@@ -1,0 +1,7 @@
+.DS_Store
+
+/vendor
+composer.lock
+
+*.sublime-project
+*.sublime-workspace

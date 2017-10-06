@@ -1,0 +1,5 @@
+Title: Projects
+
+----
+
+Text: This portfolio layout might be used to showcase your latest design work, a collection of your favorite recipes or maybe something completely different? All projects are subpages of the <mark>projects</mark> page and are fetched by a snippet file called <mark>showcase.php</mark>.

@@ -1,0 +1,9 @@
+username: fabian
+----
+firstName: Fabian
+----
+lastName: Michael
+----
+email: fabian@getkirby.com
+----
+role: designer

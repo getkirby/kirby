@@ -1,0 +1,42 @@
+title: Blog
+
+files: false
+
+pages:
+  template: article
+  sort: flip
+  num: date
+
+options: 
+  template: false
+  status: false
+
+icon: newspaper-o
+
+fields:
+  title:
+    label: Title
+    type: title
+    required: true
+    width: 3/4
+
+  perpage:
+    label: Posts per page
+    type: number
+    min: 1
+    max: 20
+    default: 5
+    width: 1/4
+
+  text:
+    label: Text
+    type: textarea
+
+  info:
+    label: Hint
+    type: info
+    text: >
+      The blog page fetches its subpages and displays them as blog posts.
+      To fill the blog page with content, just hit the <b>Add</b> button
+      to create a new article. Your blog articles will be automatically ordered by
+      date.

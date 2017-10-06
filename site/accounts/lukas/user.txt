@@ -1,0 +1,9 @@
+username: lukas
+----
+firstName: Lukas
+----
+lastName: Bestle
+----
+email: lukas@getkirby.com
+----
+role: developer

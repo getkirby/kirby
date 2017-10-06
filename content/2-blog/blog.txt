@@ -1,0 +1,9 @@
+Title: Blog
+
+----
+
+Text: Blogging with Kirby is as easy as it’s fun. This simple blog shows just a basic implementation of a blogging engine, realized with only a few lines of code. It can easily be extended with tags, categories or whatever feature you need.
+
+----
+
+Perpage: 2

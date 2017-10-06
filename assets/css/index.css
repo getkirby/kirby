@@ -1,0 +1,953 @@
+@charset "UTF-8";
+/*
+  # Kirby Starterkit
+  
+  This CSS file handles all of the styling in of Kirby’s
+  Starterkit. Feel free to tinker around with it and
+  adjust it according to your needs.  
+  
+  ## Color Definitions
+  
+  The following colors used in the Starterkit. If you want
+  to use this CSS file as a starting point for your own
+  project, you can do a simple search & replace to adjust
+  the color scheme to your needs.
+  
+  - Background:            #fffff8
+  - Text:                  #261e66
+  - Hovered Links:         #560bed
+  - Active Button BG:      #4509be
+  - Caption BG in projects
+    showcase:              rgba(38, 30, 102, .95)
+
+  - Highlight, Selection,
+    Link Underline:        #71efac
+  - Tap color
+    (touch devices):       rgba(113, 239, 172, .5)
+  - Marked Text BG,
+    Callout Boxes BG:      #eafded
+
+  - Menu Separator,
+    <hr> in text:          #a8a5be
+  - Blockquote BG:         #fffffd
+  
+  ## Table of Contents
+  
+  1 Global Rules & Definitions
+  1.1 Font Definitions
+  1.2 Reset & Normalization
+  1.3 General Typography
+  1.4 Images & Figures
+  
+  2 Layout Helpers & Reusable Components
+  2.1 Kirbytext
+  2.2 Button
+  2.3 Grid & Layout
+  2.4 Pagination
+  2.5 Projects Showcase
+  
+  3 Site Layout
+  3.1 Header
+  3.2 Menu
+  3.3 Sticky Footer
+  3.4 Main Content
+  
+  4 Template-specific Components
+  4.1 Homepage
+  4.2 Blog Article
+  4.3 Team
+  4.4 Contact
+  
+*/
+
+/* =====  1 Global Rules & Definitions  ===================================== */
+
+/* -----  1.1 Font Definitions  --------------------------------------------- */
+
+/* Montserrat */
+@font-face {
+  font-family: 'Montserrat';
+  src: url(../fonts/montserrat-700.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(../fonts/montserrat-400.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Vesper Libre */
+@font-face {
+  font-family: 'Vesper Libre';
+  src: url(../fonts/vesperlibre-400.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Vesper Libre';
+  src: url(../fonts/vesperlibre-500.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Vesper Libre';
+  src: url(../fonts/vesperlibre-700.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* -----  1.2 Reset & Normalization  ---------------------------------------- */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-sizing: border-box;
+  list-style: none;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, main, menu, nav, section, summary {
+  /* Add correct display for IE 9- and some newer browsers */
+  display: block;
+}
+
+::-moz-selection {
+  background: #71efac;
+  color: #261e66;
+}
+
+::selection {
+  background: #71efac;
+  color: #261e66;
+}
+
+/* -----  1.3 General Typography  ------------------------------------------- */
+
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, figure, pre {
+  /* Reset font-sizes and normalize margins */
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0 0 1.5rem;
+}
+
+/* Headings */
+h1, h2, h3 {
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1.25;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+  line-height: 2.2rem;
+  text-align: center;
+}
+
+h3 {
+  font-size: 1.25em;
+  line-height: 1.2;
+}
+
+h4 {
+  font-size: 1em;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid #71efac;
+}
+
+a:hover, a:focus, a:active {
+  color: #560bed;
+}
+
+/* Misc */
+hr {
+  font-size: 1.25rem;
+  font-weight: 500;
+  height: 1.5rem;
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  color: #71efac;
+}
+
+hr::before {
+  content: "";
+  position: relative;
+  display: block;
+  background: currentColor;
+  height: 2px;
+  top: calc(50% + 1px);
+}
+
+hr::after {
+  content: "× × ×";
+  background: #fffff8;
+  position: relative;
+  padding: 0 .25rem;
+  top: -.25rem;
+}
+
+h1 + hr,
+.intro + hr {
+  /* Shift a <hr> right after an `.intro`
+     or <h1> block one line up. */
+  margin-top: -1.5rem;
+}
+
+i, em {
+  /* Vesper Libre does not have Italics,
+     so we use a the *medium* weight instead */
+  font-weight: 500;
+  font-style: normal;
+}
+
+b, strong {
+  font-weight: 700;
+}
+
+mark {
+  padding: .1em .05em;
+  margin: -.1em 0;
+  color: #261e66;
+  background: #eafded;
+}
+
+/* -----  1.4 Images & Figures  --------------------------------------------- */
+
+img {
+  border-style: none;
+  width: 100%;
+  height: auto;
+}
+
+figcaption {
+  font-size: .75rem;
+  line-height: 1.5rem;
+}
+
+/* =====  2 Layout Helpers & Reusable Components  =========================== */
+
+/* The Clearfix™: A classic … */
+.cf::after {
+  content: "";
+  display: block;
+  height: 0;
+  overflow: hidden;
+  clear: both;
+}
+
+/* -----  2.1 Kirbytext  ---------------------------------------------------- */
+
+.intro {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.125rem;
+  margin-bottom: 3rem;
+}
+
+h1 + .intro {
+  margin-top: -2.25rem;
+}
+
+.text h2, .text h3 {
+  margin-top: 3rem;
+}
+
+.text ul, .text ol {
+  margin-left: 1.5em;
+}
+
+.text hr {
+  /* We use a more muted style for horizontal rules within
+     the main content. */
+  color: #a8a5be;
+}
+
+.text ul {
+  list-style: none;
+}
+
+.text ul > li::before {
+  content: "–";
+  display: inline-block;
+  position: relative;
+  width: 1.25em;
+  margin-right: -1.25em;
+  left: -1.25em;
+  padding-left: .25em;
+}
+
+.text ol > li {
+  list-style: decimal;
+}
+
+.text pre, .text code {
+  background-color: #eafded;
+  font-family: Courier, monospace;
+  font-size: .75rem;
+}
+
+.text code {
+  margin: -.25em 0;
+  padding: .25em .15em;
+  position: relative;
+  bottom: .05em;
+}
+
+.text pre > code {
+  display: block;
+  margin: 0;
+  padding: .8em;
+  position: static;
+  bottom: auto;
+  overflow-x: auto;
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+  .text pre > code {
+    /* Enables smoother scrolling for code sections on
+       mobile (i.e. touch) devices. */
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.text kbd {
+  padding: 3px 7px;
+  margin: -3px 2px;
+  font-size: 75%;
+  line-height: 1;
+  background: #e9e9e9;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #c9c7d4;
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  position: relative;
+  bottom: 2px;
+}
+
+.text blockquote {
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  border-left: 2px solid #a8a5be;
+  padding: .75rem;
+  background: #fffffd;
+}
+
+.text blockquote :last-child {
+  margin-bottom: 0;
+}
+
+/* -----  2.2 Button  ------------------------------------------------------- */
+
+.btn {
+  display: inline-block;
+  border: 2px solid;
+  padding: .6em .75em;
+  white-space: nowrap;
+  font-size: .75em;
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.btn:hover, .btn:focus {
+  background: #261e66;
+  border-color: #261e66;
+  color: #71efac;
+}
+
+.btn:active {
+  background: #4509be;
+  border-color: #4509be;
+}
+
+/* -----  2.3 Grid & Layout  ------------------------------------------------ */
+
+.grid {
+  font-size: 0;
+}
+
+.grid.gutter-1 {
+  /* We don’t use the shorthand attribute `margin: …` here
+     to make vertical margin easily overridable by other
+     styles with a lower specifity. */
+  margin-left: -.375rem;
+  margin-right: -.375rem;
+}
+
+.grid.gutter-1 .column {
+  padding-left: .375rem;
+  padding-right: .375rem;
+}
+
+.column {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  font-size: 1rem;
+  vertical-align: top;
+}
+
+.wrap {
+  box-sizing: content-box;
+  margin: 0 auto;
+  padding-left: .75rem;
+  padding-right: .75rem;
+  max-width: 36rem;
+}
+
+.wrap.wide {
+  max-width: 48rem;
+}
+
+@media all and (min-width: 31.5em) {
+  .wrap:not(.wide) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media all and (min-width: 38.25em) {
+  .wrap {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+  .wrap.wide {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* -----  2.4 Pagination  --------------------------------------------------- */
+
+.pagination {
+  margin-bottom: 1.5rem;
+}
+
+.pagination-item {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #efeeed;
+  color: #261e66;
+  border-bottom: 0;
+}
+
+.pagination-item:hover, .pagination-item:focus {
+  background: #261e66;
+  color: #71efac;
+}
+
+.pagination-item:active {
+  background: #4509be;
+}
+
+.pagination-item.left {
+  float: left;
+}
+
+.pagination-item.right {
+  float: right;
+}
+
+.pagination-item svg {
+  position: relative;
+  top: 50%;
+  display: block;
+  margin: -6px auto 0;
+  width: 24px;
+  height: 12px;
+}
+
+.pagination-item path {
+  fill: currentColor;
+}
+
+.pagination-item.is-inactive {
+  color: #e4e3e6;
+  border: 2px solid currentColor;
+  background: transparent;
+}
+
+@media all and (min-width: 75em) {
+  .pagination-item {
+    position: fixed;
+    top: 50%;
+    margin-top: -.875rem;
+  }
+  .pagination-item.left {
+    float: none;
+    left: 2.25rem;
+  }
+  .pagination-item.right {
+    float: none;
+    right: 2.25rem;
+  }
+}
+
+@media all and (pointer: coarse) {
+  .pagination-item {
+    /* On touch-devices we increase prev/next buttons */
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+/* ----- 2.5 Projects Showcase ---------------------------------------------- */
+
+.showcase {
+  position: relative;
+}
+
+.showcase-item {
+  list-style: none;
+  margin-bottom: .75rem;
+  position: relative;
+}
+
+@media all and (min-width: 38em) {
+  .showcase-item {
+    width: 33.33%;
+  }
+  .showcase-item:nth-last-child(3n+2):first-child,
+  .showcase-item:nth-last-child(3n+2):first-child + .showcase-item, .showcase-item:nth-last-child(3n+1):first-child,
+  .showcase-item:nth-last-child(3n+1):first-child ~ .showcase-item:nth-child(-n+4) {
+    /* x = items
+       When x % 3 = 2, select first and second item:
+       When x % 3 = 1, select first 4 items: */
+    width: 50%;
+  }
+}
+
+.showcase-link {
+  display: block;
+  position: relative;
+  padding-top: 100%;
+  z-index: 0;
+  border-bottom: 0;
+}
+
+.showcase-caption {
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
+  right: .75rem;
+  bottom: .75rem;
+  background: rgba(38, 30, 102, .95);
+  color: #eafded;
+  letter-spacing: .05em;
+  opacity: 0;
+  -webkit-transition: .25s opacity;
+  transition: .25s opacity;
+  will-change: opacity;
+}
+
+.showcase-title {
+  margin-bottom: 0;
+  text-align: center;
+  width: 100%;
+  padding: 0 1.5rem;
+  /* Vertically center the caption */
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.showcase-image {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.showcase-link:hover .showcase-caption,
+.showcase-link:focus .showcase-caption {
+  opacity: 1;
+}
+
+@media (any-hover: none) {
+  .showcase-caption {
+    /* The media query, enclosing these rules matches only
+       touch-screen devices that do not support hover due
+       to the lack of a pointing device like a mouse.
+       It does not work in all mobile browsers, but
+       progressively enhances the experience on supported
+       devices. Tested in Safari (iOS) 9.3 */
+    opacity: 1.0;
+    /* Reset will-change property to keep it from eating
+       up unneccessary resources on touch-only devices */
+    will-change: auto;
+  }
+  .showcase-title {
+    font-size: .85em;
+  }
+}
+
+/* =====  3 Site Layout  ==================================================== */
+
+html {
+  background: #fffff8;
+  color: #261e66;
+  font: normal 400 1.5em/1.5 "Vesper Libre", Georgia, serif;
+  /* Always show the vertical scrollbar to prevent `jumps`
+     of page content after navigating from a very short page
+     that does not scroll to a long pager */
+  overflow-y: scroll;
+  /* Setting this to `default` prevents the cursors from
+     changing when hovering blocks of text or whitespace,
+     which is less distracting */
+  cursor: default;
+  /* Neccessary for sticks footer. */
+  position: relative;
+  min-height: 100%;
+  /* Prevent adjustments of font size after orientation
+     changes in IE and iOS. */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  /* Highlight color for WebKit-bases touch devices. */
+  -webkit-tap-highlight-color: rgba(113, 239, 172, .5);
+}
+
+@media all and (max-width: 30em) {
+  html {
+    /* We decrease the font-size a little-bit for tiny
+       screens. Because this stylesheet uses relative units
+       everywhere, everything scales nicely. */
+    font-size: 1.25em;
+  }
+}
+
+body {
+  /* space for sticky footer */
+  margin-bottom: 4.5rem;
+}
+
+/* ----- 3.1  Header  ------------------------------------------------------- */
+
+.header {
+  padding-top: 1.5rem;
+}
+
+.branding {
+  text-align: center;
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.95rem;
+  margin-bottom: .45rem;
+}
+
+.branding a {
+  border-bottom: 0;
+}
+
+@media all and (min-width: 56em) {
+  .header {
+    padding-top: 3rem;
+    padding-bottom: 1.5rem;
+  }
+  .branding {
+    line-height: 3rem;
+    margin-bottom: 0;
+    white-space: nowrap;
+    text-align: left;
+  }
+  .branding,
+  .navigation {
+    vertical-align: baseline;
+    width: 50%;
+  }
+}
+
+/* -----  3.2 Menu  --------------------------------------------------------- */
+
+.menu {
+  text-align: center;
+  font-weight: 500;
+}
+
+.menu-item {
+  display: inline-block;
+}
+
+.menu-item:not(:last-child)::after {
+  content: "⁄";
+  display: inline-block;
+  font-size: .75em;
+  padding: 0 .2em;
+  color: #a8a5be;
+}
+
+.menu-item a {
+  border-bottom: 0;
+}
+
+.menu-item.is-active a {
+  border-bottom: 2px solid #71efac;
+}
+
+@media all and (min-width: 56em) {
+  .menu {
+    text-align: right;
+  }
+}
+
+/* -----  3.3 Sticky Footer  ------------------------------------------------ */
+
+@keyframes pulsing-heart {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: .875rem;
+}
+
+.footer p {
+  margin-bottom: 0;
+}
+
+.footer a {
+  border-bottom: 0;
+}
+
+.footer .heart {
+  /* The heart character of Arial Unicode MS looks just 
+     surprisingly nice … */
+  font-family: "Arial Unicode MS", Arial, sans-serif;
+  display: inline-block;
+}
+
+.footer-madewithkirby a:hover .heart {
+  animation: pulsing-heart .6s linear infinite;
+}
+
+@media all and (min-width: 48em) {
+  .footer-copyright, .footer-madewithkirby {
+    display: inline;
+  }
+  .footer-copyright::after {
+    content: "—";
+    margin: 0 .2em;
+    color: #71efac;
+  }
+}
+
+/* -----  3.4 Main Content  ------------------------------------------------- */
+
+.main {
+  padding-top: 3rem;
+  padding-bottom: 1.5rem;
+}
+
+/* =====  4 Template-specific Components ==================================== */
+
+/* -----  4.1 Homepage  ----------------------------------------------------- */
+
+.projects-section {
+  background: #eafded;
+  margin-top: 3rem;
+  padding-top: 2.25rem;
+  padding-bottom: .75rem;
+}
+
+.projects-section-more {
+  text-align: center;
+}
+
+/* ----- 4.2 Blog Article  -------------------------------------------------- */
+
+.article-title {
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.article-title a {
+  border-bottom: 0;
+}
+
+.article-date {
+  text-align: center;
+}
+
+.article:last-of-type + hr {
+  /* Hide last <hr> on blog page */
+  display: none;
+}
+
+.article-more {
+  font-size: 75%;
+  text-transform: uppercase;
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  letter-spacing: .025em;
+  white-space: nowrap;
+  border-bottom: 2px solid #71efac;
+}
+
+/* -----  4.3 Team  --------------------------------------------------------- */
+
+.team {
+  margin-top: 3rem;
+}
+
+.team-item {
+  margin-bottom: 3rem;
+}
+
+@media all and (min-width: 30em) {
+  .team-item {
+    width: 50%;
+  }
+}
+
+@media all and (min-width: 62.5em) {
+  .team-item {
+    width: 25%;
+  }
+}
+
+.team-portrait img {
+  /* Eliminate bottom margin */
+  display: block;
+}
+
+.team-name {
+  margin-bottom: 0;
+}
+
+.team-about, .team-contact {
+  font-size: .85em;
+}
+
+.team-contact a {
+  word-wrap: break-word;
+}
+
+/* -----  4.4 Contact  ------------------------------------------------------ */
+
+.contact-options {
+  list-style: none;
+  margin-bottom: 3rem;
+  margin-left: -.375rem;
+  margin-right: -.375rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.contact-item {
+  padding: 0 .375rem;
+  background: #eafded;
+  background-clip: content-box;
+  text-align: center;
+  font-size: .85rem;
+  width: 100%;
+  margin-bottom: .75rem;
+  /* By using flexbox for a contact option’s content,
+     we can ensure, that the action button in each
+     box always aligns euqally to the bottom
+     of that box. */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+@media all and (min-width: 40em) {
+  .contact-item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 62.5em) {
+  .contact-item {
+    width: 25%;
+  }
+}
+
+.contact-item-icon {
+  max-width: 50%;
+  margin-bottom: 1.5em;
+}
+
+.contact-item-title {
+  margin-bottom: 1.5em;
+}
+
+.contact-item-content {
+  padding: 1.5rem 2.25em .375em;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+.contact-twitter {
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+}
+
+.contact-twitter h2 {
+  margin-bottom: 3rem;
+}
+
+.contact-twitter h2::before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  background: url(../images/logo.svg) 50% 50%/contain no-repeat;
+  margin: 3rem auto 1.5rem;
+}
+
+@media all and (min-width: 36em) {
+  .contact-twitter p:not(:first-of-type) {
+    width: 50%;
+    float: left;
+  }
+}
+
+@media all and (min-width: 46em) {
+  .contact-twitter p:not(:first-of-type) {
+    width: 33.33%;
+  }
+}

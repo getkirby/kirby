@@ -1,0 +1,9 @@
+username: nico
+----
+firstName: Nico
+----
+lastName: Hoffmann
+----
+email: nico@getkirby.com
+----
+role: developer
