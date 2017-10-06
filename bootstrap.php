@@ -90,19 +90,19 @@ $router = new Router([
     new Route('', 'GET', function () use ($site) {
         return $site->find('home');
     }),
-    new Route('api', 'POST', function () use ($app, $site, $request) {
+    new Route('api/(:all?)', 'ALL', function ($path = null) use ($app, $site, $request) {
 
         $api = new Api([
-            'query'     => $request->body()->get('query'),
-            'variables' => $request->body()->get('variables'),
-            'data'      => [
-                'site'      => $site,
-                'users'     => $app->users(),
-                'languages' => $app->root('/') . '/panel/assets/languages'
-            ]
+            'request' => $request,
+            'path'    => $path,
+            'data'    => [
+                'site'  => $site,
+                'users' => $app->users(),
+            ],
+            'routes' => require __DIR__ . '/api/routes.php',
+            'types'  => require __DIR__ . '/api/types.php'
         ]);
 
-        header('Access-Control-Allow-Origin: *');
         return new Json($api->result());
 
     }),
