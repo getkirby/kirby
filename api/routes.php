@@ -21,4 +21,8 @@ return [
     require __DIR__ . '/routes/users/read.php',
     require __DIR__ . '/routes/users/list.php',
 
+    // languages
+    require __DIR__ . '/routes/languages/read.php',
+    require __DIR__ . '/routes/languages/list.php',
+
 ];

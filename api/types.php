@@ -9,4 +9,5 @@ return [
     'file'       => require __DIR__ . '/types/file.php',
     'pagination' => require __DIR__ . '/types/pagination.php',
     'user'       => require __DIR__ . '/types/user.php',
+    'language'   => require __DIR__ . '/types/language.php',
 ];

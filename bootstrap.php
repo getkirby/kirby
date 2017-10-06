@@ -40,7 +40,8 @@ $app = new Kirby([
         'controllers' => $root . '/site/controllers',
         'accounts'    => $root . '/site/accounts',
         'snippets'    => $root . '/site/snippets',
-        'templates'   => $root . '/site/templates'
+        'templates'   => $root . '/site/templates',
+        'panel'       => $root . '/panel'
     ],
     'request'     => $request = new Request(),
     'server'      => $server  = new Server(),
@@ -96,8 +97,9 @@ $router = new Router([
             'request' => $request,
             'path'    => $path,
             'data'    => [
+                'app'   => $app,
                 'site'  => $site,
-                'users' => $app->users(),
+                'users' => $app->users()
             ],
             'routes' => require __DIR__ . '/api/routes.php',
             'types'  => require __DIR__ . '/api/types.php'
