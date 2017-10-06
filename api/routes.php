@@ -15,8 +15,10 @@ return [
 
     // files
     require __DIR__ . '/routes/files/read.php',
+    require __DIR__ . '/routes/files/list.php',
 
     // users
+    require __DIR__ . '/routes/users/read.php',
     require __DIR__ . '/routes/users/list.php',
 
 ];
