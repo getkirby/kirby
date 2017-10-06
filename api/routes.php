@@ -13,6 +13,9 @@ return [
     // children
     require __DIR__ . '/routes/children/read.php',
 
+    // files
+    require __DIR__ . '/routes/files/read.php',
+
     // users
     require __DIR__ . '/routes/users/list.php',
 

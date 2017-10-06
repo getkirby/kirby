@@ -10,7 +10,7 @@ return function ($collection, $type) {
 
     return [
         'pagination' => $this->output('pagination', $collection->pagination()),
-        'data'       => $data
+        'items'      => $data
     ];
 
 };
