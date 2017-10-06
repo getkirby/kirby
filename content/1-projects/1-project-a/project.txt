@@ -1,4 +1,4 @@
-Title: Super cool
+Title: Hipster desk
 
 ----
 
@@ -11,3 +11,7 @@ Text: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo l
 ----
 
 Client: Apple
+
+----
+
+Intro: This is the introduction
