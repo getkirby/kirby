@@ -1,0 +1,9 @@
+Username: sonja
+
+----
+
+Email: sonja@getkirby.com
+
+----
+
+Password: $2y$10$BHUlufx3zzKjbY0aQauZcuN93Us4F2CkgMrO4tTllHMfEn.ndTLMG

@@ -1,0 +1,79 @@
+{
+    "name": "getkirby/cms",
+    "description": "Kirby Cms",
+    "keywords": ["kirby", "cms"],
+    "homepage": "https://getkirby.com",
+    "authors": [
+        {
+            "name": "Bastian Allgeier",
+            "email": "bastian@getkirby.com",
+            "homepage": "http://bastianallgeier.com"
+        }
+    ],
+    "support": {
+        "email": "support@getkirby.com",
+        "issues": "https://github.com/getkirby/kirby/issues",
+        "forum": "https://forum.getkirby.com",
+        "source": "https://github.com/getkirby/kirby"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/k-next/data"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/k-next/filesystem"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/k-next/html"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/k-next/http"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/k-next/text"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/k-next/toolkit"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "getkirby/data": "dev-master",
+        "getkirby/filesystem": "dev-master",
+        "getkirby/text": "dev-master",
+        "getkirby/http": "dev-master",
+        "webonyx/graphql-php": "^0.9.8"
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kirby\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kirby\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit"
+    },
+    "archive": {
+        "exclude": [
+            "/.gitignore",
+            "/.travis.yml",
+            "phpunit.xml",
+            "/tests",
+            "/vendor"
+        ]
+    }
+}

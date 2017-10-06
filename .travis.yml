@@ -1,0 +1,33 @@
+language: php
+
+os:
+  - linux
+
+sudo: false
+
+php:
+  - 7.0
+  - 7.1
+
+install:
+  # Install composer packages, will also trigger dump-autoload
+  - composer self-update
+  - composer install --no-interaction --dev
+
+  # Install coveralls.phar
+  - wget -c -nc --retry-connrefused --tries=0 https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+  - chmod +x coveralls.phar
+  - php coveralls.phar --version
+
+before_script:
+  - mkdir -p build/logs
+  - ls -al
+
+script:
+  - phpunit --coverage-clover build/logs/clover.xml
+
+after_success:
+  - travis_retry php coveralls.phar -v
+
+matrix:
+  fast_finish: true
