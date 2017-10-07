@@ -91,7 +91,7 @@ $router = new Router([
     new Route('', 'GET', function () use ($site) {
         return $site->find('home');
     }),
-    new Route('api/(:all?)', 'ALL', function ($path = null) use ($app, $site, $request) {
+    new Route('api/(:all)', 'ALL', function ($path = null) use ($app, $site, $request) {
 
         $api = new Api([
             'request' => $request,
