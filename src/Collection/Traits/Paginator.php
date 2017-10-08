@@ -75,7 +75,7 @@ trait Paginator
         } else {
             $options = [
                 'limit' => $arguments[0],
-                'page'  => $arguments[1],
+                'page'  => $arguments[1] ?? 1,
             ];
         }
 
