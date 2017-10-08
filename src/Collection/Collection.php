@@ -33,4 +33,46 @@ class Collection extends Iterator
         $this->set($data);
     }
 
+    public function query(array $arguments): self
+    {
+
+        $result = clone $this;
+
+        if (isset($arguments['not'])) {
+            $result = $result->not(...$arguments['not']);
+        }
+
+        if (isset($arguments['filterBy'])) {
+            foreach ($arguments['filterBy'] as $field => $params) {
+                $operator = key($params);
+                $value    = $params[$operator];
+                $result   = $result->filterBy($field, $operator, $value);
+            }
+        }
+
+        if (isset($arguments['offset'])) {
+            $result = $result->offset($arguments['offset']);
+        }
+
+        if (isset($arguments['limit'])) {
+            $result = $result->limit($arguments['limit']);
+        }
+
+        if (isset($arguments['sortBy'])) {
+            if (is_array($arguments['sortBy'])) {
+                $sort = explode(' ', implode(' ', $arguments['sortBy']));
+            } else {
+                $sort = explode(' ', $arguments['sortBy']);
+            }
+            $result = $result->sortBy(...$sort);
+        }
+
+        if (isset($arguments['paginate'])) {
+            $result = $result->paginate($arguments['paginate']);
+        }
+
+        return $result;
+    }
+
+
 }

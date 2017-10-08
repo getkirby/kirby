@@ -67,12 +67,22 @@ trait Paginator
      * @param  int        $page   optional page number to return
      * @return Collection         a sliced set of data
      */
-    public function paginate(int $limit, int $page = 1): self
+    public function paginate(...$arguments): self
     {
+
+        if (is_array($arguments[0])) {
+            $options = $arguments[0];
+        } else {
+            $options = [
+                'limit' => $arguments[0],
+                'page'  => $arguments[1],
+            ];
+        }
+
         $pagination = new Pagination([
             'total' => $this->count(),
-            'limit' => $limit,
-            'page'  => $page
+            'limit' => $options['limit'],
+            'page'  => $options['page']
         ]);
 
         // add the pagination object before
