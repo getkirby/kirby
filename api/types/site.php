@@ -3,7 +3,8 @@
 return function ($site) {
 
     return [
-        'url' => $site->url(),
+        'url'     => $site->url(),
+        'content' => $site->content()->toArray(),
     ];
 
 };
