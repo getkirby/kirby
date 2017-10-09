@@ -1,6 +1,6 @@
 <?php
 
-return function ($pagination, $arguments) {
+return function ($pagination) {
 
     return [
         'total' => $pagination->total(),

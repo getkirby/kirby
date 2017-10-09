@@ -2,27 +2,32 @@
 
 return [
     // site
+    require __DIR__ . '/routes/site/children/list.php',
+    require __DIR__ . '/routes/site/files/list.php',
+    require __DIR__ . '/routes/site/files/read.php',
     require __DIR__ . '/routes/site/read.php',
 
-    // pages
+    // pages: children
+    require __DIR__ . '/routes/pages/children/list.php',
+
+    // pages: files
+    require __DIR__ . '/routes/pages/files/list.php',
+    require __DIR__ . '/routes/pages/files/read.php',
+
+    // pages: page
+    require __DIR__ . '/routes/pages/update.php',
     require __DIR__ . '/routes/pages/read.php',
     //require 'pages/create.php',
     //require 'pages/update.php',
     //require 'pages/delete.php',
 
-    // children
-    require __DIR__ . '/routes/children/read.php',
-
-    // files
-    require __DIR__ . '/routes/files/read.php',
-    require __DIR__ . '/routes/files/list.php',
-
     // users
     require __DIR__ . '/routes/users/read.php',
+    require __DIR__ . '/routes/users/update.php',
     require __DIR__ . '/routes/users/list.php',
 
-    // languages
-    require __DIR__ . '/routes/languages/read.php',
-    require __DIR__ . '/routes/languages/list.php',
+    // panel
+    require __DIR__ . '/routes/panel/languages/read.php',
+    require __DIR__ . '/routes/panel/languages/list.php',
 
 ];

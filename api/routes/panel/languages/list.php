@@ -4,7 +4,7 @@ use Kirby\FileSystem\Folder;
 use Kirby\Data\Data;
 
 return [
-    'pattern' => 'languages',
+    'pattern' => 'panel/languages',
     'action'  => function () {
 
         $folder = new Folder($this->app()->root('panel') . '/assets/languages');

@@ -1,5 +1,5 @@
 <?php
 
-return function ($page, $arguments) {
-    return $this->output('collection', $page->files()->paginate(20), 'file');
+return function ($page, array $query = []) {
+    return $this->output('collection', $page->files(), 'file', $query);
 };

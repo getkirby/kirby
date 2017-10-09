@@ -43,10 +43,8 @@ class Collection extends Iterator
         }
 
         if (isset($arguments['filterBy'])) {
-            foreach ($arguments['filterBy'] as $field => $params) {
-                $operator = key($params);
-                $value    = $params[$operator];
-                $result   = $result->filterBy($field, $operator, $value);
+            foreach ($arguments['filterBy'] as $filter) {
+                $result = $result->filterBy($filter['field'], $filter['operator'] ?? '==', $filter['value']);
             }
         }
 

@@ -3,7 +3,7 @@
 use Kirby\Data\Data;
 
 return [
-    'pattern' => 'languages/(:any)',
+    'pattern' => 'panel/languages/(:any)',
     'action'  => function ($locale) {
 
         $file = $this->app()->root('panel') . '/assets/languages/' . $locale . '/package.json';

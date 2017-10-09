@@ -40,6 +40,16 @@ class Api
 
     }
 
+    public function request()
+    {
+        return $this->attributes['request'];
+    }
+
+    public function query()
+    {
+        return $this->request()->query()->toArray();
+    }
+
     public function router()
     {
 
@@ -60,7 +70,7 @@ class Api
         return $result->action()->call($this, ...$result->arguments());
     }
 
-    public function output(string $type, $object, $arguments = []): array
+    public function output(string $type, $object, ...$arguments): array
     {
 
         if (isset($this->attributes['types'][$type]) === false) {
@@ -71,7 +81,7 @@ class Api
             throw new Exception(sprintf('Missing "%s" object', $type));
         }
 
-        return $this->attributes['types'][$type]->call($this, ...[$object, $arguments]);
+        return $this->attributes['types'][$type]->call($this, $object, ...$arguments);
 
     }
 

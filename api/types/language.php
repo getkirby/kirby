@@ -1,6 +1,6 @@
 <?php
 
-return function ($language, $arguments) {
+return function ($language) {
 
     return [
         'locale'    => $language['locale'],

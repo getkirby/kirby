@@ -1,6 +1,6 @@
 <?php
 
-return function ($file, $arguments) {
+return function ($file) {
 
     return [
         'id'       => $file->id(),

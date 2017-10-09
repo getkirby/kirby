@@ -1,6 +1,6 @@
 <?php
 
-return function ($site, $arguments) {
+return function ($site) {
 
     return [
         'url' => $site->url(),

@@ -42,9 +42,11 @@ class Store
             throw new Exception('The password is required');
         }
 
-        if (empty($this['email']) === true) {
+        if (empty($data['email']) === true) {
             throw new Exception('The email is required');
         }
+
+        return true;
     }
 
     public function create()

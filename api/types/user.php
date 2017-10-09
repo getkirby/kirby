@@ -1,6 +1,6 @@
 <?php
 
-return function ($user, $arguments) {
+return function ($user) {
 
     $data = $user->data()->toArray();
 

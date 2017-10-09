@@ -1,6 +1,6 @@
 <?php
 
-return function ($page, $arguments) {
+return function ($page) {
 
     return [
         'id'       => $page->id(),
