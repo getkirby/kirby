@@ -8,10 +8,12 @@ return [
 
     // site: children
     require __DIR__ . '/routes/site/children/list.php',
+    require __DIR__ . '/routes/site/children/search.php',
     require __DIR__ . '/routes/site/children/create.php',
 
     // site: files
     require __DIR__ . '/routes/site/files/list.php',
+    require __DIR__ . '/routes/site/files/search.php',
     require __DIR__ . '/routes/site/files/read.php',
     require __DIR__ . '/routes/site/files/delete.php',
 
@@ -21,10 +23,12 @@ return [
 
     // pages: children
     require __DIR__ . '/routes/pages/children/list.php',
+    require __DIR__ . '/routes/pages/children/search.php',
     require __DIR__ . '/routes/pages/children/create.php',
 
     // pages: files
     require __DIR__ . '/routes/pages/files/list.php',
+    require __DIR__ . '/routes/pages/files/search.php',
     require __DIR__ . '/routes/pages/files/read.php',
     require __DIR__ . '/routes/pages/files/delete.php',
 
@@ -35,6 +39,7 @@ return [
 
     // users
     require __DIR__ . '/routes/users/list.php',
+    require __DIR__ . '/routes/users/search.php',
     require __DIR__ . '/routes/users/create.php',
     require __DIR__ . '/routes/users/read.php',
     require __DIR__ . '/routes/users/update.php',
