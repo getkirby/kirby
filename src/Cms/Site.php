@@ -7,6 +7,7 @@ use Exception;
 use Kirby\Cms\Site\Store;
 use Kirby\Cms\Site\Traits\Assets;
 use Kirby\Cms\Site\Traits\Content;
+use Kirby\Cms\Site\Traits\Mutator;
 use Kirby\Cms\Site\Traits\Relatives;
 
 class Site
@@ -15,6 +16,7 @@ class Site
     use Assets;
     use Content;
     use Relatives;
+    use Mutator;
 
     protected $attributes;
     protected $store;

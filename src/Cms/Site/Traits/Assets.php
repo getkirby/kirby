@@ -25,4 +25,39 @@ trait Assets
 
     }
 
+    public function images(): Files
+    {
+        return $this->files()->filterBy('type', '==', 'image');
+    }
+
+    public function videos(): Files
+    {
+        return $this->files()->filterBy('type', '==', 'video');
+    }
+
+    public function documents(): Files
+    {
+        return $this->files()->filterBy('type', '==', 'document');
+    }
+
+    public function audio(): Files
+    {
+        return $this->files()->filterBy('type', '==', 'audio');
+    }
+
+    public function code(): Files
+    {
+        return $this->files()->filterBy('type', '==', 'code');
+    }
+
+    public function file(string $filename = null)
+    {
+        return $filename === null ? $this->files()->first() : $this->files()->find($filename);
+    }
+
+    public function image(string $filename = null)
+    {
+        return $filename === null ? $this->images()->first() : $this->files()->find($filename);
+    }
+
 }

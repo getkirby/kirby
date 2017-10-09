@@ -2,15 +2,11 @@
 
 return function ($user) {
 
-    $data = $user->data()->toArray();
-
     return [
-        'id'        => $user->id(),
-        'email'     => $data['email'],
-        'firstName' => $data['firstName'] ?? null,
-        'lastName'  => $data['lastName'] ?? null,
-        'role'      => $data['role'] ?? 'nobody',
-        'image'     => [
+        'id'   => $user->id(),
+        'data' => $user->data()->not('password', 'role')->toArray(),
+        'role' => $user->role(),
+        'image' => [
             'url' => $user->avatar()->url()
         ]
     ];

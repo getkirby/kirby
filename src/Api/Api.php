@@ -50,6 +50,15 @@ class Api
         return $this->request()->query()->toArray();
     }
 
+    public function input($key = null)
+    {
+        if ($key === null) {
+            return $this->request()->data();
+        }
+
+        return $this->request()->data()[$key] ?? null;
+    }
+
     public function router()
     {
 
@@ -87,7 +96,31 @@ class Api
 
     public function result(): array
     {
-        return $this->call($this->attributes['path'], $this->attributes['request']->method());
+
+        $result = $this->call($this->attributes['path'], $this->attributes['request']->method());
+
+        if (is_array($result)) {
+            return $result;
+        }
+
+        if ($result === true) {
+            return [
+                'status' => 'ok'
+            ];
+        }
+
+        if ($result === null) {
+            return [
+                'status' => 'not found'
+            ];
+        }
+
+        if ($result === false) {
+            return [
+                'status' => 'error'
+            ];
+        }
+
     }
 
     public function __call($method, $arguments)

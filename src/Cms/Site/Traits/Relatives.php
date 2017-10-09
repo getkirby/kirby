@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms\Site\Traits;
 
+use Exception;
+
 use Kirby\Cms\Pages;
 use Kirby\Cms\Page;
 

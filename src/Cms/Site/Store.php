@@ -107,6 +107,11 @@ class Store
         return $this->db;
     }
 
+    public function exists(): bool
+    {
+        return $this->folder()->exists();
+    }
+
     public function read(): array
     {
         try {

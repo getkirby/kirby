@@ -8,6 +8,7 @@ use Exception;
 use Kirby\Cms\File\Store;
 use Kirby\Cms\File\Traits\Image;
 use Kirby\Cms\File\Traits\Meta;
+use Kirby\Cms\File\Traits\Mutator;
 use Kirby\Cms\File\Traits\Navigator;
 use Kirby\Cms\File\Traits\Relatives;
 use Kirby\FileSystem\File as Asset;
@@ -17,6 +18,7 @@ class File
 
     use Image;
     use Meta;
+    use Mutator;
     use Navigator;
     use Relatives;
 

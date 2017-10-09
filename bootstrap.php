@@ -41,6 +41,7 @@ $app = new Kirby([
         'accounts'    => $root . '/site/accounts',
         'snippets'    => $root . '/site/snippets',
         'templates'   => $root . '/site/templates',
+        'blueprints'  => $root . '/site/blueprints',
         'panel'       => $root . '/panel'
     ],
     'request'     => $request = new Request(),

@@ -10,7 +10,7 @@ return [
         $json = Data::read($file);
         $json['locale'] = $locale;
 
-        return $this->output('language', $json);
+        return $this->output('panel/language', $json);
 
     }
 ];

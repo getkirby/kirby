@@ -40,7 +40,11 @@ class Store
 
     public function delete()
     {
-        throw new Exception('Not yet implemented');
+        if (unlink($this->file->root()) && unlink($this->db())) {
+            return true;
+        }
+
+        return false;
     }
 
 }

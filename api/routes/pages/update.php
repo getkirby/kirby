@@ -5,8 +5,6 @@ return [
     'method'  => 'POST',
     'action'  => function ($path) {
 
-        var_dump($this->request()->data());
-
         $page = $this->site()
                      ->find($path)
                      ->update($this->request()->data());

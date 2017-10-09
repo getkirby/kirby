@@ -66,9 +66,14 @@ class User
             return $this->data;
         }
 
-        if ($this->attributes['data'] !== null) {
+        if (is_array($this->data)) {
+            // convert data arrays to field objects
+            $data = $this->data;
+        } elseif (isset($this->attributes['data']) && is_array($this->attributes['data'])) {
+            // take content from the passed attributes first
             $data = $this->attributes['data'];
         } else {
+            // read data from the store
             $data = $this->store->read();
         }
 
@@ -76,6 +81,11 @@ class User
             return new Field($key, $value);
         });
 
+    }
+
+    public function role()
+    {
+        return (string)$this->data()->get('role') ?? 'visitor';
     }
 
     public function exists(): bool
@@ -91,8 +101,10 @@ class User
 
     public function update(array $data): self
     {
-        $this->store->write(array_merge($this->data()->data(), $data));
-        $this->data = null;
+        $data = array_merge($this->data()->data(), $data);
+
+        $this->store->write($data);
+        $this->data = $data;
         return $this;
     }
 

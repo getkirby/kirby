@@ -60,6 +60,20 @@ class Fields
         return $this->fields;
     }
 
+    public function not(...$keys): self
+    {
+
+        $copy = clone $this;
+        $copy->fields = null;
+
+        foreach ($keys as $key) {
+            unset($copy->data[$key]);
+        }
+
+        return $copy;
+
+    }
+
     public function toArray(): array
     {
         return $this->data();

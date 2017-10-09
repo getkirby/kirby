@@ -2,9 +2,10 @@
 
 return [
     'pattern' => 'site/files/(:any)',
+    'method'  => 'DELETE',
     'action'  => function ($filename) {
         if ($file = $this->site()->file($filename)) {
-            return $this->output('file', $file);
+            return $file->delete();
         }
     }
 ];

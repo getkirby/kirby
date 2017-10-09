@@ -17,7 +17,7 @@ return [
             $json           = Data::read($file);
             $json['locale'] = $locale;
 
-            $result[] = $this->output('language', $json);
+            $result[] = $this->output('panel/language', $json);
 
         }
 
