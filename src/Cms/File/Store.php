@@ -40,7 +40,8 @@ class Store
 
     public function delete()
     {
-        if (unlink($this->file->root()) && unlink($this->db())) {
+
+        if (@unlink($this->file->root()) && @unlink($this->db())) {
             return true;
         }
 
