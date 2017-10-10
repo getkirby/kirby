@@ -1,11 +1,27 @@
-username: bastian
+Username: bastian
+
 ----
-firstName: Bastian
+
+Firstname: Bastian
+
 ----
-lastName: Allgeier
+
+Lastname: Allgeier
+
 ----
-email: bastian@getkirby.com
+
+Email: bastian@getkirby.com
+
 ----
-password: $2y$07$BCryptRequires22Chrcte/VlQH0piJtjXl.0t1XkA8pw9dMXTpOq
+
+Password: $2y$07$BCryptRequires22Chrcte/VlQH0piJtjXl.0t1XkA8pw9dMXTpOq
+
 ----
-role: admin
+
+Role: admin
+
+----
+
+Image: 
+
+url: 'http://localhost/kirby/v3/starterkit/site/accounts/bastian/bastian.jpg'

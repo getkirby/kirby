@@ -24,6 +24,9 @@ RewriteEngine on
 # block text files in the content folder from being accessed directly
 RewriteRule ^content/(.*)\.(txt|md|mdown)$ index.php [L]
 
+# RewriteCond %{REQUEST_URI} /+[^\.]+$
+# RewriteRule ^(.+[^/])$ %{REQUEST_URI}/ [R=301,L]
+
 # make site links work
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -37,3 +40,4 @@ RewriteRule ^(.*) index.php/$1 [L]
 # AddDefaultCharset UTF-8
 #
 # php_flag short_open_tag on
+#

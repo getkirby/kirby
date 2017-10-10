@@ -2,7 +2,7 @@ Title: Extending Kirby
 
 ----
 
-Date: 2019-10-04T23:00:00.000Z
+Date: 2016-08-02
 
 ----
 
@@ -20,10 +20,6 @@ However, if you ever get stuck, don’t hesitate to ask your question in [our fo
 
 ***
 
-# Let's check out a headline
-
-This is a nice paragraph. Yay this is beautiful. 
-
 **Further reading**
 
 - (link: https://getkirby.com/blog text: Official Kirby Blog)
@@ -31,7 +27,3 @@ This is a nice paragraph. Yay this is beautiful.
 - (link: https://getkirby.com/docs text: Kirby Documentation)
 - (link: https://getkirby.com/docs/cookbook text: Kirby Cookbook)
 - (link: https://getkirby.com/docs/developer-guide text: Kirby Developer Guide)
-
-----
-
-Author: Bastian Allgeier

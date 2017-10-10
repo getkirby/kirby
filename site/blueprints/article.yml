@@ -1,27 +1,33 @@
 title: Article
-
-pages: false
-
-fields:
-  title:
-    label: Title
-    type:  title
-    
-  coverimage:
-    label: Cover Image
-    type: image
-    width: 1/2
-    
-  date:
-    icon: calendar
-    label: Date
-    type: date
-    format: LL
-    placeholder: Select a date…
-    default: today
-    required: true
-    width: 1/2
-  
-  text:
-    label: Text
-    type: textarea
+layout:
+  -
+    width: 2/3
+    sections:
+      -
+        type: fields
+        fields:
+          -
+            label: Text
+            name: text
+            type: textarea
+  -
+    width: 1/3
+    sections:
+      -
+        type: fields
+        fields:
+          -
+            label: Date
+            name: date
+            type: date
+          -
+            label: Author
+            name: author
+            type: user
+          -
+            label: Tags
+            name: tags
+            type: tags
+      -
+        headline: Images
+        type: files

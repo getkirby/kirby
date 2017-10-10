@@ -1,20 +1,35 @@
 title: Site
-
-pages: default
-
-fields:
-  title:
-    label: Title
-    type:  text
-
-  author:
-    label: Author
-    type:  text
-
-  description:
-    label: Description
-    type:  textarea
-    
-  copyright:
-    label: Copyright
-    type:  textarea
+layout:
+  -
+    width: 1/2
+    sections:
+      -
+        headline: Projects
+        type: pages
+        parent: projects
+  -
+    width: 1/2
+    sections:
+      -
+        headline: Blog
+        type: pages
+        parent: blog
+  -
+    width: 1/2
+    sections:
+      -
+        headline: Team
+        type: pages
+        parent: about
+  -
+    width: 1/2
+    sections:
+      -
+        headline: Misc
+        type: pages
+        parent: /
+        filterBy:
+          -
+            field: group
+            operator: ==
+            value: misc
