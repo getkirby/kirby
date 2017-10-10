@@ -111,10 +111,10 @@ $router = new Router([
         return new Json($api->result());
 
     }),
-    new Route('files/(:all)/(:any)', 'GET', function ($path, $filename) use ($site) {
+    new Route('files/(:all)/(:any)', 'GET', function ($path, $filename) use ($app, $site) {
         if ($page = $site->find($path)) {
             if ($file = $page->file($filename)) {
-                $root = __DIR__ . '/files/' . $path;
+                $root = $app->root('/') . '/files/' . $path;
                 $link = $root . '/' . $file->filename();
 
                 mkdir($root, 0777, true);
@@ -123,7 +123,7 @@ $router = new Router([
                     link($file->realpath(), $link);
                 }
 
-                return new Redirect(App::instance()->url('files') . '/' . $path . '/' . $filename);
+                return new Redirect($app->url('files') . '/' . $path . '/' . $filename);
             }
         }
         return 404;
