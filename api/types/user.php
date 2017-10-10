@@ -2,7 +2,7 @@
 
 return function ($user) {
 
-    return [
+    $output = [
         'id'   => $user->id(),
         'data' => $user->data()->not('password', 'role')->toArray(),
         'role' => $user->role(),
@@ -10,5 +10,7 @@ return function ($user) {
             'url' => $user->avatar()->url()
         ]
     ];
+
+    return $output;
 
 };

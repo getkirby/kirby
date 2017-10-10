@@ -23,6 +23,14 @@ return function ($page) {
         $output['image'] = $this->output('file', $image);
     }
 
+    if ($prev = $page->prev()) {
+        $output['prev'] = $prev->id();
+    }
+
+    if ($next = $page->next()) {
+        $output['next'] = $next->id();
+    }
+
     return $output;
 
 };
