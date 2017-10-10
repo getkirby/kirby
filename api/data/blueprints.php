@@ -5,12 +5,13 @@ use Kirby\Data\Data;
 
 return function ($root) {
 
-    $folder = new Folder($root);
-    $result = [];
+    $blueprint = require __DIR__ . '/blueprint.php';
+    $folder    = new Folder($root);
+    $result    = [];
 
     foreach ($folder->files() as $root) {
-        $name = pathinfo($root, PATHINFO_FILENAME);
-        $result[$name] = ['name' => $name] + Data::read($root);
+        $data = $blueprint($root);
+        $result[$data['name']] = $data;
     }
 
     return $result;

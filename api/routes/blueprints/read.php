@@ -3,7 +3,6 @@
 return [
     'pattern' => 'blueprints/(:any)',
     'action'  => function ($name) {
-        $blueprints = (require __DIR__ . '/../../data/blueprints.php')($this->app()->root('blueprints'));
-        return $blueprints[$name];
+        return (require __DIR__ . '/../../data/blueprint.php')($this->app()->root('blueprints') . '/' . $name . '.yml');
     }
 ];
