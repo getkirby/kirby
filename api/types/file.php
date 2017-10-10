@@ -7,6 +7,7 @@ return function ($file) {
         'filename' => $file->filename(),
         'url'      => $file->url(),
         'meta'     => $file->meta()->toArray(),
+        'parent'   => $file->page() ? $file->page()->id() : null,
     ];
 
 };

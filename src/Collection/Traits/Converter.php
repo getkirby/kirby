@@ -2,6 +2,8 @@
 
 namespace Kirby\Collection\Traits;
 
+use Closure;
+
 trait Converter
 {
 
@@ -10,8 +12,12 @@ trait Converter
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray(Closure $map = null): array
     {
+        if ($map !== null) {
+            return array_map($map, $this->data);
+        }
+
         return $this->data;
     }
 
