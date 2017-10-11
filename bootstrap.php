@@ -16,6 +16,7 @@ use Kirby\Http\Server;
 use Kirby\Http\Response;
 use Kirby\Http\Response\Json;
 use Kirby\Http\Response\Redirect;
+use Kirby\Toolkit\Url;
 use Kirby\Text\Smartypants;
 use Kirby\Text\Markdown;
 use Kirby\Text\Tags;
@@ -26,12 +27,13 @@ use Kirby\Users\User\Avatar as UserAvatar;
 use Kirby\Users\User\Store as UserStore;
 use Kirby\Users\Users;
 
+
 /**
  * App configuration
  */
 $app = new Kirby([
     'url' => [
-        '/'     => $url = 'http://localhost/kirby/v3/starterkit',
+        '/'     => $url = Url::index(),
         'files' => $url . '/files',
     ],
     'root' => [
