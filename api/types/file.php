@@ -4,7 +4,9 @@ return function ($file) {
 
     $output = [
         'id'         => $file->id(),
+        'name'       => $file->name(),
         'filename'   => $file->filename(),
+        'extension'  => $file->extension(),
         'url'        => $file->url(),
         'mime'       => $file->mime(),
         'meta'       => $file->meta()->toArray(),
