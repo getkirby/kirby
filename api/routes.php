@@ -48,5 +48,7 @@ return [
     // panel
     require __DIR__ . '/routes/panel/languages/read.php',
     require __DIR__ . '/routes/panel/languages/list.php',
+    require __DIR__ . '/routes/panel/options/query.php',
+    require __DIR__ . '/routes/panel/options/field.php',
 
 ];

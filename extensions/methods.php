@@ -35,5 +35,8 @@ Field::method([
         return $this->value(function($value) {
             return App::instance()->kirbytext()->parse((string)$value);
         })->markdown();
+    },
+    'split' => function ($separator = ',') {
+        return Str::split((string)$this->value(), $separator);
     }
 ]);

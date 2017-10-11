@@ -89,7 +89,7 @@ class Field
             return $this;
         }
 
-        return static::$methods[$method]->call($this, $args);
+        return static::$methods[$method]->call($this, ...$args);
     }
 
     /**
