@@ -51,5 +51,7 @@ return [
     require __DIR__ . '/routes/panel/options/query.php',
     require __DIR__ . '/routes/panel/options/field.php',
     require __DIR__ . '/routes/panel/options/url.php',
+    require __DIR__ . '/routes/panel/autocomplete/tags.php',
+    require __DIR__ . '/routes/panel/autocomplete/users.php',
 
 ];
