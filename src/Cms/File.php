@@ -30,6 +30,7 @@ class File
 
     public function __construct($attributes)
     {
+
         $this->attributes = $attributes;
 
         if (empty($attributes['id'])) {
@@ -49,9 +50,9 @@ class File
         $this->url  = $attributes['url'];
         $this->root = $attributes['root'];
 
-        // setup the asset
-        $this->asset = new Asset($this->root);
-        $this->store = new Store($this, $attributes);
+        // setup the store and asset
+        $this->store = new Store($this->root, $attributes);
+        $this->asset = $this->store->asset();
 
     }
 

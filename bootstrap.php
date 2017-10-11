@@ -119,7 +119,9 @@ $router = new Router([
                 $root = $app->root('/') . '/files/' . $path;
                 $link = $root . '/' . $file->filename();
 
-                mkdir($root, 0777, true);
+                if (is_dir($root) === false) {
+                    mkdir($root, 0777, true);
+                }
 
                 if (is_link($link) === false) {
                     link($file->realpath(), $link);

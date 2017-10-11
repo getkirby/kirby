@@ -6,17 +6,23 @@ use Exception;
 
 use Kirby\Cms\File;
 use Kirby\Data\Data;
+use Kirby\FileSystem\File as Asset;
 
 class Store
 {
 
-    protected $file;
+    protected $root;
     protected $db;
 
-    public function __construct(File $file, $attributes = [])
+    public function __construct($root, $attributes = [])
     {
-        $this->file = $file;
-        $this->db   = $file->root() . '.txt';
+        $this->root = $root;
+        $this->db   = $root . '.txt';
+    }
+
+    public function asset()
+    {
+        return new Asset($this->root);
     }
 
     protected function db(): string
@@ -35,13 +41,36 @@ class Store
 
     public function write(array $data = []): bool
     {
-        return Data::write($this->db, $data);
+        return Data::write($this->db(), $data);
+    }
+
+    public function rename($name): Asset
+    {
+
+        $asset = new Asset($this->root);
+
+        if ($asset->exists() === false) {
+            return $this->asset();
+        }
+
+        $asset->rename($name);
+        $this->root = $asset->root();
+
+        $db = new Asset($this->db);
+
+        if ($db->exists()) {
+            $db->move($asset->root() . '.txt');
+            $this->db = $db->root();
+        }
+
+        return $asset;
+
     }
 
     public function delete()
     {
 
-        if (@unlink($this->file->root()) && @unlink($this->db())) {
+        if (@unlink($this->root) && @unlink($this->db())) {
             return true;
         }
 
