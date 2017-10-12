@@ -69,12 +69,13 @@ class Store
 
     public function delete()
     {
+        $asset = new Asset($this->root);
+        $asset->delete();
 
-        if (@unlink($this->root) && @unlink($this->db())) {
-            return true;
-        }
+        $db = new Asset($this->db());
+        $db->delete();
 
-        return false;
+        return true;
     }
 
 }

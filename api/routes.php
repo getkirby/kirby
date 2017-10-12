@@ -28,10 +28,14 @@ return [
 
     // pages: files
     require __DIR__ . '/routes/pages/files/list.php',
+    require __DIR__ . '/routes/pages/files/create.php',
     require __DIR__ . '/routes/pages/files/search.php',
     require __DIR__ . '/routes/pages/files/rename.php',
     require __DIR__ . '/routes/pages/files/read.php',
     require __DIR__ . '/routes/pages/files/delete.php',
+
+    // pages: options
+    require __DIR__ . '/routes/pages/options.php',
 
     // pages
     require __DIR__ . '/routes/pages/read.php',
