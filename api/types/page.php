@@ -9,7 +9,7 @@ return function ($page) {
         'url'      => $page->url(),
         'num'      => $page->num(),
         'template' => $page->template(),
-        'content'  => $page->content()->toArray(),
+        'content'  => $this->output('page/content', $page),
         'parent'   => $page->parent() ? $page->parent()->id() : null,
         'parents'  => array_values($page->parents()->toArray(function ($parent) {
             return [

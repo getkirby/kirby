@@ -38,6 +38,7 @@ $app = new Kirby([
     ],
     'root' => [
         '/'           => $root = dirname(__DIR__),
+        'kirby'       => __DIR__,
         'content'     => $root . '/content',
         'controllers' => $root . '/site/controllers',
         'accounts'    => $root . '/site/accounts',
@@ -60,6 +61,22 @@ $app->set('site', $site = new Site([
     'url'  => $app->url(),
     'root' => $app->root('content')
 ]));
+
+
+/**
+ * Schema setup
+ */
+$app->set('schema', function () {
+
+    $root = $this->root('kirby') . '/fields';
+
+    return [
+        'checkboxes' => require $root . '/checkboxes.php',
+        'radio'      => require $root . '/radio.php',
+        'select'     => require $root . '/select.php',
+        'tags'       => require $root . '/tags.php',
+    ];
+});
 
 
 /**

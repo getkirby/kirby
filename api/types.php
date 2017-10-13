@@ -3,6 +3,7 @@
 return [
     'site'           => require __DIR__ . '/types/site.php',
     'page'           => require __DIR__ . '/types/page.php',
+    'page/content'   => require __DIR__ . '/types/page/content.php',
     'collection'     => require __DIR__ . '/types/collection.php',
     'children'       => require __DIR__ . '/types/children.php',
     'files'          => require __DIR__ . '/types/files.php',
