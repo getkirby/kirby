@@ -1,17 +1,19 @@
 <?php
 
+use Kirby\Cms\Blueprint;
 use Kirby\FileSystem\Folder;
-use Kirby\Data\Data;
 
 return function ($root) {
 
-    $blueprint = require __DIR__ . '/blueprint.php';
-    $folder    = new Folder($root);
-    $result    = [];
+    $folder = new Folder($root);
+    $result = [];
 
     foreach ($folder->files() as $root) {
-        $data = $blueprint($root);
-        $result[$data['name']] = $data;
+
+        $name      = pathinfo($root, PATHINFO_FILENAME);
+        $blueprint = new Blueprint($folder->root(), $name);
+
+        $result[$blueprint->name()] = $blueprint->toArray();
     }
 
     return $result;
