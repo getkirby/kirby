@@ -70,6 +70,15 @@ class Schema
                 }
             }
         }
+
+        // the title should always be included
+        if (!isset($fields['title'])) {
+            $fields['title'] = [
+                'name' => 'title',
+                'type' => 'text'
+            ];
+        }
+
         return $fields;
     }
 
@@ -82,7 +91,7 @@ class Schema
 
             $key        = strtolower($field['name']);
             $definition = $this->definition($field['type']);
-            $value      = $input[$key] ?? null;
+            $value      = $input[$key] ?? '';
 
             if (is_a($definition[$method] ?? null, Closure::class)) {
                 $value = $definition[$method]($this->model, $key, $value, $field);
