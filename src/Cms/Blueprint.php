@@ -17,9 +17,9 @@ class Blueprint
         $this->name = $name;
         $this->file = $this->root . '/' . $name . '.yml';
 
-        if (file_exists($this->file)) {
+        if (file_exists($this->file) === false) {
             $this->name = 'default';
-            $this->file = $this->root . '/' . $name . '.yml';
+            $this->file = $this->root . '/default.yml';
         }
 
     }
