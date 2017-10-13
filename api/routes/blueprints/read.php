@@ -3,6 +3,14 @@
 return [
     'pattern' => 'blueprints/(:any)',
     'action'  => function ($name) {
-        return (require __DIR__ . '/../../data/blueprint.php')($this->app()->root('blueprints') . '/' . $name . '.yml');
+
+        $blueprintFile   = $this->app()->root('blueprints') . '/' . $name . '.yml';
+        $blueprintReader = require __DIR__ . '/../../data/blueprint.php';
+
+        if (file_exists($blueprintFile) === false) {
+            $blueprintFile = $this->app()->root('blueprints') . '/default.yml';
+        }
+
+        return $blueprintReader($blueprintFile);
     }
 ];
