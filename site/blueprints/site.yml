@@ -31,5 +31,5 @@ layout:
         filterBy:
           -
             field: group
-            operator: ==
+            operator: '=='
             value: misc

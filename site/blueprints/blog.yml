@@ -10,7 +10,7 @@ layout:
         filterBy:
           -
             field: draft
-            operator: ==
+            operator: '=='
             value: 1
   -
     width: 1/1
@@ -27,5 +27,5 @@ layout:
         filterBy:
           -
             field: draft
-            operator: !=
+            operator: '!='
             value: 1
