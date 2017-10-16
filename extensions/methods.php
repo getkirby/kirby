@@ -35,7 +35,7 @@ Field::method([
 
     },
     'toFile' => function () {
-
+        return $this->page()->file($this->value());
     },
     'toFloat' => function ($default = 0) {
         $value = $this->isEmpty() ? $default : $this->value();
