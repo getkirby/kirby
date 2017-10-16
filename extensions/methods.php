@@ -106,8 +106,10 @@ Field::method([
         });
 
     },
-    'short' => function () {
-
+    'short' => function (int $length, string $appendix = '…') {
+        return $this->value(function ($value) use ($length, $appendix) {
+            return Str::short($this->value(), $length, $appendix);
+        });
     },
     'smartypants' => function () {
         return $this->value(function($value) {
