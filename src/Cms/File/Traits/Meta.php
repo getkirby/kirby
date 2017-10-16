@@ -22,7 +22,11 @@ trait Meta
         }
 
         return $this->meta = new Fields($this->meta, function ($key, $value) {
-            return new Field($key, $value);
+            return new Field($key, $value, [
+                'file' => $this,
+                'page' => $page = $this->page(),
+                'site' => $page->site()
+            ]);
         });
 
     }
