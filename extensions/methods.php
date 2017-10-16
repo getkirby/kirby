@@ -49,7 +49,7 @@ Field::method([
 
     },
     'toPage' => function () {
-
+        return App::instance()->site()->find($this->value());
     },
     'toPages' => function () {
 
