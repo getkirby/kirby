@@ -8,9 +8,14 @@ use Kirby\Object\Attributes;
 use Kirby\Users\User\Auth;
 use Kirby\Users\User\Avatar;
 use Kirby\Users\User\Store;
+use Kirby\Users\User\Traits\Mutator;
+use Kirby\Users\User\Traits\Navigator;
 
 class User
 {
+
+    use Mutator;
+    use Navigator;
 
     protected $attributes = [];
     protected $auth;
@@ -91,26 +96,6 @@ class User
     public function exists(): bool
     {
         return $this->store->exists();
-    }
-
-    public function save(): self
-    {
-        $this->store->save($this->data()->data());
-        return $this;
-    }
-
-    public function update(array $data): self
-    {
-        $data = array_merge($this->data()->data(), $data);
-
-        $this->store->write($data);
-        $this->data = $data;
-        return $this;
-    }
-
-    public function delete(): bool
-    {
-        return $this->store->delete();
     }
 
     public function __call($method, $arguments)

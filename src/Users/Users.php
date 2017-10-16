@@ -23,6 +23,8 @@ class Users extends Collection
             throw new Exception('Invalid User object in Users collection');
         }
 
+        $user->collection($this);
+
         return parent::__set($user->id(), $user);
 
     }

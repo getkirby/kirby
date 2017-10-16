@@ -11,6 +11,14 @@ return function ($user) {
         ]
     ];
 
+    if ($prev = $user->prev()) {
+        $output['prev'] = $prev->email()->value();
+    }
+
+    if ($next = $user->next()) {
+        $output['next'] = $next->email()->value();
+    }
+
     return $output;
 
 };
