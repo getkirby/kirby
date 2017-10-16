@@ -29,7 +29,9 @@ trait Content
         }
 
         return $this->content = new Fields($content, function ($key, $value) {
-            return new Field($key, $value);
+            return new Field($key, $value, [
+                'site' => $this
+            ]);
         });
 
     }
