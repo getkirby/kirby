@@ -31,7 +31,10 @@ trait Content
         }
 
         return $this->content = new Fields($content, function ($key, $value) {
-            return new Field($key, $value);
+            return new Field($key, $value, [
+                'page' => $this,
+                'site' => $this->site()
+            ]);
         });
 
     }
@@ -44,7 +47,10 @@ trait Content
             return $title;
         }
 
-        return new Field('title', $this->slug());
+        return new Field('title', $this->slug(), [
+            'page' => $this,
+            'site' => $this->site()
+        ]);
     }
 
     public function date($format, string $field = 'date')

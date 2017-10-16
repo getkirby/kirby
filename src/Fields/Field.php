@@ -12,11 +12,13 @@ class Field
 
     protected $key;
     protected $value;
+    protected $dependencies = [];
 
-    public function __construct(string $key, $value)
+    public function __construct(string $key, $value, array $dependencies = [])
     {
-        $this->key   = $key;
-        $this->value = $value;
+        $this->key          = $key;
+        $this->value        = $value;
+        $this->dependencies = $dependencies;
     }
 
     /**
@@ -76,6 +78,17 @@ class Field
     }
 
     /**
+     * Checks if the field has a registered method
+     *
+     * @param string $method
+     * @return boolean
+     */
+    public function hasMethod(string $method): bool
+    {
+        return isset(static::$methods[$method]) === true;
+    }
+
+    /**
      * Calls a registered method class with the
      * passed arguments
      *
@@ -85,10 +98,6 @@ class Field
      */
     public function call(string $method, array $args = [])
     {
-        if (isset(static::$methods[$method]) === false) {
-            return $this;
-        }
-
         return static::$methods[$method]->call($this, ...$args);
     }
 
@@ -99,7 +108,18 @@ class Field
      */
     public function __call(string $method, array $args = [])
     {
-        return $this->call($method, $args);
+        // field methods
+        if ($this->hasMethod($method)) {
+            return $this->call($method, $args);
+        }
+
+        // magic dependency getters
+        if (isset($this->dependencies[$method]) === true) {
+            return $this->dependencies[$method];
+        }
+
+        // return an unmodified field otherwise
+        return $this;
     }
 
     public function toString(): string
