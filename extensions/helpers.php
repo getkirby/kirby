@@ -3,14 +3,29 @@
 use Kirby\Cms\App;
 use Kirby\Toolkit\View;
 
-function url()
+function kirby()
 {
-    return App::instance()->url();
+    return App::instance();
 }
 
 function site()
 {
-    return App::instance()->site();
+    return kirby()->site();
+}
+
+function page(...$id)
+{
+    return site()->find(...$id);
+}
+
+function pages(...$id)
+{
+    return site()->find(...$id);
+}
+
+function url($path = null)
+{
+    return rtrim(kirby()->url() . '/' . $path, '/');
 }
 
 /**
@@ -34,7 +49,12 @@ function snippet($name, $data = [], $return = false)
 
 function css($url)
 {
-    return '<link rel="stylesheet" href="' . App::instance()->url() . '/' . $url . '">';
+    return '<link rel="stylesheet" href="' . url($url) . '">';
+}
+
+function js($src)
+{
+    return '<script src="' . url($src) . '"></script>';
 }
 
 /**
@@ -50,17 +70,28 @@ function r($condition, $value, $alternative = null)
     return $condition ? $value : $alternative;
 }
 
-function kirbytag($input)
+function markdown($text)
 {
-    return App::instance()->kirbytext()->tag($input);
+    return kirby()->markdown()->parse($text);
 }
 
-function page(...$id)
+function smartypants($text) {
+    return kirby()->smartypants()->parse($text);
+}
+
+function kirbytext($text)
 {
-    return App::instance()->site()->find(...$id);
+    return kirby()->kirbytext()->parse($text);
+}
+
+function kirbytag($input)
+{
+    return kirby()->kirbytext()->tag($input);
 }
 
 function svg($root)
 {
-    require App::instance()->root() . '/' . $root;
+    require kirby()->root() . '/' . $root;
 }
+
+
