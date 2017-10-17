@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Toolkit\A;
+use Exception;
 use Kirby\Data\Data;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\V;
 
 class Schema
 {
@@ -118,6 +120,41 @@ class Schema
         $output = A::get($output, array_keys($input));
 
         return $output;
+    }
+
+    public function validate(array $input)
+    {
+
+        $rules = [];
+
+        foreach ($this->fields() as $field) {
+
+            $name = strtolower($field['name']);
+
+            $rules[$name] = [];
+
+            if (($field['validate'] ?? false) !== false) {
+                $rules[$name] = $field['validate'];
+            }
+
+            if (($field['required'] ?? false) === true) {
+                $rules[$name]['required'] = true;
+            }
+
+        }
+
+        return V::input($input, $rules);
+
+    }
+
+    public function validateField($field, $value, $validator, $params)
+    {
+
+        if (V::$validator($value, ...(array)$params)) {
+            return true;
+        }
+
+        throw new Exception('The validation failed');
     }
 
     public function toArray(): array

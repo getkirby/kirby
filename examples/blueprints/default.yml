@@ -10,10 +10,14 @@ layout:
             label: Intro
             name: intro
             type: textarea
+            validate:
+              max: 10
+              min: 5
           -
             label: Text
             name: text
             type: textarea
+            required: true
   -
     width: 1/3
     sections:
