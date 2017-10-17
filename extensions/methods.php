@@ -5,6 +5,7 @@ use Kirby\Fields\Field;
 use Kirby\Toolkit\Str;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
+use Kirby\Structure\Collection as Structure;
 
 /**
  * Field method setup
@@ -61,10 +62,10 @@ Field::method([
         return App::instance()->site()->find($this->value());
     },
     'toPages' => function (string $separator = 'yaml') {
-        return App::instance()->site()->find(...$field->toArray('yaml'));
+        return App::instance()->site()->find(...$this->toArray('yaml'));
     },
     'toStructure' => function () {
-        throw new Exception('Not implemented yet');
+        return new Structure(Yaml::decode($this->value()), $this->dependencies);
     },
     'toUrl' => function (): string {
         // TODO: solve this without using the helper
@@ -106,7 +107,7 @@ Field::method([
     },
     'or' => function ($fallback = null) {
 
-        if ($field->isNotEmpty()) {
+        if ($this->isNotEmpty()) {
             return $this;
         }
 
