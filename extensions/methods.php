@@ -3,6 +3,8 @@
 use Kirby\Cms\App;
 use Kirby\Fields\Field;
 use Kirby\Toolkit\Str;
+use Kirby\Data\Handler\Json;
+use Kirby\Data\Handler\Yaml;
 
 /**
  * Field method setup
@@ -24,8 +26,15 @@ Field::method([
     },
 
     // converters
-    'toArray' => function ($separator) {
-        return $this->split($separator);
+    'toArray' => function ($method):array {
+        switch ($method) {
+            case 'yaml':
+                return Yaml::decode($this->value());
+            case 'json':
+                return Json::decode($this->value());
+            default;
+                return $this->split($method);
+        }
     },
     'toBool' => function ($default = false) {
         $value = $this->isEmpty() ? $default : $this->value();
@@ -51,8 +60,8 @@ Field::method([
     'toPage' => function () {
         return App::instance()->site()->find($this->value());
     },
-    'toPages' => function () {
-
+    'toPages' => function (string $separator = 'yaml') {
+        return App::instance()->site()->find(...$field->toArray('yaml'));
     },
     'toStructure' => function () {
 
@@ -132,5 +141,11 @@ Field::method([
     },
     'xml' => function () {
 
+    },
+
+    // DEPRECATED aliases
+    'int' => function () {
+        return $this->toInt();
     }
+
 ]);
