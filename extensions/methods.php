@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Fields\Field;
 use Kirby\Toolkit\Str;
+use Kirby\Html\Element\A;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Structure\Collection as Structure;
@@ -55,8 +56,19 @@ Field::method([
         $value = $this->isEmpty() ? $default : $this->value();
         return intval($value);
     },
-    'toLink' => function () {
-        return $this;
+    'toLink' => function ($attr1 = null, $attr2 = null) {
+
+        $a = new A($this->page()->url(), $this->value());
+
+        if (is_string($attr1) === true) {
+            $a->attr('href', url($attr1));
+            $a->attr($attr2);
+        } else {
+            $a->attr($attr1);
+        }
+
+        return $a;
+
     },
     'toPage' => function () {
         return App::instance()->site()->find($this->value());
