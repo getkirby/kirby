@@ -4,6 +4,7 @@ namespace Kirby\Users\User\Traits;
 
 use Exception;
 use Kirby\Users\Users;
+use Kirby\Cms\App;
 
 trait Navigator
 {
@@ -13,7 +14,12 @@ trait Navigator
     public function collection(Users $collection = null)
     {
         if ($collection === null) {
-            return $this->collection;
+            if ($this->collection === null) {
+                // TODO: don't rely on app instance here
+                return App::instance()->users();
+            } else {
+                return $this->collection;
+            }
         }
 
         $this->collection = $collection;

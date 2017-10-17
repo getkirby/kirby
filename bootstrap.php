@@ -33,8 +33,9 @@ use Kirby\Image\Darkroom\GdLib as Darkroom;
  */
 $app = new Kirby([
     'url' => [
-        '/'     => $url = Url::index(),
-        'files' => $url . '/files',
+        '/'        => $url = Url::index(),
+        'files'    => $url . '/files',
+        'accounts' => $url . '/site/accounts'
     ],
     'root' => [
         '/'           => $root = dirname(__DIR__),
@@ -95,8 +96,8 @@ $app->set('users', function () {
             'auth'   => new UserAuth,
             'store'  => new UserStore(['root' => $root]),
             'avatar' => new UserAvatar([
-                'url'  => $this->url() . '/site/accounts/' . $id . '/' . $id . '.jpg',
-                'root' => $root . '/' . $id . '.jpg'
+                'url'  => $this->url() . '/site/accounts/' . $id . '/profile.jpg',
+                'root' => $root . '/profile.jpg'
             ])
         ];
     }
