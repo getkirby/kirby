@@ -65,7 +65,7 @@ Field::method([
         return App::instance()->site()->find(...$field->toArray('yaml'));
     },
     'toStructure' => function () {
-        return $this;
+        throw new Exception('Not implemented yet');
     },
     'toUrl' => function (): string {
         // TODO: solve this without using the helper
@@ -149,14 +149,41 @@ Field::method([
     },
 
     // Aliases
+    'bool' => function () {
+        return $this->toBool();
+    },
+    'esc' => function () {
+        return $this->escape();
+    },
+    'excerpt' => function () {
+        return $this->toExcerpt();
+    },
+    'float' => function () {
+        return $this->toFloat();
+    },
+    'h' => function () {
+        return $this->html();
+    },
     'int' => function () {
         return $this->toInt();
     },
     'kt' => function () {
         return $this->kirbytext();
     },
+    'link' => function () {
+        return $this->toLink();
+    },
     'md' => function () {
         return $this->markdown();
+    },
+    'sp' => function () {
+        return $this->smartypants();
+    },
+    'yaml' => function () {
+        return $this->toArray('yaml');
+    },
+    'x' => function () {
+        return $this->xml();
     }
 
 ]);
