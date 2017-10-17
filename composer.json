@@ -48,7 +48,7 @@
         "getkirby/filesystem": "dev-master",
         "getkirby/text": "dev-master",
         "getkirby/http": "dev-master",
-        "webonyx/graphql-php": "^0.9.8"
+        "claviska/simpleimage": "3.3.*"
     },
     "minimum-stability": "dev",
     "require-dev": {

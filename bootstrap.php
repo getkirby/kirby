@@ -26,7 +26,7 @@ use Kirby\Users\User\Auth\Password as UserAuth;
 use Kirby\Users\User\Avatar as UserAvatar;
 use Kirby\Users\User\Store as UserStore;
 use Kirby\Users\Users;
-
+use Kirby\Image\Darkroom\GdLib as Darkroom;
 
 /**
  * App configuration
@@ -39,6 +39,7 @@ $app = new Kirby([
     'root' => [
         '/'           => $root = dirname(__DIR__),
         'kirby'       => __DIR__,
+        'files'       => $root . '/files',
         'content'     => $root . '/content',
         'controllers' => $root . '/site/controllers',
         'accounts'    => $root . '/site/accounts',
@@ -102,6 +103,16 @@ $app->set('users', function () {
 
     return new Users($users);
 
+});
+
+
+/**
+ * Darkroom
+ */
+$app->set('darkroom', function () {
+    return new Darkroom([
+        'quality' => 80
+    ]);
 });
 
 
