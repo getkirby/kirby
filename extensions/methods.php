@@ -1,6 +1,5 @@
 <?php
 
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Fields\Field;
 use Kirby\Toolkit\Str;
