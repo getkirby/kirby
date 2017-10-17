@@ -1,0 +1,90 @@
+Title: Form Demo
+
+----
+
+Checkbox: 
+
+----
+
+Tags: cool, sper, fantastic
+
+----
+
+Checkboxes: a
+
+----
+
+Radio: a
+
+----
+
+Select: b
+
+----
+
+Date: 
+
+----
+
+User: fabian@getkirby.com
+
+----
+
+Text: Super text
+
+----
+
+Email: super@test.com
+
+----
+
+Url: 
+
+----
+
+Tel: 
+
+----
+
+Number: 
+
+----
+
+Toggle: 
+
+----
+
+Table: 
+
+-
+    title: Contact
+    text: "Feel free to drop us a line if you have any questions.\n"
+    url: 'mailto:support@getkirby.com'
+    linktext: 'Write an email'
+    icon: contact.svg
+-
+    title: Forum
+    text: "Join the Kirby community and connect with others.\n"
+    url: 'https://forum.getkirby.com/'
+    linktext: 'Visit Kirby’s forum'
+    icon: forum.svg
+-
+    title: GitHub
+    text: "Report Kirby-related issues directly on GitHub.\n"
+    url: 'https://github.com/getkirby'
+    linktext: 'Kirby on GitHub'
+    icon: github.svg
+-
+    title: Docs
+    text: 'Check out Kirby''s detailed tutorials and instructions.'
+    url: 'https://getkirby.com/docs'
+    linktext: Documentation
+    icon: docs.svg
+
+----
+
+Headline: 
+
+----
+
+Info: 

@@ -1,0 +1,146 @@
+title: Form Demo
+layout:
+  -
+    width: 1/1
+    sections:
+      -
+        type: fields
+        fields:
+          -
+            label: Text
+            name: text
+            type: text
+            max: 140
+          -
+            label: Tags
+            name: tags
+            type: tags
+          -
+            label: Date
+            name: date
+            type: date
+            width: 1/2
+          -
+            label: User
+            name: user
+            type: user
+            width: 1/2
+          -
+            label: Text
+            name: text
+            type: textarea
+          -
+            label: Email
+            name: email
+            type: email
+            width: 1/2
+          -
+            label: URL
+            name: url
+            type: url
+            width: 1/2
+          -
+            label: Phone
+            name: tel
+            type: tel
+            width: 1/2
+          -
+            label: Number
+            name: number
+            type: number
+            width: 1/2
+          -
+            label: Checkbox
+            name: checkbox
+            type: checkbox
+            text: Checkbox text
+            width: 1/2
+          -
+            label: Toggle
+            name: toggle
+            type: toggle
+            text: Toggle text
+            width: 1/2
+          -
+            label: Checkboxes
+            name: checkboxes
+            type: checkboxes
+            options:
+              a: Option A
+              b: Option B
+              c: Option C
+            width: 1/2
+          -
+            label: Radios
+            name: radio
+            type: radio
+            options:
+              a: Option A
+              b: Option B
+              c: Option C
+            width: 1/2
+          -
+            label: Select
+            name: select
+            type: select
+            options:
+              a: Option A
+              b: Option B
+              c: Option C
+          -
+            label: Table
+            name: table
+            type: table
+            columns:
+              -
+                name: title
+                label: Title
+              -
+                name: icon
+                label: Icon
+              -
+                name: text
+                label: Text
+            fields:
+              -
+                name: title
+                label: Title
+                type: text
+              -
+                name: icon
+                label: Icon
+                type: select
+                options:
+                  -
+                    text: contact.svg
+                    value: contact.svg
+                  -
+                    text: forum.svg
+                    value: forum.svg
+                  -
+                    text: github.svg
+                    value: github.svg
+                  -
+                    text: docs.svg
+                    value: docs.svg
+              -
+                name: text
+                label: Text
+                type: textarea
+              -
+                name: url
+                label: Link
+                type: url
+              -
+                name: linktext
+                label: Link Text
+                type: text
+          -
+            label: Headline
+            name: headline
+            type: headline
+          -
+            label: Info
+            name: info
+            type: info
+            text: This is an info field
