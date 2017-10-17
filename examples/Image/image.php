@@ -19,15 +19,11 @@ $app = new App([
     ])
 ]);
 
-
 $file = new File([
-    'id'   => 'projects/project-a/closeup.jpg',
-    'url'  => 'https://getkirby.com/projects/project-a/closeup.jpg',
-    'root' => __DIR__ . '/content/1-projects/1-project-a/closeup.jpg'
+    'id'   => 'closeup.jpg',
+    'url'  => 'https://getkirby.com/closeup.jpg',
+    'root' => __DIR__ . '/closeup.jpg'
 ]);
-
-
-
 
 $thumb = $file->crop(200);
 

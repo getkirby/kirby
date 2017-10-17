@@ -5,18 +5,13 @@ require __DIR__ . '/extensions/helpers.php';
 require __DIR__ . '/extensions/methods.php';
 
 use Kirby\Cms\App as Kirby;
-use Kirby\FileSystem\Folder;
-use Kirby\FileSystem\File;
 use Kirby\Http\Request;
-use Kirby\Http\Router;
 use Kirby\Http\Server;
-use Kirby\Http\Response;
-use Kirby\Toolkit\Url;
-use Kirby\Text\Smartypants;
-use Kirby\Text\Markdown;
-use Kirby\Text\Tags;
-use Kirby\Toolkit\View;
 use Kirby\Image\Darkroom\GdLib as Darkroom;
+use Kirby\Text\Markdown;
+use Kirby\Text\Smartypants;
+use Kirby\Text\Tags;
+use Kirby\Toolkit\Url;
 
 /**
  * App configuration
@@ -51,6 +46,7 @@ $app = new Kirby([
     'path'        => require __DIR__ . '/config/path.php',
     'routes'      => require __DIR__ . '/config/routes.php',
     'router'      => require __DIR__ . '/config/router.php',
+    'system'      => require __DIR__ . '/config/system.php',
 ]);
 
 echo $app->response();

@@ -25,13 +25,17 @@ class App extends BaseApp
 
     }
 
+    public function collection($name) {
+
+    }
+
     public function view(Page $page): Response
     {
 
         $viewData = [
             'site'  => $site  = $this->site(),
             'pages' => $pages = $site->children(),
-            'page'  => $page,
+            'page'  => $page
         ];
 
         // TODO: put this in a template component
