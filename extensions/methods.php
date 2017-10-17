@@ -1,5 +1,6 @@
 <?php
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Fields\Field;
 use Kirby\Toolkit\Str;
@@ -41,7 +42,7 @@ Field::method([
         return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     },
     'toExcerpt' => function () {
-
+        return $this;
     },
     'toFile' => function () {
         return $this->page()->file($this->value());
@@ -55,7 +56,7 @@ Field::method([
         return intval($value);
     },
     'toLink' => function () {
-
+        return $this;
     },
     'toPage' => function () {
         return App::instance()->site()->find($this->value());
@@ -64,10 +65,11 @@ Field::method([
         return App::instance()->site()->find(...$field->toArray('yaml'));
     },
     'toStructure' => function () {
-
+        return $this;
     },
-    'toUrl' => function () {
-
+    'toUrl' => function (): string {
+        // TODO: solve this without using the helper
+        return url($this->value());
     },
 
     // inspectors
@@ -77,10 +79,11 @@ Field::method([
 
     // manipulators
     'escape' => function () {
-
+        throw new Exception('Not implemented yet');
     },
-    'html' => function (bool $keepTags = true) {
-        return $this;
+    'html' => function () {
+        // TODO: test compatibility with old Html::encode
+        return htmlentities($this->value(), ENT_COMPAT, 'utf-8');
     },
     'kirbytext' => function () {
         return $this->value(function($value) {
@@ -88,7 +91,9 @@ Field::method([
         })->markdown();
     },
     'kirbytags' => function () {
-
+        return $this->value(function ($value) {
+            return App::instance()->kirbytext()->parse((string)$value);
+        });
     },
     'lower' => function () {
         return $this->value(function($value) {
@@ -134,18 +139,24 @@ Field::method([
         });
     },
     'widont' => function () {
-
+        throw new Exception('Not implemented yet');
     },
     'words' => function () {
-
+        throw new Exception('Not implemented yet');
     },
     'xml' => function () {
-
+        throw new Exception('Not implemented yet');
     },
 
-    // DEPRECATED aliases
+    // Aliases
     'int' => function () {
         return $this->toInt();
+    },
+    'kt' => function () {
+        return $this->kirbytext();
+    },
+    'md' => function () {
+        return $this->markdown();
     }
 
 ]);
