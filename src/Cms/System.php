@@ -17,19 +17,24 @@ class System
     public function status(): array
     {
         return [
-            'php'      => $this->php(),
-            'server'   => $this->server(),
-            'mbstring' => $this->mbstring(),
-            'curl'     => $this->curl(),
-            'files'    => $this->files(),
-            'accounts' => $this->accounts(),
-            'content'  => $this->content(),
+            'php'       => $this->php(),
+            'server'    => $this->server(),
+            'mbstring'  => $this->mbstring(),
+            'curl'      => $this->curl(),
+            'files'     => $this->files(),
+            'accounts'  => $this->accounts(),
+            'content'   => $this->content(),
         ];
     }
 
     public function isOk(): bool
     {
         return in_array(false, array_values($this->status()), true) === false;
+    }
+
+    public function isInstalled(): bool
+    {
+        return $this->app->users()->count() > 0;
     }
 
     public function php(): bool

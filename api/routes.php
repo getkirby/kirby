@@ -51,12 +51,13 @@ return [
     require __DIR__ . '/routes/users/delete.php',
 
     // panel
+    require __DIR__ . '/routes/panel/autocomplete/tags.php',
+    require __DIR__ . '/routes/panel/autocomplete/users.php',
     require __DIR__ . '/routes/panel/languages/read.php',
     require __DIR__ . '/routes/panel/languages/list.php',
     require __DIR__ . '/routes/panel/options/query.php',
     require __DIR__ . '/routes/panel/options/field.php',
     require __DIR__ . '/routes/panel/options/url.php',
-    require __DIR__ . '/routes/panel/autocomplete/tags.php',
-    require __DIR__ . '/routes/panel/autocomplete/users.php',
+    require __DIR__ . '/routes/panel/system/read.php',
 
 ];
