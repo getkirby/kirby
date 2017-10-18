@@ -97,7 +97,14 @@ class Api
     public function result(): array
     {
 
-        $result = $this->call($this->attributes['path'], $this->attributes['request']->method());
+        try {
+            $result = $this->call($this->attributes['path'], $this->attributes['request']->method());
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
 
         if (is_array($result)) {
             return $result;
