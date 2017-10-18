@@ -114,6 +114,9 @@ class Schema
 
     public function write(array $input): array
     {
+
+        $this->validate($input);
+
         $output = $this->apply($input, 'write');
 
         // only include the data that has been sent in the input array
@@ -145,16 +148,6 @@ class Schema
 
         return V::input($input, $rules);
 
-    }
-
-    public function validateField($field, $value, $validator, $params)
-    {
-
-        if (V::$validator($value, ...(array)$params)) {
-            return true;
-        }
-
-        throw new Exception('The validation failed');
     }
 
     public function toArray(): array
