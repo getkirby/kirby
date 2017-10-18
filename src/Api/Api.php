@@ -2,12 +2,13 @@
 
 namespace Kirby\Api;
 
-use Kirby\Object\Attributes;
+use Exception;
 use Kirby\Http\Request;
 use Kirby\Http\Router;
 use Kirby\Http\Router\Route;
+use Kirby\Object\Attributes;
 use Kirby\Toolkit\DI\Dependencies;
-use Exception;
+use Kirby\Users\User;
 
 class Api
 {
@@ -37,6 +38,26 @@ class Api
                 'type' => 'array',
             ]
         ]);
+
+    }
+
+    public function user(): User
+    {
+
+        $headers = array_change_key_case(getallheaders(), CASE_LOWER);
+        $token   = $headers['authorization'] ?? null;
+
+        if ($token === null) {
+            throw new Exception('Invalid authorization token');
+        }
+
+        $user = $this->app()->users()->findBy('token', $token);
+
+        if ($user === null) {
+            throw new Exception('The user cannot be found');
+        }
+
+        return $user;
 
     }
 

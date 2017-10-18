@@ -81,8 +81,8 @@ trait Paginator
 
         $pagination = new Pagination([
             'total' => $this->count(),
-            'limit' => $options['limit'],
-            'page'  => $options['page']
+            'limit' => $options['limit'] ?? 10,
+            'page'  => $options['page'] ?? 1
         ]);
 
         // add the pagination object before

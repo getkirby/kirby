@@ -60,4 +60,9 @@ return [
     require __DIR__ . '/routes/panel/options/url.php',
     require __DIR__ . '/routes/panel/system/read.php',
 
+    // session
+    require __DIR__ . '/routes/session/create.php',
+    require __DIR__ . '/routes/session/read.php',
+    require __DIR__ . '/routes/session/delete.php',
+
 ];
