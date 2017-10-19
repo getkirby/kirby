@@ -2,6 +2,7 @@
 
 return [
     'pattern' => 'pages/(:all)/slug',
+    'method'  => 'POST',
     'action'  => function ($path) {
 
         if ($page = $this->site()->find($path)) {
