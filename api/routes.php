@@ -36,6 +36,7 @@ return [
 
     // pages: options
     require __DIR__ . '/routes/pages/options.php',
+    require __DIR__ . '/routes/pages/slug.php',
 
     // pages
     require __DIR__ . '/routes/pages/read.php',

@@ -34,9 +34,29 @@ trait Mutator
 
     }
 
-    public function move()
+    public function move(string $slug)
     {
+        if (empty($slug)) {
+            throw new Exception('The slug is missing');
+        }
 
+        $this->attributes['root'] = $this->store->move($slug);
+
+        $parentId  = dirname($this->id());
+        $parentUrl = dirname($this->url());
+
+        if ($parentId === '.') {
+            $parentId = null;
+        }
+
+        if ($parentUrl === '.') {
+            $parentUrl = null;
+        }
+
+        $this->url = $parentUrl . '/' . $slug;
+        $this->id  = ltrim($parentId . '/' . $slug, '/');
+
+        return $this;
     }
 
     public function delete()

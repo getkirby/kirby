@@ -190,6 +190,27 @@ class Store
         return Data::write($this->db(), $data);
     }
 
+    public function move($slug)
+    {
+
+        $name = implode('-', array_filter([
+            $this->page->num(),
+            $slug
+        ]));
+
+        $oldRoot = $this->root;
+        $newRoot = dirname($this->root) . '/' . $name;
+
+        rename($oldRoot, $newRoot);
+
+        $this->db     = null;
+        $this->root   = $newRoot;
+        $this->folder = new Folder($this->root);
+
+        return $this->root;
+
+    }
+
     public function delete()
     {
         return $this->folder()->delete();
