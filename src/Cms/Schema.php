@@ -101,6 +101,20 @@ class Schema
         return $fields;
     }
 
+    public function meta(): array
+    {
+        $meta = [];
+        foreach ($this->layout() as $column) {
+            foreach ($column['sections'] as $section) {
+                if ($section['type'] === 'files') {
+                    $meta = array_merge($meta, $section['meta']);
+                }
+            }
+        }
+
+        return $meta;
+    }
+
     protected function apply(array $input, string $method)
     {
         $input  = array_change_key_case($input, CASE_LOWER);
