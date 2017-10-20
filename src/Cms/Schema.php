@@ -57,6 +57,23 @@ class Schema
 
     }
 
+    public function blueprints() {
+
+        $blueprints = [];
+
+        foreach ($this->layout() as $column) {
+            foreach ($column['sections'] as $section) {
+                if ($section['type'] === 'pages') {
+                    $template   = $section['template'] ?? false;
+                    $blueprints = array_merge($blueprints, (array)$template);
+                }
+            }
+        }
+
+        return array_unique($blueprints);
+
+    }
+
     public function layout(): array
     {
         return $this->blueprint()['layout'];
