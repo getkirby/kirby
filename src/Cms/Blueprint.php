@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\Blueprint\Converter;
 use Kirby\Data\Data;
 
 class Blueprint
@@ -46,7 +47,15 @@ class Blueprint
 
     public function toArray(): array
     {
-        return ['name' => $this->name] + Data::read($this->file);
+
+        $data = ['name' => $this->name] + Data::read($this->file);
+
+        // Kirby 2 blueprint
+        if (!isset($data['layout'])) {
+            $data = Converter::convert($data);
+        }
+
+        return $data;
     }
 
 }
