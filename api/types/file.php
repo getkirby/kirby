@@ -9,6 +9,7 @@ return function ($file) {
         'extension'  => $file->extension(),
         'url'        => $file->url(),
         'mime'       => $file->mime(),
+        'type'       => $file->type(),
         'meta'       => $file->meta()->toArray(),
         'parent'     => $file->page() ? $file->page()->id(): null,
         'niceSize'   => $file->niceSize(),
