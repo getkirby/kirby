@@ -4,6 +4,7 @@ namespace Kirby\Cms\Site\Traits;
 
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
+use Kirby\Toolkit\Str;
 
 trait Assets
 {
@@ -52,7 +53,25 @@ trait Assets
 
     public function file(string $filename = null)
     {
-        return $filename === null ? $this->files()->first() : $this->files()->find($filename);
+
+        if ($filename === null) {
+            return $this->files()->first();
+        }
+
+        if (Str::contains($filename, '/')) {
+            $path     = dirname($filename);
+            $filename = basename($filename);
+            $page     = $this->find($path);
+
+            if ($page !== null && $file = $page->file($filename)) {
+                return $file;
+            }
+
+            return null;
+        }
+
+        return $this->files()->find($filename);
+
     }
 
     public function image(string $filename = null)

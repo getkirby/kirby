@@ -25,7 +25,6 @@ class PageAssets extends Assets
 
     public function create($filename = null): bool
     {
-
         if ($filename === null) {
             foreach ($this->page->files() as $file) {
                 $this->create($file->filename());
@@ -49,7 +48,18 @@ class PageAssets extends Assets
             return true;
         }
 
-        return unlink($this->folder() . '/' . $filename);
+        $name      = pathinfo($filename, PATHINFO_FILENAME);
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
+        // remove the original file
+        unlink($this->folder() . '/' . $filename);
+
+        // remove all thumbnails
+        foreach (glob($this->folder() . '/' . $name . '-*.' . $extension) as $file) {
+            unlink($file);
+        }
+
+        return true;
     }
 
 }
