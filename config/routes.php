@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Api\Api;
+use Kirby\Cms\Assets\PageAssets;
 use Kirby\Http\Response\Json;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
@@ -33,23 +34,16 @@ return function () {
             return new Json($api->result());
         }),
         new Route('files/(:all)/(:any)', 'GET', function ($path, $filename) use ($app, $site) {
-            if ($page = $site->find($path)) {
-                if ($file = $page->file($filename)) {
-                    $root = $app->root('/') . '/files/' . $path;
-                    $link = $root . '/' . $file->filename();
 
-                    if (is_dir($root) === false) {
-                        mkdir($root, 0777, true);
-                    }
+            try {
+                $pageAssets = new PageAssets($app->root('files'), $site->find($path));
+                $pageAssets->create($filename);
 
-                    if (is_link($link) === false) {
-                        link($file->realpath(), $link);
-                    }
-
-                    return new Redirect($app->url('files') . '/' . $path . '/' . $filename);
-                }
+                return new Redirect($app->url('files') . '/' . $path . '/' . $filename, 307);
+            } catch (Exception $e) {
+                return 404;
             }
-            return 404;
+
         }),
         new Route('(:all)', 'GET', function ($path) use ($site) {
             return $site->find($path);
