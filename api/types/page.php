@@ -3,15 +3,16 @@
 return function ($page) {
 
     $output = [
-        'id'       => $page->id(),
-        'title'    => $page->title()->toString(),
-        'slug'     => $page->slug(),
-        'url'      => $page->url(),
-        'num'      => $page->num(),
-        'template' => $page->template(),
-        'content'  => $this->output('page/content', $page),
-        'parent'   => $page->parent() ? $page->parent()->id() : null,
-        'parents'  => array_values($page->parents()->toArray(function ($parent) {
+        'id'        => $page->id(),
+        'title'     => $page->title()->toString(),
+        'slug'      => $page->slug(),
+        'url'       => $page->url(),
+        'num'       => $page->num(),
+        'template'  => $page->template(),
+        'content'   => $this->output('page/content', $page),
+        'parent'    => $page->parent() ? $page->parent()->id(): null,
+        'isVisible' => $page->isVisible(),
+        'parents'   => array_values($page->parents()->toArray(function ($parent) {
             return [
                 'id'    => $parent->id(),
                 'title' => $parent->title()->toString(),
