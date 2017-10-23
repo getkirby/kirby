@@ -18,7 +18,7 @@ class Blueprint
         $this->name = $name;
         $this->file = $this->root . '/' . $name . '.yml';
 
-        if (file_exists($this->file) === false) {
+        if (file_exists($this->file) === false && $name !== 'site') {
             $this->name = 'default';
             $this->file = $this->root . '/default.yml';
         }
@@ -45,8 +45,33 @@ class Blueprint
         return $this->name === 'default';
     }
 
+    protected function defaultSiteBlueprint(): array
+    {
+        return [
+            'name'   => 'site',
+            'title'  => 'Site',
+            'layout' => [
+                [
+                    'width'    => '1/1',
+                    'sections' => [
+                        [
+                            'headline' => 'Pages',
+                            'type'     => 'pages',
+                            'parent'   => '/'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function toArray(): array
     {
+
+        // fallback for missing site blueprints
+        if ($this->name === 'site' && file_exists($this->file) === false) {
+            return $this->defaultSiteBlueprint();
+        }
 
         $data = ['name' => $this->name] + Data::read($this->file);
 
