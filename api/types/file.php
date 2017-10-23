@@ -15,6 +15,7 @@ return function ($file) {
         'niceSize'   => $file->niceSize(),
         'dimensions' => '1024 x 768',
         'created'    => date('d.m.Y - H:i:s', filectime($file->root())),
+        'modified'   => $file->modified(),
         'next'       => null,
         'prev'       => null
     ];
