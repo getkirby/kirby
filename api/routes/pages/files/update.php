@@ -14,7 +14,7 @@ return [
             return true;
         }
 
-        if ($file = $this->site()->find($path)->file($filename)) {
+        if ($file = $this->site()->file($path . '/' . $filename)) {
 
             foreach ($request->files()->data() as $upload) {
                 move_uploaded_file($upload['tmp_name'], $file->root());
