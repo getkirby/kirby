@@ -211,6 +211,42 @@ class Store
 
     }
 
+    public function unlisted()
+    {
+
+        if ($this->page->isVisible() === false) {
+            return $this->root;
+        }
+
+        $oldRoot = $this->root;
+        $newRoot = dirname($this->root) . '/' . $this->page->slug();
+
+        rename($oldRoot, $newRoot);
+
+        $this->db     = null;
+        $this->root   = $newRoot;
+        $this->folder = new Folder($this->root);
+
+        return $this->root;
+
+    }
+
+    public function listed(int $position)
+    {
+
+        $oldRoot = $this->root;
+        $newRoot = dirname($this->root) . '/' . $position . '-' . $this->page->slug();
+
+        rename($oldRoot, $newRoot);
+
+        $this->db     = null;
+        $this->root   = $newRoot;
+        $this->folder = new Folder($this->root);
+
+        return $this->root;
+
+    }
+
     public function delete()
     {
         return $this->folder()->delete();

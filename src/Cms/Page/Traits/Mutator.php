@@ -3,7 +3,6 @@
 namespace Kirby\Cms\Page\Traits;
 
 use Exception;
-
 use Kirby\Cms\Page;
 
 trait Mutator
@@ -57,6 +56,28 @@ trait Mutator
         $this->id  = ltrim($parentId . '/' . $slug, '/');
 
         return $this;
+    }
+
+    public function status(string $status, $position = null): self
+    {
+
+        switch ($status) {
+            case 'draft':
+                throw new Exception('Not yet implemented');
+            case 'unlisted':
+                $this->attributes['root'] = $this->store->unlisted();
+                $this->attributes['num']  = $this->num = null;
+                break;
+            case 'listed':
+                $this->attributes['root'] = $this->store->listed($position);
+                $this->attributes['num']  = $this->num = $position;
+                break;
+            default:
+                throw new Exception('Invalid status type');
+        }
+
+        return $this;
+
     }
 
     public function delete()

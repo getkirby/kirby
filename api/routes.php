@@ -40,6 +40,7 @@ return [
     require __DIR__ . '/routes/pages/options.php',
     require __DIR__ . '/routes/pages/blueprints.php',
     require __DIR__ . '/routes/pages/slug.php',
+    require __DIR__ . '/routes/pages/status.php',
 
     // pages
     require __DIR__ . '/routes/pages/read.php',
