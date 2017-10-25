@@ -7,9 +7,7 @@ return function ($user) {
         'content'  => $user->content()->not('password', 'role')->toArray(),
         'role'     => $user->role(),
         'language' => $user->language(),
-        'image'    => [
-            'url' => $user->avatar()->url()
-        ]
+        'image'    => $this->output('avatar', $user->avatar()),
     ];
 
     if ($prev = $user->prev()) {

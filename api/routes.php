@@ -47,6 +47,10 @@ return [
     require __DIR__ . '/routes/pages/update.php',
     require __DIR__ . '/routes/pages/delete.php',
 
+    // avatars
+    require __DIR__ . '/routes/avatars/create.php',
+    require __DIR__ . '/routes/avatars/delete.php',
+
     // users
     require __DIR__ . '/routes/users/list.php',
     require __DIR__ . '/routes/users/search.php',

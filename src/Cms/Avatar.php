@@ -2,14 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\FileSystem\File;
+use Kirby\Image\Image;
 
 class Avatar extends Object
 {
 
     use HasThumbs;
-
-    protected $file;
 
     public function __construct(array $props)
     {
@@ -18,6 +16,12 @@ class Avatar extends Object
             'url' => [
                 'type'     => 'string',
                 'required' => true
+            ],
+            'asset' => [
+                'type' => Image::class,
+                'default' => function () {
+                    return new Image($this->prop('root'), $this->prop('url'));
+                }
             ],
             'root' => [
                 'type'     => 'string',
@@ -28,8 +32,6 @@ class Avatar extends Object
                 'required' => true
             ]
         ]);
-
-        $this->file = new File($this->prop('root'));
 
     }
 
@@ -64,8 +66,8 @@ class Avatar extends Object
 
     public function __call($method, $arguments)
     {
-        if (method_exists($this->file, $method)) {
-            return $this->file->$method(...$arguments);
+        if (method_exists($this->prop('asset'), $method)) {
+            return $this->prop('asset')->$method(...$arguments);
         }
 
         return $this->prop($method, $arguments);

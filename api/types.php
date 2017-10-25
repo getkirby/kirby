@@ -10,6 +10,7 @@ return [
     'file'           => require __DIR__ . '/types/file.php',
     'file/content'   => require __DIR__ . '/types/file/content.php',
     'pagination'     => require __DIR__ . '/types/pagination.php',
+    'avatar'         => require __DIR__ . '/types/avatar.php',
     'user'           => require __DIR__ . '/types/user.php',
     'panel/language' => require __DIR__ . '/types/panel/language.php',
 ];
