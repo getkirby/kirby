@@ -8,6 +8,7 @@ return [
     'children'       => require __DIR__ . '/types/children.php',
     'files'          => require __DIR__ . '/types/files.php',
     'file'           => require __DIR__ . '/types/file.php',
+    'file/content'   => require __DIR__ . '/types/file/content.php',
     'pagination'     => require __DIR__ . '/types/pagination.php',
     'user'           => require __DIR__ . '/types/user.php',
     'panel/language' => require __DIR__ . '/types/panel/language.php',

@@ -2,93 +2,127 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-use Exception;
+use Kirby\Image\Image;
 
-use Kirby\Cms\File\Store;
-use Kirby\Cms\File\Traits\Image;
-use Kirby\Cms\File\Traits\Meta;
-use Kirby\Cms\File\Traits\Mutator;
-use Kirby\Cms\File\Traits\Navigator;
-use Kirby\Cms\File\Traits\Relatives;
-use Kirby\FileSystem\File as Asset;
-
-class File
+class File extends Object
 {
 
-    use Image;
-    use Meta;
-    use Mutator;
-    use Navigator;
-    use Relatives;
+    use HasSiblings;
+    use HasThumbs;
 
-    protected $attributes = [];
-    protected $asset;
-    protected $id;
-    protected $root;
-    protected $store;
-
-    public function __construct($attributes)
+    public function __construct(array $props = [])
     {
 
-        $this->attributes = $attributes;
+        parent::__construct($props, [
+            'asset' => [
+                'type' => Image::class,
+                'default' => function () {
+                    return new Image($this->root(), $this->url());
+                }
+            ],
+            'content' => [
+                'type'    => Content::class,
+                'default' => function (): Content {
+                    return $this->store()->commit('file.content', $this);
+                }
+            ],
+            'id' => [
+                'required' => true,
+                'type'     => 'string',
+            ],
+            'page' => [
+                'type' => Page::class,
+            ],
+            'root' => [
+                'required' => true,
+                'type'     => 'string',
+            ],
+            'url' => [
+                'required' => true,
+                'type'     => 'string'
+            ],
+            'original' => [
+                'type' => File::class,
+            ]
+        ]);
 
-        if (empty($attributes['id'])) {
-            throw new Exception('Please provide an ID for the file');
+    }
+
+    public function clone(array $props = []): self
+    {
+        return new static(array_merge([
+            'id'     => $this->id(),
+            'root'   => $this->root(),
+            'url'    => $this->url(),
+            'page'   => $this->page()
+        ], $props));
+    }
+
+    public static function create(Page $parent = null, string $source, string $filename, array $content = []): self
+    {
+        return static::store()->commit('file.create', $parent, $source, $filename, $content);
+    }
+
+    public function delete(): bool
+    {
+        return $this->store()->commit('file.delete', $this);
+    }
+
+    public function meta()
+    {
+        return $this->content();
+    }
+
+    public function model()
+    {
+        return is_a($this->page(), Page::class) ? $this->page() : $this->site();
+    }
+
+    public function rename(string $name): self
+    {
+        return $this->store()->commit('file.rename', $this, $name);
+    }
+
+    public function replace(string $source): self
+    {
+        return $this->store()->commit('file.replace', $this, $source);
+    }
+
+    public function update(array $content = []): self
+    {
+        return $this->store()->commit('file.update', $this, $content);
+    }
+
+    public function site()
+    {
+        return $this->plugin('site');
+    }
+
+    public function thumb(array $options = []): self
+    {
+        if ($this->page() === null) {
+            return $this->plugin('media')->create($this->site(), $this, $options);
         }
 
-        if (empty($attributes['url'])) {
-            throw new Exception('Please provide a URL for the file');
-        }
-
-        if (empty($attributes['root'])) {
-            throw new Exception('Please provide a root for the file');
-        }
-
-        // required attributes
-        $this->id   = $attributes['id'];
-        $this->url  = $attributes['url'];
-        $this->root = $attributes['root'];
-
-        // setup the store and asset
-        $this->store = new Store($this->root, $attributes);
-        $this->asset = $this->store->asset();
-
-    }
-
-    public function id(): string
-    {
-        return $this->id;
-    }
-
-    public function root(): string
-    {
-        return $this->root;
-    }
-
-    public function url(): string
-    {
-        return $this->url;
-    }
-
-    public function is(File $file)
-    {
-        return $this->id() === $file->id();
+        return $this->plugin('media')->create($this->page(), $this, $options);
     }
 
     public function __call($method, $arguments)
     {
-
-        if (isset($this->attributes[$method]) === true) {
-            return $this->attributes[$method];
+        if ($this->hasPlugin($method)) {
+            return $this->plugin($method, $arguments);
         }
 
-        if (method_exists($this->asset, $method) === true) {
-            return $this->asset->{$method}(...$arguments);
+        if ($this->hasProp($method)) {
+            return $this->prop($method, $arguments);
         }
 
-        return $this->meta()->get($method, $arguments);
+        if (method_exists($this->asset(), $method)) {
+            return $this->asset()->$method(...$arguments);
+        }
 
+        return $this->content()->get($method, $arguments);
     }
+
 
 }

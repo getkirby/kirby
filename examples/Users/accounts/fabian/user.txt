@@ -1,3 +1,0 @@
-username: fabian
-----
-email: fabian@getkirby.com

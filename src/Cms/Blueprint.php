@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\Blueprint\Converter;
 use Kirby\Data\Data;
 
 class Blueprint
@@ -77,7 +76,7 @@ class Blueprint
 
         // Kirby 2 blueprint
         if (!isset($data['layout'])) {
-            $data = Converter::convert($data);
+            $data = BlueprintConverter::convert($data);
         }
 
         return $data;

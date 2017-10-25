@@ -1,12 +1,12 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Fields\Field;
-use Kirby\Toolkit\Str;
-use Kirby\Html\Element\A;
+use Kirby\Cms\Field;
+use Kirby\Cms\Structure;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
-use Kirby\Structure\Collection as Structure;
+use Kirby\Html\Element\A;
+use Kirby\Toolkit\Str;
 
 /**
  * Field method setup
@@ -46,7 +46,7 @@ Field::method([
         return $this;
     },
     'toFile' => function () {
-        return $this->page()->file($this->value());
+        return $this->parent()->file($this->value());
     },
     'toFloat' => function ($default = 0) {
         $value = $this->isEmpty() ? $default : $this->value();
@@ -58,7 +58,7 @@ Field::method([
     },
     'toLink' => function ($attr1 = null, $attr2 = null) {
 
-        $a = new A($this->page()->url(), $this->value());
+        $a = new A($this->parent()->url(), $this->value());
 
         if (is_string($attr1) === true) {
             $a->attr('href', url($attr1));
@@ -77,7 +77,7 @@ Field::method([
         return App::instance()->site()->find(...$this->toArray('yaml'));
     },
     'toStructure' => function () {
-        return new Structure(Yaml::decode($this->value()), $this->dependencies);
+        return new Structure(Yaml::decode($this->value()), $this->parent());
     },
     'toUrl' => function (): string {
         // TODO: solve this without using the helper

@@ -1,3 +1,0 @@
-username: nico
-----
-email: nico@getkirby.com

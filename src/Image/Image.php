@@ -32,11 +32,6 @@ class Image extends File
     protected $exif;
 
     /**
-     * @var Thumb|null
-     */
-    protected $thumb;
-
-    /**
      * @var Dimensions|null
      */
     protected $dimensions;
@@ -261,53 +256,6 @@ class Image extends File
         }
         $img = new Img($this->url(), $attr);
         return $img;
-    }
-
-    /**
-     * Scales the image if possible
-     *
-     * @param  int       $width
-     * @param  int|null  $height
-     * @param  int|null  $quality
-     * @return Thumb
-     */
-    public function resize(int $width, int $height = 0, int $quality = 100): Thumb
-    {
-        $params = ['width' => $width];
-
-        if ($height !== null) {
-            $params['height']  = $height;
-        }
-
-        if ($quality !== null) {
-            $params['quality'] = $quality;
-        }
-
-        return new Thumb($this, $params);
-    }
-
-    /**
-     * Scales and crops the image if possible
-     *
-     * @param  int       $width
-     * @param  int|null  $height
-     * @param  int|null  $quality
-     * @return Thumb
-     */
-    public function crop(int $width, int $height = 0, int $quality = 100): Thumb
-    {
-
-        $params = ['width' => $width, 'crop' => true];
-
-        if ($height !== null) {
-            $params['height']  = $height;
-        }
-
-        if ($quality !== null) {
-            $params['quality'] = $quality;
-        }
-
-        return new Thumb($this, $params);
     }
 
     /**

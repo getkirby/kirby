@@ -1,28 +1,17 @@
 <?php
 
-use Kirby\Users\User;
-use Kirby\Users\User\Store;
-use Kirby\Users\User\Avatar;
+use Kirby\Cms\User;
 
 return [
     'pattern' => 'users',
     'method'  => 'POST',
     'action'  => function () {
 
-        $data = $this->input();
-        $user = new User([
-            'id'     => $id = $data['email'],
-            'data'   => $data,
-            'store'  => new Store([
-                'root' => $this->app()->root('accounts')  . '/' . $id
-            ]),
-            'avatar' => new Avatar([
-                'url'  => $this->app()->url('accounts')  . '/' . $id . '/profile.jpg',
-                'root' => $this->app()->root('accounts') . '/' . $id . '/profile.jpg'
-            ])
+        $user = User::create([
+            'email'    => $this->input('email'),
+            'password' => $this->input('password'),
+            'language' => $this->input('language'),
         ]);
-
-        $user->save();
 
         return $this->output('user', $user);
     }

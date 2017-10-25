@@ -1,3 +1,0 @@
-username: lukas
-----
-email: lukas@getkirby.com

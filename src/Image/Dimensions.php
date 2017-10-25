@@ -263,12 +263,12 @@ class Dimensions
      * @param    int         $height
      * @return   Dimensions
      */
-    public function crop(int $width, int $height = 0): self
+    public function crop(int $width, int $height = null): self
     {
         $this->width  = $width;
         $this->height = $width;
 
-        if ($height !== 0) {
+        if ($height !== 0 && $height !== null) {
             $this->height = $height;
         }
 

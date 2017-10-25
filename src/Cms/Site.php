@@ -2,53 +2,92 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-
-use Kirby\Cms\Site\Store;
-use Kirby\Cms\Site\Traits\Assets;
-use Kirby\Cms\Site\Traits\Content;
-use Kirby\Cms\Site\Traits\Mutator;
-use Kirby\Cms\Site\Traits\Relatives;
-
-class Site
+class Site extends Object
 {
 
-    use Assets;
-    use Content;
-    use Relatives;
-    use Mutator;
+    use HasChildren;
+    use HasContent;
+    use HasFiles;
 
-    protected $attributes;
-    protected $store;
-    protected $url;
+    protected static $storePrefix = 'site';
 
-    public function __construct(array $attributes)
+    public function __construct(array $props = [])
     {
-        $this->attributes = $attributes;
-        $this->store      = new Store($this, $attributes);
 
-        if (empty($attributes['url'])) {
-            throw new Exception('Please provide a URL for the site');
-        }
+        parent::__construct($props, [
+            'children' => [
+                'type'    => Pages::class,
+                'default' => function (): Pages {
+                    return $this->store()->commit('site.children', $this);
+                }
+            ],
+            'content' => [
+                'type'    => Content::class,
+                'default' => function () {
+                    return $this->store()->commit('site.content', $this);
+                }
+            ],
+            'page' => [
+                'type'    => Page::class,
+                'default' => function () {
+                    return $this->homePage();
+                }
+            ],
+            'errorPage' => [
+                'type'    => Page::class,
+                'default' => function () {
+                    return $this->find('error');
+                }
+            ],
+            'files' => [
+                'type'    => Files::class,
+                'default' => function () {
+                    return $this->store()->commit('site.files', $this);
+                }
+            ],
+            'homePage' => [
+                'type'    => Page::class,
+                'default' => function () {
+                    return $this->find('home');
+                }
+            ],
+            'root' => [
+                'type' => 'string',
+            ],
+            'url' => [
+                'type'    => 'string',
+                'default' => '/'
+            ],
+        ]);
 
-        // required
-        $this->url = $attributes['url'];
     }
 
-    public function url(): string
+    public function page(string $path = null)
     {
-        return $this->url;
-    }
-
-    public function __call($method, $arguments)
-    {
-
-        if (isset($this->attributes[$method]) === true) {
-            return $this->attributes[$method];
+        if ($path === null) {
+            return $this->prop('page');
         }
 
-        return $this->content()->get($method, $arguments);
+        return $this->find($path);
+    }
 
+    public function pages(): Pages
+    {
+        return $this->children();
+    }
+
+    public function visit($path)
+    {
+        if ($page = $this->find($path)) {
+            return $this->set('page', $page);
+        }
+
+        return $this;
+    }
+
+    public function update(array $content = []): self
+    {
+        return $this->store()->commit('site.update', $this, $content);
     }
 
 }

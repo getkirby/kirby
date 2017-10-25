@@ -21,7 +21,7 @@ class System
             'server'    => $this->server(),
             'mbstring'  => $this->mbstring(),
             'curl'      => $this->curl(),
-            'files'     => $this->files(),
+            'media'     => $this->media(),
             'accounts'  => $this->accounts(),
             'content'   => $this->content(),
         ];
@@ -58,9 +58,9 @@ class System
         return extension_loaded('curl');
     }
 
-    public function files(): bool
+    public function media(): bool
     {
-        return is_writable($this->app->root('files'));
+        return is_writable($this->app->root('media'));
     }
 
     public function accounts(): bool
