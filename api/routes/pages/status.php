@@ -7,7 +7,7 @@ return [
 
         if ($page = $this->site()->find($path)) {
             return $this->output('page',
-                $page->status(
+                $page->changeStatus(
                     $this->input('status'),
                     $this->input('position')
                 )

@@ -24,8 +24,8 @@ class Page extends Object
             ],
             'collection' => [
                 'type'    => Pages::class,
-                'default' => function (): Pages {
-                    return $this->parent() ? $this->parent()->children() : null;
+                'default' => function () {
+                    return $this->parent() ? $this->parent()->children() : $this->site()->children();
                 }
             ],
             'content' => [
