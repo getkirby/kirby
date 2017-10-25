@@ -18,7 +18,7 @@ return [
 
     },
     'write' => function ($model, $key, $value, $options) {
-        return Yaml::encode($value);
+        return is_string($value) ? $value : Yaml::encode($value);
     },
     'validate' => function ($model, $key, $value, $options) {
         return true;
