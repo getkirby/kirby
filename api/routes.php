@@ -18,6 +18,7 @@ return [
     require __DIR__ . '/routes/site/files/delete.php',
 
     // site
+    require __DIR__ . '/routes/site/blueprints.php',
     require __DIR__ . '/routes/site/read.php',
     require __DIR__ . '/routes/site/update.php',
 
