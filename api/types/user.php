@@ -3,10 +3,11 @@
 return function ($user) {
 
     $output = [
-        'id'      => $user->id(),
-        'content' => $user->content()->not('password', 'role')->toArray(),
-        'role'    => $user->role(),
-        'image'   => [
+        'id'       => $user->id(),
+        'content'  => $user->content()->not('password', 'role')->toArray(),
+        'role'     => $user->role(),
+        'language' => $user->language(),
+        'image'    => [
             'url' => $user->avatar()->url()
         ]
     ];
