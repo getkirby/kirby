@@ -1,18 +1,24 @@
 <?php
 
+use Kirby\Cms\Page;
+
 return [
     'pattern' => 'pages/(:all)/children',
     'method'  => 'POST',
     'action'  => function ($path) {
 
-        $child = $this->site()->find($path)->child([
-            'template' => $this->input('template'),
-            'slug'     => $this->input('slug'),
-            'content'  => $this->input('content')
-        ]);
+        if ($parent = $this->site()->find($path)) {
 
-        $child->save();
+            $page = Page::create(
+                $parent,
+                $this->input('slug'),
+                $this->input('template'),
+                $this->input('content')
+            );
 
-        return $this->output('page', $child);
+            return $this->output('page', $page);
+
+        }
+
     }
 ];

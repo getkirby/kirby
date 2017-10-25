@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Cms\Assets\PageAssets;
-
 return [
     'pattern' => 'pages/(:all)',
     'method'  => 'DELETE',

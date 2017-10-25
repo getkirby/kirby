@@ -167,7 +167,8 @@ return [
         $this->media()->delete($page);
 
         // delete the content folder for this page
-        $page->folder()->delete();
+        $folder = new Folder($page->root());
+        $folder->delete();
         return true;
     },
     'page.template' => function (Page $page) {
