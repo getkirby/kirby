@@ -156,7 +156,9 @@ class App extends Object
                 'default' => function () {
                     return [
                         '/'     => $index = Url::index(),
-                        'media' => $index . '/media'
+                        'media' => $index . '/media',
+                        'panel' => $index . '/panel',
+                        'api'   => $index . '/api'
                     ];
                 }
             ],
