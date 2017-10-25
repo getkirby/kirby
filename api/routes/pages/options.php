@@ -26,7 +26,7 @@ return [
         // status
         if (in_array('status', $not) === false) {
             $options[] = [
-                'icon'  => 'toggle-on',
+                'icon'  => ($page->isVisible() ? 'toggle-on' : 'toggle-off'),
                 'text'  => 'Status: ' . ($page->isVisible() ? 'Public' : 'Unlisted'),
                 'link'  => '#',
                 'click' => 'status'
