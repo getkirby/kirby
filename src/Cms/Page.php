@@ -88,9 +88,9 @@ class Page extends Object
         ], $props));
     }
 
-    public static function create($parent, string $slug, string $template, array $data = []): self
+    public static function create($parent, string $slug, string $template, array $content = []): self
     {
-        return static::store()->commit('page.create', $parent, $slug, $template, $data);
+        return static::store()->commit('page.create', $parent, $slug, $template, $content);
     }
 
     public function delete(): bool
