@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Cms\Assets\PageAssets;
-
 return [
     'pattern' => 'pages/(:all)/files/(:any)',
     'method'  => ['POST', 'OPTIONS'],
@@ -16,10 +14,7 @@ return [
         if ($file = $this->site()->file($path . '/' . $filename)) {
 
             foreach ($request->files()->data() as $upload) {
-                move_uploaded_file($upload['tmp_name'], $file->root());
-
-                $assets = new PageAssets($this->app()->root('files'), $file->page());
-                $assets->delete($filename);
+                $file->replace($upload['tmp_name']);
             }
 
             $file = $file->update($this->input());
