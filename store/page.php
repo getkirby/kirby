@@ -12,6 +12,7 @@ use Kirby\Data\Data;
 return [
     'page.change.slug' => function (Page $page, string $slug): Page {
 
+
         $newName = implode('-', array_filter([
             $page->num(),
             $slug
@@ -31,6 +32,7 @@ return [
         // delete all public files for this page
         $this->media()->delete($page);
 
+        // move the folder
         rename($oldRoot, $newRoot);
 
         return $page->clone([
