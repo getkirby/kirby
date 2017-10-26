@@ -35,6 +35,7 @@ return [
     require __DIR__ . '/routes/pages/files/rename.php',
     require __DIR__ . '/routes/pages/files/update.php',
     require __DIR__ . '/routes/pages/files/read.php',
+    require __DIR__ . '/routes/pages/files/options.php',
     require __DIR__ . '/routes/pages/files/meta.php',
     require __DIR__ . '/routes/pages/files/delete.php',
 
