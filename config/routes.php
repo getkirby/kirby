@@ -39,7 +39,12 @@ return [
             'types'  => require __DIR__ . '/../api/types.php'
         ]);
 
+        if (($api->result()['status'] ?? 'ok') === 'error') {
+            return new Json($api->result(), 400);
+        }
+
         return new Json($api->result());
+
     }),
     new Route('media/(:any)/(:all)', 'GET', function (string $type, string $path) use ($app, $site) {
         try {

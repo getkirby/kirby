@@ -135,13 +135,15 @@ class Api extends Object
 
         if ($result === null) {
             return [
-                'status' => 'not found'
+                'status'  => 'error',
+                'message' => 'not found'
             ];
         }
 
         if ($result === false) {
             return [
-                'status' => 'error'
+                'status'  => 'error',
+                'message' => 'Unexpected error'
             ];
         }
 

@@ -2,6 +2,7 @@
 
 use Kirby\Cms\User;
 use Kirby\Cms\Avatar;
+use Kirby\FileSystem\File;
 
 return [
     'pattern' => 'users/(.*?)/avatar',
