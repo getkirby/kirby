@@ -28,13 +28,13 @@ return [
             $file = new File([
                 'id'   => $filename,
                 'root' => $this->site()->root() . '/' . $filename,
-                'url'  => $this->url('media') . '/' . $filename,
+                'url'  => $this->media()->url($this->site()) . '/' . $filename,
             ]);
         } else {
             $file = new File([
                 'id'   => $page->id() . '/' . $filename,
                 'root' => $page->root() . '/' . $filename,
-                'url'  => $this->url('media') . '/' . $page->id() . '/' . $filename,
+                'url'  => $this->media()->url($page) . '/' . $filename,
             ]);
         }
 
