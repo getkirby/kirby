@@ -61,6 +61,12 @@ class App extends Object
                     ]);
                 },
             ],
+            'perms' => [
+                'type'    => Perms::class,
+                'default' => function () {
+                    return require $this->root('kirby') . '/config/perms.php';
+                }
+            ],
             'request' => [
                 'type'    => Request::class,
                 'default' => function () {
@@ -97,6 +103,12 @@ class App extends Object
                 'type'    => 'array',
                 'default' => function () {
                     return require $this->root('kirby') . '/config/routes.php';
+                }
+            ],
+            'rules' => [
+                'type'    => Rules::class,
+                'default' => function () {
+                    return require $this->root('kirby') . '/config/rules.php';
                 }
             ],
             'schema' => [
@@ -166,6 +178,8 @@ class App extends Object
 
         Object::use('store', $this->store());
         Object::use('media', $this->media());
+        Object::use('rules', $this->rules());
+        Object::use('perms', $this->perms());
         Object::use('kirby', $this);
 
         static::$instance = $this;

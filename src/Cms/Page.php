@@ -65,16 +65,25 @@ class Page extends Object
 
     public function changeSlug(string $slug): self
     {
+        $this->rules()->check('page.change.slug', $this, $slug);
+        $this->perms()->check('page.change.slug', $this, $slug);
+
         return $this->store()->commit('page.change.slug', $this, $slug);
     }
 
     public function changeTemplate(string $template): self
     {
+        $this->rules()->check('page.change.template', $this, $template);
+        $this->perms()->check('page.change.template', $this, $template);
+
         return $this->store()->commit('page.change.template', $this, $template);
     }
 
     public function changeStatus(string $status, int $position = null): self
     {
+        $this->rules()->check('page.change.status', $this, $status, $position);
+        $this->perms()->check('page.change.status', $this, $status, $position);
+
         return $this->store()->commit('page.change.status', $this, $status, $position);
     }
 
@@ -88,19 +97,30 @@ class Page extends Object
         ], $props));
     }
 
-    public static function create($parent, string $slug, string $template, array $content = []): self
+    public static function create(Page $parent = null, string $slug, string $template, array $content = []): self
     {
+        static::rules()->check('page.create', $parent, $slug, $template, $content);
+        static::perms()->check('page.create', $parent, $slug, $template, $content);
+
         return static::store()->commit('page.create', $parent, $slug, $template, $content);
     }
 
     public function delete(): bool
     {
+        $this->rules()->check('page.delete', $this);
+        $this->perms()->check('page.delete', $this);
+
         return $this->store()->commit('page.delete', $this);
     }
 
     public function exists(): bool
     {
         return $this->store()->commit('page.exists', $this);
+    }
+
+    public function hide(): self
+    {
+        return $this->changeStatus('unlisted');
     }
 
     public function isActive(): bool
@@ -161,8 +181,16 @@ class Page extends Object
         return $this->changeStatus('listed', $position);
     }
 
+    public function title(): Field
+    {
+        return $this->content()->get('title')->or($this->slug());
+    }
+
     public function update(array $content = []): self
     {
+        $this->rules()->check('page.update', $this, $content);
+        $this->perms()->check('page.update', $this, $content);
+
         return $this->store()->commit('page.update', $this, $content);
     }
 

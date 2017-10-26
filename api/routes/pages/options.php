@@ -8,8 +8,7 @@ return [
         $not     = explode(',', $this->input('not'));
         $options = [];
 
-        // TODO: make this configurable
-        if ($page->slug() === 'home' || $page->slug() === 'error') {
+        if ($page->isHomePage() || $page->isErrorPage()) {
             $not[] = 'trash';
         }
 

@@ -16,6 +16,25 @@ class Collection extends BaseCollection
         return array_search($object->id(), $this->keys());
     }
 
+    /**
+     * Returns a Collection without the given element(s)
+     *
+     * @param  args    any number of keys, passed as individual arguments
+     * @return Object
+     */
+    public function not(...$keys)
+    {
+        $collection = $this->clone();
+        foreach ($keys as $key) {
+            if (is_a($key, Object::class)) {
+                $key = $key->id();
+            }
+            unset($collection->$key);
+        }
+        return $collection;
+    }
+
+
     public function getAttribute($object, $prop)
     {
         return (string)$object->$prop();

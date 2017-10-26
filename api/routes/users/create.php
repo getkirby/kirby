@@ -11,6 +11,7 @@ return [
             'email'    => $this->input('email'),
             'password' => $this->input('password'),
             'language' => $this->input('language'),
+            'role'     => $this->input('role'),
         ]);
 
         return $this->output('user', $user);

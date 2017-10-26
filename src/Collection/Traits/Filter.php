@@ -76,9 +76,9 @@ trait Filter
      * Returns a Collection without the given element(s)
      *
      * @param  args    any number of keys, passed as individual arguments
-     * @return Object
+     * @return Collection
      */
-    public function not(...$keys): self
+    public function not(...$keys)
     {
         $collection = $this->clone();
         foreach ($keys as $key) {

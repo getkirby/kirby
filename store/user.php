@@ -8,6 +8,16 @@ use Kirby\FileSystem\Folder;
 use Kirby\Toolkit\V;
 
 return [
+    'user.change.password' => function (User $user, string $password): User {
+        return $user->store()->commit('user.write', $user, [
+            'password' => $password
+        ]);
+    },
+    'user.change.role' => function (User $user, string $role): User {
+        return $user->store()->commit('user.write', $user, [
+            'role' => $role
+        ]);
+    },
     'user.create' => function (array $content): User {
 
         if (V::email($content['email'] ?? null) === false) {
@@ -31,10 +41,14 @@ return [
 
     },
     'user.delete' => function (User $user): bool {
+
+        $this->media()->delete($user);
+
         $folder = new Folder($user->root());
         $folder->delete();
 
         return true;
+
     },
     'user.content' => function (User $user): Content {
 
@@ -43,17 +57,10 @@ return [
         return new Content($content, $user);
 
     },
-    'user.password' => function (User $user, string $password): User {
-        return $user->update([
-            'password' => $password
-        ]);
-    },
-    'user.role' => function (User $user, string $role): User {
-        return $user->update([
-            'role' => $role
-        ]);
-    },
     'user.update' => function (User $user, array $content): User {
+        return $user->store()->commit('user.write', $user, $content);
+    },
+    'user.write' => function (User $user, array $content): User {
 
         // always hash passwords
         if (isset($content['password'])) {
@@ -70,5 +77,5 @@ return [
 
         return $user->set('content', $content);
 
-    },
+    }
 ];

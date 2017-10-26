@@ -44,8 +44,27 @@ class User extends Object
 
     }
 
+    public function changePassword(string $password): self
+    {
+        $this->rules()->check('user.change.password', $this, $password);
+        $this->perms()->check('user.change.password', $this, $password);
+
+        return $this->store()->commit('user.change.password', $this, $password);
+    }
+
+    public function changeRole(string $role): self
+    {
+        $this->rules()->check('user.change.role', $this, $role);
+        $this->perms()->check('user.change.role', $this, $role);
+
+        return $this->store()->commit('user.change.role', $this, $role);
+    }
+
     public static function create(array $content = []): self
     {
+        static::rules()->check('user.create', $content);
+        static::perms()->check('user.create', $content);
+
         return static::store()->commit('user.create', $content);
     }
 
@@ -66,11 +85,17 @@ class User extends Object
 
     public function update(array $content = []): self
     {
+        $this->rules()->check('user.update', $this, $content);
+        $this->perms()->check('user.update', $this, $content);
+
         return $this->store()->commit('user.update', $this, $content);
     }
 
     public function delete(): bool
     {
+        $this->rules()->check('user.delete', $this);
+        $this->perms()->check('user.delete', $this);
+
         return $this->store()->commit('user.delete', $this);
     }
 
