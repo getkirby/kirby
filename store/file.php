@@ -5,6 +5,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\FileSystem\File as Asset;
+use Kirby\Image\Image;
 
 return [
     'file.content' => function (File $file): Content {
@@ -20,17 +21,20 @@ return [
             throw new Exception('The file does not exist');
         }
 
+        // create a temporary image object to run validations
+        $this->rules()->check('file.create', new Image($source, '/tmp'), $filename);
+
         if ($page === null) {
             $file = new File([
                 'id'   => $filename,
                 'root' => $this->site()->root() . '/' . $filename,
-                'url'  => $this->url('files') . '/' . $filename,
+                'url'  => $this->url('media') . '/' . $filename,
             ]);
         } else {
             $file = new File([
                 'id'   => $page->id() . '/' . $filename,
                 'root' => $page->root() . '/' . $filename,
-                'url'  => $this->url('files') . '/' . $page->id() . '/' . $filename,
+                'url'  => $this->url('media') . '/' . $page->id() . '/' . $filename,
             ]);
         }
 
@@ -56,6 +60,9 @@ return [
         if (file_exists($source) === false) {
             throw new Exception(sprintf('The source file "%s" does not exist', $source));
         }
+
+        // create a temporary image object to run validations
+        $this->rules()->check('file.replace', $file, new Image($source, '/tmp'));
 
         // delete all public versions
         $this->media()->delete($file->model(), $file);

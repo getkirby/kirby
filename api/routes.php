@@ -12,6 +12,7 @@ return [
     require __DIR__ . '/routes/site/children/create.php',
 
     // site: files
+    require __DIR__ . '/routes/site/files/create.php',
     require __DIR__ . '/routes/site/files/list.php',
     require __DIR__ . '/routes/site/files/search.php',
     require __DIR__ . '/routes/site/files/read.php',

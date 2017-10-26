@@ -65,6 +65,9 @@ class File extends Object
 
     public function delete(): bool
     {
+        $this->rules()->check('file.delete', $this);
+        $this->perms()->check('file.delete', $this);
+
         return $this->store()->commit('file.delete', $this);
     }
 
@@ -80,6 +83,9 @@ class File extends Object
 
     public function rename(string $name): self
     {
+        $this->rules()->check('file.rename', $this, $name);
+        $this->perms()->check('file.rename', $this, $name);
+
         return $this->store()->commit('file.rename', $this, $name);
     }
 
@@ -90,6 +96,9 @@ class File extends Object
 
     public function update(array $content = []): self
     {
+        $this->rules()->check('file.update', $this, $content);
+        $this->perms()->check('file.update', $this, $content);
+
         return $this->store()->commit('file.update', $this, $content);
     }
 

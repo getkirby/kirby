@@ -3,11 +3,10 @@
 use Kirby\Cms\File;
 
 return [
-    'pattern' => 'pages/(:all)/files',
+    'pattern' => 'site/files',
     'method'  => ['POST', 'OPTIONS'],
     'action'  => function ($path) {
 
-        $page    = $this->site()->find($path);
         $request = $this->request();
 
         if ($request->is('OPTIONS')) {
@@ -15,7 +14,7 @@ return [
         }
 
         foreach ($request->files()->data() as $file) {
-            File::create($page, $file['tmp_name'], $file['name']);
+            File::create(null, $file['tmp_name'], $file['name']);
         }
 
         return true;
