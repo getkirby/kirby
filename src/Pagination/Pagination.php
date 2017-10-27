@@ -44,7 +44,7 @@ class Pagination
     public function __construct(array $params = [])
     {
         $this->page($params['page'] ?? 1);
-        $this->limit($params['limit'] ?? 10);
+        $this->limit($params['limit'] ?? 20);
         $this->total($params['total'] ?? 0);
     }
 

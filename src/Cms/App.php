@@ -185,7 +185,7 @@ class App extends Object
         Collection::use('pagination', function ($options) {
             return new Pagination([
                 'total' => $this->count(),
-                'limit' => $options['limit'] ?? 10,
+                'limit' => $options['limit'] ?? 20,
                 'page'  => $options['page'] ?? App::instance()->request()->query()->get('page'),
                 'url'   => Url\Query::strip(Url::current())
             ]);

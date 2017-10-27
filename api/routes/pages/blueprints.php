@@ -1,7 +1,6 @@
 <?php
 
-use Kirby\Cms\Blueprint;
-use Kirby\Cms\Schema;
+use Kirby\Cms\PageBlueprint;
 
 return [
     'pattern' => 'pages/(:all)/blueprints',
@@ -9,14 +8,12 @@ return [
 
         if ($page = $this->site()->find($path)) {
 
-            $root      = $this->app()->root('blueprints');
-            $blueprint = new Blueprint($root, $page->template());
-            $schema    = new Schema($page, $blueprint->toArray(), $this->app()->schema());
+            $blueprint = new PageBlueprint($page->template());
             $result    = [];
 
-            foreach ($schema->blueprints() as $blueprintName) {
-                $blueprint = new Blueprint($root, $blueprintName);
-                $result[] = $blueprint->toArray();
+            foreach ($blueprint->blueprints() as $blueprintName) {
+                $pageBlueprint = new PageBlueprint($blueprintName);
+                $result[]      = $pageBlueprint->toArray();
             }
 
             return $result;

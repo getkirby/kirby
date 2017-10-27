@@ -2,10 +2,6 @@
 
 return [
 
-    // blueprints
-    require __DIR__ . '/routes/blueprints/list.php',
-    require __DIR__ . '/routes/blueprints/read.php',
-
     // site: children
     require __DIR__ . '/routes/site/children/list.php',
     require __DIR__ . '/routes/site/children/search.php',
@@ -19,6 +15,7 @@ return [
     require __DIR__ . '/routes/site/files/delete.php',
 
     // site
+    require __DIR__ . '/routes/site/blueprint.php',
     require __DIR__ . '/routes/site/blueprints.php',
     require __DIR__ . '/routes/site/read.php',
     require __DIR__ . '/routes/site/update.php',
@@ -36,11 +33,12 @@ return [
     require __DIR__ . '/routes/pages/files/update.php',
     require __DIR__ . '/routes/pages/files/read.php',
     require __DIR__ . '/routes/pages/files/options.php',
-    require __DIR__ . '/routes/pages/files/meta.php',
+    require __DIR__ . '/routes/pages/files/blueprint.php',
     require __DIR__ . '/routes/pages/files/delete.php',
 
     // pages: options
     require __DIR__ . '/routes/pages/options.php',
+    require __DIR__ . '/routes/pages/blueprint.php',
     require __DIR__ . '/routes/pages/blueprints.php',
     require __DIR__ . '/routes/pages/slug.php',
     require __DIR__ . '/routes/pages/status.php',

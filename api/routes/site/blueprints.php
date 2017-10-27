@@ -1,20 +1,18 @@
 <?php
 
-use Kirby\Cms\Blueprint;
-use Kirby\Cms\Schema;
+use Kirby\Cms\PageBlueprint;
+use Kirby\Cms\SiteBlueprint;
 
 return [
     'pattern' => 'site/blueprints',
     'action'  => function () {
 
-        $root      = $this->app()->root('blueprints');
-        $blueprint = new Blueprint($root, 'site');
-        $schema    = new Schema($this->site(), $blueprint->toArray(), $this->app()->schema());
+        $blueprint = new SiteBlueprint();
         $result    = [];
 
-        foreach ($schema->blueprints() as $blueprintName) {
-            $blueprint = new Blueprint($root, $blueprintName);
-            $result[] = $blueprint->toArray();
+        foreach ($blueprint->blueprints() as $blueprintName) {
+            $pageBlueprint = new PageBlueprint($blueprintName);
+            $result[]      = $pageBlueprint->toArray();
         }
 
         return $result;

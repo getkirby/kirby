@@ -7,79 +7,108 @@ use Kirby\Data\Data;
 class Blueprint
 {
 
-    protected $root;
+    protected $data;
     protected $name;
     protected $file;
 
-    public function __construct(string $root, string $name)
+    public function __construct(string $name = 'default')
     {
-        $this->root = $root;
         $this->name = $name;
-        $this->file = $this->root . '/' . $name . '.yml';
+        $this->file = $this->file();
+        $this->data = $this->data();
+    }
 
-        if (file_exists($this->file) === false && $name !== 'site') {
-            $this->name = 'default';
-            $this->file = $this->root . '/default.yml';
+    public function file()
+    {
+
+        if ($this->file !== null) {
+            return $this->file;
         }
 
-    }
+        $root = App::instance()->root('blueprints');
+        $this->file = $root . '/' . $this->name . '.yml';
 
-    public function root(): string
-    {
-        return $this->root;
-    }
+        if (file_exists($this->file) === false) {
+            $this->name = 'default';
+            $this->file = $root . '/default.yml';
+        }
 
-    public function name(): string
-    {
-        return $this->name;
-    }
-
-    public function file(): string
-    {
         return $this->file;
+
+    }
+
+    public function data()
+    {
+        if ($this->data !== null) {
+            return $this->data;
+        }
+
+        $this->data = Data::read($this->file());
+        $this->data['name'] = $this->name;
+
+        return $this->data;
+    }
+
+    public function layout(): array
+    {
+        return $this->data()['layout'] ?? [];
+    }
+
+    public function sections($type = null): array
+    {
+        $sections = [];
+
+        foreach ($this->layout() as $column) {
+            foreach (($column['sections'] ?? []) as $section) {
+                if ($type !== null && $section['type'] !== $type) {
+                    continue;
+                }
+                $sections[] = $section;
+            }
+        }
+
+        return $sections;
     }
 
     public function isDefault(): bool
     {
-        return $this->name === 'default';
+        return pathinfo($this->file(), PATHINFO_FILENAME) === 'default';
     }
 
-    protected function defaultSiteBlueprint(): array
+    public function fields(): array
     {
-        return [
-            'name'   => 'site',
-            'title'  => 'Site',
-            'layout' => [
-                [
-                    'width'    => '1/1',
-                    'sections' => [
-                        [
-                            'headline' => 'Pages',
-                            'type'     => 'pages',
-                            'parent'   => '/'
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        $fields = [];
+
+        foreach ($this->sections('fields') as $section) {
+            $fields[] = array_merge($fields, $section['fields'] ?? []);
+        }
+
+        return $fields;
+    }
+
+    public function blueprints(): array
+    {
+        $templates = [];
+
+        foreach ($this->sections('pages') as $section) {
+
+            $sectionTemplates = $section['template'] ?? 'default';
+
+            if (is_array($sectionTemplates) === true) {
+                $templates = array_merge($templates, $sectionTemplates);
+            } elseif (is_string($sectionTemplates)) {
+                $templates[] = $sectionTemplates;
+            }
+
+        }
+
+        return array_unique($templates);
+
     }
 
     public function toArray(): array
     {
-
-        // fallback for missing site blueprints
-        if ($this->name === 'site' && file_exists($this->file) === false) {
-            return $this->defaultSiteBlueprint();
-        }
-
-        $data = ['name' => $this->name] + Data::read($this->file);
-
-        // Kirby 2 blueprint
-        if (!isset($data['layout'])) {
-            $data = BlueprintConverter::convert($data);
-        }
-
-        return $data;
+        return $this->data();
     }
 
 }
