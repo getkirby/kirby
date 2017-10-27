@@ -17,7 +17,7 @@ class StructureObject extends Object
             'content' => [
                 'type'    => Content::class,
                 'default' => function () {
-                    return new Content([], $this->prop('dependencies'));
+                    return new Content([], $this->parent());
                 }
             ],
             'parent' => [

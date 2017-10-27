@@ -1,15 +1,38 @@
 <?php
 
 use Kirby\Cms\File;
+use Kirby\Cms\Page;
 use Kirby\Image\Image as Upload;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 return [
-    'file.create' => function (Upload $upload, string $filename) {
+    'file.create' => function (Page $page = null, Upload $upload, string $filename) {
         $this->rules()->check('file.valid.extension', pathinfo($filename, PATHINFO_EXTENSION));
         $this->rules()->check('file.valid.mime', $upload->mime());
         $this->rules()->check('file.valid.filename', $filename);
+        $this->rules()->check('file.exists', $page, $filename);
+    },
+    'file.exists' => function (Page $page = null, string $filename, File $not = null) {
+
+        $model     = $page === null ? $this->site() : $page;
+        $duplicate = $model->files()->not($not)->find($filename);
+
+        if ($duplicate) {
+            throw new Exception('The file exists and cannot be overwritten');
+        }
+
+    },
+    'file.rename' => function (File $file, string $name) {
+
+        $page      = $file->page();
+        $model     = $page === null ? $this->site() : $page;
+        $duplicate = $model->files()->not($file)->findBy('name', $name);
+
+        if ($duplicate) {
+            throw new Exception('A file with this name exists');
+        }
+
     },
     'file.replace' => function (File $file, Upload $upload) {
 
@@ -44,6 +67,11 @@ return [
 
         // make it easier to compare the filename
         $filename = strtolower($filename);
+
+        // check for missing filenames
+        if (empty($filename)) {
+            throw new Exception('The filename must not be empty');
+        }
 
         // Block htaccess files
         if(Str::startsWith($filename, '.ht')) {

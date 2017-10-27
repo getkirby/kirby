@@ -20,7 +20,7 @@ class Collection extends BaseCollection
         parent::__construct($items);
     }
 
-    public function indexOf($object)
+    public function indexOf($object): int
     {
         return array_search($object->id(), $this->keys());
     }

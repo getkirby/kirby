@@ -6,13 +6,6 @@ class Structure extends Collection
 {
 
     protected static $accept = StructureObject::class;
-    protected $parent;
-
-    public function __construct(array $objects = [], Object $parent = null)
-    {
-        $this->parent = $parent;
-        parent::__construct($objects);
-    }
 
     public function __set(string $id, $object)
     {

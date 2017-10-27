@@ -22,7 +22,7 @@ return [
         }
 
         // create a temporary image object to run validations
-        $this->rules()->check('file.create', new Image($source, '/tmp'), $filename);
+        $this->rules()->check('file.create', $page, new Image($source, '/tmp'), $filename);
 
         if ($page === null) {
             $file = new File([

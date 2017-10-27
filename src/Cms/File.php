@@ -20,6 +20,14 @@ class File extends Object
                     return new Image($this->root(), $this->url());
                 }
             ],
+            'collection' => [
+                'type'    => Files::class,
+                'default' => function () {
+                    if ($page = $this->page()) {
+                        return $this->page()->files();
+                    }
+                }
+            ],
             'content' => [
                 'type'    => Content::class,
                 'default' => function (): Content {
