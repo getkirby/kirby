@@ -118,6 +118,26 @@ class Page extends Object
         return $this->store()->commit('page.exists', $this);
     }
 
+    public function hasNextInvisible(): bool
+    {
+        return $this->nextInvisible() !== null;
+    }
+
+    public function hasNextVisible(): bool
+    {
+        return $this->nextVisible() !== null;
+    }
+
+    public function hasPrevInvisible(): bool
+    {
+        return $this->prevInvisible() !== null;
+    }
+
+    public function hasPrevVisible(): bool
+    {
+        return $this->prevVisible() !== null;
+    }
+
     public function hide(): self
     {
         return $this->changeStatus('unlisted');
@@ -153,6 +173,16 @@ class Page extends Object
         return $this->num() !== null;
     }
 
+    public function nextInvisible()
+    {
+        return $this->nextAll()->invisible()->first();
+    }
+
+    public function nextVisible()
+    {
+        return $this->nextAll()->visible()->first();
+    }
+
     public function parent()
     {
         return $this->prop('parent');
@@ -169,6 +199,16 @@ class Page extends Object
         }
 
         return $parents;
+    }
+
+    public function prevInvisible()
+    {
+        return $this->prevAll()->invisible()->first();
+    }
+
+    public function prevVisible()
+    {
+        return $this->prevAll()->visible()->first();
     }
 
     public function slug(): string

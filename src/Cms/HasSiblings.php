@@ -4,32 +4,29 @@ namespace Kirby\Cms;
 
 trait HasSiblings {
 
-    public function indexOf(): int
+    public function hasNext(): bool
     {
-        return $this->collection()->indexOf($this);
-    }
-
-    public function siblings()
-    {
-        if ($parent = $this->parent()) {
-            return $parent->children();
-        }
-
-        return $this->site()->children();
-    }
-
-    public function prev()
-    {
-        if ($collection = $this->collection()) {
-            return $collection->nth($this->indexOf() - 1);
-        }
-
-        return null;
+        return $this->next() !== null;
     }
 
     public function hasPrev(): bool
     {
         return $this->prev() !== null;
+    }
+
+    public function indexOf(): int
+    {
+        return $this->collection()->indexOf($this);
+    }
+
+    public function isFirst(): bool
+    {
+        return $this->collection()->first()->is($this);
+    }
+
+    public function isLast(): bool
+    {
+        return $this->collection()->last()->is($this);
     }
 
     public function next()
@@ -41,19 +38,40 @@ trait HasSiblings {
         return null;
     }
 
-    public function hasNext(): bool
+    public function nextAll()
     {
-        return $this->next() !== null;
+        if ($collection = $this->collection()) {
+            return $collection->slice($this->indexOf() + 1);
+        }
+
+        return null;
     }
 
-    public function isFirst(): bool
+    public function prev()
     {
-        return $this->collection()->first()->is($this);
+        if ($collection = $this->collection()) {
+            return $collection->nth($this->indexOf() - 1);
+        }
+
+        return null;
     }
 
-    public function isLast(): bool
+    public function prevAll()
     {
-        return $this->collection()->last()->is($this);
+        if ($collection = $this->collection()) {
+            return $collection->slice(0, $this->indexOf());
+        }
+
+        return null;
+    }
+
+    public function siblings()
+    {
+        if ($parent = $this->parent()) {
+            return $parent->children();
+        }
+
+        return $this->site()->children();
     }
 
 }

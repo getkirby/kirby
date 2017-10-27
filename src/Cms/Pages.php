@@ -21,7 +21,7 @@ class Pages extends Collection
 
     public function invisible(): self
     {
-        return $this->filterBy('isVisible', '!=', true);
+        return $this->filterBy('isVisible', '==', false);
     }
 
 }
