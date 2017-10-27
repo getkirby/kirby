@@ -25,7 +25,7 @@ return [
             ]);
         }
 
-        return new Pages($children);
+        return new Pages($children, $site);
 
     },
     'site.content' => function (Site $site): Content {

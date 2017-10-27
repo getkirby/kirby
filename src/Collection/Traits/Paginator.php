@@ -67,7 +67,7 @@ trait Paginator
      * @param  int        $page   optional page number to return
      * @return Collection         a sliced set of data
      */
-    public function paginate(...$arguments): self
+    public function paginate(...$arguments)
     {
 
         if (is_array($arguments[0])) {

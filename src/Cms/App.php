@@ -182,6 +182,15 @@ class App extends Object
         Object::use('perms', $this->perms());
         Object::use('kirby', $this);
 
+        Collection::use('pagination', function ($options) {
+            return new Pagination([
+                'total' => $this->count(),
+                'limit' => $options['limit'] ?? 10,
+                'page'  => $options['page'] ?? App::instance()->request()->query()->get('page'),
+                'url'   => Url\Query::strip(Url::current())
+            ]);
+        });
+
         static::$instance = $this;
 
     }
