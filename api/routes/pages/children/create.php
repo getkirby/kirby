@@ -3,6 +3,7 @@
 use Kirby\Cms\Page;
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)/children',
     'method'  => 'POST',
     'action'  => function ($path) {

@@ -3,6 +3,7 @@
 use Kirby\Cms\File;
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)/files',
     'method'  => ['POST', 'OPTIONS'],
     'action'  => function ($path) {

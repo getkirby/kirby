@@ -3,6 +3,7 @@
 use Kirby\Panel\Options\Url;
 
 return [
+    'auth'    => true,
     'pattern' => 'panel/options/url',
     'action'  => function () {
 

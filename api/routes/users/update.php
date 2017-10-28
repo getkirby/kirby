@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'users/(.*?)',
     'method'  => 'POST',
     'action'  => function ($email) {

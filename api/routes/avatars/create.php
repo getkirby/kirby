@@ -5,6 +5,7 @@ use Kirby\Cms\Avatar;
 use Kirby\FileSystem\File;
 
 return [
+    'auth'    => true,
     'pattern' => 'users/(.*?)/avatar',
     'method'  => ['POST', 'OPTIONS'],
     'action'  => function ($id) {

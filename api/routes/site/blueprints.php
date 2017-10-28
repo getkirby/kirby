@@ -4,6 +4,7 @@ use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\SiteBlueprint;
 
 return [
+    'auth'    => true,
     'pattern' => 'site/blueprints',
     'action'  => function () {
 

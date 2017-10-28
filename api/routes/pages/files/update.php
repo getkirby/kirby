@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)/files/(:any)',
     'method'  => ['POST', 'OPTIONS'],
     'action'  => function ($path, $filename) {

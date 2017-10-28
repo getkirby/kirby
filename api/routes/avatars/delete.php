@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'users/(.*?)/avatar',
     'method'  => 'DELETE',
     'action'  => function ($id) {

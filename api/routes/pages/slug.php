@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)/slug',
     'method'  => 'POST',
     'action'  => function ($path) {

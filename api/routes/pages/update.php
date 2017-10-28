@@ -4,6 +4,7 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\Schema;
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)',
     'method'  => 'POST',
     'action'  => function ($path) {

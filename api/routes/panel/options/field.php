@@ -3,6 +3,7 @@
 use Kirby\Panel\Options\Field;
 
 return [
+    'auth'    => true,
     'pattern' => 'panel/options/field',
     'action'  => function () {
 

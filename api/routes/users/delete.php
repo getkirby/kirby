@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'users/(.*?)',
     'method'  => 'DELETE',
     'action'  => function ($email) {

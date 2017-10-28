@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'users/(.*?)/password',
     'method'  => 'POST',
     'action'  => function ($id) {

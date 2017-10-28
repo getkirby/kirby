@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'site',
     'method'  => 'POST',
     'action'  => function () {

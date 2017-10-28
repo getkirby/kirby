@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'users/(.*?)/role',
     'method'  => 'POST',
     'action'  => function ($id) {

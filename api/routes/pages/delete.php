@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)',
     'method'  => 'DELETE',
     'action'  => function ($path) {

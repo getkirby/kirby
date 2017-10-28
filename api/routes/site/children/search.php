@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'site/children/search',
     'method'  => 'POST',
     'action'  => function () {

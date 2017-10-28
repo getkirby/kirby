@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'session',
     'method'  => 'DELETE',
     'action'  => function () {

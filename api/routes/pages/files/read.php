@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)/files/(:any)',
     'action'  => function ($path, $filename) {
 

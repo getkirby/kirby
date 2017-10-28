@@ -3,6 +3,7 @@
 use Kirby\Panel\Options\Query;
 
 return [
+    'auth'    => true,
     'pattern' => 'panel/options/query',
     'action'  => function () {
 

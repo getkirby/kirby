@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)/status',
     'method'  => 'POST',
     'action'  => function ($path) {

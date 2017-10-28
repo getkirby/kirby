@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'auth'    => true,
     'pattern' => 'panel/autocomplete/tags',
     'action'  => function () {
 

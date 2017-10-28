@@ -3,6 +3,7 @@
 use Kirby\Cms\PageBlueprint;
 
 return [
+    'auth'    => true,
     'pattern' => 'pages/(:all)/blueprints',
     'action'  => function ($path) {
 

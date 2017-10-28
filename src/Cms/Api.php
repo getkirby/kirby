@@ -7,6 +7,7 @@ use Kirby\Http\Request;
 use Kirby\Http\Router;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\DI\Dependencies;
+use Kirby\Toolkit\Str;
 
 class Api extends Object
 {
@@ -82,7 +83,7 @@ class Api extends Object
         $router = new Router;
 
         foreach ($this->prop('routes') as $route) {
-            $router->register(new Route($route['pattern'], $route['method'] ?? 'GET', $route['action']));
+            $router->register(new Route($route['pattern'], $route['method'] ?? 'GET', $route['action'], $route));
         }
 
         return $router;
@@ -91,9 +92,16 @@ class Api extends Object
 
     public function call($path, $method = 'GET')
     {
+
         $result = $this->router()->find($path, $method);
 
+        // authentication
+        if (($result->attributes()['auth'] ?? false) === true) {
+            $this->user();
+        }
+
         return $result->action()->call($this, ...$result->arguments());
+
     }
 
     public function output(string $type, $object, ...$arguments): array
