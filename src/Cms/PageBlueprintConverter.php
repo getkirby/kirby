@@ -2,37 +2,37 @@
 
 namespace Kirby\Cms;
 
-class BlueprintConverter
+class PageBlueprintConverter
 {
 
-    public static function convert(array $blueprint): array
+    protected $data;
+
+    public function __construct(array $blueprint)
     {
 
-        $output = [
+        $this->data = [
             'title'  => $blueprint['title'],
             'name'   => $blueprint['name'],
             'layout' => [
                 [
                     'width'    => '1/3',
-                    'sections' => static::sidebar($blueprint),
+                    'sections' => $this->sidebar($blueprint),
                 ],
                 [
                     'width'    => '2/3',
                     'sections' => [
                         [
                             'type'   => 'fields',
-                            'fields' => static::fields($blueprint['fields'])
+                                'fields' => $this->fields($blueprint['fields'] ?? [])
                         ]
                     ]
                 ]
             ]
         ];
 
-        return $output;
-
     }
 
-    protected static function sidebar(array $blueprint): array
+    protected function sidebar(array $blueprint): array
     {
 
         $sidebar = [];
@@ -55,7 +55,7 @@ class BlueprintConverter
 
     }
 
-    protected static function fields(array $fields): array
+    protected function fields(array $fields): array
     {
 
         // add the name to each field
@@ -69,6 +69,11 @@ class BlueprintConverter
         // remove the array keys
         return array_values($fields);
 
+    }
+
+    public function toArray()
+    {
+        return $this->data;
     }
 
 }

@@ -15,7 +15,9 @@ class SiteBlueprint extends Blueprint
     public function data()
     {
 
-        if ($this->isDefault()) {
+        $data = parent::data();
+
+        if ($this->isDefault() === true || empty($data['layout']) === true) {
             return $this->data = [
                 'name'   => 'site',
                 'title'  => 'Site',
@@ -34,7 +36,7 @@ class SiteBlueprint extends Blueprint
             ];
         }
 
-        return parent::data();
+        return $data;
 
     }
 

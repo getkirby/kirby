@@ -11,7 +11,9 @@ class PageBlueprint extends Blueprint
     {
         $data = parent::data();
 
-        // fallbacks for old blueprints
+        if (empty($data['layout']) === true) {
+            $data = (new PageBlueprintConverter($data))->toArray();
+        }
 
         return $data;
     }

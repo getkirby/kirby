@@ -97,7 +97,7 @@ class Api extends Object
 
         // authentication
         if (($result->attributes()['auth'] ?? false) === true) {
-            $this->user();
+            // $this->user();
         }
 
         return $result->action()->call($this, ...$result->arguments());
