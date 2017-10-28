@@ -80,10 +80,22 @@ class Blueprint
         $fields = [];
 
         foreach ($this->sections('fields') as $section) {
-            $fields[] = array_merge($fields, $section['fields'] ?? []);
+            $fields = array_merge($fields, $section['fields'] ?? []);
         }
 
-        return $fields;
+        $result = [];
+
+        foreach ($fields as $field) {
+            $field['name'] = strtolower($field['name'] ?? null);
+
+            if ($field['name'] === null) {
+                continue;
+            }
+
+            $result[$field['name']] = $field;
+        }
+
+        return $result;
     }
 
     public function blueprints(): array

@@ -4,7 +4,10 @@ use Kirby\Toolkit\Str;
 use Kirby\Data\Handler\Yaml;
 
 return [
-    'read' => function ($model, $key, $value, $options): array {
+    'input' => function ($model, $key, $value, $options) {
+        return Yaml::encode($value);
+    },
+    'output' => function ($model, $key, $value, $options): array {
 
         if (is_string($value) === true) {
             return Yaml::decode($value);
@@ -16,9 +19,6 @@ return [
 
         return [];
 
-    },
-    'write' => function ($model, $key, $value, $options) {
-        return Yaml::encode($value);
     },
     'validate' => function ($model, $key, $value, $options) {
         return true;

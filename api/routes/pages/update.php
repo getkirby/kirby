@@ -1,7 +1,6 @@
 <?php
 
-use Kirby\Cms\Blueprint;
-use Kirby\Cms\Schema;
+use Kirby\Cms\Input;
 
 return [
     'auth'    => true,
@@ -9,15 +8,11 @@ return [
     'method'  => 'POST',
     'action'  => function ($path) {
 
-        $page      = $this->site()->find($path);
-        $blueprint = new Blueprint($this->app()->root('blueprints'), $page->template());
-        $schema    = new Schema($page, $blueprint->toArray(), $this->app()->schema());
-        $data      = $schema->write($this->request()->data());
+        $page  = $this->site()->find($path);
+        $input = $this->input();
+        $data  = (new Input($page, $input))->toArray();
 
-        // update the page
-        $page = $page->update($data);
-
-        return $this->output('page', $page);
+        return $this->output('page', $page->update($data));
 
     }
 ];

@@ -1,12 +1,7 @@
 <?php
 
-use Kirby\Cms\Blueprint;
-use Kirby\Cms\Schema;
+use Kirby\Cms\Output;
 
 return function ($file) {
-
-    $content = $file->content()->toArray();
-
-    return $content;
-
+    return (new Output($file))->toArray();
 };

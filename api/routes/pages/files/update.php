@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Cms\Input;
+
 return [
     'auth'    => true,
     'pattern' => 'pages/(:all)/files/(:any)',
@@ -18,8 +20,10 @@ return [
                 $file->replace($upload['tmp_name']);
             }
 
-            $file = $file->update($this->input());
-            return $this->output('file', $file);
+            $input = $this->input();
+            $data  = (new Input($file, $input))->toArray();
+
+            return $this->output('file', $file->update($data));
 
         }
     }

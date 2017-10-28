@@ -40,7 +40,20 @@ class FileBlueprint
 
     public function fields(): array
     {
-        return $this->data['fields'] ?? [];
+        $fields = $this->data['fields'] ?? [];
+        $result = [];
+
+        foreach ($fields as $field) {
+            $field['name'] = strtolower($field['name'] ?? null);
+
+            if ($field['name'] === null) {
+                continue;
+            }
+
+            $result[$field['name']] = $field;
+        }
+
+        return $result;
     }
 
     public function toArray()

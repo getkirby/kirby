@@ -3,7 +3,10 @@
 use Kirby\Toolkit\Str;
 
 return [
-    'read' => function ($model, $key, $value, $options): array {
+    'input' => function ($model, $key, $value, $options) {
+        return implode(', ', (array)$value);
+    },
+    'output' => function ($model, $key, $value, $options): array {
 
         if (is_string($value) === true) {
             return Str::split($value, ',');
@@ -15,9 +18,6 @@ return [
 
         return [];
 
-    },
-    'write' => function ($model, $key, $value, $options) {
-        return implode(', ', (array)$value);
     },
     'validate' => function ($model, $key, $value, $options) {
         return true;
