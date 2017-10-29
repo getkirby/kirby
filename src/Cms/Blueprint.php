@@ -10,12 +10,19 @@ class Blueprint
     protected $data;
     protected $name;
     protected $file;
+    protected $model;
 
-    public function __construct(string $name = 'default')
+    public function __construct(string $name = 'default', Object $model = null)
     {
-        $this->name = $name;
-        $this->file = $this->file();
-        $this->data = $this->data();
+        $this->name  = $name;
+        $this->file  = $this->file();
+        $this->data  = $this->data();
+        $this->model = $model;
+    }
+
+    public function model()
+    {
+        return $this->model;
     }
 
     public function file()
@@ -75,6 +82,12 @@ class Blueprint
         return pathinfo($this->file(), PATHINFO_FILENAME) === 'default';
     }
 
+    public function field($field): array
+    {
+        $field['name'] = strtolower($field['name'] ?? null);
+        return $field;
+    }
+
     public function fields(): array
     {
         $fields = [];
@@ -86,7 +99,7 @@ class Blueprint
         $result = [];
 
         foreach ($fields as $field) {
-            $field['name'] = strtolower($field['name'] ?? null);
+            $field = $this->field($field);
 
             if ($field['name'] === null) {
                 continue;

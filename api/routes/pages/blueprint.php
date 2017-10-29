@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\PageBlueprint;
+use Kirby\Cms\Form;
 
 return [
     'auth'    => true,
@@ -8,8 +9,7 @@ return [
     'action'  => function ($path) {
 
         if ($page = $this->site()->find($path)) {
-            $blueprint = new PageBlueprint($page->template());
-            return $blueprint->toArray();
+            return (new PageBlueprint($page->template(), $page))->toArray();
         }
 
     }
