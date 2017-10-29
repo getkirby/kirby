@@ -42,7 +42,7 @@ class Api extends Object
     {
 
         $headers = array_change_key_case(getallheaders(), CASE_LOWER);
-        $token   = $headers['authorization'] ?? null;
+        $token   = str_replace('Bearer ', '', $headers['authorization'] ?? null);
 
         if ($token === null) {
             throw new Exception('Invalid authorization token');
