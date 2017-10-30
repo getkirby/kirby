@@ -1,21 +1,21 @@
 <?php snippet('header') ?>
 
   <main class="main" role="main">
-    
+
     <header class="wrap">
-      <h1><?= $page->title()->html() ?></h1>      
+      <h1><?= $page->title()->html() ?></h1>
       <div class="intro text">
         <?= $page->intro()->kirbytext() ?>
-      </div>    
-      <hr />      
+      </div>
+      <hr />
     </header>
-    
+
     <div class="wrap wide">
       <h2>Get in Touch</h2>
-      
+
       <ul class="contact-options">
         <?php foreach($page->contactoptions()->toStructure() as $item): ?>
-          <?php $icon = $page->image($item->icon()); ?>
+        <?php $icon = $item->icon()->toFile(); ?>
           <li class="contact-item column">
             <div class="contact-item-content">
               <img src="<?= $icon->url() ?>" width="<?= $icon->width() ?>" alt="<?= $item->title()->html() ?> icon" class="contact-item-icon" />
@@ -31,11 +31,11 @@
         <?php endforeach ?>
       </ul>
     </div>
-      
+
     <div class="contact-twitter text wrap cf">
       <?= $page->text()->kirbytext() ?>
     </div>
-    
+
   </main>
 
 <?php snippet('footer') ?>
