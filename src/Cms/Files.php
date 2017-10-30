@@ -18,4 +18,9 @@ class Files extends Collection
         return new FilesFinder($this, null);
     }
 
+    public function group(string $group): self
+    {
+        return $this->filterBy('group', '==', $group);
+    }
+
 }
