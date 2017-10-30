@@ -1,1 +1,1 @@
-Sort: 3
+Group: gallery

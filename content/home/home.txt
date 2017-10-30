@@ -6,7 +6,7 @@ Intro: Yay! If you are seeing this, the installation of Kirby worked. :-)
 
 ----
 
-Text:
+Text: 
 
 ## Get started
 
@@ -18,7 +18,3 @@ Text:
 - (link: http://getkirby.com/support text: Get in contact) if you need support.
 
 **Have fun with Kirby!**
-
-----
-
-Group: misc
