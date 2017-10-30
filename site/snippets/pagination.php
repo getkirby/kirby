@@ -2,7 +2,7 @@
   <nav class="pagination wrap cf">
 
     <?php if($pagination->hasPrevPage()): ?>
-      <a class="pagination-item left" href="<?= $pagination->prev() ?>" rel="prev" title="newer articles">
+      <a class="pagination-item left" href="<?= $pagination->prevPageUrl() ?>" rel="prev" title="newer articles">
         <?= svg('assets/images/arrow-left.svg') ?>
       </a>
     <?php else: ?>
@@ -12,7 +12,7 @@
     <?php endif ?>
 
     <?php if($pagination->hasNextPage()): ?>
-      <a class="pagination-item right" href="<?= $pagination->nextPage() ?>" rel="next" title="older articles">
+      <a class="pagination-item right" href="<?= $pagination->nextPageUrl() ?>" rel="next" title="older articles">
         <?= svg('assets/images/arrow-right.svg') ?>
       </a>
     <?php else: ?>
