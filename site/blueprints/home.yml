@@ -1,7 +1,7 @@
 title: Home
 layout:
   -
-    width: 2/3
+    width: 1/1
     sections:
       -
         type: fields
@@ -14,12 +14,14 @@ layout:
             label: Text
             name: text
             type: textarea
-  -
-    width: 1/3
-    sections:
+          -
+            name: line
+            type: line
       -
         headline: Latest projects
         type: pages
+        layout: cards
         parent: projects
         pagination:
           limit: 3
+          hide: true
