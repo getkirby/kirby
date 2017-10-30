@@ -14,12 +14,6 @@ class SiteBlueprint extends Blueprint
 
     public function fallback() {
 
-        // FIXME: load all blueprints as available templates for now
-        $folder     = new Folder(App::instance()->root('blueprints'));
-        $blueprints = array_map(function ($info) {
-            return pathinfo($info['filename'], PATHINFO_FILENAME);
-        }, $folder->files());
-
         return [
             'name'   => 'site',
             'title'  => 'Site',
@@ -30,8 +24,7 @@ class SiteBlueprint extends Blueprint
                         [
                             'headline' => 'Pages',
                             'type'     => 'pages',
-                            'parent'   => '/',
-                            'template' => $blueprints
+                            'parent'   => '/'
                         ]
                     ]
                 ]
