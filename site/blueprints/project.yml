@@ -35,10 +35,37 @@ layout:
         headline: Cover
         type: files
         layout: cards
-        pagination:
-          hide: true
-          page: 1
-          limit: 1
+        group: cover
+        max: 1
+        fields:
+          -
+            name: title
+            label: Title
+            type: text
+          -
+            name: subtitle
+            label: Subtitle
+            type: text
+          -
+            name: year
+            label: Year
+            type: number
+          -
+            name: tags
+            label: Tags
+            type: tags
+
       -
         headline: Images
         type: files
+        group: gallery
+        max: 5
+        fields:
+          -
+            name: caption
+            label: Caption
+            type: text
+          -
+            name: alt
+            label: Alt Text
+            type: text
