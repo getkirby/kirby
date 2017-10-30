@@ -1,9 +1,0 @@
-username: nils
-----
-firstName: Nils
-----
-lastName: Riedemann
-----
-email: nils@getkirby.com
-----
-role: developer
