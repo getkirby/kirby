@@ -53,8 +53,14 @@ trait Filter
         }
     }
 
-    public function filterBy(string $attribute, $operator, $value): self
+    public function filterBy(string $attribute, $operator, $value = null): self
     {
+
+        if (count(func_get_args()) === 2) {
+            $value    = $operator;
+            $operator = '==';
+        }
+
         if (!isset($this->filters[$operator])) {
             throw new Exception('Missing filter class for operator: ' . $operator);
         }
