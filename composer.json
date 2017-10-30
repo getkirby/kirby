@@ -43,12 +43,12 @@
         }
     ],
     "require": {
-        "php": ">=7.0.0",
+        "claviska/simpleimage": "3.3.*",
         "getkirby/data": "dev-master",
         "getkirby/filesystem": "dev-master",
-        "getkirby/text": "dev-master",
         "getkirby/http": "dev-master",
-        "claviska/simpleimage": "3.3.*",
+        "getkirby/text": "dev-master",
+        "php": ">=7.0.0",
         "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
