@@ -27,7 +27,7 @@ class Content
         return array_keys($this->data());
     }
 
-    public function get(string $key = null)
+    public function get(string $key = null, array $arguments = [])
     {
         if ($key === null) {
             $data = [];
@@ -43,7 +43,21 @@ class Content
             return $this->fields[$key];
         }
 
-        return $this->fields[$key] = new Field($key, $this->data()[$key] ?? null, $this->parent);
+        $this->fields[$key] = new Field($key, $this->data()[$key] ?? null, $this->parent);
+
+        // field method shortcuts
+        switch ($key) {
+            case 'date':
+                // don't use the date field
+                if (empty($arguments[1]) === false && $arguments[1] !== 'date') {
+                    return $this->get($arguments[1])->toDate(...$arguments);
+                }
+                return $this->fields[$key]->toDate(...$arguments);
+                break;
+            default:
+                return $this->fields[$key];
+        }
+
 
     }
 
