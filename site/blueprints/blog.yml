@@ -1,17 +1,18 @@
 title: Blog
+
 layout:
   -
     width: 1/1
     sections:
       -
-        headline: Drafts
+        headline: Unpublished articles
         type: pages
         template: article
         filterBy:
           -
-            field: draft
+            field: isVisible
             operator: '=='
-            value: 1
+            value: false
   -
     width: 1/1
     sections:
@@ -26,6 +27,6 @@ layout:
           limit: 20
         filterBy:
           -
-            field: draft
-            operator: '!='
-            value: 1
+            field: isVisible
+            operator: '=='
+            value: true
