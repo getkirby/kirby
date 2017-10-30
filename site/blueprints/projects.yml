@@ -7,7 +7,4 @@ layout:
         headline: Published
         type: pages
         layout: cards
-        sortBy: num desc
-        pagination:
-          page: 1
-          limit: 52
+        template: project
