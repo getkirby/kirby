@@ -109,7 +109,11 @@ return [
     'page.content' => function (Page $page): Content {
 
         $folder  = new Folder($page->root());
-        $content = Data::read($folder->db());
+        $content = [];
+
+        if ($db = $folder->db()) {
+            $content = Data::read($folder->db());
+        }
 
         return new Content($content, $page);
 
