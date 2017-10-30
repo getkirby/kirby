@@ -48,7 +48,8 @@
         "getkirby/filesystem": "dev-master",
         "getkirby/text": "dev-master",
         "getkirby/http": "dev-master",
-        "claviska/simpleimage": "3.3.*"
+        "claviska/simpleimage": "3.3.*",
+        "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
     "require-dev": {
