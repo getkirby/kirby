@@ -1,9 +1,0 @@
-git clone git@github.com:k-next/kirby.git
-git clone git@github.com:k-next/panel.git
-
-cd kirby
-composer update
-
-cd ../panel
-npm i
-npm run build
