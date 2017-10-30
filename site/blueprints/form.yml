@@ -7,8 +7,8 @@ layout:
         type: fields
         fields:
           -
-            label: Text
-            name: text
+            label: Intro
+            name: intro
             type: text
             max: 140
           -
@@ -16,15 +16,27 @@ layout:
             name: tags
             type: tags
           -
+            label: Non existing field
+            name: does-not-exist
+            type: my-custom-field
+          -
             label: Date
             name: date
             type: date
             width: 1/2
           -
+            label: Time
+            name: time
+            type: time
+            width: 1/2
+          -
+            label: Date & Time
+            name: datetime
+            type: datetime
+          -
             label: User
             name: user
             type: user
-            width: 1/2
           -
             label: Text
             name: text
@@ -87,6 +99,9 @@ layout:
               a: Option A
               b: Option B
               c: Option C
+          -
+            type: line
+            name: line
           -
             label: Table
             name: table
