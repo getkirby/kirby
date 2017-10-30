@@ -31,3 +31,5 @@ layout:
         headline: Image
         type: files
         layout: cards
+        group: profile
+        max: 1
