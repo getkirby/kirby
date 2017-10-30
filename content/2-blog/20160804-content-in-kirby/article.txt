@@ -2,7 +2,7 @@ Title: Content in Kirby
 
 ----
 
-Date: 2016-08-04
+Date: 2017-08-04
 
 ----
 
@@ -38,3 +38,7 @@ It is not only handier than typing “`<a href="mailto: …`”, but also encode
 - (link: https://getkirby.com/docs/content/text text: Formatting text) (Kirby Documentation)
 - (link: https://getkirby.com/docs/cookbook/blog text: Creating a Kirby-powered blog) (Kirby Cookbook)
 - (link: https://getkirby.com/docs/developer-guide/kirbytext/tags text: How to create custom Kirbytags) (Kirby Documentation)
+
+----
+
+Tags: 

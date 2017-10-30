@@ -1,1 +1,13 @@
 Group: cover
+
+----
+
+Alt: A desk with lots of stuff on it
+
+----
+
+Photographer: Sam One
+
+----
+
+Caption: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.

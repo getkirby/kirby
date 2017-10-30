@@ -39,22 +39,19 @@ layout:
         max: 1
         fields:
           -
-            name: title
-            label: Title
+            name: alt
+            label: Alt Text
             type: text
+            width: 1/2
           -
-            name: subtitle
-            label: Subtitle
+            name: photographer
+            label: Photographer
             type: text
+            width: 1/2
           -
-            name: year
-            label: Year
-            type: number
-          -
-            name: tags
-            label: Tags
-            type: tags
-
+            name: caption
+            label: Caption
+            type: textarea
       -
         headline: Images
         type: files
@@ -62,10 +59,12 @@ layout:
         max: 5
         fields:
           -
-            name: caption
-            label: Caption
-            type: text
-          -
             name: alt
             label: Alt Text
             type: text
+            width: 1/2
+          -
+            name: photographer
+            label: Photographer
+            type: text
+            width: 1/2
