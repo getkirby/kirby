@@ -6,9 +6,10 @@ return [
     'pattern' => 'panel/languages/(:any)',
     'action'  => function ($locale) {
 
-        $file = $this->app()->root('panel') . '/assets/languages/' . $locale . '/package.json';
-        $json = Data::read($file);
-        $json['locale'] = $locale;
+        $dir             = $this->app()->root('panel') . '/assets/languages/' . $locale;
+        $json            = Data::read($dir . '/package.json');
+        $json['locale']  = $locale;
+        $json['strings'] = Data::read($dir . '/core.json');
 
         return $this->output('panel/language', $json);
 
