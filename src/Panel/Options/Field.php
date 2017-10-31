@@ -6,16 +6,17 @@ use Exception;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Object\Attributes;
+use Kirby\Cms\Object;
 
-class Field
+class Field extends Object
 {
 
     protected $attributes;
 
-    public function __construct(array $attributes)
+    public function __construct(array $props = [])
     {
-        $this->attributes = Attributes::create($attributes, [
+
+        parent::__construct($props, [
             'site' => [
                 'type'     => Site::class,
                 'required' => true
@@ -31,34 +32,30 @@ class Field
                 'type' => 'string',
             ]
         ]);
+
     }
 
-    public function site(): Site
+    public function getPage()
     {
-        return $this->attributes['site'];
-    }
-
-    public function page()
-    {
-        if ($this->attributes['page'] === null || $this->attributes['page'] === '/') {
+        if ($this->page() === null || $this->page() === '/') {
             return $this->site();
-        } elseif ($page = $this->site()->find($this->attributes['page'])) {
+        } elseif ($page = $this->site()->find($this->page())) {
             return $page;
         }
 
-        throw new Exception(sprintf('The page "%s" could not be found', $this->attributes['page']));
+        throw new Exception(sprintf('The page "%s" could not be found', $this->page()));
     }
 
     public function collection()
     {
-        $page  = $this->page();
-        $field = $this->attributes['field'];
+        $page  = $this->getPage();
+        $field = $this->field();
 
-        if (empty($field)) {
+        if (empty($field) === true) {
             throw new Exception(sprintf('Invalid field name: "%s"', $field));
         }
 
-        return $page->$field()->split($this->attributes['separator'] ?? ',');
+        return $page->$field()->split($this->separator() ?? ',');
     }
 
     public function toArray(): array

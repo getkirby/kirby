@@ -3,16 +3,17 @@
 namespace Kirby\Panel\Options;
 
 use Exception;
-use Kirby\Object\Attributes;
+use Kirby\Cms\Object;
 
-class Url
+class Url extends Object
 {
 
     protected $attributes;
 
-    public function __construct(array $attributes)
+    public function __construct(array $props = [])
     {
-        $this->attributes = Attributes::create($attributes, [
+
+        parent::__construct($props, [
             'url' => [
                 'type'     => 'string',
                 'required' => true
@@ -23,7 +24,7 @@ class Url
     public function collection()
     {
         // TODO: replace with remote class call
-        if ($response = file_get_contents($this->attributes['url'])) {
+        if ($response = file_get_contents($this->url())) {
             $output = [];
 
             foreach ((array)json_decode($response, true) as $value => $text) {

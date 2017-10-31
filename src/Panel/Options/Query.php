@@ -6,16 +6,17 @@ use Exception;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Object\Attributes;
+use Kirby\Cms\Object;
 
-class Query
+class Query extends Object
 {
 
     protected $attributes;
 
-    public function __construct(array $attributes)
+    public function __construct(array $props = [])
     {
-        $this->attributes = Attributes::create($attributes, [
+
+        parent::__construct($props, [
             'site' => [
                 'type'     => Site::class,
                 'required' => true
@@ -35,28 +36,25 @@ class Query
         ]);
     }
 
-    public function site(): Site
+    public function getPage()
     {
-        return $this->attributes['site'];
-    }
-
-    public function page()
-    {
-        if ($this->attributes['page'] === null || $this->attributes['page'] === '/') {
+        if ($this->page() === null || $this->page() === '/') {
             return $this->site();
-        } elseif ($page = $this->site()->find($this->attributes['page'])) {
+        } elseif ($page = $this->site()->find($this->page())) {
             return $page;
         }
 
-        throw new Exception(sprintf('The page "%s" could not be found', $this->attributes['page']));
+        throw new Exception(sprintf('The page "%s" could not be found', $this->page()));
     }
 
     public function collection()
     {
-        $page  = $this->page();
-        $fetch = $this->attributes['fetch'] ?? 'children';
+        $page  = $this->getPage();
+        $fetch = $this->fetch() ?? 'children';
 
-        if (method_exists($page, $fetch) === false) {
+        if (method_exists($page, $fetch) === false &&
+            $page->hasPlugin($fetch) === false &&
+            $page->hasProp($fetch) === false) {
             throw new Exception(sprintf('Invalid fetch method: "%s"', $fetch));
         }
 
@@ -81,8 +79,8 @@ class Query
             'value' => 'id'
         ];
 
-        $text  = $this->attributes['text']  ?? $config['text'];
-        $value = $this->attributes['value'] ?? $config['value'];
+        $text  = $this->text()  ?? $config['text'];
+        $value = $this->value() ?? $config['value'];
 
         return [
             'text'  => (string)$item->$text(),
