@@ -9,7 +9,7 @@ return [
 
         $result = new Query([
             'site'  => $this->site(),
-            'page'  => $this->input('page'),
+            'page'  => trim($this->input('page'), '/'),
             'fetch' => $this->input('fetch'),
         ]);
 

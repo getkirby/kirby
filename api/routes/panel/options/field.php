@@ -9,7 +9,7 @@ return [
 
         $result = new Field([
             'site'      => $this->site(),
-            'page'      => $this->input('page'),
+            'page'      => trim($this->input('page'), '/'),
             'field'     => $this->input('field'),
             'separator' => $this->input('separator')
         ]);
