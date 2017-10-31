@@ -27,11 +27,17 @@ class Query extends Object
             'fetch' => [
                 'type' => 'string',
             ],
+            'template' => [
+                'type' => 'string',
+            ],
             'value' => [
                 'type' => 'string',
             ],
             'text' => [
                 'type' => 'string',
+            ],
+            'flip' => [
+                'type' => 'boolean',
             ]
         ]);
     }
@@ -58,7 +64,13 @@ class Query extends Object
             throw new Exception(sprintf('Invalid fetch method: "%s"', $fetch));
         }
 
-        return $page->$fetch();
+        $collection = $page->$fetch();
+
+        if ($this->template()) {
+            $collection = $collection->filterBy('template', $this->template());
+        }
+
+        return $collection;
     }
 
     public function item($item): array
@@ -97,7 +109,7 @@ class Query extends Object
             $output[] = $this->item($item);
         }
 
-        return $output;
+        return $this->flip() ? array_reverse($output) : $output;
     }
 
 }

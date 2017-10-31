@@ -9,8 +9,12 @@ return [
 
         $result = new Query([
             'site'  => $this->site(),
-            'page'  => trim($this->input('page'), '/'),
+            'page'  => $this->input('page'),
             'fetch' => $this->input('fetch'),
+            'template' => $this->input('template'),
+            'value' => $this->input('value'),
+            'text' => $this->input('text'),
+            'flip' => $this->input('flip') === 'true'
         ]);
 
         return $result->toArray();
