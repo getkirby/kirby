@@ -26,6 +26,8 @@
       }
     };
   </script>
+  <script src="<?= $kirby->url('panel') ?>/assets/js/vendor.js"></script>
+  <script src="<?= $kirby->url('panel') ?>/assets/js/ui.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/panel.js"></script>
 
 </body>
