@@ -2,7 +2,7 @@
 
 return [
     'input' => function ($model, $field, $value, $options) {
-        $format = $options['format'] ?? 'd-m-Y';
+        $format = $options['format'] ?? 'Y-m-d';
         return date($format, strtotime($value));
     },
     'output' => function ($model, $key, $value, $options) {
