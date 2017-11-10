@@ -12,28 +12,36 @@ class SiteBlueprint extends Blueprint
         parent::__construct('site');
     }
 
+    public function fallback() {
+
+        return [
+            'name'   => 'site',
+            'title'  => 'Site',
+            'layout' => [
+                [
+                    'width'    => '1/1',
+                    'sections' => [
+                        [
+                            'headline' => 'Pages',
+                            'type'     => 'pages',
+                            'parent'   => '/'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function data()
     {
+
+        // TODO: remove the fixed default blueprint for the site
+        return $this->data = $this->fallback();
 
         $data = parent::data();
 
         if ($this->isDefault() === true || empty($data['layout']) === true) {
-            return $this->data = [
-                'name'   => 'site',
-                'title'  => 'Site',
-                'layout' => [
-                    [
-                        'width'    => '1/1',
-                        'sections' => [
-                            [
-                                'headline' => 'Pages',
-                                'type'     => 'pages',
-                                'parent'   => '/'
-                            ]
-                        ]
-                    ]
-                ]
-            ];
+            return $this->data = $this->fallback();
         }
 
         foreach ($data['layout'] as $layoutKey => $layoutColumn) {

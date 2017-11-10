@@ -25,7 +25,6 @@ return [
 
     }),
     new Route('api/(:all)', 'ALL', function ($path = null) use ($app, $site, $request) {
-        header('Access-Control-Allow-Origin: *');
 
         $api = new Api([
             'request' => $request,

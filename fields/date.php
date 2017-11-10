@@ -12,6 +12,5 @@ return [
 
             return date(DATE_W3C, $date);
         }
-
     }
 ];

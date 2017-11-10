@@ -42,6 +42,9 @@ Field::method([
         $value = $this->isEmpty() ? $default : $this->value();
         return filter_var($value, FILTER_VALIDATE_BOOLEAN);
     },
+    'toDate' => function ($format = null) {
+        return $format === null ? $this->toTimestamp() : date($format, $this->toTimestamp());
+    },
     'toExcerpt' => function () {
         return $this;
     },
@@ -78,6 +81,9 @@ Field::method([
     },
     'toStructure' => function () {
         return new Structure(Yaml::decode($this->value()), $this->parent());
+    },
+    'toTimestamp' => function () {
+        return strtotime($this->value());
     },
     'toUrl' => function (): string {
         // TODO: solve this without using the helper

@@ -18,8 +18,12 @@ class Fields
         $this->schema = App::instance()->schema();
 
         foreach ((array)$fields as $attributes) {
-            $field = $this->field($attributes);
-            $this->fields[$field['name']] = $field;
+            try {
+                $field = $this->field($attributes);
+                $this->fields[$field['name']] = $field;
+            } catch (Exception $e) {
+                throw $e;
+            }
         }
 
     }
