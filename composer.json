@@ -35,6 +35,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/k-next/image"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/k-next/text"
         },
         {
@@ -46,7 +50,9 @@
         "claviska/simpleimage": "3.3.*",
         "getkirby/data": "dev-master",
         "getkirby/filesystem": "dev-master",
+        "getkirby/html": "dev-master",
         "getkirby/http": "dev-master",
+        "getkirby/image": "dev-master",
         "getkirby/text": "dev-master",
         "php": ">=7.0.0",
         "sentry/sentry": "^1.8"
