@@ -159,13 +159,18 @@ class App extends Object
             ],
             'path' => [
                 'type'    => 'string',
-                'default' => function () {
-                    return trim($this->server()->get('path_info'), '/');
+                'default' => function (): string {
+                    // TODO: move this to a nicer place
+                    $uri    = $this->server()->get('request_uri');
+                    $script = dirname($this->server()->get('script_name'));
+                    $path   = preg_replace('!^' . preg_quote($script) . '!', '', $uri);
+
+                    return trim($path, '/');
                 }
             ],
             'url' => [
                 'type'    => 'array',
-                'default' => function () {
+                'default' => function (): array {
                     return [
                         '/'     => $index = Url::index(),
                         'media' => $index . '/media',
