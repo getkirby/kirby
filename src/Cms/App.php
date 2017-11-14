@@ -10,7 +10,8 @@ use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Http\Server;
-use Kirby\Image\Darkroom\GdLib as Darkroom;
+use Kirby\Image\Darkroom;
+use Kirby\Image\Darkroom\GdLib;
 use Kirby\Text\Markdown;
 use Kirby\Text\Smartypants;
 use Kirby\Text\Tags as Kirbytext;
@@ -31,7 +32,7 @@ class App extends Object
             'darkroom' => [
                 'type'    => Darkroom::class,
                 'default' => function () {
-                    return new Darkroom([
+                    return new GdLib([
                         'quality' => 80
                     ]);
                 }
@@ -74,24 +75,10 @@ class App extends Object
                     return new Request;
                 }
             ],
-            'root' => [
-                'type' => 'array',
+            'roots' => [
+                'type'    => Roots::class,
                 'default' => function () {
-
-                    $index = realpath(__DIR__ . '/../../../');
-
-                    return [
-                        '/'           => $index,
-                        'kirby'       => realpath(__DIR__ . '/../../'),
-                        'media'       => $index . '/media',
-                        'content'     => $index . '/content',
-                        'controllers' => $index . '/site/controllers',
-                        'accounts'    => $index . '/site/accounts',
-                        'snippets'    => $index . '/site/snippets',
-                        'templates'   => $index . '/site/templates',
-                        'blueprints'  => $index . '/site/blueprints',
-                        'panel'       => $index . '/panel'
-                    ];
+                    return new Roots();
                 }
             ],
             'router' => [
@@ -170,15 +157,12 @@ class App extends Object
                     return trim($path, '/');
                 }
             ],
-            'url' => [
-                'type'    => 'array',
-                'default' => function (): array {
-                    return [
-                        '/'     => $index = Url::index(),
-                        'media' => $index . '/media',
-                        'panel' => $index . '/panel',
-                        'api'   => $index . '/api'
-                    ];
+            'urls' => [
+                'type'    => Urls::class,
+                'default' => function () {
+                    return new Urls([
+                        'index' => Url::index(),
+                    ]);
                 }
             ],
         ]);
@@ -207,9 +191,9 @@ class App extends Object
         return static::$instance;
     }
 
-    public function url(string $url = '/')
+    public function url(string $url = 'index')
     {
-        return $this->prop('url')[$url];
+        return $this->urls()->get($url);
     }
 
     public function user($id = null)
@@ -222,9 +206,9 @@ class App extends Object
         return $this->users()->find($id);
     }
 
-    public function root(string $root = '/')
+    public function root(string $root = 'index')
     {
-        return $this->prop('root')[$root];
+        return $this->roots()->get($root);
     }
 
     public function users(): Users
