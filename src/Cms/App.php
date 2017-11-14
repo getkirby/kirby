@@ -14,6 +14,7 @@ use Kirby\Image\Darkroom\GdLib as Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\Smartypants;
 use Kirby\Text\Tags as Kirbytext;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Url;
 use Kirby\Toolkit\View;
 
@@ -160,8 +161,9 @@ class App extends Object
             'path' => [
                 'type'    => 'string',
                 'default' => function (): string {
+
                     // TODO: move this to a nicer place
-                    $uri    = $this->server()->get('request_uri');
+                    $uri    = Str::before($this->server()->get('request_uri'), '?');
                     $script = dirname($this->server()->get('script_name'));
                     $path   = preg_replace('!^' . preg_quote($script) . '!', '', $uri);
 
