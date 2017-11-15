@@ -2,11 +2,16 @@
 
 return function ($language) {
 
-    return [
+    $result = [
         'locale'    => $language['locale'],
         'name'      => $language['title'],
         'direction' => $language['direction'],
-        'strings'   => $language['strings']
     ];
+
+    if (isset($language['strings'])) {
+        $result['strings'] = $language['strings'];
+    }
+
+    return $result;
 
 };
