@@ -1,16 +1,18 @@
 <?php
 
+use Kirby\Cms\Input;
+
 return [
     'auth'    => true,
     'pattern' => 'users/(.*?)',
     'method'  => 'POST',
-    'action'  => function ($email) {
+    'action'  => function ($id) {
 
-        $user = $this->users()
-                     ->findBy('email', $email)
-                     ->update($this->request()->data());
+        $user  = $this->users()->find($id);
+        $input = $this->input();
+        $data  = (new Input($user, $input))->toArray();
 
-        return $this->output('user', $user);
+        return $this->output('user', $user->update($data));
 
     }
 ];

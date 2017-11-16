@@ -43,24 +43,17 @@ class Input
             case Site::class:
                 return new SiteBlueprint();
             case Page::class:
-                return new PageBlueprint($this->model->template());
+                return new PageBlueprint($this->model->template(), $this->model);
             case File::class:
                 return new FileBlueprint($this->model);
+            case User::class:
+                return new UserBlueprint($this->model->role(), $this->model);
         }
     }
 
     public function fields(): array
     {
-        $fields = $this->blueprint()->fields();
-
-        if (isset($fields['title']) === false) {
-            $fields['title'] = [
-                'name' => 'title',
-                'type' => 'text'
-            ];
-        }
-
-        return $fields;
+        return $this->blueprint()->fields();
     }
 
     public function converter(string $type)

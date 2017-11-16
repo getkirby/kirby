@@ -56,6 +56,7 @@ return [
     require __DIR__ . '/routes/users/list.php',
     require __DIR__ . '/routes/users/search.php',
     require __DIR__ . '/routes/users/create.php',
+    require __DIR__ . '/routes/users/blueprint.php',
     require __DIR__ . '/routes/users/options.php',
     require __DIR__ . '/routes/users/read.php',
     require __DIR__ . '/routes/users/role.php',

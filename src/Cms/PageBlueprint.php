@@ -33,4 +33,18 @@ class PageBlueprint extends Blueprint
 
     }
 
+    public function fields(): array
+    {
+        $fields = parent::fields();
+
+        if (isset($fields['title']) === false) {
+            $fields['title'] = [
+                'name' => 'title',
+                'type' => 'text'
+            ];
+        }
+
+        return $fields;
+    }
+
 }
