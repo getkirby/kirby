@@ -69,6 +69,8 @@ class Query
         $args   = [];
         $method = preg_replace_callback('!\((.*?)\)!', function ($match) use (&$args) {
 
+            // split at all commas that separate parameters,
+            // not at commas within parameter strings
             preg_match_all('!["\'][^["\']]*["\']|[^,]+!', $match[1], $args);
 
             $args = array_map(function ($arg) {
