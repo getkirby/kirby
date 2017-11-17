@@ -10,8 +10,9 @@ return [
         $result = new Source([
             'site'  => $this->site(),
             'users'  => $this->users(),
-            'model'  => $this->input('model'),
-            'path' => $this->input('path'),
+            'page' => $this->input('page'),
+            'file' => $this->input('file'),
+            'user'  => $this->input('user'),
             'query' => $this->input('query'),
             'value' => $this->input('value'),
             'text' => $this->input('text')

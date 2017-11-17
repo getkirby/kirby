@@ -29,16 +29,18 @@ class Source extends Object
                 'type'     => Users::class,
                 'required' => true
             ],
-            'model' => [
-                'type'     => 'string',
-                'required' => true
+            'page' => [
+                'type' => 'string',
             ],
-            'path' => [
-                'type'     => 'string',
-                'required' => true
+            'file' => [
+                'type' => 'string',
+            ],
+            'user' => [
+                'type' => 'string',
             ],
             'query' => [
-                'type' => 'string'
+                'type' => 'string',
+                'required' => true
             ],
             'value' => [
                 'type' => 'string',
@@ -52,24 +54,24 @@ class Source extends Object
 
     public function result()
     {
-        $entries = [
+        $roots = [
             'site'  => $this->site(),
             'users' => $this->users()
         ];
 
-        if ($this->model() === 'Page') {
-            $entries['page'] = $this->site()->find($this->path());
+        if ($this->page()) {
+            $roots['page'] = $this->site()->find($this->page());
         }
 
-        if ($this->model() === 'File') {
-            // $entries['user'] = $this->users()->find($this->path());
+        if ($this->file()) {
+            $roots['file'] = $roots['page']->file($this->file());
         }
 
-        if ($this->model() === 'User') {
-            $entries['user'] = $this->users()->get($this->path());
+        if ($this->user()) {
+            $roots['user'] = $this->users()->get($this->user());
         }
 
-        return (new Query($this->query() ?? 'page.children', $entries))->result();
+        return (new Query($this->query(), $roots))->result();
     }
 
     public function item($item): array

@@ -54,9 +54,7 @@ class Query
     {
         $token = trim($token);
         $token = preg_replace_callback('!\((.*?)\)!', function ($match) {
-            $inner = str_replace('.', '@@@', $match[1]);
-            $inner = str_replace(',', '%%%', $inner);
-            return '(' . $inner . ')';
+            return '(' . str_replace('.', '@@@', $match[1]) . ')';
         }, $token);
 
         $parts = explode('.', $token);
@@ -71,11 +69,12 @@ class Query
         $args   = [];
         $method = preg_replace_callback('!\((.*?)\)!', function ($match) use (&$args) {
 
+            preg_match_all('!["\'][^["\']]*["\']|[^,]+!', $match[1], $args);
+
             $args = array_map(function ($arg) {
 
                 $arg = trim($arg);
                 $arg = str_replace('@@@', '.', $arg);
-                $arg = str_replace('%%%', ',', $arg);
 
                 if (substr($arg, 0, 1) === '"') {
                     return trim($arg, '"');
@@ -95,7 +94,7 @@ class Query
                 }
 
                 return (float)$arg;
-            }, explode(',', $match[1]));
+            }, $args[0]);
 
         }, $token);
 
