@@ -22,7 +22,9 @@
       config: {
         api:    '<?= $kirby->url('api') ?>',
         assets: '<?= $kirby->url('panel') ?>/assets',
-        index:  '<?= $kirby->url() ?>'
+        index:  '<?= $kirby->url() ?>',
+        // TODO: enable/disable via options
+        debug:  true
       }
     };
   </script>
