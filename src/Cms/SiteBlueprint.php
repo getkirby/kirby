@@ -23,7 +23,9 @@ class SiteBlueprint extends Blueprint
                     'sections' => [
                         [
                             'headline' => 'Pages',
+                            'self'     => 'site',
                             'type'     => 'pages',
+                            'image'    => 'page.children.first.image',
                             'parent'   => '/'
                         ]
                     ]

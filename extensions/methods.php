@@ -89,6 +89,9 @@ Field::method([
         // TODO: solve this without using the helper
         return url($this->value());
     },
+    'toUser' => function () {
+        return App::instance()->users()->find($this->value());
+    },
 
     // inspectors
     'length' => function () {

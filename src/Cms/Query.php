@@ -27,7 +27,7 @@ class Query
             $value  = null;
 
             if (is_array($data)) {
-                $value = $data[$method];
+                $value = $data[$method] ?? null;
             } elseif (is_object($data)) {
 
                 if (method_exists($data, $method) || method_exists($data, '__call')) {

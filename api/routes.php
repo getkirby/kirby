@@ -64,6 +64,9 @@ return [
     require __DIR__ . '/routes/users/update.php',
     require __DIR__ . '/routes/users/delete.php',
 
+    // sections
+    require __DIR__ . '/routes/sections/read.php',
+
     // panel
     require __DIR__ . '/routes/panel/autocomplete/tags.php',
     require __DIR__ . '/routes/panel/autocomplete/users.php',
