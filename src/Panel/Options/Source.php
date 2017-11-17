@@ -47,6 +47,9 @@ class Source extends Object
             ],
             'text' => [
                 'type' => 'string',
+            ],
+            'flip' => [
+                'type' => 'boolean',
             ]
         ]);
 
@@ -123,7 +126,7 @@ class Source extends Object
             $output[] = $this->item($item);
         }
 
-        return $output;
+        return $this->flip() ? array_reverse($output) : $output;
     }
 
 }

@@ -15,7 +15,8 @@ return [
             'user'  => $this->input('user'),
             'query' => $this->input('query'),
             'value' => $this->input('value'),
-            'text' => $this->input('text')
+            'text' => $this->input('text'),
+            'flip' => $this->input('flip') === 'true'
         ]);
 
         return $result->toArray();
