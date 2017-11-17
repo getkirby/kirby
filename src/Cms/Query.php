@@ -54,7 +54,9 @@ class Query
     {
         $token = trim($token);
         $token = preg_replace_callback('!\((.*?)\)!', function ($match) {
-            return '(' . str_replace('.', '@@@', $match[1]) . ')';
+            $inner = str_replace('.', '@@@', $match[1]);
+            $inner = str_replace(',', '%%%', $inner);
+            return '(' . $inner . ')';
         }, $token);
 
         $parts = explode('.', $token);
@@ -73,6 +75,7 @@ class Query
 
                 $arg = trim($arg);
                 $arg = str_replace('@@@', '.', $arg);
+                $arg = str_replace('%%%', ',', $arg);
 
                 if (substr($arg, 0, 1) === '"') {
                     return trim($arg, '"');
