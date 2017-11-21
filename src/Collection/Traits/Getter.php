@@ -45,7 +45,7 @@ trait Getter
         return $this->__get($key);
     }
 
-    public function getAttribute($item, string $attribute)
+    public function getAttribute($item, $attribute)
     {
         return $this->{'getAttributeFrom' . gettype($item)}($item, $attribute);
     }
