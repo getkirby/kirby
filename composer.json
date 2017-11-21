@@ -28,10 +28,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/k-next/html"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/http"
         }
     ],
     "require": {
@@ -43,7 +39,6 @@
         "getkirby/data": "dev-master",
         "getkirby/filesystem": "dev-master",
         "getkirby/html": "dev-master",
-        "getkirby/http": "dev-master",
         "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
