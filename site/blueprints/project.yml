@@ -24,6 +24,7 @@ layout:
             label: Introduction
             name: intro
             type: textarea
+            buttons: false
           -
             label: Text
             name: text
