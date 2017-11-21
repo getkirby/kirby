@@ -36,26 +36,19 @@
         {
             "type": "vcs",
             "url": "https://github.com/k-next/image"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/text"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/toolkit"
         }
     ],
     "require": {
+        "php": ">=7.0.0",
+        "ext-mbstring": "*",
+        "erusev/parsedown-extra": "0.7.*",
+        "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
         "getkirby/data": "dev-master",
         "getkirby/filesystem": "dev-master",
         "getkirby/html": "dev-master",
         "getkirby/http": "dev-master",
         "getkirby/image": "dev-master",
-        "getkirby/text": "dev-master",
-        "php": ">=7.0.0",
-        "ext-mbstring": "*",
         "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
