@@ -31,7 +31,7 @@ return [
         }
 
         $user->update([
-            'token' => session_create_id()
+            'token' => uniqid()
         ]);
 
         return $this->output('user', $user);
