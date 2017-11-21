@@ -28,7 +28,7 @@ Field::method([
     },
 
     // converters
-    'toArray' => function ($method):array {
+    'toArray' => function ($method) {
         switch ($method) {
             case 'yaml':
                 return Yaml::decode($this->value());
@@ -85,7 +85,7 @@ Field::method([
     'toTimestamp' => function () {
         return strtotime($this->value());
     },
-    'toUrl' => function (): string {
+    'toUrl' => function () {
         // TODO: solve this without using the helper
         return url($this->value());
     },
