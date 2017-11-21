@@ -69,10 +69,6 @@ class Query
         $args   = [];
         $method = preg_replace_callback('!\((.*?)\)!', function ($match) use (&$args) {
 
-            // split at all commas that separate parameters,
-            // not at commas within parameter strings
-            preg_match_all('!["\'][^["\']]*["\']|[^,]+!', $match[1], $args);
-
             $args = array_map(function ($arg) {
 
                 $arg = trim($arg);
@@ -96,7 +92,7 @@ class Query
                 }
 
                 return (float)$arg;
-            }, $args[0]);
+            }, str_getcsv($match[1],',','\''));
 
         }, $token);
 
