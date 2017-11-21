@@ -19,9 +19,9 @@ layout:
             type: line
       -
         headline: Latest projects
+        pages: site.find('projects').children.visible
         type: pages
+        info: "{{ page.year }}"
         layout: cards
-        parent: projects
         pagination:
           limit: 3
-          hide: true
