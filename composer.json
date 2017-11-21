@@ -32,10 +32,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/k-next/http"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/image"
         }
     ],
     "require": {
@@ -48,7 +44,6 @@
         "getkirby/filesystem": "dev-master",
         "getkirby/html": "dev-master",
         "getkirby/http": "dev-master",
-        "getkirby/image": "dev-master",
         "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
@@ -66,7 +61,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit --coverage-html=tests/coverage"
+        "test": "./vendor/bin/phpunit --stderr --coverage-html=tests/coverage"
     },
     "archive": {
         "exclude": [
