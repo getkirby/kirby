@@ -17,23 +17,14 @@
         "source": "https://github.com/getkirby/kirby"
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/data"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/filesystem"
-        }
     ],
     "require": {
         "php": ">=7.0.0",
         "ext-mbstring": "*",
+        "symfony/yaml": "*",
         "erusev/parsedown-extra": "0.7.*",
         "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
-        "getkirby/data": "dev-master",
-        "getkirby/filesystem": "dev-master",
         "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
