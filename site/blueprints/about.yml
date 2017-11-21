@@ -1,7 +1,7 @@
 title: About
 layout:
   -
-    width: 2/3
+    width: 1/1
     sections:
       -
         type: fields
@@ -10,13 +10,16 @@ layout:
             label: Intro
             name: intro
             type: textarea
+            buttons: false
           -
             label: Text
             name: text
             type: textarea
   -
-    width: 1/3
+    width: 1/1
     sections:
       -
         headline: Team
         type: pages
+        layout: cards
+        info: "{{ page.position }}"
