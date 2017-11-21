@@ -169,4 +169,49 @@ class Request
     {
         return $this->method()->is($method);
     }
+
+    /**
+     * Return all headers with polyfill for
+     * missing getallheaders function
+     *
+     * @return array
+     */
+    public function headers(): array
+    {
+
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        }
+
+        $headers = [];
+
+        foreach ($_SERVER as $key => $value) {
+
+            if (substr($key, 0, 5) !== 'HTTP_') {
+                continue;
+            }
+
+            // convert to lowercase
+            $key = strtolower($key);
+
+            // remove HTTP_
+            $key = substr($key, 5);
+
+            // replace _ with spaces
+            $key = str_replace('_', ' ', $key);
+
+            // uppercase first char in each word
+            $key = ucwords($key);
+
+            // convert spaces to dashes
+            $key = str_replace(' ', '-', $key);
+
+            $headers[$key] = $value;
+
+        }
+
+        return $headers;
+
+    }
+
 }
