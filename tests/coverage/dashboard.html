@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/nhoffmann/Development/k-next/starterkit/kirby/src</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href=".css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href=".css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href=".css/style.css" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]>
+  <script src=".js/html5shiv.min.js"></script>
+  <script src=".js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="index.html">/Users/nhoffmann/Development/k-next/starterkit/kirby/src</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Cms/Api.php.html#12">Api</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/UserBlueprint.php.html#7">UserBlueprint</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#7">SiteBlueprint</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Store.php.html#7">Store</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Structure.php.html#5">Structure</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/StructureObject.php.html#5">StructureObject</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#7">System</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Tempura.php.html#5">Tempura</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#5">Urls</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#5">User</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#10">CollectionSection</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Rules.php.html#7">Rules</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#8">FilesSection</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#8">PagesSection</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasChildren.php.html#5">HasChildren</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasContent.php.html#5">HasContent</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasEvents.php.html#7">HasEvents</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#7">HasFiles</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasPlugins.php.html#8">HasPlugins</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#5">HasSiblings</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#5">Site</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#5">Roots</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#23">App</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#5">FileBlueprint</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#7">Avatar</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#7">Blueprint</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Children.php.html#7">Children</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/ChildrenFinder.php.html#5">ChildrenFinder</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#8">Content</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#11">Field</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#7">Fields</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#7">File</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Files.php.html#7">Files</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PagesFinder.php.html#7">PagesFinder</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FilesFinder.php.html#7">FilesFinder</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#7">Folder</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#5">Input</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#9">Media</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#5">Output</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#5">Page</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprint.php.html#7">PageBlueprint</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#5">PageBlueprintConverter</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Pages.php.html#7">Pages</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasThumbs.php.html#5">HasThumbs</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Cms/Page.php.html#5">Page</a></td><td class="text-right">1482</td></tr>
+       <tr><td><a href="Cms/Media.php.html#9">Media</a></td><td class="text-right">1332</td></tr>
+       <tr><td><a href="Cms/App.php.html#23">App</a></td><td class="text-right">1122</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#7">Blueprint</a></td><td class="text-right">600</td></tr>
+       <tr><td><a href="Cms/Api.php.html#12">Api</a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="Cms/File.php.html#7">File</a></td><td class="text-right">506</td></tr>
+       <tr><td><a href="Cms/Content.php.html#8">Content</a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#5">Roots</a></td><td class="text-right">272</td></tr>
+       <tr><td><a href="Cms/Input.php.html#5">Input</a></td><td class="text-right">272</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#5">HasSiblings</a></td><td class="text-right">240</td></tr>
+       <tr><td><a href="Cms/Output.php.html#5">Output</a></td><td class="text-right">210</td></tr>
+       <tr><td><a href="Cms/System.php.html#7">System</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Cms/Site.php.html#5">Site</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#10">CollectionSection</a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#7">Fields</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#7">SiteBlueprint</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#7">Avatar</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#7">HasFiles</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#7">Folder</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#5">Urls</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Cms/PageBlueprint.php.html#7">PageBlueprint</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#8">PagesSection</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#11">Field</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#8">FilesSection</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#5">FileBlueprint</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#5">PageBlueprintConverter</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Cms/StructureObject.php.html#5">StructureObject</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Cms/HasPlugins.php.html#8">HasPlugins</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Cms/PagesFinder.php.html#7">PagesFinder</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Cms/UserBlueprint.php.html#7">UserBlueprint</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Cms/HasEvents.php.html#7">HasEvents</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Structure.php.html#5">Structure</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Files.php.html#7">Files</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Rules.php.html#7">Rules</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/HasContent.php.html#5">HasContent</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/ChildrenFinder.php.html#5">ChildrenFinder</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Store.php.html#7">Store</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Children.php.html#7">Children</a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Cms/Api.php.html#15"><abbr title="Api::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#44"><abbr title="Site::anonymousFunction:44#271">anonymousFunction:44#271</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#10"><abbr title="SiteBlueprint::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#88"><abbr title="Site::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#79"><abbr title="Site::visit">visit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#74"><abbr title="Site::pages">pages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#65"><abbr title="Site::page">page</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#50"><abbr title="Site::anonymousFunction:50#319">anonymousFunction:50#319</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#38"><abbr title="Site::anonymousFunction:38#230">anonymousFunction:38#230</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#37"><abbr title="SiteBlueprint::data">data</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#32"><abbr title="Site::anonymousFunction:32#190">anonymousFunction:32#190</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#26"><abbr title="Site::anonymousFunction:26#142">anonymousFunction:26#142</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#20"><abbr title="Site::anonymousFunction:20#91">anonymousFunction:20#91</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Site.php.html#14"><abbr title="Site::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Rules.php.html#19"><abbr title="Rules::check">check</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Rules.php.html#13"><abbr title="Rules::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#97"><abbr title="Roots::__call">__call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#15"><abbr title="SiteBlueprint::fallback">fallback</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#62"><abbr title="SiteBlueprint::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#80"><abbr title="Roots::anonymousFunction:80#556">anonymousFunction:80#556</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#30"><abbr title="System::isOk">isOk</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#61"><abbr title="System::media">media</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#56"><abbr title="System::curl">curl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#51"><abbr title="System::mbString">mbString</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#45"><abbr title="System::server">server</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#40"><abbr title="System::php">php</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#35"><abbr title="System::isInstalled">isInstalled</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#17"><abbr title="System::status">status</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Store.php.html#13"><abbr title="Store::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#12"><abbr title="System::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/StructureObject.php.html#51"><abbr title="StructureObject::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/StructureObject.php.html#32"><abbr title="StructureObject::__call">__call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/StructureObject.php.html#19"><abbr title="StructureObject::anonymousFunction:19#93">anonymousFunction:19#93</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/StructureObject.php.html#10"><abbr title="StructureObject::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Structure.php.html#10"><abbr title="Structure::__set">__set</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Store.php.html#19"><abbr title="Store::commit">commit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#88"><abbr title="Roots::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#74"><abbr title="Roots::anonymousFunction:74#511">anonymousFunction:74#511</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#71"><abbr title="System::content">content</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#214"><abbr title="Page::slug">slug</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#10"><abbr title="PageBlueprintConverter::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprint.php.html#36"><abbr title="PageBlueprint::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprint.php.html#10"><abbr title="PageBlueprint::data">data</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#229"><abbr title="Page::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#224"><abbr title="Page::title">title</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#219"><abbr title="Page::sort">sort</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#209"><abbr title="Page::prevVisible">prevVisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#58"><abbr title="PageBlueprintConverter::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#204"><abbr title="Page::prevInvisible">prevInvisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#191"><abbr title="Page::parents">parents</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#186"><abbr title="Page::parent">parent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#181"><abbr title="Page::nextVisible">nextVisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#176"><abbr title="Page::nextInvisible">nextInvisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#171"><abbr title="Page::isVisible">isVisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#166"><abbr title="Page::isOpen">isOpen</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#35"><abbr title="PageBlueprintConverter::sidebar">sidebar</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#74"><abbr title="PageBlueprintConverter::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#68"><abbr title="Roots::anonymousFunction:68#466">anonymousFunction:68#466</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#26"><abbr title="Roots::anonymousFunction:26#151">anonymousFunction:26#151</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#62"><abbr title="Roots::anonymousFunction:62#421">anonymousFunction:62#421</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#56"><abbr title="Roots::anonymousFunction:56#376">anonymousFunction:56#376</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#50"><abbr title="Roots::anonymousFunction:50#331">anonymousFunction:50#331</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#44"><abbr title="Roots::anonymousFunction:44#286">anonymousFunction:44#286</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#38"><abbr title="Roots::anonymousFunction:38#241">anonymousFunction:38#241</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#32"><abbr title="Roots::anonymousFunction:32#196">anonymousFunction:32#196</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#20"><abbr title="Roots::anonymousFunction:20#107">anonymousFunction:20#107</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Pages.php.html#12"><abbr title="Pages::finder">finder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#14"><abbr title="Roots::anonymousFunction:14#63">anonymousFunction:14#63</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#8"><abbr title="Roots::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PagesFinder.php.html#44"><abbr title="PagesFinder::findByKey">findByKey</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PagesFinder.php.html#21"><abbr title="PagesFinder::findByIdRecursive">findByIdRecursive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/PagesFinder.php.html#10"><abbr title="PagesFinder::findById">findById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Pages.php.html#22"><abbr title="Pages::invisible">invisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Pages.php.html#17"><abbr title="Pages::visible">visible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#66"><abbr title="System::accounts">accounts</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/System.php.html#76"><abbr title="System::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#41"><abbr title="Api::user">user</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasChildren.php.html#8"><abbr title="HasChildren::find">find</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#20"><abbr title="HasFiles::documents">documents</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#15"><abbr title="HasFiles::code">code</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#10"><abbr title="HasFiles::audio">audio</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasEvents.php.html#21"><abbr title="HasEvents::trigger">trigger</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasEvents.php.html#12"><abbr title="HasEvents::on">on</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasContent.php.html#8"><abbr title="HasContent::__call">__call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#75"><abbr title="PagesSection::anonymousFunction:75#398">anonymousFunction:75#398</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#41"><abbr title="HasFiles::image">image</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#66"><abbr title="PagesSection::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#49"><abbr title="PagesSection::filterBy">filterBy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#38"><abbr title="PagesSection::image">image</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#33"><abbr title="PagesSection::pages">pages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#11"><abbr title="PagesSection::schema">schema</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#70"><abbr title="FilesSection::anonymousFunction:70#387">anonymousFunction:70#387</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#61"><abbr title="FilesSection::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#25"><abbr title="HasFiles::file">file</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#46"><abbr title="HasFiles::images">images</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#35"><abbr title="FilesSection::image">image</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#27"><abbr title="HasSiblings::isLast">isLast</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasThumbs.php.html#8"><abbr title="HasThumbs::crop">crop</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#68"><abbr title="HasSiblings::siblings">siblings</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#59"><abbr title="HasSiblings::prevAll">prevAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#50"><abbr title="HasSiblings::prev">prev</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#41"><abbr title="HasSiblings::nextAll">nextAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#32"><abbr title="HasSiblings::next">next</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#22"><abbr title="HasSiblings::isFirst">isFirst</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#51"><abbr title="HasFiles::videos">videos</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#17"><abbr title="HasSiblings::indexOf">indexOf</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#12"><abbr title="HasSiblings::hasPrev">hasPrev</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#7"><abbr title="HasSiblings::hasNext">hasNext</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasPlugins.php.html#36"><abbr title="HasPlugins::use">use</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasPlugins.php.html#23"><abbr title="HasPlugins::plugin">plugin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasPlugins.php.html#18"><abbr title="HasPlugins::hasPlugin">hasPlugin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasPlugins.php.html#13"><abbr title="HasPlugins::__callStatic">__callStatic</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#46"><abbr title="FilesSection::filterBy">filterBy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#30"><abbr title="FilesSection::files">files</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Tempura.php.html#11"><abbr title="Tempura::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#40"><abbr title="Urls::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#47"><abbr title="User::changePassword">changePassword</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#32"><abbr title="User::anonymousFunction:32#206">anonymousFunction:32#206</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#26"><abbr title="User::anonymousFunction:26#161">anonymousFunction:26#161</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#16"><abbr title="User::anonymousFunction:16#75">anonymousFunction:16#75</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#11"><abbr title="User::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#49"><abbr title="Urls::__call">__call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#32"><abbr title="Urls::anonymousFunction:32#202">anonymousFunction:32#202</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#63"><abbr title="User::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#26"><abbr title="Urls::anonymousFunction:26#151">anonymousFunction:26#151</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#20"><abbr title="Urls::anonymousFunction:20#100">anonymousFunction:20#100</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#14"><abbr title="Urls::anonymousFunction:14#63">anonymousFunction:14#63</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#8"><abbr title="Urls::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Tempura.php.html#24"><abbr title="Tempura::__toString">__toString</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Tempura.php.html#19"><abbr title="Tempura::anonymousFunction:19#88">anonymousFunction:19#88</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Tempura.php.html#17"><abbr title="Tempura::render">render</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#55"><abbr title="User::changeRole">changeRole</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#71"><abbr title="User::hash">hash</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#11"><abbr title="FilesSection::schema">schema</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#61"><abbr title="CollectionSection::query">query</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#116"><abbr title="CollectionSection::pagination">pagination</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#101"><abbr title="CollectionSection::filterBy">filterBy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#96"><abbr title="CollectionSection::info">info</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#91"><abbr title="CollectionSection::title">title</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#83"><abbr title="CollectionSection::self">self</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#72"><abbr title="CollectionSection::template">template</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#35"><abbr title="CollectionSection::anonymousFunction:35#200">anonymousFunction:35#200</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#76"><abbr title="User::language">language</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#26"><abbr title="CollectionSection::schema">schema</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#17"><abbr title="CollectionSection::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/UserBlueprint.php.html#29"><abbr title="UserBlueprint::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/UserBlueprint.php.html#10"><abbr title="UserBlueprint::file">file</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#94"><abbr title="User::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#86"><abbr title="User::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/User.php.html#81"><abbr title="User::role">role</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#161"><abbr title="Page::isInvisible">isInvisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#156"><abbr title="Page::isHomePage">isHomePage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#151"><abbr title="Page::isErrorPage">isErrorPage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#28"><abbr title="Blueprint::file">file</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#91"><abbr title="Blueprint::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#85"><abbr title="Blueprint::field">field</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#80"><abbr title="Blueprint::isDefault">isDefault</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#64"><abbr title="Blueprint::sections">sections</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#59"><abbr title="Blueprint::layout">layout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#47"><abbr title="Blueprint::data">data</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#23"><abbr title="Blueprint::model">model</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#134"><abbr title="Blueprint::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#15"><abbr title="Blueprint::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#67"><abbr title="Avatar::__call">__call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#62"><abbr title="Avatar::thumb">thumb</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#57"><abbr title="Avatar::replace">replace</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#52"><abbr title="Avatar::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#47"><abbr title="Avatar::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#38"><abbr title="Avatar::clone">clone</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#114"><abbr title="Blueprint::blueprints">blueprints</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Children.php.html#10"><abbr title="Children::finder">finder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#12"><abbr title="Avatar::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#91"><abbr title="Content::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#14"><abbr title="Fields::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#61"><abbr title="Field::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#49"><abbr title="Field::collection">collection</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#38"><abbr title="Field::getPage">getPage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#16"><abbr title="Field::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#97"><abbr title="Content::__debuginfo">__debuginfo</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#86"><abbr title="Content::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/ChildrenFinder.php.html#10"><abbr title="ChildrenFinder::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#72"><abbr title="Content::not">not</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#64"><abbr title="Content::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#30"><abbr title="Content::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#25"><abbr title="Content::keys">keys</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#20"><abbr title="Content::data">data</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Content.php.html#14"><abbr title="Content::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/ChildrenFinder.php.html#16"><abbr title="ChildrenFinder::findById">findById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#22"><abbr title="Avatar::anonymousFunction:22#96">anonymousFunction:22#96</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#265"><abbr title="App::response">response</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#146"><abbr title="Page::isActive">isActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#28"><abbr title="App::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#74"><abbr title="App::anonymousFunction:74#494">anonymousFunction:74#494</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#68"><abbr title="App::anonymousFunction:68#447">anonymousFunction:68#447</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#58"><abbr title="App::anonymousFunction:58#369">anonymousFunction:58#369</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#50"><abbr title="App::anonymousFunction:50#320">anonymousFunction:50#320</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#42"><abbr title="App::anonymousFunction:42#271">anonymousFunction:42#271</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#34"><abbr title="App::anonymousFunction:34#222">anonymousFunction:34#222</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#160"><abbr title="Api::__call">__call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#86"><abbr title="App::anonymousFunction:86#572">anonymousFunction:86#572</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#122"><abbr title="Api::result">result</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#107"><abbr title="Api::output">output</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#93"><abbr title="Api::call">call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#80"><abbr title="Api::router">router</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#71"><abbr title="Api::input">input</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#66"><abbr title="Api::query">query</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Api.php.html#61"><abbr title="Api::request">request</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#80"><abbr title="App::anonymousFunction:80#532">anonymousFunction:80#532</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#92"><abbr title="App::anonymousFunction:92#615">anonymousFunction:92#615</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#232"><abbr title="App::view">view</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#176"><abbr title="App::anonymousFunction:176#1242">anonymousFunction:176#1242</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#219"><abbr title="App::controller">controller</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#214"><abbr title="App::users">users</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#209"><abbr title="App::root">root</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#199"><abbr title="App::user">user</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#194"><abbr title="App::url">url</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#189"><abbr title="App::instance">instance</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#162"><abbr title="App::anonymousFunction:162#1125">anonymousFunction:162#1125</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#98"><abbr title="App::anonymousFunction:98#662">anonymousFunction:98#662</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#150"><abbr title="App::anonymousFunction:150#1010">anonymousFunction:150#1010</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#144"><abbr title="App::anonymousFunction:144#971">anonymousFunction:144#971</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#138"><abbr title="App::anonymousFunction:138#924">anonymousFunction:138#924</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#132"><abbr title="App::anonymousFunction:132#886">anonymousFunction:132#886</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#116"><abbr title="App::anonymousFunction:116#792">anonymousFunction:116#792</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#110"><abbr title="App::anonymousFunction:110#754">anonymousFunction:110#754</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/App.php.html#104"><abbr title="App::anonymousFunction:104#707">anonymousFunction:104#707</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#31"><abbr title="Fields::schema">schema</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#36"><abbr title="Fields::converter">converter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#42"><abbr title="Fields::field">field</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#200"><abbr title="Media::resolve">resolve</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#50"><abbr title="Output::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#38"><abbr title="Output::blueprint">blueprint</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#33"><abbr title="Output::content">content</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#28"><abbr title="Output::schema">schema</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#23"><abbr title="Output::model">model</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#11"><abbr title="Output::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#195"><abbr title="Media::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#61"><abbr title="Output::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#157"><abbr title="Media::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#110"><abbr title="Media::filename">filename</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#83"><abbr title="Media::unlink">unlink</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#71"><abbr title="Media::link">link</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#62"><abbr title="Media::root">root</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#53"><abbr title="Media::url">url</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#30"><abbr title="Media::path">path</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Output.php.html#55"><abbr title="Output::converter">converter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#15"><abbr title="Page::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#65"><abbr title="Input::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#100"><abbr title="Page::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#141"><abbr title="Page::hide">hide</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#136"><abbr title="Page::hasPrevVisible">hasPrevVisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#131"><abbr title="Page::hasPrevInvisible">hasPrevInvisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#126"><abbr title="Page::hasNextVisible">hasNextVisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#121"><abbr title="Page::hasNextInvisible">hasNextInvisible</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#116"><abbr title="Page::exists">exists</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#108"><abbr title="Page::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#90"><abbr title="Page::clone">clone</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#21"><abbr title="Page::anonymousFunction:21#96">anonymousFunction:21#96</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#82"><abbr title="Page::changeStatus">changeStatus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#74"><abbr title="Page::changeTemplate">changeTemplate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#66"><abbr title="Page::changeSlug">changeSlug</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#55"><abbr title="Page::anonymousFunction:55#365">anonymousFunction:55#365</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#39"><abbr title="Page::anonymousFunction:39#262">anonymousFunction:39#262</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#33"><abbr title="Page::anonymousFunction:33#211">anonymousFunction:33#211</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Page.php.html#27"><abbr title="Page::anonymousFunction:27#147">anonymousFunction:27#147</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Media.php.html#12"><abbr title="Media::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#59"><abbr title="Input::converter">converter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#63"><abbr title="Fields::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#87"><abbr title="File::model">model</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#127"><abbr title="File::__call">__call</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#118"><abbr title="File::thumb">thumb</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#113"><abbr title="File::site">site</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#105"><abbr title="File::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#100"><abbr title="File::replace">replace</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#92"><abbr title="File::rename">rename</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#82"><abbr title="File::meta">meta</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#17"><abbr title="FileBlueprint::parse">parse</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#74"><abbr title="File::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#69"><abbr title="File::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#59"><abbr title="File::clone">clone</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#33"><abbr title="File::anonymousFunction:33#198">anonymousFunction:33#198</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#25"><abbr title="File::anonymousFunction:25#136">anonymousFunction:25#136</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#19"><abbr title="File::anonymousFunction:19#84">anonymousFunction:19#84</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/File.php.html#13"><abbr title="File::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#11"><abbr title="FileBlueprint::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#35"><abbr title="FileBlueprint::data">data</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#54"><abbr title="Input::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#10"><abbr title="Folder::folders">folders</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#40"><abbr title="Input::blueprint">blueprint</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#35"><abbr title="Input::content">content</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#30"><abbr title="Input::schema">schema</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#25"><abbr title="Input::model">model</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Input.php.html#12"><abbr title="Input::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#49"><abbr title="Folder::files">files</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#39"><abbr title="Folder::db">db</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FilesFinder.php.html#22"><abbr title="FilesFinder::findByKey">findByKey</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#40"><abbr title="FileBlueprint::fields">fields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FilesFinder.php.html#17"><abbr title="FilesFinder::findById">findById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FilesFinder.php.html#11"><abbr title="FilesFinder::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Files.php.html#21"><abbr title="Files::group">group</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/Files.php.html#12"><abbr title="Files::finder">finder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#45"><abbr title="FileBlueprint::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Cms/HasThumbs.php.html#18"><abbr title="HasThumbs::resize">resize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Toolkit/Url.php.html#280"><abbr title="Url::idn">idn</abbr></a></td><td class="text-right">40%</td></tr>
+       <tr><td><a href="Toolkit/Url.php.html#297"><abbr title="Url::index">index</abbr></a></td><td class="text-right">66%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Cms/Media.php.html#110"><abbr title="Media::filename">filename</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Cms/Content.php.html#30"><abbr title="Content::get">get</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Cms/Media.php.html#157"><abbr title="Media::create">create</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Cms/Api.php.html#122"><abbr title="Api::result">result</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#37"><abbr title="SiteBlueprint::data">data</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Cms/PageBlueprint.php.html#10"><abbr title="PageBlueprint::data">data</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Cms/Input.php.html#40"><abbr title="Input::blueprint">blueprint</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Cms/Media.php.html#30"><abbr title="Media::path">path</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#64"><abbr title="Blueprint::sections">sections</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Cms/Output.php.html#38"><abbr title="Output::blueprint">blueprint</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/File.php.html#127"><abbr title="File::__call">__call</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Input.php.html#65"><abbr title="Input::toArray">toArray</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#42"><abbr title="Fields::field">field</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Media.php.html#83"><abbr title="Media::unlink">unlink</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#38"><abbr title="Field::getPage">getPage</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Media.php.html#200"><abbr title="Media::resolve">resolve</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#114"><abbr title="Blueprint::blueprints">blueprints</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/StructureObject.php.html#32"><abbr title="StructureObject::__call">__call</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#91"><abbr title="Blueprint::fields">fields</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/FileBlueprint.php.html#17"><abbr title="FileBlueprint::parse">parse</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Cms/Output.php.html#61"><abbr title="Output::toArray">toArray</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#10"><abbr title="Folder::folders">folders</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#35"><abbr title="PageBlueprintConverter::sidebar">sidebar</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/PagesFinder.php.html#21"><abbr title="PagesFinder::findByIdRecursive">findByIdRecursive</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Structure.php.html#10"><abbr title="Structure::__set">__set</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/UserBlueprint.php.html#10"><abbr title="UserBlueprint::file">file</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Panel/Sections/CollectionSection.php.html#101"><abbr title="CollectionSection::filterBy">filterBy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/HasContent.php.html#8"><abbr title="HasContent::__call">__call</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/HasFiles.php.html#25"><abbr title="HasFiles::file">file</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#49"><abbr title="Folder::files">files</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Folder.php.html#39"><abbr title="Folder::db">db</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/HasPlugins.php.html#23"><abbr title="HasPlugins::plugin">plugin</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Api.php.html#41"><abbr title="Api::user">user</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/App.php.html#265"><abbr title="App::response">response</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#28"><abbr title="Blueprint::file">file</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Fields.php.html#14"><abbr title="Fields::__construct">__construct</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Api.php.html#107"><abbr title="Api::output">output</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Cms/Files.php.html#12"><abbr title="Files::finder">finder</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Api.php.html#160"><abbr title="Api::__call">__call</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/SiteBlueprint.php.html#62"><abbr title="SiteBlueprint::fields">fields</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Store.php.html#19"><abbr title="Store::commit">commit</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/App.php.html#232"><abbr title="App::view">view</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/App.php.html#219"><abbr title="App::controller">controller</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/System.php.html#45"><abbr title="System::server">server</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Urls.php.html#40"><abbr title="Urls::get">get</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/App.php.html#199"><abbr title="App::user">user</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/UserBlueprint.php.html#29"><abbr title="UserBlueprint::fields">fields</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#46"><abbr title="FilesSection::filterBy">filterBy</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Panel/Sections/FilesSection.php.html#35"><abbr title="FilesSection::image">image</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Site.php.html#65"><abbr title="Site::page">page</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#38"><abbr title="PagesSection::image">image</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Panel/Sections/PagesSection.php.html#49"><abbr title="PagesSection::filterBy">filterBy</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/HasEvents.php.html#12"><abbr title="HasEvents::on">on</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/HasEvents.php.html#21"><abbr title="HasEvents::trigger">trigger</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Api.php.html#93"><abbr title="Api::call">call</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Api.php.html#80"><abbr title="Api::router">router</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#32"><abbr title="HasSiblings::next">next</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#41"><abbr title="HasSiblings::nextAll">nextAll</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#50"><abbr title="HasSiblings::prev">prev</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#59"><abbr title="HasSiblings::prevAll">prevAll</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Site.php.html#79"><abbr title="Site::visit">visit</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Rules.php.html#19"><abbr title="Rules::check">check</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/File.php.html#118"><abbr title="File::thumb">thumb</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Output.php.html#11"><abbr title="Output::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/File.php.html#87"><abbr title="File::model">model</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Input.php.html#12"><abbr title="Input::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/File.php.html#25"><abbr title="File::anonymousFunction:25#136">anonymousFunction:25#136</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/File.php.html#13"><abbr title="File::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Media.php.html#53"><abbr title="Media::url">url</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Media.php.html#62"><abbr title="Media::root">root</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Media.php.html#71"><abbr title="Media::link">link</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Panel/Options/Field.php.html#49"><abbr title="Field::collection">collection</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Content.php.html#72"><abbr title="Content::not">not</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Api.php.html#71"><abbr title="Api::input">input</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Content.php.html#64"><abbr title="Content::fields">fields</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/ChildrenFinder.php.html#16"><abbr title="ChildrenFinder::findById">findById</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Roots.php.html#88"><abbr title="Roots::get">get</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Children.php.html#10"><abbr title="Children::finder">finder</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Page.php.html#15"><abbr title="Page::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Page.php.html#27"><abbr title="Page::anonymousFunction:27#147">anonymousFunction:27#147</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Page.php.html#166"><abbr title="Page::isOpen">isOpen</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Page.php.html#191"><abbr title="Page::parents">parents</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Blueprint.php.html#47"><abbr title="Blueprint::data">data</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/PageBlueprint.php.html#36"><abbr title="PageBlueprint::fields">fields</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/PageBlueprintConverter.php.html#58"><abbr title="PageBlueprintConverter::fields">fields</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/PagesFinder.php.html#10"><abbr title="PagesFinder::findById">findById</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/Avatar.php.html#67"><abbr title="Avatar::__call">__call</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Cms/HasSiblings.php.html#68"><abbr title="HasSiblings::siblings">siblings</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Toolkit/Url.php.html#297"><abbr title="Url::index">index</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Toolkit/Url.php.html#280"><abbr title="Url::idn">idn</abbr></a></td><td class="text-right">4</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 5.2.3-3-gf1f3005</a> using <a href="https://secure.php.net/" target="_top">PHP 7.1.7</a> with <a href="https://xdebug.org/">Xdebug 2.5.5</a> and <a href="https://phpunit.de/">PHPUnit 6.5-gf7c8195d5</a> at Tue Nov 21 20:37:31 UTC 2017.</small>
+    </p>
+   </footer>
+  </div>
+  <script src=".js/jquery.min.js" type="text/javascript"></script>
+  <script src=".js/bootstrap.min.js" type="text/javascript"></script>
+  <script src=".js/holder.min.js" type="text/javascript"></script>
+  <script src=".js/d3.min.js" type="text/javascript"></script>
+  <script src=".js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([44,0,0,0,0,0,0,0,0,0,1,30], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([303,0,0,0,0,1,0,1,0,0,1,167], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,23,"<a href=\"Cms\/Api.php.html#12\">Api<\/a>"],[0,33,"<a href=\"Cms\/App.php.html#23\">App<\/a>"],[0,9,"<a href=\"Cms\/Avatar.php.html#7\">Avatar<\/a>"],[0,24,"<a href=\"Cms\/Blueprint.php.html#7\">Blueprint<\/a>"],[0,2,"<a href=\"Cms\/Children.php.html#7\">Children<\/a>"],[0,3,"<a href=\"Cms\/ChildrenFinder.php.html#5\">ChildrenFinder<\/a>"],[100,10,"<a href=\"Collection\/Collection.php.html#14\">Collection<\/a>"],[0,17,"<a href=\"Cms\/Content.php.html#8\">Content<\/a>"],[0,8,"<a href=\"Panel\/Options\/Field.php.html#11\">Field<\/a>"],[0,10,"<a href=\"Cms\/Fields.php.html#7\">Fields<\/a>"],[0,22,"<a href=\"Cms\/File.php.html#7\">File<\/a>"],[0,8,"<a href=\"Cms\/FileBlueprint.php.html#5\">FileBlueprint<\/a>"],[0,3,"<a href=\"Cms\/Files.php.html#7\">Files<\/a>"],[0,3,"<a href=\"Cms\/FilesFinder.php.html#7\">FilesFinder<\/a>"],[0,9,"<a href=\"Cms\/Folder.php.html#7\">Folder<\/a>"],[0,16,"<a href=\"Cms\/Input.php.html#5\">Input<\/a>"],[0,36,"<a href=\"Cms\/Media.php.html#9\">Media<\/a>"],[100,11,"<a href=\"Toolkit\/Object.php.html#17\">Object<\/a>"],[0,14,"<a href=\"Cms\/Output.php.html#5\">Output<\/a>"],[0,38,"<a href=\"Cms\/Page.php.html#5\">Page<\/a>"],[0,8,"<a href=\"Cms\/PageBlueprint.php.html#7\">PageBlueprint<\/a>"],[0,7,"<a href=\"Cms\/PageBlueprintConverter.php.html#5\">PageBlueprintConverter<\/a>"],[0,3,"<a href=\"Cms\/Pages.php.html#7\">Pages<\/a>"],[0,6,"<a href=\"Cms\/PagesFinder.php.html#7\">PagesFinder<\/a>"],[100,28,"<a href=\"Pagination\/Pagination.php.html#14\">Pagination<\/a>"],[100,0,"<a href=\"Cms\/Perms.php.html#5\">Perms<\/a>"],[100,5,"<a href=\"Toolkit\/Url\/Query.php.html#15\">Query<\/a>"],[0,16,"<a href=\"Cms\/Roots.php.html#5\">Roots<\/a>"],[0,3,"<a href=\"Cms\/Rules.php.html#7\">Rules<\/a>"],[0,13,"<a href=\"Cms\/Site.php.html#5\">Site<\/a>"],[0,10,"<a href=\"Cms\/SiteBlueprint.php.html#7\">SiteBlueprint<\/a>"],[0,3,"<a href=\"Cms\/Store.php.html#7\">Store<\/a>"],[0,3,"<a href=\"Cms\/Structure.php.html#5\">Structure<\/a>"],[0,7,"<a href=\"Cms\/StructureObject.php.html#5\">StructureObject<\/a>"],[0,13,"<a href=\"Cms\/System.php.html#7\">System<\/a>"],[0,4,"<a href=\"Cms\/Tempura.php.html#5\">Tempura<\/a>"],[0,8,"<a href=\"Cms\/Urls.php.html#5\">Urls<\/a>"],[0,12,"<a href=\"Cms\/User.php.html#5\">User<\/a>"],[0,5,"<a href=\"Cms\/UserBlueprint.php.html#7\">UserBlueprint<\/a>"],[100,0,"<a href=\"Cms\/Users.php.html#5\">Users<\/a>"],[100,3,"<a href=\"Collection\/Traits\/Finder.php.html#7\">Finder<\/a>"],[100,14,"<a href=\"Collection\/Iterator.php.html#5\">Iterator<\/a>"],[92.1875,42,"<a href=\"Toolkit\/Url.php.html#23\">Url<\/a>"],[0,12,"<a href=\"Panel\/Sections\/CollectionSection.php.html#10\">CollectionSection<\/a>"],[0,8,"<a href=\"Panel\/Sections\/FilesSection.php.html#8\">FilesSection<\/a>"],[0,8,"<a href=\"Panel\/Sections\/PagesSection.php.html#8\">PagesSection<\/a>"],[100,28,"<a href=\"Toolkit\/A.php.html#15\">A<\/a>"],[100,23,"<a href=\"Toolkit\/DI\/Dependencies.php.html#24\">Dependencies<\/a>"],[100,1,"<a href=\"Toolkit\/DI\/Singletons.php.html#16\">Singletons<\/a>"],[100,34,"<a href=\"Toolkit\/Str.php.html#14\">Str<\/a>"],[100,5,"<a href=\"Toolkit\/Url\/Fragments.php.html#14\">Fragments<\/a>"],[100,2,"<a href=\"Toolkit\/Url\/Hash.php.html#14\">Hash<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Host.php.html#14\">Host<\/a>"],[100,10,"<a href=\"Toolkit\/Url\/Params.php.html#14\">Params<\/a>"],[100,3,"<a href=\"Toolkit\/Url\/Path.php.html#14\">Path<\/a>"],[100,3,"<a href=\"Toolkit\/Url\/Port.php.html#14\">Port<\/a>"],[100,13,"<a href=\"Toolkit\/Url\/Scheme.php.html#15\">Scheme<\/a>"],[100,12,"<a href=\"Toolkit\/V.php.html#17\">V<\/a>"],[100,8,"<a href=\"Toolkit\/View.php.html#16\">View<\/a>"],[0,1,"<a href=\"Cms\/HasChildren.php.html#5\">HasChildren<\/a>"],[0,3,"<a href=\"Cms\/HasContent.php.html#5\">HasContent<\/a>"],[0,4,"<a href=\"Cms\/HasEvents.php.html#7\">HasEvents<\/a>"],[0,9,"<a href=\"Cms\/HasFiles.php.html#7\">HasFiles<\/a>"],[0,6,"<a href=\"Cms\/HasPlugins.php.html#8\">HasPlugins<\/a>"],[0,15,"<a href=\"Cms\/HasSiblings.php.html#5\">HasSiblings<\/a>"],[0,2,"<a href=\"Cms\/HasThumbs.php.html#5\">HasThumbs<\/a>"],[100,5,"<a href=\"Collection\/Traits\/Converter.php.html#7\">Converter<\/a>"],[100,11,"<a href=\"Collection\/Traits\/Filter.php.html#10\">Filter<\/a>"],[100,7,"<a href=\"Collection\/Traits\/Getter.php.html#5\">Getter<\/a>"],[100,14,"<a href=\"Collection\/Traits\/Mutator.php.html#5\">Mutator<\/a>"],[100,3,"<a href=\"Collection\/Traits\/Navigator.php.html#5\">Navigator<\/a>"],[100,10,"<a href=\"Collection\/Traits\/Paginator.php.html#16\">Paginator<\/a>"],[100,10,"<a href=\"Collection\/Traits\/Sorter.php.html#7\">Sorter<\/a>"],[100,6,"<a href=\"Toolkit\/Traits\/CustomMethods.php.html#22\">CustomMethods<\/a>"],[100,4,"<a href=\"Toolkit\/Traits\/SetterGetter.php.html#23\">SetterGetter<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"Cms\/Api.php.html#15\">Api::__construct<\/a>"],[0,3,"<a href=\"Cms\/Api.php.html#41\">Api::user<\/a>"],[0,1,"<a href=\"Cms\/Api.php.html#61\">Api::request<\/a>"],[0,1,"<a href=\"Cms\/Api.php.html#66\">Api::query<\/a>"],[0,2,"<a href=\"Cms\/Api.php.html#71\">Api::input<\/a>"],[0,2,"<a href=\"Cms\/Api.php.html#80\">Api::router<\/a>"],[0,2,"<a href=\"Cms\/Api.php.html#93\">Api::call<\/a>"],[0,3,"<a href=\"Cms\/Api.php.html#107\">Api::output<\/a>"],[0,6,"<a href=\"Cms\/Api.php.html#122\">Api::result<\/a>"],[0,2,"<a href=\"Cms\/Api.php.html#160\">Api::__call<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#28\">App::__construct<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#34\">App::anonymousFunction:34#222<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#42\">App::anonymousFunction:42#271<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#50\">App::anonymousFunction:50#320<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#58\">App::anonymousFunction:58#369<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#68\">App::anonymousFunction:68#447<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#74\">App::anonymousFunction:74#494<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#80\">App::anonymousFunction:80#532<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#86\">App::anonymousFunction:86#572<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#92\">App::anonymousFunction:92#615<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#98\">App::anonymousFunction:98#662<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#104\">App::anonymousFunction:104#707<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#110\">App::anonymousFunction:110#754<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#116\">App::anonymousFunction:116#792<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#132\">App::anonymousFunction:132#886<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#138\">App::anonymousFunction:138#924<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#144\">App::anonymousFunction:144#971<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#150\">App::anonymousFunction:150#1010<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#162\">App::anonymousFunction:162#1125<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#176\">App::anonymousFunction:176#1242<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#189\">App::instance<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#194\">App::url<\/a>"],[0,2,"<a href=\"Cms\/App.php.html#199\">App::user<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#209\">App::root<\/a>"],[0,1,"<a href=\"Cms\/App.php.html#214\">App::users<\/a>"],[0,2,"<a href=\"Cms\/App.php.html#219\">App::controller<\/a>"],[0,2,"<a href=\"Cms\/App.php.html#232\">App::view<\/a>"],[0,3,"<a href=\"Cms\/App.php.html#265\">App::response<\/a>"],[0,1,"<a href=\"Cms\/Avatar.php.html#12\">Avatar::__construct<\/a>"],[0,1,"<a href=\"Cms\/Avatar.php.html#22\">Avatar::anonymousFunction:22#96<\/a>"],[0,1,"<a href=\"Cms\/Avatar.php.html#38\">Avatar::clone<\/a>"],[0,1,"<a href=\"Cms\/Avatar.php.html#47\">Avatar::create<\/a>"],[0,1,"<a href=\"Cms\/Avatar.php.html#52\">Avatar::delete<\/a>"],[0,1,"<a href=\"Cms\/Avatar.php.html#57\">Avatar::replace<\/a>"],[0,1,"<a href=\"Cms\/Avatar.php.html#62\">Avatar::thumb<\/a>"],[0,2,"<a href=\"Cms\/Avatar.php.html#67\">Avatar::__call<\/a>"],[0,1,"<a href=\"Cms\/Blueprint.php.html#15\">Blueprint::__construct<\/a>"],[0,1,"<a href=\"Cms\/Blueprint.php.html#23\">Blueprint::model<\/a>"],[0,3,"<a href=\"Cms\/Blueprint.php.html#28\">Blueprint::file<\/a>"],[0,2,"<a href=\"Cms\/Blueprint.php.html#47\">Blueprint::data<\/a>"],[0,1,"<a href=\"Cms\/Blueprint.php.html#59\">Blueprint::layout<\/a>"],[0,5,"<a href=\"Cms\/Blueprint.php.html#64\">Blueprint::sections<\/a>"],[0,1,"<a href=\"Cms\/Blueprint.php.html#80\">Blueprint::isDefault<\/a>"],[0,1,"<a href=\"Cms\/Blueprint.php.html#85\">Blueprint::field<\/a>"],[0,4,"<a href=\"Cms\/Blueprint.php.html#91\">Blueprint::fields<\/a>"],[0,4,"<a href=\"Cms\/Blueprint.php.html#114\">Blueprint::blueprints<\/a>"],[0,1,"<a href=\"Cms\/Blueprint.php.html#134\">Blueprint::toArray<\/a>"],[0,2,"<a href=\"Cms\/Children.php.html#10\">Children::finder<\/a>"],[0,1,"<a href=\"Cms\/ChildrenFinder.php.html#10\">ChildrenFinder::__construct<\/a>"],[0,2,"<a href=\"Cms\/ChildrenFinder.php.html#16\">ChildrenFinder::findById<\/a>"],[100,1,"<a href=\"Collection\/Collection.php.html#31\">Collection::__construct<\/a>"],[100,9,"<a href=\"Collection\/Collection.php.html#36\">Collection::query<\/a>"],[0,1,"<a href=\"Cms\/Content.php.html#14\">Content::__construct<\/a>"],[0,1,"<a href=\"Cms\/Content.php.html#20\">Content::data<\/a>"],[0,1,"<a href=\"Cms\/Content.php.html#25\">Content::keys<\/a>"],[0,7,"<a href=\"Cms\/Content.php.html#30\">Content::get<\/a>"],[0,2,"<a href=\"Cms\/Content.php.html#64\">Content::fields<\/a>"],[0,2,"<a href=\"Cms\/Content.php.html#72\">Content::not<\/a>"],[0,1,"<a href=\"Cms\/Content.php.html#86\">Content::toArray<\/a>"],[0,1,"<a href=\"Cms\/Content.php.html#91\">Content::update<\/a>"],[0,1,"<a href=\"Cms\/Content.php.html#97\">Content::__debuginfo<\/a>"],[0,1,"<a href=\"Panel\/Options\/Field.php.html#16\">Field::__construct<\/a>"],[0,4,"<a href=\"Panel\/Options\/Field.php.html#38\">Field::getPage<\/a>"],[0,2,"<a href=\"Panel\/Options\/Field.php.html#49\">Field::collection<\/a>"],[0,1,"<a href=\"Panel\/Options\/Field.php.html#61\">Field::toArray<\/a>"],[0,3,"<a href=\"Cms\/Fields.php.html#14\">Fields::__construct<\/a>"],[0,1,"<a href=\"Cms\/Fields.php.html#31\">Fields::schema<\/a>"],[0,1,"<a href=\"Cms\/Fields.php.html#36\">Fields::converter<\/a>"],[0,4,"<a href=\"Cms\/Fields.php.html#42\">Fields::field<\/a>"],[0,1,"<a href=\"Cms\/Fields.php.html#63\">Fields::toArray<\/a>"],[0,2,"<a href=\"Cms\/File.php.html#13\">File::__construct<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#19\">File::anonymousFunction:19#84<\/a>"],[0,2,"<a href=\"Cms\/File.php.html#25\">File::anonymousFunction:25#136<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#33\">File::anonymousFunction:33#198<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#59\">File::clone<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#69\">File::create<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#74\">File::delete<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#82\">File::meta<\/a>"],[0,2,"<a href=\"Cms\/File.php.html#87\">File::model<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#92\">File::rename<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#100\">File::replace<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#105\">File::update<\/a>"],[0,1,"<a href=\"Cms\/File.php.html#113\">File::site<\/a>"],[0,2,"<a href=\"Cms\/File.php.html#118\">File::thumb<\/a>"],[0,4,"<a href=\"Cms\/File.php.html#127\">File::__call<\/a>"],[0,1,"<a href=\"Cms\/FileBlueprint.php.html#11\">FileBlueprint::__construct<\/a>"],[0,4,"<a href=\"Cms\/FileBlueprint.php.html#17\">FileBlueprint::parse<\/a>"],[0,1,"<a href=\"Cms\/FileBlueprint.php.html#35\">FileBlueprint::data<\/a>"],[0,1,"<a href=\"Cms\/FileBlueprint.php.html#40\">FileBlueprint::fields<\/a>"],[0,1,"<a href=\"Cms\/FileBlueprint.php.html#45\">FileBlueprint::toArray<\/a>"],[0,2,"<a href=\"Cms\/Files.php.html#12\">Files::finder<\/a>"],[0,1,"<a href=\"Cms\/Files.php.html#21\">Files::group<\/a>"],[0,1,"<a href=\"Cms\/FilesFinder.php.html#11\">FilesFinder::__construct<\/a>"],[0,1,"<a href=\"Cms\/FilesFinder.php.html#17\">FilesFinder::findById<\/a>"],[0,1,"<a href=\"Cms\/FilesFinder.php.html#22\">FilesFinder::findByKey<\/a>"],[0,3,"<a href=\"Cms\/Folder.php.html#10\">Folder::folders<\/a>"],[0,3,"<a href=\"Cms\/Folder.php.html#39\">Folder::db<\/a>"],[0,3,"<a href=\"Cms\/Folder.php.html#49\">Folder::files<\/a>"],[0,2,"<a href=\"Cms\/Input.php.html#12\">Input::__construct<\/a>"],[0,1,"<a href=\"Cms\/Input.php.html#25\">Input::model<\/a>"],[0,1,"<a href=\"Cms\/Input.php.html#30\">Input::schema<\/a>"],[0,1,"<a href=\"Cms\/Input.php.html#35\">Input::content<\/a>"],[0,5,"<a href=\"Cms\/Input.php.html#40\">Input::blueprint<\/a>"],[0,1,"<a href=\"Cms\/Input.php.html#54\">Input::fields<\/a>"],[0,1,"<a href=\"Cms\/Input.php.html#59\">Input::converter<\/a>"],[0,4,"<a href=\"Cms\/Input.php.html#65\">Input::toArray<\/a>"],[0,1,"<a href=\"Cms\/Media.php.html#12\">Media::__construct<\/a>"],[0,5,"<a href=\"Cms\/Media.php.html#30\">Media::path<\/a>"],[0,2,"<a href=\"Cms\/Media.php.html#53\">Media::url<\/a>"],[0,2,"<a href=\"Cms\/Media.php.html#62\">Media::root<\/a>"],[0,2,"<a href=\"Cms\/Media.php.html#71\">Media::link<\/a>"],[0,4,"<a href=\"Cms\/Media.php.html#83\">Media::unlink<\/a>"],[0,9,"<a href=\"Cms\/Media.php.html#110\">Media::filename<\/a>"],[0,6,"<a href=\"Cms\/Media.php.html#157\">Media::create<\/a>"],[0,1,"<a href=\"Cms\/Media.php.html#195\">Media::delete<\/a>"],[0,4,"<a href=\"Cms\/Media.php.html#200\">Media::resolve<\/a>"],[100,4,"<a href=\"Toolkit\/Object.php.html#25\">Object::__construct<\/a>"],[100,2,"<a href=\"Toolkit\/Object.php.html#42\">Object::__call<\/a>"],[100,1,"<a href=\"Toolkit\/Object.php.html#54\">Object::set<\/a>"],[100,2,"<a href=\"Toolkit\/Object.php.html#67\">Object::get<\/a>"],[100,1,"<a href=\"Toolkit\/Object.php.html#77\">Object::toArray<\/a>"],[100,1,"<a href=\"Toolkit\/Object.php.html#87\">Object::__debuginfo<\/a>"],[0,2,"<a href=\"Cms\/Output.php.html#11\">Output::__construct<\/a>"],[0,1,"<a href=\"Cms\/Output.php.html#23\">Output::model<\/a>"],[0,1,"<a href=\"Cms\/Output.php.html#28\">Output::schema<\/a>"],[0,1,"<a href=\"Cms\/Output.php.html#33\">Output::content<\/a>"],[0,4,"<a href=\"Cms\/Output.php.html#38\">Output::blueprint<\/a>"],[0,1,"<a href=\"Cms\/Output.php.html#50\">Output::fields<\/a>"],[0,1,"<a href=\"Cms\/Output.php.html#55\">Output::converter<\/a>"],[0,3,"<a href=\"Cms\/Output.php.html#61\">Output::toArray<\/a>"],[0,2,"<a href=\"Cms\/Page.php.html#15\">Page::__construct<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#21\">Page::anonymousFunction:21#96<\/a>"],[0,2,"<a href=\"Cms\/Page.php.html#27\">Page::anonymousFunction:27#147<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#33\">Page::anonymousFunction:33#211<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#39\">Page::anonymousFunction:39#262<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#55\">Page::anonymousFunction:55#365<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#66\">Page::changeSlug<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#74\">Page::changeTemplate<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#82\">Page::changeStatus<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#90\">Page::clone<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#100\">Page::create<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#108\">Page::delete<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#116\">Page::exists<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#121\">Page::hasNextInvisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#126\">Page::hasNextVisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#131\">Page::hasPrevInvisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#136\">Page::hasPrevVisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#141\">Page::hide<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#146\">Page::isActive<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#151\">Page::isErrorPage<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#156\">Page::isHomePage<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#161\">Page::isInvisible<\/a>"],[0,2,"<a href=\"Cms\/Page.php.html#166\">Page::isOpen<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#171\">Page::isVisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#176\">Page::nextInvisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#181\">Page::nextVisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#186\">Page::parent<\/a>"],[0,2,"<a href=\"Cms\/Page.php.html#191\">Page::parents<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#204\">Page::prevInvisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#209\">Page::prevVisible<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#214\">Page::slug<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#219\">Page::sort<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#224\">Page::title<\/a>"],[0,1,"<a href=\"Cms\/Page.php.html#229\">Page::update<\/a>"],[0,6,"<a href=\"Cms\/PageBlueprint.php.html#10\">PageBlueprint::data<\/a>"],[0,2,"<a href=\"Cms\/PageBlueprint.php.html#36\">PageBlueprint::fields<\/a>"],[0,1,"<a href=\"Cms\/PageBlueprintConverter.php.html#10\">PageBlueprintConverter::__construct<\/a>"],[0,3,"<a href=\"Cms\/PageBlueprintConverter.php.html#35\">PageBlueprintConverter::sidebar<\/a>"],[0,2,"<a href=\"Cms\/PageBlueprintConverter.php.html#58\">PageBlueprintConverter::fields<\/a>"],[0,1,"<a href=\"Cms\/PageBlueprintConverter.php.html#74\">PageBlueprintConverter::toArray<\/a>"],[0,1,"<a href=\"Cms\/Pages.php.html#12\">Pages::finder<\/a>"],[0,1,"<a href=\"Cms\/Pages.php.html#17\">Pages::visible<\/a>"],[0,1,"<a href=\"Cms\/Pages.php.html#22\">Pages::invisible<\/a>"],[0,2,"<a href=\"Cms\/PagesFinder.php.html#10\">PagesFinder::findById<\/a>"],[0,3,"<a href=\"Cms\/PagesFinder.php.html#21\">PagesFinder::findByIdRecursive<\/a>"],[0,1,"<a href=\"Cms\/PagesFinder.php.html#44\">PagesFinder::findByKey<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#44\">Pagination::__construct<\/a>"],[100,2,"<a href=\"Pagination\/Pagination.php.html#57\">Pagination::page<\/a>"],[100,3,"<a href=\"Pagination\/Pagination.php.html#73\">Pagination::total<\/a>"],[100,3,"<a href=\"Pagination\/Pagination.php.html#93\">Pagination::limit<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#112\">Pagination::start<\/a>"],[100,2,"<a href=\"Pagination\/Pagination.php.html#122\">Pagination::end<\/a>"],[100,2,"<a href=\"Pagination\/Pagination.php.html#138\">Pagination::pages<\/a>"],[100,2,"<a href=\"Pagination\/Pagination.php.html#151\">Pagination::firstPage<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#161\">Pagination::lastPage<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#171\">Pagination::offset<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#181\">Pagination::hasPages<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#191\">Pagination::hasPrevPage<\/a>"],[100,2,"<a href=\"Pagination\/Pagination.php.html#201\">Pagination::prevPage<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#211\">Pagination::hasNextPage<\/a>"],[100,2,"<a href=\"Pagination\/Pagination.php.html#221\">Pagination::nextPage<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#231\">Pagination::isFirstPage<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#241\">Pagination::isLastPage<\/a>"],[100,1,"<a href=\"Pagination\/Pagination.php.html#251\">Pagination::toArray<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Query.php.html#24\">Query::get<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Query.php.html#37\">Query::in<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Query.php.html#54\">Query::strip<\/a>"],[100,2,"<a href=\"Toolkit\/Url\/Query.php.html#66\">Query::toString<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#8\">Roots::__construct<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#14\">Roots::anonymousFunction:14#63<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#20\">Roots::anonymousFunction:20#107<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#26\">Roots::anonymousFunction:26#151<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#32\">Roots::anonymousFunction:32#196<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#38\">Roots::anonymousFunction:38#241<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#44\">Roots::anonymousFunction:44#286<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#50\">Roots::anonymousFunction:50#331<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#56\">Roots::anonymousFunction:56#376<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#62\">Roots::anonymousFunction:62#421<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#68\">Roots::anonymousFunction:68#466<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#74\">Roots::anonymousFunction:74#511<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#80\">Roots::anonymousFunction:80#556<\/a>"],[0,2,"<a href=\"Cms\/Roots.php.html#88\">Roots::get<\/a>"],[0,1,"<a href=\"Cms\/Roots.php.html#97\">Roots::__call<\/a>"],[0,1,"<a href=\"Cms\/Rules.php.html#13\">Rules::__construct<\/a>"],[0,2,"<a href=\"Cms\/Rules.php.html#19\">Rules::check<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#14\">Site::__construct<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#20\">Site::anonymousFunction:20#91<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#26\">Site::anonymousFunction:26#142<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#32\">Site::anonymousFunction:32#190<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#38\">Site::anonymousFunction:38#230<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#44\">Site::anonymousFunction:44#271<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#50\">Site::anonymousFunction:50#319<\/a>"],[0,2,"<a href=\"Cms\/Site.php.html#65\">Site::page<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#74\">Site::pages<\/a>"],[0,2,"<a href=\"Cms\/Site.php.html#79\">Site::visit<\/a>"],[0,1,"<a href=\"Cms\/Site.php.html#88\">Site::update<\/a>"],[0,1,"<a href=\"Cms\/SiteBlueprint.php.html#10\">SiteBlueprint::__construct<\/a>"],[0,1,"<a href=\"Cms\/SiteBlueprint.php.html#15\">SiteBlueprint::fallback<\/a>"],[0,6,"<a href=\"Cms\/SiteBlueprint.php.html#37\">SiteBlueprint::data<\/a>"],[0,2,"<a href=\"Cms\/SiteBlueprint.php.html#62\">SiteBlueprint::fields<\/a>"],[0,1,"<a href=\"Cms\/Store.php.html#13\">Store::__construct<\/a>"],[0,2,"<a href=\"Cms\/Store.php.html#19\">Store::commit<\/a>"],[0,3,"<a href=\"Cms\/Structure.php.html#10\">Structure::__set<\/a>"],[0,1,"<a href=\"Cms\/StructureObject.php.html#10\">StructureObject::__construct<\/a>"],[0,1,"<a href=\"Cms\/StructureObject.php.html#19\">StructureObject::anonymousFunction:19#93<\/a>"],[0,4,"<a href=\"Cms\/StructureObject.php.html#32\">StructureObject::__call<\/a>"],[0,1,"<a href=\"Cms\/StructureObject.php.html#51\">StructureObject::toArray<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#12\">System::__construct<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#17\">System::status<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#30\">System::isOk<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#35\">System::isInstalled<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#40\">System::php<\/a>"],[0,2,"<a href=\"Cms\/System.php.html#45\">System::server<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#51\">System::mbString<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#56\">System::curl<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#61\">System::media<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#66\">System::accounts<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#71\">System::content<\/a>"],[0,1,"<a href=\"Cms\/System.php.html#76\">System::toArray<\/a>"],[0,1,"<a href=\"Cms\/Tempura.php.html#11\">Tempura::__construct<\/a>"],[0,1,"<a href=\"Cms\/Tempura.php.html#17\">Tempura::render<\/a>"],[0,1,"<a href=\"Cms\/Tempura.php.html#19\">Tempura::anonymousFunction:19#88<\/a>"],[0,1,"<a href=\"Cms\/Tempura.php.html#24\">Tempura::__toString<\/a>"],[0,1,"<a href=\"Cms\/Urls.php.html#8\">Urls::__construct<\/a>"],[0,1,"<a href=\"Cms\/Urls.php.html#14\">Urls::anonymousFunction:14#63<\/a>"],[0,1,"<a href=\"Cms\/Urls.php.html#20\">Urls::anonymousFunction:20#100<\/a>"],[0,1,"<a href=\"Cms\/Urls.php.html#26\">Urls::anonymousFunction:26#151<\/a>"],[0,1,"<a href=\"Cms\/Urls.php.html#32\">Urls::anonymousFunction:32#202<\/a>"],[0,2,"<a href=\"Cms\/Urls.php.html#40\">Urls::get<\/a>"],[0,1,"<a href=\"Cms\/Urls.php.html#49\">Urls::__call<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#11\">User::__construct<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#16\">User::anonymousFunction:16#75<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#26\">User::anonymousFunction:26#161<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#32\">User::anonymousFunction:32#206<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#47\">User::changePassword<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#55\">User::changeRole<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#63\">User::create<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#71\">User::hash<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#76\">User::language<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#81\">User::role<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#86\">User::update<\/a>"],[0,1,"<a href=\"Cms\/User.php.html#94\">User::delete<\/a>"],[0,3,"<a href=\"Cms\/UserBlueprint.php.html#10\">UserBlueprint::file<\/a>"],[0,2,"<a href=\"Cms\/UserBlueprint.php.html#29\">UserBlueprint::fields<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Finder.php.html#10\">Finder::finder<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Finder.php.html#15\">Finder::find<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Finder.php.html#20\">Finder::findBy<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#20\">Iterator::__construct<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#30\">Iterator::key<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#40\">Iterator::keys<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#50\">Iterator::current<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#61\">Iterator::prev<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#72\">Iterator::next<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#80\">Iterator::rewind<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#90\">Iterator::valid<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#100\">Iterator::count<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#111\">Iterator::indexOf<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#122\">Iterator::keyOf<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#133\">Iterator::has<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#144\">Iterator::__isset<\/a>"],[100,1,"<a href=\"Collection\/Iterator.php.html#154\">Iterator::__debuginfo<\/a>"],[100,2,"<a href=\"Toolkit\/Url.php.html#51\">Url::current<\/a>"],[100,1,"<a href=\"Toolkit\/Url.php.html#64\">Url::currentDir<\/a>"],[100,1,"<a href=\"Toolkit\/Url.php.html#74\">Url::home<\/a>"],[100,1,"<a href=\"Toolkit\/Url.php.html#84\">Url::to<\/a>"],[100,1,"<a href=\"Toolkit\/Url.php.html#94\">Url::last<\/a>"],[100,2,"<a href=\"Toolkit\/Url.php.html#105\">Url::retrieve<\/a>"],[93.33333333333333,7,"<a href=\"Toolkit\/Url.php.html#117\">Url::build<\/a>"],[100,1,"<a href=\"Toolkit\/Url.php.html#153\">Url::parts<\/a>"],[100,3,"<a href=\"Toolkit\/Url.php.html#176\">Url::isAbsolute<\/a>"],[100,4,"<a href=\"Toolkit\/Url.php.html#190\">Url::makeAbsolute<\/a>"],[100,2,"<a href=\"Toolkit\/Url.php.html#214\">Url::fix<\/a>"],[100,6,"<a href=\"Toolkit\/Url.php.html#226\">Url::base<\/a>"],[100,3,"<a href=\"Toolkit\/Url.php.html#257\">Url::short<\/a>"],[40,3,"<a href=\"Toolkit\/Url.php.html#280\">Url::idn<\/a>"],[66.66666666666666,5,"<a href=\"Toolkit\/Url.php.html#297\">Url::index<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#17\">CollectionSection::__construct<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#26\">CollectionSection::schema<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#35\">CollectionSection::anonymousFunction:35#200<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#61\">CollectionSection::query<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#72\">CollectionSection::template<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#83\">CollectionSection::self<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#91\">CollectionSection::title<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#96\">CollectionSection::info<\/a>"],[0,3,"<a href=\"Panel\/Sections\/CollectionSection.php.html#101\">CollectionSection::filterBy<\/a>"],[0,1,"<a href=\"Panel\/Sections\/CollectionSection.php.html#116\">CollectionSection::pagination<\/a>"],[0,1,"<a href=\"Panel\/Sections\/FilesSection.php.html#11\">FilesSection::schema<\/a>"],[0,1,"<a href=\"Panel\/Sections\/FilesSection.php.html#30\">FilesSection::files<\/a>"],[0,2,"<a href=\"Panel\/Sections\/FilesSection.php.html#35\">FilesSection::image<\/a>"],[0,2,"<a href=\"Panel\/Sections\/FilesSection.php.html#46\">FilesSection::filterBy<\/a>"],[0,1,"<a href=\"Panel\/Sections\/FilesSection.php.html#61\">FilesSection::toArray<\/a>"],[0,1,"<a href=\"Panel\/Sections\/FilesSection.php.html#70\">FilesSection::anonymousFunction:70#387<\/a>"],[0,1,"<a href=\"Panel\/Sections\/PagesSection.php.html#11\">PagesSection::schema<\/a>"],[0,1,"<a href=\"Panel\/Sections\/PagesSection.php.html#33\">PagesSection::pages<\/a>"],[0,2,"<a href=\"Panel\/Sections\/PagesSection.php.html#38\">PagesSection::image<\/a>"],[0,2,"<a href=\"Panel\/Sections\/PagesSection.php.html#49\">PagesSection::filterBy<\/a>"],[0,1,"<a href=\"Panel\/Sections\/PagesSection.php.html#66\">PagesSection::toArray<\/a>"],[0,1,"<a href=\"Panel\/Sections\/PagesSection.php.html#75\">PagesSection::anonymousFunction:75#398<\/a>"],[100,4,"<a href=\"Toolkit\/A.php.html#44\">A::get<\/a>"],[100,3,"<a href=\"Toolkit\/A.php.html#92\">A::pluck<\/a>"],[100,2,"<a href=\"Toolkit\/A.php.html#125\">A::shuffle<\/a>"],[100,1,"<a href=\"Toolkit\/A.php.html#157\">A::first<\/a>"],[100,1,"<a href=\"Toolkit\/A.php.html#179\">A::last<\/a>"],[100,3,"<a href=\"Toolkit\/A.php.html#212\">A::fill<\/a>"],[100,3,"<a href=\"Toolkit\/A.php.html#249\">A::missing<\/a>"],[100,5,"<a href=\"Toolkit\/A.php.html#309\">A::sort<\/a>"],[100,1,"<a href=\"Toolkit\/A.php.html#353\">A::isAssociative<\/a>"],[100,1,"<a href=\"Toolkit\/A.php.html#365\">A::average<\/a>"],[100,1,"<a href=\"Toolkit\/A.php.html#388\">A::extend<\/a>"],[100,3,"<a href=\"Toolkit\/A.php.html#421\">A::update<\/a>"],[100,3,"<a href=\"Toolkit\/DI\/Dependencies.php.html#49\">Dependencies::set<\/a>"],[100,1,"<a href=\"Toolkit\/DI\/Dependencies.php.html#76\">Dependencies::singleton<\/a>"],[100,1,"<a href=\"Toolkit\/DI\/Dependencies.php.html#89\">Dependencies::has<\/a>"],[100,4,"<a href=\"Toolkit\/DI\/Dependencies.php.html#101\">Dependencies::initialize<\/a>"],[100,4,"<a href=\"Toolkit\/DI\/Dependencies.php.html#126\">Dependencies::get<\/a>"],[100,10,"<a href=\"Toolkit\/DI\/Dependencies.php.html#189\">Dependencies::call<\/a>"],[100,1,"<a href=\"Toolkit\/DI\/Singletons.php.html#27\">Singletons::set<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#116\">Str::ascii<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#132\">Str::slug<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#164\">Str::encoding<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#177\">Str::substr<\/a>"],[100,4,"<a href=\"Toolkit\/Str.php.html#193\">Str::split<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#215\">Str::lower<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#226\">Str::upper<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#237\">Str::length<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#248\">Str::ucfirst<\/a>"],[100,1,"<a href=\"Toolkit\/Str.php.html#259\">Str::ucwords<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#273\">Str::contains<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#287\">Str::position<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#305\">Str::startsWith<\/a>"],[100,3,"<a href=\"Toolkit\/Str.php.html#322\">Str::endsWith<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#346\">Str::before<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#365\">Str::until<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#384\">Str::after<\/a>"],[100,2,"<a href=\"Toolkit\/Str.php.html#404\">Str::from<\/a>"],[100,3,"<a href=\"Toolkit\/Str.php.html#435\">Str::short<\/a>"],[100,4,"<a href=\"Toolkit\/Url\/Fragments.php.html#23\">Fragments::get<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Fragments.php.html#47\">Fragments::strip<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Hash.php.html#23\">Hash::get<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Hash.php.html#40\">Hash::strip<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Host.php.html#23\">Host::get<\/a>"],[100,4,"<a href=\"Toolkit\/Url\/Params.php.html#23\">Params::get<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Params.php.html#50\">Params::strip<\/a>"],[100,3,"<a href=\"Toolkit\/Url\/Params.php.html#62\">Params::toString<\/a>"],[100,2,"<a href=\"Toolkit\/Url\/Params.php.html#80\">Params::separator<\/a>"],[100,2,"<a href=\"Toolkit\/Url\/Path.php.html#23\">Path::get<\/a>"],[100,1,"<a href=\"Toolkit\/Url\/Path.php.html#42\">Path::strip<\/a>"],[100,3,"<a href=\"Toolkit\/Url\/Port.php.html#23\">Port::get<\/a>"],[100,3,"<a href=\"Toolkit\/Url\/Scheme.php.html#24\">Scheme::get<\/a>"],[100,3,"<a href=\"Toolkit\/Url\/Scheme.php.html#37\">Scheme::isSecure<\/a>"],[100,3,"<a href=\"Toolkit\/Url\/Scheme.php.html#49\">Scheme::hasHttpsFlag<\/a>"],[100,2,"<a href=\"Toolkit\/Url\/Scheme.php.html#61\">Scheme::hasHttpsPort<\/a>"],[100,2,"<a href=\"Toolkit\/Url\/Scheme.php.html#72\">Scheme::hasHttpsProtocol<\/a>"],[100,1,"<a href=\"Toolkit\/V.php.html#32\">V::validators<\/a>"],[100,9,"<a href=\"Toolkit\/V.php.html#46\">V::input<\/a>"],[100,2,"<a href=\"Toolkit\/V.php.html#92\">V::__callStatic<\/a>"],[100,2,"<a href=\"Toolkit\/View.php.html#47\">View::globals<\/a>"],[100,2,"<a href=\"Toolkit\/View.php.html#62\">View::__construct<\/a>"],[100,1,"<a href=\"Toolkit\/View.php.html#77\">View::file<\/a>"],[100,1,"<a href=\"Toolkit\/View.php.html#88\">View::data<\/a>"],[100,1,"<a href=\"Toolkit\/View.php.html#98\">View::toString<\/a>"],[100,1,"<a href=\"Toolkit\/View.php.html#115\">View::__toString<\/a>"],[0,1,"<a href=\"Cms\/HasChildren.php.html#8\">HasChildren::find<\/a>"],[0,3,"<a href=\"Cms\/HasContent.php.html#8\">HasContent::__call<\/a>"],[0,2,"<a href=\"Cms\/HasEvents.php.html#12\">HasEvents::on<\/a>"],[0,2,"<a href=\"Cms\/HasEvents.php.html#21\">HasEvents::trigger<\/a>"],[0,1,"<a href=\"Cms\/HasFiles.php.html#10\">HasFiles::audio<\/a>"],[0,1,"<a href=\"Cms\/HasFiles.php.html#15\">HasFiles::code<\/a>"],[0,1,"<a href=\"Cms\/HasFiles.php.html#20\">HasFiles::documents<\/a>"],[0,3,"<a href=\"Cms\/HasFiles.php.html#25\">HasFiles::file<\/a>"],[0,1,"<a href=\"Cms\/HasFiles.php.html#41\">HasFiles::image<\/a>"],[0,1,"<a href=\"Cms\/HasFiles.php.html#46\">HasFiles::images<\/a>"],[0,1,"<a href=\"Cms\/HasFiles.php.html#51\">HasFiles::videos<\/a>"],[0,1,"<a href=\"Cms\/HasPlugins.php.html#13\">HasPlugins::__callStatic<\/a>"],[0,1,"<a href=\"Cms\/HasPlugins.php.html#18\">HasPlugins::hasPlugin<\/a>"],[0,3,"<a href=\"Cms\/HasPlugins.php.html#23\">HasPlugins::plugin<\/a>"],[0,1,"<a href=\"Cms\/HasPlugins.php.html#36\">HasPlugins::use<\/a>"],[0,1,"<a href=\"Cms\/HasSiblings.php.html#7\">HasSiblings::hasNext<\/a>"],[0,1,"<a href=\"Cms\/HasSiblings.php.html#12\">HasSiblings::hasPrev<\/a>"],[0,1,"<a href=\"Cms\/HasSiblings.php.html#17\">HasSiblings::indexOf<\/a>"],[0,1,"<a href=\"Cms\/HasSiblings.php.html#22\">HasSiblings::isFirst<\/a>"],[0,1,"<a href=\"Cms\/HasSiblings.php.html#27\">HasSiblings::isLast<\/a>"],[0,2,"<a href=\"Cms\/HasSiblings.php.html#32\">HasSiblings::next<\/a>"],[0,2,"<a href=\"Cms\/HasSiblings.php.html#41\">HasSiblings::nextAll<\/a>"],[0,2,"<a href=\"Cms\/HasSiblings.php.html#50\">HasSiblings::prev<\/a>"],[0,2,"<a href=\"Cms\/HasSiblings.php.html#59\">HasSiblings::prevAll<\/a>"],[0,2,"<a href=\"Cms\/HasSiblings.php.html#68\">HasSiblings::siblings<\/a>"],[0,1,"<a href=\"Cms\/HasThumbs.php.html#8\">HasThumbs::crop<\/a>"],[0,1,"<a href=\"Cms\/HasThumbs.php.html#18\">HasThumbs::resize<\/a>"],[100,2,"<a href=\"Collection\/Traits\/Converter.php.html#15\">Converter::toArray<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Converter.php.html#29\">Converter::toJson<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Converter.php.html#39\">Converter::toString<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Converter.php.html#49\">Converter::__toString<\/a>"],[100,4,"<a href=\"Collection\/Traits\/Filter.php.html#28\">Filter::filter<\/a>"],[100,5,"<a href=\"Collection\/Traits\/Filter.php.html#45\">Filter::filterBy<\/a>"],[100,2,"<a href=\"Collection\/Traits\/Filter.php.html#75\">Filter::not<\/a>"],[100,2,"<a href=\"Collection\/Traits\/Getter.php.html#14\">Getter::__get<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Getter.php.html#31\">Getter::get<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Getter.php.html#43\">Getter::__call<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Getter.php.html#48\">Getter::getAttribute<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Getter.php.html#53\">Getter::getAttributeFromArray<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Getter.php.html#58\">Getter::getAttributeFromObject<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#8\">Mutator::clone<\/a>"],[100,2,"<a href=\"Collection\/Traits\/Mutator.php.html#20\">Mutator::data<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#40\">Mutator::empty<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#52\">Mutator::__set<\/a>"],[100,3,"<a href=\"Collection\/Traits\/Mutator.php.html#65\">Mutator::set<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#84\">Mutator::append<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#96\">Mutator::prepend<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#112\">Mutator::extend<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#123\">Mutator::__unset<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#133\">Mutator::remove<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Mutator.php.html#145\">Mutator::map<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Navigator.php.html#13\">Navigator::first<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Navigator.php.html#24\">Navigator::last<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Navigator.php.html#36\">Navigator::nth<\/a>"],[100,3,"<a href=\"Collection\/Traits\/Paginator.php.html#32\">Paginator::slice<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Paginator.php.html#47\">Paginator::limit<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Paginator.php.html#58\">Paginator::offset<\/a>"],[100,2,"<a href=\"Collection\/Traits\/Paginator.php.html#70\">Paginator::paginate<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Paginator.php.html#101\">Paginator::pagination<\/a>"],[100,2,"<a href=\"Collection\/Traits\/Paginator.php.html#114\">Paginator::chunk<\/a>"],[100,7,"<a href=\"Collection\/Traits\/Sorter.php.html#18\">Sorter::sortBy<\/a>"],[100,1,"<a href=\"Collection\/Traits\/Sorter.php.html#59\">Sorter::flip<\/a>"],[100,2,"<a href=\"Collection\/Traits\/Sorter.php.html#69\">Sorter::shuffle<\/a>"],[100,1,"<a href=\"Toolkit\/Traits\/CustomMethods.php.html#39\">CustomMethods::addCustomMethod<\/a>"],[100,1,"<a href=\"Toolkit\/Traits\/CustomMethods.php.html#49\">CustomMethods::removeCustomMethods<\/a>"],[100,1,"<a href=\"Toolkit\/Traits\/CustomMethods.php.html#60\">CustomMethods::hasCustomMethod<\/a>"],[100,2,"<a href=\"Toolkit\/Traits\/CustomMethods.php.html#74\">CustomMethods::callCustomMethod<\/a>"],[100,1,"<a href=\"Toolkit\/Traits\/CustomMethods.php.html#93\">CustomMethods::__call<\/a>"],[100,1,"<a href=\"Toolkit\/Traits\/SetterGetter.php.html#33\">SetterGetter::set<\/a>"],[100,1,"<a href=\"Toolkit\/Traits\/SetterGetter.php.html#42\">SetterGetter::get<\/a>"],[100,2,"<a href=\"Toolkit\/Traits\/SetterGetter.php.html#52\">SetterGetter::__call<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

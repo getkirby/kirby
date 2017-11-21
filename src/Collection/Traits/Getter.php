@@ -45,17 +45,17 @@ trait Getter
         return $this->__get($key);
     }
 
-    public function getAttribute($item, $attribute)
+    public function getAttribute($item, string $attribute)
     {
         return $this->{'getAttributeFrom' . gettype($item)}($item, $attribute);
     }
 
-    protected function getAttributeFromArray($array, $attribute)
+    protected function getAttributeFromArray(array $array, string $attribute)
     {
         return $array[$attribute] ?? null;
     }
 
-    protected function getAttributeFromObject($object, $attribute)
+    protected function getAttributeFromObject($object, string $attribute)
     {
         return $object->{$attribute}();
     }

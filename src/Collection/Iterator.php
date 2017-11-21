@@ -125,6 +125,17 @@ class Iterator implements \Iterator
     }
 
     /**
+     * Checks if an element is in the Object by key.
+     *
+     * @param  mixed  $key
+     * @return boolean
+     */
+    public function has($key): bool
+    {
+        return isset($this->data[$key]);
+    }
+
+    /**
      * Checks if the current key is set
      *
      * @param  mixed  $key  the key to check

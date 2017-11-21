@@ -55,6 +55,7 @@
         "getkirby/image": "dev-master",
         "getkirby/text": "dev-master",
         "php": ">=7.0.0",
+        "ext-mbstring": "*",
         "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
@@ -72,7 +73,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit"
+        "test": "./vendor/bin/phpunit --coverage-html=tests/coverage"
     },
     "archive": {
         "exclude": [
