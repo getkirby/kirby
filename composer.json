@@ -24,10 +24,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/k-next/filesystem"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/html"
         }
     ],
     "require": {
@@ -38,7 +34,6 @@
         "claviska/simpleimage": "3.3.*",
         "getkirby/data": "dev-master",
         "getkirby/filesystem": "dev-master",
-        "getkirby/html": "dev-master",
         "sentry/sentry": "^1.8"
     },
     "minimum-stability": "dev",
