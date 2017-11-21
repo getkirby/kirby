@@ -41,7 +41,7 @@ class Api extends Object
     public function user(): User
     {
 
-        $headers = array_change_key_case(getallheaders(), CASE_LOWER);
+        $headers = array_change_key_case($this->prop('request')->headers(), CASE_LOWER);
         $token   = str_replace('Bearer ', '', $headers['authorization'] ?? null);
 
         if ($token === null) {
