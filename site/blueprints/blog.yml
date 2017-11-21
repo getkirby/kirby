@@ -8,11 +8,7 @@ layout:
         headline: Unpublished articles
         type: pages
         template: article
-        filterBy:
-          -
-            field: isVisible
-            operator: '=='
-            value: false
+        pages: self.children.invisible
   -
     width: 1/1
     sections:
@@ -25,8 +21,4 @@ layout:
         pagination:
           page: 1
           limit: 20
-        filterBy:
-          -
-            field: isVisible
-            operator: '=='
-            value: true
+        pages: self.children.visible
