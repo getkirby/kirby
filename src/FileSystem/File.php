@@ -375,11 +375,18 @@ class File
      * Move the file to a new location
      *
      * @param  string $newRoot
+     * @param  bool   $overwrite Force overwriting any existing files
      */
-    public function move(string $newRoot)
+    public function move(string $newRoot, bool $overwrite = false)
     {
         if (file_exists($newRoot) === true) {
-            throw new Exception('A file at the new location: "' . $newRoot . '" already exists.');
+
+            if ($overwrite === false) {
+                throw new Exception('A file at the new location: "' . $newRoot . '" already exists.');
+            }
+
+            // delete the existing file
+            unlink($newRoot);
         }
 
         // check if the file exists
@@ -402,11 +409,12 @@ class File
      * Copy the file to a new location
      *
      * @param  string $newRoot
+     * @param  bool   $overwrite
      * @return File
      */
-    public function copy(string $newRoot): self
+    public function copy(string $newRoot, bool $overwrite = false): self
     {
-        if (file_exists($newRoot) === true) {
+        if (file_exists($newRoot) === true && $overwrite === false) {
             throw new Exception('A file at the new location: "' . $newRoot . '" already exists.');
         }
 
@@ -428,9 +436,10 @@ class File
      * touching the extension
      *
      * @param  string $newName
+     * @param  bool   $overwrite Force overwrite existing files
      * @return File
      */
-    public function rename(string $newName)
+    public function rename(string $newName, bool $overwrite = false)
     {
         $clone = clone $this;
 
@@ -447,7 +456,7 @@ class File
 
         // move the file to the new root
         if ($this->exists()) {
-            $this->move($clone->root());
+            $this->move($clone->root(), $overwrite);
         }
 
         return $clone;

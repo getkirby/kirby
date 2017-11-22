@@ -97,14 +97,15 @@ class Folder
     /**
      * Creates the folder if it does not exist yet
      *
+     * @param boolean $recursive
      * @return boolean
      */
-    public function make(): bool
+    public function make(bool $recursive = false): bool
     {
         if ($this->exists()) {
             return true;
         }
-        return mkdir($this->root());
+        return mkdir($this->root(), 0777, $recursive);
     }
 
     /**
@@ -238,21 +239,32 @@ class Folder
      */
     public function delete(): bool
     {
+
         if ($this->exists() === false) {
             return true;
         }
 
-        foreach ($this->folders() as $root) {
-            $subfolder = new static($root);
-            $subfolder->delete();
-        }
+        $ignore = ['.', '..'];
 
-        foreach ($this->files() as $root) {
-            $file = new File($root);
-            $file->delete();
+        foreach (scandir($this->root) as $item) {
+            if (in_array($item, $ignore)) {
+                continue;
+            }
+
+            $root = $this->root . '/' . $item;
+
+            if (is_dir($root)) {
+                $subfolder = new static($root);
+                $subfolder->delete();
+            } else {
+                $file = new File($root);
+                $file->delete();
+            }
+
         }
 
         return rmdir($this->root);
+
     }
 
     /**
