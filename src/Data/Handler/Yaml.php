@@ -36,6 +36,6 @@ class Yaml extends Handler
      */
     public static function decode(string $yaml): array
     {
-        return Parser::parse($yaml);
+        return (array)Parser::parse($yaml);
     }
 }
