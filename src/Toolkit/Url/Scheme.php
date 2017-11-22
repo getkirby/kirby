@@ -59,8 +59,8 @@ class Scheme
      */
     protected static function hasHttpsPort(): bool
     {
-        return ($_SERVER['SERVER_PORT'] ?? null === '443') ||
-               ($_SERVER['HTTP_X_FORWARDED_PORT'] ?? null == '443');
+        return ($_SERVER['SERVER_PORT'] ?? null) === '443' ||
+               ($_SERVER['HTTP_X_FORWARDED_PORT'] ?? null) == '443';
     }
 
     /**
@@ -70,7 +70,7 @@ class Scheme
      */
     protected static function hasHttpsProtocol(): bool
     {
-        return ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null === 'https') ||
-               ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null === 'https, http');
+        return ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) === 'https' ||
+               ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) === 'https, http';
     }
 }
