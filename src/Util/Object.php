@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Util;
 
 use stdClass;
 
