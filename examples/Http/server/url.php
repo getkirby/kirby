@@ -2,7 +2,7 @@
 
 require '../../vendor/autoload.php';
 
-use Kirby\Toolkit\Server;
+use Kirby\Http\Server;
 
 var_dump(Server::port());
 var_dump(Server::https());
