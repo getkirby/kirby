@@ -2,8 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\A;
-
 /**
  * A set of methods that make it more convenient to get variables
  * from the global server array
@@ -40,7 +38,7 @@ class Server
         }
 
         $key   = strtoupper($key);
-        $value = A::get($_SERVER, $key, $default);
+        $value = $_SERVER[$key] ?? $default;
         return static::sanitize($key, $value);
     }
 

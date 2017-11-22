@@ -2,9 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
-
 use Kirby\Http\Acceptance\Language;
 use Kirby\Http\Acceptance\MimeType;
 

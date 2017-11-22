@@ -4,7 +4,6 @@ namespace Kirby\Image;
 
 use Kirby\Image\Exif\Camera;
 use Kirby\Image\Exif\Location;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
 
 /**
@@ -216,16 +215,26 @@ class Exif
     }
 
     /**
+     * Get all computed data
+     *
+     * @return array
+     */
+    protected function computed(): array
+    {
+        return $this->data['COMPUTED'] ?? [];
+    }
+
+    /**
      * Pareses and stores all relevant exif data
      */
     protected function parse()
     {
         $this->timestamp   = $this->parseTimestamp();
-        $this->exposure    = A::get($this->data, 'ExposureTime');
-        $this->iso         = A::get($this->data, 'ISOSpeedRatings');
+        $this->exposure    = $this->data['ExposureTime'] ?? null;
+        $this->iso         = $this->data['ISOSpeedRatings'] ?? null;
         $this->focalLength = $this->parseFocalLength();
-        $this->aperture    = @$this->data['COMPUTED']['ApertureFNumber'];
-        $this->isColor     = V::accepted(@$this->data['COMPUTED']['IsColor']);
+        $this->aperture    = $this->computed()['ApertureFNumber'] ?? null;
+        $this->isColor     = V::accepted($this->computed()['IsColor'] ?? null);
     }
 
     /**
@@ -239,7 +248,7 @@ class Exif
             return strtotime($this->data['DateTimeOriginal']);
         }
 
-        return A::get($this->data, 'FileDateTime', $this->image->modified());
+        return $this->data['FileDateTime'] ?? $this->image->modified();
     }
 
     /**

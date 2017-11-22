@@ -2,7 +2,7 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\A;
+use Kirby\Util\A;
 use Kirby\Toolkit\Str;
 
 /**

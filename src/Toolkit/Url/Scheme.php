@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit\Url;
 
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Url;
 
 /**
@@ -60,8 +59,8 @@ class Scheme
      */
     protected static function hasHttpsPort(): bool
     {
-        return A::get($_SERVER, 'SERVER_PORT') === '443' ||
-               A::get($_SERVER, 'HTTP_X_FORWARDED_PORT') == '443';
+        return ($_SERVER['SERVER_PORT'] ?? null === '443') ||
+               ($_SERVER['HTTP_X_FORWARDED_PORT'] ?? null == '443');
     }
 
     /**
@@ -71,7 +70,7 @@ class Scheme
      */
     protected static function hasHttpsProtocol(): bool
     {
-        return A::get($_SERVER, 'HTTP_X_FORWARDED_PROTO') == 'https' ||
-               A::get($_SERVER, 'HTTP_X_FORWARDED_PROTO') == 'https, http';
+        return ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null === 'https') ||
+               ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null === 'https, http');
     }
 }
