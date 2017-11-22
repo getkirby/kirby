@@ -118,6 +118,10 @@ class Data
         $file = new File($file);
         $type = $type ?? $file->extension();
 
+        if ($file->exists() === false) {
+            return [];
+        }
+
         return static::handler($type)->decode($file->read());
     }
 
