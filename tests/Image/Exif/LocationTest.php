@@ -39,6 +39,6 @@ class LocationTest extends TestCase
     public function testToString()
     {
         $camera = new Location($this->_exif());
-        $this->assertEquals('50.819053333333, -0.016666666666667', (string)$camera);
+        $this->assertEquals('50.8190533333, -0.0166666666667', (string)$camera);
     }
 }
