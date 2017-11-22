@@ -14,85 +14,6 @@ class HasCount { public function count() { return 7; } }
 class VTest extends TestCase
 {
 
-    public function testInput()
-    {
-        $valid = V::input([
-            'field' => 'value'
-        ], []);
-
-        $this->assertTrue($valid);
-    }
-
-    public function testInputRequired()
-    {
-        $valid = V::input([
-            'field' => 'value'
-        ], [
-            'field' => ['required' => true]
-        ]);
-
-        $this->assertTrue($valid);
-    }
-
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The "field" field is missing
-     */
-    public function testInputRequiredFail()
-    {
-        $valid = V::input([
-            'field' => null
-        ], [
-            'field' => ['required' => true]
-        ]);
-    }
-
-    public function testInputNull()
-    {
-        $valid = V::input([
-            'field' => null
-        ], [
-            'field' => ['email' => true]
-        ]);
-
-        $this->assertTrue($valid);
-    }
-
-    public function testInputIntKey()
-    {
-        $valid = V::input([
-            'field' => 'bastian@allgeier.de'
-        ], [
-            'field' => ['email']
-        ]);
-
-        $this->assertTrue($valid);
-    }
-
-    public function testInputArrayRules()
-    {
-        $valid = V::input([
-            'field' => 5
-        ], [
-            'field' => ['max' => 6]
-        ]);
-
-        $this->assertTrue($valid);
-    }
-
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The "max" validator failed for field "field"
-     */
-    public function testInputFail()
-    {
-        $valid = V::input([
-            'field' => 5
-        ], [
-            'field' => ['max' => 3]
-        ]);
-    }
-
     public function testValidators()
     {
         $this->assertFalse(empty(V::$validators));
@@ -191,34 +112,6 @@ class VTest extends TestCase
 
         $this->assertFalse(V::between(3, 4, 5));
         $this->assertFalse(V::between('kirby', 2, 4));
-    }
-
-    public function testContains()
-    {
-        $this->assertTrue(V::contains('kirby', 'by'));
-        $this->assertTrue(V::contains('kirby', 'ki'));
-        $this->assertTrue(V::contains('kirby', 'kirby'));
-
-        $this->assertFalse(V::contains('kirby', 'kirbz'));
-        $this->assertFalse(V::contains('kirby', 'kirbys'));
-        $this->assertFalse(V::contains('kirby', ' '));
-
-        // TODO: handling for empty needle string
-        // $this->assertFalse(V::contains('kirby', ''));
-    }
-
-    public function testNotContains()
-    {
-        $this->assertTrue(V::notContains('kirby', 'kirbz'));
-        $this->assertTrue(V::notContains('kirby', 'kirbys'));
-        $this->assertTrue(V::notContains('kirby', ' '));
-
-        // TODO: handling for empty needle string
-        // $this->assertTrue(V::notContains('kirby', ''));
-
-        $this->assertFalse(V::notContains('kirby', 'by'));
-        $this->assertFalse(V::notContains('kirby', 'ki'));
-        $this->assertFalse(V::notContains('kirby', 'kirby'));
     }
 
     public function testDate()
