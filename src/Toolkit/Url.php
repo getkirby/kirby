@@ -10,6 +10,7 @@ use Kirby\Toolkit\Url\Path;
 use Kirby\Toolkit\Url\Port;
 use Kirby\Toolkit\Url\Query;
 use Kirby\Toolkit\Url\Scheme;
+use Kirby\Util\A;
 
 /**
  * A set of handy methods to work with URLs
@@ -93,7 +94,7 @@ class Url
      */
     public static function last(): string
     {
-        return A::get($_SERVER, 'HTTP_REFERER', '');
+        return $_SERVER['HTTP_REFERER'] ?? '';
     }
 
     /**
@@ -236,7 +237,7 @@ class Url
     public static function base(string $url = null): string
     {
         if ($url === null) {
-            $port = A::get($_SERVER, 'SERVER_PORT');
+            $port = $_SERVER['SERVER_PORT'] ?? null;
             $port = in_array($port, [80, 443]) === false ? $port : null;
             return Scheme::get() . '://' . A::get($_SERVER, 'SERVER_NAME', A::get($_SERVER, 'SERVER_ADDR')) . ($port ? ':' . $port : '');
         }
