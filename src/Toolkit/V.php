@@ -3,7 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 
 /**
 * A set of validator methods

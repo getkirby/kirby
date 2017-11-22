@@ -11,6 +11,7 @@ use Kirby\Toolkit\Url\Port;
 use Kirby\Toolkit\Url\Query;
 use Kirby\Toolkit\Url\Scheme;
 use Kirby\Util\A;
+use Kirby\Util\Str;
 
 /**
  * A set of handy methods to work with URLs

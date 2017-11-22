@@ -2,7 +2,7 @@
 
 namespace Kirby\Http\Acceptance;
 
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 
 use Kirby\Http\Acceptance;
 

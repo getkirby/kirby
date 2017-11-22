@@ -25,7 +25,7 @@ class Object extends stdClass
     public function __construct(array $data = [])
     {
         foreach ($data as $key => $val) {
-            if (!is_string($key) || Str::length($key) === 0) {
+            if (!is_string($key) || strlen($key) === 0) {
                 continue;
             }
             $this->{$key} = $val;

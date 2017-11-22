@@ -2,7 +2,7 @@
 
 namespace Kirby\Data\Handler;
 
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 use Kirby\Data\Handler;
 
 /**

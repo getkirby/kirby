@@ -6,8 +6,6 @@ use Exception;
 use Kirby\Http\Request;
 use Kirby\Http\Router;
 use Kirby\Http\Router\Route;
-use Kirby\Toolkit\DI\Dependencies;
-use Kirby\Toolkit\Str;
 
 class Api extends Object
 {

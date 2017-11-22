@@ -3,8 +3,7 @@
 namespace Kirby\Http;
 
 use Exception;
-use Kirby\Toolkit\Server;
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 
 /**
  * Url parser and builder class

@@ -6,7 +6,7 @@ use Kirby\FileSystem\File;
 use Kirby\Html\Element\Img;
 use Kirby\Http\Response;
 use Kirby\Http\Response\Download;
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 
 /**
  * Image

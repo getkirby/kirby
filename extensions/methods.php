@@ -6,7 +6,7 @@ use Kirby\Cms\Structure;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Html\Element\A;
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 
 /**
  * Field method setup

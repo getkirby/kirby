@@ -1,11 +1,11 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Util;
 
 /**
  * A set of handy string methods
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Util
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
