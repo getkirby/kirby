@@ -14,8 +14,8 @@ class ParamsTest extends TestCase
 
     public function testStrip()
     {
-        $this->assertEquals('https://www.youtube.com/watch/?v=9q_aXttJduk', Params::strip());
-        $this->assertEquals('http://getkirby.com#foo', Params::strip('http://getkirby.com/hello;kitty/#foo'));
+        $this->assertEquals('https://www.youtube.com/watch?v=9q_aXttJduk', Params::strip());
+        $this->assertEquals('http://getkirby.com/#foo', Params::strip('http://getkirby.com/hello;kitty/#foo'));
     }
 
     public function testToString()

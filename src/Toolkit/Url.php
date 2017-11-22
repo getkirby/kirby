@@ -133,14 +133,24 @@ class Url
         if (empty($parts['params']) === false) {
             $result[] = Params::toString($parts['params']);
         }
-        if (empty($parts['query']) === false) {
-            $result[] = '?' . Query::toString($parts['query']);
-        }
-        if (empty($parts['hash']) === false) {
-            $parts['hash'] = '#' . $parts['hash'];
+
+        // make sure that URLs without any URI
+        // end with a slash after the host
+        if(count($result) === 1) {
+            $result = $result[0] . '/';
+        } else {
+            $result = implode('/', $result);
         }
 
-        return implode('/', $result) . $parts['hash'];
+        if(empty($parts['query']) === false) {
+            $result .= '?' . Query::toString($parts['query']);
+        }
+
+        if(!empty($parts['hash'])) {
+            $result .= '#' . $parts['hash'];
+        }
+
+        return $result;
     }
 
     /**

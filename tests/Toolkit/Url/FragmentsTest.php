@@ -15,6 +15,6 @@ class FragmentsTest extends TestCase
     public function testStrip()
     {
         $this->assertEquals('https://www.youtube.com/?v=9q_aXttJduk', Fragments::strip());
-        $this->assertEquals('http://getkirby.com#foo', Fragments::strip('http://getkirby.com/docs/cheatsheet#foo'));
+        $this->assertEquals('http://getkirby.com/#foo', Fragments::strip('http://getkirby.com/docs/cheatsheet#foo'));
     }
 }

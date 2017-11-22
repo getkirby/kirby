@@ -44,10 +44,10 @@ class UrlTest extends TestCase
     public function testBuild()
     {
         // build with defaults
-        $this->assertEquals('https://www.youtube.com/watch/?v=9q_aXttJduk', Url::build());
+        $this->assertEquals('https://www.youtube.com/watch?v=9q_aXttJduk', Url::build());
 
         // build with different host
-        $this->assertEquals('https://kirbyvideo.com/watch/?v=9q_aXttJduk', Url::build(['host' => 'kirbyvideo.com']));
+        $this->assertEquals('https://kirbyvideo.com/watch?v=9q_aXttJduk', Url::build(['host' => 'kirbyvideo.com']));
 
         // build from parts
         $parts = [
@@ -55,7 +55,7 @@ class UrlTest extends TestCase
             'query'  => ['bastian' => 'allgeier'],
             'hash'   => 'foo'
         ];
-        $result = 'http://getkirby.com/hello;kitty/mickey;mouse/?bastian=allgeier#foo';
+        $result = 'http://getkirby.com/hello;kitty/mickey;mouse?bastian=allgeier#foo';
         $this->assertEquals($result, Url::build($parts, 'http://getkirby.com'));
     }
 

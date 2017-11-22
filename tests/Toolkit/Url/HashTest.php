@@ -13,7 +13,7 @@ class HashTest extends TestCase
 
     public function testStrip()
     {
-        $this->assertEquals('https://www.youtube.com/watch/?v=9q_aXttJduk', Hash::strip());
+        $this->assertEquals('https://www.youtube.com/watch?v=9q_aXttJduk', Hash::strip());
         $this->assertEquals('http://getkirby.com/docs', Hash::strip('http://getkirby.com/docs/#foo'));
     }
 }

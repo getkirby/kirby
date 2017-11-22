@@ -29,6 +29,6 @@ class QueryTest extends TestCase
     public function testStrip()
     {
         $this->assertEquals('https://www.youtube.com/watch', Query::strip());
-        $this->assertEquals('http://getkirby.com#foo', Query::strip('http://getkirby.com/?hello=kitty#foo'));
+        $this->assertEquals('http://getkirby.com/#foo', Query::strip('http://getkirby.com/?hello=kitty#foo'));
     }
 }
