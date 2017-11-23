@@ -2,7 +2,7 @@
 
 namespace Kirby\Data\Handler;
 
-use Symfony\Component\Yaml\Yaml as Parser;
+use Spyc;
 use Kirby\Data\Handler;
 
 /**
@@ -25,7 +25,7 @@ class Yaml extends Handler
      */
     public static function encode(array $data): string
     {
-        return Parser::dump($data);
+        return Spyc::YAMLDump($data, $indent = false, $wordwrap = false, $no_opening_dashes = true);
     }
 
     /**
@@ -36,6 +36,6 @@ class Yaml extends Handler
      */
     public static function decode(string $yaml): array
     {
-        return (array)Parser::parse($yaml);
+        return (array)Spyc::YAMLLoadString($yaml);
     }
 }
