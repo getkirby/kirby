@@ -2,8 +2,11 @@
 
 namespace Kirby\Panel\Sections;
 
+use Exception;
 use Kirby\Cms\Object;
+use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
+use Kirby\Panel\Sections\PagesSection\Add;
 
 class PagesSection extends CollectionSection
 {
@@ -30,7 +33,7 @@ class PagesSection extends CollectionSection
         ]);
     }
 
-    public function pages(): Pages
+    public function collection()
     {
         return $this->query($this->prop('pages'));
     }
@@ -48,7 +51,6 @@ class PagesSection extends CollectionSection
 
     public function filterBy()
     {
-
         $filters = parent::filterBy();
 
         if ($template = $this->prop('template')) {
@@ -60,19 +62,31 @@ class PagesSection extends CollectionSection
         }
 
         return $filters;
+    }
 
+    public function add()
+    {
+        // don't show the add button when there are already enough pages
+        if ($this->max() !== null && $this->max() <= $this->total()) {
+            return null;
+        }
+
+        // get the add options
+        $options = $this->prop('add');
+
+        // no button at all
+        if (empty($options) === true) {
+            return null;
+        }
+
+        return (new Add($this, $options))->toArray();
     }
 
     public function toArray(): array
     {
+        $pagination = $this->items()->pagination();
+        $items      = $this->items()->toArray(function ($page) {
 
-        $data = $this->pages()->query([
-            'filterBy' => $this->filterBy(),
-            'sortBy'   => $this->prop('sortBy'),
-            'paginate' => $this->pagination(),
-        ]);
-
-        $items = $data->toArray(function ($page) {
             $data = ['page' => $page];
 
             return [
@@ -86,12 +100,14 @@ class PagesSection extends CollectionSection
         });
 
         return [
+            'headline'   => $this->headline(),
             'items'      => array_values($items),
             'layout'     => $this->prop('layout'),
+            'add'        => $this->add(),
             'pagination' => [
-                'page'  => $data->pagination()->page(),
-                'limit' => $data->pagination()->limit(),
-                'total' => $data->pagination()->total(),
+                'page'  => $pagination->page(),
+                'limit' => $pagination->limit(),
+                'total' => $pagination->total(),
             ]
         ];
 
