@@ -39,12 +39,13 @@ return [
         ]);
 
         $result = $api->result();
+        $pretty = $request->query()->get('pretty') === 'true';
 
         if (($result['status'] ?? 'ok') === 'error') {
-            return new Json($result, 400);
+            return new Json($result, 400, $pretty);
         }
 
-        return new Json($result);
+        return new Json($result, 200, $pretty);
 
     }),
     new Route('media/(:any)/(:all)', 'GET', function (string $type, string $path) use ($app, $site) {

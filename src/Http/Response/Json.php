@@ -31,10 +31,11 @@ class Json extends Response
      *
      * @param string|array $body
      * @param int          $code
+     * @param bool         $pretty
      */
-    public function __construct($body = '', int $code = 200)
+    public function __construct($body = '', int $code = 200, bool $pretty = false)
     {
-        $this->body($body);
+        $this->body($body, $pretty);
         $this->code($code);
     }
 
@@ -44,14 +45,17 @@ class Json extends Response
      * arrays to json
      *
      * @param  string|array|null $body
+     * @param  bool              $pretty
      * @return string
      */
-    public function body($body = null): string
+    public function body($body = null, bool $pretty = false): string
     {
         if ($body === null) {
             return parent::body();
-        } elseif (is_array($body) === true) {
-            return parent::body(json_encode($body));
+        }
+
+        if (is_array($body) === true) {
+            return parent::body(json_encode($body, $pretty === true ? JSON_PRETTY_PRINT : null));
         }
 
         return parent::body($body);
