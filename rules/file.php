@@ -4,6 +4,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Image\Image as Upload;
 use Kirby\Toolkit\V;
+use Kirby\Util\Str;
 
 return [
     'file.create' => function (Page $page = null, Upload $upload, string $filename) {
