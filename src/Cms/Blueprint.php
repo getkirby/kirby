@@ -117,8 +117,13 @@ class Blueprint
         $templates = [];
 
         foreach ($this->sections('pages') as $section) {
-            $section   = new PagesSection($section);
-            $templates = array_merge($templates, $section->add()['templates']);
+
+            $section['max'] = null;
+            $section = new PagesSection($section);
+
+            if ($add = $section->add()) {
+                $templates = array_merge($templates, $add['templates']);
+            }
         }
 
         return array_unique($templates);
