@@ -196,7 +196,7 @@ V::$validators = [
                V::notIn($array[$key], [null, '', []]) === true;
     },
     'same' => function ($value, $other): bool {
-        return $value === $other;
+        return $value == $other;
     },
     'size' => function ($value, $size, $operator = '=='): bool {
         if (is_numeric($value) === true) {

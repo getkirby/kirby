@@ -79,7 +79,7 @@ class Collection extends BaseCollection
 
     public function getAttribute($object, $prop)
     {
-        return $object->$prop();
+        return (string)$object->$prop();
     }
 
     public function __set(string $id, $object)
