@@ -4,6 +4,7 @@ namespace Kirby\Panel\Sections;
 
 use Kirby\Cms\Files;
 use Kirby\Cms\Object;
+use Kirby\Panel\Sections\FilesSection\Add;
 
 class FilesSection extends CollectionSection
 {
@@ -32,6 +33,11 @@ class FilesSection extends CollectionSection
         return $this->query($this->prop('files'));
     }
 
+    public function group()
+    {
+        return $this->prop('group');
+    }
+
     public function image($file)
     {
         if (in_array($file->extension(), ['jpg', 'jpeg', 'gif', 'png', 'svg'])) {
@@ -47,7 +53,7 @@ class FilesSection extends CollectionSection
     {
         $filters = parent::filterBy();
 
-        if ($group = $this->prop('group')) {
+        if ($group = $this->group()) {
             $filters[] = [
                 'field'    => 'group',
                 'operator' => '==',
@@ -56,6 +62,24 @@ class FilesSection extends CollectionSection
         }
 
         return $filters;
+    }
+
+    public function add()
+    {
+        // don't show the add button when there are already enough files
+        if ($this->max() !== null && $this->max() <= $this->total()) {
+            return null;
+        }
+
+        // get the add options
+        $options = $this->prop('add');
+
+        // no button at all
+        if (empty($options) === true) {
+            return null;
+        }
+
+        return (new Add($this, $options))->toArray();
     }
 
     public function toArray(): array
@@ -84,6 +108,7 @@ class FilesSection extends CollectionSection
             'headline'   => $this->headline(),
             'items'      => array_values($items),
             'layout'     => $this->prop('layout'),
+            'add'        => $this->add(),
             'pagination' => [
                 'page'  => $pagination->page(),
                 'limit' => $pagination->limit(),
