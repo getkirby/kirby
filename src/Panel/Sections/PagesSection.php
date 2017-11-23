@@ -67,7 +67,7 @@ class PagesSection extends CollectionSection
     public function add()
     {
         // don't show the add button when there are already enough pages
-        if ($this->max() !== null && $this->max() <= $this->total()) {
+        if ($this->max() !== null && $this->max() < $this->total()) {
             return null;
         }
 
