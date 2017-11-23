@@ -8,7 +8,7 @@ class Tempura
     protected $template;
     protected $data;
 
-    public function __construct(string $template, array $data = [])
+    public function __construct(string $template = null, array $data = [])
     {
         $this->template = $template;
         $this->data     = $data;
