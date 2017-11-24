@@ -9,7 +9,7 @@
 
   <base href="<?= $kirby->url('panel') ?>">
   <link rel="stylesheet" href="<?= $kirby->url('panel') ?>/assets/css/panel.css">
-  <link rel="stylesheet" href="<?= $kirby->url('panel') ?>/assets/css/playground.css">
+  <link rel="stylesheet" href="<?= $kirby->url('index') ?>/assets/css/panel.css">
 
 </head>
 <body>
@@ -32,7 +32,7 @@
   <script src="<?= $kirby->url('panel') ?>/assets/js/vendor.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/ui.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/panel.js"></script>
-  <script src="<?= $kirby->url('panel') ?>/assets/js/playground.js"></script>
+  <script src="<?= $kirby->url('index') ?>/assets/js/panel.js"></script>
 
 </body>
 </html>
