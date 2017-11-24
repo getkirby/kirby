@@ -37,6 +37,13 @@ class UserBlueprint extends Blueprint
             ];
         }
 
+        if (isset($fields['language']) === false) {
+            $fields['language'] = [
+                'name' => 'language',
+                'type' => 'text'
+            ];
+        }
+
         return $fields;
     }
 
