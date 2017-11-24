@@ -98,7 +98,14 @@ class Api extends Object
             // $this->user();
         }
 
-        return $result->action()->call($this, ...$result->arguments());
+        try {
+            return $result->action()->call($this, ...$result->arguments());
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
 
     }
 
