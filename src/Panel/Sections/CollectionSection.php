@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Sections;
 
+use Exception;
 use Kirby\Cms\Collection;
 use Kirby\Cms\Object;
 use Kirby\Cms\Page;
@@ -58,13 +59,6 @@ class CollectionSection extends Object
             ],
             'max' => [
                 'type' => 'integer'
-            ],
-            'paginate' => [
-                'type'    => 'array',
-                'default' => [
-                    'page'  => 1,
-                    'limit' => 20
-                ]
             ]
         ];
     }
@@ -169,10 +163,23 @@ class CollectionSection extends Object
 
     public function paginate(): array
     {
-        return array_merge([
-            'page'  => 1,
-            'limit' => 20,
-        ], $this->prop('paginate'));
+
+        $defaults = ['page' => 1, 'limit' => 20];
+        $options  = $this->prop('paginate');
+
+        if (is_int($options) === true) {
+            return [
+                'page'  => 1,
+                'limit' => $options
+            ];
+        }
+
+        if (is_array($options) === true) {
+            return array_merge($defaults, $options);
+        }
+
+        return $defaults;
+
     }
 
 }
