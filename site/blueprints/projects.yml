@@ -9,6 +9,7 @@ layout:
         layout: cards
         max: 6
         image: page.images.group("cover").first
+        info: "{{ page.year }}"
         add:
           templates:
             - project
