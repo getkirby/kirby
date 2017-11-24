@@ -31,3 +31,4 @@ layout:
       -
         headline: Images
         type: files
+        add: image/*
