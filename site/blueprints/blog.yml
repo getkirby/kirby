@@ -8,6 +8,7 @@ layout:
         headline: Unpublished articles
         type: pages
         pages: self.children.invisible
+        info: "{{ page.date('d.m.Y') }}"
         add: article
   -
     width: 1/1
@@ -15,9 +16,5 @@ layout:
       -
         headline: Published articles
         type: pages
-        sortBy:
-           - num desc
-        pagination:
-          page: 1
-          limit: 20
-        pages: self.children.visible
+        pages: self.children.visible.flip
+        info: "{{ page.date('d.m.Y') }}"

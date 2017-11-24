@@ -1,0 +1,23 @@
+title: Default
+layout:
+  -
+    width: 1/1
+    sections:
+      -
+        type: fields
+        fields:
+          -
+            label: Website
+            name: website
+            type: url
+            width: 1/2
+          -
+            label: Twitter
+            name: twitter
+            type: text
+            icon: twitter
+            width: 1/2
+          -
+            label: Bio
+            name: bio
+            type: textarea
