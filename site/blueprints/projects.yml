@@ -7,4 +7,8 @@ layout:
         headline: Published
         type: pages
         layout: cards
-        template: project
+        max: 6
+        image: page.images.group("cover").first
+        add:
+          templates:
+            - project
