@@ -4,8 +4,10 @@ namespace Kirby\Panel\Sections;
 
 use Kirby\Cms\Collection;
 use Kirby\Cms\Object;
+use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Query;
+use Kirby\Cms\Site;
 use Kirby\Cms\Tempura;
 
 class CollectionSection extends Object
@@ -115,10 +117,19 @@ class CollectionSection extends Object
 
     public function self(): Object
     {
-        return (new Query($this->prop('self'), [
+        $query = (new Query($this->prop('self'), [
             'site'  => $this->site,
             'kirby' => $this->kirby
         ]))->result();
+
+        if (
+            is_a($query, Page::class) === true ||
+            is_a($query, Site::class) === true
+        ) {
+            return $query;
+        }
+
+        return $this->site;
     }
 
     public function headline()
