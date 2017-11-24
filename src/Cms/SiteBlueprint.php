@@ -37,9 +37,6 @@ class SiteBlueprint extends Blueprint
     public function data()
     {
 
-        // TODO: remove the fixed default blueprint for the site
-        return $this->data = $this->fallback();
-
         $data = parent::data();
 
         if ($this->isDefault() === true || empty($data['layout']) === true) {
