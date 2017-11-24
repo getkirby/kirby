@@ -16,6 +16,10 @@ class Folder extends BaseFolder
 
             $basename = basename($root);
 
+            if (substr($basename, 0, 1) === '.') {
+                continue;
+            }
+
             if (preg_match('!^([0-9]+?)-(.*)$!', $basename, $matches)) {
                 $num  = intval($matches[1]);
                 $slug = $matches[2];
@@ -44,6 +48,9 @@ class Folder extends BaseFolder
             }
             return $root;
         }
+
+        return $this->root . '/default.txt';
+
     }
 
     public function files(): array

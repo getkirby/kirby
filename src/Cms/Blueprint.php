@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Panel\Sections\PagesSection;
 
 class Blueprint
 {
@@ -117,14 +118,12 @@ class Blueprint
 
         foreach ($this->sections('pages') as $section) {
 
-            $sectionTemplates = $section['template'] ?? 'default';
+            $section['max'] = null;
+            $section = new PagesSection($section);
 
-            if (is_array($sectionTemplates) === true) {
-                $templates = array_merge($templates, $sectionTemplates);
-            } elseif (is_string($sectionTemplates)) {
-                $templates[] = $sectionTemplates;
+            if ($add = $section->add()) {
+                $templates = array_merge($templates, $add['templates']);
             }
-
         }
 
         return array_unique($templates);

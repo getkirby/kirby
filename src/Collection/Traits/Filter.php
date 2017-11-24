@@ -3,43 +3,31 @@
 namespace Kirby\Collection\Traits;
 
 use Closure;
+use Exception;
 
-use Kirby\Collection\Filter\Between;
-use Kirby\Collection\Filter\Contains;
-use Kirby\Collection\Filter\Custom;
-use Kirby\Collection\Filter\EndsWith;
-use Kirby\Collection\Filter\Equals;
-use Kirby\Collection\Filter\In;
-use Kirby\Collection\Filter\LessThan;
-use Kirby\Collection\Filter\LessThanOrEquals;
-use Kirby\Collection\Filter\MoreThan;
-use Kirby\Collection\Filter\MoreThanOrEquals;
-use Kirby\Collection\Filter\NotEquals;
-use Kirby\Collection\Filter\NotInt;
-use Kirby\Collection\Filter\StartsWith;
+use Kirby\Toolkit\V;
 
 trait Filter
 {
 
     protected $filters = [
-        'between' => Between::class,
-        '*='      => Contains::class,
-        '$='      => EndsWith::class,
-        '=='      => Equals::class,
-        'in'      => In::class,
-        '<'       => LessThan::class,
-        '<='      => LessThanOrEquals::class,
-        '>'       => MoreThan::class,
-        '>='      => MoreThanOrEquals::class,
-        '!='      => NotEquals::class,
-        'not in'  => NotInt::class,
-        '^='      => StartsWith::class
+        'between' => 'between',
+        '*='      => 'contains',
+        '$='      => 'endsWith',
+        '=='      => 'same',
+        'in'      => 'in',
+        '<'       => 'less',
+        '<='      => 'max',
+        '>'       => 'more',
+        '>='      => 'min',
+        '!='      => 'different',
+        'not in'  => 'notIn',
+        '^='      => 'startsWith'
     ];
 
     public function filter($filter): self
     {
         if (is_array($filter)) {
-
             $collection = $this;
 
             foreach ($filter as $arguments) {
@@ -47,10 +35,11 @@ trait Filter
             }
 
             return $collection;
-
-        } else if (is_a($filter, 'Closure')) {
+        } elseif (is_a($filter, 'Closure')) {
             return $this->clone()->data(array_filter($this->data, $filter));
         }
+
+        throw new Exception('The filter method needs either an array of filterBy rules or a closure function to be passed as parameter.');
     }
 
     public function filterBy(string $attribute, $operator, $value = null): self
@@ -65,12 +54,11 @@ trait Filter
             throw new Exception('Missing filter class for operator: ' . $operator);
         }
 
-        $filterClass = $this->filters[$operator];
-        $filter      = new $filterClass;
+        $filterMethod = $this->filters[$operator];
         $collection  = $this->clone();
 
         foreach ($this->data as $key => $item) {
-            if ($filter->filter($this->getAttribute($item, $attribute), $value) !== true) {
+            if (V::$filterMethod($this->getAttribute($item, $attribute), $value) !== true) {
                 $collection->remove($key);
             }
         }

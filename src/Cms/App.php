@@ -15,7 +15,6 @@ use Kirby\Image\Darkroom\GdLib;
 use Kirby\Text\Markdown;
 use Kirby\Text\Smartypants;
 use Kirby\Text\Tags as Kirbytext;
-use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Url;
 use Kirby\Toolkit\View;
 

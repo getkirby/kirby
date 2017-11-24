@@ -15,6 +15,7 @@ return function ($page) {
         'parents'   => array_values($page->parents()->toArray(function ($parent) {
             return [
                 'id'    => $parent->id(),
+                'slug'  => $parent->slug(),
                 'title' => $parent->title()->toString(),
             ];
         }))

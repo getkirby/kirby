@@ -3,7 +3,6 @@
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Image\Image as Upload;
-use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 return [

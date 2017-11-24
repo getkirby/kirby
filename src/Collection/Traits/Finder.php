@@ -22,16 +22,5 @@ trait Finder
         return $this->finder()->findBy($key, $value);
     }
 
-    /**
-     * Checks if an element is in the Object by key.
-     *
-     * @param  mixed  $key
-     * @return boolean
-     */
-    public function has($key): bool
-    {
-        return isset($this->data[$key]);
-    }
-
 }
 

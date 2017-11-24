@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 
 return [
     'setup' => function ($model, $params): array {

@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\User;
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 use Kirby\Toolkit\V;
 
 return [

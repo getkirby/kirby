@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Toolkit\Str;
 use Kirby\Data\Handler\Yaml;
 
 return [

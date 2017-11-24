@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Sections;
 
+use Kirby\Cms\Collection;
 use Kirby\Cms\Object;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Query;
@@ -13,6 +14,7 @@ class CollectionSection extends Object
     protected $kirby;
     protected $site;
     protected $self;
+    protected $items;
 
     public function __construct(array $props)
     {
@@ -32,6 +34,7 @@ class CollectionSection extends Object
             ],
             'layout' => [
                 'type'     => 'string',
+                'default'  => 'list',
                 'validate' => function ($value) {
                     return in_array($value, ['cards', 'list']);
                 }
@@ -48,7 +51,13 @@ class CollectionSection extends Object
             'sortBy' => [
                 'type' => 'array'
             ],
-            'pagination' => [
+            'min' => [
+                'type' => 'integer'
+            ],
+            'max' => [
+                'type' => 'integer'
+            ],
+            'paginate' => [
                 'type'    => 'array',
                 'default' => [
                     'page'  => 1,
@@ -56,6 +65,25 @@ class CollectionSection extends Object
                 ]
             ]
         ];
+    }
+
+    public function collection()
+    {
+        return new Collection;
+    }
+
+    public function items()
+    {
+        if (is_a($this->items, Collection::class) === true) {
+            return $this->items;
+        }
+
+        // filter, sort, paginate
+        return $this->items = $this->collection()->query([
+            'filterBy' => $this->filterBy(),
+            'sortBy'   => $this->sortBy(),
+            'paginate' => $this->paginate(),
+        ]);
     }
 
     public function query(string $query, array $data = [])
@@ -69,7 +97,12 @@ class CollectionSection extends Object
         return (new Query($query, array_merge($defaults, $data)))->result();
     }
 
-    public function template(string $template, array $data = [])
+    public function total(): int
+    {
+        return $this->items()->pagination()->total();
+    }
+
+    public function template(string $template = null, array $data = [])
     {
         $defaults = [
             'site'  => $this->site,
@@ -86,6 +119,11 @@ class CollectionSection extends Object
             'site'  => $this->site,
             'kirby' => $this->kirby
         ]))->result();
+    }
+
+    public function headline()
+    {
+        return $this->template($this->prop('headline'));
     }
 
     public function title($data = [])
@@ -113,12 +151,17 @@ class CollectionSection extends Object
         return $filters;
     }
 
-    public function pagination(): array
+    public function sortBy()
+    {
+        return $this->prop('sortBy');
+    }
+
+    public function paginate(): array
     {
         return array_merge([
             'page'  => 1,
             'limit' => 20,
-        ], $this->prop('pagination'));
+        ], $this->prop('paginate'));
     }
 
 }

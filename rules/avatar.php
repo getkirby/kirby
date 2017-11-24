@@ -1,9 +1,5 @@
 <?php
 
-use Kirby\Cms\User;
-use Kirby\Toolkit\Str;
-use Kirby\Toolkit\V;
-
 return [
     'avatar.valid.mime' => function (string $mime) {
         if ($mime !== 'image/jpeg') {

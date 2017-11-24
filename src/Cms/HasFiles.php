@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Str;
+use Kirby\Util\Str;
 
 trait HasFiles
 {

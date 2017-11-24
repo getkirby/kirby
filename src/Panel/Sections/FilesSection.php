@@ -27,7 +27,7 @@ class FilesSection extends CollectionSection
         ]);
     }
 
-    public function files(): Files
+    public function collection()
     {
         return $this->query($this->prop('files'));
     }
@@ -61,13 +61,8 @@ class FilesSection extends CollectionSection
     public function toArray(): array
     {
 
-        $data = $this->files()->query([
-            'filterBy' => $this->filterBy(),
-            'sortBy'   => $this->prop('sortBy'),
-            'paginate' => $this->pagination(),
-        ]);
-
-        $items = $data->toArray(function ($file) {
+        $pagination = $this->items()->pagination();
+        $items      = $this->items()->toArray(function ($file) {
 
             $data = ['file' => $file];
 
@@ -86,12 +81,13 @@ class FilesSection extends CollectionSection
         });
 
         return [
+            'headline'   => $this->headline(),
             'items'      => array_values($items),
             'layout'     => $this->prop('layout'),
             'pagination' => [
-                'page'  => $data->pagination()->page(),
-                'limit' => $data->pagination()->limit(),
-                'total' => $data->pagination()->total(),
+                'page'  => $pagination->page(),
+                'limit' => $pagination->limit(),
+                'total' => $pagination->total(),
             ]
         ];
 
