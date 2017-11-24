@@ -42,7 +42,7 @@ class FilesSection extends CollectionSection
     {
         if (in_array($file->extension(), ['jpg', 'jpeg', 'gif', 'png', 'svg'])) {
             return [
-                'url' => $file->url()
+                'url' => $file->url() . '?v=' . $file->modified()
             ];
         }
 
@@ -96,8 +96,9 @@ class FilesSection extends CollectionSection
                 'info'     => $this->info($data),
                 'image'    => $this->image($file),
                 'link'     => $path = '/pages/' . $file->page()->id() . '/files/' . $file->filename(),
-                'url'      => $file->url(),
+                'url'      => $file->url() ,
                 'parent'   => $file->page()->id(),
+                'mime'     => $file->mime(),
                 'filename' => $file->filename(),
                 'options'  => $this->kirby->url('api') . $path . '/options'
             ];
