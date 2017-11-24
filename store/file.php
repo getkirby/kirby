@@ -6,6 +6,7 @@ use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\FileSystem\File as Asset;
 use Kirby\Image\Image;
+use Kirby\Util\Str;
 
 return [
     'file.content' => function (File $file): Content {
@@ -20,6 +21,9 @@ return [
         if (is_file($source) === false) {
             throw new Exception('The file does not exist');
         }
+
+        // convert the filename to something safe
+        $filename = Asset::safeName($filename);
 
         // create a temporary image object to run validations
         $this->rules()->check('file.create', $page, new Image($source, '/tmp'), $filename);
