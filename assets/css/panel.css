@@ -1,0 +1,85 @@
+/* Range field */
+.kirby-range-input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: .4rem;
+  height: 2.5rem;
+}
+
+.kirby-range-input input {
+  -webkit-appearance: none;
+  flex: 1;
+  height: 6px;
+  border-radius: 5px;
+  background: #efefef;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+.kirby-range-input input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+          appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #282c34;
+  border: solid 3px #fff;
+}
+
+.kirby-range-input input::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: solid 3px #fff;
+  border-radius: 50%;
+  background: #282c34;
+}
+
+
+.kirby-range-input input:active::-webkit-slider-thumb,
+.kirby-range-input input::-webkit-slider-thumb:hover {
+  background: #567896;
+  border-color: #b8d0e4;
+}
+
+.kirby-range-input input::-moz-range-thumb:hover,
+.kirby-range-input input:active::-moz-range-thumb {
+  background: #567896;
+  border-color: #b8d0e4;
+}
+
+.kirby-range-input span {
+  position: relative;
+  max-width: 20%;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 3px;
+  background: #282c34;
+  padding: 5px 10px;
+  margin-left: 18px;
+}
+
+.kirby-range-input span:after {
+  position: absolute;
+  top: 50%;
+  left: -7px;
+  width: 0;
+  height: 0;
+  transform: translateY(-50%);
+  border-top: 7px solid transparent;
+  border-right: 7px solid #282c34;
+  border-bottom: 7px solid transparent;
+  content: '';
+}
+
+.kirby-range-input ::-moz-range-track {
+  background: #efefef;
+  border: 0;
+}
+
+.kirby-range-input input::-moz-focus-inner,
+.kirby-range-input input::-moz-focus-outer {
+  border: 0;
+}
