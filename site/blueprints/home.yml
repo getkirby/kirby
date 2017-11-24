@@ -23,5 +23,5 @@ layout:
         type: pages
         info: "{{ page.year }}"
         layout: cards
-        pagination:
+        paginate:
           limit: 3

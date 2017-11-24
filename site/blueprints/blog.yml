@@ -7,15 +7,14 @@ layout:
       -
         headline: Unpublished articles
         type: pages
-        template: article
         pages: self.children.invisible
+        add: article
   -
     width: 1/1
     sections:
       -
         headline: Published articles
         type: pages
-        template: article
         sortBy:
            - num desc
         pagination:

@@ -1,4 +1,5 @@
 title: Project
+
 layout:
   -
     width: 2/3
@@ -21,6 +22,14 @@ layout:
             name: category
             type: tags
           -
+            label: Budget
+            name: budget
+            type: range
+            step: 1000
+            max: 10000
+            before: "$"
+            required: true
+          -
             label: Introduction
             name: intro
             type: textarea
@@ -29,6 +38,7 @@ layout:
             label: Text
             name: text
             type: textarea
+
   -
     width: 1/3
     sections:
@@ -38,6 +48,7 @@ layout:
         layout: cards
         group: cover
         max: 1
+        add: image/jpeg
         fields:
           -
             name: alt
@@ -53,11 +64,13 @@ layout:
             name: caption
             label: Caption
             type: textarea
+
       -
         headline: Images
         type: files
         group: gallery
         max: 5
+        add: image/*
         fields:
           -
             name: alt
