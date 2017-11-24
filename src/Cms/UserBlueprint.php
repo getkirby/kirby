@@ -18,7 +18,7 @@ class UserBlueprint extends Blueprint
         $this->file = $root . '/' . basename($this->name) . '.yml';
 
         if (file_exists($this->file) === false) {
-            $this->name = 'visitor';
+            $this->name = 'default';
             $this->file = $root . '/' . $this->name . '.yml';
         }
 
