@@ -33,3 +33,4 @@ layout:
         layout: cards
         group: profile
         max: 1
+        add: image/*
