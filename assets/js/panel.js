@@ -18,13 +18,13 @@ panel.field('range', {
     after: {
       type: String
     },
+    name: {
+      default: 'range'
+    },
 
     // for the kirby-field component
     label: {
       default: 'Range'
-    },
-    name: {
-      default: 'range'
     }
   },
   computed: {
