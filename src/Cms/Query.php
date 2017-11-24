@@ -92,7 +92,7 @@ class Query
                 }
 
                 return (float)$arg;
-            }, str_getcsv($match[1],',','\''));
+            }, str_getcsv($match[1], ','));
 
         }, $token);
 
