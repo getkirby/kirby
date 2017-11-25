@@ -77,6 +77,10 @@ class Media extends Object
             return true;
         }
 
+        if (is_file($source) === false) {
+            throw new Exception(sprintf('The file "%s" does not exist and cannot be linked', $source));
+        }
+
         return $method($source, $link);
     }
 
