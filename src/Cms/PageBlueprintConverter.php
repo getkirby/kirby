@@ -11,7 +11,7 @@ class PageBlueprintConverter
     {
 
         $this->data = [
-            'title'  => $blueprint['title'],
+            'title'  => $blueprint['title'] ?? $blueprint['name'],
             'name'   => $blueprint['name'],
             'layout' => [
                 [
