@@ -91,7 +91,12 @@ class Query
                         return true;
                 }
 
-                return (float)$arg;
+                if (is_numeric($arg) === true) {
+                    return (float)$arg;
+                }
+
+                return $arg;
+
             }, str_getcsv($match[1], ','));
 
         }, $token);
