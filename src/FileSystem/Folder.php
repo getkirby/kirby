@@ -105,6 +105,11 @@ class Folder
         if ($this->exists()) {
             return true;
         }
+
+        if (is_writable($this->root()) === false) {
+            throw new Exception(sprintf('The folder "%s" cannot be created', $this->root()));
+        }
+
         return mkdir($this->root(), 0777, $recursive);
     }
 

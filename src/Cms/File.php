@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Image\Image;
 
 class File extends Object
@@ -117,11 +118,15 @@ class File extends Object
 
     public function thumb(array $options = []): self
     {
-        if ($this->page() === null) {
-            return $this->plugin('media')->create($this->site(), $this, $options);
-        }
+        try {
+            if ($this->page() === null) {
+                return $this->plugin('media')->create($this->site(), $this, $options);
+            }
 
-        return $this->plugin('media')->create($this->page(), $this, $options);
+            return $this->plugin('media')->create($this->page(), $this, $options);
+        } catch (Exception $e) {
+            return $this;
+        }
     }
 
     public function __call($method, $arguments)
