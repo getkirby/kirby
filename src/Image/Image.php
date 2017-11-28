@@ -158,16 +158,18 @@ class Image extends File
             $size   = $this->imagesize();
             $width  = $size[0] ?? 0;
             $height = $size[1] ?? 0;
-        } elseif ($this->extension() == 'svg') {
+        } elseif ($this->extension() === 'svg') {
             $content = $this->read();
             $xml     = simplexml_load_string($content);
-            $attr    = $xml->attributes();
-            $width   = floatval($attr->width);
-            $height  = floatval($attr->height);
-            if (($width === 0.0 || $height === 0.0) && empty($attr->viewBox) === false) {
-                $box    = Str::split($attr->viewBox, ' ');
-                $width  = floatval($box[2] ?? 0);
-                $height = floatval($box[3] ?? 0);
+            if ($xml !== false) {
+                $attr   = $xml->attributes();
+                $width  = floatval($attr->width);
+                $height = floatval($attr->height);
+                if (($width === 0.0 || $height === 0.0) && empty($attr->viewBox) === false) {
+                    $box    = Str::split($attr->viewBox, ' ');
+                    $width  = floatval($box[2] ?? 0);
+                    $height = floatval($box[3] ?? 0);
+                }
             }
         }
 
