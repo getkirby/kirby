@@ -3,6 +3,10 @@
 return [
     'setup' => function ($model, $params): array {
 
+        if (empty($params['options']) === true) {
+            return ['options' => []];
+        }
+
         if (is_string($params['options']) === true) {
             return ['options' => $params['options']];
         }
