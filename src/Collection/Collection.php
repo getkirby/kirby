@@ -38,25 +38,27 @@ class Collection extends Iterator
 
         $result = clone $this;
 
-        if (isset($arguments['not'])) {
+        if (isset($arguments['not']) === true) {
             $result = $result->not(...$arguments['not']);
         }
 
-        if (isset($arguments['filterBy'])) {
+        if (isset($arguments['filterBy']) === true) {
             foreach ($arguments['filterBy'] as $filter) {
-                $result = $result->filterBy($filter['field'], $filter['operator'] ?? '==', $filter['value']);
+                if (isset($filter['field']) === true && isset($filter['value']) === true) {
+                    $result = $result->filterBy($filter['field'], $filter['operator'] ?? '==', $filter['value']);
+                }
             }
         }
 
-        if (isset($arguments['offset'])) {
+        if (isset($arguments['offset']) === true) {
             $result = $result->offset($arguments['offset']);
         }
 
-        if (isset($arguments['limit'])) {
+        if (isset($arguments['limit']) === true) {
             $result = $result->limit($arguments['limit']);
         }
 
-        if (isset($arguments['sortBy'])) {
+        if (isset($arguments['sortBy']) === true) {
             if (is_array($arguments['sortBy'])) {
                 $sort = explode(' ', implode(' ', $arguments['sortBy']));
             } else {
@@ -65,7 +67,7 @@ class Collection extends Iterator
             $result = $result->sortBy(...$sort);
         }
 
-        if (isset($arguments['paginate'])) {
+        if (isset($arguments['paginate']) === true) {
             $result = $result->paginate($arguments['paginate']);
         }
 
