@@ -274,7 +274,11 @@ class App extends Object
             return $this->view($response);
         }
 
-        return $this->view($this->site()->errorPage());
+        try {
+            return $this->view($this->site()->errorPage());
+        } catch (Exception $e) {
+            throw new Exception('The error page is missing or cannot be loaded correctly. Please make sure to add it to your conent folder.');
+        }
 
     }
 
