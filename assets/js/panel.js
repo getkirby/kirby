@@ -30,7 +30,20 @@ panel.field('range', {
   computed: {
     // either show value or a placeholder in tooltip
     display: function () {
-      return this.value || '–';
+      return this.format(this.value) || '–';
+    }
+  },
+  methods: {
+    // format number according to current language
+    format (value) {
+      // get language locale from store
+      const locale = this.$store.state.language.locale;
+      // get decimals of step
+      let decimals = this.step.toString().split('.');
+      decimals = decimals.length > 1 ? decimals[1].length : 0;
+      return new Intl.NumberFormat(locale, {
+        minimumFractionDigits: decimals
+      }).format(value)
     }
   },
   template: `

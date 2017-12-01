@@ -59,6 +59,7 @@
   background: #282c34;
   padding: 5px 10px;
   margin-left: 18px;
+  white-space: nowrap;
 }
 
 .kirby-range-input span:after {
