@@ -1,6 +1,7 @@
 {
     "name": "getkirby/cms",
     "description": "Kirby Cms",
+    "version": "1.0.0-alpha3",
     "keywords": ["kirby", "cms"],
     "homepage": "https://getkirby.com",
     "authors": [
