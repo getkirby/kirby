@@ -5,19 +5,13 @@ panel.field('range', {
       type: Number,
       default: 0
     },
-    max: {
-      type: Number
-    },
+    max: Number,
     step: {
       type: Number,
       default: 1
     },
-    before: {
-      type: String
-    },
-    after: {
-      type: String
-    },
+    before: String,
+    after: String,
     name: {
       default: 'range'
     },
