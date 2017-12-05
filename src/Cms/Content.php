@@ -30,11 +30,7 @@ class Content
     public function get(string $key = null, array $arguments = [])
     {
         if ($key === null) {
-            $data = [];
-            foreach ($this->data() as $key => $value) {
-                $data[] = $this->get($key);
-            }
-            return $data;
+            return $this->fields();
         }
 
         $key = strtolower($key);
