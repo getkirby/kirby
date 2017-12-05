@@ -151,8 +151,13 @@ class VTest extends TestCase
         $this->assertFalse(V::same('foo', 'bar'));
         $this->assertFalse(V::same('bar', 'foo'));
         $this->assertFalse(V::same(1, 2));
-        $this->assertFalse(V::same('true', true));
         $this->assertFalse(V::same(null, 'bar'));
+
+        // non-strict
+        $this->assertTrue(V::same('true', true));
+
+        // strict
+        $this->assertFalse(V::same('true', true, true));
     }
 
     public function testEmail()

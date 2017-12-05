@@ -35,6 +35,37 @@ class V
     }
 
     /**
+     * Validate a single value against
+     * a set of rules, using all registered
+     * validators
+     *
+     * @param  mixed    $value
+     * @param  array    $rules
+     * @return boolean
+     */
+    public static function value($value, array $rules): bool
+    {
+
+        foreach ($rules as $validatorName => $validatorOptions) {
+            if (is_int($validatorName)) {
+                $validatorName    = $validatorOptions;
+                $validatorOptions = [];
+            }
+
+            if (is_array($validatorOptions) === false) {
+                $validatorOptions = [$validatorOptions];
+            }
+
+            if (static::$validatorName($value, ...$validatorOptions) === false) {
+                throw new Exception(sprintf('The "%s" validator failed', $validatorName));
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
      * Validate an input array against
      * a set of rules, usin all registered
      * validators
@@ -62,7 +93,16 @@ class V
                 continue;
             }
 
+            try {
+                V::value($fieldValue, $fieldRules);
+            } catch (Exception $e) {
+                throw new Exception(sprintf($e->getMessage() . ' failed for field "%s"', $fieldName));
+            }
+
             foreach ($fieldRules as $validatorName => $validatorOptions) {
+
+                V::value();
+
 
                 if (is_int($validatorName)) {
                     $validatorName    = $validatorOptions;
@@ -195,7 +235,10 @@ V::$validators = [
         return isset($array[$key]) === true &&
                V::notIn($array[$key], [null, '', []]) === true;
     },
-    'same' => function ($value, $other): bool {
+    'same' => function ($value, $other, bool $strict = false): bool {
+        if ($strict === true) {
+            return $value === $other;
+        }
         return $value == $other;
     },
     'size' => function ($value, $size, $operator = '=='): bool {
