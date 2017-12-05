@@ -94,7 +94,7 @@ class Roots extends Object
         return $this->prop($key);
     }
 
-    public function __call($method, $arguments = [])
+    public function __call(string $method, array $arguments = [])
     {
         return $this->get($method);
     }

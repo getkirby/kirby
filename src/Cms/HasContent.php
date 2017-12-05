@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 trait HasContent
 {
 
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments = [])
     {
         if ($this->hasPlugin($method)) {
             return $this->plugin($method, $arguments);
