@@ -9,8 +9,6 @@ class Site extends Object
     use HasContent;
     use HasFiles;
 
-    protected static $storePrefix = 'site';
-
     public function __construct(array $props = [])
     {
 
