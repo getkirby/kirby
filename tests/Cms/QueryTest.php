@@ -2,46 +2,21 @@
 
 namespace Kirby\Cms;
 
-class MockUser
-{
-
-    public function username()
-    {
-        return 'homer';
-    }
-
-    public function profiles()
-    {
-        return new Object([
-            'twitter' => '@homer'
-        ]);
-    }
-
-    public function says(...$message)
-    {
-        return implode(' ', $message);
-    }
-
-    public function age(int $years)
-    {
-        return $years;
-    }
-
-    public function isYello(bool $answer)
-    {
-        return $answer;
-    }
-
-    public function brainDump($dump)
-    {
-        return $dump;
-    }
-
-}
-
-
 class QueryTest extends TestCase
 {
+
+    public function testWithMissingData()
+    {
+        // 1-level
+        $query = new Query('user', []);
+
+        $this->assertEquals(null, $query->result());
+
+        // 2-level
+        $query = new Query('user.username', []);
+
+        $this->assertEquals(null, $query->result());
+    }
 
     public function test0LevelArrayQuery()
     {
@@ -79,14 +54,14 @@ class QueryTest extends TestCase
     public function test1LevelObjectQuery()
     {
         $query = new Query('user.username', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertEquals('homer', $query->result());
 
         // 2-level
         $query = new Query('user.profiles.twitter', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertEquals('@homer', $query->result());
@@ -96,7 +71,7 @@ class QueryTest extends TestCase
     public function test2LevelObjectQuery()
     {
         $query = new Query('user.profiles.twitter', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertEquals('@homer', $query->result());
@@ -105,7 +80,7 @@ class QueryTest extends TestCase
     public function testObjectMethodWithSingleArgument()
     {
         $query = new Query('user.says("hello world")', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertEquals('hello world', $query->result());
@@ -114,7 +89,7 @@ class QueryTest extends TestCase
     public function testObjectMethodWithMultipleArguments()
     {
         $query = new Query('user.says("hello", "world")', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertEquals('hello world', $query->result());
@@ -123,7 +98,7 @@ class QueryTest extends TestCase
     public function testObjectMethodWithMultipleArgumentsAndComma()
     {
         $query = new Query('user.says("hello,", "world")', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertEquals('hello, world', $query->result());
@@ -132,7 +107,7 @@ class QueryTest extends TestCase
     public function testObjectMethodWithInteger()
     {
         $query = new Query('user.age(12)', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertEquals(12, $query->result());
@@ -142,14 +117,14 @@ class QueryTest extends TestCase
     {
         // true
         $query = new Query('user.isYello(true)', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertTrue($query->result());
 
         // false
         $query = new Query('user.isYello(false)', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertFalse($query->result());
@@ -158,7 +133,7 @@ class QueryTest extends TestCase
     public function testObjectMethodWithNull()
     {
         $query = new Query('user.brainDump(null)', [
-            'user' => new MockUser()
+            'user' => new QueryTestUser()
         ]);
 
         $this->assertNull($query->result());
