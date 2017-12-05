@@ -70,7 +70,11 @@ class Object
             return true;
         }
 
-        if (is_object($value)) {
+        if ($type === 'number') {
+            if (is_numeric($value) !== true) {
+                throw new Exception(sprintf($error, $key, $type, gettype($value)));
+            }
+        } elseif (is_object($value)) {
             if (is_a($value, $type) !== true) {
                 throw new Exception(sprintf($error, $key, $type, get_class($value)));
             }
@@ -106,7 +110,7 @@ class Object
         if (is_a($this->props[$key], Closure::class)) {
             $value = $this->props[$key] = $this->props[$key]->call($this, ...$arguments);
             $this->validateProp($key, $value);
-            return $value;
+            return $this->props[$key] = $value;
         }
 
         return $this->props[$key];
@@ -123,6 +127,17 @@ class Object
         }
 
         return null;
+    }
+
+    public function toArray(): array
+    {
+        $array = [];
+
+        foreach ($this->schema as $key => $options) {
+            $array[$key] = $this->prop($key);
+        }
+
+        return $array;
     }
 
 }
