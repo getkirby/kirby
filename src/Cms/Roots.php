@@ -2,9 +2,24 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Registry for all system-relevant directory roots
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
+ */
 class Roots extends Object
 {
 
+    /**
+     * Creates a new root registry
+     * Customize the folder structure
+     * with the $props array
+     *
+     * @param array $props
+     */
     public function __construct(array $props = [])
     {
 
@@ -85,6 +100,12 @@ class Roots extends Object
 
     }
 
+    /**
+     * Returns a specific root from the registry
+     *
+     * @param  string $key
+     * @return string|null
+     */
     public function get(string $key = 'index')
     {
         if ($key === '/') {
@@ -94,6 +115,13 @@ class Roots extends Object
         return $this->prop($key);
     }
 
+    /**
+     * Magic method getter for roots
+     *
+     * @param  string $method
+     * @param  array $arguments
+     * @return string|null
+     */
     public function __call(string $method, array $arguments = [])
     {
         return $this->get($method);
