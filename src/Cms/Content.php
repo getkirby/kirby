@@ -5,28 +5,85 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 
+/**
+ * The Content class handles all fields
+ * for content from pages, the site and users
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
+ */
 class Content
 {
+
+    /**
+     * The raw data array
+     *
+     * @var array
+     */
     protected $data = [];
+
+    /**
+     * Cached field objects
+     * Once a field is being fetched
+     * it is added to this array for
+     * later reuse
+     *
+     * @var array
+     */
     protected $fields = [];
+
+    /**
+     * A potential parent object.
+     * Not necessarily needed. Especially
+     * for testing, but field methods might
+     * need it.
+     *
+     * @var Object
+     */
     protected $parent;
 
+    /**
+     * Creates a new Content object
+     *
+     * @param array $data
+     * @param Object $parent
+     */
     public function __construct($data = [], Object $parent = null)
     {
         $this->data = $data;
         $this->parent = $parent;
     }
 
-    public function data()
+    /**
+     * Returns the raw data array
+     *
+     * @return array
+     */
+    public function data(): array
     {
         return $this->data;
     }
 
-    public function keys()
+    /**
+     * Returns all field keys
+     *
+     * @return array
+     */
+    public function keys(): array
     {
         return array_keys($this->data());
     }
 
+    /**
+     * Returns either a single field object
+     * or all registered fields
+     *
+     * @param   string $key
+     * @param   array $arguments
+     * @return  Field|array
+     */
     public function get(string $key = null, array $arguments = [])
     {
         if ($key === null) {
@@ -54,9 +111,13 @@ class Content
                 return $this->fields[$key];
         }
 
-
     }
 
+    /**
+     * Returns all registered field objects
+     *
+     * @return array
+     */
     public function fields(): array
     {
         foreach ($this->data as $key => $value) {
@@ -65,6 +126,14 @@ class Content
         return $this->fields;
     }
 
+    /**
+     * Returns a clone of the content object
+     * without the fields, specified by the
+     * passed key(s)
+     *
+     * @param  string ...$keys
+     * @return self
+     */
     public function not(...$keys): self
     {
 
@@ -79,17 +148,37 @@ class Content
 
     }
 
+    /**
+     * Returns the raw data array
+     *
+     * @see     self::data()
+     * @return  array
+     */
     public function toArray(): array
     {
         return $this->data();
     }
 
+    /**
+     * Updates the content and returns
+     * a cloned object
+     *
+     * @param  array $content
+     * @return self
+     */
     public function update(array $content = []): self
     {
         $this->data = array_merge($this->data, $content);
         return $this;
     }
 
+    /**
+     * Same as `self::data()` to improve
+     * var_dump output
+     *
+     * @see    self::data()
+     * @return array
+     */
     public function __debuginfo(): array
     {
         return $this->toArray();
