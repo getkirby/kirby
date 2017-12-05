@@ -2,18 +2,51 @@
 
 namespace Kirby\Cms;
 
+/**
+ * The Query class can be used to
+ * query arrays and objects, including their
+ * methods with a very simple string-based syntax.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
+ */
 class Query
 {
 
+    /**
+     * The query string
+     *
+     * @var string
+     */
     protected $query;
+
+    /**
+     * Queryable data
+     *
+     * @var array
+     */
     protected $data;
 
+    /**
+     * Creates a new Query object
+     *
+     * @param string $query
+     * @param array  $data
+     */
     public function __construct(string $query, array $data = [])
     {
         $this->query = $query;
         $this->data  = $data;
     }
 
+    /**
+     * Returns the query result if anything
+     * can be found. Otherwise returns null.
+     *
+     * @return mixed
+     */
     public function result()
     {
         $parts = $this->parts($this->query);
@@ -50,7 +83,13 @@ class Query
 
     }
 
-    protected function parts($token)
+    /**
+     * Breaks the query string down into its components
+     *
+     * @param  string $token
+     * @return array
+     */
+    protected function parts(string $token): array
     {
         $token = trim($token);
         $token = preg_replace_callback('!\((.*?)\)!', function ($match) {
@@ -63,7 +102,14 @@ class Query
 
     }
 
-    protected function info($token)
+    /**
+     * Analyzes each part of the query string and
+     * extracts methods and method arguments.
+     *
+     * @param  string $token
+     * @return array
+     */
+    protected function info(string $token): array
     {
 
         $args   = [];
