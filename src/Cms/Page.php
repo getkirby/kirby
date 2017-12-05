@@ -368,6 +368,16 @@ class Page extends Object
     }
 
     /**
+     * Returns the parent Site object
+     *
+     * @return Site
+     */
+    public function site(): Site
+    {
+        return $this->plugin('site');
+    }
+
+    /**
      * Returns the slug of the page
      *
      * @return string
