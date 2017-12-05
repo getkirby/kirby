@@ -18,7 +18,7 @@ class Roots extends Object
             'kirby' => [
                 'type'    => 'string',
                 'default' => function (): string {
-                    return realpath(__DIR__ . '/../../');
+                    return $this->index() . '/kirby';
                 }
             ],
             'media' => [
