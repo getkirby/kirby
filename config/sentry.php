@@ -1,7 +1,7 @@
 <?php
 
 // TODO: enable/disable via options
-if (true) {
+if (false) {
 
     /**
      * Sentry Error Logging

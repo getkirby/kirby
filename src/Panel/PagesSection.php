@@ -1,12 +1,11 @@
 <?php
 
-namespace Kirby\Panel\Sections;
+namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\Object;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use Kirby\Panel\Sections\PagesSection\Add;
 
 class PagesSection extends CollectionSection
 {
@@ -79,7 +78,7 @@ class PagesSection extends CollectionSection
             return null;
         }
 
-        return (new Add($this, $options))->toArray();
+        return (new PagesSectionAdd($this, $options))->toArray();
     }
 
     public function toArray(): array

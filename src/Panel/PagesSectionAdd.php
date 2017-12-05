@@ -1,12 +1,11 @@
 <?php
 
-namespace Kirby\Panel\Sections\PagesSection;
+namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\Page;
-use Kirby\Panel\Sections\PagesSection;
 
-class Add
+class PagesSectionAdd
 {
 
     protected $section;

@@ -1,10 +1,9 @@
 <?php
 
-namespace Kirby\Panel\Sections;
+namespace Kirby\Panel;
 
 use Kirby\Cms\Files;
 use Kirby\Cms\Object;
-use Kirby\Panel\Sections\FilesSection\Add;
 
 class FilesSection extends CollectionSection
 {
@@ -79,7 +78,7 @@ class FilesSection extends CollectionSection
             return null;
         }
 
-        return (new Add($this, $options))->toArray();
+        return (new FilesSectionAdd($this, $options))->toArray();
     }
 
     public function toArray(): array

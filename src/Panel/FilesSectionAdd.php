@@ -1,11 +1,10 @@
 <?php
 
-namespace Kirby\Panel\Sections\FilesSection;
+namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
-use Kirby\Panel\Sections\FilesSection;
 
 class Add
 {

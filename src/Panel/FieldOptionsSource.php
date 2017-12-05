@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel\Options;
+namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\Field;
@@ -12,7 +12,7 @@ use Kirby\Cms\Object;
 use Kirby\Cms\Query;
 
 
-class Source extends Object
+class FieldOptionsSource extends Object
 {
 
     protected $attributes;
@@ -23,11 +23,15 @@ class Source extends Object
         parent::__construct($props, [
             'site' => [
                 'type'     => Site::class,
-                'required' => true
+                'default'  => function () {
+                    return $this->plugin('kirby')->site();
+                }
             ],
             'users' => [
                 'type'     => Users::class,
-                'required' => true
+                'default'  => function () {
+                    return $this->plugin('kirby')->users();
+                }
             ],
             'page' => [
                 'type' => 'string',

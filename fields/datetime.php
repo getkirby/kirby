@@ -1,16 +1,8 @@
 <?php
 
 return [
-    'input' => function ($model, $field, $value, $options) {
-        $format = $options['format'] ?? 'd-m-Y H:i';
-        return date($format, strtotime($value));
-
-    },
-    'output' => function ($model, $key, $value, $options) {
-
-        if ($value !== null) {
-            $datetime = strtotime($value);
-
+    'value' => function ($value) {
+        if ($value !== null && $datetime = strtotime($value)) {
             return [
                 'date' => date(DATE_W3C, $datetime),
                 'time' => [
@@ -20,5 +12,15 @@ return [
             ];
         }
 
-    }
+        return null;
+    },
+    'result' => function ($input) {
+        $format = $this->props()['format'] ?? 'Y-m-d H:i';
+
+        if ($date = strtotime($input)) {
+            return date($format, $date);
+        }
+
+        return null;
+    },
 ];

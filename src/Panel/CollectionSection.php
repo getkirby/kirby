@@ -1,32 +1,17 @@
 <?php
 
-namespace Kirby\Panel\Sections;
+namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\Collection;
-use Kirby\Cms\Object;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use Kirby\Cms\Query;
 use Kirby\Cms\Site;
-use Kirby\Cms\Tempura;
 
-class CollectionSection extends Object
+class CollectionSection extends Section
 {
 
-    protected $kirby;
-    protected $site;
-    protected $self;
     protected $items;
-
-    public function __construct(array $props)
-    {
-        parent::__construct($props, $this->schema());
-
-        $this->kirby = $this->plugin('kirby');
-        $this->site  = $this->kirby->site();
-        $this->self  = $this->self();
-    }
 
     public function schema(): array
     {
@@ -63,11 +48,6 @@ class CollectionSection extends Object
         ];
     }
 
-    public function collection()
-    {
-        return new Collection;
-    }
-
     public function items()
     {
         if (is_a($this->items, Collection::class) === true) {
@@ -82,45 +62,20 @@ class CollectionSection extends Object
         ]);
     }
 
-    public function query(string $query, array $data = [])
-    {
-        $defaults = [
-            'site'  => $this->site,
-            'kirby' => $this->kirby,
-            'self'  => $this->self,
-        ];
-
-        return (new Query($query, array_merge($defaults, $data)))->result();
-    }
-
     public function total(): int
     {
         return $this->items()->pagination()->total();
     }
 
-    public function template(string $template = null, array $data = [])
-    {
-        $defaults = [
-            'site'  => $this->site,
-            'kirby' => $this->kirby,
-            'self'  => $this->self,
-        ];
-
-        return (new Tempura($template, array_merge($defaults, $data)))->render();
-    }
-
     public function self(): Object
     {
-        $query = (new Query($this->prop('self'), [
-            'site'  => $this->site,
-            'kirby' => $this->kirby
-        ]))->result();
+        $result = parent::self();
 
         if (
-            is_a($query, Page::class) === true ||
-            is_a($query, Site::class) === true
+            is_a($result, Page::class) === true ||
+            is_a($result, Site::class) === true
         ) {
-            return $query;
+            return $result;
         }
 
         return $this->site;

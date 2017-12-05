@@ -1,18 +1,17 @@
 <?php
 
-namespace Kirby\Panel\Options;
+namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\Object;
 
-class Url extends Object
+class FieldOptionsUrl extends Object
 {
 
     protected $attributes;
 
-    public function __construct(array $props = [])
+    public function __construct(array $props)
     {
-
         parent::__construct($props, [
             'url' => [
                 'type'     => 'string',

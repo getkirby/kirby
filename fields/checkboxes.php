@@ -1,21 +1,22 @@
 <?php
 
+use Kirby\Util\A;
 use Kirby\Util\Str;
 
 return [
-    'setup' => function ($model, $params): array {
+    'props' => function ($props) {
 
-        if (empty($params['options']) === true) {
+        if (empty($props['options']) === true) {
             return ['options' => []];
         }
 
-        if (is_string($params['options']) === true) {
-            return ['options' => $params['options']];
+        if (is_string($props['options']) === true) {
+            return ['options' => $props['options']];
         }
 
         $options = [];
 
-        foreach ($params['options'] as $value => $text) {
+        foreach ($props['options'] as $value => $text) {
             $options[] = [
                 'value' => $value,
                 'text'  => $text
@@ -27,10 +28,7 @@ return [
         ];
 
     },
-    'input' => function ($model, $field, $value) {
-        return implode(', ', (array)$value);
-    },
-    'output' => function ($model, $key, $value, $options): array {
+    'value' => function ($value) {
 
         if (is_string($value) === true) {
             return Str::split($value, ',');
@@ -43,4 +41,20 @@ return [
         return [];
 
     },
+    'result' => function ($input) {
+        return implode(', ', (array)$input);
+    },
+    'validate' => function (array $input) {
+
+        $options = A::pluck($this->prop('options'), 'value');
+
+        foreach ($input as $value) {
+            if (in_array($value, $options) === false) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
 ];

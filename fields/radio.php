@@ -1,19 +1,21 @@
 <?php
 
-return [
-    'setup' => function ($model, $params): array {
+use Kirby\Util\A;
 
-        if (empty($params['options']) === true) {
+return [
+    'props' => function ($props) {
+
+        if (empty($props['options']) === true) {
             return ['options' => []];
         }
 
-        if (is_string($params['options']) === true) {
-            return ['options' => $params['options']];
+        if (is_string($props['options']) === true) {
+            return ['options' => $props['options']];
         }
 
         $options = [];
 
-        foreach ($params['options'] as $value => $text) {
+        foreach ($props['options'] as $value => $text) {
             $options[] = [
                 'value' => $value,
                 'text'  => $text
@@ -24,5 +26,9 @@ return [
             'options' => $options
         ];
 
+    },
+    'validate' => function ($input) {
+        $options = A::pluck($this->prop('options'), 'value');
+        return in_array($input, $options) === true;
     }
 ];
