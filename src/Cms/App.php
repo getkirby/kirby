@@ -36,6 +36,12 @@ class App extends Object
                     ]);
                 }
             ],
+            'fieldMethods' => [
+                'type'    => 'array',
+                'default' => function () {
+                    return require $this->root('kirby') . '/extensions/methods.php';
+                }
+            ],
             'kirbytext' => [
                 'type'    => Kirbytext::class,
                 'default' => function () {
@@ -180,6 +186,9 @@ class App extends Object
                 'url'   => Url\Query::strip(Url::current())
             ]);
         });
+
+        // register all field methods
+        Field::methods($this->fieldMethods());
 
         static::$instance = $this;
 

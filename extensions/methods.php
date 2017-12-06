@@ -11,7 +11,7 @@ use Kirby\Util\Str;
 /**
  * Field method setup
  */
-Field::method([
+return [
 
     // states
     'isEmpty' => function () {
@@ -207,4 +207,4 @@ Field::method([
         return $this->xml();
     }
 
-]);
+];

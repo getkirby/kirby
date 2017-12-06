@@ -55,26 +55,41 @@ class Field
     }
 
     /**
-     * Registers a new field method
+     * Setter and getter for field methods
      *
      * @param  string|array  $name
      * @param  Closure|null  $method
-     * @return Field
+     * @return Field|null
      */
     static public function method($name, Closure $method = null)
     {
-        if (is_array($name) === true) {
-            foreach ($name as $n => $m) {
-                static::method($n, $m);
-            }
-            return;
-        }
-
         if ($method === null) {
-            throw new Exception('Please pass a valid field method closure');
+            return static::$methods[$name] ?? null;
         }
 
         static::$methods[$name] = $method;
+    }
+
+    /**
+     * Returns all registered field methods
+     *
+     * @param  array $methods
+     * @return array
+     */
+    static public function methods(array $methods = null): array
+    {
+        if ($methods === null) {
+            return static::$methods;
+        }
+
+        // reset all registerd methods
+        static::$methods = [];
+
+        foreach ($methods as $name => $method) {
+            static::method($name, $method);
+        }
+
+        return static::$methods;
     }
 
     /**

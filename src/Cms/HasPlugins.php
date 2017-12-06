@@ -17,7 +17,7 @@ trait HasPlugins
 
     protected function hasPlugin($key)
     {
-        return isset(static::$plugins[$key]) === true;
+        return isset(static::$plugins[$key]) === true && static::$plugins[$key] !== null;
     }
 
     protected function plugin(string $key, array $arguments = [])

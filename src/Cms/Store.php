@@ -7,12 +7,12 @@ use Exception;
 class Store
 {
 
-    protected $app;
+    protected $bind;
     protected $actions = [];
 
-    public function __construct(array $actions = [], App $app)
+    public function __construct(array $actions = [], $bind = null)
     {
-        $this->app     = $app;
+        $this->bind    = $bind ?? $this;
         $this->actions = $actions;
     }
 
@@ -22,7 +22,7 @@ class Store
             throw new Exception(sprintf('Invalid store action: "%s"', $action));
         }
 
-        return $this->actions[$action]->call($this->app, ...$arguments);
+        return $this->actions[$action]->call($this->bind, ...$arguments);
     }
 
 }

@@ -5,55 +5,16 @@ namespace Kirby\Cms;
 class PagePropsTest extends TestCase
 {
 
-    public function testChildren()
-    {
-        $this->markTestIncomplete();
-    }
-
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "children" attribute must be of type "Kirby\Cms\Children"
+     * Deregister any plugins for the page
+     *
+     * @return void
      */
-    public function testInvalidChildren()
+    protected function setUp()
     {
-        $page = new Page([
-            'id'       => 'test',
-            'children' => 'children'
-        ]);
-    }
-
-    public function testCollection()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "collection" attribute must be of type "Kirby\Cms\Pages"
-     */
-    public function testInvalidCollection()
-    {
-        $page = new Page([
-            'id'         => 'test',
-            'collection' => 'collection'
-        ]);
-    }
-
-    public function testFiles()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "files" attribute must be of type "Kirby\Cms\Files"
-     */
-    public function testInvalidFiles()
-    {
-        $page = new Page([
-            'id'    => 'test',
-            'files' => 'files'
-        ]);
+        Page::use('kirby', null);
+        Page::use('site', null);
+        Page::use('store', null);
     }
 
     public function testId()
@@ -165,6 +126,101 @@ class PagePropsTest extends TestCase
         ]);
     }
 
+    public function testSiteProp()
+    {
+        $site = new Site();
+        $page = new Page([
+            'id'   => 'test',
+            'site' => $site
+        ]);
+
+        $this->assertEquals($site, $page->site());
+    }
+
+    public function testSitePlugin()
+    {
+        $site = new Site();
+        $page = new Page(['id'   => 'test']);
+
+        Page::use('site', $site);
+
+        $this->assertEquals($site, $page->site());
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The "site" attribute must be of type "Kirby\Cms\Site"
+     */
+    public function testInvalidSite()
+    {
+        $page = new Page([
+            'id'   => 'test',
+            'site' => 'mysite'
+        ]);
+    }
+
+    public function testStoreProp()
+    {
+        $store = new Store();
+        $page  = new Page([
+            'id'    => 'test',
+            'store' => $store
+        ]);
+
+        $this->assertEquals($store, $page->store());
+    }
+
+    public function testStorePlugin()
+    {
+        $store = new Store();
+        $page  = new Page(['id'   => 'test']);
+
+        Page::use('store', $store);
+
+        $this->assertEquals($store, $page->store());
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The "store" attribute must be of type "Kirby\Cms\Store"
+     */
+    public function testInvalidStore()
+    {
+        $page = new Page([
+            'id'    => 'test',
+            'store' => 'mystore'
+        ]);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The plugin "store" does not exist
+     */
+    public function testTemplateWithoutStore()
+    {
+        $page = new Page([
+            'id' => 'test',
+        ]);
+
+        $this->assertEquals('template', $page->template());
+    }
+
+    public function testTemplateWithStore()
+    {
+        $store = new Store([
+            'page.template' => function ($page) {
+                return 'my-template';
+            }
+        ]);
+
+        $page = new Page([
+            'id'    => 'test',
+            'store' => $store
+        ]);
+
+        $this->assertEquals('my-template', $page->template());
+    }
+
     public function testTemplate()
     {
         $page = new Page([
@@ -173,11 +229,6 @@ class PagePropsTest extends TestCase
         ]);
 
         $this->assertEquals('testTemplate', $page->template());
-    }
-
-    public function testDefaultTemplate()
-    {
-        $this->markTestIncomplete();
     }
 
     /**
@@ -231,5 +282,40 @@ class PagePropsTest extends TestCase
             'url' => false
         ]);
     }
+
+    public function slugProvider()
+    {
+        return [
+            ['test', 'test'],
+            ['test/child', 'child'],
+            ['test/child/grand-child', 'grand-child'],
+        ];
+    }
+
+    /**
+     * @dataProvider slugProvider
+     */
+    public function testSlug($id, $slug)
+    {
+        $page = new Page(['id' => $id]);
+        $this->assertEquals($slug, $page->slug());
+    }
+
+    /**
+     * @dataProvider slugProvider
+     */
+    public function testUid($id, $slug)
+    {
+        $page = new Page(['id' => $id]);
+        $this->assertEquals($slug, $page->uid());
+    }
+
+
+    // public function testEmptyTitle()
+    // {
+    //     $page = new Page(['id' => 'test']);
+    //     $this->assertInstanceOf(Field::class, $page->title());
+    //     $this->assertEquals('test', $page->title()->value());
+    // }
 
 }

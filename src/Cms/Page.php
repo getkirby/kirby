@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 /**
  * The Page class is the heart and soul of
  * Kirby. It is used to construct pages and
@@ -39,7 +41,10 @@ class Page extends Object
             'collection' => [
                 'type'    => Pages::class,
                 'default' => function () {
-                    return $this->parent() ? $this->parent()->children() : $this->site()->children();
+                    if ($parent = $this->parent()) {
+                        return $parent->children();
+                    }
+                    return $this->site()->children();
                 }
             ],
             'content' => [
@@ -66,6 +71,18 @@ class Page extends Object
             ],
             'root' => [
                 'type' => 'string',
+            ],
+            'site' => [
+                'type'    => Site::class,
+                'default' => function () {
+                    return $this->plugin('site');
+                }
+            ],
+            'store' => [
+                'type'    => Store::class,
+                'default' => function () {
+                    return $this->plugin('store');
+                }
             ],
             'template' => [
                 'type'    => 'string',
@@ -368,13 +385,17 @@ class Page extends Object
     }
 
     /**
-     * Returns the parent Site object
+     * Returns all sibling elements
      *
-     * @return Site
+     * @return Children
      */
-    public function site(): Site
+    public function siblings()
     {
-        return $this->plugin('site');
+        if ($parent = $this->parent()) {
+            return $parent->children();
+        }
+
+        return $this->site()->children();
     }
 
     /**
@@ -406,6 +427,17 @@ class Page extends Object
     public function title(): Field
     {
         return $this->content()->get('title')->or($this->slug());
+    }
+
+    /**
+     * Returns the UID of the page
+     *
+     * @see self::slug()
+     * @return string
+     */
+    public function uid(): string
+    {
+        return $this->slug();
     }
 
     /**
