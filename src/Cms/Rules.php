@@ -7,12 +7,12 @@ use Exception;
 class Rules
 {
 
-    protected $app;
+    protected $bind;
     protected $rules = [];
 
-    public function __construct(array $rules = [], App $app)
+    public function __construct(array $rules = [], $bind = null)
     {
-        $this->app   = $app;
+        $this->bind  = $bind ?? $this;
         $this->rules = $rules;
     }
 
@@ -22,7 +22,7 @@ class Rules
             return true;
         }
 
-        $this->rules[$rule]->call($this->app, ...$arguments);
+        $this->rules[$rule]->call($this->bind, ...$arguments);
     }
 
 }
