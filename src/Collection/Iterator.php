@@ -27,7 +27,7 @@ class Iterator implements \Iterator
      *
      * @return string
      */
-    public function key(): string
+    public function key()
     {
         return key($this->data);
     }
