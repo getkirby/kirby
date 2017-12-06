@@ -175,6 +175,21 @@ class PaginationTest extends TestCase
         $this->assertEquals(10, $pagination->offset());
     }
 
+    public function testHasPage()
+    {
+        $pagination = new Pagination([
+            'page'  => 1,
+            'limit' => 1,
+            'total' => 10
+        ]);
+
+        $this->assertTrue($pagination->hasPage(1));
+        $this->assertTrue($pagination->hasPage(10));
+
+        $this->assertFalse($pagination->hasPage(0));
+        $this->assertFalse($pagination->hasPage(11));
+    }
+
     public function testHasPages()
     {
         $pagination = new Pagination();

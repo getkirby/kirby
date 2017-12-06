@@ -174,6 +174,24 @@ class Pagination
     }
 
     /**
+     * Checks if the given page exists
+     *
+     * @return boolean
+     */
+    public function hasPage(int $page): bool
+    {
+        if ($page <= 0) {
+            return false;
+        }
+
+        if ($page > $this->pages()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Checks if there are any pages at all
      *
      * @return boolean
