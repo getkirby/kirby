@@ -2,17 +2,41 @@
 
 namespace Kirby\Cms;
 
+/**
+ * The StructureObject reprents each item
+ * in a Structure collection. StructureObjects
+ * behave pretty much the same as Pages or Users
+ * and have a Content object to access their fields.
+ * All fields in a StructureObject are therefor also
+ * wrapped in a Field object and can be accessed in
+ * the same way as Page fields. They also use the same
+ * Field methods.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
+ */
 class StructureObject extends Object
 {
 
+    use HasContent;
     use HasSiblings;
 
+    /**
+     * Creates a new StructureObject
+     *
+     * @param array $props
+     */
     public function __construct(array $props = [])
     {
         parent::__construct($props, [
             'id' => [
                 'type'     => 'string',
                 'required' => true,
+            ],
+            'collection' => [
+                'type' => Structure::class
             ],
             'content' => [
                 'type'    => Content::class,
@@ -23,31 +47,15 @@ class StructureObject extends Object
             'parent' => [
                 'type' => Object::class,
             ],
-            'collection' => [
-                'type' => Structure::class
-            ]
         ]);
     }
 
-    public function __call($method, $arguments)
-    {
-
-        if ($this->hasPlugin($method)) {
-            return $this->plugin($method);
-        }
-
-        if ($this->hasProp($method)) {
-            return $this->prop($method);
-        }
-
-        if (isset($this->dependencies[$method])) {
-            return $this->dependencies[$method];
-        }
-
-        return $this->prop('content')->get($method, ...$arguments);
-
-    }
-
+    /**
+     * Converts all fields in the object to a
+     * plain associative array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->prop('content')->toArray();
