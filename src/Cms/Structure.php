@@ -2,14 +2,41 @@
 
 namespace Kirby\Cms;
 
+/**
+ * The Structure class wraps
+ * array data into a nicely chainable
+ * collection with objects and Kirby-style
+ * content with fields. The Structure class
+ * is the heart and soul of our yaml conversion
+ * method for pages.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
+ */
 class Structure extends Collection
 {
 
+    /**
+     * Only accept StructureObjects for
+     * items in the collection. Arrays work too.
+     *
+     * @var string
+     */
     protected static $accept = StructureObject::class;
 
+    /**
+     * The internal setter for collection items.
+     * This makes sure that nothing unexpected ends
+     * up in the collection. You can pass arrays or
+     * StructureObjects
+     *
+     * @param string $id
+     * @param array|StructureObject $object
+     */
     public function __set(string $id, $object)
     {
-
         if (is_array($object)) {
             $object = new StructureObject([
                 'content' => new Content($object, $this->parent),
@@ -26,8 +53,6 @@ class Structure extends Collection
         $object->set('collection', $this);
 
         return parent::__set($object->id(), $object);
-
     }
-
 
 }
