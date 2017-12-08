@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Image\Image;
 use Kirby\Image\Darkroom;
+use Kirby\Util\Str;
 
 class Media extends Object
 {
@@ -120,8 +121,9 @@ class Media extends Object
 
         $options = [
             'crop' => [
-                'default' => 'center',
-                'key'     => 'crop',
+                'default'   => 'center',
+                'key'       => 'crop',
+                'separator' => '-'
             ],
             'blur' => [
                 'default' => false,
@@ -144,7 +146,7 @@ class Media extends Object
                 if ($value === true) {
                     $chain[] = $options[$key]['key'];
                 } else {
-                    $chain[] = $options[$key]['key'] . $value;
+                    $chain[] = $options[$key]['key'] . ($options[$key]['separator'] ?? '') . Str::slug($value);
                 }
             }
         }
