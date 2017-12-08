@@ -20,12 +20,12 @@ abstract class Darkroom
         $image   = new Image($file);
 
         // normalize the quality
-        if ($options['quality'] ?? null === null) {
+        if (($options['quality'] ?? null) === null) {
             $options['quality'] = $this->defaults['quality'] ?? 100;
         }
 
         // normalize the crop option
-        if ($options['crop'] ?? false === true) {
+        if (($options['crop'] ?? false) === true) {
             $options['crop'] = 'center';
         }
 
