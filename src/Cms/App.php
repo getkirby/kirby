@@ -172,11 +172,25 @@ class App extends Object
             ],
         ]);
 
-        Object::use('store', $this->store());
-        Object::use('media', $this->media());
-        Object::use('rules', $this->rules());
-        Object::use('perms', $this->perms());
-        Object::use('kirby', $this);
+        $kirby = $this;
+
+        Object::use('kirby', $kirby);
+
+        Object::use('store', function () use ($kirby) {
+            return $kirby->store();
+        });
+
+        Object::use('media', function () use ($kirby) {
+            return $kirby->media();
+        });
+
+        Object::use('rules', function () use ($kirby) {
+            return $kirby->rules();
+        });
+
+        Object::use('perms', function () use ($kirby) {
+            return $kirby->perms();
+        });
 
         Collection::use('pagination', function ($options) {
             return new Pagination([
@@ -190,7 +204,7 @@ class App extends Object
         // register all field methods
         Field::methods($this->fieldMethods());
 
-        static::$instance = $this;
+        static::$instance = $kirby;
 
     }
 
