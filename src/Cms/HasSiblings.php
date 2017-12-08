@@ -64,6 +64,16 @@ trait HasSiblings {
     }
 
     /**
+     * Checks if the item is at a certain position
+     *
+     * @return bool
+     */
+    public function isNth(int $n): bool
+    {
+        return $this->indexOf() === $n;
+    }
+
+    /**
      * Returns the next item in the collection if available
      *
      * @return Object|null

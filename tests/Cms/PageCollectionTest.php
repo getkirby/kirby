@@ -124,6 +124,15 @@ class PageCollectionTest extends TestCase
         $this->assertFalse($collection->first()->isLast());
     }
 
+    public function testIsNth()
+    {
+        $collection = $this->collection();
+
+        $this->assertTrue($collection->first()->isNth(0));
+        $this->assertTrue($collection->nth(1)->isNth(1));
+        $this->assertTrue($collection->last()->isNth($collection->count() - 1));
+    }
+
     public function testNext()
     {
         $collection = $this->collection();
