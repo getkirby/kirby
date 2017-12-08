@@ -20,7 +20,7 @@ class Finder
         return $this->collection;
     }
 
-    public function findBy(string $attribute, $value)
+    public function findBy($attribute, $value)
     {
         foreach ($this->collection as $key => $item) {
             if ($this->collection->getAttribute($item, $attribute) == $value) {
@@ -48,7 +48,7 @@ class Finder
         return $collection->data($result);
     }
 
-    public function findByKey(string $key)
+    public function findByKey($key)
     {
         return $this->collection()->get($key);
     }

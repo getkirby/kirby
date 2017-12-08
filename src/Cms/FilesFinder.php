@@ -14,12 +14,12 @@ class FilesFinder extends Finder
         $this->collection = $collection;
     }
 
-    public function findById(string $id)
+    public function findById($id)
     {
         return $this->collection()->get(ltrim($this->startAt . '/' . $id, '/'));
     }
 
-    public function findByKey(string $key)
+    public function findByKey($key)
     {
         return $this->findById($key);
     }

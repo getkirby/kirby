@@ -7,7 +7,7 @@ use Kirby\Collection\Finder;
 class PagesFinder extends Finder
 {
 
-    public function findById(string $id)
+    public function findById($id)
     {
         $page = $this->collection()->get($id);
 
@@ -18,7 +18,7 @@ class PagesFinder extends Finder
         return $page;
     }
 
-    public function findByIdRecursive(string $id, $startAt = null)
+    public function findByIdRecursive($id, $startAt = null)
     {
         $path       = explode('/', $id);
         $collection = $this->collection();
@@ -41,7 +41,7 @@ class PagesFinder extends Finder
         return $item;
     }
 
-    public function findByKey(string $key)
+    public function findByKey($key)
     {
         return $this->findById($key);
     }

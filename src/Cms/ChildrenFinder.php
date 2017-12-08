@@ -13,7 +13,7 @@ class ChildrenFinder extends PagesFinder
         $this->collection = $collection;
     }
 
-    public function findById(string $id)
+    public function findById($id)
     {
         $page = $this->collection()->get(ltrim($this->startAt . '/' . $id, '/'));
 
