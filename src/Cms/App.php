@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 use Kirby\FileSystem\File as Template;
-use Kirby\FileSystem\File as Controller;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
@@ -17,6 +16,7 @@ use Kirby\Text\Smartypants;
 use Kirby\Text\Tags as Kirbytext;
 use Kirby\Toolkit\Url;
 use Kirby\Toolkit\View;
+use Kirby\Util\Controller;
 
 
 class App extends Object
@@ -252,15 +252,11 @@ class App extends Object
 
     public function controller(string $name, array $arguments = []): array
     {
-
-        $controller = new Controller($this->root('controllers') . '/' . $name . '.php');
-
-        if ($controller->exists() === false) {
-            return [];
+        if ($controller = Controller::load($this->root('controllers') . '/' . basename($name) . '.php')) {
+            return (array)$controller->call($this, $arguments);
         }
 
-        return (array)(require $controller->root())(...$arguments);
-
+        return [];
     }
 
     public function view(Page $page): Response
@@ -270,6 +266,7 @@ class App extends Object
         $site->set('page', $page);
 
         $viewData = [
+            'kirby' => $this,
             'site'  => $site,
             'pages' => $pages = $site->children(),
             'page'  => $page
@@ -284,7 +281,7 @@ class App extends Object
         }
 
         // load controller data if a controller exists
-        $controllerData = $this->controller($template->name(), array_values($viewData));
+        $controllerData = $this->controller($template->name(), $viewData);
 
         View::globals(array_merge($controllerData, $viewData));
 

@@ -47,4 +47,19 @@ class Controller
         return $this->function->call($bind, ...$this->arguments($data));
     }
 
+    public static function load(string $file)
+    {
+        if (file_exists($file) === false) {
+            return null;
+        }
+
+        $function = require $file;
+
+        if (is_a($function, Closure::class) === false) {
+            return null;
+        }
+
+        return new static($function);
+    }
+
 }
