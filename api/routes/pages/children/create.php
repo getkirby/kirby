@@ -10,12 +10,12 @@ return [
 
         if ($parent = $this->site()->find($path)) {
 
-            $page = Page::create(
-                $parent,
-                $this->input('slug'),
-                $this->input('template'),
-                $this->input('content')
-            );
+            $page = Page::create([
+                'parent'   => $parent,
+                'slug'     => $this->input('slug'),
+                'template' => $this->input('template'),
+                'content'  => $this->input('content')
+            ]);
 
             return $this->output('page', $page);
 

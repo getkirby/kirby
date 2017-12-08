@@ -184,13 +184,8 @@ class App extends Object
             return $kirby->media();
         });
 
-        Object::use('rules', function () use ($kirby) {
-            return $kirby->rules();
-        });
-
-        Object::use('perms', function () use ($kirby) {
-            return $kirby->perms();
-        });
+        Object::use('rules', $kirby->rules());
+        Object::use('perms', $kirby->perms());
 
         Collection::use('pagination', function ($options) {
             return new Pagination([

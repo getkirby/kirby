@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Util\Str;
 
 /**
  * The Page class is the heart and soul of
@@ -163,14 +164,30 @@ class Page extends Object
     /**
      * Creates a new page
      *
-     * @param Page $parent
-     * @param string $slug
-     * @param string $template
-     * @param array $content
+     * @param array $props
      * @return self
      */
-    public static function create(Page $parent = null, string $slug, string $template, array $content = []): self
+    public static function create(array $props): self
     {
+
+        $defaults = [
+            'parent'   => null,
+            'template' => 'default',
+            'content'  => [],
+            'slug'     => null
+        ];
+
+        $props = array_merge($defaults, $props);
+
+        // convert all array items to variables
+        extract($props);
+
+        if (empty($slug) === true) {
+            $slug = $content['title'] ?? uniqid();
+        }
+
+        $slug = Str::slug($slug);
+
         static::rules()->check('page.create', $parent, $slug, $template, $content);
         static::perms()->check('page.create', $parent, $slug, $template, $content);
 
