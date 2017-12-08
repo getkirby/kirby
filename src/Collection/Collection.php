@@ -74,5 +74,9 @@ class Collection extends Iterator
         return $result;
     }
 
+    public function __debuginfo(): array
+    {
+        return $this->keys();
+    }
 
 }
