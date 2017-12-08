@@ -9,46 +9,42 @@ use ReflectionFunction;
 class Controller
 {
 
-    protected $bind;
-    protected $callback;
-    protected $data;
+    protected $function;
 
-    public function __construct(Closure $callback, array $data = [], $bind = null)
+    public function __construct(Closure $function)
     {
-        $this->callback = $callback;
-        $this->data     = $data;
-        $this->bind     = $bind;
+        $this->function = $function;
     }
 
-    public function arguments(): array
+    public function arguments(array $data = []): array
     {
-        if (empty($this->data) === true) {
+        if (empty($data) === true) {
             return [];
         }
 
-        $info = new ReflectionFunction($this->callback);
+        $info = new ReflectionFunction($this->function);
         $args = [];
 
         foreach ($info->getParameters() as $parameter) {
             $name = $parameter->getName();
 
-            if (isset($this->data[$name]) === false) {
+            if (isset($data[$name]) === false) {
                 throw new Exception(sprintf('The "%s" parameter is missing', $name));
             }
 
-            $args[] = $this->data[$name];
+            $args[] = $data[$name];
         }
 
         return $args;
     }
 
-    public function call()
+    public function call($bind = null, $data = [])
     {
-        if ($this->bind === null) {
-            return call_user_func($this->callback, ...$this->arguments());
+        if ($bind === null) {
+            return call_user_func($this->function, ...$this->arguments($data));
         }
 
-        return $this->callback->call($this->bind, ...$this->arguments());
+        return $this->function->call($bind, ...$this->arguments($data));
     }
 
 }
