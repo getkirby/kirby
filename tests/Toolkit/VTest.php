@@ -130,7 +130,6 @@ class VTest extends TestCase
         $this->assertTrue(V::different('foo', 'bar'));
         $this->assertTrue(V::different('bar', 'foo'));
         $this->assertTrue(V::different(1, 2));
-        $this->assertTrue(V::different('true', true));
         $this->assertTrue(V::different(null, 'bar'));
 
         $this->assertFalse(V::different('foo', 'foo'));
@@ -138,6 +137,12 @@ class VTest extends TestCase
         $this->assertFalse(V::different(1, 1));
         $this->assertFalse(V::different('true', 'true'));
         $this->assertFalse(V::different(null, null));
+
+        // non-strict
+        $this->assertFalse(V::different('true', true));
+
+        // strict
+        $this->assertTrue(V::different('true', true, true));
     }
 
     public function testSame()

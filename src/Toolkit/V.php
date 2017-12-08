@@ -146,7 +146,7 @@ class V
  */
 V::$validators = [
     'accepted' => function ($value): bool {
-        return V::in($value, [1, true, 'yes', 'true', '1', 'on']) === true;
+        return V::in($value, [1, true, 'yes', 'true', '1', 'on'], true) === true;
     },
     'alpha' => function ($value): bool {
         return V::match($value, '/^([a-z])+$/i') === true;
@@ -168,9 +168,12 @@ V::$validators = [
                 $date['warning_count'] === 0);
     },
     'denied' => function ($value): bool {
-        return V::in($value, [0, false, 'no', 'false', '0', 'off']) === true;
+        return V::in($value, [0, false, 'no', 'false', '0', 'off'], true) === true;
     },
-    'different' => function ($value, $other): bool {
+    'different' => function ($value, $other, $strict = false): bool {
+        if ($strict === true) {
+            return $value !== $other;
+        }
         return $value != $other;
     },
     'endsWith' => function (string $value, string $end): bool {
@@ -183,8 +186,8 @@ V::$validators = [
         return V::match($value, '/^[a-z0-9@._-]+$/i') === true &&
                V::min($value, 2) === true;
     },
-    'in' => function ($value, array $in): bool {
-        return in_array($value, $in) === true;
+    'in' => function ($value, array $in, bool $strict = false): bool {
+        return in_array($value, $in, $strict) === true;
     },
     'integer' => function ($value, bool $strict = false): bool {
         if ($strict === true) {
