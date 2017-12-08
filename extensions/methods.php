@@ -6,6 +6,7 @@ use Kirby\Cms\Structure;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Html\Element\A;
+use Kirby\Toolkit\V;
 use Kirby\Util\Str;
 
 /**
@@ -25,6 +26,9 @@ return [
     },
     'isTrue' => function () {
         return $this->toBool() === true;
+    },
+    'isValid' => function ($validator, ...$arguments) {
+        return V::$validator($this->value(), ...$arguments);
     },
 
     // converters
@@ -199,6 +203,9 @@ return [
     },
     'sp' => function () {
         return $this->smartypants();
+    },
+    'v' => function (...$arguments) {
+        return $this->isValid(...$arguments);
     },
     'yaml' => function () {
         return $this->toArray('yaml');
