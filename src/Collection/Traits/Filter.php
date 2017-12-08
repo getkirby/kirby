@@ -11,18 +11,24 @@ trait Filter
 {
 
     protected $filters = [
-        'between' => 'between',
-        '*='      => 'contains',
-        '$='      => 'endsWith',
-        '=='      => 'same',
-        'in'      => 'in',
-        '<'       => 'less',
-        '<='      => 'max',
-        '>'       => 'more',
-        '>='      => 'min',
-        '!='      => 'different',
-        'not in'  => 'notIn',
-        '^='      => 'startsWith'
+        'between'   => 'between',
+        '*='        => 'contains',
+        '!*='       => 'notContains',
+        '$='        => 'endsWith',
+        '=='        => 'same',
+        'in'        => 'in',
+        '<'         => 'less',
+        '<='        => 'max',
+        '>'         => 'more',
+        '>='        => 'min',
+        '!='        => 'different',
+        'not in'    => 'notIn',
+        '^='        => 'startsWith',
+        'match'     => 'match',
+        'maxLength' => 'maxLength',
+        'minLength' => 'minLength',
+        'maxWords'  => 'maxWords',
+        'minWords'  => 'minWords',
     ];
 
     public function filter($filter): self
@@ -42,7 +48,7 @@ trait Filter
         throw new Exception('The filter method needs either an array of filterBy rules or a closure function to be passed as parameter.');
     }
 
-    public function filterBy(string $attribute, $operator, $value = null): self
+    public function filterBy(string $attribute, $operator, ...$filter): self
     {
 
         if (count(func_get_args()) === 2) {
@@ -58,7 +64,7 @@ trait Filter
         $collection  = $this->clone();
 
         foreach ($this->data as $key => $item) {
-            if (V::$filterMethod($this->getAttribute($item, $attribute), $value) !== true) {
+            if (V::$filterMethod($this->getAttribute($item, $attribute), ...$filter) !== true) {
                 $collection->remove($key);
             }
         }

@@ -154,7 +154,7 @@ V::$validators = [
     'alphanum' => function ($value): bool {
         return V::match($value, '/^[a-z0-9]+$/i') === true;
     },
-    'between' => function ($value, float $min, float $max): bool {
+    'between' => function ($value, $min, $max): bool {
         return V::min($value, $min) === true &&
                V::max($value, $max) === true;
     },
@@ -171,7 +171,7 @@ V::$validators = [
         return V::in($value, [0, false, 'no', 'false', '0', 'off']) === true;
     },
     'different' => function ($value, $other): bool {
-        return $value !== $other;
+        return $value != $other;
     },
     'endsWith' => function (string $value, string $end): bool {
         return Str::endsWith($value, $end);
@@ -184,7 +184,7 @@ V::$validators = [
                V::min($value, 2) === true;
     },
     'in' => function ($value, array $in): bool {
-        return in_array($value, $in, true) === true;
+        return in_array($value, $in) === true;
     },
     'integer' => function ($value, bool $strict = false): bool {
         if ($strict === true) {
