@@ -97,13 +97,26 @@ class View
      */
     public function toString(): string
     {
+        $exception = null;
+
         ob_start();
         $array = array_merge(static::$globals, $this->data);
         extract($array);
-        require($this->file);
+
+        try {
+            require $this->file;
+        } catch (Exception $e) {
+            $exception = $e;
+        }
+
         $content = ob_get_contents();
         ob_end_clean();
-        return $content;
+
+        if ($exception === null) {
+            return $content;
+        }
+
+        throw $exception;
     }
 
     /**

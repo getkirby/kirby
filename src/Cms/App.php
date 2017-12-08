@@ -259,18 +259,18 @@ class App extends Object
         return [];
     }
 
-    public function view(Page $page): Response
+    public function view(Page $page, array $data = []): View
     {
 
         $site = $this->site();
         $site->set('page', $page);
 
-        $viewData = [
+        $viewData = array_merge([
             'kirby' => $this,
             'site'  => $site,
             'pages' => $pages = $site->children(),
             'page'  => $page
-        ];
+        ], $data);
 
         // TODO: put this in a template component
         $template = new Template($this->root('templates') . '/' . ($page->template() ?? 'default') . '.php');
@@ -286,32 +286,54 @@ class App extends Object
         View::globals(array_merge($controllerData, $viewData));
 
         // create the template
-        $view = new View($template->realpath());
-
-        // render the response
-        return new Response($view->toString());
+        return new View($template->realpath());
 
     }
 
-    public function response(): Response {
+    public function errorPage($message = null, $code = 404): Response
+    {
+        if ($code < 400 || $code > 600) {
+            $code = 500;
+        }
 
+        $view = $this->view($this->site()->errorPage(), [
+            'errorMessage' => $message,
+            'errorCode'    => $code
+        ]);
+
+        return new Response($view->toString(), 'text/html', $code);
+    }
+
+    public function resolve(string $path, string $method)
+    {
         // fetch the page at the current path
-        $response = $this->router()->call($this->path(), $this->request()->method());
+        $response = $this->router()->call($path, $method);
 
         if (is_a($response, Response::class)) {
             return $response;
         }
 
         if (is_a($response, Page::class)) {
-            return $this->view($response);
+            try {
+                return new Response($this->view($response)->toString(), 'text/html', 200);
+            } catch (Exception $e) {
+                return $this->errorPage($e->getMessage(), $e->getCode());
+            }
         }
 
-        try {
-            return $this->view($this->site()->errorPage());
-        } catch (Exception $e) {
-            throw new Exception('The error page is missing or cannot be loaded correctly. Please make sure to add it to your conent folder.');
+        return $this->errorPage();
+    }
+
+    public function response(): Response {
+
+        // fetch the page at the current path
+        $response = $this->resolve($this->path(), $this->request()->method());
+
+        if (is_a($response, Response::class)) {
+            return $response;
         }
 
+        return new Response($response);
     }
 
 }
