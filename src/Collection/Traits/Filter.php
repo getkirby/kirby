@@ -52,7 +52,7 @@ trait Filter
     {
 
         if (count(func_get_args()) === 2) {
-            $value    = $operator;
+            $filter   = [$operator];
             $operator = '==';
         }
 
