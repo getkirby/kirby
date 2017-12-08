@@ -28,6 +28,13 @@ class App extends Object
     {
 
         parent::__construct($props, [
+
+            'collections' => [
+                'type'    => Collections::class,
+                'default' => function () {
+                    return Collections::load($this->roots()->collections());
+                }
+            ],
             'darkroom' => [
                 'type'    => Darkroom::class,
                 'default' => function () {
@@ -231,6 +238,16 @@ class App extends Object
     public function users(): Users
     {
         return $this->store()->commit('users');
+    }
+
+    public function collection(string $name)
+    {
+        return $this->collections()->get($name, [
+            'kirby' => $this,
+            'site'  => $this->site(),
+            'pages' => $this->site()->children(),
+            'users' => $this->users()
+        ]);
     }
 
     public function controller(string $name, array $arguments = []): array

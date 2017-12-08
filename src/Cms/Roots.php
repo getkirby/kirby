@@ -54,6 +54,12 @@ class Roots extends Object
                     return $this->index() . '/site';
                 }
             ],
+            'collections' => [
+                'type'    => 'string',
+                'default' => function (): string {
+                    return $this->site() . '/collections';
+                }
+            ],
             'controllers' => [
                 'type'    => 'string',
                 'default' => function (): string {
