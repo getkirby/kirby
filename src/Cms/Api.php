@@ -162,7 +162,7 @@ class Api extends Object
 
     }
 
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments = [])
     {
          if (isset($this->prop('data')[$method])) {
              return $this->prop('data')[$method];

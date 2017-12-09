@@ -64,7 +64,7 @@ class Avatar extends Object
         return $this->plugin('media')->create($this->user(), $this, $options);
     }
 
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments = [])
     {
         if (method_exists($this->prop('asset'), $method)) {
             return $this->prop('asset')->$method(...$arguments);
