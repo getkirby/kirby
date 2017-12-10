@@ -112,52 +112,15 @@ class Media extends Object
 
     }
 
-    public function filename(Object $file, array $attributes = [])
+    public function filename(Object $file, array $attributes = []): string
     {
-
         if (empty($attributes) === true || $file->type() !== 'image') {
             return $file->filename();
         }
 
-        $options = [
-            'crop' => [
-                'default'   => 'center',
-                'key'       => 'crop',
-                'separator' => '-'
-            ],
-            'blur' => [
-                'default' => false,
-                'key'     => 'blur',
-            ],
-            'quality' => [
-                'default' => 100,
-                'key'     => 'q',
-            ],
-            'grayscale' => [
-                'default' => false,
-                'key' => 'bw'
-            ]
-        ];
+        $filename = new Filename($file->filename(), $attributes);
 
-        $chain = [];
-
-        foreach ($attributes as $key => $value) {
-            if ($value !== false && $value !== null && isset($options[$key]) === true && $options[$key]['default'] !== $value) {
-                if ($value === true) {
-                    $chain[] = $options[$key]['key'];
-                } else {
-                    $chain[] = $options[$key]['key'] . ($options[$key]['separator'] ?? '') . Str::slug($value);
-                }
-            }
-        }
-
-        sort($chain);
-
-        // add the dimensions to the chain
-        array_unshift($chain, ($attributes['width'] ?? '') . 'x' . ($attributes['height'] ?? '' ));
-
-        return $file->name() . '-' . implode('-', $chain) . '.' . $file->extension();
-
+        return $filename->toString();
     }
 
     public function create(Object $model, Object $file, array $attributes = [])
