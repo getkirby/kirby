@@ -132,6 +132,10 @@ class Object
             return true;
         }
 
+        if ($value === null && ($schema['required'] ?? false) !== true) {
+            return true;
+        }
+
         if ($type === 'number') {
             if (is_numeric($value) !== true) {
                 throw new Exception(sprintf($error, $key, $type, gettype($value)));

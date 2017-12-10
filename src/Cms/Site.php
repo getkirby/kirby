@@ -2,6 +2,18 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
+/**
+ * The Site class is the root element
+ * for any site with pages. It represents
+ * the main content folder with its site.txt
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
+ */
 class Site extends Object
 {
 
@@ -9,6 +21,11 @@ class Site extends Object
     use HasContent;
     use HasFiles;
 
+    /**
+     * Creates a new Site object
+     *
+     * @param array $props
+     */
     public function __construct(array $props = [])
     {
 
@@ -23,12 +40,6 @@ class Site extends Object
                 'type'    => Content::class,
                 'default' => function () {
                     return $this->store()->commit('site.content', $this);
-                }
-            ],
-            'page' => [
-                'type'    => Page::class,
-                'default' => function () {
-                    return $this->homePage();
                 }
             ],
             'errorPage' => [
@@ -49,8 +60,20 @@ class Site extends Object
                     return $this->find('home');
                 }
             ],
+            'page' => [
+                'type'    => Page::class,
+                'default' => function () {
+                    return $this->homePage();
+                }
+            ],
             'root' => [
                 'type' => 'string',
+            ],
+            'store' => [
+                'type'    => Store::class,
+                'default' => function () {
+                    return $this->plugin('store');
+                }
             ],
             'url' => [
                 'type'    => 'string',
@@ -60,6 +83,18 @@ class Site extends Object
 
     }
 
+    /**
+     * Returns the current page if `$path`
+     * is not specified. Otherwise it will try
+     * to find a page by the given path.
+     *
+     * If no current page is set with the page
+     * prop, the home page will be returned if
+     * it can be found. (see `Site::homePage()`)
+     *
+     * @param  string $path
+     * @return Page|null
+     */
     public function page(string $path = null)
     {
         if ($path === null) {
@@ -69,20 +104,50 @@ class Site extends Object
         return $this->find($path);
     }
 
+    /**
+     * Alias for `Site::children()`
+     *
+     * @return Pages
+     */
     public function pages(): Pages
     {
         return $this->children();
     }
 
-    public function visit($path)
+    /**
+     * Sets the current page by
+     * id or page object and
+     * returns the current page
+     *
+     * @param  string|Page $page
+     * @return Page
+     */
+    public function visit($page): Page
     {
-        if ($page = $this->find($path)) {
-            return $this->set('page', $page);
+        // convert ids to a Page object
+        if (is_string($page)) {
+            $page = $this->find($page);
         }
 
-        return $this;
+        // handle invalid pages
+        if (is_a($page, Page::class) === false) {
+            throw new Exception('Invalid page object');
+        }
+
+        // set the current active page
+        $this->set('page', $page);
+
+        // return the page
+        return $page;
     }
 
+    /**
+     * Updates the content of the site
+     * in the site.txt
+     *
+     * @param array $content
+     * @return self
+     */
     public function update(array $content = []): self
     {
         return $this->store()->commit('site.update', $this, $content);
