@@ -87,13 +87,13 @@ class FileTest extends TestCase
     public function testSafeName()
     {
         // with extension
-        $this->assertEquals('ueber-genious.txt', File::safeName('über genious.txt'));
+        $this->assertEquals('uber-genious.txt', File::safeName('über genious.txt'));
 
         // with unsafe extension
-        $this->assertEquals('ueber-genious.taext', File::safeName('über genious.täxt'));
+        $this->assertEquals('uber-genious.taxt', File::safeName('über genious.täxt'));
 
         // without extension
-        $this->assertEquals('ueber-genious', File::safeName('über genious'));
+        $this->assertEquals('uber-genious', File::safeName('über genious'));
     }
 
     public function testExtension()
