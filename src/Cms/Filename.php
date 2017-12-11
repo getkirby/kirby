@@ -7,7 +7,7 @@ use Kirby\Util\Str;
 /**
  * The Filename class handles complex
  * mapping of file attributes (i.e for thumbnails)
- * into human readable filename appendixes.
+ * into human readable filenames.
  *
  * ```php
  * $filename = new Filename('some-file.jpg', [
