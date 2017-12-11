@@ -20,4 +20,17 @@ class TestCase extends BaseTestCase
         }
     }
 
+    public function assertIsFile($input, $id = null)
+    {
+        $this->assertInstanceOf(File::class, $input);
+
+        if (is_string($id)) {
+            $this->assertEquals($id, $input->id());
+        }
+
+        if (is_a($id, File::class)) {
+            $this->assertEquals($input, $id);
+        }
+    }
+
 }
