@@ -25,6 +25,13 @@ class Page extends Object
     use HasSiblings;
 
     /**
+     * Registry with all Page models
+     *
+     * @var array
+     */
+    protected static $models = [];
+
+    /**
      * Creates a new page object
      *
      * @param array $props
@@ -169,7 +176,6 @@ class Page extends Object
      */
     public static function create(array $props): self
     {
-
         $defaults = [
             'parent'   => null,
             'template' => 'default',
@@ -215,6 +221,33 @@ class Page extends Object
     public function exists(): bool
     {
         return $this->store()->commit('page.exists', $this);
+    }
+
+    /**
+     * Constructs a Page object and also
+     * takes page models into account.
+     *
+     * @return self
+     */
+    public static function factory($props): self
+    {
+        if (empty(static::$models) === true) {
+            return new static($props);
+        }
+
+        if (empty($props['template']) === false) {
+            return static::model($props['template'], $props);
+        }
+
+        if (empty($props['root']) === false) {
+            foreach (static::$models as $template => $class) {
+                if (is_file($props['root'] . '/' . $template . '.txt')) {
+                    return static::model($template, $props);
+                }
+            }
+        }
+
+        return new static($props);
     }
 
     /**
@@ -331,6 +364,41 @@ class Page extends Object
     public function isVisible(): bool
     {
         return $this->num() !== null;
+    }
+
+    /**
+     * Creates a Page model if it has been registered
+     *
+     * @param string $name
+     * @param array $props
+     * @return Page
+     */
+    public static function model(string $name, array $props = [])
+    {
+        if ($class = (static::$models[$name] ?? null)) {
+            $object = new $class($props);
+
+            if (is_a($object, Page::class)) {
+                return $object;
+            }
+        }
+
+        return new static($props);
+    }
+
+    /**
+     * Setter and getter for Page models
+     *
+     * @param null|array $models
+     * @return array
+     */
+    public static function models(array $models = null)
+    {
+        if ($models === null) {
+            return static::$models;
+        }
+
+        return static::$models = $models;
     }
 
     /**

@@ -94,7 +94,7 @@ return [
         $children = [];
 
         foreach ($folder->folders() as $info) {
-            $children[] = new Page([
+            $children[] = Page::factory([
                 'id'     => $id  . '/' . $info['slug'],
                 'url'    => $url . '/' . $info['slug'],
                 'root'   => $info['root'],
