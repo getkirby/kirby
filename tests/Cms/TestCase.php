@@ -7,6 +7,41 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 
+    public $page = null;
+
+    public function kirby($props = []): App
+    {
+        return new App($props);
+    }
+
+    public function site(): Site
+    {
+        return $this->kirby()->site();
+    }
+
+    public function pages()
+    {
+        return $this->site()->children();
+    }
+
+    public function page(string $id = null)
+    {
+        if ($id !== null) {
+            return $this->site()->find($id);
+        }
+
+        if ($this->page !== null) {
+            return $this->site()->find($this->page);
+        }
+
+        return $this->site()->homePage();
+    }
+
+    public function assertIsSite($input)
+    {
+        $this->assertInstanceOf(Site::class, $input);
+    }
+
     public function assertIsPage($input, $id = null)
     {
         $this->assertInstanceOf(Page::class, $input);
