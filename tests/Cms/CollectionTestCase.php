@@ -32,6 +32,26 @@ class CollectionTestCase extends TestCase
         return strtolower(str_replace('CollectionTest', '', $className));
     }
 
+    public function collectionPagination()
+    {
+        return $this->collection()->pagination();
+    }
+
+    public function assertCollectionCount(int $count)
+    {
+        return $this->assertCount($count, $this->collection());
+    }
+
+    public function assertCollectionHasPagination()
+    {
+        return $this->assertInstanceOf(Pagination::class, $this->collectionPagination());
+    }
+
+    public function assertCollectionHasNoPagination()
+    {
+        return $this->assertNotInstanceOf(Pagination::class, $this->collectionPagination());
+    }
+
     public function testCollectionType()
     {
         if ($this->collectionType === null) {
