@@ -1,7 +1,8 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Data;
 
 class Blueprint extends BlueprintObject

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Cms;
 
 class BlueprintTab extends BlueprintObject
 {
