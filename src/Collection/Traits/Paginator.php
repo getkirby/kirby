@@ -96,9 +96,9 @@ trait Paginator
     /**
      * Get the previously added pagination object
      *
-     * @return Pagination
+     * @return Pagination|null
      */
-    public function pagination(): Pagination
+    public function pagination()
     {
         return $this->pagination;
     }
