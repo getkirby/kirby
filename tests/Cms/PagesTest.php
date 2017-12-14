@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 class PagesTest extends TestCase
 {
 
-    protected function pages()
+    public function pages()
     {
         return new Pages([
             new Page(['id' => 'a', 'num' => 1]),

@@ -38,6 +38,36 @@ trait HasFiles
         return $this->$in()->find($filename);
     }
 
+    public function hasAudio()
+    {
+        return $this->audio()->count() > 0;
+    }
+
+    public function hasCode()
+    {
+        return $this->code()->count() > 0;
+    }
+
+    public function hasDocuments()
+    {
+        return $this->documents()->count() > 0;
+    }
+
+    public function hasFiles()
+    {
+        return $this->files()->count() > 0;
+    }
+
+    public function hasImages()
+    {
+        return $this->images()->count() > 0;
+    }
+
+    public function hasVideos()
+    {
+        return $this->videos()->count() > 0;
+    }
+
     public function image(string $filename = null)
     {
         return $this->file($filename, 'images');

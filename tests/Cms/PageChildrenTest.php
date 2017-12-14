@@ -43,4 +43,27 @@ class PageChildrenTest extends TestCase
         ]);
     }
 
+    public function testHasChildren()
+    {
+        $page = new Page([
+            'id' => 'test',
+            'children' => new Children([
+                new Page(['id' => 'a']),
+                new Page(['id' => 'b'])
+            ])
+        ]);
+
+        $this->assertTrue($page->hasChildren());
+    }
+
+    public function testHasNoChildren()
+    {
+        $page = new Page([
+            'id'       => 'test',
+            'children' => new Children()
+        ]);
+
+        $this->assertFalse($page->hasChildren());
+    }
+
 }
