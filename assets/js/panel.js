@@ -24,13 +24,13 @@ panel.field('range', {
   computed: {
     // either show value or a placeholder in tooltip
     display () {
-      return this.format(this.value) || '–';
+      return this.format(this.state) || '–';
     },
     track () {
       return `background: linear-gradient(to right, #282c34 ${this.position}%, #efefef ${this.position}%)`;
     },
     position () {
-      return (this.value - this.min) / (this.max - this.min) * 100;
+      return (this.state - this.min) / (this.max - this.min) * 100;
     }
   },
   methods: {
@@ -47,18 +47,19 @@ panel.field('range', {
     }
   },
   template: `
-    <kirby-field :label="label" :required="required" :readonly="readonly" :name="name">
+    <kirby-field v-bind="fieldProps">
       <div class="kirby-range-input">
-      <input
-        type="range"
-        :id="name"
-        :name="name"
-        :min="min"
-        :max="max"
-        :step="step"
-        :required="required"
-        v-model.number="data"
-        :style="track" />
+        <input
+          type="range"
+          :id="name"
+          :name="name"
+          :min="min"
+          :max="max"
+          :step="step"
+          :required="required"
+          v-model.number="state"
+          :style="track"
+        />
         <span>{{ before }} {{ display }} {{ after }}</span>
       </div>
     </kirby-field>
