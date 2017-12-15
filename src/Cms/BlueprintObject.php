@@ -4,19 +4,15 @@ namespace Kirby\Cms;
 
 class BlueprintObject extends Object
 {
+
     protected static $mixins = [];
 
-    public function __construct(array $props)
+    public function __construct(array $props = [])
     {
         parent::__construct($this->extend($props), $this->schema());
     }
 
-    public function schema(): array
-    {
-        return [];
-    }
-
-    public function extend($props)
+    protected function extend($props)
     {
         if (isset($props['extends']) === false) {
             return $props;
@@ -40,8 +36,23 @@ class BlueprintObject extends Object
         return static::$mixins[$path] = $mixin;
     }
 
+    public static function mixins(array $mixins = null): array
+    {
+        if ($mixins === null) {
+            return static::$mixins;
+        }
+
+        return static::$mixins = $mixins;
+    }
+
+    protected function schema(): array
+    {
+        return [];
+    }
+
     public function toArray(): array
     {
-        return $this->props;
+        return parent::toArray();
     }
+
 }

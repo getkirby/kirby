@@ -10,15 +10,21 @@ class BlueprintTab extends BlueprintObject
     public function schema(): array
     {
         return [
+            'columns' => [
+                'type'     => 'array',
+                'required' => true,
+            ],
+            'id' => [
+                'type'    => 'string',
+                'default' => function () {
+                    return $this->name();
+                }
+            ],
             'label' => [
                 'type'    => 'string',
                 'default' => function () {
                     return 'Main';
                 }
-            ],
-            'columns' => [
-                'type'     => 'array',
-                'required' => true,
             ],
             'name' => [
                 'type'     => 'string',
@@ -27,28 +33,33 @@ class BlueprintTab extends BlueprintObject
         ];
     }
 
-    public function columns(): array
+    public function columns(): Collection
     {
-        if (is_array($this->columns) === true) {
+        if (is_a($this->columns, Collection::class) === true) {
             return $this->columns;
         }
 
-        foreach ($this->prop('columns') as $column) {
-            $this->columns[] = new BlueprintColumn($column);
+        $this->columns = new Collection();
+
+        foreach ($this->prop('columns') as $index => $props) {
+            $column = new BlueprintColumn($props + ['id' => $index]);
+            $this->columns->set($index, $column);
         }
 
         return $this->columns;
     }
 
-    public function sections(): array
+    public function sections(): Collection
     {
-        if (is_array($this->sections) === true) {
+        if (is_a($this->sections, Collection::class) === true) {
             return $this->sections;
         }
 
+        $this->sections = new Collection;
+
         foreach ($this->columns() as $column) {
             foreach ($column->sections() as $section) {
-                $this->sections[$section->name()] = $section;
+                $this->sections->set($section->id(), $section);
             }
         }
 
@@ -57,7 +68,7 @@ class BlueprintTab extends BlueprintObject
 
     public function section(string $name)
     {
-        return $this->sections()[$name] ?? null;
+        return $this->sections()->find($name);
     }
 
     public function toArray(): array
@@ -73,12 +84,10 @@ class BlueprintTab extends BlueprintObject
 
     public function toLayout(): array
     {
-        $columns = array_map(function ($column) {
-            return $column->toLayout();
-        }, $this->columns());
-
         return array_merge(parent::toArray(), [
-            'columns' => $columns
+            'columns' => array_values($columns->toArray(function($column) {
+                return $column->toLayout()
+            }))
         ]);
     }
 }

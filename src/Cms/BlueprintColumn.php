@@ -12,28 +12,31 @@ class BlueprintColumn extends BlueprintObject
         return [
             'sections' => [
                 'type'     => 'array',
-                'required' => true,
+                'required' => true
             ],
             'width' => [
                 'type'    => 'string',
                 'default' => function () {
                     return '1/1';
                 },
+                'validate' => function ($value) {
+                    return in_array($value, ['1/1', '1/2', '1/3', '2/3']);
+                }
             ],
         ];
     }
 
-    public function sections(): array
+    public function sections(): Collection
     {
         if (is_array($this->sections) === true) {
             return $this->sections;
         }
 
-        $this->sections = [];
+        $this->sections = new Collection;
 
-        foreach ($this->prop('sections') as $section) {
-            $section = new BlueprintSection($section);
-            $this->sections[$section->name()] = $section;
+        foreach ($this->prop('sections') as $props) {
+            $section = new BlueprintSection($props);
+            $this->sections->set($section->id(), $section);
         }
 
         return $this->sections;
@@ -41,28 +44,20 @@ class BlueprintColumn extends BlueprintObject
 
     public function section(string $name)
     {
-        return $this->sections()[$name] ?? null;
+        return $this->sections()->find($name);
     }
 
     public function toArray(): array
     {
-        $sections = array_map(function ($section) {
-            return $section->toArray();
-        }, $this->sections());
-
         return array_merge(parent::toArray(), [
-            'sections' => $sections
+            'sections' => array_values($this->sections()->toArray())
         ]);
     }
 
     public function toLayout(): array
     {
-        $sections = array_values(array_map(function ($section) {
-            return $section->name();
-        }, $this->sections()));
-
         return array_merge(parent::toArray(), [
-            'sections' => $sections
+            'sections' => $this->sections()->keys(),
         ]);
     }
 

@@ -14,6 +14,12 @@ class BlueprintSection extends BlueprintObject
             'fields' => [
                 'type' => 'array'
             ],
+            'id' => [
+                'type'    => 'string',
+                'default' => function () {
+                    return $this->name();
+                }
+            ],
             'name' => [
                 'type'     => 'string',
                 'required' => true
@@ -25,20 +31,17 @@ class BlueprintSection extends BlueprintObject
         ];
     }
 
-    public function fields(): array
+    public function fields()
     {
-        if (is_array($this->fields) === true) {
+        if (is_a($this->fields, Collection::class) === true) {
             return $this->fields;
         }
 
-        $this->fields = [];
+        $this->fields = new Collection;
 
-        foreach ((array)$this->prop('fields') as $field) {
-            if (is_array($field) === false) {
-                throw new Exception('Fields must be defined as array');
-            }
-            $field = new BlueprintField($field);
-            $this->fields[$field->name()] = $field;
+        foreach ((array)$this->prop('fields') as $props) {
+            $field = new BlueprintField($props);
+            $this->fields->set($field->name(), $field);
         }
 
         return $this->fields;
@@ -46,17 +49,13 @@ class BlueprintSection extends BlueprintObject
 
     public function field(string $name)
     {
-        return $this->fields[$name] ?? null;
+        return $this->fields()->find($name);
     }
 
     public function toArray(): array
     {
-        $fields = array_map(function ($field) {
-            return $field->toArray();
-        }, $this->fields());
-
         return array_merge(parent::toArray(), [
-            'fields' => $fields
+            'fields' => $this->fields()->toArray()
         ]);
     }
 }

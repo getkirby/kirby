@@ -7,6 +7,12 @@ class BlueprintField extends BlueprintObject
     public function schema(): array
     {
         return [
+            'id' => [
+                'type'    => 'string',
+                'default' => function () {
+                    return $this->name();
+                },
+            ],
             'label' => [
                 'type'     => 'string',
                 'required' => false
@@ -21,4 +27,15 @@ class BlueprintField extends BlueprintObject
             ],
         ];
     }
+
+    public function toArray(): array
+    {
+        $array = parent::toArray();
+
+        // remove the reference to the collection
+        unset($array['collection']);
+
+        return $array;
+    }
+
 }
