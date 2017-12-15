@@ -31,6 +31,12 @@ class ObjectMock extends Object
             'numberProp' => [
                 'type' => 'number'
             ],
+            'validatedProp' => [
+                'type' => 'string',
+                'validate' => function ($value) {
+                    return in_array($value, ['a', 'b']);
+                }
+            ],
             'propWithSimpleDefaultValue' => [
                 'default' => 'hello'
             ],
@@ -86,6 +92,8 @@ class ObjectTest extends TestCase
             ['numberProp', 0],
             ['numberProp', 1],
             ['numberProp', 1.2],
+            ['validatedProp', 'a'],
+            ['validatedProp', 'b'],
         ];
     }
 
@@ -108,6 +116,7 @@ class ObjectTest extends TestCase
             ['arrayProp', 'array'],
             ['objectProp', []],
             ['numberProp', 'a'],
+            ['validatedProp', 'c']
         ];
     }
 

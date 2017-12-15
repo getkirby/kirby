@@ -124,9 +124,10 @@ class Object
     protected function validateProp(string $key, $value): bool
     {
 
-        $schema = $this->schema[$key] ?? [];
-        $type   = $schema['type'] ?? null;
-        $error  = 'The "%s" attribute must be of type "%s" not "%s"';
+        $schema   = $this->schema[$key] ?? [];
+        $type     = $schema['type'] ?? null;
+        $validate = $schema['validate'] ?? null;
+        $error    = 'The "%s" attribute must be of type "%s" not "%s"';
 
         if ($type === null) {
             return true;
@@ -146,6 +147,13 @@ class Object
             }
         } elseif ($type !== gettype($value)) {
             throw new Exception(sprintf($error, $key, $type, gettype($value)));
+        }
+
+        // optional prop validation
+        if (is_a($validate, Closure::class)) {
+            if ($validate->call($this, $value) !== true) {
+                throw new Exception(sprintf('Prop validation for "%s" failed', $key));
+            }
         }
 
         return true;
