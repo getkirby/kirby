@@ -96,7 +96,7 @@ class Object
 
             // check for required props
             if (($schema['required'] ?? false) === true && $value === null) {
-                throw new Exception(sprintf('The "%s" prop is missing', $key));
+                throw new Exception(sprintf('The "%s" prop is missing in "%s"', $key, get_called_class()));
             }
 
             // type validation
@@ -123,11 +123,9 @@ class Object
      */
     protected function validateProp(string $key, $value): bool
     {
-
         $schema   = $this->schema[$key] ?? [];
         $type     = $schema['type'] ?? null;
         $validate = $schema['validate'] ?? null;
-        $error    = 'The "%s" attribute must be of type "%s" not "%s"';
 
         if ($type === null) {
             return true;
@@ -139,25 +137,24 @@ class Object
 
         if ($type === 'number') {
             if (is_numeric($value) !== true) {
-                throw new Exception(sprintf($error, $key, $type, gettype($value)));
+                $this->propTypeError($key, $type, gettype($value));
             }
-        } elseif (is_object($value)) {
+        } elseif (is_object($value) === true) {
             if (is_a($value, $type) !== true) {
-                throw new Exception(sprintf($error, $key, $type, get_class($value)));
+                $this->propTypeError($key, $type, get_class($value));
             }
         } elseif ($type !== gettype($value)) {
-            throw new Exception(sprintf($error, $key, $type, gettype($value)));
+            $this->propTypeError($key, $type, gettype($value));
         }
 
         // optional prop validation
-        if (is_a($validate, Closure::class)) {
+        if (is_a($validate, Closure::class) === true) {
             if ($validate->call($this, $value) !== true) {
                 throw new Exception(sprintf('Prop validation for "%s" failed', $key));
             }
         }
 
         return true;
-
     }
 
     /**
@@ -215,6 +212,20 @@ class Object
         }
 
         return $this->props[$key];
+    }
+
+    /**
+     * Throws an Exception with info about the
+     * failed prop type validation and the current class
+     *
+     * @param string $key
+     * @param string $expected
+     * @param string $type
+     * @return void
+     */
+    protected function propTypeError(string $key, string $expected, string $type)
+    {
+        throw new Exception(sprintf('The "%s" attribute must be of type "%s" not "%s" in "%s"', $key, $expected, $type, get_called_class()));
     }
 
     /**
