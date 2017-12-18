@@ -41,6 +41,18 @@ class Blueprint extends BlueprintObject
     protected $tabs = null;
 
     /**
+     * Creates a new Blueprint and converts
+     * the input to always return a valid nested array
+     * of options.
+     *
+     * @param array $props
+     */
+    public function __construct(array $props = [])
+    {
+        parent::__construct(BlueprintConverter::convert($props));
+    }
+
+    /**
      * Returns a collection of all Fields
      * in the blueprint
      *
