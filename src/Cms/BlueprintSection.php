@@ -31,13 +31,13 @@ class BlueprintSection extends BlueprintObject
         ];
     }
 
-    public function fields()
+    public function fields(): BlueprintCollection
     {
-        if (is_a($this->fields, Collection::class) === true) {
+        if (is_a($this->fields, BlueprintCollection::class) === true) {
             return $this->fields;
         }
 
-        $this->fields = new Collection;
+        $this->fields = new BlueprintCollection;
 
         foreach ((array)$this->prop('fields') as $props) {
             $field = new BlueprintField($props);
@@ -54,8 +54,15 @@ class BlueprintSection extends BlueprintObject
 
     public function toArray(): array
     {
-        return array_merge(parent::toArray(), [
-            'fields' => $this->fields()->toArray()
-        ]);
+        $array = parent::toArray();
+        $array['fields'] = $this->fields()->toArray();
+
+        return $array;
     }
+
+    public function toLayout()
+    {
+        return $this->id();
+    }
+
 }

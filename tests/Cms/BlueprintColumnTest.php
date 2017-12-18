@@ -114,16 +114,16 @@ class BlueprintColumnTest extends TestCase
         $expected = [
             'sections' => [
                 [
+                    'fields' => [],
+                    'id'     => 'pages',
                     'name'   => 'pages',
                     'type'   => 'pages',
-                    'fields' => [],
-                    'id'     => 'pages'
                 ],
                 [
+                    'fields' => [],
+                    'id'     => 'files',
                     'name'   => 'files',
                     'type'   => 'files',
-                    'fields' => [],
-                    'id'     => 'files'
                 ]
             ],
             'width'    => '1/2'

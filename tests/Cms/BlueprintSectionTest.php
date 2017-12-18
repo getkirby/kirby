@@ -98,11 +98,9 @@ class BlueprintSectionTest extends TestCase
         $array = $section->toArray();
 
         $this->assertCount(2, $array['fields']);
-        $this->assertArrayHasKey('title', $array['fields']);
-        $this->assertArrayHasKey('text', $array['fields']);
 
-        $this->assertEquals('title', $array['fields']['title']['id']);
-        $this->assertEquals('text', $array['fields']['text']['id']);
+        $this->assertEquals('title', $array['fields'][0]['id']);
+        $this->assertEquals('text', $array['fields'][1]['id']);
     }
 
     public function testType()

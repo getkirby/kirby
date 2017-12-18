@@ -26,13 +26,13 @@ class BlueprintColumn extends BlueprintObject
         ];
     }
 
-    public function sections(): Collection
+    public function sections(): BlueprintCollection
     {
-        if (is_array($this->sections) === true) {
+        if (is_a($this->sections, BlueprintCollection::class) === true) {
             return $this->sections;
         }
 
-        $this->sections = new Collection;
+        $this->sections = new BlueprintCollection;
 
         foreach ($this->prop('sections') as $props) {
             $section = new BlueprintSection($props);
@@ -49,16 +49,18 @@ class BlueprintColumn extends BlueprintObject
 
     public function toArray(): array
     {
-        return array_merge(parent::toArray(), [
-            'sections' => array_values($this->sections()->toArray())
-        ]);
+        $array = parent::toArray();
+        $array['sections'] = $this->sections()->toArray();
+
+        return $array;
     }
 
     public function toLayout(): array
     {
-        return array_merge(parent::toArray(), [
-            'sections' => $this->sections()->keys(),
-        ]);
+        $array = parent::toLayout();
+        $array['sections'] = $this->sections()->toLayout();
+
+        return $array;
     }
 
 }

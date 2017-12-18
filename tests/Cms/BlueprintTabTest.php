@@ -69,6 +69,26 @@ class BlueprintTabTest extends TestCase
         $this->assertCount(0, $this->tab()->columns());
     }
 
+    public function testFields()
+    {
+        $tab = $this->tab([
+            'columns' => $this->columns(),
+        ]);
+
+        $this->assertInstanceOf(Collection::class, $tab->fields());
+        $this->assertCount(2, $tab->fields());
+    }
+
+    public function testField()
+    {
+        $tab = $this->tab([
+            'columns' => $this->columns(),
+        ]);
+
+        $this->assertInstanceOf(BlueprintField::class, $tab->field('title'));
+        $this->assertEquals('title', $tab->field('title')->name());
+    }
+
     public function testId()
     {
         $this->assertEquals('my-id', $this->tab(['id' => 'my-id'])->id());

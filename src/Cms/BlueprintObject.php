@@ -12,6 +12,11 @@ class BlueprintObject extends Object
         parent::__construct($this->extend($props), $this->schema());
     }
 
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
+    }
+
     protected function extend($props)
     {
         if (isset($props['extends']) === false) {
@@ -52,7 +57,16 @@ class BlueprintObject extends Object
 
     public function toArray(): array
     {
-        return parent::toArray();
+        $array = parent::toArray();
+
+        ksort($array);
+
+        return $array;
+    }
+
+    public function toLayout()
+    {
+        return $this->toArray();
     }
 
 }
