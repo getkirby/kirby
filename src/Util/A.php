@@ -2,6 +2,8 @@
 
 namespace Kirby\Util;
 
+use Exception;
+
 /**
  * A set of handy methods to simplify array handling
  * and make it more consistent.
@@ -217,6 +219,35 @@ class A
                 $array[] = $fill;
             }
         }
+        return $array;
+    }
+
+    /**
+     * Move an array item to a new index
+     *
+     * @param array $array
+     * @param int $from
+     * @param int $to
+     * @return array
+     */
+    public static function move(array $array, int $from, int $to): array
+    {
+        $total = count($array);
+
+        if ($from >= $total || $from < 0) {
+            throw new Exception('Invalid "from" index');
+        }
+
+        if ($to >= $total || $to < 0) {
+            throw new Exception('Invalid "to" index');
+        }
+
+        // remove the item from the array
+        $item = array_splice($array, $from, 1);
+
+        // inject it at the new position
+        array_splice($array, $to, 0, $item);
+
         return $array;
     }
 

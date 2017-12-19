@@ -106,6 +106,47 @@ class ATest extends TestCase
         ], A::fill($array, 5, 'elephant'));
     }
 
+    public function testMove()
+    {
+        $input = [
+            'a',
+            'b',
+            'c',
+            'd'
+        ];
+
+        $this->assertEquals(['a', 'b', 'c', 'd'], A::move($input, 0, 0));
+        $this->assertEquals(['b', 'a', 'c', 'd'], A::move($input, 0, 1));
+        $this->assertEquals(['b', 'c', 'a', 'd'], A::move($input, 0, 2));
+        $this->assertEquals(['b', 'c', 'd', 'a'], A::move($input, 0, 3));
+
+        $this->assertEquals(['d', 'a', 'b', 'c'], A::move($input, 3, 0));
+        $this->assertEquals(['c', 'a', 'b', 'd'], A::move($input, 2, 0));
+        $this->assertEquals(['b', 'a', 'c', 'd'], A::move($input, 1, 0));
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Invalid "from" index
+     *
+     * @return void
+     */
+    public function testMoveWithInvalidFrom()
+    {
+        A::move(['a', 'b', 'c'], -1, 2);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Invalid "to" index
+     *
+     * @return void
+     */
+    public function testMoveWithInvalidTo()
+    {
+        A::move(['a', 'b', 'c'], 0, 4);
+    }
+
     public function testMissing()
     {
         $required = ['cat', 'elephant'];
