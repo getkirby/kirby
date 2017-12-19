@@ -22,6 +22,7 @@ class BlueprintColumnTest extends TestCase
     public function testSections()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => $this->sections()
         ]);
 
@@ -34,6 +35,7 @@ class BlueprintColumnTest extends TestCase
     public function testSection()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => $this->sections()
         ]);
 
@@ -42,7 +44,10 @@ class BlueprintColumnTest extends TestCase
 
     public function testMissingSection()
     {
-        $column = new BlueprintColumn(['sections' => []]);
+        $column = new BlueprintColumn([
+            'name'     => 'test',
+            'sections' => []
+        ]);
         $this->assertNull($column->section('pages'));
     }
 
@@ -62,6 +67,7 @@ class BlueprintColumnTest extends TestCase
     public function testWidth($width)
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => [],
             'width'    => $width
         ]);
@@ -72,6 +78,7 @@ class BlueprintColumnTest extends TestCase
     public function testDefaultWidth()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => []
         ]);
 
@@ -85,6 +92,7 @@ class BlueprintColumnTest extends TestCase
     public function testInvalidWidth()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => [],
             'width'    => '1/4'
         ]);
@@ -93,12 +101,15 @@ class BlueprintColumnTest extends TestCase
     public function testToArrayWithDefaults()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => []
         ]);
 
         $expected = [
+            'name'     => 'test',
             'sections' => [],
-            'width'    => '1/1'
+            'width'    => '1/1',
+            'id'       => 'test',
         ];
 
         $this->assertEquals($expected, $column->toArray());
@@ -107,11 +118,13 @@ class BlueprintColumnTest extends TestCase
     public function testToArray()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => $this->sections(),
             'width'    => '1/2'
         ]);
 
         $expected = [
+            'name'     => 'test',
             'sections' => [
                 [
                     'fields' => [],
@@ -126,7 +139,8 @@ class BlueprintColumnTest extends TestCase
                     'type'   => 'files',
                 ]
             ],
-            'width'    => '1/2'
+            'width'    => '1/2',
+            'id'       => 'test',
         ];
 
         $this->assertEquals($expected, $column->toArray());
@@ -135,12 +149,15 @@ class BlueprintColumnTest extends TestCase
     public function testToLayoutWithDefaults()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => []
         ]);
 
         $expected = [
+            'name'     => 'test',
             'sections' => [],
-            'width'    => '1/1'
+            'width'    => '1/1',
+            'id'       => 'test',
         ];
 
         $this->assertEquals($expected, $column->toLayout());
@@ -149,12 +166,15 @@ class BlueprintColumnTest extends TestCase
     public function testToLayout()
     {
         $column = new BlueprintColumn([
+            'name'     => 'test',
             'sections' => $this->sections()
         ]);
 
         $expected = [
+            'name'     => 'test',
             'sections' => $column->sections()->keys(),
-            'width'    => '1/1'
+            'width'    => '1/1',
+            'id'       => 'test',
         ];
 
         $this->assertEquals($expected, $column->toLayout());

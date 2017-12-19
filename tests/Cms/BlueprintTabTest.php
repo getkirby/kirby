@@ -16,7 +16,7 @@ class BlueprintTabTest extends TestCase
     public function columns()
     {
         return [
-            [
+            'left' => [
                 'width'    => '1/3',
                 'sections' => [
                     [
@@ -35,7 +35,7 @@ class BlueprintTabTest extends TestCase
                     ]
                 ]
             ],
-            [
+            'right' => [
                 'width'    => '2/3',
                 'sections' => [
                     [

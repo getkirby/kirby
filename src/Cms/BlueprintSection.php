@@ -39,7 +39,9 @@ class BlueprintSection extends BlueprintObject
 
         $this->fields = new BlueprintCollection;
 
-        foreach ((array)$this->prop('fields') as $props) {
+        foreach ((array)$this->prop('fields') as $name => $props) {
+            // use the key as name if the name is not set
+            $props['name'] = $props['name'] ?? $name;
             $field = new BlueprintField($props);
             $this->fields->set($field->name(), $field);
         }

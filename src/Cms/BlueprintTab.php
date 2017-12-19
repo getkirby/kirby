@@ -8,6 +8,14 @@ class BlueprintTab extends BlueprintObject
     protected $fields;
     protected $sections;
 
+    public function __construct(array $props = [])
+    {
+        $props = BlueprintConverter::convertFieldsToSection($props);
+        $props = BlueprintConverter::convertSectionsToColumn($props);
+
+        parent::__construct($props);
+    }
+
     public function schema(): array
     {
         return [
@@ -45,9 +53,11 @@ class BlueprintTab extends BlueprintObject
 
         $this->columns = new BlueprintCollection;
 
-        foreach ($this->prop('columns') as $index => $props) {
-            $column = new BlueprintColumn($props + ['id' => $index]);
-            $this->columns->set($index, $column);
+        foreach ($this->prop('columns') as $name => $props) {
+            // use the key as name if the name is not set
+            $props['name'] = $props['name'] ?? $name;
+            $column = new BlueprintColumn($props);
+            $this->columns->set($column->name(), $column);
         }
 
         return $this->columns;

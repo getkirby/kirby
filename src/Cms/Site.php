@@ -30,6 +30,12 @@ class Site extends Object
     {
 
         parent::__construct($props, [
+            'blueprint' => [
+                'type'    => SiteBlueprint::class,
+                'default' => function (): SiteBlueprint {
+                    return $this->store()->commit('site.blueprint', $this);
+                }
+            ],
             'children' => [
                 'type'    => Pages::class,
                 'default' => function (): Pages {

@@ -9,7 +9,7 @@ return [
     'action'  => function ($email) {
 
         if ($user = $this->users()->find($email)) {
-            return (new UserBlueprint($user->role(), $user))->toArray();
+            return UserBlueprint::load($user)->toArray();
         }
 
     }

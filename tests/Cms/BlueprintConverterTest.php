@@ -5,17 +5,7 @@ namespace Kirby\Cms;
 class BlueprintConverterTest extends TestCase
 {
 
-    public function testConvertWithoutChanges()
-    {
-        $blueprint = [
-            'tabs' => []
-        ];
-
-        $converted = BlueprintConverter::convert($blueprint);
-        $this->assertEquals($converted, $blueprint);
-    }
-
-    public function testConvertColumns()
+    public function testConvertColumnsToTab()
     {
         $blueprint = [
             'columns' => []
@@ -23,40 +13,51 @@ class BlueprintConverterTest extends TestCase
 
         $expected = [
             'tabs' => [
-                [
-                    'name'    => 'main',
+                'main' => [
                     'columns' => []
                 ]
             ]
         ];
 
-        $converted = BlueprintConverter::convert($blueprint);
+        $converted = BlueprintConverter::convertColumnsToTab($blueprint);
         $this->assertEquals($expected, $converted);
     }
 
-    public function testConvertFields()
+    public function testConvertSectionsToColumn()
+    {
+        $blueprint = [
+            'sections' => []
+        ];
+
+        $expected = [
+            'columns' => [
+                'center' => [
+                    'sections' => []
+                ]
+            ]
+        ];
+
+        $converted = BlueprintConverter::convertSectionsToColumn($blueprint);
+        $this->assertEquals($expected, $converted);
+    }
+
+    public function testConvertFieldsToSection()
     {
         $blueprint = [
             'fields' => []
         ];
 
         $expected = [
-            'tabs' => [
-                [
-                    'name'    => 'main',
-                    'columns' => [
-                        [
-                            'type'   => 'fields',
-                            'fields' => []
-                        ]
-                    ]
+            'sections' => [
+                'fields' => [
+                    'type'   => 'fields',
+                    'fields' => []
                 ]
             ]
         ];
 
-        $converted = BlueprintConverter::convert($blueprint);
+        $converted = BlueprintConverter::convertFieldsToSection($blueprint);
         $this->assertEquals($expected, $converted);
     }
-
 
 }

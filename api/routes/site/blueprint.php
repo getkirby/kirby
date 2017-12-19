@@ -6,6 +6,6 @@ return [
     'auth'    => true,
     'pattern' => 'site/blueprint',
     'action'  => function () {
-        return (new SiteBlueprint())->toArray();
+        return SiteBlueprint::load($this->site())->toArray();
     }
 ];

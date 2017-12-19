@@ -7,9 +7,26 @@ class BlueprintColumn extends BlueprintObject
 
     protected $sections = null;
 
+    public function __construct(array $props = [])
+    {
+        $props = BlueprintConverter::convertFieldsToSection($props);
+        parent::__construct($props);
+    }
+
     public function schema(): array
     {
         return [
+            'id' => [
+                'type'     => 'string',
+                'required' => true,
+                'default'  => function () {
+                    return $this->name();
+                }
+            ],
+            'name' => [
+                'type'     => 'string',
+                'required' => true,
+            ],
             'sections' => [
                 'type'     => 'array',
                 'required' => true
@@ -34,7 +51,9 @@ class BlueprintColumn extends BlueprintObject
 
         $this->sections = new BlueprintCollection;
 
-        foreach ($this->prop('sections') as $props) {
+        foreach ($this->prop('sections') as $name => $props) {
+            // use the key as name if the name is not set
+            $props['name'] = $props['name'] ?? $name;
             $section = new BlueprintSection($props);
             $this->sections->set($section->id(), $section);
         }

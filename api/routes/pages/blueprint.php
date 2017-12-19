@@ -7,10 +7,8 @@ return [
     'auth'    => true,
     'pattern' => 'pages/(:all)/blueprint',
     'action'  => function ($path) {
-
         if ($page = $this->site()->find($path)) {
-            return (new PageBlueprint($page->template(), $page))->toArray();
+            return PageBlueprint::load($page)->toArray();
         }
-
     }
 ];

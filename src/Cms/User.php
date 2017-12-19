@@ -35,6 +35,12 @@ class User extends Object
                     ]);
                 }
             ],
+            'blueprint' => [
+                'type'    => UserBlueprint::class,
+                'default' => function (): UserBlueprint {
+                    return $this->store()->commit('user.blueprint', $this);
+                }
+            ],
             'collection' => [
                 'type'    => Users::class,
                 'default' => function () {

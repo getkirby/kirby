@@ -40,6 +40,12 @@ class Page extends Object
     {
 
         parent::__construct($props, [
+            'blueprint' => [
+                'type'    => PageBlueprint::class,
+                'default' => function (): PageBlueprint {
+                    return $this->store()->commit('page.blueprint', $this);
+                }
+            ],
             'children' => [
                 'type'    => Children::class,
                 'default' => function (): Children {

@@ -49,7 +49,11 @@ class Blueprint extends BlueprintObject
      */
     public function __construct(array $props = [])
     {
-        parent::__construct(BlueprintConverter::convert($props));
+        $props = BlueprintConverter::convertFieldsToSection($props);
+        $props = BlueprintConverter::convertSectionsToColumn($props);
+        $props = BlueprintConverter::convertColumnsToTab($props);
+
+        parent::__construct($props);
     }
 
     /**
@@ -216,8 +220,10 @@ class Blueprint extends BlueprintObject
 
         $this->tabs = new BlueprintCollection();
 
-        foreach ($this->prop('tabs') as $tab) {
-            $tab = new BlueprintTab($tab);
+        foreach ($this->prop('tabs') as $name => $props) {
+            // use the key as name if the name is not set
+            $props['name'] = $props['name'] ?? $name;
+            $tab = new BlueprintTab($props);
             $this->tabs->append($tab->name(), $tab);
         }
 

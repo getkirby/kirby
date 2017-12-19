@@ -7,9 +7,13 @@ use Kirby\Cms\Folder;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
+use Kirby\Cms\SiteBlueprint;
 use Kirby\Data\Data;
 
 return [
+    'site.blueprint' => function (Site $site): SiteBlueprint {
+        return SiteBlueprint::load($this->kirby()->root('blueprints') . '/site.yml');
+    },
     'site.children' => function (Site $site): Pages {
 
         $url      = $site->url();

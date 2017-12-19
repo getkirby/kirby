@@ -6,12 +6,21 @@ use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Folder;
 use Kirby\Cms\Page;
+use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\Site;
 use Kirby\Data\Data;
 
 return [
-    'page.change.slug' => function (Page $page, string $slug): Page {
+    'page.blueprint' => function (Page $page) {
+        $root = $this->kirby()->root('blueprints') . '/pages';
 
+        try {
+            return PageBlueprint::load($root . '/' . $page->template() . '.yml');
+        } catch (Exception $e) {
+            return PageBlueprint::load($root . '/default.yml');
+        }
+    },
+    'page.change.slug' => function (Page $page, string $slug): Page {
 
         $newName = implode('-', array_filter([
             $page->num(),

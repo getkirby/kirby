@@ -37,8 +37,10 @@ class BlueprintTest extends TestCase
     {
         return [
             [
+                'name'     => 'test',
                 'width'    => '1/2',
-                'sections' => $this->sections()
+                'sections' => $this->sections(),
+                'id'       => 'test'
             ]
         ];
     }
@@ -176,6 +178,15 @@ class BlueprintTest extends TestCase
         $this->assertCount(2, $blueprint->fields());
         $this->assertEquals('title', $blueprint->fields()->first()->name());
         $this->assertEquals('text', $blueprint->fields()->last()->name());
+    }
+
+    public function testLoadFields()
+    {
+        $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/fields.yml');
+        $this->assertCount(1, $blueprint->tabs());
+        $this->assertEquals('main', $blueprint->tabs()->first()->name());
+        $this->assertCount(1, $blueprint->sections());
+        $this->assertEquals('fields', $blueprint->sections()->first()->name());
     }
 
 }

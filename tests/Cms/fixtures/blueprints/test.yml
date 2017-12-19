@@ -1,31 +1,25 @@
 title: Test
 
 tabs:
-    -
-        name: test
+    test:
         icon: settings
         columns:
-            -
+            left:
                 width: 2/3
                 sections:
-                    -
-                        name: fields
+                    fields:
                         type: fields
                         fields:
-                            -
-                                name: title
+                            title:
                                 label: Title
                                 type: text
-                            -
-                                name: text
+                            text:
                                 label: Textarea
                                 type: textarea
-            -
+            right:
                 width: 1/3
                 sections:
-                    -
-                        name: cover
+                    cover:
                         type: files
-                    -
-                        name: gallery
+                    gallery:
                         type: files

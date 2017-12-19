@@ -3,11 +3,25 @@
 use Kirby\Cms\Avatar;
 use Kirby\Cms\Content;
 use Kirby\Cms\User;
+use Kirby\Cms\UserBlueprint;
 use Kirby\Data\Data;
 use Kirby\FileSystem\Folder;
 use Kirby\Toolkit\V;
 
 return [
+    'user.blueprint' => function (User $user) {
+        $root = $this->kirby()->root('blueprints') . '/users';
+
+        try {
+            return UserBlueprint::load($root . '/' . $user->role() . '.yml');
+        } catch (Exception $e) {
+            try {
+                return UserBlueprint::load($root . '/default.yml');
+            } catch (Exception $e) {
+                return null;
+            }
+        }
+    },
     'user.change.password' => function (User $user, string $password): User {
         return $user->store()->commit('user.write', $user, [
             'password' => $password
