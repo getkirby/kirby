@@ -8,7 +8,7 @@ return [
     'pattern' => 'pages/(:all)/blueprint',
     'action'  => function ($path) {
         if ($page = $this->site()->find($path)) {
-            return PageBlueprint::load($page)->toArray();
+            return $page->blueprint()->toArray();
         }
     }
 ];
