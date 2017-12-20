@@ -59,6 +59,7 @@ class BlueprintObject extends Object
     {
         $array = parent::toArray();
 
+        unset($array['collection']);
         ksort($array);
 
         return $array;

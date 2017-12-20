@@ -127,13 +127,11 @@ class BlueprintColumnTest extends TestCase
             'name'     => 'test',
             'sections' => [
                 [
-                    'fields' => [],
                     'id'     => 'pages',
                     'name'   => 'pages',
                     'type'   => 'pages',
                 ],
                 [
-                    'fields' => [],
                     'id'     => 'files',
                     'name'   => 'files',
                     'type'   => 'files',

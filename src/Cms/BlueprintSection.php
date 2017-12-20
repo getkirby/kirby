@@ -11,9 +11,6 @@ class BlueprintSection extends BlueprintObject
     public function schema(): array
     {
         return [
-            'fields' => [
-                'type' => 'array'
-            ],
             'id' => [
                 'type'    => 'string',
                 'default' => function () {
@@ -56,8 +53,18 @@ class BlueprintSection extends BlueprintObject
 
     public function toArray(): array
     {
-        $array = parent::toArray();
-        $array['fields'] = $this->fields()->toArray();
+        $array = [];
+
+        foreach ($this->props() as $key => $value) {
+            $array[$key] = $this->prop($key);
+        }
+
+        unset($array['fields']);
+        unset($array['collection']);
+
+        if ($this->type() === 'fields') {
+            $array['fields'] = $this->fields()->toArray();
+        }
 
         return $array;
     }
