@@ -72,6 +72,10 @@ class BlueprintTab extends BlueprintObject
         $this->fields = new BlueprintCollection;
 
         foreach ($this->sections() as $section) {
+            if (is_a($section->fields(), BlueprintCollection::class) === false) {
+                continue;
+            }
+
             foreach ($section->fields() as $field) {
                 $this->fields->set($field->id(), $field);
             }
