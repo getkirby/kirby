@@ -215,4 +215,87 @@ class SchemaTest extends TestCase
         $this->assertEquals($this->schemaData(), $this->schema()->toArray());
     }
 
+    public function testExtend()
+    {
+
+        $schema = new Schema([
+            'a' => [
+                'type' => 'string'
+            ]
+        ]);
+
+        $schema->extend([
+            'a' => [
+                'default' => 'a'
+            ],
+            'b' => [
+                'type' => 'string'
+            ]
+        ]);
+
+        $expected = [
+            'a' => [
+                'type' => 'string',
+                'default' => 'a'
+            ],
+            'b' => [
+                'type' => 'string'
+            ]
+        ];
+
+        $this->assertEquals($expected, $schema->toArray());
+
+    }
+
+    public function testRemoveSingle()
+    {
+        $schema = new Schema([
+            'a' => [
+                'type' => 'string'
+            ],
+            'b' => [
+                'type' => 'string'
+            ]
+        ]);
+
+        $schema->remove('a');
+
+        $this->assertEquals(['b'], $schema->keys());
+    }
+
+    public function testRemoveMultiple()
+    {
+        $schema = new Schema([
+            'a' => [
+                'type' => 'string'
+            ],
+            'b' => [
+                'type' => 'string'
+            ]
+        ]);
+
+        $schema->remove('a', 'b');
+
+        $this->assertEquals([], $schema->keys());
+    }
+
+    public function testRemoveMultipleComplex()
+    {
+        $schema = new Schema([
+            'a' => [
+                'type' => 'string'
+            ],
+            'b' => [
+                'type' => 'string'
+            ],
+            'c' => [
+                'type' => 'string'
+            ]
+        ]);
+
+        $schema->remove('a', ['b', 'c']);
+
+        $this->assertEquals([], $schema->keys());
+    }
+
 }

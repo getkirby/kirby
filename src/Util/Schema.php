@@ -38,6 +38,16 @@ class Schema
     }
 
     /**
+     * Improved output for var_dump
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
      * Validates the value and returns true
      * or false. It's basically the same as
      * Schema::validate, but doesn't throw
@@ -54,6 +64,18 @@ class Schema
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Extends the schema definition
+     *
+     * @param array $schema
+     * @return self
+     */
+    public function extend(array $schema): self
+    {
+        $this->schema = array_replace_recursive($this->schema, $schema);
+        return $this;
     }
 
     /**
@@ -108,6 +130,26 @@ class Schema
         }
 
         return $result;
+    }
+
+    /**
+     * Removes definitions from the schema
+     * by key
+     *
+     * @return self
+     */
+    public function remove(...$keys): self
+    {
+        foreach ($keys as $key) {
+            if (is_array($key) === true) {
+                foreach ($key as $k) {
+                    unset($this->schema[$k]);
+                }
+            } else {
+                unset($this->schema[$key]);
+            }
+        }
+        return $this;
     }
 
     /**
