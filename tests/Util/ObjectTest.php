@@ -10,45 +10,44 @@ class ObjectTest extends TestCase
     public function testCall()
     {
         $obj = new Object([
-            'bastian' => 'allgeier',
-            'foo'     => 'bar'
+            'name' => 'homer',
+            'foo'  => 'bar'
         ]);
 
-        $this->assertEquals('allgeier', $obj->bastian());
+        $this->assertEquals('homer', $obj->name());
         $this->assertEquals('bar', $obj->foo());
     }
 
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Invalid property key: ""
+     */
     public function testInvalidKeys()
     {
-        $array = [
-            ''        => 'kirby',
-            'bastian' => 'allgeier',
-        ];
-
-        $result = [
-            'bastian' => 'allgeier',
-        ];
-
-        $obj = new Object($array);
-
-        $this->assertEquals($result, $obj->toArray());
+        $obj = new Object([
+            '' => 'kirby',
+        ]);
     }
 
     public function testSetGet()
     {
-        $obj = new Object();
-        $obj->set('bastian', 'allgeier');
+        $obj = new Object;
+        $obj->name = 'homer';
+        $obj->email('homer@simpson.com');
 
-        $this->assertEquals('allgeier', $obj->get('bastian'));
-        $this->assertEquals('bar', $obj->get('foo', 'bar'));
-        $this->assertEquals(null, $obj->get('foo'));
+        $this->assertEquals('homer', $obj->name());
+        $this->assertEquals('homer', $obj->name);
+        $this->assertEquals('homer@simpson.com', $obj->email());
+        $this->assertEquals('homer@simpson.com', $obj->email);
+        $this->assertEquals(null, $obj->foo());
+        $this->assertEquals(null, $obj->foo);
     }
 
     public function testArray()
     {
         $array = [
-            'bastian' => 'allgeier',
-            'foo'      => 'bar'
+            'name' => 'homer',
+            'foo'  => 'bar'
         ];
 
         $obj = new Object($array);

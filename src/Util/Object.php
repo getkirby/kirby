@@ -2,85 +2,60 @@
 
 namespace Kirby\Util;
 
-use stdClass;
-
 /**
- * An extended version of stdClass objects
- * with a nicer API
+ * Base object class with full support
+ * for our Props and Schema classes to
+ * introduce simple prop validation and defaults
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Util
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  * @license   MIT
  */
-class Object extends stdClass
+class Object
 {
 
     /**
-     * Constructor
+     * All registered props
      *
-     * @param array $data
+     * @var Props
      */
-    public function __construct(array $data = [])
+    protected $props;
+
+    /**
+     * Magic caller to enable prop getter and setter methods
+     *
+     * ```
+     * $object->id();
+     * $object->id('some-id');
+     * ```
+     *
+     * @param string $key
+     * @param array $args
+     * @return void
+     */
+    public function __call(string $key, array $args = [])
     {
-        foreach ($data as $key => $val) {
-            if (!is_string($key) || strlen($key) === 0) {
-                continue;
-            }
-            $this->{$key} = $val;
+        if (empty($args) === true) {
+            return $this->props->get($key);
         }
+
+        return $this->props->set($key, ...$args);
     }
 
     /**
-     * Magic getter
+     * Creates a new Object
      *
-     * @param  string $method
-     * @param  array  $arguments
-     * @return mixed
+     * @param array $props
      */
-    public function __call(string $method, array $arguments)
+    public function __construct(array $props = [])
     {
-        return isset($this->$method) ? $this->$method : null;
+        $this->props = new Props([], $props);
     }
 
     /**
-     * Attribute setter
-     *
-     * @param   string  $key
-     * @param   mixed   $value
-     * @return  Object
-     */
-    public function set(string $key, $value): self
-    {
-        $this->$key = $value;
-        return $this;
-    }
-
-    /**
-     * Attribute getter
-     *
-     * @param   string  $key
-     * @param   mixed   $default (optional)
-     * @return  mixed
-     */
-    public function get(string $key, $default = null)
-    {
-        return isset($this->$key) ? $this->$key : $default;
-    }
-
-    /**
-     * Converts the object to an array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return (array)$this;
-    }
-
-    /**
-     * Improved var_dump() output
+     * Improved var_dump output
      *
      * @return array
      */
@@ -88,4 +63,60 @@ class Object extends stdClass
     {
         return $this->toArray();
     }
+
+    /**
+     * Magic prop getter
+     *
+     * ```
+     * $object->id;
+     * ```
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function __get(string $key)
+    {
+        return $this->props->get($key);
+    }
+
+    /**
+     * Checks if a prop exists
+     *
+     * ```
+     * isset($object->id);
+     * ```
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public function __isset(string $key)
+    {
+        return $this->props->has($key);
+    }
+
+    /**
+     * Magic prop setter
+     *
+     * ```
+     * $object->id = 'some-id';
+     * ```
+     *
+     * @param string $key
+     * @return void
+     */
+    public function __set(string $key, $value)
+    {
+        $this->props->set($key, $value);
+    }
+
+    /**
+     * Returns all object props
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->props->toArray();
+    }
+
 }
