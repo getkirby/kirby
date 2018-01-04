@@ -202,6 +202,16 @@ class ClassList
     }
 
     /**
+     * Converts the ClassList to html
+     *
+     * @return string|null
+     */
+    public function toHtml()
+    {
+        return (count($this->classNames) > 0) ? $this->toString() : null;
+    }
+
+    /**
      * Magic string converter
      *
      * @return string

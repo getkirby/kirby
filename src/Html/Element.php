@@ -105,6 +105,9 @@ class Element
     {
         $this->tagName($tagName);
 
+        $this->classList = new ClassList;
+        $this->attr      = new Attributes;
+
         if (is_array($html) === true) {
             // list of elements
             if (key($html) === 0) {
@@ -116,10 +119,25 @@ class Element
             $this->html($html);
         }
 
-        $this->classList = new ClassList;
-        $this->attr      = new Attributes;
-
         $this->attr($attr);
+    }
+
+    /**
+     * Multi-purpose element creator.
+     * Pass either an element object or
+     * a string as first argument
+     *
+     * @param string|Element $element
+     * @param mixed ...$arguments
+     * @return self
+     */
+    public static function factory($element, ...$arguments): self
+    {
+        if (is_a($element, Element::class)) {
+            return $element;
+        }
+
+        return new static($element, ...$arguments);
     }
 
     /**
@@ -130,8 +148,10 @@ class Element
      * @param  string|null     $tagName
      * @return string|Element
      */
-    public function tagName(string $tagName = null)
+    public function tagName()
     {
+        $tagName = func_get_args()[0] ?? null;
+
         if ($tagName === null) {
             return $this->tagName;
         }
@@ -145,8 +165,10 @@ class Element
      * @param  string|array|Element $html
      * @return Element|string
      */
-    public function html($html = null)
+    public function html()
     {
+        $html = func_get_args()[0] ?? null;
+
         if ($html === null) {
             return $this->html;
         }
@@ -186,7 +208,7 @@ class Element
      */
     public function isVoid(): bool
     {
-        return in_array($this->tagName, static::$void) === true;
+        return in_array($this->tagName(), static::$void) === true;
     }
 
     /**
@@ -367,7 +389,7 @@ class Element
         $attr = $attributes->toHtml();
 
         // start the html tag
-        $html = '<' . $this->tagName;
+        $html = '<' . $this->tagName();
 
         // add the attributes
         if (empty($attr) === false) {
@@ -391,7 +413,7 @@ class Element
     {
         // add the rest of the tag for non-void tags
         if ($this->isVoid() === false) {
-            return '</' . $this->tagName . '>';
+            return '</' . $this->tagName() . '>';
         }
 
         return '';
@@ -431,7 +453,7 @@ class Element
      *
      * @return string
      */
-    public function toString(): string
+    public function toHtml(): string
     {
         $html = $this->begin();
 
@@ -442,6 +464,16 @@ class Element
         }
 
         return $html;
+    }
+
+    /**
+     * See Element::toHtml
+     *
+     * @return string
+     */
+    public function toString(): string
+    {
+        return $this->toHtml();
     }
 
     /**

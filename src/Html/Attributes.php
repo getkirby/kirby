@@ -72,7 +72,7 @@ class Attributes
      * @param  mixed        $attributeValue
      * @return Attributes
      */
-    public function set($attributeName, $attributeValue = null): self
+    public function set($attributeName, $attributeValue = null)
     {
         if (is_array($attributeName) === true) {
             foreach ($attributeName as $attrName => $attrVal) {

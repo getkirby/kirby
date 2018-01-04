@@ -57,6 +57,16 @@ class Attribute
     }
 
     /**
+     * Checks if the attribute value is empty
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this->value === null || $this->value === '';
+    }
+
+    /**
      * Setter and getter for the attribute name
      * Names are being converted to lowercase
      *
@@ -117,7 +127,7 @@ class Attribute
         $name  = $this->name();
         $value = $this->value();
 
-        if (empty($name) === true || $value === false || $value === '') {
+        if (empty($name) === true || $value === false || $value === '' || $value === null) {
             return '';
         }
 
@@ -145,6 +155,6 @@ class Attribute
      */
     public function __toString(): string
     {
-        return $this->value();
+        return $this->toString();
     }
 }
