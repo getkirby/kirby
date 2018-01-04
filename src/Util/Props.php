@@ -47,14 +47,14 @@ class Props
      * Creates a new props container
      * with schema definition
      *
-     * @param array $schema
+     * @param array|Schema $schema
      * @param array $props
      * @param object $bind
      */
-    public function __construct(array $schema, array $props = [], $bind = null)
+    public function __construct($schema, array $props = [], $bind = null)
     {
         $this->bind   = $bind ?? $this;
-        $this->schema = new Schema($schema);
+        $this->schema = is_a($schema, Schema::class) ? $schema : new Schema($schema);
         $this->set($props);
     }
 
@@ -202,6 +202,10 @@ class Props
                 $this->set($k, $v);
             }
             return $this;
+        }
+
+        if (empty($key) === true) {
+            throw new Exception(sprintf('Invalid property key: "%s"', $key));
         }
 
         if ($value === null) {
