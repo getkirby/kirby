@@ -2,6 +2,7 @@
 
 namespace Kirby\Util;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class PropsTest extends TestCase
@@ -58,6 +59,25 @@ class PropsTest extends TestCase
 
         $this->assertNull($props->get('b'));
         $this->assertNull($props->b);
+    }
+
+    public function testFreezing()
+    {
+        $props = new Props([
+            'a' => [
+                'type'   => 'string',
+                'freeze' => true
+            ]
+        ]);
+
+        $props->a = 'a';
+
+        $this->assertEquals('a', $props->a);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('"a" has already been used and cannot be overwritten');
+
+        $props->a = 'b';
     }
 
     public function testIsset()

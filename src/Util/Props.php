@@ -30,11 +30,11 @@ class Props
     protected $bind = null;
 
     /**
-     * The schema definition
+     * Array of frozen properties
      *
      * @var array
      */
-    protected $schema = [];
+    protected $frozen = [];
 
     /**
      * All stored properties
@@ -42,6 +42,20 @@ class Props
      * @var array
      */
     protected $props = [];
+
+    /**
+     * The schema definition
+     *
+     * @var array
+     */
+    protected $schema = [];
+
+    /**
+     * Array of used properties
+     *
+     * @var array
+     */
+    protected $used = [];
 
     /**
      * Creates a new props container
@@ -156,7 +170,11 @@ class Props
             return $this->toArray();
         }
 
-        return $this->props[$key] ?? $this->default($key);
+        // store prop usage to enable
+        // prop freezing on sequential setters
+        $this->used[] = $key;
+
+        return $this->props[$key] ?? $this->props[$key] = $this->default($key);
     }
 
     /**
@@ -173,6 +191,27 @@ class Props
         }
 
         return $this->schema->has($key) === true || isset($this->props[$key]) === true;
+    }
+
+    /**
+     * Checks if the property is frozen.
+     * Frozen properties can only be set as
+     * long as they have not been used.
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public function isFrozen(string $key): bool
+    {
+        if (($this->schema->get($key)['freeze'] ?? false) === false) {
+            return false;
+        }
+
+        if (in_array($key, $this->used) !== true) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -198,14 +237,26 @@ class Props
     public function set($key, $value = null)
     {
         if (is_array($key) === true) {
-            foreach ($key as $k => $v) {
-                $this->set($k, $v);
+
+            // make sure to set all keys. also those who are only in the schema,
+            // but have not been passed by the input array
+            $keys  = array_unique(array_merge(array_keys($key), $this->schema->keys()));
+            $input = $key;
+
+            foreach ($keys as $key) {
+                $this->set($key, $input[$key] ?? null);
             }
+
             return $this;
+
         }
 
         if (empty($key) === true) {
             throw new Exception(sprintf('Invalid property key: "%s"', $key));
+        }
+
+        if ($this->isFrozen($key) === true) {
+            throw new Exception(sprintf('"%s" has already been used and cannot be overwritten', $key));
         }
 
         if ($value === null) {
