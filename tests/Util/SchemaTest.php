@@ -78,6 +78,48 @@ class SchemaTest extends TestCase
         ];
     }
 
+    public function testHas()
+    {
+        $schema = new Schema([
+            'a' => [
+                'type' => 'string'
+            ],
+            'b' => [
+                'type' => 'string'
+            ]
+        ]);
+
+        $this->assertTrue($schema->has('a'));
+        $this->assertTrue($schema->has('b'));
+        $this->assertFalse($schema->has('c'));
+    }
+
+    public function testGet()
+    {
+        $schema = new Schema([
+            'a' => $a = [
+                'type' => 'string'
+            ]
+        ]);
+
+        $this->assertEquals($a, $schema->get('a'));
+        $this->assertNull($schema->get('b'));
+    }
+
+    public function testKeys()
+    {
+        $schema = new Schema([
+            'a' => [
+                'type' => 'string'
+            ],
+            'b' => [
+                'type' => 'string'
+            ]
+        ]);
+
+        $this->assertEquals(['a', 'b'], $schema->keys());
+    }
+
     /**
      * @dataProvider validDataProvider
      */

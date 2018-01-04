@@ -56,6 +56,38 @@ class Schema
         }
     }
 
+    /**
+     * Returns the schema definition for a
+     * specific field
+     *
+     * @param string $key
+     * @return array|null
+     */
+    public function get(string $key)
+    {
+        return $this->schema[$key] ?? null;
+    }
+
+    /**
+     * Checks if the Schema has a definition
+     * for the given key
+     *
+     * @return boolean
+     */
+    public function has(string $key)
+    {
+        return isset($this->schema[$key]) === true;
+    }
+
+    /**
+     * Returns a list of all keys in the schema
+     *
+     * @return array
+     */
+    public function keys(): array
+    {
+        return array_keys($this->schema);
+    }
 
     /**
      * Plucks all fields defined in the schema
