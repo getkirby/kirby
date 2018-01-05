@@ -198,15 +198,10 @@ class Props
      * Returns a prop by its name.
      *
      * @param string $key
-     * @param bool $strict
      * @return mixed
      */
-    public function get(string $key, bool $strict = false)
+    public function get(string $key)
     {
-        if ($strict === true && $this->schema->has($key) === false) {
-            throw new Exception(sprintf('The "%s" property is not defined in the schema', $key));
-        }
-
         // store prop usage to enable
         // prop freezing on sequential setters
         $this->used[] = $key;
@@ -355,10 +350,9 @@ class Props
      *
      * @param string|array $key
      * @param mixed $value
-     * @param bool $strict
      * @return Object
      */
-    public function set($key, $value = null, $strict = false): self
+    public function set($key, $value = null): self
     {
         // batch import
         if (is_array($key) === true) {
@@ -372,11 +366,6 @@ class Props
 
         // get the schema definition for this key
         $schema = $this->schema->get($key);
-
-        // only allow props defined in the schema, when in strict mode
-        if ($schema === null && $strict === true) {
-            throw new Exception(sprintf('The "%s" property is not defined in the schema', $key));
-        }
 
         // check for props with predefined values
         if (isset($schema['value']) === true) {
