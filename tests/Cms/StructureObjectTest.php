@@ -18,7 +18,7 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" attribute must be of type "string"
+     * @expectedExceptionMessage The "id" property must be of type "string"
      */
     public function testInvalidId()
     {
@@ -29,7 +29,7 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" prop is missing
+     * @expectedExceptionMessage The "id" property is required
      */
     public function testMissingId()
     {
@@ -49,7 +49,7 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "collection" attribute must be of type "Kirby\Cms\Structure"
+     * @expectedExceptionMessage The "collection" property must be of type "Kirby\Cms\Structure"
      */
     public function testInvalidCollection()
     {
@@ -81,7 +81,7 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "content" attribute must be of type "Kirby\Cms\Content"
+     * @expectedExceptionMessage The "content" property must be of type "Kirby\Cms\Content"
      */
     public function testInvalidContent()
     {
@@ -136,7 +136,7 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "parent" attribute must be of type "Kirby\Cms\Object"
+     * @expectedExceptionMessage The "parent" property must be of type "Kirby\Cms\Object"
      */
     public function testInvalidParent()
     {

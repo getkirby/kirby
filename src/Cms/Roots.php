@@ -14,16 +14,13 @@ class Roots extends Object
 {
 
     /**
-     * Creates a new root registry
-     * Customize the folder structure
-     * with the $props array
+     * Property schema
      *
-     * @param array $props
+     * @return array
      */
-    public function __construct(array $props = [])
+    protected function schema()
     {
-
-        parent::__construct($props, [
+        return [
             'index' => [
                 'type'    => 'string',
                 'default' => function (): string {
@@ -102,8 +99,7 @@ class Roots extends Object
                     return $this->index() . '/panel';
                 }
             ],
-        ]);
-
+        ];
     }
 
     /**
@@ -118,7 +114,7 @@ class Roots extends Object
             $key = 'index';
         }
 
-        return $this->prop($key);
+        return $this->props->get($key);
     }
 
     /**

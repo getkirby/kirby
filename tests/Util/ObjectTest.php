@@ -18,17 +18,6 @@ class ObjectTest extends TestCase
         $this->assertEquals('bar', $obj->foo());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid property key: ""
-     */
-    public function testInvalidKeys()
-    {
-        $obj = new Object([
-            '' => 'kirby',
-        ]);
-    }
-
     public function testSetGet()
     {
         $obj = new Object;

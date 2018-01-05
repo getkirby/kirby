@@ -24,14 +24,14 @@ class File extends Object
     use HasThumbs;
 
     /**
-     * Creates a new File object
+     * Property schema
      * Required props are `id`, `url` and `root`
      *
-     * @param array $props
+     * @return array
      */
-    public function __construct(array $props = [])
+    protected function schema()
     {
-        parent::__construct($props, [
+        return [
             'asset' => [
                 'type' => Image::class,
                 'default' => function () {
@@ -76,7 +76,7 @@ class File extends Object
             'original' => [
                 'type' => File::class,
             ]
-        ]);
+        ];
     }
 
     /**
@@ -246,8 +246,8 @@ class File extends Object
      */
     public function __call(string $method, array $arguments = [])
     {
-        if ($this->hasProp($method)) {
-            return $this->prop($method, $arguments);
+        if ($this->props->has($method, true)) {
+            return $this->props->get($method, $arguments);
         }
 
         if ($this->hasPlugin($method)) {

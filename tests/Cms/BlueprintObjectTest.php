@@ -24,7 +24,6 @@ class BlueprintObjectTest extends TestCase
             'b' => 'Value B'
         ]);
 
-
         $object = new BlueprintObject([
             'extends' => 'test',
             'c'       => 'Value C'

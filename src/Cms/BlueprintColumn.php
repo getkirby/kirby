@@ -51,7 +51,7 @@ class BlueprintColumn extends BlueprintObject
 
         $this->sections = new BlueprintCollection;
 
-        foreach ($this->prop('sections') as $name => $props) {
+        foreach ($this->props->sections as $name => $props) {
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
             $section = new BlueprintSection($props);

@@ -2,8 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-use Exception;
+use Kirby\Util\Object as BaseObject;
+use Kirby\Util\Props;
+use Kirby\Util\Schema;
 
 /**
  * The Object class is a base component
@@ -17,158 +18,58 @@ use Exception;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Object
+class Object extends BaseObject
 {
 
-    /**
-     * Objects are extendable with
-     * the Object::plugin() interface
-     */
     use HasPlugins;
 
     /**
-     * The registered props schema for the object.
-     * The schema must be registered in the constructor.
+     * Magic caller to enable getter methods
      *
-     * @var array
-     */
-    protected $schema = [];
-
-    /**
-     * All props data after type checks and validation
-     *
-     * @var array
-     */
-    protected $props = [];
-
-    /**
-     * Creates a new object with the given props and
-     * optional additional schema.
-     *
-     * @param array $props
-     * @param array $schema
-     */
-    public function __construct(array $props = [], array $schema = [])
-    {
-        $this->schema = $schema;
-        $this->set(array_merge($this->defaults(), $props));
-    }
-
-    /**
-     * Creates an array with all default values to
-     * be injected for those props that don't
-     * receive a value from the constructor.
-     *
-     * @return array
-     */
-    protected function defaults(): array
-    {
-        return array_map(function ($prop) {
-            return $prop['default'] ?? null;
-        }, $this->schema);
-    }
-
-    /**
-     * Setter for individual pros.
-     * The setter can also receive an array
-     * as first argument to set multiple
-     * props at once.
-     *
-     * @param string|array $key
-     * @param mixed $value
-     * @return Object
-     */
-    public function set($key, $value = null)
-    {
-        if (is_array($key) === true) {
-            foreach ($key as $k => $v) {
-                $this->set($k, $v);
-            }
-            return $this;
-        }
-
-        if ($schema = ($this->schema[$key] ?? null)) {
-
-            // inject the default value
-            if ($value === null) {
-                $value = $schema['default'] ?? null;
-            }
-
-            // check for required props
-            if (($schema['required'] ?? false) === true && $value === null) {
-                throw new Exception(sprintf('The "%s" prop is missing in "%s"', $key, get_called_class()));
-            }
-
-            // type validation
-            if ($value !== null && is_a($value, Closure::class) === false) {
-                $this->validateProp($key, $value);
-            }
-
-        }
-
-        $this->props[$key] = $value;
-        return $this;
-
-    }
-
-    /**
-     * Validates a given prop by the rules
-     * set in the schema. It validates by
-     * the given type and an optional custom
-     * validate rule.
+     * ```
+     * $object->id();
+     * ```
      *
      * @param string $key
-     * @param mixed $value
-     * @return bool
+     * @param array $args
+     * @return void
      */
-    protected function validateProp(string $key, $value): bool
+    public function __call(string $key, array $args = [])
     {
-        $schema   = $this->schema[$key] ?? [];
-        $type     = $schema['type'] ?? null;
-        $validate = $schema['validate'] ?? null;
-
-        if ($type === null) {
-            return true;
-        }
-
-        if ($value === null && ($schema['required'] ?? false) !== true) {
-            return true;
-        }
-
-        if ($type === 'number') {
-            if (is_numeric($value) !== true) {
-                $this->propTypeError($key, $type, gettype($value));
-            }
-        } elseif (is_object($value) === true) {
-            if (is_a($value, $type) !== true) {
-                $this->propTypeError($key, $type, get_class($value));
-            }
-        } elseif ($type !== gettype($value)) {
-            $this->propTypeError($key, $type, gettype($value));
-        }
-
-        // optional prop validation
-        if (is_a($validate, Closure::class) === true) {
-            if ($validate->call($this, $value) !== true) {
-                throw new Exception(sprintf('Prop validation for "%s" failed', $key));
-            }
-        }
-
-        return true;
+        return $this->get($key, $args);
     }
 
     /**
-     * Returns the data for all props
+     * Creates a new object with the given props
      *
-     * @return array
+     * @param array $props
      */
-    public function props(): array
+    public function __construct(array $props = [])
     {
-        return $this->props;
+        $this->props = new Props($this->schema(), $props, $this);
     }
 
     /**
-     * Compares to objects by their id method
+     * Getter for props
+     *
+     * @param string
+     * @return mixed
+     */
+    public function get(string $key)
+    {
+        if ($this->props->has($key)) {
+            return $this->props->get($key);
+        }
+
+        if ($this->hasPlugin($key)) {
+            return $this->plugin($key);
+        }
+
+        return null;
+    }
+
+    /**
+     * Compares two objects
      *
      * @param Object $object
      * @return bool
@@ -179,94 +80,31 @@ class Object
     }
 
     /**
-     * Checks for an existing prop by the
-     * prop name
+     * Sets the schema for the props
      *
-     * @param string $key
-     * @return bool
+     * @return array|Schema
      */
-    protected function hasProp(string $key): bool
+    protected function schema()
     {
-        return isset($this->schema[$key]) === true || isset($this->props[$key]) === true;
+        return [];
     }
 
     /**
-     * Returns a prop by its name. Additional
-     * arguments can be passed to the prop receiver.
-     * Those will be passed on to the prop default callback
+     * Setter for props
      *
-     * @param string $key
-     * @param array $arguments
-     * @return mixed
+     * @param string|array $key
+     * @param mixed $value
+     * @return self
      */
-    protected function prop(string $key, array $arguments = [])
+    public function set($key, $value = null)
     {
-        if (isset($this->props[$key]) === false) {
-            return null;
-        }
-
-        if (is_a($this->props[$key], Closure::class)) {
-            $value = $this->props[$key] = $this->props[$key]->call($this, ...$arguments);
-            $this->validateProp($key, $value);
-            return $this->props[$key] = $value;
-        }
-
-        return $this->props[$key];
+        $this->props->set($key, $value);
+        return $this;
     }
 
-    /**
-     * Throws an Exception with info about the
-     * failed prop type validation and the current class
-     *
-     * @param string $key
-     * @param string $expected
-     * @param string $type
-     * @return void
-     */
-    protected function propTypeError(string $key, string $expected, string $type)
-    {
-        throw new Exception(sprintf('The "%s" attribute must be of type "%s" not "%s" in "%s"', $key, $expected, $type, get_called_class()));
-    }
-
-    /**
-     * The magic caller enables access to all
-     * registered object plugins as well as to
-     * all registered props. Overwrite this
-     * method to limit or extend access to those
-     * parts of the object.
-     *
-     * @param string $method
-     * @param mixed $arguments
-     * @return void
-     */
-    public function __call(string $method, array $arguments = [])
-    {
-        if ($this->hasProp($method)) {
-            return $this->prop($method, $arguments);
-        }
-
-        if ($this->hasPlugin($method)) {
-            return $this->plugin($method, $arguments);
-        }
-
-        return null;
-    }
-
-    /**
-     * Converts the object to an array
-     * by fetching all registered props.
-     *
-     * @return array
-     */
     public function toArray(): array
     {
-        $array = [];
-
-        foreach ($this->schema as $key => $options) {
-            $array[$key] = $this->prop($key);
-        }
-
-        return $array;
+        return $this->props->clone()->not('collection')->toArray(true);
     }
 
 }

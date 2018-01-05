@@ -58,7 +58,7 @@ class PageContentTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "content" attribute must be of type "Kirby\Cms\Content"
+     * @expectedExceptionMessage The "content" property must be of type "Kirby\Cms\Content"
      */
     public function testInvalidContent()
     {

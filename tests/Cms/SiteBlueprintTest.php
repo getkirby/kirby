@@ -48,7 +48,7 @@ class SiteBlueprintTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "blueprint" attribute must be of type "Kirby\Cms\SiteBlueprint"
+     * @expectedExceptionMessage The "blueprint" property must be of type "Kirby\Cms\SiteBlueprint"
      */
     public function testInvalidBlueprint()
     {

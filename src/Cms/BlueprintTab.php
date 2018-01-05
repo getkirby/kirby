@@ -53,7 +53,7 @@ class BlueprintTab extends BlueprintObject
 
         $this->columns = new BlueprintCollection;
 
-        foreach ($this->prop('columns') as $name => $props) {
+        foreach ($this->props->columns as $name => $props) {
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
             $column = new BlueprintColumn($props);

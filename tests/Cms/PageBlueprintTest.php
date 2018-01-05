@@ -53,7 +53,7 @@ class PageBlueprintTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "blueprint" attribute must be of type "Kirby\Cms\PageBlueprint"
+     * @expectedExceptionMessage The "blueprint" property must be of type "Kirby\Cms\PageBlueprint"
      */
     public function testInvalidBlueprint()
     {

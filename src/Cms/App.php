@@ -26,9 +26,41 @@ class App extends Object
 
     public function __construct(array $props = [])
     {
+        parent::__construct($props);
 
-        parent::__construct($props, [
+        $kirby = $this;
 
+        Object::use('kirby', $kirby);
+
+        Object::use('store', function () use ($kirby) {
+            return $kirby->store();
+        });
+
+        Object::use('media', function () use ($kirby) {
+            return $kirby->media();
+        });
+
+        Object::use('rules', $kirby->rules());
+        Object::use('perms', $kirby->perms());
+
+        Collection::use('pagination', function ($options) {
+            return new Pagination([
+                'total' => $this->count(),
+                'limit' => $options['limit'] ?? 20,
+                'page'  => $options['page'] ?? App::instance()->request()->query()->get('page'),
+                'url'   => Url\Query::strip(Url::current())
+            ]);
+        });
+
+        // register all field methods
+        Field::methods($this->fieldMethods());
+
+        static::$instance = $kirby;
+    }
+
+    protected function schema()
+    {
+        return [
             'collections' => [
                 'type'    => Collections::class,
                 'default' => function () {
@@ -177,37 +209,7 @@ class App extends Object
                     ]);
                 }
             ],
-        ]);
-
-        $kirby = $this;
-
-        Object::use('kirby', $kirby);
-
-        Object::use('store', function () use ($kirby) {
-            return $kirby->store();
-        });
-
-        Object::use('media', function () use ($kirby) {
-            return $kirby->media();
-        });
-
-        Object::use('rules', $kirby->rules());
-        Object::use('perms', $kirby->perms());
-
-        Collection::use('pagination', function ($options) {
-            return new Pagination([
-                'total' => $this->count(),
-                'limit' => $options['limit'] ?? 20,
-                'page'  => $options['page'] ?? App::instance()->request()->query()->get('page'),
-                'url'   => Url\Query::strip(Url::current())
-            ]);
-        });
-
-        // register all field methods
-        Field::methods($this->fieldMethods());
-
-        static::$instance = $kirby;
-
+        ];
     }
 
     public static function instance()

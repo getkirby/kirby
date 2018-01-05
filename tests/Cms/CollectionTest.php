@@ -2,15 +2,23 @@
 
 namespace Kirby\Cms;
 
+class MockObject extends Object
+{
+    public function toArray(): array
+    {
+        return $this->props->not('collection')->toArray();
+    }
+}
+
 class CollectionTest extends TestCase
 {
 
     public function testWithValidObjects()
     {
         $collection = new Collection([
-            $a = new Object(['id' => 'a', 'name' => 'a']),
-            $b = new Object(['id' => 'b', 'name' => 'b']),
-            $c = new Object(['id' => 'c', 'name' => 'c'])
+            $a = new MockObject(['id' => 'a', 'name' => 'a']),
+            $b = new MockObject(['id' => 'b', 'name' => 'b']),
+            $c = new MockObject(['id' => 'c', 'name' => 'c'])
         ]);
 
         $this->assertEquals($a, $collection->first());
@@ -45,7 +53,7 @@ class CollectionTest extends TestCase
 
     public function testGetAttribute()
     {
-        $object     = new Object(['name' => 'a']);
+        $object     = new MockObject(['name' => 'a']);
         $collection = new Collection();
         $value      = $collection->getAttribute($object, 'name');
 
@@ -54,7 +62,7 @@ class CollectionTest extends TestCase
 
     public function testGetAttributeWithField()
     {
-        $object = new Object([
+        $object = new MockObject([
             'name' => new Field('name', 'a')
         ]);
 
@@ -67,9 +75,9 @@ class CollectionTest extends TestCase
     public function testIndexOfWithObject()
     {
         $collection = new Collection([
-            $a = new Object(['id' => 'a']),
-            $b = new Object(['id' => 'b']),
-            $c = new Object(['id' => 'c'])
+            $a = new MockObject(['id' => 'a']),
+            $b = new MockObject(['id' => 'b']),
+            $c = new MockObject(['id' => 'c'])
         ]);
 
         $this->assertEquals(0, $collection->indexOf($a));
@@ -80,9 +88,9 @@ class CollectionTest extends TestCase
     public function testIndexOfWithString()
     {
         $collection = new Collection([
-            new Object(['id' => 'a']),
-            new Object(['id' => 'b']),
-            new Object(['id' => 'c'])
+            new MockObject(['id' => 'a']),
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c'])
         ]);
 
         $this->assertEquals(0, $collection->indexOf('a'));
@@ -93,9 +101,9 @@ class CollectionTest extends TestCase
     public function testNotWithObjects()
     {
         $collection = new Collection([
-            $a = new Object(['id' => 'a']),
-            $b = new Object(['id' => 'b']),
-            $c = new Object(['id' => 'c'])
+            $a = new MockObject(['id' => 'a']),
+            $b = new MockObject(['id' => 'b']),
+            $c = new MockObject(['id' => 'c'])
         ]);
 
         $result = $collection->not($a);
@@ -114,9 +122,9 @@ class CollectionTest extends TestCase
     public function testNotWithString()
     {
         $collection = new Collection([
-            $a = new Object(['id' => 'a']),
-            $b = new Object(['id' => 'b']),
-            $c = new Object(['id' => 'c'])
+            $a = new MockObject(['id' => 'a']),
+            $b = new MockObject(['id' => 'b']),
+            $c = new MockObject(['id' => 'c'])
         ]);
 
         $result = $collection->not('a');
@@ -135,9 +143,9 @@ class CollectionTest extends TestCase
     public function testPaginate()
     {
         $collection = new Collection([
-            $a = new Object(['id' => 'a']),
-            $b = new Object(['id' => 'b']),
-            $c = new Object(['id' => 'c'])
+            $a = new MockObject(['id' => 'a']),
+            $b = new MockObject(['id' => 'b']),
+            $c = new MockObject(['id' => 'c'])
         ]);
 
         // page: 1
@@ -164,16 +172,10 @@ class CollectionTest extends TestCase
 
     public function testToArray()
     {
-        $schema = [
-            'id' => [
-                'type' => 'string'
-            ]
-        ];
-
         $collection = new Collection([
-            new Object(['id' => 'a'], $schema),
-            new Object(['id' => 'b'], $schema),
-            new Object(['id' => 'c'], $schema)
+            new MockObject(['id' => 'a']),
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c'])
         ]);
 
         $array = $collection->toArray();
@@ -194,9 +196,9 @@ class CollectionTest extends TestCase
     public function testToArrayWithCallback()
     {
         $collection = new Collection([
-            new Object(['id' => 'a']),
-            new Object(['id' => 'b']),
-            new Object(['id' => 'c'])
+            new MockObject(['id' => 'a']),
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c'])
         ]);
 
         $array = $collection->toArray(function ($object) {

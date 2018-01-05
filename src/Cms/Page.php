@@ -32,14 +32,13 @@ class Page extends Object
     protected static $models = [];
 
     /**
-     * Creates a new page object
+     * Property schema
      *
-     * @param array $props
+     * @return array
      */
-    public function __construct(array $props = [])
+    protected function schema()
     {
-
-        parent::__construct($props, [
+        return [
             'blueprint' => [
                 'type'    => PageBlueprint::class,
                 'default' => function (): PageBlueprint {
@@ -110,8 +109,7 @@ class Page extends Object
                     return '/' . ltrim($this->id(), '/');
                 }
             ],
-        ]);
-
+        ];
     }
 
     /**
@@ -434,7 +432,7 @@ class Page extends Object
      */
     public function parent()
     {
-        return $this->prop('parent');
+        return $this->props->get('parent');
     }
 
     /**

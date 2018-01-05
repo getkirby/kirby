@@ -24,13 +24,13 @@ class StructureObject extends Object
     use HasSiblings;
 
     /**
-     * Creates a new StructureObject
+     * Property schema
      *
-     * @param array $props
+     * @return array
      */
-    public function __construct(array $props = [])
+    protected function schema()
     {
-        parent::__construct($props, [
+        return [
             'id' => [
                 'type'     => 'string',
                 'required' => true,
@@ -47,7 +47,7 @@ class StructureObject extends Object
             'parent' => [
                 'type' => Object::class,
             ],
-        ]);
+        ];
     }
 
     /**
@@ -58,7 +58,7 @@ class StructureObject extends Object
      */
     public function toArray(): array
     {
-        return $this->prop('content')->toArray();
+        return $this->content()->toArray();
     }
 
 }

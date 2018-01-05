@@ -10,9 +10,9 @@ use Kirby\Util\Str;
 class Media extends Object
 {
 
-    public function __construct(array $props)
+    protected function schema()
     {
-        parent::__construct($props, [
+        return [
             'darkroom' => [
                 'required' => true,
                 'type'     => Darkroom::class,
@@ -25,7 +25,7 @@ class Media extends Object
                 'required' => true,
                 'type'     => 'string',
             ],
-        ]);
+        ];
     }
 
     public function path(Object $model, Object $file = null, array $attributes = []): string
@@ -54,19 +54,19 @@ class Media extends Object
     public function url(Object $model, Object $file = null, array $attributes = []): string
     {
         if ($model === null) {
-            return $this->prop('url');
+            return $this->props->url;
         }
 
-        return $this->prop('url') . '/' . $this->path($model, $file, $attributes);
+        return $this->props->url . '/' . $this->path($model, $file, $attributes);
     }
 
     public function root(Object $model, Object $file = null, array $attributes = []): string
     {
         if ($model === null) {
-            return $this->prop('root');
+            return $this->props->root;
         }
 
-        return $this->prop('root') . '/' . $this->path($model, $file, $attributes);
+        return $this->props->root . '/' . $this->path($model, $file, $attributes);
     }
 
     public function link($source, $link, $method = 'link'): bool

@@ -18,13 +18,13 @@ class User extends Object
     use HasSiblings;
 
     /**
-     * Creates a new User object
+     * Property schema
      *
-     * @param array $props
+     * @return array
      */
-    public function __construct(array $props = []) {
-
-        parent::__construct($props, [
+    protected function schema()
+    {
+        return [
             'avatar' => [
                 'type'    => Avatar::class,
                 'default' => function () {
@@ -66,8 +66,7 @@ class User extends Object
                     return $this->plugin('store');
                 }
             ],
-        ]);
-
+        ];
     }
 
     /**

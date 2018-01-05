@@ -22,7 +22,7 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "avatar" attribute must be of type "Kirby\Cms\Avatar"
+     * @expectedExceptionMessage The "avatar" property must be of type "Kirby\Cms\Avatar"
      */
     public function testInvalidAvatar()
     {
@@ -59,7 +59,7 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "collection" attribute must be of type "Kirby\Cms\Users"
+     * @expectedExceptionMessage The "collection" property must be of type "Kirby\Cms\Users"
      */
     public function testInvalidCollection()
     {
@@ -102,7 +102,7 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "content" attribute must be of type "Kirby\Cms\Content"
+     * @expectedExceptionMessage The "content" property must be of type "Kirby\Cms\Content"
      */
     public function testInvalidContent()
     {
@@ -146,7 +146,7 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" attribute must be of type "string"
+     * @expectedExceptionMessage The "id" property must be of type "string"
      */
     public function testInvalidId()
     {
@@ -155,7 +155,7 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" prop is missing
+     * @expectedExceptionMessage The "id" property is required
      */
     public function testEmptyId()
     {
@@ -174,7 +174,7 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "root" attribute must be of type "string"
+     * @expectedExceptionMessage The "root" property must be of type "string"
      */
     public function testInvalidRoot()
     {
@@ -193,7 +193,7 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "store" attribute must be of type "Kirby\Cms\Store"
+     * @expectedExceptionMessage The "store" property must be of type "Kirby\Cms\Store"
      */
     public function testInvalidStore()
     {

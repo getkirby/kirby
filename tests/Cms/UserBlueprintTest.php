@@ -56,7 +56,7 @@ class UserBlueprintTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "blueprint" attribute must be of type "Kirby\Cms\UserBlueprint"
+     * @expectedExceptionMessage The "blueprint" property must be of type "Kirby\Cms\UserBlueprint"
      */
     public function testInvalidBlueprint()
     {

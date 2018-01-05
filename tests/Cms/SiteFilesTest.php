@@ -32,7 +32,7 @@ class SiteFilesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "files" attribute must be of type "Kirby\Cms\Files"
+     * @expectedExceptionMessage The "files" property must be of type "Kirby\Cms\Files"
      */
     public function testInvalidFiles()
     {

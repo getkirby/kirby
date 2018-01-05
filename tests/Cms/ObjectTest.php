@@ -7,9 +7,9 @@ use Exception;
 class ObjectMock extends Object
 {
 
-    public function __construct(array $props = [])
+    protected function schema()
     {
-        parent::__construct($props, [
+        return [
             'stringProp' => [
                 'type' => 'string'
             ],
@@ -51,16 +51,28 @@ class ObjectMock extends Object
                     return false;
                 }
             ]
-        ]);
+        ];
     }
 
 }
 
+class ObjectWithIdMock extends Object
+{
+    protected function schema()
+    {
+        return [
+            'id' => [
+                'type' => 'string',
+            ],
+        ];
+    }
+}
+
 class ObjectToArrayMock extends Object
 {
-    public function __construct(array $props = [])
+    protected function schema()
     {
-        parent::__construct($props, [
+        return [
             'a' => [
                 'type' => 'string',
                 'default' => 'defaultA'
@@ -69,7 +81,7 @@ class ObjectToArrayMock extends Object
                 'type' => 'string',
                 'default' => 'defaultB'
             ]
-        ]);
+        ];
     }
 }
 
@@ -86,9 +98,6 @@ class ObjectTest extends TestCase
             ['booleanProp', true],
             ['arrayProp', []],
             ['objectProp', new ObjectMock([])],
-            ['numberProp', '0'],
-            ['numberProp', '1'],
-            ['numberProp', '1.2'],
             ['numberProp', 0],
             ['numberProp', 1],
             ['numberProp', 1.2],
@@ -110,6 +119,9 @@ class ObjectTest extends TestCase
     {
         return [
             ['stringProp', false],
+            ['numberProp', '0'],
+            ['numberProp', '1'],
+            ['numberProp', '1.2'],
             ['integerProp', '1'],
             ['doubleProp', '1.2'],
             ['booleanProp', 'true'],
@@ -176,8 +188,8 @@ class ObjectTest extends TestCase
 
     public function testIs()
     {
-        $a = new ObjectMock(['id' => 'a']);
-        $b = new ObjectMock(['id' => 'b']);
+        $a = new ObjectWithIdMock(['id' => 'a']);
+        $b = new ObjectWithIdMock(['id' => 'b']);
 
         $this->assertTrue($a->is($a));
         $this->assertFalse($a->is($b));

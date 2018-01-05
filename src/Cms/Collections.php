@@ -58,7 +58,7 @@ class Collections extends Object
             return $this->cache[$name];
         }
 
-        $controller = new Controller($this->props[$name]);
+        $controller = new Controller($this->props->get($name));
 
         return $this->cache[$name] = $controller->call(null, $data);
     }

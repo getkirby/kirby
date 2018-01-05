@@ -14,15 +14,13 @@ class Urls extends Object
 {
 
     /**
-     * Creates the Urls registry.
-     * Urls can be overwritten or added
-     * with the $props variable.
+     * Property Schema
      *
-     * @param array $props
+     * @return array
      */
-    public function __construct(array $props = [])
+    protected function schema()
     {
-        parent::__construct($props, [
+        return [
             'index' => [
                 'type'    => 'string',
                 'default' => function (): string {
@@ -47,7 +45,7 @@ class Urls extends Object
                     return rtrim($this->index(), '/') . '/api';
                 }
             ]
-        ]);
+        ];
     }
 
     /**
@@ -64,19 +62,7 @@ class Urls extends Object
             $key = 'index';
         }
 
-        return $this->prop($key);
-    }
-
-    /**
-     * Magic caller to fetch Urls by method call
-     *
-     * @param  string $method
-     * @param  array $arguments
-     * @return string|null
-     */
-    public function __call(string $method, array $arguments = [])
-    {
-        return $this->get($method);
+        return $this->props->get($key);
     }
 
 }

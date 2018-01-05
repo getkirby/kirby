@@ -32,7 +32,7 @@ class SiteChildrenTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "children" attribute must be of type "Kirby\Cms\Pages"
+     * @expectedExceptionMessage The "children" property must be of type "Kirby\Cms\Pages"
      */
     public function testInvalidChildren()
     {

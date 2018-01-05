@@ -87,7 +87,7 @@ class BlueprintColumnTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Prop validation for "width" failed
+     * @expectedExceptionMessage Validation for the "width" property failed
      */
     public function testInvalidWidth()
     {

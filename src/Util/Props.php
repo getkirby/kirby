@@ -359,11 +359,6 @@ class Props
             return $this->import($key);
         }
 
-        // check for invalid keys
-        if (empty($key) === true) {
-            throw new Exception(sprintf('Invalid property key: "%s"', $key));
-        }
-
         // get the schema definition for this key
         $schema = $this->schema->get($key);
 
@@ -411,10 +406,6 @@ class Props
         $result = [];
 
         foreach ($keys as $key) {
-
-            if (empty($key) === true) {
-                throw new Exception(sprintf('Invalid property key: "%s"', $key));
-            }
 
             $definition = $schema[$key] ?? null;
             $value      = $props[$key]  ?? null;

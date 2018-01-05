@@ -36,7 +36,7 @@ class BlueprintSection extends BlueprintObject
 
         $this->fields = new BlueprintCollection;
 
-        foreach ((array)$this->prop('fields') as $name => $props) {
+        foreach ((array)$this->props->fields as $name => $props) {
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
             $field = new BlueprintField($props);
@@ -53,19 +53,13 @@ class BlueprintSection extends BlueprintObject
 
     public function toArray(): array
     {
-        $array = [];
-
-        foreach ($this->props() as $key => $value) {
-            $array[$key] = $this->prop($key);
-        }
-
-        unset($array['fields']);
-        unset($array['collection']);
+        $array = $this->props->not('fields', 'collection')->toArray();
 
         if ($this->type() === 'fields') {
             $array['fields'] = $this->fields()->toArray();
         }
 
+        ksort($array);
         return $array;
     }
 

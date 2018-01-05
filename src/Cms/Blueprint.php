@@ -129,7 +129,7 @@ class Blueprint extends BlueprintObject
      */
     public function options()
     {
-        return new BlueprintObject($this->prop('options'));
+        return new BlueprintObject($this->props->options);
     }
 
     /**
@@ -220,7 +220,7 @@ class Blueprint extends BlueprintObject
 
         $this->tabs = new BlueprintCollection();
 
-        foreach ($this->prop('tabs') as $name => $props) {
+        foreach ($this->props->tabs as $name => $props) {
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
             $tab = new BlueprintTab($props);

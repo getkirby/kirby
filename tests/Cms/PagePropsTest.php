@@ -28,7 +28,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" prop is missing
+     * @expectedExceptionMessage The "id" property is required and must not be null
      */
     public function testEmptyId()
     {
@@ -37,7 +37,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" attribute must be of type "string"
+     * @expectedExceptionMessage The "id" property must be of type "string" not "boolean"
      */
     public function testInvalidId()
     {
@@ -58,7 +58,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "num" attribute must be of type "integer"
+     * @expectedExceptionMessage The "num" property must be of type "integer"
      */
     public function testInvalidNum()
     {
@@ -94,7 +94,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "parent" attribute must be of type "Kirby\Cms\Page"
+     * @expectedExceptionMessage The "parent" property must be of type "Kirby\Cms\Page"
      */
     public function testInvalidParent()
     {
@@ -116,7 +116,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "root" attribute must be of type "string"
+     * @expectedExceptionMessage The "root" property must be of type "string"
      */
     public function testInvalidRoot()
     {
@@ -149,7 +149,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "site" attribute must be of type "Kirby\Cms\Site"
+     * @expectedExceptionMessage The "site" property must be of type "Kirby\Cms\Site"
      */
     public function testInvalidSite()
     {
@@ -182,7 +182,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "store" attribute must be of type "Kirby\Cms\Store"
+     * @expectedExceptionMessage The "store" property must be of type "Kirby\Cms\Store"
      */
     public function testInvalidStore()
     {
@@ -233,7 +233,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "template" attribute must be of type "string"
+     * @expectedExceptionMessage The "template" property must be of type "string"
      */
     public function testInvalidTemplate()
     {
@@ -273,7 +273,7 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "url" attribute must be of type "string"
+     * @expectedExceptionMessage The "url" property must be of type "string"
      */
     public function testInvalidUrl()
     {
@@ -309,13 +309,5 @@ class PagePropsTest extends TestCase
         $page = new Page(['id' => $id]);
         $this->assertEquals($slug, $page->uid());
     }
-
-
-    // public function testEmptyTitle()
-    // {
-    //     $page = new Page(['id' => 'test']);
-    //     $this->assertInstanceOf(Field::class, $page->title());
-    //     $this->assertEquals('test', $page->title()->value());
-    // }
 
 }

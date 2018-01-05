@@ -22,14 +22,13 @@ class Site extends Object
     use HasFiles;
 
     /**
-     * Creates a new Site object
+     * Property schema
      *
-     * @param array $props
+     * @return array
      */
-    public function __construct(array $props = [])
+    protected function schema()
     {
-
-        parent::__construct($props, [
+        return [
             'blueprint' => [
                 'type'    => SiteBlueprint::class,
                 'default' => function (): SiteBlueprint {
@@ -85,8 +84,7 @@ class Site extends Object
                 'type'    => 'string',
                 'default' => '/'
             ],
-        ]);
-
+        ];
     }
 
     /**
@@ -104,7 +102,7 @@ class Site extends Object
     public function page(string $path = null)
     {
         if ($path === null) {
-            return $this->prop('page');
+            return $this->props->get('page');
         }
 
         return $this->find($path);

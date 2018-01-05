@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Util\Schema;
+
 class BlueprintObject extends Object
 {
 
@@ -9,12 +11,12 @@ class BlueprintObject extends Object
 
     public function __construct(array $props = [])
     {
-        parent::__construct($this->extend($props), $this->schema());
+        parent::__construct($this->extend($props));
     }
 
-    public function __debuginfo(): array
+    protected function schema()
     {
-        return $this->toArray();
+        return new Schema([]);
     }
 
     protected function extend($props)
@@ -48,11 +50,6 @@ class BlueprintObject extends Object
         }
 
         return static::$mixins = $mixins;
-    }
-
-    protected function schema(): array
-    {
-        return [];
     }
 
     public function toArray(): array
