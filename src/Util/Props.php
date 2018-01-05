@@ -377,7 +377,7 @@ class Props
             $definition = $schema[$key] ?? null;
             $value      = $props[$key]  ?? null;
 
-            if (isset($definition['default']) === true) {
+            if ($value === null && isset($definition['default']) === true) {
                 $this->resolve[$key] = 'default';
                 continue;
             }
