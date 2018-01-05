@@ -96,7 +96,7 @@ class Content
             return $this->fields[$key];
         }
 
-        $this->fields[$key] = new Field($key, $this->data()[$key] ?? null, $this->parent);
+        $this->fields[$key] = new ContentField($key, $this->data()[$key] ?? null, $this->parent);
 
         // field method shortcuts
         switch ($key) {

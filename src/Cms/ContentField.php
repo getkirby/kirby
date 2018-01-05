@@ -24,9 +24,8 @@ use Exception;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Field
+class ContentField
 {
-
     /**
      * The field name
      *

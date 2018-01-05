@@ -513,7 +513,7 @@ class Page extends Object
      *
      * @return Field
      */
-    public function title(): Field
+    public function title(): ContentField
     {
         return $this->content()->get('title')->or($this->slug());
     }

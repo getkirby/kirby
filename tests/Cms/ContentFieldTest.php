@@ -2,12 +2,12 @@
 
 namespace Kirby\Cms;
 
-class FieldTest extends TestCase
+class ContentFieldTest extends TestCase
 {
 
     public function test__debuginfo()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
         $this->assertEquals(['title' => 'Title'], $field->__debuginfo());
     }
 
@@ -18,7 +18,7 @@ class FieldTest extends TestCase
 
     public function testKey()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
         $this->assertEquals('title', $field->key());
     }
 
@@ -35,14 +35,14 @@ class FieldTest extends TestCase
     public function testParent()
     {
         $parent = new Object();
-        $field  = new Field('title', 'Title', $parent);
+        $field  = new ContentField('title', 'Title', $parent);
 
         $this->assertEquals($parent, $field->parent());
     }
 
     public function testToString()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
 
         $this->assertEquals('Title', $field->toString());
         $this->assertEquals('Title', $field->__toString());
@@ -51,19 +51,19 @@ class FieldTest extends TestCase
 
     public function testToArray()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
         $this->assertEquals(['title' => 'Title'], $field->toArray());
     }
 
     public function testValue()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
         $this->assertEquals('Title', $field->value());
     }
 
     public function testValueSetter()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
         $this->assertEquals('Title', $field->value());
         $field->value('Modified');
         $this->assertEquals('Modified', $field->value());
@@ -71,7 +71,7 @@ class FieldTest extends TestCase
 
     public function testValueCallbackSetter()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
         $this->assertEquals('Title', $field->value());
         $field->value(function ($value) {
             return 'Modified';
@@ -85,7 +85,7 @@ class FieldTest extends TestCase
      */
     public function testInvalidValueSetter()
     {
-        $field = new Field('title', 'Title');
+        $field = new ContentField('title', 'Title');
         $field->value(new Object());
     }
 

@@ -10,7 +10,7 @@ class PageContentTest extends TestCase
      */
     protected function setUp()
     {
-        Field::methods(require __DIR__ . '/../../extensions/methods.php');
+        ContentField::methods(require __DIR__ . '/../../extensions/methods.php');
     }
 
     /**

@@ -131,7 +131,7 @@ class UserPropsTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Content::class, $user->content());
-        $this->assertInstanceOf(Field::class, $user->content()->get('name'));
+        $this->assertInstanceOf(ContentField::class, $user->content()->get('name'));
         $this->assertEquals('User', $user->name()->value());
     }
 

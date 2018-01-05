@@ -53,7 +53,7 @@ class App extends Object
         });
 
         // register all field methods
-        Field::methods($this->fieldMethods());
+        ContentField::methods($this->fieldMethods());
 
         static::$instance = $kirby;
     }

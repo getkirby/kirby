@@ -101,8 +101,8 @@ class StructureObjectTest extends TestCase
             ])
         ]);
 
-        $this->assertInstanceOf(Field::class, $object->title());
-        $this->assertInstanceOf(Field::class, $object->text());
+        $this->assertInstanceOf(ContentField::class, $object->title());
+        $this->assertInstanceOf(ContentField::class, $object->text());
 
         $this->assertEquals('Title', $object->title()->value());
         $this->assertEquals('Text', $object->text()->value());
