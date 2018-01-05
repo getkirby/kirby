@@ -10,10 +10,9 @@ use Kirby\Http\Router\Route;
 class Api extends Object
 {
 
-    public function __construct(array $props)
+    protected function schema()
     {
-
-        parent::__construct($props, [
+        return [
             'request' => [
                 'type'     => Request::class,
                 'required' => true
@@ -32,14 +31,13 @@ class Api extends Object
             'types' => [
                 'type' => 'array',
             ]
-        ]);
-
+        ];
     }
 
     public function user(): User
     {
 
-        $headers = array_change_key_case($this->prop('request')->headers(), CASE_LOWER);
+        $headers = array_change_key_case($this->props->request->headers(), CASE_LOWER);
         $token   = str_replace('Bearer ', '', $headers['authorization'] ?? null);
 
         if ($token === null) {
@@ -58,7 +56,7 @@ class Api extends Object
 
     public function request()
     {
-        return $this->prop('request');
+        return $this->props->request;
     }
 
     public function query()
@@ -80,7 +78,7 @@ class Api extends Object
 
         $router = new Router;
 
-        foreach ($this->prop('routes') as $route) {
+        foreach ($this->props->routes as $route) {
             $router->register(new Route($route['pattern'], $route['method'] ?? 'GET', $route['action'], $route));
         }
 
@@ -112,7 +110,7 @@ class Api extends Object
     public function output(string $type, $object, ...$arguments): array
     {
 
-        if (isset($this->prop('types')[$type]) === false) {
+        if (isset($this->props->types[$type]) === false) {
             throw new Exception(sprintf('Invalid output type "%s"', $type));
         }
 
@@ -120,7 +118,7 @@ class Api extends Object
             throw new Exception(sprintf('Missing "%s" object', $type));
         }
 
-        return $this->prop('types')[$type]->call($this, $object, ...$arguments);
+        return $this->props->types[$type]->call($this, $object, ...$arguments);
 
     }
 
@@ -128,7 +126,7 @@ class Api extends Object
     {
 
         try {
-            $result = $this->call($this->prop('path'), $this->prop('request')->method());
+            $result = $this->call($this->props->path, $this->props->request->method());
         } catch (Exception $e) {
             return [
                 'status'  => 'error',
@@ -164,8 +162,8 @@ class Api extends Object
 
     public function __call(string $method, array $arguments = [])
     {
-         if (isset($this->prop('data')[$method])) {
-             return $this->prop('data')[$method];
+         if (isset($this->props->data[$method])) {
+             return $this->props->data[$method];
          }
     }
 
