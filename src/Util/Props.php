@@ -44,6 +44,14 @@ class Props
     protected $props = [];
 
     /**
+     * Array of props that need to
+     * be resolved on the next get
+     *
+     * @var array
+     */
+    protected $resolve = [];
+
+    /**
      * The schema definition
      *
      * @var array
@@ -58,18 +66,35 @@ class Props
     protected $used = [];
 
     /**
+     * Magic prop caller
+     *
+     * ```
+     * $props->id();
+     * ```
+     *
+     * @param string $key
+     * @param mixed $args
+     * @return mixed
+     */
+    public function __call(string $key, $args)
+    {
+        return empty($args) === true ? $this->get($key) : $this->set($key, ...$args);
+    }
+
+    /**
      * Creates a new props container
      * with schema definition
      *
      * @param array|Schema $schema
-     * @param array $props
+     * @param array $props Set to null to stop the initial setter on construction
      * @param object $bind
      */
     public function __construct($schema, array $props = [], $bind = null)
     {
         $this->bind   = $bind ?? $this;
         $this->schema = is_a($schema, Schema::class) ? $schema : new Schema($schema);
-        $this->set($props);
+
+        $this->setup($props);
     }
 
     /**
@@ -117,6 +142,18 @@ class Props
     }
 
     /**
+     * Set the object contect for the resolvers
+     *
+     * @param object $bind
+     * @return self
+     */
+    public function bind($bind): self
+    {
+        $this->bind = $bind;
+        return $this;
+    }
+
+    /**
      * Returns the default value for a specific prop
      * Default values are resolved here, if they are
      * defined as a Closure.
@@ -126,15 +163,7 @@ class Props
      */
     public function default(string $key)
     {
-        if ($schema = $this->schema->get($key)) {
-            $default = $schema['default'] ?? null;
-            if (is_a($default, Closure::class)) {
-                $default = $default->call($this->bind);
-            }
-            return $default;
-        }
-
-        return null;
+        return $this->resolve($key, 'default');
     }
 
     /**
@@ -164,17 +193,27 @@ class Props
      * @param array $arguments
      * @return mixed
      */
-    public function get(string $key = null, array $arguments = [])
+    public function get(string $key, array $arguments = [])
     {
-        if ($key === null) {
-            return $this->toArray();
-        }
-
         // store prop usage to enable
         // prop freezing on sequential setters
         $this->used[] = $key;
 
-        return $this->props[$key] ?? $this->props[$key] = $this->default($key);
+        // get the prop value
+        $value = $this->props[$key] ?? null;
+
+        // check for prop values that need resolving
+        if (isset($this->resolve[$key]) === true) {
+            $value = $this->resolve($key, $this->resolve[$key]);
+
+            // does not need resolving the next time
+            unset($this->resolve[$key]);
+
+            $this->schema->validate($key, $value);
+            $this->props[$key] = $value;
+        }
+
+        return $value;
     }
 
     /**
@@ -191,6 +230,25 @@ class Props
         }
 
         return $this->schema->has($key) === true || isset($this->props[$key]) === true;
+    }
+
+    /**
+     * Set multiple props at once
+     *
+     * @param array $values
+     * @return self
+     */
+    public function import(array $values): self
+    {
+        // make sure to set all keys. also those who are only in the schema,
+        // but have not been passed by the input array
+        $keys = array_unique(array_merge(array_keys($values), $this->schema->keys()));
+
+        foreach ($keys as $key) {
+            $this->set($key, $values[$key] ?? null);
+        }
+
+        return $this;
     }
 
     /**
@@ -215,6 +273,27 @@ class Props
     }
 
     /**
+     * Resolve values in the schema, which might
+     * be setup as Closures.
+     *
+     * @param string $key
+     * @param string $field
+     * @return mixed
+     */
+    protected function resolve(string $key, string $field)
+    {
+        if ($schema = $this->schema->get($key)) {
+            $value = $schema[$field] ?? null;
+            if (is_a($value, Closure::class) === true) {
+                $value = $value->call($this->bind);
+            }
+            return $value;
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the underlying schema object
      *
      * @return Schema
@@ -234,38 +313,85 @@ class Props
      * @param mixed $value
      * @return Object
      */
-    public function set($key, $value = null)
+    public function set($key, $value = null): self
     {
+        // batch import
         if (is_array($key) === true) {
-
-            // make sure to set all keys. also those who are only in the schema,
-            // but have not been passed by the input array
-            $keys  = array_unique(array_merge(array_keys($key), $this->schema->keys()));
-            $input = $key;
-
-            foreach ($keys as $key) {
-                $this->set($key, $input[$key] ?? null);
-            }
-
-            return $this;
-
+            return $this->import($key);
         }
 
+        // check for invalid keys
         if (empty($key) === true) {
             throw new Exception(sprintf('Invalid property key: "%s"', $key));
         }
 
-        if ($this->isFrozen($key) === true) {
+        // get the schema definition for this key
+        $schema = $this->schema->get($key);
+
+        // check for props with predefined values
+        if (isset($schema['value']) === true) {
+            throw new Exception(sprintf('The fixed value for "%s" cannot be overwritten', $key));
+        }
+
+        // check for frozen props
+        if (isset($schema['freeze']) === true && $this->isFrozen($key) === true) {
             throw new Exception(sprintf('"%s" has already been used and cannot be overwritten', $key));
         }
 
-        if ($value === null) {
-            $value = $this->default($key);
+        // validate the final prop value
+        $this->schema->validate($key, $value);
+
+        // set the prop
+        $this->props[$key] = $value;
+
+        // return the updated Props object
+        return $this;
+    }
+
+    /**
+     * This is run once on construction to setup
+     * all prop keys, run initial validation and
+     * also set the props that need to be resolved
+     * This takes a lot of logic out of the set method
+     *
+     * @return void
+     */
+    protected function setup(array $props = [])
+    {
+        // get the schema definition for all keys
+        $schema = $this->schema->toArray();
+
+        // make sure to set all keys. also those who are only in the schema,
+        // but have not been passed by the input array
+        $keys = array_unique(array_merge(array_keys($props), array_keys($schema)));
+
+        // prepare all props
+        $result = [];
+
+        foreach ($keys as $key) {
+
+            if (empty($key) === true) {
+                throw new Exception(sprintf('Invalid property key: "%s"', $key));
+            }
+
+            $definition = $schema[$key] ?? null;
+            $value      = $props[$key]  ?? null;
+
+            if (isset($definition['default']) === true) {
+                $this->resolve[$key] = 'default';
+                continue;
+            }
+
+            if (isset($definition['value']) === true) {
+                $this->resolve[$key] = 'value';
+                continue;
+            }
+
+            $this->schema->validate($key, $value);
+            $this->props[$key] = $value;
+
         }
 
-        $this->schema->validate($key, $value);
-        $this->props[$key] = $value;
-        return $this;
     }
 
     /**

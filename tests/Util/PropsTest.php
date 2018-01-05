@@ -339,4 +339,45 @@ class PropsTest extends TestCase
         ]);
     }
 
+    public function testValue()
+    {
+        $props = new Props([
+            'a' => [
+                'value' => 'nice'
+            ]
+        ]);
+
+        $this->assertEquals('nice', $props->a);
+    }
+
+    public function testLazyValue()
+    {
+        $props = new Props([
+            'a' => [
+                'value' => function () {
+                    return 'nice';
+                }
+            ]
+        ]);
+
+        $this->assertEquals('nice', $props->a);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The fixed value for "a" cannot be overwritten
+     *
+     * @return void
+     */
+    public function testValueSetter()
+    {
+        $props = new Props([
+            'a' => [
+                'value' => 'nice'
+            ]
+        ]);
+
+        $props->a = 'awesome';
+    }
+
 }
