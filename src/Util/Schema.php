@@ -187,7 +187,7 @@ class Schema
             $valueType = get_class($value);
         }
 
-        return new Exception(sprintf('"%s" must be of type "%s" not "%s"', $key, $expectedType, $valueType));
+        return new Exception(sprintf('The "%s" property must be of type "%s" not "%s"', $key, $expectedType, $valueType));
     }
 
     /**
@@ -229,7 +229,7 @@ class Schema
 
         // check required fields
         if ($this->validateRequired($value, $schema['required'] ?? false) === false) {
-            throw new Exception(sprintf('"%s" is required and must not be null', $key));
+            throw new Exception(sprintf('The "%s" property is required and must not be null', $key));
         }
 
         // skip validation if the field is empty
@@ -242,7 +242,7 @@ class Schema
         }
 
         if ($this->validateCustom($value, $schema['validate'] ?? null) === false) {
-            throw new Exception(sprintf('Validation for "%s" failed', $key));
+            throw new Exception(sprintf('Validation for the "%s" property failed', $key));
         }
 
         return true;

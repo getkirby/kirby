@@ -75,7 +75,7 @@ class PropsTest extends TestCase
         $this->assertEquals('a', $props->a);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('"a" has already been used and cannot be overwritten');
+        $this->expectExceptionMessage('The "a" property has already been used and cannot be overwritten');
 
         $props->a = 'b';
     }
@@ -110,7 +110,7 @@ class PropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage "a" must be of type "string" not "boolean"
+     * @expectedExceptionMessage The "a" property must be of type "string" not "boolean"
      */
     public function testSetInvalid()
     {
@@ -305,7 +305,7 @@ class PropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage "a" must be of type "string" not "boolean"
+     * @expectedExceptionMessage The "a" property must be of type "string" not "boolean"
      */
     public function testValidationFails()
     {
@@ -320,7 +320,7 @@ class PropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage "b" must be of type "boolean" not "string"
+     * @expectedExceptionMessage The "b" property must be of type "boolean" not "string"
      */
     public function testArrayValidationFails()
     {
@@ -365,7 +365,7 @@ class PropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The fixed value for "a" cannot be overwritten
+     * @expectedExceptionMessage The fixed value for the "a" property cannot be overwritten
      *
      * @return void
      */
@@ -378,6 +378,44 @@ class PropsTest extends TestCase
         ]);
 
         $props->a = 'awesome';
+    }
+
+    public function testKeys()
+    {
+        $props = new Props([
+            'a' => ['type' => 'string'],
+            'b' => ['type' => 'string'],
+        ], [
+            'c' => 'something'
+        ]);
+
+        $this->assertEquals(['a', 'b', 'c'], $props->keys());
+    }
+
+    public function testKeysStrict()
+    {
+        $props = new Props([
+            'a' => ['type' => 'string'],
+            'b' => ['type' => 'string'],
+        ], [
+            'c' => 'something'
+        ]);
+
+        $this->assertEquals(['a', 'b'], $props->keys(true));
+    }
+
+    public function testNot()
+    {
+        $props = new Props([
+            'a' => ['type' => 'string'],
+            'b' => ['type' => 'string'],
+            'c' => ['type' => 'string']
+        ]);
+
+        $this->assertEquals(['a', 'c'], $props->not('b')->keys());
+        $this->assertEquals(['c'], $props->not('a', 'b')->keys());
+        $this->assertEquals(['c'], $props->not(['a', 'b'])->keys());
+        $this->assertEquals([], $props->not(['a', 'b'], 'c')->keys());
     }
 
 }

@@ -154,6 +154,16 @@ class Props
     }
 
     /**
+     * Returns a cloned version of the props container
+     *
+     * @return self
+     */
+    public function clone()
+    {
+        return clone $this;
+    }
+
+    /**
      * Returns the default value for a specific prop
      * Default values are resolved here, if they are
      * defined as a Closure.
@@ -185,16 +195,18 @@ class Props
     }
 
     /**
-     * Returns a prop by its name. Additional
-     * arguments can be passed to the prop receiver.
-     * Those will be passed on to the prop default callback
+     * Returns a prop by its name.
      *
      * @param string $key
-     * @param array $arguments
+     * @param bool $strict
      * @return mixed
      */
-    public function get(string $key, array $arguments = [])
+    public function get(string $key, bool $strict = false)
     {
+        if ($strict === true && $this->schema->has($key) === false) {
+            throw new Exception(sprintf('The "%s" property is not defined in the schema', $key));
+        }
+
         // store prop usage to enable
         // prop freezing on sequential setters
         $this->used[] = $key;
@@ -273,6 +285,38 @@ class Props
     }
 
     /**
+     * Returns a list of all prop keys
+     *
+     * @return array
+     */
+    public function keys(bool $strict = false): array
+    {
+        return array_keys($this->toArray($strict));
+    }
+
+    /**
+     * Removes props from the schema
+     * and also unsets them from the props list
+     *
+     * @return self
+     */
+    public function not(...$not)
+    {
+        $clone = $this->clone();
+        $clone->schema->remove(...$not);
+
+        foreach ($not as $key) {
+            if (is_array($key) === true) {
+                $clone = $clone->not(...$key);
+            } else {
+                unset($clone->props[$key]);
+            }
+        }
+
+        return $clone;
+    }
+
+    /**
      * Resolve values in the schema, which might
      * be setup as Closures.
      *
@@ -311,9 +355,10 @@ class Props
      *
      * @param string|array $key
      * @param mixed $value
+     * @param bool $strict
      * @return Object
      */
-    public function set($key, $value = null): self
+    public function set($key, $value = null, $strict = false): self
     {
         // batch import
         if (is_array($key) === true) {
@@ -328,15 +373,23 @@ class Props
         // get the schema definition for this key
         $schema = $this->schema->get($key);
 
+        // only allow props defined in the schema, when in strict mode
+        if ($schema === null && $strict === true) {
+            throw new Exception(sprintf('The "%s" property is not defined in the schema', $key));
+        }
+
         // check for props with predefined values
         if (isset($schema['value']) === true) {
-            throw new Exception(sprintf('The fixed value for "%s" cannot be overwritten', $key));
+            throw new Exception(sprintf('The fixed value for the "%s" property cannot be overwritten', $key));
         }
 
         // check for frozen props
         if (isset($schema['freeze']) === true && $this->isFrozen($key) === true) {
-            throw new Exception(sprintf('"%s" has already been used and cannot be overwritten', $key));
+            throw new Exception(sprintf('The "%s" property has already been used and cannot be overwritten', $key));
         }
+
+        // make sure to no longer resolve this value
+        unset($this->resolve[$key]);
 
         // validate the final prop value
         $this->schema->validate($key, $value);

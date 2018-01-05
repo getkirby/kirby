@@ -170,7 +170,7 @@ class SchemaTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage "c" is required and must not be null
+     * @expectedExceptionMessage The "c" property is required and must not be null
      */
     public function testDoesNotValidateMultiple()
     {
