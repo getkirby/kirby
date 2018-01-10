@@ -55,6 +55,9 @@ class App extends Object
         // register all field methods
         ContentField::methods($this->fieldMethods());
 
+        // field loader
+        Field::$loader = require $this->root('loaders') . '/fields.php';
+
         static::$instance = $kirby;
     }
 
@@ -143,12 +146,6 @@ class App extends Object
                     return require $this->root('kirby') . '/config/rules.php';
                 }
             ],
-            'schema' => [
-                'type'    => 'array',
-                'default' => function () {
-                    return require $this->root('kirby') . '/config/schema.php';
-                }
-            ],
             'server' => [
                 'type'    => Server::class,
                 'default' => function () {
@@ -226,7 +223,7 @@ class App extends Object
     {
         if ($id === null) {
             // TODO: return the logged in user
-            throw new Exception('Not yet implemented');
+            return $this->users()->first();
         }
 
         return $this->users()->find($id);
