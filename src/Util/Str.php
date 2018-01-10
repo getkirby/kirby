@@ -184,7 +184,7 @@ class Str
      * @param  int     $length The min length of values.
      * @return array   An array of found values
      */
-    public static function split(string $string, string $separator = ',', int $length = 1): array
+    public static function split($string, string $separator = ',', int $length = 1): array
     {
         $string = trim($string, $separator);
         $parts  = explode($separator, $string);
