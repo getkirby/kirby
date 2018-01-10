@@ -63,6 +63,12 @@ class Roots extends Object
                     return $this->site() . '/controllers';
                 }
             ],
+            'loaders' => [
+                'type'    => 'string',
+                'default' => function (): string {
+                    return $this->kirby() . '/loaders';
+                }
+            ],
             'accounts' => [
                 'type'    => 'string',
                 'default' => function (): string {
