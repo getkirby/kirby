@@ -89,12 +89,14 @@ class Props
      * @param array $props Set to null to stop the initial setter on construction
      * @param object $bind
      */
-    public function __construct($schema, array $props = [], $bind = null)
+    public function __construct($schema, $props = [], $bind = null, $force = false)
     {
         $this->bind   = $bind ?? $this;
         $this->schema = is_a($schema, Schema::class) ? $schema : new Schema($schema);
 
-        $this->setup($props);
+        if (is_array($props) === true) {
+            $this->setup($props, $force);
+        }
     }
 
     /**
@@ -243,16 +245,17 @@ class Props
      * Set multiple props at once
      *
      * @param array $values
+     * @param bool $force
      * @return self
      */
-    public function import(array $values): self
+    public function import(array $values, bool $force = false): self
     {
         // make sure to set all keys. also those who are only in the schema,
         // but have not been passed by the input array
         $keys = array_unique(array_merge(array_keys($values), $this->schema->keys()));
 
         foreach ($keys as $key) {
-            $this->set($key, $values[$key] ?? null);
+            $this->set($key, $values[$key] ?? null, $force);
         }
 
         return $this;
@@ -350,13 +353,22 @@ class Props
      *
      * @param string|array $key
      * @param mixed $value
+     * @param bool $force
      * @return Object
      */
-    public function set($key, $value = null): self
+    public function set($key, $value = null, bool $force = false): self
     {
         // batch import
         if (is_array($key) === true) {
             return $this->import($key);
+        }
+
+        // set the value without further validation
+        // only use this at your own risk and make sure
+        // to validate values afterwards
+        if ($force === true) {
+            $this->props[$key] = $value;
+            return $this;
         }
 
         // get the schema definition for this key
@@ -391,9 +403,11 @@ class Props
      * also set the props that need to be resolved
      * This takes a lot of logic out of the set method
      *
+     * @param array $props
+     * @param bool $force
      * @return void
      */
-    protected function setup(array $props = [])
+    protected function setup(array $props = [], bool $force = false)
     {
         // get the schema definition for all keys
         $schema = $this->schema->toArray();
@@ -406,7 +420,6 @@ class Props
         $result = [];
 
         foreach ($keys as $key) {
-
             $definition = $schema[$key] ?? null;
             $value      = $props[$key]  ?? null;
 
@@ -420,9 +433,11 @@ class Props
                 continue;
             }
 
-            $this->schema->validate($key, $value);
-            $this->props[$key] = $value;
+            if ($force === false) {
+                $this->schema->validate($key, $value);
+            }
 
+            $this->props[$key] = $value;
         }
 
     }
@@ -462,8 +477,12 @@ class Props
      * @param mixed $value
      * @return bool
      */
-    public function validate($key, $value = null): bool
+    public function validate($key = null, $value = null): bool
     {
+        if ($key === null) {
+            return $this->schema->validate($this->toArray());
+        }
+
         return $this->schema->validate($key, $value);
     }
 
