@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\Field;
+use Kirby\Cms\ContentField;
 use Kirby\Cms\Structure;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
@@ -32,7 +32,7 @@ return [
     },
 
     // converters
-    'toArray' => function ($method) {
+    'toData' => function ($method = ',') {
         switch ($method) {
             case 'yaml':
                 return Yaml::decode($this->value());
@@ -81,7 +81,7 @@ return [
         return App::instance()->site()->find($this->value());
     },
     'toPages' => function (string $separator = 'yaml') {
-        return App::instance()->site()->find(...$this->toArray('yaml'));
+        return App::instance()->site()->find(...$this->toData('yaml'));
     },
     'toStructure' => function () {
         return new Structure(Yaml::decode($this->value()), $this->parent());
@@ -136,7 +136,7 @@ return [
             return $this;
         }
 
-        if (is_a($fallback, Field::class)) {
+        if (is_a($fallback, ContentField::class)) {
             return $fallback;
         }
 
@@ -208,7 +208,7 @@ return [
         return $this->isValid(...$arguments);
     },
     'yaml' => function () {
-        return $this->toArray('yaml');
+        return $this->toData('yaml');
     },
     'x' => function () {
         return $this->xml();
