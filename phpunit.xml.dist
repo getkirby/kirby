@@ -18,8 +18,17 @@
     </filter>
 
     <testsuites>
-        <testsuite name="Tests Suite">
-            <directory>tests/</directory>
+        <testsuite name="Classes">
+            <directory>./tests/</directory>
+        </testsuite>
+        <testsuite name="Fields">
+            <directory suffix=".test.php">./fields/</directory>
+        </testsuite>
+        <testsuite name="Helpers">
+            <file>./extensions/helpers.test.php</file>
+        </testsuite>
+        <testsuite name="Methods">
+            <file>./extensions/methods.test.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
