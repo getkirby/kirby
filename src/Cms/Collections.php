@@ -19,7 +19,7 @@ use Kirby\FileSystem\Folder;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Collections extends Object
+class Collections
 {
 
     /**
@@ -31,6 +31,13 @@ class Collections extends Object
      * @var array
      */
     protected $cache = [];
+
+    /**
+     * Store of all collections
+     *
+     * @var array
+     */
+    protected $collections = [];
 
     /**
      * Magic caller to enable something like
@@ -46,6 +53,16 @@ class Collections extends Object
     }
 
     /**
+     * Creates a new Collections set
+     *
+     * @param array $collections
+     */
+    public function __construct(array $collections = [])
+    {
+        $this->collections = $collections;
+    }
+
+    /**
      * Loads a collection by name if registered
      *
      * @param string $name
@@ -58,7 +75,7 @@ class Collections extends Object
             return $this->cache[$name];
         }
 
-        $controller = new Controller($this->props->get($name));
+        $controller = new Controller($this->collections[$name]);
 
         return $this->cache[$name] = $controller->call(null, $data);
     }

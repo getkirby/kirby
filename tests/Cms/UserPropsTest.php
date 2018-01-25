@@ -5,46 +5,27 @@ namespace Kirby\Cms;
 class UserPropsTest extends TestCase
 {
 
-    public function testAvatar()
+    public function testDefaultAvatar()
     {
         $user = new User([
             'id' => 'user@domain.com'
         ]);
 
-        $user->set('avatar', $avatar = new Avatar([
-            'root' => '/var/avatar.jpg',
-            'url'  => '/users/avatar.jpg',
-            'user' => $user
-        ]));
-
-        $this->assertEquals($avatar, $user->avatar());
+        $this->assertInstanceOf(Avatar::class, $user->avatar());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "avatar" property must be of type "Kirby\Cms\Avatar"
-     */
-    public function testInvalidAvatar()
-    {
-        $user = new User(['id' => 'user@domain.com', 'avatar' => 'something']);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "media" does not exist
-     */
-    public function testDefaultAvatarWithoutMediaManager()
+    public function testCustomAvatar()
     {
         $user = new User([
-            'id' => 'user@domain.com'
+            'id'     => 'user@domain.com',
+            'avatar' => $avatar = new Avatar([
+                'url'  => '/users/something.jpg',
+                'root' => '/users/something.jpg'
+            ])
         ]);
 
-        $user->avatar();
-    }
-
-    public function testDefaultAvatarWithMediaManager()
-    {
-        $this->markTestIncomplete();
+        $this->assertInstanceOf(Avatar::class, $user->avatar());
+        $this->assertEquals($avatar->url(), $user->avatar()->url());
     }
 
     public function testCollection()
@@ -58,35 +39,16 @@ class UserPropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "collection" property must be of type "Kirby\Cms\Users"
+     * @expectedException TypeError
      */
     public function testInvalidCollection()
     {
         $user = new User(['id' => 'user@domain.com', 'collection' => 'something']);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testDefaultCollectionWithoutStore()
+    public function testDefaultCollection()
     {
         $user = new User(['id' => 'user@domain.com']);
-        $user->collection();
-    }
-
-    public function testDefaultCollectionWithStore()
-    {
-        $user = new User([
-            'id'    => 'user@domain.com',
-            'store' => new Store([
-                'users' => function () {
-                    return new Users();
-                }
-            ])
-        ]);
-
         $this->assertInstanceOf(Users::class, $user->collection());
     }
 
@@ -101,38 +63,18 @@ class UserPropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "content" property must be of type "Kirby\Cms\Content"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setContent() must be an instance of Kirby\Cms\Content or null, string given
      */
     public function testInvalidContent()
     {
         $user = new User(['id' => 'user@domain.com', 'content' => 'something']);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testDefaultContentWithoutStore()
+    public function testDefaultContent()
     {
         $user = new User(['id' => 'user@domain.com']);
-        $user->content();
-    }
-
-    public function testDefaultContentWithStore()
-    {
-        $user = new User([
-            'id'    => 'user@domain.com',
-            'store' => new Store([
-                'user.content' => function ($user) {
-                    return new Content(['name' => 'User'], $user);
-                }
-            ])
-        ]);
-
         $this->assertInstanceOf(Content::class, $user->content());
-        $this->assertInstanceOf(ContentField::class, $user->content()->get('name'));
-        $this->assertEquals('User', $user->name()->value());
     }
 
     public function testId()
@@ -145,21 +87,12 @@ class UserPropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "id" property must be of type "string"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setId() must be of the type string, array given
      */
     public function testInvalidId()
     {
-        $user = new User(['id' => false]);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "id" property is required
-     */
-    public function testEmptyId()
-    {
-        $user = new User();
+        $user = new User(['id' => []]);
     }
 
     public function testRoot()
@@ -173,31 +106,11 @@ class UserPropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "root" property must be of type "string"
+     * @expectedException TypeError
      */
     public function testInvalidRoot()
     {
-        $user = new User(['id' => 'user@domain.com', 'root' => false]);
-    }
-
-    public function testStore()
-    {
-        $user = new User([
-            'id'    => 'user@domain.com',
-            'store' => $store = new Store()
-        ]);
-
-        $this->assertEquals($store, $user->store());
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "store" property must be of type "Kirby\Cms\Store"
-     */
-    public function testInvalidStore()
-    {
-        $user = new User(['id' => 'user@domain.com', 'store' => 'something']);
+        $user = new User(['id' => 'user@domain.com', 'root' => []]);
     }
 
 }

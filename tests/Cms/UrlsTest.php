@@ -9,7 +9,6 @@ class UrlsTest extends TestCase
     {
         return [
             ['/',      'index'],
-            ['/',      '/'],
             ['/media', 'media'],
             ['/panel', 'panel'],
             ['/api',   'api'],
@@ -24,14 +23,12 @@ class UrlsTest extends TestCase
         $urls = new Urls();
 
         $this->assertEquals($url, $urls->$method());
-        $this->assertEquals($url, $urls->get($method));
     }
 
     public function customBaseUrlProvider(): array
     {
         return [
             ['https://getkirby.com',       'index'],
-            ['https://getkirby.com',       '/'],
             ['https://getkirby.com/media', 'media'],
             ['https://getkirby.com/panel', 'panel'],
             ['https://getkirby.com/api',   'api'],
@@ -48,14 +45,12 @@ class UrlsTest extends TestCase
         ]);
 
         $this->assertEquals($url, $urls->$method());
-        $this->assertEquals($url, $urls->get($method));
     }
 
     public function customUrlProvider(): array
     {
         return [
             ['https://getkirby.com',       'index'],
-            ['https://getkirby.com',       '/'],
             ['https://cdn.getkirby.com',   'media'],
             ['https://getkirby.com/admin', 'panel'],
             ['https://getkirby.com/rest',  'api'],
@@ -76,7 +71,6 @@ class UrlsTest extends TestCase
         ]);
 
         $this->assertEquals($url, $urls->$method());
-        $this->assertEquals($url, $urls->get($method));
     }
 
 

@@ -5,6 +5,12 @@ namespace Kirby\Cms;
 class UserMethodsTest extends TestCase
 {
 
+    public function setUp()
+    {
+        // make sure field methods are loaded
+        new App();
+    }
+
     public function testHash()
     {
         $user = new User(['id' => $id = 'user@domain.com']);
@@ -23,35 +29,10 @@ class UserMethodsTest extends TestCase
         $this->assertEquals('de', $user->language());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testDefaultLanguageWithoutStore()
-    {
-        $user = new User(['id' => 'user@domain.com']);
-        $this->assertEquals('en', $user->language());
-    }
-
-    public function testDefaultLanguageWithStore()
+    public function testDefaultLanguage()
     {
         $user = new User([
-            'id'    => 'user@domain.com',
-            'store' => new Store([
-                'user.content' => function ($user) {
-                    return new Content([], $user);
-                }
-            ])
-        ]);
-
-        $this->assertEquals('en', $user->language());
-    }
-
-    public function testDefaultLanguageWithContent()
-    {
-        $user = new User([
-            'id'      => 'user@domain.com',
-            'content' => new Content()
+            'id' => 'user@domain.com',
         ]);
 
         $this->assertEquals('en', $user->language());
@@ -69,35 +50,10 @@ class UserMethodsTest extends TestCase
         $this->assertEquals('editor', $user->role());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testDefaultRoleWithoutStore()
-    {
-        $user = new User(['id' => 'user@domain.com']);
-        $this->assertEquals('visitor', $user->role());
-    }
-
-    public function testDefaultRoleWithStore()
+    public function testDefaultRole()
     {
         $user = new User([
-            'id'    => 'user@domain.com',
-            'store' => new Store([
-                'user.content' => function ($user) {
-                    return new Content([], $user);
-                }
-            ])
-        ]);
-
-        $this->assertEquals('visitor', $user->role());
-    }
-
-    public function testDefaultRoleWithContent()
-    {
-        $user = new User([
-            'id'      => 'user@domain.com',
-            'content' => new Content()
+            'id' => 'user@domain.com',
         ]);
 
         $this->assertEquals('visitor', $user->role());

@@ -2,27 +2,40 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 trait HasContent
 {
+
+    /**
+     * The content
+     *
+     * @var Content
+     */
+    protected $content;
 
     /**
      * Modified getter to also return fields
      * from the object's content
      *
      * @param string $method
+     * @param array $arguments
      * @return mixed
      */
-    public function get(string $method)
+    public function __call(string $method, array $arguments = [])
     {
-        if ($this->props->has($method, true)) {
-            return $this->props->get($method);
-        }
+        return $this->content()->get($method, ...$arguments);
+    }
 
-        if ($this->hasPlugin($method)) {
-            return $this->plugin($method);
-        }
-
-        return $this->content()->get($method);
+    /**
+     * Prepares the content object for the
+     * toArray method
+     *
+     * @return array
+     */
+    protected function convertContentToArray(): array
+    {
+        return $this->content()->toArray();
     }
 
     /**
@@ -35,6 +48,33 @@ trait HasContent
     public function date(string $format = null, $field = 'date')
     {
         return $this->content()->get($field, [$format]);
+    }
+
+    /**
+     * Returns the content
+     *
+     * @return Content
+     */
+    public function content(): Content
+    {
+        if (is_a($this->content, Content::class) === true) {
+            return $this->content;
+        }
+
+        return $this->content = new Content([]);
+    }
+
+    /**
+     * Sets the Content object
+     *
+     * @param Content|null $content
+     * @return self
+     */
+    protected function setContent(Content $content = null): self
+    {
+        $this->content = $content;
+        $this->content->setParent($this);
+        return $this;
     }
 
 }

@@ -10,120 +10,49 @@ use Kirby\Util\Str;
 class Media extends Object
 {
 
-    protected function schema()
+    /**
+     * Properties for the array export
+     *
+     * @var array
+     */
+    protected static $toArray = [
+        'darkroom',
+        'root',
+        'url'
+    ];
+
+    /**
+     * @var Darkroom
+     */
+    protected $darkroom;
+
+    /**
+     * @var string
+     */
+    protected $root;
+
+    /**
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * Creates a new media manager instance
+     *
+     * @param array $props
+     */
+    public function __construct(array $props)
     {
-        return [
-            'darkroom' => [
-                'required' => true,
-                'type'     => Darkroom::class,
-            ],
-            'root' => [
-                'required' => true,
-                'type'     => 'string',
-            ],
-            'url' => [
-                'required' => true,
-                'type'     => 'string',
-            ],
-        ];
+        $this->setRequiredProperties($props, ['darkroom', 'root', 'url']);
     }
 
-    public function path(Object $model, Object $file = null, array $attributes = []): string
-    {
-        switch (get_class($model)) {
-            case Page::class:
-                $path = 'pages/' . $model->id();
-                break;
-            case Site::class:
-                $path = 'site';
-                break;
-            case User::class:
-                $path = 'users/' . $model->hash();
-                break;
-            default:
-                throw new Exception('Invalid media model');
-        }
-
-        if ($file !== null) {
-            $path .= '/' . $this->filename($file, $attributes);
-        }
-
-        return $path;
-    }
-
-    public function url(Object $model, Object $file = null, array $attributes = []): string
-    {
-        if ($model === null) {
-            return $this->props->url;
-        }
-
-        return $this->props->url . '/' . $this->path($model, $file, $attributes);
-    }
-
-    public function root(Object $model, Object $file = null, array $attributes = []): string
-    {
-        if ($model === null) {
-            return $this->props->root;
-        }
-
-        return $this->props->root . '/' . $this->path($model, $file, $attributes);
-    }
-
-    public function link($source, $link, $method = 'link'): bool
-    {
-        $folder = new Folder(dirname($link));
-        $folder->make(true);
-
-        if (is_file($link) === true) {
-            return true;
-        }
-
-        if (is_file($source) === false) {
-            throw new Exception(sprintf('The file "%s" does not exist and cannot be linked', $source));
-        }
-
-        return $method($source, $link);
-    }
-
-    public function unlink($root): bool
-    {
-
-        if (is_dir($root) === true) {
-            $folder = new Folder($root);
-            $folder->delete();
-            return true;
-        }
-
-        $dirname   = dirname($root);
-        $name      = pathinfo($root, PATHINFO_FILENAME);
-        $extension = pathinfo($root, PATHINFO_EXTENSION);
-
-        // remove the original file
-        if (is_file($root) === true) {
-            unlink($root);
-        }
-
-        // remove all thumbnails
-        foreach (glob($dirname . '/' . $name . '-*.' . $extension) as $file) {
-            unlink($file);
-        }
-
-        return true;
-
-    }
-
-    public function filename(Object $file, array $attributes = []): string
-    {
-        if (empty($attributes) === true || $file->type() !== 'image') {
-            return $file->filename();
-        }
-
-        $filename = new Filename($file->filename(), $attributes);
-
-        return $filename->toString();
-    }
-
-    public function create(Object $model, Object $file, array $attributes = [])
+    /**
+     * @param Object $model
+     * @param Object $file
+     * @param array $attributes
+     * @return array
+     */
+    public function create(Object $model, Object $file, array $attributes = []): array
     {
 
         if ($file->exists() === false) {
@@ -161,11 +90,89 @@ class Media extends Object
 
     }
 
+    /**
+     * @param Object $model
+     * @param Object $file
+     * @return boolean
+     */
     public function delete(Object $model, Object $file = null): bool
     {
         return $this->unlink($this->root($model, $file));
     }
 
+    /**
+     * @param Object $file
+     * @param array $attributes
+     * @return string
+     */
+    public function filename(Object $file, array $attributes = []): string
+    {
+        if (empty($attributes) === true || $file->type() !== 'image') {
+            return $file->filename();
+        }
+
+        $filename = new Filename($file->filename(), $attributes);
+
+        return $filename->toString();
+    }
+
+    /**
+     * @param string $source
+     * @param string $link
+     * @param string $method
+     * @return boolean
+     */
+    public function link(string $source, string $link, string $method = 'link'): bool
+    {
+        $folder = new Folder(dirname($link));
+        $folder->make(true);
+
+        if (is_file($link) === true) {
+            return true;
+        }
+
+        if (is_file($source) === false) {
+            throw new Exception(sprintf('The file "%s" does not exist and cannot be linked', $source));
+        }
+
+        return $method($source, $link);
+    }
+
+    /**
+     * @param Object $model
+     * @param Object $file
+     * @param array $attributes
+     * @return string
+     */
+    public function path(Object $model, Object $file = null, array $attributes = []): string
+    {
+        switch (get_class($model)) {
+            case Page::class:
+                $path = 'pages/' . $model->id();
+                break;
+            case Site::class:
+                $path = 'site';
+                break;
+            case User::class:
+                $path = 'users/' . $model->hash();
+                break;
+            default:
+                throw new Exception('Invalid media model');
+        }
+
+        if ($file !== null) {
+            $path .= '/' . $this->filename($file, $attributes);
+        }
+
+        return $path;
+    }
+
+    /**
+     * @param App $app
+     * @param string $type
+     * @param string $path
+     * @return void
+     */
     public function resolve(App $app, string $type, string $path)
     {
 
@@ -186,6 +193,97 @@ class Media extends Object
 
         return $app->media()->create($model, $file);
 
+    }
+
+    /**
+     * @param Object $model
+     * @param Object $file
+     * @param array $attributes
+     * @return string
+     */
+    public function root(Object $model = null, Object $file = null, array $attributes = []): string
+    {
+        if ($model === null) {
+            return $this->root;
+        }
+
+        return $this->root . '/' . $this->path($model, $file, $attributes);
+    }
+
+    /**
+     * @param Darkroom $darkroom
+     * @return self
+     */
+    protected function setDarkroom(Darkroom $darkroom): self
+    {
+        $this->darkroom = $darkroom;
+        return $this;
+    }
+
+    /**
+     * @param string $root
+     * @return self
+     */
+    protected function setRoot(string $root): self
+    {
+        $this->root = $root;
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return self
+     */
+    protected function setUrl(string $url): self
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @param string $root
+     * @return boolean
+     */
+    public function unlink(string $root): bool
+    {
+
+        if (is_dir($root) === true) {
+            $folder = new Folder($root);
+            $folder->delete();
+            return true;
+        }
+
+        $dirname   = dirname($root);
+        $name      = pathinfo($root, PATHINFO_FILENAME);
+        $extension = pathinfo($root, PATHINFO_EXTENSION);
+
+        // remove the original file
+        if (is_file($root) === true) {
+            unlink($root);
+        }
+
+        // remove all thumbnails
+        foreach (glob($dirname . '/' . $name . '-*.' . $extension) as $file) {
+            unlink($file);
+        }
+
+        return true;
+
+    }
+
+    /**
+     * @param Object $model
+     * @param Object $file
+     * @param array $attributes
+     * @return string
+     */
+    public function url(Object $model = null, Object $file = null, array $attributes = []): string
+    {
+        if ($model === null) {
+            return $this->url;
+        }
+
+        return $this->url . '/' . $this->path($model, $file, $attributes);
     }
 
 }

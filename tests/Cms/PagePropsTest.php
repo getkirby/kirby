@@ -12,9 +12,7 @@ class PagePropsTest extends TestCase
      */
     protected function setUp()
     {
-        Page::use('kirby', null);
-        Page::use('site', null);
-        Page::use('store', null);
+        App::destroy();
     }
 
     public function testId()
@@ -28,21 +26,21 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" property is required and must not be null
+     * @expectedExceptionMessage Missing "id" property
      */
     public function testEmptyId()
     {
-        $page = new Page();
+        $page = new Page(['id' => null]);
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "id" property must be of type "string" not "boolean"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setId() must be of the type string, array given
      */
     public function testInvalidId()
     {
         $page = new Page([
-            'id' => false
+            'id' => []
         ]);
     }
 
@@ -57,14 +55,14 @@ class PagePropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "num" property must be of type "integer"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setNum() must be of the type integer or null, array given
      */
     public function testInvalidNum()
     {
         $page = new Page([
             'id'  => 'test',
-            'num' => false
+            'num' => []
         ]);
     }
 
@@ -93,8 +91,8 @@ class PagePropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "parent" property must be of type "Kirby\Cms\Page"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setParent() must be an instance of Kirby\Cms\Page or null, string given
      */
     public function testInvalidParent()
     {
@@ -115,18 +113,18 @@ class PagePropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "root" property must be of type "string"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setRoot() must be of the type string or null, array given
      */
     public function testInvalidRoot()
     {
         $page = new Page([
             'id'   => 'test',
-            'root' => false
+            'root' => []
         ]);
     }
 
-    public function testSiteProp()
+    public function testSite()
     {
         $site = new Site();
         $page = new Page([
@@ -137,19 +135,8 @@ class PagePropsTest extends TestCase
         $this->assertEquals($site, $page->site());
     }
 
-    public function testSitePlugin()
-    {
-        $site = new Site();
-        $page = new Page(['id'   => 'test']);
-
-        Page::use('site', $site);
-
-        $this->assertEquals($site, $page->site());
-    }
-
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "site" property must be of type "Kirby\Cms\Site"
+     * @expectedException TypeError
      */
     public function testInvalidSite()
     {
@@ -159,66 +146,13 @@ class PagePropsTest extends TestCase
         ]);
     }
 
-    public function testStoreProp()
-    {
-        $store = new Store();
-        $page  = new Page([
-            'id'    => 'test',
-            'store' => $store
-        ]);
-
-        $this->assertEquals($store, $page->store());
-    }
-
-    public function testStorePlugin()
-    {
-        $store = new Store();
-        $page  = new Page(['id'   => 'test']);
-
-        Page::use('store', $store);
-
-        $this->assertEquals($store, $page->store());
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "store" property must be of type "Kirby\Cms\Store"
-     */
-    public function testInvalidStore()
-    {
-        $page = new Page([
-            'id'    => 'test',
-            'store' => 'mystore'
-        ]);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testTemplateWithoutStore()
+    public function testDefaultTemplate()
     {
         $page = new Page([
             'id' => 'test',
         ]);
 
-        $this->assertEquals('template', $page->template());
-    }
-
-    public function testTemplateWithStore()
-    {
-        $store = new Store([
-            'page.template' => function ($page) {
-                return 'my-template';
-            }
-        ]);
-
-        $page = new Page([
-            'id'    => 'test',
-            'store' => $store
-        ]);
-
-        $this->assertEquals('my-template', $page->template());
+        $this->assertEquals('default', $page->template());
     }
 
     public function testTemplate()
@@ -232,14 +166,14 @@ class PagePropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "template" property must be of type "string"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setTemplate() must be of the type string or null, array given
      */
     public function testInvalidTemplate()
     {
         $page = new Page([
             'id'       => 'test',
-            'template' => false
+            'template' => []
         ]);
     }
 
@@ -272,14 +206,14 @@ class PagePropsTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "url" property must be of type "string"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setUrl() must be of the type string or null, array given
      */
     public function testInvalidUrl()
     {
         $page = new Page([
             'id'  => 'test',
-            'url' => false
+            'url' => []
         ]);
     }
 

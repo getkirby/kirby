@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 /**
  * The User class represents
  * panel users as well as frontend users.
@@ -11,62 +13,93 @@ namespace Kirby\Cms;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class User extends Object
+class User extends Model
 {
 
     use HasContent;
     use HasSiblings;
 
     /**
-     * Property schema
+     * Those properties should be
+     * converted to an array in User::toArray
      *
-     * @return array
+     * @var array
      */
-    protected function schema()
+    protected static $toArray = [
+        'avatar',
+        'content',
+        'hash',
+        'id',
+        'language',
+        'root',
+        'role'
+    ];
+
+    /**
+     * The user's avatar object
+     *
+     * @var Avatar
+     */
+    protected $avatar;
+
+    /**
+     * The UserBlueprint object
+     *
+     * @var UserBlueprint
+     */
+    protected $blueprint;
+
+    /**
+     * The user id
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
+     * The absolute path to the user directory
+     *
+     * @var string
+     */
+    protected $root;
+
+    /**
+     * Creates a new User object
+     *
+     * @param array $props
+     */
+    public function __construct(array $props)
     {
-        return [
-            'avatar' => [
-                'type'    => Avatar::class,
-                'default' => function () {
-                    return new Avatar([
-                        'root' => $this->root() . '/profile.jpg',
-                        'url'  => $this->plugin('media')->url($this) . '/profile.jpg',
-                        'user' => $this,
-                    ]);
-                }
-            ],
-            'blueprint' => [
-                'type'    => UserBlueprint::class,
-                'default' => function (): UserBlueprint {
-                    return $this->store()->commit('user.blueprint', $this);
-                }
-            ],
-            'collection' => [
-                'type'    => Users::class,
-                'default' => function () {
-                    return $this->store()->commit('users');
-                }
-            ],
-            'content' => [
-                'type'    => Content::class,
-                'default' => function () {
-                    return $this->store()->commit('user.content', $this);
-                }
-            ],
-            'id' => [
-                'type'     => 'string',
-                'required' => true
-            ],
-            'root' => [
-                'type' => 'string'
-            ],
-            'store' => [
-                'type'    => Store::class,
-                'default' => function () {
-                    return $this->plugin('store');
-                }
-            ],
-        ];
+        $this->setRequiredProperties($props, ['id']);
+        $this->setOptionalProperties($props, ['avatar', 'blueprint', 'collection', 'content', 'root']);
+    }
+
+    /**
+     * Returns the Avatar object
+     *
+     * @return Avatar
+     */
+    public function avatar(): Avatar
+    {
+        if (is_a($this->avatar, Avatar::class) === true) {
+            return $this->avatar;
+        }
+
+        return $this->avatar = $this->store()->avatar();
+    }
+
+    /**
+     * Returns the UserBlueprint object
+     *
+     * @return UserBlueprint
+     */
+    public function blueprint(): UserBlueprint
+    {
+        if (is_a($this->blueprint, Blueprint::class) === true) {
+            return $this->blueprint;
+        }
+
+        return $this->blueprint = $this->store()->blueprint();
     }
 
     /**
@@ -80,7 +113,7 @@ class User extends Object
         $this->rules()->check('user.change.password', $this, $password);
         $this->perms()->check('user.change.password', $this, $password);
 
-        return $this->store()->commit('user.change.password', $this, $password);
+        return $this->store()->changePassword($password);
     }
 
     /**
@@ -94,7 +127,32 @@ class User extends Object
         $this->rules()->check('user.change.role', $this, $role);
         $this->perms()->check('user.change.role', $this, $role);
 
-        return $this->store()->commit('user.change.role', $this, $role);
+        return $this->store()->changeRole($role);
+    }
+
+    /**
+     * Returns the parent Users collection
+     *
+     * @return Users
+     */
+    public function collection(): Users
+    {
+        if (is_a($this->collection, Users::class) === true) {
+            return $this->collection;
+        }
+
+        return $this->collection = App::instance()->users();
+    }
+
+    /**
+     * Prepares the avatar object for the
+     * User::toArray method
+     *
+     * @return array
+     */
+    protected function convertAvatarToArray(): array
+    {
+        return $this->avatar()->toArray();
     }
 
     /**
@@ -109,7 +167,34 @@ class User extends Object
         static::rules()->check('user.create', $content);
         static::perms()->check('user.create', $content);
 
-        return static::store()->commit('user.create', $content);
+        return App::instance()->component('UsersStore')->create($content);
+    }
+
+    /**
+     * Deletes the user
+     *
+     * @return bool
+     */
+    public function delete(): bool
+    {
+        $this->rules()->check('user.delete', $this);
+        $this->perms()->check('user.delete', $this);
+
+        return $this->store()->delete();
+    }
+
+    /**
+     * Returns the User's content
+     *
+     * @return Content
+     */
+    public function content(): Content
+    {
+        if (is_a($this->content, Content::class) === true) {
+            return $this->content;
+        }
+
+        return $this->store()->content();
     }
 
     /**
@@ -126,13 +211,35 @@ class User extends Object
     }
 
     /**
+     * Returns the user id
+     *
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Compares the current object with the given user object
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function is(User $user): bool
+    {
+        return $this->id() === $user->id();
+    }
+
+    /**
      * Returns the user language
      *
      * @return string
      */
     public function language(): string
     {
-        return $this->content()->get('language')->or('en')->toString();
+        $language = $this->content()->get('language')->toString();
+        return empty($language) === false ? $language : 'en';
     }
 
     /**
@@ -142,7 +249,75 @@ class User extends Object
      */
     public function role(): string
     {
-        return $this->content()->get('role')->or('visitor')->toString();
+        $role = $this->content()->get('role')->toString();
+        return empty($role) === false ? $role : 'visitor';
+    }
+
+    /**
+     * Returns the user directory root
+     *
+     * @return string|null
+     */
+    public function root()
+    {
+        return $this->root;
+    }
+
+    /**
+     * Sets the parent avatar object
+     *
+     * @param Avatar $avatar
+     * @return self
+     */
+    protected function setAvatar(Avatar $avatar = null): self
+    {
+        $this->avatar = $avatar;
+        $this->avatar->setUser($this);
+        return $this;
+    }
+
+    /**
+     * Sets the blueprint object
+     *
+     * @param UserBlueprint $blueprint
+     * @return self
+     */
+    protected function setBlueprint(UserBlueprint $blueprint = null): self
+    {
+        $this->blueprint = $blueprint;
+        return $this;
+    }
+
+    /**
+     * Sets the user id
+     *
+     * @param string $id
+     * @return self
+     */
+    protected function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * Sets the user directory root
+     *
+     * @param string $root
+     * @return self
+     */
+    protected function setRoot(string $root = null): self
+    {
+        $this->root = $root;
+        return $this;
+    }
+
+    /**
+     * @return UserStore
+     */
+    protected function store(): UserStore
+    {
+        return App::instance()->component('UserStore', $this);
     }
 
     /**
@@ -156,20 +331,7 @@ class User extends Object
         $this->rules()->check('user.update', $this, $content);
         $this->perms()->check('user.update', $this, $content);
 
-        return $this->store()->commit('user.update', $this, $content);
-    }
-
-    /**
-     * Deletes the user
-     *
-     * @return bool
-     */
-    public function delete(): bool
-    {
-        $this->rules()->check('user.delete', $this);
-        $this->perms()->check('user.delete', $this);
-
-        return $this->store()->commit('user.delete', $this);
+        return $this->store()->update($content);
     }
 
 }

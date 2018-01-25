@@ -10,59 +10,32 @@ namespace Kirby\Cms;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Urls extends Object
+class Urls extends Ingredients
 {
 
-    /**
-     * Property Schema
-     *
-     * @return array
-     */
-    protected function schema()
+    protected $api;
+    protected $index;
+    protected $media;
+    protected $panel;
+
+    public function api(): string
     {
-        return [
-            'index' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return '/';
-                }
-            ],
-            'media' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return rtrim($this->index(), '/') . '/media';
-                }
-            ],
-            'panel' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return rtrim($this->index(), '/') . '/panel';
-                }
-            ],
-            'api' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return rtrim($this->index(), '/') . '/api';
-                }
-            ]
-        ];
+        return $this->api = $this->api ?? rtrim($this->index(), '/') . '/api';
     }
 
-    /**
-     * Get a specific Url by key
-     * If no key is specified the index Url
-     * will be returned
-     *
-     * @param  string $key
-     * @return string|null
-     */
-    public function get(string $key = 'index')
+    public function index(): string
     {
-        if ($key === '/') {
-            $key = 'index';
-        }
+        return $this->index = $this->index ?? '/';
+    }
 
-        return $this->props->get($key);
+    public function media(): string
+    {
+        return $this->media = $this->media ?? rtrim($this->index(), '/') . '/media';
+    }
+
+    public function panel(): string
+    {
+        return $this->panel = $this->panel ?? rtrim($this->index(), '/') . '/panel';
     }
 
 }

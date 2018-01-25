@@ -4,241 +4,58 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
-use Kirby\FileSystem\File as Template;
+
 use Kirby\Http\Request;
-use Kirby\Http\Response;
-use Kirby\Http\Router;
 use Kirby\Http\Server;
-use Kirby\Image\Darkroom;
-use Kirby\Image\Darkroom\GdLib;
-use Kirby\Text\Markdown;
-use Kirby\Text\Smartypants;
 use Kirby\Text\Tags as Kirbytext;
 use Kirby\Toolkit\Url;
-use Kirby\Toolkit\View;
-use Kirby\Util\Controller;
-
+use Kirby\Util\Factory;
 
 class App extends Object
 {
 
-    protected static $instance;
+    use HasSingleton;
 
+    protected static $root;
+
+    protected $collections;
+    protected $components;
+    protected $path;
+    protected $roots;
+    protected $routes;
+    protected $site;
+    protected $urls;
+
+    /**
+     * Creates a new App instance
+     *
+     * @param array $props
+     */
     public function __construct(array $props = [])
     {
-        parent::__construct($props);
+        // the kirby folder directory
+        static::$root = dirname(dirname(__DIR__));
 
-        $kirby = $this;
+        $this->setOptionalProperties($props, [
+            'components',
+            'path',
+            'roots',
+            'site',
+            'urls'
+        ]);
 
-        Object::use('kirby', $kirby);
+        static::$instance = $this;
 
-        Object::use('store', function () use ($kirby) {
-            return $kirby->store();
-        });
-
-        Object::use('media', function () use ($kirby) {
-            return $kirby->media();
-        });
-
-        Object::use('rules', $kirby->rules());
-        Object::use('perms', $kirby->perms());
-
-        Collection::use('pagination', function ($options) {
-            return new Pagination([
-                'total' => $this->count(),
-                'limit' => $options['limit'] ?? 20,
-                'page'  => $options['page'] ?? App::instance()->request()->query()->get('page'),
-                'url'   => Url\Query::strip(Url::current())
-            ]);
-        });
-
-        // register all field methods
-        ContentField::methods($this->fieldMethods());
-
-        // field loader
-        Field::$loader = require $this->root('loaders') . '/fields.php';
-
-        static::$instance = $kirby;
     }
 
-    protected function schema()
-    {
-        return [
-            'collections' => [
-                'type'    => Collections::class,
-                'default' => function () {
-                    return Collections::load($this->roots()->collections());
-                }
-            ],
-            'darkroom' => [
-                'type'    => Darkroom::class,
-                'default' => function () {
-                    return new GdLib([
-                        'quality' => 80
-                    ]);
-                }
-            ],
-            'fieldMethods' => [
-                'type'    => 'array',
-                'default' => function () {
-                    return require $this->root('kirby') . '/extensions/methods.php';
-                }
-            ],
-            'kirbytext' => [
-                'type'    => Kirbytext::class,
-                'default' => function () {
-                    return new Kirbytext([
-                        'breaks' => true
-                    ]);
-                }
-            ],
-            'markdown' => [
-                'type'    => Markdown::class,
-                'default' => function () {
-                    return new Markdown([
-                        'breaks' => true
-                    ]);
-                }
-            ],
-            'media' => [
-                'type'    => Media::class,
-                'default' => function () {
-                    return new Media([
-                        'darkroom' => $this->darkroom(),
-                        'root'     => $this->root('media'),
-                        'url'      => $this->url('media')
-                    ]);
-                },
-            ],
-            'perms' => [
-                'type'    => Perms::class,
-                'default' => function () {
-                    return require $this->root('kirby') . '/config/perms.php';
-                }
-            ],
-            'request' => [
-                'type'    => Request::class,
-                'default' => function () {
-                    return new Request;
-                }
-            ],
-            'roots' => [
-                'type'    => Roots::class,
-                'default' => function () {
-                    return new Roots();
-                }
-            ],
-            'router' => [
-                'type'    => Router::class,
-                'default' => function () {
-                    return new Router($this->routes());
-                }
-            ],
-            'routes' => [
-                'type'    => 'array',
-                'default' => function () {
-                    return require $this->root('kirby') . '/config/routes.php';
-                }
-            ],
-            'rules' => [
-                'type'    => Rules::class,
-                'default' => function () {
-                    return require $this->root('kirby') . '/config/rules.php';
-                }
-            ],
-            'server' => [
-                'type'    => Server::class,
-                'default' => function () {
-                    return new Server;
-                }
-            ],
-            'site' => [
-                'type' => Site::class,
-                'default' => function () {
-
-                    $site = new Site([
-                        'url'  => $this->url(),
-                        'root' => $this->root('content')
-                    ]);
-
-                    Page::use('site', $site);
-                    File::use('site', $site);
-
-                    return $site;
-
-                }
-            ],
-            'smartypants' => [
-                'type'    => Smartypants::class,
-                'default' => function () {
-                    return new Smartypants;
-                }
-            ],
-            'store' => [
-                'type'    => Store::class,
-                'default' => function () {
-                    return require $this->root('kirby') . '/config/store.php';
-                }
-            ],
-            'system' => [
-                'type'    => System::class,
-                'default' => function () {
-                    return new System($this);
-                }
-            ],
-            'path' => [
-                'type'    => 'string',
-                'default' => function (): string {
-
-                    // TODO: move this to a nicer place
-                    $uri    = parse_url($this->server()->get('request_uri'), PHP_URL_PATH);
-                    $script = dirname($this->server()->get('script_name'));
-                    $path   = preg_replace('!^' . preg_quote($script) . '!', '', $uri);
-
-                    return trim($path, '/');
-                }
-            ],
-            'urls' => [
-                'type'    => Urls::class,
-                'default' => function () {
-                    return new Urls([
-                        'index' => Url::index(),
-                    ]);
-                }
-            ],
-        ];
-    }
-
-    public static function instance()
-    {
-        return static::$instance;
-    }
-
-    public function url(string $url = 'index')
-    {
-        return $this->urls()->get($url);
-    }
-
-    public function user($id = null)
-    {
-        if ($id === null) {
-            // TODO: return the logged in user
-            return $this->users()->first();
-        }
-
-        return $this->users()->find($id);
-    }
-
-    public function root(string $root = 'index')
-    {
-        return $this->roots()->get($root);
-    }
-
-    public function users(): Users
-    {
-        return $this->store()->commit('users');
-    }
-
+    /**
+     * Returns a specific user-defined collection
+     * by name. All relevant dependencies are
+     * automatically injected
+     *
+     * @param string $name
+     * @return void
+     */
     public function collection(string $name)
     {
         return $this->collections()->get($name, [
@@ -249,6 +66,53 @@ class App extends Object
         ]);
     }
 
+    /**
+     * Returns all user-defined collections
+     *
+     * @return Collections
+     */
+    public function collections(): Collections
+    {
+        if (is_a($this->collections, Collections::class)) {
+            return $this->collections;
+        }
+
+        return $this->collections = Collections::load($this->root('collections'));
+    }
+
+    /**
+     * @return Factory
+     */
+    public function components(): Factory
+    {
+        if (is_a($this->components, Factory::class)) {
+            return $this->components;
+        }
+
+        // set the default components
+        return $this->setComponents()->components;
+    }
+
+    /**
+     * Returns a component instance
+     *
+     * @param string $className
+     * @param mixed ...$arguments
+     * @return mixed
+     */
+    public function component(string $className, ...$arguments)
+    {
+        return $this->components()->get($className, ...$arguments);
+    }
+
+    /**
+     * Calls a page controller by name
+     * and with the given arguments
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return array
+     */
     public function controller(string $name, array $arguments = []): array
     {
         if ($controller = Controller::load($this->root('controllers') . '/' . basename($name) . '.php')) {
@@ -258,81 +122,264 @@ class App extends Object
         return [];
     }
 
-    public function view(Page $page, array $data = []): View
+    /**
+     * Returns the Kirbytext parser
+     *
+     * @return Kirbytext
+     */
+    public function kirbytext(): Kirbytext
     {
-
-        $site = $this->site();
-        $site->set('page', $page);
-
-        $viewData = array_merge([
-            'kirby' => $this,
-            'site'  => $site,
-            'pages' => $pages = $site->children(),
-            'page'  => $page
-        ], $data);
-
-        // TODO: put this in a template component
-        $template = new Template($this->root('templates') . '/' . ($page->template() ?? 'default') . '.php');
-
-        // switch to the default template if the file cannot be found
-        if ($template->exists() === false) {
-            $template = new Template($this->root('templates') . '/default.php');
-        }
-
-        // load controller data if a controller exists
-        $controllerData = $this->controller($template->name(), $viewData);
-
-        View::globals(array_merge($controllerData, $viewData));
-
-        // create the template
-        return new View($template->realpath());
-
+        return $this->component('kirbytext');
     }
 
-    public function errorPage($message = null, $code = 404): Response
+    /**
+     * Returns the Media manager object
+     *
+     * @return Media
+     */
+    public function media(): Media
     {
-        if ($code < 400 || $code > 600) {
-            $code = 500;
+        return $this->component('media', $this->component('darkroom'), '', '/media');
+    }
+
+    /**
+     * Returns the request path
+     *
+     * @return void
+     */
+    public function path()
+    {
+        if (is_string($this->path) === true) {
+            return $this->path;
         }
 
-        $view = $this->view($this->site()->errorPage(), [
-            'errorMessage' => $message,
-            'errorCode'    => $code
+        /**
+         * Fetch the default request path
+         * TODO: move this to its own place
+         */
+        $requestUri  = parse_url($this->server()->get('request_uri'), PHP_URL_PATH);
+        $scriptName  = $this->server()->get('script_name');
+        $scriptFile  = basename($scriptName);
+        $scriptDir   = dirname($scriptName);
+        $scriptPath  = $scriptFile === 'index.php' ? $scriptDir: $scriptName;
+        $requestPath = preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri);
+
+        return $this->setPath($requestPath)->path;
+    }
+
+    /**
+     * Returns the Request singleton
+     *
+     * @return Request
+     */
+    public function request(): Request
+    {
+        return $this->component('request');
+    }
+
+    /**
+     * Returns a system root
+     *
+     * @param string $type
+     * @return string
+     */
+    public function root($type = 'index'): string
+    {
+        return $this->roots()->$type();
+    }
+
+    /**
+     * Returns the directory structure
+     *
+     * @return Roots
+     */
+    public function roots(): Roots
+    {
+        if (is_a($this->roots, Roots::class) === true) {
+            return $this->roots;
+        }
+
+        // set the default roots
+        return $this->setRoots()->roots();
+    }
+
+    /**
+     * Returns the Router singleton
+     *
+     * @return Router
+     */
+    public function router(): Router
+    {
+        return $this->component('router', $this->routes);
+    }
+
+    /**
+     * Returns all defined routes
+     *
+     * @return array
+     */
+    public function routes(): array
+    {
+        if (is_array($this->routes) === true) {
+            return $this->routes;
+        }
+
+        return $this->routes = (array)include static::$root . '/config/routes.php';
+    }
+
+    /**
+     * Creates the Factory class instance
+     * with all registered components
+     *
+     * @param array $components
+     * @return self
+     */
+    protected function setComponents(array $components = []): self
+    {
+        $defaults = (array)include static::$root . '/config/components.php';
+        $this->components = new Factory(array_merge($defaults, $components));
+        return $this;
+    }
+
+    /**
+     * Sets the request path that is
+     * used for the router
+     *
+     * @param string $path
+     * @return self
+     */
+    protected function setPath(string $path = null)
+    {
+        $this->path = trim($path, '/');
+        return $this;
+    }
+
+    /**
+     * Sets the directory structure
+     *
+     * @param array $roots
+     * @return self
+     */
+    protected function setRoots(array $roots = [])
+    {
+        $this->roots = new Roots($roots);
+        return $this;
+    }
+
+    /**
+     * Sets a custom Site object
+     *
+     * @param Site $site
+     * @return self
+     */
+    protected function setSite(Site $site = null)
+    {
+        $this->site = $site;
+        return $this;
+    }
+
+    /**
+     * Sets the Url structure
+     *
+     * @param array $urls
+     * @return self
+     */
+    protected function setUrls(array $urls = [])
+    {
+        $this->urls = new Urls(array_merge(['index' => Url::index()], $urls));
+        return $this;
+    }
+
+    /**
+     * Returns the Server singleton
+     *
+     * @return Server
+     */
+    public function server(): Server
+    {
+        return $this->component('server');
+    }
+
+    /**
+     * @return Site
+     */
+    public function site(): Site
+    {
+        if (is_a($this->site, Site::class)) {
+            return $this->site;
+        }
+
+        $site = new Site([
+            'errorPageId' => 'error',
+            'homePageId'  => 'home',
+            'root'        => $this->root('content'),
+            'url'         => $this->url('index'),
         ]);
 
-        return new Response($view->toString(), 'text/html', $code);
+        return $this->setSite($site)->site();
     }
 
-    public function resolve(string $path, string $method)
+    /**
+     * System check class
+     *
+     * @return System
+     */
+    public function system(): System
     {
-        // fetch the page at the current path
-        $response = $this->router()->call($path, $method);
-
-        if (is_a($response, Response::class)) {
-            return $response;
-        }
-
-        if (is_a($response, Page::class)) {
-            try {
-                return new Response($this->view($response)->toString(), 'text/html', 200);
-            } catch (Exception $e) {
-                return $this->errorPage($e->getMessage(), $e->getCode());
-            }
-        }
-
-        return $this->errorPage();
+        return new System($this);
     }
 
-    public function response(): Response {
+    /**
+     * Returns a system url
+     *
+     * @param string $type
+     * @return string
+     */
+    public function url($type = 'index'): string
+    {
+        return $this->urls()->$type();
+    }
 
-        // fetch the page at the current path
-        $response = $this->resolve($this->path(), $this->request()->method());
-
-        if (is_a($response, Response::class)) {
-            return $response;
+    /**
+     * Returns the url structure
+     *
+     * @return Urls
+     */
+    public function urls(): Urls
+    {
+        if (is_a($this->urls, Urls::class) === true) {
+            return $this->urls;
         }
 
-        return new Response($response);
+        // set the default urls
+        return $this->setUrls()->urls();
+    }
+
+    /**
+     * Returns a specific user by id
+     * or the current user if no id is given
+     *
+     * @param string $id
+     * @return User|null
+     */
+    public function user(string $id = null)
+    {
+        if ($id === null) {
+            // TODO: return the logged in user
+            return $this->users()->first();
+        }
+
+        return $this->users()->find($id);
+    }
+
+    /**
+     * Returns all users
+     *
+     * @return Users
+     */
+    public function users(): Users
+    {
+        return new Users([]);
     }
 
 }

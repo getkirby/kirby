@@ -2,109 +2,116 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Object as BaseObject;
-use Kirby\Util\Props;
-use Kirby\Util\Schema;
+use Exception;
+use ReflectionMethod;
 
-/**
- * The Object class is a base component
- * class that can be used to create objects
- * with typed and validated properties easily.
- *
- * Most Kirby Cms classes are based on this.
- *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- */
-class Object extends BaseObject
+abstract class Object
 {
 
-    use HasPlugins;
-
     /**
-     * Magic caller to enable getter methods
+     * Properties that should be converted to array
      *
-     * ```
-     * $object->id();
-     * ```
-     *
-     * @param string $key
-     * @param array $args
-     * @return void
+     * @var array
      */
-    public function __call(string $key, array $args = [])
-    {
-        return $this->get($key, $args);
-    }
+    protected static $toArray = [];
 
     /**
-     * Creates a new object with the given props
+     * Optional property setter.
+     * This is mostly used in constructors
      *
      * @param array $props
-     */
-    public function __construct(array $props = [])
-    {
-        $this->props = new Props($this->schema(), $props, $this);
-    }
-
-    /**
-     * Getter for props
-     *
-     * @param string
-     * @return mixed
-     */
-    public function get(string $key)
-    {
-        if ($this->props->has($key)) {
-            return $this->props->get($key);
-        }
-
-        if ($this->hasPlugin($key)) {
-            return $this->plugin($key);
-        }
-
-        return null;
-    }
-
-    /**
-     * Compares two objects
-     *
-     * @param Object $object
-     * @return bool
-     */
-    public function is(Object $object): bool
-    {
-        return $this->id() === $object->id();
-    }
-
-    /**
-     * Sets the schema for the props
-     *
-     * @return array|Schema
-     */
-    protected function schema()
-    {
-        return [];
-    }
-
-    /**
-     * Setter for props
-     *
-     * @param string|array $key
-     * @param mixed $value
+     * @param array $keys
      * @return self
      */
-    public function set($key, $value = null)
+    protected function setOptionalProperties(array $props, array $keys)
     {
-        $this->props->set($key, $value);
+        foreach ($keys as $key) {
+            if (isset($props[$key]) === true) {
+                $this->{'set' . $key}($props[$key]);
+            }
+        }
         return $this;
     }
 
+    /**
+     * Required property setter.
+     * This is mostly used in constructors
+     *
+     * @param array $props
+     * @param array $keys
+     * @return self
+     */
+    protected function setRequiredProperties(array $props, array $keys)
+    {
+        foreach ($keys as $key) {
+            if (isset($props[$key]) === false) {
+                throw new Exception(sprintf('Missing "%s" property', $key));
+            }
+
+            $this->{'set' . $key}($props[$key]);
+        }
+        return $this;
+    }
+
+    /**
+     * Converts the object to json
+     * by using the toArray method first.
+     *
+     * @param boolean $pretty Enable/disable pretty printing the json output
+     * @return string
+     */
+    public function toJson(bool $pretty = false): string
+    {
+        return json_encode($this->toArray(), $pretty ? JSON_PRETTY_PRINT : null);
+    }
+
+    /**
+     * Creates an array of all values of public
+     * getters that return a non-object value
+     *
+     * @return array
+     */
     public function toArray(): array
     {
-        return $this->props->clone()->not('collection')->toArray(true);
+        $array = [];
+
+        foreach (static::$toArray as $propertyName) {
+
+            $getterName    = $propertyName;
+            $converterName = 'convert' . $propertyName . 'toArray';
+
+            try {
+
+                // add the getter result to the array
+                if (method_exists($this, $converterName)) {
+                    $value = $this->$converterName();
+                } else {
+
+                    $method = new ReflectionMethod($this, $getterName);
+
+                    if ($method->isStatic() === true || $method->getNumberOfRequiredParameters() > 0) {
+                        throw new Exception('Invalid getter');
+                    }
+
+                    $value = $this->$getterName();
+
+                }
+
+                // don't add object if it doesn't have its own toArray method
+                if (is_object($value) === false) {
+                    $array[$propertyName] = $value;
+                }
+
+            } catch (Exception $e) {
+                $array[$propertyName] = [
+                    'error' => sprintf('%s in file %s on line %s', $e->getMessage(), $e->getFile(), $e->getLine())
+                ];
+            }
+
+        }
+
+        ksort($array);
+        return $array;
     }
 
 }

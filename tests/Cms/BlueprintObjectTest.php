@@ -2,29 +2,43 @@
 
 namespace Kirby\Cms;
 
+class BlueprintMockObject extends BlueprintObject
+{
+
+    use HasUnknownProperties;
+
+    public function __construct(array $props = [])
+    {
+        $props = $this->extend($props);
+        $this->setUnknownProperties($props);
+    }
+
+}
+
+
 class BlueprintObjectTest extends TestCase
 {
 
     public function setUp()
     {
         // reset all mixins
-        BlueprintObject::mixins([]);
+        BlueprintMockObject::mixins([]);
     }
 
     public function testDefaultSchema()
     {
-        $object = new BlueprintObject();
+        $object = new BlueprintMockObject();
         $this->assertEquals([], $object->toArray());
     }
 
     public function testMixin()
     {
-        BlueprintObject::mixin('test', [
+        BlueprintMockObject::mixin('test', [
             'a' => 'Value A',
             'b' => 'Value B'
         ]);
 
-        $object = new BlueprintObject([
+        $object = new BlueprintMockObject([
             'extends' => 'test',
             'c'       => 'Value C'
         ]);
@@ -36,12 +50,12 @@ class BlueprintObjectTest extends TestCase
 
     public function testOverloadMixin()
     {
-        BlueprintObject::mixin('test', [
+        BlueprintMockObject::mixin('test', [
             'a' => 'Value A',
             'b' => 'Value B'
         ]);
 
-        $object = new BlueprintObject([
+        $object = new BlueprintMockObject([
             'extends' => 'test',
             'a'       => 'Overloaded A'
         ]);

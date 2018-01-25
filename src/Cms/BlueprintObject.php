@@ -2,21 +2,18 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Schema;
+use Exception;
 
-class BlueprintObject extends Object
+class BlueprintObject extends Model
 {
+
+    use HasI18n;
 
     protected static $mixins = [];
 
     public function __construct(array $props = [])
     {
         parent::__construct($this->extend($props));
-    }
-
-    protected function schema()
-    {
-        return new Schema([]);
     }
 
     protected function extend($props)
@@ -50,16 +47,6 @@ class BlueprintObject extends Object
         }
 
         return static::$mixins = $mixins;
-    }
-
-    public function toArray(): array
-    {
-        $array = parent::toArray();
-
-        unset($array['collection']);
-        ksort($array);
-
-        return $array;
     }
 
     public function toLayout()

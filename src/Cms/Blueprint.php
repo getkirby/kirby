@@ -19,26 +19,63 @@ use Kirby\Data\Data;
 class Blueprint extends BlueprintObject
 {
 
+    use HasUnknownProperties;
+
+    /**
+     * All properties that should be
+     * included in the Blueprint::toArray
+     * method output
+     *
+     * @var array
+     */
+    protected static $toArray = [
+        'name',
+        'options',
+        'tabs',
+        'title'
+    ];
+
     /**
      * Cache for the fields collection
      *
      * @var BlueprintCollection
      */
-    protected $fields = null;
+    protected $fields;
+
+    /**
+     * The blueprint name
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * Model option settings
+     *
+     * @var array
+     */
+    protected $options;
 
     /**
      * Cache for the sections collection
      *
      * @var BlueprintCollection
      */
-    protected $sections = null;
+    protected $sections;
 
     /**
      * Cache for the tabs collection
      *
      * @var BlueprintCollection
      */
-    protected $tabs = null;
+    protected $tabs;
+
+    /**
+     * The blueprint title
+     *
+     * @var string
+     */
+    protected $title;
 
     /**
      * Creates a new Blueprint and converts
@@ -49,11 +86,37 @@ class Blueprint extends BlueprintObject
      */
     public function __construct(array $props = [])
     {
+        $props = $this->extend($props);
+
         $props = BlueprintConverter::convertFieldsToSection($props);
         $props = BlueprintConverter::convertSectionsToColumn($props);
         $props = BlueprintConverter::convertColumnsToTab($props);
 
-        parent::__construct($props);
+        $this->setRequiredProperties($props, ['name', 'tabs', 'title']);
+        $this->setOptionalProperties($props, ['options']);
+        $this->setUnknownProperties($props, ['options']);
+    }
+
+    /**
+     * Prepare the tabs object for the
+     * Blueprint::toArray method
+     *
+     * @return array
+     */
+    protected function convertTabsToArray(): array
+    {
+        return $this->tabs()->toArray();
+    }
+
+    /**
+     * Returns a specific field from the blueprint
+     *
+     * @param string $name
+     * @return BlueprintField|null
+     */
+    public function field(string $name)
+    {
+        return $this->fields()->find($name);
     }
 
     /**
@@ -68,26 +131,15 @@ class Blueprint extends BlueprintObject
             return $this->fields;
         }
 
-        $this->fields = new BlueprintCollection;
+        $fields = new BlueprintCollection;
 
         foreach ($this->sections() as $section) {
             foreach ($section->fields() as $field) {
-                $this->fields->set($field->id(), $field);
+                $fields->set($field->id(), $field);
             }
         }
 
-        return $this->fields;
-    }
-
-    /**
-     * Returns a specific field from the blueprint
-     *
-     * @param string $name
-     * @return BlueprintField|null
-     */
-    public function field(string $name)
-    {
-        return $this->fields()->find($name);
+        return $this->fields = $fields;
     }
 
     /**
@@ -123,13 +175,23 @@ class Blueprint extends BlueprintObject
     }
 
     /**
-     * Returns an object of options
+     * Returns the Blueprint name
      *
-     * @return BlueprintObject
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Returns all model options
+     *
+     * @return array
      */
     public function options()
     {
-        return new BlueprintObject($this->props->options);
+        return $this->options ?? [];
     }
 
     /**
@@ -155,43 +217,15 @@ class Blueprint extends BlueprintObject
             return $this->sections;
         }
 
-        $this->sections = new BlueprintCollection;
+        $sections = new BlueprintCollection;
 
         foreach ($this->tabs() as $tab) {
             foreach ($tab->sections() as $section) {
-                $this->sections->append($section->id(), $section);
+                $sections->append($section->id(), $section);
             }
         }
 
-        return $this->sections;
-    }
-
-    /**
-     * Returns the prop schema
-     *
-     * @return array
-     */
-    public function schema(): array
-    {
-        return [
-            'name' => [
-                'type'     => 'string',
-                'required' => true
-            ],
-            'options' => [
-                'type'     => 'array',
-                'required' => false,
-                'default'  => []
-            ],
-            'tabs' => [
-                'type'     => 'array',
-                'required' => true
-            ],
-            'title' => [
-                'type'     => 'string',
-                'required' => true
-            ],
-        ];
+        return $this->sections = $sections;
     }
 
     /**
@@ -218,30 +252,66 @@ class Blueprint extends BlueprintObject
             return $this->tabs;
         }
 
-        $this->tabs = new BlueprintCollection();
+        $tabs = new BlueprintCollection();
 
-        foreach ($this->props->tabs as $name => $props) {
+        foreach ($this->tabs as $name => $props) {
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
             $tab = new BlueprintTab($props);
-            $this->tabs->append($tab->name(), $tab);
+            $tabs->append($tab->id(), $tab);
         }
 
-        return $this->tabs;
+        return $this->tabs = $tabs;
     }
 
     /**
-     * Converts the Blueprint and all nested Objects
-     * to a nested, associative array
+     * Returns the Blueprint title
      *
-     * @return array
+     * @return string
      */
-    public function toArray(): array
+    public function title(): string
     {
-        $array = parent::toArray();
-        $array['tabs'] = $this->tabs()->toArray();
+        return $this->title;
+    }
 
-        return $array;
+    /**
+     * @param string $name
+     * @return self
+     */
+    protected function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @param array $options
+     * @return self
+     */
+    protected function setOptions(array $options = []): self
+    {
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * @param array $tabs
+     * @return self
+     */
+    protected function setTabs(array $tabs): self
+    {
+        $this->tabs = $tabs;
+        return $this;
+    }
+
+    /**
+     * @param string|array $title
+     * @return self
+     */
+    protected function setTitle($title): self
+    {
+        $this->title = $this->i18n($title);
+        return $this;
     }
 
     /**

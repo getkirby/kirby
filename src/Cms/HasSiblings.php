@@ -14,6 +14,66 @@ namespace Kirby\Cms;
 trait HasSiblings {
 
     /**
+     * Returns the position / index in the collection
+     *
+     * @return int
+     */
+    public function indexOf(): int
+    {
+        return $this->collection()->indexOf($this);
+    }
+
+    /**
+     * Returns the next item in the collection if available
+     *
+     * @return Object|null
+     */
+    public function next()
+    {
+        return $this->collection()->nth($this->indexOf() + 1);
+    }
+
+    /**
+     * Returns the end of the collection starting after the current item
+     *
+     * @return Collection
+     */
+    public function nextAll()
+    {
+        return $this->collection()->slice($this->indexOf() + 1);
+    }
+
+    /**
+     * Returns the previous item in the collection if available
+     *
+     * @return Object|null
+     */
+    public function prev()
+    {
+        return $this->collection()->slice($this->indexOf() - 1);
+    }
+
+    /**
+     * Returns the beginning of the collection before the current item
+     *
+     * @return Collection
+     */
+    public function prevAll()
+    {
+        return $this->collection()->slice(0, $this->indexOf());
+    }
+
+    /**
+     * Returns all sibling elements
+     *
+     * @return Collection
+     */
+    public function siblings()
+    {
+        return $this->collection();
+    }
+
+    /**
      * Checks if there's a next item in the collection
      *
      * @return bool
@@ -31,16 +91,6 @@ trait HasSiblings {
     public function hasPrev(): bool
     {
         return $this->prev() !== null;
-    }
-
-    /**
-     * Returns the position / index in the collection
-     *
-     * @return int
-     */
-    public function indexOf(): int
-    {
-        return $this->collection()->indexOf($this);
     }
 
     /**
@@ -71,72 +121,6 @@ trait HasSiblings {
     public function isNth(int $n): bool
     {
         return $this->indexOf() === $n;
-    }
-
-    /**
-     * Returns the next item in the collection if available
-     *
-     * @return Object|null
-     */
-    public function next()
-    {
-        if ($collection = $this->collection()) {
-            return $collection->nth($this->indexOf() + 1);
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the end of the collection starting after the current item
-     *
-     * @return Collection
-     */
-    public function nextAll()
-    {
-        if ($collection = $this->collection()) {
-            return $collection->slice($this->indexOf() + 1);
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the previous item in the collection if available
-     *
-     * @return Object|null
-     */
-    public function prev()
-    {
-        if ($collection = $this->collection()) {
-            return $collection->nth($this->indexOf() - 1);
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the beginning of the collection before the current item
-     *
-     * @return Collection
-     */
-    public function prevAll()
-    {
-        if ($collection = $this->collection()) {
-            return $collection->slice(0, $this->indexOf());
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns all sibling elements
-     *
-     * @return Collection
-     */
-    public function siblings()
-    {
-        return $this->collection();
     }
 
 }

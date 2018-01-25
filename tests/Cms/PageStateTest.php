@@ -19,10 +19,10 @@ class PageStateTest extends TestCase
      */
     public function testPageState($key, $method)
     {
-        $page = new Page(['id' => 'test']);
-        $site = new Site([$key => $page]);
+        $site = new Site();
+        $page = new Page(['id' => 'test', 'site' => $site]);
 
-        Page::use('site', $site);
+        $site->{'set' . $key}($page);
 
         $this->assertTrue($page->$method());
     }
@@ -32,22 +32,22 @@ class PageStateTest extends TestCase
      */
     public function testNegativePageState($key, $method)
     {
-        $pageA = new Page(['id' => 'page-a']);
-        $pageB = new Page(['id' => 'page-b']);
-        $site  = new Site([$key => $pageB]);
+        $site  = new Site();
+        $pageA = new Page(['id' => 'page-a', 'site' => $site]);
+        $pageB = new Page(['id' => 'page-b', 'site' => $site]);
 
-        Page::use('site', $site);
+        $site->{'set' . $key}($pageB);
 
         $this->assertFalse($pageA->$method());
     }
 
     public function testIsOpen()
     {
-        $parent = new Page(['id' => 'test']);
-        $child  = new Page(['id' => 'test/child', 'parent' => $parent]);
-        $site   = new Site(['page' => $child]);
+        $site   = new Site();
+        $parent = new Page(['id' => 'test', 'site' => $site]);
+        $child  = new Page(['id' => 'test/child', 'parent' => $parent, 'site' => $site]);
 
-        Page::use('site', $site);
+        $site->setPage($child);
 
         $this->assertTrue($parent->isOpen());
         $this->assertTrue($child->isOpen());
@@ -55,12 +55,12 @@ class PageStateTest extends TestCase
 
     public function testIsNotOpen()
     {
-        $parent = new Page(['id' => 'test']);
-        $child  = new Page(['id' => 'test/child', 'parent' => $parent]);
-        $active = new Page(['id' => 'active']);
-        $site   = new Site(['page' => $active]);
+        $site   = new Site();
+        $parent = new Page(['id' => 'test', 'site' => $site]);
+        $child  = new Page(['id' => 'test/child', 'parent' => $parent, 'site' => $site]);
+        $active = new Page(['id' => 'active', 'site' => $site]);
 
-        Page::use('site', $site);
+        $site->setPage($active);
 
         $this->assertFalse($parent->isOpen());
         $this->assertFalse($child->isOpen());

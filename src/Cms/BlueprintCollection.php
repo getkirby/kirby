@@ -7,6 +7,8 @@ use Closure;
 class BlueprintCollection extends Collection
 {
 
+    protected static $accept = BlueprintObject::class;
+
     public function __debuginfo(): array
     {
         return $this->toArray();

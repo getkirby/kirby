@@ -23,21 +23,19 @@ use Kirby\Collection\Collection as BaseCollection;
 class Collection extends BaseCollection
 {
 
-    use HasPlugins;
-
     /**
      * Accepts any extension of the Object class
      *
      * @var string
      */
-    protected static $accept = Object::class;
+    protected static $accept = Model::class;
 
     /**
      * Stores the parent object, which is needed
      * in some collections to get the finder methods
      * right. Especially in the ChildrenFinder class.
      *
-     * @var Object
+     * @var object
      */
     protected $parent;
 
@@ -45,9 +43,9 @@ class Collection extends BaseCollection
      * Creates a new Collection with the given objects
      *
      * @param array $objects
-     * @param Object $parent
+     * @param object $parent
      */
-    public function __construct($objects = [], Object $parent = null)
+    public function __construct($objects = [], $parent = null)
     {
         $this->parent = $parent;
         parent::__construct($objects);
@@ -59,16 +57,16 @@ class Collection extends BaseCollection
      * the collection prop on each object correctly.
      *
      * @param string $id
-     * @param Object $object
+     * @param object $object
      */
     public function __set(string $id, $object)
     {
-        if (!is_a($object, static::$accept)) {
+        if (is_a($object, static::$accept) === false) {
             throw new Exception(sprintf('Invalid object in collection. Accepted: "%s"', static::$accept));
         }
 
         // inject the collection for proper navigation
-        $object->set('collection', $this);
+        $object->setCollection($this);
 
         return parent::__set($object->id(), $object);
     }
@@ -77,7 +75,7 @@ class Collection extends BaseCollection
      * Returns the plain prop value from a given
      * object, to be used in filter functions.
      *
-     * @param  Object $object
+     * @param  object $object
      * @param  string $prop
      * @return mixed
      */
@@ -91,7 +89,7 @@ class Collection extends BaseCollection
      * The method will automatically detect objects
      * or ids and then search accordingly.
      *
-     * @param  string|Object $object
+     * @param  string|object $object
      * @return int
      */
     public function indexOf($object): int
@@ -113,7 +111,7 @@ class Collection extends BaseCollection
     {
         $collection = $this->clone();
         foreach ($keys as $key) {
-            if (is_a($key, Object::class)) {
+            if (is_a($key, static::$accept)) {
                 $key = $key->id();
             }
             unset($collection->$key);
@@ -140,15 +138,15 @@ class Collection extends BaseCollection
             ];
         }
 
-        if ($this->hasPlugin('pagination')) {
-            $this->pagination = $this->plugin('pagination', [$options]);
-        } else {
-            $this->pagination = new Pagination([
-                'total' => $this->count(),
-                'limit' => $options['limit'] ?? 10,
-                'page'  => $options['page']  ?? null,
-            ]);
-        }
+        // add pagination defaults
+        $options = array_merge([
+            'total' => $this->count(),
+            'limit' => 10,
+            'page'  => null,
+        ], $options);
+
+        // initialize the pagination instance
+        $this->pagination = App::instance()->component('Pagination', $options);
 
         // slice and clone the collection according to the pagination
         return $this->slice($this->pagination->offset(), $this->pagination->limit());
@@ -164,7 +162,7 @@ class Collection extends BaseCollection
      */
     public function toArray(Closure $map = null): array
     {
-        return parent::toArray($map ?? function (Object $object) {
+        return parent::toArray($map ?? function ($object) {
             return $object->toArray();
         });
     }

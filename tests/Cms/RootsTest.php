@@ -12,7 +12,6 @@ class RootsTest extends TestCase
 
         return [
             [$index, 'index'],
-            [$index, '/'],
             [$index . '/kirby', 'kirby'],
             [$index . '/media', 'media'],
             [$index . '/content', 'content'],
@@ -36,7 +35,6 @@ class RootsTest extends TestCase
         $roots = new Roots();
 
         $this->assertEquals($root, $roots->$method());
-        $this->assertEquals($root, $roots->get($method));
     }
 
     public function customIndexRootProvider(): array
@@ -46,8 +44,6 @@ class RootsTest extends TestCase
 
         return [
             [$index, 'index'],
-            [$index, '/'],
-            [$index . '/kirby', 'kirby'],
             [$index . '/media', 'media'],
             [$index . '/content', 'content'],
             [$site = $index . '/site', 'site'],
@@ -72,7 +68,6 @@ class RootsTest extends TestCase
         ]);
 
         $this->assertEquals($root, $roots->$method());
-        $this->assertEquals($root, $roots->get($method));
     }
 
     public function customRootProvider(): array
@@ -83,7 +78,6 @@ class RootsTest extends TestCase
 
         return [
             [$public, 'index'],
-            [$public, '/'],
             [$public . '/media', 'media'],
             [$public . '/panel', 'panel'],
             [$base . '/kirby', 'kirby'],
@@ -112,7 +106,6 @@ class RootsTest extends TestCase
         ]);
 
         $this->assertEquals($root, $roots->$method());
-        $this->assertEquals($root, $roots->get($method));
     }
 
 }

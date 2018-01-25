@@ -48,12 +48,24 @@ class Content
      * Creates a new Content object
      *
      * @param array $data
-     * @param Object $parent
+     * @param object $parent
      */
-    public function __construct($data = [], Object $parent = null)
+    public function __construct($data = [], $parent = null)
     {
         $this->data = $data;
         $this->parent = $parent;
+    }
+
+    /**
+     * Same as `self::data()` to improve
+     * var_dump output
+     *
+     * @see    self::data()
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
     }
 
     /**
@@ -67,13 +79,16 @@ class Content
     }
 
     /**
-     * Returns all field keys
+     * Returns all registered field objects
      *
      * @return array
      */
-    public function keys(): array
+    public function fields(): array
     {
-        return array_keys($this->data());
+        foreach ($this->data as $key => $value) {
+            $this->get($key);
+        }
+        return $this->fields;
     }
 
     /**
@@ -114,16 +129,13 @@ class Content
     }
 
     /**
-     * Returns all registered field objects
+     * Returns all field keys
      *
      * @return array
      */
-    public function fields(): array
+    public function keys(): array
     {
-        foreach ($this->data as $key => $value) {
-            $this->get($key);
-        }
-        return $this->fields;
+        return array_keys($this->data());
     }
 
     /**
@@ -149,6 +161,18 @@ class Content
     }
 
     /**
+     * Set the parent model
+     *
+     * @param Model $parent
+     * @return self
+     */
+    public function setParent(Model $parent): self
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
      * Returns the raw data array
      *
      * @see     self::data()
@@ -170,18 +194,6 @@ class Content
     {
         $this->data = array_merge($this->data, $content);
         return $this;
-    }
-
-    /**
-     * Same as `self::data()` to improve
-     * var_dump output
-     *
-     * @see    self::data()
-     * @return array
-     */
-    public function __debuginfo(): array
-    {
-        return $this->toArray();
     }
 
 }

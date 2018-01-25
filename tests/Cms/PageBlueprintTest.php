@@ -25,35 +25,8 @@ class PageBlueprintTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testBlueprintWithoutStore()
-    {
-        $page = new Page(['id' => 'test']);
-        $page->blueprint();
-    }
-
-    public function testBlueprintWithStore()
-    {
-        $blueprint = $this->blueprint();
-        $store = new Store([
-            'page.blueprint' => function () use ($blueprint) {
-                return $blueprint;
-            }
-        ]);
-
-        $page = new Page([
-            'id'    => 'test',
-            'store' => $store
-        ]);
-
-        $this->assertEquals($blueprint, $page->blueprint());
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "blueprint" property must be of type "Kirby\Cms\PageBlueprint"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setBlueprint() must be an instance of Kirby\Cms\PageBlueprint or null, instance of Kirby\Cms\Blueprint given
      */
     public function testInvalidBlueprint()
     {

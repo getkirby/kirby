@@ -13,32 +13,10 @@ class PageContentTest extends TestCase
         ContentField::methods(require __DIR__ . '/../../extensions/methods.php');
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testDefaultContentWithoutStore()
+    public function testDefaultContent()
     {
         $page = new Page(['id' =>  'test']);
         $this->assertInstanceOf(Content::class, $page->content());
-    }
-
-    public function testDefaultContentWithStore()
-    {
-        $store = new Store([
-            'page.content' => function ($page) {
-                return new Content([
-                    'text' => 'lorem ipsum'
-                ], $page);
-            }
-        ]);
-
-        $page = new Page([
-            'id'    => 'test',
-            'store' => $store
-        ]);
-
-        $this->assertEquals('lorem ipsum', $page->text()->value());
     }
 
     public function testContent()
@@ -57,8 +35,8 @@ class PageContentTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "content" property must be of type "Kirby\Cms\Content"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setContent() must be an instance of Kirby\Cms\Content or null
      */
     public function testInvalidContent()
     {

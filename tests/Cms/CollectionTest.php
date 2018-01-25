@@ -2,12 +2,21 @@
 
 namespace Kirby\Cms;
 
-class MockObject extends Object
+class MockObject extends Model
 {
-    public function toArray(): array
+
+    use HasUnknownProperties;
+
+    public function __construct(array $props = [])
     {
-        return $this->props->not('collection')->toArray();
+        $this->setUnknownProperties($props);
     }
+
+    public function getId()
+    {
+        return $this->getUnknownProperty('id');
+    }
+
 }
 
 class CollectionTest extends TestCase
@@ -27,7 +36,7 @@ class CollectionTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Invalid object in collection. Accepted: "Kirby\Cms\Object"
+     * @expectedExceptionMessage Invalid object in collection. Accepted: "Kirby\Cms\Model"
      */
     public function testWithInvalidStringItems()
     {
@@ -40,7 +49,7 @@ class CollectionTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Invalid object in collection. Accepted: "Kirby\Cms\Object"
+     * @expectedExceptionMessage Invalid object in collection. Accepted: "Kirby\Cms\Model"
      */
     public function testWithInvalidArrayItems()
     {
@@ -53,9 +62,9 @@ class CollectionTest extends TestCase
 
     public function testGetAttribute()
     {
-        $object     = new MockObject(['name' => 'a']);
+        $object     = new MockObject(['id' => 'a']);
         $collection = new Collection();
-        $value      = $collection->getAttribute($object, 'name');
+        $value      = $collection->getAttribute($object, 'id');
 
         $this->assertEquals('a', $value);
     }
@@ -63,11 +72,11 @@ class CollectionTest extends TestCase
     public function testGetAttributeWithField()
     {
         $object = new MockObject([
-            'name' => new ContentField('name', 'a')
+            'id' => new ContentField('id', 'a')
         ]);
 
         $collection = new Collection();
-        $value      = $collection->getAttribute($object, 'name');
+        $value      = $collection->getAttribute($object, 'id');
 
         $this->assertEquals('a', $value);
     }

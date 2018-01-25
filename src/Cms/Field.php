@@ -3,10 +3,151 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Util\Component;
 
-class Field extends Component
+abstract class Field extends Object
 {
+
+    use HasI18n;
+
+    protected static $toArray = [
+        'default',
+        'disabled',
+        'help',
+        'icon',
+        'label',
+        'name',
+        'required',
+        'save',
+        'type',
+        'value'
+    ];
+
+    protected $default;
+    protected $disabled = false;
+    protected $help;
+    protected $icon;
+    protected $label;
+    protected $model;
+    protected $name;
+    protected $required = false;
+    protected $save = true;
+    protected $type;
+    protected $value;
+
+    public function __construct(array $props)
+    {
+        $this->setRequiredProperties($props, ['name']);
+        $this->setOptionalProperties($props, [
+            'default',
+            'disabled',
+            'help',
+            'icon',
+            'label',
+            'model',
+            'required',
+            'value'
+        ]);
+    }
+
+    public function createDataValue($value)
+    {
+        return $value;
+    }
+
+    public function createTextValue($value): string
+    {
+        return (string)$value;
+    }
+
+    public function default()
+    {
+        return $this->createDataValue($this->default);
+    }
+
+    public function emptyValues(): array
+    {
+        return [null, '', []];
+    }
+
+    public function error()
+    {
+        try {
+            $this->submit($this->value());
+            return false;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function exception(string $message): Exception
+    {
+        return new Exception($this->exceptionMessage($message));
+    }
+
+    public function exceptionMessage(string $message): string
+    {
+        return sprintf($message . ' in the %s field "%s"', $this->type(), $this->name());
+    }
+
+    public function help()
+    {
+        return $this->help;
+    }
+
+    public function isEmpty(): bool
+    {
+        $args  = func_get_args();
+        $value = count($args) === 0 ? $this->value() : $args[0];
+
+        return in_array($value, $this->emptyValues(), true) === true;
+    }
+
+    public function label()
+    {
+        return $this->label;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function submit()
+    {
+        if ($this->save === false) {
+            return null;
+        }
+
+        $args  = func_get_args();
+        $value = count($args) === 0 ? $this->value() : $this->createDataValue($args[0]);
+
+        if ($this->isEmpty($value) === true) {
+            if ($this->required() === true) {
+                throw $this->exception('Missing value');
+            }
+        } else {
+            if ($this->validate($value) === false) {
+                throw $this->exception('Invalid value');
+            }
+        }
+
+        return $this->createTextValue($value);
+    }
+
+    public function type(): string
+    {
+        return $this->type;
+    }
+
+    public function value()
+    {
+        return $this->value;
+    }
+
+    public function validate(): bool
+    {
+        return true;
+    }
 
     protected static function abstract(): array
     {

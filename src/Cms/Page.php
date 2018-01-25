@@ -16,7 +16,7 @@ use Kirby\Util\Str;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Page extends Object
+class Page extends Model
 {
 
     use HasChildren;
@@ -32,84 +32,115 @@ class Page extends Object
     protected static $models = [];
 
     /**
-     * Property schema
+     * Properties that should be converted to array
      *
-     * @return array
+     * @var array
      */
-    protected function schema()
+    protected static $toArray = [
+        'children',
+        'content',
+        'files',
+        'id',
+        'num',
+        'parent',
+        'root',
+        'slug',
+        'template',
+        'uid',
+        'url'
+    ];
+
+    /**
+     * The PageBlueprint object
+     *
+     * @var PageBlueprint
+     */
+    protected $blueprint;
+
+    /**
+     * The Page id
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
+     * The sorting number
+     *
+     * @var integer|null
+     */
+    protected $num;
+
+    /**
+     * The parent page
+     *
+     * @var Page|null
+     */
+    protected $parent;
+
+    /**
+     * The root to the page directory
+     *
+     * @var string|null
+     */
+    protected $root;
+
+    /**
+     * The parent Site object
+     *
+     * @var Site|null
+     */
+    protected $site;
+
+    /**
+     * The template name
+     *
+     * @var string|null
+     */
+    protected $template;
+
+    /**
+     * The page url
+     *
+     * @var string|null
+     */
+    protected $url;
+
+    /**
+     * Creates a new page object
+     *
+     * @param array $props
+     */
+    public function __construct(array $props)
     {
-        return [
-            'blueprint' => [
-                'type'    => PageBlueprint::class,
-                'default' => function (): PageBlueprint {
-                    return $this->store()->commit('page.blueprint', $this);
-                }
-            ],
-            'children' => [
-                'type'    => Children::class,
-                'default' => function (): Children {
-                    return $this->store()->commit('page.children', $this);
-                }
-            ],
-            'collection' => [
-                'type'    => Pages::class,
-                'default' => function () {
-                    if ($parent = $this->parent()) {
-                        return $parent->children();
-                    }
-                    return $this->site()->children();
-                }
-            ],
-            'content' => [
-                'type'    => Content::class,
-                'default' => function (): Content {
-                    return $this->store()->commit('page.content', $this);
-                }
-            ],
-            'files' => [
-                'type' => Files::class,
-                'default' => function (): Files {
-                    return $this->store()->commit('page.files', $this);
-                }
-            ],
-            'id' => [
-                'required' => true,
-                'type'     => 'string',
-            ],
-            'num' => [
-                'type' => 'integer'
-            ],
-            'parent' => [
-                'type' => Page::class,
-            ],
-            'root' => [
-                'type' => 'string',
-            ],
-            'site' => [
-                'type'    => Site::class,
-                'default' => function () {
-                    return $this->plugin('site');
-                }
-            ],
-            'store' => [
-                'type'    => Store::class,
-                'default' => function () {
-                    return $this->plugin('store');
-                }
-            ],
-            'template' => [
-                'type'    => 'string',
-                'default' => function () {
-                    return $this->store()->commit('page.template', $this);
-                }
-            ],
-            'url' => [
-                'type'    => 'string',
-                'default' => function () {
-                    return '/' . ltrim($this->id(), '/');
-                }
-            ],
-        ];
+        $this->setRequiredProperties($props, ['id']);
+        $this->setOptionalProperties($props, [
+            'blueprint',
+            'children',
+            'collection',
+            'content',
+            'files',
+            'num',
+            'kirby',
+            'parent',
+            'root',
+            'site',
+            'template',
+            'url'
+        ]);
+
+    }
+
+    /**
+     * @return PageBlueprint
+     */
+    public function blueprint(): PageBlueprint
+    {
+        if (is_a($this->blueprint, PageBlueprint::class) === true) {
+            return $this->blueprint;
+        }
+
+        return $this->blueprint = $this->store()->blueprint();
     }
 
     /**
@@ -123,7 +154,7 @@ class Page extends Object
         $this->rules()->check('page.change.slug', $this, $slug);
         $this->perms()->check('page.change.slug', $this, $slug);
 
-        return $this->store()->commit('page.change.slug', $this, $slug);
+        return $this->store()->changeSlug($slug);
     }
 
     /**
@@ -137,7 +168,7 @@ class Page extends Object
         $this->rules()->check('page.change.template', $this, $template);
         $this->perms()->check('page.change.template', $this, $template);
 
-        return $this->store()->commit('page.change.template', $this, $template);
+        return $this->store()->changeTemplate($template);
     }
 
     /**
@@ -152,7 +183,22 @@ class Page extends Object
         $this->rules()->check('page.change.status', $this, $status, $position);
         $this->perms()->check('page.change.status', $this, $status, $position);
 
-        return $this->store()->commit('page.change.status', $this, $status, $position);
+        return $this->store()->changeStatus($status, $position);
+    }
+
+    /**
+     * Returns the Children collection for this page
+     * The HasChildren trait takes care of the rest
+     *
+     * @return Pages|Children
+     */
+    public function children(): Pages
+    {
+        if (is_a($this->children, Pages::class) === true) {
+            return $this->children;
+        }
+
+        return $this->children = $this->store()->children();
     }
 
     /**
@@ -166,10 +212,48 @@ class Page extends Object
     {
         return new static(array_merge([
             'id'     => $this->id(),
+            'parent' => $this->parent(),
             'root'   => $this->root(),
+            'site'   => $this->site(),
             'url'    => $this->url(),
-            'parent' => $this->parent()
         ], $props));
+    }
+
+    /**
+     * Returns the default parent collection
+     *
+     * @return Collection
+     */
+    public function collection()
+    {
+        if (is_a($this->collection, Collection::class)) {
+            return $this->collection;
+        }
+
+        if ($parent = $this->parent()) {
+            return $this->collection = $parent->children();
+        }
+
+        if ($site = $this->site()) {
+            return $this->collection = $site->children();
+        }
+
+        return $this->collection = new Pages([$this]);
+    }
+
+    /**
+     * Returns the Content class with
+     * all ContentFields for the page
+     *
+     * @return Content
+     */
+    public function content(): Content
+    {
+        if (is_a($this->content, Content::class) === true) {
+            return $this->content;
+        }
+
+        return $this->content = $this->store()->content();
     }
 
     /**
@@ -214,7 +298,7 @@ class Page extends Object
         $this->rules()->check('page.delete', $this);
         $this->perms()->check('page.delete', $this);
 
-        return $this->store()->commit('page.delete', $this);
+        return $this->store()->delete();
     }
 
     /**
@@ -224,7 +308,7 @@ class Page extends Object
      */
     public function exists(): bool
     {
-        return $this->store()->commit('page.exists', $this);
+        return $this->store()->exists();
     }
 
     /**
@@ -252,6 +336,20 @@ class Page extends Object
         }
 
         return new static($props);
+    }
+
+    /**
+     * Returns the Files collection
+     *
+     * @return Files
+     */
+    public function files(): Files
+    {
+        if (is_a($this->files, Files::class) === true) {
+            return $this->files;
+        }
+
+        return $this->store()->files();
     }
 
     /**
@@ -306,6 +404,27 @@ class Page extends Object
     public function hide(): self
     {
         return $this->changeStatus('unlisted');
+    }
+
+    /**
+     * Returns the Page Id
+     *
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Compares the current object with the given page object
+     *
+     * @param Page $page
+     * @return bool
+     */
+    public function is(Page $page): bool
+    {
+        return $this->id() === $page->id();
     }
 
     /**
@@ -396,7 +515,7 @@ class Page extends Object
      * @param null|array $models
      * @return array
      */
-    public static function models(array $models = null)
+    public static function models(array $models = null): array
     {
         if ($models === null) {
             return static::$models;
@@ -426,13 +545,23 @@ class Page extends Object
     }
 
     /**
-     * Returns the parent page if it exists
+     * Returns the sorting number
      *
-     * @return self|null
+     * @return integer|null
+     */
+    public function num()
+    {
+        return $this->num;
+    }
+
+    /**
+     * Returns the parent Page object
+     *
+     * @return Page|null
      */
     public function parent()
     {
-        return $this->props->get('parent');
+        return $this->parent;
     }
 
     /**
@@ -474,17 +603,109 @@ class Page extends Object
     }
 
     /**
-     * Returns all sibling elements
+     * Returns the directory root
      *
-     * @return Children
+     * @return string
      */
-    public function siblings()
+    public function root()
     {
-        if ($parent = $this->parent()) {
-            return $parent->children();
-        }
+        return $this->root;
+    }
 
-        return $this->site()->children();
+    /**
+     * Sets the Blueprint object
+     *
+     * @param PageBlueprint|null $blueprint
+     * @return self
+     */
+    protected function setBlueprint(PageBlueprint $blueprint = null): self
+    {
+        $this->blueprint = $blueprint;
+        return $this;
+    }
+
+    /**
+     * Sets the Content object
+     *
+     * @param Content|null $content
+     * @return self
+     */
+    protected function setContent(Content $content = null): self
+    {
+        $this->content = $content;
+        return $this;
+    }
+
+    /**
+     * Sets the Page id
+     *
+     * @param string $id
+     * @return self
+     */
+    protected function setId(string $id): self
+    {
+        $this->id = trim($id, '/');
+        return $this;
+    }
+
+    /**
+     * Sets the sorting number
+     *
+     * @param integer $num
+     * @return self
+     */
+    protected function setNum(int $num = null): self
+    {
+        $this->num = $num === null ?: intval($num);
+        return $this;
+    }
+
+    /**
+     * Sets the parent page object
+     *
+     * @param Page|null $parent
+     * @return self
+     */
+    protected function setParent(Page $parent = null): self
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * Sets the page directory
+     *
+     * @param string|null $root
+     * @return self
+     */
+    protected function setRoot(string $root = null): self
+    {
+        $this->root = $root;
+        return $this;
+    }
+
+    /**
+     * Sets the template name
+     *
+     * @param string $template
+     * @return self
+     */
+    protected function setTemplate(string $template = null): self
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * Sets the Url
+     *
+     * @param string $url
+     * @return self
+     */
+    protected function setUrl(string $url = null): self
+    {
+        $this->url = rtrim($url, '/');
+        return $this;
     }
 
     /**
@@ -509,9 +730,27 @@ class Page extends Object
     }
 
     /**
+     * @return PageStore
+     */
+    public function store(): PageStore
+    {
+        return App::instance()->component('PageStore', $this);
+    }
+
+    /**
+     * Returns the template name
+     *
+     * @return string
+     */
+    public function template(): string
+    {
+        return $this->template = $this->template ?? $this->store()->template();
+    }
+
+    /**
      * Returns the title field or the slug as fallback
      *
-     * @return Field
+     * @return ContentField
      */
     public function title(): ContentField
     {
@@ -540,7 +779,17 @@ class Page extends Object
         $this->rules()->check('page.update', $this, $content);
         $this->perms()->check('page.update', $this, $content);
 
-        return $this->store()->commit('page.update', $this, $content);
+        return $this->store()->update($content);
+    }
+
+    /**
+     * Returns the Url
+     *
+     * @return string
+     */
+    public function url(): string
+    {
+        return $this->url ?? '/' . $this->id();
     }
 
 }

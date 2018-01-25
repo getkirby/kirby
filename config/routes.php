@@ -7,13 +7,11 @@ use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\View;
 
-$app     = $this;
-$site    = $this->site();
-$request = $this->request();
+$app = $this;
 
 return [
-    new Route('', 'GET', function () use ($site) {
-        return $site->find('home');
+    new Route('', 'GET', function () use ($app) {
+        return $app->site()->find('home');
     }),
     new Route('panel/(:all?)', 'GET', function ($path = null) use ($app) {
 
@@ -24,14 +22,14 @@ return [
         return new Response($view);
 
     }),
-    new Route('api/(:all)', 'ALL', function ($path = null) use ($app, $site, $request) {
+    new Route('api/(:all)', 'ALL', function ($path = null) use ($app) {
 
         $api = new Api([
-            'request' => $request,
+            'request' => $request = $app->request(),
             'path'    => $path,
             'data'    => [
                 'app'   => $app,
-                'site'  => $site,
+                'site'  => $app->site(),
                 'users' => $app->users()
             ],
             'routes' => require __DIR__ . '/../api/routes.php',
@@ -48,14 +46,14 @@ return [
         return new Json($result, 200, $pretty);
 
     }),
-    new Route('media/(:any)/(:all)', 'GET', function (string $type, string $path) use ($app, $site) {
+    new Route('media/(:any)/(:all)', 'GET', function (string $type, string $path) use ($app) {
         try {
             return new Redirect($app->media()->resolve($app, $type, $path)->url(), 307);
         } catch (Exception $e) {
             return 404;
         }
     }),
-    new Route('(:all)', 'GET', function ($path) use ($site) {
-        return $site->find($path);
+    new Route('(:all)', 'GET', function ($path) use ($app) {
+        return $app->site()->find($path);
     }),
 ];

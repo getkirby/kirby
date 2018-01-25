@@ -14,15 +14,6 @@ class SitePropsTest extends TestCase
         $this->assertEquals($root, $site->root());
     }
 
-    public function testStore()
-    {
-        $site = new Site([
-            'store' => $store = new Store()
-        ]);
-
-        $this->assertEquals($store, $site->store());
-    }
-
     public function testUrl()
     {
         $site = new Site([

@@ -9,13 +9,6 @@ use Kirby\Image\Image;
 use Kirby\Util\Str;
 
 return [
-    'file.content' => function (File $file): Content {
-
-        $content = Data::read($file->root() . '.txt');
-
-        return new Content($content, $file);
-
-    },
     'file.create' => function (Page $page = null, string $source, string $filename, array $content = []): File {
 
         if (is_file($source) === false) {
@@ -57,27 +50,6 @@ return [
         Data::write($file->root() . '.txt', $content->toArray());
 
         return $file->set('content', $content);
-
-    },
-    'file.replace' => function (File $file, string $source): File {
-
-        if (file_exists($source) === false) {
-            throw new Exception(sprintf('The source file "%s" does not exist', $source));
-        }
-
-        // create a temporary image object to run validations
-        $this->rules()->check('file.replace', $file, new Image($source, '/tmp'));
-
-        // delete all public versions
-        $this->media()->delete($file->model(), $file);
-
-        // overwrite the original
-        copy($source, $file->root());
-
-        // create a new public file
-        $this->media()->create($file->model(), $file);
-
-        return $file;
 
     },
     'file.rename' => function (File $file, string $name): File {

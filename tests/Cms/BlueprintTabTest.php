@@ -9,7 +9,7 @@ class BlueprintTabTest extends TestCase
     {
         return new BlueprintTab(array_merge([
             'name'    => 'test',
-            'columns' => []
+            'columns' => $this->columns()
         ], $props));
     }
 
@@ -63,10 +63,15 @@ class BlueprintTabTest extends TestCase
         $this->assertCount(2, $tab->columns());
     }
 
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Please define at least one column for the tab
+     */
     public function testEmptyColumns()
     {
-        $this->assertInstanceOf(Collection::class, $this->tab()->columns());
-        $this->assertCount(0, $this->tab()->columns());
+        $tab = $this->tab([
+            'columns' => []
+        ]);
     }
 
     public function testFields()
@@ -106,7 +111,7 @@ class BlueprintTabTest extends TestCase
 
     public function testDefaultLabel()
     {
-        $this->assertEquals('Main', $this->tab()->label());
+        $this->assertNull($this->tab()->label());
     }
 
     public function testName()

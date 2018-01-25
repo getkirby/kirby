@@ -23,32 +23,14 @@ class SiteBlueprintTest extends TestCase
         $this->assertEquals($blueprint, $site->blueprint());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testBlueprintWithoutStore()
+    public function testDefaultBlueprint()
     {
-        $site = new Site();
-        $site->blueprint();
-    }
-
-    public function testBlueprintWithStore()
-    {
-        $blueprint = $this->blueprint();
-        $store = new Store([
-            'site.blueprint' => function () use ($blueprint) {
-                return $blueprint;
-            }
-        ]);
-
-        $site = new Site(['store' => $store]);
-        $this->assertEquals($blueprint, $site->blueprint());
+        $this->markTestIncomplete();
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "blueprint" property must be of type "Kirby\Cms\SiteBlueprint"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Site::setBlueprint() must be an instance of Kirby\Cms\SiteBlueprint or null, instance of Kirby\Cms\Blueprint given
      */
     public function testInvalidBlueprint()
     {

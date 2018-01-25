@@ -5,34 +5,15 @@ namespace Kirby\Cms;
 class SiteChildrenTest extends TestCase
 {
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testDefaultChildrenWithoutStore()
+    public function testDefaultChildren()
     {
         $site = new Site();
         $this->assertInstanceOf(Pages::class, $site->children());
     }
 
-    public function testDefaultChildrenWithStore()
-    {
-        $store = new Store([
-            'site.children' => function ($site) {
-                return new Pages([], $site);
-            }
-        ]);
-
-        $site = new Site([
-            'store' => $store
-        ]);
-
-        $this->assertInstanceOf(Pages::class, $site->children());
-    }
-
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "children" property must be of type "Kirby\Cms\Pages"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Site::setChildren() must be an instance of Kirby\Cms\Pages or null, string given
      */
     public function testInvalidChildren()
     {
@@ -44,11 +25,10 @@ class SiteChildrenTest extends TestCase
     public function testPages()
     {
         $site = new Site([
-            'children' => $children = new Children()
+            'children' => $pages = new Pages()
         ]);
 
-        $this->assertEquals($children, $site->pages());
-        $this->assertEquals($site->children(), $site->pages());
+        $this->assertInstanceOf(Pages::class, $site->children());
     }
 
 }

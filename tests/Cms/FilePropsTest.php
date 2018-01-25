@@ -47,7 +47,7 @@ class FilePropsTest extends TestCase
             'collection' => $files = new Files()
         ]);
 
-        $this->assertEquals($files, $file->collection());
+        $this->assertInstanceOf(Files::class, $file->collection());
     }
 
     public function testDefaultCollection()
@@ -58,15 +58,19 @@ class FilePropsTest extends TestCase
     public function testContent()
     {
         $file = $this->file([
-            'content' => $content = new Content()
+            'content' => $content = new Content([
+                'test' => 'Test'
+            ])
         ]);
 
-        $this->assertEquals($content, $file->content());
+        $this->assertEquals('Test', $file->content()->get('test')->value());
     }
 
     public function testDefaultContent()
     {
-        $this->markTestIncomplete();
+        $file = $this->file();
+
+        $this->assertInstanceOf(Content::class, $file->content());
     }
 
     public function testId()
@@ -82,7 +86,7 @@ class FilePropsTest extends TestCase
     public function testPage()
     {
         $file = $this->file([
-            'page' => $page = new Page(['id' => 'test'])
+            'parent' => $page = new Page(['id' => 'test'])
         ]);
 
         $this->assertEquals($page, $file->page());

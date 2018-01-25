@@ -79,9 +79,9 @@ class ContentField
      *
      * @param string $key
      * @param mixed  $value
-     * @param Object $parent
+     * @param object $parent
      */
-    public function __construct(string $key, $value, Object $parent = null)
+    public function __construct(string $key, $value, $parent = null)
     {
         $this->key    = $key;
         $this->value  = $value;

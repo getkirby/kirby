@@ -29,34 +29,8 @@ class UserBlueprintTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "store" does not exist
-     */
-    public function testBlueprintWithoutStore()
-    {
-        $user = $this->user();
-        $user->blueprint();
-    }
-
-    public function testBlueprintWithStore()
-    {
-        $blueprint = $this->blueprint();
-        $store = new Store([
-            'user.blueprint' => function () use ($blueprint) {
-                return $blueprint;
-            }
-        ]);
-
-        $user = $this->user([
-            'store' => $store
-        ]);
-
-        $this->assertEquals($blueprint, $user->blueprint());
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "blueprint" property must be of type "Kirby\Cms\UserBlueprint"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setBlueprint() must be an instance of Kirby\Cms\UserBlueprint or null, instance of Kirby\Cms\Blueprint given
      */
     public function testInvalidBlueprint()
     {

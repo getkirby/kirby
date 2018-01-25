@@ -10,129 +10,92 @@ namespace Kirby\Cms;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Roots extends Object
+class Roots extends Ingredients
 {
 
-    /**
-     * Property schema
-     *
-     * @return array
-     */
-    protected function schema()
+    protected $accounts;
+    protected $blueprints;
+    protected $collections;
+    protected $content;
+    protected $controllers;
+    protected $index;
+    protected $kirby;
+    protected $loaders;
+    protected $media;
+    protected $panel;
+    protected $plugins;
+    protected $site;
+    protected $snippets;
+    protected $templates;
+
+    public function accounts(): string
     {
-        return [
-            'index' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return realpath(__DIR__ . '/../../../');
-                }
-            ],
-            'kirby' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->index() . '/kirby';
-                }
-            ],
-            'media' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->index() . '/media';
-                }
-            ],
-            'content' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->index() . '/content';
-                }
-            ],
-            'site' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->index() . '/site';
-                }
-            ],
-            'collections' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->site() . '/collections';
-                }
-            ],
-            'controllers' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->site() . '/controllers';
-                }
-            ],
-            'loaders' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->kirby() . '/loaders';
-                }
-            ],
-            'accounts' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->site() . '/accounts';
-                }
-            ],
-            'snippets' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->site() . '/snippets';
-                }
-            ],
-            'templates' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->site() . '/templates';
-                }
-            ],
-            'plugins' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->site() . '/plugins';
-                }
-            ],
-            'blueprints' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->site() . '/blueprints';
-                }
-            ],
-            'panel' => [
-                'type'    => 'string',
-                'default' => function (): string {
-                    return $this->index() . '/panel';
-                }
-            ],
-        ];
+        return $this->accounts = $this->accounts ?? $this->site() . '/accounts';
     }
 
-    /**
-     * Returns a specific root from the registry
-     *
-     * @param  string $key
-     * @return string|null
-     */
-    public function get(string $key = 'index')
+    public function blueprints(): string
     {
-        if ($key === '/') {
-            $key = 'index';
-        }
-
-        return $this->props->get($key);
+        return $this->blueprints = $this->blueprints ?? $this->site() . '/blueprints';
     }
 
-    /**
-     * Magic method getter for roots
-     *
-     * @param  string $method
-     * @param  array $arguments
-     * @return string|null
-     */
-    public function __call(string $method, array $arguments = [])
+    public function collections(): string
     {
-        return $this->get($method);
+        return $this->collections = $this->collections ?? $this->site() . '/collections';
+    }
+
+    public function content(): string
+    {
+        return $this->content = $this->content ?? $this->index() . '/content';
+    }
+
+    public function controllers(): string
+    {
+        return $this->controllers = $this->controllers ?? $this->site() . '/controllers';
+    }
+
+    public function index(): string
+    {
+        return $this->index = $this->index ?? realpath(__DIR__ . '/../../../');
+    }
+
+    public function kirby(): string
+    {
+        return $this->kirby = $this->kirby ?? realpath(__DIR__ . '/../../');
+    }
+
+    public function loaders(): string
+    {
+        return $this->loaders = $this->loaders ?? $this->kirby() . '/loaders';
+    }
+
+    public function media(): string
+    {
+        return $this->media = $this->media ?? $this->index() . '/media';
+    }
+
+    public function panel(): string
+    {
+        return $this->panel = $this->panel ?? $this->index() . '/panel';
+    }
+
+    public function plugins(): string
+    {
+        return $this->plugins = $this->plugins ?? $this->site() . '/plugins';
+    }
+
+    public function site(): string
+    {
+        return $this->site = $this->site ?? $this->index() . '/site';
+    }
+
+    public function snippets(): string
+    {
+        return $this->snippets = $this->snippets ?? $this->site() . '/snippets';
+    }
+
+    public function templates(): string
+    {
+        return $this->templates = $this->templates ?? $this->site() . '/templates';
     }
 
 }

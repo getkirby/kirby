@@ -17,16 +17,55 @@ use Kirby\Image\Image;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Avatar extends Object
+class Avatar extends Model
 {
 
     use HasThumbs;
 
     /**
+     * Properties that should be converted to array
+     * in Avatar::toArray
+     *
+     * @var array
+     */
+    protected static $toArray = [
+        'root',
+        'url',
+        'exists'
+    ];
+
+    /**
+     * The Image object, which
+     * is being wrapped by this class.
+     *
+     * @var Image
+     */
+    protected $asset;
+
+    /**
+     * The absolute path to the avatar file
+     *
+     * @var string
+     */
+    protected $root;
+
+    /**
+     * The public url for the avatar file
+     *
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * The parent User object
+     *
+     * @var User
+     */
+    protected $user;
+
+    /**
      * Magic caller to wrap around
      * Kirby Image methods like size, mime, etc.
-     * But also allows access to props like
-     * url, root and user.
      *
      * @param string $method
      * @param array $arguments
@@ -34,13 +73,39 @@ class Avatar extends Object
      */
     public function __call(string $method, array $arguments = [])
     {
-        $asset = $this->props->asset;
+        $asset = $this->asset();
 
         if (method_exists($asset, $method)) {
             return $asset->$method(...$arguments);
         }
 
-        return $this->props->get($method);
+        throw new Exception('Invalid avatar method: ' . $method);
+    }
+
+    /**
+     * Creates a new Avatar object
+     *
+     * @param array $props
+     */
+    public function __construct(array $props)
+    {
+        $this->setRequiredProperties($props, ['root', 'url']);
+        $this->setOptionalProperties($props, ['asset', 'user']);
+    }
+
+    /**
+     * Returns the defined Image object
+     * or initializes a default.
+     *
+     * @return Image
+     */
+    public function asset(): Image
+    {
+        if (is_a($this->asset, Image::class)) {
+            return $this->asset;
+        }
+
+        return $this->asset = new Image($this->root(), $this->url());
     }
 
     /**
@@ -54,9 +119,9 @@ class Avatar extends Object
     public function clone(array $props = []): self
     {
         return new static(array_merge([
-            'root' => $this->props->root,
-            'url'  => $this->props->url,
-            'user' => $this->props->user,
+            'root' => $this->root(),
+            'url'  => $this->url(),
+            'user' => $this->user(),
         ], $props));
     }
 
@@ -71,7 +136,7 @@ class Avatar extends Object
      */
     public static function create(User $user, string $source): self
     {
-        return static::store()->commit('avatar.create', $user, $source);
+        return $this->store()->create($source);
     }
 
     /**
@@ -82,7 +147,19 @@ class Avatar extends Object
      */
     public function delete(): bool
     {
-        return $this->plugin('store')->commit('avatar.delete', $this);
+        return $this->store()->delete();
+    }
+
+    /**
+     * Shortcut to the asset method
+     * This is needed to make the toArray
+     * method recognize this method at all.
+     *
+     * @return boolean
+     */
+    public function exists(): bool
+    {
+        return $this->asset()->exists();
     }
 
     /**
@@ -94,40 +171,65 @@ class Avatar extends Object
      */
     public function replace(string $source): self
     {
-        return $this->plugin('store')->commit('avatar.replace', $this, $source);
+        return $this->store()->replace($source);
     }
 
     /**
-     * Property schema
+     * Returns the absolute path to the asset file
      *
-     * @return array
+     * @return string
      */
-    protected function schema()
+    public function root(): string
     {
-        return [
-            'asset' => [
-                'type'    => Image::class,
-                'freeze'  => true,
-                'default' => function () {
-                    return new Image($this->props->root, $this->props->url);
-                }
-            ],
-            'root' => [
-                'type'     => 'string',
-                'freeze'   => true,
-                'required' => true
-            ],
-            'url' => [
-                'type'     => 'string',
-                'freeze'   => true,
-                'required' => true
-            ],
-            'user' => [
-                'type'     => User::class,
-                'freeze'   => true,
-                'required' => true
-            ]
-        ];
+        return $this->root;
+    }
+
+    /**
+     * Sets the Image object
+     *
+     * @param Image $asset
+     * @return self
+     */
+    protected function setAsset(Image $asset = null): self
+    {
+        $this->asset = $asset;
+        return $this;
+    }
+
+    /**
+     * Sets the absolute path to the avatar file
+     *
+     * @param string $root
+     * @return self
+     */
+    protected function setRoot(string $root): self
+    {
+        $this->root = $root;
+        return $this;
+    }
+
+    /**
+     * Sets the public url for the avatar file
+     *
+     * @param string $url
+     * @return self
+     */
+    protected function setUrl(string $url): self
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * Sets the parent User object
+     *
+     * @param User $user
+     * @return self
+     */
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+        return $this;
     }
 
     /**
@@ -140,7 +242,27 @@ class Avatar extends Object
      */
     public function thumb(array $options = []): self
     {
-        return $this->plugin('media')->create($this->user(), $this, $options);
+        return App::instance()->media()->create($this->user(), $this, $options);
+    }
+
+    /**
+     * Returns the public url for the avatar file
+     *
+     * @return string
+     */
+    public function url(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * Returns the parent User object
+     *
+     * @return User
+     */
+    public function user()
+    {
+        return $this->user;
     }
 
 }

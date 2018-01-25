@@ -55,16 +55,6 @@ class Object
     }
 
     /**
-     * Improved var_dump output
-     *
-     * @return array
-     */
-    public function __debuginfo(): array
-    {
-        return $this->toArray();
-    }
-
-    /**
      * Magic prop getter
      *
      * ```

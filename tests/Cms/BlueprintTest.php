@@ -87,7 +87,7 @@ class BlueprintTest extends TestCase
 
     public function testOptions()
     {
-        $this->assertInstanceOf(BlueprintObject::class, $this->blueprint()->options());
+        $this->assertEquals($this->options(), $this->blueprint()->options());
     }
 
     public function testSection()
