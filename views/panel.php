@@ -30,9 +30,10 @@
     };
   </script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/vendor.js"></script>
+  <script src="<?= $kirby->url('panel') ?>/assets/js/registry.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/ui.js"></script>
-  <script src="<?= $kirby->url('panel') ?>/assets/js/panel.js"></script>
   <script src="<?= $kirby->url('index') ?>/assets/js/panel.js"></script>
+  <script src="<?= $kirby->url('panel') ?>/assets/js/panel.js"></script>
 
 </body>
 </html>
