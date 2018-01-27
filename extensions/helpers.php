@@ -3,14 +3,20 @@
 use Kirby\Cms\App;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
-
+use Kirby\Util\F;
 
 function css($url)
 {
     return '<link rel="stylesheet" href="' . url($url) . '">';
 }
 
-function go($url) {
+function get($key, $default = null)
+{
+    return App::instance()->request()->query()->get($key, $default);
+}
+
+function go($url)
+{
     die(new Redirect(url($url)));
 }
 
@@ -26,27 +32,27 @@ function kirby()
 
 function kirbytag($input)
 {
-    return kirby()->kirbytext()->tag($input);
+    return App::instance()->component('kirbytext')->tag($input);
 }
 
 function kirbytext($text)
 {
-    return kirby()->kirbytext()->parse($text);
+    return App::instance()->component('kirbytext')->parse($text);
 }
 
 function markdown($text)
 {
-    return kirby()->markdown()->parse($text);
+    return App::instance()->component('markdown')->parse($text);
 }
 
 function page(...$id)
 {
-    return site()->find(...$id);
+    return App::instance()->site()->find(...$id);
 }
 
 function pages(...$id)
 {
-    return site()->find(...$id);
+    return App::instance()->site()->find(...$id);
 }
 
 /**
@@ -64,40 +70,48 @@ function r($condition, $value, $alternative = null)
 
 function site()
 {
-    return kirby()->site();
+    return App::instance()->site();
 }
 
 function smartypants($text)
 {
-    return kirby()->smartypants()->parse($text);
+    return App::instance()->component('smartypants')->parse($text);
 }
 
-/**
- * Helpers
- */
 function snippet($name, $data = [], $return = false)
 {
-    if (is_object($data)) {
+    if (is_object($data) === true) {
         $data = ['item' => $data];
     }
 
-    $snippet = new View(App::instance()->root('snippets') . '/' . $name . '.php', $data);
-    $snippet->toString();
+    $snippet = App::instance()->component('snippet', $name, $data);
 
-    if ($return) {
-        return $snippet;
+    if ($return === true) {
+        return $snippet->render();
     }
 
-    echo $snippet;
+    echo $snippet->render();
 }
 
-function svg($root)
+function svg(string $file)
 {
-    require kirby()->root() . '/' . $root;
+    $root = App::instance()->root();
+    $file = $root . '/' . $file;
+
+    if (file_exists($file) === false) {
+        return false;
+    }
+
+    ob_start();
+    include F::realpath($file, $root);
+    $svg = ob_get_contents();
+    ob_end_clean();
+
+    return $svg;
 }
 
 function url($path = null)
 {
-    return rtrim(kirby()->url() . '/' . $path, '/');
+    return rtrim(App::instance()->url() . '/' . $path, '/');
 }
 
