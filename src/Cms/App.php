@@ -5,10 +5,6 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 
-use Kirby\Http\Request;
-use Kirby\Http\Router;
-use Kirby\Http\Server;
-use Kirby\Text\Tags as Kirbytext;
 use Kirby\Toolkit\Url;
 use Kirby\Util\Controller;
 use Kirby\Util\Factory;
@@ -195,7 +191,7 @@ class App extends Object
      *
      * @return Request
      */
-    public function request(): Request
+    public function request()
     {
         return $this->component('request');
     }
@@ -231,7 +227,7 @@ class App extends Object
      *
      * @return Router
      */
-    public function router(): Router
+    public function router()
     {
         return $this->component('router', $this->routes());
     }
@@ -325,7 +321,7 @@ class App extends Object
      *
      * @return Server
      */
-    public function server(): Server
+    public function server()
     {
         return $this->component('server');
     }
