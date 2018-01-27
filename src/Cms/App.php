@@ -6,9 +6,11 @@ use Closure;
 use Exception;
 
 use Kirby\Http\Request;
+use Kirby\Http\Router;
 use Kirby\Http\Server;
 use Kirby\Text\Tags as Kirbytext;
 use Kirby\Toolkit\Url;
+use Kirby\Util\Controller;
 use Kirby\Util\Factory;
 
 class App extends Object
@@ -36,6 +38,7 @@ class App extends Object
         // the kirby folder directory
         static::$root = dirname(dirname(__DIR__));
 
+        // configurable properties
         $this->setOptionalProperties($props, [
             'components',
             'path',
@@ -44,8 +47,10 @@ class App extends Object
             'urls'
         ]);
 
-        static::$instance = $this;
+        // register all field methods
+        ContentField::methods(include static::$root . '/extensions/methods.php');
 
+        static::$instance = $this;
     }
 
     /**
@@ -113,23 +118,19 @@ class App extends Object
      * @param array $arguments
      * @return array
      */
-    public function controller(string $name, array $arguments = []): array
+    public function controller(string $name, array $arguments = [], string $contentType = null): array
     {
-        if ($controller = Controller::load($this->root('controllers') . '/' . basename($name) . '.php')) {
+        $name = basename(strtolower($name));
+
+        if ($contentType !== null && $contentType !== 'html') {
+            $name .= '.' . $contentType;
+        }
+
+        if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
             return (array)$controller->call($this, $arguments);
         }
 
         return [];
-    }
-
-    /**
-     * Returns the Kirbytext parser
-     *
-     * @return Kirbytext
-     */
-    public function kirbytext(): Kirbytext
-    {
-        return $this->component('kirbytext');
     }
 
     /**
@@ -139,7 +140,11 @@ class App extends Object
      */
     public function media(): Media
     {
-        return $this->component('media', $this->component('darkroom'), '', '/media');
+        return $this->component('media', [
+            'darkroom' => $this->component('darkroom'),
+            'root'     => $this->root('media'),
+            'url'      => $this->url('media')
+        ]);
     }
 
     /**
@@ -165,6 +170,24 @@ class App extends Object
         $requestPath = preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri);
 
         return $this->setPath($requestPath)->path;
+    }
+
+    /**
+     * Returns the Response object for the
+     * current request
+     *
+     * @return Response
+     */
+    public function render(string $path = null, string $method = null)
+    {
+        $path   = $path   ?? $this->path();
+        $method = $method ?? $this->request()->method();
+
+        try {
+            return $this->component('response', $this->router()->call($path, $method));
+        } catch (Exception $e) {
+            return $this->component('response', $e);
+        }
     }
 
     /**
@@ -210,7 +233,7 @@ class App extends Object
      */
     public function router(): Router
     {
-        return $this->component('router', $this->routes);
+        return $this->component('router', $this->routes());
     }
 
     /**
@@ -236,8 +259,15 @@ class App extends Object
      */
     protected function setComponents(array $components = []): self
     {
-        $defaults = (array)include static::$root . '/config/components.php';
-        $this->components = new Factory(array_merge($defaults, $components));
+
+        $defaultComponentsCreator = include static::$root . '/config/components.php';
+        $defaultComponentsConfig  = [];
+
+        if (is_a($defaultComponentsCreator, Closure::class)) {
+            $defaultComponentsConfig = (array)$defaultComponentsCreator($this);
+        }
+
+        $this->components = new Factory(array_merge($defaultComponentsConfig, $components));
         return $this;
     }
 
