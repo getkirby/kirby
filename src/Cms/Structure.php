@@ -40,7 +40,7 @@ class Structure extends Collection
         if (is_array($object)) {
             $object = new StructureObject([
                 'content' => new Content($object, $this->parent),
-                'id'      => $id,
+                'id'      => $object['id'] ?? $id,
                 'parent'  => $this->parent
             ]);
         }
@@ -50,7 +50,7 @@ class Structure extends Collection
         }
 
         // inject the collection for proper navigation
-        $object->set('collection', $this);
+        $object->setCollection($this);
 
         return parent::__set($object->id(), $object);
     }
