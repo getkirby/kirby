@@ -74,7 +74,7 @@ trait HasFiles
             return $this->find($path)->$in()->find($filename);
         }
 
-        return $this->{'get' . $in}()->find($filename);
+        return $this->$in()->find($filename);
     }
 
     /**
