@@ -161,6 +161,17 @@ class Content
     }
 
     /**
+     * Returns the parent
+     * Site, Page, File or User object
+     *
+     * @return Site|Page|File|User
+     */
+    public function parent()
+    {
+        return $this->parent;
+    }
+
+    /**
      * Set the parent model
      *
      * @param Model $parent
