@@ -142,8 +142,11 @@ class Collection extends BaseCollection
         $options = array_merge([
             'total' => $this->count(),
             'limit' => 10,
-            'page'  => null,
+            'page'  => null
         ], $options);
+
+        // remove null values to make later merges work properly
+        $options = array_filter($options);
 
         // initialize the pagination instance
         $this->pagination = App::instance()->component('Pagination', $options);
