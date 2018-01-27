@@ -17,14 +17,6 @@ class View
 {
 
     /**
-     * Store to set global data for all
-     * following views
-     *
-     * @var array
-     */
-    protected static $globals = [];
-
-    /**
      * The absolute path to the view file
      *
      * @var string
@@ -39,21 +31,6 @@ class View
     protected $data = [];
 
     /**
-     * Setter and getter for global view variables
-     *
-     * @param  array|null $globals
-     * @return array
-     */
-    public static function globals(array $globals = null): array
-    {
-        if ($globals === null) {
-            return static::$globals;
-        }
-
-        return static::$globals = $globals;
-    }
-
-    /**
      * Creates a new view object
      *
      * @param string $file
@@ -61,22 +38,8 @@ class View
      */
     public function __construct(string $file, array $data = [])
     {
-        if (!file_exists($file)) {
-            throw new Exception('The view does not exist: ' . $file);
-        }
-
-        $this->file = $file;
+        $this->file = realpath($file);
         $this->data = $data;
-    }
-
-    /**
-     * Returns the view file
-     *
-     * @return string
-     */
-    public function file(): string
-    {
-        return $this->file;
     }
 
     /**
@@ -91,20 +54,53 @@ class View
     }
 
     /**
+     * Checks if the template file exists
+     *
+     * @return boolean
+     */
+    public function exists(): bool
+    {
+        return file_exists($this->file()) === true;
+    }
+
+    /**
+     * Returns the view file
+     *
+     * @return string
+     */
+    public function file(): string
+    {
+        return $this->file;
+    }
+
+    /**
+     * Creates an error message for the missing view exception
+     *
+     * @return string
+     */
+    protected function missingViewMessage(): string
+    {
+        return 'The view does not exist: ' . $this->file();
+    }
+
+    /**
      * Renders the view
      *
      * @return string
      */
-    public function toString(): string
+    public function render(): string
     {
+        if ($this->exists() === false) {
+            throw new Exception($this->missingViewMessage());
+        }
+
         $exception = null;
 
         ob_start();
-        $array = array_merge(static::$globals, $this->data);
-        extract($array);
+        extract($this->data());
 
         try {
-            require $this->file;
+            require $this->file();
         } catch (Exception $e) {
             $exception = $e;
         }
@@ -120,6 +116,16 @@ class View
     }
 
     /**
+     * Alias for View::render()
+     *
+     * @return string
+     */
+    public function toString(): string
+    {
+        return $this->render();
+    }
+
+    /**
      * Magic string converter to enable
      * converting view objects to string
      *
@@ -127,6 +133,6 @@ class View
      */
     public function __toString(): string
     {
-        return $this->toString();
+        return $this->render();
     }
 }
