@@ -112,12 +112,12 @@ return [
     },
     'kirbytext' => function () {
         return $this->value(function($value) {
-            return App::instance()->kirbytext()->parse((string)$value);
+            return App::instance()->component('kirbytext')->parse((string)$value);
         })->markdown();
     },
     'kirbytags' => function () {
         return $this->value(function ($value) {
-            return App::instance()->kirbytext()->parse((string)$value);
+            return App::instance()->component('kirbytext')->parse((string)$value);
         });
     },
     'lower' => function () {
@@ -127,7 +127,7 @@ return [
     },
     'markdown' => function () {
         return $this->value(function($value) {
-            return App::instance()->markdown()->parse((string)$value);
+            return App::instance()->component('markdown')->parse((string)$value);
         });
     },
     'or' => function ($fallback = null) {
