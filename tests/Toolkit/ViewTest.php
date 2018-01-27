@@ -9,28 +9,9 @@ class ViewTest extends TestCase
 
     const FIXTURES = __DIR__ . '/fixtures';
 
-    protected function setUp()
-    {
-        View::globals([]);
-    }
-
     protected function _view(array $data = [])
     {
         return new View(static::FIXTURES . '/view.php', $data);
-    }
-
-    public function testGlobals()
-    {
-
-        $this->assertEquals([], View::globals());
-
-        View::globals(['test']);
-
-        $this->assertEquals(['test'], View::globals());
-
-        View::globals([]);
-
-        $this->assertEquals([], View::globals());
     }
 
     public function testFile()
