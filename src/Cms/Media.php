@@ -52,7 +52,7 @@ class Media extends Object
      * @param array $attributes
      * @return array
      */
-    public function create(Object $model, Object $file, array $attributes = []): array
+    public function create(Object $model, Object $file, array $attributes = [])
     {
 
         if ($file->exists() === false) {
@@ -88,6 +88,16 @@ class Media extends Object
             'original' => $file
         ]);
 
+    }
+
+    /**
+     * Returns the Darkroom instance
+     *
+     * @return Darkroom
+     */
+    public function darkroom()
+    {
+        return $this->darkroom;
     }
 
     /**
