@@ -96,7 +96,7 @@ class File extends Model
             return $this->asset()->$method(...$arguments);
         }
 
-        return parent::__call($method, $arguments);
+        return $this->content()->get($method, ...$arguments);
     }
 
     /**
