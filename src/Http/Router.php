@@ -5,7 +5,6 @@ namespace Kirby\Http;
 use Exception;
 use Kirby\Http\Router\Route;
 use Kirby\Http\Router\Result;
-use Kirby\Toolkit\DI\Singletons;
 
 /**
  * @package   Kirby Http
@@ -16,16 +15,6 @@ use Kirby\Toolkit\DI\Singletons;
  */
 class Router
 {
-
-    /**
-     * A registry for Router dependencies
-     * You can set dependencies, which can
-     * later be injected automatically into
-     * the Route action by using type hints.
-     *
-     * @var Singletons
-     */
-    protected $dependencies;
 
     /**
      * All registered routes, sorted by
@@ -55,22 +44,7 @@ class Router
      */
     public function __construct(array $routes = [])
     {
-        $this->dependencies = new Singletons;
         $this->register($routes);
-    }
-
-    /**
-     * Registers a new dependency, to inject
-     * later into the Route action.
-     *
-     * @param  string         $name
-     * @param  string|Closure $dependency
-     * @return Router
-     */
-    public function dependency(string $name, $dependency): self
-    {
-        $this->dependencies->set($name, $dependency);
-        return $this;
     }
 
     /**
@@ -145,6 +119,6 @@ class Router
     public function call(string $path = '/', string $method = 'GET')
     {
         $result = $this->find($path, $method);
-        return $this->dependencies->call($result->action(), $result->arguments(), $result);
+        return $result->action()->call($result, ...$result->arguments());
     }
 }
