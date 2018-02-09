@@ -50,7 +50,7 @@ trait HasSiblings {
      */
     public function prev()
     {
-        return $this->collection()->slice($this->indexOf() - 1);
+        return $this->collection()->nth($this->indexOf() - 1);
     }
 
     /**

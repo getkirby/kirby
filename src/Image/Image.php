@@ -42,7 +42,7 @@ class Image extends File
      * @param string       $root
      * @param string|null  $url
      */
-    public function __construct(string $root, string $url = null)
+    public function __construct(string $root = null, string $url = null)
     {
         parent::__construct($root);
         $this->url = $url;
@@ -53,7 +53,7 @@ class Image extends File
      *
      * @return string
      */
-    public function url(): string
+    public function url()
     {
         return $this->url;
     }

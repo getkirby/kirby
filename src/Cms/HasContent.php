@@ -24,7 +24,7 @@ trait HasContent
      */
     public function __call(string $method, array $arguments = [])
     {
-        return $this->content()->get($method, ...$arguments);
+        return $this->content()->get($method, $arguments);
     }
 
     /**
@@ -36,6 +36,20 @@ trait HasContent
     protected function convertContentToArray(): array
     {
         return $this->content()->toArray();
+    }
+
+    /**
+     * Returns the content
+     *
+     * @return Content
+     */
+    public function content(): Content
+    {
+        if (is_a($this->content, Content::class) === true) {
+            return $this->content;
+        }
+
+        return $this->setContent($this->store()->content())->content();
     }
 
     /**
@@ -51,17 +65,23 @@ trait HasContent
     }
 
     /**
-     * Returns the content
+     * Returns all content validation errors
      *
-     * @return Content
+     * @return array
      */
-    public function content(): Content
+    public function errors(): array
     {
-        if (is_a($this->content, Content::class) === true) {
-            return $this->content;
-        }
+        return Form::for($this)->errors();
+    }
 
-        return $this->content = new Content([]);
+    /**
+     * Checks if the model data has any errors
+     *
+     * @return boolean
+     */
+    public function isValid(): bool
+    {
+        return Form::for($this)->hasErrors() === false;
     }
 
     /**
@@ -70,11 +90,41 @@ trait HasContent
      * @param Content|null $content
      * @return self
      */
-    protected function setContent(Content $content = null): self
+    protected function setContent(array $content = null): self
     {
+        if ($content !== null) {
+            $content = new Content($content, $this);
+        }
+
         $this->content = $content;
-        $this->content->setParent($this);
         return $this;
+    }
+
+    /**
+     * Updates User data
+     *
+     * @param array $content
+     * @return self
+     */
+    public function update(array $input = null): self
+    {
+        $form = Form::for($this, [
+            'values' => $input
+        ]);
+
+        // validate the input
+        $form->isValid();
+
+        // get the data values array
+        $values = $form->values();
+
+        // validate those values additionally with the model rules
+        $this->rules()->update($this, $values, $form);
+
+        // store and pass the form as second param
+        // to make use of the Form::stringValues() method
+        // if necessary
+        return $this->store()->update($values, $form);
     }
 
 }

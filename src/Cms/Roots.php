@@ -68,6 +68,11 @@ class Roots extends Ingredients
         return $this->loaders = $this->loaders ?? $this->kirby() . '/loaders';
     }
 
+    public function locales(): string
+    {
+        return $this->locales = $this->locales ?? $this->kirby() . '/locales';
+    }
+
     public function media(): string
     {
         return $this->media = $this->media ?? $this->index() . '/media';

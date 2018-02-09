@@ -14,10 +14,6 @@ class PageCollectionTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The plugin "site" does not exist
-     */
     public function testDefaultCollectionWithoutSite()
     {
         $page = new Page(['id' =>  'test']);
@@ -53,7 +49,7 @@ class PageCollectionTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setCollection() must be an instance of Kirby\Cms\Pages or null, string given
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Model::setCollection() must be an instance of Kirby\Cms\Collection or null, string given
      */
     public function testInvalidCollection()
     {

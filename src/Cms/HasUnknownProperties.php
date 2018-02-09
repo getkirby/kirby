@@ -17,8 +17,8 @@ trait HasUnknownProperties
     protected $unknownProperties = [];
 
     /**
-     * Extended magic method caller
-     * to also enable getting unexpected attributes
+     * Magic method caller
+     * to enable getting unexpected attributes
      *
      * @param string $method
      * @param array $arguments
@@ -26,11 +26,7 @@ trait HasUnknownProperties
      */
     public function __call(string $method, array $arguments = [])
     {
-        try {
-            return parent::__call($method, $arguments);
-        } catch (Exception $e) {
-            return $this->getUnknownProperty($method);
-        }
+        return $this->getUnknownProperty($method);
     }
 
     /**

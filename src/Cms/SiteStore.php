@@ -3,78 +3,132 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Data\Data;
+use Kirby\Base\Base;
+use Kirby\Util\Dir;
 
-class SiteStore
+class SiteStore extends SiteStoreDefault
 {
 
-    protected $folder;
-    protected $site;
+    protected $base;
 
-    public function __construct(Site $site)
+    public function base()
     {
-        $this->folder = new Folder((string)$site->root());
-        $this->site   = $site;
-    }
-
-    public function blueprint(): SiteBlueprint
-    {
-        return SiteBlueprint::load(App::instance()->root('blueprints') . '/site.yml');
-    }
-
-    public function children(): Pages
-    {
-        $url      = $this->site->url();
-        $children = [];
-
-        foreach ($this->folder->folders() as $info) {
-            $children[] = Page::factory([
-                'id'   => $info['slug'],
-                'url'  => $url . '/' . $info['slug'],
-                'root' => $info['root'],
-                'num'  => $info['num'],
-                'site' => $this->site
-            ]);
+        if (is_a($this->base, Base::class) === true) {
+            return $this->base;
         }
 
-        return new Pages($children, $this);
+        return $this->base = new Base([
+            'extension' => 'txt',
+            'root'      => $this->kirby()->root('content'),
+            'type'      => 'site',
+        ]);
     }
 
-    public function content(): Content
+    public function children()
     {
-        $content = Data::read($this->site->root() . '/site.txt');
-        return new Content($content, $this);
+
+        $site      = $this->site();
+        $url       = $site->url();
+        $children  = new Pages([], $site);
+        $extension = $this->base()->extension();
+
+        foreach ($this->base()->children() as $slug => $props) {
+
+            $props['slug']  = $slug;
+            $props['url']   = $url . '/' . $slug;
+            $props['site']  = $site;
+            $props['store'] = PageStore::class;
+
+            $page = Page::factory($props);
+
+            $children->set($page->id(), $page);
+
+        }
+
+        return $children;
+
+    }
+
+    public function content()
+    {
+        return $this->base()->read();
+    }
+
+    public function createFile(File $file, string $source)
+    {
+        $file = $file->clone([
+            'store' => FileStore::class
+        ]);
+
+        return $file->create($source);
+    }
+
+    public function createChild(Page $child)
+    {
+
+        if ($this->exists() === false) {
+            return $child;
+        }
+
+        $root = $this->root() . '/' . $child->slug();
+
+        // create the new page directory
+        if (Dir::make($root) !== true) {
+            throw new Exception('The page directory cannot be created');
+        }
+
+        // attach the store
+        $child = $child->clone([
+            'store' => PageStore::class
+        ]);
+
+        // write the content file
+        return $child->update();
     }
 
     public function exists(): bool
     {
-        return $this->folder->exists();
+        return is_dir($this->root()) === true;
     }
 
-    public function files(): Files
+    public function files()
     {
-        $url    = App::instance()->media()->url($this->site);
-        $files  = [];
 
-        foreach ($this->folder->files() as $info) {
-            $files[] = new File([
-                'id'     => $info['filename'],
-                'url'    => $url . '/' . $info['filename'],
-                'root'   => $info['root'],
-                'parent' => $this->site
+        $base      = $this->base();
+        $site      = $this->site();
+        $root      = $base->root();
+        $extension = $base->extension();
+        $url       = $site->kirby()->media()->url($site);
+        $files     = new Files([], $site);
+
+        foreach ($this->base()->files() as $filename => $props) {
+
+            $file = new File([
+                'filename' => $filename,
+                'parent'   => $site,
+                'store'    => FileStore::class
             ]);
+
+            $files->set($file->id(), $file);
+
         }
 
-        return new Files($files, $this);
+        return $files;
     }
 
-    public function update(): bool
+    public function id()
     {
-        $content = $this->site->content()->update($content);
+        return $this->base()->root();
+    }
 
-        Data::write($this->site->root() . '/site.txt', $content->toArray());
+    public function root()
+    {
+        return $this->base()->root();
+    }
 
-        return $this->site->setContent($content);
+    public function site()
+    {
+        return $this->model;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Exception;
+use Kirby\Http\Router\Route;
 use Kirby\Http\Router\Result;
 use Kirby\Toolkit\DI\Singletons;
 
@@ -80,7 +81,7 @@ class Router
      */
     public function register($route): self
     {
-        if (is_a($route, 'Kirby\Http\Router\Route') === true) {
+        if (is_a($route, Route::class) === true) {
             foreach ($route->method() as $method) {
                 foreach ($route->pattern() as $pattern) {
                     $this->routes[$method][$pattern] = $route;
@@ -90,8 +91,12 @@ class Router
         }
 
         if (is_array($route) === true) {
-            foreach ($route as $p) {
-                $this->register($p);
+            foreach ($route as $r) {
+                if (is_a($r, Route::class) === true) {
+                    $this->register($r);
+                } else {
+                    $this->register(new Route($r['pattern'], $r['method'] ?? 'GET', $r['action'], $r));
+                }
             }
             return $this;
         }

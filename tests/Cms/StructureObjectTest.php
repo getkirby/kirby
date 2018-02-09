@@ -17,23 +17,23 @@ class StructureObjectTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "id" property must be of type "string"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\StructureObject::setId() must be of the type string, array given
      */
     public function testInvalidId()
     {
         $object = new StructureObject([
-            'id' => false
+            'id' => []
         ]);
     }
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "id" property is required
+     * @expectedExceptionMessage Missing "id" property
      */
     public function testMissingId()
     {
-        $object = new StructureObject();
+        $object = new StructureObject(['foo' => 'bar']);
     }
 
     public function testCollection()
@@ -48,8 +48,8 @@ class StructureObjectTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "collection" property must be of type "Kirby\Cms\Structure"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Model::setCollection() must be an instance of Kirby\Cms\Collection or null, boolean given
      */
     public function testInvalidCollection()
     {
@@ -80,8 +80,8 @@ class StructureObjectTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "content" property must be of type "Kirby\Cms\Content"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\StructureObject::setContent() must be an instance of Kirby\Cms\Content, boolean given
      */
     public function testInvalidContent()
     {
@@ -110,7 +110,7 @@ class StructureObjectTest extends TestCase
 
     public function testContentFieldsParent()
     {
-        $parent = new Object();
+        $parent = new Page(['id' => 'test']);
         $object = new StructureObject([
             'id'      => 'test',
             'content' => new Content([
@@ -125,7 +125,7 @@ class StructureObjectTest extends TestCase
 
     public function testParent()
     {
-        $parent = new Object();
+        $parent = new Page(['id' => 'test']);
         $object = new StructureObject([
             'id'     => 'test',
             'parent' => $parent
@@ -135,8 +135,8 @@ class StructureObjectTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "parent" property must be of type "Kirby\Cms\Object"
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\StructureObject::setParent() must be an instance of Kirby\Cms\Model, boolean given
      */
     public function testInvalidParent()
     {
@@ -153,12 +153,18 @@ class StructureObjectTest extends TestCase
             'text'  => 'Text'
         ];
 
+        $expected = [
+            'id'    => 'test',
+            'text'  => 'Text',
+            'title' => 'Title',
+        ];
+
         $object = new StructureObject([
             'id'      => 'test',
             'content' => new Content($content)
         ]);
 
-        $this->assertEquals($content, $object->toArray());
+        $this->assertEquals($expected, $object->toArray());
     }
 
 }

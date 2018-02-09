@@ -31,7 +31,7 @@ class StructureTest extends TestCase
 
     public function testParent()
     {
-        $parent    = new Object();
+        $parent    = new Page(['id' => 'test']);
         $structure = new Structure([
             ['test' => 'Test']
         ], $parent);
@@ -46,9 +46,14 @@ class StructureTest extends TestCase
             ['name' => 'B']
         ];
 
+        $expected = [
+            ['id' => 0, 'name' => 'A'],
+            ['id' => 1, 'name' => 'B'],
+        ];
+
         $structure = new Structure($data);
 
-        $this->assertEquals($data, $structure->toArray());
+        $this->assertEquals($expected, $structure->toArray());
 
     }
 

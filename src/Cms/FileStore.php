@@ -4,106 +4,143 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Data\Data;
+use Kirby\Image\Image;
+use Kirby\Util\F;
 
-class FileStore
+class FileStore extends FileStoreDefault
 {
 
-    protected $file;
+    protected $root;
 
-    public function __construct(File $file)
+    public function asset()
     {
-        $this->file = $file;
+        return new Image($this->root(), $this->file()->url());
     }
 
-    public function content(): Content
+    public function changeName(string $name): File
     {
-        $content = Data::read($this->file->root() . '.txt');
-        return new Content($content, $this->file);
+        $oldFile  = $this->file();
+        $oldRoot  = $this->root();
+        $oldStore = $this->storeFile();
+
+        // create a file object clone with the new name
+        $newRoot  = dirname($oldRoot) . '/' . $newFilename = $name . '.' . $oldFile->extension();
+        $newStore = $newRoot . '.' . $this->extension();
+        $newFile  = $this->file()->clone([
+            'filename' => $newFilename,
+        ]);
+
+        if ($oldFile->exists() === false) {
+            return $newFile;
+        }
+
+        if ($newFile->exists() === true) {
+            throw new Exception('The new file exists and cannot be overwritten');
+        }
+
+        // remove all public versions
+        $this->media()->delete($oldFile->parent(), $oldFile);
+
+        // rename the main file
+        F::move($oldRoot, $newRoot);
+
+        // rename the store file
+        F::move($oldStore, $newStore);
+
+        // create a new public version
+        $this->media()->create($newFile->parent(), $newFile);
+
+        return $newFile;
+    }
+
+    public function content()
+    {
+        return Data::read($this->storeFile());
+    }
+
+    public function create(string $source)
+    {
+        // delete all public versions
+        $this->media()->delete($this->file()->parent(), $this->file());
+
+        // overwrite the original
+        if (F::copy($source, $this->root()) !== true) {
+            throw new Exception('The file could not be created');
+        }
+
+        // create a new public file
+        $this->media()->create($this->file()->parent(), $this->file());
+
+        // return a fresh clone
+        return $this->file()->clone();
     }
 
     public function delete(): bool
     {
-        // delete the meta file first
-        if (file_exists($txt = $this->file->root() . '.txt') === true) {
-            unlink($txt);
-        }
-
         // delete all public versions
-        App::instance()->media()->delete($this->file->model(), $this->file);
+        $this->media()->delete($this->file()->parent(), $this->file());
 
-        // delete the real thing
-        if (file_exists($this->file->root()) === true) {
-            unlink($this->file->root()) !== false;
-        }
+        F::remove($this->storeFile());
+        F::remove($this->root());
 
         return true;
     }
 
-    public function rename(string $name): File
+    public function exists(): bool
     {
-        $media      = App::instance()->media();
-        $content    = $this->file->content()->toArray();
-        $filename   = $name . '.' . $this->file->extension();
-        $props      = [
-            'id'   => $id = ltrim($this->file->model()->id() . '/' . $filename, '/'),
-            'root' => $this->file->model()->root() . '/' . $filename,
-            'url'  => $this->this->media()->url($this->file->model()) . '/' . $filename
-        ];
+        return is_file(realpath($this->root())) === true;
+    }
 
-        // remove the content file first
-        if (file_exists($txt = $this->file->root() . '.txt')) {
-            unlink($txt);
+    public function extension(): string
+    {
+        return 'txt';
+    }
+
+    public function replace(string $source)
+    {
+        return $this->create($source);
+    }
+
+    public function root(): string
+    {
+        if (is_string($this->root) === true) {
+            return $this->root;
         }
 
-        // remove all public versions
-        $media->delete($this->file->model(), $this->file);
+        $file   = $this->model();
+        $parent = $file->parent();
 
-        // rename the file
-        rename($this->file->root(), $props['root']);
+        if (is_a($parent, Page::class) === true) {
+            return $this->root = $this->kirby()->root('content') . '/' . $parent->diruri() . '/' . $file->filename();
+        }
 
-        // create a clean file object for it
-        $this->file = $this->file->clone($props);
+        if (is_a($parent, Site::class) === true) {
+            return $this->root = $this->kirby()->root('content') . '/' . $file->filename();
+        }
 
-        // create a new public version
-        $media->create($this->file->model(), $this->file);
+        throw new Exception('Unexpected model type');
+    }
 
-        // store the content in a fresh content file
+    public function storeFile(): string
+    {
+        return $this->root() . '.' . $this->extension();
+    }
+
+    public function update(array $content = [])
+    {
+        $file = parent::update($content);
+
+        if ($this->exists() === false) {
+            return $file;
+        }
+
         if (empty($content) === false) {
-            $this->file->update($content);
+            if (Data::write($this->storeFile(), $content) !== true) {
+                throw new Exception('The file content could not be updated');
+            }
         }
 
-        return $this->file;
-    }
-
-    public function replace(string $source): File
-    {
-        if (file_exists($source) === false) {
-            throw new Exception(sprintf('The source file "%s" does not exist', $source));
-        }
-
-        $media = App::instance()->media();
-
-        // create a temporary image object to run validations
-        $this->rules()->check('file.replace', $this->file, new Image($source, '/tmp'));
-
-        // delete all public versions
-        $media->delete($this->file->model(), $this->file);
-
-        // overwrite the original
-        copy($source, $this->file->root());
-
-        // create a new public file
-        $media->create($this->file->model(), $file);
-
-        return $this->file;
-    }
-
-    public function update(array $content = []): File
-    {
-        $content = $this->file->content()->update($content);
-        Data::write($this->file->root() . '.txt', $content->toArray());
-
-        return $this->file->setContent($content);
+        return $file;
     }
 
 }

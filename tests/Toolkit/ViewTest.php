@@ -27,6 +27,7 @@ class ViewTest extends TestCase
     public function testWithMissingFile()
     {
         $view = new View('invalid-file.php');
+        $view->render();
     }
 
     public function testData()

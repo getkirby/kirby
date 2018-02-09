@@ -201,9 +201,9 @@ class Content
      * @param  array $content
      * @return self
      */
-    public function update(array $content = []): self
+    public function update(array $content = null): self
     {
-        $this->data = array_merge($this->data, $content);
+        $this->data = array_merge($this->data, (array)$content);
         return $this;
     }
 

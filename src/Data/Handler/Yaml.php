@@ -23,7 +23,7 @@ class Yaml extends Handler
      * @param  array  $data
      * @return string
      */
-    public static function encode(array $data): string
+    public static function encode(array $data = []): string
     {
         return Spyc::YAMLDump($data, $indent = false, $wordwrap = false, $no_opening_dashes = true);
     }
@@ -34,7 +34,7 @@ class Yaml extends Handler
      * @param  string $yaml
      * @return array
      */
-    public static function decode(string $yaml): array
+    public static function decode(string $yaml = null): array
     {
         return (array)Spyc::YAMLLoadString($yaml);
     }

@@ -12,9 +12,9 @@ class QueryTestUser
 
     public function profiles()
     {
-        return new Object([
+        return [
             'twitter' => '@homer'
-        ]);
+        ];
     }
 
     public function says(...$message)

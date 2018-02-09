@@ -25,10 +25,11 @@
         assets: '<?= $kirby->url('panel') ?>/assets',
         index:  '<?= $kirby->url() ?>',
         // TODO: enable/disable via options
-        debug:  true
+        debug:  false
       }
     };
   </script>
+
   <script src="<?= $kirby->url('panel') ?>/assets/js/vendor.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/registry.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/ui.js"></script>

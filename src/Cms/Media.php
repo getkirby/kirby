@@ -156,18 +156,15 @@ class Media extends Object
      */
     public function path(Object $model, Object $file = null, array $attributes = []): string
     {
-        switch (get_class($model)) {
-            case Page::class:
-                $path = 'pages/' . $model->id();
-                break;
-            case Site::class:
-                $path = 'site';
-                break;
-            case User::class:
-                $path = 'users/' . $model->hash();
-                break;
-            default:
-                throw new Exception('Invalid media model');
+
+        if (is_a($model, Page::class) === true) {
+            $path = 'pages/' . $model->id();
+        } elseif (is_a($model, Site::class) === true) {
+            $path = 'site';
+        } elseif (is_a($model, User::class) === true) {
+            $path = 'users/' . $model->id();
+        } else {
+            throw new Exception('Invalid media model');
         }
 
         if ($file !== null) {
@@ -196,7 +193,7 @@ class Media extends Object
                 $file  = $model->file($path);
                 break;
             case 'users':
-                $model = $app->users()->findBy('hash', dirname($path));
+                $model = $app->users()->findBy('id', dirname($path));
                 $file  = $model->avatar();
                 break;
         }

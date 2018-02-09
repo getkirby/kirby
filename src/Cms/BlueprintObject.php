@@ -3,17 +3,37 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Util\I18n;
 
-class BlueprintObject extends Model
+class BlueprintObject extends Object
 {
 
-    use HasI18n;
+    use I18n;
+    use HasModel;
 
     protected static $mixins = [];
 
+    /**
+     * The parent collection
+     *
+     * @var Collection
+     */
+    protected $collection;
+
     public function __construct(array $props = [])
     {
-        parent::__construct($this->extend($props));
+        $props = $this->extend($props);
+        $this->setProperties($props);
+    }
+
+    /**
+     * Returns the default parent collection
+     *
+     * @return Collection
+     */
+    protected function collection()
+    {
+        return $this->collection;
     }
 
     protected function extend($props)
@@ -47,6 +67,20 @@ class BlueprintObject extends Model
         }
 
         return static::$mixins = $mixins;
+    }
+
+    /**
+     * Sets the parent Collection object
+     * This is used to handle traversal methods
+     * like next, prev, etc.
+     *
+     * @param Collection|null $collection
+     * @return self
+     */
+    public function setCollection(Collection $collection = null)
+    {
+        $this->collection = $collection;
+        return $this;
     }
 
     public function toLayout()

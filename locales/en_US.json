@@ -1,0 +1,45 @@
+{
+    "locale.direction": "ltr",
+    "locale.name": "English",
+    "locale.translator": "Kirby Team",
+
+    "upload": "Upload",
+    "import": "Import",
+    "change": "Change",
+    "copy": "Copy",
+    "delete": "Delete",
+    "search": "Search",
+
+    "login": "Login",
+    "logout": "Logout",
+
+    "dashboard": "Dashboard",
+    "site": "Site",
+    "settings": "Settings",
+    "users": "Users",
+    "account": "Your account",
+
+    "page.list": "Page List",
+    "page.title": "Title",
+    "page.preview": "Preview",
+    "page.template.change": "Change template",
+    "page.url.change": "Change URL",
+
+    "user": "User",
+    "user.previous": "Previous User",
+    "user.next": "Next User",
+    "user.add": "Add a new user",
+    "user.firstname": "First name",
+    "user.lastname": "Last name",
+    "user.image": "Picture",
+    "user.role": "Role",
+    "user.language": "Language",
+
+    "email": "Email",
+    "email.placeholder": "mail@example.com",
+    "password": "Password",
+    "website": "Website",
+
+    "notification.welcome": "Welcome {name}",
+    "notification.image.deleted": "The image has been deleted"
+}

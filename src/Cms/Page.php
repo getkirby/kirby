@@ -43,7 +43,6 @@ class Page extends Model
         'id',
         'num',
         'parent',
-        'root',
         'slug',
         'template',
         'uid',
@@ -56,6 +55,20 @@ class Page extends Model
      * @var PageBlueprint
      */
     protected $blueprint;
+
+    /**
+     * Sorting number + slug
+     *
+     * @var string
+     */
+    protected $dirname;
+
+    /**
+     * Path of dirnames
+     *
+     * @var string
+     */
+    protected $diruri;
 
     /**
      * The Page id
@@ -79,18 +92,18 @@ class Page extends Model
     protected $parent;
 
     /**
-     * The root to the page directory
-     *
-     * @var string|null
-     */
-    protected $root;
-
-    /**
      * The parent Site object
      *
      * @var Site|null
      */
     protected $site;
+
+    /**
+     * The URL-appendix aka slug
+     *
+     * @var string
+     */
+    protected $slug;
 
     /**
      * The template name
@@ -113,22 +126,14 @@ class Page extends Model
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, ['id']);
-        $this->setOptionalProperties($props, [
-            'blueprint',
-            'children',
-            'collection',
-            'content',
-            'files',
-            'num',
-            'kirby',
-            'parent',
-            'root',
-            'site',
-            'template',
-            'url'
-        ]);
+        $this->setProperties($props);
 
+        // set the id, depending on the parent
+        if ($parent = $this->parent()) {
+            $this->id = $parent->id() . '/' . $this->slug();
+        } else {
+            $this->id = $this->slug();
+        }
     }
 
     /**
@@ -144,6 +149,23 @@ class Page extends Model
     }
 
     /**
+     * Changes the sorting number
+     *
+     * @param int $num
+     * @return self
+     */
+    public function changeNum(int $num = null): self
+    {
+        if ($num === $this->num()) {
+            return $this;
+        }
+
+        $this->rules()->changeNum($this, $num);
+
+        return $this->store()->changeNum($num);
+    }
+
+    /**
      * Changes the slug/uid of the page
      *
      * @param string $slug
@@ -151,8 +173,11 @@ class Page extends Model
      */
     public function changeSlug(string $slug): self
     {
-        $this->rules()->check('page.change.slug', $this, $slug);
-        $this->perms()->check('page.change.slug', $this, $slug);
+        if ($slug === $this->slug()) {
+            return $this;
+        }
+
+        $this->rules()->changeSlug($this, $slug);
 
         return $this->store()->changeSlug($slug);
     }
@@ -165,25 +190,13 @@ class Page extends Model
      */
     public function changeTemplate(string $template): self
     {
-        $this->rules()->check('page.change.template', $this, $template);
-        $this->perms()->check('page.change.template', $this, $template);
+        if ($template === $this->template()) {
+            return $this;
+        }
+
+        $this->rules()->changeTemplate($this, $template);
 
         return $this->store()->changeTemplate($template);
-    }
-
-    /**
-     * Changes the visibility/status of the page
-     *
-     * @param string $status
-     * @param int $position
-     * @return self
-     */
-    public function changeStatus(string $status, int $position = null): self
-    {
-        $this->rules()->check('page.change.status', $this, $status, $position);
-        $this->perms()->check('page.change.status', $this, $status, $position);
-
-        return $this->store()->changeStatus($status, $position);
     }
 
     /**
@@ -199,24 +212,6 @@ class Page extends Model
         }
 
         return $this->children = $this->store()->children();
-    }
-
-    /**
-     * Clones the current page object with basic
-     * initial values for the clone
-     *
-     * @param array $props
-     * @return self
-     */
-    public function clone(array $props = []): self
-    {
-        return new static(array_merge([
-            'id'     => $this->id(),
-            'parent' => $this->parent(),
-            'root'   => $this->root(),
-            'site'   => $this->site(),
-            'url'    => $this->url(),
-        ], $props));
     }
 
     /**
@@ -242,63 +237,99 @@ class Page extends Model
     }
 
     /**
-     * Returns the Content class with
-     * all ContentFields for the page
-     *
-     * @return Content
-     */
-    public function content(): Content
-    {
-        if (is_a($this->content, Content::class) === true) {
-            return $this->content;
-        }
-
-        return $this->content = $this->store()->content();
-    }
-
-    /**
-     * Creates a new page
+     * Creates a child of the current page
      *
      * @param array $props
      * @return self
      */
-    public static function create(array $props): self
+    public function createChild(array $props): self
     {
-        $defaults = [
-            'parent'   => null,
-            'template' => 'default',
-            'content'  => [],
-            'slug'     => null
-        ];
+        $props['content'] = $props['content'] ?? [];
+        $props['url']     = null;
+        $props['num']     = null;
+        $props['parent']  = $this;
+        $props['site']    = $this->site();
+        $props['store']   = null;
 
-        $props = array_merge($defaults, $props);
+        // temporary child for validation
+        $child = Page::factory($props);
 
-        // convert all array items to variables
-        extract($props);
+        // validate the child
+        $this->rules()->createChild($this, $child);
 
-        if (empty($slug) === true) {
-            $slug = $content['title'] ?? uniqid();
-        }
+        return $this->store()->createChild($child);
+    }
 
-        $slug = Str::slug($slug);
+    public function createFile(string $source, array $props = [])
+    {
+        $props['filename'] = $props['filename'] ?? basename($source);
+        $props['parent']   = $this;
+        $props['store']    = null;
+        $props['url']      = null;
 
-        static::rules()->check('page.create', $parent, $slug, $template, $content);
-        static::perms()->check('page.create', $parent, $slug, $template, $content);
+        // temporary child for validation
+        $file = new File($props);
 
-        return static::store()->commit('page.create', $parent, $slug, $template, $content);
+        // validate the child
+        $this->rules()->createFile($this, $file);
+
+        return $this->store()->createFile($file, $source);
+    }
+
+    protected function defaultStore()
+    {
+        return PageStoreDefault::class;
     }
 
     /**
      * Deletes the page
      *
+     * @param bool $force
      * @return bool
      */
-    public function delete(): bool
+    public function delete(bool $force = false): bool
     {
-        $this->rules()->check('page.delete', $this);
-        $this->perms()->check('page.delete', $this);
+        $this->rules()->delete($this, $force);
+
+        // delete all files individually
+        foreach ($this->files() as $file) {
+            $file->delete();
+        }
+
+        // delete all children individually
+        foreach ($this->children() as $child) {
+            $child->delete(true);
+        }
 
         return $this->store()->delete();
+    }
+
+    /**
+     * Sorting number + Slug
+     *
+     * @return string
+     */
+    public function dirname(): string
+    {
+        return $this->num() !== null ? $this->num() . '.' . $this->slug() : $this->slug();
+    }
+
+    /**
+     * Sorting number + Slug
+     *
+     * @return string
+     */
+    public function diruri(): string
+    {
+        if (is_string($this->diruri) === true) {
+            return $this->diruri;
+        }
+
+        if ($parent = $this->parent()) {
+            return $this->diruri = $this->parent()->diruri() . '/' . $this->dirname();
+        }
+
+        return $this->diruri = $this->dirname();
     }
 
     /**
@@ -444,7 +475,11 @@ class Page extends Model
      */
     public function isErrorPage(): bool
     {
-        return $this->site()->errorPage()->is($this);
+        if ($errorPage = $this->site()->errorPage()) {
+            return $errorPage->is($this);
+        }
+
+        return false;
     }
 
     /**
@@ -454,7 +489,11 @@ class Page extends Model
      */
     public function isHomePage(): bool
     {
-        return $this->site()->homePage()->is($this);
+        if ($homePage = $this->site()->homePage()) {
+            return $homePage->is($this);
+        }
+
+        return false;
     }
 
     /**
@@ -487,6 +526,16 @@ class Page extends Model
     public function isVisible(): bool
     {
         return $this->num() !== null;
+    }
+
+    /**
+     * The page's base url for any files
+     *
+     * @return string
+     */
+    public function mediaUrl(): string
+    {
+        return $this->kirby()->url('media') . '/pages/' . $this->id();
     }
 
     /**
@@ -599,17 +648,19 @@ class Page extends Model
      */
     public function prevVisible()
     {
-        return $this->prevAll()->visible()->first();
+        return $this->prevAll()->visible()->last();
     }
 
     /**
-     * Returns the directory root
+     * Returns the PageRules class instance
+     * which is being used in various methods
+     * to check for valid actions and input.
      *
-     * @return string
+     * @return PageRules
      */
-    public function root()
+    protected function rules()
     {
-        return $this->root;
+        return new PageRules();
     }
 
     /**
@@ -625,30 +676,6 @@ class Page extends Model
     }
 
     /**
-     * Sets the Content object
-     *
-     * @param Content|null $content
-     * @return self
-     */
-    protected function setContent(Content $content = null): self
-    {
-        $this->content = $content;
-        return $this;
-    }
-
-    /**
-     * Sets the Page id
-     *
-     * @param string $id
-     * @return self
-     */
-    protected function setId(string $id): self
-    {
-        $this->id = trim($id, '/');
-        return $this;
-    }
-
-    /**
      * Sets the sorting number
      *
      * @param integer $num
@@ -656,7 +683,7 @@ class Page extends Model
      */
     protected function setNum(int $num = null): self
     {
-        $this->num = $num === null ?: intval($num);
+        $this->num = $num === null ? $num : intval($num);
         return $this;
     }
 
@@ -673,14 +700,14 @@ class Page extends Model
     }
 
     /**
-     * Sets the page directory
+     * Sets the required Page slug
      *
-     * @param string|null $root
+     * @param string $slug
      * @return self
      */
-    protected function setRoot(string $root = null): self
+    protected function setSlug(string $slug): self
     {
-        $this->root = $root;
+        $this->slug = Str::slug($slug);
         return $this;
     }
 
@@ -692,7 +719,7 @@ class Page extends Model
      */
     protected function setTemplate(string $template = null): self
     {
-        $this->template = $template;
+        $this->template = $template !== null ? Str::slug($template) : null;
         return $this;
     }
 
@@ -704,7 +731,11 @@ class Page extends Model
      */
     protected function setUrl(string $url = null): self
     {
-        $this->url = rtrim($url, '/');
+        if (is_string($url) === true) {
+            $url = rtrim($url, '/');
+        }
+
+        $this->url = $url;
         return $this;
     }
 
@@ -715,7 +746,7 @@ class Page extends Model
      */
     public function slug(): string
     {
-        return basename($this->id());
+        return $this->slug;
     }
 
     /**
@@ -729,13 +760,6 @@ class Page extends Model
         return $this->changeStatus('listed', $position);
     }
 
-    /**
-     * @return PageStore
-     */
-    public function store(): PageStore
-    {
-        return App::instance()->component('PageStore', $this);
-    }
 
     /**
      * Returns the template name
@@ -769,27 +793,21 @@ class Page extends Model
     }
 
     /**
-     * Updates the page content
-     *
-     * @param array $content
-     * @return self
-     */
-    public function update(array $content = []): self
-    {
-        $this->rules()->check('page.update', $this, $content);
-        $this->perms()->check('page.update', $this, $content);
-
-        return $this->store()->update($content);
-    }
-
-    /**
      * Returns the Url
      *
      * @return string
      */
     public function url(): string
     {
-        return $this->url ?? '/' . $this->id();
+        if (is_string($this->url) === true) {
+            return $this->url;
+        }
+
+        if ($parent = $this->parent()) {
+            return $this->url = $this->parent()->url() . '/' . $this->slug();
+        }
+
+        return $this->site()->url() . '/' . $this->slug();
     }
 
 }

@@ -7,7 +7,9 @@ use Exception;
 
 use Kirby\Toolkit\Url;
 use Kirby\Util\Controller;
+use Kirby\Util\F;
 use Kirby\Util\Factory;
+use Kirby\Util\Dir;
 
 class App extends Object
 {
@@ -130,6 +132,16 @@ class App extends Object
     }
 
     /**
+     * Returns all available locales
+     *
+     * @return Locales
+     */
+    public function locales()
+    {
+        return $this->component('locales');
+    }
+
+    /**
      * Returns the Media manager object
      *
      * @return Media
@@ -179,11 +191,7 @@ class App extends Object
         $path   = $path   ?? $this->path();
         $method = $method ?? $this->request()->method();
 
-        try {
-            return $this->component('response', $this->router()->call($path, $method));
-        } catch (Exception $e) {
-            return $this->component('response', $e);
-        }
+        return $this->component('response', $this->router()->call($path, $method));
     }
 
     /**
@@ -255,7 +263,6 @@ class App extends Object
      */
     protected function setComponents(array $components = []): self
     {
-
         $defaultComponentsCreator = include static::$root . '/config/components.php';
         $defaultComponentsConfig  = [];
 
@@ -335,14 +342,7 @@ class App extends Object
             return $this->site;
         }
 
-        $site = new Site([
-            'errorPageId' => 'error',
-            'homePageId'  => 'home',
-            'root'        => $this->root('content'),
-            'url'         => $this->url('index'),
-        ]);
-
-        return $this->setSite($site)->site();
+        return $this->site = $this->component('site');
     }
 
     /**
@@ -405,7 +405,7 @@ class App extends Object
      */
     public function users(): Users
     {
-        return new Users([]);
+        return $this->component('users');
     }
 
 }

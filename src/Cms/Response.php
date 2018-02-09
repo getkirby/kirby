@@ -9,7 +9,7 @@ use Kirby\Http\Response\Json;
 class Response extends BaseResponse
 {
 
-    public static function errorPage($data = [], $mime = 'text/html', $code = 404)
+    public static function errorPage($data = [], $contentType = 'html', $code = 404)
     {
         if ($code < 400 || $code > 600) {
             $code = 500;
@@ -25,7 +25,7 @@ class Response extends BaseResponse
             'errorType'    => null
         ], $data);
 
-        return static::page(App::instance()->site()->errorPage(), $data, $mime, $code);
+        return static::page(App::instance()->site()->errorPage(), $data, $contentType, $code);
     }
 
     public static function for($input)

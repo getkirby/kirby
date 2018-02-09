@@ -58,8 +58,7 @@ class BlueprintColumn extends BlueprintObject
         $props = BlueprintConverter::convertFieldsToSection($props);
 
         // properties
-        $this->setRequiredProperties($props, ['name', 'sections']);
-        $this->setOptionalProperties($props, ['id', 'width']);
+        $this->setProperties($props);
     }
 
     /**
@@ -101,10 +100,16 @@ class BlueprintColumn extends BlueprintObject
         $sections = new BlueprintCollection;
 
         foreach ($this->sections as $name => $props) {
+
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
-            $section = new BlueprintSection($props);
+
+            // pass down the model
+            $props['model'] = $this->model();
+
+            $section = BlueprintSection::factory($props);
             $sections->set($section->id(), $section);
+
         }
 
         return $this->sections = $sections;

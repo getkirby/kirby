@@ -20,9 +20,12 @@ class Folder extends BaseFolder
                 continue;
             }
 
-            if (preg_match('!^([0-9]+?)-(.*)$!', $basename, $matches)) {
-                $num  = intval($matches[1]);
-                $slug = $matches[2];
+            // find the first dot
+            $dot = strpos($basename, '.');
+
+            if ($dot !== false) {
+                $num  = intval(substr($basename, 0, $dot));
+                $slug = substr($basename, $dot + 1);
             } else {
                 $num  = null;
                 $slug = $basename;

@@ -123,7 +123,7 @@ class Str
      * @param  string  $allowed    List of all allowed characters (regex)
      * @return string              The safe string
      */
-    public static function slug(string $string, string $separator = null, string $allowed = null): string
+    public static function slug(string $string = null, string $separator = null, string $allowed = null): string
     {
         $separator = $separator ?? static::$defaults['slug']['separator'];
         $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
@@ -168,7 +168,7 @@ class Str
      * @param  int     $length
      * @return string
      */
-    public static function substr(string $string, int $start = 0, int $length = null): string
+    public static function substr(string $string = null, int $start = 0, int $length = null): string
     {
         return mb_substr($string, $start, $length, 'UTF-8');
     }
@@ -206,7 +206,7 @@ class Str
      * @param  string  $string
      * @return string
      */
-    public static function lower(string $string): string
+    public static function lower(string $string = null): string
     {
         return mb_strtolower($string, 'UTF-8');
     }
@@ -217,7 +217,7 @@ class Str
      * @param  string  $string
      * @return string
      */
-    public static function upper(string $string): string
+    public static function upper(string $string = null): string
     {
         return mb_strtoupper($string, 'UTF-8');
     }
@@ -228,7 +228,7 @@ class Str
      * @param  string  $string
      * @return int
      */
-    public static function length(string $string): int
+    public static function length(string $string = null): int
     {
         return mb_strlen($string, 'UTF-8');
     }
@@ -239,7 +239,7 @@ class Str
      * @param  string $string
      * @return string
      */
-    public static function ucfirst(string $string): string
+    public static function ucfirst(string $string = null): string
     {
         return static::upper(static::substr($string, 0, 1)) . static::lower(static::substr($string, 1));
     }
@@ -250,7 +250,7 @@ class Str
      * @param  string  $string
      * @return string
      */
-    public static function ucwords(string $string): string
+    public static function ucwords(string $string = null): string
     {
         return mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
     }

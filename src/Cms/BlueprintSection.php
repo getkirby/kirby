@@ -7,30 +7,6 @@ use Exception;
 class BlueprintSection extends BlueprintObject
 {
 
-    use HasUnknownProperties;
-
-    /**
-     * All properties that should be
-     * included in BlueprintSection::toArray
-     *
-     * @var array
-     */
-    protected static $toArray = [
-        'id',
-        'name',
-        'type'
-    ];
-
-    /**
-     * @var string
-     */
-    protected $id;
-
-    /**
-     * @var array|BlueprintCollection
-     */
-    protected $fields;
-
     /**
      * @var string
      */
@@ -49,44 +25,28 @@ class BlueprintSection extends BlueprintObject
     public function __construct(array $props)
     {
         $props = $this->extend($props);
-
-        $this->setRequiredProperties($props, ['name', 'type']);
-        $this->setOptionalProperties($props, ['fields', 'id']);
-        $this->setUnknownProperties($props);
+        $this->setProperties($props);
     }
 
     /**
-     * Returns a single field by name
+     * General factory for any section type
      *
-     * @param string $name
-     * @return BlueprintField|null
+     * @param array $props
+     * @return BlueprintSection
      */
-    public function field(string $name)
+    public static function factory(array $props)
     {
-        return $this->fields()->find($name);
-    }
-
-    /**
-     * Returns all fields in the section
-     *
-     * @return BlueprintCollection
-     */
-    public function fields(): BlueprintCollection
-    {
-        if (is_a($this->fields, BlueprintCollection::class) === true) {
-            return $this->fields;
+        if (isset($props['type']) === false) {
+            throw new Exception('Missing section type');
         }
 
-        $fields = new BlueprintCollection;
+        $className = __NAMESPACE__ . '\\Blueprint' . ucfirst($props['type']) . 'Section';
 
-        foreach ((array)$this->fields as $name => $props) {
-            // use the key as name if the name is not set
-            $props['name'] = $props['name'] ?? $name;
-            $field = new BlueprintField($props);
-            $fields->set($field->name(), $field);
+        if (class_exists($className) === false) {
+            throw new Exception(sprintf('Invalid section type: "%s"', $props['type']));
         }
 
-        return $this->fields = $fields;
+        return new $className($props);
     }
 
     /**
@@ -97,7 +57,32 @@ class BlueprintSection extends BlueprintObject
      */
     public function id(): string
     {
-        return $this->id ?? $this->name();
+        return $this->name();
+    }
+
+    /**
+     * Returns the simple name of the model type
+     *
+     * @param object|null $model
+     * @return string
+     */
+    public function modelType($model = null): string
+    {
+        $model = $model ?? $this->model();
+        $types = [
+            'page' => Page::class,
+            'site' => Site::class,
+            'file' => File::class,
+            'user' => User::class
+        ];
+
+        foreach ($types as $type => $className) {
+            if (is_a($model, $className) === true) {
+                return $type;
+            }
+        }
+
+        throw new Exception('Unsupported model type');
     }
 
     /**
@@ -110,36 +95,33 @@ class BlueprintSection extends BlueprintObject
         return $this->name;
     }
 
-    /**
-     * Gets the value of type
-     *
-     * @return string
-     */
-    public function type(): string
+    public function stringQuery(string $query, array $data = [])
     {
-        return $this->type;
+        return (new Query($query, $this->stringQueryData($data)))->result();
     }
 
-    /**
-     * Sets the value of id
-     *
-     * @return self
-     */
-    protected function setId($id = null): self
+    public function stringQueryData($data = []): array
     {
-        $this->id = $id;
-        return $this;
+        $model = $this->model();
+
+        if ($model === null) {
+            throw new Exception('Missing model');
+        }
+
+        $defaults = [
+            'site'  => $model->site(),
+            'kirby' => $model->kirby(),
+        ];
+
+        // inject the model with the simple model name
+        $defaults[$this->modelType()] = $model;
+
+        return array_merge($defaults, $data);
     }
 
-    /**
-     * Sets the fields
-     *
-     * @return self
-     */
-    protected function setFields(array $fields = []): self
+    public function stringTemplate(string $template = null, array $data = [])
     {
-        $this->fields = $fields;
-        return $this;
+        return (new Tempura($template, $this->stringQueryData($data)))->render();
     }
 
     /**
@@ -157,10 +139,10 @@ class BlueprintSection extends BlueprintObject
     /**
      * Sets the value of type
      *
-     * @param string|null $type
+     * @param string $type
      * @return  self
      */
-    protected function setType(string $type = null): self
+    protected function setType(string $type): self
     {
         $this->type = $type;
         return $this;
@@ -174,15 +156,17 @@ class BlueprintSection extends BlueprintObject
      */
     public function toArray(): array
     {
-        $array = parent::toArray();
+        return $this->propertiesToArray();
+    }
 
-        if ($this->type() === 'fields') {
-            $array['fields'] = $this->fields()->toArray();
-        }
-
-        ksort($array);
-
-        return $array;
+    /**
+     * Gets the value of type
+     *
+     * @return string
+     */
+    public function type(): string
+    {
+        return $this->type;
     }
 
     /**

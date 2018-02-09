@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Toolkit\V;
 
 /**
  * The User class represents
@@ -28,10 +29,9 @@ class User extends Model
     protected static $toArray = [
         'avatar',
         'content',
-        'hash',
+        'email',
         'id',
         'language',
-        'root',
         'role'
     ];
 
@@ -50,6 +50,13 @@ class User extends Model
     protected $blueprint;
 
     /**
+     * The user email
+     *
+     * @var string
+     */
+    protected $email;
+
+    /**
      * The user id
      *
      * @var string
@@ -57,11 +64,11 @@ class User extends Model
     protected $id;
 
     /**
-     * The absolute path to the user directory
+     * The user password
      *
      * @var string
      */
-    protected $root;
+    protected $password;
 
     /**
      * Creates a new User object
@@ -70,8 +77,16 @@ class User extends Model
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, ['id']);
-        $this->setOptionalProperties($props, ['avatar', 'blueprint', 'collection', 'content', 'root']);
+        $this->setRequiredProperties($props, ['email']);
+        $this->setOptionalProperties($props, [
+            'avatar',
+            'collection',
+            'content',
+            'language',
+            'password',
+            'role',
+            'store'
+        ]);
     }
 
     /**
@@ -93,13 +108,39 @@ class User extends Model
      *
      * @return UserBlueprint
      */
-    public function blueprint(): UserBlueprint
+    public function blueprint()
     {
         if (is_a($this->blueprint, Blueprint::class) === true) {
             return $this->blueprint;
         }
 
         return $this->blueprint = $this->store()->blueprint();
+    }
+
+    /**
+     * Changes the user email address
+     *
+     * @param string $email
+     * @return self
+     */
+    public function changeEmail(string $email): self
+    {
+        $this->rules()->changeEmail($this, $email);
+
+        return $this->store()->changeEmail($email);
+    }
+
+    /**
+     * Changes the user language
+     *
+     * @param string $language
+     * @return self
+     */
+    public function changeLanguage(string $language): self
+    {
+        $this->rules()->changeLanguage($this, $language);
+
+        return $this->store()->changeLanguage($language);
     }
 
     /**
@@ -110,8 +151,7 @@ class User extends Model
      */
     public function changePassword(string $password): self
     {
-        $this->rules()->check('user.change.password', $this, $password);
-        $this->perms()->check('user.change.password', $this, $password);
+        $this->rules()->changePassword($this, $password);
 
         return $this->store()->changePassword($password);
     }
@@ -124,8 +164,7 @@ class User extends Model
      */
     public function changeRole(string $role): self
     {
-        $this->rules()->check('user.change.role', $this, $role);
-        $this->perms()->check('user.change.role', $this, $role);
+        $this->rules()->changeRole($this, $role);
 
         return $this->store()->changeRole($role);
     }
@@ -141,7 +180,7 @@ class User extends Model
             return $this->collection;
         }
 
-        return $this->collection = App::instance()->users();
+        return $this->collection = $this->kirby()->users();
     }
 
     /**
@@ -156,18 +195,29 @@ class User extends Model
     }
 
     /**
-     * Static method to create new Users and
-     * return the User object
-     *
-     * @param  array $content
      * @return self
      */
-    public static function create(array $content = []): self
+    public function create(): self
     {
-        static::rules()->check('user.create', $content);
-        static::perms()->check('user.create', $content);
+        // stop if the user already exists
+        if ($this->exists() === true) {
+            throw new Exception('The user already exists');
+        }
 
-        return App::instance()->component('UsersStore')->create($content);
+        // form validation
+        $form = Form::for($this);
+        $form->isValid();
+
+        // rule validation
+        $this->rules()->create($this, $form);
+
+        // run the store action
+        return $this->store()->create($form);
+    }
+
+    protected function defaultStore()
+    {
+        return UserStoreDefault::class;
     }
 
     /**
@@ -177,37 +227,29 @@ class User extends Model
      */
     public function delete(): bool
     {
-        $this->rules()->check('user.delete', $this);
-        $this->perms()->check('user.delete', $this);
+        $this->rules()->delete($this);
 
         return $this->store()->delete();
     }
 
     /**
-     * Returns the User's content
-     *
-     * @return Content
-     */
-    public function content(): Content
-    {
-        if (is_a($this->content, Content::class) === true) {
-            return $this->content;
-        }
-
-        return $this->store()->content();
-    }
-
-    /**
-     * Returns the hashed id
-     * This is being used to create
-     * media Urls without exposing
-     * the email address for example
+     * Returns the user email address
      *
      * @return string
      */
-    public function hash(): string
+    public function email(): string
     {
-        return sha1($this->id());
+        return $this->email;
+    }
+
+    /**
+     * Checks if the user exists in the store
+     *
+     * @return boolean
+     */
+    public function exists(): bool
+    {
+        return $this->store()->exists();
     }
 
     /**
@@ -232,14 +274,64 @@ class User extends Model
     }
 
     /**
+     * Checks if the user is the last one
+     * with the admin role
+     *
+     * @return boolean
+     */
+    public function isLastAdmin(): bool
+    {
+        return $this->role() === 'admin' && $this->kirby()->users()->filterBy('role', 'admin')->count() <= 1;
+    }
+
+    /**
+     * Checks if the user is the last user
+     *
+     * @return boolean
+     */
+    public function isLastUser(): bool
+    {
+        return $this->kirby()->users()->count() === 1;
+    }
+
+    /**
      * Returns the user language
      *
      * @return string
      */
     public function language(): string
     {
-        $language = $this->content()->get('language')->toString();
-        return empty($language) === false ? $language : 'en';
+        return $this->language ?? $this->store()->language() ?? 'en_US';
+    }
+
+    /**
+     * Returns the media url for the user object
+     *
+     * @return string
+     */
+    public function mediaUrl(): string
+    {
+        return $this->kirby()->media()->url($this);
+    }
+
+    /**
+     * Returns the user's name
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->content()->get('name')->or($this->email())->value();
+    }
+
+    /**
+     * Returns the encrypted user password
+     *
+     * @return string
+     */
+    public function password()
+    {
+        return $this->password ?? $this->store()->password();
     }
 
     /**
@@ -249,18 +341,18 @@ class User extends Model
      */
     public function role(): string
     {
-        $role = $this->content()->get('role')->toString();
-        return empty($role) === false ? $role : 'visitor';
+        return $this->role ?? $this->store()->role() ?? 'visitor';
     }
 
     /**
-     * Returns the user directory root
+     * Returns the UserRules class to
+     * validate any important action.
      *
-     * @return string|null
+     * @return UserRules
      */
-    public function root()
+    protected function rules()
     {
-        return $this->root;
+        return new UserRules();
     }
 
     /**
@@ -277,61 +369,78 @@ class User extends Model
     }
 
     /**
-     * Sets the blueprint object
+     * Sets the user email
      *
-     * @param UserBlueprint $blueprint
+     * @param string $email
      * @return self
      */
-    protected function setBlueprint(UserBlueprint $blueprint = null): self
+    protected function setEmail(string $email): self
     {
-        $this->blueprint = $blueprint;
+        $email = strtolower(trim($email));
+
+        $this->email = $email;
+        $this->id    = sha1($this->email);
+
         return $this;
     }
 
     /**
-     * Sets the user id
+     * Sets the user language
      *
-     * @param string $id
+     * @param string $language
      * @return self
      */
-    protected function setId(string $id): self
+    protected function setLanguage(string $language): self
     {
-        $this->id = $id;
+        $this->language = trim($language);
+        return $this;
+    }
+
+    protected function setPassword(string $password = null): self
+    {
+        if ($password !== null) {
+
+            $info = password_get_info($password);
+
+            if ($info['algo'] === 0) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+            }
+
+        }
+
+        $this->password = $password;
         return $this;
     }
 
     /**
-     * Sets the user directory root
+     * Sets the user role
      *
-     * @param string $root
+     * @param string $role
      * @return self
      */
-    protected function setRoot(string $root = null): self
+    protected function setRole(string $role): self
     {
-        $this->root = $root;
+        $this->role = strtolower(trim($role));
         return $this;
     }
 
     /**
-     * @return UserStore
-     */
-    protected function store(): UserStore
-    {
-        return App::instance()->component('UserStore', $this);
-    }
-
-    /**
-     * Updates User data
+     * Compares the given password with the stored one
      *
-     * @param array $content
-     * @return self
+     * @param string $password
+     * @return boolean
      */
-    public function update(array $content = []): self
+    public function validatePassword(string $password): bool
     {
-        $this->rules()->check('user.update', $this, $content);
-        $this->perms()->check('user.update', $this, $content);
+        if (empty($this->password()) === true) {
+            throw new Exception('The user has no password');
+        }
 
-        return $this->store()->update($content);
+        if (password_verify($password, $this->password()) !== true) {
+            throw new Exception('Invalid password');
+        }
+
+        return true;
     }
 
 }

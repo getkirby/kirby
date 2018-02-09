@@ -3,6 +3,13 @@
 return function (Kirby\Cms\App $app) {
 
     return [
+        'Api' => [
+            'singleton' => true,
+            'type'      => Kirby\Api\Api::class,
+            'instance'  => function () {
+                return new Kirby\Api\Api(include __DIR__ . '/api.php');
+            }
+        ],
         'Darkroom' => [
             'singleton' => true,
             'type'      => Kirby\Image\Darkroom::class,
@@ -12,13 +19,6 @@ return function (Kirby\Cms\App $app) {
                 ]);
             }
         ],
-        'FileStore' => [
-            'singleton' => false,
-            'type'      => Kirby\Cms\FileStore::class,
-            'instance'  => function (Kirby\Cms\File $file) {
-                return new Kirby\Cms\FileStore($file);
-            }
-        ],
         'Kirbytext' => [
             'singleton' => true,
             'type'      => Kirby\Text\Tags::class,
@@ -26,6 +26,26 @@ return function (Kirby\Cms\App $app) {
                 return new Kirby\Text\Tags([
                     'breaks' => true
                 ]);
+            }
+        ],
+        'Locales' => [
+            'singleton' => true,
+            'type'      => Kirby\Cms\Locales::class,
+            'instance'  => function () use ($app) {
+
+                $locales = new Kirby\Cms\Locales();
+
+                foreach (Kirby\Util\Dir::read($app->root('locales')) as $file) {
+                    if (Kirby\Util\F::extension($file) !== 'json') {
+                        continue;
+                    }
+
+                    $locale = new Kirby\Cms\Locale(Kirby\Util\F::name($file));
+                    $locales->set($locale->id(), $locale);
+                }
+
+                return $locales;
+
             }
         ],
         'Markdown' => [
@@ -42,13 +62,6 @@ return function (Kirby\Cms\App $app) {
             'type'      => Kirby\Cms\Media::class,
             'instance'  => function (array $props) {
                 return new Kirby\Cms\Media($props);
-            }
-        ],
-        'PageStore' => [
-            'singleton' => false,
-            'type'      => Kirby\Cms\PageStore::class,
-            'instance'  => function (Kirby\Cms\Page $page) {
-                return new Kirby\Cms\PageStore($page);
             }
         ],
         'Pagination' => [
@@ -94,11 +107,16 @@ return function (Kirby\Cms\App $app) {
                 return new Kirby\Http\Server;
             }
         ],
-        'SiteStore' => [
-            'singleton' => false,
-            'type'      => Kirby\Cms\SiteStore::class,
-            'instance'  => function (Kirby\Cms\Site $site) {
-                return new Kirby\Cms\SiteStore($site);
+        'Site' => [
+            'singleton' => true,
+            'type'      => Kirby\Cms\Site::class,
+            'instance'  => function () use ($app) {
+                return new Kirby\Cms\Site([
+                    'errorPageId' => 'error',
+                    'homePageId'  => 'home',
+                    'url'         => $app->url('index'),
+                    'store'       => Kirby\Cms\SiteStore::class,
+                ]);
             }
         ],
         'SmartyPants' => [
@@ -122,13 +140,32 @@ return function (Kirby\Cms\App $app) {
                 return new Kirby\Cms\Template($name, $data, $appendix);
             }
         ],
-        'UserStore' => [
-            'singleton' => false,
-            'type'      => Kirby\Cms\UserStore::class,
-            'instance'  => function (Kirby\Cms\User $user) {
-                return new Kirby\Cms\UserStore($user);
+        'Users' => [
+            'singleton' => true,
+            'type'      => Kirby\Cms\Users::class,
+            'instance'  => function () use ($app) {
+
+                $users = new Kirby\Cms\Users();
+                $root  = $app->root('accounts');
+
+                foreach (Kirby\Util\Dir::read($root) as $userDirectory) {
+
+                    if (is_dir($root . '/' . $userDirectory) === false) {
+                        continue;
+                    }
+
+                    $user = new Kirby\Cms\User([
+                        'email' => $userDirectory,
+                        'store' => Kirby\Cms\UserStore::class
+                    ]);
+
+                    $users->set($user->id(), $user);
+                }
+
+                return $users;
+
             }
-        ],
+        ]
     ];
 
 };

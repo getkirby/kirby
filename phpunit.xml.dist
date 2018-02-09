@@ -21,9 +21,6 @@
         <testsuite name="Classes">
             <directory>./tests/</directory>
         </testsuite>
-        <testsuite name="Fields">
-            <directory suffix=".test.php">./fields/</directory>
-        </testsuite>
         <testsuite name="Helpers">
             <file>./extensions/helpers.test.php</file>
         </testsuite>

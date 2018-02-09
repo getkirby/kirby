@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Image\Image;
+use Kirby\Util\Str;
 
 /**
  * The File class is a wrapper around
@@ -20,6 +21,9 @@ use Kirby\Image\Image;
 class File extends Model
 {
 
+    const STORE_CLASS   = FileStore::class;
+    const STORE_DEFAULT = FileStoreDefault::class;
+
     use HasContent;
     use HasSiblings;
     use HasThumbs;
@@ -31,9 +35,7 @@ class File extends Model
      * @var array
      */
     protected static $toArray = [
-        'id',
         'model',
-        'root',
         'url'
     ];
 
@@ -47,19 +49,14 @@ class File extends Model
     protected $asset;
 
     /**
-     * The File id
-     *
      * @var string
      */
     protected $id;
 
     /**
-     * The original File object
-     * after File manipulations
-     *
-     * @var File
+     * @var string
      */
-    protected $original;
+    protected $filename;
 
     /**
      * The parent object
@@ -67,13 +64,6 @@ class File extends Model
      * @var Model
      */
     protected $parent;
-
-    /**
-     * The path to the file
-     *
-     * @var string
-     */
-    protected $root;
 
     /**
      * The public file Url
@@ -96,7 +86,7 @@ class File extends Model
             return $this->asset()->$method(...$arguments);
         }
 
-        return $this->content()->get($method, ...$arguments);
+        return $this->content()->get($method, $arguments);
     }
 
     /**
@@ -107,59 +97,20 @@ class File extends Model
     public function __construct(array $props)
     {
         // properties
-        $this->setRequiredProperties($props, ['id', 'root', 'url']);
-        $this->setOptionalProperties($props, ['asset', 'content', 'original', 'parent']);
-    }
+        $this->setRequiredProperties($props, ['filename', 'parent']);
+        $this->setOptionalProperties($props, [
+            'content',
+            'original',
+            'store',
+            'url'
+        ]);
 
-    /**
-     * Clones a File object and throws out
-     * all stuff that is too specific to provide
-     * a clean slate. You can pass additional
-     * props that will be merged with the existing
-     * props with the `$props` argument.
-     *
-     * @param array $props
-     * @return self
-     */
-    public function clone(array $props = []): self
-    {
-        return new static(array_merge([
-            'id'     => $this->id(),
-            'root'   => $this->root(),
-            'url'    => $this->url(),
-            'parent' => $this->parent()
-        ], $props));
-    }
+        if (is_a($this->parent(), Page::class) === true) {
+            $this->id = $this->parent()->id() . '/' . $this->filename();
+        } else {
+            $this->id = $this->filename();
+        }
 
-    /**
-     * Creates a new file on disk and returns the
-     * File object. The store is used to handle file
-     * writing, so it can be replaced by any other
-     * way of generating files.
-     *
-     * @param Page $parent
-     * @param string $source
-     * @param string $filename
-     * @param array $content
-     * @return self
-     */
-    public static function create(Page $parent = null, string $source, string $filename, array $content = []): self
-    {
-        throw new Exception('not yet implemented');
-    }
-
-    /**
-     * Deletes the file. The store is used to
-     * manipulate the filesystem or whatever you prefer.
-     *
-     * @return bool
-     */
-    public function delete(): bool
-    {
-        $this->rules()->check('file.delete', $this);
-        $this->perms()->check('file.delete', $this);
-
-        return $this->store()->delete();
     }
 
     /**
@@ -173,7 +124,31 @@ class File extends Model
             return $this->asset;
         }
 
-        return $this->asset = new Image($this->root(), $this->url());
+        return $this->asset = $this->store()->asset();
+    }
+
+    /**
+     * Renames the file without touching the extension
+     * The store is used to actually execute this.
+     *
+     * @param string $name
+     * @param bool $sanitize
+     * @return self
+     */
+    public function changeName(string $name, bool $sanitize = true): self
+    {
+        if ($sanitize === true) {
+            $name = Str::slug($name);
+        }
+
+        // don't rename if not necessary
+        if ($name === $this->name()) {
+            return $this;
+        }
+
+        $this->rules()->changeName($this, $name);
+
+        return $this->store()->changeName($name);
     }
 
     /**
@@ -199,17 +174,52 @@ class File extends Model
     }
 
     /**
-     * Returns the file's Content object
+     * Creates a new file on disk and returns the
+     * File object. The store is used to handle file
+     * writing, so it can be replaced by any other
+     * way of generating files.
      *
-     * @return Content
+     * @param string $source
+     * @return self
      */
-    public function content(): Content
+    public function create(string $source): self
     {
-        if (is_a($this->content, Content::class)) {
-            return $this->content;
+        if ($this->exists() === true) {
+            throw new Exception('The file exists and cannot be overwritten');
         }
 
-        return $this->content = $this->store()->content();
+        $file = $this->store()->create($source);
+        $file = $file->update($this->content()->toArray());
+
+        return $file;
+    }
+
+    protected function defaultStore()
+    {
+        return FileStoreDefault::class;
+    }
+
+    /**
+     * Deletes the file. The store is used to
+     * manipulate the filesystem or whatever you prefer.
+     *
+     * @return bool
+     */
+    public function delete(): bool
+    {
+        $this->rules()->delete($this);
+
+        return $this->store()->delete();
+    }
+
+    public function exists(): bool
+    {
+        return $this->store()->exists();
+    }
+
+    public function filename(): string
+    {
+        return $this->filename;
     }
 
     /**
@@ -257,16 +267,6 @@ class File extends Model
     }
 
     /**
-     * Returns the original File object
-     *
-     * @return File
-     */
-    public function original()
-    {
-        return $this->original;
-    }
-
-    /**
      * Returns the parent Page object
      *
      * @return Page
@@ -287,21 +287,6 @@ class File extends Model
     }
 
     /**
-     * Renames the file without touching the extension
-     * The store is used to actually execute this.
-     *
-     * @param string $name
-     * @return self
-     */
-    public function rename(string $name): self
-    {
-        $this->rules()->check('file.rename', $this, $name);
-        $this->perms()->check('file.rename', $this, $name);
-
-        return $this->store()->rename($name);
-    }
-
-    /**
      * Replaces the file. The source must
      * be an absolute path to a file or a Url.
      * The store handles the replacement so it
@@ -317,49 +302,25 @@ class File extends Model
     }
 
     /**
-     * Returns the root
+     * Returns the FileRules class to
+     * validate any important action.
      *
-     * @return string
+     * @return FileRules
      */
-    public function root(): string
+    protected function rules()
     {
-        return $this->root;
+        return new FileRules();
     }
 
     /**
-     * Sets the asset object
+     * Sets the filename
      *
-     * @param Image $asset
+     * @param string $filename
      * @return self
      */
-    protected function setAsset(Image $asset = null): self
+    protected function setFilename(string $filename): self
     {
-        $this->asset = $asset;
-        return $this;
-    }
-
-    /**
-     * Sets the id
-     *
-     * @param string $id
-     * @return self
-     */
-    protected function setId(string $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * Sets the original File object
-     * after a File has been modified
-     *
-     * @param File $original
-     * @return self
-     */
-    protected function setOriginal(File $original = null): self
-    {
-        $this->original = $original;
+        $this->filename = $filename;
         return $this;
     }
 
@@ -372,18 +333,6 @@ class File extends Model
     protected function setParent(Model $parent = null): self
     {
         $this->parent = $parent;
-        return $this;
-    }
-
-    /**
-     * Sets the root
-     *
-     * @param string $root
-     * @return self
-     */
-    protected function setRoot(string $root): self
-    {
-        $this->root = $root;
         return $this;
     }
 
@@ -406,15 +355,7 @@ class File extends Model
      */
     public function site(): Site
     {
-        return is_a($this->parent(), Site::class) === true ? $this->parent() : App::instance()->site();
-    }
-
-    /**
-     * @return FileStore
-     */
-    protected function store(): FileStore
-    {
-        return App::instance()->component('FileStore', $this);
+        return is_a($this->parent(), Site::class) === true ? $this->parent() : $this->kirby()->site();
     }
 
     /**
@@ -431,7 +372,7 @@ class File extends Model
      */
     public function thumb(array $options = []): self
     {
-        $media = App::instance()->media();
+        $media = $this->kirby()->media();
 
         try {
             if ($this->page() === null) {
@@ -457,30 +398,13 @@ class File extends Model
     }
 
     /**
-     * Updates the file content.
-     * The store writes content into text
-     * files or any other place you determin in
-     * custom store implementations.
-     *
-     * @param array $content
-     * @return self
-     */
-    public function update(array $content = []): self
-    {
-        $this->rules()->check('file.update', $this, $content);
-        $this->perms()->check('file.update', $this, $content);
-
-        return $this->store()->update($content);
-    }
-
-    /**
      * Returns the Url
      *
      * @return string
      */
-    public function url(): string
+    public function url()
     {
-        return $this->url;
+        return $this->url ?? $this->url = $this->parent()->mediaUrl() . '/' . $this->filename();
     }
 
 }

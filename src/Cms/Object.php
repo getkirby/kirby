@@ -3,10 +3,13 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Util\Properties;
 use ReflectionMethod;
 
 abstract class Object
 {
+
+    use Properties;
 
     /**
      * Properties that should be converted to array
@@ -14,44 +17,6 @@ abstract class Object
      * @var array
      */
     protected static $toArray = [];
-
-    /**
-     * Optional property setter.
-     * This is mostly used in constructors
-     *
-     * @param array $props
-     * @param array $keys
-     * @return self
-     */
-    protected function setOptionalProperties(array $props, array $keys)
-    {
-        foreach ($keys as $key) {
-            if (isset($props[$key]) === true) {
-                $this->{'set' . $key}($props[$key]);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * Required property setter.
-     * This is mostly used in constructors
-     *
-     * @param array $props
-     * @param array $keys
-     * @return self
-     */
-    protected function setRequiredProperties(array $props, array $keys)
-    {
-        foreach ($keys as $key) {
-            if (isset($props[$key]) === false) {
-                throw new Exception(sprintf('Missing "%s" property', $key));
-            }
-
-            $this->{'set' . $key}($props[$key]);
-        }
-        return $this;
-    }
 
     /**
      * Converts the object to json

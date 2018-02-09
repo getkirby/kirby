@@ -12,7 +12,7 @@ class MockObject extends Model
         $this->setUnknownProperties($props);
     }
 
-    public function getId()
+    public function id()
     {
         return $this->getUnknownProperty('id');
     }

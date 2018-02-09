@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Data\Data;
+use Kirby\Form\Fields;
 
 /**
  * The Blueprint class converts an array from a
@@ -18,8 +19,6 @@ use Kirby\Data\Data;
  */
 class Blueprint extends BlueprintObject
 {
-
-    use HasUnknownProperties;
 
     /**
      * All properties that should be
@@ -92,9 +91,7 @@ class Blueprint extends BlueprintObject
         $props = BlueprintConverter::convertSectionsToColumn($props);
         $props = BlueprintConverter::convertColumnsToTab($props);
 
-        $this->setRequiredProperties($props, ['name', 'tabs', 'title']);
-        $this->setOptionalProperties($props, ['options']);
-        $this->setUnknownProperties($props, ['options']);
+        $this->setProperties($props);
     }
 
     /**
@@ -125,17 +122,22 @@ class Blueprint extends BlueprintObject
      *
      * @return BlueprintCollection
      */
-    public function fields(): BlueprintCollection
+    public function fields()
     {
         if (is_a($this->fields, BlueprintCollection::class) === true) {
             return $this->fields;
         }
 
-        $fields = new BlueprintCollection;
+        $fields = new Fields;
 
         foreach ($this->sections() as $section) {
+            // skip sections without fields
+            if (method_exists($section, 'fields') === false) {
+                continue;
+            }
+
             foreach ($section->fields() as $field) {
-                $fields->set($field->id(), $field);
+                $fields->set($field->name(), $field);
             }
         }
 
@@ -156,9 +158,10 @@ class Blueprint extends BlueprintObject
      * Loads a blueprint from file or array
      *
      * @param string|array $input
+     * @param Model $model
      * @return self
      */
-    public static function load($input)
+    public static function load($input, $model)
     {
         if (is_array($input)) {
             return new static($input);
@@ -168,8 +171,9 @@ class Blueprint extends BlueprintObject
             throw new Exception('The blueprint cannot be found');
         }
 
-        $data         = Data::read($input);
-        $data['name'] = pathinfo($input, PATHINFO_FILENAME);
+        $data          = Data::read($input);
+        $data['name']  = pathinfo($input, PATHINFO_FILENAME);
+        $data['model'] = $model;
 
         return new static($data);
     }
@@ -255,8 +259,13 @@ class Blueprint extends BlueprintObject
         $tabs = new BlueprintCollection();
 
         foreach ($this->tabs as $name => $props) {
+
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
+
+            // pass down the model
+            $props['model'] = $this->model();
+
             $tab = new BlueprintTab($props);
             $tabs->append($tab->id(), $tab);
         }
@@ -288,7 +297,7 @@ class Blueprint extends BlueprintObject
      * @param array $options
      * @return self
      */
-    protected function setOptions(array $options = []): self
+    protected function setOptions(array $options = null): self
     {
         $this->options = $options;
         return $this;

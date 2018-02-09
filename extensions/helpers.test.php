@@ -9,8 +9,11 @@ class HelpersTest extends TestCase
 
     public function setUp()
     {
-        $kirby = new Kirby();
-        $kirby->urls->index = 'https://getkirby.com';
+        $kirby = new Kirby([
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ]
+        ]);
 
         require_once __DIR__ . '/helpers.php';
     }

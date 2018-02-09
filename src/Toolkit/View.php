@@ -38,7 +38,7 @@ class View
      */
     public function __construct(string $file, array $data = [])
     {
-        $this->file = realpath($file);
+        $this->file = $file;
         $this->data = $data;
     }
 

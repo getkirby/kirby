@@ -144,7 +144,7 @@ class File
      *
      * @param string $root Absolute file path
      */
-    public function __construct(string $root)
+    public function __construct(string $root = null)
     {
         $this->root = $root;
     }
@@ -154,7 +154,7 @@ class File
      *
      * @return string
      */
-    public function root(): string
+    public function root()
     {
         return $this->root;
     }
@@ -259,11 +259,15 @@ class File
     /**
      * Detects the mime type of the file
      *
-     * @return string
+     * @return string|null
      */
-    public function mime(): string
+    public function mime()
     {
-        return new MimeType($this);
+        if ($this->exists() === true) {
+            return new MimeType($this);
+        }
+
+        return null;
     }
 
     /**

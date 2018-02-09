@@ -27,7 +27,6 @@ class Site extends Model
         'errorPage',
         'files',
         'homePage',
-        'root',
         'url'
     ];
 
@@ -112,7 +111,7 @@ class Site extends Model
             'homePage',
             'kirby',
             'page',
-            'root',
+            'store',
             'url',
         ]);
     }
@@ -130,24 +129,6 @@ class Site extends Model
     }
 
     /**
-     * Returns the Content class with
-     * all ContentFields for the site
-     *
-     * The HasContent trait takes care
-     * of the rest.
-     *
-     * @return Content
-     */
-    public function content()
-    {
-        if (is_a($this->content, Content::class) === true) {
-            return $this->content;
-        }
-
-        return $this->content = $this->store()->content();
-    }
-
-    /**
      * Returns the Children collection
      *
      * @return Pages
@@ -159,6 +140,51 @@ class Site extends Model
         }
 
         return $this->children = $this->store()->children();
+    }
+
+    /**
+     * Creates a main page
+     *
+     * @param array $props
+     * @return self
+     */
+    public function createChild(array $props)
+    {
+        $props['num']    = null;
+        $props['parent'] = null;
+        $props['site']   = $this;
+        $props['store']  = null;
+        $props['url']    = null;
+
+        // temporary child for validation
+        $child = Page::factory($props);
+
+        // validate the child
+        $this->rules()->createChild($this, $child);
+
+        return $this->store()->createChild($child);
+
+    }
+
+    public function createFile(string $source, array $props = [])
+    {
+        $props['filename'] = $props['filename'] ?? basename($source);
+        $props['parent']   = $this;
+        $props['store']    = null;
+        $props['url']      = null;
+
+        // temporary child for validation
+        $file = new File($props);
+
+        // validate the child
+        $this->rules()->createFile($this, $file, $source);
+
+        return $this->store()->createFile($file, $source);
+    }
+
+    protected function defaultStore()
+    {
+        return SiteStoreDefault::class;
     }
 
     /**
@@ -224,6 +250,16 @@ class Site extends Model
     }
 
     /**
+     * The site's base url for any files
+     *
+     * @return string
+     */
+    public function mediaUrl(): string
+    {
+        return $this->kirby()->url('media') . '/site';
+    }
+
+    /**
      * Returns the current page if `$path`
      * is not specified. Otherwise it will try
      * to find a page by the given path.
@@ -259,13 +295,15 @@ class Site extends Model
     }
 
     /**
-     * Returns the directory root
+     * Returns the SiteRules class instance
+     * which is being used in various methods
+     * to check for valid actions and input.
      *
-     * @return string
+     * @return SiteRules
      */
-    public function root()
+    protected function rules()
     {
-        return $this->root;
+        return new SiteRules();
     }
 
     /**
@@ -288,6 +326,10 @@ class Site extends Model
      */
     public function setErrorPage(Page $errorPage = null): self
     {
+        if (is_a($this->errorPage, Page::class) === true) {
+            throw new Exception('The error page has already been set');
+        }
+
         $this->errorPage = $errorPage;
         return $this;
     }
@@ -315,6 +357,10 @@ class Site extends Model
      */
     public function setHomePage(Page $homePage = null): self
     {
+        if (is_a($this->homePage, Page::class) === true) {
+            throw new Exception('The home page has already been set');
+        }
+
         $this->homePage = $homePage;
         return $this;
     }
@@ -347,18 +393,6 @@ class Site extends Model
     }
 
     /**
-     * Sets the page directory
-     *
-     * @param string|null $root
-     * @return self
-     */
-    protected function setRoot(string $root = null): self
-    {
-        $this->root = $root;
-        return $this;
-    }
-
-    /**
      * Sets the Url
      *
      * @param string $url
@@ -368,28 +402,6 @@ class Site extends Model
     {
         $this->url = rtrim($url, '/');
         return $this;
-    }
-
-    /**
-     * Returns the SiteStore
-     *
-     * @return SiteStore
-     */
-    protected function store(): SiteStore
-    {
-        return App::instance()->component('SiteStore', $this);
-    }
-
-    /**
-     * Updates the content of the site
-     * in the site.txt
-     *
-     * @param array $content
-     * @return self
-     */
-    public function update(array $content = []): self
-    {
-        return $this->store()->update($content);
     }
 
     /**

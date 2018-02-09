@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Image\Image;
 
 /**
@@ -29,7 +30,6 @@ class Avatar extends Model
      * @var array
      */
     protected static $toArray = [
-        'root',
         'url',
         'exists'
     ];
@@ -41,13 +41,6 @@ class Avatar extends Model
      * @var Image
      */
     protected $asset;
-
-    /**
-     * The absolute path to the avatar file
-     *
-     * @var string
-     */
-    protected $root;
 
     /**
      * The public url for the avatar file
@@ -89,8 +82,8 @@ class Avatar extends Model
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, ['root', 'url']);
-        $this->setOptionalProperties($props, ['asset', 'user']);
+        $this->setRequiredProperties($props, ['user']);
+        $this->setOptionalProperties($props, ['url', 'store', 'original']);
     }
 
     /**
@@ -105,24 +98,7 @@ class Avatar extends Model
             return $this->asset;
         }
 
-        return $this->asset = new Image($this->root(), $this->url());
-    }
-
-    /**
-     * Takes the required props and creates
-     * a new clean avatar object with those,
-     * that can serve as a fresh clone.
-     *
-     * @param array $props
-     * @return self
-     */
-    public function clone(array $props = []): self
-    {
-        return new static(array_merge([
-            'root' => $this->root(),
-            'url'  => $this->url(),
-            'user' => $this->user(),
-        ], $props));
+        return $this->asset = $this->store()->asset();
     }
 
     /**
@@ -134,8 +110,13 @@ class Avatar extends Model
      * @param string $source
      * @return self
      */
-    public static function create(User $user, string $source): self
+    public function create(string $source): self
     {
+        // temporary image object to inspect the source
+        $source = new Image($source);
+
+        $this->rules()->create($this, $source);
+
         return $this->store()->create($source);
     }
 
@@ -147,6 +128,8 @@ class Avatar extends Model
      */
     public function delete(): bool
     {
+        $this->rules()->delete($this);
+
         return $this->store()->delete();
     }
 
@@ -159,7 +142,7 @@ class Avatar extends Model
      */
     public function exists(): bool
     {
-        return $this->asset()->exists();
+        return $this->store()->exists();
     }
 
     /**
@@ -171,41 +154,23 @@ class Avatar extends Model
      */
     public function replace(string $source): self
     {
+        // temporary image object to inspect the source
+        $source = new Image($source);
+
+        $this->rules()->replace($this, $source);
+
         return $this->store()->replace($source);
     }
 
     /**
-     * Returns the absolute path to the asset file
+     * Returns the AvatarRules class to
+     * validate any important action.
      *
-     * @return string
+     * @return AvatarRules
      */
-    public function root(): string
+    protected function rules()
     {
-        return $this->root;
-    }
-
-    /**
-     * Sets the Image object
-     *
-     * @param Image $asset
-     * @return self
-     */
-    protected function setAsset(Image $asset = null): self
-    {
-        $this->asset = $asset;
-        return $this;
-    }
-
-    /**
-     * Sets the absolute path to the avatar file
-     *
-     * @param string $root
-     * @return self
-     */
-    protected function setRoot(string $root): self
-    {
-        $this->root = $root;
-        return $this;
+        return new AvatarRules();
     }
 
     /**
@@ -214,7 +179,7 @@ class Avatar extends Model
      * @param string $url
      * @return self
      */
-    protected function setUrl(string $url): self
+    protected function setUrl(string $url = null): self
     {
         $this->url = $url;
         return $this;
@@ -242,7 +207,7 @@ class Avatar extends Model
      */
     public function thumb(array $options = []): self
     {
-        return App::instance()->media()->create($this->user(), $this, $options);
+        return $this->store()->thumb($options);
     }
 
     /**
@@ -252,7 +217,7 @@ class Avatar extends Model
      */
     public function url(): string
     {
-        return $this->url;
+        return $this->url ?? $this->url = $this->asset()->url();
     }
 
     /**

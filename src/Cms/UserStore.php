@@ -3,98 +3,209 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Data\Data;
-use Kirby\FileSystem\Folder;
+use Kirby\Base\Base;
+use Kirby\Util\Dir;
 
-class UserStore
+class UserStore extends UserStoreDefault
 {
 
-    protected $user;
+    protected $base;
+    protected $data;
 
-    public function __construct(User $user)
+    /**
+     * @return Avatar
+     */
+    public function avatar()
     {
-        $this->user = $user;
-    }
-
-    public function avatar(): Avatar
-    {
-        return $this->avatar = new Avatar([
-            'root' => $this->user->root() . '/profile.jpg',
-            'url'  => App::instance()->media()->url($this->user),
-            'user' => $this->user,
+        return new Avatar([
+            'url'   => $this->media()->url($this->user()) . '/profile.jpg',
+            'user'  => $this->user(),
+            'store' => AvatarStore::class
         ]);
     }
 
-    /**
-     * @return UserBlueprint|null
-     */
-    public function blueprint()
+    public function base()
     {
-        $root = App::instance()->root('blueprints') . '/users';
-
-        try {
-            return UserBlueprint::load($root . '/' . $this->user->role() . '.yml');
-        } catch (Exception $e) {
-            try {
-                return UserBlueprint::load($root . '/default.yml');
-            } catch (Exception $e) {
-                return null;
-            }
+        if (is_a($this->base, Base::class) === true) {
+            return $this->base;
         }
+
+        return $this->base = new Base([
+            'root'      => $this->root(),
+            'extension' => 'txt',
+            'type'      => 'user'
+        ]);
+    }
+
+    public function changeEmail(string $email)
+    {
+        $user = parent::changeEmail($email);
+
+        if ($this->exists() === false) {
+            return $user;
+        }
+
+        $this->media()->delete($this->user());
+
+        $oldRoot = $this->root();
+        $newRoot = dirname($this->root()) . '/' . $user->email();
+
+        if (is_dir($newRoot) === true) {
+            throw new Exception('A user with this email already exists');
+        }
+
+        if (Dir::move($oldRoot, $newRoot) !== true) {
+            throw new Exception('The user directory could not be moved');
+        }
+
+        return $user->update();
+    }
+
+    public function changeLanguage(string $language)
+    {
+        $user = parent::changeLanguage($language);
+
+        if ($this->exists() === false) {
+            return $user;
+        }
+
+        // save the user
+        return $user->update();
     }
 
     public function changePassword(string $password)
     {
-        return $this->write([
-            'password' => $password
-        ]);
+        $user = parent::changePassword($password);
+
+        if ($this->exists() === false) {
+            return $user;
+        }
+
+        // save the user
+        return $user->update();
     }
 
     public function changeRole(string $role)
     {
-        return $this->write([
-            'role' => $role
-        ]);
+        $user = parent::changeRole($role);
+
+        if ($this->exists() === false) {
+            return $user;
+        }
+
+        // save the user
+        return $user->update();
     }
 
-    public function content(): Content
+    public function content()
     {
-        $content = Data::read($this->user->root() . '/user.txt');
-        return new Content($content, $this->user);
+        $data = $this->data();
+
+        // remove unwanted stuff from the content object
+        unset($data['email']);
+        unset($data['language']);
+        unset($data['password']);
+        unset($data['role']);
+
+        return $data;
+    }
+
+    public function create()
+    {
+        // try to create the directory
+        if (Dir::make($this->root()) !== true) {
+            throw new Exception('The user directory could not be created');
+        }
+
+        // create an empty storage file
+        touch($this->root() . '/user.txt');
+
+        // store the content
+        return $this->user()->update();
+    }
+
+    public function data()
+    {
+        if (is_array($this->data) === true) {
+            return $this->data;
+        }
+
+        return $this->data = $this->base()->read();
     }
 
     public function delete(): bool
     {
-        App::instance()->media()->delete($user);
+        if ($this->exists() === false) {
+            return true;
+        }
 
-        $folder = new Folder($user->root());
-        $folder->delete();
+        // delete all public assets for this user
+        $this->media()->delete($this->user());
+
+        // delete the user directory
+        if (Dir::remove($this->root()) !== true) {
+            throw new Exception('The user directory could not be deleted');
+        }
 
         return true;
     }
 
-    public function update(array $content)
+    public function exists(): bool
     {
-        return $this->write($content);
+        return is_dir($this->root()) === true && file_exists($this->base()->storage()) === true;
     }
 
-    protected function write(array $content)
+    public function id()
     {
-        // always hash passwords
-        if (isset($content['password'])) {
-            $info = password_get_info($content['password']);
+        return $this->root();
+    }
 
-            if ($info['algo'] === 0) {
-                $content['password'] = password_hash($content['password'], PASSWORD_DEFAULT);
-            }
+    public function language(): string
+    {
+        return $this->data()['language'] ?? parent::language();
+    }
+
+    public function password()
+    {
+        return $this->data()['password'] ?? null;
+    }
+
+    public function role(): string
+    {
+        return $this->data()['role'] ?? parent::role();
+    }
+
+    public function root(): string
+    {
+        return $this->kirby()->root('accounts') . '/' . $this->user()->email();
+    }
+
+    public function update(array $values, Form $form)
+    {
+        $user = parent::update($values, $form);
+
+        if ($this->exists() === false) {
+            return $user;
         }
 
-        $content = $this->user->content()->update($content);
+        $content = $user->content()->toArray();
 
-        Data::write($this->user->root() . '/user.txt', $content->toArray());
+        // store main information in the content file
+        $content['email']    = $user->email();
+        $content['language'] = $user->language();
+        $content['password'] = $user->password();
+        $content['role']     = $user->role();
 
-        return $this->user->setContent($content);
+        if ($this->base()->write($content) !== true) {
+            throw new Exception('The user information could not be saved');
+        }
+
+        return $user;
     }
 
+    public function user()
+    {
+        return $this->model();
+    }
 
 }
