@@ -23,9 +23,7 @@ return function (Kirby\Cms\App $app) {
             'singleton' => true,
             'type'      => Kirby\Text\Tags::class,
             'instance'  => function () {
-                return new Kirby\Text\Tags([
-                    'breaks' => true
-                ]);
+                return new Kirby\Text\Tags();
             }
         ],
         'Locales' => [

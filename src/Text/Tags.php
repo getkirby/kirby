@@ -3,7 +3,19 @@
 namespace Kirby\Text;
 
 use Exception;
-use Kirby\Toolkit\DI\Singletons;
+
+use Kirby\Text\Tags\Tag;
+use Kirby\Text\Tags\Tag\Date;
+use Kirby\Text\Tags\Tag\Link;
+use Kirby\Text\Tags\Tag\Email;
+use Kirby\Text\Tags\Tag\File;
+use Kirby\Text\Tags\Tag\Gist;
+use Kirby\Text\Tags\Tag\Image;
+use Kirby\Text\Tags\Tag\Tel;
+use Kirby\Text\Tags\Tag\Twitter;
+use Kirby\Text\Tags\Tag\Vimeo;
+use Kirby\Text\Tags\Tag\Youtube;
+
 
 /**
  * The Tags Parser parses tags in
@@ -31,31 +43,39 @@ class Tags
     /**
      * All registered Tag classes
      *
-     * @var Singletons
+     * @var array
      */
-    protected $tags;
+    protected $tags = [
+        'date'    => Date::class,
+        'link'    => Link::class,
+        'email'   => Email::class,
+        'file'    => File::class,
+        'gist'    => Gist::class,
+        'image'   => Image::class,
+        'tel'     => Tel::class,
+        'twitter' => Twitter::class,
+        'vimeo'   => Vimeo::class,
+        'youtube' => Youtube::class,
+    ];
 
     /**
-     * Creates a new KirbyText Parser
-     * The constructor sets all default
-     * tag classes. Those can be overwritten
-     * afterwards with the set method
+     * Instance cache
+     *
+     * @var array
      */
-    public function __construct()
-    {
-        $this->tags = new Singletons;
+    protected $tagInstances = [];
 
-        // set default tags
-        $this->tags->set('date', 'Kirby\Text\Tags\Tag\Date');
-        $this->tags->set('link', 'Kirby\Text\Tags\Tag\Link');
-        $this->tags->set('email', 'Kirby\Text\Tags\Tag\Email');
-        $this->tags->set('file', 'Kirby\Text\Tags\Tag\File');
-        $this->tags->set('gist', 'Kirby\Text\Tags\Tag\Gist');
-        $this->tags->set('image', 'Kirby\Text\Tags\Tag\Image');
-        $this->tags->set('tel', 'Kirby\Text\Tags\Tag\Tel');
-        $this->tags->set('twitter', 'Kirby\Text\Tags\Tag\Twitter');
-        $this->tags->set('vimeo', 'Kirby\Text\Tags\Tag\Vimeo');
-        $this->tags->set('youtube', 'Kirby\Text\Tags\Tag\Youtube');
+    public function __construct(array $tags = [])
+    {
+        $tags = array_merge($this->tags, $tags);
+
+        foreach ($tags as $name => $class) {
+            if (is_subclass_of($class, Tag::class) === false) {
+                throw new Exception('Tags must be a subclass of Kirby\Text\Tags\Tag: ' . $name . ' => ' . $class);
+            }
+        }
+
+        $this->tags = $tags;
     }
 
     /**
@@ -70,11 +90,11 @@ class Tags
      */
     public function set(string $name, string $class): self
     {
-        if (is_subclass_of($class, 'Kirby\Text\Tags\Tag') === false) {
+        if (is_subclass_of($class, Kirby\Text\Tags\Tag::class) === false) {
             throw new Exception('Tags must be a subclass of Kirby\Text\Tags\Tag');
         }
 
-        $this->tags->set($name, $class);
+        $this->tags[$name] = $class;
         return $this;
     }
 
@@ -129,6 +149,26 @@ class Tags
     }
 
     /**
+     * Creates a tag class instance
+     *
+     * @param string $name
+     * @return void
+     */
+    protected function tagInstance(string $name)
+    {
+        if (isset($this->tagInstances[$name]) === true) {
+            return $this->tagInstances[$name];
+        }
+
+
+        if (isset($this->tags[$name]) === false) {
+            throw new Exception('Unsupported tag: ' . $name);
+        }
+
+        return $this->tagInstances[$name] = new $this->tags[$name]();
+    }
+
+    /**
      * Parses a tag string
      * ```
      * (image: myimage.jpg alt: my image)
@@ -142,7 +182,7 @@ class Tags
         // remove the brackets
         $tag        = trim(rtrim(ltrim($string, '('), ')'));
         $name       = trim(substr($tag, 0, strpos($tag, ':')));
-        $instance   = $this->tags->get($name);
+        $instance   = $this->tagInstance($name);
         $attributes = [];
 
         // extract all attributes
@@ -180,7 +220,7 @@ class Tags
     {
         $name     = key($attributes);
         $value    = array_shift($attributes);
-        $instance = $this->tags->get($name);
+        $instance = $this->tagInstance($name);
 
         return $instance->parse($value, $attributes);
     }
