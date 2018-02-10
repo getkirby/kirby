@@ -57,6 +57,18 @@ class Avatar extends Model
     protected $user;
 
     /**
+     * Creates a new Avatar object
+     * The only required property is the
+     * parent User
+     *
+     * @param array $props
+     */
+    public function __construct(array $props)
+    {
+        $this->setProperties($props);
+    }
+
+    /**
      * Magic caller to wrap around
      * Kirby Image methods like size, mime, etc.
      *
@@ -73,17 +85,6 @@ class Avatar extends Model
         }
 
         throw new Exception('Invalid avatar method: ' . $method);
-    }
-
-    /**
-     * Creates a new Avatar object
-     *
-     * @param array $props
-     */
-    public function __construct(array $props)
-    {
-        $this->setRequiredProperties($props, ['user']);
-        $this->setOptionalProperties($props, ['url', 'store', 'original']);
     }
 
     /**
@@ -118,6 +119,16 @@ class Avatar extends Model
         $this->rules()->create($this, $source);
 
         return $this->store()->create($source);
+    }
+
+    /**
+     * Returns the default store class name
+     *
+     * @return string
+     */
+    protected function defaultStore()
+    {
+        return AvatarStoreDefault::class;
     }
 
     /**

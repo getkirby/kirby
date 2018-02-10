@@ -10,8 +10,6 @@ class AvatarTest extends TestCase
     public function avatar(array $props = [])
     {
         return new Avatar(array_merge([
-            'url'  => '/media/users/example.jpg',
-            'root' => '/var/www/media/users/example.jpg',
             'user' => $this->user()
         ], $props));
     }
@@ -19,17 +17,14 @@ class AvatarTest extends TestCase
     public function user()
     {
         return new User([
-            'id' => 'mail@example.com'
+            'email' => 'mail@example.com'
         ]);
     }
 
     public function testAsset()
     {
-        $avatar = $this->avatar([
-            'asset' => $asset = new Image('/test.jpg', '/test.jpg')
-        ]);
-
-        $this->assertEquals($asset, $avatar->asset());
+        $avatar = $this->avatar();
+        $this->assertEquals($avatar->url(), $avatar->asset()->url());
     }
 
     public function testClone()
@@ -37,7 +32,6 @@ class AvatarTest extends TestCase
         $avatar = $this->avatar();
         $clone  = $avatar->clone();
 
-        $this->assertEquals($avatar->root(), $clone->root());
         $this->assertEquals($avatar->url(), $clone->url());
         $this->assertEquals($avatar->user(), $clone->user());
     }
@@ -57,15 +51,6 @@ class AvatarTest extends TestCase
         $this->markTestIncomplete();
     }
 
-    public function testRoot()
-    {
-        $avatar = $this->avatar([
-            'root' => $root = '/var/users/example.jpg'
-        ]);
-
-        $this->assertEquals($root, $avatar->root());
-    }
-
     public function testUrl()
     {
         $avatar = $this->avatar([
@@ -78,7 +63,7 @@ class AvatarTest extends TestCase
     public function testUser()
     {
         $avatar = $this->avatar([
-            'user' => $user = new User(['id' => 'abc'])
+            'user' => $user = new User(['email' => 'abc'])
         ]);
 
         $this->assertEquals($user, $avatar->user());
