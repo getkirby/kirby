@@ -41,20 +41,6 @@ class RouterTest extends TestCase
         $this->assertEquals('POST', $resultB->method());
     }
 
-    public function testDependency()
-    {
-        $router = new Router;
-        $router->dependency('Test', 'TestDependency');
-
-        $route  = new Route('a', 'GET', function ($test) {
-            print $test;
-        });
-        $router->register($route);
-
-        $this->expectOutputString('TestDependency');
-        $router->call('a');
-    }
-
     /**
      * @expectedException        Exception
      * @expectedExceptionMessage Invalid data to register routes
