@@ -19,6 +19,7 @@ class User extends Model
 
     use HasContent;
     use HasSiblings;
+    use HasStore;
 
     /**
      * Those properties should be
@@ -36,39 +37,41 @@ class User extends Model
     ];
 
     /**
-     * The user's avatar object
-     *
      * @var Avatar
      */
     protected $avatar;
 
     /**
-     * The UserBlueprint object
-     *
      * @var UserBlueprint
      */
     protected $blueprint;
 
     /**
-     * The user email
-     *
      * @var string
      */
     protected $email;
 
     /**
-     * The user id
-     *
      * @var string
      */
     protected $id;
 
     /**
-     * The user password
-     *
+     * @var string
+     */
+    protected $language = 'en_US';
+
+    /**
      * @var string
      */
     protected $password;
+
+    /**
+     * The user role
+     *
+     * @var string
+     */
+    protected $role = 'visitor';
 
     /**
      * Creates a new User object
@@ -77,16 +80,7 @@ class User extends Model
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, ['email']);
-        $this->setOptionalProperties($props, [
-            'avatar',
-            'collection',
-            'content',
-            'language',
-            'password',
-            'role',
-            'store'
-        ]);
+        $this->setProperties($props);
     }
 
     /**
@@ -301,7 +295,7 @@ class User extends Model
      */
     public function language(): string
     {
-        return $this->language ?? $this->store()->language() ?? 'en_US';
+        return $this->language ?? $this->language = $this->store()->language();
     }
 
     /**
@@ -341,7 +335,7 @@ class User extends Model
      */
     public function role(): string
     {
-        return $this->role ?? $this->store()->role() ?? 'visitor';
+        return $this->role ?? $this->role = $this->store()->role();
     }
 
     /**
@@ -353,19 +347,6 @@ class User extends Model
     protected function rules()
     {
         return new UserRules();
-    }
-
-    /**
-     * Sets the parent avatar object
-     *
-     * @param Avatar $avatar
-     * @return self
-     */
-    protected function setAvatar(Avatar $avatar = null): self
-    {
-        $this->avatar = $avatar;
-        $this->avatar->setUser($this);
-        return $this;
     }
 
     /**
@@ -390,12 +371,18 @@ class User extends Model
      * @param string $language
      * @return self
      */
-    protected function setLanguage(string $language): self
+    protected function setLanguage(string $language = null): self
     {
         $this->language = trim($language);
         return $this;
     }
 
+    /**
+     * Sets and hashes a new user password
+     *
+     * @param string $password
+     * @return self
+     */
     protected function setPassword(string $password = null): self
     {
         if ($password !== null) {
@@ -418,7 +405,7 @@ class User extends Model
      * @param string $role
      * @return self
      */
-    protected function setRole(string $role): self
+    protected function setRole(string $role = null): self
     {
         $this->role = strtolower(trim($role));
         return $this;

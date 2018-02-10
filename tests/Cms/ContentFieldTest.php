@@ -34,7 +34,7 @@ class ContentFieldTest extends TestCase
 
     public function testParent()
     {
-        $parent = new Page(['id' => 'test']);
+        $parent = new Page(['slug' => 'test']);
         $field  = new ContentField('title', 'Title', $parent);
 
         $this->assertEquals($parent, $field->parent());
@@ -86,7 +86,7 @@ class ContentFieldTest extends TestCase
     public function testInvalidValueSetter()
     {
         $field = new ContentField('title', 'Title');
-        $field->value(new Page(['id' => 'yay']));
+        $field->value(new Page(['slug' => 'yay']));
     }
 
 }

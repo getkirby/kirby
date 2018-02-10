@@ -8,7 +8,7 @@ class SitePagesTest extends TestCase
     public function testErrorPage()
     {
         $site = new Site([
-            'errorPage' => $page = new Page(['id' => 'error'])
+            'errorPage' => $page = new Page(['slug' => 'error'])
         ]);
 
         $this->assertIsPage($site->errorPage(), $page);
@@ -18,7 +18,7 @@ class SitePagesTest extends TestCase
     {
         $site = new Site([
             'children' => new Pages([
-                new Page(['id' => 'error'])
+                new Page(['slug' => 'error'])
             ])
         ]);
 
@@ -28,7 +28,7 @@ class SitePagesTest extends TestCase
     public function testHomePage()
     {
         $site = new Site([
-            'homePage' => $page = new Page(['id' => 'home'])
+            'homePage' => $page = new Page(['slug' => 'home'])
         ]);
 
         $this->assertIsPage($site->homePage(), $page);
@@ -38,7 +38,7 @@ class SitePagesTest extends TestCase
     {
         $site = new Site([
             'children' => new Pages([
-                new Page(['id' => 'home'])
+                new Page(['slug' => 'home'])
             ])
         ]);
 
@@ -48,7 +48,7 @@ class SitePagesTest extends TestCase
     public function testPage()
     {
         $site = new Site([
-            'page' => $page = new Page(['id' => 'test'])
+            'page' => $page = new Page(['slug' => 'test'])
         ]);
 
         $this->assertIsPage($site->page(), $page);
@@ -58,7 +58,7 @@ class SitePagesTest extends TestCase
     {
         $site = new Site([
             'children' => new Pages([
-                new Page(['id' => 'home'])
+                new Page(['slug' => 'home'])
             ])
         ]);
 
@@ -69,7 +69,7 @@ class SitePagesTest extends TestCase
     {
         $site = new Site([
             'children' => new Pages([
-                new Page(['id' => 'test'])
+                new Page(['slug' => 'test'])
             ])
         ]);
 
@@ -79,7 +79,7 @@ class SitePagesTest extends TestCase
     public function testVisitWithPageObject()
     {
         $site = new Site();
-        $page = $site->visit(new Page(['id' => 'test']));
+        $page = $site->visit(new Page(['slug' => 'test']));
 
         $this->assertIsPage($site->page(), 'test');
         $this->assertIsPage($site->page(), $page);
@@ -89,7 +89,7 @@ class SitePagesTest extends TestCase
     {
         $site = new Site([
             'children' => new Pages([
-                new Page(['id' => 'test'])
+                new Page(['slug' => 'test'])
             ])
         ]);
 

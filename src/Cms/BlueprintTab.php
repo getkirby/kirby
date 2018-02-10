@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Form\Fields;
 
 class BlueprintTab extends BlueprintObject
 {
@@ -137,22 +138,24 @@ class BlueprintTab extends BlueprintObject
      *
      * @return BlueprintCollection
      */
-    public function fields(): BlueprintCollection
+    public function fields(): Fields
     {
         if (is_a($this->fields, BlueprintCollection::class) === true) {
             return $this->fields;
         }
 
-        $this->fields = new BlueprintCollection;
+        $this->fields = new Fields;
 
         foreach ($this->sections() as $section) {
-            if (is_a($section->fields(), BlueprintCollection::class) === false) {
+
+            if (method_exists($section, 'fields') === false) {
                 continue;
             }
 
             foreach ($section->fields() as $field) {
-                $this->fields->set($field->id(), $field);
+                $this->fields->set($field->name(), $field);
             }
+
         }
 
         return $this->fields;

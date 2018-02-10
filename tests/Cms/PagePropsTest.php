@@ -18,7 +18,7 @@ class PagePropsTest extends TestCase
     public function testId()
     {
         $page = new Page([
-            'id' => 'test'
+            'slug' => 'test'
         ]);
 
         $this->assertEquals('test', $page->id());
@@ -26,28 +26,28 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Missing "id" property
+     * @expectedExceptionMessage The property "slug" is required
      */
     public function testEmptyId()
     {
-        $page = new Page(['id' => null]);
+        $page = new Page(['slug' => null]);
     }
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setId() must be of the type string, array given
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setSlug() must be of the type string, array given
      */
     public function testInvalidId()
     {
         $page = new Page([
-            'id' => []
+            'slug' => []
         ]);
     }
 
     public function testNum()
     {
         $page = new Page([
-            'id'  => 'test',
+            'slug'  => 'test',
             'num' => 1
         ]);
 
@@ -61,7 +61,7 @@ class PagePropsTest extends TestCase
     public function testInvalidNum()
     {
         $page = new Page([
-            'id'  => 'test',
+            'slug'  => 'test',
             'num' => []
         ]);
     }
@@ -69,7 +69,7 @@ class PagePropsTest extends TestCase
     public function testEmptyNum()
     {
         $page = new Page([
-            'id'  => 'test',
+            'slug'  => 'test',
             'num' => null
         ]);
 
@@ -79,11 +79,11 @@ class PagePropsTest extends TestCase
     public function testParent()
     {
         $parent = new Page([
-            'id' => 'test'
+            'slug' => 'test'
         ]);
 
         $page = new Page([
-            'id'     => 'test/child',
+            'slug'     => 'test/child',
             'parent' => $parent
         ]);
 
@@ -97,30 +97,8 @@ class PagePropsTest extends TestCase
     public function testInvalidParent()
     {
         $page = new Page([
-            'id'     => 'test/child',
+            'slug'     => 'test/child',
             'parent' => 'some parent'
-        ]);
-    }
-
-    public function testRoot()
-    {
-        $page = new Page([
-            'id'   => 'test',
-            'root' => '/test'
-        ]);
-
-        $this->assertEquals('/test', $page->root());
-    }
-
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setRoot() must be of the type string or null, array given
-     */
-    public function testInvalidRoot()
-    {
-        $page = new Page([
-            'id'   => 'test',
-            'root' => []
         ]);
     }
 
@@ -128,7 +106,7 @@ class PagePropsTest extends TestCase
     {
         $site = new Site();
         $page = new Page([
-            'id'   => 'test',
+            'slug'   => 'test',
             'site' => $site
         ]);
 
@@ -141,7 +119,7 @@ class PagePropsTest extends TestCase
     public function testInvalidSite()
     {
         $page = new Page([
-            'id'   => 'test',
+            'slug'   => 'test',
             'site' => 'mysite'
         ]);
     }
@@ -149,7 +127,7 @@ class PagePropsTest extends TestCase
     public function testDefaultTemplate()
     {
         $page = new Page([
-            'id' => 'test',
+            'slug' => 'test',
         ]);
 
         $this->assertEquals('default', $page->template());
@@ -158,11 +136,11 @@ class PagePropsTest extends TestCase
     public function testTemplate()
     {
         $page = new Page([
-            'id'       => 'test',
+            'slug'     => 'test',
             'template' => 'testTemplate'
         ]);
 
-        $this->assertEquals('testTemplate', $page->template());
+        $this->assertEquals('testtemplate', $page->template());
     }
 
     /**
@@ -172,7 +150,7 @@ class PagePropsTest extends TestCase
     public function testInvalidTemplate()
     {
         $page = new Page([
-            'id'       => 'test',
+            'slug'       => 'test',
             'template' => []
         ]);
     }
@@ -180,7 +158,7 @@ class PagePropsTest extends TestCase
     public function testUrl()
     {
         $page = new Page([
-            'id'  => 'test',
+            'slug'  => 'test',
             'url' => 'https://getkirby.com/test'
         ]);
 
@@ -190,7 +168,7 @@ class PagePropsTest extends TestCase
     public function testDefaultUrl()
     {
         $page = new Page([
-            'id' => 'test'
+            'slug' => 'test'
         ]);
 
         $this->assertEquals('/test', $page->url());
@@ -199,7 +177,7 @@ class PagePropsTest extends TestCase
     public function testDefaultUrlWithDuplicateLeadingSlash()
     {
         $page = new Page([
-            'id' => '/test'
+            'slug' => '/test'
         ]);
 
         $this->assertEquals('/test', $page->url());
@@ -212,7 +190,7 @@ class PagePropsTest extends TestCase
     public function testInvalidUrl()
     {
         $page = new Page([
-            'id'  => 'test',
+            'slug'  => 'test',
             'url' => []
         ]);
     }
@@ -221,8 +199,8 @@ class PagePropsTest extends TestCase
     {
         return [
             ['test', 'test'],
-            ['test/child', 'child'],
-            ['test/child/grand-child', 'grand-child'],
+            ['test/child', 'test-child'],
+            ['test/child/grand-child', 'test-child-grand-child'],
         ];
     }
 
@@ -231,7 +209,7 @@ class PagePropsTest extends TestCase
      */
     public function testSlug($id, $slug)
     {
-        $page = new Page(['id' => $id]);
+        $page = new Page(['slug' => $id]);
         $this->assertEquals($slug, $page->slug());
     }
 
@@ -240,7 +218,7 @@ class PagePropsTest extends TestCase
      */
     public function testUid($id, $slug)
     {
-        $page = new Page(['id' => $id]);
+        $page = new Page(['slug' => $id]);
         $this->assertEquals($slug, $page->uid());
     }
 

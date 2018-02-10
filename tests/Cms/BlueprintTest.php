@@ -17,6 +17,7 @@ class BlueprintTest extends TestCase
             'options' => $this->options(),
             'tabs'    => $this->tabs(),
             'title'   => 'Test',
+            'model'   => new Page(['slug' => 'test'])
         ];
     }
 
@@ -151,11 +152,6 @@ class BlueprintTest extends TestCase
         $this->assertFalse($this->blueprint()->isDefault());
     }
 
-    public function testToArray()
-    {
-        $this->assertEquals($this->props(), $this->blueprint()->toArray());
-    }
-
     public function testToLayout()
     {
         $tabs = $this->blueprint()->toLayout();
@@ -168,7 +164,7 @@ class BlueprintTest extends TestCase
 
     public function testLoad()
     {
-        $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/test.yml');
+        $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/test.yml', new Page(['slug' => 'test']));
 
         $this->assertCount(1, $blueprint->tabs());
         $this->assertEquals('test', $blueprint->tabs()->first()->name());
@@ -182,7 +178,7 @@ class BlueprintTest extends TestCase
 
     public function testLoadFields()
     {
-        $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/fields.yml');
+        $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/fields.yml', new Page(['slug' => 'test']));
         $this->assertCount(1, $blueprint->tabs());
         $this->assertEquals('main', $blueprint->tabs()->first()->name());
         $this->assertCount(1, $blueprint->sections());

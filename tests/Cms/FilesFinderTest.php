@@ -18,13 +18,12 @@ class FilesFinderTest extends TestCase
     /**
      * @dataProvider fileProvider
      */
-    public function testFindById($id, $startAt)
+    public function testFindById($filename, $startAt)
     {
         $collection = new Files([
             $file = new File([
-                'id'   => $id,
-                'url'  => $id,
-                'root' => $id
+                'filename' => $filename,
+                'url'      => $filename,
             ])
         ]);
 
@@ -34,8 +33,8 @@ class FilesFinderTest extends TestCase
         $this->assertIsFile($finder->find('some-file.jpg'), $file);
 
         if (empty($startAt) === false) {
-            $this->assertNull($finder->findById($id));
-            $this->assertNull($finder->find($id));
+            $this->assertNull($finder->findById($filename));
+            $this->assertNull($finder->find($filename));
         }
     }
 

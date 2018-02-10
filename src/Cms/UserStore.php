@@ -97,7 +97,7 @@ class UserStore extends UserStoreDefault
         return $user->update();
     }
 
-    public function content()
+    public function content(): array
     {
         $data = $this->data();
 

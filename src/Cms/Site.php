@@ -20,6 +20,7 @@ class Site extends Model
     use HasChildren;
     use HasContent;
     use HasFiles;
+    use HasStore;
 
     protected static $toArray = [
         'children',
@@ -102,18 +103,7 @@ class Site extends Model
      */
     public function __construct(array $props = [])
     {
-        $this->setOptionalProperties($props, [
-            'blueprint',
-            'children',
-            'content',
-            'errorPage',
-            'files',
-            'homePage',
-            'kirby',
-            'page',
-            'store',
-            'url',
-        ]);
+        $this->setProperties($props);
     }
 
     /**

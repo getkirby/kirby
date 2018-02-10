@@ -24,6 +24,11 @@ class StructureObject extends Model
     use HasSiblings;
 
     /**
+     * @var array
+     */
+    protected $content = [];
+
+    /**
      * @var string
      */
     protected $id;
@@ -34,12 +39,13 @@ class StructureObject extends Model
     protected $parent;
 
     /**
+     * Creates a new StructureObject with the given props
+     *
      * @param array $props
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, ['id']);
-        $this->setOptionalProperties($props, ['collection', 'content', 'parent']);
+        $this->setProperties($props);
     }
 
     /**
@@ -53,17 +59,21 @@ class StructureObject extends Model
     }
 
     /**
-     * Returns the entire Content object
+     * Returns the content
      *
      * @return Content
      */
-    public function content()
+    public function content(): Content
     {
         if (is_a($this->content, Content::class) === true) {
             return $this->content;
         }
 
-        return $this->content = new Content([], $this->parent());
+        if (is_array($this->content) !== true) {
+            $this->content = [];
+        }
+
+        return $this->content = new Content($this->content, $this->parent());
     }
 
     /**
@@ -74,6 +84,18 @@ class StructureObject extends Model
     public function parent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Sets the Content object with the given parent
+     *
+     * @param array|null $content
+     * @return self
+     */
+    protected function setContent(array $content = null): self
+    {
+        $this->content = $content;
+        return $this;
     }
 
     /**
@@ -92,25 +114,13 @@ class StructureObject extends Model
     }
 
     /**
-     * Sets the all content fields for the object
-     *
-     * @param Content $content
-     * @return self
-     */
-    protected function setContent(Content $content): self
-    {
-        $this->content = $content;
-        return $this;
-    }
-
-    /**
      * Sets the parent Model. This can either be a
      * Page, Site, File or User object
      *
-     * @param Page|Site|File|User $parent
+     * @param Page|Site|File|User|null $parent
      * @return self
      */
-    protected function setParent(Model $parent): self
+    protected function setParent(Model $parent = null): self
     {
         $this->parent = $parent;
         return $this;

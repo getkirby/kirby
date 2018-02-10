@@ -32,13 +32,6 @@ abstract class Model extends Object
     protected $site;
 
     /**
-     * The Store instance
-     *
-     * @var Store
-     */
-    protected $store;
-
-    /**
      * Returns the default parent collection
      *
      * @return Collection
@@ -112,31 +105,6 @@ abstract class Model extends Object
     {
         $this->site = $site;
         return $this;
-    }
-
-    /**
-     * Setter for the Store instance
-     *
-     * @param Store $store
-     * @return self
-     */
-    public function setStore($store)
-    {
-        $this->store = $store;
-        return $this;
-    }
-
-    /**
-     * @return Store
-     */
-    protected function store()
-    {
-        if (is_a($this->store, Store::class) === true) {
-            return $this->store;
-        }
-
-        $className = $this->store;
-        return new $className($this);
     }
 
 }

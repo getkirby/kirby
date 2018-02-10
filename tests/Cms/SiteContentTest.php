@@ -21,21 +21,21 @@ class SiteContentTest extends TestCase
 
     public function testContent()
     {
-        $content = new Content([
+        $content = [
             'text' => 'lorem ipsum'
-        ]);
+        ];
 
         $site = new Site([
             'content' => $content
         ]);
 
-        $this->assertEquals($content, $site->content());
+        $this->assertEquals($content, $site->content()->toArray());
         $this->assertEquals('lorem ipsum', $site->text()->value());
     }
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Site::setContent() must be an instance of Kirby\Cms\Content or null, string given
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Site::setContent() must be of the type array or null, string given
      */
     public function testInvalidContent()
     {
@@ -47,9 +47,9 @@ class SiteContentTest extends TestCase
     public function testDateWithoutFormat()
     {
         $site = new Site([
-            'content' => new Content([
+            'content' => [
                 'date' => '2012-12-12'
-            ])
+            ]
         ]);
 
         $this->assertEquals(strtotime('2012-12-12'), $site->date());
@@ -58,9 +58,9 @@ class SiteContentTest extends TestCase
     public function testDateWithFormat()
     {
         $site = new Site([
-            'content' => new Content([
+            'content' => [
                 'date' => '2012-12-12'
-            ])
+            ]
         ]);
 
         $this->assertEquals('12.12.2012', $site->date('d.m.Y'));

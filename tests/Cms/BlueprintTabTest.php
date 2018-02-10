@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Form\Field;
+use Kirby\Form\Fields;
+
 class BlueprintTabTest extends TestCase
 {
 
@@ -9,7 +12,8 @@ class BlueprintTabTest extends TestCase
     {
         return new BlueprintTab(array_merge([
             'name'    => 'test',
-            'columns' => $this->columns()
+            'columns' => $this->columns(),
+            'model'   => new Page(['slug' => 'test'])
         ], $props));
     }
 
@@ -80,7 +84,7 @@ class BlueprintTabTest extends TestCase
             'columns' => $this->columns(),
         ]);
 
-        $this->assertInstanceOf(Collection::class, $tab->fields());
+        $this->assertInstanceOf(Fields::class, $tab->fields());
         $this->assertCount(2, $tab->fields());
     }
 
@@ -90,7 +94,7 @@ class BlueprintTabTest extends TestCase
             'columns' => $this->columns(),
         ]);
 
-        $this->assertInstanceOf(BlueprintField::class, $tab->field('title'));
+        $this->assertInstanceOf(Field::class, $tab->field('title'));
         $this->assertEquals('title', $tab->field('title')->name());
     }
 

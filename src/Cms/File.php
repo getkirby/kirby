@@ -21,11 +21,9 @@ use Kirby\Util\Str;
 class File extends Model
 {
 
-    const STORE_CLASS   = FileStore::class;
-    const STORE_DEFAULT = FileStoreDefault::class;
-
     use HasContent;
     use HasSiblings;
+    use HasStore;
     use HasThumbs;
 
     /**
@@ -97,13 +95,7 @@ class File extends Model
     public function __construct(array $props)
     {
         // properties
-        $this->setRequiredProperties($props, ['filename', 'parent']);
-        $this->setOptionalProperties($props, [
-            'content',
-            'original',
-            'store',
-            'url'
-        ]);
+        $this->setProperties($props);
 
         if (is_a($this->parent(), Page::class) === true) {
             $this->id = $this->parent()->id() . '/' . $this->filename();

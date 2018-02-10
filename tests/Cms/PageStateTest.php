@@ -20,7 +20,7 @@ class PageStateTest extends TestCase
     public function testPageState($key, $method)
     {
         $site = new Site();
-        $page = new Page(['id' => 'test', 'site' => $site]);
+        $page = new Page(['slug' => 'test', 'site' => $site]);
 
         $site->{'set' . $key}($page);
 
@@ -33,8 +33,8 @@ class PageStateTest extends TestCase
     public function testNegativePageState($key, $method)
     {
         $site  = new Site();
-        $pageA = new Page(['id' => 'page-a', 'site' => $site]);
-        $pageB = new Page(['id' => 'page-b', 'site' => $site]);
+        $pageA = new Page(['slug' => 'page-a', 'site' => $site]);
+        $pageB = new Page(['slug' => 'page-b', 'site' => $site]);
 
         $site->{'set' . $key}($pageB);
 
@@ -44,8 +44,8 @@ class PageStateTest extends TestCase
     public function testIsOpen()
     {
         $site   = new Site();
-        $parent = new Page(['id' => 'test', 'site' => $site]);
-        $child  = new Page(['id' => 'test/child', 'parent' => $parent, 'site' => $site]);
+        $parent = new Page(['slug' => 'test', 'site' => $site]);
+        $child  = new Page(['slug' => 'test/child', 'parent' => $parent, 'site' => $site]);
 
         $site->setPage($child);
 
@@ -56,9 +56,9 @@ class PageStateTest extends TestCase
     public function testIsNotOpen()
     {
         $site   = new Site();
-        $parent = new Page(['id' => 'test', 'site' => $site]);
-        $child  = new Page(['id' => 'test/child', 'parent' => $parent, 'site' => $site]);
-        $active = new Page(['id' => 'active', 'site' => $site]);
+        $parent = new Page(['slug' => 'test', 'site' => $site]);
+        $child  = new Page(['slug' => 'test/child', 'parent' => $parent, 'site' => $site]);
+        $active = new Page(['slug' => 'active', 'site' => $site]);
 
         $site->setPage($active);
 
@@ -68,22 +68,22 @@ class PageStateTest extends TestCase
 
     public function testIsVisible()
     {
-        $page = new Page(['id' => 'test']);
+        $page = new Page(['slug' => 'test']);
 
         $this->assertFalse($page->isVisible());
 
-        $page = new Page(['id' => 'test', 'num' => 1]);
+        $page = new Page(['slug' => 'test', 'num' => 1]);
 
         $this->assertTrue($page->isVisible());
     }
 
     public function testIsInvisible()
     {
-        $page = new Page(['id' => 'test']);
+        $page = new Page(['slug' => 'test']);
 
         $this->assertTrue($page->isInvisible());
 
-        $page = new Page(['id' => 'test', 'num' => 1]);
+        $page = new Page(['slug' => 'test', 'num' => 1]);
 
         $this->assertFalse($page->isInvisible());
     }

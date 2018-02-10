@@ -31,7 +31,7 @@ class StructureTest extends TestCase
 
     public function testParent()
     {
-        $parent    = new Page(['id' => 'test']);
+        $parent    = new Page(['slug' => 'test']);
         $structure = new Structure([
             ['test' => 'Test']
         ], $parent);

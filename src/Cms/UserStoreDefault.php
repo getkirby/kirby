@@ -64,7 +64,7 @@ class UserStoreDefault extends Store
         ]);
     }
 
-    public function content(): Content
+    public function content(): array
     {
         return [];
     }

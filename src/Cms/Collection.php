@@ -156,6 +156,16 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Returns the parent model
+     *
+     * @return Model
+     */
+    public function parent()
+    {
+        return $this->parent;
+    }
+
+    /**
      * Converts all objects in the collection
      * to an array. This can also take a callback
      * function to further modify the array result.

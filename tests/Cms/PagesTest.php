@@ -8,9 +8,9 @@ class PagesTest extends TestCase
     public function pages()
     {
         return new Pages([
-            new Page(['id' => 'a', 'num' => 1]),
-            new Page(['id' => 'b', 'num' => 2]),
-            new Page(['id' => 'c'])
+            new Page(['slug' => 'a', 'num' => 1]),
+            new Page(['slug' => 'b', 'num' => 2]),
+            new Page(['slug' => 'c'])
         ]);
     }
 

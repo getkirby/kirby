@@ -37,15 +37,16 @@ class Structure extends Collection
      */
     public function __set(string $id, $object)
     {
+
         if (is_array($object)) {
             $object = new StructureObject([
-                'content' => new Content($object, $this->parent),
+                'parent'  => $this->parent,
+                'content' => $object,
                 'id'      => $object['id'] ?? $id,
-                'parent'  => $this->parent
             ]);
         }
 
-        if (!is_a($object, static::$accept)) {
+        if (is_a($object, static::$accept) === false) {
             throw new Exception(sprintf('Invalid "%s" object in collection', static::$accept));
         }
 

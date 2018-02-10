@@ -23,7 +23,7 @@ class PageModelTest extends TestCase
     public function testPageModelWithTemplate()
     {
         $page = Page::factory([
-            'id'       => 'test',
+            'slug'     => 'test',
             'template' => 'article',
         ]);
 
@@ -34,7 +34,7 @@ class PageModelTest extends TestCase
     public function testMissingPageModel()
     {
         $page = Page::factory([
-            'id'       => 'test',
+            'slug'     => 'test',
             'template' => 'project',
         ]);
 

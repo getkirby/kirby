@@ -7,7 +7,7 @@ class PageChildrenTest extends TestCase
 
     public function testDefaultChildren()
     {
-        $page = new Page(['id' => 'test']);
+        $page = new Page(['slug' => 'test']);
         $this->assertInstanceOf(Children::class, $page->children());
         $this->assertCount(0, $page->children());
     }
@@ -15,10 +15,10 @@ class PageChildrenTest extends TestCase
     public function testHasChildren()
     {
         $page = new Page([
-            'id' => 'test',
+            'slug' => 'test',
             'children' => new Children([
-                new Page(['id' => 'a']),
-                new Page(['id' => 'b'])
+                new Page(['slug' => 'a']),
+                new Page(['slug' => 'b'])
             ])
         ]);
 
@@ -28,7 +28,7 @@ class PageChildrenTest extends TestCase
     public function testHasNoChildren()
     {
         $page = new Page([
-            'id'       => 'test',
+            'slug'     => 'test',
             'children' => new Children()
         ]);
 

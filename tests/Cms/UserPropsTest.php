@@ -5,33 +5,19 @@ namespace Kirby\Cms;
 class UserPropsTest extends TestCase
 {
 
-    public function testDefaultAvatar()
+    public function testAvatar()
     {
         $user = new User([
-            'id' => 'user@domain.com'
+            'email' => 'user@domain.com'
         ]);
 
         $this->assertInstanceOf(Avatar::class, $user->avatar());
-    }
-
-    public function testCustomAvatar()
-    {
-        $user = new User([
-            'id'     => 'user@domain.com',
-            'avatar' => $avatar = new Avatar([
-                'url'  => '/users/something.jpg',
-                'root' => '/users/something.jpg'
-            ])
-        ]);
-
-        $this->assertInstanceOf(Avatar::class, $user->avatar());
-        $this->assertEquals($avatar->url(), $user->avatar()->url());
     }
 
     public function testCollection()
     {
         $user = new User([
-            'id'         => 'user@domain.com',
+            'email'      => 'user@domain.com',
             'collection' => $users = new Users()
         ]);
 
@@ -43,74 +29,56 @@ class UserPropsTest extends TestCase
      */
     public function testInvalidCollection()
     {
-        $user = new User(['id' => 'user@domain.com', 'collection' => 'something']);
+        $user = new User(['email' => 'user@domain.com', 'collection' => 'something']);
     }
 
     public function testDefaultCollection()
     {
-        $user = new User(['id' => 'user@domain.com']);
+        $user = new User(['email' => 'user@domain.com']);
         $this->assertInstanceOf(Users::class, $user->collection());
     }
 
     public function testContent()
     {
         $user = new User([
-            'id'      => 'user@domain.com',
-            'content' => $content = new Content()
+            'email'   => 'user@domain.com',
+            'content' => $content = ['name' => 'Test']
         ]);
 
-        $this->assertEquals($content, $user->content());
+        $this->assertEquals($content, $user->content()->toArray());
     }
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setContent() must be an instance of Kirby\Cms\Content or null, string given
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setContent() must be of the type array or null, string given
      */
     public function testInvalidContent()
     {
-        $user = new User(['id' => 'user@domain.com', 'content' => 'something']);
+        $user = new User(['email' => 'user@domain.com', 'content' => 'something']);
     }
 
     public function testDefaultContent()
     {
-        $user = new User(['id' => 'user@domain.com']);
+        $user = new User(['email' => 'user@domain.com']);
         $this->assertInstanceOf(Content::class, $user->content());
     }
 
-    public function testId()
+    public function testEmail()
     {
         $user = new User([
-            'id' => $id = 'user@domain.com',
+            'email' => $email = 'user@domain.com',
         ]);
 
-        $this->assertEquals($id, $user->id());
+        $this->assertEquals($email, $user->email());
     }
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setId() must be of the type string, array given
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setEmail() must be of the type string, array given
      */
-    public function testInvalidId()
+    public function testInvalidEmail()
     {
-        $user = new User(['id' => []]);
-    }
-
-    public function testRoot()
-    {
-        $user = new User([
-            'id'   => 'user@domain.com',
-            'root' => $root = '/var/accounts/user@domain.com'
-        ]);
-
-        $this->assertEquals($root, $user->root());
-    }
-
-    /**
-     * @expectedException TypeError
-     */
-    public function testInvalidRoot()
-    {
-        $user = new User(['id' => 'user@domain.com', 'root' => []]);
+        $user = new User(['email' => []]);
     }
 
 }

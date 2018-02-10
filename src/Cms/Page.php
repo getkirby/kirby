@@ -23,6 +23,7 @@ class Page extends Model
     use HasContent;
     use HasFiles;
     use HasSiblings;
+    use HasStore;
 
     /**
      * Registry with all Page models

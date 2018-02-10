@@ -8,21 +8,21 @@ class PageCollectionTest extends TestCase
     protected function collection()
     {
         return new Pages([
-            new Page(['id' => 'project-a']),
-            new Page(['id' => 'project-b']),
-            new Page(['id' => 'project-c'])
+            new Page(['slug' => 'project-a']),
+            new Page(['slug' => 'project-b']),
+            new Page(['slug' => 'project-c'])
         ]);
     }
 
     public function testDefaultCollectionWithoutSite()
     {
-        $page = new Page(['id' =>  'test']);
+        $page = new Page(['slug' => 'test']);
         $this->assertInstanceOf(Pages::class, $page->collection());
     }
 
     public function testDefaultCollectionWithSite()
     {
-        $page     = new Page(['id' => 'test']);
+        $page     = new Page(['slug' => 'test']);
         $children = new Children([$page]);
         $site     = new Site(['children' => $children]);
 
@@ -34,7 +34,7 @@ class PageCollectionTest extends TestCase
     public function testCollection()
     {
         $pages = new Pages([]);
-        $page  = new Page(['id' => 'test', 'collection' => $pages]);
+        $page  = new Page(['slug' => 'test', 'collection' => $pages]);
 
         $this->assertEquals($pages, $page->collection());
     }
@@ -54,7 +54,7 @@ class PageCollectionTest extends TestCase
     public function testInvalidCollection()
     {
         $page = new Page([
-            'id'         => 'test',
+            'slug'       => 'test',
             'collection' => 'collection'
         ]);
     }

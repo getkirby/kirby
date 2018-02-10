@@ -7,7 +7,7 @@ class PageFilesTest extends TestCase
 
     public function testDefaultFiles()
     {
-        $page = new Page(['id' => 'test']);
+        $page = new Page(['slug' => 'test']);
         $this->assertInstanceOf(Files::class, $page->files());
         $this->assertCount(0, $page->files());
     }
@@ -15,11 +15,11 @@ class PageFilesTest extends TestCase
     public function testFiles()
     {
         $files = new Files([
-            $file = new File(['id' => 'test', 'root' => '/test.jpg', 'url' => '/test.jpg'])
+            $file = new File(['filename' => 'test.jpg', 'url' => '/test.jpg'])
         ]);
 
         $page = new Page([
-            'id'    => 'test',
+            'slug'  => 'test',
             'files' => $files
         ]);
 

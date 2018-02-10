@@ -15,33 +15,30 @@ class PageContentTest extends TestCase
 
     public function testDefaultContent()
     {
-        $page = new Page(['id' =>  'test']);
+        $page = new Page(['slug' =>  'test']);
         $this->assertInstanceOf(Content::class, $page->content());
     }
 
     public function testContent()
     {
-        $content = new Content([
-            'text' => 'lorem ipsum'
-        ]);
 
         $page = new Page([
-            'id'      => 'test',
-            'content' => $content
+            'slug'    => 'test',
+            'content' => $content = ['text' => 'lorem ipsum']
         ]);
 
-        $this->assertEquals($content, $page->content());
+        $this->assertEquals($content, $page->content()->toArray());
         $this->assertEquals('lorem ipsum', $page->text()->value());
     }
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setContent() must be an instance of Kirby\Cms\Content or null
+     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setContent() must be of the type array or null, string given
      */
     public function testInvalidContent()
     {
         $page = new Page([
-            'id'      => 'test',
+            'slug'    => 'test',
             'content' => 'content'
         ]);
     }
@@ -49,8 +46,8 @@ class PageContentTest extends TestCase
     public function testEmptyTitle()
     {
         $page = new Page([
-            'id'      => 'test',
-            'content' => new Content()
+            'slug'    => 'test',
+            'content' => []
         ]);
 
         $this->assertEquals($page->slug(), $page->title()->value());
@@ -59,10 +56,10 @@ class PageContentTest extends TestCase
     public function testTitle()
     {
         $page = new Page([
-            'id'      => 'test',
-            'content' => new Content([
+            'slug'    => 'test',
+            'content' => [
                 'title' => 'Custom Title'
-            ])
+            ]
         ]);
 
         $this->assertEquals('Custom Title', $page->title()->value());
@@ -71,10 +68,10 @@ class PageContentTest extends TestCase
     public function testDateWithoutFormat()
     {
         $page = new Page([
-            'id'      => 'test',
-            'content' => new Content([
+            'slug'    => 'test',
+            'content' => [
                 'date' => '2012-12-12'
-            ])
+            ]
         ]);
 
         $this->assertEquals(strtotime('2012-12-12'), $page->date());
@@ -83,10 +80,10 @@ class PageContentTest extends TestCase
     public function testDateWithFormat()
     {
         $page = new Page([
-            'id'      => 'test',
-            'content' => new Content([
+            'slug'    => 'test',
+            'content' => [
                 'date' => '2012-12-12'
-            ])
+            ]
         ]);
 
         $this->assertEquals('12.12.2012', $page->date('d.m.Y'));

@@ -21,6 +21,7 @@ use Kirby\Image\Image;
 class Avatar extends Model
 {
 
+    use HasStore;
     use HasThumbs;
 
     /**

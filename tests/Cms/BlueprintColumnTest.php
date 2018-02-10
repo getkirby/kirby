@@ -23,7 +23,8 @@ class BlueprintColumnTest extends TestCase
     {
         $column = new BlueprintColumn([
             'name'     => 'test',
-            'sections' => $this->sections()
+            'sections' => $this->sections(),
+            'model'    => new Page(['slug' => 'test'])
         ]);
 
         $this->assertInstanceOf(Collection::class, $column->sections());
@@ -36,7 +37,8 @@ class BlueprintColumnTest extends TestCase
     {
         $column = new BlueprintColumn([
             'name'     => 'test',
-            'sections' => $this->sections()
+            'sections' => $this->sections(),
+            'model'    => new Page(['slug' => 'test'])
         ]);
 
         $this->assertInstanceOf(BlueprintSection::class, $column->section('pages'));
@@ -46,7 +48,8 @@ class BlueprintColumnTest extends TestCase
     {
         $column = new BlueprintColumn([
             'name'     => 'test',
-            'sections' => []
+            'sections' => [],
+            'model'    => new Page(['slug' => 'test'])
         ]);
         $this->assertNull($column->section('pages'));
     }
@@ -69,7 +72,8 @@ class BlueprintColumnTest extends TestCase
         $column = new BlueprintColumn([
             'name'     => 'test',
             'sections' => [],
-            'width'    => $width
+            'width'    => $width,
+            'model'    => new Page(['slug' => 'test'])
         ]);
 
         $this->assertEquals($width, $column->width());
@@ -79,7 +83,8 @@ class BlueprintColumnTest extends TestCase
     {
         $column = new BlueprintColumn([
             'name'     => 'test',
-            'sections' => []
+            'sections' => [],
+            'model'    => new Page(['slug' => 'test'])
         ]);
 
         $this->assertEquals('1/1', $column->width());
@@ -94,7 +99,8 @@ class BlueprintColumnTest extends TestCase
         $column = new BlueprintColumn([
             'name'     => 'test',
             'sections' => [],
-            'width'    => '1/4'
+            'width'    => '1/4',
+            'model'    => new Page(['slug' => 'test'])
         ]);
     }
 
@@ -102,7 +108,8 @@ class BlueprintColumnTest extends TestCase
     {
         $column = new BlueprintColumn([
             'name'     => 'test',
-            'sections' => []
+            'sections' => [],
+            'model'    => new Page(['slug' => 'test'])
         ]);
 
         $expected = [
@@ -115,40 +122,13 @@ class BlueprintColumnTest extends TestCase
         $this->assertEquals($expected, $column->toArray());
     }
 
-    public function testToArray()
-    {
-        $column = new BlueprintColumn([
-            'name'     => 'test',
-            'sections' => $this->sections(),
-            'width'    => '1/2'
-        ]);
-
-        $expected = [
-            'name'     => 'test',
-            'sections' => [
-                [
-                    'id'     => 'pages',
-                    'name'   => 'pages',
-                    'type'   => 'pages',
-                ],
-                [
-                    'id'     => 'files',
-                    'name'   => 'files',
-                    'type'   => 'files',
-                ]
-            ],
-            'width'    => '1/2',
-            'id'       => 'test',
-        ];
-
-        $this->assertEquals($expected, $column->toArray());
-    }
 
     public function testToLayoutWithDefaults()
     {
         $column = new BlueprintColumn([
             'name'     => 'test',
-            'sections' => []
+            'sections' => [],
+            'model'    => new Page(['slug' => 'test'])
         ]);
 
         $expected = [
@@ -165,7 +145,8 @@ class BlueprintColumnTest extends TestCase
     {
         $column = new BlueprintColumn([
             'name'     => 'test',
-            'sections' => $this->sections()
+            'sections' => $this->sections(),
+            'model'    => new Page(['slug' => 'test'])
         ]);
 
         $expected = [
