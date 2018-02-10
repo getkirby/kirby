@@ -11,20 +11,15 @@ class TagsTest extends TestCase
         return new Tags();
     }
 
-    public function testSet()
-    {
-        $tags = $this->tags();
-        $this->assertEquals($tags, $tags->set('test', 'Kirby\Text\Tags\Tag\Date'));
-    }
-
     /**
      * @expectedException        Exception
      * @expectedExceptionMessage Tags must be a subclass of Kirby\Text\Tags\Tag
      */
     public function testSetInvalid()
     {
-        $tags = $this->tags();
-        $this->assertEquals($tags, $tags->set('test', 'Kirby\Text\Tags\Tag\Invalid'));
+        new Tags([
+            'test' => 'Invalid'
+        ]);
     }
 
     public function testParse()

@@ -79,26 +79,6 @@ class Tags
     }
 
     /**
-     * Defines a new tag handling class, which
-     * has to be an extension of Kirby\Text\Tags\Tag
-     * Default tags, which are defined in the
-     * constructor can be overwritten that way.
-     *
-     * @param  string $name
-     * @param  string $class
-     * @return Tags
-     */
-    public function set(string $name, string $class): self
-    {
-        if (is_subclass_of($class, Kirby\Text\Tags\Tag::class) === false) {
-            throw new Exception('Tags must be a subclass of Kirby\Text\Tags\Tag');
-        }
-
-        $this->tags[$name] = $class;
-        return $this;
-    }
-
-    /**
      * Takes a string and parses all tags within
      * the string, which can be handled by the
      * registered tag classes.
