@@ -11,9 +11,8 @@ class FileRules
 
     public static function changeName(File $file, string $name): bool
     {
-        $page      = $file->page();
-        $model     = $page === null ? $this->site() : $page;
-        $duplicate = $model->files()->not($file)->findBy('name', $name);
+        $parent    = $file->parent();
+        $duplicate = $parent->files()->not($file)->findBy('name', $name);
 
         if ($duplicate) {
             throw new Exception('A file with this name exists');
@@ -24,13 +23,13 @@ class FileRules
 
     public static function create(File $file): bool
     {
-        $this->rules()->validExtension($file->extension());
-        $this->rules()->validMime($file->mime());
-        $this->rules()->validFilename($file->filename());
-
         if ($file->exists() === true) {
             throw new Exception('The file exists and cannot be overwritten');
         }
+
+        static::validExtension($file, $file->extension());
+        static::validMime($file, $file->mime());
+        static::validFilename($file, $file->filename());
 
         return true;
     }
@@ -42,9 +41,9 @@ class FileRules
 
     public static function replace(File $file, Upload $upload): bool
     {
-        $this->rules()->validExtension($file, $upload->extension());
-        $this->rules()->validMime($file, $upload->mime());
-        $this->rules()->validFilename($file, $upload->filename());
+        static::validExtension($file, $upload->extension());
+        static::validMime($file, $upload->mime());
+        static::validFilename($file, $upload->filename());
 
         if ($upload->mime() !== $file->mime()) {
             throw new Exception('The mime type of the new file does not match the old one');
@@ -58,7 +57,7 @@ class FileRules
         return true;
     }
 
-    public static function validExtension(string $extension): bool
+    public static function validExtension(File $file, string $extension): bool
     {
 
         // make it easier to compare the extension
@@ -80,7 +79,7 @@ class FileRules
 
     }
 
-    public static function validFilename(string $filename)
+    public static function validFilename(File $file, string $filename)
     {
 
         // make it easier to compare the filename
@@ -105,7 +104,7 @@ class FileRules
 
     }
 
-    public static function validMime(string $mime)
+    public static function validMime(File $file, string $mime)
     {
 
         // make it easier to compare the mime
