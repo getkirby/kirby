@@ -21,10 +21,12 @@ abstract class Ingredients
      *
      * @param array $values
      */
-    public function __construct(array $values = [])
+    public function __construct(array $values = null)
     {
-        foreach (get_object_vars($this) as $key => $value) {
-            $this->$key = $values[$key] ?? null;
+        if ($values !== null) {
+            foreach (get_object_vars($this) as $key => $value) {
+                $this->$key = $values[$key] ?? null;
+            }
         }
     }
 
