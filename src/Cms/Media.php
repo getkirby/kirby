@@ -43,7 +43,7 @@ class Media extends Object
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, ['darkroom', 'root', 'url']);
+        $this->setProperties($props);
     }
 
     /**

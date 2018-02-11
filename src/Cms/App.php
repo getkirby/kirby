@@ -37,13 +37,7 @@ class App extends Object
         static::$root = dirname(dirname(__DIR__));
 
         // configurable properties
-        $this->setOptionalProperties($props, [
-            'components',
-            'path',
-            'roots',
-            'site',
-            'urls'
-        ]);
+        $this->setProperties($props);
 
         // register all field methods
         ContentField::methods(include static::$root . '/extensions/methods.php');
@@ -261,7 +255,7 @@ class App extends Object
      * @param array $components
      * @return self
      */
-    protected function setComponents(array $components = []): self
+    protected function setComponents(array $components = null): self
     {
         $defaultComponentsCreator = include static::$root . '/config/components.php';
         $defaultComponentsConfig  = [];
@@ -270,7 +264,7 @@ class App extends Object
             $defaultComponentsConfig = (array)$defaultComponentsCreator($this);
         }
 
-        $this->components = new Factory(array_merge($defaultComponentsConfig, $components));
+        $this->components = new Factory(array_merge($defaultComponentsConfig, (array)$components));
         return $this;
     }
 
@@ -283,7 +277,7 @@ class App extends Object
      */
     protected function setPath(string $path = null)
     {
-        $this->path = trim($path, '/');
+        $this->path = $path !== null ? trim($path, '/') : null;
         return $this;
     }
 
@@ -293,7 +287,7 @@ class App extends Object
      * @param array $roots
      * @return self
      */
-    protected function setRoots(array $roots = [])
+    protected function setRoots(array $roots = null)
     {
         $this->roots = new Roots($roots);
         return $this;
@@ -317,9 +311,9 @@ class App extends Object
      * @param array $urls
      * @return self
      */
-    protected function setUrls(array $urls = [])
+    protected function setUrls(array $urls = null)
     {
-        $this->urls = new Urls(array_merge(['index' => Url::index()], $urls));
+        $this->urls = new Urls(array_merge(['index' => Url::index()], (array)$urls));
         return $this;
     }
 
