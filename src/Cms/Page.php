@@ -19,6 +19,8 @@ use Kirby\Util\Str;
 class Page extends Model
 {
 
+    protected static $cache = [];
+
     use HasChildren;
     use HasContent;
     use HasFiles;
@@ -351,23 +353,27 @@ class Page extends Model
      */
     public static function factory($props): self
     {
+        if (isset(static::$cache[$props['slug']]) === true) {
+            return static::$cache[$props['slug']];
+        }
+
         if (empty(static::$models) === true) {
-            return new static($props);
+            return static::$cache[$props['slug']] = new static($props);
         }
 
         if (empty($props['template']) === false) {
-            return static::model($props['template'], $props);
+            return static::$cache[$props['slug']] = static::model($props['template'], $props);
         }
 
         if (empty($props['root']) === false) {
             foreach (static::$models as $template => $class) {
                 if (is_file($props['root'] . '/' . $template . '.txt')) {
-                    return static::model($template, $props);
+                    return static::$cache[$props['slug']] = static::model($template, $props);
                 }
             }
         }
 
-        return new static($props);
+        return static::$cache[$props['slug']] = new static($props);
     }
 
     /**
