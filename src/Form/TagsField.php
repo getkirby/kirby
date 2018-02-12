@@ -12,6 +12,7 @@ class TagsField extends Field
     use Mixins\Help;
     use Mixins\Icon;
     use Mixins\Label;
+    use Mixins\Options;
     use Mixins\Required;
     use Mixins\Separator;
     use Mixins\Value;
