@@ -17,19 +17,21 @@ trait Options
 
     protected $options = [];
     protected $query = null;
-    protected $url;
+    protected $api;
 
     public function options(): array
     {
-        if (is_array($this->options) === true) {
-            return $this->options;
+        switch ($this->options) {
+            case 'api':
+                $this->options = $this->optionsFromApi();
+                break;
+            case 'query':
+                $this->options = $this->optionsFromQuery();
+                break;
         }
 
-        switch ($this->options) {
-            case 'query':
-                return $this->options = $this->optionsFromQuery();
-            case 'url':
-                return $this->options = $this->optionsFromUrl();
+        if (is_array($this->options) === false) {
+            return [];
         }
 
         $options = [];
@@ -122,19 +124,21 @@ trait Options
         return $optionsQuery->options();
     }
 
-    protected function optionsFromUrl(): array
+    protected function optionsFromApi(): array
     {
         $kirby = $this->model()->kirby();
-        $url   = $this->url();
+        $api   = $this->api();
         $fetch = null;
         $text  = null;
         $value = null;
 
-        if (is_array($url) === true) {
-            $fetch = $url['fetch'] ?? null;
-            $text  = $url['text']  ?? null;
-            $value = $url['value'] ?? null;
-            $url   = $url['url']   ?? null;
+        if (is_array($api) === true) {
+            $fetch = $api['fetch'] ?? null;
+            $text  = $api['text']  ?? null;
+            $value = $api['value'] ?? null;
+            $url   = $api['url']   ?? null;
+        } else {
+            $url = $api;
         }
 
         $optionsApi = new OptionsApi([
@@ -165,15 +169,15 @@ trait Options
         return $this;
     }
 
-    protected function setUrl($url = null)
+    protected function setApi($api = null)
     {
-        $this->url = $url;
+        $this->api = $api;
         return $this;
     }
 
-    public function url()
+    public function api()
     {
-        return $this->url;
+        return $this->api;
     }
 
     public function values(): array
