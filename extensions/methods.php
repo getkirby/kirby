@@ -150,6 +150,11 @@ return [
             return Str::short($this->value(), $length, $appendix);
         });
     },
+    'slug' => function () {
+        return $this->value(function ($value) {
+            return Str::slug($value);
+        });
+    },
     'smartypants' => function () {
         return $this->value(function($value) {
             return App::instance()->smartypants()->parse((string)$value);
