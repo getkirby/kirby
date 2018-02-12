@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 /**
  * The Structure class wraps
  * array data into a nicely chainable

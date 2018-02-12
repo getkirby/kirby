@@ -35,7 +35,7 @@ class Tempura
      * @param string $template
      * @param array $data
      */
-    public function __construct(string $template = null, array $data = [])
+    public function __construct(string $template = null, $data = [])
     {
         $this->template = $template;
         $this->data     = $data;

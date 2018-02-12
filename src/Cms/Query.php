@@ -35,7 +35,7 @@ class Query
      * @param string $query
      * @param array  $data
      */
-    public function __construct(string $query, array $data = [])
+    public function __construct(string $query = null, $data = [])
     {
         $this->query = $query;
         $this->data  = $data;
@@ -49,6 +49,10 @@ class Query
      */
     public function result()
     {
+        if (empty($this->query) === true) {
+            return $this->data;
+        }
+
         $parts = $this->parts($this->query);
         $data  = $this->data;
 
