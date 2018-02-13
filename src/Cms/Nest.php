@@ -6,19 +6,23 @@ use Kirby\Util\Obj;
 
 class Nest
 {
-    public static function create(array $array)
+    public static function create($data, $parent = null)
     {
+        if (is_scalar($data) === true) {
+            return new ContentField($data, $data);
+        }
+
         $result = [];
 
-        foreach ($array as $key => $value) {
+        foreach ($data as $key => $value) {
             if (is_array($value) === true) {
-                $result[$key] = static::create($value);
+                $result[$key] = static::create($value, $parent);
             } elseif (is_string($value) === true) {
-                $result[$key] = new ContentField($key, $value);
+                $result[$key] = new ContentField($key, $value, $parent);
             }
         }
 
-        if (is_int(key($array))) {
+        if (is_int(key($data))) {
             return new NestCollection($result);
         } else {
             return new NestObject($result);
