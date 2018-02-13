@@ -225,15 +225,20 @@ class ContentField
     {
         if ($value === null) {
             return $this->value;
-        } elseif (is_scalar($value)) {
-            $this->value = (string)$value;
-            return $this;
-        } elseif (is_callable($value)) {
-            $this->value = (string)$value->call($this, $this->value);
-            return $this;
         }
 
-        throw new Exception('Invalid field value type: ' . gettype($value));
+        if (is_scalar($value)) {
+            $value = (string)$value;
+        } elseif (is_callable($value)) {
+            $value = (string)$value->call($this, $this->value);
+        } else {
+            throw new Exception('Invalid field value type: ' . gettype($value));
+        }
+
+        $clone = clone $this;
+        $clone->value = $value;
+
+        return $clone;
     }
 
 }
