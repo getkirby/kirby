@@ -95,6 +95,16 @@ class Blueprint extends BlueprintObject
     }
 
     /**
+     * Convert the options object to array
+     *
+     * @return array
+     */
+    protected function convertOptionsToArray(): array
+    {
+        return $this->options()->toArray();
+    }
+
+    /**
      * Prepare the tabs object for the
      * Blueprint::toArray method
      *

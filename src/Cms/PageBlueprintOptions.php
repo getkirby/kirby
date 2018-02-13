@@ -2,79 +2,75 @@
 
 namespace Kirby\Cms;
 
-class PageBlueprintOptions extends BlueprintObject
+use Exception;
+
+class PageBlueprintOptions extends BlueprintOptions
 {
 
-    protected static $toArray = [
-        'delete',
-        'template',
-        'url'
+    protected $options = [
+        'changeStatus'   => true,
+        'changeTemplate' => true,
+        'changeUrl'      => true,
+        'edit'           => true,
+        'delete'         => true,
+        'preview'        => true,
+        'read'           => true,
     ];
 
-    protected $delete;
-    protected $template;
-    protected $url;
-
-    /**
-     * @param array $props
-     */
-    public function __construct(array $props = [])
+    public function __construct(Page $model, array $options = null)
     {
-        $this->setOptionalProperties($props, ['delete', 'template', 'url']);
+        parent::__construct($model, $options);
     }
 
-    /**
-     * @return boolean
-     */
+    public function changeStatus(): bool
+    {
+        if ($this->model->isErrorPage() === true) {
+            return false;
+        }
+
+        return $this->options['changeStatus'];
+    }
+
+    public function changeTemplate(): bool
+    {
+        if ($this->model->isHomeOrErrorPage() === true) {
+            return false;
+        }
+
+        return $this->options['changeTemplate'];
+    }
+
+    public function changeUrl(): bool
+    {
+        if ($this->model->isHomeOrErrorPage() === true) {
+            return false;
+        }
+
+        return $this->options['changeUrl'];
+    }
+
     public function delete(): bool
     {
-        return $this->delete ?? true;
+        if ($this->model->isHomeOrErrorPage() === true) {
+            return false;
+        }
+
+        return $this->options['delete'];
     }
 
-    /**
-     * @return boolean
-     */
-    public function template(): bool
+    public function edit(): bool
     {
-        return $this->template ?? true;
+        return $this->options['edit'];
     }
 
-    /**
-     * @return boolean
-     */
-    public function url(): bool
+    public function preview(): bool
     {
-        return $this->url ?? true;
+        return $this->options['preview'];
     }
 
-    /**
-     * @param boolean $delete
-     * @return self
-     */
-    protected function setDelete(bool $delete = true): self
+    public function read(): bool
     {
-        $this->delete = $delete;
-        return $this;
-    }
-
-    /**
-     * @param boolean $template
-     * @return self
-     */
-    protected function setTemplate(bool $template = true): self
-    {
-        $this->template = $template;
-        return $this;
-    }
-
-    /**
-     * @param boolean $url
-     * @return self
-     */
-    protected function setUrl(bool $url = true): self
-    {
-        $this->url = $url;
-        return $this;
+        return $this->options['read'];
     }
 
 }

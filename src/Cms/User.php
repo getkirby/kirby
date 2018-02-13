@@ -268,6 +268,26 @@ class User extends Model
     }
 
     /**
+     * Checks if this user has the admin role
+     *
+     * @return boolean
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role() === 'admin';
+    }
+
+    /**
+     * Checks if the current user is this user
+     *
+     * @return boolean
+     */
+    public function isLoggedIn(): bool
+    {
+        return $this->is($this->kirby()->user());
+    }
+
+    /**
      * Checks if the user is the last one
      * with the admin role
      *

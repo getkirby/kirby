@@ -106,14 +106,14 @@ return [
         'pattern' => 'pages/(:any)/files/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id, string $filename) {
-            // TODO: implement file options
+            return $this->file($id, $filename)->blueprint()->options()->toArray();
         }
     ],
     [
         'pattern' => 'pages/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
-            // TODO: implement options
+            return $this->page($id)->blueprint()->options()->toArray();
         }
     ],
 

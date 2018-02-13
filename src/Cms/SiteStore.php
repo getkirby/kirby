@@ -106,7 +106,8 @@ class SiteStore extends SiteStoreDefault
             $file = new File([
                 'filename' => $filename,
                 'parent'   => $site,
-                'store'    => FileStore::class
+                'store'    => FileStore::class,
+                'url'      => $url . '/' . $filename,
             ]);
 
             $files->set($file->id(), $file);

@@ -47,6 +47,13 @@ class File extends Model
     protected $asset;
 
     /**
+     * Cache for the initialized blueprint object
+     *
+     * @var FileBlueprint
+     */
+    protected $blueprint;
+
+    /**
      * @var string
      */
     protected $id;
@@ -117,6 +124,18 @@ class File extends Model
         }
 
         return $this->asset = $this->store()->asset();
+    }
+
+    /**
+     * @return FileBlueprint
+     */
+    public function blueprint(): FileBlueprint
+    {
+        if (is_a($this->blueprint, FileBlueprint::class) === true) {
+            return $this->blueprint;
+        }
+
+        return $this->blueprint = $this->store()->blueprint();
     }
 
     /**

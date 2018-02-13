@@ -79,5 +79,12 @@ return [
             return $this->user($id)->delete();
         }
     ],
+    [
+        'pattern' => 'users/(:any)/options',
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            return $this->user($id)->blueprint()->options()->toArray();
+        }
+    ],
 
 ];

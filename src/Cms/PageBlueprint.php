@@ -5,14 +5,13 @@ namespace Kirby\Cms;
 class PageBlueprint extends Blueprint
 {
 
-    protected function convertOptionsToArray(): array
-    {
-        return $this->options()->toArray();
-    }
-
     public function options()
     {
-        return new PageBlueprintOptions(parent::options());
+        if (is_a($this->options, PageBlueprintOptions::class) === true) {
+            return $this->options;
+        }
+
+        return $this->options = new PageBlueprintOptions($this->model, $this->options);
     }
 
 }

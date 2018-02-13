@@ -504,6 +504,18 @@ class Page extends Model
     }
 
     /**
+     * It's often required to check for the
+     * home and error page to stop certain
+     * actions. That's why there's a shortcut.
+     *
+     * @return boolean
+     */
+    public function isHomeOrErrorPage(): bool
+    {
+        return $this->isHomePage() === true || $this->isErrorPage() === true;
+    }
+
+    /**
      * Checks if the page is invisible
      *
      * @return bool

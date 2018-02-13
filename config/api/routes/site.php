@@ -91,14 +91,14 @@ return [
         'pattern' => 'site/files/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $filename) {
-            // TODO: implement file options
+            return $this->file(null, $filename)->blueprint()->options()->toArray();
         }
     ],
     [
         'pattern' => 'site/options',
         'method'  => 'GET',
         'action'  => function () {
-            // TODO: implement options
+            return $this->site()->blueprint()->options()->toArray();
         }
     ],
 
