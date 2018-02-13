@@ -26,7 +26,8 @@
         "erusev/parsedown-extra": "0.7.*",
         "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
-        "sentry/sentry": "^1.8"
+        "sentry/sentry": "^1.8",
+        "firebase/php-jwt": "^5.0"
     },
     "minimum-stability": "dev",
     "require-dev": {

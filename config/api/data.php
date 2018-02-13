@@ -1,9 +1,30 @@
 <?php
 
+use Firebase\JWT\JWT;
+
 /**
  * Api Data Definitions
  */
 return [
+    'token' => function () {
+
+        $token = $this->requestQuery('auth');
+
+        if (empty($token) === true) {
+            $token = str_replace('Bearer ', '', $this->requestHeaders('Authorization'));
+        }
+
+        if (empty($token) === true) {
+            throw new Exception('Invalid authentication token');
+        }
+
+        // TODO: get the key from config
+        $key = 'kirby';
+
+        // return the token object
+        return (array)JWT::decode($token, $key, ['HS256']);
+
+    },
     'file' => function (string $id = null, string $filename) {
 
         $parent = $id === null ? $this->site() : $this->page($id);
@@ -32,8 +53,14 @@ return [
     'site' => function () {
         return $this->kirby()->site();
     },
-    'user' => function (string $id) {
+    'user' => function (string $id = null) {
 
+        // get the authenticated user
+        if ($id === null) {
+            return $this->users()->findBy('id', $this->token()['uid']);
+        }
+
+        // get a specific user by id
         if ($user = $this->users()->find($id)) {
             return $user;
         }

@@ -437,10 +437,14 @@ class User extends Model
      * @param string $password
      * @return boolean
      */
-    public function validatePassword(string $password): bool
+    public function validatePassword(string $password = null): bool
     {
         if (empty($this->password()) === true) {
             throw new Exception('The user has no password');
+        }
+
+        if ($password === null) {
+            throw new Exception('Invalid password');
         }
 
         if (password_verify($password, $this->password()) !== true) {

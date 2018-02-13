@@ -15,6 +15,7 @@ class Api
 
     use Properties;
 
+    protected $authentication;
     protected $collections;
     protected $data;
     protected $models;
@@ -31,6 +32,20 @@ class Api
         $this->setProperties($props);
     }
 
+    public function authenticate()
+    {
+        if ($auth = $this->authentication()) {
+            return $auth->call($this);
+        }
+
+        return true;
+    }
+
+    public function authentication()
+    {
+        return $this->authentication;
+    }
+
     public function call(string $path, string $method = 'GET', array $requestData = [])
     {
 
@@ -40,6 +55,12 @@ class Api
 
         try {
             $result = $router->find($path, $method);
+            $auth   = $result->attributes()['auth'] ?? true;
+
+            if ($auth !== false) {
+                $this->authenticate();
+            }
+
             $output = $result->action()->call($this, ...$result->arguments());
         } catch (Exception $e) {
             $output = [
@@ -138,6 +159,11 @@ class Api
         return $this->requestData('files', $key, $default);
     }
 
+    public function requestHeaders(string $key = null, $default = null)
+    {
+        return $this->requestData('headers', $key, $default);
+    }
+
     public function requestQuery(string $key = null, $default = null)
     {
         return $this->requestData('query', $key, $default);
@@ -166,6 +192,12 @@ class Api
     public function routes(): array
     {
         return $this->routes;
+    }
+
+    protected function setAuthentication(Closure $authentication = null)
+    {
+        $this->authentication = $authentication;
+        return $this;
     }
 
     protected function setCollections(array $collections = [])

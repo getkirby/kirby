@@ -23,9 +23,10 @@ return [
             $request = $kirby->request();
 
             return $kirby->component('api')->toResponse($path, $this->method(), [
-                'query' => $request->query()->toArray(),
-                'body'  => $request->body()->toArray(),
-                'files' => $request->files()->toArray(),
+                'body'    => $request->body()->toArray(),
+                'files'   => $request->files()->toArray(),
+                'headers' => $request->headers(),
+                'query'   => $request->query()->toArray(),
             ]);
         }
     ],
