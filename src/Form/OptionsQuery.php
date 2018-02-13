@@ -3,10 +3,13 @@
 namespace Kirby\Form;
 
 use Exception;
+use Kirby\Cms\ContentField;
 use Kirby\Cms\Query;
 use Kirby\Cms\Tempura;
 use Kirby\Collection\Collection;
+use Kirby\Util\Obj;
 use Kirby\Util\Properties;
+use Kirby\Util\Str;
 
 class OptionsQuery
 {
@@ -35,7 +38,7 @@ class OptionsQuery
         return $this->data;
     }
 
-    protected function field(string $object, string $field, array $data)
+    protected function template(string $object, string $field, array $data)
     {
         $value = $this->$field();
 
@@ -59,11 +62,8 @@ class OptionsQuery
         $data    = $this->data();
         $query   = new Query($this->query(), $this->data());
         $result  = $query->result();
+        $result  = $this->resultToCollection($result);
         $options = [];
-
-        if (is_a($result, Collection::class) === false) {
-            throw new Exception('Invalid query result data');
-        }
 
         foreach ($result as $item) {
 
@@ -71,8 +71,8 @@ class OptionsQuery
             $data  = array_merge($data, [$alias => $item]);
 
             $options[] = [
-                'text'  => $this->field($alias, 'text', $data),
-                'value' => $this->field($alias, 'value', $data)
+                'text'  => $this->template($alias, 'text', $data),
+                'value' => $this->template($alias, 'value', $data)
             ];
         }
 
@@ -98,7 +98,29 @@ class OptionsQuery
             }
         }
 
-        throw new Exception('The object class could not be resolved');
+        return 'item';
+    }
+
+    protected function resultToCollection($result)
+    {
+        if (is_array($result)) {
+            foreach ($result as $key => $item) {
+                if (is_scalar($item) === true) {
+                    $result[$key] = new Obj([
+                        'key'   => new ContentField('key', $key),
+                        'value' => new ContentField('value', $item),
+                    ]);
+                }
+            }
+
+            $result = new Collection($result);
+        }
+
+        if (is_a($result, Collection::class) === false) {
+            throw new Exception('Invalid query result data');
+        }
+
+        return $result;
     }
 
     protected function setAliases(array $aliases = null)

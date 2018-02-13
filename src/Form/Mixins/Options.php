@@ -11,6 +11,7 @@ use Kirby\Form\Exceptions\OptionException;
 use Kirby\Form\OptionsApi;
 use Kirby\Form\OptionsQuery;
 use Kirby\Util\A;
+use Kirby\Util\Obj;
 
 trait Options
 {
@@ -57,10 +58,11 @@ trait Options
     protected function optionsDataAliases(): array
     {
         return [
-            Page::class            => 'page',
             File::class            => 'file',
+            Obj::class             => 'arrayItem',
+            Page::class            => 'page',
+            StructureObject::class => 'structureItem',
             User::class            => 'user',
-            StructureObject::class => 'item'
         ];
     }
 
@@ -92,18 +94,20 @@ trait Options
 
         // default text setup
         $text = [
-            'file' => '{{ file.filename }}',
-            'page' => '{{ page.title }}',
-            'user' => '{{ user.email }}',
-            'item' => '{{ item.title }}'
+            'arrayItem'     => '{{ arrayItem.value }}',
+            'file'          => '{{ file.filename }}',
+            'page'          => '{{ page.title }}',
+            'structureItem' => '{{ structureItem.title }}',
+            'user'          => '{{ user.email }}',
         ];
 
         // default value setup
         $value = [
-            'file' => '{{ file.id }}',
-            'page' => '{{ page.id }}',
-            'user' => '{{ user.id }}',
-            'item' => '{{ item.id }}'
+            'arrayItem'     => '{{ arrayItem.value }}',
+            'file'          => '{{ file.id }}',
+            'page'          => '{{ page.id }}',
+            'structureItem' => '{{ structureItem.id }}',
+            'user'          => '{{ user.id }}',
         ];
 
         // resolve array query setup
