@@ -32,6 +32,9 @@ return [
         'num' => function (Page $page) {
             return $page->num();
         },
+        'options' => function (Page $page) {
+            return $page->blueprint()->options()->toArray();
+        },
         'parent' => function (Page $page) {
             return $page->parent();
         },
@@ -63,6 +66,7 @@ return [
             'content',
             'id',
             'num',
+            'options',
             'parent' => 'compact',
             'slug',
             'template',

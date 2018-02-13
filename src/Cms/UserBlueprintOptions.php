@@ -13,8 +13,8 @@ class UserBlueprintOptions extends BlueprintOptions
         'changePassword' => true,
         'changeRole'     => true,
         'delete'         => true,
-        'edit'           => true,
         'read'           => true,
+        'update'         => true,
     ];
 
     public function __construct(User $model, array $options = null)
@@ -51,11 +51,6 @@ class UserBlueprintOptions extends BlueprintOptions
         return $this->options['delete'];
     }
 
-    public function edit(): bool
-    {
-        return $this->options['edit'];
-    }
-
     public function read(): bool
     {
         return $this->options['read'];
@@ -64,6 +59,11 @@ class UserBlueprintOptions extends BlueprintOptions
     protected function user()
     {
         return $this->model;
+    }
+
+    public function update(): bool
+    {
+        return $this->options['update'];
     }
 
 }

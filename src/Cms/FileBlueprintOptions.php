@@ -7,9 +7,9 @@ class FileBlueprintOptions extends BlueprintOptions
 
     protected $options = [
         'delete'   => true,
-        'edit'     => true,
         'read'     => true,
         'replace'  => true,
+        'update'   => true,
     ];
 
     public function __construct(File $model, array $options = null)
@@ -22,11 +22,6 @@ class FileBlueprintOptions extends BlueprintOptions
         return $this->options['delete'];
     }
 
-    public function edit(): bool
-    {
-        return $this->options['edit'];
-    }
-
     public function read(): bool
     {
         return $this->options['read'];
@@ -35,6 +30,11 @@ class FileBlueprintOptions extends BlueprintOptions
     public function replace(): bool
     {
         return $this->options['replace'];
+    }
+
+    public function update(): bool
+    {
+        return $this->options['update'];
     }
 
 }

@@ -36,6 +36,9 @@ return [
         'next' => function (User $user) {
             return $user->next();
         },
+        'options' => function (User $user) {
+            return $user->blueprint()->options()->toArray();
+        },
         'prev' => function (User $user) {
             return $user->prev();
         },
@@ -53,6 +56,7 @@ return [
             'language',
             'name',
             'next' => 'compact',
+            'options',
             'prev' => 'compact',
             'role'
         ],

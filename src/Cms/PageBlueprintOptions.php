@@ -11,10 +11,10 @@ class PageBlueprintOptions extends BlueprintOptions
         'changeStatus'   => true,
         'changeTemplate' => true,
         'changeUrl'      => true,
-        'edit'           => true,
         'delete'         => true,
         'preview'        => true,
         'read'           => true,
+        'update'         => true,
     ];
 
     public function __construct(Page $model, array $options = null)
@@ -58,11 +58,6 @@ class PageBlueprintOptions extends BlueprintOptions
         return $this->options['delete'];
     }
 
-    public function edit(): bool
-    {
-        return $this->options['edit'];
-    }
-
     public function preview(): bool
     {
         return $this->options['preview'];
@@ -71,6 +66,11 @@ class PageBlueprintOptions extends BlueprintOptions
     public function read(): bool
     {
         return $this->options['read'];
+    }
+
+    public function update(): bool
+    {
+        return $this->options['update'];
     }
 
 }

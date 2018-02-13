@@ -38,6 +38,9 @@ return [
         'next' => function (File $file) {
             return $file->next();
         },
+        'options' => function (File $file) {
+            return $file->blueprint()->options()->toArray();
+        },
         'prev' => function (File $file) {
             return $file->prev();
         },
@@ -70,6 +73,7 @@ return [
             'modified',
             'next' => 'compact',
             'niceSize',
+            'options',
             'prev' => 'compact',
             'size',
             'type',

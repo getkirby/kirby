@@ -23,6 +23,9 @@ return [
         'files' => function (Site $site) {
             return $site->files();
         },
+        'options' => function (Site $site) {
+            return $site->blueprint()->options()->toArray();
+        },
         'title' => function (Site $site) {
             return $site->title()->value();
         },
@@ -34,6 +37,7 @@ return [
     'views' => [
         'default' => [
             'content',
+            'options',
             'title',
             'url'
         ],
