@@ -171,7 +171,7 @@ class Site extends Model
         $file = new File($props);
 
         // validate the child
-        $this->rules()->createFile($this, $file, $source);
+        $this->rules()->createFile($this, $file);
 
         return $this->store()->createFile($file, $source);
     }

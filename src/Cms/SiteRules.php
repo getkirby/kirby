@@ -19,7 +19,7 @@ class SiteRules
         return true;
     }
 
-    public static function createFile(Site $site, File $file, string $source): bool
+    public static function createFile(Site $site, File $file): bool
     {
         return true;
     }
