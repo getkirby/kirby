@@ -38,7 +38,7 @@ class SiteRulesTest extends TestCase
             'filename' => 'cover.jpg',
             'url'      => 'https://getkirby.com/projects/project-a/cover.jpg'
         ]);
-        $this->assertTrue(SiteRules::createFile($site, $file));
+        $this->assertTrue(SiteRules::createFile($site, $file, 'https://getkirby.com/projects/project-a/cover.jpg'));
     }
 
     public function testUpdate()
