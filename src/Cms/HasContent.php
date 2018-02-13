@@ -103,7 +103,7 @@ trait HasContent
     /**
      * Updates User data
      *
-     * @param array $content
+     * @param array $input
      * @return self
      */
     public function update(array $input = null): self

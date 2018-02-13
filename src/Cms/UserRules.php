@@ -35,13 +35,14 @@ class UserRules
         return true;
     }
 
+    // TODO: $form not used?
     public static function create(User $user, Form $form): bool
     {
         static::validEmail($user, $user->email());
         static::validRole($user, $user->role());
         static::validLanguage($user, $user->language());
 
-        if ($user->password() !== null) {
+        if ($user->password() !== '') {
             static::validPassword($user, $user->password());
         }
 
@@ -84,7 +85,8 @@ class UserRules
             throw new Exception('Please enter a valid email address');
         }
 
-        if ($duplicate = $user->kirby()->users()->not($user)->find($email)) {
+        // TODO: Remove sha1() as soon as finding by email works again
+        if ($duplicate = $user->kirby()->users()->not($user)->find(sha1($email))) {
             throw new Exception('A user with this email address already exists');
         }
 

@@ -147,6 +147,9 @@ class User extends Model
     {
         $this->rules()->changePassword($this, $password);
 
+        // hash password after checking rules
+        $password = $this->hashedPassword($password);
+
         return $this->store()->changePassword($password);
     }
 
@@ -189,24 +192,33 @@ class User extends Model
     }
 
     /**
+     * @param array $input
      * @return self
      */
-    public function create(): self
+    public function create(array $input = null): self
     {
         // stop if the user already exists
         if ($this->exists() === true) {
             throw new Exception('The user already exists');
         }
 
-        // form validation
-        $form = Form::for($this);
+        $form = Form::for($this, [
+            'values' => $input
+        ]);
+
+        // validate the input
         $form->isValid();
 
-        // rule validation
-        $this->rules()->create($this, $form);
+        // get the data values array
+        $values = $form->values();
 
-        // run the store action
-        return $this->store()->create($form);
+        // validate those values additionally with the model rules
+        $this->rules()->create($this, $values, $form);
+
+        // store and pass the form as second param
+        // to make use of the Form::stringValues() method
+        // if necessary
+        return $this->store()->create($values, $form);
     }
 
     protected function defaultStore()
@@ -405,17 +417,7 @@ class User extends Model
      */
     protected function setPassword(string $password = null): self
     {
-        if ($password !== null) {
-
-            $info = password_get_info($password);
-
-            if ($info['algo'] === 0) {
-                $password = password_hash($password, PASSWORD_DEFAULT);
-            }
-
-        }
-
-        $this->password = $password;
+        $this->password = trim($password);
         return $this;
     }
 
@@ -452,6 +454,27 @@ class User extends Model
         }
 
         return true;
+    }
+
+    /**
+     * Hashes user password
+     *
+     * @param string $password
+     * @return string
+     */
+    public function hashedPassword(string $password): string
+    {
+        if ($password !== null) {
+
+            $info = password_get_info($password);
+
+            if ($info['algo'] === 0) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+            }
+
+        }
+
+        return $password;
     }
 
 }

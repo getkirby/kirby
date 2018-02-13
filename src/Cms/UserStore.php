@@ -110,7 +110,7 @@ class UserStore extends UserStoreDefault
         return $data;
     }
 
-    public function create()
+    public function create(array $values, Form $form)
     {
         // try to create the directory
         if (Dir::make($this->root()) !== true) {
@@ -121,7 +121,7 @@ class UserStore extends UserStoreDefault
         touch($this->root() . '/user.txt');
 
         // store the content
-        return $this->user()->update();
+        return $this->user()->update($values, $form);
     }
 
     public function data()
@@ -193,7 +193,7 @@ class UserStore extends UserStoreDefault
         // store main information in the content file
         $content['email']    = $user->email();
         $content['language'] = $user->language();
-        $content['password'] = $user->password();
+        $content['password'] = $user->hashedPassword();
         $content['role']     = $user->role();
 
         if ($this->base()->write($content) !== true) {
