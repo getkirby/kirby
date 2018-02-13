@@ -9,6 +9,11 @@ class PageRules
 
     public static function changeNum(Page $page, int $num = null): bool
     {
+
+        if ($num < 0) {
+            throw new Exception('The page order number cannot be negative');
+        }
+
         return true;
     }
 
@@ -69,6 +74,10 @@ class PageRules
     {
         if ($page->exists() === false) {
             throw new Exception('The page does not exist');
+        }
+
+        if ($page->hasChildren() === true && $force === false) {
+            throw new Exception('The page has children');
         }
 
         if ($page->isHomePage()) {
