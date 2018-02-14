@@ -148,7 +148,7 @@ class User extends Model
         $this->rules()->changePassword($this, $password);
 
         // hash password after checking rules
-        $password = $this->hashedPassword($password);
+        $password = $this->hashPassword($password);
 
         return $this->store()->changePassword($password);
     }
@@ -458,20 +458,15 @@ class User extends Model
 
     /**
      * Hashes user password
-     *
-     * @param string $password
-     * @return string
      */
-    public function hashedPassword(string $password): string
+    public function hashPassword($password)
     {
         if ($password !== null) {
-
             $info = password_get_info($password);
 
             if ($info['algo'] === 0) {
                 $password = password_hash($password, PASSWORD_DEFAULT);
             }
-
         }
 
         return $password;

@@ -193,7 +193,7 @@ class UserStore extends UserStoreDefault
         // store main information in the content file
         $content['email']    = $user->email();
         $content['language'] = $user->language();
-        $content['password'] = $user->hashedPassword();
+        $content['password'] = $user->hashPassword($user->password());
         $content['role']     = $user->role();
 
         if ($this->base()->write($content) !== true) {

@@ -42,7 +42,7 @@ class UserRules
         static::validRole($user, $user->role());
         static::validLanguage($user, $user->language());
 
-        if ($user->password() !== '') {
+        if ($user->password() !== null) {
             static::validPassword($user, $user->password());
         }
 
