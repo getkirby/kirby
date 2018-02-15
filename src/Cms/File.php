@@ -353,7 +353,7 @@ class File extends Model
      * @param string $url
      * @return self
      */
-    protected function setUrl(string $url): self
+    protected function setUrl(string $url = null): self
     {
         $this->url = $url;
         return $this;
