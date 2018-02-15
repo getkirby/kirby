@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Util\Str;
 
 /**
  * The Site class is the root element
@@ -140,20 +141,23 @@ class Site extends Model
      */
     public function createChild(array $props)
     {
-        $props['num']    = null;
-        $props['parent'] = null;
-        $props['site']   = $this;
-        $props['store']  = null;
-        $props['url']    = null;
+        $props['content'] = $props['content'] ?? [];
+        $props['url']     = null;
+        $props['num']     = null;
+        $props['parent']  = null;
+        $props['site']    = $this;
+        $props['slug']    = Str::slug($props['slug'] ?? $props['content']['slug'] ?? null);
 
         // temporary child for validation
         $child = Page::factory($props);
 
-        // validate the child
+        // run all form validations
+        $child->update();
+
+        // run additional validations
         $this->rules()->createChild($this, $child);
 
         return $this->store()->createChild($child);
-
     }
 
     public function createFile(string $source, array $props = [])

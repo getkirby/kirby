@@ -252,12 +252,15 @@ class Page extends Model
         $props['num']     = null;
         $props['parent']  = $this;
         $props['site']    = $this->site();
-        $props['store']   = null;
+        $props['slug']    = Str::slug($props['slug'] ?? $props['content']['slug'] ?? null);
 
         // temporary child for validation
         $child = Page::factory($props);
 
-        // validate the child
+        // run all form validations
+        $child->update();
+
+        // run additional validations
         $this->rules()->createChild($this, $child);
 
         return $this->store()->createChild($child);
@@ -363,14 +366,6 @@ class Page extends Model
 
         if (empty($props['template']) === false) {
             return static::$cache[$props['slug']] = static::model($props['template'], $props);
-        }
-
-        if (empty($props['root']) === false) {
-            foreach (static::$models as $template => $class) {
-                if (is_file($props['root'] . '/' . $template . '.txt')) {
-                    return static::$cache[$props['slug']] = static::model($template, $props);
-                }
-            }
         }
 
         return static::$cache[$props['slug']] = new static($props);
