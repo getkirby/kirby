@@ -36,6 +36,11 @@ trait Properties
                 continue;
             }
 
+            if (method_exists($this, 'convert' . $name . 'ToArray') === true) {
+                $array[$name] = $this->{'convert' . $name . 'ToArray'}();
+                continue;
+            }
+
             if (method_exists($this, $name) === true) {
                 $method = new ReflectionMethod($this, $name);
 
