@@ -41,13 +41,6 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/children',
-        'method'  => 'POST',
-        'action'  => function (string $id) {
-            return $this->page($id)->createChild($this->requestBody());
-        }
-    ],
-    [
         'pattern' => 'pages/(:any)/children/search',
         'method'  => 'POST',
         'action'  => function (string $id) {
@@ -72,7 +65,6 @@ return [
         'pattern' => 'pages/(:any)/files',
         'method'  => 'POST',
         'action'  => function (string $id) {
-
             return $this->upload(function ($source, $filename) use ($id) {
                 return $this->page($id)->createFile($source, [
                     'filename' => $filename
@@ -116,5 +108,12 @@ return [
             return $this->page($id)->blueprint()->options()->toArray();
         }
     ],
+    [
+        'pattern' => 'pages/(:any)/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $sectionName, string $path = '') {
+            return $this->page($id)->blueprint()->section($sectionName)->apiCall($this, $path);
+        }
+    ]
 
 ];

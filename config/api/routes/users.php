@@ -86,5 +86,12 @@ return [
             return $this->user($id)->blueprint()->options()->toArray();
         }
     ],
+    [
+        'pattern' => 'users/(:any)/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $sectionName, string $path = '') {
+            return $this->user($id)->blueprint()->section($sectionName)->apiCall($this, $path);
+        }
+    ]
 
 ];

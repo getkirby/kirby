@@ -19,13 +19,6 @@ return [
         }
     ],
     [
-        'pattern' => 'site/children',
-        'method'  => 'POST',
-        'action'  => function () {
-            return $this->site()->createChild($this->requestBody());
-        }
-    ],
-    [
         'pattern' => 'site/children/search',
         'method'  => 'POST',
         'action'  => function () {
@@ -101,5 +94,12 @@ return [
             return $this->site()->blueprint()->options()->toArray();
         }
     ],
+    [
+        'pattern' => 'site/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $sectionName, string $path = '') {
+            return $this->site()->blueprint()->section($sectionName)->apiCall($this, $path);
+        }
+    ]
 
 ];
