@@ -18,7 +18,7 @@ trait HasStore
      * @param Store $store
      * @return self
      */
-    public function setStore($store)
+    public function setStore(string $store)
     {
         $this->store = $store;
         return $this;
