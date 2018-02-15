@@ -137,17 +137,16 @@ class PageStore extends PageStoreDefault
             throw new Exception('The page directory cannot be created');
         }
 
+        // write the text file
+        touch($root . '/' . $child->template() . '.txt');
+
         // attach the store
         $child = $child->clone([
-            'store' => [
-                'root' => $root,
-                'type' => $child->template()
-            ]
+            'store' => static::class
         ]);
 
         // write the content file
         return $child->update();
-
     }
 
     public function delete(): bool

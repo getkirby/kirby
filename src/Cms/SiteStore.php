@@ -65,7 +65,6 @@ class SiteStore extends SiteStoreDefault
 
     public function createChild(Page $child)
     {
-
         if ($this->exists() === false) {
             return $child;
         }
@@ -76,6 +75,9 @@ class SiteStore extends SiteStoreDefault
         if (Dir::make($root) !== true) {
             throw new Exception('The page directory cannot be created');
         }
+
+        // write the text file
+        touch($root . '/' . $child->template() . '.txt');
 
         // attach the store
         $child = $child->clone([
