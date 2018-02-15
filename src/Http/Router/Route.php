@@ -102,9 +102,12 @@ class Route
         if ($pattern === null) {
             return $this->pattern;
         } elseif (is_string($pattern)) {
-            return $this->pattern = [$pattern];
+            return $this->pattern = [rtrim($pattern, '/')];
         } elseif (is_array($pattern)) {
-            return $this->pattern = $pattern;
+            foreach ($pattern as $p) {
+                $this->pattern[] = rtrim($p, '/');
+            }
+            return $this->pattern;
         } else {
             throw new Exception('Invalid pattern type');
         }

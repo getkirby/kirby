@@ -69,7 +69,7 @@ class Router
                 if (is_a($r, Route::class) === true) {
                     $this->register($r);
                 } else {
-                    $this->register(new Route($r['pattern'], $r['method'] ?? 'GET', $r['action'], $r));
+                    $this->register(new Route($r['pattern'] ?? '', $r['method'] ?? 'GET', $r['action'], $r));
                 }
             }
             return $this;
