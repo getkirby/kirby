@@ -14,8 +14,38 @@ trait BlueprintSectionData
     protected $data;
     protected $error;
     protected $item;
+    protected $limit = 20;
+    protected $originalData;
+    protected $parent;
     protected $query;
-    protected $total;
+    protected $pagination;
+
+    protected function convertDataToArray(): array
+    {
+        return $this->result();
+    }
+
+    protected function convertPaginationToArray(): array
+    {
+        $pagination = $this->pagination();
+
+        return [
+            'limit' => $pagination->limit(),
+            'page'  => $pagination->page(),
+            'total' => $pagination->total(),
+        ];
+    }
+
+    protected function convertParentToArray()
+    {
+        $parent = $this->parent();
+
+        if (is_a($parent, Page::class) === true) {
+            return $parent->id();
+        }
+
+        return null;
+    }
 
     public function data()
     {
@@ -29,7 +59,14 @@ trait BlueprintSectionData
             throw new Exception('Invalid data type');
         }
 
-        return $this->data = $data;
+        $this->originalData = $data;
+
+        // apply the default pagination
+        return $this->data = $data->paginate([
+            'page'  => 1,
+            'limit' => $this->limit()
+        ]);
+
     }
 
     protected function defaultQuery(): string
@@ -45,6 +82,15 @@ trait BlueprintSectionData
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function isFull(): bool
+    {
+        if ($max = $this->max()) {
+            return $this->total() >= $this->max();
+        }
+
+        return false;
     }
 
     public function item(): array
@@ -99,6 +145,48 @@ trait BlueprintSectionData
         return null;
     }
 
+    public function limit(): int
+    {
+        return $this->limit;
+    }
+
+    public function originalData()
+    {
+        if (is_a($this->originalData, static::ACCEPT) === true) {
+            return $this->originalData;
+        }
+
+        // query the data first
+        $this->data();
+
+        return $this->originalData;
+    }
+
+    public function paginate(int $page = 1, int $limit = null)
+    {
+        // overwrite the default pagination by using the original data set
+        $this->data = $this->originalData()->paginate([
+            'page'  => $page,
+            'limit' => $limit ?? $this->limit()
+        ]);
+
+        return $this;
+    }
+
+    public function pagination()
+    {
+        return $this->data()->pagination();
+    }
+
+    public function parent()
+    {
+        if ($parent = $this->data()->parent()) {
+            return $parent;
+        }
+
+        return $this->model();
+    }
+
     public function query(): string
     {
         return $this->query;
@@ -121,6 +209,12 @@ trait BlueprintSectionData
         return $this;
     }
 
+    protected function setLimit(int $limit = null)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
     protected function setQuery(string $query)
     {
         $this->query = $query;
@@ -129,11 +223,7 @@ trait BlueprintSectionData
 
     public function total(): int
     {
-        if ($pagination = $this->data()->pagination()) {
-            return $pagination->total();
-        }
-
-        return $this->data()->count();
+        return $this->pagination()->total();
     }
 
     protected function validate(): bool

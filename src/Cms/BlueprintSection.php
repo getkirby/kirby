@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Api\Api;
 use Exception;
 
 class BlueprintSection extends BlueprintObject
@@ -26,6 +27,19 @@ class BlueprintSection extends BlueprintObject
     {
         $props = $this->extend($props);
         $this->setProperties($props);
+    }
+
+    public function api(Api $parentApi)
+    {
+        return $parentApi->clone([
+            'routes' => $this->routes(),
+            'data'   => array_merge($parentApi->data(), ['section' => $this])
+        ]);
+    }
+
+    public function apiCall(Api $parentApi, string $path = '')
+    {
+        return $this->api($parentApi)->call($path, $parentApi->requestMethod(), $parentApi->requestData());
     }
 
     /**
@@ -93,6 +107,23 @@ class BlueprintSection extends BlueprintObject
     public function name(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    public function routes(): array
+    {
+        return [
+            'read' => [
+                'pattern' => '/',
+                'method'  => 'GET',
+                'auth'    => false,
+                'action'  => function () {
+                    return $this->section()->toArray();
+                }
+            ]
+        ];
     }
 
     public function stringQuery(string $query, array $data = [])
