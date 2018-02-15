@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Image\Image;
 use Kirby\Image\Darkroom;
+use Kirby\FileSystem\Folder;
 use Kirby\Util\Str;
 
 class Media extends Object
