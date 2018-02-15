@@ -21,6 +21,7 @@ class Api
     protected $models;
     protected $routes;
     protected $requestData;
+    protected $requestMethod;
 
     public function __call($method, $args)
     {
@@ -46,9 +47,12 @@ class Api
         return $this->authentication;
     }
 
-    public function call(string $path, string $method = 'GET', array $requestData = [])
+    public function call(string $path = null, string $method = 'GET', array $requestData = [])
     {
 
+        $path = rtrim($path, '/');
+
+        $this->setRequestMethod($method);
         $this->setRequestData($requestData);
 
         $router = new Router($this->routes());
@@ -164,6 +168,11 @@ class Api
         return $this->requestData('headers', $key, $default);
     }
 
+    public function requestMethod(): string
+    {
+        return $this->requestMethod;
+    }
+
     public function requestQuery(string $key = null, $default = null)
     {
         return $this->requestData('query', $key, $default);
@@ -230,6 +239,12 @@ class Api
         return $this;
     }
 
+    protected function setRequestMethod(string $requestMethod = null)
+    {
+        $this->requestMethod = $requestMethod;
+        return $this;
+    }
+
     protected function setRoutes(array $routes)
     {
         if (empty($routes) === true) {
@@ -258,8 +273,13 @@ class Api
     {
 
         $result = [];
+        $files  = $this->requestFiles();
 
-        foreach ($this->requestFiles() as $upload) {
+        if (empty($files) === true) {
+            throw new Exception('No uploaded files');
+        }
+
+        foreach ($files as $upload) {
 
             if (isset($upload['tmp_name']) === false && is_array($upload)) {
                 continue;
