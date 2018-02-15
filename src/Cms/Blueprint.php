@@ -123,7 +123,11 @@ class Blueprint extends BlueprintObject
      */
     public function field(string $name)
     {
-        return $this->fields()->find($name);
+        if ($field = $this->fields()->find($name)) {
+            return $field;
+        }
+
+        throw new Exception('The field could not be found');
     }
 
     /**
@@ -217,7 +221,11 @@ class Blueprint extends BlueprintObject
      */
     public function section(string $name)
     {
-        return $this->sections()->find($name);
+        if ($section = $this->sections()->find($name)) {
+            return $section;
+        }
+
+        throw new Exception('The section could not be found');
     }
 
     /**
@@ -251,7 +259,11 @@ class Blueprint extends BlueprintObject
      */
     public function tab(string $name)
     {
-        return $this->tabs()->find($name);
+        if ($tab = $this->tabs()->find($name)) {
+            return $tab;
+        }
+
+        throw new Exception('The tab could not be found');
     }
 
     /**
