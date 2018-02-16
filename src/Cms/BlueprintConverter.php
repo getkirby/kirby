@@ -41,4 +41,17 @@ class BlueprintConverter
         return $data;
     }
 
+    public static function convertSectionsToColumns(array $data): array
+    {
+        if (isset($data['sections']) === false || isset($data['columns']) === true) {
+            return $data;
+        }
+
+        $data['columns'] = [
+            ['1/1' => implode(',', array_keys($data['sections']))]
+        ];
+
+        return $data;
+    }
+
 }

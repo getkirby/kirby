@@ -71,6 +71,7 @@ class Blueprint extends BlueprintObject
     {
         $props = $this->extend($props);
         $props = BlueprintConverter::convertFieldsToSection($props);
+        $props = BlueprintConverter::convertSectionsToColumns($props);
         $props = BlueprintConverter::convertColumnsToTabs($props);
 
         $this->tabs = new BlueprintTabs($this, $props['tabs'] ?? []);
@@ -217,7 +218,7 @@ class Blueprint extends BlueprintObject
             return $section;
         }
 
-        throw new Exception('The section could not be found');
+        throw new Exception(sprintf('The section "%s" could not be found', $name));
     }
 
     /**
