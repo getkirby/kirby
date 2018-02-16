@@ -80,6 +80,13 @@ return [
         }
     ],
     [
+        'pattern' => 'users/(:any)/blueprint',
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            return $this->user($id)->blueprint();
+        }
+    ],
+    [
         'pattern' => 'users/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
