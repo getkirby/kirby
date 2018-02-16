@@ -146,6 +146,15 @@ class BlueprintFilesSection extends BlueprintSection
         return $item;
     }
 
+    protected function itemLink($item)
+    {
+        if (is_a($item->parent(), Page::class) === true) {
+            return '/pages/' . str_replace('/', '+', $item->parent()->id()) . '/files/' . $item->filename();
+        } else {
+            $type = '/site/files/' . $item->filename();
+        }
+    }
+
     protected function itemToResult($item)
     {
         $stringTemplateData = [$this->modelType($item) => $item];
