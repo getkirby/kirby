@@ -35,14 +35,19 @@ return [
     ],
     'type' => Site::class,
     'views' => [
+        'compact' => [
+            'title',
+            'url'
+        ],
         'default' => [
             'content',
             'options',
             'title',
             'url'
         ],
-        'compact' => [
+        'panel' => [
             'title',
+            'blueprint',
             'url'
         ]
     ]

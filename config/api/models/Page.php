@@ -62,6 +62,11 @@ return [
     ],
     'type' => Page::class,
     'views' => [
+        'compact' => [
+            'id',
+            'title',
+            'url',
+        ],
         'default' => [
             'content',
             'id',
@@ -73,10 +78,15 @@ return [
             'title',
             'url'
         ],
-        'compact' => [
+        'panel' => [
             'id',
+            'blueprint',
+            'next'    => ['id', 'slug', 'title'],
+            'parents' => ['id', 'slug', 'title'],
+            'prev'    => ['id', 'slug', 'title'],
+            'slug',
             'title',
-            'url',
+            'url'
         ]
     ],
 ];

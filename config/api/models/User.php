@@ -67,6 +67,17 @@ return [
             'language',
             'name',
             'role',
-        ]
+        ],
+        'panel' => [
+            'avatar' => 'compact',
+            'blueprint',
+            'email',
+            'id',
+            'language',
+            'name',
+            'next' => ['id', 'name'],
+            'prev' => ['id', 'name'],
+            'role',
+        ],
     ]
 ];
