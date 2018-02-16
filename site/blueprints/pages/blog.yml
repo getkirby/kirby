@@ -1,0 +1,17 @@
+title: Blog
+
+sections:
+  drafts:
+    headline: Unpublished articles
+    type: pages
+    query: page.children.invisible
+    item:
+      info: "{{ page.date('d.m.Y') }}"
+    create: article
+
+  published:
+    headline: Published articles
+    type: pages
+    query: page.children.visible.flip
+    item:
+      info: "{{ page.date('d.m.Y') }}"

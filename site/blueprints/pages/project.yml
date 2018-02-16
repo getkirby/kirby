@@ -1,0 +1,48 @@
+name: project
+title: Project
+
+tabs:
+
+	content:
+		label: Content
+		icon: text
+		columns:
+			- 2/3: content
+			- 1/3: images
+
+	seo:
+		label: SEO
+		icon: search
+		columns:
+			- 1/1: seo
+
+sections:
+
+	# the form for the page
+	content:
+		type: fields
+		fields:
+			headline:
+				label: Headline
+				type: text
+			text:
+				label: Text
+				type: textarea
+
+	# all images displayed as nice cards
+	images:
+		headline: Images
+		type: files
+		query: page.images
+		layout: list
+
+	# seo fields
+	seo:
+		type: fields
+		fields:
+			metaTitle:
+				label: Meta Title
+				type: text
+			metaDescription:
+				label: Meta Description
+				type: textarea

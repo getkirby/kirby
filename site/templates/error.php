@@ -4,14 +4,15 @@
 
     <header class="wrap">
       <h1><?= $page->title()->html() ?></h1>
+
       <div class="intro text">
-        <?= $page->text()->kirbytext() ?>
+        <?= $page->intro()->kirbytext() ?>
       </div>
       <hr />
     </header>
 
-    <div class="wrap wide">
-      <?php snippet('showcase') ?>
+    <div class="text wrap">
+      <?= $page->text()->kirbytext() ?>
     </div>
 
   </main>

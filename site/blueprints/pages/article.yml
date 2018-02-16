@@ -1,0 +1,35 @@
+title: Article
+
+columns:
+  - 2/3: content
+  - 1/3: meta, images
+
+sections:
+
+  content:
+    type: fields
+    fields:
+      text:
+        label: Text
+        type: textarea
+
+  meta:
+    type: fields
+    fields:
+      date:
+        label: Date
+        type: datetime
+        required: true
+      author:
+        label: Author
+        type: user
+      tags:
+        label: Tags
+        type: tags
+
+  images:
+    headline: Images
+    type: files
+    accept: image/*
+
+

@@ -1,0 +1,21 @@
+title: Projects
+
+sections:
+  drafts:
+    headline: Unpublished Projects
+    type: pages
+    query: page.children.invisible
+    item:
+      info: "{{ page.year }}"
+    create: project
+
+  published:
+    headline:
+      en_US: Published Projects
+      de_DE: Veröffentlicht
+    type: pages
+    layout: cards
+    query: page.children.visible
+    item:
+      info: "{{ page.year }}"
+

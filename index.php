@@ -1,5 +1,5 @@
 <?php
 
-$kirby = require 'kirby/bootstrap.php';
+require 'kirby/bootstrap.php';
 
-echo $kirby->response();
+echo (new Kirby)->render();

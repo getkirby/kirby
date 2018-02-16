@@ -1,0 +1,118 @@
+title: Form Demo
+fields:
+  intro:
+    label: Intro
+    type: text
+    max: 140
+  tags:
+    label: Tags
+    type: tags
+    options: query
+    query:
+      fetch: page.siblings
+  date:
+    label: Date
+    type: date
+    width: 1/2
+  time:
+    label: Time
+    type: time
+    width: 1/2
+  datetime:
+    label: Date & Time
+    type: datetime
+  user:
+    label: User
+    type: user
+  text:
+    label: Text
+    type: textarea
+  email:
+    label: Email
+    type: email
+    width: 1/2
+  url:
+    label: URL
+    name: url
+    type: url
+    width: 1/2
+  tel:
+    label: Phone
+    type: tel
+    width: 1/2
+  number:
+    label: Number
+    type: number
+    width: 1/2
+  checkbox:
+    label: Checkbox
+    type: checkbox
+    text: Checkbox text
+    width: 1/2
+  toggle:
+    label: Toggle
+    type: toggle
+    text: Toggle text
+    width: 1/2
+  checkboxes:
+    label: Checkboxes
+    type: checkboxes
+    options:
+      a: Option A
+      b: Option B
+      c: Option C
+    width: 1/2
+  radio:
+    label: Radios
+    type: radio
+    options:
+      a: Option A
+      b: Option B
+      c: Option C
+    width: 1/2
+  select:
+    label: Select
+    type: select
+    options: api
+    api:
+      url: http://localhost/kirby/v3/starterkit/lab/companies.json
+      fetch: companies
+      value: "{{ item.data.slug }}"
+      text: "{{ item.data }}"
+  line:
+    type: line
+  structure:
+    label: Structure
+    type: structure
+    fields:
+      title:
+        label: Title
+        type: text
+      icon:
+        label: Icon
+        type: select
+        options:
+          -
+            text: contact.svg
+            value: contact.svg
+          -
+            text: forum.svg
+            value: forum.svg
+          -
+            text: github.svg
+            value: github.svg
+          -
+            text: docs.svg
+            value: docs.svg
+      text:
+        label: Text
+        type: textarea
+      url:
+        label: Link
+        type: url
+      linktext:
+        label: Link Text
+        type: text
+  headline:
+    label: Headline
+    type: headline

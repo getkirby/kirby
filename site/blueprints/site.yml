@@ -1,33 +1,71 @@
 title: Site
-layout:
-  -
-    width: 1/1
-    sections:
-      -
-        headline: Projects
-        type: pages
-        pages: site.find('projects').children
-        info: "{{ page.year }}"
-        layout: list
-        add: project
-      -
-        headline: Blog
-        type: pages
-        pages: site.find('blog').children.flip
-        info: "{{ page.date('d.m.Y') }}"
-        layout: list
-        add: article
-      -
-        headline: About
-        type: pages
-        pages: site.find('about').children
-        info: "{{ page.position }}"
-        layout: list
-        add: team
-      -
-        headline: Misc
-        type: pages
-        pages: site.find('home', 'contact')
-        layout: list
-        image: false
-        add: default
+
+tabs:
+  pages:
+    label: Pages
+    icon: page
+    columns:
+      - 1/1: projects, blog, about, misc
+  social:
+    label: Social
+    icon: twitter
+    columns:
+      - 1/1: social
+  seo:
+    label: SEO
+    icon: search
+    columns:
+      - 1/1: seo
+
+sections:
+
+  projects:
+    headline: Projects
+    type: pages
+    query: site.find("projects").children.visible
+    layout: list
+
+  blog:
+    headline: Blog
+    type: pages
+    query: site.find('blog').children.visible
+    layout: list
+    item:
+      info: "{{ page.date('d.m.Y') }}"
+
+  about:
+    headline: About
+    type: pages
+    query: site.find('about').children
+    layout: list
+    item:
+      info: "{{ page.position }}"
+
+  misc:
+    headline: Misc
+    type: pages
+    query: site.find('home', 'contact', 'form')
+    item:
+      image: false
+
+  social:
+    type: fields
+    fields:
+      twitter:
+        label: Twitter Account
+        type: text
+        icon: twitter
+      facebook:
+        label: Facebook Account
+        type: text
+        icon: facebook
+
+  seo:
+    type: fields
+    fields:
+      metaTitle:
+        label: Meta Title
+        type: text
+      metaDescription:
+        label: Meta Description
+        type: textarea

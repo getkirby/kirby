@@ -1,0 +1,21 @@
+title: About
+
+
+sections:
+
+  content:
+    type: fields
+    fields:
+      intro:
+        label: Intro
+        type: textarea
+      text:
+        label: Text
+        type: textarea
+
+  team:
+    headline: Team
+    type: pages
+    layout: cards
+    item:
+      info: "{{ page.position }}"

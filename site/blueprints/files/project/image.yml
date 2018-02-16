@@ -1,0 +1,15 @@
+title: Project Image
+
+options:
+  replace: false
+  delete: false
+
+fields:
+  - name: caption
+    label: Caption
+    type: text
+
+
+
+
+

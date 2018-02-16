@@ -1,0 +1,15 @@
+title: Project File
+options:
+  replace: false
+  delete: false
+layout:
+  -
+    width: 1/1
+    type: fields
+    fields:
+      - name: caption
+        label: Caption
+        type: text
+
+
+

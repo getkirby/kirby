@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit
+    bootstrap="kirby/test.php"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnFailure="false"
+    stderr="true"
+    strict="true"
+    colors="true"
+    verbose="false">
+
+    <testsuites>
+        <testsuite name="Test Suite">
+            <directory>site/tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

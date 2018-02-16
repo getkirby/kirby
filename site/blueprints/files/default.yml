@@ -1,0 +1,13 @@
+title: Files
+
+layout:
+  -
+    width: 1/1
+    type: fields
+    fields:
+      - name: alt
+        label: Caption
+        type: text
+
+
+

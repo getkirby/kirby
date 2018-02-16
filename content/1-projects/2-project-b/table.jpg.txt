@@ -1,9 +1,0 @@
-Group: gallery
-
-----
-
-Alt: A table with chairs
-
-----
-
-Photographer: Sam One

@@ -1,0 +1,13 @@
+title: Image
+
+layout:
+  -
+    width: 1/1
+    type: fields
+    fields:
+      - name: caption
+        label: Caption
+        type: text
+
+
+

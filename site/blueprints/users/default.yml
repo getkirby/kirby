@@ -1,23 +1,49 @@
 title: Default
-layout:
-  -
-    width: 1/1
-    sections:
-      -
-        type: fields
-        fields:
-          -
-            label: Website
-            name: website
-            type: url
-            width: 1/2
-          -
-            label: Twitter
-            name: twitter
-            type: text
-            icon: twitter
-            width: 1/2
-          -
-            label: Bio
-            name: bio
-            type: textarea
+
+tabs:
+  address:
+    label: Address
+    icon: text
+    columns:
+      - 1/1: address
+  info:
+    label: Additional info
+    icon: twitter
+    columns:
+      - 1/1: info
+
+sections:
+
+  address:
+    type: fields
+    fields:
+      street:
+        label: Street
+        type: text
+      zip:
+        label: ZIP
+        type: text
+        width: 1/4
+      city:
+        label: City
+        type: text
+        width: 3/4
+      country:
+        label: Country
+        type: text
+
+  info:
+    type: fields
+    fields:
+      website:
+        label: Website
+        type: url
+        width: 1/2
+      twitter:
+        label: Twitter
+        type: text
+        icon: twitter
+        width: 1/2
+      bio:
+        label: Bio
+        type: textarea
