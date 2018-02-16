@@ -61,10 +61,12 @@ return [
             'role'
         ],
         'compact' => [
+            'avatar' => 'compact',
             'id',
             'email',
+            'language',
             'name',
-            'role'
+            'role',
         ]
     ]
 ];

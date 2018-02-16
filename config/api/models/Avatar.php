@@ -42,6 +42,7 @@ return [
     'views'  => [
         'compact' => [
             'exists',
+            'modified',
             'url',
         ]
     ],
