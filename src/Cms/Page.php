@@ -356,19 +356,15 @@ class Page extends Model
      */
     public static function factory($props): self
     {
-        if (isset(static::$cache[$props['slug']]) === true) {
-            return static::$cache[$props['slug']];
-        }
-
         if (empty(static::$models) === true) {
-            return static::$cache[$props['slug']] = new static($props);
+            return new static($props);
         }
 
         if (empty($props['template']) === false) {
-            return static::$cache[$props['slug']] = static::model($props['template'], $props);
+            return static::model($props['template'], $props);
         }
 
-        return static::$cache[$props['slug']] = new static($props);
+        return new static($props);
     }
 
     /**
