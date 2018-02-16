@@ -62,6 +62,26 @@ class BlueprintPagesSection extends BlueprintSection
         return $result;
     }
 
+    protected function itemImage($item, array $data)
+    {
+        $query = $this->item()['image'] ?? null;
+
+        if ($query === null) {
+            return $item->image();
+        }
+
+        if ($query !== false) {
+            return (new Query($this->item()['image'], $data))->result();
+        }
+
+        return null;
+    }
+
+    protected function itemLink($item)
+    {
+        return '/pages/' . str_replace('/', '+', $item->id());
+    }
+
     public function post(array $data)
     {
         // make sure the basics are provided
