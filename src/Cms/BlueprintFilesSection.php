@@ -138,12 +138,33 @@ class BlueprintFilesSection extends BlueprintSection
 
     protected function itemInfo($item)
     {
-        return (string)$item->mime();
+        return (string)$item->niceSize();
     }
 
     protected function itemImage($item)
     {
         return $item;
+    }
+
+    protected function itemToResult($item)
+    {
+        $stringTemplateData = [$this->modelType($item) => $item];
+
+        if (is_a($item->parent(), Page::class) === true) {
+            $parent = $item->parent()->id();
+        } else {
+            $parent = null;
+        }
+
+        return [
+            'filename' => $item->filename(),
+            'id'       => $item->id(),
+            'parent'   => $parent,
+            'text'     => $this->itemValue($item, 'title', $stringTemplateData),
+            'image'    => $this->itemImageResult($item, $stringTemplateData),
+            'link'     => $this->itemLink($item),
+            'info'     => $this->itemValue($item, 'info', $stringTemplateData),
+        ];
     }
 
     public function upload(array $data)
