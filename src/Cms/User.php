@@ -59,7 +59,7 @@ class User extends Model
     /**
      * @var string
      */
-    protected $language = 'en_US';
+    protected $language;
 
     /**
      * @var string
@@ -71,7 +71,7 @@ class User extends Model
      *
      * @var string
      */
-    protected $role = 'visitor';
+    protected $role;
 
     /**
      * Creates a new User object
@@ -393,7 +393,7 @@ class User extends Model
      */
     protected function setLanguage(string $language = null): self
     {
-        $this->language = trim($language);
+        $this->language = $language !== null ? trim($language) : null;
         return $this;
     }
 
@@ -427,7 +427,7 @@ class User extends Model
      */
     protected function setRole(string $role = null): self
     {
-        $this->role = strtolower(trim($role));
+        $this->role = $role !== null ? strtolower(trim($role)) : null;
         return $this;
     }
 
