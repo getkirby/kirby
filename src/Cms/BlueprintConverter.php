@@ -5,14 +5,15 @@ namespace Kirby\Cms;
 class BlueprintConverter
 {
 
-    public static function convertColumnsToTab(array $data): array
+    public static function convertColumnsToTabs(array $data): array
     {
-        if (isset($data['columns']) === false) {
+        if (isset($data['columns']) === false || isset($data['tabs']) === true) {
             return $data;
         }
 
         $data['tabs'] = [
             'main' => [
+                'label'   => 'Main',
                 'columns' => $data['columns']
             ]
         ];
@@ -21,24 +22,6 @@ class BlueprintConverter
 
         return $data;
     }
-
-    public static function convertSectionsToColumn(array $data): array
-    {
-        if (isset($data['sections']) === false) {
-            return $data;
-        }
-
-        $data['columns'] = [
-            'center' => [
-                'sections' => $data['sections']
-            ]
-        ];
-
-        unset($data['sections']);
-
-        return $data;
-    }
-
 
     public static function convertFieldsToSection(array $data): array
     {

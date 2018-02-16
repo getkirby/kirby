@@ -212,7 +212,7 @@ class BlueprintFilesSection extends BlueprintSection
             ];
         }
 
-        if (is_array($accept) === false) {
+        if (is_array($accept) === false && $accept !== null) {
             throw new Exception('Invalid accept rules definition');
         }
 

@@ -19,11 +19,4 @@ class BlueprintCollection extends Collection
         return array_values(parent::toArray($map));
     }
 
-    public function toLayout(): array
-    {
-        return array_values($this->toArray(function($object) {
-            return $object->toLayout();
-        }));
-    }
-
 }

@@ -83,9 +83,9 @@ class BlueprintObject extends Object
         return $this;
     }
 
-    public function toLayout()
+    public function toArray(): array
     {
-        return $this->toArray();
+        return $this->propertiesToArray();
     }
 
 }

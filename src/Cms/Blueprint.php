@@ -9,7 +9,7 @@ use Kirby\Form\Fields;
 /**
  * The Blueprint class converts an array from a
  * blueprint file into an object with a Kirby-style
- * chainable API for tabs, sections and everything
+ * chainable API for sections and everything
  * else
  *
  * @package   Kirby Cms
@@ -21,25 +21,16 @@ class Blueprint extends BlueprintObject
 {
 
     /**
-     * All properties that should be
-     * included in the Blueprint::toArray
-     * method output
-     *
-     * @var array
-     */
-    protected static $toArray = [
-        'name',
-        'options',
-        'tabs',
-        'title'
-    ];
-
-    /**
      * Cache for the fields collection
      *
      * @var BlueprintCollection
      */
     protected $fields;
+
+    /**
+     * @var BlueprintTabs
+     */
+    protected $tabs;
 
     /**
      * The blueprint name
@@ -63,13 +54,6 @@ class Blueprint extends BlueprintObject
     protected $sections;
 
     /**
-     * Cache for the tabs collection
-     *
-     * @var BlueprintCollection
-     */
-    protected $tabs;
-
-    /**
      * The blueprint title
      *
      * @var string
@@ -86,12 +70,23 @@ class Blueprint extends BlueprintObject
     public function __construct(array $props = [])
     {
         $props = $this->extend($props);
-
         $props = BlueprintConverter::convertFieldsToSection($props);
-        $props = BlueprintConverter::convertSectionsToColumn($props);
-        $props = BlueprintConverter::convertColumnsToTab($props);
+        $props = BlueprintConverter::convertColumnsToTabs($props);
+
+        $this->tabs = new BlueprintTabs($this, $props['tabs']);
 
         $this->setProperties($props);
+    }
+
+    /**
+     * Prepare the BlueprintTabs object for the
+     * Blueprint::toArray method
+     *
+     * @return array
+     */
+    protected function convertTabsToArray(): array
+    {
+        return $this->tabs()->toArray();
     }
 
     /**
@@ -102,17 +97,6 @@ class Blueprint extends BlueprintObject
     protected function convertOptionsToArray(): array
     {
         return $this->options()->toArray();
-    }
-
-    /**
-     * Prepare the tabs object for the
-     * Blueprint::toArray method
-     *
-     * @return array
-     */
-    protected function convertTabsToArray(): array
-    {
-        return $this->tabs()->toArray();
     }
 
     /**
@@ -169,6 +153,14 @@ class Blueprint extends BlueprintObject
     }
 
     /**
+     * @return BlueprintTabs
+     */
+    public function tabs(): BlueprintTabs
+    {
+        return $this->tabs;
+    }
+
+    /**
      * Loads a blueprint from file or array
      *
      * @param string|array $input
@@ -209,7 +201,7 @@ class Blueprint extends BlueprintObject
      */
     public function options()
     {
-        return $this->options ?? [];
+        return $this->options ?? new BlueprintOptions($this->model(), $this->options);
     }
 
     /**
@@ -241,58 +233,18 @@ class Blueprint extends BlueprintObject
 
         $sections = new BlueprintCollection;
 
-        foreach ($this->tabs() as $tab) {
-            foreach ($tab->sections() as $section) {
-                $sections->append($section->id(), $section);
-            }
-        }
-
-        return $this->sections = $sections;
-    }
-
-    /**
-     * Returns a specific BlueprintTab object
-     * by name, if it exists
-     *
-     * @param string $name
-     * @return BlueprintTab|null
-     */
-    public function tab(string $name)
-    {
-        if ($tab = $this->tabs()->find($name)) {
-            return $tab;
-        }
-
-        throw new Exception('The tab could not be found');
-    }
-
-    /**
-     * Returns a BlueprintCollection of all
-     * BlueprintTab objects.
-     *
-     * @return BlueprintCollection
-     */
-    public function tabs(): Collection
-    {
-        if (is_a($this->tabs, BlueprintCollection::class) === true) {
-            return $this->tabs;
-        }
-
-        $tabs = new BlueprintCollection();
-
-        foreach ($this->tabs as $name => $props) {
-
+        foreach ($this->sections as $name => $props) {
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
 
             // pass down the model
             $props['model'] = $this->model();
 
-            $tab = new BlueprintTab($props);
-            $tabs->append($tab->id(), $tab);
+            $section = BlueprintSection::factory($props);
+            $sections->set($section->id(), $section);
         }
 
-        return $this->tabs = $tabs;
+        return $this->sections = $sections;
     }
 
     /**
@@ -326,12 +278,12 @@ class Blueprint extends BlueprintObject
     }
 
     /**
-     * @param array $tabs
+     * @param array $sections
      * @return self
      */
-    protected function setTabs(array $tabs): self
+    protected function setSections(array $sections = null): self
     {
-        $this->tabs = $tabs;
+        $this->sections = $sections;
         return $this;
     }
 
@@ -343,17 +295,6 @@ class Blueprint extends BlueprintObject
     {
         $this->title = $this->i18n($title);
         return $this;
-    }
-
-    /**
-     * Returns a simplified array for the
-     * panel layout.
-     *
-     * @return array
-     */
-    public function toLayout(): array
-    {
-        return $this->tabs()->toLayout();
     }
 
 }
