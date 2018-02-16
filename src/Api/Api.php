@@ -150,7 +150,10 @@ class Api
             return $this->requestData[$type] ?? [];
         }
 
-        return $this->requestData($type)[$key] ?? $default;
+        $data = array_change_key_case($this->requestData($type));
+        $key  = strtolower($key);
+
+        return $data[$key] ?? $default;
     }
 
     public function requestBody(string $key = null, $default = null)
