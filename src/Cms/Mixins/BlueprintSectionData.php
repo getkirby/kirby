@@ -4,6 +4,9 @@ namespace Kirby\Cms\Mixins;
 
 use Exception;
 use Kirby\Cms\File;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\User;
 
 trait BlueprintSectionData
 {
@@ -15,6 +18,7 @@ trait BlueprintSectionData
     protected $error;
     protected $item;
     protected $limit = 20;
+    protected $link;
     protected $originalData;
     protected $parent;
     protected $query;
@@ -98,12 +102,19 @@ trait BlueprintSectionData
         return $this->item ?? [];
     }
 
+    protected function itemImage()
+    {
+        return null;
+    }
+
     protected function itemImageResult($item, $stringTemplateData)
     {
-        $image = $this->itemValue($item, 'image', $stringTemplateData);
+        $image = $this->itemImage($item, $stringTemplateData);
 
         if ($image !== null && is_a($image, File::class) === true && $image->type() === 'image') {
-            return $image->url();
+            return [
+                'url' => $image->url()
+            ];
         }
 
         return null;
@@ -121,14 +132,15 @@ trait BlueprintSectionData
 
     protected function itemToResult($item)
     {
-
         $stringTemplateData = [$this->modelType($item) => $item];
 
         return [
-            'title' => $this->itemValue($item, 'title', $stringTemplateData),
-            'image' => $this->itemImageResult($item, $stringTemplateData),
-            'link'  => $this->itemLink($item),
-            'info'  => $this->itemValue($item, 'info', $stringTemplateData),
+            'id'     => $item->id(),
+            'parent' => $item->parent() ? $item->parent()->id() : null,
+            'text'   => $this->itemValue($item, 'title', $stringTemplateData),
+            'image'  => $this->itemImageResult($item, $stringTemplateData),
+            'link'   => $this->itemLink($item),
+            'info'   => $this->itemValue($item, 'info', $stringTemplateData),
         ];
     }
 
@@ -148,6 +160,40 @@ trait BlueprintSectionData
     public function limit(): int
     {
         return $this->limit;
+    }
+
+    public function link()
+    {
+        $parent = $this->parent();
+        $model  = $this->model();
+
+        if ($parent === null) {
+            return $this->linkForModel($model);
+        }
+
+        $parentClass = get_class($parent);
+        $modelClass  = get_class($model);
+
+        if ($parentClass !== $modelClass) {
+            return $this->linkForModel($parent);
+        }
+
+        return null;
+    }
+
+    protected function linkForModel($model)
+    {
+        if (is_a($model, Page::class) === true) {
+            return '/pages/' . str_replace('/', '+', $model->id());
+        }
+
+        if (is_a($model, Site::class) === true) {
+            return '/pages';
+        }
+
+        if (is_a($model, User::class) === true) {
+            return '/users/' . $model->id();
+        }
     }
 
     public function originalData()
