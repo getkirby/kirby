@@ -44,7 +44,7 @@ class BlueprintFieldsSection extends BlueprintSection
     {
         return [
             'errors' => $this->form()->errors(),
-            'fields' => $this->form()->fields()->toOptions(),
+            'fields' => array_values($this->form()->fields()->toOptions()),
             'name'   => $this->name(),
             'type'   => $this->type(),
             'values' => $this->form()->values(),

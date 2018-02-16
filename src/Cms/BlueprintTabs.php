@@ -33,7 +33,7 @@ class BlueprintTabs
             $sections = current($column);
 
             if (in_array($width, ['1/1', '1/2', '1/3', '1/4', '2/3', '3/4']) === false) {
-                throw new Exception('Invalid column width');
+                throw new Exception('Invalid column width: ' . $width);
             }
 
             if (empty($sections) === true) {
@@ -103,7 +103,7 @@ class BlueprintTabs
 
     public function toArray(): array
     {
-        return $this->tabs($this->tabs);
+        return array_values($this->tabs($this->tabs));
     }
 
 }
