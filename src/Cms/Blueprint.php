@@ -73,7 +73,7 @@ class Blueprint extends BlueprintObject
         $props = BlueprintConverter::convertFieldsToSection($props);
         $props = BlueprintConverter::convertColumnsToTabs($props);
 
-        $this->tabs = new BlueprintTabs($this, $props['tabs']);
+        $this->tabs = new BlueprintTabs($this, $props['tabs'] ?? []);
 
         $this->setProperties($props);
     }

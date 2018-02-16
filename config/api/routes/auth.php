@@ -49,7 +49,8 @@ return [
 
             return [
                 'status' => 'ok',
-                'token'  => $token
+                'token'  => $token,
+                'user'   => $this->resolve($user)->select('id, email, language, name')->toArray()
             ];
 
         }
