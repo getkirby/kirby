@@ -10,7 +10,7 @@ class PageRules
     public static function changeNum(Page $page, int $num = null): bool
     {
 
-        if ($num < 0) {
+        if ($num !== null && $num < 0) {
             throw new Exception('The page order number cannot be negative');
         }
 
