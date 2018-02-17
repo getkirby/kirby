@@ -76,7 +76,7 @@ return [
         'pattern' => 'users/(:any)/avatar',
         'method'  => 'DELETE',
         'action'  => function (string $id) {
-            return $this->user($id)->delete();
+            return $this->user($id)->avatar()->delete();
         }
     ],
     [
