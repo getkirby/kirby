@@ -14,7 +14,7 @@ class UrlField extends TextField
 
     protected function defaultIcon()
     {
-        return 'url';
+        return 'chain';
     }
 
     protected function defaultLabel()
