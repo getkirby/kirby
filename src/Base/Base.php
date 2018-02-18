@@ -3,6 +3,7 @@
 namespace Kirby\Base;
 
 use Kirby\Data\Data;
+use Kirby\FileSystem\Folder;
 use Kirby\Util\Properties;
 
 class Base
@@ -36,6 +37,11 @@ class Base
             'Thumb.db',
             '@eaDir'
         ];
+    }
+
+    public function delete()
+    {
+        return (new Folder($this->root()))->delete();
     }
 
     public function extension(): string
