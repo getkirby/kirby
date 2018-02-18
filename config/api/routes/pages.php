@@ -109,6 +109,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/slug',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->page($id)->changeSlug($this->requestBody('slug'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/(:any)/(:all?)',
         'method'  => 'ALL',
         'action'  => function (string $id, string $sectionName, string $path = '') {
