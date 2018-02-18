@@ -205,15 +205,16 @@ class PageStore extends PageStoreDefault
 
     protected function root($page = null): string
     {
-        if (is_string($this->root) === true) {
-            return $this->root;
-        }
 
         if ($page === null) {
+            if (is_string($this->root) === true) {
+                return $this->root;
+            }
+
             return $this->root = $this->kirby()->root('content') . '/' . $this->page()->diruri();
         }
 
-        return $this->root = $this->parentRoot() . '/' . $this->dirname();
+        return $this->parentRoot() . '/' . $page->dirname();
     }
 
     public function template(): string
