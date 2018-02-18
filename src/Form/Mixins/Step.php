@@ -27,11 +27,10 @@ trait Step
 
     protected function validateStep($value)
     {
-        // TODO: Find way that works with floats as well
+        // TODO: find a way that works with decimal numbers
         // if ($this->step() !== null && $value % $this->step() !== 0) {
-        if ($this->step() !== null) {
-            throw new StepException();
-        }
+        //     throw new StepException();
+        // }
 
         return true;
     }
