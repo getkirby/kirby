@@ -87,10 +87,38 @@ return [
         }
     ],
     [
+        'pattern' => 'users/(:any)/email',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->user($id)->changeEmail($this->requestBody('email'));
+        }
+    ],
+    [
+        'pattern' => 'users/(:any)/language',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->user($id)->changeLanguage($this->requestBody('language'));
+        }
+    ],
+    [
         'pattern' => 'users/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
             return $this->user($id)->blueprint()->options()->toArray();
+        }
+    ],
+    [
+        'pattern' => 'users/(:any)/password',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->user($id)->changePassword($this->requestBody('password'));
+        }
+    ],
+    [
+        'pattern' => 'users/(:any)/role',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->user($id)->changeRole($this->requestBody('role'));
         }
     ],
     [
