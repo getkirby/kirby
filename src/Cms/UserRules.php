@@ -36,7 +36,7 @@ class UserRules
     }
 
     // TODO: $form not used?
-    public static function create(User $user, Form $form): bool
+    public static function create(User $user, $values, Form $form): bool
     {
         static::validEmail($user, $user->email());
         static::validRole($user, $user->role());
