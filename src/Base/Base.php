@@ -3,7 +3,7 @@
 namespace Kirby\Base;
 
 use Kirby\Data\Data;
-use Kirby\FileSystem\Folder;
+use Kirby\Util\Dir;
 use Kirby\Util\Properties;
 
 class Base
@@ -39,9 +39,13 @@ class Base
         ];
     }
 
-    public function delete()
+    public function delete(): bool
     {
-        return (new Folder($this->root()))->delete();
+        if (Dir::remove($this->root()) !== true) {
+            throw new Exception('The directory could not be deleted');
+        }
+
+        return true;
     }
 
     public function extension(): string
