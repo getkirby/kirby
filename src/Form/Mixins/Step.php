@@ -14,7 +14,7 @@ trait Step
         return null;
     }
 
-    protected function setStep(float $step = null)
+    protected function setStep(int $step = null)
     {
         $this->step = $step;
         return $this;
@@ -27,10 +27,9 @@ trait Step
 
     protected function validateStep($value)
     {
-        // TODO: find a way that works with decimal numbers
-        // if ($this->step() !== null && $value % $this->step() !== 0) {
-        //     throw new StepException();
-        // }
+        if ($this->step() !== null && $value % $this->step() !== 0) {
+            throw new StepException();
+        }
 
         return true;
     }
