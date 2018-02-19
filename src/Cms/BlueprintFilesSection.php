@@ -182,6 +182,7 @@ class BlueprintFilesSection extends BlueprintSection
             'image'    => $this->itemImageResult($item, $stringTemplateData),
             'link'     => $this->itemLink($item),
             'info'     => $this->itemValue($item, 'info', $stringTemplateData),
+            'url'      => $item->url()
         ];
     }
 
