@@ -87,6 +87,15 @@ class BlueprintFilesSection extends BlueprintSection
     public function create()
     {
         if (empty($this->create) === true) {
+
+            // automatically accept new files, when "accept" is set
+            if (empty($this->accept) === false) {
+                return [
+                    'content' => [],
+                    'name'    => null
+                ];
+            }
+
             return false;
         }
 
