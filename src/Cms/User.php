@@ -417,7 +417,7 @@ class User extends Model
      */
     protected function setPassword(string $password = null): self
     {
-        $this->password = trim($password);
+        $this->password = $password;
         return $this;
     }
 

@@ -69,7 +69,7 @@ class UserStoreDefault extends Store
         return [];
     }
 
-    public function create()
+    public function create(array $values, Form $form)
     {
         throw new Exception('The user cannot be saved');
     }
