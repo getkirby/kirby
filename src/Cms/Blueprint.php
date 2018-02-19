@@ -234,7 +234,7 @@ class Blueprint extends BlueprintObject
 
         $sections = new BlueprintCollection;
 
-        foreach ($this->sections as $name => $props) {
+        foreach ((array)$this->sections as $name => $props) {
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
 
