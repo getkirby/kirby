@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Util\A;
 
 class BlueprintPagesSection extends BlueprintSection
 {
@@ -33,15 +34,36 @@ class BlueprintPagesSection extends BlueprintSection
             $template = $this->data()->first()->template() ?? 'default';
         }
 
-        if (is_array($template) === true) {
-            return $template;
-        }
-
         if (is_string($template) === true) {
-            return [$template];
+            $template = [$template];
         }
 
-        throw new Exception('Invalid child template');
+        if (is_array($template) !== true) {
+            throw new Exception('Invalid child template');
+        }
+
+        // an array of template options
+        $options = [];
+
+        // convert every template to a usable option array
+        // for the template select box
+        foreach ($template as $templateName) {
+
+            // create a dummy child page to load the blueprint
+            $child = new Page([
+                'slug'     => 'tmp',
+                'template' => $templateName
+            ]);
+
+            $options[] = [
+                'value' => $templateName,
+                'text'  => $child->blueprint()->title()
+            ];
+
+        }
+
+        return $options;
+
     }
 
     public function create()
@@ -106,7 +128,7 @@ class BlueprintPagesSection extends BlueprintSection
         $content = array_merge($data['content'] ?? [], $options['content']);
 
         // validate the template
-        if (in_array($data['template'], $options['template']) === false) {
+        if (in_array($data['template'], A::pluck($options['template'], 'value')) === false) {
             throw new Exception('Invalid template');
         }
 
