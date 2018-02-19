@@ -85,8 +85,21 @@ class Api
             ];
         }
 
-        return $output;
+        if ($output === true) {
+            return [
+                'status' => 'ok',
+            ];
+        }
 
+        if ($output === false) {
+            return [
+                'status'  => 'error',
+                'message' => 'bad request',
+                'code'    => 400,
+            ];
+        }
+
+        return $output;
     }
 
     public function collection(string $name, $collection = null)

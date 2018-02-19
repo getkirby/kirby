@@ -14,7 +14,7 @@ class Dir
      * @param   boolean $recursive Create all parent directories, which don't exist
      * @return  boolean True: the dir has been created, false: creating failed
      */
-    public static function make($dir, $recursive = true): bool
+    public static function make(string $dir, bool $recursive = true): bool
     {
         if (is_dir($dir) === true) {
             return true;
@@ -63,7 +63,7 @@ class Dir
      * @param   array   $ignore Optional array with filenames, which should be ignored
      * @return  array   An array of filenames
      */
-    public static function read($dir, $ignore = null): array
+    public static function read(string $dir, array $ignore = null): array
     {
         if (is_dir($dir) === false) {
             return [];
@@ -84,6 +84,37 @@ class Dir
         }
 
         return (array)array_diff(scandir($dir), $ignore);
+    }
+
+    /**
+     * Removes a folder including all containing files and folders
+     *
+     * @param string $dir
+     * @return boolean
+     */
+    public static function remove(string $dir): bool
+    {
+        $dir = realpath($dir);
+
+        if (is_dir($dir) === false) {
+            return true;
+        }
+
+        foreach (scandir($dir) as $childName) {
+            if (in_array($childName, ['.', '..']) === true) {
+                continue;
+            }
+
+            $child = $dir . '/' . $childName;
+
+            if (is_dir($child) === true) {
+                static::remove($child);
+            } else {
+                F::remove($child);
+            }
+        }
+
+        return rmdir($dir);
     }
 
 }
