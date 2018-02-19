@@ -62,18 +62,6 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/files',
-        'method'  => 'POST',
-        'action'  => function (string $id) {
-            return $this->upload(function ($source, $filename) use ($id) {
-                return $this->page($id)->createFile($source, [
-                    'filename' => $filename
-                ]);
-            });
-
-        }
-    ],
-    [
         'pattern' => 'pages/(:any)/files/(:any)',
         'method'  => 'GET',
         'action'  => function (string $id, string $filename) {

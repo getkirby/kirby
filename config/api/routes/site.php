@@ -47,19 +47,6 @@ return [
         }
     ],
     [
-        'pattern' => 'site/files',
-        'method'  => 'POST',
-        'action'  => function () {
-
-            return $this->upload(function ($source, $filename) {
-                return $this->site()->createFile($source, [
-                    'filename' => $filename
-                ]);
-            });
-
-        }
-    ],
-    [
         'pattern' => 'site/files/(:any)',
         'method'  => 'GET',
         'action'  => function (string $filename) {
