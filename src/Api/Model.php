@@ -171,7 +171,12 @@ class Model
         }
 
         if (isset($this->views[$name]) === false) {
-            throw new Exception(sprintf('The view "%s" does not exist', $name));
+            $name = 'default';
+
+            // try to fall back to the default view at least
+            if (isset($this->views[$name]) === false) {
+                throw new Exception(sprintf('The view "%s" does not exist', $name));
+            }
         }
 
         return $this->select($this->views[$name]);
