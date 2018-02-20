@@ -104,6 +104,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/title',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->page($id)->changeTitle($this->requestBody('title'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/(:any)/(:all?)',
         'method'  => 'ALL',
         'action'  => function (string $id, string $sectionName, string $path = '') {

@@ -203,6 +203,17 @@ class Page extends Model
     }
 
     /**
+     * @param string $title
+     * @return self
+     */
+    public function changeTitle(string $title): self
+    {
+        return $this->update([
+            'title' => $title
+        ]);
+    }
+
+    /**
      * Returns the Children collection for this page
      * The HasChildren trait takes care of the rest
      *
