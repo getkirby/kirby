@@ -58,18 +58,9 @@ return [
         'pattern' => 'users/(:any)/avatar',
         'method'  => 'POST',
         'action'  => function (string $id) {
-
             return $this->upload(function ($source, $filename) use ($id) {
-                return $this->user($id)->avatar()->create($source);
+                return $this->user($id)->avatar()->replace($source);
             }, $single = true);
-
-        }
-    ],
-    [
-        'pattern' => 'users/(:any)/avatar',
-        'method'  => 'PATCH',
-        'action'  => function (string $id) {
-            throw new Exception('not yet implemented');
         }
     ],
     [
