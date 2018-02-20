@@ -8,7 +8,7 @@ use Kirby\Image\Darkroom;
 use Kirby\FileSystem\Folder;
 use Kirby\Util\Str;
 
-class Media extends Object
+class Media extends Component
 {
 
     /**
@@ -48,12 +48,12 @@ class Media extends Object
     }
 
     /**
-     * @param Object $model
-     * @param Object $file
+     * @param Component $model
+     * @param Component $file
      * @param array $attributes
      * @return array
      */
-    public function create(Object $model, Object $file, array $attributes = [])
+    public function create(Component $model, Component $file, array $attributes = [])
     {
 
         if ($file->exists() === false) {
@@ -102,21 +102,21 @@ class Media extends Object
     }
 
     /**
-     * @param Object $model
-     * @param Object $file
+     * @param Component $model
+     * @param Component $file
      * @return boolean
      */
-    public function delete(Object $model, Object $file = null): bool
+    public function delete(Component $model, Component $file = null): bool
     {
         return $this->unlink($this->root($model, $file));
     }
 
     /**
-     * @param Object $file
+     * @param Component $file
      * @param array $attributes
      * @return string
      */
-    public function filename(Object $file, array $attributes = []): string
+    public function filename(Component $file, array $attributes = []): string
     {
         if (empty($attributes) === true || $file->type() !== 'image') {
             return $file->filename();
@@ -150,12 +150,12 @@ class Media extends Object
     }
 
     /**
-     * @param Object $model
-     * @param Object $file
+     * @param Component $model
+     * @param Component $file
      * @param array $attributes
      * @return string
      */
-    public function path(Object $model, Object $file = null, array $attributes = []): string
+    public function path(Component $model, Component $file = null, array $attributes = []): string
     {
 
         if (is_a($model, Page::class) === true) {
@@ -204,12 +204,12 @@ class Media extends Object
     }
 
     /**
-     * @param Object $model
-     * @param Object $file
+     * @param Component $model
+     * @param Component $file
      * @param array $attributes
      * @return string
      */
-    public function root(Object $model = null, Object $file = null, array $attributes = []): string
+    public function root(Component $model = null, Component $file = null, array $attributes = []): string
     {
         if ($model === null) {
             return $this->root;
@@ -280,12 +280,12 @@ class Media extends Object
     }
 
     /**
-     * @param Object $model
-     * @param Object $file
+     * @param Component $model
+     * @param Component $file
      * @param array $attributes
      * @return string
      */
-    public function url(Object $model = null, Object $file = null, array $attributes = []): string
+    public function url(Component $model = null, Component $file = null, array $attributes = []): string
     {
         if ($model === null) {
             return $this->url;

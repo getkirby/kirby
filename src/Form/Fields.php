@@ -11,7 +11,7 @@ class Fields extends Collection
 
     /**
      * Internal setter for each object in the Collection.
-     * This takes care of Object validation and of setting
+     * This takes care of validation and of setting
      * the collection prop on each object correctly.
      *
      * @param string $id

@@ -53,7 +53,7 @@ class Collection extends BaseCollection
 
     /**
      * Internal setter for each object in the Collection.
-     * This takes care of Object validation and of setting
+     * This takes care of Component validation and of setting
      * the collection prop on each object correctly.
      *
      * @param string $id
@@ -105,7 +105,7 @@ class Collection extends BaseCollection
      * Returns a Collection without the given element(s)
      *
      * @param  args    any number of keys, passed as individual arguments
-     * @return Object
+     * @return Collection
      */
     public function not(...$keys)
     {

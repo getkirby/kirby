@@ -79,7 +79,7 @@ trait Mutator
      *
      * @param  mixed      $key
      * @param  mixed      $item
-     * @return Object
+     * @return Collection
      */
     public function append($key, $item): self
     {

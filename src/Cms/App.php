@@ -11,7 +11,7 @@ use Kirby\Util\F;
 use Kirby\Util\Factory;
 use Kirby\Util\Dir;
 
-class App extends Object
+class App extends Component
 {
 
     use HasSingleton;

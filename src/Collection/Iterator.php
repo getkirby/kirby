@@ -125,7 +125,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Checks if an element is in the Object by key.
+     * Checks if an element is in the collection by key.
      *
      * @param  mixed  $key
      * @return boolean

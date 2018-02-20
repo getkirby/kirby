@@ -40,7 +40,7 @@ class Content
      * for testing, but field methods might
      * need it.
      *
-     * @var Object
+     * @var Page|File|User|Site
      */
     protected $parent;
 

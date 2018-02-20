@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Util\I18n;
 
-class BlueprintObject extends Object
+class BlueprintObject extends Component
 {
 
     use I18n;

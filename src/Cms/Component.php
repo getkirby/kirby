@@ -6,7 +6,7 @@ use Exception;
 use Kirby\Util\Properties;
 use ReflectionMethod;
 
-abstract class Object
+abstract class Component
 {
 
     use Properties;

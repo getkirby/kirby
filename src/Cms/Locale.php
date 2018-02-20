@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 
-class Locale extends Object
+class Locale extends Component
 {
 
     protected $code;

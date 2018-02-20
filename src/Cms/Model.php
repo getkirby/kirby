@@ -7,7 +7,7 @@ use stdClass;
 use ReflectionMethod;
 use Kirby\Util\Str;
 
-abstract class Model extends Object
+abstract class Model extends Component
 {
 
     /**
