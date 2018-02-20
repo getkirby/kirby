@@ -35,6 +35,7 @@ sections:
 		type: files
 		query: page.images
 		layout: list
+		accept: image/jpeg
 
 	# seo fields
 	seo:
