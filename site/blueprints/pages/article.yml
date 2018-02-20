@@ -19,7 +19,6 @@ sections:
       date:
         label: Date
         type: datetime
-        required: true
       author:
         label: Author
         type: user
