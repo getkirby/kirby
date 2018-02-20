@@ -92,6 +92,13 @@ return [
         }
     ],
     [
+        'pattern' => 'users/(:any)/name',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->user($id)->changeName($this->requestBody('name'));
+        }
+    ],
+    [
         'pattern' => 'users/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {

@@ -64,6 +64,11 @@ class User extends Model
     /**
      * @var string
      */
+    protected $name;
+
+    /**
+     * @var string
+     */
     protected $password;
 
     /**
@@ -135,6 +140,17 @@ class User extends Model
         $this->rules()->changeLanguage($this, $language);
 
         return $this->store()->changeLanguage($language);
+    }
+
+    /**
+     * Changes the screen name of the user
+     *
+     * @param string $name
+     * @return self
+     */
+    public function changeName(string $name): self
+    {
+        return $this->store()->changeName($name);
     }
 
     /**
@@ -265,7 +281,11 @@ class User extends Model
      */
     public function id(): string
     {
-        return $this->id;
+        if ($this->id !== null) {
+            return $this->id;
+        }
+
+        return $this->id = sha1($this->email());
     }
 
     /**
@@ -347,7 +367,7 @@ class User extends Model
      */
     public function name(): string
     {
-        return $this->content()->get('name')->or($this->email())->value();
+        return $this->name ?? $this->name = $this->content()->get('name')->or($this->email())->value();
     }
 
     /**
@@ -392,7 +412,6 @@ class User extends Model
         $email = strtolower(trim($email));
 
         $this->email = $email;
-        $this->id    = sha1($this->email);
 
         return $this;
     }
@@ -406,6 +425,18 @@ class User extends Model
     protected function setLanguage(string $language = null): self
     {
         $this->language = $language !== null ? trim($language) : null;
+        return $this;
+    }
+
+    /**
+     * Sets the user name
+     *
+     * @param string $name
+     * @return self
+     */
+    protected function setName(string $name = null): self
+    {
+        $this->name = $name !== null ? trim($name) : null;
         return $this;
     }
 

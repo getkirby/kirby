@@ -50,6 +50,13 @@ class UserStoreDefault extends Store
         ]);
     }
 
+    public function changeName(string $name)
+    {
+        return $this->user()->clone([
+            'name' => $name
+        ]);
+    }
+
     public function changePassword(string $password)
     {
         return $this->user()->clone([

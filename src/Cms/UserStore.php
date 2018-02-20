@@ -73,6 +73,18 @@ class UserStore extends UserStoreDefault
         return $user->update();
     }
 
+    public function changeName(string $name)
+    {
+        $user = parent::changeName($name);
+
+        if ($this->exists() === false) {
+            return $user;
+        }
+
+        // save the user
+        return $user->update();
+    }
+
     public function changePassword(string $password)
     {
         $user = parent::changePassword($password);
@@ -193,6 +205,7 @@ class UserStore extends UserStoreDefault
         // store main information in the content file
         $content['email']    = $user->email();
         $content['language'] = $user->language();
+        $content['name']     = $user->name();
         $content['password'] = $user->hashPassword($user->password());
         $content['role']     = $user->role();
 
