@@ -90,6 +90,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/files/(:any)/rename',
+        'method'  => 'PATCH',
+        'action'  => function (string $id, string $filename) {
+            return $this->file($id, $filename)->changeName($this->requestBody('name'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
