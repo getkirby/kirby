@@ -288,8 +288,10 @@ class Api
     public function upload(Closure $callback, $single = false): array
     {
 
-        $result = [];
-        $files  = $this->requestFiles();
+        $trials  = 0;
+        $uploads = [];
+        $errors  = [];
+        $files   = $this->requestFiles();
 
         if (empty($files) === true) {
             throw new Exception('No uploaded files');
@@ -300,6 +302,8 @@ class Api
             if (isset($upload['tmp_name']) === false && is_array($upload)) {
                 continue;
             }
+
+            $trials++;
 
             try {
 
@@ -313,27 +317,46 @@ class Api
                     $data = $this->resolve($data)->toArray();
                 }
 
-                $result[$upload['name']] = [
-                    'status' => 'ok',
-                    'data'   => $data,
-                ];
+                $uploads[$upload['name']] = $data;
 
             } catch (Exception $e) {
-
-                $result[$upload['name']] = [
-                    'status'  => 'error',
-                    'message' => $e->getMessage()
-                ];
-
+                $errors[$upload['name']] = $e->getMessage();
             }
 
             if ($single === true) {
-                return current($result);
+                break;
             }
 
         }
 
-        return $result;
+        // return a single upload response
+        if ($trials === 1) {
+
+            if (empty($errors) === false) {
+                return [
+                    'status'  => 'error',
+                    'message' => current($errors)
+                ];
+            }
+
+            return [
+                'status' => 'ok',
+                'data'   => current($uploads)
+            ];
+
+        }
+
+        if (empty($errors) === false) {
+            return [
+                'status' => 'error',
+                'errors' => $errors
+            ];
+        }
+
+        return [
+            'status' => 'ok',
+            'data'   => $uploads
+        ];
 
     }
 
