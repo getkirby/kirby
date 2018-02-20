@@ -39,6 +39,10 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function changeRole(): bool
     {
+        if ($this->model->isLastAdmin() === true) {
+            return false;
+        }
+
         return $this->options['changeRole'];
     }
 
