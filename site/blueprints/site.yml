@@ -24,6 +24,7 @@ sections:
     type: pages
     query: site.find("projects").children.visible
     layout: list
+    create: project
 
   blog:
     headline: Blog
@@ -32,6 +33,7 @@ sections:
     layout: list
     item:
       info: "{{ page.date('d.m.Y') }}"
+    create: article
 
   about:
     headline: About
@@ -40,6 +42,7 @@ sections:
     layout: list
     item:
       info: "{{ page.position }}"
+    create: team
 
   misc:
     headline: Misc
