@@ -37,7 +37,11 @@ return [
             return $user->next();
         },
         'options' => function (User $user) {
-            return $user->blueprint()->options()->toArray();
+            if ($blueprint = $user->blueprint()) {
+                return $blueprint->options()->toArray();
+            }
+
+            return null;
         },
         'prev' => function (User $user) {
             return $user->prev();
