@@ -30,6 +30,8 @@ RewriteRule ^content/(.*)\.(txt|md|mdown)$ index.php [L]
 #RewriteCond $1 !^plugins/[a-zA-Z0-9\.\-_%=]+/assets/.*
 RewriteRule ^site/(.*) index.php [L]
 
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
 # block direct access to kirby and the panel sources
 RewriteRule ^(kirby|panel\/app|panel\/tests)/(.*) index.php [L]
 
