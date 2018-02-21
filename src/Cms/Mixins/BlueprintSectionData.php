@@ -113,7 +113,7 @@ trait BlueprintSectionData
 
         if ($image !== null && is_a($image, File::class) === true && $image->type() === 'image') {
             return [
-                'url' => $image->url()
+                'url' => $this->layout() === 'list' ? $image->crop(100)->url() : $image->crop(300, 200)->url()
             ];
         }
 
