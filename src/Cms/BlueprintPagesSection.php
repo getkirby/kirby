@@ -146,7 +146,7 @@ class BlueprintPagesSection extends BlueprintSection
                 'pattern' => '/',
                 'method'  => 'GET',
                 'action'  => function () {
-                    return $this->section()->paginate($this->requestQuery('page', 1), $this->requestQuery('limit', 20))->toArray();
+                    return $this->section()->paginate($this->requestQuery('page', 1), $this->requestQuery('limit'))->toArray();
                 }
             ],
             'create' => [
