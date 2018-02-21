@@ -178,24 +178,19 @@ class Request
      */
     public function headers(): array
     {
-
-        if (function_exists('getallheaders')) {
-            return getallheaders();
-        }
-
         $headers = [];
 
         foreach ($_SERVER as $key => $value) {
 
-            if (substr($key, 0, 5) !== 'HTTP_') {
+            if (substr($key, 0, 5) !== 'HTTP_' && substr($key, 0, 14) !== 'REDIRECT_HTTP_') {
                 continue;
             }
 
+            // remove HTTP_
+            $key = str_replace(['REDIRECT_HTTP_', 'HTTP_'], '', $key);
+
             // convert to lowercase
             $key = strtolower($key);
-
-            // remove HTTP_
-            $key = substr($key, 5);
 
             // replace _ with spaces
             $key = str_replace('_', ' ', $key);
