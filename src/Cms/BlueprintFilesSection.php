@@ -147,7 +147,7 @@ class BlueprintFilesSection extends BlueprintSection
 
     protected function itemInfo($item)
     {
-        return (string)$item->niceSize();
+        return null;
     }
 
     protected function itemImage($item)
