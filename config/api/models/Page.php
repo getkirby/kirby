@@ -26,6 +26,9 @@ return [
         'id' => function (Page $page) {
             return $page->id();
         },
+        'isVisible' => function (Page $page) {
+            return $page->isVisible() === true;
+        },
         'next' => function (Page $page) {
             return $page->next();
         },
@@ -70,6 +73,7 @@ return [
         'default' => [
             'content',
             'id',
+            'isVisible',
             'num',
             'options',
             'parent' => 'compact',
@@ -81,6 +85,7 @@ return [
         'panel' => [
             'id',
             'blueprint',
+            'isVisible',
             'next'    => ['id', 'slug', 'title'],
             'parents' => ['id', 'slug', 'title'],
             'prev'    => ['id', 'slug', 'title'],

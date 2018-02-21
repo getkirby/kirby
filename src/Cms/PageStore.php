@@ -40,7 +40,6 @@ class PageStore extends PageStoreDefault
         $this->moveDirectory($oldRoot, $newRoot);
 
         return $newPage;
-
     }
 
     public function changeSlug(string $slug)

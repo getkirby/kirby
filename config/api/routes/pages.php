@@ -111,6 +111,17 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/status',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            if ($this->requestBody('status') === 'invisible') {
+                return $this->page($id)->hide();
+            }
+
+            return $this->page($id)->sort($this->requestBody('position'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/title',
         'method'  => 'PATCH',
         'action'  => function (string $id) {

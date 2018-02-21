@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Util\A;
 use Kirby\Util\Str;
 
 /**
@@ -443,7 +444,19 @@ class Page extends Model
      */
     public function hide(): self
     {
-        return $this->changeStatus('unlisted');
+        if ($this->isInvisible() === true) {
+            return $this;
+        }
+
+        $siblings = $this->siblings()->not($this);
+        $index    = 0;
+
+        foreach ($siblings as $sibling) {
+            $index++;
+            $sibling->changeNum($index);
+        }
+
+        return $this->changeNum(null);
     }
 
     /**
@@ -778,9 +791,36 @@ class Page extends Model
      */
     public function sort(int $position): self
     {
-        return $this->changeStatus('listed', $position);
-    }
+        // get all siblings including the current page
+        $siblings = $this->siblings()->visible();
 
+        // get a non-associative array of ids
+        $keys  = $siblings->keys();
+        $index = array_search($this->id(), $keys);
+
+        // if the page is not included in the siblings
+        // push the page at the end.
+        if ($index === false) {
+            $keys[] = $this->id();
+            $index  = count($keys) - 1;
+        }
+
+        // move the current page number in the array of keys
+        // subtract 1 from the num and the position, because of the
+        // zero-based array keys
+        $sorted = A::move($keys, $index, $position - 1);
+        $page   = null;
+
+        foreach ($sorted as $key => $id) {
+            if ($id === $this->id()) {
+                $page = $this->changeNum($key + 1);
+            } else {
+                $siblings->findBy('id', $id)->changeNum($key + 1);
+            }
+        }
+
+        return $page;
+    }
 
     /**
      * Returns the template name
