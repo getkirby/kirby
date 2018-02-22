@@ -28,7 +28,7 @@ trait MinLength
 
     protected function validateMinLength($value)
     {
-        if ($this->minLength() !== null) {
+        if ($this->isEmpty() === false && $this->minLength() !== null) {
             if (V::minLength($value, $this->minLength()) === false) {
                 throw new MinLengthException();
             }
