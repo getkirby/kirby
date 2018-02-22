@@ -351,6 +351,22 @@ class Page extends Model
     }
 
     /**
+     * Returns all content validation errors
+     *
+     * @return array
+     */
+    public function errors(): array
+    {
+        $errors = [];
+
+        foreach ($this->blueprint()->sections() as $section) {
+            $errors = array_merge($errors, array_values($section->errors()));
+        }
+
+        return $errors;
+    }
+
+    /**
      * Checks if the page exists in the store
      *
      * @return bool
@@ -791,6 +807,10 @@ class Page extends Model
      */
     public function sort(int $position): self
     {
+        if ($this->isInvisible() === true && empty($this->errors()) === false) {
+            throw new Exception('The page has errors and cannot be published');
+        }
+
         // get all siblings including the current page
         $siblings = $this->siblings()->visible();
 

@@ -15,7 +15,7 @@ trait BlueprintSectionData
     use BlueprintSectionMin;
 
     protected $data;
-    protected $error;
+    protected $errors;
     protected $item;
     protected $limit = 20;
     protected $link;
@@ -78,13 +78,19 @@ trait BlueprintSectionData
         return 'site.children';
     }
 
-    public function error()
+    public function errors(): array
     {
+
         try {
             $this->validate();
-            return null;
+            return [];
         } catch (Exception $e) {
-            return $e->getMessage();
+            return [
+                [
+                    'type'    => 'exception',
+                    'message' => $e->getMessage()
+                ]
+            ];
         }
     }
 
