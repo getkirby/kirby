@@ -25,9 +25,17 @@ sections:
 			headline:
 				label: Headline
 				type: text
+				required: true
+				minLength: 10
+			year:
+				label: Year
+				type: number
+				min: 2000
+				required: true
 			text:
 				label: Text
 				type: textarea
+				minLength: 10
 
 	# all images displayed as nice cards
 	images:
@@ -35,6 +43,8 @@ sections:
 		type: files
 		query: page.images
 		layout: list
+		min: 2
+		max: 3
 		accept: image/jpeg
 
 	# seo fields
