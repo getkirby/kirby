@@ -57,6 +57,7 @@ return [
 
         // get the authenticated user
         if ($id === null) {
+            return $this->users()->first();
             return $this->users()->findBy('id', $this->token()['uid']);
         }
 

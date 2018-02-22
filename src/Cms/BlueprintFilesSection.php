@@ -86,6 +86,10 @@ class BlueprintFilesSection extends BlueprintSection
 
     public function create()
     {
+        if ($this->isFull() === true) {
+            return false;
+        }
+
         if (empty($this->create) === true) {
 
             // automatically accept new files, when "accept" is set
@@ -96,10 +100,6 @@ class BlueprintFilesSection extends BlueprintSection
                 ];
             }
 
-            return false;
-        }
-
-        if ($this->isFull() === true) {
             return false;
         }
 

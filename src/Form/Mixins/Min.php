@@ -28,7 +28,7 @@ trait Min
 
     protected function validateMin($value, $message = null): bool
     {
-        if ($this->min() !== null) {
+        if ($this->isEmpty() === false && $this->min() !== null) {
             if ($value < $this->min()) {
                 throw $message !== null ? new MinException($message) : new MinException();
             }

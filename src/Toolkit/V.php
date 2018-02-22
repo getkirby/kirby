@@ -210,16 +210,16 @@ V::$validators = [
     'min' => function ($value, float $min): bool {
         return V::size($value, $min, '>=') === true;
     },
-    'maxLength' => function (string $value, $max): bool {
+    'maxLength' => function (string $value = null, $max): bool {
         return Str::length(trim($value)) <= $max;
     },
-    'minLength' => function (string $value, $min): bool {
+    'minLength' => function (string $value = null, $min): bool {
         return Str::length(trim($value)) >= $min;
     },
-    'maxWords' => function (string $value, $max): bool {
+    'maxWords' => function (string $value = null, $max): bool {
         return V::max(explode(' ', trim($value)), $max) === true;
     },
-    'minWords' => function (string $value, $min): bool {
+    'minWords' => function (string $value = null, $min): bool {
         return V::min(explode(' ', trim($value)), $min) === true;
     },
     'more' => function ($value, float $min): bool {

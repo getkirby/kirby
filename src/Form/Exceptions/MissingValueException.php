@@ -4,5 +4,5 @@ namespace Kirby\Form\Exceptions;
 
 class MissingValueException extends FieldException
 {
-    protected $message = 'The value is missing';
+    protected $message = 'The field is required';
 }

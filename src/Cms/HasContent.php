@@ -104,16 +104,19 @@ trait HasContent
      * Updates User data
      *
      * @param array $input
+     * @param boolean $validate
      * @return self
      */
-    public function update(array $input = null): self
+    public function update(array $input = null, bool $validate = true): self
     {
         $form = Form::for($this, [
             'values' => $input
         ]);
 
         // validate the input
-        $form->isValid();
+        if ($validate === true) {
+            $form->isValid();
+        }
 
         // get the data values array
         $values = $form->values();

@@ -28,7 +28,7 @@ trait Max
 
     protected function validateMax($value, $message = null): bool
     {
-        if ($this->max() !== null) {
+        if ($this->isEmpty() === false && $this->max() !== null) {
             if ($value > $this->max()) {
                 throw $message !== null ? new MaxException($message) : new MaxException();
             }

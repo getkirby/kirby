@@ -118,7 +118,6 @@ class BlueprintSection extends BlueprintObject
             'read' => [
                 'pattern' => '/',
                 'method'  => 'GET',
-                'auth'    => false,
                 'action'  => function () {
                     return $this->section()->toArray();
                 }

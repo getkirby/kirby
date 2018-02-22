@@ -28,7 +28,7 @@ trait MaxLength
 
     protected function validateMaxLength($value)
     {
-        if ($this->maxLength() !== null) {
+        if ($this->isEmpty() === false && $this->maxLength() !== null) {
             if (V::maxLength($value, $this->maxLength()) === false) {
                 throw new MaxLengthException();
             }
