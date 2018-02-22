@@ -69,6 +69,7 @@ return [
             'id',
             'title',
             'url',
+            'num'
         ],
         'default' => [
             'content',
