@@ -164,6 +164,30 @@ class Page extends Model
             return $this;
         }
 
+        $mode = $this->blueprint()->num();
+
+        switch ($mode) {
+            case 'zero':
+                $num = 0;
+                break;
+            case 'default':
+                $num = $num;
+                break;
+            default:
+                $template = new Tempura($mode, [
+                    'kirby' => $this->kirby(),
+                    'page'  => $this,
+                    'site'  => $this->site(),
+                ]);
+
+                $num = intval($template->render());
+                break;
+        }
+
+        if ($num === $this->num()) {
+            return $this;
+        }
+
         $this->rules()->changeNum($this, $num);
 
         return $this->store()->changeNum($num);
