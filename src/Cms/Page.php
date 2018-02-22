@@ -269,9 +269,6 @@ class Page extends Model
         // temporary child for validation
         $child = Page::factory($props);
 
-        // run all form validations
-        $child->update();
-
         // run additional validations
         $this->rules()->createChild($this, $child);
 

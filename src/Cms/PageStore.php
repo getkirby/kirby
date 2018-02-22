@@ -145,7 +145,7 @@ class PageStore extends PageStoreDefault
         ]);
 
         // write the content file
-        return $child->update();
+        return $child->update(null, false);
     }
 
     public function delete(): bool
