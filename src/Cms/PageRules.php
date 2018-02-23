@@ -9,7 +9,6 @@ class PageRules
 
     public static function changeNum(Page $page, int $num = null): bool
     {
-
         if ($num !== null && $num < 0) {
             throw new Exception('The page order number cannot be negative');
         }
@@ -29,15 +28,6 @@ class PageRules
 
         if ($duplicate = $page->siblings()->not($page)->find($slug)) {
             throw new Exception(sprintf('The URL appendix "%s" exists', $slug));
-        }
-
-        return true;
-    }
-
-    public static function changeStatus(Page $page, string $status, int $position = null): bool
-    {
-        if (in_array($status, ['listed', 'unlisted']) === false) {
-            throw new Exception(sprintf('Invalid status "%s"', $status));
         }
 
         return true;
