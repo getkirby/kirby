@@ -10,6 +10,12 @@ return [
         'name' => function (PageBlueprint $blueprint) {
             return $blueprint->name();
         },
+        'num' => function (PageBlueprint $blueprint) {
+            return $blueprint->num();
+        },
+        'options' => function (PageBlueprint $blueprint) {
+            return $blueprint->options()->toArray();
+        },
         'tabs' => function (PageBlueprint $blueprint) {
             return $blueprint->tabs()->toArray();
         },
