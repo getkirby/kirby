@@ -1,0 +1,32 @@
+title: Testimonials
+
+columns:
+  - 2/3: content
+  - 1/3: image
+
+sections:
+  content:
+    type: fields
+    fields:
+      username:
+        label: Username
+        type:  text
+        icon:  user
+        width: 1/2
+      tweet:
+        label: Tweet
+        type:  text
+        icon:  twitter
+        width: 1/2
+      text:
+        label: Text
+        type:  textarea
+        icon:  file-text-o
+
+  image:
+    headline: Image
+    type: files
+    query: page.images
+    layout: cards
+    min: 1
+    max: 1

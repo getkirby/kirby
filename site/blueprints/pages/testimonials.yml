@@ -1,0 +1,8 @@
+title: Testimonials
+
+sections:
+  testimonials:
+    headline: Tweets
+    type: pages
+    item:
+      info: "@{{ page.username }}"

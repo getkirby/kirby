@@ -1,5 +1,7 @@
 title: Article
 
+num: date
+
 columns:
   - 2/3: content
   - 1/3: meta, images
@@ -21,7 +23,8 @@ sections:
         type: datetime
       author:
         label: Author
-        type: user
+        type: text
+        icon: user
       tags:
         label: Tags
         type: tags

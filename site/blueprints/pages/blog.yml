@@ -1,5 +1,8 @@
 title: Blog
 
+options:
+  status: false
+
 sections:
   drafts:
     headline: Unpublished articles

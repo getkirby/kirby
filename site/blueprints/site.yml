@@ -24,6 +24,8 @@ sections:
     type: pages
     query: site.find("projects").children.visible
     layout: list
+    item:
+      info: "{{ page.year }}"
     create: project
 
   blog:
@@ -47,7 +49,7 @@ sections:
   misc:
     headline: Misc
     type: pages
-    query: site.find('home', 'contact', 'form')
+    query: site.find('home', 'contact', 'kitchensink')
     item:
       image: false
 

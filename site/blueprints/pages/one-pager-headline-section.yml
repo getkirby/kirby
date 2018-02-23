@@ -1,0 +1,8 @@
+title: Headline Section
+
+fields:
+  headline:
+    label: Headline
+    type: text
+
+

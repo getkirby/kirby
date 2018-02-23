@@ -27,6 +27,7 @@ sections:
 				type: text
 				required: true
 				minLength: 10
+				maxLength: 20
 			year:
 				label: Year
 				type: number
