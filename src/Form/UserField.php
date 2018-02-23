@@ -15,6 +15,8 @@ class UserField extends Field
     use Mixins\Required;
     use Mixins\Value;
 
+    protected $options;
+
     protected function defaultDefault()
     {
         if ($user = App::instance()->user()) {
@@ -35,6 +37,21 @@ class UserField extends Field
     protected function defaultName(): string
     {
         return 'user';
+    }
+
+    public function options(): array {
+
+        $options = [];
+
+        foreach (App::instance()->users() as $user) {
+            $options[] = [
+                'value' => $user->id(),
+                'text' => $user->name(),
+                'icon' => $user->avatar()->url()
+            ];
+        }
+
+        return $options;
     }
 
     protected function validate($value): bool
