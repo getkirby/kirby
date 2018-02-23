@@ -42,7 +42,7 @@ return [
             return $page->parent();
         },
         'parents' => function (Page $page) {
-            return $page->parents();
+            return $page->parents()->flip();
         },
         'prev' => function (Page $page) {
             return $page->prev();
