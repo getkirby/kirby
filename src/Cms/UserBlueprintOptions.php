@@ -10,6 +10,7 @@ class UserBlueprintOptions extends BlueprintOptions
     protected $options = [
         'changeEmail'    => true,
         'changeLanguage' => true,
+        'changeName'     => true,
         'changePassword' => true,
         'changeRole'     => true,
         'delete'         => true,
@@ -30,6 +31,11 @@ class UserBlueprintOptions extends BlueprintOptions
     public function changeLanguage(): bool
     {
         return $this->options['changeLanguage'];
+    }
+
+    public function changeName(): bool
+    {
+        return $this->options['changeName'];
     }
 
     public function changePassword(): bool

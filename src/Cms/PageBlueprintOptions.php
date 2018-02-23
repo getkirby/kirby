@@ -10,11 +10,13 @@ class PageBlueprintOptions extends BlueprintOptions
     protected $aliases = [
         'status'   => 'changeStatus',
         'template' => 'changeTemplate',
+        'title'    => 'changeTitle',
         'url'      => 'changeUrl',
     ];
 
     protected $options = [
         'changeStatus'   => true,
+        'changeTitle'    => true,
         'changeTemplate' => true,
         'changeUrl'      => true,
         'delete'         => true,
@@ -35,6 +37,11 @@ class PageBlueprintOptions extends BlueprintOptions
         }
 
         return $this->options['changeStatus'];
+    }
+
+    public function changeTitle(): bool
+    {
+        return $this->options['changeTitle'];
     }
 
     public function changeTemplate(): bool

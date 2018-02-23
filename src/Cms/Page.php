@@ -239,7 +239,7 @@ class Page extends Model
     {
         return $this->update([
             'title' => $title
-        ]);
+        ], false);
     }
 
     /**
