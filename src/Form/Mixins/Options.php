@@ -40,7 +40,7 @@ trait Options
         foreach ($this->options as $key => $option) {
             if (is_array($option) === false || isset($option['value']) === false) {
                 $option = [
-                    'value' => $key,
+                    'value' => is_int($key) ? $option : $key,
                     'text'  => $option
                 ];
             }
