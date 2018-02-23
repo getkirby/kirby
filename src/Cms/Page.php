@@ -164,28 +164,32 @@ class Page extends Model
             return $this;
         }
 
-        $mode = $this->blueprint()->num();
+        if ($num !== null) {
 
-        switch ($mode) {
-            case 'zero':
-                $num = 0;
-                break;
-            case 'default':
-                $num = $num;
-                break;
-            default:
-                $template = new Tempura($mode, [
-                    'kirby' => $this->kirby(),
-                    'page'  => $this,
-                    'site'  => $this->site(),
-                ]);
+            $mode = $this->blueprint()->num();
 
-                $num = intval($template->render());
-                break;
-        }
+            switch ($mode) {
+                case 'zero':
+                    $num = 0;
+                    break;
+                case 'default':
+                    $num = $num;
+                    break;
+                default:
+                    $template = new Tempura($mode, [
+                        'kirby' => $this->kirby(),
+                        'page'  => $this,
+                        'site'  => $this->site(),
+                    ]);
 
-        if ($num === $this->num()) {
-            return $this;
+                    $num = intval($template->render());
+                    break;
+            }
+
+            if ($num === $this->num()) {
+                return $this;
+            }
+
         }
 
         $this->rules()->changeNum($this, $num);
@@ -832,35 +836,42 @@ class Page extends Model
             throw new Exception('The page has errors and cannot be published');
         }
 
-        // get all siblings including the current page
-        $siblings = $this->siblings()->visible();
+        if ($this->blueprint()->num() === 'default') {
 
-        // get a non-associative array of ids
-        $keys  = $siblings->keys();
-        $index = array_search($this->id(), $keys);
+            // get all siblings including the current page
+            $siblings = $this->siblings()->visible();
 
-        // if the page is not included in the siblings
-        // push the page at the end.
-        if ($index === false) {
-            $keys[] = $this->id();
-            $index  = count($keys) - 1;
-        }
+            // get a non-associative array of ids
+            $keys  = $siblings->keys();
+            $index = array_search($this->id(), $keys);
 
-        // move the current page number in the array of keys
-        // subtract 1 from the num and the position, because of the
-        // zero-based array keys
-        $sorted = A::move($keys, $index, $position - 1);
-        $page   = null;
-
-        foreach ($sorted as $key => $id) {
-            if ($id === $this->id()) {
-                $page = $this->changeNum($key + 1);
-            } else {
-                $siblings->findBy('id', $id)->changeNum($key + 1);
+            // if the page is not included in the siblings
+            // push the page at the end.
+            if ($index === false) {
+                $keys[] = $this->id();
+                $index  = count($keys) - 1;
             }
+
+            // move the current page number in the array of keys
+            // subtract 1 from the num and the position, because of the
+            // zero-based array keys
+            $sorted = A::move($keys, $index, $position - 1);
+            $page   = null;
+
+            foreach ($sorted as $key => $id) {
+                if ($id === $this->id()) {
+                    $page = $this->changeNum($key + 1);
+                } else {
+                    $siblings->findBy('id', $id)->changeNum($key + 1);
+                }
+            }
+
+            return $page;
+
         }
 
-        return $page;
+        return $this->changeNum($position);
+
     }
 
     /**
