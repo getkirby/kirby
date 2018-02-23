@@ -7,6 +7,12 @@ use Exception;
 class PageBlueprintOptions extends BlueprintOptions
 {
 
+    protected $aliases = [
+        'status'   => 'changeStatus',
+        'template' => 'changeTemplate',
+        'url'      => 'changeUrl',
+    ];
+
     protected $options = [
         'changeStatus'   => true,
         'changeTemplate' => true,

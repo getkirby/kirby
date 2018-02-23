@@ -158,7 +158,7 @@ class Page extends Model
      * @param int $num
      * @return self
      */
-    public function changeNum(int $num = null): self
+    protected function changeNum(int $num = null): self
     {
         if ($num === $this->num()) {
             return $this;
@@ -487,6 +487,11 @@ class Page extends Model
     {
         if ($this->isInvisible() === true) {
             return $this;
+        }
+
+        // TODO: move this to rules
+        if ($this->blueprint()->options()->changeStatus() === false) {
+            throw new Exception('The status for this page cannot be changed');
         }
 
         $siblings = $this->siblings()->not($this);
@@ -832,8 +837,14 @@ class Page extends Model
      */
     public function sort(int $position): self
     {
+        // TODO: move this to rules
         if ($this->isInvisible() === true && empty($this->errors()) === false) {
             throw new Exception('The page has errors and cannot be published');
+        }
+
+        // TODO: move this to rules
+        if ($this->blueprint()->options()->changeStatus() !== true) {
+            throw new Exception('The status for this page cannot be changed');
         }
 
         if ($this->blueprint()->num() === 'default') {
