@@ -1,0 +1,7 @@
+Title: Grant Hutchinson
+----
+Username: splorp
+----
+Tweet: https://twitter.com/splorp/status/162939436533940224
+----
+Text: Interested in a slick, flat file CMS? I’m loving all the recent updates and tutorials for @getkirby

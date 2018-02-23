@@ -1,0 +1,7 @@
+Title: Hamish McNeill
+----
+Username: hamishmcneill
+----
+Tweet: https://twitter.com/hamishmcneill/status/365027937365393409
+----
+Text: Spent some time working with @getkirby last night for a new site – such a lean, clean, flexible, file-based CMS machine! <3

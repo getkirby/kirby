@@ -1,0 +1,7 @@
+Title: Cole Henley
+----
+Username: cole007
+----
+Tweet: https://twitter.com/cole007/status/146627804509900800
+----
+Text: from the brains behind @zootool, @getkirby looks like a really nice file-based rather than database-driven CMS: http://getkirby.com/
