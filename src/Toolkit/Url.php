@@ -297,7 +297,7 @@ class Url
         if (static::isAbsolute($url) === true) {
             $url = static::short($url);
         }
-        return idn_to_utf8($url);
+        return idn_to_utf8($url, 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     /**

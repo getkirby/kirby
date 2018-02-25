@@ -210,7 +210,7 @@ class Exif
      */
     protected function read(): array
     {
-        $data = @read_exif_data($this->image->root());
+        $data = @exif_read_data($this->image->root());
         return is_array($data) ? $data : [];
     }
 
