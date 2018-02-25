@@ -36,13 +36,13 @@ class TimeField extends DateField
             return $this->format;
         }
 
-        return $this->hours() === 24 ? 'H:i:s' : 'h:i:s a';
+        return $this->hours() === 24 ? 'H:i' : 'h:i a';
     }
 
     protected function valueFromInput($value)
     {
         if ($value !== null && $timestamp = strtotime($value)) {
-            return date('H:i:s', $timestamp);
+            return date('H:i', $timestamp);
         }
 
         return null;
