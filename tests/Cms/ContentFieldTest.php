@@ -65,7 +65,7 @@ class ContentFieldTest extends TestCase
     {
         $field = new ContentField('title', 'Title');
         $this->assertEquals('Title', $field->value());
-        $field->value('Modified');
+        $field = $field->value('Modified');
         $this->assertEquals('Modified', $field->value());
     }
 
@@ -73,7 +73,7 @@ class ContentFieldTest extends TestCase
     {
         $field = new ContentField('title', 'Title');
         $this->assertEquals('Title', $field->value());
-        $field->value(function ($value) {
+        $field = $field->value(function ($value) {
             return 'Modified';
         });
         $this->assertEquals('Modified', $field->value());
