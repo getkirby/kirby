@@ -50,7 +50,6 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setContent() must be of the type array or null, string given
      */
     public function testInvalidContent()
     {
@@ -74,7 +73,6 @@ class UserPropsTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\User::setEmail() must be of the type string, array given
      */
     public function testInvalidEmail()
     {

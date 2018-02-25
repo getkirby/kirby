@@ -13,7 +13,6 @@ class SiteFilesTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Site::setFiles() must be an instance of Kirby\Cms\Files or null, string given
      */
     public function testInvalidFiles()
     {

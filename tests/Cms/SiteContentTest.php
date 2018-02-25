@@ -35,7 +35,6 @@ class SiteContentTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Site::setContent() must be of the type array or null, string given
      */
     public function testInvalidContent()
     {

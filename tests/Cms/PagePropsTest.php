@@ -35,7 +35,6 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setSlug() must be of the type string, array given
      */
     public function testInvalidId()
     {
@@ -56,7 +55,6 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setNum() must be of the type integer or null, array given
      */
     public function testInvalidNum()
     {
@@ -92,7 +90,6 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setParent() must be an instance of Kirby\Cms\Page or null, string given
      */
     public function testInvalidParent()
     {
@@ -145,7 +142,6 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setTemplate() must be of the type string or null, array given
      */
     public function testInvalidTemplate()
     {
@@ -185,7 +181,6 @@ class PagePropsTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Page::setUrl() must be of the type string or null, array given
      */
     public function testInvalidUrl()
     {

@@ -18,7 +18,6 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\StructureObject::setId() must be of the type string, array given
      */
     public function testInvalidId()
     {
@@ -49,7 +48,6 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\Model::setCollection() must be an instance of Kirby\Cms\Collection or null, boolean given
      */
     public function testInvalidCollection()
     {
@@ -125,7 +123,6 @@ class StructureObjectTest extends TestCase
 
     /**
      * @expectedException TypeError
-     * @expectedExceptionMessage Argument 1 passed to Kirby\Cms\StructureObject::setParent() must be an instance of Kirby\Cms\Model or null, boolean given
      */
     public function testInvalidParent()
     {
