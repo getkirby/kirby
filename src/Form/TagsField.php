@@ -36,14 +36,26 @@ class TagsField extends Field
 
     protected function valueFromInput($input)
     {
+
+        // if $input is string, convert it to array
         $value = $this->valueFromList($input, $this->separator());
-        $value = $this->convert($value);
+
+        // transform into value-text objects
+        $value = array_map(function($tag) {
+            $option = $this->option($tag['value'] ?? $tag);
+
+            return [
+                'value' => $tag['value'] ?? $tag,
+                'text' => $option['text'] ?? $tag['text'] ?? $tag,
+            ];
+        }, $value);
 
         return $value;
     }
 
     protected function valueToString($value)
     {
+        $value = array_column($value, 'value');
         return $this->valueToList($value, $this->separator() . ' ');
     }
 
