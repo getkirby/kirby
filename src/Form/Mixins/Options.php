@@ -20,6 +20,15 @@ trait Options
     protected $query = null;
     protected $api;
 
+    public function option(string $value) {
+        foreach($this->options() as $option)
+        {
+            if ($option['value'] === $value) {
+                return $option;
+            }
+        }
+    }
+
     public function options(): array
     {
         switch ($this->options) {
