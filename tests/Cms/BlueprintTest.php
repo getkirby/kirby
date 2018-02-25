@@ -13,11 +13,12 @@ class BlueprintTest extends TestCase
     public function props(): array
     {
         return [
-            'name'    => 'test',
-            'options' => $this->options(),
-            'tabs'    => $this->tabs(),
-            'title'   => 'Test',
-            'model'   => new Page(['slug' => 'test'])
+            'name'     => 'test',
+            'options'  => $this->options(),
+            'sections' => $this->sections(),
+            'tabs'     => $this->tabs(),
+            'title'    => 'Test',
+            'model'    => new Page(['slug' => 'test'])
         ];
     }
 
@@ -25,8 +26,7 @@ class BlueprintTest extends TestCase
     {
         return [
             [
-                'id'      => $id = 'testTab',
-                'name'    => $id,
+                'name'    => 'testTab',
                 'label'   => 'Test Tab',
                 'icon'    => 'settings',
                 'columns' => $this->columns()
@@ -37,12 +37,7 @@ class BlueprintTest extends TestCase
     public function columns(): array
     {
         return [
-            [
-                'name'     => 'test',
-                'width'    => '1/2',
-                'sections' => $this->sections(),
-                'id'       => 'test'
-            ]
+            '1/2' => 'testSection'
         ];
     }
 
@@ -50,8 +45,7 @@ class BlueprintTest extends TestCase
     {
         return [
             [
-                'id'     => $id = 'testSection',
-                'name'   => $id,
+                'name'   => 'testSection',
                 'type'   => 'fields',
                 'fields' => $this->fields()
             ]
@@ -73,8 +67,7 @@ class BlueprintTest extends TestCase
     {
         return [
             [
-                'id'    => $id = 'testField',
-                'name'  => $id,
+                'name'  => 'testField',
                 'label' => 'Test Field',
                 'type'  => 'text'
             ]
@@ -112,25 +105,14 @@ class BlueprintTest extends TestCase
     {
         $blueprint = $this->blueprint(['tabs' => []]);
 
-        $this->assertInstanceOf(Collection::class, $blueprint->tabs());
-        $this->assertCount(0, $blueprint->tabs());
-    }
-
-    public function testTab()
-    {
-        $blueprint = $this->blueprint();
-        $this->assertInstanceOf(BlueprintTab::class, $blueprint->tab('testTab'));
-        $this->assertEquals('testTab', $blueprint->tab('testTab')->name());
+        $this->assertInstanceOf(BlueprintTabs::class, $blueprint->tabs());
     }
 
     public function testTabs()
     {
         $blueprint = $this->blueprint();
 
-        $this->assertInstanceOf(Collection::class, $blueprint->tabs());
-        $this->assertCount(1, $blueprint->tabs());
-        $this->assertInstanceOf(BlueprintTab::class, $blueprint->tabs()->first());
-        $this->assertEquals('testTab', $blueprint->tabs()->first()->name());
+        $this->assertInstanceOf(BlueprintTabs::class, $blueprint->tabs());
     }
 
     public function testTitle()
@@ -152,22 +134,10 @@ class BlueprintTest extends TestCase
         $this->assertFalse($this->blueprint()->isDefault());
     }
 
-    public function testToLayout()
-    {
-        $tabs = $this->blueprint()->toLayout();
-
-        $this->assertEquals('testTab', $tabs[0]['name']);
-        $this->assertEquals('settings', $tabs[0]['icon']);
-        $this->assertEquals('1/2', $tabs[0]['columns'][0]['width']);
-        $this->assertEquals(['testSection'], $tabs[0]['columns'][0]['sections']);
-    }
-
     public function testLoad()
     {
         $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/test.yml', new Page(['slug' => 'test']));
 
-        $this->assertCount(1, $blueprint->tabs());
-        $this->assertEquals('test', $blueprint->tabs()->first()->name());
         $this->assertCount(3, $blueprint->sections());
         $this->assertEquals('fields', $blueprint->sections()->first()->name());
         $this->assertEquals('gallery', $blueprint->sections()->last()->name());
@@ -179,9 +149,6 @@ class BlueprintTest extends TestCase
     public function testLoadFields()
     {
         $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/fields.yml', new Page(['slug' => 'test']));
-        $this->assertCount(1, $blueprint->tabs());
-        $this->assertEquals('main', $blueprint->tabs()->first()->name());
-        $this->assertCount(1, $blueprint->sections());
         $this->assertEquals('fields', $blueprint->sections()->first()->name());
     }
 

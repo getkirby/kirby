@@ -28,7 +28,8 @@ class BlueprintObjectTest extends TestCase
     public function testDefaultSchema()
     {
         $object = new BlueprintMockObject();
-        $this->assertEquals([], $object->toArray());
+        $this->assertArrayHasKey('locale', $object->toArray());
+        $this->assertArrayHasKey('model', $object->toArray());
     }
 
     public function testMixin()

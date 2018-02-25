@@ -18,8 +18,7 @@ class TelField extends TextField
     protected function defaultLabel()
     {
         return [
-            'en' => 'Phone',
-            'de' => 'Telefon',
+            'en_US' => 'Phone',
         ];
     }
 

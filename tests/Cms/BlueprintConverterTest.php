@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 class BlueprintConverterTest extends TestCase
 {
 
-    public function testConvertColumnsToTab()
+    public function testConvertColumnsToTabs()
     {
         $blueprint = [
             'columns' => []
@@ -14,31 +14,19 @@ class BlueprintConverterTest extends TestCase
         $expected = [
             'tabs' => [
                 'main' => [
-                    'columns' => []
+                    'columns' => [],
+                    'label'   => 'Main'
                 ]
             ]
         ];
 
-        $converted = BlueprintConverter::convertColumnsToTab($blueprint);
+        $converted = BlueprintConverter::convertColumnsToTabs($blueprint);
         $this->assertEquals($expected, $converted);
     }
 
-    public function testConvertSectionsToColumn()
+    public function testConvertSectionsToColumns()
     {
-        $blueprint = [
-            'sections' => []
-        ];
-
-        $expected = [
-            'columns' => [
-                'center' => [
-                    'sections' => []
-                ]
-            ]
-        ];
-
-        $converted = BlueprintConverter::convertSectionsToColumn($blueprint);
-        $this->assertEquals($expected, $converted);
+        $this->markTestIncomplete();
     }
 
     public function testConvertFieldsToSection()

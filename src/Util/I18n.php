@@ -7,7 +7,18 @@ use Exception;
 trait I18n
 {
 
-    protected $locale = 'en_US';
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @return string
+     */
+    protected function defaultLocale(): string
+    {
+        return 'en_US';
+    }
 
     /**
      * Translates the given input according to

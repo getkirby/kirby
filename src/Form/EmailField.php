@@ -30,8 +30,7 @@ class EmailField extends TextField
     protected function defaultPlaceholder()
     {
         return [
-            'de' => 'mail@beispiel.de',
-            'en' => 'mail@example.com'
+            'en_US' => 'mail@example.com'
         ];
     }
 

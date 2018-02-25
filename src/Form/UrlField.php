@@ -14,7 +14,7 @@ class UrlField extends TextField
 
     protected function defaultIcon()
     {
-        return 'chain';
+        return 'url';
     }
 
     protected function defaultLabel()
@@ -30,8 +30,7 @@ class UrlField extends TextField
     protected function defaultPlaceholder()
     {
         return [
-            'en' => 'https://example.com',
-            'de' => 'https://beispiel.de',
+            'en_US' => 'https://example.com'
         ];
     }
 

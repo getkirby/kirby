@@ -103,12 +103,12 @@ class UserRulesTest extends TestCase
 
     public function testCreate()
     {
-        $user = new User([
+        $user = new User($values = [
             'email'    => 'user@domain.com',
             'password' => '12345678'
         ]);
         $form = Form::for($user);
-        $this->assertTrue(UserRules::create($user, $form));
+        $this->assertTrue(UserRules::create($user, $values, $form));
     }
 
     /**
