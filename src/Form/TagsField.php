@@ -17,7 +17,19 @@ class TagsField extends Field
     use Mixins\Separator;
     use Mixins\Value;
 
-    protected function defaultLabel()
+    protected $accept;
+
+    public function accept(): string
+    {
+        return $this->accept;
+    }
+
+    protected function defaultAccept(): string
+    {
+        return 'all';
+    }
+
+    protected function defaultLabel(): string
     {
         return 'Tags';
     }
@@ -25,6 +37,11 @@ class TagsField extends Field
     protected function defaultName(): string
     {
         return 'tags';
+    }
+
+    public function setAccept(string $accept)
+    {
+        return $this->accept = $accept;
     }
 
     protected function validate($value): bool

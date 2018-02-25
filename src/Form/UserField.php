@@ -39,7 +39,8 @@ class UserField extends Field
         return 'user';
     }
 
-    public function options(): array {
+    public function options(): array
+    {
 
         $options = [];
 
