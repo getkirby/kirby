@@ -29,6 +29,11 @@ class TagsField extends Field
         return 'all';
     }
 
+    protected function defaultIcon(): string
+    {
+        return 'tag';
+    }
+
     protected function defaultLabel(): string
     {
         return 'Tags';
