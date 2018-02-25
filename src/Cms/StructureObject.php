@@ -24,11 +24,6 @@ class StructureObject extends Model
     use HasSiblings;
 
     /**
-     * @var array
-     */
-    protected $content = [];
-
-    /**
      * @var string
      */
     protected $id;
