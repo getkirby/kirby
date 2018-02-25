@@ -76,23 +76,6 @@ class PageRulesTest extends TestCase
         PageRules::changeSlug($pages->first(), 'project-b');
     }
 
-    public function testChangeStatus()
-    {
-        $page = new Page(['slug' => 'test']);
-        $this->assertTrue(PageRules::changeStatus($page, 'listed'));
-        $this->assertTrue(PageRules::changeStatus($page, 'unlisted'));
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid status "private"
-     */
-    public function testInvalidChangeStatus()
-    {
-        $page = new Page(['slug' => 'test']);
-        PageRules::changeStatus($page, 'private');
-    }
-
     public function testChangeTemplate()
     {
         $page = new Page(['slug' => 'test']);
