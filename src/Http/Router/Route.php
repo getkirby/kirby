@@ -104,6 +104,7 @@ class Route
         } elseif (is_string($pattern)) {
             return $this->pattern = [rtrim($pattern, '/')];
         } elseif (is_array($pattern)) {
+            $this->pattern = [];
             foreach ($pattern as $p) {
                 $this->pattern[] = rtrim($p, '/');
             }
