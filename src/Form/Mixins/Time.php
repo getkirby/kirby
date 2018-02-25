@@ -17,7 +17,7 @@ trait Time
 
     protected function defaultStep(): int
     {
-        return 60;
+        return 5;
     }
 
     public function hours(): int
@@ -35,7 +35,7 @@ trait Time
         return $this;
     }
 
-    protected function setStep(int $step = 60)
+    protected function setStep(int $step = 5)
     {
         $this->step = $step;
         return $this;
