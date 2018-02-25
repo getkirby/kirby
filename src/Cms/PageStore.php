@@ -183,7 +183,7 @@ class PageStore extends PageStoreDefault
         return $files;
     }
 
-    public function id()
+    public function id(): string
     {
         return $this->base()->root();
     }
