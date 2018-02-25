@@ -17,7 +17,7 @@ class RouterTest extends TestCase
         $result = $router->find('/', 'GET');
 
         $this->assertInstanceOf('Kirby\Http\Router\Result', $result);
-        $this->assertEquals('/', $result->pattern());
+        $this->assertEquals('', $result->pattern());
         $this->assertEquals('GET', $result->method());
     }
 

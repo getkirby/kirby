@@ -90,6 +90,8 @@ class Router
      */
     public function find(string $path, string $method)
     {
+        $path = rtrim($path, '/');
+
         if (isset($this->routes[$method]) === false) {
             throw new Exception('Invalid routing method: ' . $method);
         }
