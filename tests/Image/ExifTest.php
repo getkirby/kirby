@@ -18,7 +18,7 @@ class ExifTest extends TestCase
         $exif  = $this->_exif();
         $this->assertEquals([
             'FileName'      => 'cat.jpg',
-            'FileDateTime'  => read_exif_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'],
+            'FileDateTime'  => exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'],
             'FileSize'      => 23574,
             'FileType'      => 2,
             'MimeType'      => 'image/jpeg',
@@ -53,7 +53,7 @@ class ExifTest extends TestCase
     public function testTimestamp()
     {
         $exif  = $this->_exif();
-        $this->assertEquals(read_exif_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'], $exif->timestamp());
+        $this->assertEquals(exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'], $exif->timestamp());
     }
 
     public function testExposure()
