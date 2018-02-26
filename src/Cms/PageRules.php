@@ -38,10 +38,10 @@ class PageRules
         return true;
     }
 
-    public static function createChild(Page $page, Page $child): bool
+    public static function create(Page $page): bool
     {
-        $siblings = $page->children();
-        $slug     = $child->slug();
+        $siblings = $page->siblings();
+        $slug     = $page->slug();
 
         if ($duplicate = $siblings->find($slug)) {
             throw new Exception(sprintf('The URL appendix "%s" exists', $slug));

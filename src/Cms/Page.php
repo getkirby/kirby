@@ -280,6 +280,27 @@ class Page extends Model
     }
 
     /**
+     * Creates and stores a new page
+     *
+     * @param array $props
+     * @return self
+     */
+    public static function create(array $props): self
+    {
+        // clean up the slug
+        $props['slug'] = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
+
+        // create a temporary page object
+        $page = Page::factory($props);
+
+        // validate the new page object
+        $page->rules()->create($page);
+
+        // store the new page object
+        return $page->store()->create($page);
+    }
+
+    /**
      * Creates a child of the current page
      *
      * @param array $props
@@ -287,20 +308,15 @@ class Page extends Model
      */
     public function createChild(array $props): self
     {
-        $props['content'] = $props['content'] ?? [];
-        $props['url']     = null;
-        $props['num']     = null;
-        $props['parent']  = $this;
-        $props['site']    = $this->site();
-        $props['slug']    = Str::slug($props['slug'] ?? $props['content']['slug'] ?? null);
+        $props = array_merge($props, [
+            'url'    => null,
+            'num'    => null,
+            'parent' => $this,
+            'site'   => $this->site(),
+            'store'  => get_class($this->store())
+        ]);
 
-        // temporary child for validation
-        $child = Page::factory($props);
-
-        // run additional validations
-        $this->rules()->createChild($this, $child);
-
-        return $this->store()->createChild($child);
+        return static::create($props);
     }
 
     public function createFile(string $source, array $props = [])

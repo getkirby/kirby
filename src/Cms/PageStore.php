@@ -122,14 +122,13 @@ class PageStore extends PageStoreDefault
         return $file->create($source);
     }
 
-    public function createChild(Page $child)
+    public function create(Page $page)
     {
-        if ($this->exists() === false) {
-            return $child;
+        if ($this->exists() === true) {
+            return $page;
         }
 
-        $parent = $this->page();
-        $root   = $this->root() . '/' . $child->slug();
+        $root = $this->root($page);
 
         // create the new page directory
         if (Dir::make($root) !== true) {
@@ -137,15 +136,10 @@ class PageStore extends PageStoreDefault
         }
 
         // write the text file
-        touch($root . '/' . $child->template() . '.txt');
-
-        // attach the store
-        $child = $child->clone([
-            'store' => static::class
-        ]);
+        touch($root . '/' . $page->template() . '.txt');
 
         // write the content file
-        return $child->update(null, false);
+        return $page->update(null, false);
     }
 
     public function delete(): bool

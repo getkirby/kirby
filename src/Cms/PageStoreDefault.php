@@ -50,9 +50,9 @@ class PageStoreDefault extends Store
         return [];
     }
 
-    public function createChild(Page $child)
+    public function create(Page $page)
     {
-        return $child;
+        return $page;
     }
 
     public function createFile(File $file, string $source)
