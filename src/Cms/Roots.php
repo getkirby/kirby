@@ -16,6 +16,7 @@ class Roots extends Ingredients
     protected $accounts;
     protected $blueprints;
     protected $collections;
+    protected $config;
     protected $content;
     protected $controllers;
     protected $index;
@@ -41,6 +42,11 @@ class Roots extends Ingredients
     public function collections(): string
     {
         return $this->collections = $this->collections ?? $this->site() . '/collections';
+    }
+
+    public function config(): string
+    {
+        return $this->config = $this->config ?? $this->site() . '/config';
     }
 
     public function content(): string

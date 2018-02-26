@@ -20,6 +20,7 @@ class App extends Component
 
     protected $collections;
     protected $components;
+    protected $options;
     protected $path;
     protected $roots;
     protected $routes;
@@ -147,6 +148,32 @@ class App extends Component
             'root'     => $this->root('media'),
             'url'      => $this->url('media')
         ]);
+    }
+
+    /**
+     * Load a specific configuration option
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function option(string $key, $default = null)
+    {
+        return $this->options()[$key] ?? $default;
+    }
+
+    /**
+     * Returns all configuration options
+     *
+     * @return array
+     */
+    public function options(): array
+    {
+        if (is_array($this->options) === true) {
+            return $this->options;
+        }
+
+        return $this->options = Config::for($this);
     }
 
     /**

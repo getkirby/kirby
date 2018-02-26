@@ -45,6 +45,11 @@ function markdown($text)
     return App::instance()->component('markdown')->parse($text);
 }
 
+function option(string $key, $default = null)
+{
+    return App::instance()->option($key, $default);
+}
+
 function page(...$id)
 {
     return App::instance()->site()->find(...$id);
