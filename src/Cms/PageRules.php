@@ -50,11 +50,6 @@ class PageRules
         return true;
     }
 
-    public static function createFile(Page $page, File $file): bool
-    {
-        return true;
-    }
-
     public static function update(Page $page, array $content = []): bool
     {
         return true;

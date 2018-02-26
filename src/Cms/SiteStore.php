@@ -54,15 +54,6 @@ class SiteStore extends SiteStoreDefault
         return $this->base()->read();
     }
 
-    public function createFile(File $file, string $source)
-    {
-        $file = $file->clone([
-            'store' => FileStore::class
-        ]);
-
-        return $file->create($source);
-    }
-
     public function exists(): bool
     {
         return is_dir($this->root()) === true;

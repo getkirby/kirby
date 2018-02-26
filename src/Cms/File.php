@@ -191,18 +191,22 @@ class File extends Model
      * way of generating files.
      *
      * @param string $source
+     * @param array $props
      * @return self
      */
-    public function create(string $source): self
+    public static function create(string $source, array $props): self
     {
-        if ($this->exists() === true) {
-            throw new Exception('The file exists and cannot be overwritten');
-        }
+        // prefer the filename from the props
+        $props['filename'] = $props['filename'] ?? basename($source);
 
-        $file = $this->store()->create($source);
-        $file = $file->update($this->content()->toArray());
+        // create the basic file object
+        $file = new static($props);
 
-        return $file;
+        // validate the source and file object
+        $file->rules()->create($source, $file);
+
+        // store the file
+        return $file->store()->create($source, $file);
     }
 
     protected function defaultStore()

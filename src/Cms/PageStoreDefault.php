@@ -55,11 +55,6 @@ class PageStoreDefault extends Store
         return $page;
     }
 
-    public function createFile(File $file, string $source)
-    {
-        return $file;
-    }
-
     public function delete(): bool
     {
         throw new Exception('This page cannot be deleted');

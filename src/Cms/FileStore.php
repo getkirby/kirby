@@ -58,10 +58,10 @@ class FileStore extends FileStoreDefault
         return Data::read($this->storeFile());
     }
 
-    public function create(string $source)
+    public function create(string $source, File $file)
     {
         // delete all public versions
-        $this->media()->delete($this->file()->parent(), $this->file());
+        $this->media()->delete($file->parent(), $file);
 
         // overwrite the original
         if (F::copy($source, $this->root()) !== true) {
@@ -69,10 +69,10 @@ class FileStore extends FileStoreDefault
         }
 
         // create a new public file
-        $this->media()->create($this->file()->parent(), $this->file());
+        $this->media()->create($file->parent(), $file);
 
         // return a fresh clone
-        return $this->file()->clone();
+        return $file->clone();
     }
 
     public function delete(): bool

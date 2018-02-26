@@ -113,15 +113,6 @@ class PageStore extends PageStoreDefault
         return $this->base()->read();
     }
 
-    public function createFile(File $file, string $source)
-    {
-        $file = $file->clone([
-            'store' => FileStore::class
-        ]);
-
-        return $file->create($source);
-    }
-
     public function create(Page $page)
     {
         if ($this->exists() === true) {

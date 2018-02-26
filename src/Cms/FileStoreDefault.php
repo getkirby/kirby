@@ -43,7 +43,7 @@ class FileStoreDefault extends Store
         return [];
     }
 
-    public function create(string $source)
+    public function create(string $source, File $file)
     {
         throw new Exception('This file cannot be saved');
     }

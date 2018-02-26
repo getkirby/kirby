@@ -321,18 +321,14 @@ class Page extends Model
 
     public function createFile(string $source, array $props = [])
     {
-        $props['filename'] = $props['filename'] ?? basename($source);
-        $props['parent']   = $this;
-        $props['store']    = null;
-        $props['url']      = null;
+        $props = array_merge($props, [
+            'parent' => $this,
+            // TODO: make this independent from the store
+            'store'  => FileStore::class,
+            'url'    => null
+        ]);
 
-        // temporary child for validation
-        $file = new File($props);
-
-        // validate the child
-        $this->rules()->createFile($this, $file);
-
-        return $this->store()->createFile($file, $source);
+        return File::create($source, $props);
     }
 
     protected function defaultStore()
