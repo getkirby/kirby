@@ -96,7 +96,7 @@ class F
      * @param string $file The path for the file
      * @return string
      */
-    public static function base64(stirng $file)
+    public static function base64(string $file): string
     {
         return base64_encode(static::read($file));
     }
@@ -168,7 +168,7 @@ class F
      * @param string $extension
      * @return string|false
      */
-    public static function extensionToType($extension)
+    public static function extensionToType(string $extension)
     {
         foreach (static::$types as $type => $extensions) {
             if (in_array($extension, $extensions) === true) {
@@ -185,7 +185,7 @@ class F
      * @param string $type
      * @return array
      */
-    public static function extensions($type = null) {
+    public static function extensions(string $type = null) {
         if ($type === null) {
             return array_keys(Mime::types());
         }
@@ -243,7 +243,7 @@ class F
      * @param string $file
      * @return string|false
      */
-    public static function mime($file)
+    public static function mime(string $file)
     {
         return Mime::type($file);
     }
@@ -252,9 +252,9 @@ class F
      * Converts a mime type to a file extension
      *
      * @param string $mime
-     * @return string
+     * @return string|false
      */
-    public static function mimeToExtension($mime)
+    public static function mimeToExtension(string $mime)
     {
         return Mime::toExtension($mime);
     }
@@ -263,9 +263,9 @@ class F
      * Returns the type for a given mime
      *
      * @param string $mime
-     * @return string
+     * @return string|false
      */
-    public static function mimeToType($mime)
+    public static function mimeToType(string $mime)
     {
         return static::extensionToType(Mime::toExtension($mime));
     }
@@ -277,7 +277,7 @@ class F
      * @param  string $new The path to the new location
      * @return boolean
      */
-    public static function move($old, $new): bool
+    public static function move(string $old, string $new): bool
     {
         if ($old === $new) {
             return true;
@@ -305,7 +305,7 @@ class F
      * Converts an integer size into a human readable format
      *
      * @param  mixed $size The file size or a file path
-     * @return string
+     * @return string|int
      */
     public static function niceSize($size): string
     {
@@ -328,9 +328,9 @@ class F
      * Reads the content of a file
      *
      * @param  string $file The path for the file
-     * @return string
+     * @return string|false
      */
-    public static function read($file)
+    public static function read(string $file)
     {
         if (is_readable($file) === false) {
             throw new Exception('The file is not readable');
@@ -379,7 +379,7 @@ class F
      * @param  string  $file The path for the file
      * @return boolean
      */
-    public static function remove($file): bool
+    public static function remove(string $file): bool
     {
         $file = realpath($file);
 
