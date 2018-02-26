@@ -21,6 +21,7 @@ class App extends Component
     protected $collections;
     protected $components;
     protected $options;
+    protected $hooks;
     protected $path;
     protected $roots;
     protected $routes;
@@ -124,6 +125,20 @@ class App extends Component
         }
 
         return [];
+    }
+
+    /**
+     * The Hooks registry
+     *
+     * @return Hooks
+     */
+    public function hooks(): Hooks
+    {
+        if (is_a($this->hooks, Hooks::class) === true) {
+            return $this->hooks;
+        }
+
+        return $this->hooks = new Hooks($this);
     }
 
     /**
