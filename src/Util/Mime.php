@@ -114,8 +114,8 @@ class Mime
 
     public static function fromExtension(string $extension)
     {
-        $mime = static::$mimes[$extension] ?? null;
-        return is_[$mime) === true ? array_shift($mime) : $mim];
+        $mime = static::$types[$extension] ?? null;
+        return is_array($mime) === true ? array_shift($mime) : $mime;
     }
 
     /**
