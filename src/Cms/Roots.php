@@ -19,6 +19,7 @@ class Roots extends Ingredients
     protected $config;
     protected $content;
     protected $controllers;
+    protected $env;
     protected $index;
     protected $kirby;
     protected $loaders;
@@ -57,6 +58,11 @@ class Roots extends Ingredients
     public function controllers(): string
     {
         return $this->controllers = $this->controllers ?? $this->site() . '/controllers';
+    }
+
+    public function env(): string
+    {
+        return $this->env = $this->env ?? $this->index();
     }
 
     public function index(): string

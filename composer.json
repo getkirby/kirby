@@ -27,7 +27,8 @@
         "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
         "sentry/sentry": "^1.8",
-        "firebase/php-jwt": "^5.0"
+        "firebase/php-jwt": "^5.0",
+        "vlucas/phpdotenv": "^2.4.0"
     },
     "minimum-stability": "dev",
     "require-dev": {

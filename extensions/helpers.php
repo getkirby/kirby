@@ -10,6 +10,11 @@ function css($url)
     return '<link rel="stylesheet" href="' . url($url) . '">';
 }
 
+function env($key, $default = null)
+{
+    return $_ENV[$key] ?? $default;
+}
+
 function get($key, $default = null)
 {
     return App::instance()->request()->query()->get($key, $default);
