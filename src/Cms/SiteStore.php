@@ -63,31 +63,6 @@ class SiteStore extends SiteStoreDefault
         return $file->create($source);
     }
 
-    public function createChild(Page $child)
-    {
-        if ($this->exists() === false) {
-            return $child;
-        }
-
-        $root = $this->root() . '/' . $child->slug();
-
-        // create the new page directory
-        if (Dir::make($root) !== true) {
-            throw new Exception('The page directory cannot be created');
-        }
-
-        // write the text file
-        touch($root . '/' . $child->template() . '.txt');
-
-        // attach the store
-        $child = $child->clone([
-            'store' => PageStore::class
-        ]);
-
-        // write the content file
-        return $child->update();
-    }
-
     public function exists(): bool
     {
         return is_dir($this->root()) === true;

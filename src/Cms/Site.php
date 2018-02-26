@@ -141,23 +141,16 @@ class Site extends Model
      */
     public function createChild(array $props)
     {
-        $props['content'] = $props['content'] ?? [];
-        $props['url']     = null;
-        $props['num']     = null;
-        $props['parent']  = null;
-        $props['site']    = $this;
-        $props['slug']    = Str::slug($props['slug'] ?? $props['content']['slug'] ?? null);
+        $props = array_merge($props, [
+            'url'    => null,
+            'num'    => null,
+            'parent' => null,
+            'site'   => $this,
+            // TODO: refactor this to be independent from the page store
+            'store'  => PageStore::class,
+        ]);
 
-        // temporary child for validation
-        $child = Page::factory($props);
-
-        // run all form validations
-        $child->update();
-
-        // run additional validations
-        $this->rules()->createChild($this, $child);
-
-        return $this->store()->createChild($child);
+        return Page::create($props);
     }
 
     public function createFile(string $source, array $props = [])
