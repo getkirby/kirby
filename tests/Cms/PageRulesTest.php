@@ -82,44 +82,6 @@ class PageRulesTest extends TestCase
         $this->assertTrue(PageRules::changeTemplate($page, 'project'));
     }
 
-    public function testCreateChild()
-    {
-        $child    = new Page(['slug' => 'project-a']);
-        $children = new Children([$child]);
-        $page     = new Page([
-            'slug' => 'projects',
-            'children' => $children
-        ]);
-        $new      = new Page(['slug' => 'project-b']);
-        $this->assertTrue(PageRules::createChild($page, $new));
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The URL appendix "project-a" exists
-     */
-    public function testCreateChildDuplicate()
-    {
-        $child    = new Page(['slug' => 'project-a']);
-        $children = new Children([$child]);
-        $page     = new Page([
-            'slug' => 'projects',
-            'children' => $children
-        ]);
-        $new      = new Page(['slug' => 'project-a']);
-        PageRules::createChild($page, $new);
-    }
-
-    public function testCreateFile()
-    {
-        $page = new Page(['slug' => 'test']);
-        $file = new File([
-            'filename' => 'cover.jpg',
-            'url'      => 'https://getkirby.com/projects/project-a/cover.jpg'
-        ]);
-        $this->assertTrue(PageRules::createFile($page, $file));
-    }
-
     public function testUpdate()
     {
         $page = new Page(['slug' => 'test']);
