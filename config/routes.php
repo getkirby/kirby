@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Api\Api;
-use Kirby\Http\Response;
+use Kirby\Cms\Response;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\View;
@@ -38,6 +38,12 @@ return [
             } catch (Exception $e) {
                 return 404;
             }
+        }
+    ],
+    [
+        'pattern' => '(:all)\.([a-z]{2,5})',
+        'action'  => function (string $path, string $extension) use ($kirby) {
+            return Response::for($kirby->site()->find($path), [], $extension);
         }
     ],
     [

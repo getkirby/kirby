@@ -112,13 +112,9 @@ class App extends Component
      * @param array $arguments
      * @return array
      */
-    public function controller(string $name, array $arguments = [], string $contentType = null): array
+    public function controller(string $name, array $arguments = []): array
     {
         $name = basename(strtolower($name));
-
-        if ($contentType !== null && $contentType !== 'html') {
-            $name .= '.' . $contentType;
-        }
 
         if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
             return (array)$controller->call($this, $arguments);
