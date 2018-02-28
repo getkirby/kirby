@@ -23,6 +23,7 @@ class App extends Component
     protected $options;
     protected $hooks;
     protected $path;
+    protected $registry;
     protected $roots;
     protected $routes;
     protected $site;
@@ -40,6 +41,9 @@ class App extends Component
 
         // configurable properties
         $this->setProperties($props);
+
+        // create the plugin registry
+        $this->registry = new Registry;
 
         // register all field methods
         ContentField::methods(include static::$root . '/extensions/methods.php');
@@ -76,7 +80,7 @@ class App extends Component
             return $this->collections;
         }
 
-        return $this->collections = Collections::load($this->root('collections'));
+        return $this->collections = Collections::load($this);
     }
 
     /**
@@ -116,7 +120,13 @@ class App extends Component
     {
         $name = basename(strtolower($name));
 
+        // site controller
         if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
+            return (array)$controller->call($this, $arguments);
+        }
+
+        // registry controller
+        if ($controller = $this->get('controller', $name)) {
             return (array)$controller->call($this, $arguments);
         }
 
@@ -134,7 +144,10 @@ class App extends Component
             return $this->hooks;
         }
 
-        return $this->hooks = new Hooks($this);
+        $this->hooks = new Hooks($this);
+        $this->hooks->registerAll($this->get('hook'));
+
+        return $this->hooks;
     }
 
     /**
@@ -212,6 +225,11 @@ class App extends Component
         return $this->setPath($requestPath)->path;
     }
 
+    public function get($type, $name = null)
+    {
+        return $this->registry->get($type, $name);
+    }
+
     /**
      * Returns the Response object for the
      * current request
@@ -284,6 +302,19 @@ class App extends Component
         }
 
         return $this->routes = (array)include static::$root . '/config/routes.php';
+    }
+
+    /**
+     * Registry setter
+     *
+     * @param string $type
+     * @param mixed ...$arguments
+     * @return self
+     */
+    public function set($type, ...$arguments): self
+    {
+        $this->registry->set($type, ...$arguments);
+        return $this;
     }
 
     /**

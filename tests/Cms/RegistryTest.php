@@ -25,7 +25,6 @@ class RegistryTest extends TestCase
             ['fieldMethod', 'test', function () {}],
             ['fileMethod', 'test', function () {}],
             ['filesMethod', 'test', function () {}],
-            ['hook', 'test', function () {}],
             ['pageMethod', 'test', function () {}],
             ['pageModel', 'test', 'MyModelClass'],
             ['pagesMethod', 'test', function () {}],
@@ -51,36 +50,20 @@ class RegistryTest extends TestCase
         $this->assertEquals($entry, $registry->get($type, $name));
     }
 
-    public function multipleEntryProvider()
-    {
-        return [
-            ['blueprint', ['a', 'b'] , '/test.yml'],
-            ['controller', ['a', 'b'], function () {}],
-            ['fieldMethod', ['a', 'b'], function () {}],
-            ['fieldMethod', ['a', 'b'], function () {}],
-            ['fileMethod', ['a', 'b'], function () {}],
-            ['filesMethod', ['a', 'b'], function () {}],
-            ['hook', ['a', 'b'], function () {}],
-            ['pageMethod', ['a', 'b'], function () {}],
-            ['pageModel', ['a', 'b'], 'MyModelClass'],
-            ['pagesMethod', ['a', 'b'], function () {}],
-            ['route', ['a', 'b'], []],
-            ['siteMethod', ['a', 'b'], function () {}],
-            ['template', ['a', 'b'], '/template.php'],
-        ];
-    }
-
-    /**
-     * @dataProvider multipleEntryProvider
-     */
-    public function testMultipleSetAndGet($type, array $names, $entry)
+    public function testHook()
     {
         $registry = new Registry;
-        $registry->set($type, $names, $entry);
+        $registry->set('hook', 'test', $closure = function () {});
 
-        foreach ($names as $name) {
-            $this->assertEquals($entry, $registry->get($type, $name));
-        }
+        $expected = [$closure];
+
+        $this->assertEquals($expected, $registry->get('hook', 'test'));
+
+        $expected = [
+            'test' => [$closure]
+        ];
+
+        $this->assertEquals($expected, $registry->get('hook'));
     }
 
     public function testSetAndGetRouteWithoutName()
@@ -99,7 +82,7 @@ class RegistryTest extends TestCase
         $registry = new Registry;
         $registry->set('template', 'test', 'test.php');
 
-        $this->assertEquals(['test' => 'test.php'], $registry->entries('template'));
+        $this->assertEquals(['test' => 'test.php'], $registry->get('template'));
     }
 
 }

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Exception;
 use Kirby\Util\Controller;
 use Kirby\FileSystem\Folder;
 
@@ -75,6 +76,10 @@ class Collections
             return $this->cache[$name];
         }
 
+        if (isset($this->collections[$name]) === false) {
+            throw new Exception('Unknown collection');
+        }
+
         $controller = new Controller($this->collections[$name]);
 
         return $this->cache[$name] = $controller->call(null, $data);
@@ -87,10 +92,10 @@ class Collections
      * @param  string $root
      * @return self
      */
-    public static function load(string $root): self
+    public static function load(App $app): self
     {
-        $collections = [];
-        $folder      = new Folder($root);
+        $collections = $app->get('collection');
+        $folder      = new Folder($app->root('collections'));
 
         foreach ($folder->files() as $file) {
 

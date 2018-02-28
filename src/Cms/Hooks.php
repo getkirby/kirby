@@ -54,6 +54,27 @@ class Hooks
     }
 
     /**
+     * Sets multiple hooks at once
+     *
+     * @param array $hooks
+     * @return self
+     */
+    public function registerAll(array $hooks): self
+    {
+        foreach ($hooks as $name => $callbacks) {
+            if (is_a($callbacks, Closure::class) === true) {
+                $this->register($name, $callbacks);
+            } else {
+                foreach ($callbacks as $callback) {
+                    $this->register($name, $callback);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Triggers all registered hooks for a given
      * name if they exist
      *

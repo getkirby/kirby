@@ -16,10 +16,11 @@ class Config
         $host = 'localhost';
         $root = $app->roots()->config();
 
-        $main = static::load($root . '/config.php');
-        $host = static::load($root . '/config.' . $host . '.php');
+        $main    = static::load($root . '/config.php');
+        $host    = static::load($root . '/config.' . $host . '.php');
+        $plugins = $app->get('option');
 
-        return array_merge($main, $host);
+        return array_merge($plugins, $main, $host);
     }
 
     public static function load(string $file): array

@@ -31,40 +31,42 @@ class Registry
     ];
 
     /**
-     * Internal getter and setter for registry entries
+     * Add an entry to the registry
      *
      * @param string $type
-     * @param string|array $key
+     * @param string $key
      * @param mixed $value
-     * @return mixed
+     * @return self
      */
-    protected function entry(string $type, $key, $value = null)
+    protected function add(string $type, string $key, $value)
     {
-        if ($value === null) {
-            return $this->entries[$type][$key] ?? null;
-        }
-
         if (array_key_exists($type, $this->entries) === false) {
             throw new Exception(sprintf('Invalid registry entry type "%s"', $type));
         }
 
-        if (is_array($key) === true) {
-            foreach ($key as $k) {
-                $this->entries[$type][$k] = $value;
-            }
-            return $this->entries[$type];
-        }
-
-        return $this->entries[$type][$key] = $value;
+        $this->entries[$type][$key] = $value;
+        return $this;
     }
 
-    public function entries($type = null): array
+    /**
+     * @param string $type
+     * @param string $key
+     * @param mixed $value
+     * @return self
+     */
+    protected function append(string $type, string $key, $value): self
     {
-        if ($type === null) {
-            return $this->entries;
+        if (array_key_exists($type, $this->entries) === false) {
+            throw new Exception(sprintf('Invalid registry entry type "%s"', $type));
         }
 
-        return $this->entries[$type] ?? [];
+        if (isset($this->entries[$type][$key]) === false) {
+            $this->entries[$type][$key] = [];
+        }
+
+        $this->entries[$type][$key][] = $value;
+
+        return $this;
     }
 
     /**
@@ -72,9 +74,21 @@ class Registry
      *
      * @return mixed
      */
-    public function get(string $type, string $key)
+    public function get(string $type = null, string $key = null)
     {
-        return $this->entry($type, $key);
+        if ($type === null) {
+            return $this->entries;
+        }
+
+        if (array_key_exists($type, $this->entries) === false) {
+            throw new Exception(sprintf('Invalid registry entry type "%s"', $type));
+        }
+
+        if ($key === null) {
+            return $this->entries[$type];
+        }
+
+        return $this->entries[$type][$key] ?? null;
     }
 
     /**
@@ -95,62 +109,62 @@ class Registry
 
     public function setBlueprint($name, string $file)
     {
-        return $this->entry('blueprint', $name, $file);
+        return $this->add('blueprint', $name, $file);
     }
 
     public function setCollection(string $name, Closure $function)
     {
-        return $this->entry('collection', $name, $function);
+        return $this->add('collection', $name, $function);
     }
 
     public function setController($name, Closure $function)
     {
-        return $this->entry('controller', $name, $function);
+        return $this->add('controller', $name, $function);
     }
 
     public function setField(string $name, string $directory)
     {
-        return $this->entry('field', $name, $directory);
+        return $this->add('field', $name, $directory);
     }
 
     public function setFieldMethod($name, Closure $function)
     {
-        return $this->entry('fieldMethod', $name, $function);
+        return $this->add('fieldMethod', $name, $function);
     }
 
     public function setFileMethod($name, Closure $function)
     {
-        return $this->entry('fileMethod', $name, $function);
+        return $this->add('fileMethod', $name, $function);
     }
 
     public function setFilesMethod($name, Closure $function)
     {
-        return $this->entry('filesMethod', $name, $function);
+        return $this->add('filesMethod', $name, $function);
     }
 
     public function setHook($name, Closure $function)
     {
-        return $this->entry('hook', $name, $function);
+        return $this->append('hook', $name, $function);
     }
 
     public function setPageMethod($name, Closure $function)
     {
-        return $this->entry('pageMethod', $name, $function);
+        return $this->add('pageMethod', $name, $function);
     }
 
     public function setPageModel($name, string $className)
     {
-        return $this->entry('pageModel', $name, $className);
+        return $this->add('pageModel', $name, $className);
     }
 
     public function setPagesMethod($name, Closure $function)
     {
-        return $this->entry('pagesMethod', $name, $function);
+        return $this->add('pagesMethod', $name, $function);
     }
 
     public function setOption(string $name, $value)
     {
-        return $this->entry('option', $name, $value);
+        return $this->add('option', $name, $value);
     }
 
     public function setRoute($name, $route = null)
@@ -160,37 +174,37 @@ class Registry
             $name  = $route['pattern'] ?? null;
         }
 
-        return $this->entry('route', $name, $route);
+        return $this->add('route', $name, $route);
     }
 
     public function setSiteMethod($name, Closure $function)
     {
-        return $this->entry('siteMethod', $name, $function);
+        return $this->add('siteMethod', $name, $function);
     }
 
     public function setSnippet(string $name, string $file)
     {
-        return $this->entry('snippet', $name, $file);
+        return $this->add('snippet', $name, $file);
     }
 
     public function setTag(string $name, array $tag)
     {
-        return $this->entry('tag', $name, $tag);
+        return $this->add('tag', $name, $tag);
     }
 
     public function setTemplate($name, string $file)
     {
-        return $this->entry('template', $name, $file);
+        return $this->add('template', $name, $file);
     }
 
     public function setValidator(string $name, Closure $function)
     {
-        return $this->entry('validator', $name, $function);
+        return $this->add('validator', $name, $function);
     }
 
     public function setWidget(string $name, string $directory)
     {
-        return $this->entry('widget', $name, $directory);
+        return $this->add('widget', $name, $directory);
     }
 
 }
