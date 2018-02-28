@@ -57,4 +57,19 @@ class AppRegistryTest extends TestCase
         $this->assertEquals('testValue', $kirby->option('testOption'));
     }
 
+    public function testRoute()
+    {
+        $kirby = new App;
+
+        $kirby->set('route', [
+            'pattern' => 'test',
+            'action'  => function () {
+                return 'test';
+            }
+        ]);
+
+        $this->assertEquals('test', $kirby->router()->call('test'));
+
+    }
+
 }

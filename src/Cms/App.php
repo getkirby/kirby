@@ -301,7 +301,10 @@ class App extends Component
             return $this->routes;
         }
 
-        return $this->routes = (array)include static::$root . '/config/routes.php';
+        $registry = $this->get('route');
+        $main     = (array)include static::$root . '/config/routes.php';
+
+        return $this->routes = array_merge($registry, $main);
     }
 
     /**
