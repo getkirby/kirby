@@ -108,7 +108,7 @@ class Response extends BaseResponse
         }
 
         // call the template controller if there's one.
-        $globals = array_merge($kirby->controller($template->name(), $globals, $contentType), $globals);
+        $globals = array_merge($kirby->controller($template->name(), $globals), $globals);
 
         // make all globals available
         // for templates and snippets
