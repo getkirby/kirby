@@ -150,7 +150,7 @@ class BlueprintFilesSection extends BlueprintSection
         return null;
     }
 
-    protected function itemImage($item)
+    protected function itemImageDefault($item)
     {
         return $item;
     }
@@ -179,7 +179,7 @@ class BlueprintFilesSection extends BlueprintSection
             'id'       => $item->id(),
             'parent'   => $parent,
             'text'     => $this->itemValue($item, 'title', $stringTemplateData),
-            'image'    => $this->itemImageResult($item, $stringTemplateData),
+            'image'    => $this->itemImage($item, $stringTemplateData),
             'link'     => $this->itemLink($item),
             'info'     => $this->itemValue($item, 'info', $stringTemplateData),
             'url'      => $item->url()

@@ -7,6 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Cms\Query;
 
 trait BlueprintSectionData
 {
@@ -108,21 +109,47 @@ trait BlueprintSectionData
         return $this->item ?? [];
     }
 
-    protected function itemImage()
+    protected function itemImage($item, array $data)
     {
-        return null;
-    }
+        $imageSettings = $this->item()['image'] ?? null;
+        $imageSource   = null;
 
-    protected function itemImageResult($item, $stringTemplateData)
-    {
-        $image = $this->itemImage($item, $stringTemplateData);
-
-        if ($image !== null && is_a($image, File::class) === true && $image->type() === 'image') {
-            return [
-                'url' => $this->layout() === 'list' ? $image->crop(100)->url() : $image->crop(300, 200)->url()
-            ];
+        if (is_array($imageSettings) === false) {
+            $imageSource   = $imageSettings;
+            $imageSettings = [];
+        } else {
+            $imageSource = $imageSettings['src'] ?? null;
         }
 
+        // remove the src from the settings
+        unset($imageSettings['src']);
+
+        // add defaults
+        $imageSettings = array_merge([
+            'url'   => false,
+            'ratio' => '3/2',
+            'back'  => 'black'
+        ], $imageSettings);
+
+        if ($imageSource === null) {
+            $imageSource = $this->itemImageDefault($item);
+        }
+
+        if (is_string($imageSource) === true) {
+            $imageSource = (new Query($imageSource, $data))->result();
+        }
+
+        if (is_a($imageSource, File::class) === true && $imageSource->type() === 'image') {
+            $imageSettings['url'] = $this->layout() === 'list' ? $imageSource->crop(100)->url() : $imageSource->resize(300, 300)->url();
+        } else {
+            $imageSettings['url'] = false;
+        }
+
+        return $imageSettings;
+    }
+
+    protected function itemImageDefault($item)
+    {
         return null;
     }
 
@@ -144,7 +171,7 @@ trait BlueprintSectionData
             'id'     => $item->id(),
             'parent' => $item->parent() ? $item->parent()->id() : null,
             'text'   => $this->itemValue($item, 'title', $stringTemplateData),
-            'image'  => $this->itemImageResult($item, $stringTemplateData),
+            'image'  => $this->itemImage($item, $stringTemplateData),
             'link'   => $this->itemLink($item),
             'info'   => $this->itemValue($item, 'info', $stringTemplateData),
             'url'    => $item->url()
