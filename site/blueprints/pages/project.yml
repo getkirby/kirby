@@ -28,11 +28,16 @@ sections:
 				required: true
 				minLength: 10
 				maxLength: 20
+				width: 3/4
 			year:
 				label: Year
 				type: number
 				min: 2000
 				required: true
+				width: 1/4
+			tags:
+				label: Tags
+				type: tags
 			text:
 				label: Text
 				type: textarea
