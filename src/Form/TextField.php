@@ -37,7 +37,7 @@ class TextField extends Field
 
     protected function valueFromInput($input)
     {
-        return $this->convert($input);
+        return $this->convert(trim($input));
     }
 
 }
