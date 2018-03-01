@@ -23,11 +23,13 @@ sections:
         type: datetime
       author:
         label: Author
-        type: text
+        type: user
         icon: user
       tags:
         label: Tags
         type: tags
+        options: query
+        query: site.find("blog").children
 
   images:
     headline: Images
