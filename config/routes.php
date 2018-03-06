@@ -2,6 +2,7 @@
 
 use Kirby\Api\Api;
 use Kirby\Cms\Response;
+use Kirby\Cms\Resources;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\View;
@@ -31,13 +32,17 @@ return [
         }
     ],
     [
+        'pattern' => 'media/plugins/(:all)',
+        'action'  => function (string $path) use ($kirby) {
+            if ($resource = Resources::forPlugins()->find('plugins/' . $path)) {
+                return $resource->link()->redirect();
+            }
+        }
+    ],
+    [
         'pattern' => 'media/(:any)/(:all)',
         'action'  => function (string $type, string $path) use ($kirby) {
-            try {
-                return new Redirect($kirby->media()->resolve($kirby, $type, $path)->url(), 307);
-            } catch (Exception $e) {
-                return 404;
-            }
+            return new Redirect($kirby->media()->resolve($kirby, $type, $path)->url(), 307);
         }
     ],
     [
