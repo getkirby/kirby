@@ -8,10 +8,18 @@ use Kirby\Util\Dir;
 trait AppPlugins
 {
 
-    protected function plugins()
+    protected $plugins;
+
+    public function plugins(): array
     {
+        if (is_array($this->plugins) === true) {
+            return $this->plugins;
+        }
+
         $root  = $this->root('plugins');
         $kirby = $this;
+
+        $this->plugins = [];
 
         foreach (Dir::read($root) as $dirname) {
 
@@ -19,11 +27,14 @@ trait AppPlugins
                 continue;
             }
 
-            $entry = $root . '/' . $dirname . '/' . $dirname . '.php';
+            $dir   = $root . '/' . $dirname;
+            $entry = $dir . '/' . $dirname . '.php';
 
             if (file_exists($entry) === false) {
                 continue;
             }
+
+            $this->plugins[] = $dir;
 
             include_once $entry;
 
@@ -33,6 +44,8 @@ trait AppPlugins
         $this->registerFields();
         $this->registerHooks();
         $this->registerPageModels();
+
+        return $this->plugins;
 
     }
 
