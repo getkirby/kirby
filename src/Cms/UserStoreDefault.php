@@ -18,24 +18,6 @@ class UserStoreDefault extends Store
         ]);
     }
 
-    /**
-     * @return UserBlueprint|null
-     */
-    public function blueprint()
-    {
-        $root = $this->kirby()->root('blueprints') . '/users';
-
-        try {
-            return UserBlueprint::load($root . '/' . $this->user()->role() . '.yml', $this->user());
-        } catch (Exception $e) {
-            try {
-                return UserBlueprint::load($root . '/default.yml', $this->user());
-            } catch (Exception $e) {
-                return null;
-            }
-        }
-    }
-
     public function changeEmail(string $email)
     {
         return $this->user()->clone([

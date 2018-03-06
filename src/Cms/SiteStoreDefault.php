@@ -5,11 +5,6 @@ namespace Kirby\Cms;
 class SiteStoreDefault extends Store
 {
 
-    public function blueprint()
-    {
-        return SiteBlueprint::load($this->kirby()->root('blueprints') . '/site.yml', $this->site());
-    }
-
     public function children()
     {
         return new Pages([], $this->site());

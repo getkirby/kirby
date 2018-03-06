@@ -113,7 +113,11 @@ class User extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = $this->store()->blueprint();
+        try {
+            return $this->blueprint = UserBlueprint::load('users/' . $this->role(), 'users/default', $this);
+        } catch (Exception $e) {
+            return $this->blueprint = null;
+        }
     }
 
     /**

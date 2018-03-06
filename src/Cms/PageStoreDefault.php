@@ -7,17 +7,6 @@ use Exception;
 class PageStoreDefault extends Store
 {
 
-    public function blueprint()
-    {
-        $root = $this->kirby()->root('blueprints') . '/pages';
-
-        try {
-            return PageBlueprint::load($root . '/' . $this->page()->template() . '.yml', $this->page());
-        } catch (Exception $e) {
-            return PageBlueprint::load($root . '/default.yml', $this->page());
-        }
-    }
-
     public function changeNum(int $num = null)
     {
         return $this->page()->clone([

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Data\Data;
 use Kirby\Form\Fields;
+use Kirby\Util\F;
 
 /**
  * The Blueprint class converts an array from a
@@ -162,24 +163,46 @@ class Blueprint extends BlueprintObject
     }
 
     /**
+     * Find a blueprint by name
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function find(string $name): string
+    {
+        $kirby = App::instance();
+        $root  = $kirby->root('blueprints');
+        $file  = $root . '/' . $name . '.yml';
+
+        if (F::exists($file, $root) === true) {
+            return $file;
+        }
+
+        if ($file = $kirby->get('blueprint', $name)) {
+            return $file;
+        }
+
+        throw new Exception(sprintf('The blueprint "%s" could not be loaded', $name));
+    }
+
+    /**
      * Loads a blueprint from file or array
      *
-     * @param string|array $input
+     * @param string $name
+     * @param string $fallback
      * @param Model $model
      * @return self
      */
-    public static function load($input, $model)
+    public static function load(string $name, string $fallback = null, Model $model)
     {
-        if (is_array($input)) {
-            return new static($input);
+        try {
+            $file = static::find($name);
+        } catch (Exception $e) {
+            $file = $fallback !== null ? static::find($fallback) : null;
         }
 
-        if (is_file($input) === false) {
-            throw new Exception('The blueprint cannot be found');
-        }
-
-        $data          = Data::read($input);
-        $data['name']  = pathinfo($input, PATHINFO_FILENAME);
+        $data          = Data::read($file);
+        $data['name']  = F::name($file);
         $data['model'] = $model;
 
         return new static($data);
