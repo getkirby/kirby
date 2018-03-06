@@ -14,10 +14,17 @@ class Field extends Component
     use I18n;
     use Mixins\Model;
 
+    public static $types = [];
+
     protected $disabled;
     protected $name;
     protected $type;
     protected $width;
+
+    public static function assets(): array
+    {
+        return [];
+    }
 
     protected function defaultDisabled(): bool
     {
@@ -45,13 +52,14 @@ class Field extends Component
             throw new PropertyException('Missing field type');
         }
 
-        $fieldClass = __NAMESPACE__ . '\\' . ucfirst($props['type']) . 'Field';
+        $type  = $props['type'];
+        $class = static::$types[$type] ?? __NAMESPACE__ . '\\' . ucfirst($type) . 'Field';
 
-        if (class_exists($fieldClass) === false) {
-            throw new PropertyException(sprintf('Invalid field type: "%s"', $props['type']));
+        if (class_exists($class) === false) {
+            throw new PropertyException(sprintf('Invalid field type: "%s"', $type));
         }
 
-        return new $fieldClass($props);
+        return new $class($props);
     }
 
     public function isDisabled(): bool
