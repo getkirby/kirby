@@ -31,6 +31,18 @@ class Registry
     ];
 
     /**
+     * Creates a new Registry instance
+     * and also imports every entry that
+     * is being passed
+     *
+     * @param array $import
+     */
+    public function __construct(array $import = null)
+    {
+        $this->import($import);
+    }
+
+    /**
      * Add an entry to the registry
      *
      * @param string $type
@@ -92,6 +104,40 @@ class Registry
     }
 
     /**
+     * Imports an entire set of registry entries
+     *
+     * [
+     *   'controller' => [
+     *     'foo' => function () {}
+     *   ],
+     *   'collection' => [
+     *     'bar' => function () {}
+     *   ]
+     * ]
+     *
+     * @param array $array
+     * @return self
+     */
+    public function import(array $import = null)
+    {
+        if (is_array($import) === false) {
+            return $this;
+        }
+
+        foreach ($import as $type => $entries) {
+            foreach ($entries as $name => $entry) {
+                if (is_string($name)) {
+                    $this->set($type, $name, $entry);
+                } else {
+                    $this->set($type, $entry);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Global setter for any registry entry type
      *
      * @param string $type
@@ -132,34 +178,25 @@ class Registry
         return $this->add('fieldMethod', $name, $function);
     }
 
-    public function setFileMethod($name, Closure $function)
+    public function setHook($name, $function)
     {
-        return $this->add('fileMethod', $name, $function);
-    }
+        if (is_a($function, Closure::class) === true) {
+            return $this->append('hook', $name, $function);
+        }
 
-    public function setFilesMethod($name, Closure $function)
-    {
-        return $this->add('filesMethod', $name, $function);
-    }
+        if (is_array($function) === true) {
+            foreach ($function as $func) {
+                $this->setHook($name, $func);
+            }
+            return $this;
+        }
 
-    public function setHook($name, Closure $function)
-    {
-        return $this->append('hook', $name, $function);
-    }
-
-    public function setPageMethod($name, Closure $function)
-    {
-        return $this->add('pageMethod', $name, $function);
+        throw new Exception('Invalid hook format');
     }
 
     public function setPageModel($name, string $className)
     {
         return $this->add('pageModel', $name, $className);
-    }
-
-    public function setPagesMethod($name, Closure $function)
-    {
-        return $this->add('pagesMethod', $name, $function);
     }
 
     public function setOption(string $name, $value)
@@ -175,11 +212,6 @@ class Registry
         }
 
         return $this->add('route', $name, $route);
-    }
-
-    public function setSiteMethod($name, Closure $function)
-    {
-        return $this->add('siteMethod', $name, $function);
     }
 
     public function setSnippet(string $name, string $file)
@@ -200,11 +232,6 @@ class Registry
     public function setValidator(string $name, Closure $function)
     {
         return $this->add('validator', $name, $function);
-    }
-
-    public function setWidget(string $name, string $directory)
-    {
-        return $this->add('widget', $name, $directory);
     }
 
 }
