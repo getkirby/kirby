@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 
+use Kirby\Form\Field;
 use Kirby\Toolkit\Url;
 use Kirby\Util\Controller;
 use Kirby\Util\F;
@@ -14,6 +15,7 @@ use Kirby\Util\Dir;
 class App extends Component
 {
 
+    use AppPlugins;
     use HasSingleton;
 
     protected static $root;
@@ -45,8 +47,8 @@ class App extends Component
         // create the plugin registry
         $this->registry = new Registry;
 
-        // register all field methods
-        ContentField::methods(include static::$root . '/extensions/methods.php');
+        // load all plugins
+        $this->plugins();
 
         static::$instance = $this;
     }
@@ -144,10 +146,7 @@ class App extends Component
             return $this->hooks;
         }
 
-        $this->hooks = new Hooks($this);
-        $this->hooks->registerAll($this->get('hook'));
-
-        return $this->hooks;
+        return $this->hooks = new Hooks($this);
     }
 
     /**
