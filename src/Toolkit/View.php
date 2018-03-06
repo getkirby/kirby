@@ -66,9 +66,9 @@ class View
     /**
      * Returns the view file
      *
-     * @return string
+     * @return string|false
      */
-    public function file(): string
+    public function file()
     {
         return $this->file;
     }
