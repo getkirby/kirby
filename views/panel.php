@@ -8,8 +8,11 @@
   <title>Kirby Panel</title>
 
   <base href="<?= $kirby->url('panel') ?>">
+
   <link rel="stylesheet" href="<?= $kirby->url('panel') ?>/assets/css/panel.css">
-  <link rel="stylesheet" href="<?= $kirby->url('index') ?>/assets/css/panel.css">
+  <?php foreach ($plugins->type('css') as $plugin): ?>
+  <link rel="stylesheet" href="<?= $plugin->url() ?>">
+  <?php endforeach ?>
 
 </head>
 <body>
@@ -33,7 +36,11 @@
   <script src="<?= $kirby->url('panel') ?>/assets/js/vendor.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/registry.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/ui.js"></script>
-  <script src="<?= $kirby->url('index') ?>/assets/js/panel.js"></script>
+
+  <?php foreach ($plugins->type('js') as $plugin): ?>
+  <script src="<?= $plugin->url() ?>"></script>
+  <?php endforeach ?>
+
   <script src="<?= $kirby->url('panel') ?>/assets/js/panel.js"></script>
 
 </body>
