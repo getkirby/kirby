@@ -45,7 +45,7 @@ class App extends Component
         $this->setProperties($props);
 
         // create the plugin registry
-        $this->registry = new Registry;
+        $this->registry = new Registry($props['set'] ?? null);
 
         // load all plugins
         $this->plugins();
