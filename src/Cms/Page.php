@@ -33,7 +33,7 @@ class Page extends Model
      *
      * @var array
      */
-    protected static $models = [];
+    public static $models = [];
 
     /**
      * Properties that should be converted to array
@@ -648,21 +648,6 @@ class Page extends Model
         }
 
         return new static($props);
-    }
-
-    /**
-     * Setter and getter for Page models
-     *
-     * @param null|array $models
-     * @return array
-     */
-    public static function models(array $models = null): array
-    {
-        if ($models === null) {
-            return static::$models;
-        }
-
-        return static::$models = $models;
     }
 
     /**
