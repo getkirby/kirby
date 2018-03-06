@@ -113,7 +113,12 @@ class Field extends Component
     public function type(): string
     {
         $className = get_called_class();
-        $className = substr($className, strrpos($className, '\\') + 1);
+        $from      = strrpos($className, '\\');
+
+        if ($from !== false) {
+            $className = substr($className, $from + 1);
+        }
+
         $className = str_replace('Field', '', $className);
         $className = strtolower($className);
 
