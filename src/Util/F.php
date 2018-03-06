@@ -238,6 +238,29 @@ class F
     }
 
     /**
+     * Create a (symbolic) link to a file
+     *
+     * @param string $source
+     * @param string $link
+     * @param string $method
+     * @return boolean
+     */
+    public static function link(string $source, string $link, string $method = 'link'): bool
+    {
+        Dir::make(dirname($link), true);
+
+        if (is_file($link) === true) {
+            return true;
+        }
+
+        if (is_file($source) === false) {
+            throw new Exception(sprintf('The file "%s" does not exist and cannot be linked', $source));
+        }
+
+        return $method($source, $link);
+    }
+
+    /**
      * Returns the mime type of a file
      *
      * @param string $file
