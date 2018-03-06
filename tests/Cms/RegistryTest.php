@@ -23,19 +23,13 @@ class RegistryTest extends TestCase
             ['controller', 'test', function () {}],
             ['field', 'test', '/field/directory'],
             ['fieldMethod', 'test', function () {}],
-            ['fileMethod', 'test', function () {}],
-            ['filesMethod', 'test', function () {}],
-            ['pageMethod', 'test', function () {}],
             ['pageModel', 'test', 'MyModelClass'],
-            ['pagesMethod', 'test', function () {}],
             ['option', 'test', 'anything'],
             ['route', 'test', []],
-            ['siteMethod', 'test', function () {}],
             ['snippet', 'test', '/snippet.php'],
             ['tag', 'test', []],
             ['template', 'test', '/template.php'],
             ['validator', 'test', function () {}],
-            ['widget', 'test', '/widget/directory'],
         ];
     }
 
@@ -83,6 +77,53 @@ class RegistryTest extends TestCase
         $registry->set('template', 'test', 'test.php');
 
         $this->assertEquals(['test' => 'test.php'], $registry->get('template'));
+    }
+
+    public function testImport()
+    {
+        $registry = new Registry();
+        $registry->import([
+            'template' => [
+                'test' => 'testTemplate.php'
+            ],
+            'snippet' => [
+                'test' => 'testSnippet.php'
+            ]
+        ]);
+
+        $this->assertEquals('testTemplate.php', $registry->get('template', 'test'));
+        $this->assertEquals('testSnippet.php', $registry->get('snippet', 'test'));
+    }
+
+    public function testImportOnSet()
+    {
+        $registry = new Registry();
+        $registry->set([
+            'template' => [
+                'test' => 'testTemplate.php'
+            ],
+            'snippet' => [
+                'test' => 'testSnippet.php'
+            ]
+        ]);
+
+        $this->assertEquals('testTemplate.php', $registry->get('template', 'test'));
+        $this->assertEquals('testSnippet.php', $registry->get('snippet', 'test'));
+    }
+
+    public function testImportOnConstruct()
+    {
+        $registry = new Registry([
+            'template' => [
+                'test' => 'testTemplate.php'
+            ],
+            'snippet' => [
+                'test' => 'testSnippet.php'
+            ]
+        ]);
+
+        $this->assertEquals('testTemplate.php', $registry->get('template', 'test'));
+        $this->assertEquals('testSnippet.php', $registry->get('snippet', 'test'));
     }
 
 }

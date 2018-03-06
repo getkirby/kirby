@@ -140,12 +140,16 @@ class Registry
     /**
      * Global setter for any registry entry type
      *
-     * @param string $type
+     * @param string|array $type
      * @param mixed ...$arguments
      * @return mixed
      */
-    public function set(string $type, ...$arguments)
+    public function set($type, ...$arguments)
     {
+        if (is_array($type) === true) {
+            return $this->import($type);
+        }
+
         if (method_exists($this, 'set' . $type) === false) {
             throw new Exception(sprintf('Invalid registry entry type "%s"', $type));
         }
