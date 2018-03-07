@@ -1,9 +1,8 @@
 <?php
 
-namespace Kirby\Text\Tags\Tag;
+namespace Kirby\Text\Tags;
 
 use Kirby\Html\Element;
-use Kirby\Text\Tags\Tag;
 
 /**
  * The File Tag can be used to add

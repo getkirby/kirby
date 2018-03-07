@@ -5,17 +5,16 @@ namespace Kirby\Text;
 use Exception;
 
 use Kirby\Text\Tags\Tag;
-use Kirby\Text\Tags\Tag\Date;
-use Kirby\Text\Tags\Tag\Link;
-use Kirby\Text\Tags\Tag\Email;
-use Kirby\Text\Tags\Tag\File;
-use Kirby\Text\Tags\Tag\Gist;
-use Kirby\Text\Tags\Tag\Image;
-use Kirby\Text\Tags\Tag\Tel;
-use Kirby\Text\Tags\Tag\Twitter;
-use Kirby\Text\Tags\Tag\Vimeo;
-use Kirby\Text\Tags\Tag\Youtube;
-
+use Kirby\Text\Tags\Date;
+use Kirby\Text\Tags\Link;
+use Kirby\Text\Tags\Email;
+use Kirby\Text\Tags\File;
+use Kirby\Text\Tags\Gist;
+use Kirby\Text\Tags\Image;
+use Kirby\Text\Tags\Tel;
+use Kirby\Text\Tags\Twitter;
+use Kirby\Text\Tags\Vimeo;
+use Kirby\Text\Tags\Youtube;
 
 /**
  * The Tags Parser parses tags in
@@ -139,7 +138,6 @@ class Tags
         if (isset($this->tagInstances[$name]) === true) {
             return $this->tagInstances[$name];
         }
-
 
         if (isset($this->tags[$name]) === false) {
             throw new Exception('Unsupported tag: ' . $name);

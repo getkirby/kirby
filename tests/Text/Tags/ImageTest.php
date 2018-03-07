@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Text\Tags\Tag;
+namespace Kirby\Text\Tags;
 
 use Kirby\Html\Element\Img;
 use PHPUnit\Framework\TestCase;

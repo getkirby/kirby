@@ -1,8 +1,6 @@
 <?php
 
-namespace Kirby\Text\Tags\Tag;
-
-use Kirby\Text\Tags\Tag;
+namespace Kirby\Text\Tags;
 
 /**
  * The Tel tag creates a phone number

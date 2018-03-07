@@ -1,8 +1,7 @@
 <?php
 
-namespace Kirby\Text\Tags\Tag;
+namespace Kirby\Text\Tags;
 
-use Kirby\Text\Tags\Tag;
 use Kirby\Html\Element;
 use Kirby\Html\Element\A;
 

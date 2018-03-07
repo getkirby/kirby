@@ -18,7 +18,7 @@ namespace Kirby\Text\Tags;
  * @copyright Bastian Allgeier
  * @license   MIT
  */
-class Tag
+abstract class Tag
 {
 
     /**

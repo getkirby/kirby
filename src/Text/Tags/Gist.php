@@ -1,9 +1,8 @@
 <?php
 
-namespace Kirby\Text\Tags\Tag;
+namespace Kirby\Text\Tags;
 
 use Kirby\Html\Element\Gist as Embed;
-use Kirby\Text\Tags\Tag;
 
 /**
  * Embeds a Github Gist in your text

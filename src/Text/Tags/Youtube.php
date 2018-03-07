@@ -1,9 +1,8 @@
 <?php
 
-namespace Kirby\Text\Tags\Tag;
+namespace Kirby\Text\Tags;
 
 use Kirby\Html\Element\Video\Youtube as Embed;
-use Kirby\Text\Tags\Tag;
 
 /**
  * Embeds a Youtube video in your text

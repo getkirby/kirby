@@ -1,11 +1,10 @@
 <?php
 
-namespace Kirby\Text\Tags\Tag;
+namespace Kirby\Text\Tags;
 
 use Kirby\Html\Element;
 use Kirby\Html\Element\Img;
 use Kirby\Html\Element\A;
-use Kirby\Text\Tags\Tag;
 
 /**
  * Embeds an image in your text
