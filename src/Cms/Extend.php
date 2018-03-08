@@ -119,6 +119,11 @@ class Extend
         return $mixed;
     }
 
+    public static function pages(array $pages): array
+    {
+        return $pages;
+    }
+
     public static function pageModels(array $pageModels): array
     {
         return static::strings('pageModel', $pageModels);

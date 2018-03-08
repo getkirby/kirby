@@ -52,6 +52,22 @@ class Pages extends Collection
     }
 
     /**
+     * Custom getter that is able to find
+     * extension pages
+     *
+     * @param string $key
+     * @return Page|null
+     */
+    public function get($key, $default = null)
+    {
+        if ($item = parent::get($key)) {
+            return $item;
+        }
+
+        return App::instance()->extension('pages', $key);
+    }
+
+    /**
      * Returns all invisible pages in the collection
      *
      * @return self
