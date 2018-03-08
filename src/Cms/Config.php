@@ -18,7 +18,7 @@ class Config
 
         $main    = static::load($root . '/config.php');
         $host    = static::load($root . '/config.' . $host . '.php');
-        $plugins = $app->get('option');
+        $plugins = $app->extensions('options');
 
         return array_merge($plugins, $main, $host);
     }

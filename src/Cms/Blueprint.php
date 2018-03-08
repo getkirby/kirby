@@ -178,7 +178,7 @@ class Blueprint extends BlueprintObject
             return $file;
         }
 
-        if ($file = $kirby->get('blueprint', $name)) {
+        if ($file = $kirby->extension('blueprints', $name)) {
             return $file;
         }
 
@@ -199,6 +199,10 @@ class Blueprint extends BlueprintObject
             $file = static::find($name);
         } catch (Exception $e) {
             $file = $fallback !== null ? static::find($fallback) : null;
+        }
+
+        if ($file === null) {
+            return null;
         }
 
         $data          = Data::read($file);

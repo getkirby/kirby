@@ -15,17 +15,16 @@ use Kirby\Util\Dir;
 class App extends Component
 {
 
+    use AppOptions;
     use AppPlugins;
+    use AppHooks;
     use HasSingleton;
 
     protected static $root;
 
     protected $collections;
     protected $components;
-    protected $options;
-    protected $hooks;
     protected $path;
-    protected $registry;
     protected $roots;
     protected $routes;
     protected $site;
@@ -44,13 +43,26 @@ class App extends Component
         // configurable properties
         $this->setProperties($props);
 
-        // create the plugin registry
-        $this->registry = new Registry($props['set'] ?? null);
+        // load all extensions
+        $this->extensionsFromSystem();
+        $this->extensionsFromProps($props);
+        $this->extensionsFromPlugins();
 
-        // load all plugins
-        $this->plugins();
-
+        // set the singleton
         static::$instance = $this;
+    }
+
+    /**
+     * Calls any Kirby route
+     *
+     * @return mixed
+     */
+    public function call(string $path = null, string $method = null)
+    {
+        $path   = $path   ?? $this->path();
+        $method = $method ?? $this->request()->method();
+
+        return $this->router()->call($path, $method);
     }
 
     /**
@@ -128,7 +140,7 @@ class App extends Component
         }
 
         // registry controller
-        if ($controller = $this->get('controller', $name)) {
+        if ($controller = $this->extension('controllers', $name)) {
             return (array)$controller->call($this, $arguments);
         }
 
@@ -174,32 +186,6 @@ class App extends Component
     }
 
     /**
-     * Load a specific configuration option
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function option(string $key, $default = null)
-    {
-        return $this->options()[$key] ?? $default;
-    }
-
-    /**
-     * Returns all configuration options
-     *
-     * @return array
-     */
-    public function options(): array
-    {
-        if (is_array($this->options) === true) {
-            return $this->options;
-        }
-
-        return $this->options = Config::for($this);
-    }
-
-    /**
      * Returns the request path
      *
      * @return void
@@ -224,11 +210,6 @@ class App extends Component
         return $this->setPath($requestPath)->path;
     }
 
-    public function get($type, $name = null)
-    {
-        return $this->registry->get($type, $name);
-    }
-
     /**
      * Returns the Response object for the
      * current request
@@ -237,10 +218,7 @@ class App extends Component
      */
     public function render(string $path = null, string $method = null)
     {
-        $path   = $path   ?? $this->path();
-        $method = $method ?? $this->request()->method();
-
-        return $this->component('response', $this->router()->call($path, $method));
+        return $this->component('response', $this->call($path, $method));
     }
 
     /**
@@ -300,23 +278,10 @@ class App extends Component
             return $this->routes;
         }
 
-        $registry = $this->get('route');
-        $main     = (array)include static::$root . '/config/routes.php';
+        $registry = $this->extensions('routes');
+        $main     = (include static::$root . '/config/routes.php')($this);
 
         return $this->routes = array_merge($registry, $main);
-    }
-
-    /**
-     * Registry setter
-     *
-     * @param string $type
-     * @param mixed ...$arguments
-     * @return self
-     */
-    public function set($type, ...$arguments): self
-    {
-        $this->registry->set($type, ...$arguments);
-        return $this;
     }
 
     /**

@@ -10,7 +10,7 @@
   <base href="<?= $kirby->url('panel') ?>">
 
   <link rel="stylesheet" href="<?= $kirby->url('panel') ?>/assets/css/panel.css">
-  <?php foreach ($plugins->type('css') as $plugin): ?>
+  <?php foreach ($plugins->filterBy('extension', 'css') as $plugin): ?>
   <link rel="stylesheet" href="<?= $plugin->url() ?>">
   <?php endforeach ?>
 
@@ -37,7 +37,7 @@
   <script src="<?= $kirby->url('panel') ?>/assets/js/registry.js"></script>
   <script src="<?= $kirby->url('panel') ?>/assets/js/ui.js"></script>
 
-  <?php foreach ($plugins->type('js') as $plugin): ?>
+  <?php foreach ($plugins->filterBy('extension', 'js') as $plugin): ?>
   <script src="<?= $plugin->url() ?>"></script>
   <?php endforeach ?>
 

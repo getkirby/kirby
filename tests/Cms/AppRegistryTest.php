@@ -12,30 +12,31 @@ class DummyPage  extends Page {}
 class AppRegistryTest extends TestCase
 {
 
+    public function setUp()
+    {
+        App::removePlugins();
+    }
+
     public function testBlueprint()
     {
         $kirby = new App([
-            'set' => [
-                'blueprint' => [
-                    'pages/test' => $file = 'test.yml'
-                ]
+            'blueprints' => [
+                'pages/test' => $file = 'test.yml'
             ]
         ]);
 
-        $this->assertEquals($file, $kirby->get('blueprint', 'pages/test'));
+        $this->assertEquals($file, $kirby->extension('blueprints', 'pages/test'));
     }
 
     public function testCollection()
     {
         $pages = new Pages([]);
         $kirby = new App([
-            'set' => [
-                'collection' => [
-                    'test' => function () use ($pages) {
-                        return $pages;
-                    }
-                ],
-            ]
+            'collections' => [
+                'test' => function () use ($pages) {
+                    return $pages;
+                }
+            ],
         ]);
 
         $this->assertEquals($pages, $kirby->collection('test'));
@@ -44,12 +45,10 @@ class AppRegistryTest extends TestCase
     public function testController()
     {
         $kirby = new App([
-            'set' => [
-                'controller' => [
-                    'test' => function () {
-                        return ['foo' => 'bar'];
-                    }
-                ]
+            'controllers' => [
+                'test' => function () {
+                    return ['foo' => 'bar'];
+                }
             ]
         ]);
 
@@ -59,12 +58,10 @@ class AppRegistryTest extends TestCase
     public function testContentFieldMethod()
     {
         $kirby = new App([
-            'set' => [
-                'fieldMethod' => [
-                    'test' => function () {
-                        return 'test';
-                    }
-                ]
+            'fieldMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
             ]
         ]);
 
@@ -75,10 +72,8 @@ class AppRegistryTest extends TestCase
     public function testField()
     {
         $app = new App([
-            'set' => [
-                'field' => [
-                    'dummy' => DummyField::class
-                ]
+            'fields' => [
+                'dummy' => DummyField::class
             ]
         ]);
 
@@ -95,16 +90,14 @@ class AppRegistryTest extends TestCase
         $phpUnit  = $this;
 
         $kirby = new App([
-            'set' => [
-                'hook' => [
-                    'testHook' => function ($message) use ($phpUnit, &$executed) {
-                        $phpUnit->assertEquals('test', $message);
-                    }
-                ]
+            'hooks' => [
+                'testHook' => function ($message) use ($phpUnit, &$executed) {
+                    $phpUnit->assertEquals('test', $message);
+                }
             ]
         ]);
 
-        $kirby->hooks()->trigger('testHook', 'test');
+        $kirby->trigger('testHook', 'test');
     }
 
     public function testHooks()
@@ -113,23 +106,21 @@ class AppRegistryTest extends TestCase
         $executed = 0;
 
         $kirby = new App([
-            'set' => [
-                'hook' => [
-                    'testHook' => [
-                        function ($message) use ($phpUnit, &$executed) {
-                            $phpUnit->assertEquals('test', $message);
-                            $executed++;
-                        },
-                        function ($message) use ($phpUnit, &$executed) {
-                            $phpUnit->assertEquals('test', $message);
-                            $executed++;
-                        }
-                    ]
+            'hooks' => [
+                'testHook' => [
+                    function ($message) use ($phpUnit, &$executed) {
+                        $phpUnit->assertEquals('test', $message);
+                        $executed++;
+                    },
+                    function ($message) use ($phpUnit, &$executed) {
+                        $phpUnit->assertEquals('test', $message);
+                        $executed++;
+                    }
                 ]
             ]
         ]);
 
-        $kirby->hooks()->trigger('testHook', 'test');
+        $kirby->trigger('testHook', 'test');
         $this->assertEquals(2, $executed);
 
     }
@@ -137,10 +128,8 @@ class AppRegistryTest extends TestCase
     public function testPageModel()
     {
         $kirby = new App([
-            'set' => [
-                'pageModel' => [
-                    'dummy' => DummyPage::class
-                ]
+            'pageModels' => [
+                'dummy' => DummyPage::class
             ]
         ]);
 
@@ -155,10 +144,8 @@ class AppRegistryTest extends TestCase
     public function testOption()
     {
         $kirby = new App([
-            'set' => [
-                'option' => [
-                    'testOption' => 'testValue'
-                ]
+            'options' => [
+                'testOption' => 'testValue'
             ]
         ]);
 
@@ -168,46 +155,39 @@ class AppRegistryTest extends TestCase
     public function testRoute()
     {
         $kirby = new App([
-            'set' => [
-                'route' => [
-                    [
-                        'pattern' => 'test',
-                        'action'  => function () {
-                            return 'test';
-                        }
-                    ]
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'action'  => function () {
+                        return 'test';
+                    }
                 ]
             ]
         ]);
 
-        $this->assertEquals('test', $kirby->router()->call('test'));
-
+        $this->assertEquals('test', $kirby->call('test'));
     }
 
     public function testSnippet()
     {
         $kirby = new App([
-            'set' => [
-                'snippet' => [
-                    'header' => $file = 'header.php'
-                ]
+            'snippets' => [
+                'header' => $file = 'header.php'
             ]
         ]);
 
-        $this->assertEquals($file, $kirby->get('snippet', 'header'));
+        $this->assertEquals($file, $kirby->extension('snippets', 'header'));
     }
 
     public function testTemplate()
     {
         $kirby = new App([
-            'set' => [
-                'template' => [
-                    'project' => $file = 'project.php'
-                ]
+            'templates' => [
+                'project' => $file = 'project.php'
             ]
         ]);
 
-        $this->assertEquals($file, $kirby->get('template', 'project'));
+        $this->assertEquals($file, $kirby->extension('templates', 'project'));
     }
 
 }

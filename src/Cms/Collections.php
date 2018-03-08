@@ -94,7 +94,7 @@ class Collections
      */
     public static function load(App $app): self
     {
-        $collections = $app->get('collection');
+        $collections = $app->extensions('collections');
         $folder      = new Folder($app->root('collections'));
 
         foreach ($folder->files() as $file) {

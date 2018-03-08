@@ -15,9 +15,9 @@ class PageModelTest extends TestCase
 
     protected function setUp()
     {
-        Page::models([
+        Page::$models = [
             'article' => ArticlePage::class
-        ]);
+        ];
     }
 
     public function testPageModelWithTemplate()

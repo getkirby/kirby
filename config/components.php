@@ -22,8 +22,8 @@ return function (Kirby\Cms\App $app) {
         'Kirbytext' => [
             'singleton' => true,
             'type'      => Kirby\Text\Tags::class,
-            'instance'  => function () {
-                return new Kirby\Text\Tags();
+            'instance'  => function () use ($app) {
+                return new Kirby\Text\Tags($app->extensions('tags'));
             }
         ],
         'Locales' => [

@@ -19,7 +19,7 @@ class Snippet extends Template
             return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
         } catch (Exception $e) {
             // try to load the template from the registry
-            return App::instance()->get('snippet', $this->name());
+            return App::instance()->extension('snippets', $this->name());
         }
     }
 

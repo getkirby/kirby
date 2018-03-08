@@ -10,7 +10,7 @@ class SiteContentTest extends TestCase
      */
     protected function setUp()
     {
-        ContentField::methods(require __DIR__ . '/../../extensions/methods.php');
+        ContentField::$methods = require __DIR__ . '/../../extensions/methods.php';
     }
 
     public function testDefaultContent()

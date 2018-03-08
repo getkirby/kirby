@@ -26,6 +26,7 @@ use Exception;
  */
 class ContentField
 {
+
     /**
      * The field name
      *
