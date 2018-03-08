@@ -21,28 +21,6 @@ class Resource extends Model
         $this->setProperties($props);
     }
 
-    /**
-     * Cleans up all instances of the current
-     * resource, including all timestamped versions
-     *
-     * @return bool
-     */
-    public function cleanUp(): bool
-    {
-        $dir   = $this->dir();
-        $name  = F::name($this->filename(true));
-        $ext   = $this->extension();
-        $files = glob($dir . '/' . $name . '.*.' . $ext);
-
-        foreach ($files as $file) {
-            F::remove($file);
-        }
-
-        F::remove($this->root());
-
-        return true;
-    }
-
     public function dir(): string
     {
         return dirname($this->root());
@@ -151,7 +129,7 @@ class Resource extends Model
 
     public function link(string $root = null): self
     {
-        $this->cleanUp();
+        $this->purge();
 
         if (F::link($this->src(), $this->root()) !== true) {
             throw new Exception('The resource could not be linked');
@@ -163,6 +141,28 @@ class Resource extends Model
     public function path(): string
     {
         return $this->path;
+    }
+
+    /**
+     * Cleans up all instances of the current
+     * resource, including all timestamped versions
+     *
+     * @return bool
+     */
+    public function purge(): bool
+    {
+        $dir   = $this->dir();
+        $name  = F::name($this->filename(true));
+        $ext   = $this->extension();
+        $files = glob($dir . '/' . $name . '.*.' . $ext);
+
+        foreach ($files as $file) {
+            F::remove($file);
+        }
+
+        F::remove($this->root());
+
+        return true;
     }
 
     public function redirect()
