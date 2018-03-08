@@ -13,8 +13,7 @@ use Kirby\Text\Tags\Gist;
 use Kirby\Text\Tags\Image;
 use Kirby\Text\Tags\Tel;
 use Kirby\Text\Tags\Twitter;
-use Kirby\Text\Tags\Vimeo;
-use Kirby\Text\Tags\Youtube;
+use Kirby\Text\Tags\Video;
 
 /**
  * The Tags Parser parses tags in
@@ -53,8 +52,9 @@ class Tags
         'image'   => Image::class,
         'tel'     => Tel::class,
         'twitter' => Twitter::class,
-        'vimeo'   => Vimeo::class,
-        'youtube' => Youtube::class,
+        'video'   => Video::class,
+        'vimeo'   => Video::class,
+        'youtube' => Video::class,
     ];
 
     /**

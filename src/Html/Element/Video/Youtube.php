@@ -57,6 +57,6 @@ class Youtube extends Video
             throw new Exception('Invalid Youtube source');
         }
 
-        return '//' . $domain . '/embed/' . $id . $this->query($options);
+        return 'https://' . $domain . '/embed/' . $id . $this->query($options);
     }
 }

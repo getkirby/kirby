@@ -32,6 +32,6 @@ class Vimeo extends Video
             throw new Exception('Invalid Vimeo source');
         }
 
-        return '//player.vimeo.com/video/' . $id . $this->query($options);
+        return 'https://player.vimeo.com/video/' . $id . $this->query($options);
     }
 }
