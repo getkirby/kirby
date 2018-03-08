@@ -21,6 +21,28 @@ class Resource extends Model
         $this->setProperties($props);
     }
 
+    /**
+     * Cleans up all instances of the current
+     * resource, including all timestamped versions
+     *
+     * @return bool
+     */
+    public function cleanUp(): bool
+    {
+        $dir   = $this->dir();
+        $name  = F::name($this->filename(true));
+        $ext   = $this->extension();
+        $files = glob($dir . '/' . $name . '.*.' . $ext);
+
+        foreach ($files as $file) {
+            F::remove($file);
+        }
+
+        F::remove($this->root());
+
+        return true;
+    }
+
     public function dir(): string
     {
         return dirname($this->root());
@@ -30,12 +52,12 @@ class Resource extends Model
         return F::extension($this->src());
     }
 
-    public function filename(): string
+    public function filename($raw = false): string
     {
         $name      = Str::slug(F::name($this->src()));
         $extension = F::extension($this->src());
 
-        if ($this->timestamp() === true) {
+        if ($this->timestamp() === true && $raw === false) {
             return $name . '.' . filemtime($this->src()) . '.' . $extension;
         }
 
@@ -90,8 +112,8 @@ class Resource extends Model
 
     public static function forPlugin(Plugin $plugin, string $path): self
     {
-        // strip the timestamp
-        $path = preg_replace('!([0-9]+?)\.([a-z]{2,4}?)$!', '$2', $path);
+
+        $path = static::stripTimestamp($path);
 
         return new static([
             'kirby'     => $plugin->kirby(),
@@ -129,6 +151,8 @@ class Resource extends Model
 
     public function link(string $root = null): self
     {
+        $this->cleanUp();
+
         if (F::link($this->src(), $this->root()) !== true) {
             throw new Exception('The resource could not be linked');
         }
@@ -178,6 +202,12 @@ class Resource extends Model
     public function src(): string
     {
         return $this->src;
+    }
+
+    public static function stripTimestamp(string $path): string
+    {
+        // strip the timestamp
+        return preg_replace('!([0-9]+?)\.([a-z]{2,4}?)$!', '$2', $path);
     }
 
     public function timestamp(): bool
