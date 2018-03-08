@@ -26,6 +26,10 @@ class Resource extends Model
         return dirname($this->root());
     }
 
+    public function extension() {
+        return F::extension($this->src());
+    }
+
     public function filename(): string
     {
         $name      = Str::slug(F::name($this->src()));
@@ -38,7 +42,7 @@ class Resource extends Model
         return $name . '.' . $extension;
     }
 
-    public static function for(Model $model)
+    public static function for(Model $model, ...$arguments)
     {
         // Site and Page files
         if (is_a($model, File::class) === true) {
@@ -48,6 +52,11 @@ class Resource extends Model
         // Avatars
         if (is_a($model, Avatar::class) === true) {
             return static::forAvatar($model);
+        }
+
+        // Plugin
+        if (is_a($model, Plugin::class) === true) {
+            return static::forPlugin($model, ...$arguments);
         }
 
         throw new Exception('Invalid model type');
@@ -76,6 +85,20 @@ class Resource extends Model
             'path'  => 'users/' . $avatar->user()->id(),
             'src'   => $avatar->root(),
             'type'  => 'avatar'
+        ]);
+    }
+
+    public static function forPlugin(Plugin $plugin, string $path): self
+    {
+        // strip the timestamp
+        $path = preg_replace('!([0-9]+?)\.([a-z]{2,4}?)$!', '$2', $path);
+
+        return new static([
+            'kirby'     => $plugin->kirby(),
+            'path'      => 'plugins/' . $plugin->name() . '/' . ltrim(dirname($path), './'),
+            'src'       => $plugin->root() . '/assets/' . $path,
+            'type'      => 'plugin',
+            'timestamp' => true
         ]);
     }
 
