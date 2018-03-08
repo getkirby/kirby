@@ -7,48 +7,83 @@ use PHPUnit\Framework\TestCase;
 
 class ImageTest extends TestCase
 {
-    public function _image()
-    {
-        $tag  = new Image();
-        $tag->parse('test.jpg', [
-            'link'   => 'http://getkirby.com/test.jpg',
-            'alt'    => 'Kirby CMS',
-            'width'  => 100,
-            'height' => 100
-        ]);
-        return $tag;
-    }
 
     public function testAttributes()
     {
-        $tag = $this->_image();
+        $tag = new Image();
         $this->assertEquals([
-            'link',
             'alt',
+            'height',
+            'imgClass',
+            'link',
+            'linkClass',
+            'rel',
+            'target',
+            'title',
             'width',
-            'height'
         ], $tag->attributes());
     }
 
-
-    public function testParse()
+    public function dataProvider()
     {
-        $tag = $this->_image();
-        $this->assertEquals('http://getkirby.com/test.jpg', $tag->attr('link'));
-        $this->assertEquals('Kirby CMS', $tag->attr('alt'));
-        $this->assertEquals(100, $tag->attr('width'));
-        $this->assertEquals(100, $tag->attr('height'));
+        return [
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['alt' => 'test'],
+                'expected' => '<img alt="test" src="test.jpg">'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['height' => '100%'],
+                'expected' => '<img alt="" height="100%" src="test.jpg">'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['imgClass' => 'test'],
+                'expected' => '<img alt="" class="test" src="test.jpg">'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['link' => '#test'],
+                'expected' => '<a href="#test"><img alt="" src="test.jpg"></a>'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['link' => '#test', 'linkClass' => 'test'],
+                'expected' => '<a class="test" href="#test"><img alt="" src="test.jpg"></a>'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['link' => '#test', 'rel' => 'me'],
+                'expected' => '<a href="#test" rel="me"><img alt="" src="test.jpg"></a>'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['link' => '#test','target' => '_blank'],
+                'expected' => '<a href="#test" rel="noopener noreferrer" target="_blank"><img alt="" src="test.jpg"></a>'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['title' => 'test'],
+                'expected' => '<img alt="" src="test.jpg" title="test">'
+            ],
+            [
+                'name'     => 'test.jpg',
+                'props'    => ['width' => '100%'],
+                'expected' => '<img alt="" src="test.jpg" width="100%">'
+            ],
+        ];
     }
 
-    public function testHtml()
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testTag($name, $props, $expected)
     {
-        $tag = $this->_image();
-        $this->assertEquals('<a href="http://getkirby.com/test.jpg"><img alt="Kirby CMS" height="100" src="test.jpg" width="100"></a>', (string)$tag);
+        $tag    = new Image();
+        $result = $tag->parse($name, $props);
+
+        $this->assertEquals($expected, $result);
     }
 
-    public function testHtmlWithoutLink()
-    {
-        $tag = new Image();
-        $this->assertEquals('<img src="test.jpg">', $tag->parse('test.jpg'));
-    }
 }

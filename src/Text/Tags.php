@@ -83,13 +83,14 @@ class Tags
      * registered tag classes.
      *
      * @param  string $text
+     * @param  array $data Additional data that will be passed down to the tag class
      * @return string
      */
-    public function parse(string $text): string
+    public function parse(string $text, array $data = []): string
     {
-        return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) {
+        return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) use ($data) {
             try {
-                return $this->tag($match[0]);
+                return $this->tag($match[0], $data);
             } catch (Exception $e) {
                 return $match[0];
             }
@@ -114,14 +115,15 @@ class Tags
      * ```
      *
      * @param  string|array $input
+     * @param  array $data
      * @return string
      */
-    public function tag($input): string
+    public function tag($input, array $data = []): string
     {
         if (is_string($input) === true) {
-            return $this->tagFromString($input);
+            return $this->tagFromString($input, $data);
         } elseif (is_array($input) === true) {
-            return $this->tagFromArray($input);
+            return $this->tagFromArray($input, $data);
         } else {
             throw new Exception('Invalid tag input');
         }
@@ -153,9 +155,10 @@ class Tags
      * ```
      *
      * @param  string $string
+     * @param  array $data
      * @return string
      */
-    public function tagFromString(string $string): string
+    public function tagFromString(string $string, array $data): string
     {
         // remove the brackets
         $tag        = trim(rtrim(ltrim($string, '('), ')'));
@@ -179,7 +182,7 @@ class Tags
 
         $value = array_shift($attributes);
 
-        return $instance->parse($value, $attributes);
+        return $instance->parse($value, $attributes, $data);
     }
 
     /**
@@ -192,14 +195,15 @@ class Tags
      * ```
      *
      * @param  array   $attributes
+     * @param  array   $data
      * @return string
      */
-    public function tagFromArray(array $attributes): string
+    public function tagFromArray(array $attributes, $data): string
     {
         $name     = key($attributes);
         $value    = array_shift($attributes);
         $instance = $this->tagInstance($name);
 
-        return $instance->parse($value, $attributes);
+        return $instance->parse($value, $attributes, $data);
     }
 }

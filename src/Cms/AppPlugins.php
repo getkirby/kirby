@@ -109,7 +109,12 @@ trait AppPlugins
     protected function extensionsFromSystem()
     {
         $this->extend([
-            'fieldMethods' => (array)require static::$root . '/extensions/methods.php'
+            'fieldMethods' => (array)require static::$root . '/extensions/methods.php',
+            'tags' => [
+                'file'  => Tags\File::class,
+                'image' => Tags\Image::class,
+                'link'  => Tags\Link::class,
+            ]
         ]);
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Url;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
 use Kirby\Util\F;
@@ -120,8 +121,13 @@ function svg(string $file)
     return $svg;
 }
 
-function url($path = null)
+function u(string $path = null): string
 {
-    return rtrim(App::instance()->url() . '/' . $path, '/');
+    return Url::to();
+}
+
+function url(string $path = null): string
+{
+    return Url::to($path);
 }
 

@@ -34,10 +34,15 @@ class Image extends Tag
     public function attributes(): array
     {
         return [
-            'link',
             'alt',
+            'height',
+            'imgClass',
+            'link',
+            'linkClass',
+            'rel',
+            'target',
+            'title',
             'width',
-            'height'
         ];
     }
 
@@ -49,10 +54,12 @@ class Image extends Tag
      */
     public function element(): Element
     {
-        return new Img($this->value(), [
+        return new Img($this->src(), [
             'alt'    => $this->attr('alt'),
-            'width'  => $this->attr('width'),
+            'class'  => $this->attr('imgClass'),
             'height' => $this->attr('height'),
+            'title'  => $this->attr('title'),
+            'width'  => $this->attr('width'),
         ]);
     }
 
@@ -65,10 +72,19 @@ class Image extends Tag
     protected function link()
     {
         if (empty($this->attr('link')) !== true) {
-            return new A($this->attr('link'));
+            return new A($this->linkUrl(), '', [
+                'class'  => $this->attr('linkClass'),
+                'rel'    => $this->attr('rel'),
+                'target' => $this->attr('target')
+            ]);
         } else {
             return false;
         }
+    }
+
+    protected function linkUrl(): string
+    {
+        return $this->attr('link');
     }
 
     /**
@@ -87,4 +103,10 @@ class Image extends Tag
 
         return $image;
     }
+
+    protected function src(): string
+    {
+        return $this->value();
+    }
+
 }

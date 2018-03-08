@@ -32,5 +32,9 @@ class A extends Element
         $this->html($html);
         $this->attr($attr);
         $this->attr('href', $href);
+
+        if ($this->attr('target')->value() === '_blank') {
+            $this->attr('rel', 'noopener noreferrer');
+        }
     }
 }
