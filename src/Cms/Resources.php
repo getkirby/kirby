@@ -16,55 +16,29 @@ class Resources extends Collection
      */
     protected static $accept = Resource::class;
 
-    public static function forPluginClass(string $className, $clone = null): self
+    public static function forField(string $className, Plugin $plugin = null): self
     {
-        if (method_exists($className, 'assets') === false) {
-            throw new Exception(sprintf('The class "%s" has no assets definition', $className));
+        $result = new static;
+
+        // only fields within a plugin can have resources/assets
+        if ($plugin === null) {
+            return $result;
         }
 
-        $result = new static;
-        $assets = $className::assets();
-        $kirby  = App::instance();
-
-        foreach (['js', 'css', 'img'] as $type) {
-            $files = $assets[$type] ?? [];
-
-            if (is_string($files) === true) {
-                $files = [$files];
-            }
-
-            foreach ($files as $file) {
-                $fileParts  = explode('/', $file);
-                $filePath   = implode('/', array_slice($fileParts, 2));
-                $pluginName = implode('/', array_slice($fileParts, 0, 2));
-
-                $resource = Resource::forPlugin($kirby->plugin($pluginName), $filePath, [
-                    'type' => $type
-                ]);
-
-                $result->append($resource->id(), $resource);
-            }
+        foreach ($className::assets() as $asset) {
+            $resource = Resource::forPlugin($plugin, $asset);
+            $result->append($resource->id(), $resource);
         }
 
         return $result;
-    }
-
-    public static function forField(string $className): self
-    {
-        return static::forPluginClass($className, function ($resource) {
-            return [
-                'path'      => 'plugins/fields/' . $resource->path(),
-                'timestamp' => true
-            ];
-        });
     }
 
     public static function forFields(): self
     {
         $result = new static;
 
-        foreach (App::instance()->extensions('fields') as $type => $className) {
-            foreach (static::forField($className) as $resource) {
+        foreach (App::instance()->extensions('fields') as $type => $field) {
+            foreach (static::forField($field['class'], $field['plugin']) as $resource) {
                 $result->append($resource->id(), $resource);
             }
         }

@@ -9,7 +9,7 @@ use Kirby\Image\Image;
 class DummyField extends TextField {}
 class DummyPage  extends Page {}
 
-class AppRegistryTest extends TestCase
+class AppPluginsTest extends TestCase
 {
 
     public function setUp()

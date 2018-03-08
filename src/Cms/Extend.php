@@ -38,9 +38,27 @@ class Extend
         return static::strings('blueprint', $blueprints);
     }
 
-    public static function fields(array $fields): array
+    public static function fields(array $fields, Plugin $plugin = null): array
     {
-        return static::strings('field', $fields);
+        $result = [];
+
+        foreach ($fields as $name => $class) {
+
+            if (is_string($name) === false) {
+                throw new Exception('Invalid field type');
+            }
+
+            if (is_string($class) === false) {
+                throw new Exception('Invalid field class definition');
+            }
+
+            $result[$name] = [
+                'class'  => $class,
+                'plugin' => $plugin
+            ];
+        }
+
+        return $result;
     }
 
     public static function fieldMethods(array $fieldMethods): array
@@ -106,18 +124,18 @@ class Extend
         return static::strings('pageModel', $pageModels);
     }
 
-    public static function options(array $options, string $prefix = null): array
+    public static function options(array $options, Plugin $plugin = null): array
     {
         $options = static::mixed('option', $options);
 
-        if ($prefix === null) {
+        if ($plugin === null) {
             return $options;
         }
 
         $prefixed = [];
 
         foreach ($options as $key => $value) {
-            $prefixed[$prefix . '.' . $key] = $value;
+            $prefixed[$plugin->prefix() . '.' . $key] = $value;
         }
 
         return $prefixed;

@@ -14,7 +14,7 @@ trait AppPlugins
     protected $extensions = [];
     protected $pluginsAreLoaded = false;
 
-    public function extend(array $extensions, string $prefix = null): array
+    public function extend(array $extensions, Plugin $plugin = null): array
     {
         $extends = [];
 
@@ -28,7 +28,7 @@ trait AppPlugins
                 throw new Exception(sprintf('Extensions for "%s" must be defined as array', $type));
             }
 
-            $extends[$type] = Extend::$type($values, $prefix);
+            $extends[$type] = Extend::$type($values, $plugin);
         }
 
         // extensions that need to be registered instantly
@@ -41,13 +41,14 @@ trait AppPlugins
 
     protected function extendFieldMethods(array $methods)
     {
-        $default = include static::$root . '/extensions/methods.php';
         ContentField::$methods = array_merge(ContentField::$methods, $methods);
     }
 
     protected function extendFields(array $fields)
     {
-        Field::$types = array_merge(Field::$types, $fields);
+        foreach ($fields as $name => $field) {
+            Field::$types[$name] = $field['class'];
+        }
     }
 
     protected function extendPageModels(array $models)
@@ -86,7 +87,7 @@ trait AppPlugins
     {
         // register all their extensions
         foreach ($this->plugins() as $plugin) {
-            $this->extend($plugin->extends());
+            $this->extend($plugin->extends(), $plugin);
         }
     }
 

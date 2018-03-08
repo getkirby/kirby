@@ -37,10 +37,15 @@ class ExtendTest extends TestCase
 
     public function testFields()
     {
-        $result = Extend::fields($expected = [
+        $result = Extend::fields([
             'a' => 'a',
             'b' => 'b'
         ]);
+
+        $expected = [
+            'a' => ['class' => 'a', 'plugin' => null],
+            'b' => ['class' => 'b', 'plugin' => null]
+        ];
 
         $this->assertEquals($expected, $result);
     }
