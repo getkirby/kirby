@@ -7,5 +7,3 @@ if (is_dir(__DIR__ . '/vendor')) {
 }
 
 require __DIR__ . '/config/sentry.php';
-require __DIR__ . '/extensions/helpers.php';
-require __DIR__ . '/config/aliases.php';

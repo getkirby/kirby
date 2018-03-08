@@ -35,6 +35,10 @@
         "phpunit/phpunit": "^7"
     },
     "autoload": {
+        "files": [
+            "extensions/helpers.php",
+            "config/aliases.php"
+        ],
         "psr-4": {
             "Kirby\\": "src/"
         }
