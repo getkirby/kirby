@@ -16,6 +16,10 @@ class LinkTest extends TestCase
         new App([
             'urls' => [
                 'index' => 'https://getkirby.com'
+            ],
+            'components' => [
+                // avoid side effects from the current site
+                'site' => new Site()
             ]
         ]);
     }
