@@ -53,7 +53,13 @@ class CollectionsTest extends TestCase
 
     public function testLoad()
     {
-        $collections = Collections::load(__DIR__ . '/fixtures/collections');
+        $app = new App([
+            'roots' => [
+                'collections' => __DIR__ . '/fixtures/collections'
+            ]
+        ]);
+
+        $collections = Collections::load($app);
         $result      = $collections->get('test');
 
         $this->assertInstanceOf(Collection::class, $result);
