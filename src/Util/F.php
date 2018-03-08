@@ -261,6 +261,21 @@ class F
     }
 
     /**
+     * Loads a file and returns the result
+     *
+     * @param string $file
+     * @return mixed
+     */
+    public static function load(string $file, $fallback = null)
+    {
+        if (file_exists($file) === false) {
+            return $fallback;
+        }
+
+        return include $file;
+    }
+
+    /**
      * Returns the mime type of a file
      *
      * @param string $file
