@@ -31,9 +31,9 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/plugins/(:any)/(:any)/(:all)',
-            'action'  => function (string $provider, string $pluginName, string $path) use ($kirby) {
-                return $kirby->plugin($provider . '/' . $pluginName)->resource($path)->link()->redirect();
+            'pattern' => 'media/plugins/(:any)/(:any)/(:all).(css|js|jpg|png|gif|svg)',
+            'action'  => function (string $provider, string $pluginName, string $path, string $extension) use ($kirby) {
+                return $kirby->plugin($provider . '/' . $pluginName)->resource($path . '.' . $extension)->link()->redirect();
             }
         ],
         [
