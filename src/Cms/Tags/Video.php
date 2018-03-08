@@ -10,20 +10,27 @@ class Video extends \Kirby\Text\Tags\Video
 {
     use Dependencies;
 
-    protected function iframe(): Element
-    {
-        $options = $this->kirby()->options();
+    protected $options;
+    protected $attr;
 
-        // url option queries
-        $query = [
-            'vimeo'   => $options['kirbytext.video.vimeo.options']   ?? [],
-            'youtube' => $options['kirbytext.video.youtube.options'] ?? [],
+    public function __construct()
+    {
+        $config = $this->kirby()->options();
+
+        $this->attr = [
+            'class'  => $config['kirbytext.video.class']  ?? 'video',
+            'height' => $config['kirbytext.video.height'] ?? false,
+            'width'  => $config['kirbytext.video.width']  ?? false,
         ];
 
-        return Iframe::create($this->value(), $query, [
-            'class'  => $options['kirbytext.video.class']  ?? 'video',
-            'height' => $options['kirbytext.video.height'] ?? false,
-            'width'  => $options['kirbytext.video.width']  ?? false,
-        ]);
+        $this->options = [
+            'vimeo'   => $config['kirbytext.video.vimeo.options']   ?? [],
+            'youtube' => $config['kirbytext.video.youtube.options'] ?? [],
+        ];
+    }
+
+    protected function iframe(): Element
+    {
+        return Iframe::create($this->value(), $this->options, $this->attr);
     }
 }
