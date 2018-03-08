@@ -15,22 +15,6 @@ class FileStoreDefault extends Store
         return new Image($this->file()->filename(), $this->file()->url());
     }
 
-    public function blueprint()
-    {
-        $root = $this->kirby()->root('blueprints') . '/files';
-
-        try {
-            return FileBlueprint::load($root . '/default.yml', $this->file());
-        } catch (Exception $e) {
-            return new FileBlueprint([
-                'model' => $this->file(),
-                'name'  => 'default',
-                'tabs'  => [],
-                'title' => 'Default',
-            ]);
-        }
-    }
-
     public function changeName(string $name): File
     {
         return $this->file()->clone([

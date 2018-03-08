@@ -135,7 +135,16 @@ class File extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = $this->store()->blueprint();
+        if ($blueprint = FileBlueprint::load('files/default.yml', null, $this)) {
+            return $this->blueprint = $blueprint;
+        }
+
+        return $this->blueprint = new FileBlueprint([
+            'model' => $this,
+            'name'  => 'default',
+            'tabs'  => [],
+            'title' => 'Default',
+        ]);
     }
 
     /**
