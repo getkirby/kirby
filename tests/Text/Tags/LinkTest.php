@@ -52,12 +52,12 @@ class LinkTest extends TestCase
     public function testHtml()
     {
         $tag = $this->_link();
-        $this->assertEquals('<a class="testclass" href="http://google.com" rel="nofollow" role="testrole" target="_blank" title="Google">Google</a>', (string)$tag);
+        $this->assertEquals('<a class="testclass" href="http://google.com" rel="noopener nofollow" role="testrole" target="_blank" title="Google">Google</a>', (string)$tag);
     }
 
     public function testTarget()
     {
-        $withBlank    = '<a href="http://google.com" target="_blank">http://google.com</a>';
+        $withBlank    = '<a href="http://google.com" rel="noopener nofollow" target="_blank">http://google.com</a>';
         $withoutBlank = '<a href="http://google.com">http://google.com</a>';
 
         $tag = new Link();

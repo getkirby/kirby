@@ -32,7 +32,7 @@ class Img extends Element
         $this->attr($attr);
         $this->attr('src', $src);
 
-        if ($this->attr('alt')->isEmpty() === true) {
+        if (empty((string)$this->attr('alt'))) {
             $this->attr('alt', ' ');
         }
     }

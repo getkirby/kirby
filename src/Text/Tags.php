@@ -158,7 +158,7 @@ class Tags
      * @param  array $data
      * @return string
      */
-    public function tagFromString(string $string, array $data): string
+    public function tagFromString(string $string, array $data = []): string
     {
         // remove the brackets
         $tag        = trim(rtrim(ltrim($string, '('), ')'));
@@ -198,7 +198,7 @@ class Tags
      * @param  array   $data
      * @return string
      */
-    public function tagFromArray(array $attributes, $data): string
+    public function tagFromArray(array $attributes, array $data = []): string
     {
         $name     = key($attributes);
         $value    = array_shift($attributes);

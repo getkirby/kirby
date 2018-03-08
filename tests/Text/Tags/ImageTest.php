@@ -60,7 +60,7 @@ class ImageTest extends TestCase
             [
                 'name'     => 'test.jpg',
                 'props'    => ['link' => '#test','target' => '_blank'],
-                'expected' => '<a href="#test" rel="noopener noreferrer" target="_blank"><img alt="" src="test.jpg"></a>'
+                'expected' => '<a href="#test" rel="noopener nofollow" target="_blank"><img alt="" src="test.jpg"></a>'
             ],
             [
                 'name'     => 'test.jpg',
