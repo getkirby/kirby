@@ -107,8 +107,7 @@ class UserRulesTest extends TestCase
             'email'    => 'user@domain.com',
             'password' => '12345678'
         ]);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::create($user, $values, $form));
+        $this->assertTrue(UserRules::create($user));
     }
 
     /**
@@ -118,8 +117,7 @@ class UserRulesTest extends TestCase
     public function testCreateWithoutEmail()
     {
         $user = new User(['password' => '123']);
-        $form = Form::for($user);
-        UserRules::create($user, $form);
+        UserRules::create($user);
     }
 
 
@@ -140,10 +138,9 @@ class UserRulesTest extends TestCase
     public function testUpdate()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'zodiac' => 'lion'
-        ], $form));
+        ], $input));
     }
 
     /**
@@ -153,10 +150,9 @@ class UserRulesTest extends TestCase
     public function testUpdateWithEmail()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'email' => 'admin@domain.com'
-        ], $form));
+        ], $input));
     }
 
     /**
@@ -166,10 +162,9 @@ class UserRulesTest extends TestCase
     public function testUpdateWithPassword()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'password' => '12345678'
-        ], $form));
+        ], $input));
     }
 
     /**
@@ -179,10 +174,9 @@ class UserRulesTest extends TestCase
     public function testUpdateWithRole()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'role' => 'editor'
-        ], $form));
+        ], $input));
     }
 
     public function testDelete()
