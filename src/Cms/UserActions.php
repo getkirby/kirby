@@ -70,11 +70,7 @@ trait UserActions
      */
     public function changeRole(string $role): self
     {
-        $this->rules()->changeRole($this, $role);
-        $this->kirby()->trigger('user.changeRole:before', $this);
-        $result = $this->store()->changeRole($role);
-        $this->kirby()->trigger('user.changeRole:after', $result, $this);
-        return $result;
+        return $this->commit('changeRole', $role);
     }
 
     /**

@@ -59,4 +59,24 @@ class UserActionsTest extends TestCase
         });
     }
 
+    public function testChangePassword()
+    {
+        $this->assertHooks([
+            'user.changePassword:before' => function (User $user) {
+                $this->assertInstanceOf(User::class, $user);
+            },
+            'user.changePassword:after' => function (User $newUser, User $oldUser) {
+                $this->assertNotEquals($newUser->password(), $oldUser->password());
+            }
+        ], function () {
+            $this->userDummy()->changePassword('top-secret');
+        });
+    }
+
+    public function testChangeRole()
+    {
+        $this->markTestIncomplete('We need more test users to be able to switch roles');
+    }
+
+
 }
