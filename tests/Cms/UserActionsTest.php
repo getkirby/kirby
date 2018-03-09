@@ -17,10 +17,15 @@ class UserActionsTest extends TestCase
         ]);
 
         return $user->clone([
-            'blueprint' => new UserBlueprint([
-                'model' => $user,
-                'name'  => 'Test User',
-                'title' => 'user'
+            'blueprint'  => new UserBlueprint([
+                'model'  => $user,
+                'name'   => 'Test User',
+                'title'  => 'user',
+                'fields' => [
+                    'website' => [
+                        'type' => 'url'
+                    ]
+                ]
             ])
         ]);
     }
@@ -76,6 +81,26 @@ class UserActionsTest extends TestCase
     public function testChangeRole()
     {
         $this->markTestIncomplete('We need more test users to be able to switch roles');
+    }
+
+    public function testUpdate()
+    {
+        $user = $this->userDummy();
+
+        $this->assertHooks([
+            'user.update:before' => function (User $user, array $values, array $strings) {
+                $this->assertEquals(null, $user->website()->value());
+                $this->assertEquals('https://test.com', $strings['website']);
+            },
+            'user.update:after' => function (User $newUser, User $oldUser) {
+                $this->assertEquals('https://test.com', $newUser->website()->value());
+                $this->assertEquals(null, $oldUser->website()->value());
+            }
+        ], function () use ($user) {
+            $user->update([
+                'website' => 'https://test.com',
+            ]);
+        });
     }
 
 

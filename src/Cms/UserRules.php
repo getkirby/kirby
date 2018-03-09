@@ -66,17 +66,17 @@ class UserRules
         return true;
     }
 
-    public static function update(User $user, array $content = [], Form $form): bool
+    public static function update(User $user, array $values = [], array $strings = []): bool
     {
-        if (isset($content['email']) === true) {
+        if (isset($values['email']) === true) {
             throw new Exception('Use the User::changeEmail() method to change the user email');
         }
 
-        if (isset($content['password']) === true) {
+        if (isset($values['password']) === true) {
             throw new Exception('Use the User::changePassword() method to change the user password');
         }
 
-        if (isset($content['role']) === true) {
+        if (isset($values['role']) === true) {
             throw new Exception('Use the User::changeRole() method to change the user role');
         }
 
