@@ -15,6 +15,7 @@ class Roots extends Ingredients
 
     protected $accounts;
     protected $blueprints;
+    protected $cache;
     protected $collections;
     protected $config;
     protected $content;
@@ -38,6 +39,11 @@ class Roots extends Ingredients
     public function blueprints(): string
     {
         return $this->blueprints = $this->blueprints ?? $this->site() . '/blueprints';
+    }
+
+    public function cache(): string
+    {
+        return $this->cache = $this->cache ?? $this->site() . '/cache';
     }
 
     public function collections(): string

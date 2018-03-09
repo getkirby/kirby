@@ -15,9 +15,11 @@ use Kirby\Util\Dir;
 class App extends Component
 {
 
+    use AppCaches;
+    use AppHooks;
     use AppOptions;
     use AppPlugins;
-    use AppHooks;
+
     use HasSingleton;
 
     protected static $root;
