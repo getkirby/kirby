@@ -21,8 +21,7 @@ trait SiteActions
             'num'    => null,
             'parent' => null,
             'site'   => $this,
-            // TODO: refactor this to be independent from the page store
-            'store'  => PageStore::class,
+            'store'  => $this->store()::PAGE_STORE_CLASS,
         ]);
 
         return Page::create($props);
@@ -32,8 +31,7 @@ trait SiteActions
     {
         $props = array_merge($props, [
             'parent' => $this,
-            // TODO: make this independent from the store
-            'store'  => FileStore::class,
+            'store'  => $this->store()::FILE_STORE_CLASS,
             'url'    => null
         ]);
 

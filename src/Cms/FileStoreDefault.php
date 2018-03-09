@@ -29,7 +29,7 @@ class FileStoreDefault extends Store
 
     public function create(File $file, Upload $upload)
     {
-        throw new Exception('This file cannot be saved');
+        return $file;
     }
 
     public function delete(): bool

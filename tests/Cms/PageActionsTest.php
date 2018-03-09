@@ -132,7 +132,13 @@ class PageActionsTest extends TestCase
 
     public function testCreateFile()
     {
+        $parent = $this->pageDummy();
+        $file   = $parent->createFile([
+            'source' => __DIR__ . '/fixtures/files/test.js'
+        ]);
 
+        $this->assertInstanceOf(File::class, $file);
+        $this->assertEquals($parent, $file->parent());
     }
 
     public function testDelete()
@@ -185,6 +191,45 @@ class PageActionsTest extends TestCase
         ], function () {
             $result = $this->pageDummy()->sort(1);
             $this->assertEquals(1, $result->num());
+        });
+    }
+
+    public function testUpdate()
+    {
+        $page = $this->pageDummy();
+        $page = $page->clone([
+            'blueprint' => new PageBlueprint([
+                'name'   => 'test',
+                'title'  => 'test',
+                'model'  => $page,
+                'fields' => [
+                    'headline' => [
+                        'type' => 'text'
+                    ],
+                    'text' => [
+                        'type' => 'text'
+                    ]
+                ]
+            ])
+        ]);
+
+        $this->assertHooks([
+            'page.update:before' => function (Page $page, array $values, array $strings) {
+                $this->assertEquals(null, $page->headline()->value());
+                $this->assertEquals(null, $page->text()->value());
+
+                $this->assertEquals('Test', $strings['headline']);
+                $this->assertEquals('Test', $strings['text']);
+            },
+            'page.update:after' => function (Page $newPage, Page $oldPage) {
+                $this->assertEquals('Test', $newPage->headline()->value());
+                $this->assertEquals(null, $oldPage->headline()->value());
+            }
+        ], function () use ($page) {
+            $page->update([
+                'headline' => 'Test',
+                'text'     => 'Test'
+            ]);
         });
     }
 

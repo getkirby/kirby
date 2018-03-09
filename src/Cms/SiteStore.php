@@ -9,6 +9,9 @@ use Kirby\Util\Dir;
 class SiteStore extends SiteStoreDefault
 {
 
+    const PAGE_STORE_CLASS = PageStore::class;
+    const FILE_STORE_CLASS = FileStore::class;
+
     protected $base;
 
     public function base()
@@ -37,7 +40,7 @@ class SiteStore extends SiteStoreDefault
             $props['slug']  = $slug;
             $props['url']   = $url . '/' . $slug;
             $props['site']  = $site;
-            $props['store'] = PageStore::class;
+            $props['store'] = static::PAGE_STORE_CLASS;
 
             $page = Page::factory($props);
 
@@ -74,7 +77,7 @@ class SiteStore extends SiteStoreDefault
             $file = new File([
                 'filename' => $filename,
                 'parent'   => $site,
-                'store'    => FileStore::class,
+                'store'    => static::FILE_STORE_CLASS,
                 'url'      => $url . '/' . $filename,
             ]);
 

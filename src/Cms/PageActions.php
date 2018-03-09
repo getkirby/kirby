@@ -158,7 +158,7 @@ trait PageActions
             'num'    => null,
             'parent' => $this,
             'site'   => $this->site(),
-            'store'  => get_class($this->store())
+            'store'  => $this->store()::PAGE_STORE_CLASS,
         ]);
 
         return static::create($props);
@@ -168,8 +168,7 @@ trait PageActions
     {
         $props = array_merge($props, [
             'parent' => $this,
-            // TODO: make this independent from the store
-            'store'  => FileStore::class,
+            'store'  => $this->store()::FILE_STORE_CLASS,
             'url'    => null
         ]);
 

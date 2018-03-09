@@ -7,6 +7,9 @@ use Exception;
 class PageStoreDefault extends Store
 {
 
+    const PAGE_STORE_CLASS = PageStoreDefault::class;
+    const FILE_STORE_CLASS = FileStoreDefault::class;
+
     public function changeNum(int $num = null)
     {
         return $this->page()->clone([

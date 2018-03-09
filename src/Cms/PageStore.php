@@ -10,6 +10,9 @@ use Kirby\Util\F;
 class PageStore extends PageStoreDefault
 {
 
+    const PAGE_STORE_CLASS = PageStore::class;
+    const FILE_STORE_CLASS = FileStore::class;
+
     protected $base;
     protected $root;
 
@@ -97,7 +100,7 @@ class PageStore extends PageStoreDefault
                 'parent' => $parent,
                 'site'   => $site,
                 'slug'   => $slug,
-                'store'  => PageStore::class
+                'store'  => static::PAGE_STORE_CLASS
             ]);
 
             $children->set($page->id(), $page);
@@ -158,7 +161,7 @@ class PageStore extends PageStoreDefault
                 'filename' => $filename,
                 'url'      => $url . '/' . $filename,
                 'parent'   => $page,
-                'store'    => FileStore::class
+                'store'    => static::FILE_STORE_CLASS
             ]);
 
             $files->set($file->id(), $file);
