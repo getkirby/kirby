@@ -206,15 +206,15 @@ class PageStore extends PageStoreDefault
         return $this->base()->type();
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
-        $page = parent::update($content, $form);
+        $page = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $page;
         }
 
-        $this->base()->write($form->stringValues());
+        $this->base()->write($strings);
 
         return $page;
     }

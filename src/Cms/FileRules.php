@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Image\Image as Upload;
 use Kirby\Toolkit\V;
 use Kirby\Util\Str;
 
@@ -22,17 +21,14 @@ class FileRules
         return true;
     }
 
-    public static function create(string $source, File $file): bool
+    public static function create(File $file, Upload $upload): bool
     {
         if ($file->exists() === true) {
             throw new Exception('The file exists and cannot be overwritten');
         }
 
-        // test image object for the mime type check
-        $src = new Upload($source);
-
         static::validExtension($file, $file->extension());
-        static::validMime($file, $src->mime());
+        static::validMime($file, $upload->mime());
         static::validFilename($file, $file->filename());
 
         return true;
@@ -49,8 +45,8 @@ class FileRules
         static::validMime($file, $upload->mime());
         static::validFilename($file, $upload->filename());
 
-        if ($upload->mime() !== $file->mime()) {
-            throw new Exception('The mime type of the new file does not match the old one');
+        if ($upload->mime() != $file->mime()) {
+            throw new Exception(sprintf('The mime type of the new file (%s) does not match the old one (%s)', $upload->mime(), $file->mime()));
         }
 
         return true;
@@ -108,7 +104,7 @@ class FileRules
 
     }
 
-    public static function validMime(File $file, string $mime)
+    public static function validMime(File $file, string $mime = null)
     {
 
         // make it easier to compare the mime

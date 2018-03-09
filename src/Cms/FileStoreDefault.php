@@ -27,7 +27,7 @@ class FileStoreDefault extends Store
         return [];
     }
 
-    public function create(string $source, File $file)
+    public function create(File $file, Upload $upload)
     {
         throw new Exception('This file cannot be saved');
     }
@@ -52,15 +52,15 @@ class FileStoreDefault extends Store
         return $this->file()->filename();
     }
 
-    public function replace(string $source)
+    public function replace(Upload $upload)
     {
-        $this->create($source);
+        return $this->create($this->file(), $upload);
     }
 
-    public function update(array $content = [])
+    public function update(array $values = [], array $strings = [])
     {
         return $this->file()->clone([
-            'content' => $content
+            'content' => $strings
         ]);
     }
 

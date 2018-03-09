@@ -93,10 +93,10 @@ class UserStoreDefault extends Store
         return 'visitor';
     }
 
-    public function update(array $values, Form $form)
+    public function update(array $values = [], array $strings = [])
     {
         return $this->user()->clone([
-            'content' => $form->stringValues()
+            'content' => $strings
         ]);
     }
 

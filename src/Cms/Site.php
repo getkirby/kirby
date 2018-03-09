@@ -18,6 +18,8 @@ use Kirby\Util\Str;
 class Site extends Model
 {
 
+    use SiteActions;
+
     use HasChildren;
     use HasContent;
     use HasFiles;
@@ -131,38 +133,6 @@ class Site extends Model
         }
 
         return $this->children = $this->store()->children();
-    }
-
-    /**
-     * Creates a main page
-     *
-     * @param array $props
-     * @return self
-     */
-    public function createChild(array $props)
-    {
-        $props = array_merge($props, [
-            'url'    => null,
-            'num'    => null,
-            'parent' => null,
-            'site'   => $this,
-            // TODO: refactor this to be independent from the page store
-            'store'  => PageStore::class,
-        ]);
-
-        return Page::create($props);
-    }
-
-    public function createFile(string $source, array $props = [])
-    {
-        $props = array_merge($props, [
-            'parent' => $this,
-            // TODO: make this independent from the store
-            'store'  => FileStore::class,
-            'url'    => null
-        ]);
-
-        return File::create($source, $props);
     }
 
     protected function defaultStore()

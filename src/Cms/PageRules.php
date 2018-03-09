@@ -38,9 +38,14 @@ class PageRules
         return true;
     }
 
+    public static function changeTitle(Page $page, string $title): bool
+    {
+        return true;
+    }
+
     public static function create(Page $page): bool
     {
-        $siblings = $page->siblings();
+        $siblings = $page->parent() ? $page->parent()->children() : $page->site()->children();
         $slug     = $page->slug();
 
         if ($duplicate = $siblings->find($slug)) {

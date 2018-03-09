@@ -192,9 +192,9 @@ class UserStore extends UserStoreDefault
         return $this->kirby()->root('accounts') . '/' . $this->user()->email();
     }
 
-    public function update(array $values, Form $form)
+    public function update(array $values = [], array $strings = [])
     {
-        $user = parent::update($values, $form);
+        $user = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $user;

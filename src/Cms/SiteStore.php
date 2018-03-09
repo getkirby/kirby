@@ -100,15 +100,15 @@ class SiteStore extends SiteStoreDefault
         return $this->model;
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
-        $site = parent::update($content, $form);
+        $site = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $site;
         }
 
-        $this->base()->write($form->stringValues());
+        $this->base()->write($strings);
 
         return $site;
     }

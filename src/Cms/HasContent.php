@@ -101,7 +101,7 @@ trait HasContent
     }
 
     /**
-     * Updates User data
+     * Updates the model data
      *
      * @param array $input
      * @param boolean $validate
@@ -119,15 +119,10 @@ trait HasContent
         }
 
         // get the data values array
-        $values = $form->values();
+        $values  = $form->values();
+        $strings = $form->stringValues();
 
-        // validate those values additionally with the model rules
-        $this->rules()->update($this, $values, $form);
-
-        // store and pass the form as second param
-        // to make use of the Form::stringValues() method
-        // if necessary
-        return $this->store()->update($values, $form);
+        return $this->commit('update', $values, $strings);
     }
 
 }

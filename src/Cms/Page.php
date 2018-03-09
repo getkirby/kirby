@@ -20,6 +20,8 @@ use Kirby\Util\Str;
 class Page extends Model
 {
 
+    use PageActions;
+
     protected static $cache = [];
 
     use HasChildren;
@@ -152,95 +154,6 @@ class Page extends Model
         return $this->blueprint = PageBlueprint::load('pages/' . $this->template(), 'pages/default', $this);
     }
 
-    /**
-     * Changes the sorting number
-     *
-     * @param int $num
-     * @return self
-     */
-    protected function changeNum(int $num = null): self
-    {
-        if ($num === $this->num()) {
-            return $this;
-        }
-
-        if ($num !== null) {
-
-            $mode = $this->blueprint()->num();
-
-            switch ($mode) {
-                case 'zero':
-                    $num = 0;
-                    break;
-                case 'default':
-                    $num = $num;
-                    break;
-                default:
-                    $template = new Tempura($mode, [
-                        'kirby' => $this->kirby(),
-                        'page'  => $this,
-                        'site'  => $this->site(),
-                    ]);
-
-                    $num = intval($template->render());
-                    break;
-            }
-
-            if ($num === $this->num()) {
-                return $this;
-            }
-
-        }
-
-        $this->rules()->changeNum($this, $num);
-
-        return $this->store()->changeNum($num);
-    }
-
-    /**
-     * Changes the slug/uid of the page
-     *
-     * @param string $slug
-     * @return self
-     */
-    public function changeSlug(string $slug): self
-    {
-        if ($slug === $this->slug()) {
-            return $this;
-        }
-
-        $this->rules()->changeSlug($this, $slug);
-
-        return $this->store()->changeSlug($slug);
-    }
-
-    /**
-     * Changes the page template
-     *
-     * @param string $template
-     * @return self
-     */
-    public function changeTemplate(string $template): self
-    {
-        if ($template === $this->template()) {
-            return $this;
-        }
-
-        $this->rules()->changeTemplate($this, $template);
-
-        return $this->store()->changeTemplate($template);
-    }
-
-    /**
-     * @param string $title
-     * @return self
-     */
-    public function changeTitle(string $title): self
-    {
-        return $this->update([
-            'title' => $title
-        ], false);
-    }
 
     /**
      * Returns the Children collection for this page
@@ -272,91 +185,12 @@ class Page extends Model
             return $this->collection = $parent->children();
         }
 
-        if ($site = $this->site()) {
-            return $this->collection = $site->children();
-        }
-
         return $this->collection = new Pages([$this]);
-    }
-
-    /**
-     * Creates and stores a new page
-     *
-     * @param array $props
-     * @return self
-     */
-    public static function create(array $props): self
-    {
-        // clean up the slug
-        $props['slug'] = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
-
-        // create a temporary page object
-        $page = Page::factory($props);
-
-        // validate the new page object
-        $page->rules()->create($page);
-
-        // store the new page object
-        return $page->store()->create($page);
-    }
-
-    /**
-     * Creates a child of the current page
-     *
-     * @param array $props
-     * @return self
-     */
-    public function createChild(array $props): self
-    {
-        $props = array_merge($props, [
-            'url'    => null,
-            'num'    => null,
-            'parent' => $this,
-            'site'   => $this->site(),
-            'store'  => get_class($this->store())
-        ]);
-
-        return static::create($props);
-    }
-
-    public function createFile(string $source, array $props = [])
-    {
-        $props = array_merge($props, [
-            'parent' => $this,
-            // TODO: make this independent from the store
-            'store'  => FileStore::class,
-            'url'    => null
-        ]);
-
-        return File::create($source, $props);
     }
 
     protected function defaultStore()
     {
         return PageStoreDefault::class;
-    }
-
-    /**
-     * Deletes the page
-     *
-     * @param bool $force
-     * @return bool
-     */
-    public function delete(bool $force = false): bool
-    {
-        $this->rules()->delete($this, $force);
-
-        // delete all files individually
-        foreach ($this->files() as $file) {
-            $file->delete();
-        }
-
-        // delete all children individually
-        foreach ($this->children() as $child) {
-            $child->delete(true);
-        }
-
-        return $this->store()->delete();
     }
 
     /**
@@ -488,33 +322,6 @@ class Page extends Model
     public function hasPrevVisible(): bool
     {
         return $this->prevVisible() !== null;
-    }
-
-    /**
-     * Changes the status to unlisted
-     *
-     * @return self
-     */
-    public function hide(): self
-    {
-        if ($this->isInvisible() === true) {
-            return $this;
-        }
-
-        // TODO: move this to rules
-        if ($this->blueprint()->options()->changeStatus() === false) {
-            throw new Exception('The status for this page cannot be changed');
-        }
-
-        $siblings = $this->siblings()->not($this);
-        $index    = 0;
-
-        foreach ($siblings as $sibling) {
-            $index++;
-            $sibling->changeNum($index);
-        }
-
-        return $this->changeNum(null);
     }
 
     /**
@@ -824,62 +631,6 @@ class Page extends Model
     public function slug(): string
     {
         return $this->slug;
-    }
-
-    /**
-     * Changes the page number
-     *
-     * @param int $position
-     * @return self
-     */
-    public function sort(int $position): self
-    {
-        // TODO: move this to rules
-        if ($this->isInvisible() === true && empty($this->errors()) === false) {
-            throw new Exception('The page has errors and cannot be published');
-        }
-
-        // TODO: move this to rules
-        if ($this->blueprint()->options()->changeStatus() !== true) {
-            throw new Exception('The status for this page cannot be changed');
-        }
-
-        if ($this->blueprint()->num() === 'default') {
-
-            // get all siblings including the current page
-            $siblings = $this->siblings()->visible();
-
-            // get a non-associative array of ids
-            $keys  = $siblings->keys();
-            $index = array_search($this->id(), $keys);
-
-            // if the page is not included in the siblings
-            // push the page at the end.
-            if ($index === false) {
-                $keys[] = $this->id();
-                $index  = count($keys) - 1;
-            }
-
-            // move the current page number in the array of keys
-            // subtract 1 from the num and the position, because of the
-            // zero-based array keys
-            $sorted = A::move($keys, $index, $position - 1);
-            $page   = null;
-
-            foreach ($sorted as $key => $id) {
-                if ($id === $this->id()) {
-                    $page = $this->changeNum($key + 1);
-                } else {
-                    $siblings->findBy('id', $id)->changeNum($key + 1);
-                }
-            }
-
-            return $page;
-
-        }
-
-        return $this->changeNum($position);
-
     }
 
     /**

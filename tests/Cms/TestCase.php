@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -66,6 +67,28 @@ class TestCase extends BaseTestCase
         if (is_a($id, File::class)) {
             $this->assertEquals($input, $id);
         }
+    }
+
+    public function assertHooks(array $hooks, Closure $action)
+    {
+        $phpUnit   = $this;
+        $triggered = 0;
+
+        foreach ($hooks as $name => $callback) {
+            $hooks[$name] = function (...$arguments) use ($callback, $phpUnit, &$triggered) {
+                $callback->call($phpUnit, ...$arguments);
+                $triggered++;
+            };
+        }
+
+        App::removePlugins();
+
+        $app = new App([
+            'hooks' => $hooks
+        ]);
+
+        $action->call($this);
+        $this->assertEquals(count($hooks), $triggered);
     }
 
 }

@@ -212,7 +212,8 @@ class BlueprintFilesSection extends BlueprintSection
         // merge the post data with the pre-defined content set in the blueprint
         $content = array_merge($data['content'] ?? [], $options['content']);
 
-        return $this->parent()->createFile($data['source'], [
+        return $this->parent()->createFile([
+            'source'   => $data['source'],
             'content'  => $content,
             'filename' => $this->filename($data['source'], $data['filename'], $options['name'])
         ]);

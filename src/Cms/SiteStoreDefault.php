@@ -45,10 +45,10 @@ class SiteStoreDefault extends Store
         return $this->model;
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
         return $this->site()->clone([
-            'content' => $form->stringValues()
+            'content' => $strings
         ]);
     }
 

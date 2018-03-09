@@ -29,6 +29,11 @@ class PageStoreDefault extends Store
         ]);
     }
 
+    public function changeTitle(string $title)
+    {
+        return $this->update($data = ['title' => $title], $data);
+    }
+
     public function children()
     {
         return new Children([], $this->page());
@@ -79,10 +84,10 @@ class PageStoreDefault extends Store
         return 'default';
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
         return $this->page()->clone([
-            'content' => $form->stringValues()
+            'content' => $strings
         ]);
     }
 

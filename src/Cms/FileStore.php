@@ -58,13 +58,13 @@ class FileStore extends FileStoreDefault
         return Data::read($this->storeFile());
     }
 
-    public function create(string $source, File $file)
+    public function create(File $file, Upload $upload)
     {
         // delete all public versions
         $this->media()->delete($file->parent(), $file);
 
         // overwrite the original
-        if (F::copy($source, $this->root()) !== true) {
+        if (F::copy($upload->root(), $this->root()) !== true) {
             throw new Exception('The file could not be created');
         }
 
@@ -96,9 +96,9 @@ class FileStore extends FileStoreDefault
         return 'txt';
     }
 
-    public function replace(string $source)
+    public function replace(Upload $upload)
     {
-        return $this->create($source);
+        return $this->create($this->file(), $upload);
     }
 
     public function root(): string
@@ -126,16 +126,16 @@ class FileStore extends FileStoreDefault
         return $this->root() . '.' . $this->extension();
     }
 
-    public function update(array $content = [])
+    public function update(array $values = [], array $strings = [])
     {
-        $file = parent::update($content);
+        $file = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $file;
         }
 
-        if (empty($content) === false) {
-            if (Data::write($this->storeFile(), $content) !== true) {
+        if (empty($strings) === false) {
+            if (Data::write($this->storeFile(), $strings) !== true) {
                 throw new Exception('The file content could not be updated');
             }
         }
