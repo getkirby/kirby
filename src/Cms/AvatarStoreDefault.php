@@ -18,9 +18,9 @@ class AvatarStoreDefault extends Store
         return $this->model;
     }
 
-    public function create(string $source)
+    public function create(Upload $upload)
     {
-        throw new Exception('The avatar cannot be created');
+        return $this->avatar();
     }
 
     public function delete(): bool
@@ -38,9 +38,9 @@ class AvatarStoreDefault extends Store
         return $this->user()->id();
     }
 
-    public function replace(string $source)
+    public function replace(Upload $upload)
     {
-        throw new Exception('The avatar cannot be replaced');
+        return $this->create($upload);
     }
 
     public function thumb(array $options = [])

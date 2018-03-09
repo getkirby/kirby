@@ -3,28 +3,51 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Image\Image;
 
 trait AvatarActions
 {
+
+    /**
+     * Commits a avatar action, by following these steps
+     *
+     * 1. checks the action rules
+     * 2. sends the before hook
+     * 3. commits the store action
+     * 4. sends the after hook
+     * 5. returns the result
+     *
+     * @param string $action
+     * @param mixed ...$arguments
+     * @return mixed
+     */
+    protected function commit(string $action, ...$arguments)
+    {
+        $this->rules()->$action($this, ...$arguments);
+        $this->kirby()->trigger('avatar.' . $action . ':before', $this, ...$arguments);
+        $result = $this->store()->$action(...$arguments);
+        $this->kirby()->trigger('avatar.' . $action . ':after', $result, $this);
+        return $result;
+    }
 
     /**
      * Creates the avatar on upload.
      * The file system handling is done
      * by the store.
      *
-     * @param User $user
-     * @param string $source
+     * @param array $props
      * @return self
      */
-    public function create(string $source): self
+    public static function create(array $props): self
     {
-        // temporary image object to inspect the source
-        $source = new Image($source);
+        if (isset($props['source'], $props['user']) === false) {
+            throw new Exception('Please provide the "source" and "user" props for the Avatar');
+        }
 
-        $this->rules()->create($this, $source);
+        // create the basic avatar and a test upload object
+        $avatar = new static($props);
+        $upload = new Upload($props['source']);
 
-        return $this->store()->create($source);
+        return $avatar->commit('create', $upload);
     }
 
     /**
@@ -35,9 +58,7 @@ trait AvatarActions
      */
     public function delete(): bool
     {
-        $this->rules()->delete($this);
-
-        return $this->store()->delete();
+        return $this->commit('delete');
     }
 
     /**
@@ -49,12 +70,7 @@ trait AvatarActions
      */
     public function replace(string $source): self
     {
-        // temporary image object to inspect the source
-        $source = new Image($source);
-
-        $this->rules()->replace($this, $source);
-
-        return $this->store()->replace($source);
+        return $this->commit('replace', new Upload($source));
     }
 
     /**
