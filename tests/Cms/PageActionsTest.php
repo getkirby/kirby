@@ -30,10 +30,18 @@ class PageActionsTest extends TestCase
 
     public function pageDummy()
     {
-        return new Page([
-            'slug'     => 'test',
-            'template' => 'test',
-            'store'    => PageActionsTestStore::class
+        $page = new Page([
+            'slug'      => 'test',
+            'template'  => 'test',
+            'store'     => PageActionsTestStore::class,
+        ]);
+
+        return $page->clone([
+            'blueprint' => new PageBlueprint([
+                'model' => $page,
+                'title' => 'test',
+                'name'  => 'test'
+            ])
         ]);
     }
 
