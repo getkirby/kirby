@@ -58,9 +58,9 @@ class UserStoreDefault extends Store
         return [];
     }
 
-    public function create(array $values, Form $form)
+    public function create(User $user)
     {
-        throw new Exception('The user cannot be saved');
+        return $user;
     }
 
     public function delete(): bool

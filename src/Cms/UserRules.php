@@ -19,6 +19,11 @@ class UserRules
         return static::validLanguage($user, $language);
     }
 
+    public static function changeName(User $user, string $name): bool
+    {
+        return true;
+    }
+
     public static function changePassword(User $user, string $password): bool
     {
         return static::validPassword($user, $password);
@@ -35,8 +40,7 @@ class UserRules
         return true;
     }
 
-    // TODO: $form not used?
-    public static function create(User $user, $values, Form $form): bool
+    public static function create(User $user): bool
     {
         static::validEmail($user, $user->email());
         static::validRole($user, $user->role());

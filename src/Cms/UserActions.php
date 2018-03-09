@@ -16,9 +16,7 @@ trait UserActions
      */
     public function changeEmail(string $email): self
     {
-        $this->rules()->changeEmail($this, $email);
-
-        return $this->store()->changeEmail($email);
+        return $this->commit('changeEmail', $email);
     }
 
     /**
@@ -29,9 +27,7 @@ trait UserActions
      */
     public function changeLanguage(string $language): self
     {
-        $this->rules()->changeLanguage($this, $language);
-
-        return $this->store()->changeLanguage($language);
+        return $this->commit('changeLanguage', $language);
     }
 
     /**
@@ -42,7 +38,7 @@ trait UserActions
      */
     public function changeName(string $name): self
     {
-        return $this->store()->changeName($name);
+        return $this->commit('changeName', $name);
     }
 
     /**
@@ -54,11 +50,16 @@ trait UserActions
     public function changePassword(string $password): self
     {
         $this->rules()->changePassword($this, $password);
+        $this->kirby()->trigger('user.changePassword:before', $this);
 
         // hash password after checking rules
         $password = $this->hashPassword($password);
 
-        return $this->store()->changePassword($password);
+        // store the new password
+        $result = $this->store()->changePassword($password);
+
+        $this->kirby()->trigger('user.changePassword:after', $result, $this);
+        return $result;
     }
 
     /**
@@ -70,38 +71,46 @@ trait UserActions
     public function changeRole(string $role): self
     {
         $this->rules()->changeRole($this, $role);
+        $this->kirby()->trigger('user.changeRole:before', $this);
+        $result = $this->store()->changeRole($role);
+        $this->kirby()->trigger('user.changeRole:after', $result, $this);
+        return $result;
+    }
 
-        return $this->store()->changeRole($role);
+    /**
+     * Commits a user action, by following these steps
+     *
+     * 1. checks the action rules
+     * 2. sends the before hook
+     * 3. commits the store action
+     * 4. sends the after hook
+     * 5. returns the result
+     *
+     * @param string $action
+     * @param mixed ...$arguments
+     * @return mixed
+     */
+    protected function commit(string $action, ...$arguments)
+    {
+        $this->rules()->$action($this, ...$arguments);
+        $this->kirby()->trigger('user.' . $action . ':before', $this, ...$arguments);
+        $result = $this->store()->$action(...$arguments);
+        $this->kirby()->trigger('user.' . $action . ':after', $result, $this);
+        return $result;
     }
 
     /**
      * @param array $input
      * @return self
      */
-    public function create(array $input = null): self
+    public static function create(array $props = null): self
     {
-        // stop if the user already exists
-        if ($this->exists() === true) {
-            throw new Exception('The user already exists');
-        }
-
-        $form = Form::for($this, [
-            'values' => $input
-        ]);
-
-        // validate the input
-        $form->isValid();
-
-        // get the data values array
-        $values = $form->values();
-
-        // validate those values additionally with the model rules
-        $this->rules()->create($this, $values, $form);
-
-        // store and pass the form as second param
-        // to make use of the Form::stringValues() method
-        // if necessary
-        return $this->store()->create($values, $form);
+        $user = new static($props);
+        $user->rules()->create($user);
+        $user->kirby()->trigger('user.create:before', $props);
+        $result = $user->store()->create($user);
+        $user->kirby()->trigger('user.create:after', $result);
+        return $result;
     }
 
     /**
@@ -111,9 +120,7 @@ trait UserActions
      */
     public function delete(): bool
     {
-        $this->rules()->delete($this);
-
-        return $this->store()->delete();
+        return $this->commit('delete');
     }
 
 }

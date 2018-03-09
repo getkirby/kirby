@@ -11,7 +11,7 @@ class Users extends Collection
         // move this into a UsersStore class
         $data['store'] = UserStore::class;
 
-        return (new User($data))->create();
+        return User::create($data);
     }
 
 }

@@ -122,7 +122,7 @@ class UserStore extends UserStoreDefault
         return $data;
     }
 
-    public function create(array $values, Form $form)
+    public function create(User $user)
     {
         // try to create the directory
         if (Dir::make($this->root()) !== true) {
@@ -132,8 +132,10 @@ class UserStore extends UserStoreDefault
         // create an empty storage file
         touch($this->root() . '/user.txt');
 
-        // store the content
-        return $this->user()->update($values, $form);
+        // write the user data
+        $this->write($user);
+
+        return $user;
     }
 
     public function data()
@@ -200,6 +202,12 @@ class UserStore extends UserStoreDefault
             return $user;
         }
 
+        $this->write($user);
+        return $user;
+    }
+
+    public function write(User $user): bool
+    {
         $content = $user->content()->toArray();
 
         // store main information in the content file
@@ -213,7 +221,7 @@ class UserStore extends UserStoreDefault
             throw new Exception('The user information could not be saved');
         }
 
-        return $user;
+        return true;
     }
 
     public function user()
