@@ -111,7 +111,7 @@ class SiteStore extends SiteStoreDefault
             return $site;
         }
 
-        $this->base()->write($strings);
+        $this->base()->write($site->content()->toArray());
 
         return $site;
     }

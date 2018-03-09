@@ -135,7 +135,7 @@ class FileStore extends FileStoreDefault
         }
 
         if (empty($strings) === false) {
-            if (Data::write($this->storeFile(), $strings) !== true) {
+            if (Data::write($this->storeFile(), $file->content()->toArray()) !== true) {
                 throw new Exception('The file content could not be updated');
             }
         }

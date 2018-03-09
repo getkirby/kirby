@@ -217,7 +217,7 @@ class PageStore extends PageStoreDefault
             return $page;
         }
 
-        $this->base()->write($strings);
+        $this->base()->write($page->content()->toArray());
 
         return $page;
     }
