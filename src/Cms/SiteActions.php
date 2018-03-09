@@ -9,6 +9,28 @@ trait SiteActions
 {
 
     /**
+     * Commits a site action, by following these steps
+     *
+     * 1. checks the action rules
+     * 2. sends the before hook
+     * 3. commits the store action
+     * 4. sends the after hook
+     * 5. returns the result
+     *
+     * @param string $action
+     * @param mixed ...$arguments
+     * @return mixed
+     */
+    protected function commit(string $action, ...$arguments)
+    {
+        $this->rules()->$action($this, ...$arguments);
+        $this->kirby()->trigger('site.' . $action . ':before', $this, ...$arguments);
+        $result = $this->store()->$action(...$arguments);
+        $this->kirby()->trigger('site.' . $action . ':after', $result, $this);
+        return $result;
+    }
+
+    /**
      * Creates a main page
      *
      * @param array $props
