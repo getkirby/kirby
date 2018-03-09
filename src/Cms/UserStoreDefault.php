@@ -96,7 +96,7 @@ class UserStoreDefault extends Store
     public function update(array $values = [], array $strings = [])
     {
         return $this->user()->clone([
-            'content' => $strings
+            'content' => $this->user()->content()->update($strings)->toArray()
         ]);
     }
 

@@ -60,7 +60,7 @@ class FileStoreDefault extends Store
     public function update(array $values = [], array $strings = [])
     {
         return $this->file()->clone([
-            'content' => $strings
+            'content' => $this->file()->content()->update($strings)->toArray()
         ]);
     }
 

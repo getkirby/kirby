@@ -58,7 +58,7 @@ class UserStore extends UserStoreDefault
             throw new Exception('The user directory could not be moved');
         }
 
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changeLanguage(string $language)
@@ -70,7 +70,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changeName(string $name)
@@ -82,7 +82,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changePassword(string $password)
@@ -94,7 +94,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changeRole(string $role)
@@ -106,7 +106,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function content(): array
@@ -133,9 +133,7 @@ class UserStore extends UserStoreDefault
         touch($this->root() . '/user.txt');
 
         // write the user data
-        $this->write($user);
-
-        return $user;
+        return $this->save($user);
     }
 
     public function data()
@@ -202,11 +200,10 @@ class UserStore extends UserStoreDefault
             return $user;
         }
 
-        $this->write($user);
-        return $user;
+        return $this->save($user);
     }
 
-    public function write(User $user): bool
+    public function save(User $user): User
     {
         $content = $user->content()->toArray();
 
@@ -221,7 +218,7 @@ class UserStore extends UserStoreDefault
             throw new Exception('The user information could not be saved');
         }
 
-        return true;
+        return $user;
     }
 
     public function user()

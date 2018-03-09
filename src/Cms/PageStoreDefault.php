@@ -90,7 +90,7 @@ class PageStoreDefault extends Store
     public function update(array $values = [], array $strings = [])
     {
         return $this->page()->clone([
-            'content' => $strings
+            'content' => $this->page()->content()->update($strings)->toArray()
         ]);
     }
 

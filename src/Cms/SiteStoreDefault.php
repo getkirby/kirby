@@ -51,7 +51,7 @@ class SiteStoreDefault extends Store
     public function update(array $values = [], array $strings = [])
     {
         return $this->site()->clone([
-            'content' => $strings
+            'content' => $this->site()->content()->update($strings)->toArray()
         ]);
     }
 
