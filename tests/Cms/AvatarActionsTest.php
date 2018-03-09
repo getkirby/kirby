@@ -37,7 +37,7 @@ class AvatarActionsTest extends TestCase
 
     public function avatar()
     {
-        $avatar = new Avatar([
+        return new Avatar([
             'user' => $this->user(),
             'store' => AvatarActionsTestStore::class
         ]);
@@ -73,8 +73,19 @@ class AvatarActionsTest extends TestCase
 
     public function testDelete()
     {
+        AvatarActionsTestStore::$exists = true;
 
-
+        $this->assertHooks([
+            'avatar.delete:before' => function (Avatar $avatar) {
+                $this->assertTrue($avatar->exists());
+            },
+            'avatar.delete:after' => function (bool $result, Avatar $avatar) {
+                $this->assertFalse($avatar->exists());
+                $this->assertTrue($result);
+            }
+        ], function () {
+            $this->avatar()->delete();
+        });
     }
 
     public function testReplace()

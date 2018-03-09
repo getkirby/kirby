@@ -198,7 +198,7 @@ trait PageActions
 
         $result = $this->store()->delete();
 
-        $this->kirby()->trigger('page.delete:after', $this, $result);
+        $this->kirby()->trigger('page.delete:after', $result, $this);
 
         return $result;
     }

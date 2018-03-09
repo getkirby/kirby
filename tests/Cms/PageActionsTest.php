@@ -158,7 +158,7 @@ class PageActionsTest extends TestCase
                 $this->assertTrue($page->exists());
                 $this->assertTrue($force);
             },
-            'page.delete:after' => function (Page $page, bool $result) {
+            'page.delete:after' => function (bool $result, Page $page) {
                 $this->assertFalse($page->exists());
             }
         ], function () {

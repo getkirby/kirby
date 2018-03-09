@@ -137,7 +137,7 @@ class FileActionsTest extends TestCase
             'file.delete:before' => function (File $file) {
                 $this->assertTrue($file->exists());
             },
-            'file.delete:after' => function (File $file, bool $result) {
+            'file.delete:after' => function (bool $result, File $file) {
                 $this->assertFalse($file->exists());
                 $this->assertTrue($result);
             }

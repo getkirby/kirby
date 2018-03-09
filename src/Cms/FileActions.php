@@ -86,11 +86,7 @@ trait FileActions
      */
     public function delete(): bool
     {
-        $this->rules()->delete($this);
-        $this->kirby()->trigger('file.delete:before', $this);
-        $result = $this->store()->delete();
-        $this->kirby()->trigger('file.delete:after', $this, $result);
-        return $result;
+        return $this->commit('delete');
     }
 
     /**
