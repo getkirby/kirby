@@ -106,11 +106,12 @@ class F
      *
      * @param  string  $file
      * @param  string  $target
+     * @param  boolean $force
      * @return boolean
      */
-    public static function copy(string $source, string $target): bool
+    public static function copy(string $source, string $target, bool $force = false): bool
     {
-        if (file_exists($source) === false || file_exists($target) === true) {
+        if (file_exists($source) === false || (file_exists($target) === true && $force === false)) {
             return false;
         }
 
