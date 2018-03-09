@@ -2,6 +2,14 @@
 
 namespace Kirby\Cms;
 
+class ReplaceableTestAvatar extends Avatar
+{
+    public function mime()
+    {
+        return 'image/jpeg';
+    }
+}
+
 class AvatarActionsTestStore extends AvatarStoreDefault
 {
 
@@ -90,7 +98,21 @@ class AvatarActionsTest extends TestCase
 
     public function testReplace()
     {
+        $avatar = new ReplaceableTestAvatar([
+            'user'  => $this->user(),
+            'store' => AvatarActionsTestStore::class
+        ]);
 
+        $this->assertHooks([
+            'avatar.replace:before' => function (Avatar $avatar, Upload $upload) {
+                $this->assertEquals('test.jpg', $upload->filename());
+                $this->assertEquals('profile.jpg', $avatar->filename());
+            },
+            'avatar.replace:after' => function (Avatar $newAvatar, Avatar $oldAvatar) {
+            }
+        ], function () use ($avatar) {
+            $avatar->replace(__DIR__ . '/fixtures/files/test.jpg');
+        });
     }
 
 }
