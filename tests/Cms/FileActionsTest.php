@@ -18,9 +18,9 @@ class FileActionsTestStore extends FileStoreDefault
 
     public static $exists = true;
 
-    public function create(File $file, Upload $upload)
+    public function create(Upload $upload)
     {
-        return $file;
+        return $this->file();
     }
 
     public function delete(): bool

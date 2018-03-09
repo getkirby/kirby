@@ -58,8 +58,10 @@ class FileStore extends FileStoreDefault
         return Data::read($this->storeFile());
     }
 
-    public function create(File $file, Upload $upload)
+    public function create(Upload $upload)
     {
+        $file = $this->file();
+
         // delete all public versions
         $this->media()->delete($file->parent(), $file);
 
@@ -98,7 +100,7 @@ class FileStore extends FileStoreDefault
 
     public function replace(Upload $upload)
     {
-        return $this->create($this->file(), $upload);
+        return $this->create($upload);
     }
 
     public function root(): string

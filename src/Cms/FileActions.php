@@ -75,15 +75,7 @@ trait FileActions
         $file   = new static($props);
         $upload = new Upload($props['source']);
 
-        $file->rules()->create($file, $upload);
-
-        $file->kirby()->trigger('file.create:before', $file, $upload);
-
-        $result = $file->store()->create($file, $upload);
-
-        $file->kirby()->trigger('file.create:after', $result);
-
-        return $result;
+        return $file->commit('create', $upload);
     }
 
     /**

@@ -27,9 +27,9 @@ class FileStoreDefault extends Store
         return [];
     }
 
-    public function create(File $file, Upload $upload)
+    public function create(Upload $upload)
     {
-        return $file;
+        return $this->file();
     }
 
     public function delete(): bool
@@ -54,7 +54,7 @@ class FileStoreDefault extends Store
 
     public function replace(Upload $upload)
     {
-        return $this->create($this->file(), $upload);
+        return $this->create($upload);
     }
 
     public function update(array $values = [], array $strings = [])
