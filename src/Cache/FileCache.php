@@ -26,10 +26,6 @@ class FileCache extends Cache
      */
     public function __construct($params = [])
     {
-        if (is_string($params)) {
-            $params = ['root' => $params];
-        }
-
         $defaults = [
             'root'      => null,
             'extension' => null
