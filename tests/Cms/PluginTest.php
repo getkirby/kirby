@@ -83,4 +83,23 @@ class PluginTest extends TestCase
         $this->assertEquals('getkirby.test-plugin', $plugin->prefix());
     }
 
+    public function testPrefixedOptions()
+    {
+        App::removePlugins();
+
+        App::plugin([
+            'name' => 'developer/plugin',
+            'extends' => [
+                'options' => [
+                    'foo' => 'bar'
+                ]
+            ]
+        ]);
+
+        $app = new App;
+        $this->assertEquals('bar', $app->option('developer.plugin.foo'));
+
+        App::removePlugins();
+    }
+
 }

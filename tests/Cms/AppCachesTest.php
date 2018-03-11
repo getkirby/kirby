@@ -39,4 +39,20 @@ class AppCachesTest extends TestCase
         $this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
     }
 
+    public function testPluginDefaultCache()
+    {
+        App::plugin([
+            'name' => 'developer/plugin',
+            'extends' => [
+                'options' => [
+                    'cache' => true
+                ]
+            ]
+        ]);
+
+        $kirby = new App();
+
+        $this->assertInstanceOf(FileCache::class, $kirby->cache('developer.plugin'));
+    }
+
 }

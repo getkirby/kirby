@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
+use Kirby\Util\Str;
 
 class Extend
 {

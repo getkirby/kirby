@@ -10,6 +10,16 @@ class TestCase extends BaseTestCase
 
     public $page = null;
 
+    public function setUp()
+    {
+        App::removePlugins();
+    }
+
+    public function tearDown()
+    {
+        App::removePlugins();
+    }
+
     public function kirby($props = []): App
     {
         return new App($props);

@@ -10,8 +10,9 @@ class PagePropsTest extends TestCase
      *
      * @return void
      */
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
         App::destroy();
     }
 

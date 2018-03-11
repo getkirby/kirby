@@ -13,8 +13,10 @@ class ArticlePage extends Page
 class PageModelTest extends TestCase
 {
 
-    protected function setUp()
+    public function setUp()
     {
+        parent::setUp();
+
         Page::$models = [
             'article' => ArticlePage::class
         ];
