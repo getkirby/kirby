@@ -45,7 +45,7 @@ trait AppCaches
 
     protected function cacheOptions(string $key): array
     {
-        $options = $this->option($this->cacheOptionsKey($key), false);
+        $options = $this->option($cacheKey = $this->cacheOptionsKey($key), false);
 
         if ($options === false) {
             return [
@@ -89,13 +89,14 @@ trait AppCaches
         }
 
         // try to extract the plugin name
-        $parts      = explode('.', $key);
-        $pluginName = implode('/', array_slice($parts, 0, 2));
-        $cacheName  = implode('.', array_slice($parts, 2));
+        $parts        = explode('.', $key);
+        $pluginName   = implode('/', array_slice($parts, 0, 2));
+        $pluginPrefix = implode('.', array_slice($parts, 0, 2));
+        $cacheName    = implode('.', array_slice($parts, 2));
 
         // check if such a plugin exists
         if ($plugin = $this->plugin($pluginName)) {
-            return empty($cacheName) === true ? $plugin->prefix() . '.cache' : $pluginName . '.cache.' . $cacheName;
+            return empty($cacheName) === true ? $pluginPrefix . '.cache' : $pluginPrefix . '.cache.' . $cacheName;
         }
 
         return $prefixedKey;
