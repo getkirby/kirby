@@ -78,47 +78,14 @@ class Response extends BaseResponse
 
     public static function page(Page $page, array $data = [], $contentType = 'html', $code = 200)
     {
-        // we'll need this a few times
-        $kirby = $page->kirby();
-
-        // create all globals for the
-        // controller, template and snippets
-        $globals = array_merge($data, [
-            'kirby' => $kirby,
-            'site'  => $site = $page->site(),
-            'pages' => $site->children(),
-            'page'  => $site->visit($page)
-        ]);
-
-        // try to create the page template
-        $template = $kirby->component('template', $page->template(), [], $contentType);
-
-        // fall back to the default template if it doesn't exist
-        if ($template->exists() === false) {
-            $template = $kirby->component('template', 'default', [], $contentType);
-        }
-
-        // react if even the default template does not exist
-        if ($template->exists() === false) {
-            if ($page->isErrorPage() === true) {
-                throw new Exception('The error and the default template do not exist');
-            }
-
-            return static::errorPage('The default template does not exist');
-        }
-
-        // call the template controller if there's one.
-        $globals = array_merge($kirby->controller($template->name(), $globals), $globals);
-
-        // make all globals available
-        // for templates and snippets
-        Template::globals($globals);
+        // render and optionally cache the page
+        $result = $page->render($data, $contentType);
 
         // convert the content representation type to a usable mime type
         $mime = F::extensionToMime($contentType) ?? 'text/html';
 
         // create the response object for the page
-        return new static($template->render(), $mime, $code);
+        return new static($result, $mime, $code);
     }
 
 }

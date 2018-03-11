@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Exception;
 use Kirby\Util\A;
 use Kirby\Util\Str;
@@ -21,9 +22,6 @@ class Page extends Model
 {
 
     use PageActions;
-
-    protected static $cache = [];
-
     use HasChildren;
     use HasContent;
     use HasFiles;
@@ -154,6 +152,39 @@ class Page extends Model
         return $this->blueprint = PageBlueprint::load('pages/' . $this->template(), 'pages/default', $this);
     }
 
+    /**
+     * Checks if the page can be cached in the
+     * pages cache. This will also check if one
+     * of the ignore rules from the config kick in.
+     *
+     * @return boolean
+     */
+    protected function canBeCached(): bool
+    {
+        $kirby   = $this->kirby();
+        $cache   = $kirby->cache('pages');
+        $request = $kirby->request();
+        $options = $cache->options();
+
+        // the pages cache is switched off
+        if ($options['active'] === false) {
+            return false;
+        }
+
+        // disable the pages cache for incomin requests or special data
+        if ((string)$request->method() !== 'GET' || empty($request->data()) === false) {
+            return false;
+        }
+
+        // check for a custom ignore rule
+        if (is_a($options['ignore'] ?? null, Closure::class)) {
+            if ($options['ignore']($this) === true) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     /**
      * Returns the Children collection for this page
@@ -533,6 +564,66 @@ class Page extends Model
     public function prevVisible()
     {
         return $this->prevAll()->visible()->last();
+    }
+
+    public function render(array $data = [], $contentType = 'html'): string
+    {
+        $kirby = $this->kirby();
+        $cache = $cacheId = $result = null;
+
+        // try to get the page from cache
+        if (empty($data) === true && $this->canBeCached() === true) {
+            $cache   = $kirby->cache('pages');
+            $cacheId = $this->id() . '.' . $contentType;
+            $result  = $cache->get($cacheId);
+
+            if ($result !== null) {
+                return $result;
+            }
+        }
+
+        // create all globals for the
+        // controller, template and snippets
+        $globals = array_merge($data, [
+            'kirby' => $kirby,
+            'site'  => $site = $this->site(),
+            'pages' => $site->children(),
+            'page'  => $site->visit($this)
+        ]);
+
+        // try to create the page template
+        $template = $kirby->component('template', $this->template(), [], $contentType);
+
+        // fall back to the default template if it doesn't exist
+        if ($template->exists() === false) {
+            $template = $kirby->component('template', 'default', [], $contentType);
+        }
+
+        // react if even the default template does not exist
+        if ($template->exists() === false) {
+            if ($this->isErrorPage() === true) {
+                throw new Exception('The error template does not exist');
+            } else {
+                throw new Exception('The default template does not exist');
+            }
+        }
+
+        // call the template controller if there's one.
+        $globals = array_merge($kirby->controller($template->name(), $globals), $globals);
+
+        // make all globals available
+        // for templates and snippets
+        Template::globals($globals);
+
+        // render the page
+        $result = $template->render();
+
+        // render the template and cache the result
+        if ($cache !== null) {
+            $cache->set($cacheId, $result);
+        }
+
+        return $result;
     }
 
     /**
