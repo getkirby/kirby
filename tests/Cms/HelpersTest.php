@@ -14,8 +14,6 @@ class HelpersTest extends TestCase
                 'index' => 'https://getkirby.com'
             ]
         ]);
-
-        require_once __DIR__ . '/helpers.php';
     }
 
     public function testCssHelper()

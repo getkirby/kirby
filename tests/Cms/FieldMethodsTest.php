@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\App as Kirby;
+use Kirby\Cms\App;
 use Kirby\Data\Handler\Yaml;
 
 class FieldMethodsTest extends TestCase
@@ -10,9 +10,8 @@ class FieldMethodsTest extends TestCase
 
     public function setUp()
     {
-        $kirby = new Kirby();
-
-        require_once __DIR__ . '/methods.php';
+        parent::setUp();
+        new App();
     }
 
     public function field($value = '')

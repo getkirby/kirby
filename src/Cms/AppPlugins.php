@@ -109,15 +109,8 @@ trait AppPlugins
     protected function extensionsFromSystem()
     {
         $this->extend([
-            'fieldMethods' => (array)require static::$root . '/extensions/methods.php',
-            'tags' => [
-                'file'    => Tags\File::class,
-                'image'   => Tags\Image::class,
-                'link'    => Tags\Link::class,
-                'video'   => Tags\Video::class,
-                'vimeo'   => Tags\Video::class,
-                'youtube' => Tags\Video::class,
-            ]
+            'fieldMethods' => (include static::$root . '/config/methods.php')($this),
+            'tags'         =>  include static::$root . '/config/tags.php'
         ]);
     }
 

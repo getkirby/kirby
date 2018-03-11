@@ -1,6 +1,6 @@
 <?php
 
-return function (Kirby\Cms\App $app) {
+return function ($app) {
 
     return [
         'Api' => [
