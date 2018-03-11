@@ -122,9 +122,9 @@ class PageActionsTest extends TestCase
         $parent = $this->pageDummy();
 
         $this->assertHooks([
-            'page.create:before' => function (Page $parentPage = null, array $props) use ($parent) {
+            'page.create:before' => function (Page $page, array $props) use ($parent) {
                 $this->assertEquals('test-child', $props['slug']);
-                $this->assertEquals($parentPage, $parent);
+                $this->assertEquals($parent, $page->parent());
             },
             'page.create:after' => function (Page $page) {
                 $this->assertEquals('test-child', $page->slug());

@@ -47,9 +47,9 @@ class PageStoreDefault extends Store
         return [];
     }
 
-    public function create(Page $page)
+    public function create()
     {
-        return $page;
+        return $this->page();
     }
 
     public function delete(): bool

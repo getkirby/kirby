@@ -114,8 +114,25 @@ trait PageActions
     {
         $this->rules()->$action($this, ...$arguments);
         $this->kirby()->trigger('page.' . $action . ':before', $this, ...$arguments);
-        $result = $this->store()->$action(...$arguments);
+
+        switch ($action) {
+            case 'sort':
+            case 'hide':
+                $result = $this->commit('changeNum', ...$arguments);
+                break;
+            default:
+                $result = $this->store()->$action(...$arguments);
+        }
+
         $this->kirby()->trigger('page.' . $action . ':after', $result, $this);
+
+        // flush the pages cache, except the changeNum action is run
+        // flushing it there, would be triggered way too often.
+        // triggering it on sort and hide is absolutely enough
+        if ($action !== 'changeNum') {
+            $this->kirby()->cache('pages')->flush();
+        }
+
         return $result;
     }
 
@@ -133,16 +150,7 @@ trait PageActions
         // create a temporary page object
         $page = Page::factory($props);
 
-        // validate the page dummy
-        $page->rules()->create($page);
-
-        $page->kirby()->trigger('page.create:before', $page->parent(), $props);
-
-        $result = $page->store()->create($page);
-
-        $page->kirby()->trigger('page.create:after', $result);
-
-        return $result;
+        return $page->commit('create', $props);
     }
 
     /**
@@ -199,6 +207,7 @@ trait PageActions
         $result = $this->store()->delete();
 
         $this->kirby()->trigger('page.delete:after', $result, $this);
+        $this->kirby()->cache('pages')->flush();
 
         return $result;
     }
@@ -219,7 +228,7 @@ trait PageActions
             throw new Exception('The status for this page cannot be changed');
         }
 
-        $siblings = $this->siblings()->not($this);
+        $siblings = $this->siblings()->visible()->not($this);
         $index    = 0;
 
         foreach ($siblings as $sibling) {
@@ -227,11 +236,7 @@ trait PageActions
             $sibling->commit('changeNum', $index);
         }
 
-        $this->kirby()->trigger('page.hide:before', $this);
-        $result = $this->commit('changeNum', null);
-        $this->kirby()->trigger('page.hide:after', $result, $this);
-
-        return $result;
+        return $this->commit('hide');
     }
 
     /**
@@ -283,12 +288,7 @@ trait PageActions
 
         }
 
-        $this->kirby()->trigger('page.sort:before', $this, $position);
-        $result = $this->commit('changeNum', $position);
-        $this->kirby()->trigger('page.sort:after', $result, $this);
-
-        return $result;
-
+        return $this->commit('sort', $position);
     }
 
 }

@@ -116,8 +116,10 @@ class PageStore extends PageStoreDefault
         return $this->base()->read();
     }
 
-    public function create(Page $page)
+    public function create()
     {
+        $page = $this->page();
+
         if ($this->exists() === true) {
             return $page;
         }

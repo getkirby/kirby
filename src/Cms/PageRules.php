@@ -55,11 +55,6 @@ class PageRules
         return true;
     }
 
-    public static function update(Page $page, array $content = []): bool
-    {
-        return true;
-    }
-
     public static function delete(Page $page, bool $force = false): bool
     {
         if ($page->exists() === false) {
@@ -78,6 +73,21 @@ class PageRules
             throw new Exception('The error page cannot be deleted');
         }
 
+        return true;
+    }
+
+    public static function hide(Page $page): bool
+    {
+        return true;
+    }
+
+    public static function sort(Page $page, int $position): bool
+    {
+        return true;
+    }
+
+    public static function update(Page $page, array $content = []): bool
+    {
         return true;
     }
 
