@@ -222,4 +222,14 @@ class Cache
         return true;
     }
 
+    /**
+     * Returns all passed cache options
+     *
+     * @return array
+     */
+    public function options(): array
+    {
+        return $this->options;
+    }
+
 }
