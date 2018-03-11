@@ -8,15 +8,24 @@ use Kirby\Cache\FileCache;
 class AppCachesTest extends TestCase
 {
 
+    public function app(array $props = [])
+    {
+        return new App(array_merge([
+            'roots' => [
+                'index' => __DIR__
+            ]
+        ], $props));
+    }
+
+
     public function testDisabledCache()
     {
-        $kirby = new App();
-        $this->assertEquals(Cache::class, get_class($kirby->cache('pages')));
+        $this->assertEquals(Cache::class, get_class($this->app()->cache('pages')));
     }
 
     public function testEnabledCacheWithoutOptions()
     {
-        $kirby = new App([
+        $kirby = $this->app([
             'options' => [
                 'cache.pages' => true
             ]
@@ -27,7 +36,7 @@ class AppCachesTest extends TestCase
 
     public function testEnabledCacheWithOptions()
     {
-        $kirby = new App([
+        $kirby = $this->app([
             'options' => [
                 'cache.pages' => [
                     'type' => 'file',
@@ -50,9 +59,7 @@ class AppCachesTest extends TestCase
             ]
         ]);
 
-        $kirby = new App();
-
-        $this->assertInstanceOf(FileCache::class, $kirby->cache('developer.plugin'));
+        $this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin'));
     }
 
     public function testPluginCustomCache()
@@ -66,9 +73,7 @@ class AppCachesTest extends TestCase
             ]
         ]);
 
-        $kirby = new App();
-
-        $this->assertInstanceOf(FileCache::class, $kirby->cache('developer.plugin.api'));
+        $this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin.api'));
     }
 
 }
