@@ -27,6 +27,7 @@ trait SiteActions
         $this->kirby()->trigger('site.' . $action . ':before', $this, ...$arguments);
         $result = $this->store()->$action(...$arguments);
         $this->kirby()->trigger('site.' . $action . ':after', $result, $this);
+        $this->kirby()->cache('pages')->flush();
         return $result;
     }
 

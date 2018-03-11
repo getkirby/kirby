@@ -50,6 +50,7 @@ trait FileActions
         $this->kirby()->trigger('file.' . $action . ':before', $this, ...$arguments);
         $result = $this->store()->$action(...$arguments);
         $this->kirby()->trigger('file.' . $action . ':after', $result, $this);
+        $this->kirby()->cache('pages')->flush();
         return $result;
     }
 
