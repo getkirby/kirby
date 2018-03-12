@@ -56,47 +56,17 @@ class Api
         $this->setRequestData($requestData);
 
         $router = new Router($this->routes());
+        $result = $router->find($path, $method);
+        $auth   = $result->attributes()['auth'] ?? true;
 
-        try {
-            $result = $router->find($path, $method);
-            $auth   = $result->attributes()['auth'] ?? true;
-
-            if ($auth !== false) {
-                $this->authenticate();
-            }
-
-            $output = $result->action()->call($this, ...$result->arguments());
-        } catch (Throwable $e) {
-            $output = [
-                'status'  => 'error',
-                'message' => $e->getMessage()
-            ];
+        if ($auth !== false) {
+            $this->authenticate();
         }
+
+        $output = $result->action()->call($this, ...$result->arguments());
 
         if (is_object($output) === true) {
             return $this->resolve($output)->toResponse();
-        }
-
-        if ($output === null) {
-            return [
-                'status'  => 'error',
-                'message' => 'not found',
-                'code'    => 404,
-            ];
-        }
-
-        if ($output === true) {
-            return [
-                'status' => 'ok',
-            ];
-        }
-
-        if ($output === false) {
-            return [
-                'status'  => 'error',
-                'message' => 'bad request',
-                'code'    => 400,
-            ];
         }
 
         return $output;
@@ -271,15 +241,45 @@ class Api
         return $this;
     }
 
-    public function toResponse(string $path, $method = 'GET', array $requestData = [])
+    public function render(string $path, $method = 'GET', array $requestData = [])
     {
-        $result = $this->call($path, $method, $requestData);
+        try {
+            $result = $this->call($path, $method, $requestData);
+        } catch (Throwable $e) {
+            $result = [
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'code'    => 500
+            ];
+        }
+
+        if ($result === null) {
+            $result = [
+                'status'  => 'error',
+                'message' => 'not found',
+                'code'    => 404,
+            ];
+        }
+
+        if ($result === true) {
+            $result = [
+                'status' => 'ok',
+            ];
+        }
+
+        if ($result === false) {
+            $result = [
+                'status'  => 'error',
+                'message' => 'bad request',
+                'code'    => 400,
+            ];
+        }
 
         // pretty print json data
         $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
 
         if (($result['status'] ?? 'ok') === 'error') {
-            return new Json($result, 400, $pretty);
+            return new Json($result, $result['code'] ?? 400, $pretty);
         }
 
         return new Json($result, 200, $pretty);

@@ -109,6 +109,7 @@ trait AppPlugins
     protected function extensionsFromSystem()
     {
         $this->extend([
+            'blueprints'   =>  include static::$root . '/config/blueprints.php',
             'fieldMethods' => (include static::$root . '/config/methods.php')($this),
             'tags'         =>  include static::$root . '/config/tags.php'
         ]);

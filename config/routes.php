@@ -22,7 +22,7 @@ return function ($kirby) {
             'action'  => function ($path = null) use ($kirby) {
                 $request = $kirby->request();
 
-                return $kirby->component('api')->toResponse($path, $this->method(), [
+                return $kirby->component('api')->render($path, $this->method(), [
                     'body'    => $request->body()->toArray(),
                     'files'   => $request->files()->toArray(),
                     'headers' => $request->headers(),
