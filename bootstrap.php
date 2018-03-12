@@ -6,4 +6,6 @@ if (is_dir(__DIR__ . '/vendor')) {
     require __DIR__ . '/../../autoload.php';
 }
 
+define('DS', '/');
+
 require __DIR__ . '/config/sentry.php';
