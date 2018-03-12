@@ -3,6 +3,7 @@
 namespace Kirby\Api;
 
 use Closure;
+use Exception;
 use Throwable;
 
 use Kirby\Http\Router;
@@ -249,6 +250,8 @@ class Api
             $result = [
                 'status'  => 'error',
                 'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
                 'code'    => 500
             ];
         }

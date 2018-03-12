@@ -36,7 +36,7 @@ class Extend
 
     public static function blueprints(array $blueprints): array
     {
-        return static::strings('blueprint', $blueprints);
+        return $blueprints;
     }
 
     public static function fields(array $fields, Plugin $plugin = null): array

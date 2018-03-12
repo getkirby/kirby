@@ -10,6 +10,7 @@ use Kirby\Cms\Site;
 return [
     'Avatar'        => include __DIR__ . '/models/Avatar.php',
     'File'          => include __DIR__ . '/models/File.php',
+    'FileBlueprint' => include __DIR__ . '/models/FileBlueprint.php',
     'Locale'        => include __DIR__ . '/models/Locale.php',
     'Page'          => include __DIR__ . '/models/Page.php',
     'PageBlueprint' => include __DIR__ . '/models/PageBlueprint.php',

@@ -22,7 +22,7 @@ class FileStoreDefault extends Store
         ]);
     }
 
-    public function content()
+    public function content(): array
     {
         return [];
     }
@@ -55,6 +55,11 @@ class FileStoreDefault extends Store
     public function replace(Upload $upload)
     {
         return $this->create($upload);
+    }
+
+    public function template()
+    {
+        return $this->file()->content()->get('template')->value();
     }
 
     public function update(array $values = [], array $strings = [])

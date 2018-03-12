@@ -53,7 +53,7 @@ class FileStore extends FileStoreDefault
         return $newFile;
     }
 
-    public function content()
+    public function content(): array
     {
         return Data::read($this->storeFile());
     }

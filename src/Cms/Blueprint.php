@@ -166,9 +166,9 @@ class Blueprint extends BlueprintObject
      * Find a blueprint by name
      *
      * @param string $name
-     * @return string
+     * @return string|array
      */
-    public static function find(string $name): string
+    public static function find(string $name)
     {
         $kirby = App::instance();
         $root  = $kirby->root('blueprints');
@@ -178,8 +178,8 @@ class Blueprint extends BlueprintObject
             return $file;
         }
 
-        if ($file = $kirby->extension('blueprints', $name)) {
-            return $file;
+        if ($blueprint = $kirby->extension('blueprints', $name)) {
+            return $blueprint;
         }
 
         throw new Exception(sprintf('The blueprint "%s" could not be loaded', $name));
@@ -205,9 +205,14 @@ class Blueprint extends BlueprintObject
             return null;
         }
 
-        $data          = Data::read($file);
-        $data['name']  = F::name($file);
-        $data['model'] = $model;
+        if (is_array($file) === true) {
+            $data = $file;
+            $data['model'] = $model;
+        } else {
+            $data          = Data::read($file);
+            $data['name']  = F::name($file);
+            $data['model'] = $model;
+        }
 
         return new static($data);
     }

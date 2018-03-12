@@ -26,6 +26,7 @@ class File extends Model
     use HasContent;
     use HasSiblings;
     use HasStore;
+    use HasTemplate;
     use HasThumbs;
 
     /**
@@ -137,16 +138,7 @@ class File extends Model
             return $this->blueprint;
         }
 
-        if ($blueprint = FileBlueprint::load('files/default.yml', null, $this)) {
-            return $this->blueprint = $blueprint;
-        }
-
-        return $this->blueprint = new FileBlueprint([
-            'model' => $this,
-            'name'  => 'default',
-            'tabs'  => [],
-            'title' => 'Default',
-        ]);
+        return $this->blueprint = FileBlueprint::load('files/' . $this->template(), 'files/default', $this);
     }
 
     /**

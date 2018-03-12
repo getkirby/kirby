@@ -27,6 +27,7 @@ class Page extends Model
     use HasFiles;
     use HasSiblings;
     use HasStore;
+    use HasTemplate;
 
     /**
      * Registry with all Page models
@@ -108,13 +109,6 @@ class Page extends Model
      * @var string
      */
     protected $slug;
-
-    /**
-     * The template name
-     *
-     * @var string|null
-     */
-    protected $template;
 
     /**
      * The page url
@@ -695,18 +689,6 @@ class Page extends Model
     }
 
     /**
-     * Sets the template name
-     *
-     * @param string $template
-     * @return self
-     */
-    protected function setTemplate(string $template = null): self
-    {
-        $this->template = $template !== null ? Str::slug($template) : null;
-        return $this;
-    }
-
-    /**
      * Sets the Url
      *
      * @param string $url
@@ -730,16 +712,6 @@ class Page extends Model
     public function slug(): string
     {
         return $this->slug;
-    }
-
-    /**
-     * Returns the template name
-     *
-     * @return string
-     */
-    public function template(): string
-    {
-        return $this->template = $this->template ?? $this->store()->template();
     }
 
     /**
