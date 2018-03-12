@@ -167,7 +167,7 @@ class Page extends Model
         $options = $cache->options();
 
         // the pages cache is switched off
-        if ($options['active'] === false) {
+        if (($options['active'] ?? false) === false) {
             return false;
         }
 

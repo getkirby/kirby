@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
+use Throwable;
 
 use Kirby\Form\Field;
 use Kirby\Toolkit\Url;
@@ -220,7 +221,11 @@ class App extends Component
      */
     public function render(string $path = null, string $method = null)
     {
-        return $this->component('response', $this->call($path, $method));
+        try {
+            return $this->component('response', $this->call($path, $method));
+        } catch (Throwable $e) {
+            return $this->component('response', $e);
+        }
     }
 
     /**

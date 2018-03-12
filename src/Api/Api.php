@@ -3,7 +3,7 @@
 namespace Kirby\Api;
 
 use Closure;
-use Exception;
+use Throwable;
 
 use Kirby\Http\Router;
 use Kirby\Http\Router\Route;
@@ -66,7 +66,7 @@ class Api
             }
 
             $output = $result->action()->call($this, ...$result->arguments());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $output = [
                 'status'  => 'error',
                 'message' => $e->getMessage()

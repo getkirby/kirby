@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Throwable;
 use Kirby\Http\Response as BaseResponse;
 use Kirby\Http\Response\Json;
 use Kirby\Util\F;
@@ -47,7 +48,7 @@ class Response extends BaseResponse
         }
 
         // Exceptions
-        if (is_a($input, Exception::class)) {
+        if (is_a($input, Throwable::class)) {
             return static::errorPage(array_merge($data, [
                 'errorMessage' => $input->getMessage(),
                 'errorCode'    => $input->getCode(),
