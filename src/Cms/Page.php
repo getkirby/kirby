@@ -165,6 +165,7 @@ class Page extends Model
         $cache   = $kirby->cache('pages');
         $request = $kirby->request();
         $options = $cache->options();
+        $ignore  = $options['ignore'] ?? null;
 
         // the pages cache is switched off
         if (($options['active'] ?? false) === false) {
@@ -177,8 +178,15 @@ class Page extends Model
         }
 
         // check for a custom ignore rule
-        if (is_a($options['ignore'] ?? null, Closure::class)) {
-            if ($options['ignore']($this) === true) {
+        if (is_a($ignore, Closure::class)) {
+            if ($ignore($this) === true) {
+                return false;
+            }
+        }
+
+        // ignore pages by id
+        if (is_array($ignore) === true) {
+            if (in_array($this->id(), $ignore) === true) {
                 return false;
             }
         }
