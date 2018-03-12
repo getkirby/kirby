@@ -97,6 +97,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/files/(:any)/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $filename, string $sectionName, string $path = '') {
+            return $this->file($id, $filename)->blueprint()->section($sectionName)->apiCall($this, $path);
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
