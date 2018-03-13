@@ -70,6 +70,10 @@ class FileStore extends FileStoreDefault
             throw new Exception('The file could not be created');
         }
 
+        if ($file->template() !== null) {
+            $this->update($data = ['template' => $file->template()], $data);
+        }
+
         // create a new public file
         $this->media()->create($file->parent(), $file);
 

@@ -95,8 +95,9 @@ class BlueprintFilesSection extends BlueprintSection
             // automatically accept new files, when "accept" is set
             if (empty($this->accept) === false) {
                 return [
-                    'content' => [],
-                    'name'    => null
+                    'content'  => [],
+                    'name'     => null,
+                    'template' => null,
                 ];
             }
 
@@ -104,8 +105,9 @@ class BlueprintFilesSection extends BlueprintSection
         }
 
         $result = [
-            'content' => empty($this->create['content']) ? [] : $this->create['content'],
-            'name'    => $this->create['name'] ?? null
+            'content'  => empty($this->create['content']) ? [] : $this->create['content'],
+            'name'     => $this->create['name'] ?? null,
+            'template' => $this->create['template'] ?? null
         ];
 
         return $result;
@@ -215,6 +217,7 @@ class BlueprintFilesSection extends BlueprintSection
         return $this->parent()->createFile([
             'source'   => $data['source'],
             'content'  => $content,
+            'template' => $options['template'],
             'filename' => $this->filename($data['source'], $data['filename'], $options['name'])
         ]);
     }
