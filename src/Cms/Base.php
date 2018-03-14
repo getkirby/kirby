@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Base;
+namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Util\Dir;

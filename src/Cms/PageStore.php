@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Base\Base;
 use Kirby\Util\Dir;
 use Kirby\Util\F;
 
