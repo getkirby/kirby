@@ -66,6 +66,7 @@ class Base
 
         $this->inventory = [
             'children' => [],
+            'drafts'   => [],
             'files'    => [],
             'type'     => 'default',
         ];
@@ -84,7 +85,7 @@ class Base
             }
 
             // ignore all items with a leading dot
-            if (substr($item, 0, 1) === '.') {
+            if (substr($item, 0, 1) === '.' || $item === '_drafts') {
                 continue;
             }
 
