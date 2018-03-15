@@ -176,8 +176,19 @@ class Media extends Component
 
         switch ($type) {
             case 'pages':
-                $model = $app->site()->find(dirname($path));
-                $file  = $model->file(basename($path));
+
+                $id    = dirname($path);
+                $model = $app->site()->find($id);
+
+                if ($model === null) {
+                    $model = $app->site()->draft($id);
+                }
+
+                if ($model === null) {
+                    throw new Exception('The page could not be found');
+                }
+
+                $file = $model->file(basename($path));
                 break;
             case 'site':
                 $model = $app->site();
