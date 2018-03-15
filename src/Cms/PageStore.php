@@ -174,7 +174,19 @@ class PageStore extends PageStoreDefault
     public function delete(): bool
     {
         // delete the content folder for this page
-        return $this->base()->delete();
+        Dir::remove($this->page()->root());
+
+        // if the page is a draft and the _drafts folder
+        // is now empty. clean it up.
+        if ($this->page()->isDraft() === true) {
+            $draftsDir = dirname($this->page()->root());
+
+            if (Dir::isEmpty($draftsDir) === true) {
+                Dir::remove($draftsDir);
+            }
+        }
+
+        return true;
     }
 
     public function drafts(): array
@@ -241,6 +253,12 @@ class PageStore extends PageStoreDefault
 
     protected function moveDirectory(string $old, string $new): bool
     {
+        $parent = dirname($new);
+
+        if (Dir::make($parent, true) !== true) {
+            throw new Exception('The parent directory could not be created');
+        }
+
         if (Dir::move($old, $new) !== true) {
             throw new Exception('The directory could not be moved');
         }
@@ -258,6 +276,14 @@ class PageStore extends PageStoreDefault
         }
 
         $this->moveDirectory($draft->root(), $root);
+
+        // Get the draft folder and check if there are any other drafts
+        // left. Otherwise delete it.
+        $draftDir = dirname($draft->root());
+
+        if (Dir::isEmpty($draftDir) === true) {
+            Dir::remove($draftDir);
+        }
 
         return $draft->clone([], Page::class);
     }

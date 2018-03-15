@@ -8,6 +8,16 @@ class Dir
 {
 
     /**
+     * Checks if the folder has any contents
+     *
+     * @return boolean
+     */
+    public static function isEmpty(string $dir): bool
+    {
+        return count(static::read($dir)) === 0;
+    }
+
+    /**
      * Creates a new directory
      *
      * @param   string  $dir The path for the new directory
