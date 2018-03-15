@@ -271,7 +271,7 @@ class Page extends Model
     }
 
     /**
-     * Return all drafts for the project
+     * Return all drafts for the page
      *
      * @return Children
      */

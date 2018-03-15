@@ -28,6 +28,11 @@ class SiteStoreDefault extends Store
         return $file;
     }
 
+    public function drafts(): array
+    {
+        return [];
+    }
+
     public function exists(): bool
     {
         return false;

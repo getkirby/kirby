@@ -49,11 +49,10 @@ return [
 
         $parentId = dirname($id);
         $draftId  = basename($id);
+        $parent   = $parentId === '.' ? $this->site() : $this->site()->find($parentId);
 
-        if ($parent = $this->site()->find($parentId)) {
-            if ($draft = $parent->drafts()->find($draftId)) {
-                return $draft;
-            }
+        if ($parent && $draft = $parent->drafts()->find($draftId)) {
+            return $draft;
         }
 
         throw new Exception(sprintf('The page "%s" cannot be found', $id));

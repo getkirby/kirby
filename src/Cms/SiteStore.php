@@ -21,7 +21,7 @@ class SiteStore extends SiteStoreDefault
 
         return $this->base = new Base([
             'extension' => 'txt',
-            'root'      => $this->kirby()->root('content'),
+            'root'      => $this->site()->root(),
             'type'      => 'site',
         ]);
     }
@@ -32,7 +32,6 @@ class SiteStore extends SiteStoreDefault
         $site      = $this->site();
         $url       = $site->url();
         $children  = new Pages([], $site);
-        $extension = $this->base()->extension();
 
         foreach ($this->base()->children() as $slug => $props) {
 
@@ -56,6 +55,31 @@ class SiteStore extends SiteStoreDefault
         return $this->base()->read();
     }
 
+    public function drafts(): array
+    {
+
+        $site   = $this->site();
+        $url    = $site->url();
+        $drafts = [];
+        $base   = new Base([
+            'extension' => 'txt',
+            'root'      => $site->root() . '/_drafts',
+        ]);
+
+        foreach ($base->children() as $slug => $props) {
+            $drafts[] = [
+                'num'    => $props['num'],
+                'site'   => $site,
+                'slug'   => $slug,
+                'status' => 'draft',
+                'url'    => $url . '/_drafts/' . $slug,
+                'store'  => static::PAGE_STORE_CLASS
+            ];
+        }
+
+        return $drafts;
+    }
+
     public function exists(): bool
     {
         return is_dir($this->root()) === true;
@@ -64,12 +88,11 @@ class SiteStore extends SiteStoreDefault
     public function files()
     {
 
-        $base      = $this->base();
-        $site      = $this->site();
-        $root      = $base->root();
-        $extension = $base->extension();
-        $url       = $site->kirby()->media()->url($site);
-        $files     = new Files([], $site);
+        $base  = $this->base();
+        $site  = $this->site();
+        $root  = $base->root();
+        $url   = $site->kirby()->media()->url($site);
+        $files = new Files([], $site);
 
         foreach ($this->base()->files() as $filename => $props) {
 

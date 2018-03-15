@@ -298,6 +298,8 @@ trait PageActions
 
         $result = $this->store()->delete();
 
+        $this->resortSiblingsAfterUnlisting();
+
         $this->kirby()->trigger('page.delete:after', $result, $this);
         $this->kirby()->cache('pages')->flush();
 

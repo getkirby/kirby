@@ -134,6 +134,16 @@ class Site extends Model
     }
 
     /**
+     * Return all drafts for the site
+     *
+     * @return Pages
+     */
+    public function drafts(): Pages
+    {
+        return new Pages(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
+    }
+
+    /**
      * Returns the error page object
      *
      * @return Page
