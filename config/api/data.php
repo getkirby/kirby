@@ -7,23 +7,7 @@ use Firebase\JWT\JWT;
  */
 return [
     'token' => function () {
-
-        $token = $this->requestQuery('auth');
-
-        if (empty($token) === true) {
-            $token = str_replace('Bearer ', '', $this->requestHeaders('Authorization'));
-        }
-
-        if (empty($token) === true) {
-            throw new Exception('Invalid authentication token');
-        }
-
-        // TODO: get the key from config
-        $key = 'kirby';
-
-        // return the token object
-        return (array)JWT::decode($token, $key, ['HS256']);
-
+        return $this->kirby()->authToken();
     },
     'file' => function (string $id = null, string $filename) {
 

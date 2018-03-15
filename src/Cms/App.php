@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 use Throwable;
-
+use Firebase\JWT\JWT;
 use Kirby\Form\Field;
 use Kirby\Toolkit\Url;
 use Kirby\Util\Controller;
@@ -53,6 +53,29 @@ class App extends Component
 
         // set the singleton
         static::$instance = $this;
+    }
+
+    /**
+     * Returns the authentication token from the request
+     *
+     * @return array|null
+     */
+    public function authToken()
+    {
+        $query   = $this->request()->data();
+        $headers = $this->request()->headers();
+        $token   = $query['auth'] ?? $headers['Authorization'] ?? null;
+        $token   = preg_replace('!^Bearer !', '', $token);
+
+        if (empty($token) === true) {
+            throw new Exception('Invalid authentication token');
+        }
+
+        // TODO: get the key from config
+        $key = 'kirby';
+
+        // return the token object
+        return (array)JWT::decode($token, $key, ['HS256']);
     }
 
     /**
@@ -428,8 +451,11 @@ class App extends Component
     public function user(string $id = null)
     {
         if ($id === null) {
-            // TODO: return the logged in user
-            return $this->users()->first();
+            try {
+                return $this->users()->findBy('id', $this->authToken()['uid']);
+            } catch (Throwable $e) {
+                return null;
+            }
         }
 
         return $this->users()->find($id);

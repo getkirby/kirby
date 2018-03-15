@@ -134,6 +134,18 @@ class Site extends Model
     }
 
     /**
+     * Returns a draft object by the path
+     * if one can be found
+     *
+     * @param string $path
+     * @return PageDraft|null
+     */
+    public function draft(string $path)
+    {
+        return PageDraft::seek($this, $path);
+    }
+
+    /**
      * Return all drafts for the site
      *
      * @return Pages

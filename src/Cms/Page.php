@@ -271,6 +271,15 @@ class Page extends Model
     }
 
     /**
+     * @param string $path
+     * @return PageDraft|null
+     */
+    public function draft(string $path)
+    {
+        return PageDraft::seek($path);
+    }
+
+    /**
      * Return all drafts for the page
      *
      * @return Children

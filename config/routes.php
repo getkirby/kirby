@@ -6,6 +6,7 @@ use Kirby\Cms\Resources;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\View;
+use Kirby\Util\Str;
 
 return function ($kirby) {
 
@@ -51,7 +52,16 @@ return function ($kirby) {
         [
             'pattern' => '(:all)',
             'action'  => function (string $path) use ($kirby) {
-                return $kirby->site()->find($path);
+                if ($page = $kirby->site()->find($path)) {
+                    return $page;
+                }
+
+                // authenticated users may see drafts
+                if ($draft = $kirby->site()->draft($path)) {
+                    return $draft;
+                }
+
+                return null;
             }
         ]
     ];
