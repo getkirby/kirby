@@ -10,4 +10,9 @@ $page = require __DIR__ . '/Page.php';
 
 $page['type'] = PageDraft::class;
 
+// resolve siblings from the parent page instead of listing all drafts
+$page['fields']['siblings'] = function (Page $page) {
+    return $page->parent()->children()->not($page);
+};
+
 return $page;
