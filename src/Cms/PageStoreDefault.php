@@ -41,7 +41,7 @@ class PageStoreDefault extends Store
 
     protected function changeStatusToDraft()
     {
-        return $this->page()->clone([], PageDraft::class);
+        return $this->page()->clone(['num' => null], PageDraft::class);
     }
 
     protected function changeStatusToListed(int $position)
