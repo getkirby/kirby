@@ -49,7 +49,7 @@ return [
 
         // get the authenticated user
         if ($id === null) {
-            return $this->users()->findBy('id', $this->token()['uid']);
+            return $this->kirby()->user();
         }
 
         // get a specific user by id
