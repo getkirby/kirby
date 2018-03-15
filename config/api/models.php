@@ -14,6 +14,7 @@ return [
     'Locale'        => include __DIR__ . '/models/Locale.php',
     'Page'          => include __DIR__ . '/models/Page.php',
     'PageBlueprint' => include __DIR__ . '/models/PageBlueprint.php',
+    'PageDraft'     => include __DIR__ . '/models/PageDraft.php',
     'Site'          => include __DIR__ . '/models/Site.php',
     'SiteBlueprint' => include __DIR__ . '/models/SiteBlueprint.php',
     'User'          => include __DIR__ . '/models/User.php',

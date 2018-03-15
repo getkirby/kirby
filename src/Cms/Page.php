@@ -204,6 +204,22 @@ class Page extends Model
     }
 
     /**
+     * Clone the page object and
+     * optionally convert it to a draft object
+     *
+     * @param array $props
+     * @return self
+     */
+    public function clone(array $props = [], string $to = null)
+    {
+        if ($to === null || $to === static::class) {
+            return parent::clone($props);
+        }
+
+        return new $to(array_replace_recursive($this->propertyData, $props));
+    }
+
+    /**
      * Returns the default parent collection
      *
      * @return Collection
@@ -252,6 +268,16 @@ class Page extends Model
         }
 
         return $this->diruri = $this->dirname();
+    }
+
+    /**
+     * Return all drafts for the project
+     *
+     * @return Children
+     */
+    public function drafts(): Children
+    {
+        return new Children(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
     }
 
     /**
@@ -389,6 +415,16 @@ class Page extends Model
     }
 
     /**
+     * Checks if the current page is a draft
+     *
+     * @return boolean
+     */
+    public function isDraft(): bool
+    {
+        return static::class === PageDraft::class;
+    }
+
+    /**
      * Checks if the page is the error page
      *
      * @return bool
@@ -435,7 +471,17 @@ class Page extends Model
      */
     public function isInvisible(): bool
     {
-        return $this->isVisible() === false;
+        return $this->isUnlisted();
+    }
+
+    /**
+     * Checks if the page has a sorting number
+     *
+     * @return boolean
+     */
+    public function isListed(): bool
+    {
+        return $this->num() !== null;
     }
 
     /**
@@ -451,13 +497,23 @@ class Page extends Model
     }
 
     /**
+     * Checks if the page has no sorting number
+     *
+     * @return boolean
+     */
+    public function isUnlisted(): bool
+    {
+        return $this->num() === null;
+    }
+
+    /**
      * Checks if the page is visible
      *
      * @return bool
      */
     public function isVisible(): bool
     {
-        return $this->num() !== null;
+        return $this->isListed();
     }
 
     /**
@@ -528,6 +584,18 @@ class Page extends Model
     public function parent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Returns the parent model,
+     * which can either be another Page
+     * or the Site
+     *
+     * @return Page|Site
+     */
+    public function parentModel()
+    {
+        return $this->parent() ?? $this->site();
     }
 
     /**
@@ -629,6 +697,17 @@ class Page extends Model
     }
 
     /**
+     * Returns the absolute root to the page directory
+     * No matter if it exists or not.
+     *
+     * @return string
+     */
+    public function root(): string
+    {
+        return $this->kirby()->root('content') . '/' . $this->diruri();
+    }
+
+    /**
      * Returns the PageRules class instance
      * which is being used in various methods
      * to check for valid actions and input.
@@ -712,6 +791,22 @@ class Page extends Model
     public function slug(): string
     {
         return $this->slug;
+    }
+
+    /**
+     * @return string draft, listed or unlisted
+     */
+    public function status()
+    {
+        if ($this->isDraft() === true) {
+            return 'draft';
+        }
+
+        if ($this->isUnlisted() === true) {
+            return 'unlisted';
+        }
+
+        return 'listed';
     }
 
     /**

@@ -47,6 +47,15 @@ return [
             return $page;
         }
 
+        $parentId = dirname($id);
+        $draftId  = basename($id);
+
+        if ($parent = $this->site()->find($parentId)) {
+            if ($draft = $parent->drafts()->find($draftId)) {
+                return $draft;
+            }
+        }
+
         throw new Exception(sprintf('The page "%s" cannot be found', $id));
 
     },

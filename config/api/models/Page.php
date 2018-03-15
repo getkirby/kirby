@@ -26,9 +26,6 @@ return [
         'id' => function (Page $page) {
             return $page->id();
         },
-        'isVisible' => function (Page $page) {
-            return $page->isVisible() === true;
-        },
         'next' => function (Page $page) {
             return $page->next();
         },
@@ -53,6 +50,9 @@ return [
         'slug' => function (Page $page) {
             return $page->slug();
         },
+        'status' => function (Page $page) {
+            return $page->status();
+        },
         'template' => function (Page $page) {
             return $page->template();
         },
@@ -74,7 +74,7 @@ return [
         'default' => [
             'content',
             'id',
-            'isVisible',
+            'status',
             'num',
             'options',
             'parent' => 'compact',
@@ -86,7 +86,7 @@ return [
         'panel' => [
             'id',
             'blueprint',
-            'isVisible',
+            'status',
             'next'    => ['id', 'slug', 'title'],
             'parents' => ['id', 'slug', 'title'],
             'prev'    => ['id', 'slug', 'title'],

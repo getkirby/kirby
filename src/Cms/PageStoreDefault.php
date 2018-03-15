@@ -14,7 +14,7 @@ class PageStoreDefault extends Store
     {
         return $this->page()->clone([
             'num' => $num,
-        ]);
+        ], Page::class);
     }
 
     public function changeSlug(string $slug)
@@ -23,6 +23,35 @@ class PageStoreDefault extends Store
             'slug' => $slug,
             'url'  => rtrim(dirname($this->page()->url()), '/') . '/' . $slug
         ]);
+    }
+
+    public function changeStatus(string $status, int $position = null)
+    {
+        switch ($status) {
+            case 'draft':
+                return $this->changeStatusToDraft();
+            case 'listed':
+                return $this->changeStatusToListed($position);
+            case 'unlisted':
+                return $this->changeStatusToUnlisted();
+            default:
+                throw new Exception('Invalid status');
+        }
+    }
+
+    protected function changeStatusToDraft()
+    {
+        return $this->page()->clone([], PageDraft::class);
+    }
+
+    protected function changeStatusToListed(int $position)
+    {
+        return $this->changeNum($position);
+    }
+
+    protected function changeStatusToUnlisted()
+    {
+        return $this->changeNum(null);
     }
 
     public function changeTemplate(string $template)
@@ -57,6 +86,11 @@ class PageStoreDefault extends Store
         throw new Exception('This page cannot be deleted');
     }
 
+    public function drafts(): array
+    {
+        return [];
+    }
+
     public function exists(): bool
     {
         return false;
@@ -80,6 +114,11 @@ class PageStoreDefault extends Store
     public function page()
     {
         return $this->model;
+    }
+
+    public function publish()
+    {
+        return $this->page();
     }
 
     public function template(): string

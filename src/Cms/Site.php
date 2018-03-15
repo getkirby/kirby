@@ -86,13 +86,6 @@ class Site extends Model
     protected $page;
 
     /**
-     * The root to the content directory
-     *
-     * @var string|null
-     */
-    protected $root;
-
-    /**
      * The page url
      *
      * @var string
@@ -245,6 +238,16 @@ class Site extends Model
     public function pages(): Pages
     {
         return $this->children();
+    }
+
+    /**
+     * Returns the absolute path to the content directory
+     *
+     * @return string
+     */
+    public function root(): string
+    {
+        return $this->kirby()->root('content');
     }
 
     /**

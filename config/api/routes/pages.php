@@ -121,11 +121,7 @@ return [
         'pattern' => 'pages/(:any)/status',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
-            if ($this->requestBody('status') === 'invisible') {
-                return $this->page($id)->hide();
-            }
-
-            return $this->page($id)->sort($this->requestBody('position'));
+            return $this->page($id)->changeStatus($this->requestBody('status'), $this->requestBody('position'));
         }
     ],
     [

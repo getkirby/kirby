@@ -21,34 +21,6 @@ trait PageActions
             return $this;
         }
 
-        if ($num !== null) {
-
-            $mode = $this->blueprint()->num();
-
-            switch ($mode) {
-                case 'zero':
-                    $num = 0;
-                    break;
-                case 'default':
-                    $num = $num;
-                    break;
-                default:
-                    $template = new Tempura($mode, [
-                        'kirby' => $this->kirby(),
-                        'page'  => $this,
-                        'site'  => $this->site(),
-                    ]);
-
-                    $num = intval($template->render());
-                    break;
-            }
-
-            if ($num === $this->num()) {
-                return $this;
-            }
-
-        }
-
         return $this->commit('changeNum', $num);
     }
 
@@ -65,6 +37,108 @@ trait PageActions
         }
 
         return $this->commit('changeSlug', $slug);
+    }
+
+    /**
+     * Change the status of the current page
+     * to either draft, listed or unlisted
+     *
+     * @param string $status "draft", "listed" or "unlisted"
+     * @param integer $position Optional sorting number
+     * @return Page
+     */
+    public function changeStatus(string $status, int $position = null): self
+    {
+        switch ($status) {
+            case 'draft':
+                return $this->changeStatusToDraft();
+            case 'listed':
+                return $this->changeStatusToListed($position);
+            case 'unlisted':
+                return $this->changeStatusToUnlisted();
+            default:
+                throw new Exception('Invalid status');
+        }
+    }
+
+    protected function changeStatusToDraft(): self
+    {
+        return $this->commit('changeStatus', 'draft');
+    }
+
+    protected function resortSiblingsAfterListing(int $position): bool
+    {
+        // get all siblings including the current page
+        $siblings = $this->siblings()->listed();
+
+        // get a non-associative array of ids
+        $keys  = $siblings->keys();
+        $index = array_search($this->id(), $keys);
+
+        // if the page is not included in the siblings
+        // push the page at the end.
+        if ($index === false) {
+            $keys[] = $this->id();
+            $index  = count($keys) - 1;
+        }
+
+        // move the current page number in the array of keys
+        // subtract 1 from the num and the position, because of the
+        // zero-based array keys
+        $sorted = A::move($keys, $index, $position - 1);
+
+        foreach ($sorted as $key => $id) {
+            if ($id === $this->id()) {
+                $position = $key + 1;
+            } else {
+                $siblings->findBy('id', $id)->commit('changeNum', $key + 1);
+            }
+        }
+
+        return true;
+    }
+
+    protected function resortSiblingsAfterUnlisting(): bool
+    {
+        $siblings = $this->siblings()->listed()->not($this);
+        $index    = 0;
+
+        foreach ($siblings as $sibling) {
+            $index++;
+            $sibling->commit('changeNum', $index);
+        }
+
+        return true;
+    }
+
+    protected function changeStatusToListed(int $position = null): self
+    {
+        if ($this->status() === 'listed') {
+            return $this;
+        }
+
+        // create a sorting number for the page
+        $num  = $this->createNum($position);
+        $page = $this->commit('changeStatus', 'listed', $num);
+
+        if ($this->blueprint()->num() === 'default') {
+            $this->resortSiblingsAfterListing($num);
+        }
+
+        return $page;
+    }
+
+    protected function changeStatusToUnlisted(): self
+    {
+        if ($this->status() === 'unlisted') {
+            return $this;
+        }
+
+        $page = $this->commit('changeStatus', 'unlisted');
+
+        $this->resortSiblingsAfterUnlisting();
+
+        return $page;
     }
 
     /**
@@ -114,16 +188,7 @@ trait PageActions
     {
         $this->rules()->$action($this, ...$arguments);
         $this->kirby()->trigger('page.' . $action . ':before', $this, ...$arguments);
-
-        switch ($action) {
-            case 'sort':
-            case 'hide':
-                $result = $this->commit('changeNum', ...$arguments);
-                break;
-            default:
-                $result = $this->store()->$action(...$arguments);
-        }
-
+        $result = $this->store()->$action(...$arguments);
         $this->kirby()->trigger('page.' . $action . ':after', $result, $this);
 
         // flush the pages cache, except the changeNum action is run
@@ -148,7 +213,7 @@ trait PageActions
         $props['slug'] = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
 
         // create a temporary page object
-        $page = Page::factory($props);
+        $page = PageDraft::factory($props);
 
         return $page->commit('create', $props);
     }
@@ -184,6 +249,33 @@ trait PageActions
     }
 
     /**
+     * Create the sorting number for the page
+     * depending on the blueprint settings
+     *
+     * @param integer $num
+     * @return integer
+     */
+    protected function createNum(int $num = null): int
+    {
+        $mode = $this->blueprint()->num();
+
+        switch ($mode) {
+            case 'zero':
+                return 0;
+            case 'default':
+                return $num;
+            default:
+                $template = new Tempura($mode, [
+                    'kirby' => $this->kirby(),
+                    'page'  => $this,
+                    'site'  => $this->site(),
+                ]);
+
+                return intval($template->render());
+        }
+    }
+
+    /**
      * Deletes the page
      *
      * @param bool $force
@@ -210,85 +302,6 @@ trait PageActions
         $this->kirby()->cache('pages')->flush();
 
         return $result;
-    }
-
-    /**
-     * Changes the status to unlisted
-     *
-     * @return self
-     */
-    public function hide(): self
-    {
-        if ($this->isInvisible() === true) {
-            return $this;
-        }
-
-        // TODO: move this to rules
-        if ($this->blueprint()->options()->changeStatus() === false) {
-            throw new Exception('The status for this page cannot be changed');
-        }
-
-        $siblings = $this->siblings()->visible()->not($this);
-        $index    = 0;
-
-        foreach ($siblings as $sibling) {
-            $index++;
-            $sibling->commit('changeNum', $index);
-        }
-
-        return $this->commit('hide');
-    }
-
-    /**
-     * Changes the page number
-     *
-     * @param int $position
-     * @return self
-     */
-    public function sort(int $position): self
-    {
-        // TODO: move this to rules
-        if ($this->isInvisible() === true && empty($this->errors()) === false) {
-            throw new Exception('The page has errors and cannot be published');
-        }
-
-        // TODO: move this to rules
-        if ($this->blueprint()->options()->changeStatus() !== true) {
-            throw new Exception('The status for this page cannot be changed');
-        }
-
-        if ($this->blueprint()->num() === 'default') {
-
-            // get all siblings including the current page
-            $siblings = $this->siblings()->visible();
-
-            // get a non-associative array of ids
-            $keys  = $siblings->keys();
-            $index = array_search($this->id(), $keys);
-
-            // if the page is not included in the siblings
-            // push the page at the end.
-            if ($index === false) {
-                $keys[] = $this->id();
-                $index  = count($keys) - 1;
-            }
-
-            // move the current page number in the array of keys
-            // subtract 1 from the num and the position, because of the
-            // zero-based array keys
-            $sorted = A::move($keys, $index, $position - 1);
-
-            foreach ($sorted as $key => $id) {
-                if ($id === $this->id()) {
-                    $position = $key + 1;
-                } else {
-                    $siblings->findBy('id', $id)->commit('changeNum', $key + 1);
-                }
-            }
-
-        }
-
-        return $this->commit('sort', $position);
     }
 
 }
