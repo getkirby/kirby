@@ -63,66 +63,25 @@ trait PageActions
 
     protected function changeStatusToDraft(): self
     {
-        return $this->commit('changeStatus', 'draft');
-    }
+        $page = $this->commit('changeStatus', 'draft');
+        $this->resortSiblingsAfterUnlisting();
 
-    protected function resortSiblingsAfterListing(int $position): bool
-    {
-        // get all siblings including the current page
-        $siblings = $this->siblings()->listed();
-
-        // get a non-associative array of ids
-        $keys  = $siblings->keys();
-        $index = array_search($this->id(), $keys);
-
-        // if the page is not included in the siblings
-        // push the page at the end.
-        if ($index === false) {
-            $keys[] = $this->id();
-            $index  = count($keys) - 1;
-        }
-
-        // move the current page number in the array of keys
-        // subtract 1 from the num and the position, because of the
-        // zero-based array keys
-        $sorted = A::move($keys, $index, $position - 1);
-
-        foreach ($sorted as $key => $id) {
-            if ($id === $this->id()) {
-                $position = $key + 1;
-            } else {
-                $siblings->findBy('id', $id)->commit('changeNum', $key + 1);
-            }
-        }
-
-        return true;
-    }
-
-    protected function resortSiblingsAfterUnlisting(): bool
-    {
-        $siblings = $this->siblings()->listed()->not($this);
-        $index    = 0;
-
-        foreach ($siblings as $sibling) {
-            $index++;
-            $sibling->commit('changeNum', $index);
-        }
-
-        return true;
+        return $page;
     }
 
     protected function changeStatusToListed(int $position = null): self
     {
-        if ($this->status() === 'listed') {
+        // create a sorting number for the page
+        $num = $this->createNum($position);
+
+        if ($this->status() === 'listed' && $num === $this->num()) {
             return $this;
         }
 
-        // create a sorting number for the page
-        $num  = $this->createNum($position);
         $page = $this->commit('changeStatus', 'listed', $num);
 
         if ($this->blueprint()->num() === 'default') {
-            $this->resortSiblingsAfterListing($num);
+            $page->resortSiblingsAfterListing($num);
         }
 
         return $page;
@@ -135,7 +94,6 @@ trait PageActions
         }
 
         $page = $this->commit('changeStatus', 'unlisted');
-
         $this->resortSiblingsAfterUnlisting();
 
         return $page;
@@ -304,6 +262,51 @@ trait PageActions
         $this->kirby()->cache('pages')->flush();
 
         return $result;
+    }
+
+    protected function resortSiblingsAfterListing(int $position): bool
+    {
+        // get all siblings including the current page
+        $siblings = $this->siblings()->listed();
+
+        // get a non-associative array of ids
+        $keys  = $siblings->keys();
+        $index = array_search($this->id(), $keys);
+
+        // if the page is not included in the siblings
+        // push the page at the end.
+        if ($index === false) {
+            $keys[] = $this->id();
+            $index  = count($keys) - 1;
+        }
+
+        // move the current page number in the array of keys
+        // subtract 1 from the num and the position, because of the
+        // zero-based array keys
+        $sorted = A::move($keys, $index, $position - 1);
+
+        foreach ($sorted as $key => $id) {
+            if ($id === $this->id()) {
+                $position = $key + 1;
+            } else {
+                $siblings->findBy('id', $id)->commit('changeNum', $key + 1);
+            }
+        }
+
+        return true;
+    }
+
+    protected function resortSiblingsAfterUnlisting(): bool
+    {
+        $siblings = $this->siblings()->listed()->not($this);
+        $index    = 0;
+
+        foreach ($siblings as $sibling) {
+            $index++;
+            $sibling->commit('changeNum', $index);
+        }
+
+        return true;
     }
 
 }
