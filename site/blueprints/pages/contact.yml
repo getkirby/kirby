@@ -13,15 +13,20 @@ fields:
       title:
         label: Title
         type: text
+        width: 1/2
       text:
         label: Text
         type: text
+        width: 1/2
       url:
         label: URL
         type: text
+        icon: chain
+        width: 1/2
       linktext:
         label: Link Text
         type: text
+        width: 1/2
   text:
     label: Text
     type: textarea
