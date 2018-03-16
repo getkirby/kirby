@@ -8,14 +8,7 @@ tabs:
 		icon: text
 		columns:
 			- 2/3: content
-			- 1/3: images
-
-	seo:
-		label: SEO
-		icon: search
-		columns:
-			- 1/1: seo
-
+			- 1/3: cover, gallery
 sections:
 
 	# the form for the page
@@ -43,23 +36,25 @@ sections:
 				type: textarea
 				minLength: 10
 
+	cover:
+		headline: Cover
+		type: files
+		query: page.images.filterBy("template", "cover")
+		layout: cards
+		min: 1
+		max: 1
+		accept: image/jpeg
+		create:
+			template: cover
+
+
 	# all images displayed as nice cards
-	images:
-		headline: Images
+	gallery:
+		headline: Gallery
 		type: files
 		query: page.images
 		layout: list
-		min: 2
-		max: 3
 		accept: image/jpeg
+		create:
+			template: image
 
-	# seo fields
-	seo:
-		type: fields
-		fields:
-			metaTitle:
-				label: Meta Title
-				type: text
-			metaDescription:
-				label: Meta Description
-				type: textarea
