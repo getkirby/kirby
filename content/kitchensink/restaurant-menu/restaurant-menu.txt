@@ -5,13 +5,13 @@ Title: Restaurant Menu
 Starters: 
 
 - 
-  dish: Big fat salat
+  dish: Big fat salad
   description: "It's not really a salad"
-  price: 5.5
+  price: 5.99
 - 
   dish: Some Soup
   description: "It's a hot fluid. Could be soup."
-  price: 7
+  price: 7.99
 - 
   dish: Chicken Nuggets
   description: vegetarian
@@ -46,7 +46,7 @@ Meat:
   price: 24.99
 - 
   dish: Beef
-  description: With Majonese
+  description: With mayonnaise
   price: 25.99
 - 
   dish: Pigeon
