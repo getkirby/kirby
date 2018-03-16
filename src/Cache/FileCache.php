@@ -22,9 +22,9 @@ class FileCache extends Cache
      * Set all parameters which are needed for the file cache
      * see defaults for available parameters
      *
-     * @param mixed $params
+     * @param array $params
      */
-    public function __construct($params = [])
+    public function __construct(array $params)
     {
         $defaults = [
             'root'      => null,

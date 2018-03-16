@@ -7,19 +7,11 @@ use PHPUnit\Framework\TestCase;
 class FileTest extends TestCase
 {
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The cache directory does not exist
-     */
-    public function testSetupInvalidPath()
-    {
-        new FileCache('foo');
-    }
-
     public function testSetGetRemove()
     {
-        $root = __DIR__ . '/fixtures/file';
-        $file = new FileCache($root);
+        $file = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file'
+        ]);
 
         $file->set('foo', 'A basic value');
         $this->assertTrue(file_exists($root . '/foo'));
@@ -52,8 +44,9 @@ class FileTest extends TestCase
 
     public function testFlush()
     {
-        $root = __DIR__ . '/fixtures/file';
-        $file = new FileCache($root);
+        $file = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file'
+        ]);
 
         $file->set('a', 'A basic value');
         $file->set('b', 'A basic value');
