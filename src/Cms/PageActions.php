@@ -17,6 +17,9 @@ trait PageActions
      */
     protected function changeNum(int $num = null): self
     {
+        // always make sure to have the right sorting number
+        $num = $this->createNum($num);
+
         if ($num === $this->num()) {
             return $this;
         }
@@ -289,7 +292,7 @@ trait PageActions
             if ($id === $this->id()) {
                 $position = $key + 1;
             } else {
-                $siblings->findBy('id', $id)->commit('changeNum', $key + 1);
+                $siblings->findBy('id', $id)->changeNum($key + 1);
             }
         }
 
@@ -303,7 +306,7 @@ trait PageActions
 
         foreach ($siblings as $sibling) {
             $index++;
-            $sibling->commit('changeNum', $index);
+            $sibling->changeNum($index);
         }
 
         return true;
