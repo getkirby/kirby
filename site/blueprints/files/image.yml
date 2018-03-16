@@ -1,0 +1,13 @@
+title: Image
+
+accept:
+
+
+fields:
+  alt:
+    label: Alt Text
+    type: text
+    required: true
+  caption:
+    label: Caption
+    type: textarea
