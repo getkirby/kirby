@@ -19,6 +19,12 @@ class FieldMethodsTest extends TestCase
         return new ContentField('test', $value);
     }
 
+    public function testFieldMethodCombination()
+    {
+        $field = $this->field('test')->upper()->short(3);
+        $this->assertEquals('TES…', $field->value());
+    }
+
     public function testIsEmpty()
     {
         $this->assertTrue($this->field()->isEmpty());
