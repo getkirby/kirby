@@ -62,6 +62,46 @@ class PageActionsTest extends TestCase
         });
     }
 
+    public function testChangeStatusToUnlisted()
+    {
+        $pageDummmy = $this->pageDummy()->clone([
+            'num' => 1
+        ]);
+
+        $this->assertHooks([
+            'page.changeStatus:before' => function (Page $page, string $status) {
+                $this->assertEquals(1, $page->num());
+                $this->assertEquals('unlisted', $status);
+            },
+            'page.changeStatus:after' => function (Page $newPage, Page $oldPage) {
+                $this->assertEquals(null, $newPage->num());
+                $this->assertEquals(1, $oldPage->num());
+            }
+        ], function () use ($pageDummmy) {
+            $result = $pageDummmy->changeStatus('unlisted');
+            $this->assertEquals(null, $result->num());
+        });
+    }
+
+    public function testChangeSortToListed()
+    {
+        $this->assertHooks([
+            'page.changeStatus:before' => function (Page $page, string $status, int $num = null) {
+                $this->assertEquals(1, $num);
+                $this->assertEquals('listed', $status);
+            },
+            'page.changeStatus:after' => function (Page $newPage, Page $oldPage) {
+                $this->assertEquals(1, $newPage->num());
+                $this->assertEquals(null, $oldPage->num());
+            }
+        ], function () {
+            $result = $this->pageDummy()->changeStatus('listed', 1);
+            $this->assertEquals(1, $result->num());
+        });
+    }
+
+
+
     public function testChangeTemplate()
     {
         $this->assertHooks([
@@ -163,42 +203,6 @@ class PageActionsTest extends TestCase
             }
         ], function () {
             $this->pageDummy()->delete($force = true);
-        });
-    }
-
-    public function testHide()
-    {
-        $pageDummmy = $this->pageDummy()->clone([
-            'num' => 1
-        ]);
-
-        $this->assertHooks([
-            'page.hide:before' => function (Page $page) {
-                $this->assertEquals(1, $page->num());
-            },
-            'page.hide:after' => function (Page $newPage, Page $oldPage) {
-                $this->assertEquals(null, $newPage->num());
-                $this->assertEquals(1, $oldPage->num());
-            }
-        ], function () use ($pageDummmy) {
-            $result = $pageDummmy->hide(1);
-            $this->assertEquals(null, $result->num());
-        });
-    }
-
-    public function testSort()
-    {
-        $this->assertHooks([
-            'page.sort:before' => function (Page $page, int $num = null) {
-                $this->assertEquals(1, $num);
-            },
-            'page.sort:after' => function (Page $newPage, Page $oldPage) {
-                $this->assertEquals(1, $newPage->num());
-                $this->assertEquals(null, $oldPage->num());
-            }
-        ], function () {
-            $result = $this->pageDummy()->sort(1);
-            $this->assertEquals(1, $result->num());
         });
     }
 
