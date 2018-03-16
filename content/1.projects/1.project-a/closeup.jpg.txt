@@ -1,0 +1,17 @@
+Template: cover
+
+----
+
+Alt: 
+
+----
+
+Fullwidth: false
+
+----
+
+Caption: 
+
+----
+
+Align: center

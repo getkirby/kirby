@@ -1,13 +1,17 @@
-title: Image
+title: Cover
 
 fields:
   alt:
     label: Alt Text
     type: text
     width: 1/2
-  link:
-    label: Link
-    type: url
+  align:
+    label: Align
+    type: select
+    options:
+      - left
+      - center
+      - right
     width: 1/2
   caption:
     label: Caption

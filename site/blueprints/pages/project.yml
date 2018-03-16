@@ -20,7 +20,7 @@ sections:
 				type: text
 				required: true
 				minLength: 10
-				maxLength: 20
+				maxLength: 140
 				width: 3/4
 			year:
 				label: Year
@@ -34,7 +34,6 @@ sections:
 			text:
 				label: Text
 				type: textarea
-				minLength: 10
 
 	cover:
 		headline: Cover
@@ -52,7 +51,7 @@ sections:
 	gallery:
 		headline: Gallery
 		type: files
-		query: page.images
+		query: page.images.filterBy("template", "image")
 		layout: list
 		accept: image/jpeg
 		create:
