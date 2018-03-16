@@ -26,7 +26,9 @@ sections:
 		fields:
 			price:
 				label: Price
-				type: text
+				type: number
+				step: 0.01
+				prefix: €
 			design:
 				label: Design by …
 				type: text

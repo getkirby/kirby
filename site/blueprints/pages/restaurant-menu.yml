@@ -16,6 +16,7 @@ fields:
       price:
         label: Price
         type: number
+        prefix: €
         step: 0.01
         width: 1/3
 
@@ -34,6 +35,7 @@ fields:
       price:
         label: Price
         type: number
+        prefix: €
         step: 0.01
         width: 1/3
 
@@ -52,6 +54,7 @@ fields:
       price:
         label: Price
         type: number
+        prefix: €
         step: 0.01
         width: 1/3
 
@@ -70,5 +73,6 @@ fields:
       price:
         label: Price
         type: number
+        prefix: €
         step: 0.01
         width: 1/3
