@@ -21,10 +21,6 @@ sections:
       date:
         label: Date
         type: datetime
-      author:
-        label: Author
-        type: user
-        icon: user
       tags:
         label: Tags
         type: tags
