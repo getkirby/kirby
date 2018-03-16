@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 class PageActionsTestStore extends PageStoreDefault
 {
 
@@ -99,8 +101,6 @@ class PageActionsTest extends TestCase
             $this->assertEquals(1, $result->num());
         });
     }
-
-
 
     public function testChangeTemplate()
     {
@@ -243,6 +243,37 @@ class PageActionsTest extends TestCase
                 'text'     => 'Test'
             ]);
         });
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Nope
+     */
+    public function testUpdateException()
+    {
+        $app = new App([
+            'hooks' => [
+                'page.update:before' => function () {
+                    throw new Exception('Nope');
+                }
+            ]
+        ]);
+
+        $page = $this->pageDummy();
+        $page = $page->clone([
+            'blueprint' => new PageBlueprint([
+                'name'   => 'test',
+                'title'  => 'test',
+                'model'  => $page,
+                'fields' => [
+                    'headline' => [
+                        'type' => 'text'
+                    ]
+                ]
+            ])
+        ]);
+
+        $page->update(['headline' => 'test']);
     }
 
 }
