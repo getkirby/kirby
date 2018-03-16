@@ -2,9 +2,9 @@ title: Projects
 
 sections:
   drafts:
-    headline: Unpublished Projects
+    headline: Projects Drafts
     type: pages
-    query: page.children.invisible
+    query: page.drafts
     item:
       info: "{{ page.year }}"
     create: project
@@ -15,7 +15,7 @@ sections:
       de_DE: Veröffentlicht
     type: pages
     layout: cards
-    query: page.children.visible
+    query: page.children
     item:
       info: "{{ page.year }}"
 

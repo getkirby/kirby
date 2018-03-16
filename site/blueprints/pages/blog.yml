@@ -7,7 +7,7 @@ sections:
   drafts:
     headline: Unpublished articles
     type: pages
-    query: page.children.invisible
+    query: page.drafts
     item:
       info: "{{ page.date('d.m.Y') }}"
     create: article
@@ -15,6 +15,6 @@ sections:
   published:
     headline: Published articles
     type: pages
-    query: page.children.visible.flip
+    query: page.children.flip
     item:
       info: "{{ page.date('d.m.Y') }}"
