@@ -49,7 +49,11 @@ return function (App $app) {
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
         },
         'toDate' => function ($format = null) {
-            return $format === null ? $this->toTimestamp() : date($format, $this->toTimestamp());
+            if (empty($this->value()) === false) {
+                return $format === null ? $this->toTimestamp() : date($format, $this->toTimestamp());
+            }
+
+            return null;
         },
         'toExcerpt' => function () {
             return $this;
