@@ -1,6 +1,10 @@
 title: About
 
 
+columns:
+  - 1/2: content
+  - 1/2: hires, team
+
 sections:
 
   content:
@@ -13,9 +17,18 @@ sections:
         label: Text
         type: textarea
 
+  hires:
+    headline: New Team Members
+    query: page.drafts
+    type: pages
+    layout: list
+    create: team
+    item:
+      info: "{{ page.position }}"
+
   team:
     headline: Team
     type: pages
-    layout: cards
+    layout: list
     item:
       info: "{{ page.position }}"

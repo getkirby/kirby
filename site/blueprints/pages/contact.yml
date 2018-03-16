@@ -8,7 +8,6 @@ fields:
   contactoptions:
     label: Contact Options
     type: structure
-    style: table
     fields:
       title:
         label: Title
@@ -27,6 +26,16 @@ fields:
         label: Link Text
         type: text
         width: 1/2
-  text:
-    label: Text
-    type: textarea
+  twitter:
+    label: Follow the Kirby Team on Twitter …
+    type: structure
+    fields:
+      name:
+        label: Team Member
+        type: text
+        width: 1/2
+      twitter:
+        label: Twitter Username
+        type: text
+        icon: twitter
+        width: 1/2
