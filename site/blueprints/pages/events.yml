@@ -13,7 +13,15 @@ sections:
   published:
     type: pages
     headline: Published events
-    query: page.children.sortBy("from", "asc")
+    query: page.children.listed.sortBy("from", "asc")
+    create: event
+    item:
+      info: "{{ page.from.toDate('d.m.Y') }} - {{ page.to.toDate('d.m.Y') }} / {{ page.location }}"
+
+  unlisted:
+    type: pages
+    headline: Unlisted events
+    query: page.children.unlisted.sortBy("from", "asc")
     create: event
     item:
       info: "{{ page.from.toDate('d.m.Y') }} - {{ page.to.toDate('d.m.Y') }} / {{ page.location }}"
