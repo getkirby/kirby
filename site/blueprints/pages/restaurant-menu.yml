@@ -1,0 +1,70 @@
+title: Restaurant Menu
+
+fields:
+  starters:
+    label: Starters
+    type: structure
+    fields:
+      dish:
+        label: Dish
+        type: text
+        width: 1/3
+      description:
+        label: Description
+        type: text
+        width: 1/3
+      price:
+        label: Price
+        type: number
+        width: 1/3
+
+  pasta:
+    label: Pasta
+    type: structure
+    fields:
+      dish:
+        label: Dish
+        type: text
+        width: 1/3
+      description:
+        label: Description
+        type: text
+        width: 1/3
+      price:
+        label: Price
+        type: number
+        width: 1/3
+
+  meat:
+    label: Meat
+    type: structure
+    fields:
+      dish:
+        label: Dish
+        type: text
+        width: 1/3
+      description:
+        label: Description
+        type: text
+        width: 1/3
+      price:
+        label: Price
+        type: number
+        width: 1/3
+
+  desert:
+    label: Desert
+    type: structure
+    fields:
+      dish:
+        label: Dish
+        type: text
+        width: 1/3
+      description:
+        label: Description
+        type: text
+        width: 1/3
+      price:
+        label: Price
+        type: number
+        width: 1/3
