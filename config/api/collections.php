@@ -4,6 +4,7 @@ use Kirby\Cms\Children;
 use Kirby\Cms\Files;
 use Kirby\Cms\Locales;
 use Kirby\Cms\Pages;
+use Kirby\Cms\Roles;
 use Kirby\Cms\Users;
 
 /**
@@ -43,6 +44,15 @@ return [
     'pages' => [
         'model' => 'page',
         'type'  => Pages::class,
+        'view'  => 'compact'
+    ],
+
+    /**
+     * Roles
+     */
+    'roles' => [
+        'model' => 'role',
+        'type'  => Roles::class,
         'view'  => 'compact'
     ],
 

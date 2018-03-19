@@ -107,4 +107,12 @@ abstract class Model extends Component
         return $this;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'name'  => $this->name(),
+            'title' => $this->title(),
+        ];
+    }
+
 }

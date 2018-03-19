@@ -3,7 +3,7 @@
 use Kirby\Cms\Locale;
 
 /**
- * User
+ * Locale
  */
 return [
     'fields' => [
