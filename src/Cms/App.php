@@ -263,6 +263,16 @@ class App extends Component
     }
 
     /**
+     * Returns all user roles
+     *
+     * @return Roles
+     */
+    public function roles(): Roles
+    {
+        return $this->component('roles');
+    }
+
+    /**
      * Returns a system root
      *
      * @param string $type

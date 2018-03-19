@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 class Role extends Model
 {
 
@@ -15,7 +17,19 @@ class Role extends Model
 
     public static function factory(string $name): self
     {
-        $props = Blueprint::load('users/' . $name);
+        try {
+            $props = Blueprint::load('users/' . $name);
+        } catch (Exception $e) {
+            if (in_array($name, ['admin', 'nobody'], true) === false) {
+                throw new Exception(sprintf('The role "%s" does not exist', $name));
+            }
+
+            $props = [
+                'name'  => $name,
+                'title' => ucfirst($name)
+            ];
+        }
+
         return new static($props);
     }
 

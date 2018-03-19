@@ -90,6 +90,13 @@ return function ($app) {
                 return Kirby\Cms\Response::for($input);
             }
         ],
+        'Roles' => [
+            'singleton' => true,
+            'type'      => Kirby\Cms\Roles::class,
+            'instance'  => function () {
+                return Kirby\Cms\Roles::factory();
+            }
+        ],
         'Router' => [
             'singleton' => true,
             'type'      => Kirby\Http\Router::class,
