@@ -11,6 +11,22 @@ class Role extends Model
     protected $name;
     protected $title;
 
+    protected static function defaults()
+    {
+        return [
+            'admin' => [
+                'description' => 'The admin has all rights',
+                'name'        => 'admin',
+                'title'       => 'Admin'
+            ],
+            'nobody' => [
+                'description' => 'This is a fallback role without any permissions',
+                'name'        => 'nobody',
+                'title'       => 'Nobody'
+            ]
+        ];
+    }
+
     public function __construct(array $props)
     {
         $this->setProperties($props);
@@ -21,14 +37,13 @@ class Role extends Model
         try {
             $props = Blueprint::load('users/' . $name);
         } catch (Exception $e) {
-            if (in_array($name, ['admin', 'nobody'], true) === false) {
+            $defaults = static::defaults();
+
+            if (array_key_exists($name, $defaults) === false) {
                 throw new Exception(sprintf('The role "%s" does not exist', $name));
             }
 
-            $props = [
-                'name'  => $name,
-                'title' => ucfirst($name)
-            ];
+            $props = $defaults[$name];
         }
 
         return new static($props);

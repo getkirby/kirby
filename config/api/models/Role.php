@@ -7,6 +7,9 @@ use Kirby\Cms\Role;
  */
 return [
     'fields' => [
+        'description' => function (Role $role) {
+            return $role->description();
+        },
         'name' => function (Role $role) {
             return $role->name();
         },
@@ -17,6 +20,7 @@ return [
     'type'  => Role::class,
     'views' => [
         'compact' => [
+            'description',
             'name',
             'title'
         ]
