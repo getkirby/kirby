@@ -118,7 +118,11 @@ class User extends Model
         try {
             return $this->blueprint = UserBlueprint::factory('users/' . $this->role(), 'users/default', $this);
         } catch (Exception $e) {
-            return $this->blueprint = null;
+            return $this->blueprint = new UserBlueprint([
+                'model' => $this,
+                'name'  => 'default',
+                'title' => 'Default',
+            ]);
         }
     }
 
