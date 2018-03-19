@@ -50,6 +50,15 @@ class Permissions
         }
     }
 
+    public function for(string $category, string $action): bool
+    {
+        if ($this->hasAction($category, $action) === false) {
+            throw new Exception('Invalid permission action');
+        }
+
+        return $this->actions[$category][$action];
+    }
+
     protected function hasAction(string $category, string $action)
     {
         return $this->hasCategory($category) === true && array_key_exists($action, $this->actions[$category]) === true;

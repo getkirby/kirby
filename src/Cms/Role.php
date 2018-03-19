@@ -9,6 +9,7 @@ class Role extends Model
 
     protected $description;
     protected $name;
+    protected $permissions;
     protected $title;
 
     protected static function defaults()
@@ -17,12 +18,14 @@ class Role extends Model
             'admin' => [
                 'description' => 'The admin has all rights',
                 'name'        => 'admin',
-                'title'       => 'Admin'
+                'title'       => 'Admin',
+                'permissions' => true,
             ],
             'nobody' => [
                 'description' => 'This is a fallback role without any permissions',
                 'name'        => 'nobody',
-                'title'       => 'Nobody'
+                'title'       => 'Nobody',
+                'permissions' => false,
             ]
         ];
     }
@@ -64,6 +67,11 @@ class Role extends Model
         return $this->name;
     }
 
+    public function permissions(): Permissions
+    {
+        return $this->permissions;
+    }
+
     protected function setDescription(string $description = null): self
     {
         $this->description = $description;
@@ -73,6 +81,12 @@ class Role extends Model
     protected function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    protected function setPermissions($permissions = null): self
+    {
+        $this->permissions = new Permissions($permissions);
         return $this;
     }
 
