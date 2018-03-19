@@ -19,6 +19,11 @@ class Role extends Model
         return new static($props);
     }
 
+    public function id(): string
+    {
+        return $this->name();
+    }
+
     public function name(): string
     {
         return $this->name;
