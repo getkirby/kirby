@@ -33,7 +33,13 @@ class Roles extends Collection
             $roles->set($role->name(), $role);
         }
 
-        return $roles;
+        // always include the admin role
+        if ($roles->find('admin') === null) {
+            $roles->set('admin', Role::factory('admin'));
+        }
+
+        // return the collection sorted by name
+        return $roles->sortBy('name', 'asc');
     }
 
 }
