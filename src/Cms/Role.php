@@ -7,6 +7,7 @@ use Exception;
 class Role extends Model
 {
 
+    protected $description;
     protected $name;
     protected $title;
 
@@ -33,6 +34,11 @@ class Role extends Model
         return new static($props);
     }
 
+    public function description()
+    {
+        return $this->description;
+    }
+
     public function id(): string
     {
         return $this->name();
@@ -41,6 +47,12 @@ class Role extends Model
     public function name(): string
     {
         return $this->name;
+    }
+
+    protected function setDescription(string $description = null): self
+    {
+        $this->description = $description;
+        return $this;
     }
 
     protected function setName(string $name): self

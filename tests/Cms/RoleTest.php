@@ -17,12 +17,14 @@ class RoleTest extends TestCase
     public function testProps()
     {
         $role = new Role([
+            'description' => 'Test',
             'name'  => 'admin',
             'title' => 'Admin'
         ]);
 
         $this->assertEquals('admin', $role->name());
         $this->assertEquals('Admin', $role->title());
+        $this->assertEquals('Test', $role->description());
     }
 
     public function testFactory()
