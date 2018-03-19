@@ -9,17 +9,8 @@ use Kirby\Image\Darkroom;
 class GdLib extends Darkroom
 {
 
-    protected $defaults = [
-        'autoOrient' => true,
-        'crop'       => false,
-        'blur'       => false,
-        'quality'    => 100,
-        'grayscale'  => false,
-    ];
-
     public function process(string $file, array $options = []): array
     {
-
         $options = $this->preprocess($file, $options);
 
         $image = new SimpleImage();
@@ -33,7 +24,6 @@ class GdLib extends Darkroom
         $image->toFile($file, null, $options['quality']);
 
         return $options;
-
     }
 
     protected function autoOrient(SimpleImage $image, $options)

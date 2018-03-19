@@ -13,10 +13,9 @@ return function ($app) {
         'Darkroom' => [
             'singleton' => true,
             'type'      => Kirby\Image\Darkroom::class,
-            'instance'  => function () {
-                return new Kirby\Image\Darkroom\GdLib([
-                    'quality' => 80
-                ]);
+            'instance'  => function () use ($app) {
+                $options = (array)$app->option('thumbs');
+                return Kirby\Image\Darkroom::factory($options['driver'] ?? 'gd', $options);
             }
         ],
         'Kirbytext' => [

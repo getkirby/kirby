@@ -247,6 +247,7 @@ class App extends Component
         try {
             return $this->component('response', $this->call($path, $method));
         } catch (Throwable $e) {
+            error_log($e);
             return $this->component('response', $e);
         }
     }
