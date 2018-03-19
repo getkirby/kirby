@@ -11,8 +11,6 @@ class BlueprintObject extends Component
     use I18n;
     use HasModel;
 
-    protected static $mixins = [];
-
     /**
      * The parent collection
      *
@@ -22,7 +20,7 @@ class BlueprintObject extends Component
 
     public function __construct(array $props = [])
     {
-        $props = $this->extend($props);
+        $props = Blueprint::extend($props);
         $this->setProperties($props);
     }
 
@@ -34,39 +32,6 @@ class BlueprintObject extends Component
     protected function collection()
     {
         return $this->collection;
-    }
-
-    protected function extend($props)
-    {
-        if (isset($props['extends']) === false) {
-            return $props;
-        }
-
-        if ($mixin = static::mixin($props['extends'])) {
-            $props = array_replace_recursive($mixin, $props);
-        }
-
-        unset($props['extends']);
-
-        return $props;
-    }
-
-    public static function mixin(string $path, array $mixin = null): array
-    {
-        if ($mixin === null) {
-            return static::$mixins[$path] ?? null;
-        }
-
-        return static::$mixins[$path] = $mixin;
-    }
-
-    public static function mixins(array $mixins = null): array
-    {
-        if ($mixins === null) {
-            return static::$mixins;
-        }
-
-        return static::$mixins = $mixins;
     }
 
     /**

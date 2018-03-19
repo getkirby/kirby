@@ -75,12 +75,14 @@ class BlueprintTabs
                 throw new Exception('Missing tab name');
             }
 
+            $tab = Blueprint::extend($tab);
+
             if (empty($tab['label']) === true) {
                 throw new Exception('The tab label is missing');
             }
 
             if (empty($tab['columns']) === true) {
-                throw new Exception('The columns missing');
+                throw new Exception('The columns are undefined or empty');
             }
 
             // use the key as name if the name is not already set

@@ -143,7 +143,7 @@ class Page extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = PageBlueprint::load('pages/' . $this->template(), 'pages/default', $this);
+        return $this->blueprint = PageBlueprint::factory('pages/' . $this->template(), 'pages/default', $this);
     }
 
     /**

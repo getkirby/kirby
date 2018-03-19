@@ -22,6 +22,11 @@ class Blueprint extends BlueprintObject
 {
 
     /**
+     * All registered blueprint extensions
+     */
+    public static $mixins = [];
+
+    /**
      * Cache for the fields collection
      *
      * @var BlueprintCollection
@@ -70,7 +75,7 @@ class Blueprint extends BlueprintObject
      */
     public function __construct(array $props = [])
     {
-        $props = $this->extend($props);
+        $props = static::extend($props);
         $props = BlueprintConverter::convertFieldsToSection($props);
         $props = BlueprintConverter::convertSectionsToColumns($props);
         $props = BlueprintConverter::convertColumnsToTabs($props);
@@ -100,6 +105,60 @@ class Blueprint extends BlueprintObject
     {
         return $this->options()->toArray();
     }
+
+    /**
+     * Extend blueprints props with a mixin
+     *
+     * @param array|string $props
+     * @return array
+     */
+    public static function extend($props): array
+    {
+        if (is_string($props) === true) {
+            $props = [
+                'extends' => $props
+            ];
+        }
+
+        if (isset($props['extends']) === false) {
+            return $props;
+        }
+
+        if ($mixin = static::mixin($props['extends'])) {
+            $props = array_replace_recursive($mixin, $props);
+        }
+
+        unset($props['extends']);
+
+        return $props;
+    }
+
+    /**
+     * Create a new blueprint for a model
+     *
+     * @param string $name
+     * @param string $fallback
+     * @param Model $model
+     * @return self
+     */
+    public static function factory(string $name, string $fallback = null, Model $model)
+    {
+        try {
+            $props = static::load($name);
+        } catch (Exception $e) {
+            $props = $fallback !== null ? static::load($name) : null;
+        }
+
+        if ($props === null) {
+            return null;
+        }
+
+        // inject the parent model
+        $props['model'] = $model;
+
+        return new static($props);
+    }
+
 
     /**
      * Returns a specific field from the blueprint
@@ -144,23 +203,6 @@ class Blueprint extends BlueprintObject
         return $this->fields = $fields;
     }
 
-    /**
-     * Checks if this is the default blueprint
-     *
-     * @return bool
-     */
-    public function isDefault(): bool
-    {
-        return $this->name() === 'default';
-    }
-
-    /**
-     * @return BlueprintTabs
-     */
-    public function tabs(): BlueprintTabs
-    {
-        return $this->tabs;
-    }
 
     /**
      * Find a blueprint by name
@@ -186,6 +228,39 @@ class Blueprint extends BlueprintObject
     }
 
     /**
+     * Checks if this is the default blueprint
+     *
+     * @return bool
+     */
+    public function isDefault(): bool
+    {
+        return $this->name() === 'default';
+    }
+
+    /**
+     * Load a blueprint mixin from file or extension
+     *
+     * @param string $path
+     * @return array
+     */
+    public static function mixin(string $path): array
+    {
+        if (isset(static::$mixins[$path]) === true) {
+            return static::$mixins[$path];
+        }
+
+        try {
+            return static::$mixins[$path] = static::load($path);
+        } catch (Exception $e) {
+            if ($mixin = App::instance()->extension('blueprints', $path)) {
+                return static::$mixins[$path] = $mixin;
+            }
+
+            throw new Exception(sprintf('The mixin "%s" does not exist', $path));
+        }
+    }
+
+    /**
      * Loads a blueprint from file or array
      *
      * @param string $name
@@ -193,28 +268,21 @@ class Blueprint extends BlueprintObject
      * @param Model $model
      * @return self
      */
-    public static function load(string $name, string $fallback = null, Model $model)
+    public static function load(string $name)
     {
-        try {
-            $file = static::find($name);
-        } catch (Exception $e) {
-            $file = $fallback !== null ? static::find($fallback) : null;
+        $props = static::find($name);
+
+        if (is_array($props) === true) {
+            return $props;
         }
 
-        if ($file === null) {
-            return null;
-        }
+        $file  = $props;
+        $props = Data::read($file);
 
-        if (is_array($file) === true) {
-            $data = $file;
-            $data['model'] = $model;
-        } else {
-            $data          = Data::read($file);
-            $data['name']  = F::name($file);
-            $data['model'] = $model;
-        }
+        // inject the filename as name if no name is set
+        $props['name'] = $props['name'] ?? F::name($file);
 
-        return new static($data);
+        return $props;
     }
 
     /**
@@ -267,6 +335,9 @@ class Blueprint extends BlueprintObject
         $sections = new BlueprintCollection;
 
         foreach ((array)$this->sections as $name => $props) {
+            // section extensions
+            $props = Blueprint::extend($props);
+
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
 
@@ -278,16 +349,6 @@ class Blueprint extends BlueprintObject
         }
 
         return $this->sections = $sections;
-    }
-
-    /**
-     * Returns the Blueprint title
-     *
-     * @return string
-     */
-    public function title(): string
-    {
-        return $this->title;
     }
 
     /**
@@ -328,6 +389,24 @@ class Blueprint extends BlueprintObject
     {
         $this->title = $this->i18n($title);
         return $this;
+    }
+
+    /**
+     * @return BlueprintTabs
+     */
+    public function tabs(): BlueprintTabs
+    {
+        return $this->tabs;
+    }
+
+    /**
+     * Returns the Blueprint title
+     *
+     * @return string
+     */
+    public function title(): string
+    {
+        return $this->title;
     }
 
 }

@@ -79,7 +79,13 @@ class BlueprintFieldsSection extends BlueprintSection
 
     protected function setFields(array $fields): self
     {
-        $this->fields = $fields;
+        foreach ($fields as $name => $field) {
+            $field = Blueprint::extend($field);
+            $field['name'] = $name;
+
+            $this->fields[$name] = $field;
+        }
+
         return $this;
     }
 

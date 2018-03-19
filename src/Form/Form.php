@@ -62,7 +62,6 @@ class Form extends Component
         $fields = [];
 
         foreach ($this->fields as $name => $field) {
-
             $field['locale'] = $locale;
             $field['model']  = $model;
             $field['name']   = $name = $field['name'] ?? $name;

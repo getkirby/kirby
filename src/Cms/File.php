@@ -138,7 +138,7 @@ class File extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = FileBlueprint::load('files/' . $this->template(), 'files/default', $this);
+        return $this->blueprint = FileBlueprint::factory('files/' . $this->template(), 'files/default', $this);
     }
 
     /**

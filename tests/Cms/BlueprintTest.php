@@ -142,7 +142,7 @@ class BlueprintTest extends TestCase
             ]
         ]);
 
-        $blueprint = Blueprint::load('test', null, new Page(['slug' => 'test']));
+        $blueprint = Blueprint::factory('test', null, new Page(['slug' => 'test']));
 
         $this->assertCount(3, $blueprint->sections());
         $this->assertEquals('fields', $blueprint->sections()->first()->name());
@@ -160,7 +160,7 @@ class BlueprintTest extends TestCase
             ]
         ]);
 
-        $blueprint = Blueprint::load('fields', null, new Page(['slug' => 'test']));
+        $blueprint = Blueprint::factory('fields', null, new Page(['slug' => 'test']));
         $this->assertEquals('fields', $blueprint->sections()->first()->name());
     }
 

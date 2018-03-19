@@ -111,7 +111,7 @@ class Site extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = SiteBlueprint::load('site', null, $this);
+        return $this->blueprint = SiteBlueprint::factory('site', null, $this);
     }
 
     /**
