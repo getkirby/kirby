@@ -144,32 +144,6 @@ return function ($app) {
                 return new Kirby\Cms\Template($name, $data, $appendix);
             }
         ],
-        'Users' => [
-            'singleton' => true,
-            'type'      => Kirby\Cms\Users::class,
-            'instance'  => function () use ($app) {
-
-                $users = new Kirby\Cms\Users();
-                $root  = $app->root('accounts');
-
-                foreach (Kirby\Util\Dir::read($root) as $userDirectory) {
-
-                    if (is_dir($root . '/' . $userDirectory) === false) {
-                        continue;
-                    }
-
-                    $user = new Kirby\Cms\User([
-                        'email' => $userDirectory,
-                        'store' => Kirby\Cms\UserStore::class
-                    ]);
-
-                    $users->set($user->id(), $user);
-                }
-
-                return $users;
-
-            }
-        ]
     ];
 
 };

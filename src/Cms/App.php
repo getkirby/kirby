@@ -32,6 +32,7 @@ class App extends Component
     protected $routes;
     protected $site;
     protected $urls;
+    protected $users;
 
     /**
      * Creates a new App instance
@@ -395,6 +396,26 @@ class App extends Component
     }
 
     /**
+     * Create your own set of app users
+     *
+     * @param array $users
+     * @return self
+     */
+    protected function setUsers(array $users = null): self
+    {
+        if ($users !== null) {
+            $this->users = new Users();
+
+            foreach ($users as $props) {
+                $user = new User($props);
+                $this->users->append($user->id(), $user);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns the Server singleton
      *
      * @return Server
@@ -479,7 +500,11 @@ class App extends Component
      */
     public function users(): Users
     {
-        return $this->component('users');
+        if (is_a($this->users, Users::class) === true) {
+            return $this->users;
+        }
+
+        return $this->users = Users::factory($this);
     }
 
 }
