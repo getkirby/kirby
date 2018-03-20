@@ -177,6 +177,25 @@ class User extends Model
     }
 
     /**
+     * Hashes user password
+     *
+     * @param string|null $password
+     * @return string|null
+     */
+    public function hashPassword($password)
+    {
+        if ($password !== null) {
+            $info = password_get_info($password);
+
+            if ($info['algo'] === 0) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+            }
+        }
+
+        return $password;
+    }
+
+    /**
      * Returns the user id
      *
      * @return string
@@ -283,13 +302,31 @@ class User extends Model
     }
 
     /**
+     * @param string $category
+     * @param string $action
+     * @return array|bool
+     */
+    public function permissions(string $category = null, string $action = null)
+    {
+        if ($category === null) {
+            return $this->role()->permissions()->toArray();
+        }
+
+        return $this->role()->permissions()->for($category, $action);
+    }
+
+    /**
      * Returns the user role
      *
      * @return string
      */
-    public function role(): string
+    public function role(): Role
     {
-        return $this->role ?? $this->role = $this->store()->role();
+        if (is_a($this->role, Role::class) === true) {
+            return $this->role;
+        }
+
+        return $this->role = Role::factory($this->store()->role(), 'nobody');
     }
 
     /**
@@ -387,22 +424,6 @@ class User extends Model
         }
 
         return true;
-    }
-
-    /**
-     * Hashes user password
-     */
-    public function hashPassword($password)
-    {
-        if ($password !== null) {
-            $info = password_get_info($password);
-
-            if ($info['algo'] === 0) {
-                $password = password_hash($password, PASSWORD_DEFAULT);
-            }
-        }
-
-        return $password;
     }
 
 }
