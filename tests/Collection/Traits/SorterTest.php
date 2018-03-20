@@ -2,14 +2,28 @@
 
 namespace Kirby\Collection\Traits;
 
-use Kirby\Cms\ContentField;
 use Kirby\Collection\Collection;
 
 use PHPUnit\Framework\TestCase;
 
-class SorterTest extends TestCase
+class MockObject
 {
 
+    protected $value;
+
+    public function __construct(string $value)
+    {
+        $this->value = $value;
+    }
+
+    public function __toString() {
+        return (string)$this->value;
+    }
+
+}
+
+class SorterTest extends TestCase
+{
 
     public function testSortBy()
     {
@@ -107,9 +121,9 @@ class SorterTest extends TestCase
 
     public function testSortObjects()
     {
-        $bastian = new ContentField('name', 'Bastian');
-        $nico    = new ContentField('name', 'Nico');
-        $sonja   = new ContentField('name', 'Sonja');
+        $bastian = new MockObject('Bastian');
+        $nico    = new MockObject('Nico');
+        $sonja   = new MockObject('Sonja');
 
         $collection = new Collection([
             ['name' => $nico],
