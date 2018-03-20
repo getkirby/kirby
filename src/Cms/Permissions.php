@@ -16,12 +16,13 @@ class Permissions
             'update' => true
         ],
         'page' => [
-            'changeTemplate' => true,
-            'changeTitle' => true,
             'changeSlug' => true,
             'changeStatus' => true,
+            'changeTemplate' => true,
+            'changeTitle' => true,
             'create' => true,
             'delete' => true,
+            'preview' => true,
             'update' => true
         ],
         'site' => [
@@ -50,10 +51,18 @@ class Permissions
         }
     }
 
-    public function for(string $category, string $action): bool
+    public function for(string $category = null, string $action = null)
     {
+        if ($action === null) {
+            if ($this->hasCategory($category) === false) {
+                return false;
+            }
+
+            return $this->actions[$category];
+        }
+
         if ($this->hasAction($category, $action) === false) {
-            throw new Exception('Invalid permission action');
+            return false;
         }
 
         return $this->actions[$category][$action];
