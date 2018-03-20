@@ -18,12 +18,8 @@ class PageRules
 
     public static function changeSlug(Page $page, string $slug): bool
     {
-        if ($page->isHomePage() === true) {
-            throw new Exception('The slug of the home page cannot be changed');
-        }
-
-        if ($page->isErrorPage() === true) {
-            throw new Exception('The slug of the error page cannot be changed');
+        if ($page->permissions()->changeSlug() !== true) {
+            throw new Exception('The slug for this page cannot be changed');
         }
 
         if ($duplicate = $page->siblings()->not($page)->find($slug)) {
@@ -35,10 +31,6 @@ class PageRules
 
     public static function changeStatus(Page $page, string $status, int $position = null): bool
     {
-        if ($page->blueprint()->options()->changeStatus() !== true) {
-            throw new Exception('The status for this page cannot be changed');
-        }
-
         switch ($status) {
             case 'draft':
                 return static::changeStatusToDraft($page);
@@ -53,11 +45,19 @@ class PageRules
 
     public static function changeStatusToDraft(Page $page)
     {
+        if ($page->permissions()->changeStatus() !== true) {
+            throw new Exception('The status for this page cannot be changed');
+        }
+
         return true;
     }
 
     public static function changeStatusToListed(Page $page, int $position)
     {
+        if ($page->permissions()->changeStatus() !== true) {
+            throw new Exception('The status for this page cannot be changed');
+        }
+
         if ($position !== null && $position < 0) {
             throw new Exception('Invalid position');
         }
@@ -71,21 +71,37 @@ class PageRules
 
     public static function changeStatusToUnlisted(Page $page)
     {
+        if ($page->permissions()->changeStatus() !== true) {
+            throw new Exception('The status for this page cannot be changed');
+        }
+
         return true;
     }
 
     public static function changeTemplate(Page $page, string $template): bool
     {
+        if ($page->permissions()->changeTemplate() !== true) {
+            throw new Exception('The template for this page cannot be changed');
+        }
+
         return true;
     }
 
     public static function changeTitle(Page $page, string $title): bool
     {
+        if ($page->permissions()->changeTitle() !== true) {
+            throw new Exception('The title for this page cannot be changed');
+        }
+
         return true;
     }
 
     public static function create(Page $page): bool
     {
+        if ($page->permissions()->create() !== true) {
+            throw new Exception('This page cannot be created');
+        }
+
         $siblings = $page->parentModel()->children();
         $drafts   = $page->parentModel()->drafts();
         $slug     = $page->slug();
@@ -103,6 +119,10 @@ class PageRules
 
     public static function delete(Page $page, bool $force = false): bool
     {
+        if ($page->permissions()->create() !== true) {
+            throw new Exception('This page cannot be deleted');
+        }
+
         if ($page->exists() === false) {
             throw new Exception('The page does not exist');
         }
@@ -111,19 +131,15 @@ class PageRules
             throw new Exception('The page has children');
         }
 
-        if ($page->isHomePage()) {
-            throw new Exception('The home page cannot be deleted');
-        }
-
-        if ($page->isErrorPage()) {
-            throw new Exception('The error page cannot be deleted');
-        }
-
         return true;
     }
 
     public static function update(Page $page, array $content = []): bool
     {
+        if ($page->permissions()->update() !== true) {
+            throw new Exception('This page cannot be updated');
+        }
+
         return true;
     }
 

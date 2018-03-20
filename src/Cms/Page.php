@@ -626,6 +626,16 @@ class Page extends Model
     }
 
     /**
+     * Returns the permissions object for this page
+     *
+     * @return BlueprintOptions
+     */
+    public function permissions()
+    {
+        return $this->blueprint()->options();
+    }
+
+    /**
      * Returns the previous invisible page
      *
      * @return self|null
