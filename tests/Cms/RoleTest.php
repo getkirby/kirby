@@ -30,7 +30,7 @@ class RoleTest extends TestCase
     public function testFactory()
     {
         $app  = $this->app();
-        $role = Role::factory('editor');
+        $role = Role::load('editor');
 
         $this->assertEquals('editor', $role->name());
         $this->assertEquals('Editor', $role->title());
@@ -45,22 +45,22 @@ class RoleTest extends TestCase
     public function testMissingRole()
     {
         $app  = $this->app();
-        $role = Role::factory('does-not-exist');
+        $role = Role::load('does-not-exist');
     }
 
-    public function testAdminFactory()
+    public function testAdmin()
     {
         $app  = $this->app();
-        $role = Role::factory('admin');
+        $role = Role::admin();
 
         $this->assertEquals('admin', $role->name());
         $this->assertEquals('Admin', $role->title());
     }
 
-    public function testNobodyFactory()
+    public function testNobody()
     {
         $app  = $this->app();
-        $role = Role::factory('nobody');
+        $role = Role::nobody();
 
         $this->assertEquals('nobody', $role->name());
         $this->assertEquals('Nobody', $role->title());

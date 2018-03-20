@@ -27,6 +27,7 @@ class Roots extends Ingredients
     protected $media;
     protected $panel;
     protected $plugins;
+    protected $roles;
     protected $site;
     protected $snippets;
     protected $templates;
@@ -104,6 +105,11 @@ class Roots extends Ingredients
     public function plugins(): string
     {
         return $this->plugins = $this->plugins ?? $this->site() . '/plugins';
+    }
+
+    public function roles(): string
+    {
+        return $this->roles = $this->roles ?? $this->blueprints() . '/users';
     }
 
     public function site(): string

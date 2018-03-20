@@ -43,7 +43,6 @@ class UserRules
     public static function create(User $user): bool
     {
         static::validEmail($user, $user->email());
-        static::validRole($user, $user->role());
         static::validLanguage($user, $user->language());
 
         if ($user->password() !== null) {

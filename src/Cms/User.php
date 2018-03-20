@@ -248,7 +248,7 @@ class User extends Model
      */
     public function isLastAdmin(): bool
     {
-        return $this->role() === 'admin' && $this->kirby()->users()->filterBy('role', 'admin')->count() <= 1;
+        return $this->role()->isAdmin() === true && $this->kirby()->users()->filterBy('role', 'admin')->count() <= 1;
     }
 
     /**
@@ -326,7 +326,13 @@ class User extends Model
             return $this->role;
         }
 
-        return $this->role = Role::factory($this->store()->role(), 'nobody');
+        $roleName = $this->role ?? $this->store()->role();
+
+        if ($role = $this->kirby()->roles()->find($roleName)) {
+            return $this->role = $role;
+        }
+
+        return $this->role = Role::nobody();
     }
 
     /**

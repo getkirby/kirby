@@ -256,6 +256,10 @@ class PageActionsTest extends TestCase
                 'page.update:before' => function () {
                     throw new Exception('Nope');
                 }
+            ],
+            'user' => 'test@getkirby.com',
+            'users' => [
+                ['email' => 'test@getkirby.com', 'role' => 'admin']
             ]
         ]);
 

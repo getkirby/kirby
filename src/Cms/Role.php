@@ -12,6 +12,25 @@ class Role extends Model
     protected $permissions;
     protected $title;
 
+    public function __construct(array $props)
+    {
+        $this->setProperties($props);
+    }
+
+    public function __toString(): string
+    {
+        return $this->name();
+    }
+
+    public static function admin(array $inject = [])
+    {
+        try {
+            return static::load('admin');
+        } catch (Exception $e) {
+            return static::factory(static::defaults()['admin'], $inject);
+        }
+    }
+
     protected static function defaults()
     {
         return [
@@ -30,35 +49,14 @@ class Role extends Model
         ];
     }
 
-    public function __construct(array $props)
-    {
-        $this->setProperties($props);
-    }
-
-    public static function factory(string $name, string $fallback = null): self
-    {
-        try {
-            $props = Blueprint::load('users/' . $name);
-        } catch (Exception $e) {
-            $defaults = static::defaults();
-
-            if (array_key_exists($name, $defaults) === false) {
-                if ($fallback === null) {
-                    throw new Exception(sprintf('The role "%s" does not exist', $name));
-                }
-
-                return static::factory($fallback);
-            }
-
-            $props = $defaults[$name];
-        }
-
-        return new static($props);
-    }
-
     public function description()
     {
         return $this->description;
+    }
+
+    public static function factory(array $props, array $inject = []): self
+    {
+        return new static($props + $inject);
     }
 
     public function id(): string
@@ -66,9 +64,37 @@ class Role extends Model
         return $this->name();
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->name() === 'admin';
+    }
+
+    public function isNobody(): bool
+    {
+        return $this->name() === 'nobody';
+    }
+
+    public static function load(string $name, array $inject = []): self
+    {
+        try {
+            return static::factory(Blueprint::load('users/' . $name), $inject);
+        } catch (Exception $e) {
+            throw new Exception(sprintf('The role "%s" does not exist', $name));
+        }
+    }
+
     public function name(): string
     {
         return $this->name;
+    }
+
+    public static function nobody(array $inject = [])
+    {
+        try {
+            return static::load('nobody');
+        } catch (Exception $e) {
+            return static::factory(static::defaults()['nobody'], $inject);
+        }
     }
 
     public function permissions(): Permissions

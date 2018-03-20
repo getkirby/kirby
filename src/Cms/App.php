@@ -28,10 +28,12 @@ class App extends Component
     protected $collections;
     protected $components;
     protected $path;
+    protected $roles;
     protected $roots;
     protected $routes;
     protected $site;
     protected $urls;
+    protected $user;
     protected $users;
 
     /**
@@ -270,7 +272,11 @@ class App extends Component
      */
     public function roles(): Roles
     {
-        return $this->component('roles');
+        if (is_a($this->roles, Roles::class) === true) {
+            return $this->roles;
+        }
+
+        return $this->roles = Roles::load($this->root('roles'));
     }
 
     /**
@@ -360,6 +366,23 @@ class App extends Component
     }
 
     /**
+     * Create your own set of roles
+     *
+     * @param array $roles
+     * @return self
+     */
+    protected function setRoles(array $roles = null): self
+    {
+        if ($roles !== null) {
+            $this->roles = Roles::factory($roles, [
+                'kirby' => $this
+            ]);
+        }
+
+        return $this;
+    }
+
+    /**
      * Sets the directory structure
      *
      * @param array $roots
@@ -396,6 +419,18 @@ class App extends Component
     }
 
     /**
+     * Set the currently active user id
+     *
+     * @param string $user
+     * @return self
+     */
+    protected function setUser(string $user = null): self
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
      * Create your own set of app users
      *
      * @param array $users
@@ -404,12 +439,9 @@ class App extends Component
     protected function setUsers(array $users = null): self
     {
         if ($users !== null) {
-            $this->users = new Users();
-
-            foreach ($users as $props) {
-                $user = new User($props);
-                $this->users->append($user->id(), $user);
-            }
+            $this->users = Users::factory($users, [
+                'kirby' => $this
+            ]);
         }
 
         return $this;
@@ -483,8 +515,16 @@ class App extends Component
     public function user(string $id = null)
     {
         if ($id === null) {
+            if (is_a($this->user, User::class) === true) {
+                return $this->user;
+            }
+
+            if (is_string($this->user) === true) {
+                return $this->user = $this->users()->findBy('email', $this->user);
+            }
+
             try {
-                return $this->users()->findBy('id', $this->authToken()['uid']);
+                return $this->user = $this->users()->findBy('id', $this->authToken()['uid']);
             } catch (Throwable $e) {
                 return null;
             }
@@ -504,7 +544,7 @@ class App extends Component
             return $this->users;
         }
 
-        return $this->users = Users::factory($this);
+        return $this->users = Users::load($this->root('accounts'), ['kirby' => $this]);
     }
 
 }

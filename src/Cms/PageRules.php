@@ -119,7 +119,7 @@ class PageRules
 
     public static function delete(Page $page, bool $force = false): bool
     {
-        if ($page->permissions()->create() !== true) {
+        if ($page->permissions()->delete() !== true) {
             throw new Exception('This page cannot be deleted');
         }
 

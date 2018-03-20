@@ -146,7 +146,7 @@ class Blueprint extends BlueprintObject
         try {
             $props = static::load($name);
         } catch (Exception $e) {
-            $props = $fallback !== null ? static::load($name) : null;
+            $props = $fallback !== null ? static::load($fallback) : null;
         }
 
         if ($props === null) {

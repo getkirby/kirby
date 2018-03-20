@@ -94,7 +94,14 @@ class TestCase extends BaseTestCase
         App::removePlugins();
 
         $app = new App([
-            'hooks' => $hooks
+            'hooks' => $hooks,
+            'user'  => 'test@getkirby.com',
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'admin'
+                ]
+            ]
         ]);
 
         $action->call($this);

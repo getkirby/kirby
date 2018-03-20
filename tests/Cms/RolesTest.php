@@ -5,32 +5,26 @@ namespace Kirby\Cms;
 class RolesTest extends TestCase
 {
 
-    public function testDefaultRoles()
+    public function testFactory()
     {
-        new App([
-            'roots' => [
-                'site' => __DIR__ . '/does-not-exist'
+        $roles = Roles::factory([
+            [
+                'name'  => 'editor',
+                'title' => 'Editor'
             ]
         ]);
-
-        $roles = Roles::factory();
 
         $this->assertInstanceOf(Roles::class, $roles);
 
-        // should only contain the admin role
-        $this->assertCount(1, $roles);
+        // should contain the editor role from fixtures and the default admin role
+        $this->assertCount(2, $roles);
         $this->assertEquals('admin', $roles->first()->name());
+        $this->assertEquals('editor', $roles->last()->name());
     }
 
-    public function testFactory()
+    public function testLoad()
     {
-        new App([
-            'roots' => [
-                'site' => __DIR__ . '/fixtures'
-            ]
-        ]);
-
-        $roles = Roles::factory();
+        $roles = Roles::load(__DIR__ . '/fixtures/blueprints/users');
 
         $this->assertInstanceOf(Roles::class, $roles);
 

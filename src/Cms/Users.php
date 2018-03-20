@@ -16,11 +16,21 @@ class Users extends Collection
         return User::create($data);
     }
 
-    public static function factory(App $app = null): self
+    public static function factory(array $users, array $inject = []): self
     {
+        $collection = new static;
 
-        $app   = $app ?? App::instance();
-        $root  = $app->root('accounts');
+        // read all user blueprints
+        foreach ($users as $props) {
+            $user = new User($props + $inject);
+            $collection->set($user->id(), $user);
+        }
+
+        return $collection;
+    }
+
+    public static function load(string $root, array $inject = []): self
+    {
         $users = new static;
 
         foreach (Dir::read($root) as $userDirectory) {
@@ -30,9 +40,8 @@ class Users extends Collection
 
             $user = new User([
                 'email' => $userDirectory,
-                'kirby' => $app,
                 'store' => UserStore::class
-            ]);
+            ] + $inject);
 
             $users->set($user->id(), $user);
         }

@@ -41,11 +41,9 @@ class UserRulesTest extends TestCase
     public function testChangeEmailDuplicate()
     {
         $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com']),
-                    new User(['email' => 'admin@domain.com'])
-                ])
+            'users' => [
+                ['email' => 'user@domain.com'],
+                ['email' => 'admin@domain.com']
             ]
         ]);
 
@@ -90,11 +88,9 @@ class UserRulesTest extends TestCase
     public function testChangeRoleLastAdmin()
     {
         $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com', 'role' => 'admin']),
-                    new User(['email' => 'admin@domain.com', 'role' => 'editor'])
-                ])
+            'users' => [
+                ['email' => 'user@domain.com', 'role' => 'admin'],
+                ['email' => 'admin@domain.com', 'role' => 'editor']
             ]
         ]);
 
@@ -107,6 +103,7 @@ class UserRulesTest extends TestCase
             'email'    => 'user@domain.com',
             'password' => '12345678'
         ]);
+
         $this->assertTrue(UserRules::create($user));
     }
 
@@ -192,11 +189,9 @@ class UserRulesTest extends TestCase
     public function testDeleteLastAdmin()
     {
         $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com', 'role' => 'admin']),
-                    new User(['email' => 'admin@domain.com', 'role' => 'editor'])
-                ])
+            'users' => [
+                ['email' => 'user@domain.com', 'role' => 'admin'],
+                ['email' => 'admin@domain.com', 'role' => 'editor']
             ]
         ]);
 
@@ -210,10 +205,8 @@ class UserRulesTest extends TestCase
     public function testDeleteLastUser()
     {
         $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com', 'role' => 'editor']),
-                ])
+            'users' => [
+                ['email' => 'user@domain.com', 'role' => 'editor'],
             ]
         ]);
 

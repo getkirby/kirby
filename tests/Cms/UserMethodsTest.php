@@ -38,12 +38,19 @@ class UserMethodsTest extends TestCase
 
     public function testRole()
     {
+        $kirby = new App([
+            'roles' => [
+                ['name' => 'editor', 'title' => 'Editor']
+            ]
+        ]);
+
         $user = new User([
             'email' => 'user@domain.com',
             'role'  => 'editor',
+            'kirby' => $kirby
         ]);
 
-        $this->assertEquals('editor', $user->role());
+        $this->assertEquals('editor', $user->role()->name());
     }
 
     public function testDefaultRole()
@@ -52,7 +59,7 @@ class UserMethodsTest extends TestCase
             'email' => 'user@domain.com',
         ]);
 
-        $this->assertEquals('visitor', $user->role());
+        $this->assertEquals('nobody', $user->role()->name());
     }
 
 }
