@@ -61,6 +61,11 @@ class PageBlueprintOptions extends BlueprintOptions
         return $this->isAllowed('page', 'changeTemplate');
     }
 
+    public function create(): bool
+    {
+        return $this->isAllowed('page', 'create');
+    }
+
     public function delete(): bool
     {
         if ($this->model()->isHomeOrErrorPage() === true) {
