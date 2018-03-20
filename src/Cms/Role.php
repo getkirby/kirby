@@ -35,7 +35,7 @@ class Role extends Model
         $this->setProperties($props);
     }
 
-    public static function factory(string $name): self
+    public static function factory(string $name, string $fallback = null): self
     {
         try {
             $props = Blueprint::load('users/' . $name);
@@ -43,7 +43,11 @@ class Role extends Model
             $defaults = static::defaults();
 
             if (array_key_exists($name, $defaults) === false) {
-                throw new Exception(sprintf('The role "%s" does not exist', $name));
+                if ($fallback === null) {
+                    throw new Exception(sprintf('The role "%s" does not exist', $name));
+                }
+
+                return static::factory($fallback);
             }
 
             $props = $defaults[$name];
