@@ -2,6 +2,7 @@
 
 namespace Kirby\Collection\Traits;
 
+use Kirby\Cms\ContentField;
 use Kirby\Collection\Collection;
 
 use PHPUnit\Framework\TestCase;
@@ -45,9 +46,13 @@ class SorterTest extends TestCase
         $this->assertEquals('Bastian', $sorted->last()['name']);
         $this->assertEquals('Sonja', $sorted->first()['name']);
 
-        $sorted = $collection->sortBy('name', 'asc', 'color', 'asc');
+        $sorted = $collection->sortBy('name', 'asc', 'color', SORT_ASC);
         $this->assertEquals('blue', $sorted->nth(1)['color']);
         $this->assertEquals('green', $sorted->nth(2)['color']);
+
+        $sorted = $collection->sortBy('name', 'asc', 'color', SORT_DESC);
+        $this->assertEquals('green', $sorted->nth(1)['color']);
+        $this->assertEquals('blue', $sorted->nth(2)['color']);
     }
 
     public function testSortByNatural()
@@ -70,12 +75,52 @@ class SorterTest extends TestCase
         $this->assertEquals('img2.png', $sorted->nth(1)['name']);
         $this->assertEquals('img10.png', $sorted->nth(2)['name']);
         $this->assertEquals('img12.png', $sorted->nth(3)['name']);
+
+        $sorted = $collection->sortBy('name', SORT_NATURAL, 'desc');
+        $this->assertEquals('img12.png', $sorted->nth(0)['name']);
+        $this->assertEquals('img10.png', $sorted->nth(1)['name']);
+        $this->assertEquals('img2.png', $sorted->nth(2)['name']);
+        $this->assertEquals('img1.png', $sorted->nth(3)['name']);
+    }
+
+    public function testSortIntegers()
+    {
+        $collection = new Collection([
+            ['number' => 12],
+            ['number' => 1],
+            ['number' => 10],
+            ['number' => 2]
+        ]);
+
+        $sorted = $collection->sortBy('number', 'asc');
+        $this->assertEquals(1, $sorted->nth(0)['number']);
+        $this->assertEquals(2, $sorted->nth(1)['number']);
+        $this->assertEquals(10, $sorted->nth(2)['number']);
+        $this->assertEquals(12, $sorted->nth(3)['number']);
     }
 
     public function testSortByEmpty()
     {
         $collection = new Collection();
         $this->assertEquals($collection, $collection->sortBy());
+    }
+
+    public function testSortObjects()
+    {
+        $bastian = new ContentField('name', 'Bastian');
+        $nico    = new ContentField('name', 'Nico');
+        $sonja   = new ContentField('name', 'Sonja');
+
+        $collection = new Collection([
+            ['name' => $nico],
+            ['name' => $bastian],
+            ['name' => $sonja]
+        ]);
+
+        $sorted = $collection->sortBy('name', 'asc');
+        $this->assertEquals($bastian, $sorted->nth(0)['name']);
+        $this->assertEquals($nico, $sorted->nth(1)['name']);
+        $this->assertEquals($sonja, $sorted->nth(2)['name']);
     }
 
     public function testFlip()
