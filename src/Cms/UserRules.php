@@ -117,11 +117,11 @@ class UserRules
 
     public static function validRole(User $user, string $role): bool
     {
-        if (V::in($role, ['admin', 'editor', 'visitor']) === false) {
-            throw new Exception(sprintf('Invalid user role: "%s"', $role));
+        if (is_a($user->kirby()->roles()->find($role), Role::class) === true) {
+            return true;
         }
 
-        return true;
+        throw new Exception(sprintf('Invalid user role: "%s"', $role));
     }
 
 }
