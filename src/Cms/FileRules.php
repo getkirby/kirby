@@ -11,6 +11,10 @@ class FileRules
 
     public static function changeName(File $file, string $name): bool
     {
+        if ($file->permissions()->changeName() !== true) {
+            throw new Exception('The name for this file cannot be changed');
+        }
+
         $parent    = $file->parent();
         $duplicate = $parent->files()->not($file)->findBy('name', $name);
 
@@ -27,6 +31,10 @@ class FileRules
             throw new Exception('The file exists and cannot be overwritten');
         }
 
+        if ($file->permissions()->create() !== true) {
+            throw new Exception('The file cannot be created');
+        }
+
         static::validExtension($file, $file->extension());
         static::validMime($file, $upload->mime());
         static::validFilename($file, $file->filename());
@@ -36,11 +44,19 @@ class FileRules
 
     public static function delete(): bool
     {
+        if ($file->permissions()->delete() !== true) {
+            throw new Exception('The file cannot be deleted');
+        }
+
         return true;
     }
 
     public static function replace(File $file, Upload $upload): bool
     {
+        if ($file->permissions()->replace() !== true) {
+            throw new Exception('The file cannot be replaced');
+        }
+
         static::validExtension($file, $upload->extension());
         static::validMime($file, $upload->mime());
         static::validFilename($file, $upload->filename());
@@ -54,6 +70,10 @@ class FileRules
 
     public static function update(File $file, array $content = []): bool
     {
+        if ($file->permissions()->update() !== true) {
+            throw new Exception('The file cannot be updated');
+        }
+
         return true;
     }
 

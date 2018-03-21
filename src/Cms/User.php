@@ -302,17 +302,11 @@ class User extends Model
     }
 
     /**
-     * @param string $category
-     * @param string $action
-     * @return array|bool
+     * @return UserBlueprintOptions
      */
-    public function permissions(string $category = null, string $action = null)
+    public function permissions(): UserBlueprintOptions
     {
-        if ($category === null) {
-            return $this->role()->permissions()->toArray();
-        }
-
-        return $this->role()->permissions()->for($category, $action);
+        return $this->blueprint()->options();
     }
 
     /**

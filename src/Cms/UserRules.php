@@ -11,26 +11,46 @@ class UserRules
 
     public static function changeEmail(User $user, string $email): bool
     {
-        return static::validEmail($user, $email);
+        if ($user->permissions()->changeEmail() !== true) {
+            throw new Exception('The email for this user cannot be changed');
+        }
+
+        static::validEmail($user, $email);
     }
 
     public static function changeLanguage(User $user, string $language): bool
     {
+        if ($user->permissions()->changeLanguage() !== true) {
+            throw new Exception('The language for this user cannot be changed');
+        }
+
         return static::validLanguage($user, $language);
     }
 
     public static function changeName(User $user, string $name): bool
     {
+        if ($user->permissions()->changeName() !== true) {
+            throw new Exception('The name for this user cannot be changed');
+        }
+
         return true;
     }
 
     public static function changePassword(User $user, string $password): bool
     {
+        if ($user->permissions()->changePassword() !== true) {
+            throw new Exception('The password for this user cannot be changed');
+        }
+
         return static::validPassword($user, $password);
     }
 
     public static function changeRole(User $user, string $role): bool
     {
+        if ($user->permissions()->changeRole() !== true) {
+            throw new Exception('The role for this user cannot be changed');
+        }
+
         static::validRole($user, $role);
 
         if ($role !== 'admin' && $user->isLastAdmin() === true) {
@@ -42,6 +62,10 @@ class UserRules
 
     public static function create(User $user): bool
     {
+        if ($user->permissions()->create() !== true) {
+            throw new Exception('This user cannot be created');
+        }
+
         static::validEmail($user, $user->email());
         static::validLanguage($user, $user->language());
 

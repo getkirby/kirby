@@ -8,13 +8,13 @@ class UserBlueprintOptions extends BlueprintOptions
 {
 
     protected $options = [
+        'create'         => true,
         'changeEmail'    => true,
         'changeLanguage' => true,
         'changeName'     => true,
         'changePassword' => true,
         'changeRole'     => true,
         'delete'         => true,
-        'read'           => true,
         'update'         => true,
     ];
 
@@ -25,22 +25,22 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function changeEmail(): bool
     {
-        return $this->options['changeEmail'];
+        return $this->isAllowed('user', 'changeEmail');
     }
 
     public function changeLanguage(): bool
     {
-        return $this->options['changeLanguage'];
+        return $this->isAllowed('user', 'changeLanguage');
     }
 
     public function changeName(): bool
     {
-        return $this->options['changeName'];
+        return $this->isAllowed('user', 'changeName');
     }
 
     public function changePassword(): bool
     {
-        return $this->options['changePassword'];
+        return $this->isAllowed('user', 'changePassword');
     }
 
     public function changeRole(): bool
@@ -49,7 +49,12 @@ class UserBlueprintOptions extends BlueprintOptions
             return false;
         }
 
-        return $this->options['changeRole'];
+        return $this->isAllowed('user', 'changeRole');
+    }
+
+    public function create(): bool
+    {
+        return $this->isAllowed('user', 'create');
     }
 
     public function delete(): bool
@@ -58,12 +63,7 @@ class UserBlueprintOptions extends BlueprintOptions
             return false;
         }
 
-        return $this->options['delete'];
-    }
-
-    public function read(): bool
-    {
-        return $this->options['read'];
+        return $this->isAllowed('user', 'delete');
     }
 
     protected function user()

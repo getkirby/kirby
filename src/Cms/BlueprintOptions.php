@@ -31,7 +31,7 @@ class BlueprintOptions
 
     protected function isAllowed(string $category, string $action): bool
     {
-        $user = $this->user();
+        $user = $this->kirby()->user();
 
         if (empty($user) === true || $user->role()->id() === 'nobody') {
             return false;
@@ -45,7 +45,7 @@ class BlueprintOptions
             return $this->options[$action];
         }
 
-        return $user->permissions($category, $action);
+        return $user->role()->permissions()->for($category, $action);
     }
 
     protected function kirby()
@@ -67,11 +67,6 @@ class BlueprintOptions
         }
 
         return $result;
-    }
-
-    protected function user()
-    {
-        return $this->kirby()->user();
     }
 
 }
