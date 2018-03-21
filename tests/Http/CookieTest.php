@@ -58,6 +58,10 @@ class CookieTest extends TestCase
         $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
         $this->assertEquals('bar', Cookie::get('foo'));
 
+        // value with a plus sign
+        $_COOKIE['foo'] = '9c8c403efa31d4e4598d75e9c394b48255b65154+bar+baz';
+        $this->assertEquals('bar+baz', Cookie::get('foo'));
+
         // separator missing
         $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85';
         $this->assertEquals(null, Cookie::get('foo'));

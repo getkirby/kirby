@@ -2,7 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Util\A;
 use Kirby\Util\Str;
 
 /**
@@ -151,15 +150,14 @@ class Cookie
      */
     protected static function parse(string $string)
     {
-        // if no hash-value seperator is present return null
+        // if no hash-value separator is present, we can't parse the value
         if (strpos($string, '+') === false) {
             return null;
         }
 
         // extract hash and value
-        $parts = Str::split($string, '+');
-        $hash  = A::first($parts);
-        $value = A::last($parts);
+        $hash  = Str::before($string, '+');
+        $value = Str::after($string, '+');
 
         // if the hash or the value is missing at all return null
         if ($hash === $value) {
