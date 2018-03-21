@@ -80,6 +80,7 @@ return [
             'language',
             'name',
             'next' => ['id', 'name'],
+            'options',
             'prev' => ['id', 'name'],
             'role',
         ],

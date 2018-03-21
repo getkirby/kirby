@@ -32,11 +32,21 @@ class BlueprintFieldsSection extends BlueprintSection
 
     public function form()
     {
+        $fields   = $this->fields;
+        $disabled = $this->model()->permissions()->update() === false;
+
+        if ($disabled === true) {
+            $fields = array_map(function ($field) {
+                $field['disabled'] = true;
+                return $field;
+            }, $fields);
+        }
+
         return new Form([
-            'fields' => $this->fields,
+            'fields' => $fields,
             'locale' => 'en',
             'model'  => $this->model(),
-            'values' => $this->values ?? $this->model()->content()->toArray()
+            'values' => $this->values ?? $this->model()->content()->toArray(),
         ]);
     }
 
@@ -79,10 +89,10 @@ class BlueprintFieldsSection extends BlueprintSection
 
     protected function setFields(array $fields): self
     {
+
         foreach ($fields as $name => $field) {
             $field = Blueprint::extend($field);
             $field['name'] = $name;
-
             $this->fields[$name] = $field;
         }
 

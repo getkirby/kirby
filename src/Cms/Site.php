@@ -263,6 +263,16 @@ class Site extends Model
     }
 
     /**
+     * Returns the permissions object for this site
+     *
+     * @return SiteBlueprintOptions
+     */
+    public function permissions(): SiteBlueprintOptions
+    {
+        return $this->blueprint()->options();
+    }
+
+    /**
      * Returns the absolute path to the content directory
      *
      * @return string

@@ -8,8 +8,7 @@ class SiteBlueprintOptions extends BlueprintOptions
 {
 
     protected $options = [
-        'read'   => true,
-        'update' => true,
+        'update' => null,
     ];
 
     public function __construct(Site $model, array $options = null)
@@ -17,14 +16,9 @@ class SiteBlueprintOptions extends BlueprintOptions
         parent::__construct($model, $options);
     }
 
-    public function read(): bool
-    {
-        return $this->options['read'];
-    }
-
     public function update(): bool
     {
-        return $this->options['update'];
+        return $this->isAllowed('site', 'update');
     }
 
 }

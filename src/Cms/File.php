@@ -245,9 +245,9 @@ class File extends Model
     /**
      * Returns the permissions object for this file
      *
-     * @return BlueprintFileOptions
+     * @return FileBlueprintOptions
      */
-    public function permissions(): BlueprintFileOptions
+    public function permissions(): FileBlueprintOptions
     {
         return $this->blueprint()->options();
     }

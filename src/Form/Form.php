@@ -79,7 +79,7 @@ class Form extends Component
         $values = [];
 
         foreach ($this->fields() as $field) {
-            if (method_exists($field, 'stringValue') === true && $field->isDisabled() === false) {
+            if (method_exists($field, 'stringValue') === true) {
                 $values[$field->name()] = $field->stringValue();
             }
         }
@@ -109,7 +109,7 @@ class Form extends Component
         $result = [];
 
         foreach ($this->fields() as $field) {
-            if (method_exists($field, 'value') === true && $field->isDisabled() === false) {
+            if (method_exists($field, 'value') === true) {
                 $result[$field->name()] = $field->value();
             }
         }
