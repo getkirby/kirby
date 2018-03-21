@@ -18,10 +18,10 @@ class Cookie
 {
 
     /**
-     * configuration
+     * Key to use for cookie signing
      * @var string
      */
-    public static $salt = 'KirbyHttpCookieSalt';
+    public static $key = 'KirbyHttpCookieKey';
 
     /**
      * Set a new cookie
@@ -48,8 +48,8 @@ class Cookie
      */
     public static function set(string $key, string $value, int $lifetime = 0, string $path = '/', string $domain = null, bool $secure = false, bool $httpOnly = true): bool
     {
-        // hash the value
-        $value = static::hash($value) . '+' . $value;
+        // add an HMAC signature of the value
+        $value = static::hmac($value) . '+' . $value;
 
         // store that thing in the cookie global
         $_COOKIE[$key] = $value;
@@ -128,15 +128,15 @@ class Cookie
     }
 
     /**
-     * Creates a hash for the cookie value
-     * salted with the secret cookie salt string from the defaults
+     * Creates a HMAC for the cookie value
+     * Used as a cookie signature to prevent easy tampering with cookie data
      *
      * @param  string $value
      * @return string
      */
-    protected static function hash(string $value): string
+    protected static function hmac(string $value): string
     {
-        return sha1($value . static::$salt);
+        return hash_hmac('sha1', $value, static::$key);
     }
 
     /**
@@ -164,7 +164,8 @@ class Cookie
         }
 
         // compare the extracted hash with the hashed value
-        if ($hash !== static::hash($value)) {
+        // don't accept value if the hash is invalid
+        if (hash_equals(static::hmac($value), $hash) !== true) {
             return null;
         }
 

@@ -7,11 +7,11 @@ use PHPUnit\Framework\TestCase;
 class CookieTest extends TestCase
 {
 
-    public function testSalt()
+    public function testKey()
     {
-        $this->assertEquals('KirbyHttpCookieSalt', Cookie::$salt);
-        Cookie::$salt = 'KirbyToolkitCookieSalt';
-        $this->assertEquals('KirbyToolkitCookieSalt', Cookie::$salt);
+        $this->assertEquals('KirbyHttpCookieKey', Cookie::$key);
+        Cookie::$key = 'KirbyToolkitCookieKey';
+        $this->assertEquals('KirbyToolkitCookieKey', Cookie::$key);
     }
 
     public function testLifetime()
@@ -23,13 +23,13 @@ class CookieTest extends TestCase
     public function testSet()
     {
         Cookie::set('foo', 'bar');
-        $this->assertEquals('040df854f89c9f9ca3490fb950c91ad9aa304c97+bar', $_COOKIE['foo']);
+        $this->assertEquals('703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar', $_COOKIE['foo']);
     }
 
     public function testForever()
     {
         Cookie::forever('forever', 'bar');
-        $this->assertEquals('040df854f89c9f9ca3490fb950c91ad9aa304c97+bar', $_COOKIE['forever']);
+        $this->assertEquals('703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar', $_COOKIE['forever']);
         $this->assertTrue(Cookie::exists('forever'));
     }
 
@@ -55,29 +55,29 @@ class CookieTest extends TestCase
     public function testParse()
     {
         // valid
-        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97+bar';
+        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
         $this->assertEquals('bar', Cookie::get('foo'));
 
         // separator missing
-        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97';
+        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85';
         $this->assertEquals(null, Cookie::get('foo'));
-        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97+bar';
+        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
         $this->assertEquals('bar', Cookie::get('foo'));
 
         // no value
-        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97+';
+        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+';
         $this->assertEquals(null, Cookie::get('foo'));
-        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97+bar';
+        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
         $this->assertEquals('bar', Cookie::get('foo'));
 
         // no hash
         $_COOKIE['foo'] = '+bar';
         $this->assertEquals(null, Cookie::get('foo'));
-        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97+bar';
+        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
         $this->assertEquals('bar', Cookie::get('foo'));
 
         // wrong hash
-        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb958c91ad9aa304c97+bar';
+        $_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97+bar';
         $this->assertEquals(null, Cookie::get('foo'));
     }
 }
