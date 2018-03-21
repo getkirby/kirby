@@ -8,6 +8,11 @@ class Permissions
 {
 
     protected $actions = [
+        'access' => [
+            'panel' => true,
+            'users' => true,
+            'site'  => true
+        ],
         'file' => [
             'changeName' => true,
             'create' => true,

@@ -27,6 +27,10 @@ return [
             // try to find the user by the sha1 id
             $user = $this->user($id);
 
+            if ($user->role()->permissions()->for('access', 'panel') === false) {
+                throw new Exception('You are not allowed to access the panel');
+            }
+
             if ($user->validatePassword($password) !== true) {
                 throw new Exception('Invalid email or password');
             }
@@ -50,7 +54,7 @@ return [
             return [
                 'status' => 'ok',
                 'token'  => $token,
-                'user'   => $this->resolve($user)->select('id, email, language, name')->toArray()
+                'user'   => $this->resolve($user)->view('auth')->toArray()
             ];
 
         }
@@ -59,7 +63,7 @@ return [
         'pattern' => 'auth/user',
         'method'  => 'GET',
         'action'  => function () {
-            return $this->user();
+            return $this->resolve($this->user())->view('auth');
         }
     ]
 ];
