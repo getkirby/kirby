@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cache\ApcCache;
+use Kirby\Cache\ApcuCache;
 use Kirby\Cache\Cache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
@@ -28,7 +28,7 @@ trait AppCaches
         // TODO: make this configurable
         $type  = strtolower($options['type']);
         $types = [
-            'apc'       => ApcCache::class,
+            'apcu'      => ApcuCache::class,
             'file'      => FileCache::class,
             'memcached' => MemCached::class,
         ];

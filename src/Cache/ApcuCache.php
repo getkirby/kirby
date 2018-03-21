@@ -3,7 +3,7 @@
 namespace Kirby\Cache;
 
 /**
- * APC Cache
+ * APCu Cache
  *
  * @package   Kirby Cache
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -11,7 +11,7 @@ namespace Kirby\Cache;
  * @copyright Bastian Allgeier
  * @license   MIT
  */
-class ApcCache extends Cache
+class ApcuCache extends Cache
 {
 
     /**
@@ -29,7 +29,7 @@ class ApcCache extends Cache
      */
     public function set(string $key, $value, int $minutes = 0)
     {
-        return apc_store($key, $this->value($value, $minutes), $this->expiration($minutes));
+        return apcu_store($key, $this->value($value, $minutes), $this->expiration($minutes));
     }
 
     /**
@@ -40,7 +40,7 @@ class ApcCache extends Cache
      */
     public function retrieve(string $key)
     {
-        return apc_fetch($key);
+        return apcu_fetch($key);
     }
 
     /**
@@ -51,7 +51,7 @@ class ApcCache extends Cache
      */
     public function exists(string $key): bool
     {
-        return apc_exists($key);
+        return apcu_exists($key);
     }
 
     /**
@@ -62,7 +62,7 @@ class ApcCache extends Cache
      */
     public function remove(string $key): bool
     {
-        return apc_delete($key);
+        return apcu_delete($key);
     }
 
     /**
@@ -72,6 +72,6 @@ class ApcCache extends Cache
      */
     public function flush(): bool
     {
-        return apc_clear_cache('user');
+        return apcu_clear_cache();
     }
 }
