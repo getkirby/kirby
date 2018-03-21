@@ -114,13 +114,9 @@ class BlueprintFieldsSection extends BlueprintSection
     {
         $this->values = $values;
 
-        try {
-            $this->form()->isValid();
-            $this->model = $this->model()->update($values, false);
-            return $this;
-        } catch (Exception $e) {
-            return $this;
-        }
+        $this->form()->isValid();
+        $this->model = $this->model()->update($values, false);
+        return $this;
     }
 
     public function updateField(string $fieldName, $value)
@@ -132,15 +128,10 @@ class BlueprintFieldsSection extends BlueprintSection
         $model   = $this->model();
         $payload = [$field->name() => $field->value()];
 
-        try {
-            $field->isValid();
-            $this->model  = $model->update($payload, false);
-            $this->values = null;
-            return $this;
-        } catch (Exception $e) {
-            $this->values = $model->content()->update($payload)->toArray();
-            return $this;
-        }
+        $field->isValid();
+        $this->model  = $model->update($payload, false);
+        $this->values = null;
+        return $this;
     }
 
     public function values()

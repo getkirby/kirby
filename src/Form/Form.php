@@ -44,7 +44,9 @@ class Form extends Component
     public function isValid(): bool
     {
         foreach ($this->fields() as $field) {
-            $field->isValid();
+            if (method_exists($field, 'isValid') === true) {
+                $field->isValid();
+            }
         }
 
         return true;
