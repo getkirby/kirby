@@ -193,7 +193,7 @@ class Cookie
     {
         if (isset($_COOKIE[$key])) {
             unset($_COOKIE[$key]);
-            return setcookie($key, '', time() - 3600, '/');
+            return setcookie($key, '', 1, '/') && setcookie($key, false);
         }
 
         return false;
