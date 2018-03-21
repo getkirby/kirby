@@ -16,6 +16,11 @@ class PageDraft extends Page
         return '_drafts/' . $this->dirname();
     }
 
+    public function isVerified(string $token)
+    {
+        return sha1($this->id() . $this->template()) === $token;
+    }
+
     public static function seek($parent, string $path)
     {
         $path = str_replace('_drafts/', '', $path);
@@ -41,6 +46,11 @@ class PageDraft extends Page
         }
 
         return $parent;
+    }
+
+    public function url(): string
+    {
+        return parent::url() . '/' . sha1($this->id() . $this->template());
     }
 
 }

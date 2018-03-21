@@ -15,4 +15,5 @@ $page['fields']['siblings'] = function (Page $page) {
     return $page->parent()->children()->not($page);
 };
 
+
 return $page;

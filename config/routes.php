@@ -57,8 +57,15 @@ return function ($kirby) {
                 }
 
                 // authenticated users may see drafts
-                if ($draft = $kirby->site()->draft($path)) {
-                    return $draft;
+                if (Str::contains($path, '_drafts') === true) {
+                    $id     = dirname($path);
+                    $ptoken = basename($path);
+
+                    if ($draft = $kirby->site()->draft($id)) {
+                        if ($draft->isVerified($ptoken) === true) {
+                            return $draft;
+                        }
+                    }
                 }
 
                 return null;
