@@ -6,10 +6,11 @@ class FileBlueprintOptions extends BlueprintOptions
 {
 
     protected $options = [
-        'delete'   => true,
-        'read'     => true,
-        'replace'  => true,
-        'update'   => true,
+        'changeName' => true,
+        'create'     => true,
+        'delete'     => true,
+        'replace'    => true,
+        'update'     => true,
     ];
 
     public function __construct(File $model, array $options = null)
@@ -17,24 +18,29 @@ class FileBlueprintOptions extends BlueprintOptions
         parent::__construct($model, $options);
     }
 
-    public function delete(): bool
+    public function changeName(): bool
     {
-        return $this->options['delete'];
+        return $this->isAllowed('file', 'changeName');
     }
 
-    public function read(): bool
+    public function create(): bool
     {
-        return $this->options['read'];
+        return $this->isAllowed('file', 'create');
+    }
+
+    public function delete(): bool
+    {
+        return $this->isAllowed('file', 'delete');
     }
 
     public function replace(): bool
     {
-        return $this->options['replace'];
+        return $this->isAllowed('file', 'replace');
     }
 
     public function update(): bool
     {
-        return $this->options['update'];
+        return $this->isAllowed('file', 'update');
     }
 
 }
