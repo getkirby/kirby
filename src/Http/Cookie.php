@@ -79,17 +79,20 @@ class Cookie
      *
      * </code>
      *
-     * @param  string  $key    The name of the cookie
-     * @param  string  $value  The cookie content
-     * @param  string  $path   Path on the server to set the cookie for
-     * @param  string  $domain The domain
-     * @param  boolean $secure only sets the cookie over https
-     * @return boolean         true: the cookie has been created,
-     *                         false: cookie creation failed
+     * @param  string  $key       The name of the cookie
+     * @param  string  $value     The cookie content
+     * @param  string  $path      The path on the server to set the
+     *                            cookie for
+     * @param  string  $domain    the domain
+     * @param  boolean $secure    only sets the cookie over https
+     * @param  boolean $httpOnly  avoids the cookie to be accessed
+     *                            via javascript
+     * @return boolean            true: cookie was created,
+     *                            false: cookie creation failed
      */
-    public static function forever(string $key, $value, string $path = '/', string $domain = null, bool $secure = false): bool
+    public static function forever(string $key, $value, string $path = '/', string $domain = null, bool $secure = false, bool $httpOnly = true): bool
     {
-        return static::set($key, $value, 2628000, $path, $domain, $secure);
+        return static::set($key, $value, 2628000, $path, $domain, $secure, $httpOnly);
     }
 
     /**
