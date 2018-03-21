@@ -555,6 +555,11 @@ class Page extends Model
         return new static($props);
     }
 
+    public function modified(string $format = null)
+    {
+        return $this->content()->get('modified')->toDate($format);
+    }
+
     /**
      * Returns the next invisible page if it exists
      *

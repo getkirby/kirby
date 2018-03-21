@@ -114,7 +114,12 @@ class BlueprintFieldsSection extends BlueprintSection
     {
         $this->values = $values;
 
-        $this->form()->isValid();
+        try {
+            $this->form()->isValid();
+        } catch (Exception $e) {
+            return $this;
+        }
+
         $this->model = $this->model()->update($values, false);
         return $this;
     }
@@ -128,7 +133,13 @@ class BlueprintFieldsSection extends BlueprintSection
         $model   = $this->model();
         $payload = [$field->name() => $field->value()];
 
-        $field->isValid();
+        try {
+            $this->form()->isValid();
+        } catch (Exception $e) {
+            $this->values = $model->content()->update($payload)->toArray();
+            return $this;
+        }
+
         $this->model  = $model->update($payload, false);
         $this->values = null;
         return $this;
