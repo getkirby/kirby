@@ -16,10 +16,26 @@ class Field extends Component
 
     public static $types = [];
 
+    protected $propertyAliases = [
+        'readonly' => 'disabled'
+    ];
+
     protected $disabled;
     protected $name;
     protected $type;
     protected $width;
+
+    public function __construct(array $props)
+    {
+        foreach ($this->propertyAliases as $alias => $prop) {
+            if (isset($props[$alias]) === true) {
+                $props[$prop] = $props[$alias];
+                unset($props[$alias]);
+            }
+        }
+
+        parent::__construct($props);
+    }
 
     public static function assets(): array
     {
