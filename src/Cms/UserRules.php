@@ -78,6 +78,10 @@ class UserRules
 
     public static function delete(User $user): bool
     {
+        if ($user->permissions()->delete() !== true) {
+            throw new Exception('The user cannot be deleted');
+        }
+
         if ($user->isLastAdmin() === true) {
             throw new Exception('The last admin cannot be deleted');
         }
@@ -91,6 +95,10 @@ class UserRules
 
     public static function update(User $user, array $values = [], array $strings = []): bool
     {
+        if ($user->permissions()->update() !== true) {
+            throw new Exception('The user cannot be updated');
+        }
+
         if (isset($values['email']) === true) {
             throw new Exception('Use the User::changeEmail() method to change the user email');
         }
