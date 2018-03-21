@@ -73,7 +73,7 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function update(): bool
     {
-        return $this->options['update'];
+        return $this->isAllowed('user', 'update');
     }
 
 }
