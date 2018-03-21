@@ -19,6 +19,7 @@ class PageBlueprintOptions extends BlueprintOptions
         'changeStatus'   => null,
         'changeTemplate' => null,
         'changeTitle'    => null,
+        'create'         => null,
         'delete'         => null,
         'preview'        => null,
         'update'         => null,
