@@ -6,11 +6,11 @@ class FileBlueprintOptions extends BlueprintOptions
 {
 
     protected $options = [
-        'changeName' => true,
-        'create'     => true,
-        'delete'     => true,
-        'replace'    => true,
-        'update'     => true,
+        'changeName' => null,
+        'create'     => null,
+        'delete'     => null,
+        'replace'    => null,
+        'update'     => null,
     ];
 
     public function __construct(File $model, array $options = null)

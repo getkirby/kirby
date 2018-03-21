@@ -8,14 +8,14 @@ class UserBlueprintOptions extends BlueprintOptions
 {
 
     protected $options = [
-        'create'         => true,
-        'changeEmail'    => true,
-        'changeLanguage' => true,
-        'changeName'     => true,
-        'changePassword' => true,
-        'changeRole'     => true,
-        'delete'         => true,
-        'update'         => true,
+        'create'         => null,
+        'changeEmail'    => null,
+        'changeLanguage' => null,
+        'changeName'     => null,
+        'changePassword' => null,
+        'changeRole'     => null,
+        'delete'         => null,
+        'update'         => null,
     ];
 
     public function __construct(User $model, array $options = null)
