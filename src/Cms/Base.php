@@ -85,7 +85,7 @@ class Base
             }
 
             // ignore all items with a leading dot
-            if (substr($item, 0, 1) === '.' || $item === '_drafts') {
+            if (in_array(substr($item, 0, 1), ['.', '_']) === true) {
                 continue;
             }
 
