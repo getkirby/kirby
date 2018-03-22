@@ -23,10 +23,12 @@ trait SiteActions
      */
     protected function commit(string $action, ...$arguments)
     {
+        $old = $this->hardcopy();
+
         $this->rules()->$action($this, ...$arguments);
         $this->kirby()->trigger('site.' . $action . ':before', $this, ...$arguments);
         $result = $this->store()->$action(...$arguments);
-        $this->kirby()->trigger('site.' . $action . ':after', $result, $this);
+        $this->kirby()->trigger('site.' . $action . ':after', $result, $old);
         $this->kirby()->cache('pages')->flush();
         return $result;
     }

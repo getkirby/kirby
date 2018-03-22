@@ -147,10 +147,12 @@ trait PageActions
      */
     protected function commit(string $action, ...$arguments)
     {
+        $old = $this->hardcopy();
+
         $this->rules()->$action($this, ...$arguments);
         $this->kirby()->trigger('page.' . $action . ':before', $this, ...$arguments);
         $result = $this->store()->$action(...$arguments);
-        $this->kirby()->trigger('page.' . $action . ':after', $result, $this);
+        $this->kirby()->trigger('page.' . $action . ':after', $result, $old);
 
         // flush the pages cache, except the changeNum action is run
         // flushing it there, would be triggered way too often.

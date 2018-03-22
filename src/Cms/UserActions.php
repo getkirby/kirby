@@ -88,10 +88,12 @@ trait UserActions
      */
     protected function commit(string $action, ...$arguments)
     {
+        $old = $this->hardcopy();
+
         $this->rules()->$action($this, ...$arguments);
         $this->kirby()->trigger('user.' . $action . ':before', $this, ...$arguments);
         $result = $this->store()->$action(...$arguments);
-        $this->kirby()->trigger('user.' . $action . ':after', $result, $this);
+        $this->kirby()->trigger('user.' . $action . ':after', $result, $old);
         return $result;
     }
 

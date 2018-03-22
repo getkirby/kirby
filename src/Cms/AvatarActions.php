@@ -22,10 +22,12 @@ trait AvatarActions
      */
     protected function commit(string $action, ...$arguments)
     {
+        $old = $this->hardcopy();
+
         $this->rules()->$action($this, ...$arguments);
         $this->kirby()->trigger('avatar.' . $action . ':before', $this, ...$arguments);
         $result = $this->store()->$action(...$arguments);
-        $this->kirby()->trigger('avatar.' . $action . ':after', $result, $this);
+        $this->kirby()->trigger('avatar.' . $action . ':after', $result, $old);
         return $result;
     }
 

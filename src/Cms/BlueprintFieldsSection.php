@@ -112,7 +112,7 @@ class BlueprintFieldsSection extends BlueprintSection
 
     public function updateAll(array $values)
     {
-        $this->values = $values;
+        $this->values = $this->model()->content()->update($values)->toArray();
 
         try {
             $this->form()->isValid();
@@ -120,7 +120,7 @@ class BlueprintFieldsSection extends BlueprintSection
             return $this;
         }
 
-        $this->model = $this->model()->update($values, false);
+        $this->model = $this->model()->update($this->values, false);
         return $this;
     }
 
@@ -133,10 +133,11 @@ class BlueprintFieldsSection extends BlueprintSection
         $model   = $this->model();
         $payload = [$field->name() => $field->value()];
 
+        $this->values = $model->content()->update($payload)->toArray();
+
         try {
             $this->form()->isValid();
         } catch (Exception $e) {
-            $this->values = $model->content()->update($payload)->toArray();
             return $this;
         }
 

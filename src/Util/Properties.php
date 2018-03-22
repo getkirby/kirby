@@ -11,14 +11,22 @@ trait Properties
 
     protected $propertyData = [];
 
-    public function __clone()
-    {
-        throw new Exception('Use the clone method instead');
-    }
-
     public function clone(array $props = [])
     {
         return new static(array_replace_recursive($this->propertyData, $props));
+    }
+
+    /**
+     * Creates a clone and fetches all
+     * lazy-loaded getters to get a full copy
+     *
+     * @return self
+     */
+    public function hardcopy()
+    {
+        $clone = $this->clone();
+        $clone->propertiesToArray();
+        return $clone;
     }
 
     protected function isRequiredProperty(string $name): bool
