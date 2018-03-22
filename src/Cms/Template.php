@@ -9,6 +9,7 @@ use Kirby\Util\F;
 class Template extends View
 {
 
+    protected static $type = 'template';
     protected static $globals = [];
     protected $name;
 
@@ -38,7 +39,7 @@ class Template extends View
             return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
         } catch (Exception $e) {
             // try to load the template from the registry
-            return App::instance()->extension('templates', $this->name());
+            return App::instance()->extension(static::$type . 's', $this->name());
         }
     }
 
@@ -53,7 +54,7 @@ class Template extends View
 
     protected function missingViewMessage(): string
     {
-        return sprintf('The template "%s" cannot be found', $this->name());
+        return sprintf('The %s "%s" cannot be found', static::$type, $this->name());
     }
 
     public function name(): string
@@ -68,7 +69,7 @@ class Template extends View
 
     public function root(): string
     {
-        return App::instance()->root('templates');
+        return App::instance()->root(static::$type . 's');
     }
 
 }
