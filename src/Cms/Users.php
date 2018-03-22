@@ -29,6 +29,18 @@ class Users extends Collection
         return $collection;
     }
 
+    /**
+     * Initialize the UsersFinder class,
+     * which is handling findBy and find
+     * methods
+     *
+     * @return UsersFinder
+     */
+    protected function finder()
+    {
+        return new UsersFinder($this);
+    }
+
     public static function load(string $root, array $inject = []): self
     {
         $users = new static;
