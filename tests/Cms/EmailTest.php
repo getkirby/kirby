@@ -128,4 +128,31 @@ class EmailTest extends TestCase
         ], $email->toArray()['to']);
     }
 
+    public function testEmailUserData()
+    {
+
+        $app = new App([
+            'roots' => [
+                'emails' => __DIR__ . '/fixtures/emails'
+            ]
+        ]);
+
+        $user =  new User([
+            'email' => 'ceo@company.com',
+            'name' => 'Mario'
+        ]);
+
+        $email = new Email($this->_email([
+            'to' => $user,
+            'template' => 'user-info',
+            'data' => [
+                'user' => $user
+            ]
+        ]));
+
+        $this->assertEquals('ceo@company.com', $email->toArray()['to']);
+        $this->assertEquals('Welcome, Mario!', $email->toArray()['body']);
+
+    }
+
 }
