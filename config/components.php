@@ -18,6 +18,13 @@ return function ($app) {
                 return Kirby\Image\Darkroom::factory($options['driver'] ?? 'gd', $options);
             }
         ],
+        'Email' => [
+            'singleton' => true,
+            'type'      => Kirby\Email\Email::class,
+            'instance'  => function (array $props = []) use ($app) {
+                return new Kirby\Email\PHPMailer($props, $props['send'] ?? true);
+            }
+        ],
         'Kirbytext' => [
             'singleton' => true,
             'type'      => Kirby\Text\Tags::class,

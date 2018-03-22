@@ -28,7 +28,8 @@
         "claviska/simpleimage": "3.3.*",
         "sentry/sentry": "^1.8",
         "firebase/php-jwt": "^5.0",
-        "vlucas/phpdotenv": "^2.4.0"
+        "vlucas/phpdotenv": "^2.4.0",
+        "phpmailer/phpmailer": "^6.0"
     },
     "minimum-stability": "dev",
     "require-dev": {

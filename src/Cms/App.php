@@ -177,6 +177,17 @@ class App extends Component
     }
 
     /**
+     * Returns the Email singleton
+     *
+     * @return Email
+     */
+    public function email($preset = [], array $props = [])
+    {
+        $email = new Email($preset, $props);
+        return $this->component('email', $email->toArray());
+    }
+
+    /**
      * The Hooks registry
      *
      * @return Hooks
