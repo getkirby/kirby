@@ -15,7 +15,7 @@ class UserRules
             throw new Exception('The email for this user cannot be changed');
         }
 
-        static::validEmail($user, $email);
+        return static::validEmail($user, $email);
     }
 
     public static function changeLanguage(User $user, string $language): bool

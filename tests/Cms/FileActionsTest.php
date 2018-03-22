@@ -62,7 +62,7 @@ class FileActionsTest extends TestCase
         $file   = new File([
             'filename' => 'test.jpg',
             'parent'   => $parent,
-            'store'    => FileActionsTestStore::class
+            'store'    => FileActionsTestStore::class,
         ]);
 
         return $file;

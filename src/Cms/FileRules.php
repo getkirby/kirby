@@ -42,7 +42,7 @@ class FileRules
         return true;
     }
 
-    public static function delete(): bool
+    public static function delete(File $file): bool
     {
         if ($file->permissions()->delete() !== true) {
             throw new Exception('The file cannot be deleted');
