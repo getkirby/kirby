@@ -6,6 +6,8 @@ use Exception;
 
 class Email
 {
+
+    protected $options;
     protected $preset;
     protected $props;
 
@@ -19,9 +21,14 @@ class Email
     ];
 
     public function __construct($preset = [], array $props = []) {
+        $this->options = $options = App::instance()->option('email');
+
         // load presets from options
         $this->preset = $this->preset($preset);
         $this->props = array_merge($this->preset, $props);
+
+        // add transport settings
+        $this->props['transport'] = $this->options['transport'] ?? [];
 
         // transform model objects to values
         foreach (static::$transform as $prop => $model) {
@@ -38,10 +45,8 @@ class Email
             return $preset;
         }
 
-        $options = App::instance()->option('email');
-
         // preset does not exist
-        if (isset($options['presets'][$preset]) === false) {
+        if (isset($this->options['presets'][$preset]) === false) {
             throw new Exception(sprintf('Email preset "%s" does not exist', $preset));
         }
 

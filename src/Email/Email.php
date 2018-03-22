@@ -31,6 +31,7 @@ class Email
     protected $isSent = false;
     protected $subject;
     protected $to;
+    protected $transport;
 
     public function __construct(array $props = [], bool $send = true)
     {
@@ -59,6 +60,13 @@ class Email
     public function cc(): array
     {
         return $this->cc;
+    }
+
+    protected function defaultTransport(): array
+    {
+        return [
+            'type' => 'mail'
+        ];
     }
 
     public function from(): string
@@ -156,6 +164,12 @@ class Email
         return $this;
     }
 
+    protected function setTransport($transport = null)
+    {
+        $this->setTransport = $transport;
+        return $this;
+    }
+
     public function subject(): string
     {
         return $this->subject;
@@ -164,6 +178,11 @@ class Email
     public function to(): array
     {
         return $this->to;
+    }
+
+    public function transport(): array
+    {
+        return $this->transport ?? $this->defaultTransport();
     }
 
 }

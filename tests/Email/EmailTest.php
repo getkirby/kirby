@@ -34,6 +34,8 @@ class EmailTest extends TestCase
         $this->assertInstanceOf(Body::class, $email->body());
         $this->assertEquals($body, $email->body()->text());
         $this->assertEquals(null, $email->body()->html());
+
+        $this->assertEquals(['type' => 'mail'], $email->transport());
     }
 
     /**
