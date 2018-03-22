@@ -111,4 +111,21 @@ class EmailTest extends TestCase
         ], $email->toArray()['attachments']);
     }
 
+    public function testEmailWithCollectionObject()
+    {
+        $to = new Users([
+            new User(['email' => 'ceo@company.com']),
+            new User(['email' => 'marketing@company.com'])
+        ]);
+
+        $email = new Email($this->_email([
+            'to' => $to
+        ]));
+
+        $this->assertEquals([
+            'ceo@company.com',
+            'marketing@company.com'
+        ], $email->toArray()['to']);
+    }
+
 }
