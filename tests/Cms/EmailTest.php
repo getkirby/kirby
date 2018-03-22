@@ -5,20 +5,15 @@ namespace Kirby\Cms;
 class EmailTest extends TestCase
 {
 
-    protected function _email($props = []) {
-        return array_merge([
-            'from' => 'no-reply@supercompany.com',
-            'to' => 'someone@gmail.com',
-            'subject' => 'Thank you for your contact request',
-            'body' => 'We will never reply',
-            'send' => false
-        ], $props);
-    }
-
     public function testToArray()
     {
-        $email = new Email($this->_email());
-        $this->assertEquals($this->_email(), $email->toArray());
+        $props = [
+            'one' => 'eins',
+            'two' => 'zwei',
+            'three' => 'drei'
+        ];
+        $email = new Email($props);
+        $this->assertEquals($props, $email->toArray());
     }
 
     public function testEmailPresets()
@@ -35,9 +30,9 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $email = new Email('contact', $this->_email([
+        $email = new Email('contact', [
             'to' => $to = 'nobody@web.de'
-        ]));
+        ]);
 
         $this->assertEquals($to, $email->toArray()['to']);
         $this->assertEquals($cc, $email->toArray()['cc']);
@@ -50,12 +45,12 @@ class EmailTest extends TestCase
                 'emails' => __DIR__ . '/fixtures/emails'
             ]
         ]);
-        $email = new Email($this->_email([
+        $email = new Email([
             'template' => 'contact',
             'data' => [
                 'name' => 'Alex'
             ]
-        ]));
+        ]);
         $this->assertEquals('Welcome to Kirby, Alex!', $email->toArray()['body']);
     }
 
@@ -65,9 +60,9 @@ class EmailTest extends TestCase
      */
     public function testEmailInvalidTemplate()
     {
-        $email = new Email($this->_email([
+        $email = new Email([
             'template' => 'subscription'
-        ]));
+        ]);
     }
 
     public function testEmailWithObjects()
@@ -88,7 +83,7 @@ class EmailTest extends TestCase
             'parent' =>  $app->site()
         ]);
 
-        $email = new Email($this->_email([
+        $email = new Email([
             'from' => $from,
             'to' => [
                 $to,
@@ -98,7 +93,7 @@ class EmailTest extends TestCase
                 $file,
                 $image
             ]
-        ]));
+        ]);
 
         $this->assertEquals('sales@company.com', $email->toArray()['from']);
         $this->assertEquals([
@@ -118,9 +113,7 @@ class EmailTest extends TestCase
             new User(['email' => 'marketing@company.com'])
         ]);
 
-        $email = new Email($this->_email([
-            'to' => $to
-        ]));
+        $email = new Email(['to' => $to]);
 
         $this->assertEquals([
             'ceo@company.com',
@@ -142,13 +135,13 @@ class EmailTest extends TestCase
             'name' => 'Mario'
         ]);
 
-        $email = new Email($this->_email([
+        $email = new Email([
             'to' => $user,
             'template' => 'user-info',
             'data' => [
                 'user' => $user
             ]
-        ]));
+        ]);
 
         $this->assertEquals('ceo@company.com', $email->toArray()['to']);
         $this->assertEquals('Welcome, Mario!', $email->toArray()['body']);
