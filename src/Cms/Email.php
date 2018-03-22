@@ -2,88 +2,119 @@
 
 namespace Kirby\Cms;
 
-
+use Exception;
 
 class Email
 {
     protected $preset;
     protected $props;
 
+    protected static $transform = [
+        'from'        => 'user',
+        'replyTo'     => 'user',
+        'to'          => 'user',
+        'cc'          => 'user',
+        'bcc'         => 'user',
+        'attachments' => 'file'
+    ];
+
     public function __construct($preset = [], array $props = []) {
-        $this->props = array_merge($this->preset($preset), $props);
-        $this->convertObjects();
+        // load presets from options
+        $this->preset = $this->preset($preset);
+        $this->props = array_merge($this->preset, $props);
+
+        // transform model objects to values
+        foreach (static::$transform as $prop => $model) {
+            $this->transformProp($prop, $model);
+        }
+
+        // load template for body text
         $this->template();
     }
 
-    protected function convertFile($file)
-    {
-        return $this->convertObject($file, File::class, 'url');
-    }
-
-    protected function convertObject($object, $class, $method)
-    {
-        if (is_string($object) === true) {
-            return $object;
-        }
-
-        if (is_a($object, $class) === true) {
-            return $object->$method();
-        }
-
-        if (is_array($object) === true || is_a($object, Collection::class) === true) {
-            $objects = [];
-            foreach ($object as $item) {
-                $objects[] = $this->convertObject($item, $class, $method);
-            }
-            return $objects;
-        }
-    }
-
-    protected function convertObjects()
-    {
-        $this->convertProp('from', 'user');
-        $this->convertProp('replyTo', 'user');
-        $this->convertProp('to', 'user');
-        $this->convertProp('cc', 'user');
-        $this->convertProp('bcc', 'user');
-        $this->convertProp('attachments', 'file');
-    }
-
-    protected function convertProp($prop, $type) {
-        if (isset($this->props[$prop]) === true) {
-            $this->props[$prop] = $this->{'convert' . ucfirst($type)}($this->props[$prop]);
-        }
-    }
-
-    protected function convertUser($user)
-    {
-        return $this->convertObject($user, User::class, 'email');
-    }
-
     protected function preset($preset) {
-        if (is_array($preset) === true) {
+        // only passed props, not preset name
+        if (is_string($preset) !== true) {
             return $preset;
         }
 
-        if (is_string($preset) === true) {
-            $options = App::instance()->option('email');
-            return $options['presets'][$preset] ?? [];
-            // TODO: throw warning if preset does not exist
+        $options = App::instance()->option('email');
+
+        // preset does not exist
+        if (isset($options['presets'][$preset]) === false) {
+            throw new Exception(sprintf('Email preset "%s" does not exist', $preset));
         }
+
+        return $options['presets'][$preset];
     }
 
-    protected function template() {
-        if (isset($this->props['template']) == true) {
+    protected function template()
+    {
+        if (isset($this->props['template']) === true) {
+
+            // prepare data to be passed to template
             $data = $this->props['data'] ?? [];
-            $template = new EmailTemplate($this->props['template'], $data);
-            $this->props['body'] = $template->render();
-            // TODO: implement html/text email templates
+
+            // check if html/text templates exist
+            $html = new EmailTemplate($this->props['template'] . '.html', $data);
+            $text = new EmailTemplate($this->props['template'] . '.text', $data);
+            if ($html->exists() === true && $text->exists() === true) {
+                $this->props['body'] = [
+                $this->props['body'] =
+                    'html' => $html->render(),
+                    'text' => $text->render()
+                ];
+
+            // fallback to single email text template
+            } else {
+                $template = new EmailTemplate($this->props['template'], $data);
+                $this->props['body'] = $template->render();
+            }
+
         }
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return $this->props;
+    }
+
+    protected function transformFile($file)
+    {
+        return $this->transformModel($file, File::class, 'url');
+    }
+
+    protected function transformModel($value, $class, $content)
+    {
+        // value is already a string
+        if (is_string($value) === true) {
+            return $value;
+        }
+
+        // value is a model object, get value through content method
+        if (is_a($value, $class) === true) {
+            return $value->$content();
+        }
+
+        // value is an array or collection, call transform on each item
+        if (is_array($value) === true || is_a($value, Collection::class) === true) {
+            $models = [];
+            foreach ($value as $model) {
+                $models[] = $this->transformModel($model, $class, $content);
+            }
+            return $models;
+        }
+    }
+
+    protected function transformProp($prop, $model) {
+        if (isset($this->props[$prop]) === true) {
+            $this->props[$prop] = $this->{'transform' . ucfirst($model)}($this->props[$prop]);
+        }
+    }
+
+    protected function transformUser($user)
+    {
+        return $this->transformModel($user, User::class, 'email');
     }
 
 }

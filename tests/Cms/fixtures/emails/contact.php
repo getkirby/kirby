@@ -1,1 +1,1 @@
-Welcome to Kirby, <?= $name ?>!
+Cheers, <?= $name ?>!

@@ -38,6 +38,16 @@ class EmailTest extends TestCase
         $this->assertEquals($cc, $email->toArray()['cc']);
     }
 
+    /**
+     * @expectedException        Exception
+     * @expectedExceptionMessage Email preset "not-a-preset" does not exist
+     */
+    public function testEmailInvalidPreset()
+    {
+
+        $email = new Email('not-a-preset', []);
+    }
+
     public function testEmailTemplate()
     {
         $app = new App([
@@ -51,7 +61,23 @@ class EmailTest extends TestCase
                 'name' => 'Alex'
             ]
         ]);
-        $this->assertEquals('Welcome to Kirby, Alex!', $email->toArray()['body']);
+        $this->assertEquals('Cheers, Alex!', $email->toArray()['body']);
+    }
+
+    public function testEmailTemplateHtml()
+    {
+        $app = new App([
+            'roots' => [
+                'emails' => __DIR__ . '/fixtures/emails'
+            ]
+        ]);
+        $email = new Email([
+            'template' => 'media'
+        ]);
+        $this->assertEquals([
+            'html' => '<b>Image:</b> <img src=""/>',
+            'text' => 'Image: Description'
+        ], $email->toArray()['body']);
     }
 
     /**
