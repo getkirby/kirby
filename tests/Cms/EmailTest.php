@@ -10,10 +10,9 @@ class EmailTest extends TestCase
         $props = [
             'one' => 'eins',
             'two' => 'zwei',
-            'three' => 'drei'
         ];
         $email = new Email($props);
-        $this->assertEquals($props, $email->toArray());
+        $this->assertEquals($props + ['transport' => []], $email->toArray());
     }
 
     public function testEmailPresets()

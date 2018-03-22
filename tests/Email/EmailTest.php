@@ -5,8 +5,8 @@ namespace Kirby\Email;
 class EmailTest extends TestCase
 {
 
-    protected function _email($props = [], $send = true) {
-        return parent::_email(Email::class, $props, $send);
+    protected function _email($props = []) {
+        return parent::_email(Email::class, $props);
     }
 
     public function testProperties()

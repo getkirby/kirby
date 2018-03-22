@@ -35,7 +35,7 @@ class AppTest extends TestCase
             'to' => 'someone@gmail.com',
             'subject' => 'Thank you for your contact request',
             'body' => 'We will never reply',
-            'send' => false
+            'debug' => true
         ]);
         $this->assertInstanceOf(\Kirby\Email\Email::class, $email);
     }

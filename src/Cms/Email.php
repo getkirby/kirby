@@ -50,7 +50,7 @@ class Email
             throw new Exception(sprintf('Email preset "%s" does not exist', $preset));
         }
 
-        return $options['presets'][$preset];
+        return $this->options['presets'][$preset];
     }
 
     protected function template()

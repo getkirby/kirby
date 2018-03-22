@@ -33,11 +33,11 @@ class Email
     protected $to;
     protected $transport;
 
-    public function __construct(array $props = [], bool $send = true)
+    public function __construct(array $props = [], bool $debug = false)
     {
         $this->setProperties($props);
 
-        if ($send === true) {
+        if ($debug === false) {
             $this->send();
         }
     }

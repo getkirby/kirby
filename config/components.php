@@ -22,7 +22,7 @@ return function ($app) {
             'singleton' => true,
             'type'      => Kirby\Email\Email::class,
             'instance'  => function (array $props = []) use ($app) {
-                return new Kirby\Email\PHPMailer($props, $props['send'] ?? true);
+                return new Kirby\Email\PHPMailer($props, $props['debug'] ?? false);
             }
         ],
         'Kirbytext' => [
