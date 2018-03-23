@@ -1,0 +1,17 @@
+label: Dishes
+type: structure
+fields:
+  dish:
+    label: Dish
+    type: text
+    width: 1/3
+  description:
+    label: Description
+    type: text
+    width: 1/3
+  price:
+    label: Price
+    type: number
+    prefix: €
+    step: 0.01
+    width: 1/3

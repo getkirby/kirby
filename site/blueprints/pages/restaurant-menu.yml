@@ -2,77 +2,17 @@ title: Restaurant Menu
 
 fields:
   starters:
+    extends: fields/dishes
     label: Starters
-    type: structure
-    fields:
-      dish:
-        label: Dish
-        type: text
-        width: 1/3
-      description:
-        label: Description
-        type: text
-        width: 1/3
-      price:
-        label: Price
-        type: number
-        prefix: €
-        step: 0.01
-        width: 1/3
 
   pasta:
+    extends: fields/dishes
     label: Pasta
-    type: structure
-    fields:
-      dish:
-        label: Dish
-        type: text
-        width: 1/3
-      description:
-        label: Description
-        type: text
-        width: 1/3
-      price:
-        label: Price
-        type: number
-        prefix: €
-        step: 0.01
-        width: 1/3
 
   meat:
+    extends: fields/dishes
     label: Meat
-    type: structure
-    fields:
-      dish:
-        label: Dish
-        type: text
-        width: 1/3
-      description:
-        label: Description
-        type: text
-        width: 1/3
-      price:
-        label: Price
-        type: number
-        prefix: €
-        step: 0.01
-        width: 1/3
 
   desert:
+    extends: fields/dishes
     label: Desert
-    type: structure
-    fields:
-      dish:
-        label: Dish
-        type: text
-        width: 1/3
-      description:
-        label: Description
-        type: text
-        width: 1/3
-      price:
-        label: Price
-        type: number
-        prefix: €
-        step: 0.01
-        width: 1/3

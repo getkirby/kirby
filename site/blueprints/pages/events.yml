@@ -3,25 +3,17 @@ title: Events
 sections:
 
   drafts:
-    type: pages
+    extends: sections/events
     headline: Unpublished events
     query: page.drafts.sortBy("from", "asc")
     create: event
-    item:
-      info: "{{ page.from.toDate('d.m.Y') }} - {{ page.to.toDate('d.m.Y') }} / {{ page.location }}"
 
   published:
-    type: pages
+    extends: sections/events
     headline: Published events
     query: page.children.listed.sortBy("from", "asc")
-    create: event
-    item:
-      info: "{{ page.from.toDate('d.m.Y') }} - {{ page.to.toDate('d.m.Y') }} / {{ page.location }}"
 
   unlisted:
-    type: pages
+    extends: sections/events
     headline: Unlisted events
     query: page.children.unlisted.sortBy("from", "asc")
-    create: event
-    item:
-      info: "{{ page.from.toDate('d.m.Y') }} - {{ page.to.toDate('d.m.Y') }} / {{ page.location }}"

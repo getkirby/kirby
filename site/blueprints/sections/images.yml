@@ -1,0 +1,4 @@
+type: files
+headline: Images
+layout: list
+accept: image/jpeg, image/png

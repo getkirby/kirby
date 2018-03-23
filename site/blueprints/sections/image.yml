@@ -1,0 +1,7 @@
+type: files
+headline: Cover
+max: 1
+layout: cards
+accept: image/jpeg, image/png
+item:
+  info: "{{ file.dimensions }}"

@@ -23,9 +23,7 @@ sections:
         label: About
         type: textarea
 
-  image:
-    type: files
-    headline: Image
-    layout: cards
-    max: 1
-    accept: image/*
+	image:
+		extends: sections/image
+		query: page.images
+		min: 1

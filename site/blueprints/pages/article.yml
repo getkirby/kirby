@@ -27,9 +27,4 @@ sections:
         options: query
         query: site.find("blog").children
 
-  images:
-    headline: Images
-    type: files
-    accept: image/*
-
-
+  images: sections/images

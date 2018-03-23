@@ -1,21 +1,15 @@
 title: Projects
 
+options:
+  delete: false
+
 sections:
   drafts:
+    extends: sections/projects
     headline: Projects Drafts
-    type: pages
+    layout: list
     query: page.drafts
-    item:
-      info: "{{ page.year }}"
     create: project
 
   published:
-    headline:
-      en_US: Published Projects
-      de_DE: Veröffentlicht
-    type: pages
-    layout: cards
-    query: page.children
-    item:
-      info: "{{ page.year }}"
-
+    extends: sections/projects

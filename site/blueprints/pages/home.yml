@@ -1,7 +1,5 @@
 title: Home
 
-
-
 sections:
   content:
     type: fields
@@ -16,9 +14,6 @@ sections:
         type: line
 
   projects:
+    extends: sections/projects
     headline: Latest projects
     query: site.find('projects').children.visible.limit(3)
-    type: pages
-    item:
-      info: "{{ page.year }}"
-    layout: cards
