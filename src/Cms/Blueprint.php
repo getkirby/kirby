@@ -338,8 +338,8 @@ class Blueprint extends BlueprintObject
             // section extensions
             $props = Blueprint::extend($props);
 
-            // use the key as name if the name is not set
-            $props['name'] = $props['name'] ?? $name;
+            // use the key as name
+            $props['name'] = $name;
 
             // pass down the model
             $props['model'] = $this->model();

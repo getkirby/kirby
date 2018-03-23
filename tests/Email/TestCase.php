@@ -5,7 +5,7 @@ namespace Kirby\Email;
 class TestCase extends \PHPUnit\Framework\TestCase
 {
 
-    protected function _email($mailer, $props = []) {
+    protected function _email($props = [], $mailer) {
         return new $mailer(array_merge([
             'from' => 'no-reply@supercompany.com',
             'to' => 'someone@gmail.com',

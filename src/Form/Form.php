@@ -64,10 +64,11 @@ class Form extends Component
         $fields = [];
 
         foreach ($this->fields as $name => $field) {
-            $field['locale'] = $locale;
-            $field['model']  = $model;
-            $field['name']   = $name = $field['name'] ?? $name;
-            $field['value']  = $values[strtolower($name)] ?? null;
+            $field['locale']    = $locale;
+            $field['model']     = $model;
+            $field['name']      = $name              = $field['name'] ?? $name;
+            $field['value']     = $values[$lowerName = strtolower($name)] ?? null;
+            $field['undefined'] = isset($values[$lowerName]) === false;
 
             $fields[$name] = $field;
         }

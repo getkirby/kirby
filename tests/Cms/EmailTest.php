@@ -126,8 +126,8 @@ class EmailTest extends TestCase
             'someone@gmail.com'
         ], $email->toArray()['to']);
         $this->assertEquals([
-            '/media/site/report.pdf',
-            '/media/site/graph.png'
+            'report.pdf',
+            'graph.png'
         ], $email->toArray()['attachments']);
     }
 

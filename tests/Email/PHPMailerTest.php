@@ -5,8 +5,8 @@ namespace Kirby\Email;
 class PHPMailerTest extends TestCase
 {
 
-    protected function _email($props = []) {
-        return parent::_email(PHPMailer::class, $props);
+    protected function _email($props = [], $mailer = PHPMailer::class) {
+        return parent::_email($props, $mailer);
     }
 
     public function testSend()

@@ -25,8 +25,7 @@ class BlueprintTest extends TestCase
     public function tabs(): array
     {
         return [
-            [
-                'name'    => 'testTab',
+            'testTab' => [
                 'label'   => 'Test Tab',
                 'icon'    => 'settings',
                 'columns' => $this->columns()
@@ -44,8 +43,7 @@ class BlueprintTest extends TestCase
     public function sections(): array
     {
         return [
-            [
-                'name'   => 'testSection',
+            'testSection' => [
                 'type'   => 'fields',
                 'fields' => $this->fields()
             ]
@@ -66,8 +64,7 @@ class BlueprintTest extends TestCase
     public function fields(): array
     {
         return [
-            [
-                'name'  => 'testField',
+            'testField' => [
                 'label' => 'Test Field',
                 'type'  => 'text'
             ]

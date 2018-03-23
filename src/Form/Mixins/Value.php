@@ -14,6 +14,7 @@ trait Value
     protected $default;
     protected $empty;
     protected $error;
+    protected $undefined = true;
     protected $value;
 
     public function default()
@@ -58,6 +59,17 @@ trait Value
     }
 
     /**
+     * Checks if the field value is set
+     * or undefined
+     *
+     * @return boolean
+     */
+    public function isUndefined(): bool
+    {
+        return $this->undefined;
+    }
+
+    /**
      * Checks if the current field value is valid
      *
      * @return boolean
@@ -77,14 +89,24 @@ trait Value
         return $this;
     }
 
+    protected function setUndefined(bool $undefined): self
+    {
+        $this->undefined = $undefined;
+        return $this;
+    }
+
     /**
      * @param mixed $value
      * @return self
      */
     protected function setValue($value = null): self
     {
+        if ($value !== null) {
+            $this->setUndefined(false);
+        }
+
         // set the default if the value is empty
-        $value = $this->isEmpty($value) === true ? $this->default() : $value;
+        $value = $this->isUndefined() === true ? $this->default() : $value;
 
         // convert the given value to a data value
         $this->value = $this->valueFromInput($value);
