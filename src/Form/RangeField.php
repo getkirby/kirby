@@ -45,15 +45,4 @@ class RangeField extends NumberField
         return $this;
     }
 
-    protected function setStep(float $step = null)
-    {
-        $this->step = $step;
-        return $this;
-    }
-
-    protected function validateStep($value)
-    {
-        return true;
-    }
-
 }
