@@ -24,7 +24,7 @@ trait BlueprintSectionMax
     {
         if ($max = $this->max()) {
             if ($this->total() > $max) {
-                throw new Exception('Too many entries');
+                throw new Exception('No more than ' . $max . ' entries allowed');
             }
         }
 

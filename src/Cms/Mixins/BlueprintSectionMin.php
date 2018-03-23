@@ -28,7 +28,7 @@ trait BlueprintSectionMin
     {
         if ($min = $this->min()) {
             if ($this->total() < $min) {
-                throw new Exception('Not enough entries');
+                throw new Exception('At least ' . $min . ' entries required');
             }
         }
 
