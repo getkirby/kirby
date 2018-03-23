@@ -7,7 +7,6 @@ use Kirby\Util\Str;
 class CheckboxesField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Columns;
     use Mixins\Label;
     use Mixins\Options;

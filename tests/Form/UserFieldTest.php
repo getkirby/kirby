@@ -10,11 +10,6 @@ class UserFieldTest extends FieldTestCase
         return UserField::class;
     }
 
-    public function testAutofocus()
-    {
-        $this->assertAutofocusProperty();
-    }
-
     public function testHelp()
     {
         $this->assertHelpProperty();

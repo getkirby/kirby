@@ -5,7 +5,6 @@ namespace Kirby\Form;
 class TextareaField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Converter;
     use Mixins\Counter;
     use Mixins\Help;

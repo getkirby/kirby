@@ -10,7 +10,6 @@ abstract class FieldTestCase extends BaseTestCase
 {
 
     use Assertions\Autocomplete;
-    use Assertions\Autofocus;
     use Assertions\Converter;
     use Assertions\Disabled;
     use Assertions\Help;

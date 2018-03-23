@@ -5,7 +5,6 @@ namespace Kirby\Form;
 class NumberField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Help;
     use Mixins\Icon;
     use Mixins\Label;

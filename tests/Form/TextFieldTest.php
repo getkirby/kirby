@@ -10,11 +10,6 @@ class TextFieldTest extends FieldTestCase
         return TextField::class;
     }
 
-    public function testAutofocus()
-    {
-        $this->assertAutofocusProperty();
-    }
-
     public function testAutocomplete()
     {
         $this->assertAutocompleteProperty();

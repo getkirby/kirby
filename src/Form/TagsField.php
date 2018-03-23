@@ -7,7 +7,6 @@ use Kirby\Util\Str;
 class TagsField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Converter;
     use Mixins\Help;
     use Mixins\Icon;

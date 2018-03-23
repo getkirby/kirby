@@ -5,7 +5,6 @@ namespace Kirby\Form;
 class SelectField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Label;
     use Mixins\Options;
     use Mixins\Required;

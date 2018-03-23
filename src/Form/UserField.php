@@ -8,7 +8,6 @@ use Kirby\Form\Exceptions\ValidationException;
 class UserField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Help;
     use Mixins\Icon;
     use Mixins\Label;

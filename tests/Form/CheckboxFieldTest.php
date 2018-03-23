@@ -17,11 +17,6 @@ class CheckboxFieldTest extends FieldTestCase
         ];
     }
 
-    public function testAutofocus()
-    {
-        $this->assertAutofocusProperty();
-    }
-
     public function testHelp()
     {
         $this->assertHelpProperty();

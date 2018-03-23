@@ -5,7 +5,6 @@ namespace Kirby\Form;
 class StructureField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Counter;
     use Mixins\Fields;
     use Mixins\Help;

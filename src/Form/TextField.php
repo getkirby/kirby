@@ -6,7 +6,6 @@ class TextField extends Field
 {
 
     use Mixins\Autocomplete;
-    use Mixins\Autofocus;
     use Mixins\Converter;
     use Mixins\Counter;
     use Mixins\Help;

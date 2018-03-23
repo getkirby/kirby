@@ -5,7 +5,6 @@ namespace Kirby\Form;
 class DateField extends Field
 {
 
-    use Mixins\Autofocus;
     use Mixins\Date;
     use Mixins\Help;
     use Mixins\Icon;
