@@ -10,11 +10,6 @@ class TextareaFieldTest extends FieldTestCase
         return TextareaField::class;
     }
 
-    public function testConverter()
-    {
-        $this->assertConverterProperty();
-    }
-
     public function testHelp()
     {
         $this->assertHelpProperty();
