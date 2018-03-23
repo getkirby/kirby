@@ -128,7 +128,7 @@ trait BlueprintSectionData
         $imageSettings = array_merge([
             'url'   => false,
             'ratio' => '3/2',
-            'back'  => 'black'
+            'back'  => 'pattern'
         ], $imageSettings);
 
         if ($imageSource === null) {
