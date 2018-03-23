@@ -2,7 +2,6 @@
 
 namespace Kirby\Collection\Traits;
 
-use Kirby\Util\A;
 use Kirby\Util\Str;
 
 trait Sorter
@@ -66,9 +65,9 @@ trait Sorter
         // build the multisort params in the right order
         $params = [];
         foreach ($fields as $field) {
-            $params[] = A::get($field, 'values',    []);
-            $params[] = A::get($field, 'direction', SORT_ASC);
-            $params[] = A::get($field, 'flags',     SORT_REGULAR);
+            $params[] = $field['values']    ?? [];
+            $params[] = $field['direction'] ?? SORT_ASC;
+            $params[] = $field['flags']     ?? SORT_REGULAR;
         }
         $params[] = &$array;
 
