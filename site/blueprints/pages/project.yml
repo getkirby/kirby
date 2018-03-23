@@ -21,7 +21,6 @@ sections:
 				minLength: 10
 				maxLength: 140
 				width: 3/4
-				default: My default headline
 			year:
 				label: Year
 				type: number

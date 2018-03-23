@@ -5,7 +5,7 @@ tabs:
     label: Pages
     icon: page
     columns:
-      - 1/1: projects, blog, about, misc
+      - 1/1: projects, blog, about, kitchensink, misc
   social:
     label: Social
     icon: twitter
@@ -46,10 +46,17 @@ sections:
       info: "{{ page.position }}"
     create: team
 
+  kitchensink:
+    headline: Kitchensink
+    type: pages
+    query: site.find('kitchensink').children
+    item:
+      image: false
+
   misc:
     headline: Misc
     type: pages
-    query: site.find('home', 'contact', 'kitchensink')
+    query: site.find('home', 'contact')
     item:
       image: false
 
