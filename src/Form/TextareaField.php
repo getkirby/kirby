@@ -5,7 +5,6 @@ namespace Kirby\Form;
 class TextareaField extends Field
 {
 
-    use Mixins\Converter;
     use Mixins\Counter;
     use Mixins\Help;
     use Mixins\Icon;
@@ -31,11 +30,6 @@ class TextareaField extends Field
         $this->validateLength($value);
 
         return true;
-    }
-
-    protected function valueFromInput($input)
-    {
-        return $this->convert($input);
     }
 
 }
