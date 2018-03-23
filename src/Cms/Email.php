@@ -86,7 +86,7 @@ class Email
 
     protected function transformFile($file)
     {
-        return $this->transformModel($file, File::class, 'url');
+        return $this->transformModel($file, File::class, 'root');
     }
 
     protected function transformModel($value, $class, $content)
