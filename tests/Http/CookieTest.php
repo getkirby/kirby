@@ -16,6 +16,7 @@ class CookieTest extends TestCase
 
     public function testLifetime()
     {
+        $this->assertEquals(12345678901, Cookie::lifetime(12345678901));
         $this->assertEquals((600 + time()), Cookie::lifetime(10));
         $this->assertEquals(0, Cookie::lifetime(-10));
     }
@@ -49,6 +50,7 @@ class CookieTest extends TestCase
     public function testGet()
     {
         $this->assertEquals('bar', Cookie::get('foo'));
+        $this->assertEquals('some amazing default', Cookie::get('does_not_exist', 'some amazing default'));
         $this->assertEquals($_COOKIE, Cookie::get());
     }
 
@@ -58,18 +60,18 @@ class CookieTest extends TestCase
         $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
         $this->assertEquals('bar', Cookie::get('foo'));
 
+        // no value
+        $_COOKIE['foo'] = '21fdd6d0d6f5b4ac8109e5f2d0c3f0f7e8e89492+';
+        $this->assertEquals('', Cookie::get('foo'));
+        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
+        $this->assertEquals('bar', Cookie::get('foo'));
+
         // value with a plus sign
         $_COOKIE['foo'] = '9c8c403efa31d4e4598d75e9c394b48255b65154+bar+baz';
         $this->assertEquals('bar+baz', Cookie::get('foo'));
 
         // separator missing
         $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85';
-        $this->assertEquals(null, Cookie::get('foo'));
-        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
-        $this->assertEquals('bar', Cookie::get('foo'));
-
-        // no value
-        $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+';
         $this->assertEquals(null, Cookie::get('foo'));
         $_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
         $this->assertEquals('bar', Cookie::get('foo'));

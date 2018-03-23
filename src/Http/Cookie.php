@@ -166,7 +166,8 @@ class Cookie
         $value = Str::after($string, '+');
 
         // if the hash or the value is missing at all return null
-        if (!$hash || !$value) {
+        // $value can be an empty string, $hash can't be!
+        if (!is_string($hash) || $hash === '' || !is_string($value)) {
             return null;
         }
 
