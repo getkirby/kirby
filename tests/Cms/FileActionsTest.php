@@ -150,6 +150,7 @@ class FileActionsTest extends TestCase
     {
         $file = new ReplaceableTestFile([
             'filename' => 'yay.js',
+            'parent'   => new Page(['slug' => 'test']),
             'store'    => FileActionsTestStore::class
         ]);
 
