@@ -7,20 +7,20 @@ trait Text
 
     protected $text;
 
-    protected function defaultText()
+    protected function defaultText(): string
     {
-        return null;
+        return '';
     }
 
-    protected function setText($text = null)
+    protected function setText(string $text = null)
     {
         $this->text = $this->i18n($text);
         return $this;
     }
 
-    public function text()
+    public function text(): string
     {
-        return $this->text;
+        return markdown(kirbytext($this->text));
     }
 
 }
