@@ -14,6 +14,8 @@ class TextareaField extends Field
     use Mixins\Required;
     use Mixins\Value;
 
+    protected $multiline;
+
     protected function defaultLabel()
     {
         return 'Text';
@@ -22,6 +24,22 @@ class TextareaField extends Field
     protected function defaultName(): string
     {
         return 'text';
+    }
+
+    protected function defaultMultiline(): bool
+    {
+        return true;
+    }
+
+    protected function setMultiline(bool $multiline = null)
+    {
+        $this->multiline = $multiline;
+        return $this;
+    }
+
+    public function multiline()
+    {
+        return $this->multiline;
     }
 
     protected function validate($value): bool
