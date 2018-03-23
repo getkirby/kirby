@@ -13,8 +13,10 @@ class TextField extends Field
     use Mixins\Label;
     use Mixins\Length;
     use Mixins\Placeholder;
+    use Mixins\Pattern;
     use Mixins\Prefix;
     use Mixins\Required;
+    use Mixins\Spellcheck;
     use Mixins\Value;
 
     protected function defaultLabel()
