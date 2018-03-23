@@ -2,8 +2,6 @@
 
 namespace Kirby\Collection\Traits;
 
-use Kirby\Util\Str;
-
 trait Sorter
 {
 
@@ -34,7 +32,7 @@ trait Sorter
 
             // detect the type of argument
             // sorting direction
-            $argLower = Str::lower($arg);
+            $argLower = strtolower($arg);
             if ($arg === SORT_ASC || $argLower === 'asc') {
                 $fields[$currentField]['direction'] = SORT_ASC;
             } else if ($arg === SORT_DESC || $argLower === 'desc') {
