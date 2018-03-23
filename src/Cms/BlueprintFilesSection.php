@@ -120,24 +120,26 @@ class BlueprintFilesSection extends BlueprintSection
 
     public function filename($source, $filename, $template = null)
     {
-        if (empty($template) === true) {
-            return $filename;
+        $extension = F::extension($filename);
+        $name      = F::name($filename);
+
+        if (empty($template) === false) {
+            $image = new Image($source);
+            $data  = [
+                'file' => [
+                    'height'      => $image->height(),
+                    'name'        => F::name($filename),
+                    'orientation' => $image->orientation(),
+                    'type'        => $image->type(),
+                    'width'       => $image->width(),
+                ],
+                'index' => $this->total() + 1
+            ];
+
+            $name = (new Tempura($template, $data))->render();
         }
 
-        $extension = F::extension($filename);
-        $image     = new Image($source);
-        $data      = [
-            'file' => [
-                'height'      => $image->height(),
-                'name'        => F::name($filename),
-                'orientation' => $image->orientation(),
-                'type'        => $image->type(),
-                'width'       => $image->width(),
-            ],
-            'index' => $this->total() + 1
-        ];
-
-        $name = Str::slug((new Tempura($template, $data))->render());
+        $name = Str::slug($name);
 
         return $name . '.' . $extension;
     }
