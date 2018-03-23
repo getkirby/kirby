@@ -27,26 +27,27 @@ class Cookie
      *
      * <code>
      *
-     * cookie::set('mycookie', 'hello', 60);
+     * cookie::set('mycookie', 'hello', ['lifetime' => 60]);
      * // expires in 1 hour
      *
      * </code>
      *
      * @param  string  $key       The name of the cookie
      * @param  string  $value     The cookie content
-     * @param  int     $lifetime  The number of minutes until the
-     *                            cookie expires
-     * @param  string  $path      The path on the server to set the
-     *                            cookie for
-     * @param  string  $domain    the domain
-     * @param  boolean $secure    only sets the cookie over https
-     * @param  boolean $httpOnly  avoids the cookie to be accessed
-     *                            via javascript
+     * @param  array   $options   Array of options:
+     *                            lifetime, path, domain, secure, httpOnly
      * @return boolean            true: cookie was created,
      *                            false: cookie creation failed
      */
-    public static function set(string $key, string $value, int $lifetime = 0, string $path = '/', string $domain = null, bool $secure = false, bool $httpOnly = true): bool
+    public static function set(string $key, string $value, array $options = []): bool
     {
+        // extract options
+        $lifetime = $options['lifetime'] ?? 0;
+        $path     = $options['path']     ?? '/';
+        $domain   = $options['domain']   ?? null;
+        $secure   = $options['secure']   ?? false;
+        $httpOnly = $options['httpOnly'] ?? true;
+
         // add an HMAC signature of the value
         $value = static::hmac($value) . '+' . $value;
 
@@ -60,12 +61,20 @@ class Cookie
     /**
      * Calculates the lifetime for a cookie
      *
-     * @param  int  $minutes
+     * @param  int $minutes Number of minutes or timestamp
      * @return int
      */
     public static function lifetime(int $minutes): int
     {
-        return $minutes > 0 ? (time() + ($minutes * 60)) : 0;
+        if ($minutes > 1000000000) {
+            // absolute timestamp
+            return $minutes;
+        } elseif ($minutes > 0) {
+            // minutes from now
+            return time() + ($minutes * 60);
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -80,18 +89,15 @@ class Cookie
      *
      * @param  string  $key       The name of the cookie
      * @param  string  $value     The cookie content
-     * @param  string  $path      The path on the server to set the
-     *                            cookie for
-     * @param  string  $domain    the domain
-     * @param  boolean $secure    only sets the cookie over https
-     * @param  boolean $httpOnly  avoids the cookie to be accessed
-     *                            via javascript
+     * @param  array   $options   Array of options:
+     *                            path, domain, secure, httpOnly
      * @return boolean            true: cookie was created,
      *                            false: cookie creation failed
      */
-    public static function forever(string $key, $value, string $path = '/', string $domain = null, bool $secure = false, bool $httpOnly = true): bool
+    public static function forever(string $key, string $value, array $options = []): bool
     {
-        return static::set($key, $value, 2628000, $path, $domain, $secure, $httpOnly);
+        $options['lifetime'] = 253402214400; // 9999-12-31
+        return static::set($key, $value, $options);
     }
 
     /**
