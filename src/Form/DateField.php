@@ -12,6 +12,8 @@ class DateField extends Field
     use Mixins\Required;
     use Mixins\Value;
 
+    protected $range;
+
     protected function defaultIcon()
     {
         return 'calendar';
@@ -25,6 +27,22 @@ class DateField extends Field
     protected function defaultName(): string
     {
         return 'date';
+    }
+
+    protected function defaultRange(): int
+    {
+        return 10;
+    }
+
+    public function range()
+    {
+        return $this->range;
+    }
+
+    protected function setRange(int $range = null)
+    {
+        $this->range = $range;
+        return $this;
     }
 
     protected function validate($value): bool
