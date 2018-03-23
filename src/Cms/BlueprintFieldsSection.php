@@ -32,11 +32,21 @@ class BlueprintFieldsSection extends BlueprintSection
 
     public function form()
     {
+        $fields   = $this->fields;
+        $disabled = $this->model()->permissions()->update() === false;
+
+        if ($disabled === true) {
+            $fields = array_map(function ($field) {
+                $field['disabled'] = true;
+                return $field;
+            }, $fields);
+        }
+
         return new Form([
-            'fields' => $this->fields,
+            'fields' => $fields,
             'locale' => 'en',
             'model'  => $this->model(),
-            'values' => $this->values ?? $this->model()->content()->toArray()
+            'values' => $this->values ?? $this->model()->content()->toArray(),
         ]);
     }
 
@@ -79,7 +89,13 @@ class BlueprintFieldsSection extends BlueprintSection
 
     protected function setFields(array $fields): self
     {
-        $this->fields = $fields;
+
+        foreach ($fields as $name => $field) {
+            $field = Blueprint::extend($field);
+            $field['name'] = $name;
+            $this->fields[$name] = $field;
+        }
+
         return $this;
     }
 
@@ -96,15 +112,16 @@ class BlueprintFieldsSection extends BlueprintSection
 
     public function updateAll(array $values)
     {
-        $this->values = $values;
+        $this->values = $this->model()->content()->update($values)->toArray();
 
         try {
             $this->form()->isValid();
-            $this->model = $this->model()->update($values, false);
-            return $this;
         } catch (Exception $e) {
             return $this;
         }
+
+        $this->model = $this->model()->update($this->values, false);
+        return $this;
     }
 
     public function updateField(string $fieldName, $value)
@@ -116,15 +133,17 @@ class BlueprintFieldsSection extends BlueprintSection
         $model   = $this->model();
         $payload = [$field->name() => $field->value()];
 
+        $this->values = $model->content()->update($payload)->toArray();
+
         try {
-            $field->isValid();
-            $this->model  = $model->update($payload, false);
-            $this->values = null;
-            return $this;
+            $this->form()->isValid();
         } catch (Exception $e) {
-            $this->values = $model->content()->update($payload)->toArray();
             return $this;
         }
+
+        $this->model  = $model->update($payload, false);
+        $this->values = null;
+        return $this;
     }
 
     public function values()

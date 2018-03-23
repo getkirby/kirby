@@ -1,0 +1,14 @@
+{
+    "name": "getkirby/test-plugin",
+    "description": "Some really nice description",
+    "type": "plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bastian Allgeier",
+            "email": "bastian@getkirby.com"
+        }
+    ],
+    "require": {}
+}

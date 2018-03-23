@@ -8,14 +8,14 @@ class UserBlueprintOptions extends BlueprintOptions
 {
 
     protected $options = [
-        'changeEmail'    => true,
-        'changeLanguage' => true,
-        'changeName'     => true,
-        'changePassword' => true,
-        'changeRole'     => true,
-        'delete'         => true,
-        'read'           => true,
-        'update'         => true,
+        'create'         => null,
+        'changeEmail'    => null,
+        'changeLanguage' => null,
+        'changeName'     => null,
+        'changePassword' => null,
+        'changeRole'     => null,
+        'delete'         => null,
+        'update'         => null,
     ];
 
     public function __construct(User $model, array $options = null)
@@ -25,45 +25,45 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function changeEmail(): bool
     {
-        return $this->options['changeEmail'];
+        return $this->isAllowed('user', 'changeEmail');
     }
 
     public function changeLanguage(): bool
     {
-        return $this->options['changeLanguage'];
+        return $this->isAllowed('user', 'changeLanguage');
     }
 
     public function changeName(): bool
     {
-        return $this->options['changeName'];
+        return $this->isAllowed('user', 'changeName');
     }
 
     public function changePassword(): bool
     {
-        return $this->options['changePassword'];
+        return $this->isAllowed('user', 'changePassword');
     }
 
     public function changeRole(): bool
     {
-        if ($this->model->isLastAdmin() === true) {
+        if ($this->model()->isLastAdmin() === true) {
             return false;
         }
 
-        return $this->options['changeRole'];
+        return $this->isAllowed('user', 'changeRole');
+    }
+
+    public function create(): bool
+    {
+        return $this->isAllowed('user', 'create');
     }
 
     public function delete(): bool
     {
-        if ($this->model->isLastAdmin() === true) {
+        if ($this->model()->isLastAdmin() === true) {
             return false;
         }
 
-        return $this->options['delete'];
-    }
-
-    public function read(): bool
-    {
-        return $this->options['read'];
+        return $this->isAllowed('user', 'delete');
     }
 
     protected function user()
@@ -73,7 +73,7 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function update(): bool
     {
-        return $this->options['update'];
+        return $this->isAllowed('user', 'update');
     }
 
 }

@@ -25,7 +25,7 @@ class BlueprintSection extends BlueprintObject
      */
     public function __construct(array $props)
     {
-        $props = $this->extend($props);
+        $props = Blueprint::extend($props);
         $this->setProperties($props);
     }
 

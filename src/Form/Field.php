@@ -14,10 +14,33 @@ class Field extends Component
     use I18n;
     use Mixins\Model;
 
+    public static $types = [];
+
+    protected $propertyAliases = [
+        'readonly' => 'disabled'
+    ];
+
     protected $disabled;
     protected $name;
     protected $type;
     protected $width;
+
+    public function __construct(array $props)
+    {
+        foreach ($this->propertyAliases as $alias => $prop) {
+            if (isset($props[$alias]) === true) {
+                $props[$prop] = $props[$alias];
+                unset($props[$alias]);
+            }
+        }
+
+        parent::__construct($props);
+    }
+
+    public static function assets(): array
+    {
+        return [];
+    }
 
     protected function defaultDisabled(): bool
     {
@@ -45,13 +68,14 @@ class Field extends Component
             throw new PropertyException('Missing field type');
         }
 
-        $fieldClass = __NAMESPACE__ . '\\' . ucfirst($props['type']) . 'Field';
+        $type  = $props['type'];
+        $class = static::$types[$type] ?? __NAMESPACE__ . '\\' . ucfirst($type) . 'Field';
 
-        if (class_exists($fieldClass) === false) {
-            throw new PropertyException(sprintf('Invalid field type: "%s"', $props['type']));
+        if (class_exists($class) === false) {
+            throw new PropertyException(sprintf('Invalid field type: "%s"', $type));
         }
 
-        return new $fieldClass($props);
+        return new $class($props);
     }
 
     public function isDisabled(): bool
@@ -105,7 +129,12 @@ class Field extends Component
     public function type(): string
     {
         $className = get_called_class();
-        $className = substr($className, strrpos($className, '\\') + 1);
+        $from      = strrpos($className, '\\');
+
+        if ($from !== false) {
+            $className = substr($className, $from + 1);
+        }
+
         $className = str_replace('Field', '', $className);
         $className = strtolower($className);
 

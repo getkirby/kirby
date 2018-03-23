@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Base\Base;
 use Kirby\Util\Dir;
 
 class UserStore extends UserStoreDefault
@@ -58,7 +57,7 @@ class UserStore extends UserStoreDefault
             throw new Exception('The user directory could not be moved');
         }
 
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changeLanguage(string $language)
@@ -70,7 +69,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changeName(string $name)
@@ -82,7 +81,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changePassword(string $password)
@@ -94,7 +93,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function changeRole(string $role)
@@ -106,7 +105,7 @@ class UserStore extends UserStoreDefault
         }
 
         // save the user
-        return $user->update();
+        return $this->save($user);
     }
 
     public function content(): array
@@ -122,7 +121,7 @@ class UserStore extends UserStoreDefault
         return $data;
     }
 
-    public function create(array $values, Form $form)
+    public function create(User $user)
     {
         // try to create the directory
         if (Dir::make($this->root()) !== true) {
@@ -132,8 +131,8 @@ class UserStore extends UserStoreDefault
         // create an empty storage file
         touch($this->root() . '/user.txt');
 
-        // store the content
-        return $this->user()->update($values, $form);
+        // write the user data
+        return $this->save($user);
     }
 
     public function data()
@@ -192,14 +191,19 @@ class UserStore extends UserStoreDefault
         return $this->kirby()->root('accounts') . '/' . $this->user()->email();
     }
 
-    public function update(array $values, Form $form)
+    public function update(array $values = [], array $strings = [])
     {
-        $user = parent::update($values, $form);
+        $user = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $user;
         }
 
+        return $this->save($user);
+    }
+
+    public function save(User $user): User
+    {
         $content = $user->content()->toArray();
 
         // store main information in the content file

@@ -53,26 +53,32 @@ class FileStore extends FileStoreDefault
         return $newFile;
     }
 
-    public function content()
+    public function content(): array
     {
         return Data::read($this->storeFile());
     }
 
-    public function create(string $source)
+    public function create(Upload $upload)
     {
+        $file = $this->file();
+
         // delete all public versions
-        $this->media()->delete($this->file()->parent(), $this->file());
+        $this->media()->delete($file->parent(), $file);
 
         // overwrite the original
-        if (F::copy($source, $this->root()) !== true) {
+        if (F::copy($upload->root(), $this->root()) !== true) {
             throw new Exception('The file could not be created');
         }
 
+        if ($file->template() !== null) {
+            $this->update($data = ['template' => $file->template()], $data);
+        }
+
         // create a new public file
-        $this->media()->create($this->file()->parent(), $this->file());
+        $this->media()->create($file->parent(), $file);
 
         // return a fresh clone
-        return $this->file()->clone();
+        return $file->clone();
     }
 
     public function delete(): bool
@@ -96,9 +102,9 @@ class FileStore extends FileStoreDefault
         return 'txt';
     }
 
-    public function replace(string $source)
+    public function replace(Upload $upload)
     {
-        return $this->create($source);
+        return $this->create($upload);
     }
 
     public function root(): string
@@ -126,16 +132,16 @@ class FileStore extends FileStoreDefault
         return $this->root() . '.' . $this->extension();
     }
 
-    public function update(array $content = [])
+    public function update(array $values = [], array $strings = [])
     {
-        $file = parent::update($content);
+        $file = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $file;
         }
 
-        if (empty($content) === false) {
-            if (Data::write($this->storeFile(), $content) !== true) {
+        if (empty($strings) === false) {
+            if (Data::write($this->storeFile(), $file->content()->toArray()) !== true) {
                 throw new Exception('The file content could not be updated');
             }
         }

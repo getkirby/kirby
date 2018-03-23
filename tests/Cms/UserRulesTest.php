@@ -2,13 +2,29 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 class UserRulesTest extends TestCase
 {
 
-    public function userProvider()
+    public function appWithAdmin()
+    {
+        return new App([
+            'roots' => [
+                'site' => __DIR__ . '/fixtures',
+            ],
+            'user' => 'admin@domain.com',
+            'users' => [
+                ['email' => 'user@domain.com', 'role' => 'editor'],
+                ['email' => 'admin@domain.com', 'role' => 'admin']
+            ]
+        ]);
+    }
+
+    public function validDataProvider()
     {
         return [
-            ['Email', 'admin@domain.com'],
+            ['Email', 'editor@domain.com'],
             ['Language', 'en_US'],
             ['Password', '12345678'],
             ['Role', 'editor']
@@ -16,22 +32,38 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @dataProvider userProvider
+     * @dataProvider validDataProvider
      */
-    public function testChange($key, $value)
+    public function testChangeValid($key, $value)
     {
-        $user = new User(['email' => 'user@domain.com']);
+        $kirby = $this->appWithAdmin();
+        $user  = $kirby->user('user@domain.com');
+
         $this->assertTrue(UserRules::{'change' . $key}($user, $value));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Please enter a valid email address
-     */
-    public function testChangeEmailInvalid()
+    public function invalidDataProvider()
     {
-        $user = new User(['email' => 'user@domain.com']);
-        UserRules::changeEmail($user, 'getkirby.com');
+        return [
+            ['Email', 'domain.com', 'Please enter a valid email address'],
+            ['Language', 'english', 'Invalid user language'],
+            ['Password', '1234', 'The password must be at least 8 characters long'],
+            ['Role', 'rockstar', 'Invalid user role: "rockstar"']
+        ];
+    }
+
+    /**
+     * @dataProvider invalidDataProvider
+     */
+    public function testChangeInvalid($key, $value, $message)
+    {
+        $kirby = $this->appWithAdmin();
+        $user  = $kirby->user('user@domain.com');
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage($message);
+
+        $this->assertTrue(UserRules::{'change' . $key}($user, $value));
     }
 
     /**
@@ -40,88 +72,32 @@ class UserRulesTest extends TestCase
      */
     public function testChangeEmailDuplicate()
     {
-        $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com']),
-                    new User(['email' => 'admin@domain.com'])
-                ])
-            ]
-        ]);
+        $kirby = $this->appWithAdmin();
 
-        UserRules::changeEmail($kirby->users()->first(), 'admin@domain.com');
-    }
-
-    /**
-     *
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid user language
-     */
-    public function testChangeLanguageInvalid()
-    {
-        $user = new User(['email' => 'user@domain.com']);
-        UserRules::changeLanguage($user, 'english');
+        UserRules::changeEmail($kirby->user('user@domain.com'), 'admin@domain.com');
     }
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The password must be at least 8 characters long
-     */
-    public function testChangePasswordInvalid()
-    {
-        $user = new User(['email' => 'user@domain.com']);
-        UserRules::changePassword($user, '1234');
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid user role: "rockstar"
-     */
-    public function testChangeRoleInvalid()
-    {
-        $user = new User(['email' => 'user@domain.com']);
-        UserRules::changeRole($user, 'rockstar');
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The role for the last admin cannot be changed
+     * @expectedExceptionMessage The role for this user cannot be changed
      */
     public function testChangeRoleLastAdmin()
     {
-        $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com', 'role' => 'admin']),
-                    new User(['email' => 'admin@domain.com', 'role' => 'editor'])
-                ])
-            ]
-        ]);
+        $kirby = $this->appWithAdmin();
 
-        UserRules::changeRole($kirby->users()->first(), 'editor');
+        UserRules::changeRole($kirby->user('admin@domain.com'), 'editor');
     }
 
     public function testCreate()
     {
-        $user = new User($values = [
+        $user = new User([
             'email'    => 'user@domain.com',
-            'password' => '12345678'
+            'password' => '12345678',
+            'kirby'    => $this->appWithAdmin()
         ]);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::create($user, $values, $form));
-    }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The property "email" is required
-     */
-    public function testCreateWithoutEmail()
-    {
-        $user = new User(['password' => '123']);
-        $form = Form::for($user);
-        UserRules::create($user, $form);
+        $this->assertTrue(UserRules::create($user));
     }
-
 
     // /**
     //  * @expectedException Exception
@@ -140,10 +116,9 @@ class UserRulesTest extends TestCase
     public function testUpdate()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'zodiac' => 'lion'
-        ], $form));
+        ], $input));
     }
 
     /**
@@ -153,10 +128,9 @@ class UserRulesTest extends TestCase
     public function testUpdateWithEmail()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'email' => 'admin@domain.com'
-        ], $form));
+        ], $input));
     }
 
     /**
@@ -166,10 +140,9 @@ class UserRulesTest extends TestCase
     public function testUpdateWithPassword()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'password' => '12345678'
-        ], $form));
+        ], $input));
     }
 
     /**
@@ -179,10 +152,9 @@ class UserRulesTest extends TestCase
     public function testUpdateWithRole()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $form = Form::for($user);
-        $this->assertTrue(UserRules::update($user, [
+        $this->assertTrue(UserRules::update($user, $input = [
             'role' => 'editor'
-        ], $form));
+        ], $input));
     }
 
     public function testDelete()
@@ -193,33 +165,29 @@ class UserRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The last admin cannot be deleted
+     * @expectedExceptionMessage The user cannot be deleted
      */
     public function testDeleteLastAdmin()
     {
         $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com', 'role' => 'admin']),
-                    new User(['email' => 'admin@domain.com', 'role' => 'editor'])
-                ])
+            'users' => [
+                ['email' => 'user@domain.com', 'role' => 'editor'],
+                ['email' => 'admin@domain.com', 'role' => 'admin']
             ]
         ]);
 
-        UserRules::delete($kirby->users()->first());
+        UserRules::delete($kirby->user('admin@domain.com'));
     }
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The last user cannot be deleted
+     * @expectedExceptionMessage The user cannot be deleted
      */
     public function testDeleteLastUser()
     {
         $kirby = new App([
-            'components' => [
-                'users' => new Users([
-                    new User(['email' => 'user@domain.com', 'role' => 'editor']),
-                ])
+            'users' => [
+                ['email' => 'user@domain.com', 'role' => 'editor'],
             ]
         ]);
 

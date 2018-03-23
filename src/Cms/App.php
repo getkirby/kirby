@@ -4,7 +4,9 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
-
+use Throwable;
+use Firebase\JWT\JWT;
+use Kirby\Form\Field;
 use Kirby\Toolkit\Url;
 use Kirby\Util\Controller;
 use Kirby\Util\F;
@@ -14,6 +16,11 @@ use Kirby\Util\Dir;
 class App extends Component
 {
 
+    use AppCaches;
+    use AppHooks;
+    use AppOptions;
+    use AppPlugins;
+
     use HasSingleton;
 
     protected static $root;
@@ -21,10 +28,13 @@ class App extends Component
     protected $collections;
     protected $components;
     protected $path;
+    protected $roles;
     protected $roots;
     protected $routes;
     protected $site;
     protected $urls;
+    protected $user;
+    protected $users;
 
     /**
      * Creates a new App instance
@@ -39,10 +49,49 @@ class App extends Component
         // configurable properties
         $this->setProperties($props);
 
-        // register all field methods
-        ContentField::methods(include static::$root . '/extensions/methods.php');
+        // load all extensions
+        $this->extensionsFromSystem();
+        $this->extensionsFromProps($props);
+        $this->extensionsFromPlugins();
 
+        // set the singleton
         static::$instance = $this;
+    }
+
+    /**
+     * Returns the authentication token from the request
+     *
+     * @return array|null
+     */
+    public function authToken()
+    {
+        $query   = $this->request()->data();
+        $headers = $this->request()->headers();
+        $token   = $query['auth'] ?? $headers['Authorization'] ?? null;
+        $token   = preg_replace('!^Bearer !', '', $token);
+
+        if (empty($token) === true) {
+            throw new Exception('Invalid authentication token');
+        }
+
+        // TODO: get the key from config
+        $key = 'kirby';
+
+        // return the token object
+        return (array)JWT::decode($token, $key, ['HS256']);
+    }
+
+    /**
+     * Calls any Kirby route
+     *
+     * @return mixed
+     */
+    public function call(string $path = null, string $method = null)
+    {
+        $path   = $path   ?? $this->path();
+        $method = $method ?? $this->request()->method();
+
+        return $this->router()->call($path, $method);
     }
 
     /**
@@ -74,7 +123,7 @@ class App extends Component
             return $this->collections;
         }
 
-        return $this->collections = Collections::load($this->root('collections'));
+        return $this->collections = Collections::load($this);
     }
 
     /**
@@ -110,19 +159,35 @@ class App extends Component
      * @param array $arguments
      * @return array
      */
-    public function controller(string $name, array $arguments = [], string $contentType = null): array
+    public function controller(string $name, array $arguments = []): array
     {
         $name = basename(strtolower($name));
 
-        if ($contentType !== null && $contentType !== 'html') {
-            $name .= '.' . $contentType;
-        }
-
+        // site controller
         if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
             return (array)$controller->call($this, $arguments);
         }
 
+        // registry controller
+        if ($controller = $this->extension('controllers', $name)) {
+            return (array)$controller->call($this, $arguments);
+        }
+
         return [];
+    }
+
+    /**
+     * The Hooks registry
+     *
+     * @return Hooks
+     */
+    public function hooks(): Hooks
+    {
+        if (is_a($this->hooks, Hooks::class) === true) {
+            return $this->hooks;
+        }
+
+        return $this->hooks = new Hooks($this);
     }
 
     /**
@@ -182,10 +247,12 @@ class App extends Component
      */
     public function render(string $path = null, string $method = null)
     {
-        $path   = $path   ?? $this->path();
-        $method = $method ?? $this->request()->method();
-
-        return $this->component('response', $this->router()->call($path, $method));
+        try {
+            return $this->component('response', $this->call($path, $method));
+        } catch (Throwable $e) {
+            error_log($e);
+            return $this->component('response', $e);
+        }
     }
 
     /**
@@ -196,6 +263,20 @@ class App extends Component
     public function request()
     {
         return $this->component('request');
+    }
+
+    /**
+     * Returns all user roles
+     *
+     * @return Roles
+     */
+    public function roles(): Roles
+    {
+        if (is_a($this->roles, Roles::class) === true) {
+            return $this->roles;
+        }
+
+        return $this->roles = Roles::load($this->root('roles'));
     }
 
     /**
@@ -245,7 +326,10 @@ class App extends Component
             return $this->routes;
         }
 
-        return $this->routes = (array)include static::$root . '/config/routes.php';
+        $registry = $this->extensions('routes');
+        $main     = (include static::$root . '/config/routes.php')($this);
+
+        return $this->routes = array_merge($registry, $main);
     }
 
     /**
@@ -282,6 +366,23 @@ class App extends Component
     }
 
     /**
+     * Create your own set of roles
+     *
+     * @param array $roles
+     * @return self
+     */
+    protected function setRoles(array $roles = null): self
+    {
+        if ($roles !== null) {
+            $this->roles = Roles::factory($roles, [
+                'kirby' => $this
+            ]);
+        }
+
+        return $this;
+    }
+
+    /**
      * Sets the directory structure
      *
      * @param array $roots
@@ -314,6 +415,35 @@ class App extends Component
     protected function setUrls(array $urls = null)
     {
         $this->urls = new Urls(array_merge(['index' => Url::index()], (array)$urls));
+        return $this;
+    }
+
+    /**
+     * Set the currently active user id
+     *
+     * @param string $user
+     * @return self
+     */
+    protected function setUser(string $user = null): self
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * Create your own set of app users
+     *
+     * @param array $users
+     * @return self
+     */
+    protected function setUsers(array $users = null): self
+    {
+        if ($users !== null) {
+            $this->users = Users::factory($users, [
+                'kirby' => $this
+            ]);
+        }
+
         return $this;
     }
 
@@ -385,8 +515,19 @@ class App extends Component
     public function user(string $id = null)
     {
         if ($id === null) {
-            // TODO: return the logged in user
-            return $this->users()->first();
+            if (is_a($this->user, User::class) === true) {
+                return $this->user;
+            }
+
+            if (is_string($this->user) === true) {
+                return $this->user = $this->users()->findBy('email', $this->user);
+            }
+
+            try {
+                return $this->user = $this->users()->findBy('id', $this->authToken()['uid']);
+            } catch (Throwable $e) {
+                return null;
+            }
         }
 
         return $this->users()->find($id);
@@ -399,7 +540,11 @@ class App extends Component
      */
     public function users(): Users
     {
-        return $this->component('users');
+        if (is_a($this->users, Users::class) === true) {
+            return $this->users;
+        }
+
+        return $this->users = Users::load($this->root('accounts'), ['kirby' => $this]);
     }
 
 }

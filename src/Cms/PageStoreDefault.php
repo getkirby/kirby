@@ -7,22 +7,14 @@ use Exception;
 class PageStoreDefault extends Store
 {
 
-    public function blueprint()
-    {
-        $root = $this->kirby()->root('blueprints') . '/pages';
-
-        try {
-            return PageBlueprint::load($root . '/' . $this->page()->template() . '.yml', $this->page());
-        } catch (Exception $e) {
-            return PageBlueprint::load($root . '/default.yml', $this->page());
-        }
-    }
+    const PAGE_STORE_CLASS = PageStoreDefault::class;
+    const FILE_STORE_CLASS = FileStoreDefault::class;
 
     public function changeNum(int $num = null)
     {
         return $this->page()->clone([
             'num' => $num,
-        ]);
+        ], Page::class);
     }
 
     public function changeSlug(string $slug)
@@ -33,11 +25,45 @@ class PageStoreDefault extends Store
         ]);
     }
 
+    public function changeStatus(string $status, int $position = null)
+    {
+        switch ($status) {
+            case 'draft':
+                return $this->changeStatusToDraft();
+            case 'listed':
+                return $this->changeStatusToListed($position);
+            case 'unlisted':
+                return $this->changeStatusToUnlisted();
+            default:
+                throw new Exception('Invalid status');
+        }
+    }
+
+    protected function changeStatusToDraft()
+    {
+        return $this->page()->clone(['num' => null], PageDraft::class);
+    }
+
+    protected function changeStatusToListed(int $position)
+    {
+        return $this->changeNum($position);
+    }
+
+    protected function changeStatusToUnlisted()
+    {
+        return $this->changeNum(null);
+    }
+
     public function changeTemplate(string $template)
     {
         return $this->page()->clone([
             'template' => $template
         ]);
+    }
+
+    public function changeTitle(string $title)
+    {
+        return $this->update($data = ['title' => $title], $data);
     }
 
     public function children()
@@ -50,19 +76,19 @@ class PageStoreDefault extends Store
         return [];
     }
 
-    public function createChild(Page $child)
+    public function create()
     {
-        return $child;
-    }
-
-    public function createFile(File $file, string $source)
-    {
-        return $file;
+        return $this->page();
     }
 
     public function delete(): bool
     {
         throw new Exception('This page cannot be deleted');
+    }
+
+    public function drafts(): array
+    {
+        return [];
     }
 
     public function exists(): bool
@@ -90,15 +116,20 @@ class PageStoreDefault extends Store
         return $this->model;
     }
 
+    public function publish()
+    {
+        return $this->page();
+    }
+
     public function template(): string
     {
         return 'default';
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
         return $this->page()->clone([
-            'content' => $form->stringValues()
+            'content' => $this->page()->content()->update($strings)->toArray()
         ]);
     }
 

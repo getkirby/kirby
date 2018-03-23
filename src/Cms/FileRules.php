@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image as Upload;
+use Exception;
 use Kirby\Toolkit\V;
 use Kirby\Util\Str;
 
@@ -11,6 +11,10 @@ class FileRules
 
     public static function changeName(File $file, string $name): bool
     {
+        if ($file->permissions()->changeName() !== true) {
+            throw new Exception('The name for this file cannot be changed');
+        }
+
         $parent    = $file->parent();
         $duplicate = $parent->files()->not($file)->findBy('name', $name);
 
@@ -21,32 +25,44 @@ class FileRules
         return true;
     }
 
-    public static function create(File $file): bool
+    public static function create(File $file, Upload $upload): bool
     {
         if ($file->exists() === true) {
             throw new Exception('The file exists and cannot be overwritten');
         }
 
+        if ($file->permissions()->create() !== true) {
+            throw new Exception('The file cannot be created');
+        }
+
         static::validExtension($file, $file->extension());
-        static::validMime($file, $file->mime());
+        static::validMime($file, $upload->mime());
         static::validFilename($file, $file->filename());
 
         return true;
     }
 
-    public static function delete(): bool
+    public static function delete(File $file): bool
     {
+        if ($file->permissions()->delete() !== true) {
+            throw new Exception('The file cannot be deleted');
+        }
+
         return true;
     }
 
     public static function replace(File $file, Upload $upload): bool
     {
+        if ($file->permissions()->replace() !== true) {
+            throw new Exception('The file cannot be replaced');
+        }
+
         static::validExtension($file, $upload->extension());
         static::validMime($file, $upload->mime());
         static::validFilename($file, $upload->filename());
 
-        if ($upload->mime() !== $file->mime()) {
-            throw new Exception('The mime type of the new file does not match the old one');
+        if ($upload->mime() != $file->mime()) {
+            throw new Exception(sprintf('The mime type of the new file (%s) does not match the old one (%s)', $upload->mime(), $file->mime()));
         }
 
         return true;
@@ -54,6 +70,10 @@ class FileRules
 
     public static function update(File $file, array $content = []): bool
     {
+        if ($file->permissions()->update() !== true) {
+            throw new Exception('The file cannot be updated');
+        }
+
         return true;
     }
 
@@ -104,7 +124,7 @@ class FileRules
 
     }
 
-    public static function validMime(File $file, string $mime)
+    public static function validMime(File $file, string $mime = null)
     {
 
         // make it easier to compare the mime

@@ -29,12 +29,31 @@ class BlueprintOptions
 
     }
 
-    public function kirby()
+    protected function isAllowed(string $category, string $action): bool
+    {
+        $user = $this->kirby()->user();
+
+        if (empty($user) === true || $user->role()->id() === 'nobody') {
+            return false;
+        }
+
+        if ($user->role()->id() === 'admin') {
+            return true;
+        }
+
+        if (is_bool($this->options[$action]) === true) {
+            return $this->options[$action];
+        }
+
+        return $user->role()->permissions()->for($category, $action);
+    }
+
+    protected function kirby()
     {
         return $this->model()->kirby();
     }
 
-    public function model()
+    protected function model()
     {
         return $this->model;
     }

@@ -18,6 +18,8 @@ use Kirby\Util\Str;
 class Site extends Model
 {
 
+    use SiteActions;
+
     use HasChildren;
     use HasContent;
     use HasFiles;
@@ -84,13 +86,6 @@ class Site extends Model
     protected $page;
 
     /**
-     * The root to the content directory
-     *
-     * @var string|null
-     */
-    protected $root;
-
-    /**
      * The page url
      *
      * @var string
@@ -116,7 +111,7 @@ class Site extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = $this->store()->blueprint();
+        return $this->blueprint = SiteBlueprint::factory('site', null, $this);
     }
 
     /**
@@ -133,52 +128,31 @@ class Site extends Model
         return $this->children = $this->store()->children();
     }
 
-    /**
-     * Creates a main page
-     *
-     * @param array $props
-     * @return self
-     */
-    public function createChild(array $props)
-    {
-        $props['content'] = $props['content'] ?? [];
-        $props['url']     = null;
-        $props['num']     = null;
-        $props['parent']  = null;
-        $props['site']    = $this;
-        $props['slug']    = Str::slug($props['slug'] ?? $props['content']['slug'] ?? null);
-
-        // temporary child for validation
-        $child = Page::factory($props);
-
-        // run all form validations
-        $child->update();
-
-        // run additional validations
-        $this->rules()->createChild($this, $child);
-
-        return $this->store()->createChild($child);
-    }
-
-    public function createFile(string $source, array $props = [])
-    {
-        $props['filename'] = $props['filename'] ?? basename($source);
-        $props['parent']   = $this;
-        $props['store']    = null;
-        $props['url']      = null;
-
-        // temporary child for validation
-        $file = new File($props);
-
-        // validate the child
-        $this->rules()->createFile($this, $file);
-
-        return $this->store()->createFile($file, $source);
-    }
-
     protected function defaultStore()
     {
         return SiteStoreDefault::class;
+    }
+
+    /**
+     * Returns a draft object by the path
+     * if one can be found
+     *
+     * @param string $path
+     * @return PageDraft|null
+     */
+    public function draft(string $path)
+    {
+        return PageDraft::seek($this, $path);
+    }
+
+    /**
+     * Return all drafts for the site
+     *
+     * @return Pages
+     */
+    public function drafts(): Pages
+    {
+        return new Pages(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
     }
 
     /**
@@ -286,6 +260,26 @@ class Site extends Model
     public function pages(): Pages
     {
         return $this->children();
+    }
+
+    /**
+     * Returns the permissions object for this site
+     *
+     * @return SiteBlueprintOptions
+     */
+    public function permissions(): SiteBlueprintOptions
+    {
+        return $this->blueprint()->options();
+    }
+
+    /**
+     * Returns the absolute path to the content directory
+     *
+     * @return string
+     */
+    public function root(): string
+    {
+        return $this->kirby()->root('content');
     }
 
     /**

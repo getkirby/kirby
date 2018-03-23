@@ -7,6 +7,7 @@ use Kirby\Image\Image;
 use Kirby\Image\Darkroom;
 use Kirby\FileSystem\Folder;
 use Kirby\Util\Str;
+use Kirby\Util\F;
 
 class Media extends Component
 {
@@ -135,18 +136,7 @@ class Media extends Component
      */
     public function link(string $source, string $link, string $method = 'link'): bool
     {
-        $folder = new Folder(dirname($link));
-        $folder->make(true);
-
-        if (is_file($link) === true) {
-            return true;
-        }
-
-        if (is_file($source) === false) {
-            throw new Exception(sprintf('The file "%s" does not exist and cannot be linked', $source));
-        }
-
-        return $method($source, $link);
+        return F::link($source, $link, $method);
     }
 
     /**
@@ -186,8 +176,19 @@ class Media extends Component
 
         switch ($type) {
             case 'pages':
-                $model = $app->site()->find(dirname($path));
-                $file  = $model->file(basename($path));
+
+                $id    = dirname($path);
+                $model = $app->site()->find($id);
+
+                if ($model === null) {
+                    $model = $app->site()->draft($id);
+                }
+
+                if ($model === null) {
+                    throw new Exception('The page could not be found');
+                }
+
+                $file = $model->file(basename($path));
                 break;
             case 'site':
                 $model = $app->site();
@@ -199,8 +200,7 @@ class Media extends Component
                 break;
         }
 
-        return $app->media()->create($model, $file);
-
+        return $this->create($model, $file);
     }
 
     /**

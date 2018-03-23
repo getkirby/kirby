@@ -14,17 +14,13 @@ class AvatarStore extends AvatarStoreDefault
         return new Image($this->root(), $this->url());
     }
 
-    public function create(string $source)
+    public function create(Upload $upload)
     {
-        if ($this->exists() === true) {
-            throw new Exception('The avatar already exists');
-        }
-
         // delete all public versions
         $this->media()->delete($this->user());
 
         // overwrite the original
-        if (F::copy($source, $this->root()) !== true) {
+        if (F::copy($upload->root(), $this->root(), true) !== true) {
             throw new Exception('The avatar could not be created');
         }
 
@@ -58,10 +54,9 @@ class AvatarStore extends AvatarStoreDefault
         return $this->root();
     }
 
-    public function replace(string $source)
+    public function replace(Upload $upload)
     {
-        $this->delete();
-        return $this->create($source);
+        return $this->create($upload);
     }
 
     public function root(): string

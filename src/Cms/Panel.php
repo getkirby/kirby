@@ -30,7 +30,8 @@ class Panel
     public function render(): string
     {
         return new View($this->kirby->root('kirby') . '/views/panel.php', [
-            'kirby' => $this->kirby,
+            'kirby'   => $this->kirby,
+            'plugins' => Resources::forPlugins()
         ]);
     }
 

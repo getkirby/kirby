@@ -2,30 +2,52 @@
 
 namespace Kirby\Image;
 
-abstract class Darkroom
+use Exception;
+
+class Darkroom
 {
 
-    protected $defaults = [];
-    protected $options  = [];
+    public static $types = [
+        'gd' => Darkroom\GdLib::class,
+        'im' => Darkroom\ImageMagick::class,
+    ];
 
-    public function __construct(array $defaults = [])
+    protected $settings = [];
+
+    public function __construct(array $settings = [])
     {
-        $this->defaults = array_merge($this->defaults, ['width' => null, 'height' => null], $defaults);
+        $this->settings = array_merge($this->defaults(), $settings);
     }
 
-    public function preprocess(string $file, array $options = [])
+    public static function factory(string $type, array $settings = [])
     {
-
-        $options = array_merge($this->defaults, $options);
-        $image   = new Image($file);
-
-        // normalize the quality
-        if (($options['quality'] ?? null) === null) {
-            $options['quality'] = $this->defaults['quality'] ?? 100;
+        if (isset(static::$types[$type]) === false) {
+            throw new Exception('Invalid Darkroom type');
         }
 
+        $class = static::$types[$type];
+        return new $class($settings);
+    }
+
+    protected function defaults(): array
+    {
+        return [
+            'autoOrient' => true,
+            'crop'       => false,
+            'blur'       => false,
+            'grayscale'  => false,
+            'height'     => null,
+            'quality'    => 90,
+            'width'      => null,
+        ];
+    }
+
+    protected function options(array $options = []): array
+    {
+        $options = array_merge($this->settings, $options);
+
         // normalize the crop option
-        if (($options['crop'] ?? false) === true) {
+        if ($options['crop'] === true) {
             $options['crop'] = 'center';
         }
 
@@ -34,8 +56,20 @@ abstract class Darkroom
             $options['blur'] = 10;
         }
 
+        if ($options['quality'] === null) {
+            $options['quality'] = $this->settings['quality'];
+        }
+
+        return $options;
+    }
+
+    public function preprocess(string $file, array $options = [])
+    {
+        $options = $this->options($options);
+        $image   = new Image($file);
+
         // pre-calculate the correct image size
-        if (($options['crop'] ?? false) === false) {
+        if ($options['crop'] === false) {
             $dimensions = $image->dimensions()->resize($options['width'], $options['height']);
         } else {
             $dimensions = $image->dimensions()->crop($options['width'], $options['height']);
@@ -45,14 +79,11 @@ abstract class Darkroom
         $options['height'] = $dimensions->height();
 
         return $options;
-
     }
 
-    abstract public function process(string $file, array $options = []): array;
-
-    protected function options(array $options = []): array
+    public function process(string $file, array $options = []): array
     {
-        return array_merge($this->defaults, $options);
+        return $this->preprocess($file, $options);
     }
 
 }

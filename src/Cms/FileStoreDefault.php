@@ -15,22 +15,6 @@ class FileStoreDefault extends Store
         return new Image($this->file()->filename(), $this->file()->url());
     }
 
-    public function blueprint()
-    {
-        $root = $this->kirby()->root('blueprints') . '/files';
-
-        try {
-            return FileBlueprint::load($root . '/default.yml', $this->file());
-        } catch (Exception $e) {
-            return new FileBlueprint([
-                'model' => $this->file(),
-                'name'  => 'default',
-                'tabs'  => [],
-                'title' => 'Default',
-            ]);
-        }
-    }
-
     public function changeName(string $name): File
     {
         return $this->file()->clone([
@@ -38,14 +22,14 @@ class FileStoreDefault extends Store
         ]);
     }
 
-    public function content()
+    public function content(): array
     {
         return [];
     }
 
-    public function create(string $source)
+    public function create(Upload $upload)
     {
-        throw new Exception('This file cannot be saved');
+        return $this->file();
     }
 
     public function delete(): bool
@@ -68,15 +52,20 @@ class FileStoreDefault extends Store
         return $this->file()->filename();
     }
 
-    public function replace(string $source)
+    public function replace(Upload $upload)
     {
-        $this->create($source);
+        return $this->create($upload);
     }
 
-    public function update(array $content = [])
+    public function template()
+    {
+        return $this->file()->content()->get('template')->value();
+    }
+
+    public function update(array $values = [], array $strings = [])
     {
         return $this->file()->clone([
-            'content' => $content
+            'content' => $this->file()->content()->update($strings)->toArray()
         ]);
     }
 

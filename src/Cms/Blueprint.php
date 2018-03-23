@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Data\Data;
 use Kirby\Form\Fields;
+use Kirby\Util\F;
 
 /**
  * The Blueprint class converts an array from a
@@ -19,6 +20,11 @@ use Kirby\Form\Fields;
  */
 class Blueprint extends BlueprintObject
 {
+
+    /**
+     * All registered blueprint extensions
+     */
+    public static $mixins = [];
 
     /**
      * Cache for the fields collection
@@ -69,7 +75,7 @@ class Blueprint extends BlueprintObject
      */
     public function __construct(array $props = [])
     {
-        $props = $this->extend($props);
+        $props = static::extend($props);
         $props = BlueprintConverter::convertFieldsToSection($props);
         $props = BlueprintConverter::convertSectionsToColumns($props);
         $props = BlueprintConverter::convertColumnsToTabs($props);
@@ -99,6 +105,60 @@ class Blueprint extends BlueprintObject
     {
         return $this->options()->toArray();
     }
+
+    /**
+     * Extend blueprints props with a mixin
+     *
+     * @param array|string $props
+     * @return array
+     */
+    public static function extend($props): array
+    {
+        if (is_string($props) === true) {
+            $props = [
+                'extends' => $props
+            ];
+        }
+
+        if (isset($props['extends']) === false) {
+            return $props;
+        }
+
+        if ($mixin = static::mixin($props['extends'])) {
+            $props = array_replace_recursive($mixin, $props);
+        }
+
+        unset($props['extends']);
+
+        return $props;
+    }
+
+    /**
+     * Create a new blueprint for a model
+     *
+     * @param string $name
+     * @param string $fallback
+     * @param Model $model
+     * @return self
+     */
+    public static function factory(string $name, string $fallback = null, Model $model)
+    {
+        try {
+            $props = static::load($name);
+        } catch (Exception $e) {
+            $props = $fallback !== null ? static::load($fallback) : null;
+        }
+
+        if ($props === null) {
+            return null;
+        }
+
+        // inject the parent model
+        $props['model'] = $model;
+
+        return new static($props);
+    }
+
 
     /**
      * Returns a specific field from the blueprint
@@ -143,6 +203,30 @@ class Blueprint extends BlueprintObject
         return $this->fields = $fields;
     }
 
+
+    /**
+     * Find a blueprint by name
+     *
+     * @param string $name
+     * @return string|array
+     */
+    public static function find(string $name)
+    {
+        $kirby = App::instance();
+        $root  = $kirby->root('blueprints');
+        $file  = $root . '/' . $name . '.yml';
+
+        if (F::exists($file, $root) === true) {
+            return $file;
+        }
+
+        if ($blueprint = $kirby->extension('blueprints', $name)) {
+            return $blueprint;
+        }
+
+        throw new Exception(sprintf('The blueprint "%s" could not be loaded', $name));
+    }
+
     /**
      * Checks if this is the default blueprint
      *
@@ -154,35 +238,51 @@ class Blueprint extends BlueprintObject
     }
 
     /**
-     * @return BlueprintTabs
+     * Load a blueprint mixin from file or extension
+     *
+     * @param string $path
+     * @return array
      */
-    public function tabs(): BlueprintTabs
+    public static function mixin(string $path): array
     {
-        return $this->tabs;
+        if (isset(static::$mixins[$path]) === true) {
+            return static::$mixins[$path];
+        }
+
+        try {
+            return static::$mixins[$path] = static::load($path);
+        } catch (Exception $e) {
+            if ($mixin = App::instance()->extension('blueprints', $path)) {
+                return static::$mixins[$path] = $mixin;
+            }
+
+            throw new Exception(sprintf('The mixin "%s" does not exist', $path));
+        }
     }
 
     /**
      * Loads a blueprint from file or array
      *
-     * @param string|array $input
+     * @param string $name
+     * @param string $fallback
      * @param Model $model
      * @return self
      */
-    public static function load($input, $model)
+    public static function load(string $name)
     {
-        if (is_array($input)) {
-            return new static($input);
+        $props = static::find($name);
+
+        if (is_array($props) === true) {
+            return $props;
         }
 
-        if (is_file($input) === false) {
-            throw new Exception('The blueprint cannot be found');
-        }
+        $file  = $props;
+        $props = Data::read($file);
 
-        $data          = Data::read($input);
-        $data['name']  = pathinfo($input, PATHINFO_FILENAME);
-        $data['model'] = $model;
+        // inject the filename as name if no name is set
+        $props['name'] = $props['name'] ?? F::name($file);
 
-        return new static($data);
+        return $props;
     }
 
     /**
@@ -235,6 +335,9 @@ class Blueprint extends BlueprintObject
         $sections = new BlueprintCollection;
 
         foreach ((array)$this->sections as $name => $props) {
+            // section extensions
+            $props = Blueprint::extend($props);
+
             // use the key as name if the name is not set
             $props['name'] = $props['name'] ?? $name;
 
@@ -246,16 +349,6 @@ class Blueprint extends BlueprintObject
         }
 
         return $this->sections = $sections;
-    }
-
-    /**
-     * Returns the Blueprint title
-     *
-     * @return string
-     */
-    public function title(): string
-    {
-        return $this->title;
     }
 
     /**
@@ -296,6 +389,24 @@ class Blueprint extends BlueprintObject
     {
         $this->title = $this->i18n($title);
         return $this;
+    }
+
+    /**
+     * @return BlueprintTabs
+     */
+    public function tabs(): BlueprintTabs
+    {
+        return $this->tabs;
+    }
+
+    /**
+     * Returns the Blueprint title
+     *
+     * @return string
+     */
+    public function title(): string
+    {
+        return $this->title;
     }
 
 }

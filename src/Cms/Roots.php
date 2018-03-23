@@ -15,15 +15,19 @@ class Roots extends Ingredients
 
     protected $accounts;
     protected $blueprints;
+    protected $cache;
     protected $collections;
+    protected $config;
     protected $content;
     protected $controllers;
+    protected $env;
     protected $index;
     protected $kirby;
     protected $loaders;
     protected $media;
     protected $panel;
     protected $plugins;
+    protected $roles;
     protected $site;
     protected $snippets;
     protected $templates;
@@ -38,9 +42,19 @@ class Roots extends Ingredients
         return $this->blueprints = $this->blueprints ?? $this->site() . '/blueprints';
     }
 
+    public function cache(): string
+    {
+        return $this->cache = $this->cache ?? $this->site() . '/cache';
+    }
+
     public function collections(): string
     {
         return $this->collections = $this->collections ?? $this->site() . '/collections';
+    }
+
+    public function config(): string
+    {
+        return $this->config = $this->config ?? $this->site() . '/config';
     }
 
     public function content(): string
@@ -51,6 +65,11 @@ class Roots extends Ingredients
     public function controllers(): string
     {
         return $this->controllers = $this->controllers ?? $this->site() . '/controllers';
+    }
+
+    public function env(): string
+    {
+        return $this->env = $this->env ?? $this->index();
     }
 
     public function index(): string
@@ -86,6 +105,11 @@ class Roots extends Ingredients
     public function plugins(): string
     {
         return $this->plugins = $this->plugins ?? $this->site() . '/plugins';
+    }
+
+    public function roles(): string
+    {
+        return $this->roles = $this->roles ?? $this->blueprints() . '/users';
     }
 
     public function site(): string

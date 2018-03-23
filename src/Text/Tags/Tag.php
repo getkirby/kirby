@@ -18,8 +18,25 @@ namespace Kirby\Text\Tags;
  * @copyright Bastian Allgeier
  * @license   MIT
  */
-class Tag
+abstract class Tag
 {
+
+    /**
+     * A list of all detected attributes
+     * in the tag
+     *
+     * @var array
+     */
+    protected $attributes = [];
+
+    /**
+     * An array of injected data
+     * which can be used to handle
+     * tag dependencies
+     *
+     * @var array
+     */
+    protected $data = [];
 
     /**
      * The main value of the tag.
@@ -29,14 +46,6 @@ class Tag
      * @var string
      */
     protected $value;
-
-    /**
-     * A list of all detected attributes
-     * in the tag
-     *
-     * @var array
-     */
-    protected $attributes = [];
 
     /**
      * Returns a list of allowed attributes.
@@ -50,6 +59,16 @@ class Tag
     public function attributes(): array
     {
         return [];
+    }
+
+    /**
+     * Injected tag data
+     *
+     * @return array
+     */
+    public function data(): array
+    {
+        return $this->data;
     }
 
     /**
@@ -73,7 +92,7 @@ class Tag
      */
     public function attr(string $name, $default = '')
     {
-        return $this->attributes[$name] ?? $default;
+        return $this->attributes[strtolower($name)] ?? $default;
     }
 
     /**
@@ -94,7 +113,7 @@ class Tag
      */
     public function __toString(): string
     {
-            return $this->html();
+        return $this->html();
     }
 
     /**
@@ -104,12 +123,14 @@ class Tag
      *
      * @param  string $value
      * @param  array  $attributes
+     * @param  array  $data
      * @return string
      */
-    public function parse(string $value, array $attributes = []): string
+    public function parse(string $value, array $attributes = [], array $data = []): string
     {
         $this->value      = $value;
-        $this->attributes = $attributes;
+        $this->attributes = array_change_key_case($attributes);
+        $this->data       = $data;
 
         return $this->html();
     }

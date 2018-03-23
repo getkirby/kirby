@@ -3,11 +3,13 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Base\Base;
 use Kirby\Util\Dir;
 
 class SiteStore extends SiteStoreDefault
 {
+
+    const PAGE_STORE_CLASS = PageStore::class;
+    const FILE_STORE_CLASS = FileStore::class;
 
     protected $base;
 
@@ -19,7 +21,7 @@ class SiteStore extends SiteStoreDefault
 
         return $this->base = new Base([
             'extension' => 'txt',
-            'root'      => $this->kirby()->root('content'),
+            'root'      => $this->site()->root(),
             'type'      => 'site',
         ]);
     }
@@ -30,14 +32,13 @@ class SiteStore extends SiteStoreDefault
         $site      = $this->site();
         $url       = $site->url();
         $children  = new Pages([], $site);
-        $extension = $this->base()->extension();
 
         foreach ($this->base()->children() as $slug => $props) {
 
             $props['slug']  = $slug;
             $props['url']   = $url . '/' . $slug;
             $props['site']  = $site;
-            $props['store'] = PageStore::class;
+            $props['store'] = static::PAGE_STORE_CLASS;
 
             $page = Page::factory($props);
 
@@ -54,38 +55,29 @@ class SiteStore extends SiteStoreDefault
         return $this->base()->read();
     }
 
-    public function createFile(File $file, string $source)
+    public function drafts(): array
     {
-        $file = $file->clone([
-            'store' => FileStore::class
+
+        $site   = $this->site();
+        $url    = $site->url();
+        $drafts = [];
+        $base   = new Base([
+            'extension' => 'txt',
+            'root'      => $site->root() . '/_drafts',
         ]);
 
-        return $file->create($source);
-    }
-
-    public function createChild(Page $child)
-    {
-        if ($this->exists() === false) {
-            return $child;
+        foreach ($base->children() as $slug => $props) {
+            $drafts[] = [
+                'num'    => $props['num'],
+                'site'   => $site,
+                'slug'   => $slug,
+                'status' => 'draft',
+                'url'    => $url . '/_drafts/' . $slug,
+                'store'  => static::PAGE_STORE_CLASS
+            ];
         }
 
-        $root = $this->root() . '/' . $child->slug();
-
-        // create the new page directory
-        if (Dir::make($root) !== true) {
-            throw new Exception('The page directory cannot be created');
-        }
-
-        // write the text file
-        touch($root . '/' . $child->template() . '.txt');
-
-        // attach the store
-        $child = $child->clone([
-            'store' => PageStore::class
-        ]);
-
-        // write the content file
-        return $child->update();
+        return $drafts;
     }
 
     public function exists(): bool
@@ -96,19 +88,18 @@ class SiteStore extends SiteStoreDefault
     public function files()
     {
 
-        $base      = $this->base();
-        $site      = $this->site();
-        $root      = $base->root();
-        $extension = $base->extension();
-        $url       = $site->kirby()->media()->url($site);
-        $files     = new Files([], $site);
+        $base  = $this->base();
+        $site  = $this->site();
+        $root  = $base->root();
+        $url   = $site->kirby()->media()->url($site);
+        $files = new Files([], $site);
 
         foreach ($this->base()->files() as $filename => $props) {
 
             $file = new File([
                 'filename' => $filename,
                 'parent'   => $site,
-                'store'    => FileStore::class,
+                'store'    => static::FILE_STORE_CLASS,
                 'url'      => $url . '/' . $filename,
             ]);
 
@@ -134,15 +125,15 @@ class SiteStore extends SiteStoreDefault
         return $this->model;
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
-        $site = parent::update($content, $form);
+        $site = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $site;
         }
 
-        $this->base()->write($form->stringValues());
+        $this->base()->write($site->content()->toArray());
 
         return $site;
     }

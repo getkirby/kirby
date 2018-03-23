@@ -17,6 +17,8 @@ use Kirby\Toolkit\V;
 class User extends Model
 {
 
+    use UserActions;
+
     use HasContent;
     use HasSiblings;
     use HasStore;
@@ -113,73 +115,15 @@ class User extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = $this->store()->blueprint();
-    }
-
-    /**
-     * Changes the user email address
-     *
-     * @param string $email
-     * @return self
-     */
-    public function changeEmail(string $email): self
-    {
-        $this->rules()->changeEmail($this, $email);
-
-        return $this->store()->changeEmail($email);
-    }
-
-    /**
-     * Changes the user language
-     *
-     * @param string $language
-     * @return self
-     */
-    public function changeLanguage(string $language): self
-    {
-        $this->rules()->changeLanguage($this, $language);
-
-        return $this->store()->changeLanguage($language);
-    }
-
-    /**
-     * Changes the screen name of the user
-     *
-     * @param string $name
-     * @return self
-     */
-    public function changeName(string $name): self
-    {
-        return $this->store()->changeName($name);
-    }
-
-    /**
-     * Changes the user password
-     *
-     * @param string $password
-     * @return self
-     */
-    public function changePassword(string $password): self
-    {
-        $this->rules()->changePassword($this, $password);
-
-        // hash password after checking rules
-        $password = $this->hashPassword($password);
-
-        return $this->store()->changePassword($password);
-    }
-
-    /**
-     * Changes the user role
-     *
-     * @param string $role
-     * @return self
-     */
-    public function changeRole(string $role): self
-    {
-        $this->rules()->changeRole($this, $role);
-
-        return $this->store()->changeRole($role);
+        try {
+            return $this->blueprint = UserBlueprint::factory('users/' . $this->role(), 'users/default', $this);
+        } catch (Exception $e) {
+            return $this->blueprint = new UserBlueprint([
+                'model' => $this,
+                'name'  => 'default',
+                'title' => 'Default',
+            ]);
+        }
     }
 
     /**
@@ -207,51 +151,9 @@ class User extends Model
         return $this->avatar()->toArray();
     }
 
-    /**
-     * @param array $input
-     * @return self
-     */
-    public function create(array $input = null): self
-    {
-        // stop if the user already exists
-        if ($this->exists() === true) {
-            throw new Exception('The user already exists');
-        }
-
-        $form = Form::for($this, [
-            'values' => $input
-        ]);
-
-        // validate the input
-        $form->isValid();
-
-        // get the data values array
-        $values = $form->values();
-
-        // validate those values additionally with the model rules
-        $this->rules()->create($this, $values, $form);
-
-        // store and pass the form as second param
-        // to make use of the Form::stringValues() method
-        // if necessary
-        return $this->store()->create($values, $form);
-    }
-
     protected function defaultStore()
     {
         return UserStoreDefault::class;
-    }
-
-    /**
-     * Deletes the user
-     *
-     * @return bool
-     */
-    public function delete(): bool
-    {
-        $this->rules()->delete($this);
-
-        return $this->store()->delete();
     }
 
     /**
@@ -272,6 +174,25 @@ class User extends Model
     public function exists(): bool
     {
         return $this->store()->exists();
+    }
+
+    /**
+     * Hashes user password
+     *
+     * @param string|null $password
+     * @return string|null
+     */
+    public function hashPassword($password)
+    {
+        if ($password !== null) {
+            $info = password_get_info($password);
+
+            if ($info['algo'] === 0) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+            }
+        }
+
+        return $password;
     }
 
     /**
@@ -327,7 +248,7 @@ class User extends Model
      */
     public function isLastAdmin(): bool
     {
-        return $this->role() === 'admin' && $this->kirby()->users()->filterBy('role', 'admin')->count() <= 1;
+        return $this->role()->isAdmin() === true && $this->kirby()->users()->filterBy('role', 'admin')->count() <= 1;
     }
 
     /**
@@ -381,13 +302,31 @@ class User extends Model
     }
 
     /**
+     * @return UserBlueprintOptions
+     */
+    public function permissions(): UserBlueprintOptions
+    {
+        return $this->blueprint()->options();
+    }
+
+    /**
      * Returns the user role
      *
      * @return string
      */
-    public function role(): string
+    public function role(): Role
     {
-        return $this->role ?? $this->role = $this->store()->role();
+        if (is_a($this->role, Role::class) === true) {
+            return $this->role;
+        }
+
+        $roleName = $this->role ?? $this->store()->role();
+
+        if ($role = $this->kirby()->roles()->find($roleName)) {
+            return $this->role = $role;
+        }
+
+        return $this->role = Role::nobody();
     }
 
     /**
@@ -485,22 +424,6 @@ class User extends Model
         }
 
         return true;
-    }
-
-    /**
-     * Hashes user password
-     */
-    public function hashPassword($password)
-    {
-        if ($password !== null) {
-            $info = password_get_info($password);
-
-            if ($info['algo'] === 0) {
-                $password = password_hash($password, PASSWORD_DEFAULT);
-            }
-        }
-
-        return $password;
     }
 
 }

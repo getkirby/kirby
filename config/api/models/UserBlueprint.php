@@ -10,6 +10,9 @@ return [
         'name' => function (UserBlueprint $blueprint) {
             return $blueprint->name();
         },
+        'options' => function (UserBlueprint $blueprint) {
+            return $blueprint->options()->toArray();
+        },
         'tabs' => function (UserBlueprint $blueprint) {
             return $blueprint->tabs()->toArray();
         },

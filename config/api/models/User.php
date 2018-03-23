@@ -43,6 +43,9 @@ return [
 
             return null;
         },
+        'permissions' => function (User $user) {
+            return $user->role()->permissions()->toArray();
+        },
         'prev' => function (User $user) {
             return $user->prev();
         },
@@ -72,6 +75,14 @@ return [
             'name',
             'role',
         ],
+        'auth' => [
+            'avatar' => 'compact',
+            'permissions',
+            'email',
+            'id',
+            'name',
+            'role'
+        ],
         'panel' => [
             'avatar' => 'compact',
             'blueprint',
@@ -80,6 +91,7 @@ return [
             'language',
             'name',
             'next' => ['id', 'name'],
+            'options',
             'prev' => ['id', 'name'],
             'role',
         ],

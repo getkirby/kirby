@@ -3,12 +3,14 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Base\Base;
 use Kirby\Util\Dir;
 use Kirby\Util\F;
 
 class PageStore extends PageStoreDefault
 {
+
+    const PAGE_STORE_CLASS = PageStore::class;
+    const FILE_STORE_CLASS = FileStore::class;
 
     protected $base;
     protected $root;
@@ -21,7 +23,7 @@ class PageStore extends PageStoreDefault
 
         return $this->base = new Base([
             'extension' => 'txt',
-            'root'      => $this->root()
+            'root'      => $this->page()->root()
         ]);
     }
 
@@ -32,10 +34,10 @@ class PageStore extends PageStoreDefault
         }
 
         $oldPage = $this->page();
-        $oldRoot = $this->root();
+        $oldRoot = $oldPage->root();
 
         $newPage = parent::changeNum($num);
-        $newRoot = $this->root($newPage);
+        $newRoot = $newPage->root();
 
         $this->moveDirectory($oldRoot, $newRoot);
 
@@ -49,16 +51,46 @@ class PageStore extends PageStoreDefault
         }
 
         $oldPage = $this->page();
-        $oldRoot = $this->root();
+        $oldRoot = $oldPage->root();
 
         $newPage = parent::changeSlug($slug);
-        $newRoot = $this->root($newPage);
+        $newRoot = $newPage->root();
 
         $this->moveDirectory($oldRoot, $newRoot);
 
         $this->media()->delete($oldPage);
 
         return $newPage;
+    }
+
+    protected function changeStatusToDraft()
+    {
+        $oldPage = $this->page();
+        $newPage = parent::changeStatusToDraft();
+
+        $this->moveDirectory($oldPage->root(), $newPage->root());
+
+        return $newPage;
+    }
+
+    protected function changeStatusToListed(int $position)
+    {
+        // publish the draft first
+        if ($this->page()->isDraft() === true) {
+            $this->model = $this->publishDraft();
+        }
+
+        return $this->changeNum($position);
+    }
+
+    protected function changeStatusToUnlisted()
+    {
+        // publish the draft first
+        if ($this->page()->isDraft() === true) {
+            $this->page = $this->publishDraft();
+        }
+
+        return $this->changeNum(null);
     }
 
     public function changeTemplate(string $template)
@@ -71,7 +103,7 @@ class PageStore extends PageStoreDefault
         $oldFile = $this->base()->storage();
 
         $newPage = parent::changeTemplate($template);
-        $newFile = $this->root() . '/' . $newPage->template() . '.' . $this->base()->extension();
+        $newFile = $newPage->root() . '/' . $newPage->template() . '.' . $this->base()->extension();
 
         if (F::move($oldFile, $newFile) !== true) {
             throw new Exception('The text file could not be moved');
@@ -97,7 +129,7 @@ class PageStore extends PageStoreDefault
                 'parent' => $parent,
                 'site'   => $site,
                 'slug'   => $slug,
-                'store'  => PageStore::class
+                'store'  => static::PAGE_STORE_CLASS
             ]);
 
             $children->set($page->id(), $page);
@@ -113,23 +145,19 @@ class PageStore extends PageStoreDefault
         return $this->base()->read();
     }
 
-    public function createFile(File $file, string $source)
+    public function create()
     {
-        $file = $file->clone([
-            'store' => FileStore::class
-        ]);
+        $page = $this->page();
 
-        return $file->create($source);
-    }
-
-    public function createChild(Page $child)
-    {
-        if ($this->exists() === false) {
-            return $child;
+        if ($this->exists() === true) {
+            return $page;
         }
 
-        $parent = $this->page();
-        $root   = $this->root() . '/' . $child->slug();
+        $root = $page->root();
+
+        if (is_dir($root) === true) {
+            throw new Exception('The draft already exists');
+        }
 
         // create the new page directory
         if (Dir::make($root) !== true) {
@@ -137,21 +165,56 @@ class PageStore extends PageStoreDefault
         }
 
         // write the text file
-        touch($root . '/' . $child->template() . '.txt');
-
-        // attach the store
-        $child = $child->clone([
-            'store' => static::class
-        ]);
+        touch($root . '/' . $page->template() . '.txt');
 
         // write the content file
-        return $child->update(null, false);
+        return $page->update(null, false);
     }
 
     public function delete(): bool
     {
         // delete the content folder for this page
-        return $this->base()->delete();
+        Dir::remove($this->page()->root());
+
+        // if the page is a draft and the _drafts folder
+        // is now empty. clean it up.
+        if ($this->page()->isDraft() === true) {
+            $draftsDir = dirname($this->page()->root());
+
+            if (Dir::isEmpty($draftsDir) === true) {
+                Dir::remove($draftsDir);
+            }
+        }
+
+        return true;
+    }
+
+    public function drafts(): array
+    {
+        $parent    = $this->page();
+        $id        = $parent->id();
+        $url       = $parent->url() . '/_drafts';
+        $site      = $parent->site();
+        $extension = $this->base()->extension();
+        $drafts    = [];
+        $base      = new Base([
+            'extension' => 'txt',
+            'root'      => $parent->root() . '/_drafts',
+        ]);
+
+        foreach ($base->children() as $slug => $props) {
+            $drafts[] = [
+                'num'    => $props['num'],
+                'parent' => $parent,
+                'site'   => $site,
+                'slug'   => $slug,
+                'status' => 'draft',
+                'url'    => $parent->url() . '/_drafts/' . $slug,
+                'store'  => static::class
+            ];
+        }
+
+        return $drafts;
     }
 
     public function exists(): bool
@@ -173,7 +236,7 @@ class PageStore extends PageStoreDefault
                 'filename' => $filename,
                 'url'      => $url . '/' . $filename,
                 'parent'   => $page,
-                'store'    => FileStore::class
+                'store'    => static::FILE_STORE_CLASS
             ]);
 
             $files->set($file->id(), $file);
@@ -190,6 +253,12 @@ class PageStore extends PageStoreDefault
 
     protected function moveDirectory(string $old, string $new): bool
     {
+        $parent = dirname($new);
+
+        if (Dir::make($parent, true) !== true) {
+            throw new Exception('The parent directory could not be created');
+        }
+
         if (Dir::move($old, $new) !== true) {
             throw new Exception('The directory could not be moved');
         }
@@ -197,23 +266,26 @@ class PageStore extends PageStoreDefault
         return true;
     }
 
-    protected function parentRoot(): string
+    protected function publishDraft()
     {
-        return dirname($this->root());
-    }
+        $draft = $this->page();
+        $root  = $draft->parentModel()->root() . '/' . $draft->slug();
 
-    protected function root($page = null): string
-    {
-
-        if ($page === null) {
-            if (is_string($this->root) === true) {
-                return $this->root;
-            }
-
-            return $this->root = $this->kirby()->root('content') . '/' . $this->page()->diruri();
+        if ($draft->isPage() === false) {
+            throw new Exception('The page is not a draft');
         }
 
-        return $this->parentRoot() . '/' . $page->dirname();
+        $this->moveDirectory($draft->root(), $root);
+
+        // Get the draft folder and check if there are any other drafts
+        // left. Otherwise delete it.
+        $draftDir = dirname($draft->root());
+
+        if (Dir::isEmpty($draftDir) === true) {
+            Dir::remove($draftDir);
+        }
+
+        return $draft->clone([], Page::class);
     }
 
     public function template(): string
@@ -221,15 +293,15 @@ class PageStore extends PageStoreDefault
         return $this->base()->type();
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
-        $page = parent::update($content, $form);
+        $page = parent::update($values, $strings);
 
         if ($this->exists() === false) {
             return $page;
         }
 
-        $this->base()->write($form->stringValues());
+        $this->base()->write($page->content()->toArray());
 
         return $page;
     }

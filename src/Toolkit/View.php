@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Throwable;
 
 /**
  * Simple PHP view engine
@@ -66,9 +67,9 @@ class View
     /**
      * Returns the view file
      *
-     * @return string
+     * @return string|false
      */
-    public function file(): string
+    public function file()
     {
         return $this->file;
     }
@@ -101,7 +102,7 @@ class View
 
         try {
             require $this->file();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $exception = $e;
         }
 

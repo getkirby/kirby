@@ -97,6 +97,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/files/(:any)/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $filename, string $sectionName, string $path = '') {
+            return $this->file($id, $filename)->blueprint()->section($sectionName)->apiCall($this, $path);
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
@@ -114,11 +121,7 @@ return [
         'pattern' => 'pages/(:any)/status',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
-            if ($this->requestBody('status') === 'invisible') {
-                return $this->page($id)->hide();
-            }
-
-            return $this->page($id)->sort($this->requestBody('position'));
+            return $this->page($id)->changeStatus($this->requestBody('status'), $this->requestBody('position'));
         }
     ],
     [

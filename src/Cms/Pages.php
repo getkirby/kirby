@@ -52,23 +52,59 @@ class Pages extends Collection
     }
 
     /**
-     * Returns all invisible pages in the collection
+     * Custom getter that is able to find
+     * extension pages
+     *
+     * @param string $key
+     * @return Page|null
+     */
+    public function get($key, $default = null)
+    {
+        if ($item = parent::get($key)) {
+            return $item;
+        }
+
+        return App::instance()->extension('pages', $key);
+    }
+
+    /**
+     * Deprecated alias for Pages::unlisted()
      *
      * @return self
      */
     public function invisible(): self
     {
-        return $this->filterBy('isVisible', '==', false);
+        return $this->filterBy('isUnlisted', '==', true);
     }
 
     /**
-     * Returns all visible pages in the collection
+     * Returns all listed pages in the collection
+     *
+     * @return self
+     */
+    public function listed(): self
+    {
+        return $this->filterBy('isListed', '==', true);
+    }
+
+    /**
+     * Returns all unlisted pages in the collection
+     *
+     * @return self
+     */
+    public function unlisted(): self
+    {
+        return $this->filterBy('isUnlisted', '==', true);
+    }
+
+    /**
+     * Deprecated alias for Pages::listed()
      *
      * @return self
      */
     public function visible(): self
     {
-        return $this->filterBy('isVisible', '==', true);
+        return $this->filterBy('isListed', '==', true);
     }
 
 }

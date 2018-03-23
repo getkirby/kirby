@@ -29,8 +29,11 @@ class Img extends Element
     {
         parent::__construct('img');
 
-        $this->attr('alt', ' ');
         $this->attr($attr);
         $this->attr('src', $src);
+
+        if (empty((string)$this->attr('alt'))) {
+            $this->attr('alt', ' ');
+        }
     }
 }

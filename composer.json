@@ -27,13 +27,18 @@
         "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
         "sentry/sentry": "^1.8",
-        "firebase/php-jwt": "^5.0"
+        "firebase/php-jwt": "^5.0",
+        "vlucas/phpdotenv": "^2.4.0"
     },
     "minimum-stability": "dev",
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "^7"
     },
     "autoload": {
+        "files": [
+            "config/helpers.php",
+            "config/aliases.php"
+        ],
         "psr-4": {
             "Kirby\\": "src/"
         }

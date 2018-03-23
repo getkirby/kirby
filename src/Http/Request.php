@@ -121,9 +121,22 @@ class Request
      *
      * @return array
      */
-    public function data()
+    public function data(): array
     {
         return $this->is('GET') ? $this->query()->toArray() : $this->body()->toArray();
+    }
+
+    /**
+     * Returns any data field from the request
+     * if it exists
+     *
+     * @param string $key
+     * @param mixed $fallback
+     * @return mixed
+     */
+    public function get(string $key, $fallback = null)
+    {
+        return $this->data()[$key] ?? $fallback;
     }
 
     /**

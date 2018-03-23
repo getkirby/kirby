@@ -136,7 +136,13 @@ class BlueprintTest extends TestCase
 
     public function testLoad()
     {
-        $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/test.yml', new Page(['slug' => 'test']));
+        new App([
+            'roots' => [
+                'blueprints' => __DIR__ . '/fixtures/blueprints'
+            ]
+        ]);
+
+        $blueprint = Blueprint::factory('test', null, new Page(['slug' => 'test']));
 
         $this->assertCount(3, $blueprint->sections());
         $this->assertEquals('fields', $blueprint->sections()->first()->name());
@@ -148,7 +154,13 @@ class BlueprintTest extends TestCase
 
     public function testLoadFields()
     {
-        $blueprint = Blueprint::load(__DIR__ . '/fixtures/blueprints/fields.yml', new Page(['slug' => 'test']));
+        new App([
+            'roots' => [
+                'blueprints' => __DIR__ . '/fixtures/blueprints'
+            ]
+        ]);
+
+        $blueprint = Blueprint::factory('fields', null, new Page(['slug' => 'test']));
         $this->assertEquals('fields', $blueprint->sections()->first()->name());
     }
 

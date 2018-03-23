@@ -18,24 +18,6 @@ class UserStoreDefault extends Store
         ]);
     }
 
-    /**
-     * @return UserBlueprint|null
-     */
-    public function blueprint()
-    {
-        $root = $this->kirby()->root('blueprints') . '/users';
-
-        try {
-            return UserBlueprint::load($root . '/' . $this->user()->role() . '.yml', $this->user());
-        } catch (Exception $e) {
-            try {
-                return UserBlueprint::load($root . '/default.yml', $this->user());
-            } catch (Exception $e) {
-                return null;
-            }
-        }
-    }
-
     public function changeEmail(string $email)
     {
         return $this->user()->clone([
@@ -76,9 +58,9 @@ class UserStoreDefault extends Store
         return [];
     }
 
-    public function create(array $values, Form $form)
+    public function create(User $user)
     {
-        throw new Exception('The user cannot be saved');
+        return $user;
     }
 
     public function delete(): bool
@@ -111,10 +93,10 @@ class UserStoreDefault extends Store
         return 'visitor';
     }
 
-    public function update(array $values, Form $form)
+    public function update(array $values = [], array $strings = [])
     {
         return $this->user()->clone([
-            'content' => $form->stringValues()
+            'content' => $this->user()->content()->update($strings)->toArray()
         ]);
     }
 

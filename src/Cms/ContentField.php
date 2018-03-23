@@ -26,6 +26,7 @@ use Exception;
  */
 class ContentField
 {
+
     /**
      * The field name
      *
@@ -38,7 +39,7 @@ class ContentField
      *
      * @var array
      */
-    protected static $methods = [];
+    public static $methods = [];
 
     /**
      * The parent object if available.
@@ -143,44 +144,6 @@ class ContentField
     public function key(): string
     {
         return $this->key;
-    }
-
-    /**
-     * Setter and getter for field methods
-     *
-     * @param  string|array  $name
-     * @param  Closure|null  $method
-     * @return Field|null
-     */
-    static public function method($name, Closure $method = null)
-    {
-        if ($method === null) {
-            return static::$methods[$name] ?? null;
-        }
-
-        static::$methods[$name] = $method;
-    }
-
-    /**
-     * Returns all registered field methods
-     *
-     * @param  array $methods
-     * @return array
-     */
-    static public function methods(array $methods = null): array
-    {
-        if ($methods === null) {
-            return static::$methods;
-        }
-
-        // reset all registerd methods
-        static::$methods = [];
-
-        foreach ($methods as $name => $method) {
-            static::method($name, $method);
-        }
-
-        return static::$methods;
     }
 
     /**

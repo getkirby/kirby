@@ -69,11 +69,11 @@ class Video extends Iframe
     {
         // YouTube video
         if (preg_match('!(youtube.com\/embed\/[a-zA-Z0-9_-]+)|(youtube-nocookie.com\/embed\/[a-zA-Z0-9_-]+)|(v=[a-zA-Z0-9_-]+)|(youtu.be\/[a-zA-Z0-9_-]+)!i', $src) === 1) {
-            return new Video\Youtube($src, $options, $attr);
+            return new Video\Youtube($src, $options['youtube'] ?? [], $attr);
 
         // Vimeo video
         } elseif (preg_match('!vimeo.com\/([0-9]+)!i', $src) === 1) {
-            return new Video\Vimeo($src, $options, $attr);
+            return new Video\Vimeo($src, $options['vimeo'] ?? [], $attr);
         }
 
         return new self($src, $options, $attr);

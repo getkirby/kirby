@@ -3,12 +3,11 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Image\Image;
 
 class AvatarRules
 {
 
-    public static function create(Avatar $avatar, Image $source): bool
+    public static function create(Avatar $avatar, Upload $source): bool
     {
         static::validMime($avatar, $source->mime());
         static::validDimensions($avatar, $source->width(), $source->height());
@@ -21,7 +20,7 @@ class AvatarRules
         return true;
     }
 
-    public static function replace(Avatar $avatar, Image $source): bool
+    public static function replace(Avatar $avatar, Upload $source): bool
     {
         return static::create($avatar, $source);
     }

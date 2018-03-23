@@ -11,6 +11,7 @@ class NumberField extends Field
     use Mixins\Label;
     use Mixins\MinMax;
     use Mixins\Placeholder;
+    use Mixins\Prefix;
     use Mixins\Required;
     use Mixins\Step;
     use Mixins\Value;

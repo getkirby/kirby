@@ -14,6 +14,7 @@ class TextField extends Field
     use Mixins\Label;
     use Mixins\Length;
     use Mixins\Placeholder;
+    use Mixins\Prefix;
     use Mixins\Required;
     use Mixins\Value;
 
@@ -37,7 +38,7 @@ class TextField extends Field
 
     protected function valueFromInput($input)
     {
-        return $this->convert($input);
+        return $this->convert(trim($input));
     }
 
 }

@@ -44,7 +44,9 @@ class Form extends Component
     public function isValid(): bool
     {
         foreach ($this->fields() as $field) {
-            $field->isValid();
+            if (method_exists($field, 'isValid') === true) {
+                $field->isValid();
+            }
         }
 
         return true;
@@ -62,7 +64,6 @@ class Form extends Component
         $fields = [];
 
         foreach ($this->fields as $name => $field) {
-
             $field['locale'] = $locale;
             $field['model']  = $model;
             $field['name']   = $name = $field['name'] ?? $name;
@@ -80,7 +81,7 @@ class Form extends Component
         $values = [];
 
         foreach ($this->fields() as $field) {
-            if (method_exists($field, 'stringValue') === true && $field->isDisabled() === false) {
+            if (method_exists($field, 'stringValue') === true) {
                 $values[$field->name()] = $field->stringValue();
             }
         }
@@ -110,7 +111,7 @@ class Form extends Component
         $result = [];
 
         foreach ($this->fields() as $field) {
-            if (method_exists($field, 'value') === true && $field->isDisabled() === false) {
+            if (method_exists($field, 'value') === true) {
                 $result[$field->name()] = $field->value();
             }
         }

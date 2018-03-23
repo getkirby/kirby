@@ -1,6 +1,6 @@
 <?php
 
-return function (Kirby\Cms\App $app) {
+return function ($app) {
 
     return [
         'Api' => [
@@ -13,17 +13,16 @@ return function (Kirby\Cms\App $app) {
         'Darkroom' => [
             'singleton' => true,
             'type'      => Kirby\Image\Darkroom::class,
-            'instance'  => function () {
-                return new Kirby\Image\Darkroom\GdLib([
-                    'quality' => 80
-                ]);
+            'instance'  => function () use ($app) {
+                $options = (array)$app->option('thumbs');
+                return Kirby\Image\Darkroom::factory($options['driver'] ?? 'gd', $options);
             }
         ],
         'Kirbytext' => [
             'singleton' => true,
             'type'      => Kirby\Text\Tags::class,
-            'instance'  => function () {
-                return new Kirby\Text\Tags();
+            'instance'  => function () use ($app) {
+                return new Kirby\Text\Tags($app->extensions('tags'));
             }
         ],
         'Locales' => [
@@ -91,6 +90,13 @@ return function (Kirby\Cms\App $app) {
                 return Kirby\Cms\Response::for($input);
             }
         ],
+        'Roles' => [
+            'singleton' => true,
+            'type'      => Kirby\Cms\Roles::class,
+            'instance'  => function () {
+                return Kirby\Cms\Roles::factory();
+            }
+        ],
         'Router' => [
             'singleton' => true,
             'type'      => Kirby\Http\Router::class,
@@ -138,32 +144,6 @@ return function (Kirby\Cms\App $app) {
                 return new Kirby\Cms\Template($name, $data, $appendix);
             }
         ],
-        'Users' => [
-            'singleton' => true,
-            'type'      => Kirby\Cms\Users::class,
-            'instance'  => function () use ($app) {
-
-                $users = new Kirby\Cms\Users();
-                $root  = $app->root('accounts');
-
-                foreach (Kirby\Util\Dir::read($root) as $userDirectory) {
-
-                    if (is_dir($root . '/' . $userDirectory) === false) {
-                        continue;
-                    }
-
-                    $user = new Kirby\Cms\User([
-                        'email' => $userDirectory,
-                        'store' => Kirby\Cms\UserStore::class
-                    ]);
-
-                    $users->set($user->id(), $user);
-                }
-
-                return $users;
-
-            }
-        ]
     ];
 
 };

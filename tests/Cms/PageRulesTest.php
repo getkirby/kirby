@@ -15,9 +15,26 @@ class FakePageStore extends PageStoreDefault
 class PageRulesTest extends TestCase
 {
 
+    public function appWithAdmin()
+    {
+        return new App([
+            'user' => 'test@getkirby.com',
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'admin'
+                ]
+            ]
+        ]);
+    }
+
     public function testChangeNum()
     {
-        $page = new Page(['slug' => 'test']);
+        $page = new Page([
+            'slug'  => 'test',
+            'kirby' => $this->appWithAdmin(),
+        ]);
+
         $this->assertTrue(PageRules::changeNum($page, 2));
         $this->assertTrue(PageRules::changeNum($page));
     }
@@ -28,36 +45,54 @@ class PageRulesTest extends TestCase
      */
     public function testInvalidChangeNum()
     {
-        $page = new Page(['slug' => 'test']);
+        $page = new Page([
+            'slug'  => 'test',
+            'kirby' => $this->appWithAdmin(),
+        ]);
+
         PageRules::changeNum($page, -1);
     }
 
     public function testChangeSlug()
     {
-        $page = new Page(['slug' => 'test']);
+        $page = new Page([
+            'slug'  => 'test',
+            'kirby' => $this->appWithAdmin(),
+        ]);
+
         $this->assertTrue(PageRules::changeSlug($page, 'test-a'));
     }
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The slug of the home page cannot be changed
+     * @expectedExceptionMessage The slug for this page cannot be changed
      */
     public function testChangeSlugWithHomepage()
     {
         $site = new Site();
-        $page = new Page(['slug' => 'test', 'site' => $site]);
+        $page = new Page([
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
+            'site'  => $site
+        ]);
+
         $site->setHomepage($page);
         PageRules::changeSlug($page, 'test-a');
     }
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The slug of the error page cannot be changed
+     * @expectedExceptionMessage The slug for this page cannot be changed
      */
     public function testChangeSlugWithErrorPage()
     {
         $site = new Site();
-        $page = new Page(['slug' => 'test', 'site' => $site]);
+        $page = new Page([
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
+            'site'  => $site
+        ]);
+
         $site->setErrorPage($page);
         PageRules::changeSlug($page, 'test-a');
     }
@@ -68,61 +103,37 @@ class PageRulesTest extends TestCase
      */
     public function testChangeSlugWithDuplicate()
     {
-        $pages = new Pages([
-            new Page(['slug' => 'project-a']),
-            new Page(['slug' => 'project-b']),
-            new Page(['slug' => 'project-c'])
+        $page = new Page([
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
         ]);
+
+        $pages = new Pages([
+            $page->clone(['slug' => 'project-a']),
+            $page->clone(['slug' => 'project-b']),
+            $page->clone(['slug' => 'project-c'])
+        ]);
+
         PageRules::changeSlug($pages->first(), 'project-b');
     }
 
     public function testChangeTemplate()
     {
-        $page = new Page(['slug' => 'test']);
+        $page = new Page([
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
+        ]);
+
         $this->assertTrue(PageRules::changeTemplate($page, 'project'));
-    }
-
-    public function testCreateChild()
-    {
-        $child    = new Page(['slug' => 'project-a']);
-        $children = new Children([$child]);
-        $page     = new Page([
-            'slug' => 'projects',
-            'children' => $children
-        ]);
-        $new      = new Page(['slug' => 'project-b']);
-        $this->assertTrue(PageRules::createChild($page, $new));
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The URL appendix "project-a" exists
-     */
-    public function testCreateChildDuplicate()
-    {
-        $child    = new Page(['slug' => 'project-a']);
-        $children = new Children([$child]);
-        $page     = new Page([
-            'slug' => 'projects',
-            'children' => $children
-        ]);
-        $new      = new Page(['slug' => 'project-a']);
-        PageRules::createChild($page, $new);
-    }
-
-    public function testCreateFile()
-    {
-        $page = new Page(['slug' => 'test']);
-        $file = new File([
-            'filename' => 'cover.jpg',
-            'url'      => 'https://getkirby.com/projects/project-a/cover.jpg'
-        ]);
-        $this->assertTrue(PageRules::createFile($page, $file));
     }
 
     public function testUpdate()
     {
-        $page = new Page(['slug' => 'test']);
+        $page = new Page([
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
+        ]);
+
         $this->assertTrue(PageRules::update($page, [
             'color' => 'red'
         ]));
@@ -131,9 +142,11 @@ class PageRulesTest extends TestCase
     public function testDelete()
     {
         $page = new Page([
+            'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
             'store' => FakePageStore::class
         ]);
+
         $this->assertTrue(PageRules::delete($page));
     }
 
@@ -143,18 +156,23 @@ class PageRulesTest extends TestCase
      */
     public function testDeleteNotExists()
     {
-        $page = new Page(['slug' => 'test']);
+        $page = new Page([
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
+        ]);
+
         PageRules::delete($page);
     }
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The home page cannot be deleted
+     * @expectedExceptionMessage This page cannot be deleted
      */
     public function testDeleteHomepage()
     {
         $site = new Site();
         $page = new Page([
+            'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
             'store' => FakePageStore::class,
             'site'  => $site
@@ -165,12 +183,13 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The error page cannot be deleted
+     * @expectedExceptionMessage This page cannot be deleted
      */
     public function testDeleteErrorPage()
     {
         $site = new Site();
         $page = new Page([
+            'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
             'store' => FakePageStore::class,
             'site'  => $site
@@ -186,26 +205,31 @@ class PageRulesTest extends TestCase
     public function testDeleteWithChildren()
     {
         $page = new Page([
-            'slug' => 'test',
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
             'children' => new Children([
                 new Page(['slug' => 'a']),
                 new Page(['slug' => 'b'])
             ]),
             'store' => FakePageStore::class,
         ]);
+
         PageRules::delete($page);
     }
 
     public function testDeleteWithChildrenForce()
     {
         $page = new Page([
-            'slug' => 'test',
+            'kirby' => $this->appWithAdmin(),
+            'slug'  => 'test',
             'children' => new Children([
                 new Page(['slug' => 'a']),
                 new Page(['slug' => 'b'])
             ]),
             'store' => FakePageStore::class,
         ]);
+
+
         $this->assertTrue(PageRules::delete($page, true));
     }
 

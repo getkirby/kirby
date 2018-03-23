@@ -5,17 +5,15 @@ namespace Kirby\Text;
 use Exception;
 
 use Kirby\Text\Tags\Tag;
-use Kirby\Text\Tags\Tag\Date;
-use Kirby\Text\Tags\Tag\Link;
-use Kirby\Text\Tags\Tag\Email;
-use Kirby\Text\Tags\Tag\File;
-use Kirby\Text\Tags\Tag\Gist;
-use Kirby\Text\Tags\Tag\Image;
-use Kirby\Text\Tags\Tag\Tel;
-use Kirby\Text\Tags\Tag\Twitter;
-use Kirby\Text\Tags\Tag\Vimeo;
-use Kirby\Text\Tags\Tag\Youtube;
-
+use Kirby\Text\Tags\Date;
+use Kirby\Text\Tags\Link;
+use Kirby\Text\Tags\Email;
+use Kirby\Text\Tags\File;
+use Kirby\Text\Tags\Gist;
+use Kirby\Text\Tags\Image;
+use Kirby\Text\Tags\Tel;
+use Kirby\Text\Tags\Twitter;
+use Kirby\Text\Tags\Video;
 
 /**
  * The Tags Parser parses tags in
@@ -54,8 +52,9 @@ class Tags
         'image'   => Image::class,
         'tel'     => Tel::class,
         'twitter' => Twitter::class,
-        'vimeo'   => Vimeo::class,
-        'youtube' => Youtube::class,
+        'video'   => Video::class,
+        'vimeo'   => Video::class,
+        'youtube' => Video::class,
     ];
 
     /**
@@ -84,13 +83,14 @@ class Tags
      * registered tag classes.
      *
      * @param  string $text
+     * @param  array $data Additional data that will be passed down to the tag class
      * @return string
      */
-    public function parse(string $text): string
+    public function parse(string $text, array $data = []): string
     {
-        return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) {
+        return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) use ($data) {
             try {
-                return $this->tag($match[0]);
+                return $this->tag($match[0], $data);
             } catch (Exception $e) {
                 return $match[0];
             }
@@ -115,14 +115,15 @@ class Tags
      * ```
      *
      * @param  string|array $input
+     * @param  array $data
      * @return string
      */
-    public function tag($input): string
+    public function tag($input, array $data = []): string
     {
         if (is_string($input) === true) {
-            return $this->tagFromString($input);
+            return $this->tagFromString($input, $data);
         } elseif (is_array($input) === true) {
-            return $this->tagFromArray($input);
+            return $this->tagFromArray($input, $data);
         } else {
             throw new Exception('Invalid tag input');
         }
@@ -140,7 +141,6 @@ class Tags
             return $this->tagInstances[$name];
         }
 
-
         if (isset($this->tags[$name]) === false) {
             throw new Exception('Unsupported tag: ' . $name);
         }
@@ -155,9 +155,10 @@ class Tags
      * ```
      *
      * @param  string $string
+     * @param  array $data
      * @return string
      */
-    public function tagFromString(string $string): string
+    public function tagFromString(string $string, array $data = []): string
     {
         // remove the brackets
         $tag        = trim(rtrim(ltrim($string, '('), ')'));
@@ -181,7 +182,7 @@ class Tags
 
         $value = array_shift($attributes);
 
-        return $instance->parse($value, $attributes);
+        return $instance->parse($value, $attributes, $data);
     }
 
     /**
@@ -194,14 +195,15 @@ class Tags
      * ```
      *
      * @param  array   $attributes
+     * @param  array   $data
      * @return string
      */
-    public function tagFromArray(array $attributes): string
+    public function tagFromArray(array $attributes, array $data = []): string
     {
         $name     = key($attributes);
         $value    = array_shift($attributes);
         $instance = $this->tagInstance($name);
 
-        return $instance->parse($value, $attributes);
+        return $instance->parse($value, $attributes, $data);
     }
 }

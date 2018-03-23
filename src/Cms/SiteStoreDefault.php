@@ -5,10 +5,8 @@ namespace Kirby\Cms;
 class SiteStoreDefault extends Store
 {
 
-    public function blueprint()
-    {
-        return SiteBlueprint::load($this->kirby()->root('blueprints') . '/site.yml', $this->site());
-    }
+    const PAGE_STORE_CLASS = PageStoreDefault::class;
+    const FILE_STORE_CLASS = FileStoreDefault::class;
 
     public function children()
     {
@@ -28,6 +26,11 @@ class SiteStoreDefault extends Store
     public function createFile(File $file, string $source)
     {
         return $file;
+    }
+
+    public function drafts(): array
+    {
+        return [];
     }
 
     public function exists(): bool
@@ -50,10 +53,10 @@ class SiteStoreDefault extends Store
         return $this->model;
     }
 
-    public function update(array $content = [], $form)
+    public function update(array $values = [], array $strings = [])
     {
         return $this->site()->clone([
-            'content' => $form->stringValues()
+            'content' => $this->site()->content()->update($strings)->toArray()
         ]);
     }
 

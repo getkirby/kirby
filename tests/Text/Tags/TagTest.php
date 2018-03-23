@@ -4,11 +4,13 @@ namespace Kirby\Text\Tags;
 
 use PHPUnit\Framework\TestCase;
 
+class DummyTag extends Tag {}
+
 class TagTest extends TestCase
 {
     public function tag()
     {
-        return new Tag();
+        return new DummyTag();
     }
 
     public function testAttributes()

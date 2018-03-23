@@ -75,6 +75,20 @@ return [
         }
     ],
     [
+        'pattern' => 'site/files/(:any)/rename',
+        'method'  => 'PATCH',
+        'action'  => function (string $filename) {
+            return $this->file(null, $filename)->changeName($this->requestBody('name'));
+        }
+    ],
+    [
+        'pattern' => 'site/files/(:any)/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $filename, string $sectionName, string $path = '') {
+            return $this->file(null, $filename)->blueprint()->section($sectionName)->apiCall($this, $path);
+        }
+    ],
+    [
         'pattern' => 'site/options',
         'method'  => 'GET',
         'action'  => function () {

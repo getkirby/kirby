@@ -21,11 +21,5 @@
         <testsuite name="Classes">
             <directory>./tests/</directory>
         </testsuite>
-        <testsuite name="Helpers">
-            <file>./extensions/helpers.test.php</file>
-        </testsuite>
-        <testsuite name="Methods">
-            <file>./extensions/methods.test.php</file>
-        </testsuite>
     </testsuites>
 </phpunit>

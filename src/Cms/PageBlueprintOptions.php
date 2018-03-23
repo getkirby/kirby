@@ -11,18 +11,18 @@ class PageBlueprintOptions extends BlueprintOptions
         'status'   => 'changeStatus',
         'template' => 'changeTemplate',
         'title'    => 'changeTitle',
-        'url'      => 'changeUrl',
+        'url'      => 'changeSlug',
     ];
 
     protected $options = [
-        'changeStatus'   => true,
-        'changeTitle'    => true,
-        'changeTemplate' => true,
-        'changeUrl'      => true,
-        'delete'         => true,
-        'preview'        => true,
-        'read'           => true,
-        'update'         => true,
+        'changeSlug'     => null,
+        'changeStatus'   => null,
+        'changeTemplate' => null,
+        'changeTitle'    => null,
+        'create'         => null,
+        'delete'         => null,
+        'preview'        => null,
+        'update'         => null,
     ];
 
     public function __construct(Page $model, array $options = null)
@@ -30,60 +30,65 @@ class PageBlueprintOptions extends BlueprintOptions
         parent::__construct($model, $options);
     }
 
-    public function changeStatus(): bool
+    public function changeSlug(): bool
     {
-        if ($this->model->isErrorPage() === true) {
+        if ($this->model()->isHomeOrErrorPage() === true) {
             return false;
         }
 
-        return $this->options['changeStatus'];
+        return $this->isAllowed('page', 'changeSlug');
+    }
+
+    public function changeStatus(): bool
+    {
+        if ($this->model()->isErrorPage() === true) {
+            return false;
+        }
+
+        return $this->isAllowed('page', 'changeStatus');
     }
 
     public function changeTitle(): bool
     {
-        return $this->options['changeTitle'];
+        return $this->isAllowed('page', 'changeTitle');
     }
 
     public function changeTemplate(): bool
     {
-        if ($this->model->isHomeOrErrorPage() === true) {
+        if ($this->model()->isHomeOrErrorPage() === true) {
             return false;
         }
 
-        return $this->options['changeTemplate'];
+        return $this->isAllowed('page', 'changeTemplate');
     }
 
-    public function changeUrl(): bool
+    public function create(): bool
     {
-        if ($this->model->isHomeOrErrorPage() === true) {
-            return false;
-        }
-
-        return $this->options['changeUrl'];
+        return $this->isAllowed('page', 'create');
     }
 
     public function delete(): bool
     {
-        if ($this->model->isHomeOrErrorPage() === true) {
+        if ($this->model()->isHomeOrErrorPage() === true) {
             return false;
         }
 
-        return $this->options['delete'];
+        return $this->isAllowed('page', 'delete');
     }
 
     public function preview(): bool
     {
-        return $this->options['preview'];
+        return $this->isAllowed('page', 'preview');
     }
 
     public function read(): bool
     {
-        return $this->options['read'];
+        return $this->isAllowed('page', 'read');
     }
 
     public function update(): bool
     {
-        return $this->options['update'];
+        return $this->isAllowed('page', 'update');
     }
 
 }

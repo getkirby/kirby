@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Exception;
 use Kirby\Util\A;
 use Kirby\Util\Str;
@@ -20,20 +21,20 @@ use Kirby\Util\Str;
 class Page extends Model
 {
 
-    protected static $cache = [];
-
+    use PageActions;
     use HasChildren;
     use HasContent;
     use HasFiles;
     use HasSiblings;
     use HasStore;
+    use HasTemplate;
 
     /**
      * Registry with all Page models
      *
      * @var array
      */
-    protected static $models = [];
+    public static $models = [];
 
     /**
      * Properties that should be converted to array
@@ -110,13 +111,6 @@ class Page extends Model
     protected $slug;
 
     /**
-     * The template name
-     *
-     * @var string|null
-     */
-    protected $template;
-
-    /**
      * The page url
      *
      * @var string|null
@@ -149,97 +143,49 @@ class Page extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = $this->store()->blueprint();
+        return $this->blueprint = PageBlueprint::factory('pages/' . $this->template(), 'pages/default', $this);
     }
 
     /**
-     * Changes the sorting number
+     * Checks if the page can be cached in the
+     * pages cache. This will also check if one
+     * of the ignore rules from the config kick in.
      *
-     * @param int $num
-     * @return self
+     * @return boolean
      */
-    protected function changeNum(int $num = null): self
+    protected function canBeCached(): bool
     {
-        if ($num === $this->num()) {
-            return $this;
+        $kirby   = $this->kirby();
+        $cache   = $kirby->cache('pages');
+        $request = $kirby->request();
+        $options = $cache->options();
+        $ignore  = $options['ignore'] ?? null;
+
+        // the pages cache is switched off
+        if (($options['active'] ?? false) === false) {
+            return false;
         }
 
-        if ($num !== null) {
+        // disable the pages cache for incomin requests or special data
+        if ((string)$request->method() !== 'GET' || empty($request->data()) === false) {
+            return false;
+        }
 
-            $mode = $this->blueprint()->num();
-
-            switch ($mode) {
-                case 'zero':
-                    $num = 0;
-                    break;
-                case 'default':
-                    $num = $num;
-                    break;
-                default:
-                    $template = new Tempura($mode, [
-                        'kirby' => $this->kirby(),
-                        'page'  => $this,
-                        'site'  => $this->site(),
-                    ]);
-
-                    $num = intval($template->render());
-                    break;
+        // check for a custom ignore rule
+        if (is_a($ignore, Closure::class)) {
+            if ($ignore($this) === true) {
+                return false;
             }
+        }
 
-            if ($num === $this->num()) {
-                return $this;
+        // ignore pages by id
+        if (is_array($ignore) === true) {
+            if (in_array($this->id(), $ignore) === true) {
+                return false;
             }
-
         }
 
-        $this->rules()->changeNum($this, $num);
-
-        return $this->store()->changeNum($num);
-    }
-
-    /**
-     * Changes the slug/uid of the page
-     *
-     * @param string $slug
-     * @return self
-     */
-    public function changeSlug(string $slug): self
-    {
-        if ($slug === $this->slug()) {
-            return $this;
-        }
-
-        $this->rules()->changeSlug($this, $slug);
-
-        return $this->store()->changeSlug($slug);
-    }
-
-    /**
-     * Changes the page template
-     *
-     * @param string $template
-     * @return self
-     */
-    public function changeTemplate(string $template): self
-    {
-        if ($template === $this->template()) {
-            return $this;
-        }
-
-        $this->rules()->changeTemplate($this, $template);
-
-        return $this->store()->changeTemplate($template);
-    }
-
-    /**
-     * @param string $title
-     * @return self
-     */
-    public function changeTitle(string $title): self
-    {
-        return $this->update([
-            'title' => $title
-        ], false);
+        return true;
     }
 
     /**
@@ -258,6 +204,22 @@ class Page extends Model
     }
 
     /**
+     * Clone the page object and
+     * optionally convert it to a draft object
+     *
+     * @param array $props
+     * @return self
+     */
+    public function clone(array $props = [], string $to = null)
+    {
+        if ($to === null || $to === static::class) {
+            return parent::clone($props);
+        }
+
+        return new $to(array_replace_recursive($this->propertyData, $props));
+    }
+
+    /**
      * Returns the default parent collection
      *
      * @return Collection
@@ -272,79 +234,12 @@ class Page extends Model
             return $this->collection = $parent->children();
         }
 
-        if ($site = $this->site()) {
-            return $this->collection = $site->children();
-        }
-
         return $this->collection = new Pages([$this]);
-    }
-
-    /**
-     * Creates a child of the current page
-     *
-     * @param array $props
-     * @return self
-     */
-    public function createChild(array $props): self
-    {
-        $props['content'] = $props['content'] ?? [];
-        $props['url']     = null;
-        $props['num']     = null;
-        $props['parent']  = $this;
-        $props['site']    = $this->site();
-        $props['slug']    = Str::slug($props['slug'] ?? $props['content']['slug'] ?? null);
-
-        // temporary child for validation
-        $child = Page::factory($props);
-
-        // run additional validations
-        $this->rules()->createChild($this, $child);
-
-        return $this->store()->createChild($child);
-    }
-
-    public function createFile(string $source, array $props = [])
-    {
-        $props['filename'] = $props['filename'] ?? basename($source);
-        $props['parent']   = $this;
-        $props['store']    = null;
-        $props['url']      = null;
-
-        // temporary child for validation
-        $file = new File($props);
-
-        // validate the child
-        $this->rules()->createFile($this, $file);
-
-        return $this->store()->createFile($file, $source);
     }
 
     protected function defaultStore()
     {
         return PageStoreDefault::class;
-    }
-
-    /**
-     * Deletes the page
-     *
-     * @param bool $force
-     * @return bool
-     */
-    public function delete(bool $force = false): bool
-    {
-        $this->rules()->delete($this, $force);
-
-        // delete all files individually
-        foreach ($this->files() as $file) {
-            $file->delete();
-        }
-
-        // delete all children individually
-        foreach ($this->children() as $child) {
-            $child->delete(true);
-        }
-
-        return $this->store()->delete();
     }
 
     /**
@@ -373,6 +268,25 @@ class Page extends Model
         }
 
         return $this->diruri = $this->dirname();
+    }
+
+    /**
+     * @param string $path
+     * @return PageDraft|null
+     */
+    public function draft(string $path)
+    {
+        return PageDraft::seek($path);
+    }
+
+    /**
+     * Return all drafts for the page
+     *
+     * @return Children
+     */
+    public function drafts(): Children
+    {
+        return new Children(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
     }
 
     /**
@@ -479,33 +393,6 @@ class Page extends Model
     }
 
     /**
-     * Changes the status to unlisted
-     *
-     * @return self
-     */
-    public function hide(): self
-    {
-        if ($this->isInvisible() === true) {
-            return $this;
-        }
-
-        // TODO: move this to rules
-        if ($this->blueprint()->options()->changeStatus() === false) {
-            throw new Exception('The status for this page cannot be changed');
-        }
-
-        $siblings = $this->siblings()->not($this);
-        $index    = 0;
-
-        foreach ($siblings as $sibling) {
-            $index++;
-            $sibling->changeNum($index);
-        }
-
-        return $this->changeNum(null);
-    }
-
-    /**
      * Returns the Page Id
      *
      * @return string
@@ -534,6 +421,16 @@ class Page extends Model
     public function isActive(): bool
     {
         return $this->site()->page()->is($this);
+    }
+
+    /**
+     * Checks if the current page is a draft
+     *
+     * @return boolean
+     */
+    public function isDraft(): bool
+    {
+        return static::class === PageDraft::class;
     }
 
     /**
@@ -583,7 +480,17 @@ class Page extends Model
      */
     public function isInvisible(): bool
     {
-        return $this->isVisible() === false;
+        return $this->isUnlisted();
+    }
+
+    /**
+     * Checks if the page has a sorting number
+     *
+     * @return boolean
+     */
+    public function isListed(): bool
+    {
+        return $this->num() !== null;
     }
 
     /**
@@ -599,13 +506,23 @@ class Page extends Model
     }
 
     /**
+     * Checks if the page has no sorting number
+     *
+     * @return boolean
+     */
+    public function isUnlisted(): bool
+    {
+        return $this->num() === null;
+    }
+
+    /**
      * Checks if the page is visible
      *
      * @return bool
      */
     public function isVisible(): bool
     {
-        return $this->num() !== null;
+        return $this->isListed();
     }
 
     /**
@@ -638,19 +555,9 @@ class Page extends Model
         return new static($props);
     }
 
-    /**
-     * Setter and getter for Page models
-     *
-     * @param null|array $models
-     * @return array
-     */
-    public static function models(array $models = null): array
+    public function modified(string $format = null)
     {
-        if ($models === null) {
-            return static::$models;
-        }
-
-        return static::$models = $models;
+        return $this->content()->get('modified')->toDate($format);
     }
 
     /**
@@ -694,6 +601,18 @@ class Page extends Model
     }
 
     /**
+     * Returns the parent model,
+     * which can either be another Page
+     * or the Site
+     *
+     * @return Page|Site
+     */
+    public function parentModel()
+    {
+        return $this->parent() ?? $this->site();
+    }
+
+    /**
      * Returns a list of all parents and their parents recursively
      *
      * @return Pages
@@ -709,6 +628,16 @@ class Page extends Model
         }
 
         return $parents;
+    }
+
+    /**
+     * Returns the permissions object for this page
+     *
+     * @return BlueprintOptions
+     */
+    public function permissions()
+    {
+        return $this->blueprint()->options();
     }
 
     /**
@@ -729,6 +658,77 @@ class Page extends Model
     public function prevVisible()
     {
         return $this->prevAll()->visible()->last();
+    }
+
+    public function render(array $data = [], $contentType = 'html'): string
+    {
+        $kirby = $this->kirby();
+        $cache = $cacheId = $result = null;
+
+        // try to get the page from cache
+        if (empty($data) === true && $this->canBeCached() === true) {
+            $cache   = $kirby->cache('pages');
+            $cacheId = $this->id() . '.' . $contentType;
+            $result  = $cache->get($cacheId);
+
+            if ($result !== null) {
+                return $result;
+            }
+        }
+
+        // create all globals for the
+        // controller, template and snippets
+        $globals = array_merge($data, [
+            'kirby' => $kirby,
+            'site'  => $site = $this->site(),
+            'pages' => $site->children(),
+            'page'  => $site->visit($this)
+        ]);
+
+        // try to create the page template
+        $template = $kirby->component('template', $this->template(), [], $contentType);
+
+        // fall back to the default template if it doesn't exist
+        if ($template->exists() === false) {
+            $template = $kirby->component('template', 'default', [], $contentType);
+        }
+
+        // react if even the default template does not exist
+        if ($template->exists() === false) {
+            if ($this->isErrorPage() === true) {
+                throw new Exception('The error template does not exist');
+            } else {
+                throw new Exception('The default template does not exist');
+            }
+        }
+
+        // call the template controller if there's one.
+        $globals = array_merge($kirby->controller($template->name(), $globals), $globals);
+
+        // make all globals available
+        // for templates and snippets
+        Template::globals($globals);
+
+        // render the page
+        $result = $template->render();
+
+        // render the template and cache the result
+        if ($cache !== null) {
+            $cache->set($cacheId, $result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the absolute root to the page directory
+     * No matter if it exists or not.
+     *
+     * @return string
+     */
+    public function root(): string
+    {
+        return $this->kirby()->root('content') . '/' . $this->diruri();
     }
 
     /**
@@ -792,18 +792,6 @@ class Page extends Model
     }
 
     /**
-     * Sets the template name
-     *
-     * @param string $template
-     * @return self
-     */
-    protected function setTemplate(string $template = null): self
-    {
-        $this->template = $template !== null ? Str::slug($template) : null;
-        return $this;
-    }
-
-    /**
      * Sets the Url
      *
      * @param string $url
@@ -830,69 +818,19 @@ class Page extends Model
     }
 
     /**
-     * Changes the page number
-     *
-     * @param int $position
-     * @return self
+     * @return string draft, listed or unlisted
      */
-    public function sort(int $position): self
+    public function status()
     {
-        // TODO: move this to rules
-        if ($this->isInvisible() === true && empty($this->errors()) === false) {
-            throw new Exception('The page has errors and cannot be published');
+        if ($this->isDraft() === true) {
+            return 'draft';
         }
 
-        // TODO: move this to rules
-        if ($this->blueprint()->options()->changeStatus() !== true) {
-            throw new Exception('The status for this page cannot be changed');
+        if ($this->isUnlisted() === true) {
+            return 'unlisted';
         }
 
-        if ($this->blueprint()->num() === 'default') {
-
-            // get all siblings including the current page
-            $siblings = $this->siblings()->visible();
-
-            // get a non-associative array of ids
-            $keys  = $siblings->keys();
-            $index = array_search($this->id(), $keys);
-
-            // if the page is not included in the siblings
-            // push the page at the end.
-            if ($index === false) {
-                $keys[] = $this->id();
-                $index  = count($keys) - 1;
-            }
-
-            // move the current page number in the array of keys
-            // subtract 1 from the num and the position, because of the
-            // zero-based array keys
-            $sorted = A::move($keys, $index, $position - 1);
-            $page   = null;
-
-            foreach ($sorted as $key => $id) {
-                if ($id === $this->id()) {
-                    $page = $this->changeNum($key + 1);
-                } else {
-                    $siblings->findBy('id', $id)->changeNum($key + 1);
-                }
-            }
-
-            return $page;
-
-        }
-
-        return $this->changeNum($position);
-
-    }
-
-    /**
-     * Returns the template name
-     *
-     * @return string
-     */
-    public function template(): string
-    {
-        return $this->template = $this->template ?? $this->store()->template();
+        return 'listed';
     }
 
     /**

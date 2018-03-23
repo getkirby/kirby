@@ -5,14 +5,6 @@ namespace Kirby\Cms;
 class PageContentTest extends TestCase
 {
 
-    /**
-     * Freshly register all field methods
-     */
-    protected function setUp()
-    {
-        ContentField::methods(require __DIR__ . '/../../extensions/methods.php');
-    }
-
     public function testDefaultContent()
     {
         $page = new Page(['slug' =>  'test']);

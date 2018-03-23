@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Throwable;
 use Kirby\Http\Response as BaseResponse;
 use Kirby\Http\Response\Json;
+use Kirby\Util\F;
 
 class Response extends BaseResponse
 {
@@ -28,11 +30,11 @@ class Response extends BaseResponse
         return static::page(App::instance()->site()->errorPage(), $data, $contentType, $code);
     }
 
-    public static function for($input)
+    public static function for($input, $data = [], $contentType = 'html', $code = 200)
     {
         // Empty input
         if (empty($input) === true) {
-            return static::errorPage('Not found');
+            return static::errorPage('Not found', $contentType, $code);
         }
 
         // Responses
@@ -42,32 +44,32 @@ class Response extends BaseResponse
 
         // Pages
         if (is_a($input, Page::class)) {
-            return static::page($input);
+            return static::page($input, $data, $contentType, $code);
         }
 
         // Exceptions
-        if (is_a($input, Exception::class)) {
-            return static::errorPage([
+        if (is_a($input, Throwable::class)) {
+            return static::errorPage(array_merge($data, [
                 'errorMessage' => $input->getMessage(),
                 'errorCode'    => $input->getCode(),
                 'errorType'    => get_class($input)
-            ], 'html', $input->getCode());
+            ]), $contentType, $input->getCode());
         }
 
         // Pages by id
         if (is_string($input) === true) {
             if ($page = App::instance()->site()->find($input)) {
-                return static::page($page);
+                return static::page($page, $data, $contentType, $code);
             }
         }
 
         // Fallback
-        return static::errorPage();
+        return static::errorPage($data, $contentType, $code);
     }
 
-    public static function homePage()
+    public static function homePage(array $data = [], $contentType = 'html', $code = 200)
     {
-        return static::page(App::instance()->site()->homePage());
+        return static::page(App::instance()->site()->homePage(), $data, $contentType, $code);
     }
 
     public static function json(array $data = [])
@@ -77,35 +79,14 @@ class Response extends BaseResponse
 
     public static function page(Page $page, array $data = [], $contentType = 'html', $code = 200)
     {
-        // we'll need this a few times
-        $app = App::instance();
+        // render and optionally cache the page
+        $result = $page->render($data, $contentType);
 
-        // create all globals for the
-        // controller, template and snippets
-        $globals = array_merge($data, [
-            'kirby' => $page->kirby(),
-            'site'  => $site = $page->site(),
-            'pages' => $site->children(),
-            'page'  => $site->visit($page)
-        ]);
-
-        // try to create the page template
-        $template = $app->component('template', $page->template(), [], $contentType);
-
-        // fall back to the default template if it doesn't exist
-        if ($template->exists() === false) {
-            $template = $app->component('template', 'default', [], $contentType);
-        }
-
-        // call the template controller if there's one.
-        $globals = array_merge($app->controller($template->name(), $globals, $contentType), $globals);
-
-        // make all globals available
-        // for templates and snippets
-        Template::globals($globals);
+        // convert the content representation type to a usable mime type
+        $mime = F::extensionToMime($contentType) ?? 'text/html';
 
         // create the response object for the page
-        return new static($template->render(), 'text/html', $code);
+        return new static($result, $mime, $code);
     }
 
 }

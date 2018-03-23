@@ -7,23 +7,7 @@ use Firebase\JWT\JWT;
  */
 return [
     'token' => function () {
-
-        $token = $this->requestQuery('auth');
-
-        if (empty($token) === true) {
-            $token = str_replace('Bearer ', '', $this->requestHeaders('Authorization'));
-        }
-
-        if (empty($token) === true) {
-            throw new Exception('Invalid authentication token');
-        }
-
-        // TODO: get the key from config
-        $key = 'kirby';
-
-        // return the token object
-        return (array)JWT::decode($token, $key, ['HS256']);
-
+        return $this->kirby()->authToken();
     },
     'file' => function (string $id = null, string $filename) {
 
@@ -47,6 +31,14 @@ return [
             return $page;
         }
 
+        $parentId = dirname($id);
+        $draftId  = basename($id);
+        $parent   = $parentId === '.' ? $this->site() : $this->site()->find($parentId);
+
+        if ($parent && $draft = $parent->drafts()->find($draftId)) {
+            return $draft;
+        }
+
         throw new Exception(sprintf('The page "%s" cannot be found', $id));
 
     },
@@ -57,7 +49,7 @@ return [
 
         // get the authenticated user
         if ($id === null) {
-            return $this->users()->findBy('id', $this->token()['uid']);
+            return $this->kirby()->user();
         }
 
         // get a specific user by id

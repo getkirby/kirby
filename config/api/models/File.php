@@ -8,6 +8,9 @@ use Kirby\Cms\Form;
  */
 return [
     'fields' => [
+        'blueprint' => function (File $file) {
+            return $file->blueprint();
+        },
         'content' => function (File $file) {
             return $file->content()->toArray();
         },
@@ -84,6 +87,22 @@ return [
         'compact' => [
             'filename',
             'id',
+            'type',
+            'url'
+        ],
+        'panel' => [
+            'blueprint',
+            'dimensions',
+            'extension',
+            'filename',
+            'id',
+            'mime',
+            'modified',
+            'name',
+            'next' => 'compact',
+            'niceSize',
+            'parent' => 'compact',
+            'prev' => 'compact',
             'type',
             'url'
         ]

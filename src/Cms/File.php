@@ -21,9 +21,12 @@ use Kirby\Util\Str;
 class File extends Model
 {
 
+    use FileActions;
+
     use HasContent;
     use HasSiblings;
     use HasStore;
+    use HasTemplate;
     use HasThumbs;
 
     /**
@@ -135,31 +138,7 @@ class File extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = $this->store()->blueprint();
-    }
-
-    /**
-     * Renames the file without touching the extension
-     * The store is used to actually execute this.
-     *
-     * @param string $name
-     * @param bool $sanitize
-     * @return self
-     */
-    public function changeName(string $name, bool $sanitize = true): self
-    {
-        if ($sanitize === true) {
-            $name = Str::slug($name);
-        }
-
-        // don't rename if not necessary
-        if ($name === $this->name()) {
-            return $this;
-        }
-
-        $this->rules()->changeName($this, $name);
-
-        return $this->store()->changeName($name);
+        return $this->blueprint = FileBlueprint::factory('files/' . $this->template(), 'files/default', $this);
     }
 
     /**
@@ -184,43 +163,9 @@ class File extends Model
         return $this->collection = new Files([$this]);
     }
 
-    /**
-     * Creates a new file on disk and returns the
-     * File object. The store is used to handle file
-     * writing, so it can be replaced by any other
-     * way of generating files.
-     *
-     * @param string $source
-     * @return self
-     */
-    public function create(string $source): self
-    {
-        if ($this->exists() === true) {
-            throw new Exception('The file exists and cannot be overwritten');
-        }
-
-        $file = $this->store()->create($source);
-        $file = $file->update($this->content()->toArray());
-
-        return $file;
-    }
-
     protected function defaultStore()
     {
         return FileStoreDefault::class;
-    }
-
-    /**
-     * Deletes the file. The store is used to
-     * manipulate the filesystem or whatever you prefer.
-     *
-     * @return bool
-     */
-    public function delete(): bool
-    {
-        $this->rules()->delete($this);
-
-        return $this->store()->delete();
     }
 
     public function exists(): bool
@@ -298,18 +243,13 @@ class File extends Model
     }
 
     /**
-     * Replaces the file. The source must
-     * be an absolute path to a file or a Url.
-     * The store handles the replacement so it
-     * finally decides what it will support as
-     * source.
+     * Returns the permissions object for this file
      *
-     * @param string $source
-     * @return self
+     * @return FileBlueprintOptions
      */
-    public function replace(string $source): self
+    public function permissions(): FileBlueprintOptions
     {
-        return $this->store()->replace($source);
+        return $this->blueprint()->options();
     }
 
     /**
@@ -367,33 +307,6 @@ class File extends Model
     public function site(): Site
     {
         return is_a($this->parent(), Site::class) === true ? $this->parent() : $this->kirby()->site();
-    }
-
-    /**
-     * Creates a modified version of images
-     * The media manager takes care of generating
-     * those modified versions and putting them
-     * in the right place. This is normally the
-     * /media folder of your installation, but
-     * could potentially also be a CDN or any other
-     * place.
-     *
-     * @param array $options
-     * @return self
-     */
-    public function thumb(array $options = []): self
-    {
-        $media = $this->kirby()->media();
-
-        try {
-            if ($this->page() === null) {
-                return $media->create($this->site(), $this, $options);
-            }
-
-            return $media->create($this->page(), $this, $options);
-        } catch (Exception $e) {
-            return $this;
-        }
     }
 
     /**

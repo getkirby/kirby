@@ -14,9 +14,9 @@ trait Step
         return null;
     }
 
-    protected function setStep(int $step = null)
+    protected function setStep(float $step = null)
     {
-        $this->step = $step;
+        $this->step = $step !== null ? floatval($step) : null;
         return $this;
     }
 
@@ -27,10 +27,6 @@ trait Step
 
     protected function validateStep($value)
     {
-        if ($this->step() !== null && $value % $this->step() !== 0) {
-            throw new StepException();
-        }
-
         return true;
     }
 

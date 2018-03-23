@@ -6,14 +6,13 @@ os:
 sudo: false
 
 php:
-  - 7.0
   - 7.1
   - 7.2
 
 install:
   # Install composer packages, will also trigger dump-autoload
   - composer self-update
-  - composer install --no-interaction --dev
+  - composer install --no-interaction
 
   # Install coveralls.phar
   - wget -c -nc --retry-connrefused --tries=0 https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
@@ -32,3 +31,6 @@ after_success:
 
 matrix:
   fast_finish: true
+
+notifications:
+  email: false

@@ -15,7 +15,7 @@ class YoutubeTest extends TestCase
             'http://www.youtube.com/watch?feature=player_embedded&v=7C9EYka6fIU#!',
             'http://youtu.be/7C9EYka6fIU'
         ];
-        $src  = '//youtube.com/embed/7C9EYka6fIU';
+        $src  = 'https://youtube.com/embed/7C9EYka6fIU';
 
         $this->assertEquals($src, $embed->src($urls[0]));
         $this->assertEquals($src, $embed->src($urls[1]));
@@ -26,7 +26,7 @@ class YoutubeTest extends TestCase
     {
         $url   = 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M';
         $embed = new Youtube($url);
-        $src   = '//www.youtube-nocookie.com/embed/d9NF2edxy-M';
+        $src   = 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M';
 
         $this->assertEquals($src, $embed->src($url));
     }
@@ -40,7 +40,7 @@ class YoutubeTest extends TestCase
             'http://youtu.be/7C9EYka6fIU'
         ];
         $options = ['option1' => 'value1'];
-        $src     = '//youtube.com/embed/7C9EYka6fIU?option1=value1';
+        $src     = 'https://youtube.com/embed/7C9EYka6fIU?option1=value1';
 
         $this->assertEquals($src, $embed->src($urls[0], $options));
         $this->assertEquals($src, $embed->src($urls[1], $options));

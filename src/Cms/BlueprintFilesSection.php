@@ -95,8 +95,9 @@ class BlueprintFilesSection extends BlueprintSection
             // automatically accept new files, when "accept" is set
             if (empty($this->accept) === false) {
                 return [
-                    'content' => [],
-                    'name'    => null
+                    'content'  => [],
+                    'name'     => null,
+                    'template' => null,
                 ];
             }
 
@@ -104,8 +105,9 @@ class BlueprintFilesSection extends BlueprintSection
         }
 
         $result = [
-            'content' => empty($this->create['content']) ? [] : $this->create['content'],
-            'name'    => $this->create['name'] ?? null
+            'content'  => empty($this->create['content']) ? [] : $this->create['content'],
+            'name'     => $this->create['name'] ?? null,
+            'template' => $this->create['template'] ?? null
         ];
 
         return $result;
@@ -150,7 +152,7 @@ class BlueprintFilesSection extends BlueprintSection
         return null;
     }
 
-    protected function itemImage($item)
+    protected function itemImageDefault($item)
     {
         return $item;
     }
@@ -179,7 +181,7 @@ class BlueprintFilesSection extends BlueprintSection
             'id'       => $item->id(),
             'parent'   => $parent,
             'text'     => $this->itemValue($item, 'title', $stringTemplateData),
-            'image'    => $this->itemImageResult($item, $stringTemplateData),
+            'image'    => $this->itemImage($item, $stringTemplateData),
             'link'     => $this->itemLink($item),
             'info'     => $this->itemValue($item, 'info', $stringTemplateData),
             'url'      => $item->url()
@@ -212,8 +214,10 @@ class BlueprintFilesSection extends BlueprintSection
         // merge the post data with the pre-defined content set in the blueprint
         $content = array_merge($data['content'] ?? [], $options['content']);
 
-        return $this->parent()->createFile($data['source'], [
+        return $this->parent()->createFile([
+            'source'   => $data['source'],
             'content'  => $content,
+            'template' => $options['template'],
             'filename' => $this->filename($data['source'], $data['filename'], $options['name'])
         ]);
     }

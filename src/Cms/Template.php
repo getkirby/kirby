@@ -14,25 +14,32 @@ class Template extends View
 
     public function __construct(string $name, array $data = [], string $contentType = null)
     {
-
         $this->data = $data;
         $this->name = strtolower($name);
 
         if ($contentType !== null && $contentType !== 'html') {
             $this->name .= '.' . $contentType;
         }
-
-        try {
-            $this->file = F::realpath($this->root() . '/' . $this->name . '.php', $this->root());
-        } catch (Exception $e) {
-            $this->file = false;
-        }
-
     }
 
     public function data(): array
     {
         return array_merge(static::$globals, $this->data);
+    }
+
+    public function extension(): string
+    {
+        return 'php';
+    }
+
+    public function file()
+    {
+        try {
+            return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
+        } catch (Exception $e) {
+            // try to load the template from the registry
+            return App::instance()->extension('templates', $this->name());
+        }
     }
 
     public static function globals(array $globals = null): array
