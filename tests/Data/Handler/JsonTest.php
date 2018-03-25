@@ -14,9 +14,16 @@ class JsonTest extends TestCase
             'children' => ['Lisa', 'Bart', 'Maggie']
         ];
 
-        $data   = Json::encode($array);
-        $result = Json::decode($data);
+        $data = Json::encode($array);
+        $this->assertEquals('{"name":"Homer","children":["Lisa","Bart","Maggie"]}', $data);
 
+        $result = Json::decode($data);
         $this->assertEquals($array, $result);
+    }
+
+    public function corruptedDecode()
+    {
+        $data = 'some gibberish';
+        $this->assertNull(Json::decode($data));
     }
 }

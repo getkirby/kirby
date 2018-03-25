@@ -30,11 +30,17 @@ class Json extends Handler
     /**
      * Parses JSON and returns a multi-dimensional array
      *
-     * @param  string $json
-     * @return array
+     * @param  string     $string
+     * @return array/null
      */
-    public static function decode(string $json): array
+    public static function decode(string $json): ?array
     {
-        return json_decode($json, true);
+        $result = json_decode($json, true);
+
+        if (is_array($result)) {
+            return $result;
+        } else {
+            return null;
+        }
     }
 }

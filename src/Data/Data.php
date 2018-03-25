@@ -109,11 +109,11 @@ class Data
      * The data handler is automatically chosen by
      * the extension if not specified.
      *
-     * @param  string  $file
-     * @param  string  $type
-     * @return array
+     * @param  string     $file
+     * @param  string     $type
+     * @return array/null
      */
-    public static function read(string $file, string $type = null): array
+    public static function read(string $file, string $type = null): ?array
     {
         $file = new File($file);
         $type = $type ?? $file->extension();

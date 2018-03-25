@@ -31,10 +31,10 @@ class Yaml extends Handler
     /**
      * Parses YAML and returns a multi-dimensional array
      *
-     * @param  string $yaml
-     * @return array
+     * @param  string     $string
+     * @return array/null
      */
-    public static function decode(string $yaml = null): array
+    public static function decode(string $yaml = null): ?array
     {
         return (array)Spyc::YAMLLoadString($yaml);
     }
