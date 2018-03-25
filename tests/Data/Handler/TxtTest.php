@@ -14,9 +14,13 @@ class TxtTest extends TestCase
             'text'  => 'Text'
         ];
 
-        $data   = Txt::encode($array);
-        $result = Txt::decode($data);
+        $data = Txt::encode($array);
+        $this->assertEquals(
+            "Title: Title\n\n----\n\nText: Text",
+            $data
+        );
 
+        $result = Txt::decode($data);
         $this->assertEquals($array, $result);
     }
 

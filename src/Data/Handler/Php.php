@@ -30,11 +30,17 @@ class Php extends Handler
     /**
      * Unserializes a string
      *
-     * @param  string $string
-     * @return array
+     * @param  string     $string
+     * @return array/null
      */
-    public static function decode(string $string): array
+    public static function decode(string $string): ?array
     {
-        return unserialize($string);
+        $result = @unserialize($string);
+
+        if (is_array($result)) {
+            return $result;
+        } else {
+            return null;
+        }
     }
 }

@@ -83,10 +83,10 @@ class Txt extends Handler
     /**
      * Parses Kirby txt and returns a multi-dimensional array
      *
-     * @param  string $string
-     * @return array
+     * @param  string     $string
+     * @return array/null
      */
-    public static function decode(string $string): array
+    public static function decode(string $string): ?array
     {
         // remove BOM
         $string = str_replace('\xEF\xBB\xBF', '', $string);
