@@ -86,7 +86,7 @@ class Txt extends Handler
      * @param  string     $string
      * @return array/null
      */
-    public static function decode(string $string): ?array
+    public static function decode(string $string)
     {
         // remove BOM
         $string = str_replace('\xEF\xBB\xBF', '', $string);

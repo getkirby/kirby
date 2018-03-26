@@ -33,7 +33,7 @@ class Php extends Handler
      * @param  string     $string
      * @return array/null
      */
-    public static function decode(string $string): ?array
+    public static function decode(string $string)
     {
         $result = @unserialize($string);
 
