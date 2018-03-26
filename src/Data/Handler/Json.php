@@ -33,7 +33,7 @@ class Json extends Handler
      * @param  string     $string
      * @return array/null
      */
-    public static function decode(string $json): ?array
+    public static function decode(string $json)
     {
         $result = json_decode($json, true);
 

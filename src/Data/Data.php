@@ -113,7 +113,7 @@ class Data
      * @param  string     $type
      * @return array/null
      */
-    public static function read(string $file, string $type = null): ?array
+    public static function read(string $file, string $type = null)
     {
         $file = new File($file);
         $type = $type ?? $file->extension();
