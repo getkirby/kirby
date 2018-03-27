@@ -53,6 +53,9 @@ return [
         'parent' => function (File $file) {
             return $file->parent();
         },
+        'template' => function (File $file) {
+            return $file->template();
+        },
         'size' => function (File $file) {
             return $file->size();
         },
@@ -81,6 +84,7 @@ return [
             'options',
             'prev' => 'compact',
             'size',
+            'template',
             'type',
             'url'
         ],
@@ -103,6 +107,7 @@ return [
             'niceSize',
             'parent' => 'compact',
             'prev' => 'compact',
+            'template',
             'type',
             'url'
         ]
