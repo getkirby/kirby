@@ -47,6 +47,24 @@ class Pages extends Collection
     protected $index = null;
 
     /**
+     * Returns all children for each page in the array
+     *
+     * @return Pages
+     */
+    public function children(): Pages
+    {
+        $children = new Pages([], $this->parent);
+
+        foreach ($this->data as $pageKey => $page) {
+            foreach ($page->children() as $childKey => $child) {
+                $children->data[$childKey] = $child;
+            }
+        }
+
+        return $children;
+    }
+
+    /**
      * Initialize the PagesFinder class,
      * which is handling findBy and find
      * methods

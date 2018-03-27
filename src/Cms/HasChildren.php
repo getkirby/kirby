@@ -52,6 +52,14 @@ trait HasChildren
     }
 
     /**
+     * @return Pages
+     */
+    public function grandChildren(): Pages
+    {
+        return $this->children()->children();
+    }
+
+    /**
      * Checks if the model has any children
      *
      * @return boolean
