@@ -22,6 +22,11 @@ class FileStoreDefault extends Store
         ]);
     }
 
+    public function changeSort(int $sort)
+    {
+        return $this->update($data = ['sort' => $sort], $data);
+    }
+
     public function content(): array
     {
         return [];

@@ -32,6 +32,15 @@ trait FileActions
     }
 
     /**
+     * @param integer $num
+     * @return self
+     */
+    public function changeSort(int $num): self
+    {
+        return $this->commit('changeSort', $num);
+    }
+
+    /**
      * Commits a file action, by following these steps
      *
      * 1. checks the action rules

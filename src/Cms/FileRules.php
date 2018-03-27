@@ -25,6 +25,11 @@ class FileRules
         return true;
     }
 
+    public static function changeSort(File $file, int $sort): bool
+    {
+        return true;
+    }
+
     public static function create(File $file, Upload $upload): bool
     {
         if ($file->exists() === true) {

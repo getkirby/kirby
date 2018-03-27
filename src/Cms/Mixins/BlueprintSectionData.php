@@ -22,6 +22,7 @@ trait BlueprintSectionData
     protected $link;
     protected $originalData;
     protected $parent;
+    protected $sortable;
     protected $query;
     protected $pagination;
 
@@ -77,6 +78,11 @@ trait BlueprintSectionData
     protected function defaultQuery(): string
     {
         return 'site.children';
+    }
+
+    protected function defaultSortable(): bool
+    {
+        return false;
     }
 
     public function errors(): array
@@ -299,6 +305,17 @@ trait BlueprintSectionData
     {
         $this->query = $query;
         return $this;
+    }
+
+    protected function setSortable(bool $sortable)
+    {
+        $this->sortable = $sortable;
+        return $this;
+    }
+
+    public function sortable(): bool
+    {
+        return $this->sortable;
     }
 
     public function total(): int

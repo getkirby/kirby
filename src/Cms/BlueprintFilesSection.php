@@ -118,6 +118,11 @@ class BlueprintFilesSection extends BlueprintSection
         return 'page.files';
     }
 
+    protected function defaultSortable(): bool
+    {
+        return true;
+    }
+
     public function filename($source, $filename, $template = null)
     {
         $extension = F::extension($filename);
@@ -190,6 +195,17 @@ class BlueprintFilesSection extends BlueprintSection
         ];
     }
 
+    public function query(): string
+    {
+        $query  = $this->query;
+
+        if ($this->sortable() === true) {
+            $query .= '.sortBy("sort", "asc")';
+        }
+
+        return $query;
+    }
+
     public function upload(array $data)
     {
         // make sure the basics are provided
@@ -246,6 +262,13 @@ class BlueprintFilesSection extends BlueprintSection
                         ]);
                     });
                 }
+            ],
+            'sort' => [
+                'pattern' => 'sort',
+                'method'  => 'PATCH',
+                'action'  => function () {
+                    return $this->section()->sort($this->requestBody('items'));
+                }
             ]
         ];
     }
@@ -270,6 +293,22 @@ class BlueprintFilesSection extends BlueprintSection
     {
         $this->create = $create;
         return $this;
+    }
+
+    public function sort(array $input)
+    {
+        if ($this->sortable() === false) {
+            throw new Exception('Files cannot be sorted');
+        }
+
+        $files = $this->parent()->files();
+
+        foreach ($input as $index => $id) {
+            $file = $files->findBy('id', $id);
+            $file->changeSort($index + 1);
+        }
+
+        return true;
     }
 
 }
