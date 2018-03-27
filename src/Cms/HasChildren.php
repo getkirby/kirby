@@ -62,6 +62,16 @@ trait HasChildren
     }
 
     /**
+     * Creates a flat child index
+     *
+     * @return Pages
+     */
+    public function index(): Pages
+    {
+        return $this->children()->index();
+    }
+
+    /**
      * Sets the Children collection
      *
      * @param Pages|Children|null $children

@@ -40,6 +40,13 @@ class Pages extends Collection
     protected static $accept = Page::class;
 
     /**
+     * Cache for the index
+     *
+     * @var null|Pages
+     */
+    protected $index = null;
+
+    /**
      * Initialize the PagesFinder class,
      * which is handling findBy and find
      * methods
@@ -65,6 +72,31 @@ class Pages extends Collection
         }
 
         return App::instance()->extension('pages', $key);
+    }
+
+    /**
+     * Create a recursive flat index of all
+     * pages and subpages, etc.
+     *
+     * @return Pages
+     */
+    public function index(): Pages
+    {
+        if (is_a($this->index, Children::class) === true) {
+            return $this->index;
+        }
+
+        $this->index = new Children([], $this->parent);
+
+        foreach($this->data as $pageKey => $page) {
+            $this->index->data[$pageKey] = $page;
+
+            foreach ($page->index() as $childKey => $child) {
+                $this->index->data[$childKey] = $child;
+            }
+        }
+
+        return $this->index;
     }
 
     /**
