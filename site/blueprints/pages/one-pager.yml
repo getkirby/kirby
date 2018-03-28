@@ -1,13 +1,14 @@
 title: One Pager
 
+icon: 📔
+
 sections:
   sections:
     headline: Sections
     type: pages
     item:
       info: "{{ page.template }}"
-    create:
-      template:
-        - one-pager-headline-section
-        - one-pager-gallery-section
-        - one-pager-text-section
+    template:
+      - one-pager-headline-section
+      - one-pager-gallery-section
+      - one-pager-text-section

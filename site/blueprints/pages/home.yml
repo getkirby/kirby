@@ -16,4 +16,5 @@ sections:
   projects:
     extends: sections/projects
     headline: Latest projects
-    query: site.find('projects').children.visible.limit(3)
+    status: listed
+    limit: 3

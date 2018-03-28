@@ -1,8 +1,5 @@
 title: Cover
 
-options:
-  delete: false
-
 fields:
   alt:
     label: Alt Text

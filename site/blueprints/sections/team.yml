@@ -1,0 +1,8 @@
+headline: Team
+type: pages
+parent: site.find("about")
+status: listed
+layout: list
+templates: team
+item:
+  info: "{{ page.position }}"

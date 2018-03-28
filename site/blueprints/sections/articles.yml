@@ -1,0 +1,8 @@
+type: pages
+parent: site.find("blog")
+headline: Blog
+layout: list
+sortBy: date desc
+templates: article
+item:
+  info: "{{ page.date('d.m.Y') }}"

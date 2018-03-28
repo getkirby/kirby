@@ -1,6 +1,8 @@
 headline: Projects
 type: pages
 layout: cards
-query: site.find("projects").children
+parent: site.find("projects")
+status: listed
+templates: project
 item:
   info: "{{ page.year }}"

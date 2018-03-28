@@ -20,43 +20,29 @@ tabs:
 sections:
 
   projects:
-    headline: Projects
-    type: pages
-    query: site.find("projects").children.visible
+    extends: sections/projects
     layout: list
-    item:
-      info: "{{ page.year }}"
-    create: project
 
   blog:
-    headline: Blog
-    type: pages
-    query: site.find('blog').children.visible
-    layout: list
-    item:
-      info: "{{ page.date('d.m.Y') }}"
-    create: article
+    extends: sections/articles
 
   about:
+    extends: sections/team
     headline: About
-    type: pages
-    query: site.find('about').children
-    layout: list
-    item:
-      info: "{{ page.position }}"
-    create: team
 
   kitchensink:
     headline: Kitchensink
     type: pages
-    query: site.find('kitchensink').children
+    parent: site.find("kitchensink")
     item:
       image: false
 
   misc:
     headline: Misc
     type: pages
-    query: site.find('home', 'contact')
+    templates:
+      - home
+      - contact
     item:
       image: false
 

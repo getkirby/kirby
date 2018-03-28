@@ -2,6 +2,8 @@ title: Article
 
 num: date
 
+icon: 💩
+
 columns:
   - 2/3: content
   - 1/3: meta, images

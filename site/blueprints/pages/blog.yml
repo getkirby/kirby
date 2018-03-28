@@ -5,16 +5,16 @@ options:
 
 sections:
   drafts:
+    extends: sections/articles
     headline: Unpublished articles
-    type: pages
-    query: page.drafts
-    item:
-      info: "{{ page.date('d.m.Y') }}"
-    create: article
+    status: draft
+
+  unlisted:
+    extends: sections/articles
+    headline: Articles in review
+    status: unlisted
 
   published:
+    extends: sections/articles
     headline: Published articles
-    type: pages
-    query: page.children.flip
-    item:
-      info: "{{ page.date('d.m.Y') }}"
+    status: listed

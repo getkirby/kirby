@@ -18,17 +18,10 @@ sections:
         type: textarea
 
   hires:
+    extends: sections/team
     headline: New Team Members
-    query: page.drafts
-    type: pages
-    layout: list
-    create: team
-    item:
-      info: "{{ page.position }}"
+    status: draft
 
   team:
+    extends: sections/team
     headline: Team
-    type: pages
-    layout: list
-    item:
-      info: "{{ page.position }}"

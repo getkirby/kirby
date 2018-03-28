@@ -1,19 +1,21 @@
 title: Events
 
+icon: 📅
+
 sections:
 
   drafts:
     extends: sections/events
     headline: Unpublished events
-    query: page.drafts.sortBy("from", "asc")
-    create: event
-
-  published:
-    extends: sections/events
-    headline: Published events
-    query: page.children.listed.sortBy("from", "asc")
+    status: draft
 
   unlisted:
     extends: sections/events
     headline: Unlisted events
-    query: page.children.unlisted.sortBy("from", "asc")
+    status: unlisted
+
+  published:
+    extends: sections/events
+    headline: Published events
+    status: listed
+

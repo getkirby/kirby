@@ -8,8 +8,9 @@ sections:
     extends: sections/projects
     headline: Projects Drafts
     layout: list
-    query: page.drafts
-    create: project
+    status: draft
 
   published:
     extends: sections/projects
+    headline: Published Projects
+    status: listed

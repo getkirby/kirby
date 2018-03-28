@@ -1,5 +1,7 @@
 title: Restaurant Menu
 
+icon: 🍕
+
 fields:
   starters:
     extends: fields/dishes
