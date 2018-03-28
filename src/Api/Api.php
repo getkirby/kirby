@@ -247,6 +247,8 @@ class Api
         try {
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
+            error_log($e);
+
             $result = [
                 'status'  => 'error',
                 'message' => $e->getMessage(),

@@ -218,6 +218,10 @@ trait BlueprintSectionData
             return $this->linkForModel($parent);
         }
 
+        if ($parentClass === Page::class && $parent->is($model) === false) {
+            return $this->linkForModel($parent);
+        }
+
         return null;
     }
 

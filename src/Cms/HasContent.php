@@ -61,7 +61,7 @@ trait HasContent
      */
     public function date(string $format = null, $field = 'date')
     {
-        return $this->content()->get($field, [$format]);
+        return $this->content()->get($field)->toDate($format);
     }
 
     /**
