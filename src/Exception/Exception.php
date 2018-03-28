@@ -10,14 +10,15 @@ class Exception extends \Exception
     protected $data;
     protected $key;
 
-    protected static $defaultKey = 'general';
+    protected static $defaultKeyPrefix = 'exception';
+    protected static $defaultKey = 'error';
     protected static $defaultData = [];
     protected static $defaultFallback = 'An error occured';
     protected static $defaultCode = null;
 
     public function __construct(array $args = [])
     {
-        $this->key = 'exception.' . ($args['key'] ?? static::$defaultKey);
+        $this->key = static::$defaultKeyPrefix . '.' . ($args['key'] ?? static::$defaultKey);
         $this->data = $args['data'] ?? static::$defaultData;
         $message = $args['fallback'] ?? static::$defaultFallback;
         $code = $args['code'] ?? static::$defaultCode;
