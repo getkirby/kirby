@@ -2,7 +2,7 @@
 
 namespace Kirby\Exception;
 
-class MissingPermissionException extends Exception
+class PermissionException extends Exception
 {
 
     protected static $defaultKeyPrefix = 'exception.permission';

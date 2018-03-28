@@ -2,7 +2,7 @@
 
 namespace Kirby\Exception;
 
-class MissingPermissionExceptionTest extends \PHPUnit\Framework\TestCase
+class PermissionExceptionTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testDefaults()

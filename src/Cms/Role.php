@@ -80,7 +80,7 @@ class Role extends Model
         try {
             return static::factory(Blueprint::load('users/' . $name), $inject);
         } catch (Exception $e) {
-            throw new MissingDataException([
+            throw new DataException([
                 'key' => 'role.missing',
                 'fallback' => 'The role "%s" does not exist',
                 'data' => [$name]
