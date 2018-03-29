@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Exception\DataException;
 
 class Role extends Model
 {
@@ -80,11 +79,7 @@ class Role extends Model
         try {
             return static::factory(Blueprint::load('users/' . $name), $inject);
         } catch (Exception $e) {
-            throw new DataException([
-                'key' => 'role.missing',
-                'fallback' => 'The role "%s" does not exist',
-                'data' => [$name]
-            ]);
+            throw new Exception(sprintf('The role "%s" does not exist', $name));
         }
     }
 
