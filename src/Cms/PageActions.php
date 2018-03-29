@@ -60,7 +60,7 @@ trait PageActions
             case 'unlisted':
                 return $this->changeStatusToUnlisted();
             default:
-                throw new Exception('Invalid status');
+                throw new Exception('Invalid status: ' . $status);
         }
     }
 

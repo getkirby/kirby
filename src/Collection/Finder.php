@@ -3,7 +3,6 @@
 namespace Kirby\Collection;
 
 use Exception;
-use Kirby\Collection;
 
 class Finder
 {

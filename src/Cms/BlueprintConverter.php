@@ -48,7 +48,7 @@ class BlueprintConverter
         }
 
         $data['columns'] = [
-            ['1/1' => implode(',', array_keys($data['sections']))]
+            ['1/1' => implode(',', array_keys((array)$data['sections']))]
         ];
 
         return $data;

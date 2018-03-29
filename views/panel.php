@@ -13,6 +13,7 @@
   <?php foreach ($plugins->filterBy('extension', 'css') as $plugin): ?>
   <link rel="stylesheet" href="<?= $plugin->url() ?>">
   <?php endforeach ?>
+  <link rel="stylesheet" href="<?= $kirby->url('index') ?>/assets/css/panel.css">
 
 </head>
 <body>
@@ -40,6 +41,7 @@
   <?php foreach ($plugins->filterBy('extension', 'js') as $plugin): ?>
   <script src="<?= $plugin->url() ?>"></script>
   <?php endforeach ?>
+  <script src="<?= $kirby->url('index') ?>/assets/js/panel.js"></script>
 
   <script src="<?= $kirby->url('panel') ?>/assets/js/panel.js"></script>
 

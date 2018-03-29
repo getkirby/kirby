@@ -62,8 +62,10 @@ class UserRules
 
     public static function create(User $user): bool
     {
-        if ($user->permissions()->create() !== true) {
-            throw new Exception('This user cannot be created');
+        if ($user->kirby()->users()->count() > 0) {
+            if ($user->permissions()->create() !== true) {
+                throw new Exception('This user cannot be created');
+            }
         }
 
         static::validEmail($user, $user->email());

@@ -103,6 +103,11 @@ trait UserActions
      */
     public static function create(array $props = null): self
     {
+        // hash the password before creating the user
+        if (isset($props['password']) === true) {
+            $props['password'] = static::hashPassword($props['password']);
+        }
+
         $user = new static($props);
         $user->rules()->create($user);
         $user->kirby()->trigger('user.create:before', $props);

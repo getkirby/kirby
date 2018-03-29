@@ -37,7 +37,14 @@ return [
             }
 
             // create the first user
-            return $this->users()->create($this->requestBody());
+            $user  = $this->users()->create($this->requestBody());
+            $token = $user->login($this->requestBody('password'));
+
+            return [
+                'status' => 'ok',
+                'token'  => $token,
+                'user'   => $this->resolve($user)->view('auth')->toArray()
+            ];
         }
     ]
 

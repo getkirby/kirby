@@ -1,7 +1,5 @@
 <?php
 
-use Firebase\JWT\JWT;
-
 /**
  * Authentication
  */
@@ -25,31 +23,8 @@ return [
             }
 
             // try to find the user by the sha1 id
-            $user = $this->user($id);
-
-            if ($user->role()->permissions()->for('access', 'panel') === false) {
-                throw new Exception('You are not allowed to access the panel');
-            }
-
-            if ($user->validatePassword($password) !== true) {
-                throw new Exception('Invalid email or password');
-            }
-
-            // TODO: get the token and expiration from the config
-            $key        = 'kirby';
-            $expiration = 3600 * 24 * 7;
-
-            // create a json web token
-            $token = [
-                'iss' => $this->kirby()->url(),
-                'aud' => $this->kirby()->url(),
-                'iat' => $time = time(),
-                'nbf' => $time,
-                'exp' => $time + $expiration,
-                'uid' => $user->id(),
-            ];
-
-            $token = JWT::encode($token, $key);
+            $user  = $this->user($id);
+            $token = $user->login($password);
 
             return [
                 'status' => 'ok',

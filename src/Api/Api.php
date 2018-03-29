@@ -247,12 +247,15 @@ class Api
         try {
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
+            error_log($e);
+
             $result = [
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-                'file'    => $e->getFile(),
-                'line'    => $e->getLine(),
-                'code'    => 500
+                'status'    => 'error',
+                'exception' => get_class($e),
+                'message'   => $e->getMessage(),
+                'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+                'line'      => $e->getLine(),
+                'code'      => 500
             ];
         }
 

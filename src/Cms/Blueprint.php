@@ -24,7 +24,7 @@ class Blueprint extends BlueprintObject
     /**
      * All registered blueprint extensions
      */
-    public static $mixins = [];
+    public static $loaded = [];
 
     /**
      * Cache for the fields collection
@@ -34,9 +34,9 @@ class Blueprint extends BlueprintObject
     protected $fields;
 
     /**
-     * @var BlueprintTabs
+     * @var string
      */
-    protected $tabs;
+    protected $icon;
 
     /**
      * The blueprint name
@@ -58,6 +58,11 @@ class Blueprint extends BlueprintObject
      * @var BlueprintCollection
      */
     protected $sections;
+
+    /**
+     * @var BlueprintTabs
+     */
+    protected $tabs;
 
     /**
      * The blueprint title
@@ -228,6 +233,14 @@ class Blueprint extends BlueprintObject
     }
 
     /**
+     * @return string|null
+     */
+    public function icon()
+    {
+        return $this->icon;
+    }
+
+    /**
      * Checks if this is the default blueprint
      *
      * @return bool
@@ -245,17 +258,9 @@ class Blueprint extends BlueprintObject
      */
     public static function mixin(string $path): array
     {
-        if (isset(static::$mixins[$path]) === true) {
-            return static::$mixins[$path];
-        }
-
         try {
-            return static::$mixins[$path] = static::load($path);
+            return static::load($path);
         } catch (Exception $e) {
-            if ($mixin = App::instance()->extension('blueprints', $path)) {
-                return static::$mixins[$path] = $mixin;
-            }
-
             throw new Exception(sprintf('The mixin "%s" does not exist', $path));
         }
     }
@@ -266,10 +271,14 @@ class Blueprint extends BlueprintObject
      * @param string $name
      * @param string $fallback
      * @param Model $model
-     * @return self
+     * @return array
      */
     public static function load(string $name)
     {
+        if (isset(static::$loaded[$name]) === true) {
+            return static::$loaded[$name];
+        }
+
         $props = static::find($name);
 
         if (is_array($props) === true) {
@@ -282,7 +291,7 @@ class Blueprint extends BlueprintObject
         // inject the filename as name if no name is set
         $props['name'] = $props['name'] ?? F::name($file);
 
-        return $props;
+        return static::$loaded[$name] = $props;
     }
 
     /**
@@ -349,6 +358,16 @@ class Blueprint extends BlueprintObject
         }
 
         return $this->sections = $sections;
+    }
+
+    /**
+     * @param string $icon
+     * @return self
+     */
+    protected function setIcon(string $icon = null): self
+    {
+        $this->icon = $icon;
+        return $this;
     }
 
     /**
