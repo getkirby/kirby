@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 class PageBlueprintOptions extends BlueprintOptions
 {
 
