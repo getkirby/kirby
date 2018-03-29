@@ -2,6 +2,16 @@
 
 namespace Kirby\Exception;
 
+class WillFail {
+
+    public function fail () {
+        throw new Exception([
+            'key' => 'key.unique',
+        ]);
+    }
+
+}
+
 class ExceptionTest extends \PHPUnit\Framework\TestCase
 {
 
@@ -30,6 +40,16 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('An error occured', $exception->getMessage());
         $this->assertEquals(0, $exception->getHttpCode());
         $this->assertEquals([], $exception->getData());
+    }
+
+    /**
+     * @expectedException Kirby\Exception\Exception
+     * @expectedExceptionCode exception.key.unique
+     */
+    public function testPHPUnitTesting()
+    {
+        $class = new WillFail();
+        $class->fail();
     }
 
 }
