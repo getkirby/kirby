@@ -3,6 +3,7 @@
 namespace Kirby\Exception;
 
 use Kirby\Cms\App;
+use Kirby\Util\Str;
 
 class Exception extends \Exception
 {
@@ -11,9 +12,9 @@ class Exception extends \Exception
     protected $httpCode;
 
     protected static $defaultKey = 'error';
-    protected static $defaultFallback = 'An error occured';
+    protected static $defaultFallback = 'An error occurred';
     protected static $defaultData = [];
-    protected static $defaultHttpCode = 0;
+    protected static $defaultHttpCode = 500;
 
     public function __construct(array $args = [])
     {
@@ -29,7 +30,7 @@ class Exception extends \Exception
         }
 
         // format message with passed data
-        $message = sprintf($message, ...$this->data);
+        $message = Str::template($message, $this->data, '-');
 
         // handover to Exception parent class constructor
         parent::__construct($message, null, $previous);

@@ -19,8 +19,8 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     {
         $exception = new Exception([
             'key' => 'page.slug.invalid',
-            'fallback' => 'The page slug "%s" is invalid',
-            'data' => $data = ['project/(c'],
+            'fallback' => 'The page slug "{slug}" is invalid',
+            'data' => $data = ['slug' => 'project/(c'],
             'httpCode' => $http = 500
         ]);
 
@@ -37,8 +37,8 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
         $exception = new Exception();
 
         $this->assertEquals('exception.error', $exception->getKey());
-        $this->assertEquals('An error occured', $exception->getMessage());
-        $this->assertEquals(0, $exception->getHttpCode());
+        $this->assertEquals('An error occurred', $exception->getMessage());
+        $this->assertEquals(500, $exception->getHttpCode());
         $this->assertEquals([], $exception->getData());
     }
 
