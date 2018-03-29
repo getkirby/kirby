@@ -38,7 +38,11 @@ return [
         'pattern' => 'auth/user',
         'method'  => 'GET',
         'action'  => function () {
-            return $this->resolve($this->user())->view('auth');
+            if ($user = $this->user()) {
+                return $this->resolve($user)->view('auth');
+            }
+
+            throw new Exception('The user cannot be found');
         }
     ]
 ];

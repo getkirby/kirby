@@ -9,7 +9,7 @@ class BlueprintMixinTest extends TestCase
     {
         parent::setUp();
 
-        Blueprint::$mixins = [];
+        Blueprint::$loaded = [];
     }
 
     public function testMixinFromFile()
