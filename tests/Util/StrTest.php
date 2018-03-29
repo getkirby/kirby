@@ -260,4 +260,11 @@ class StrTest extends TestCase
         // with different ellipsis character
         $this->assertEquals('Super---', Str::short($string, 5, '---'));
     }
+
+    public function testTemplate()
+    {
+        $string = 'From {b} to {a}';
+        $this->assertEquals('From here to there', Str::template($string, ['a' => 'there', 'b' => 'here']));
+        $this->assertEquals('From  to ', Str::template($string, []));
+    }
 }
