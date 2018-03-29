@@ -8,42 +8,49 @@ class Exception extends \Exception
 {
 
     protected $data;
-    protected $key;
+    protected $httpCode;
 
-    protected static $defaultKeyPrefix = 'exception';
     protected static $defaultKey = 'error';
-    protected static $defaultData = [];
     protected static $defaultFallback = 'An error occured';
-    protected static $defaultCode = null;
+    protected static $defaultData = [];
+    protected static $defaultHttpCode = 0;
 
     public function __construct(array $args = [])
     {
-        $this->key = static::$defaultKeyPrefix . '.' . ($args['key'] ?? static::$defaultKey);
-        $this->data = $args['data'] ?? static::$defaultData;
+        $key = 'exception.' . ($args['key'] ?? static::$defaultKey);
         $message = $args['fallback'] ?? static::$defaultFallback;
-        $code = $args['code'] ?? static::$defaultCode;
+        $this->data = $args['data'] ?? static::$defaultData;
+        $this->httpCode = $args['httpCode'] ?? static::$defaultHttpCode;
         $previous = $args['previous'] ?? null;
 
         // use localized message if can be loaded
         if (class_exists(App::class)) {
-            $message = App::instance()->locales()->get($this->key, $message);
+            $message = App::instance()->locales()->get($key, $message);
         }
 
         // format message with passed data
         $message = sprintf($message, ...$this->data);
 
         // handover to Exception parent class constructor
-        parent::__construct($message, $code, $previous);
-    }
+        parent::__construct($message, null, $previous);
 
-    final public function getKey(): string
-    {
-        return $this->key;
+        // set the Exception code to the key
+        $this->code = $key;
     }
 
     final public function getData(): array
     {
         return $this->data;
+    }
+
+    final public function getKey(): string
+    {
+        return $this->getCode();
+    }
+
+    final public function getHttpCode(): int
+    {
+        return $this->httpCode;
     }
 
 }

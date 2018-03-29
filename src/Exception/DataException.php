@@ -5,9 +5,8 @@ namespace Kirby\Exception;
 class DataException extends Exception
 {
 
-    protected static $defaultKeyPrefix = 'exception.data';
-    protected static $defaultKey = 'missing';
+    protected static $defaultKey = 'data.missing';
     protected static $defaultFallback = 'Missing data';
-    protected static $defaultCode = 404;
+    protected static $defaultHttpCode = 404;
 
 }
