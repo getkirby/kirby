@@ -34,9 +34,9 @@ class Blueprint extends BlueprintObject
     protected $fields;
 
     /**
-     * @var BlueprintTabs
+     * @var string
      */
-    protected $tabs;
+    protected $icon;
 
     /**
      * The blueprint name
@@ -58,6 +58,11 @@ class Blueprint extends BlueprintObject
      * @var BlueprintCollection
      */
     protected $sections;
+
+    /**
+     * @var BlueprintTabs
+     */
+    protected $tabs;
 
     /**
      * The blueprint title
@@ -228,6 +233,14 @@ class Blueprint extends BlueprintObject
     }
 
     /**
+     * @return string|null
+     */
+    public function icon()
+    {
+        return $this->icon;
+    }
+
+    /**
      * Checks if this is the default blueprint
      *
      * @return bool
@@ -349,6 +362,16 @@ class Blueprint extends BlueprintObject
         }
 
         return $this->sections = $sections;
+    }
+
+    /**
+     * @param string $icon
+     * @return self
+     */
+    protected function setIcon(string $icon = null): self
+    {
+        $this->icon = $icon;
+        return $this;
     }
 
     /**

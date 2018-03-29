@@ -115,6 +115,14 @@ trait BlueprintSectionData
         return $this->item ?? [];
     }
 
+    protected function itemIcon($item)
+    {
+        return [
+            'type' => $item->blueprint()->icon() ?? 'file',
+            'back' => 'black'
+        ];
+    }
+
     protected function itemImage($item, array $data)
     {
         $imageSettings = $this->item()['image'] ?? null;
@@ -178,6 +186,7 @@ trait BlueprintSectionData
             'parent' => $item->parent() ? $item->parent()->id() : null,
             'text'   => $this->itemValue($item, 'title', $stringTemplateData),
             'image'  => $this->itemImage($item, $stringTemplateData),
+            'icon'   => $this->itemIcon($item),
             'link'   => $this->itemLink($item),
             'info'   => $this->itemValue($item, 'info', $stringTemplateData),
             'url'    => $item->url()
