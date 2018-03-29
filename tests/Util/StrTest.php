@@ -266,5 +266,6 @@ class StrTest extends TestCase
         $string = 'From {b} to {a}';
         $this->assertEquals('From here to there', Str::template($string, ['a' => 'there', 'b' => 'here']));
         $this->assertEquals('From  to ', Str::template($string, []));
+        $this->assertEquals('From - to -', Str::template($string, [], '-'));
     }
 }
