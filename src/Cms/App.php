@@ -531,11 +531,11 @@ class App extends Component
             }
 
             if (is_string($this->user) === true) {
-                return $this->user = $this->users()->findBy('email', $this->user);
+                return $this->user = $this->users()->find($this->user);
             }
 
             try {
-                return $this->user = $this->users()->findBy('id', $this->authToken()['uid']);
+                return $this->user = $this->users()->find($this->authToken()['uid']);
             } catch (Throwable $e) {
                 return null;
             }

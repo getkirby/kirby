@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Firebase\JWT\JWT;
 use Kirby\Toolkit\V;
 
 /**
@@ -182,7 +183,7 @@ class User extends Model
      * @param string|null $password
      * @return string|null
      */
-    public function hashPassword($password)
+    public static function hashPassword($password)
     {
         if ($password !== null) {
             $info = password_get_info($password);
@@ -270,6 +271,40 @@ class User extends Model
     {
         return $this->language ?? $this->language = $this->store()->language();
     }
+
+    /**
+     * Logs the user in and creates a auth token
+     *
+     * @param string $password
+     * @return string
+     */
+    public function login(string $password): string
+    {
+        if ($this->role()->permissions()->for('access', 'panel') === false) {
+            throw new Exception('You are not allowed to access the panel');
+        }
+
+        if ($this->validatePassword($password) !== true) {
+            throw new Exception('Invalid email or password');
+        }
+
+        // TODO: get the token and expiration from the config
+        $key        = 'kirby';
+        $expiration = 3600 * 24 * 7;
+
+        // create a json web token
+        $token = [
+            'iss' => $this->kirby()->url(),
+            'aud' => $this->kirby()->url(),
+            'iat' => $time = time(),
+            'nbf' => $time,
+            'exp' => $time + $expiration,
+            'uid' => $this->id(),
+        ];
+
+        return JWT::encode($token, $key);
+    }
+
 
     /**
      * Returns the media url for the user object
