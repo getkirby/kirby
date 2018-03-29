@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\PermissionException;
 
 class PageRules
 {
@@ -19,11 +21,19 @@ class PageRules
     public static function changeSlug(Page $page, string $slug): bool
     {
         if ($page->permissions()->changeSlug() !== true) {
-            throw new Exception('The slug for this page cannot be changed');
+            throw new PermissionException([
+                'key'      => 'page.changeSlug.permission',
+                'fallback' => 'You are not allowed to change the slug for "{slug}"',
+                'data'     => ['slug' => $page->id()]
+            ]);
         }
 
         if ($duplicate = $page->siblings()->not($page)->find($slug)) {
-            throw new Exception(sprintf('The URL appendix "%s" exists', $slug));
+            throw new DuplicateException([
+                'key'      => 'page.duplicate',
+                'fallback' => 'A page with the slug "{slug}" already exists',
+                'data'     => ['slug' => $slug]
+            ]);
         }
 
         return true;
