@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Exception\MissingDataException;
+use Kirby\Exception\DataException;
 
 class Role extends Model
 {
