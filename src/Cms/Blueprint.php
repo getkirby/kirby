@@ -24,7 +24,7 @@ class Blueprint extends BlueprintObject
     /**
      * All registered blueprint extensions
      */
-    public static $mixins = [];
+    public static $loaded = [];
 
     /**
      * Cache for the fields collection
@@ -258,17 +258,9 @@ class Blueprint extends BlueprintObject
      */
     public static function mixin(string $path): array
     {
-        if (isset(static::$mixins[$path]) === true) {
-            return static::$mixins[$path];
-        }
-
         try {
-            return static::$mixins[$path] = static::load($path);
+            return static::load($path);
         } catch (Exception $e) {
-            if ($mixin = App::instance()->extension('blueprints', $path)) {
-                return static::$mixins[$path] = $mixin;
-            }
-
             throw new Exception(sprintf('The mixin "%s" does not exist', $path));
         }
     }
@@ -279,10 +271,14 @@ class Blueprint extends BlueprintObject
      * @param string $name
      * @param string $fallback
      * @param Model $model
-     * @return self
+     * @return array
      */
     public static function load(string $name)
     {
+        if (isset(static::$loaded[$name]) === true) {
+            return static::$loaded[$name];
+        }
+
         $props = static::find($name);
 
         if (is_array($props) === true) {
@@ -295,7 +291,7 @@ class Blueprint extends BlueprintObject
         // inject the filename as name if no name is set
         $props['name'] = $props['name'] ?? F::name($file);
 
-        return $props;
+        return static::$loaded[$name] = $props;
     }
 
     /**
