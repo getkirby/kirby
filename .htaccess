@@ -38,11 +38,14 @@ RewriteRule ^(kirby|panel\/app|panel\/tests)/(.*) index.php [L]
 # make panel links work
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/panel/assets
 RewriteRule ^panel/(.*) panel/index.php [L]
 
 # make site links work
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/panel
+RewriteCond %{REQUEST_URI} !^/assets
 RewriteRule ^(.*) index.php [L]
 
 </IfModule>
