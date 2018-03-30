@@ -19,7 +19,7 @@ trait Placeholder
 
     protected function setPlaceholder($placeholder = null)
     {
-        $this->placeholder = $this->i18n($placeholder);
+        $this->placeholder = $this->translate($placeholder);
         return $this;
     }
 

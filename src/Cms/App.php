@@ -432,10 +432,10 @@ class App extends Component
     /**
      * Set the currently active user id
      *
-     * @param string $user
+     * @param  User|string $user
      * @return self
      */
-    protected function setUser(string $user = null): self
+    protected function setUser($user = null): self
     {
         $this->user = $user;
         return $this;
@@ -556,6 +556,30 @@ class App extends Component
         }
 
         return $this->users = Users::load($this->root('accounts'), ['kirby' => $this]);
+    }
+
+    /**
+     * Returns translate string for key from locales file
+     *
+     * @param   string       $key
+     * @param   string|null  $fallback
+     * @param   string|null  $locale
+     * @return  string
+     */
+    public function translate(string $key, string $fallback = null, string $locale = null): string
+    {
+        // TODO: handle short locales
+        if ($locale === null) {
+            if ($user = $this->user()) {
+                $locale = $user->language() ?? 'en_US';
+            } else {
+                $locale = 'en_US';
+            }
+        }
+
+        $locale = $this->locales()->get($locale);
+
+        return $locale->get($key, $fallback);
     }
 
 }

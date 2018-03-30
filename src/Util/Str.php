@@ -438,4 +438,28 @@ class Str
 
         return static::substr($string, 0, $length) . $appendix;
     }
+
+    /**
+     * Replaces placeholders in string with value from array
+     *
+     * <code>
+     *
+     * echo Str::template('From {b} to {a}', ['a' => 'there', 'b' => 'here']);
+     * // output: From here to there
+     *
+     * </code>
+     *
+     * @param  string  $string   The string with placeholders
+     * @param  array   $data     Associative array with placeholders as
+     *                           keys and replacements as values
+     * @param  string  $fallback A fallback if a token does not have any matches
+     * @return string            The filled-in string
+     */
+    public static function template(string $string, array $data = [], string $fallback = null): string
+    {
+        return preg_replace_callback('!{(.*?)}!', function ($match) use ($data, $fallback) {
+            return $data[$match[1]] ?? $fallback;
+        }, $string);
+    }
+
 }

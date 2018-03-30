@@ -25,7 +25,7 @@ trait Help
      */
     protected function setHelp($help = null): self
     {
-        $this->help = $this->i18n($help);
+        $this->help = $this->translate($help);
         return $this;
     }
 

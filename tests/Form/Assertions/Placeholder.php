@@ -12,7 +12,7 @@ trait Placeholder
         }
 
         $this->assertPropertyDefault('placeholder', $default);
-        $this->assertPropertyI18n('placeholder');
+        $this->assertPropertyTranslate('placeholder');
         $this->assertPropertyIsOptional('placeholder');
     }
 

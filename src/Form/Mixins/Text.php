@@ -14,7 +14,7 @@ trait Text
 
     protected function setText(string $text = null)
     {
-        $this->text = $this->i18n($text);
+        $this->text = $this->translate($text);
         return $this;
     }
 
