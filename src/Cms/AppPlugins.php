@@ -25,7 +25,11 @@ trait AppPlugins
             }
 
             if (is_array($values) === false) {
-                throw new Exception(sprintf('Extensions for "%s" must be defined as array', $type));
+                throw new InvalidArgumentException([
+                    'key'      => 'exception.app.invalid.extension',
+                    'fallback' => 'Extensions for "{type}" must be defined as array',
+                    'data'     => ['type' => $type]
+                ]);
             }
 
             $extends[$type] = Extend::$type($values, $plugin);
@@ -134,7 +138,10 @@ trait AppPlugins
         }
 
         if (is_array($props) === false) {
-            throw new Exception('Invalid plugin definition');
+            throw new InvalidArgumentException([
+                'key'      => 'exception.app.invalid.plugin',
+                'fallback' => 'Invalid plugin definition',
+            ]);
         }
 
         // automatic root detection

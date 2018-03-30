@@ -110,6 +110,9 @@
     "error.form.errors": "Please fix all form errors …",
     "error.section.notFound": "The section type <strong>{type}</strong> does not exist. Please change the configuration in your blueprint.",
     "error.section.notLoaded": "The section could not be loaded",
+    "error.app.invalid.cacheType": "Invalid cache type \"{type}\"",
+    "error.app.invalid.extension": "Extensions for \"{type}\" must be defined as array",
+    "exception.app.invalid.plugin": "Invalid plugin definition",
 
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
     "error.page.changeTemplate.invalid": "The template for this page cannot be changed",

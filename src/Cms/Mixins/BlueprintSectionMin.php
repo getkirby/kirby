@@ -34,9 +34,7 @@ trait BlueprintSectionMin
                 throw new InvalidArgumentException([
                     'key'      => 'exception.blueprint.section.min',
                     'fallback' => 'At least {min} entries required',
-                    'data' => [
-                        'min'  => $min
-                    ]
+                    'data'     => ['min' => $min]
                 ]);
             }
         }

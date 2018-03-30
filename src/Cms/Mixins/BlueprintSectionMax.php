@@ -27,9 +27,7 @@ trait BlueprintSectionMax
                 throw new InvalidArgumentException([
                     'key'      => 'exception.blueprint.section.max',
                     'fallback' => 'No more than {max} entries allowed',
-                    'data' => [
-                        'max'  => $max
-                    ]
+                    'data'     => ['max' => $max]
                 ]);
             }
         }

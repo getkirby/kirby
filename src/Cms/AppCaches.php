@@ -39,9 +39,7 @@ trait AppCaches
             throw new InvalidArgumentException([
                 'key'      => 'exception.app.invalid.cacheType',
                 'fallback' => 'Invalid cache type "{type}"',
-                'data' => [
-                    'type'  => $type
-                ]
+                'data'     => ['type' => $type]
             ]);
         }
 

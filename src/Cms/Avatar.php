@@ -2,8 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Image\Image;
+
+use Kirby\Exception\BadMethodCallException;
 
 /**
  * The Avatar class handles user images.
@@ -87,7 +88,9 @@ class Avatar extends Model
             return $asset->$method(...$arguments);
         }
 
-        throw new Exception('Invalid avatar method: ' . $method);
+        throw new BadMethodCallException([
+            'data' => ['method' => 'Avatar::' . $method]
+        ]);
     }
 
     /**
