@@ -34,7 +34,14 @@ class Plugin extends Model
             return $this->info;
         }
 
-        return $this->info = Data::read($this->manifest());
+        try {
+            $info = Data::read($this->manifest());
+        } catch (Exception $e) {
+            // there is no manifest file or it is invalid
+            $info = [];
+        }
+
+        return $this->info = $info;
     }
 
     public function manifest(): string
