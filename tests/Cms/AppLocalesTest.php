@@ -28,18 +28,21 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
     {
         $app = App::instance();
         $this->assertEquals('Search', $app->translate('search'));
+        $this->assertEquals('Search', t('search'));
     }
 
     public function testTranslateFallback()
     {
         $app = App::instance();
         $this->assertEquals('Cake', $app->translate('not-exist', 'Cake'));
+        $this->assertEquals('Cake', t('not-exist', 'Cake'));
     }
 
     public function testTranslateSetLocale()
     {
         $app = App::instance();
         $this->assertEquals('Das ist ein Testfehler', $app->translate('exception.test', null, 'de_DE'));
+        $this->assertEquals('Das ist ein Testfehler', t('exception.test', null, 'de_DE'));
     }
 
     public function testTranslateUserLanguage()
@@ -47,6 +50,7 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
         $app = App::instance();
 
         $this->assertEquals('This is a test error', $app->translate('exception.test'));
+        $this->assertEquals('This is a test error', t('exception.test'));
 
         $app = new App([
             'user' => new User([
@@ -56,6 +60,7 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertEquals('Das ist ein Testfehler', $app->translate('exception.test'));
+        $this->assertEquals('Das ist ein Testfehler', t('exception.test'));
 
         // reset app instance
         $app = new App();

@@ -121,6 +121,19 @@ function svg(string $file)
     return $svg;
 }
 
+/**
+ * Returns translate string for key from locales file
+ *
+ * @param   string       $key
+ * @param   string|null  $fallback
+ * @param   string|null  $locale
+ * @return  string
+ */
+function t(string $key, string $fallback = null, string $locale = null): string
+{
+    return App::instance()->translate($key, $fallback, $locale);
+}
+
 function u(string $path = null): string
 {
     return Url::to();
