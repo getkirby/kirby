@@ -113,5 +113,9 @@
 
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
     "error.page.changeTemplate.invalid": "The template for this page cannot be changed",
-    "error.user.password.notSame": "The passwords do not match"
+    "error.user.password.notSame": "The passwords do not match",
+
+    "error.blueprint.section.min.invalid": "The min value must be 1 or higher",
+    "error.blueprint.section.min": "At least {min} entries required",
+    "error.blueprint.section.max": "No more than {max} entries allowed"
 }
