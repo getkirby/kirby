@@ -41,5 +41,7 @@
     "website": "Website",
 
     "notification.welcome": "Welcome {name}",
-    "notification.image.deleted": "The image has been deleted"
+    "notification.image.deleted": "The image has been deleted",
+
+    "exception.test": "This is a test error"
 }

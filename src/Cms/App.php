@@ -558,4 +558,27 @@ class App extends Component
         return $this->users = Users::load($this->root('accounts'), ['kirby' => $this]);
     }
 
+    /**
+     * Returns translate string for key from locales file
+     *
+     * @param   string       $key
+     * @param   string|null  $fallback
+     * @param   string|null  $locale
+     * @return  string
+     */
+    public function translate(string $key, string $fallback = null, string $locale = null): string
+    {
+        if ($locale === null) {
+            if ($user = $this->user()) {
+                $locale = $user->language() ?? 'en_US';
+            } else {
+                $locale = 'en_US';
+            }
+        }
+
+        $locale = $this->locales()->get($locale);
+
+        return $locale->get($key, $fallback);
+    }
+
 }

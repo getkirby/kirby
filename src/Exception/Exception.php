@@ -26,7 +26,7 @@ class Exception extends \Exception
 
         // use localized message if can be loaded
         if (class_exists(App::class)) {
-            $message = App::instance()->locales()->get($key, $message);
+            $message = App::instance()->translate($key, $message);
         }
 
         // format message with passed data
