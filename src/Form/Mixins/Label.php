@@ -25,7 +25,7 @@ trait Label
      */
     protected function setLabel($label = null): self
     {
-        $this->label = $this->i18n($label);
+        $this->label = $this->translate($label);
         return $this;
     }
 

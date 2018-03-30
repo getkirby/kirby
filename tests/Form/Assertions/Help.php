@@ -9,7 +9,7 @@ trait Help
     {
         $this->assertPropertyCanBeNull('help');
         $this->assertPropertyDefault('help', $default);
-        $this->assertPropertyI18n('help');
+        $this->assertPropertyTranslate('help');
         $this->assertPropertyIsOptional('help');
     }
 

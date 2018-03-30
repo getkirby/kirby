@@ -3,12 +3,12 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Util\I18n;
+use Kirby\Util\Translate;
 
 class BlueprintObject extends Component
 {
 
-    use I18n;
+    use Translate;
     use HasModel;
 
     /**

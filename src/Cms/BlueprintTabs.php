@@ -3,13 +3,13 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Util\I18n;
+use Kirby\Util\Translate;
 use Kirby\Util\Str;
 
 class BlueprintTabs
 {
 
-    use I18n;
+    use Translate;
 
     protected $blueprint;
     protected $tabs = [];
@@ -92,7 +92,7 @@ class BlueprintTabs
             $tab['columns'] = $this->columns($tab['columns']);
 
             // translate the label if necessary
-            $tab['label'] = $this->i18n($tab['label']);
+            $tab['label'] = $this->translate($tab['label']);
 
             ksort($tab);
 

@@ -4,12 +4,12 @@ namespace Kirby\Form;
 
 use Exception;
 use Kirby\Form\Exceptions\PropertyException;
-use Kirby\Util\I18n;
+use Kirby\Util\Translate;
 
 class Form extends Component
 {
 
-    use I18n;
+    use Translate;
     use Mixins\Model;
 
     protected $errors;

@@ -77,12 +77,12 @@ abstract class FieldTestCase extends BaseTestCase
         }
     }
 
-    public function assertPropertyI18n(string $property)
+    public function assertPropertyTranslate(string $property)
     {
         // simple
         $this->assertPropertyValue($property, 'test');
 
-        // i18n
+        // translate
         $text = [
             'en' => 'english',
             'de' => 'deutsch'

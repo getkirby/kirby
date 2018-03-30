@@ -12,7 +12,7 @@ trait Label
         }
 
         $this->assertPropertyDefault('label', $default);
-        $this->assertPropertyI18n('label');
+        $this->assertPropertyTranslate('label');
         $this->assertPropertyIsOptional('label');
     }
 

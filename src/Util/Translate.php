@@ -4,7 +4,7 @@ namespace Kirby\Util;
 
 use Exception;
 
-trait I18n
+trait Translate
 {
 
     /**
@@ -26,14 +26,14 @@ trait I18n
      * as array with values for each language:
      *
      * ```
-     * $this->i18n(['en' => 'Hey', 'de' => 'Ho']);
+     * $this->translate(['en' => 'Hey', 'de' => 'Ho']);
      * ```
      *
      * @param string|array $input
      * @param string $default
      * @return string|null
      */
-    protected function i18n($input, $default = null)
+    protected function translate($input, $default = null)
     {
         if ($input === null) {
             return null;
