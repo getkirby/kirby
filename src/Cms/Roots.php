@@ -75,7 +75,7 @@ class Roots extends Ingredients
 
     public function env(): string
     {
-        return $this->env = $this->env ?? $this->index();
+        return $this->env = $this->env ?? $this->site();
     }
 
     public function index(): string
