@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
 
 /**
  * The Content class handles all fields

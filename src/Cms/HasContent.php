@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 trait HasContent
 {

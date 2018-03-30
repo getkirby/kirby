@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-
 /**
  * The Pages collection contains
  * any number and mixture of page objects
