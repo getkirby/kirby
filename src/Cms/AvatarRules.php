@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 class AvatarRules
 {
@@ -27,8 +27,12 @@ class AvatarRules
 
     public static function validMime(Avatar $avatar, string $mime): bool
     {
+        // TODO: also allow PNG files
         if ($mime !== 'image/jpeg') {
-            throw new Exception('User profile images must be a JPEG file');
+            throw new InvalidArgumentException([
+                'key'      => 'exception.avatar.invalid.mime',
+                'fallback' => 'User profile images must be JPEG or PNG files',
+            ]);
         }
 
         return true;
@@ -37,7 +41,10 @@ class AvatarRules
     public static function validDimensions(Avatar $avatar, int $width, int $height): bool
     {
         if ($width > 3000 || $height > 3000) {
-            throw new Exception('Please keep the width and height of the profile image below 3000 pixel');
+            throw new InvalidArgumentException([
+                'key'      => 'exception.avatar.invalid.dimensions',
+                'fallback' => 'Please keep the width and height of the profile image below 3000 pixel',
+            ]);
         }
 
         return true;

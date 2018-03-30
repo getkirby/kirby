@@ -117,6 +117,14 @@
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
     "error.page.changeTemplate.invalid": "The template for this page cannot be changed",
     "error.user.password.notSame": "The passwords do not match",
+    "error.avatar.invalid.props": "Please provide the \"source\" and \"user\" props for the Avatar",
+    "error.avatar.invalid.dimensions": "Please keep the width and height of the profile image below 3000 pixel",
+    "error.avatar.invalid.mime": "User profile images must be JPEG or PNG files",
+
+    "exception.blueprint.data.type": "The data type \"{class}\" is invalid, only \"{accept}\" allowed",
+    "exception.blueprint.section.min.invalid": "The min value must be 1 or higher",
+    "exception.blueprint.section.min": "At least {min} entries required",
+    "exception.blueprint.section.max": "No more than {max} entries allowed"
 
     "error.blueprint.section.min.invalid": "The min value must be 1 or higher",
     "error.blueprint.section.min": "At least {min} entries required",
