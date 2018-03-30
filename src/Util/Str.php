@@ -452,6 +452,7 @@ class Str
      * @param  string  $string   The string with placeholders
      * @param  array   $data     Associative array with placeholders as
      *                           keys and replacements as values
+     * @param  string  $fallback A fallback if a token does not have any matches
      * @return string            The filled-in string
      */
     public static function template(string $string, array $data = [], string $fallback = null): string
