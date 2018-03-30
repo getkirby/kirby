@@ -1,8 +1,8 @@
-Title: Project B
+Title: Lame light effects
 
 ----
 
-Year: 2013
+Year: 2017
 
 ----
 
@@ -10,7 +10,7 @@ Text: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo l
 
 ----
 
-Headline: Room with chairs
+Headline: 
 
 ----
 

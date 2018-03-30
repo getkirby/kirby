@@ -5,4 +5,7 @@ parent: site.find("projects")
 status: listed
 templates: project
 item:
+  image:
+    src: page.images.filterBy("template", "cover").first
+    ratio: 3/2
   info: "{{ page.year }}"
