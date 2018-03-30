@@ -113,6 +113,7 @@
     "error.app.invalid.cacheType": "Invalid cache type \"{type}\"",
     "error.app.invalid.extension": "Extensions for \"{type}\" must be defined as array",
     "exception.app.invalid.plugin": "Invalid plugin definition",
+    "exception.app.directory.delete": "The directory could not be deleted",
 
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
     "error.page.changeTemplate.invalid": "The template for this page cannot be changed",
