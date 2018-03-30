@@ -22,7 +22,7 @@ sections:
     fields:
       date:
         label: Date
-        type: datetime
+        type: date
       tags:
         label: Tags
         type: tags

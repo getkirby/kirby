@@ -25,6 +25,7 @@ sections:
 				label: Year
 				type: number
 				min: 2000
+				default: 2018
 				required: true
 				width: 1/4
 			tags:

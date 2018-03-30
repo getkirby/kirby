@@ -20,6 +20,7 @@ sections:
       street:
         label: Street
         type: text
+        required: true
       zip:
         label: ZIP
         type: text
