@@ -21,9 +21,12 @@ class JsonTest extends TestCase
         $this->assertEquals($array, $result);
     }
 
-    public function corruptedDecode()
+    /**
+     * @expectedException        \Exception
+     * @expectedExceptionMessage JSON string is invalid
+     */
+    public function testDecodeCorrupted()
     {
-        $data = 'some gibberish';
-        $this->assertNull(Json::decode($data));
+        Json::decode('some gibberish');
     }
 }

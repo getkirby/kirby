@@ -18,7 +18,7 @@ class Txt extends Handler
 {
 
     /**
-     * Converts an array to Kirby txt
+     * Converts an array to an encoded Kirby txt string
      *
      * @param  array  $data
      * @return string
@@ -81,12 +81,12 @@ class Txt extends Handler
     }
 
     /**
-     * Parses Kirby txt and returns a multi-dimensional array
+     * Parses a Kirby txt string and returns a multi-dimensional array
      *
-     * @param  string     $string
-     * @return array/null
+     * @param  string $string
+     * @return array
      */
-    public static function decode(string $string)
+    public static function decode(string $string): array
     {
         // remove BOM
         $string = str_replace('\xEF\xBB\xBF', '', $string);

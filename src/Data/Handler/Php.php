@@ -2,6 +2,7 @@
 
 namespace Kirby\Data\Handler;
 
+use Exception;
 use Kirby\Data\Handler;
 
 /**
@@ -17,7 +18,7 @@ class Php extends Handler
 {
 
     /**
-     * Serializes an array
+     * Converts an array to a serialized string
      *
      * @param  array  $data
      * @return string
@@ -28,19 +29,19 @@ class Php extends Handler
     }
 
     /**
-     * Unserializes a string
+     * Parses a serialized string and returns a multi-dimensional array
      *
-     * @param  string     $string
-     * @return array/null
+     * @param  string $string
+     * @return array
      */
-    public static function decode(string $string)
+    public static function decode(string $string): array
     {
         $result = @unserialize($string);
 
         if (is_array($result)) {
             return $result;
         } else {
-            return null;
+            throw new Exception('Serialized string is invalid');
         }
     }
 }

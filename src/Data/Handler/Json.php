@@ -2,6 +2,7 @@
 
 namespace Kirby\Data\Handler;
 
+use Exception;
 use Kirby\Data\Handler;
 
 /**
@@ -17,7 +18,7 @@ class Json extends Handler
 {
 
     /**
-     * Converts an array to a json string
+     * Converts an array to an encoded JSON string
      *
      * @param  array  $data
      * @return string
@@ -28,19 +29,19 @@ class Json extends Handler
     }
 
     /**
-     * Parses JSON and returns a multi-dimensional array
+     * Parses an encoded JSON string and returns a multi-dimensional array
      *
-     * @param  string     $string
-     * @return array/null
+     * @param  string $string
+     * @return array
      */
-    public static function decode(string $json)
+    public static function decode(string $json): array
     {
         $result = json_decode($json, true);
 
         if (is_array($result)) {
             return $result;
         } else {
-            return null;
+            throw new Exception('JSON string is invalid');
         }
     }
 }

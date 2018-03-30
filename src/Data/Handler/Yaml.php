@@ -2,6 +2,7 @@
 
 namespace Kirby\Data\Handler;
 
+use Exception;
 use Spyc;
 use Kirby\Data\Handler;
 
@@ -18,24 +19,31 @@ class Yaml extends Handler
 {
 
     /**
-     * Converts an array to a yaml string
+     * Converts an array to an encoded YAML string
      *
      * @param  array  $data
      * @return string
      */
-    public static function encode(array $data = []): string
+    public static function encode(array $data): string
     {
-        return Spyc::YAMLDump($data, $indent = false, $wordwrap = false, $no_opening_dashes = true);
+        //                           $indent $wordwrap $no_opening_dashes
+        return Spyc::YAMLDump($data, false,  false,    true);
     }
 
     /**
-     * Parses YAML and returns a multi-dimensional array
+     * Parses an encoded YAML string and returns a multi-dimensional array
      *
-     * @param  string     $string
-     * @return array/null
+     * @param  string $string
+     * @return array
      */
-    public static function decode(string $yaml = null)
+    public static function decode(string $yaml): array
     {
-        return (array)Spyc::YAMLLoadString($yaml);
+        $result = Spyc::YAMLLoadString($yaml);
+
+        if (is_array($result)) {
+            return $result;
+        } else {
+            throw new Exception('YAML string is invalid');
+        }
     }
 }

@@ -109,20 +109,20 @@ class Data
      * The data handler is automatically chosen by
      * the extension if not specified.
      *
-     * @param  string     $file
-     * @param  string     $type
-     * @return array/null
+     * @param  string $file
+     * @param  string $type
+     * @return array
      */
-    public static function read(string $file, string $type = null)
+    public static function read(string $file, string $type = null): array
     {
-        $file = new File($file);
-        $type = $type ?? $file->extension();
+        $fileObject = new File($file);
+        $type = $type ?? $fileObject->extension();
 
-        if ($file->exists() === false) {
-            return [];
+        if ($fileObject->exists() !== true) {
+            throw new Exception('The file "' . $file . '" does not exist');
         }
 
-        return static::handler($type)->decode($file->read());
+        return static::handler($type)->decode($fileObject->read());
     }
 
     /**
