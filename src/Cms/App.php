@@ -568,6 +568,7 @@ class App extends Component
      */
     public function translate(string $key, string $fallback = null, string $locale = null): string
     {
+        // TODO: handle short locales
         if ($locale === null) {
             if ($user = $this->user()) {
                 $locale = $user->language() ?? 'en_US';
