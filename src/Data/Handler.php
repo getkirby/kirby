@@ -27,8 +27,10 @@ abstract class Handler
     /**
      * Parses an encoded string and returns a multi-dimensional array
      *
-     * @param  string     $string
-     * @return array/null
+     * Needs to throw an Exception if the file can't be parsed.
+     *
+     * @param  string $string
+     * @return array
      */
-    abstract public static function decode(string $string);
+    abstract public static function decode(string $string): array;
 }

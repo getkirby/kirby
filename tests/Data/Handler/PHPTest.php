@@ -24,9 +24,12 @@ class PhpTest extends TestCase
         $this->assertEquals($array, $result);
     }
 
-    public function corruptedDecode()
+    /**
+     * @expectedException        \Exception
+     * @expectedExceptionMessage Serialized string is invalid
+     */
+    public function testDecodeCorrupted()
     {
-        $data = 'some gibberish';
-        $this->assertNull(Php::decode($data));
+        Php::decode('some gibberish');
     }
 }
