@@ -432,10 +432,10 @@ class App extends Component
     /**
      * Set the currently active user id
      *
-     * @param string $user
+     * @param  User|string $user
      * @return self
      */
-    protected function setUser(string $user = null): self
+    protected function setUser($user = null): self
     {
         $this->user = $user;
         return $this;
