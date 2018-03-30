@@ -37,7 +37,7 @@ trait AppCaches
 
         if (array_key_exists($type, $types) === false) {
             throw new InvalidArgumentException([
-                'key'      => 'exception.app.invalid.cacheType',
+                'key'      => 'app.invalid.cacheType',
                 'fallback' => 'Invalid cache type "{type}"',
                 'data'     => ['type' => $type]
             ]);

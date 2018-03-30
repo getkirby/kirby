@@ -2,9 +2,11 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Form\Field;
 use Kirby\Util\Dir;
+
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
 
 trait AppPlugins
 {
@@ -26,7 +28,7 @@ trait AppPlugins
 
             if (is_array($values) === false) {
                 throw new InvalidArgumentException([
-                    'key'      => 'exception.app.invalid.extension',
+                    'key'      => 'app.invalid.extension',
                     'fallback' => 'Extensions for "{type}" must be defined as array',
                     'data'     => ['type' => $type]
                 ]);
@@ -139,7 +141,7 @@ trait AppPlugins
 
         if (is_array($props) === false) {
             throw new InvalidArgumentException([
-                'key'      => 'exception.app.invalid.plugin',
+                'key'      => 'app.plugin.invalid',
                 'fallback' => 'Invalid plugin definition',
             ]);
         }
@@ -151,7 +153,11 @@ trait AppPlugins
         $name   = $plugin->name();
 
         if (isset(static::$plugins[$name]) === true) {
-            throw new Exception(sprintf('The plugin "%s" has already been registered', $name));
+            throw new InvalidArgumentException([
+                'key'      => 'app.plugin.duplicate',
+                'fallback' => 'The plugin "{name}" has already been registered',
+                'data'     => ['name' => $name]
+            ]);
         }
 
         return static::$plugins[$name] = $plugin;

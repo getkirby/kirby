@@ -25,7 +25,7 @@ trait BlueprintSectionMax
         if ($max = $this->max()) {
             if ($this->total() > $max) {
                 throw new InvalidArgumentException([
-                    'key'      => 'exception.blueprint.section.max',
+                    'key'      => 'blueprint.section.max',
                     'fallback' => 'No more than {max} entries allowed',
                     'data'     => ['max' => $max]
                 ]);

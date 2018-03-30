@@ -32,7 +32,7 @@ trait BlueprintSectionMin
         if ($min = $this->min()) {
             if ($this->total() < $min) {
                 throw new InvalidArgumentException([
-                    'key'      => 'exception.blueprint.section.min',
+                    'key'      => 'blueprint.section.min',
                     'fallback' => 'At least {min} entries required',
                     'data'     => ['min' => $min]
                 ]);

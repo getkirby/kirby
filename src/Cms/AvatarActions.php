@@ -43,7 +43,7 @@ trait AvatarActions
     {
         if (isset($props['source'], $props['user']) === false) {
             throw new InvalidArgumentException([
-                'key'      => 'exception.avatar.invalid.props',
+                'key'      => 'avatar.invalid.props',
                 'fallback' => 'Please provide the "source" and "user" props for the Avatar'
             ]);
         }
