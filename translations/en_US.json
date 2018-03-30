@@ -120,12 +120,11 @@
     "error.avatar.invalid.props": "Please provide the \"source\" and \"user\" props for the Avatar",
     "error.avatar.invalid.dimensions": "Please keep the width and height of the profile image below 3000 pixel",
     "error.avatar.invalid.mime": "User profile images must be JPEG or PNG files",
+    "error.avatar.create.fail": "The avatar could not be created",
+    "error.avatar.delete.fail": "The avatar could not be deleted",
+    "error.avatar.thumb.fail": "The avatar cannot be resized",
 
-    "exception.blueprint.data.type": "The data type \"{class}\" is invalid, only \"{accept}\" allowed",
-    "exception.blueprint.section.min.invalid": "The min value must be 1 or higher",
-    "exception.blueprint.section.min": "At least {min} entries required",
-    "exception.blueprint.section.max": "No more than {max} entries allowed"
-
+    "error.blueprint.data.type": "The data type \"{class}\" is invalid, only \"{accept}\" allowed",
     "error.blueprint.section.min.invalid": "The min value must be 1 or higher",
     "error.blueprint.section.min": "At least {min} entries required",
     "error.blueprint.section.max": "No more than {max} entries allowed"
