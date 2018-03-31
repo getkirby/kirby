@@ -125,8 +125,11 @@
     "error.avatar.create.fail": "The avatar could not be created",
     "error.avatar.delete.fail": "The avatar could not be deleted",
     "error.avatar.thumb.fail": "The avatar cannot be resized",
-
     "error.blueprint.data.type": "The data type \"{class}\" is invalid, only \"{accept}\" allowed",
+    "error.blueprint.file.notFound": "The blueprint \"{name}\" could not be loaded",
+    "error.blueprint.field.notFound": "The field \"{name}\" could not be found",
+    "error.blueprint.section.notFound": "The section \"{name}\" could not be found",
+    "error.blueprint.mixin.notFound": "The mixin \"{path}\" could not be found",
     "error.blueprint.section.min.invalid": "The min value must be 1 or higher",
     "error.blueprint.section.min": "At least {min} entries required",
     "error.blueprint.section.max": "No more than {max} entries allowed"

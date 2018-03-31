@@ -2,10 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
 use Kirby\Form\Fields;
 use Kirby\Util\F;
+
+use Exception;
+use Kirby\Exception\NotFoundException;
+
 
 /**
  * The Blueprint class converts an array from a
@@ -177,7 +180,11 @@ class Blueprint extends BlueprintObject
             return $field;
         }
 
-        throw new Exception('The field could not be found');
+        throw new NotFoundException([
+            'key'      => 'exception.blueprint.field.notFound',
+            'fallback' => 'The field "{name}" could not be found',
+            'data'     => ['name' => $name]
+        ]);
     }
 
     /**
@@ -229,7 +236,12 @@ class Blueprint extends BlueprintObject
             return $blueprint;
         }
 
-        throw new Exception(sprintf('The blueprint "%s" could not be loaded', $name));
+        throw new NotFoundException([
+            'key'      => 'exception.blueprint.file.notFound',
+            'fallback' => 'The blueprint "{name}" could not be loaded',
+            'data'     => ['name' => $name]
+        ]);
+
     }
 
     /**
@@ -261,7 +273,11 @@ class Blueprint extends BlueprintObject
         try {
             return static::load($path);
         } catch (Exception $e) {
-            throw new Exception(sprintf('The mixin "%s" does not exist', $path));
+            throw new NotFoundException([
+                'key'      => 'exception.blueprint.mixin.notFound',
+                'fallback' => 'The mixin "{path}" could not be found',
+                'data'     => ['path' => $path]
+            ]);
         }
     }
 
@@ -327,7 +343,11 @@ class Blueprint extends BlueprintObject
             return $section;
         }
 
-        throw new Exception(sprintf('The section "%s" could not be found', $name));
+        throw new NotFoundException([
+            'key'      => 'exception.blueprint.section.notFound',
+            'fallback' => 'The section "{name}" could not be found',
+            'data'     => ['name' => $name]
+        ]);
     }
 
     /**
