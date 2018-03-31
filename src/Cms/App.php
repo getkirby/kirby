@@ -564,22 +564,32 @@ class App extends Component
      * @param   string       $key
      * @param   string|null  $fallback
      * @param   string|null  $locale
-     * @return  string
+     * @return  string|null
      */
-    public function translate(string $key, string $fallback = null, string $locale = null): string
+    public function translate(string $key, string $fallback = null, string $locale = null)
     {
+        // TODO: define at a better place
+        $defaultLocale = 'en_US';
+
         // TODO: handle short locales
         if ($locale === null) {
             if ($user = $this->user()) {
-                $locale = $user->language() ?? 'en_US';
+                $locale = $user->language() ?? $defaultLocale;
             } else {
-                $locale = 'en_US';
+                $locale = $defaultLocale;
             }
         }
 
-        $locale = $this->locales()->get($locale);
+        $locales = $this->locales();
 
-        return $locale->get($key, $fallback);
+        // if current language file has translation, return it
+        if ($translation = $locales->get($locale)->get($key)) {
+            return $translation;
+        }
+
+        // otherwise use default language file or
+        // return fallback string if no translation at all exists
+        return $locales->get($defaultLocale)->get($key, $fallback);
     }
 
 }
