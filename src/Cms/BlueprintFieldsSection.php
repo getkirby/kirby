@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\NotFoundException;
 
 class BlueprintFieldsSection extends BlueprintSection
 {
@@ -22,7 +23,12 @@ class BlueprintFieldsSection extends BlueprintSection
             return $field;
         }
 
-        throw new Exception('The field cannot be found');
+        throw new NotFoundException([
+            'key'      => 'blueprint.field.notFound',
+            'fallback' => 'The field "{name}" could not be found',
+            'data'     => ['name' => $name]
+        ]);
+
     }
 
     public function fields()
