@@ -30,6 +30,7 @@ class SiteStore extends SiteStoreDefault
     {
 
         $site      = $this->site();
+        $kirby     = $site->kirby();
         $url       = $site->url();
         $children  = new Pages([], $site);
 
@@ -38,6 +39,7 @@ class SiteStore extends SiteStoreDefault
             $props['slug']  = $slug;
             $props['url']   = $url . '/' . $slug;
             $props['site']  = $site;
+            $props['kirby'] = $kirby;
             $props['store'] = static::PAGE_STORE_CLASS;
 
             $page = Page::factory($props);

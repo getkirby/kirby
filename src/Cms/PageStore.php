@@ -119,6 +119,7 @@ class PageStore extends PageStoreDefault
         $id        = $parent->id();
         $url       = $parent->url();
         $site      = $parent->site();
+        $kirby     = $site->kirby();
         $extension = $this->base()->extension();
         $children  = new Children([], $parent);
 
@@ -128,6 +129,7 @@ class PageStore extends PageStoreDefault
                 'num'    => $props['num'],
                 'parent' => $parent,
                 'site'   => $site,
+                'kirby'  => $kirby,
                 'slug'   => $slug,
                 'store'  => static::PAGE_STORE_CLASS
             ]);
