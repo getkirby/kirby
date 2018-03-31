@@ -38,8 +38,8 @@ class EmailTest extends TestCase
     }
 
     /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage Email preset "not-a-preset" does not exist
+     * @expectedException Kirby\Exception\NotFoundException
+     * @expectedExceptionCode exception.email.preset.notFound
      */
     public function testEmailInvalidPreset()
     {

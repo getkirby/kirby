@@ -2,9 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Toolkit\V;
 use Kirby\Util\Str;
+
+use Exception;
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\PermissionException;
 
 class FileRules
 {
@@ -12,14 +15,22 @@ class FileRules
     public static function changeName(File $file, string $name): bool
     {
         if ($file->permissions()->changeName() !== true) {
-            throw new Exception('The name for this file cannot be changed');
+            throw new PermissionException([
+                'key'      => 'exception.file.changeName.permissions',
+                'fallback' => 'You are not allowed to change the name of "{filename}"',
+                'data'     => ['filename' => $file->name()]
+            ]);
         }
 
         $parent    = $file->parent();
         $duplicate = $parent->files()->not($file)->findBy('name', $name);
 
         if ($duplicate) {
-            throw new Exception('A file with this name exists');
+            throw new DuplicateException([
+                'key'      => 'exception.file.duplicate',
+                'fallback' => 'A file with the filename "{filename}" already exists',
+                'data'     => ['filename' => $duplicate->name()]
+            ]);
         }
 
         return true;

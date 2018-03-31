@@ -150,5 +150,7 @@
 
     "error.file.invalid.name.missing": "The filename must not be empty",
     "error.file.invalid.mime.forbidden": "The mime type \"{mime}\" is not allowed",
-    "error.file.props.missing": "Please provide the \"source\" and \"parent\" props for the File"
+    "error.file.props.missing": "Please provide the \"source\" and \"parent\" props for the File",
+    "error.file.changeName.permissions": "You are not allowed to change the name of \"{filename}\"",
+    "error.file.duplicate": "A file with the filename \"{filename}\" already exists"
 }

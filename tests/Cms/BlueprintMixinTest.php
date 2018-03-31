@@ -58,8 +58,8 @@ class BlueprintMixinTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The mixin "fields/headline" does not exist
+     * @expectedException Kirby\Exception\NotFoundException
+     * @expectedExceptionCode exception.blueprint.mixin.notFound
      */
     public function testNonExistingMixin()
     {
