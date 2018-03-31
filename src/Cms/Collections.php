@@ -3,9 +3,10 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
 use Kirby\Util\Controller;
 use Kirby\FileSystem\Folder;
+
+use Kirby\Exception\NotFoundException;
 
 /**
  * Manages and loads all collections
@@ -77,7 +78,11 @@ class Collections
         }
 
         if (isset($this->collections[$name]) === false) {
-            throw new Exception('Unknown collection');
+            throw new NotFoundException([
+                'key'      => 'collection.notFound',
+                'fallback' => 'The collection "{name}" cannot be found',
+                'data'     => ['name' => $name]
+            ]);
         }
 
         $controller = new Controller($this->collections[$name]);
