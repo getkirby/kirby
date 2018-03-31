@@ -147,5 +147,7 @@
     "error.collection.notFound": "The collection \"{name}\" cannot be found",
 
     "error.file.invalid.name.missing": "The filename must not be empty",
-    "error.file.invalid.mime.forbidden": "The mime type \"{mime}\" is not allowed"
+    "error.file.invalid.mime.forbidden": "The mime type \"{mime}\" is not allowed",
+
+    "error.email.preset.notFound": "The email preset \"{name}\" cannot be found"
 }

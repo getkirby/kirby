@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\NotFoundException;
 
 class Email
 {
@@ -47,7 +47,11 @@ class Email
 
         // preset does not exist
         if (isset($this->options['presets'][$preset]) === false) {
-            throw new Exception(sprintf('Email preset "%s" does not exist', $preset));
+            throw new NotFoundException([
+                'key'      => 'email.preset.notFound',
+                'fallback' => 'The email preset "{name}" could not be found',
+                'data'     => ['name' => $preset]
+            ]);
         }
 
         return $this->options['presets'][$preset];
