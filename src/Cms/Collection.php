@@ -3,8 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
 use Kirby\Collection\Collection as BaseCollection;
+
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The Collection class serves as foundation
@@ -62,7 +63,11 @@ class Collection extends BaseCollection
     public function __set(string $id, $object)
     {
         if (is_a($object, static::$accept) === false) {
-            throw new Exception(sprintf('Invalid object in collection. Accepted: "%s"', static::$accept));
+            throw new InvalidArgumentException([
+                'key'      => 'collection.object.invalid',
+                'fallback' => 'Invalid object in collection. Accepted: "{accept}"',
+                'data'     => ['accept' => static::$accept]
+            ]);
         }
 
         // inject the collection for proper navigation

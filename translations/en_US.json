@@ -143,6 +143,8 @@
     "error.blueprint.tab.columns.width.invalid": "The column width \"{width}\" is not valid",
     "error.blueprint.mixin.notFound": "The mixin \"{path}\" could not be found",
 
+    "error.collection.object.invalid": "Invalid object in collection. Accepted: \"{accept}\"",
+
     "error.file.invalid.name.missing": "The filename must not be empty",
     "error.file.invalid.mime.forbidden": "The mime type \"{mime}\" is not allowed"
 }
