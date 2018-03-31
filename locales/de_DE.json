@@ -3,5 +3,5 @@
     "locale.name": "Deutsch",
     "locale.translator": "Kirby Team",
 
-    "exception.test": "Das ist ein Testfehler"
+    "error.test": "Das ist ein Testfehler"
 }
