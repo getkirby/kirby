@@ -207,10 +207,10 @@ class PageRulesTest extends TestCase
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
-            'children' => new Children([
-                new Page(['slug' => 'a']),
-                new Page(['slug' => 'b'])
-            ]),
+            'children' => [
+                ['slug' => 'a'],
+                ['slug' => 'b']
+            ],
             'store' => FakePageStore::class,
         ]);
 
@@ -222,10 +222,10 @@ class PageRulesTest extends TestCase
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
-            'children' => new Children([
-                new Page(['slug' => 'a']),
-                new Page(['slug' => 'b'])
-            ]),
+            'children' => [
+                ['slug' => 'a'],
+                ['slug' => 'b']
+            ],
             'store' => FakePageStore::class,
         ]);
 

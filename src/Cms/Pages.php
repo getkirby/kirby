@@ -65,6 +65,29 @@ class Pages extends Collection
     }
 
     /**
+     * Creates a pages collection from an array of props
+     *
+     * @param array $pages
+     * @param Model $parent
+     * @param array $inject
+     * @return Pages
+     */
+    public static function factory(array $pages, Model $parent = null, array $inject = [])
+    {
+        $children = new static([], $parent);
+
+        foreach ($pages as $props) {
+            $page = Page::factory($props + $inject + [
+                'collection' => $children
+            ]);
+
+            $children->data[$page->id()] = $page;
+        }
+
+        return $children;
+    }
+
+    /**
      * Initialize the PagesFinder class,
      * which is handling findBy and find
      * methods

@@ -16,10 +16,10 @@ class PageChildrenTest extends TestCase
     {
         $page = new Page([
             'slug' => 'test',
-            'children' => new Children([
-                new Page(['slug' => 'a']),
-                new Page(['slug' => 'b'])
-            ])
+            'children' => [
+                ['slug' => 'a'],
+                ['slug' => 'b']
+            ]
         ]);
 
         $this->assertTrue($page->hasChildren());
@@ -29,7 +29,7 @@ class PageChildrenTest extends TestCase
     {
         $page = new Page([
             'slug'     => 'test',
-            'children' => new Children()
+            'children' => []
         ]);
 
         $this->assertFalse($page->hasChildren());

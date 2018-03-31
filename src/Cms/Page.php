@@ -194,13 +194,17 @@ class Page extends Model
      *
      * @return Pages|Children
      */
-    public function children(): Pages
+    public function children()
     {
         if (is_a($this->children, Pages::class) === true) {
             return $this->children;
         }
 
-        return $this->children = $this->store()->children();
+        return $this->children = Children::factory($this->children ?? $this->store()->children(), $this, [
+            'kirby'  => $this->kirby(),
+            'site'   => $this->site(),
+            'parent' => $this
+        ]);
     }
 
     /**

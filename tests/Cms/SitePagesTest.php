@@ -17,9 +17,9 @@ class SitePagesTest extends TestCase
     public function testDefaultErrorPageWithChildren()
     {
         $site = new Site([
-            'children' => new Pages([
-                new Page(['slug' => 'error'])
-            ])
+            'children' => [
+                ['slug' => 'error']
+            ]
         ]);
 
         $this->assertIsPage($site->errorPage(), 'error');
@@ -37,9 +37,9 @@ class SitePagesTest extends TestCase
     public function testDefaultHomePageWithChildren()
     {
         $site = new Site([
-            'children' => new Pages([
-                new Page(['slug' => 'home'])
-            ])
+            'children' => [
+                ['slug' => 'home']
+            ]
         ]);
 
         $this->assertIsPage($site->homePage(), 'home');
@@ -57,9 +57,9 @@ class SitePagesTest extends TestCase
     public function testDefaultPageWithChildren()
     {
         $site = new Site([
-            'children' => new Pages([
-                new Page(['slug' => 'home'])
-            ])
+            'children' => [
+                ['slug' => 'home']
+            ]
         ]);
 
         $this->assertIsPage($site->page(), 'home');
@@ -68,9 +68,9 @@ class SitePagesTest extends TestCase
     public function testPageWithPathAndChildren()
     {
         $site = new Site([
-            'children' => new Pages([
-                new Page(['slug' => 'test'])
-            ])
+            'children' => [
+                ['slug' => 'test']
+            ]
         ]);
 
         $this->assertIsPage($site->page('test'), 'test');
@@ -88,28 +88,15 @@ class SitePagesTest extends TestCase
     public function testVisitWithId()
     {
         $site = new Site([
-            'children' => new Pages([
-                new Page(['slug' => 'test'])
-            ])
+            'children' => [
+                ['slug' => 'test']
+            ]
         ]);
 
         $page = $site->visit('test');
 
         $this->assertIsPage($site->page(), 'test');
         $this->assertIsPage($site->page(), $page);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid page object
-     */
-    public function testVisitWithInvalidId()
-    {
-        $site = new Site([
-            'children' => new Pages()
-        ]);
-
-        $site->visit('test');
     }
 
 }

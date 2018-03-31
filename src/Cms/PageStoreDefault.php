@@ -66,9 +66,9 @@ class PageStoreDefault extends Store
         return $this->update($data = ['title' => $title], $data);
     }
 
-    public function children()
+    public function children(): array
     {
-        return new Children([], $this->page());
+        return [];
     }
 
     public function content()

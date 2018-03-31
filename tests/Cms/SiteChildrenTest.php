@@ -24,7 +24,7 @@ class SiteChildrenTest extends TestCase
     public function testPages()
     {
         $site = new Site([
-            'children' => $pages = new Pages()
+            'children' => []
         ]);
 
         $this->assertInstanceOf(Pages::class, $site->children());

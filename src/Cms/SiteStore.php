@@ -26,30 +26,21 @@ class SiteStore extends SiteStoreDefault
         ]);
     }
 
-    public function children()
+    public function children(): array
     {
-
-        $site      = $this->site();
-        $kirby     = $site->kirby();
-        $url       = $site->url();
-        $children  = new Pages([], $site);
+        $site     = $this->site();
+        $url      = $site->url();
+        $children = [];
 
         foreach ($this->base()->children() as $slug => $props) {
-
-            $props['slug']  = $slug;
-            $props['url']   = $url . '/' . $slug;
-            $props['site']  = $site;
-            $props['kirby'] = $kirby;
-            $props['store'] = static::PAGE_STORE_CLASS;
-
-            $page = Page::factory($props);
-
-            $children->set($page->id(), $page);
-
+            $children[] = $props + [
+                'slug'  => $slug,
+                'url'   => $url . '/' . $slug,
+                'store' => static::PAGE_STORE_CLASS
+            ];
         }
 
         return $children;
-
     }
 
     public function content()
@@ -59,7 +50,6 @@ class SiteStore extends SiteStoreDefault
 
     public function drafts(): array
     {
-
         $site   = $this->site();
         $url    = $site->url();
         $drafts = [];
@@ -71,7 +61,6 @@ class SiteStore extends SiteStoreDefault
         foreach ($base->children() as $slug => $props) {
             $drafts[] = [
                 'num'    => $props['num'],
-                'site'   => $site,
                 'slug'   => $slug,
                 'status' => 'draft',
                 'url'    => $url . '/_drafts/' . $slug,

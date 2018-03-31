@@ -37,7 +37,7 @@ trait HasChildren
             return $this->children;
         }
 
-        return $this->children = new Pages();
+        return $this->children = new Pages([]);
     }
 
     /**
@@ -85,7 +85,7 @@ trait HasChildren
      * @param Pages|Children|null $children
      * @return self
      */
-    protected function setChildren(Pages $children = null)
+    protected function setChildren(array $children = null)
     {
         $this->children = $children;
         return $this;

@@ -125,7 +125,10 @@ class Site extends Model
             return $this->children;
         }
 
-        return $this->children = $this->store()->children();
+        return $this->children = Pages::factory($this->children ?? $this->store()->children(), $this, [
+            'kirby' => $this->kirby(),
+            'site'  => $this,
+        ]);
     }
 
     protected function defaultStore()
@@ -152,7 +155,10 @@ class Site extends Model
      */
     public function drafts(): Pages
     {
-        return new Pages(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
+        return Pages::factory($this->store()->drafts(), $this, [
+            'kirby' => $this->kirby(),
+            'site'  => $this,
+        ]);
     }
 
     /**

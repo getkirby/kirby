@@ -112,34 +112,18 @@ class PageStore extends PageStoreDefault
         return $newPage;
     }
 
-    public function children(): Children
+    public function children(): array
     {
-
-        $parent    = $this->page();
-        $id        = $parent->id();
-        $url       = $parent->url();
-        $site      = $parent->site();
-        $kirby     = $site->kirby();
-        $extension = $this->base()->extension();
-        $children  = new Children([], $parent);
+        $children = [];
 
         foreach ($this->base()->children() as $slug => $props) {
-
-            $page = Page::factory([
-                'num'    => $props['num'],
-                'parent' => $parent,
-                'site'   => $site,
-                'kirby'  => $kirby,
+            $children[] = $props + [
                 'slug'   => $slug,
                 'store'  => static::PAGE_STORE_CLASS
-            ]);
-
-            $children->set($page->id(), $page);
-
+            ];
         }
 
         return $children;
-
     }
 
     public function content()
