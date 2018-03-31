@@ -2,9 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\Translate;
 use Kirby\Util\Str;
+
+use Kirby\Exception\InvalidArgumentException;
 
 class BlueprintTabs
 {
@@ -53,11 +54,18 @@ class BlueprintTabs
             ];
 
             if (in_array($width, $widths) === false) {
-                throw new Exception('Invalid column width: ' . $width);
+                throw new InvalidArgumentException([
+                    'key'      => 'blueprint.tab.columns.width.invalid',
+                    'fallback' => 'The column width "{width}" is not valid',
+                    'data'     => ['width' => $width]
+                ]);
             }
 
             if (empty($sections) === true) {
-                throw new Exception('The sections are missing');
+                throw new InvalidArgumentException([
+                    'key'      => 'blueprint.tab.section.missing',
+                    'fallback' => 'The tab sections are missing'
+                ]);
             }
 
             $result[] = [
@@ -92,17 +100,26 @@ class BlueprintTabs
         foreach ($tabs as $name => $tab) {
 
             if (is_string($name) === false) {
-                throw new Exception('Missing tab name');
+                throw new InvalidArgumentException([
+                    'key'      => 'blueprint.tab.name.missing',
+                    'fallback' => 'The tab name is missing',
+                ]);
             }
 
             $tab = Blueprint::extend($tab);
 
             if (empty($tab['label']) === true) {
-                throw new Exception('The tab label is missing');
+                throw new InvalidArgumentException([
+                    'key'      => 'blueprint.tab.label.missing',
+                    'fallback' => 'The tab label is missing',
+                ]);
             }
 
             if (empty($tab['columns']) === true) {
-                throw new Exception('The columns are undefined or empty');
+                throw new InvalidArgumentException([
+                    'key'      => 'blueprint.tab.columns.missing',
+                    'fallback' => 'The tab columns are undefined or empty',
+                ]);
             }
 
             // use the key as name if the name is not already set
