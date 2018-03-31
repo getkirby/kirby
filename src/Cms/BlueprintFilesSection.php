@@ -2,11 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Http\Acceptance\MimeType;
 use Kirby\Image\Image;
 use Kirby\Toolkit\V;
 use Kirby\Util\F;
 use Kirby\Util\Str;
+
+use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 class BlueprintFilesSection extends BlueprintSection
 {
@@ -37,8 +40,44 @@ class BlueprintFilesSection extends BlueprintSection
 
     public function add(): bool
     {
-        if ($this->isFull() === true) {
-            return false;
+        $rules = $this->accept();
+
+        if ($rules === true) {
+            return true;
+        }
+
+        $image = new Image($source);
+
+        if ($rules['mime'] !== null) {
+            if ((new MimeType($rules['mime']))->has($image->mime()) === false) {
+                throw new InvalidArgumentException([
+                    'key'      => 'file.invalid.mime.forbidden',
+                    'fallback' => 'The mime type "{mime}" is not allowed',
+                    'data'     => ['mime' => $image->mime()]
+                ]);
+            }
+        }
+
+        $validations = [
+            'maxSize'     => ['size',   'max', 'The file is too large'],
+            'minSize'     => ['size',   'min', 'The file is too small'],
+            'maxWidth'    => ['width',  'max', 'The width of the image is too large'],
+            'minWidth'    => ['width',  'min', 'The width of the image is too small'],
+            'maxHeight'   => ['height', 'max', 'The height of the image is too large'],
+            'minHeight'   => ['height', 'min', 'The height of the image is too small'],
+            'orientation' => ['orientation', 'same', 'The orientation of the image is incorrect']
+        ];
+
+        foreach ($validations as $key => $arguments) {
+            if ($rules[$key] !== null) {
+                $property  = $arguments[0];
+                $validator = $arguments[1];
+                $message   = $arguments[2];
+
+                if (V::$validator($image->$property(), $rules[$key]) === false) {
+                    throw new Exception($message);
+                }
+            }
         }
 
         return true;
@@ -159,7 +198,10 @@ class BlueprintFilesSection extends BlueprintSection
     {
         // make sure the basics are provided
         if (isset($data['filename'], $data['source']) === false) {
-            throw new Exception('Please provide a filename');
+            throw new InvalidArgumentException([
+                'key'      => 'file.invalid.name.missing',
+                'fallback' => 'The filename must not be empty',
+            ]);
         }
 
         // check if adding files is allowed at all
