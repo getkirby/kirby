@@ -299,7 +299,7 @@ class Page extends Model
         $errors = [];
 
         foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, array_values($section->errors()));
+            $errors = array_merge($errors, $section->errors());
         }
 
         return $errors;
