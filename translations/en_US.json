@@ -146,8 +146,9 @@
     "error.collection.object.invalid": "Invalid object in collection. Accepted: \"{accept}\"",
     "error.collection.notFound": "The collection \"{name}\" cannot be found",
 
+    "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
+
     "error.file.invalid.name.missing": "The filename must not be empty",
     "error.file.invalid.mime.forbidden": "The mime type \"{mime}\" is not allowed",
-
-    "error.email.preset.notFound": "The email preset \"{name}\" cannot be found"
+    "error.file.props.missing": "Please provide the \"source\" and \"parent\" props for the File"
 }
