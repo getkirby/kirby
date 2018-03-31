@@ -125,6 +125,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/template',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->page($id)->changeTemplate($this->requestBody('template'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/title',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
