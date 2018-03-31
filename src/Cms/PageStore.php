@@ -177,26 +177,19 @@ class PageStore extends PageStoreDefault
 
     public function drafts(): array
     {
-        $parent    = $this->page();
-        $id        = $parent->id();
-        $url       = $parent->url() . '/_drafts';
-        $site      = $parent->site();
-        $extension = $this->base()->extension();
-        $drafts    = [];
-        $base      = new Base([
+        $drafts = [];
+        $parent = $this->page();
+        $base   = new Base([
             'extension' => 'txt',
             'root'      => $parent->root() . '/_drafts',
         ]);
 
         foreach ($base->children() as $slug => $props) {
-            $drafts[] = [
-                'num'    => $props['num'],
-                'parent' => $parent,
-                'site'   => $site,
+            $drafts[] = $props + [
                 'slug'   => $slug,
                 'status' => 'draft',
                 'url'    => $parent->url() . '/_drafts/' . $slug,
-                'store'  => static::class
+                'store'  => static::PAGE_STORE_CLASS
             ];
         }
 

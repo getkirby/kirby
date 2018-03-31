@@ -290,7 +290,11 @@ class Page extends Model
      */
     public function drafts(): Children
     {
-        return new Children(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
+        return Children::factory($this->store()->drafts(), $this, [
+            'kirby'  => $this->kirby(),
+            'site'   => $this->site(),
+            'parent' => $this
+        ], PageDraft::class);
     }
 
     /**

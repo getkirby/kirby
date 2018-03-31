@@ -70,14 +70,15 @@ class Pages extends Collection
      * @param array $pages
      * @param Model $parent
      * @param array $inject
+     * @param string $class
      * @return Pages
      */
-    public static function factory(array $pages, Model $parent = null, array $inject = [])
+    public static function factory(array $pages, Model $parent = null, array $inject = [], string $class = Page::class)
     {
         $children = new static([], $parent);
 
         foreach ($pages as $props) {
-            $page = Page::factory($props + $inject + [
+            $page = $class::factory($props + $inject + [
                 'collection' => $children
             ]);
 
