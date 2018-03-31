@@ -16,9 +16,8 @@ class FileRules
     {
         if ($file->permissions()->changeName() !== true) {
             throw new PermissionException([
-                'key'      => 'exception.file.changeName.permissions',
-                'fallback' => 'You are not allowed to change the name of "{filename}"',
-                'data'     => ['filename' => $file->name()]
+                'key'  => 'exception.file.changeName.permissions',
+                'data' => ['filename' => $file->name()]
             ]);
         }
 
@@ -27,9 +26,8 @@ class FileRules
 
         if ($duplicate) {
             throw new DuplicateException([
-                'key'      => 'exception.file.duplicate',
-                'fallback' => 'A file with the filename "{filename}" already exists',
-                'data'     => ['filename' => $duplicate->name()]
+                'key'  => 'exception.file.duplicate',
+                'data' => ['filename' => $duplicate->name()]
             ]);
         }
 

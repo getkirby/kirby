@@ -181,9 +181,8 @@ class Blueprint extends BlueprintObject
         }
 
         throw new NotFoundException([
-            'key'      => 'blueprint.field.notFound',
-            'fallback' => 'The field "{name}" could not be found',
-            'data'     => ['name' => $name]
+            'key'  => 'blueprint.field.notFound',
+            'data' => ['name' => $name]
         ]);
     }
 
@@ -237,9 +236,8 @@ class Blueprint extends BlueprintObject
         }
 
         throw new NotFoundException([
-            'key'      => 'blueprint.file.notFound',
-            'fallback' => 'The blueprint "{name}" could not be loaded',
-            'data'     => ['name' => $name]
+            'key'  => 'blueprint.file.notFound',
+            'data' => ['name' => $name]
         ]);
 
     }
@@ -274,9 +272,8 @@ class Blueprint extends BlueprintObject
             return static::load($path);
         } catch (Exception $e) {
             throw new NotFoundException([
-                'key'      => 'blueprint.mixin.notFound',
-                'fallback' => 'The mixin "{path}" could not be found',
-                'data'     => ['path' => $path]
+                'key'  => 'blueprint.mixin.notFound',
+                'data' => ['path' => $path]
             ]);
         }
     }
@@ -344,9 +341,8 @@ class Blueprint extends BlueprintObject
         }
 
         throw new NotFoundException([
-            'key'      => 'blueprint.section.notFound',
-            'fallback' => 'The section "{name}" could not be found',
-            'data'     => ['name' => $name]
+            'key'  => 'blueprint.section.notFound',
+            'data' => ['name' => $name]
         ]);
     }
 

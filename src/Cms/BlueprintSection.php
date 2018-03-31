@@ -53,8 +53,7 @@ class BlueprintSection extends BlueprintObject
     {
         if (isset($props['type']) === false) {
             throw new InvalidArgumentException([
-                'key'      => 'blueprint.section.type.missing',
-                'fallback' => 'The section type is missing',
+                'key' => 'blueprint.section.type.missing',
             ]);
         }
 
@@ -62,9 +61,8 @@ class BlueprintSection extends BlueprintObject
 
         if (class_exists($className) === false) {
             throw new InvalidArgumentException([
-                'key'      => 'blueprint.section.type.missing',
-                'fallback' => 'The section type "{type}" is not valid',
-                'data'     => ['type' => $props['type']]
+                'key'  => 'blueprint.section.type.missing',
+                'data' => ['type' => $props['type']]
             ]);
         }
 
@@ -105,9 +103,8 @@ class BlueprintSection extends BlueprintObject
         }
 
         throw new InvalidArgumentException([
-            'key'      => 'blueprint.section.model.invalid',
-            'fallback' => 'The model type "{type}" is not supported',
-            'data'     => ['type' => get_class($model)]
+            'key'  => 'blueprint.section.model.invalid',
+            'data' => ['type' => get_class($model)]
         ]);
     }
 
@@ -148,8 +145,7 @@ class BlueprintSection extends BlueprintObject
 
         if ($model === null) {
             throw new InvalidArgumentException([
-                'key'      => 'blueprint.section.model.missing',
-                'fallback' => 'The section model is missing',
+                'key' => 'blueprint.section.model.missing',
             ]);
         }
 

@@ -79,9 +79,8 @@ class Collections
 
         if (isset($this->collections[$name]) === false) {
             throw new NotFoundException([
-                'key'      => 'collection.notFound',
-                'fallback' => 'The collection "{name}" cannot be found',
-                'data'     => ['name' => $name]
+                'key'  => 'collection.notFound',
+                'data' => ['name' => $name]
             ]);
         }
 

@@ -48,9 +48,8 @@ class Email
         // preset does not exist
         if (isset($this->options['presets'][$preset]) === false) {
             throw new NotFoundException([
-                'key'      => 'email.preset.notFound',
-                'fallback' => 'The email preset "{name}" could not be found',
-                'data'     => ['name' => $preset]
+                'key'  => 'email.preset.notFound',
+                'data' => ['name' => $preset]
             ]);
         }
 

@@ -24,9 +24,8 @@ class BlueprintFieldsSection extends BlueprintSection
         }
 
         throw new NotFoundException([
-            'key'      => 'blueprint.field.notFound',
-            'fallback' => 'The field "{name}" could not be found',
-            'data'     => ['name' => $name]
+            'key'  => 'blueprint.field.notFound',
+            'data' => ['name' => $name]
         ]);
 
     }

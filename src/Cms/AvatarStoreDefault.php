@@ -27,8 +27,7 @@ class AvatarStoreDefault extends Store
     public function delete(): bool
     {
         throw new Exception([
-            'key'      => 'avatar.delete.fail',
-            'fallback' => 'The avatar could not be deleted',
+            'key' => 'avatar.delete.fail',
         ]);
     }
 
@@ -50,8 +49,7 @@ class AvatarStoreDefault extends Store
     public function thumb(array $options = [])
     {
         throw new Exception([
-            'key'      => 'avatar.thumb.fail',
-            'fallback' => 'The avatar cannot be resized',
+            'key' => 'avatar.thumb.fail',
         ]);
     }
 

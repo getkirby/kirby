@@ -34,8 +34,7 @@
   "file.replaced": "Die Datei wurde ersetzt",
   "file.sorted": "Sortiert!",
   "file.deleted": "Die Datei wurde gelöscht",
-  "file.delete.confirm":
-    "Möchtest du wirklich <br><strong>{filename}</strong> löschen?",
+  "file.delete.confirm": "Möchtest du wirklich <br><strong>{filename}</strong> löschen?",
   "file.template": "Vorlage",
   "file.mime": "Typ",
   "file.url": "URL",
@@ -45,8 +44,7 @@
   "file.orientation": "Ausrichtung",
 
   "page.created": "Die Seite wurde erstellt",
-  "page.delete.confirm":
-    "Möchtest du wirklich <br><strong>{title}</strong> löschen?",
+  "page.delete.confirm": "Möchtest du wirklich <br><strong>{title}</strong> löschen?",
   "page.deleted": "Die Seite wurde gelöscht",
   "page.rename.fromTitle": "Aus Titel erzeugen",
   "page.renamed": "Die Seite wurde umbenannt",
@@ -55,16 +53,14 @@
   "page.url.change": "URL ändern",
   "page.url.changed": "Die URL wurde geändert zu: /{url}",
   "page.url.changed.same": "Die URL ist gleich geblieben",
-  "page.status.draft.description":
-    "Die Seite ist im Entwurfsmodus und nur für eingeloggte Editoren sichtbar",
+  "page.status.draft.description": "Die Seite ist im Entwurfsmodus und nur für eingeloggte Editoren sichtbar",
   "page.status.unlisted.description": "Die Seite ist nur via URL erreichbar",
   "page.status.listed.description": "Die Seite ist öffentlich für jeden",
   "page.status.change": "Status ändern",
   "page.status.change.result.draft": "Die Seite ist nun im Entwurfsmodus",
   "page.status.change.result.unlisted": "Die Seite ist nun ungelistet",
   "page.status.change.result.listed": "Die Seite ist nun gelistet",
-  "page.status.change.result.num":
-    "Die Seite befindet sich nun an Position {num}",
+  "page.status.change.result.num": "Die Seite befindet sich nun an Position {num}",
   "page.status.select": "Bitte wähl einen Status aus …",
   "page.num.select": "Bitte wähle eine Position aus",
   "page.template": "Vorlage",
@@ -84,8 +80,7 @@
   "user.name.change": "Nutzer umbenennen",
   "user.name.changed": "Der Name wurde geändert",
   "user.delete": "Nutzer löschen",
-  "user.delete.confirm":
-    "Möchtest du wirklich <br><strong>{email}</strong> löschen?",
+  "user.delete.confirm": "Möchtest du wirklich <br><strong>{email}</strong> löschen?",
   "user.deleted": "Der Nutzer wurde gelöscht",
   "user.email": "E-Mail",
   "user.email.placeholder": "mail@example.de",
@@ -107,8 +102,7 @@
   "user.language.change": "Sprache ändern",
   "user.language.changed": "Die Sprache wurde geändert",
   "user.language.select": "Bitte wähl eine Sprache aus …",
-  "user.blueprint":
-    "Du kannst weitere Abschnitte und Formularfelder für diese Nutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
+  "user.blueprint": "Du kannst weitere Abschnitte und Formularfelder für diese Nutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
   "user.none": "Keine Nutzer",
 
   "error.test": "Das ist ein Testfehler"

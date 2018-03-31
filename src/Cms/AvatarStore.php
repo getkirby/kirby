@@ -23,8 +23,7 @@ class AvatarStore extends AvatarStoreDefault
         // overwrite the original
         if (F::copy($upload->root(), $this->root(), true) !== true) {
             throw new Exception([
-                'key'      => 'avatar.create.fail',
-                'fallback' => 'The avatar could not be created',
+                'key' => 'avatar.create.fail',
             ]);
         }
 
@@ -43,8 +42,7 @@ class AvatarStore extends AvatarStoreDefault
 
         if (F::remove($this->root()) !== true) {
             throw new Exception([
-                'key'      => 'avatar.delete.fail',
-                'fallback' => 'The avatar could not be deleted',
+                'key' => 'avatar.delete.fail',
             ]);
         }
 

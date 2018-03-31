@@ -28,9 +28,8 @@ trait AppPlugins
 
             if (is_array($values) === false) {
                 throw new InvalidArgumentException([
-                    'key'      => 'app.invalid.extension',
-                    'fallback' => 'Extensions for "{type}" must be defined as array',
-                    'data'     => ['type' => $type]
+                    'key'  => 'app.invalid.extension',
+                    'data' => ['type' => $type]
                 ]);
             }
 
@@ -141,8 +140,7 @@ trait AppPlugins
 
         if (is_array($props) === false) {
             throw new InvalidArgumentException([
-                'key'      => 'app.plugin.invalid',
-                'fallback' => 'Invalid plugin definition',
+                'key' => 'app.plugin.invalid',
             ]);
         }
 
@@ -154,9 +152,8 @@ trait AppPlugins
 
         if (isset(static::$plugins[$name]) === true) {
             throw new InvalidArgumentException([
-                'key'      => 'app.plugin.duplicate',
-                'fallback' => 'The plugin "{name}" has already been registered',
-                'data'     => ['name' => $name]
+                'key'  => 'app.plugin.duplicate',
+                'data' => ['name' => $name]
             ]);
         }
 

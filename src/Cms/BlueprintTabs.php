@@ -55,16 +55,14 @@ class BlueprintTabs
 
             if (in_array($width, $widths) === false) {
                 throw new InvalidArgumentException([
-                    'key'      => 'blueprint.tab.columns.width.invalid',
-                    'fallback' => 'The column width "{width}" is not valid',
-                    'data'     => ['width' => $width]
+                    'key'  => 'blueprint.tab.columns.width.invalid',
+                    'data' => ['width' => $width]
                 ]);
             }
 
             if (empty($sections) === true) {
                 throw new InvalidArgumentException([
-                    'key'      => 'blueprint.tab.section.missing',
-                    'fallback' => 'The tab sections are missing'
+                    'key' => 'blueprint.tab.section.missing',
                 ]);
             }
 
@@ -101,8 +99,7 @@ class BlueprintTabs
 
             if (is_string($name) === false) {
                 throw new InvalidArgumentException([
-                    'key'      => 'blueprint.tab.name.missing',
-                    'fallback' => 'The tab name is missing',
+                    'key' => 'blueprint.tab.name.missing',
                 ]);
             }
 
@@ -110,15 +107,13 @@ class BlueprintTabs
 
             if (empty($tab['label']) === true) {
                 throw new InvalidArgumentException([
-                    'key'      => 'blueprint.tab.label.missing',
-                    'fallback' => 'The tab label is missing',
+                    'key' => 'blueprint.tab.label.missing',
                 ]);
             }
 
             if (empty($tab['columns']) === true) {
                 throw new InvalidArgumentException([
-                    'key'      => 'blueprint.tab.columns.missing',
-                    'fallback' => 'The tab columns are undefined or empty',
+                    'key' => 'blueprint.tab.columns.missing',
                 ]);
             }
 

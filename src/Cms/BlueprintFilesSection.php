@@ -51,9 +51,8 @@ class BlueprintFilesSection extends BlueprintSection
         if ($rules['mime'] !== null) {
             if ((new MimeType($rules['mime']))->has($image->mime()) === false) {
                 throw new InvalidArgumentException([
-                    'key'      => 'file.invalid.mime.forbidden',
-                    'fallback' => 'The mime type "{mime}" is not allowed',
-                    'data'     => ['mime' => $image->mime()]
+                    'key'  => 'file.invalid.mime.forbidden',
+                    'data' => ['mime' => $image->mime()]
                 ]);
             }
         }
@@ -199,8 +198,7 @@ class BlueprintFilesSection extends BlueprintSection
         // make sure the basics are provided
         if (isset($data['filename'], $data['source']) === false) {
             throw new InvalidArgumentException([
-                'key'      => 'file.invalid.name.missing',
-                'fallback' => 'The filename must not be empty',
+                'key' => 'file.invalid.name.missing',
             ]);
         }
 
