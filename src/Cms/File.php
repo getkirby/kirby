@@ -24,6 +24,7 @@ class File extends Model
     use FileActions;
 
     use HasContent;
+    use HasErrors;
     use HasSiblings;
     use HasStore;
     use HasTemplate;

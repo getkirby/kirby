@@ -22,6 +22,7 @@ class Site extends Model
 
     use HasChildren;
     use HasContent;
+    use HasErrors;
     use HasFiles;
     use HasStore;
 
@@ -158,7 +159,7 @@ class Site extends Model
         return Pages::factory($this->store()->drafts(), $this, [
             'kirby' => $this->kirby(),
             'site'  => $this,
-        ]);
+        ], PageDraft::class);
     }
 
     /**

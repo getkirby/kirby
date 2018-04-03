@@ -24,6 +24,7 @@ class Page extends Model
     use PageActions;
     use HasChildren;
     use HasContent;
+    use HasErrors;
     use HasFiles;
     use HasSiblings;
     use HasStore;
@@ -295,22 +296,6 @@ class Page extends Model
             'site'   => $this->site(),
             'parent' => $this
         ], PageDraft::class);
-    }
-
-    /**
-     * Returns all content validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
-    {
-        $errors = [];
-
-        foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, $section->errors());
-        }
-
-        return $errors;
     }
 
     /**
