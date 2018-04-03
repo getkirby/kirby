@@ -39,7 +39,14 @@ class Exception extends \Exception
             if (isset($args['key']) === true) {
                 $message = App::instance()->translate(self::$prefix . '.' . $args['key']);
             }
+        }
 
+        // 3. Provided fallback message
+        if ($message === null) {
+            $message = $args['fallback'] ?? null;
+        }
+
+        if (class_exists(App::class)) {
             // 4. Translation for default key in current language
             // 5. Translation for default key in default language
             if ($message === null) {
@@ -47,10 +54,9 @@ class Exception extends \Exception
             }
         }
 
-        // 5. Provided fallback message
         // 6. Default fallback message
         if ($message === null) {
-            $message = $args['fallback'] ?? static::$defaultFallback;
+            $message = static::$defaultFallback;
         }
 
         // Format message with passed data
