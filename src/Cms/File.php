@@ -244,6 +244,20 @@ class File extends Model
     }
 
     /**
+     * Returns a collection of all parent pages
+     *
+     * @return Pages
+     */
+    public function parents(): Pages
+    {
+        if (is_a($this->parent(), Page::class) === true) {
+            return $this->parent()->parents()->prepend($this->parent()->id(), $this->parent());
+        }
+
+        return new Pages;
+    }
+
+    /**
      * Returns the permissions object for this file
      *
      * @return FileBlueprintOptions

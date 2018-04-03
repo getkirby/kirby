@@ -53,6 +53,9 @@ return [
         'parent' => function (File $file) {
             return $file->parent();
         },
+        'parents' => function (File $file) {
+            return $file->parents()->flip();
+        },
         'template' => function (File $file) {
             return $file->template();
         },
@@ -106,6 +109,7 @@ return [
             'next' => 'compact',
             'niceSize',
             'parent' => 'compact',
+            'parents' => ['id', 'slug', 'title'],
             'prev' => 'compact',
             'template',
             'type',

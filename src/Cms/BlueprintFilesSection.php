@@ -178,9 +178,9 @@ class BlueprintFilesSection extends BlueprintSection
     {
         if (is_a($item->parent(), Page::class) === true) {
             return '/pages/' . str_replace('/', '+', $item->parent()->id()) . '/files/' . $item->filename();
-        } else {
-            $type = '/site/files/' . $item->filename();
         }
+
+        return '/site/files/' . $item->filename();
     }
 
     protected function itemToResult($item)
