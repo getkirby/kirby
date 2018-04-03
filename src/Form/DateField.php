@@ -14,6 +14,15 @@ class DateField extends Field
 
     protected $range;
 
+    protected function defaultDefault()
+    {
+        if ($this->required() === true) {
+            return 'today';
+        }
+
+        return null;
+    }
+
     protected function defaultIcon()
     {
         return 'calendar';
