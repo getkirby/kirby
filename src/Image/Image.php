@@ -186,7 +186,7 @@ class Image extends File
      */
     public function match(array $rules): bool
     {
-        if ($rules['mime'] !== null) {
+        if (($rules['mime'] ?? null) !== null) {
             if ((new MimeType($rules['mime']))->has($this->mime()) === false) {
                 throw new Exception('Invalid mime type');
             }
