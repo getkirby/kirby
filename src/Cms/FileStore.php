@@ -55,7 +55,11 @@ class FileStore extends FileStoreDefault
 
     public function content(): array
     {
-        return Data::read($this->storeFile());
+        try {
+            return Data::read($this->storeFile());
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
     public function create(Upload $upload)
