@@ -20,7 +20,7 @@ trait Time
         return 5;
     }
 
-    public function notation(): int
+    public function notation()
     {
         return $this->notation;
     }
