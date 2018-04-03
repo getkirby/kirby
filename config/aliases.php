@@ -9,7 +9,12 @@ use Kirby\Cms\Structure;
 use Kirby\Cms\Form;
 use Kirby\Cms\Response;
 
+use Kirby\Util\Dir;
+use Kirby\Util\F;
+
 class_alias(App::class, 'Kirby');
+class_alias(Dir::class, 'Dir');
+class_alias(F::class, 'F');
 class_alias(File::class, 'File');
 class_alias(Form::class, 'Form');
 class_alias(Page::class, 'Page');
