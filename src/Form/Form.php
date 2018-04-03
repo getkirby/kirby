@@ -33,7 +33,7 @@ class Form extends Component
         foreach ($this->fields() as $field) {
             if (method_exists($field, 'error') === true) {
                 if ($error = $field->error()) {
-                    $errors[$field->name()] = $error;
+                    $errors[] = $error;
                 }
             }
         }

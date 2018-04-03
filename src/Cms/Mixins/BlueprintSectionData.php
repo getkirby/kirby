@@ -76,10 +76,11 @@ trait BlueprintSectionData
             return [];
         } catch (Exception $e) {
             return [
-                $this->name() => [
+                [
+                    'name'    => $this->name(),
                     'label'   => $this->headline(),
-                    'type'    => 'exception',
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
+                    'type'    => 'section',
                 ]
             ];
         }

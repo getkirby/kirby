@@ -10,11 +10,13 @@ class Exception extends \Exception
 
     protected $data;
     protected $httpCode;
+    protected $details;
 
     protected static $defaultKey = 'general';
     protected static $defaultFallback = 'An error occurred';
     protected static $defaultData = [];
     protected static $defaultHttpCode = 500;
+    protected static $defaultDetails = [];
 
     private static $prefix = 'error';
 
@@ -26,6 +28,7 @@ class Exception extends \Exception
         // Set data and httpCode from provided arguments or defaults
         $this->data = $args['data'] ?? static::$defaultData;
         $this->httpCode = $args['httpCode'] ?? static::$defaultHttpCode;
+        $this->details = $args['details'] ?? static::$defaultDetails;
 
         // Fallback waterfall for message string
         $message = null;
@@ -65,6 +68,11 @@ class Exception extends \Exception
         return $this->data;
     }
 
+    final public function getDetails(): array
+    {
+        return $this->details;
+    }
+
     final public function getKey(): string
     {
         return $this->getCode();
@@ -73,6 +81,19 @@ class Exception extends \Exception
     final public function getHttpCode(): int
     {
         return $this->httpCode;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'exception' => static::class,
+            'message'   => $this->getMessage(),
+            'key'       => $this->getKey(),
+            'file'      => ltrim($this->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+            'line'      => $this->getLine(),
+            'details'   => $this->getDetails(),
+            'code'      => $this->getHttpCode()
+        ];
     }
 
 }

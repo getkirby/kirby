@@ -44,9 +44,10 @@ trait Value
             return false;
         } catch (Exception $e) {
             return [
+                'name'    => $this->name(),
                 'label'   => method_exists($this, 'label') ? $this->label() : ucfirst($this->name()),
-                'type'    => method_exists($e, 'getType') ? $e->getType() : null,
                 'message' => $e->getMessage(),
+                'type'    => 'field'
             ];
         }
     }

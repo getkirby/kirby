@@ -249,14 +249,19 @@ class Api
         } catch (Throwable $e) {
             error_log($e);
 
-            $result = [
-                'status'    => 'error',
-                'exception' => get_class($e),
-                'message'   => $e->getMessage(),
-                'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
-                'line'      => $e->getLine(),
-                'code'      => 500
-            ];
+            if (is_a($e, \Kirby\Exception\Exception::class) === true) {
+                $result = ['status' => 'error'] + $e->toArray();
+            } else {
+                $result = [
+                    'status'    => 'error',
+                    'exception' => get_class($e),
+                    'message'   => $e->getMessage(),
+                    'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+                    'line'      => $e->getLine(),
+                    'code'      => 500
+                ];
+            }
+
         }
 
         if ($result === null) {
