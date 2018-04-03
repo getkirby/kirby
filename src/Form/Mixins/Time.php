@@ -7,7 +7,7 @@ use Kirby\Form\PropertyException;
 trait Time
 {
 
-    protected $format;
+    protected $notation;
     protected $step;
 
     protected function defaultNotation(): int
