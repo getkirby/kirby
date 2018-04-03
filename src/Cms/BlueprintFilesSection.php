@@ -206,7 +206,7 @@ class BlueprintFilesSection extends BlueprintSection
         // check if adding files is allowed at all
         if ($this->add() === false) {
             throw new LogicException([
-                'key' => 'file.add.denied'
+                'key' => 'blueprint.section.files.add'
             ]);
         }
 
@@ -260,7 +260,7 @@ class BlueprintFilesSection extends BlueprintSection
     {
         if ($this->sortable() === false) {
             throw new LogicException([
-                'key' => 'file.sort.denied'
+                'key' => 'blueprint.section.files.sort'
             ]);
         }
 

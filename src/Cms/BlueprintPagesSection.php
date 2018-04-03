@@ -154,17 +154,30 @@ class BlueprintPagesSection extends BlueprintSection
     public function post(array $data)
     {
         if ($this->add() === false) {
-            throw new Exception('You cannot add any pages to the section');
+            throw new LogicException([
+                'key' => 'blueprint.section.pages.add'
+            ]);
         }
 
-        // make sure the basics are provided
-        if (isset($data['slug'], $data['template']) === false) {
-            throw new Exception('Please provide a slug and template');
+        // make sure the slug is provided
+        if (isset($data['slug']) === false) {
+            throw new InvalidArgumentException([
+                'key' => 'page.slug.invalid'
+            ]);
+        }
+
+        // make sure the template is provided
+        if (isset($data['slug']) === false) {
+            throw new InvalidArgumentException([
+                'key' => 'page.template.missing'
+            ]);
         }
 
         // validate the template
         if (in_array($data['template'], $this->templates()) === false) {
-            throw new Exception('Invalid template');
+            throw new InvalidArgumentException([
+                'key' => 'page.template.invalid'
+            ]);
         }
 
         return $this->parent()->createChild([
@@ -208,7 +221,9 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted']) === false) {
-            throw new Exception('Invalid status: ' . $status);
+            throw new InvalidArgumentException([
+                'key' => 'page.status.invalid'
+            ]);
         }
 
         $this->status = $status;

@@ -141,7 +141,10 @@
     "error.blueprint.tab.columns.missing": "The tab columns are undefined or empty",
     "error.blueprint.tab.section.missing": "The tab sections are missing",
     "error.blueprint.tab.columns.width.invalid": "The column width \"{width}\" is not valid",
-    "error.blueprint.mixin.notFound": "The mixin \"{path}\" could not be found",
+    "error.blueprint.mixin.notFound": "The mixin \"{path}\"    could not be found",
+    "error.blueprint.section.files.add": "You cannot add any files to the section",
+    "error.blueprint.section.files.sort": "The files of the section cannot be sorted",
+    "error.blueprint.section.pages.add": "You cannot add any pages to the section",
 
     "error.collection.object.invalid": "Invalid object in collection. Accepted: \"{accept}\"",
     "error.collection.notFound": "The collection \"{name}\" cannot be found",
@@ -153,5 +156,10 @@
     "error.file.props.missing": "Please provide the \"source\" and \"parent\" props for the File",
     "error.file.changeName.permissions": "You are not allowed to change the name of \"{filename}\"",
     "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
-    "error.file.add.denied": "No files can be added"
+
+    "error.page.slug.invalid": "Please enter a valid URL prefix",
+    "error.page.template.missing": "Please provide a template for the page",
+    "error.page.template.invalid": "Please select a valid template",
+    "error.page.status.invalid": "Please set a valid page status"
+
 }
