@@ -55,6 +55,15 @@ return [
     ],
     [
         'pattern' => 'site/files/(:any)',
+        'method'  => 'POST',
+        'action'  => function (string $filename) {
+            return $this->upload(function ($source) use ($filename) {
+                return $this->file(null, $filename)->replace($source);
+            });
+        }
+    ],
+    [
+        'pattern' => 'site/files/(:any)',
         'method'  => 'PATCH',
         'action'  => function (string $filename) {
             return $this->file(null, $filename)->update($this->requestBody());

@@ -64,11 +64,10 @@ class FileRules
             throw new Exception('The file cannot be replaced');
         }
 
-        static::validExtension($file, $upload->extension());
         static::validMime($file, $upload->mime());
-        static::validFilename($file, $upload->filename());
 
-        if ($upload->mime() != $file->mime()) {
+
+        if ((string)$upload->mime() !== (string)$file->mime()) {
             throw new Exception(sprintf('The mime type of the new file (%s) does not match the old one (%s)', $upload->mime(), $file->mime()));
         }
 
@@ -88,7 +87,6 @@ class FileRules
 
     public static function validExtension(File $file, string $extension): bool
     {
-
         // make it easier to compare the extension
         $extension = strtolower($extension);
 

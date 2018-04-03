@@ -77,6 +77,15 @@ return [
     ],
     [
         'pattern' => 'pages/(:any)/files/(:any)',
+        'method'  => 'POST',
+        'action'  => function (string $id, string $filename) {
+            return $this->upload(function ($source) use ($id, $filename) {
+                return $this->file($id, $filename)->replace($source);
+            });
+        }
+    ],
+    [
+        'pattern' => 'pages/(:any)/files/(:any)',
         'method'  => 'DELETE',
         'action'  => function (string $id, string $filename) {
             return $this->file($id, $filename)->delete();
