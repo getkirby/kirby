@@ -10,6 +10,15 @@ class TimeField extends DateField
 
     use Mixins\Time;
 
+    protected function defaultDefault()
+    {
+        if ($this->required() === true) {
+            return 'now';
+        }
+
+        return null;
+    }
+
     protected function defaultFormat(): string
     {
         return 'H:i:s';
