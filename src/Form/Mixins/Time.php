@@ -7,10 +7,10 @@ use Kirby\Form\PropertyException;
 trait Time
 {
 
-    protected $hours;
+    protected $format;
     protected $step;
 
-    protected function defaultHours(): string
+    protected function defaultNotation(): int
     {
         return 24;
     }
@@ -20,18 +20,18 @@ trait Time
         return 5;
     }
 
-    public function hours(): int
+    public function notation(): int
     {
-        return $this->hours;
+        return $this->notation;
     }
 
-    protected function setHours(int $hours = 24)
+    protected function setNotation(int $notation = null)
     {
-        if (in_array($hours, [12, 24], true) === false) {
-            throw new PropertyException('Invalid time format');
+        if (in_array($notation, [12, 24], true) === false) {
+            throw new PropertyException('Invalid time notation');
         }
 
-        $this->hours = $hours;
+        $this->notation = $notation;
         return $this;
     }
 
