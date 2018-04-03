@@ -11,25 +11,10 @@ class ContentFieldTest extends TestCase
         $this->assertEquals(['title' => 'Title'], $field->__debuginfo());
     }
 
-    public function testCall()
-    {
-        $this->markTestIncomplete();
-    }
-
     public function testKey()
     {
         $field = new ContentField('title', 'Title');
         $this->assertEquals('title', $field->key());
-    }
-
-    public function testMethod()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function testMethods()
-    {
-        $this->markTestIncomplete();
     }
 
     public function testParent()

@@ -26,6 +26,7 @@ class Page extends Model
     use HasContent;
     use HasErrors;
     use HasFiles;
+    use HasMethods;
     use HasSiblings;
     use HasStore;
     use HasTemplate;
@@ -117,6 +118,24 @@ class Page extends Model
      * @var string|null
      */
     protected $url;
+
+    /**
+     * Magic caller
+     *
+     * @param string $method
+     * @param array $args
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments = [])
+    {
+        // page methods
+        if ($this->hasMethod($method)) {
+            return $this->call($method, $arguments);
+        }
+
+        // return page content otherwise
+        return $this->content()->get($method, $arguments);
+    }
 
     /**
      * Creates a new page object

@@ -67,6 +67,9 @@ class AppPluginsTest extends TestCase
 
         $page = new Page(['slug' => 'test']);
         $this->assertEquals('test', $page->customField()->test());
+
+        // reset methods
+        ContentField::$methods = [];
     }
 
     public function testField()
@@ -123,6 +126,23 @@ class AppPluginsTest extends TestCase
         $kirby->trigger('testHook', 'test');
         $this->assertEquals(2, $executed);
 
+    }
+
+    public function testPageMethod()
+    {
+        $kirby = new App([
+            'pageMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $page = new Page(['slug' => 'test']);
+        $this->assertEquals('test', $page->test());
+
+        // reset methods
+        Page::$methods = [];
     }
 
     public function testPageModel()

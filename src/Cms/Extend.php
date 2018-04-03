@@ -125,6 +125,11 @@ class Extend
         return $pages;
     }
 
+    public static function pageMethods(array $pageMethods): array
+    {
+        return static::callbacks('pageMethod', $pageMethods);
+    }
+
     public static function pageModels(array $pageModels): array
     {
         return static::strings('pageModel', $pageModels);
