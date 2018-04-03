@@ -36,7 +36,7 @@ class TimeField extends DateField
             return $this->format;
         }
 
-        return $this->hours() === 24 ? 'H:i' : 'h:i a';
+        return $this->notation() === 24 ? 'H:i' : 'h:i a';
     }
 
     protected function valueFromInput($value)
