@@ -67,6 +67,8 @@ trait PageActions
     protected function changeStatusToDraft(): self
     {
         $page = $this->commit('changeStatus', 'draft');
+        $page->parent()->purge();
+
         $this->resortSiblingsAfterUnlisting();
 
         return $page;
@@ -82,6 +84,7 @@ trait PageActions
         }
 
         $page = $this->commit('changeStatus', 'listed', $num);
+        $page->parent()->purge();
 
         if ($this->blueprint()->num() === 'default') {
             $page->resortSiblingsAfterListing($num);
@@ -97,6 +100,8 @@ trait PageActions
         }
 
         $page = $this->commit('changeStatus', 'unlisted');
+        $page->parent()->purge();
+
         $this->resortSiblingsAfterUnlisting();
 
         return $page;
@@ -260,6 +265,7 @@ trait PageActions
         }
 
         $result = $this->store()->delete();
+        $this->parent()->purge();
 
         $this->resortSiblingsAfterUnlisting();
 
@@ -267,6 +273,15 @@ trait PageActions
         $this->kirby()->cache('pages')->flush();
 
         return $result;
+    }
+
+    /**
+     * Clean internal caches
+     */
+    public function purge()
+    {
+        $this->children  = null;
+        $this->blueprint = null;
     }
 
     protected function resortSiblingsAfterListing(int $position): bool
