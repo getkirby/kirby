@@ -2,10 +2,13 @@
 
 namespace Kirby\Image;
 
+use Exception;
 use Kirby\FileSystem\File;
 use Kirby\Html\Element\Img;
 use Kirby\Http\Response;
 use Kirby\Http\Response\Download;
+use Kirby\Http\Acceptance\MimeType;
+use Kirby\Toolkit\V;
 use Kirby\Util\Str;
 
 /**
@@ -174,6 +177,46 @@ class Image extends File
         }
 
         return $this->dimensions = new Dimensions($width, $height);
+    }
+
+    /**
+     * Runs a set of validations on the image object
+     *
+     * @return bool
+     */
+    public function match(array $rules): bool
+    {
+        if ($rules['mime'] !== null) {
+            if ((new MimeType($rules['mime']))->has($this->mime()) === false) {
+                throw new Exception('Invalid mime type');
+            }
+        }
+
+        $rules = array_change_key_case($rules);
+
+        $validations = [
+            'maxsize'     => ['size',   'max', 'The file is too large'],
+            'minsize'     => ['size',   'min', 'The file is too small'],
+            'maxwidth'    => ['width',  'max', 'The width of the image is too large'],
+            'minwidth'    => ['width',  'min', 'The width of the image is too small'],
+            'maxheight'   => ['height', 'max', 'The height of the image is too large'],
+            'minheight'   => ['height', 'min', 'The height of the image is too small'],
+            'orientation' => ['orientation', 'same', 'The orientation of the image is incorrect']
+        ];
+
+        foreach ($validations as $key => $arguments) {
+            if (isset($rules[$key]) === true && $rules[$key] !== null) {
+                $property  = $arguments[0];
+                $validator = $arguments[1];
+                $message   = $arguments[2];
+
+                if (V::$validator($this->$property(), $rules[$key]) === false) {
+                    throw new Exception($message);
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

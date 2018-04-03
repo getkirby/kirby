@@ -44,6 +44,8 @@ class FileRules
         static::validMime($file, $upload->mime());
         static::validFilename($file, $file->filename());
 
+        $upload->match($file->blueprint()->accept());
+
         return true;
     }
 
@@ -69,6 +71,8 @@ class FileRules
         if ($upload->mime() != $file->mime()) {
             throw new Exception(sprintf('The mime type of the new file (%s) does not match the old one (%s)', $upload->mime(), $file->mime()));
         }
+
+        $upload->match($file->blueprint()->accept());
 
         return true;
     }

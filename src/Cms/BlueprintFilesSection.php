@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Http\Acceptance\MimeType;
 use Kirby\Image\Image;
 use Kirby\Toolkit\V;
 use Kirby\Util\F;
@@ -19,76 +18,12 @@ class BlueprintFilesSection extends BlueprintSection
     use Mixins\BlueprintSectionData;
 
     protected $add;
-    protected $accept;
     protected $template;
 
     public function add(): bool
     {
         if ($this->isFull() === true) {
             return false;
-        }
-
-        return true;
-    }
-
-    public function accept()
-    {
-        // accept anything
-        if (empty($this->accept) === true) {
-            return true;
-        }
-
-        $defaults = [
-            'mime'        => null,
-            'maxHeight'   => null,
-            'maxSize'     => null,
-            'maxWidth'    => null,
-            'minHeight'   => null,
-            'minSize'     => null,
-            'minWidth'    => null,
-            'orientation' => null
-        ];
-
-        return array_merge($defaults, $this->accept);
-
-    }
-
-    public function accepts($source): bool
-    {
-        $rules = $this->accept();
-
-        if ($rules === true) {
-            return true;
-        }
-
-        $image = new Image($source);
-
-        if ($rules['mime'] !== null) {
-            if ((new MimeType($rules['mime']))->has($image->mime()) === false) {
-                throw new Exception('Invalid mime type');
-            }
-        }
-
-        $validations = [
-            'maxSize'     => ['size',   'max', 'The file is too large'],
-            'minSize'     => ['size',   'min', 'The file is too small'],
-            'maxWidth'    => ['width',  'max', 'The width of the image is too large'],
-            'minWidth'    => ['width',  'min', 'The width of the image is too small'],
-            'maxHeight'   => ['height', 'max', 'The height of the image is too large'],
-            'minHeight'   => ['height', 'min', 'The height of the image is too small'],
-            'orientation' => ['orientation', 'same', 'The orientation of the image is incorrect']
-        ];
-
-        foreach ($validations as $key => $arguments) {
-            if ($rules[$key] !== null) {
-                $property  = $arguments[0];
-                $validator = $arguments[1];
-                $message   = $arguments[2];
-
-                if (V::$validator($image->$property(), $rules[$key]) === false) {
-                    throw new Exception($message);
-                }
-            }
         }
 
         return true;
@@ -216,9 +151,6 @@ class BlueprintFilesSection extends BlueprintSection
         if ($this->add() === false) {
             throw new Exception('No files can be added');
         }
-
-        // validate the upload
-        $this->accepts($data['source']);
 
         return $this->parent()->createFile([
             'source'   => $data['source'],

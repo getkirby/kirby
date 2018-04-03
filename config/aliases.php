@@ -11,6 +11,7 @@ use Kirby\Cms\Response;
 
 use Kirby\Util\Dir;
 use Kirby\Util\F;
+use Kirby\Toolkit\V;
 
 class_alias(App::class, 'Kirby');
 class_alias(Dir::class, 'Dir');
@@ -22,3 +23,4 @@ class_alias(Site::class, 'Site');
 class_alias(Panel::class, 'Panel');
 class_alias(Response::class, 'Response');
 class_alias(Structure::class, 'Structure');
+class_alias(V::class, 'V');
