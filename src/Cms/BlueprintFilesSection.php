@@ -18,8 +18,18 @@ class BlueprintFilesSection extends BlueprintSection
     use Mixins\BlueprintSectionLayout;
     use Mixins\BlueprintSectionData;
 
+    protected $add;
     protected $accept;
-    protected $create;
+    protected $template;
+
+    public function add(): bool
+    {
+        if ($this->isFull() === true) {
+            return false;
+        }
+
+        return true;
+    }
 
     public function accept()
     {
@@ -84,38 +94,38 @@ class BlueprintFilesSection extends BlueprintSection
         return true;
     }
 
-    public function create()
+    /**
+     * Fetch data for the applied settings
+     *
+     * @return Files
+     */
+    public function data(): Files
     {
-        if ($this->isFull() === true) {
-            return false;
+        if ($this->data !== null) {
+            return $this->data;
         }
 
-        if (empty($this->create) === true) {
+        $data = $this->parent()->files();
 
-            // automatically accept new files, when "accept" is set
-            if (empty($this->accept) === false) {
-                return [
-                    'content'  => [],
-                    'name'     => null,
-                    'template' => null,
-                ];
-            }
-
-            return false;
+        // filter by the template
+        if ($template = $this->template()) {
+            $data = $data->filterBy('template', $template);
         }
 
-        $result = [
-            'content'  => empty($this->create['content']) ? [] : $this->create['content'],
-            'name'     => $this->create['name'] ?? null,
-            'template' => $this->create['template'] ?? null
-        ];
+        if ($this->sortBy() && $this->sortable() === false) {
+            $data = $data->sortBy(...Str::split($this->sortBy(), ' '));
+        } elseif ($this->sortable() === true) {
+            $data = $data->sortBy('sort', 'desc');
+        }
 
-        return $result;
-    }
+        // store the original data to reapply pagination later
+        $this->originalData = $data;
 
-    protected function defaultQuery(): string
-    {
-        return 'page.files';
+        // apply the default pagination
+        return $this->data = $data->paginate([
+            'page'  => 1,
+            'limit' => $this->limit()
+        ]);
     }
 
     protected function defaultSortable(): bool
@@ -195,17 +205,6 @@ class BlueprintFilesSection extends BlueprintSection
         ];
     }
 
-    public function query(): string
-    {
-        $query  = $this->query;
-
-        if ($this->sortable() === true) {
-            $query .= '.sortBy("sort", "asc")';
-        }
-
-        return $query;
-    }
-
     public function upload(array $data)
     {
         // make sure the basics are provided
@@ -213,30 +212,18 @@ class BlueprintFilesSection extends BlueprintSection
             throw new Exception('Please provide a filename');
         }
 
-        // get all create options from the blueprint
-        $options = $this->create();
-
         // check if adding files is allowed at all
-        if (empty($options)) {
+        if ($this->add() === false) {
             throw new Exception('No files can be added');
-        }
-
-        // make sure we don't allow more entries than accepted
-        if ($this->isFull()) {
-            throw new Exception('Too many files');
         }
 
         // validate the upload
         $this->accepts($data['source']);
 
-        // merge the post data with the pre-defined content set in the blueprint
-        $content = array_merge($data['content'] ?? [], $options['content']);
-
         return $this->parent()->createFile([
             'source'   => $data['source'],
-            'content'  => $content,
-            'template' => $options['template'],
-            'filename' => $this->filename($data['source'], $data['filename'], $options['name'])
+            'template' => $this->template(),
+            'filename' => $this->filename($data['source'], $data['filename'])
         ]);
     }
 
@@ -273,25 +260,9 @@ class BlueprintFilesSection extends BlueprintSection
         ];
     }
 
-    protected function setAccept($accept = null)
+    protected function setTemplate(string $template = null)
     {
-        if (is_string($accept) === true) {
-            $accept = [
-                'mime' => $accept
-            ];
-        }
-
-        if (is_array($accept) === false && $accept !== null) {
-            throw new Exception('Invalid accept rules definition');
-        }
-
-        $this->accept = $accept;
-        return $this;
-    }
-
-    protected function setCreate(array $create = null)
-    {
-        $this->create = $create;
+        $this->template = $template;
         return $this;
     }
 
@@ -309,6 +280,11 @@ class BlueprintFilesSection extends BlueprintSection
         }
 
         return true;
+    }
+
+    public function template()
+    {
+        return $this->template;
     }
 
 }
