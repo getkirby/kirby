@@ -18,6 +18,7 @@ class App extends Component
 
     use AppCaches;
     use AppHooks;
+    use AppLocales;
     use AppOptions;
     use AppPlugins;
 
@@ -199,16 +200,6 @@ class App extends Component
         }
 
         return $this->hooks = new Hooks($this);
-    }
-
-    /**
-     * Returns all available locales
-     *
-     * @return Locales
-     */
-    public function locales()
-    {
-        return $this->component('locales');
     }
 
     /**
@@ -556,40 +547,6 @@ class App extends Component
         }
 
         return $this->users = Users::load($this->root('accounts'), ['kirby' => $this]);
-    }
-
-    /**
-     * Returns translate string for key from locales file
-     *
-     * @param   string       $key
-     * @param   string|null  $fallback
-     * @param   string|null  $locale
-     * @return  string|null
-     */
-    public function translate(string $key, string $fallback = null, string $locale = null)
-    {
-        // TODO: define at a better place
-        $defaultLocale = 'en_US';
-
-        // TODO: handle short locales
-        if ($locale === null) {
-            if ($user = $this->user()) {
-                $locale = $user->language() ?? $defaultLocale;
-            } else {
-                $locale = $defaultLocale;
-            }
-        }
-
-        $locales = $this->locales();
-
-        // if current language file has translation, return it
-        if ($translation = $locales->get($locale)->get($key)) {
-            return $translation;
-        }
-
-        // otherwise use default language file or
-        // return fallback string if no translation at all exists
-        return $locales->get($defaultLocale)->get($key, $fallback);
     }
 
 }
