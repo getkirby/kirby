@@ -38,9 +38,9 @@ class SiteStoreDefault extends Store
         return false;
     }
 
-    public function files()
+    public function files(): array
     {
-        return new Files([], $this->site());
+        return [];
     }
 
     public function id()

@@ -76,26 +76,22 @@ class SiteStore extends SiteStoreDefault
         return is_dir($this->root()) === true;
     }
 
-    public function files()
+    public function files(): array
     {
-
         $base  = $this->base();
         $site  = $this->site();
         $root  = $base->root();
         $url   = $site->kirby()->media()->url($site);
-        $files = new Files([], $site);
+        $files = [];
 
         foreach ($this->base()->files() as $filename => $props) {
-
-            $file = new File([
+            $file = [
                 'filename' => $filename,
-                'parent'   => $site,
                 'store'    => static::FILE_STORE_CLASS,
                 'url'      => $url . '/' . $filename,
-            ]);
+            ];
 
-            $files->set($file->id(), $file);
-
+            $files[] = $file;
         }
 
         return $files;

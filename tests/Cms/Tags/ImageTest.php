@@ -66,21 +66,13 @@ class ImageTest extends TestCase
             'slug'    => 'test',
             'content' => [
                 'test' => '(image: test.jpg)'
+            ],
+            'files' => [
+                ['filename' => 'test.jpg']
             ]
         ]);
 
-        // TODO: refactor this. Should only be arrays
-        $files = new PageFiles([
-            new PageFile([
-                'parent'   => $page,
-                'filename' => 'test.jpg'
-            ])
-        ], $page);
-
-        $page = $page->clone(['files' => $files]);
-
         $expected = '<figure><img alt="" src="https://getkirby.com/media/pages/test/test.jpg"></figure>';
-
         $this->assertEquals($expected, $page->test()->kirbytags()->value());
     }
 

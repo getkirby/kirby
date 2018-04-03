@@ -338,7 +338,11 @@ class Page extends Model
             return $this->files;
         }
 
-        return $this->store()->files();
+        return $this->files = Files::factory($this->files ?? $this->store()->files(), $this, [
+            'kirby'  => $this->kirby(),
+            'parent' => $this,
+            'site'   => $this->site(),
+        ]);
     }
 
     /**

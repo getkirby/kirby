@@ -191,13 +191,17 @@ class Site extends Model
      *
      * @return Files
      */
-    public function files()
+    public function files(): Files
     {
         if (is_a($this->files, Files::class) === true) {
             return $this->files;
         }
 
-        return $this->files = $this->store()->files();
+        return $this->files = Files::factory($this->files ?? $this->store()->files(), $this, [
+            'kirby'  => $this->kirby(),
+            'parent' => $this,
+            'site'   => $this,
+        ]);
     }
 
     /**

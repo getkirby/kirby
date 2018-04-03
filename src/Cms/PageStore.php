@@ -201,25 +201,20 @@ class PageStore extends PageStoreDefault
         return is_dir($this->base()->root()) === true;
     }
 
-    public function files(): Files
+    public function files(): array
     {
         $base      = $this->base();
         $page      = $this->page();
         $url       = $this->media()->url($page);
         $extension = $base->extension();
-        $files     = new Files([], $page);
+        $files     = [];
 
         foreach ($this->base()->files() as $filename => $props) {
-
-            $file = new File([
+            $files[] = [
                 'filename' => $filename,
                 'url'      => $url . '/' . $filename,
-                'parent'   => $page,
                 'store'    => static::FILE_STORE_CLASS
-            ]);
-
-            $files->set($file->id(), $file);
-
+            ];
         }
 
         return $files;

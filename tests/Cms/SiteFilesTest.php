@@ -23,12 +23,11 @@ class SiteFilesTest extends TestCase
 
     public function testFiles()
     {
-        $files = new Files([]);
         $site  = new Site([
-            'files' => $files
+            'files' => []
         ]);
 
-        $this->assertEquals($files, $site->files());
+        $this->assertInstanceOf(Files::class, $site->files());
     }
 
 }

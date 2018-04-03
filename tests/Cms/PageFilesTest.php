@@ -14,13 +14,11 @@ class PageFilesTest extends TestCase
 
     public function testFiles()
     {
-        $files = new Files([
-            $file = new File(['filename' => 'test.jpg', 'url' => '/test.jpg'])
-        ]);
-
         $page = new Page([
             'slug'  => 'test',
-            'files' => $files
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
         ]);
 
         $this->assertInstanceOf(Files::class, $page->files());

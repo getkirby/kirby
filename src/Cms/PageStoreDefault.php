@@ -96,9 +96,9 @@ class PageStoreDefault extends Store
         return false;
     }
 
-    public function files()
+    public function files(): array
     {
-        return new Files([], $this->page());
+        return [];
     }
 
     public function id(): string
