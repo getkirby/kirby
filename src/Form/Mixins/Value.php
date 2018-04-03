@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Mixins;
 
+use Exception;
 use Throwable;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Form\Exceptions\DisabledFieldException;
