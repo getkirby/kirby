@@ -39,7 +39,7 @@ class EmailTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\NotFoundException
-     * @expectedExceptionCode exception.email.preset.notFound
+     * @expectedExceptionCode error.email.preset.notFound
      */
     public function testEmailInvalidPreset()
     {

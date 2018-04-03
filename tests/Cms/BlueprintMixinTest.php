@@ -59,7 +59,7 @@ class BlueprintMixinTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\NotFoundException
-     * @expectedExceptionCode exception.blueprint.mixin.notFound
+     * @expectedExceptionCode error.blueprint.mixin.notFound
      */
     public function testNonExistingMixin()
     {

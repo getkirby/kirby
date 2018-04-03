@@ -10,6 +10,7 @@ use Kirby\Util\Str;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 
 class BlueprintFilesSection extends BlueprintSection
 {
@@ -198,13 +199,15 @@ class BlueprintFilesSection extends BlueprintSection
         // make sure the basics are provided
         if (isset($data['filename'], $data['source']) === false) {
             throw new InvalidArgumentException([
-                'key' => 'file.invalid.name.missing',
+                'key' => 'file.invalid.name.missing'
             ]);
         }
 
         // check if adding files is allowed at all
         if ($this->add() === false) {
-            throw new Exception('No files can be added');
+            throw new LogicException([
+                'key' => 'file.add.denied'
+            ]);
         }
 
         return $this->parent()->createFile([
@@ -256,7 +259,9 @@ class BlueprintFilesSection extends BlueprintSection
     public function sort(array $input)
     {
         if ($this->sortable() === false) {
-            throw new Exception('Files cannot be sorted');
+            throw new LogicException([
+                'key' => 'file.sort.denied'
+            ]);
         }
 
         $files = $this->parent()->files();

@@ -152,5 +152,6 @@
     "error.file.invalid.mime.forbidden": "The mime type \"{mime}\" is not allowed",
     "error.file.props.missing": "Please provide the \"source\" and \"parent\" props for the File",
     "error.file.changeName.permissions": "You are not allowed to change the name of \"{filename}\"",
-    "error.file.duplicate": "A file with the filename \"{filename}\" already exists"
+    "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
+    "error.file.add.denied": "No files can be added"
 }
