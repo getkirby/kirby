@@ -23,7 +23,9 @@ class Page extends Model
 
     use PageActions;
     use HasChildren;
-    use HasContent;
+    use HasContent {
+        update as protected updateContent;
+    }
     use HasErrors;
     use HasFiles;
     use HasMethods;
@@ -868,6 +870,25 @@ class Page extends Model
     public function uid(): string
     {
         return $this->slug();
+    }
+
+    /**
+     * Updates the page data
+     *
+     * @param array $input
+     * @param boolean $validate
+     * @return self
+     */
+    public function update(array $input = null, bool $validate = true): self
+    {
+        $result = $this->updateContent($input, $validate);
+
+        // if num is created from page content, update num on content update
+        if (in_array($this->blueprint()->num(), ['zero', 'default']) === false) {
+            $this->changeNum();
+        }
+
+        return $result;
     }
 
     /**
