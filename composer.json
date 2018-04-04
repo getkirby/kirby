@@ -29,7 +29,8 @@
         "sentry/sentry": "^1.8",
         "firebase/php-jwt": "^5.0",
         "vlucas/phpdotenv": "^2.4.0",
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+        "p3k/emoji-detector": "^0.2.1"
     },
     "minimum-stability": "dev",
     "require-dev": {

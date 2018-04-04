@@ -115,6 +115,16 @@ class Str
     }
 
     /**
+     * Checks if the string is a valid emoji
+     *
+     * @return boolean
+     */
+    public static function isEmoji(string $string = null): bool
+    {
+        return \Emoji\is_single_emoji($string) !== false;
+    }
+
+    /**
      * Convert a string to a safe version to be used in a URL
      *
      * @param  string  $string     The unsafe string
