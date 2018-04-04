@@ -29,10 +29,10 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/blueprint',
+        'pattern' => 'pages/(:any)/blueprints',
         'method'  => 'GET',
         'action'  => function (string $id) {
-            return $this->page($id)->blueprint();
+            return $this->page($id)->blueprints();
         }
     ],
     [

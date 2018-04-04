@@ -11,6 +11,9 @@ return [
         'blueprint' => function (Page $page) {
             return $page->blueprint();
         },
+        'blueprints' => function (Page $page) {
+            return $page->blueprints();
+        },
         'children' => function (Page $page) {
             return $page->children();
         },

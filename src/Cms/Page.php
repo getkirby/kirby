@@ -169,6 +169,30 @@ class Page extends Model
     }
 
     /**
+     * Returns an array with all blueprints that are available for the page
+     *
+     * @return array
+     */
+    public function blueprints(): array
+    {
+        if ($parent = $this->parentModel()) {
+            $blueprints = [];
+
+            foreach ($parent->blueprint()->sections() as $section) {
+                if (is_a($section, BlueprintPagesSection::class) === false) {
+                    continue;
+                }
+
+                $blueprints = array_map("unserialize", array_unique(array_map("serialize", array_merge($blueprints, $section->blueprints()))));
+            }
+
+            return $blueprints;
+        }
+
+        return [];
+    }
+
+    /**
      * Checks if the page can be cached in the
      * pages cache. This will also check if one
      * of the ignore rules from the config kick in.
