@@ -884,7 +884,7 @@ class Page extends Model
         $result = $this->updateContent($input, $validate);
 
         // if num is created from page content, update num on content update
-        if (in_array($this->blueprint()->num(), ['zero', 'default']) === false) {
+        if ($this->isListed() === true && in_array($this->blueprint()->num(), ['zero', 'default']) === false) {
             $this->changeNum();
         }
 
