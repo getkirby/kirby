@@ -63,4 +63,15 @@ trait SiteActions
         return File::create($props);
     }
 
+    /**
+     * Clean internal caches
+     */
+    public function purge(): self
+    {
+        $this->children  = null;
+        $this->blueprint = null;
+
+        return $this;
+    }
+
 }

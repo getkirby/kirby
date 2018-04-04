@@ -67,7 +67,7 @@ trait PageActions
     protected function changeStatusToDraft(): self
     {
         $page = $this->commit('changeStatus', 'draft');
-        $page->parent()->purge();
+        $page->parentModel()->purge();
 
         $this->resortSiblingsAfterUnlisting();
 
@@ -84,7 +84,7 @@ trait PageActions
         }
 
         $page = $this->commit('changeStatus', 'listed', $num);
-        $page->parent()->purge();
+        $page->parentModel()->purge();
 
         if ($this->blueprint()->num() === 'default') {
             $page->resortSiblingsAfterListing($num);
@@ -100,7 +100,7 @@ trait PageActions
         }
 
         $page = $this->commit('changeStatus', 'unlisted');
-        $page->parent()->purge();
+        $page->parentModel()->purge();
 
         $this->resortSiblingsAfterUnlisting();
 
@@ -231,6 +231,18 @@ trait PageActions
             case 'zero':
                 return 0;
             case 'default':
+                // avoid zeros or negative numbers
+                if ($num < 1) {
+                    return 1;
+                }
+
+                $max = $this->parentModel()->purge()->children()->listed()->merge($this)->count();
+
+                // avoid higher numbers than possible
+                if ($num > $max) {
+                    return $max;
+                }
+
                 return $num;
             default:
                 $template = new Tempura($mode, [
@@ -265,7 +277,7 @@ trait PageActions
         }
 
         $result = $this->store()->delete();
-        $this->parent()->purge();
+        $this->parentModel()->purge();
 
         $this->resortSiblingsAfterUnlisting();
 
@@ -278,26 +290,30 @@ trait PageActions
     /**
      * Clean internal caches
      */
-    public function purge()
+    public function purge(): self
     {
         $this->children  = null;
         $this->blueprint = null;
+
+        return $this;
     }
 
     protected function resortSiblingsAfterListing(int $position): bool
     {
         // get all siblings including the current page
-        $siblings = $this->siblings()->listed();
+        $siblings = $this->siblings()->listed()->merge($this);
 
         // get a non-associative array of ids
         $keys  = $siblings->keys();
         $index = array_search($this->id(), $keys);
 
-        // if the page is not included in the siblings
-        // push the page at the end.
+        // if the page is not included in the siblings something went wrong
         if ($index === false) {
-            $keys[] = $this->id();
-            $index  = count($keys) - 1;
+            throw new Exception('The page is not included in the sorting index');
+        }
+
+        if ($position > count($keys)) {
+            $position = count($keys);
         }
 
         // move the current page number in the array of keys
@@ -307,7 +323,7 @@ trait PageActions
 
         foreach ($sorted as $key => $id) {
             if ($id === $this->id()) {
-                $position = $key + 1;
+                continue;
             } else {
                 $siblings->findBy('id', $id)->changeNum($key + 1);
             }

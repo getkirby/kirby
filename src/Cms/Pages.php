@@ -206,7 +206,7 @@ class Pages extends Collection
         // append a single page
         if (is_a($args[0], Page::class) === true) {
             $collection = clone $this;
-            return $collection->append($args[0]->id(), $args[0]);
+            return $collection->set($args[0]->id(), $args[0]);
         }
 
         // merge an array

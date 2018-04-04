@@ -24,7 +24,7 @@ class BlueprintPagesSection extends BlueprintSection
 
     public function add(): bool
     {
-        if ($this->status() !== 'draft') {
+        if (in_array($this->status(), ['draft', 'all']) === false) {
             return false;
         }
 
@@ -85,6 +85,8 @@ class BlueprintPagesSection extends BlueprintSection
             case 'unlisted':
                 $data = $this->parent()->children()->unlisted();
                 break;
+            default:
+                $data = $this->parent()->children()->merge('drafts');
         }
 
         // filter by all set templates
@@ -108,7 +110,7 @@ class BlueprintPagesSection extends BlueprintSection
 
     protected function defaultStatus(): string
     {
-        return 'published';
+        return 'all';
     }
 
     public function group(): string
@@ -130,6 +132,23 @@ class BlueprintPagesSection extends BlueprintSection
     protected function itemLink($item)
     {
         return '/pages/' . str_replace('/', '+', $item->id());
+    }
+
+    protected function itemToResult($item)
+    {
+        $stringTemplateData = [$this->modelType($item) => $item];
+
+        return [
+            'icon'   => $this->itemIcon($item),
+            'id'     => $item->id(),
+            'image'  => $this->itemImage($item, $stringTemplateData),
+            'info'   => $this->itemValue($item, 'info', $stringTemplateData),
+            'link'   => $this->itemLink($item),
+            'parent' => $item->parent() ? $item->parent()->id() : null,
+            'status' => $item->status(),
+            'text'   => $this->itemValue($item, 'title', $stringTemplateData),
+            'url'    => $item->url()
+        ];
     }
 
     public function post(array $data)
@@ -188,7 +207,7 @@ class BlueprintPagesSection extends BlueprintSection
             $status = 'draft';
         }
 
-        if (in_array($status, ['draft', 'published', 'listed', 'unlisted']) === false) {
+        if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted']) === false) {
             throw new Exception('Invalid status: ' . $status);
         }
 
@@ -225,8 +244,8 @@ class BlueprintPagesSection extends BlueprintSection
 
     public function sort(string $id, string $status, int $position = null)
     {
-        if ($this->status() === 'published') {
-            throw new Exception('This section has listed and unlisted pages. Pages must be sorted manually.');
+        if ($this->status() === 'all') {
+            $status = 'listed';
         }
 
         $page = $this->parent()->children()->findBy('id', $id);
