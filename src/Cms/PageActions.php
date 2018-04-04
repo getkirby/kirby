@@ -301,7 +301,7 @@ trait PageActions
     protected function resortSiblingsAfterListing(int $position): bool
     {
         // get all siblings including the current page
-        $siblings = $this->siblings()->listed()->merge($this);
+        $siblings = $this->parentModel()->purge()->children()->listed()->merge($this);
 
         // get a non-associative array of ids
         $keys  = $siblings->keys();
@@ -334,7 +334,7 @@ trait PageActions
 
     protected function resortSiblingsAfterUnlisting(): bool
     {
-        $siblings = $this->siblings()->listed()->not($this);
+        $siblings = $this->parentModel()->purge()->children()->listed()->not($this);
         $index    = 0;
 
         foreach ($siblings as $sibling) {
