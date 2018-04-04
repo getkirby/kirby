@@ -18,7 +18,22 @@ class BlueprintFilesSection extends BlueprintSection
     use Mixins\BlueprintSectionData;
 
     protected $add;
+    protected $accept;
     protected $template;
+
+    public function accept()
+    {
+        if ($template = $this->template()) {
+            $file = new File([
+                'filename' => 'tmp',
+                'template' => $template
+            ]);
+
+            return $file->blueprint()->accept()['mime'];
+        }
+
+        return null;
+    }
 
     public function add(): bool
     {
