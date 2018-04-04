@@ -17,9 +17,7 @@ class BlueprintPagesSection extends BlueprintSection
 
     protected $add;
     protected $blueprints;
-    protected $parent;
     protected $sortable;
-    protected $sortBy;
     protected $status;
     protected $group;
     protected $templates;
@@ -134,25 +132,6 @@ class BlueprintPagesSection extends BlueprintSection
         return '/pages/' . str_replace('/', '+', $item->id());
     }
 
-    /**
-     * Resolve the given parent setting to
-     * a page model
-     *
-     * @return Page|Site|null
-     */
-    public function parent()
-    {
-        if (is_string($this->parent) === true) {
-            return $this->parent = $this->stringQuery($this->parent);
-        }
-
-        if ($this->parent === null) {
-            return $this->parent = $this->model();
-        }
-
-        return $this->parent;
-    }
-
     public function post(array $data)
     {
         if ($this->add() === false) {
@@ -201,18 +180,6 @@ class BlueprintPagesSection extends BlueprintSection
                 }
             ]
         ];
-    }
-
-    protected function setParent(string $parent = null): self
-    {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    protected function setSortBy(string $sortBy = null): self
-    {
-        $this->sortBy = $sortBy;
-        return $this;
     }
 
     protected function setStatus(string $status): self
@@ -292,11 +259,6 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         return true;
-    }
-
-    public function sortBy()
-    {
-        return $this->sortBy;
     }
 
     public function status(): string

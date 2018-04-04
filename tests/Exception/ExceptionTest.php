@@ -25,8 +25,8 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertInstanceOf(Exception::class, $exception);
-        $this->assertEquals('exception.page.slug.invalid', $exception->getKey());
-        $this->assertEquals('exception.page.slug.invalid', $exception->getCode());
+        $this->assertEquals('error.page.slug.invalid', $exception->getKey());
+        $this->assertEquals('error.page.slug.invalid', $exception->getCode());
         $this->assertEquals('The page slug "project/(c" is invalid', $exception->getMessage());
         $this->assertEquals($http, $exception->getHttpCode());
         $this->assertEquals($data, $exception->getData());
@@ -36,7 +36,7 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     {
         $exception = new Exception();
 
-        $this->assertEquals('exception.error', $exception->getKey());
+        $this->assertEquals('error.general', $exception->getKey());
         $this->assertEquals('An error occurred', $exception->getMessage());
         $this->assertEquals(500, $exception->getHttpCode());
         $this->assertEquals([], $exception->getData());
@@ -44,7 +44,7 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @expectedException Kirby\Exception\Exception
-     * @expectedExceptionCode exception.key.unique
+     * @expectedExceptionCode error.key.unique
      */
     public function testPHPUnitTesting()
     {

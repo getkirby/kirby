@@ -23,7 +23,7 @@ trait BlueprintSectionData
     protected $originalData;
     protected $parent;
     protected $sortable;
-    protected $query;
+    protected $sortBy;
     protected $pagination;
 
     protected function convertDataToArray(): array
@@ -55,24 +55,7 @@ trait BlueprintSectionData
 
     public function data()
     {
-        if (is_a($this->data, static::ACCEPT) === true) {
-            return $this->data;
-        }
-
-        $data = $this->stringQuery($this->query());
-
-        if (is_a($data, static::ACCEPT) === false) {
-            throw new Exception('Invalid data type');
-        }
-
-        $this->originalData = $data;
-
-        // apply the default pagination
-        return $this->data = $data->paginate([
-            'page'  => 1,
-            'limit' => $this->limit()
-        ]);
-
+        throw new Exception('Undefined data handler');
     }
 
     protected function defaultQuery(): string
@@ -94,8 +77,10 @@ trait BlueprintSectionData
         } catch (Exception $e) {
             return [
                 [
-                    'type'    => 'exception',
-                    'message' => $e->getMessage()
+                    'name'    => $this->name(),
+                    'label'   => $this->headline(),
+                    'message' => $e->getMessage(),
+                    'type'    => 'section',
                 ]
             ];
         }
@@ -277,18 +262,23 @@ trait BlueprintSectionData
         return $this->data()->pagination();
     }
 
+    /**
+     * Resolve the given parent setting to
+     * a page model
+     *
+     * @return Page|Site|null
+     */
     public function parent()
     {
-        if ($parent = $this->data()->parent()) {
-            return $parent;
+        if (is_string($this->parent) === true) {
+            return $this->parent = $this->stringQuery($this->parent);
         }
 
-        return $this->model();
-    }
+        if ($this->parent === null) {
+            return $this->parent = $this->model();
+        }
 
-    public function query(): string
-    {
-        return $this->query;
+        return $this->parent;
     }
 
     public function result(): array
@@ -314,9 +304,9 @@ trait BlueprintSectionData
         return $this;
     }
 
-    protected function setQuery(string $query)
+    protected function setParent(string $parent = null): self
     {
-        $this->query = $query;
+        $this->parent = $parent;
         return $this;
     }
 
@@ -326,9 +316,20 @@ trait BlueprintSectionData
         return $this;
     }
 
+    protected function setSortBy(string $sortBy = null): self
+    {
+        $this->sortBy = $sortBy;
+        return $this;
+    }
+
     public function sortable(): bool
     {
         return $this->sortable;
+    }
+
+    public function sortBy()
+    {
+        return $this->sortBy;
     }
 
     public function total(): int

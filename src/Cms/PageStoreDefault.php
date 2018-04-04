@@ -66,9 +66,9 @@ class PageStoreDefault extends Store
         return $this->update($data = ['title' => $title], $data);
     }
 
-    public function children()
+    public function children(): array
     {
-        return new Children([], $this->page());
+        return [];
     }
 
     public function content()
@@ -96,9 +96,9 @@ class PageStoreDefault extends Store
         return false;
     }
 
-    public function files()
+    public function files(): array
     {
-        return new Files([], $this->page());
+        return [];
     }
 
     public function id(): string

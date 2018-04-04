@@ -24,6 +24,7 @@ class File extends Model
     use FileActions;
 
     use HasContent;
+    use HasErrors;
     use HasSiblings;
     use HasStore;
     use HasTemplate;
@@ -240,6 +241,20 @@ class File extends Model
     public function parent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Returns a collection of all parent pages
+     *
+     * @return Pages
+     */
+    public function parents(): Pages
+    {
+        if (is_a($this->parent(), Page::class) === true) {
+            return $this->parent()->parents()->prepend($this->parent()->id(), $this->parent());
+        }
+
+        return new Pages;
     }
 
     /**

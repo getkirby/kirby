@@ -8,9 +8,9 @@ class SiteStoreDefault extends Store
     const PAGE_STORE_CLASS = PageStoreDefault::class;
     const FILE_STORE_CLASS = FileStoreDefault::class;
 
-    public function children()
+    public function children(): array
     {
-        return new Pages([], $this->site());
+        return [];
     }
 
     public function content()
@@ -38,9 +38,9 @@ class SiteStoreDefault extends Store
         return false;
     }
 
-    public function files()
+    public function files(): array
     {
-        return new Files([], $this->site());
+        return [];
     }
 
     public function id()

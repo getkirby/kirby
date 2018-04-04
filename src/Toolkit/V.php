@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use Kirby\Util\Str;
+use Kirby\Image\Image;
 
 /**
 * A set of validator methods

@@ -178,7 +178,7 @@ trait HasFiles
      * @param Files|null $files
      * @return self
      */
-    protected function setFiles(Files $files = null): self
+    protected function setFiles(array $files = null): self
     {
         $this->files = $files;
         return $this;

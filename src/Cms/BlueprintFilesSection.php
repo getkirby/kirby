@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Http\Acceptance\MimeType;
 use Kirby\Image\Image;
 use Kirby\Toolkit\V;
 use Kirby\Util\F;
@@ -18,104 +17,50 @@ class BlueprintFilesSection extends BlueprintSection
     use Mixins\BlueprintSectionLayout;
     use Mixins\BlueprintSectionData;
 
-    protected $accept;
-    protected $create;
+    protected $add;
+    protected $template;
 
-    public function accept()
-    {
-        // accept anything
-        if (empty($this->accept) === true) {
-            return true;
-        }
-
-        $defaults = [
-            'mime'        => null,
-            'maxHeight'   => null,
-            'maxSize'     => null,
-            'maxWidth'    => null,
-            'minHeight'   => null,
-            'minSize'     => null,
-            'minWidth'    => null,
-            'orientation' => null
-        ];
-
-        return array_merge($defaults, $this->accept);
-
-    }
-
-    public function accepts($source): bool
-    {
-        $rules = $this->accept();
-
-        if ($rules === true) {
-            return true;
-        }
-
-        $image = new Image($source);
-
-        if ($rules['mime'] !== null) {
-            if ((new MimeType($rules['mime']))->has($image->mime()) === false) {
-                throw new Exception('Invalid mime type');
-            }
-        }
-
-        $validations = [
-            'maxSize'     => ['size',   'max', 'The file is too large'],
-            'minSize'     => ['size',   'min', 'The file is too small'],
-            'maxWidth'    => ['width',  'max', 'The width of the image is too large'],
-            'minWidth'    => ['width',  'min', 'The width of the image is too small'],
-            'maxHeight'   => ['height', 'max', 'The height of the image is too large'],
-            'minHeight'   => ['height', 'min', 'The height of the image is too small'],
-            'orientation' => ['orientation', 'same', 'The orientation of the image is incorrect']
-        ];
-
-        foreach ($validations as $key => $arguments) {
-            if ($rules[$key] !== null) {
-                $property  = $arguments[0];
-                $validator = $arguments[1];
-                $message   = $arguments[2];
-
-                if (V::$validator($image->$property(), $rules[$key]) === false) {
-                    throw new Exception($message);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public function create()
+    public function add(): bool
     {
         if ($this->isFull() === true) {
             return false;
         }
 
-        if (empty($this->create) === true) {
-
-            // automatically accept new files, when "accept" is set
-            if (empty($this->accept) === false) {
-                return [
-                    'content'  => [],
-                    'name'     => null,
-                    'template' => null,
-                ];
-            }
-
-            return false;
-        }
-
-        $result = [
-            'content'  => empty($this->create['content']) ? [] : $this->create['content'],
-            'name'     => $this->create['name'] ?? null,
-            'template' => $this->create['template'] ?? null
-        ];
-
-        return $result;
+        return true;
     }
 
-    protected function defaultQuery(): string
+    /**
+     * Fetch data for the applied settings
+     *
+     * @return Files
+     */
+    public function data(): Files
     {
-        return 'page.files';
+        if ($this->data !== null) {
+            return $this->data;
+        }
+
+        $data = $this->parent()->files();
+
+        // filter by the template
+        if ($template = $this->template()) {
+            $data = $data->filterBy('template', $template);
+        }
+
+        if ($this->sortBy() && $this->sortable() === false) {
+            $data = $data->sortBy(...Str::split($this->sortBy(), ' '));
+        } elseif ($this->sortable() === true) {
+            $data = $data->sortBy('sort', 'desc');
+        }
+
+        // store the original data to reapply pagination later
+        $this->originalData = $data;
+
+        // apply the default pagination
+        return $this->data = $data->paginate([
+            'page'  => 1,
+            'limit' => $this->limit()
+        ]);
     }
 
     protected function defaultSortable(): bool
@@ -168,9 +113,9 @@ class BlueprintFilesSection extends BlueprintSection
     {
         if (is_a($item->parent(), Page::class) === true) {
             return '/pages/' . str_replace('/', '+', $item->parent()->id()) . '/files/' . $item->filename();
-        } else {
-            $type = '/site/files/' . $item->filename();
         }
+
+        return '/site/files/' . $item->filename();
     }
 
     protected function itemToResult($item)
@@ -195,17 +140,6 @@ class BlueprintFilesSection extends BlueprintSection
         ];
     }
 
-    public function query(): string
-    {
-        $query  = $this->query;
-
-        if ($this->sortable() === true) {
-            $query .= '.sortBy("sort", "asc")';
-        }
-
-        return $query;
-    }
-
     public function upload(array $data)
     {
         // make sure the basics are provided
@@ -213,30 +147,15 @@ class BlueprintFilesSection extends BlueprintSection
             throw new Exception('Please provide a filename');
         }
 
-        // get all create options from the blueprint
-        $options = $this->create();
-
         // check if adding files is allowed at all
-        if (empty($options)) {
+        if ($this->add() === false) {
             throw new Exception('No files can be added');
         }
 
-        // make sure we don't allow more entries than accepted
-        if ($this->isFull()) {
-            throw new Exception('Too many files');
-        }
-
-        // validate the upload
-        $this->accepts($data['source']);
-
-        // merge the post data with the pre-defined content set in the blueprint
-        $content = array_merge($data['content'] ?? [], $options['content']);
-
         return $this->parent()->createFile([
             'source'   => $data['source'],
-            'content'  => $content,
-            'template' => $options['template'],
-            'filename' => $this->filename($data['source'], $data['filename'], $options['name'])
+            'template' => $this->template(),
+            'filename' => $this->filename($data['source'], $data['filename'])
         ]);
     }
 
@@ -273,25 +192,9 @@ class BlueprintFilesSection extends BlueprintSection
         ];
     }
 
-    protected function setAccept($accept = null)
+    protected function setTemplate(string $template = null)
     {
-        if (is_string($accept) === true) {
-            $accept = [
-                'mime' => $accept
-            ];
-        }
-
-        if (is_array($accept) === false && $accept !== null) {
-            throw new Exception('Invalid accept rules definition');
-        }
-
-        $this->accept = $accept;
-        return $this;
-    }
-
-    protected function setCreate(array $create = null)
-    {
-        $this->create = $create;
+        $this->template = $template;
         return $this;
     }
 
@@ -309,6 +212,11 @@ class BlueprintFilesSection extends BlueprintSection
         }
 
         return true;
+    }
+
+    public function template()
+    {
+        return $this->template;
     }
 
 }

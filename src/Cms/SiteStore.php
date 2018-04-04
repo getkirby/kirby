@@ -26,28 +26,21 @@ class SiteStore extends SiteStoreDefault
         ]);
     }
 
-    public function children()
+    public function children(): array
     {
-
-        $site      = $this->site();
-        $url       = $site->url();
-        $children  = new Pages([], $site);
+        $site     = $this->site();
+        $url      = $site->url();
+        $children = [];
 
         foreach ($this->base()->children() as $slug => $props) {
-
-            $props['slug']  = $slug;
-            $props['url']   = $url . '/' . $slug;
-            $props['site']  = $site;
-            $props['store'] = static::PAGE_STORE_CLASS;
-
-            $page = Page::factory($props);
-
-            $children->set($page->id(), $page);
-
+            $children[] = $props + [
+                'slug'  => $slug,
+                'url'   => $url . '/' . $slug,
+                'store' => static::PAGE_STORE_CLASS
+            ];
         }
 
         return $children;
-
     }
 
     public function content()
@@ -57,7 +50,6 @@ class SiteStore extends SiteStoreDefault
 
     public function drafts(): array
     {
-
         $site   = $this->site();
         $url    = $site->url();
         $drafts = [];
@@ -69,7 +61,6 @@ class SiteStore extends SiteStoreDefault
         foreach ($base->children() as $slug => $props) {
             $drafts[] = [
                 'num'    => $props['num'],
-                'site'   => $site,
                 'slug'   => $slug,
                 'status' => 'draft',
                 'url'    => $url . '/_drafts/' . $slug,
@@ -85,26 +76,22 @@ class SiteStore extends SiteStoreDefault
         return is_dir($this->root()) === true;
     }
 
-    public function files()
+    public function files(): array
     {
-
         $base  = $this->base();
         $site  = $this->site();
         $root  = $base->root();
         $url   = $site->kirby()->media()->url($site);
-        $files = new Files([], $site);
+        $files = [];
 
         foreach ($this->base()->files() as $filename => $props) {
-
-            $file = new File([
+            $file = [
                 'filename' => $filename,
-                'parent'   => $site,
                 'store'    => static::FILE_STORE_CLASS,
                 'url'      => $url . '/' . $filename,
-            ]);
+            ];
 
-            $files->set($file->id(), $file);
-
+            $files[] = $file;
         }
 
         return $files;

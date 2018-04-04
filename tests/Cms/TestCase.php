@@ -13,11 +13,13 @@ class TestCase extends BaseTestCase
     public function setUp()
     {
         App::removePlugins();
+        Blueprint::$loaded = [];
     }
 
     public function tearDown()
     {
         App::removePlugins();
+        Blueprint::$loaded = [];
     }
 
     public function kirby($props = []): App
@@ -79,7 +81,7 @@ class TestCase extends BaseTestCase
         }
     }
 
-    public function assertHooks(array $hooks, Closure $action)
+    public function assertHooks(array $hooks, Closure $action, $appProps = [])
     {
         $phpUnit   = $this;
         $triggered = 0;
@@ -93,8 +95,9 @@ class TestCase extends BaseTestCase
 
         App::removePlugins();
 
-        $app = new App([
+        $app = new App(array_merge([
             'hooks' => $hooks,
+            'roots' => ['index' => '/dev/null'],
             'user'  => 'test@getkirby.com',
             'users' => [
                 [
@@ -102,9 +105,9 @@ class TestCase extends BaseTestCase
                     'role'  => 'admin'
                 ]
             ]
-        ]);
+        ], $appProps));
 
-        $action->call($this);
+        $action->call($this, $app);
         $this->assertEquals(count($hooks), $triggered);
     }
 

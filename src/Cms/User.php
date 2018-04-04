@@ -21,6 +21,7 @@ class User extends Model
     use UserActions;
 
     use HasContent;
+    use HasErrors;
     use HasSiblings;
     use HasStore;
 

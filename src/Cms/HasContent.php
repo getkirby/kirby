@@ -65,16 +65,6 @@ trait HasContent
     }
 
     /**
-     * Returns all content validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
-    {
-        return Form::for($this)->errors();
-    }
-
-    /**
      * Checks if the model data has any errors
      *
      * @return boolean

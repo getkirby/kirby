@@ -41,16 +41,16 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
     public function testTranslateSetLocale()
     {
         $app = App::instance();
-        $this->assertEquals('Das ist ein Testfehler', $app->translate('exception.test', null, 'de_DE'));
-        $this->assertEquals('Das ist ein Testfehler', t('exception.test', null, 'de_DE'));
+        $this->assertEquals('Das ist ein Testfehler', $app->translate('error.test', null, 'de_DE'));
+        $this->assertEquals('Das ist ein Testfehler', t('error.test', null, 'de_DE'));
     }
 
     public function testTranslateUserLanguage()
     {
         $app = App::instance();
 
-        $this->assertEquals('This is a test error', $app->translate('exception.test'));
-        $this->assertEquals('This is a test error', t('exception.test'));
+        $this->assertEquals('This is a test error', $app->translate('error.test'));
+        $this->assertEquals('This is a test error', t('error.test'));
 
         $app = new App([
             'user' => new User([
@@ -59,8 +59,8 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
             ])
         ]);
 
-        $this->assertEquals('Das ist ein Testfehler', $app->translate('exception.test'));
-        $this->assertEquals('Das ist ein Testfehler', t('exception.test'));
+        $this->assertEquals('Das ist ein Testfehler', $app->translate('error.test'));
+        $this->assertEquals('Das ist ein Testfehler', t('error.test'));
 
         // reset app instance
         $app = new App();
@@ -73,7 +73,7 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
             'fallback' => 'This would be the fallback error'
         ]);
 
-        $this->assertEquals('exception.test', $exception->getKey());
+        $this->assertEquals('error.test', $exception->getKey());
         $this->assertEquals('This is a test error', $exception->getMessage());
     }
 
@@ -84,7 +84,7 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
             'fallback' => 'This would be the fallback error'
         ]);
 
-        $this->assertEquals('exception.no-real-key', $exception->getKey());
+        $this->assertEquals('error.no-real-key', $exception->getKey());
         $this->assertEquals('This would be the fallback error', $exception->getMessage());
     }
 

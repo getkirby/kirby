@@ -55,7 +55,11 @@ class FileStore extends FileStoreDefault
 
     public function content(): array
     {
-        return Data::read($this->storeFile());
+        try {
+            return Data::read($this->storeFile());
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
     public function create(Upload $upload)
@@ -66,7 +70,7 @@ class FileStore extends FileStoreDefault
         $this->media()->delete($file->parent(), $file);
 
         // overwrite the original
-        if (F::copy($upload->root(), $this->root()) !== true) {
+        if (F::copy($upload->root(), $this->root(), true) !== true) {
             throw new Exception('The file could not be created');
         }
 

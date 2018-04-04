@@ -126,6 +126,7 @@ return function ($app) {
                     'errorPageId' => 'error',
                     'homePageId'  => 'home',
                     'url'         => $app->url('index'),
+                    'kirby'       => $app,
                     'store'       => Kirby\Cms\SiteStore::class,
                 ]);
             }

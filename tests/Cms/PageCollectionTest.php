@@ -7,28 +7,17 @@ class PageCollectionTest extends TestCase
 
     protected function collection()
     {
-        return new Pages([
-            new Page(['slug' => 'project-a']),
-            new Page(['slug' => 'project-b']),
-            new Page(['slug' => 'project-c'])
-        ]);
+        return [
+            ['slug' => 'project-a'],
+            ['slug' => 'project-b'],
+            ['slug' => 'project-c']
+        ];
     }
 
     public function testDefaultCollectionWithoutSite()
     {
         $page = new Page(['slug' => 'test']);
         $this->assertInstanceOf(Pages::class, $page->collection());
-    }
-
-    public function testDefaultCollectionWithSite()
-    {
-        $page     = new Page(['slug' => 'test']);
-        $children = new Children([$page]);
-        $site     = new Site(['children' => $children]);
-
-        $page->setSite($site);
-
-        $this->markTestIncomplete();
     }
 
     public function testCollection()
@@ -41,7 +30,7 @@ class PageCollectionTest extends TestCase
 
     public function testCollectionContext()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
         $page       = $collection->first();
 
         $this->assertEquals($collection, $page->collection());
@@ -60,7 +49,7 @@ class PageCollectionTest extends TestCase
 
     public function testHasNext()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertTrue($collection->first()->hasNext());
         $this->assertFalse($collection->last()->hasNext());
@@ -78,7 +67,7 @@ class PageCollectionTest extends TestCase
 
     public function testHasPrev()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertTrue($collection->last()->hasPrev());
         $this->assertFalse($collection->first()->hasPrev());
@@ -96,7 +85,7 @@ class PageCollectionTest extends TestCase
 
     public function testIndexOf()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertEquals(0, $collection->first()->indexOf());
         $this->assertEquals(1, $collection->nth(1)->indexOf());
@@ -105,7 +94,7 @@ class PageCollectionTest extends TestCase
 
     public function testIsFirst()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertTrue($collection->first()->isFirst());
         $this->assertFalse($collection->last()->isFirst());
@@ -113,7 +102,7 @@ class PageCollectionTest extends TestCase
 
     public function testIsLast()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertTrue($collection->last()->isLast());
         $this->assertFalse($collection->first()->isLast());
@@ -121,7 +110,7 @@ class PageCollectionTest extends TestCase
 
     public function testIsNth()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertTrue($collection->first()->isNth(0));
         $this->assertTrue($collection->nth(1)->isNth(1));
@@ -130,14 +119,14 @@ class PageCollectionTest extends TestCase
 
     public function testNext()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertEquals($collection->first()->next(), $collection->nth(1));
     }
 
     public function testNextAll()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
         $first      = $collection->first();
 
         $this->assertCount(2, $first->nextAll());
@@ -158,14 +147,14 @@ class PageCollectionTest extends TestCase
 
     public function testPrev()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
 
         $this->assertEquals($collection->last()->prev(), $collection->nth(1));
     }
 
     public function testPrevAll()
     {
-        $collection = $this->collection();
+        $collection = Pages::factory($this->collection());
         $last       = $collection->last();
 
         $this->assertCount(2, $last->prevAll());
@@ -186,19 +175,16 @@ class PageCollectionTest extends TestCase
 
     public function testSiblings()
     {
-
-        $children = $this->collection();
-
         $site = new Site([
-            'children' => $children
+            'children' => $this->collection()
         ]);
 
-        $page = $site->children()->nth(1);
+        $page     = $site->children()->nth(1);
+        $children = $site->children();
 
         $this->assertEquals($children, $page->siblings());
         $this->assertEquals($children, $children->first()->siblings());
         $this->assertEquals($children, $children->last()->siblings());
-
     }
 
     public function testSiblingsWithoutCurrentPage()

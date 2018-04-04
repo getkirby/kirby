@@ -32,10 +32,13 @@ class PageActionsTest extends TestCase
 
     public function pageDummy()
     {
+        $parent = new Page(['slug' => 'parent']);
+
         $page = new Page([
             'slug'      => 'test',
             'template'  => 'test',
             'store'     => PageActionsTestStore::class,
+            'parent'    => $parent
         ]);
 
         return $page->clone([

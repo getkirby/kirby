@@ -8,7 +8,7 @@ class InvalidArgumentExceptionTest extends \PHPUnit\Framework\TestCase
     public function testDefaults()
     {
         $exception = new InvalidArgumentException();
-        $this->assertEquals('exception.invalidArgument', $exception->getKey());
+        $this->assertEquals('error.invalidArgument', $exception->getKey());
         $this->assertEquals('Invalid argument "-" in method "-"', $exception->getMessage());
         $this->assertEquals(400, $exception->getHttpCode());
         $this->assertEquals(['argument' => null, 'method' => null], $exception->getData());

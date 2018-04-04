@@ -112,32 +112,18 @@ class PageStore extends PageStoreDefault
         return $newPage;
     }
 
-    public function children(): Children
+    public function children(): array
     {
-
-        $parent    = $this->page();
-        $id        = $parent->id();
-        $url       = $parent->url();
-        $site      = $parent->site();
-        $extension = $this->base()->extension();
-        $children  = new Children([], $parent);
+        $children = [];
 
         foreach ($this->base()->children() as $slug => $props) {
-
-            $page = Page::factory([
-                'num'    => $props['num'],
-                'parent' => $parent,
-                'site'   => $site,
+            $children[] = $props + [
                 'slug'   => $slug,
                 'store'  => static::PAGE_STORE_CLASS
-            ]);
-
-            $children->set($page->id(), $page);
-
+            ];
         }
 
         return $children;
-
     }
 
     public function content()
@@ -191,26 +177,19 @@ class PageStore extends PageStoreDefault
 
     public function drafts(): array
     {
-        $parent    = $this->page();
-        $id        = $parent->id();
-        $url       = $parent->url() . '/_drafts';
-        $site      = $parent->site();
-        $extension = $this->base()->extension();
-        $drafts    = [];
-        $base      = new Base([
+        $drafts = [];
+        $parent = $this->page();
+        $base   = new Base([
             'extension' => 'txt',
             'root'      => $parent->root() . '/_drafts',
         ]);
 
         foreach ($base->children() as $slug => $props) {
-            $drafts[] = [
-                'num'    => $props['num'],
-                'parent' => $parent,
-                'site'   => $site,
+            $drafts[] = $props + [
                 'slug'   => $slug,
                 'status' => 'draft',
                 'url'    => $parent->url() . '/_drafts/' . $slug,
-                'store'  => static::class
+                'store'  => static::PAGE_STORE_CLASS
             ];
         }
 
@@ -222,25 +201,20 @@ class PageStore extends PageStoreDefault
         return is_dir($this->base()->root()) === true;
     }
 
-    public function files(): Files
+    public function files(): array
     {
         $base      = $this->base();
         $page      = $this->page();
         $url       = $this->media()->url($page);
         $extension = $base->extension();
-        $files     = new Files([], $page);
+        $files     = [];
 
         foreach ($this->base()->files() as $filename => $props) {
-
-            $file = new File([
+            $files[] = [
                 'filename' => $filename,
                 'url'      => $url . '/' . $filename,
-                'parent'   => $page,
                 'store'    => static::FILE_STORE_CLASS
-            ]);
-
-            $files->set($file->id(), $file);
-
+            ];
         }
 
         return $files;

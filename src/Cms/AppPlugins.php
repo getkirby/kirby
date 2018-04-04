@@ -34,6 +34,7 @@ trait AppPlugins
         // extensions that need to be registered instantly
         $this->extendFieldMethods($extends['fieldMethods'] ?? []);
         $this->extendFields($extends['fields'] ?? []);
+        $this->extendPageMethods($extends['pageMethods'] ?? []);
         $this->extendPageModels($extends['pageModels'] ?? []);
 
         return $this->extensions = array_replace_recursive($this->extensions, $extends);
@@ -49,6 +50,11 @@ trait AppPlugins
         foreach ($fields as $name => $field) {
             Field::$types[$name] = $field['class'];
         }
+    }
+
+    protected function extendPageMethods(array $methods)
+    {
+        Page::$methods = array_merge(Page::$methods, $methods);
     }
 
     protected function extendPageModels(array $models)

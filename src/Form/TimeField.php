@@ -10,6 +10,15 @@ class TimeField extends DateField
 
     use Mixins\Time;
 
+    protected function defaultDefault()
+    {
+        if ($this->required() === true) {
+            return 'now';
+        }
+
+        return null;
+    }
+
     protected function defaultFormat(): string
     {
         return 'H:i:s';
@@ -36,7 +45,7 @@ class TimeField extends DateField
             return $this->format;
         }
 
-        return $this->hours() === 24 ? 'H:i' : 'h:i a';
+        return $this->notation() === 24 ? 'H:i' : 'h:i a';
     }
 
     protected function valueFromInput($value)

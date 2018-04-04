@@ -22,6 +22,7 @@ class Site extends Model
 
     use HasChildren;
     use HasContent;
+    use HasErrors;
     use HasFiles;
     use HasStore;
 
@@ -125,7 +126,10 @@ class Site extends Model
             return $this->children;
         }
 
-        return $this->children = $this->store()->children();
+        return $this->children = Pages::factory($this->children ?? $this->store()->children(), $this, [
+            'kirby' => $this->kirby(),
+            'site'  => $this,
+        ]);
     }
 
     protected function defaultStore()
@@ -152,7 +156,10 @@ class Site extends Model
      */
     public function drafts(): Pages
     {
-        return new Pages(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
+        return Pages::factory($this->store()->drafts(), $this, [
+            'kirby' => $this->kirby(),
+            'site'  => $this,
+        ], PageDraft::class);
     }
 
     /**
@@ -184,13 +191,17 @@ class Site extends Model
      *
      * @return Files
      */
-    public function files()
+    public function files(): Files
     {
         if (is_a($this->files, Files::class) === true) {
             return $this->files;
         }
 
-        return $this->files = $this->store()->files();
+        return $this->files = Files::factory($this->files ?? $this->store()->files(), $this, [
+            'kirby'  => $this->kirby(),
+            'parent' => $this,
+            'site'   => $this,
+        ]);
     }
 
     /**

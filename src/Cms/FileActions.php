@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Image\Image;
 use Kirby\Util\Str;
 
 trait FileActions

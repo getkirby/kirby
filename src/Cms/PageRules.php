@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\PermissionException;
 
 class PageRules
 {
@@ -63,6 +64,11 @@ class PageRules
         }
 
         if ($page->isDraft() === true && empty($page->errors()) === false) {
+            throw new PermissionException([
+                'key'     => 'page.changeStatus.incomplete',
+                'details' => $page->errors()
+            ]);
+
             throw new Exception('The page has errors and cannot be published');
         }
 

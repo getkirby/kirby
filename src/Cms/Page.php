@@ -26,7 +26,9 @@ class Page extends Model
     use HasContent {
         update as protected updateContent;
     }
+    use HasErrors;
     use HasFiles;
+    use HasMethods;
     use HasSiblings;
     use HasStore;
     use HasTemplate;
@@ -120,6 +122,24 @@ class Page extends Model
     protected $url;
 
     /**
+     * Magic caller
+     *
+     * @param string $method
+     * @param array $args
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments = [])
+    {
+        // page methods
+        if ($this->hasMethod($method)) {
+            return $this->call($method, $arguments);
+        }
+
+        // return page content otherwise
+        return $this->content()->get($method, $arguments);
+    }
+
+    /**
      * Creates a new page object
      *
      * @param array $props
@@ -196,13 +216,17 @@ class Page extends Model
      *
      * @return Pages|Children
      */
-    public function children(): Pages
+    public function children()
     {
         if (is_a($this->children, Pages::class) === true) {
             return $this->children;
         }
 
-        return $this->children = $this->store()->children();
+        return $this->children = Children::factory($this->children ?? $this->store()->children(), $this, [
+            'kirby'  => $this->kirby(),
+            'site'   => $this->site(),
+            'parent' => $this
+        ]);
     }
 
     /**
@@ -288,23 +312,11 @@ class Page extends Model
      */
     public function drafts(): Children
     {
-        return new Children(array_map([PageDraft::class, 'factory'], $this->store()->drafts()), $this);
-    }
-
-    /**
-     * Returns all content validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
-    {
-        $errors = [];
-
-        foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, array_values($section->errors()));
-        }
-
-        return $errors;
+        return Children::factory($this->store()->drafts(), $this, [
+            'kirby'  => $this->kirby(),
+            'site'   => $this->site(),
+            'parent' => $this
+        ], PageDraft::class);
     }
 
     /**
@@ -347,7 +359,11 @@ class Page extends Model
             return $this->files;
         }
 
-        return $this->store()->files();
+        return $this->files = Files::factory($this->files ?? $this->store()->files(), $this, [
+            'kirby'  => $this->kirby(),
+            'parent' => $this,
+            'site'   => $this->site(),
+        ]);
     }
 
     /**

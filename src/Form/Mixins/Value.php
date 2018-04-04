@@ -3,6 +3,7 @@
 namespace Kirby\Form\Mixins;
 
 use Exception;
+use Throwable;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Form\Exceptions\DisabledFieldException;
 use Kirby\Form\Exceptions\ValidationException;
@@ -44,8 +45,10 @@ trait Value
             return false;
         } catch (Exception $e) {
             return [
-                'type'    => method_exists($e, 'getType') ? $e->getType() : null,
+                'name'    => $this->name(),
+                'label'   => method_exists($this, 'label') ? $this->label() : ucfirst($this->name()),
                 'message' => $e->getMessage(),
+                'type'    => 'field'
             ];
         }
     }
@@ -143,10 +146,14 @@ trait Value
         return Str::split($value, $separator);
     }
 
-    protected function valueFromYaml($value)
+    protected function valueFromYaml($value): array
     {
         if (is_array($value) === true) {
             return $value;
+        }
+
+        if ($value === null) {
+            return [];
         }
 
         return Yaml::decode($value);
