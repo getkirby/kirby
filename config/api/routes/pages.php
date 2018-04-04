@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * Page Routes
  */
@@ -16,7 +18,7 @@ return [
         'pattern' => 'pages/(:any)',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
-            return $this->page($id)->update($this->requestBody());
+            return $this->page($id)->update($this->requestBody(), true);
         }
     ],
     [

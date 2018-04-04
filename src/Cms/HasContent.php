@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Exception;
 
 trait HasContent
@@ -105,7 +106,13 @@ trait HasContent
 
         // validate the input
         if ($validate === true) {
-            $form->isValid();
+            try {
+                $form->isValid();
+            } catch (Exception $e) {
+                throw new InvalidArgumentException([
+                    'details' => $form->errors()
+                ]);
+            }
         }
 
         // get the data values array

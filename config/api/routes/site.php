@@ -12,6 +12,13 @@ return [
         }
     ],
     [
+        'pattern' => 'site',
+        'method'  => 'PATCH',
+        'action'  => function () {
+            return $this->site()->update($this->requestBody());
+        }
+    ],
+    [
         'pattern' => 'site/children',
         'method'  => 'GET',
         'action'  => function () {
