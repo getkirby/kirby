@@ -117,11 +117,33 @@ class Str
     /**
      * Checks if the string is a valid emoji
      *
+     * @param string|null $string
      * @return boolean
      */
     public static function isEmoji(string $string = null): bool
     {
-        return \Emoji\is_single_emoji($string) !== false;
+        if ($string === null) {
+            return false;
+        }
+
+        $chr = function ($i) {
+            return iconv('UCS-4LE', 'UTF-8', pack('V', $i));
+        };
+
+        if (preg_match('/[' .
+            $chr(0x1F600) . '-' . $chr(0x1F64F) . // Emoticons
+            $chr(0x1F300) . '-' . $chr(0x1F5FF) . // Misc Symbols and Pictographs
+            $chr(0x1F680) . '-' . $chr(0x1F6FF) . // Transport and Map
+            $chr(0x2600)  . '-' . $chr(0x26FF)  . // Misc symbols
+            $chr(0x2700)  . '-' . $chr(0x27BF)  . // Dingbats
+            $chr(0xFE00)  . '-' . $chr(0xFE0F)  . // Variation Selectors
+            $chr(0x1F900) . '-' . $chr(0x1F9FF) . // Supplemental Symbols and Pictographs
+            $chr(0x1F1E6) . '-' . $chr(0x1F1FF) . // Flags
+            ']/u', $string)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

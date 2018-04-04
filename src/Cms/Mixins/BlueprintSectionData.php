@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Query;
+use Kirby\Util\Str;
 
 trait BlueprintSectionData
 {
@@ -102,9 +103,24 @@ trait BlueprintSectionData
 
     protected function itemIcon($item)
     {
+        if ($icon = $item->blueprint()->icon()) {
+            if (Str::isEmoji($icon) === true) {
+                return [
+                    'type'  => 'emoji',
+                    'back'  => 'white',
+                    'emoji' => $icon
+                ];
+            }
+
+            return [
+                'type' => $icon,
+                'back' => 'black',
+            ];
+        }
+
         return [
-            'type' => $item->blueprint()->icon() ?? 'file',
-            'back' => 'black'
+            'type' => 'file',
+            'back' => 'black',
         ];
     }
 
