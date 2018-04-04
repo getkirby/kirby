@@ -50,6 +50,10 @@ class PageRules
             throw new Exception('The status for this page cannot be changed');
         }
 
+        if ($page->isHomeOrErrorPage() === true) {
+            throw new Exception('This page cannot be converted to a draft');
+        }
+
         return true;
     }
 
