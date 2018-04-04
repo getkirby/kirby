@@ -12,6 +12,7 @@ class TextareaField extends Field
     use Mixins\Length;
     use Mixins\Multiline;
     use Mixins\Placeholder;
+    use Mixins\Size;
     use Mixins\Required;
     use Mixins\Value;
 
