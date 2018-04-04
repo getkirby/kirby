@@ -8,6 +8,11 @@ class SiteStoreDefault extends Store
     const PAGE_STORE_CLASS = PageStoreDefault::class;
     const FILE_STORE_CLASS = FileStoreDefault::class;
 
+    public function changeTitle(string $title)
+    {
+        return $this->update($data = ['title' => $title], $data);
+    }
+
     public function children(): array
     {
         return [];

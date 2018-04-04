@@ -34,6 +34,21 @@ trait SiteActions
     }
 
     /**
+     * Change the site title
+     *
+     * @param string $title
+     * @return self
+     */
+    public function changeTitle(string $title): self
+    {
+        if ($title === $this->title()->value()) {
+            return $this;
+        }
+
+        return $this->commit('changeTitle', $title);
+    }
+
+    /**
      * Creates a main page
      *
      * @param array $props

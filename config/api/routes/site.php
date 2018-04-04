@@ -112,6 +112,13 @@ return [
         }
     ],
     [
+        'pattern' => 'site/title',
+        'method'  => 'PATCH',
+        'action'  => function () {
+            return $this->site()->changeTitle($this->requestBody('title'));
+        }
+    ],
+    [
         'pattern' => 'site/(:any)/(:all?)',
         'method'  => 'ALL',
         'action'  => function (string $sectionName, string $path = '') {
