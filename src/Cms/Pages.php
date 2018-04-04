@@ -172,6 +172,60 @@ class Pages extends Collection
     }
 
     /**
+     * Include all given items in the collection
+     *
+     * @return self
+     */
+    public function merge(...$args): self
+    {
+        // merge multiple arguments at once
+        if (count($args) > 1) {
+            $collection = clone $this;
+            foreach ($args as $arg) {
+                $collection = $collection->merge($arg);
+            }
+            return $collection;
+        }
+
+        // merge all parent drafts
+        if ($args[0] === 'drafts') {
+            if ($parent = $this->parent()) {
+                return $this->merge($parent->drafts());
+            }
+
+            return $this;
+        }
+
+        // merge an entire collection
+        if (is_a($args[0], static::class) === true) {
+            $collection = clone $this;
+            $collection->data = array_merge($collection->data, $args[0]->data);
+            return $collection;
+        }
+
+        // append a single page
+        if (is_a($args[0], Page::class) === true) {
+            $collection = clone $this;
+            return $collection->append($args[0]->id(), $args[0]);
+        }
+
+        // merge an array
+        if (is_array($args[0]) === true) {
+            $collection = clone $this;
+            foreach ($args[0] as $arg) {
+                $collection = $collection->merge($arg);
+            }
+            return $collection;
+        }
+
+        if (is_string($args[0]) === true) {
+            return $this->merge(App::instance()->site()->find($args[0]));
+        }
+
+        return $this;
+    }
+
+    /**
      * Deprecated alias for Pages::listed()
      *
      * @return self
