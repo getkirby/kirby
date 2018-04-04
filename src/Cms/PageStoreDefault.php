@@ -54,10 +54,11 @@ class PageStoreDefault extends Store
         return $this->changeNum(null);
     }
 
-    public function changeTemplate(string $template)
+    public function changeTemplate(string $template, array $data = [])
     {
         return $this->page()->clone([
-            'template' => $template
+            'template' => $template,
+            'content'  => $data
         ]);
     }
 

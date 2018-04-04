@@ -119,7 +119,84 @@ trait PageActions
             return $this;
         }
 
-        return $this->commit('changeTemplate', $template);
+        // prepare data to transfer between blueprints
+        $old      = 'pages/' . $this->template();
+        $new      = 'pages/' . $template;
+        $transfer = $this->transferData($this->content(), $old, $new);
+
+        return $this->commit('changeTemplate', $template, $transfer['data']);
+    }
+
+    /**
+     * Transfers data from old to new blueprint and tracks changes
+     *
+     * @param Content $content
+     * @param string $old       Old blueprint
+     * @param string $new       New blueprint
+     * @return array
+     */
+    public function transferData(Content $content, string $old, string $new): array
+    {
+        // Prepare data
+        $data      = [];
+        $old       = Blueprint::factory($old, null, $this);
+        $new       = Blueprint::factory($new, null, $this);
+        $oldFields = $old->fields();
+        $newFields = $new->fields();
+
+        // Tracking changes
+        $added    = [];
+        $replaced = [];
+        $removed  = [];
+
+        // Ensure to keep title
+        $data['title'] = $content->get('title')->value();
+
+        // Go through all fields of new template
+        foreach($newFields as $newField) {
+            $name     = $newField->name();
+            $oldField = $oldFields->get($name);
+
+            // Field name matches with old template
+            if ($oldField !== null) {
+
+                // Same field type, add and keep value
+                if ($oldField->type() === $newField->type()) {
+                    $data[$name] = $content->get($name)->value();
+
+                // Different field type, add with empty value
+                } else {
+                    $data[$name]     = null;
+                    $replaced[$name] = $oldFields->get($name)->label();
+                }
+
+            // Field does not exist in old template,
+            // add with empty or preserved value
+            } else {
+                $preserved    = $content->get($name);
+                $data[$name]  = $preserved ? $preserved->value(): null;
+                $added[$name] = $newField->label();
+            }
+
+        }
+
+        // Go through all values to preserve them
+        foreach($content->fields() as $field) {
+            $name     = $field->key();
+            $newField = $newFields->get($name);
+
+            if ($newField === null) {
+                $data[$name]    = $field->value();
+                $removed[$name] = $oldField->label();
+            }
+        }
+
+        return [
+            'data'     => $data,
+            'added'    => $added,
+            'replaced' => $replaced,
+            'removed'  => $removed
+        ];
     }
 
     /**

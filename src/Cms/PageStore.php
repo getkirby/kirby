@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Util\Dir;
 use Kirby\Util\F;
 
@@ -93,21 +94,24 @@ class PageStore extends PageStoreDefault
         return $this->changeNum(null);
     }
 
-    public function changeTemplate(string $template)
+    public function changeTemplate(string $template, array $data = [])
     {
         if ($this->exists() === false) {
-            return parent::changeTemplate($template);
+            return parent::changeTemplate($template, $data);
         }
 
-        $oldPage = $this->page();
+
+        $newPage = parent::changeTemplate($template, $data);
+        $newFile = $newPage->root() . '/' . $newPage->template() . '.' . $this->base()->extension();
         $oldFile = $this->base()->storage();
 
-        $newPage = parent::changeTemplate($template);
-        $newFile = $newPage->root() . '/' . $newPage->template() . '.' . $this->base()->extension();
-
-        if (F::move($oldFile, $newFile) !== true) {
-            throw new Exception('The text file could not be moved');
+        if (Data::write($newFile, $data) !== true) {
+             throw new Exception('The new text file could not be written');
         }
+
+        if (F::remove($oldFile) !== true) {
+            throw new Exception('The old text file could not be removed');
+       }
 
         return $newPage;
     }
