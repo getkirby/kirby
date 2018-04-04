@@ -25,12 +25,8 @@ sections:
         icon:  file-text-o
 
   image:
-    headline: Image
-    type: files
-    query: page.images
-    layout: cards
+    extends: sections/image
+    min: 1
     item:
       image:
         ratio: 1/1
-    min: 1
-    max: 1

@@ -6,6 +6,7 @@ sections:
   sections:
     headline: Sections
     type: pages
+    status: listed
     item:
       info: "{{ page.template }}"
     template:

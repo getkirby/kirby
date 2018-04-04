@@ -15,13 +15,15 @@ tabs:
     label: SEO
     icon: search
     columns:
-      - 1/1: seo
+      - 2/3: seoContent
+      - 1/3: seoImages
 
 sections:
 
   projects:
     extends: sections/projects
     layout: list
+    status: all
 
   blog:
     extends: sections/articles
@@ -58,12 +60,18 @@ sections:
         type: text
         icon: facebook
 
-  seo:
+  seoContent:
     type: fields
     fields:
       metaTitle:
         label: Meta Title
         type: text
+        required: true
       metaDescription:
         label: Meta Description
         type: textarea
+
+  seoImages:
+    type: files
+    headline: Seo Images
+    min: 1

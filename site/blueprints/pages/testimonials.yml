@@ -3,8 +3,17 @@ title: Testimonials
 icon: 👫
 
 sections:
-  testimonials:
-    headline: Tweets
+  drafts:
+    headline: Unpublished Tweets
     type: pages
+    status: draft
+    templates: testimonial
+    item:
+      info: "@{{ page.username }}"
+
+  published:
+    headline: Published Tweets
+    type: pages
+    status: listed
     item:
       info: "@{{ page.username }}"

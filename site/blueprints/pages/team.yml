@@ -26,6 +26,5 @@ sections:
         type: textarea
 
 	image:
-		extends: sections/image
-		query: page.images
+    extends: sections/image
 		min: 1

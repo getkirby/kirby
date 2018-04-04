@@ -14,17 +14,12 @@ sections:
           (link: https://marcthiele.com text: Marc Thiele) was so kind to allow me to use the great (twitter: btconf) shirts for this shop example.
           (link: https://https://beyondtellerrand.myshopify.com text: Please visit his shop) for more information about each shirt — and to buy them :)
 
+  drafts:
+    extends: sections/products
+    headline: Unpublished Products
+    status: drafts
+
   products:
-    headline: Products
-    type: pages
+    extends: sections/products
+    headline: Published Products
     layout: cards
-    create: product
-    query: page.children.flip
-    item:
-      info: "€ {{ page.price }} / {{ page.design }}"
-      image:
-        src: page.image
-        ratio: 1/1
-        back: pattern
-
-

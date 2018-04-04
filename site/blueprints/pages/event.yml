@@ -29,8 +29,6 @@ sections:
   image:
     type: files
     headline: Image
-    query: page.images
     max: 1
-    accept: image/jpeg
     item:
       info: "{{ file.dimensions }} / {{ file.niceSize }}"

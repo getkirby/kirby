@@ -1,10 +1,14 @@
 title: Cover
 
+accept:
+  mime: image/jpeg, image/png
+
 fields:
   alt:
     label: Alt Text
     type: text
     width: 1/2
+    required: true
   align:
     label: Align
     type: select

@@ -25,3 +25,4 @@ sections:
   team:
     extends: sections/team
     headline: Team
+    status: listed

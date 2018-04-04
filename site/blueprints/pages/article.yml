@@ -16,17 +16,21 @@ sections:
       text:
         label: Text
         type: textarea
+        size: large
 
   meta:
     type: fields
     fields:
       date:
         label: Date
-        type: date
+        type: datetime
+        default: now
       tags:
         label: Tags
         type: tags
         options: query
         query: site.find("blog").children
 
-  images: sections/images
+  images:
+    extends: sections/images
+    template: image

@@ -1,0 +1,10 @@
+headline: Products
+type: pages
+templates: product
+status: listed
+item:
+  info: "€ {{ page.price }} / {{ page.design }}"
+  image:
+    src: page.image
+    ratio: 1/1
+    back: pattern

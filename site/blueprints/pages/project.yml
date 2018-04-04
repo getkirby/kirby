@@ -37,13 +37,9 @@ sections:
 
 	cover:
 		extends: sections/image
-		query: page.images.filterBy("template", "cover")
+		template: cover
 		min: 1
-		create:
-			template: cover
 
 	gallery:
 		extends: sections/images
-		query: page.images.filterBy("template", "image")
-		create:
-			template: image
+		template: image
