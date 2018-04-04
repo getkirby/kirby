@@ -573,9 +573,9 @@ class Page extends Model
         return new static($props);
     }
 
-    public function modified(string $format = null)
+    public function modified(string $format = 'U')
     {
-        return $this->content()->get('modified')->toDate($format);
+        return date($format, $this->store()->modified());
     }
 
     /**

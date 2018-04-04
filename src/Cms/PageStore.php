@@ -225,6 +225,11 @@ class PageStore extends PageStoreDefault
         return $this->base()->root();
     }
 
+    public function modified()
+    {
+        return filemtime($this->base()->storage());
+    }
+
     protected function moveDirectory(string $old, string $new): bool
     {
         $parent = dirname($new);
