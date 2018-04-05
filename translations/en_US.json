@@ -162,13 +162,26 @@
     "error.page.template.invalid": "Please select a valid template",
     "error.page.status.invalid": "Please set a valid page status",
 
-    "error.user.delete.user": "The user \"{user}\" cannot be deleted",
+    "error.user.delete.user": "The user \"{name}\" cannot be deleted",
     "error.user.duplicate": "A user with the email address \"{email}\" already exists",
     "error.user.directory.create": "The user directory for \"{email}\" could not be created",
     "error.user.directory.move": "The user directory for \"{email}\" could not be moved",
     "error.user.directory.delete": "The user directory for \"{email}\" could not be deleted",
-    "error.user.save": "The user information for \"{email}\" could not be saved"
-
-
+    "error.user.save": "The user information for \"{email}\" could not be saved",
+    "error.user.changeEmail.permission": "You are not allowed to change the email for the user \"{name}\"",
+    "error.user.changeLanguage.permission": "You are not allowed to change the language for the user \"{name}\"",
+    "error.user.changeName.permission": "You are not allowed to change the name for the user \"{name}\"",
+    "error.user.changePassword.permission": "You are not allowed to change the password for the user \"{name}\"",
+    "error.user.changeRole.permission": "You are not allowed to change the role for the user \"{name}\"",
+    "error.user.changeRole.lastAdmin": "The role for the last admin cannot be changed",
+    "error.user.create.permission": "You are not allowed to create this user",
+    "error.user.delete.permission": "You are not allowed to delete the user \"{name}\"",
+    "error.user.update.permission": "You are not allowed to update the user \"{name}\"",
+    "error.user.delete.lastAdmin": "The last admin cannot be deleted",
+    "error.user.delete.lastUser": "The last user cannot be deleted",
+    "error.user.invalid.email": "Please enter a valid email address",
+    "error.user.invalid.language": "Please enter a valid language",
+    "error.user.invalid.password": "Please enter a valid password. Passwords must be at least 8 characters long.",
+    "error.user.invalid.role": "Please enter a valid role"
 
 }
