@@ -66,9 +66,9 @@ class UserStoreDefault extends Store
     public function delete(): bool
     {
         throw new LogicException([
-            'key'  => 'user.delete.lastUser',
-            'data' => ['user' => $this->user()->name()]
-        ])
+            'key'  => 'user.delete',
+            'data' => ['name' => $this->user()->name()]
+        ]);
     }
 
     public function exists(): bool

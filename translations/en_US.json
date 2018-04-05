@@ -110,6 +110,8 @@
     "error.form.errors": "Please fix all form errors …",
     "error.section.notFound": "The section type <strong>{type}</strong> does not exist. Please change the configuration in your blueprint.",
     "error.section.notLoaded": "The section could not be loaded",
+    "error.access.panel": "You are not allowed to login to the panel",
+
     "error.app.cacheType.invalid": "Invalid cache type \"{type}\"",
     "error.app.extension.invalid": "Extensions for \"{type}\" must be defined as array",
     "error.app.plugin.invalid": "Invalid plugin definition",
@@ -157,12 +159,18 @@
     "error.file.changeName.permissions": "You are not allowed to change the name of \"{filename}\"",
     "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
 
+    "error.page.draft.duplicate": "A page draft with the slug \"{slug}\" already exists",
+    "error.page.draft.invalid": "The page \"{slug}\" is not a draft",
     "error.page.slug.invalid": "Please enter a valid URL prefix",
     "error.page.template.missing": "Please provide a template for the page",
     "error.page.template.invalid": "Please select a valid template",
     "error.page.status.invalid": "Please set a valid page status",
+    "error.page.delete": "The page \"{slug}\" cannot be deleted",
+    "error.page.textfile.move": "The page textfile for \"{slug}\" could not be moved",
+    "error.page.directory.create": "The page directory for \"{slug}\" cannot be created",
+    "error.page.directory.move": "The page directory for \"{slug}\" cannot be moved",
 
-    "error.user.delete.user": "The user \"{name}\" cannot be deleted",
+    "error.user.delete": "The user \"{name}\" cannot be deleted",
     "error.user.duplicate": "A user with the email address \"{email}\" already exists",
     "error.user.directory.create": "The user directory for \"{email}\" could not be created",
     "error.user.directory.move": "The user directory for \"{email}\" could not be moved",

@@ -283,7 +283,9 @@ class User extends Model
     public function login(string $password, $session = null)
     {
         if ($this->role()->permissions()->for('access', 'panel') === false) {
-            throw new Exception('You are not allowed to access the panel');
+            throw new PermissionsException([
+                'key'  => 'access.panel',
+            ]);
         }
 
         if ($this->validatePassword($password) !== true) {
@@ -474,6 +476,7 @@ class User extends Model
 
         if ($password === null) {
             throw new Exception('Invalid password');
+
         }
 
         if (password_verify($password, $this->password()) !== true) {

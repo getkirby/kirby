@@ -2,10 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
 use Kirby\Util\Dir;
 use Kirby\Util\F;
+
+use Exception;
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\LogicException;
 
 class PageStore extends PageStoreDefault
 {
@@ -146,12 +149,18 @@ class PageStore extends PageStoreDefault
         $root = $page->root();
 
         if (is_dir($root) === true) {
-            throw new Exception('The draft already exists');
+            throw new DuplicateException([
+                'key'  => 'page.draft.duplicate',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         // create the new page directory
         if (Dir::make($root) !== true) {
-            throw new Exception('The page directory cannot be created');
+            throw new LogicException([
+                'key'  => 'page.directory.create',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         // write the text file
@@ -243,7 +252,10 @@ class PageStore extends PageStoreDefault
         }
 
         if (Dir::move($old, $new) !== true) {
-            throw new Exception('The directory could not be moved');
+            throw new LogicException([
+                'key'  => 'page.directory.move',
+                'data' => ['slug' => $old->slug()]
+            ]);
         }
 
         return true;
@@ -255,7 +267,10 @@ class PageStore extends PageStoreDefault
         $root  = $draft->parentModel()->root() . '/' . $draft->slug();
 
         if ($draft->isPage() === false) {
-            throw new Exception('The page is not a draft');
+            throw new LogicException([
+                'key'  => 'page.draft.invalid',
+                'data' => ['slug' => $draft->slug()]
+            ]);
         }
 
         $this->moveDirectory($draft->root(), $root);
