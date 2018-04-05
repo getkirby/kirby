@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\LogicException;
 
 class UserStoreDefault extends Store
 {
@@ -65,7 +65,10 @@ class UserStoreDefault extends Store
 
     public function delete(): bool
     {
-        throw new Exception('The user cannot be deleted');
+        throw new LogicException([
+            'key'  => 'user.delete.lastUser',
+            'data' => ['user' => $this->user()->name()]
+        ])
     }
 
     public function exists(): bool

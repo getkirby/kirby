@@ -160,6 +160,15 @@
     "error.page.slug.invalid": "Please enter a valid URL prefix",
     "error.page.template.missing": "Please provide a template for the page",
     "error.page.template.invalid": "Please select a valid template",
-    "error.page.status.invalid": "Please set a valid page status"
+    "error.page.status.invalid": "Please set a valid page status",
+
+    "error.user.delete.user": "The user \"{user}\" cannot be deleted",
+    "error.user.duplicate": "A user with the email address \"{email}\" already exists",
+    "error.user.directory.create": "The user directory for \"{email}\" could not be created",
+    "error.user.directory.move": "The user directory for \"{email}\" could not be moved",
+    "error.user.directory.delete": "The user directory for \"{email}\" could not be deleted",
+    "error.user.save": "The user information for \"{email}\" could not be saved"
+
+
 
 }
