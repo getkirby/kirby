@@ -2,9 +2,11 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\A;
 use Kirby\Util\Str;
+
+use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 class BlueprintPagesSection extends BlueprintSection
 {
