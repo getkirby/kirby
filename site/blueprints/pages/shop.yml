@@ -22,4 +22,5 @@ sections:
   products:
     extends: sections/products
     headline: Published Products
+    status: published
     layout: cards
