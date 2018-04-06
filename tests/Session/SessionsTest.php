@@ -106,6 +106,126 @@ class SessionsTest extends TestCase
         new Sessions(__DIR__ . '/fixtures/store', ['gcInterval' => 0]);
     }
 
+    public function testCreate()
+    {
+        $sessions = new Sessions($this->store, ['mode' => 'header']);
+        $time = time();
+        $session = $sessions->create();
+        $this->assertEquals('header', $session->mode());
+        $this->assertNull($session->token());
+        $this->assertEquals($time, $session->startTime());
+        $this->assertEquals($time + 7200, $session->expiryTime());
+        $this->assertEquals(1800, $session->timeout());
+        $this->assertTrue($session->renewable());
+
+        $time = time();
+        $session = $sessions->create([
+            'mode'       => 'manual',
+            'startTime'  => '+ 1 hour',
+            'expiryTime' => '+ 10 hours',
+            'timeout'    => false,
+            'renewable'  => false
+        ]);
+        $this->assertEquals('manual', $session->mode());
+        $this->assertNull($session->token());
+        $this->assertEquals($time + 3600, $session->startTime());
+        $this->assertEquals($time + 39600, $session->expiryTime());
+        $this->assertEquals(false, $session->timeout());
+        $this->assertFalse($session->renewable());
+    }
+
+    public function testGet()
+    {
+        $sessions = new Sessions($this->store, ['mode' => 'header']);
+        $session = $sessions->get('9999999999.valid.' . $this->store->validKey);
+        $this->assertEquals('header', $session->mode());
+        $this->assertEquals('9999999999.valid.' . $this->store->validKey, $session->token());
+
+        $session1 = $sessions->get('9999999999.valid2.' . $this->store->validKey, 'manual');
+        $this->assertEquals('manual', $session1->mode());
+        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session1->token());
+
+        $session2 = $sessions->get('9999999999.valid2.' . $this->store->validKey, 'header');
+        $this->assertEquals($session1, $session2);
+        $session1->data()->set('someKey', 'someValue');
+        $this->assertEquals('someValue', $session2->data()->get('someKey'));
+    }
+
+    /**
+     * @expectedException     Kirby\Exception\NotFoundException
+     * @expectedExceptionCode error.session.notFound
+     */
+    public function testGetInvalid()
+    {
+        $this->sessions->get('9999999999.doesNotExist.' . $this->store->validKey);
+    }
+
+    public function testCurrent()
+    {
+        Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+
+        $sessions = new Sessions($this->store, ['mode' => 'cookie']);
+        $session = $sessions->current();
+        $this->assertEquals('cookie', $session->mode());
+        $this->assertEquals('9999999999.valid.' . $this->store->validKey, $session->token());
+
+        $sessions = new Sessions($this->store, ['mode' => 'header']);
+        $session = $sessions->current();
+        $this->assertEquals('header', $session->mode());
+        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+
+        unset($_SERVER['HTTP_AUTHORIZATION']);
+        $this->assertNull($sessions->current());
+
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->invalidKey;
+        $this->assertNull($sessions->current());
+
+        // test self-check: should work again
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+        $session = $sessions->current();
+        $this->assertEquals('header', $session->mode());
+        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+    }
+
+    /**
+     * @expectedException     Kirby\Exception\LogicException
+     * @expectedExceptionCode error.session.sessions.manualMode
+     */
+    public function testCurrentManualMode()
+    {
+        $sessions = new Sessions($this->store, ['mode' => 'manual']);
+        $sessions->current();
+    }
+
+    public function testCurrentDetected()
+    {
+        Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+
+        $session = $this->sessions->currentDetected();
+        $this->assertEquals('header', $session->mode());
+        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+
+        unset($_SERVER['HTTP_AUTHORIZATION']);
+        $session = $this->sessions->currentDetected();
+        $this->assertEquals('cookie', $session->mode());
+        $this->assertEquals('9999999999.valid.' . $this->store->validKey, $session->token());
+
+        Cookie::remove('kirby_session');
+        $this->assertNull($this->sessions->currentDetected());
+
+        Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->invalidKey;
+        $this->assertNull($this->sessions->currentDetected());
+
+        // test self-check: should work again
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+        $session = $this->sessions->currentDetected();
+        $this->assertEquals('header', $session->mode());
+        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+    }
+
     public function testCollectGarbage()
     {
         $this->store->collectedGarbage = false;
