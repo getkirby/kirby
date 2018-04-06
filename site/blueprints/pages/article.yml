@@ -33,4 +33,3 @@ sections:
 
   images:
     extends: sections/images
-    template: image
