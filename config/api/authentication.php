@@ -1,5 +1,9 @@
 <?php
 
 return function () {
-    return $this->user();
+    if ($user = $this->user()) {
+        return $user;
+    }
+
+    throw new Exception('Unauthenticated', 403);
 };

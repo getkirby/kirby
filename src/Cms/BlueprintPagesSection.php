@@ -244,7 +244,7 @@ class BlueprintPagesSection extends BlueprintSection
 
     public function sort(string $id, string $status, int $position = null)
     {
-        if ($this->status() === 'all') {
+        if (in_array($this->status(), ['all', 'published']) === true) {
             $status = 'listed';
         }
 
