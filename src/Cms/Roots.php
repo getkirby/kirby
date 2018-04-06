@@ -29,6 +29,7 @@ class Roots extends Ingredients
     protected $panel;
     protected $plugins;
     protected $roles;
+    protected $sessions;
     protected $site;
     protected $snippets;
     protected $templates;
@@ -116,6 +117,11 @@ class Roots extends Ingredients
     public function roles(): string
     {
         return $this->roles = $this->roles ?? $this->blueprints() . '/users';
+    }
+
+    public function sessions(): string
+    {
+        return $this->sessions = $this->sessions ?? $this->site() . '/sessions';
     }
 
     public function site(): string

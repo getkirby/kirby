@@ -145,6 +145,14 @@ return function ($app) {
                 return new Kirby\Cms\Snippet($name, $data);
             }
         ],
+        'Session' => [
+            'singleton' => true,
+            'type'      => Kirby\Session\AutoSession::class,
+            'instance'  => function () use ($app) {
+                $options = (array)$app->option('session');
+                return new Kirby\Session\AutoSession($app->root('sessions'), $options);
+            }
+        ],
         'Template' => [
             'singleton' => false,
             'type'      => Kirby\Cms\Template::class,

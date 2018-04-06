@@ -335,6 +335,17 @@ class App extends Component
     }
 
     /**
+     * Returns the current session object
+     *
+     * @param  array   $options Additional options, see the session component
+     * @return Session
+     */
+    public function session(array $options = [])
+    {
+        return $this->component('session')->get($options);
+    }
+
+    /**
      * Creates the Factory class instance
      * with all registered components
      *
