@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Firebase\JWT\JWT;
+use Kirby\Session\Session;
 use Kirby\Toolkit\V;
 
 /**
@@ -274,12 +274,13 @@ class User extends Model
     }
 
     /**
-     * Logs the user in and creates a auth token
+     * Logs the user in
      *
      * @param string $password
-     * @return string
+     * @param Session|array $session Session options or session object to set the user in
+     * @return void
      */
-    public function login(string $password): string
+    public function login(string $password, $session = null)
     {
         if ($this->role()->permissions()->for('access', 'panel') === false) {
             throw new Exception('You are not allowed to access the panel');
@@ -289,23 +290,53 @@ class User extends Model
             throw new Exception('Invalid email or password');
         }
 
-        // TODO: get the token and expiration from the config
-        $key        = 'kirby';
-        $expiration = 3600 * 24 * 7;
-
-        // create a json web token
-        $token = [
-            'iss' => $this->kirby()->url(),
-            'aud' => $this->kirby()->url(),
-            'iat' => $time = time(),
-            'nbf' => $time,
-            'exp' => $time + $expiration,
-            'uid' => $this->id(),
-        ];
-
-        return JWT::encode($token, $key);
+        $this->loginPasswordless($session);
     }
 
+    /**
+     * Logs the user in without checking the password
+     *
+     * @param Session|array $session Session options or session object to set the user in
+     * @return void
+     */
+    public function loginPasswordless($session = null)
+    {
+        // use passed session options or session object if set
+        if (is_array($session)) {
+            $session = $this->kirby->session($session);
+        } elseif (!is_a($session, Session::class)) {
+            $session = $this->kirby->session(['detect' => true]);
+        }
+
+        $session->regenerateToken(); // privilege change
+        $session->data()->set('user.id', $this->id());
+    }
+
+    /**
+     * Logs the user out
+     *
+     * @param Session|array $session Session options or session object to unset the user in
+     * @return void
+     */
+    public function logout($session = null)
+    {
+        // use passed session options or session object if set
+        if (is_array($session)) {
+            $session = $this->kirby->session($session);
+        } elseif (!is_a($session, Session::class)) {
+            $session = $this->kirby->session(['detect' => true]);
+        }
+
+        $session->data()->remove('user.id');
+
+        if ($session->data()->get() === []) {
+            // session is now empty, we might as well destroy it
+            $session->destroy();
+        } else {
+            // privilege change
+            $session->regenerateToken();
+        }
+    }
 
     /**
      * Returns the media url for the user object

@@ -5,13 +5,14 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 use Throwable;
-use Firebase\JWT\JWT;
 use Kirby\Form\Field;
 use Kirby\Toolkit\Url;
+use Kirby\Session\Session;
 use Kirby\Util\Controller;
 use Kirby\Util\F;
 use Kirby\Util\Factory;
 use Kirby\Util\Dir;
+use Kirby\Util\Str;
 
 class App extends Component
 {
@@ -57,29 +58,6 @@ class App extends Component
 
         // set the singleton
         static::$instance = $this;
-    }
-
-    /**
-     * Returns the authentication token from the request
-     *
-     * @return array|null
-     */
-    public function authToken()
-    {
-        $query   = $this->request()->data();
-        $headers = $this->request()->headers();
-        $token   = $query['auth'] ?? $headers['Authorization'] ?? null;
-        $token   = preg_replace('!^Bearer !', '', $token);
-
-        if (empty($token) === true) {
-            throw new Exception('Invalid authentication token');
-        }
-
-        // TODO: get the key from config
-        $key = 'kirby';
-
-        // return the token object
-        return (array)JWT::decode($token, $key, ['HS256']);
     }
 
     /**
@@ -522,10 +500,11 @@ class App extends Component
      * Returns a specific user by id
      * or the current user if no id is given
      *
-     * @param string $id
+     * @param  string        $id
+     * @param  Session|array $session Session options or session object for getting the current user
      * @return User|null
      */
-    public function user(string $id = null)
+    public function user(string $id = null, $session = null)
     {
         if ($id === null) {
             if (is_a($this->user, User::class) === true) {
@@ -537,7 +516,40 @@ class App extends Component
             }
 
             try {
-                return $this->user = $this->users()->find($this->authToken()['uid']);
+                $authorization = $this->request()->headers()['Authorization'] ?? '';
+                if (Str::startsWith($authorization, 'Basic ') === true) {
+                    // HTTP Basic auth
+                    $credentials = base64_decode(substr($authorization, 6));
+                    $id       = Str::before($credentials, ':');
+                    $password = Str::after($credentials, ':');
+
+                    $user = $this->users()->find($id);
+
+                    if ($user->validatePassword($password) !== true) {
+                        return null;
+                    }
+                } else {
+                    // try session in header or cookie
+                    // use passed session options or session object if set
+                    if (is_array($session)) {
+                        $session = $this->session($session);
+                    } elseif (!is_a($session, Session::class)) {
+                        $session = $this->session(['detect' => true]);
+                    }
+
+                    $id = $session->data()->get('user.id');
+                    if (is_string($id) !== true) {
+                        return null;
+                    }
+
+                    $user = $this->users()->find($id);
+
+                    // in case the session needs to be updated, do it now
+                    // for better performance
+                    $session->commit();
+                }
+
+                return $this->user = $user;
             } catch (Throwable $e) {
                 return null;
             }
