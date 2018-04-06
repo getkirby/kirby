@@ -3,5 +3,20 @@
     "locale.name": "Deutsch",
     "locale.translator": "Kirby Team",
 
+    "open": "Öffnen",
+    "upload": "Hochladen",
+    "change": "Ändern",
+    "copy": "Kopieren",
+    "delete": "Löschen",
+
+    "login": "Login",
+    "logout": "Logout",
+
+    "welcome": "Willkommen!",
+    "site": "Seite",
+    "settings": "Einstellungen",
+    "users": "Benutzer",
+    "account": "Dein Account",
+
     "error.test": "Das ist ein Testfehler"
 }

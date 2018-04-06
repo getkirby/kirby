@@ -3,45 +3,47 @@
     "locale.name": "English",
     "locale.translator": "Kirby Team",
 
+    "open": "Open",
     "upload": "Upload",
-    "import": "Import",
     "change": "Change",
     "copy": "Copy",
     "delete": "Delete",
-    "search": "Search",
 
     "login": "Login",
     "logout": "Logout",
 
-    "dashboard": "Dashboard",
+    "welcome": "Welcome!",
     "site": "Site",
     "settings": "Settings",
     "users": "Users",
     "account": "Your account",
 
+    "file.renamed": "The file has been renamed",
+    "file.replaced": "The file has been replaced",
+
     "page.list": "Page List",
     "page.title": "Title",
-    "page.preview": "Open",
     "page.template.change": "Change template",
     "page.url.change": "Change URL",
 
     "user": "User",
-    "user.previous": "Previous User",
-    "user.next": "Next User",
     "user.add": "Add a new user",
     "user.firstname": "First name",
     "user.lastname": "Last name",
-    "user.image": "Picture",
+    "user.avatar": "Picture",
+    "user.avatar.uploaded": "The avatar has been uploaded",
+    "user.avatar.deleted": "The avatar has been deleted",
     "user.role": "Role",
+    "user.role.all": "All",
     "user.language": "Language",
+    "user.none": "No users",
+    "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
 
     "email": "Email",
     "email.placeholder": "mail@example.com",
     "password": "Password",
     "website": "Website",
 
-    "notification.welcome": "Welcome {name}",
-    "notification.image.deleted": "The image has been deleted",
 
     "error.test": "This is a test error",
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published"

@@ -81,7 +81,8 @@ return [
             'email',
             'id',
             'name',
-            'role'
+            'role',
+            'language'
         ],
         'panel' => [
             'avatar' => 'compact',
