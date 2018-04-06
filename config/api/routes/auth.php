@@ -6,36 +6,6 @@
 return [
     [
         'pattern' => 'auth',
-        'auth'    => false,
-        'method'  => 'POST',
-        'action'  => function () {
-
-            $email    = $this->requestBody('email');
-            $password = $this->requestBody('password');
-            $id       = sha1($email);
-
-            if (empty($email) === true) {
-                throw new Exception('Missing email');
-            }
-
-            if (empty($password) === true) {
-                throw new Exception('Missing password');
-            }
-
-            // try to find the user by the sha1 id
-            $user  = $this->user($id);
-            $token = $user->login($password);
-
-            return [
-                'status' => 'ok',
-                'token'  => $token,
-                'user'   => $this->resolve($user)->view('auth')->toArray()
-            ];
-
-        }
-    ],
-    [
-        'pattern' => 'auth/user',
         'method'  => 'GET',
         'action'  => function () {
             if ($user = $this->user()) {
@@ -44,5 +14,70 @@ return [
 
             throw new Exception('The user cannot be found');
         }
-    ]
+    ],
+    [
+        'pattern' => 'auth/login',
+        'method'  => 'POST',
+        'action'  => function () {
+
+            // assemble session options
+            $options = [
+                'createMode' => 'cookie',
+                'long'       => $this->requestQuery('long') === 'true'
+            ];
+
+            // log in to the session
+            $this->user(null, $options)->loginPasswordless();
+
+            return [
+                'status' => 'ok',
+                'user'   => $this->resolve($this->user())->view('auth')->toArray()
+            ];
+
+        }
+    ],
+    [
+        'pattern' => 'auth/token',
+        'method'  => 'POST',
+        'action'  => function () {
+
+            // assemble session options
+            $options = [
+                'createMode' => 'header',
+                'long'       => $this->requestQuery('long') === 'true'
+            ];
+
+            // log in to the session
+            $this->user(null, $options)->loginPasswordless();
+
+            return [
+                'status' => 'ok',
+                // TODO: Remove the following line once the token is transmitted on the
+                //       top-level of the response anyway
+                'token'  => $this->session()->token(),
+                'user'   => $this->resolve($this->user())->view('auth')->toArray()
+            ];
+
+        }
+    ],
+    [
+        'pattern' => 'auth/logout',
+        'method'  => 'POST',
+        'action'  => function () {
+
+            // verify that we are logged in via session
+            $authorization = $this->requestHeaders('Authorization', '');
+            if (Str::startsWith($authorization, 'Basic ')) {
+                throw new Exception('Cannot log out of HTTP Basic authentication');
+            }
+
+            // logout of the current, detected session
+            $this->user()->logout();
+
+            return [
+                'status' => 'ok'
+            ];
+
+        }
+    ],
 ];

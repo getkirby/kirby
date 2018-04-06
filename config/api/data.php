@@ -1,13 +1,15 @@
 <?php
 
-use Firebase\JWT\JWT;
-
 /**
  * Api Data Definitions
  */
 return [
-    'token' => function () {
-        return $this->kirby()->authToken();
+    'session' => function (array $options = []) {
+        $options = array_merge([
+            'detect' => true
+        ], $options);
+
+        return $this->kirby()->session($options);
     },
     'file' => function (string $id = null, string $filename) {
 
@@ -45,11 +47,11 @@ return [
     'site' => function () {
         return $this->kirby()->site();
     },
-    'user' => function (string $id = null) {
+    'user' => function (string $id = null, array $sessionOptions = []) {
 
         // get the authenticated user
         if ($id === null) {
-            return $this->kirby()->user();
+            return $this->kirby()->user(null, $this->session($sessionOptions));
         }
 
         // get a specific user by id
