@@ -12,7 +12,7 @@ trait Value
 
     public function assertValueIsInvalid(array $props, string $errorType)
     {
-        $this->assertEquals($errorType, $this->field($props)->error()['type']);
+        $this->assertEquals($errorType, $this->field($props)->error()['cause']);
     }
 
     public function assertValueIsBool()

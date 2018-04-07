@@ -48,7 +48,8 @@ trait Value
                 'name'    => $this->name(),
                 'label'   => method_exists($this, 'label') ? $this->label() : ucfirst($this->name()),
                 'message' => $e->getMessage(),
-                'type'    => 'field'
+                'type'    => 'field',
+                'cause'   => $e->getType()
             ];
         }
     }
