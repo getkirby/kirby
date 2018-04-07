@@ -77,6 +77,18 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('This is a test error', $exception->getMessage());
     }
 
+    public function testExceptionPinned()
+    {
+        $exception = new Exception([
+            'key'       => 'test',
+            'fallback'  => 'This would be the fallback error',
+            'translate' => false
+        ]);
+
+        $this->assertEquals('error.test', $exception->getKey());
+        $this->assertEquals('This would be the fallback error', $exception->getMessage());
+    }
+
     public function testExceptionInvalidKey()
     {
         $exception = new Exception([
@@ -98,7 +110,7 @@ class AppLocalesTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $exception = new Exception([
-            'key'      => 'test'
+            'key' => 'test'
         ]);
 
         $this->assertEquals('Das ist ein Testfehler', $exception->getMessage());

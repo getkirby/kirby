@@ -33,7 +33,7 @@ class Exception extends \Exception
         // Fallback waterfall for message string
         $message = null;
 
-        if (class_exists(App::class)) {
+        if (($args['translate'] ?? true) === true && class_exists(App::class) === true) {
             // 1. Translation for provided key in current language
             // 2. Translation for provided key in default language
             if (isset($args['key']) === true) {
