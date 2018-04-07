@@ -76,3 +76,23 @@ class TestSessionStore extends SessionStore
         $this->collectedGarbage = true;
     }
 }
+
+class MockSession extends Session {
+    public $ensuredToken       = false;
+    public $preparedForWriting = false;
+
+    public function __construct()
+    {
+        // do nothing here
+    }
+
+    public function ensureToken()
+    {
+        $this->ensuredToken = true;
+    }
+
+    public function prepareForWriting()
+    {
+        $this->preparedForWriting = true;
+    }
+}
