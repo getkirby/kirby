@@ -301,12 +301,7 @@ class User extends Model
      */
     public function loginPasswordless($session = null)
     {
-        // use passed session options or session object if set
-        if (is_array($session)) {
-            $session = $this->kirby->session($session);
-        } elseif (!is_a($session, Session::class)) {
-            $session = $this->kirby->session(['detect' => true]);
-        }
+        $session = $this->sessionFromOptions($session);
 
         $session->regenerateToken(); // privilege change
         $session->data()->set('user.id', $this->id());
@@ -320,12 +315,7 @@ class User extends Model
      */
     public function logout($session = null)
     {
-        // use passed session options or session object if set
-        if (is_array($session)) {
-            $session = $this->kirby->session($session);
-        } elseif (!is_a($session, Session::class)) {
-            $session = $this->kirby->session(['detect' => true]);
-        }
+        $session = $this->sessionFromOptions($session);
 
         $session->data()->remove('user.id');
 
@@ -491,6 +481,24 @@ class User extends Model
         }
 
         return true;
+    }
+
+    /**
+     * Converts session options into a session object
+     *
+     * @param Session|array $session Session options or session object to unset the user in
+     * @return Session
+     */
+    protected function sessionFromOptions($session): Session
+    {
+        // use passed session options or session object if set
+        if (is_array($session)) {
+            $session = $this->kirby->session($session);
+        } elseif (!is_a($session, Session::class)) {
+            $session = $this->kirby->session(['detect' => true]);
+        }
+
+        return $session;
     }
 
 }
