@@ -139,8 +139,8 @@ trait PageActions
     {
         // Prepare data
         $data      = [];
-        $old       = Blueprint::factory($old, null, $this);
-        $new       = Blueprint::factory($new, null, $this);
+        $old       = Blueprint::factory($old, 'pages/default', $this);
+        $new       = Blueprint::factory($new, 'pages/default', $this);
         $oldFields = $old->fields();
         $newFields = $new->fields();
 
@@ -187,7 +187,7 @@ trait PageActions
 
             if ($newField === null) {
                 $data[$name]    = $field->value();
-                $removed[$name] = $oldField->label();
+                $removed[$name] = $field->name();
             }
         }
 
