@@ -1,0 +1,26 @@
+<?php
+
+namespace Kirby\Session;
+
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+
+class SessionStoreTest extends TestCase
+{
+    public function testGenerateId()
+    {
+        // get a reference to the protected method
+        $reflector = new ReflectionClass(SessionStore::class);
+        $generateId = $reflector->getMethod('generateId');
+        $generateId->setAccessible(true);
+
+        $id1 = $generateId->invoke(null);
+        $this->assertStringMatchesFormat('%x', $id1);
+        $this->assertEquals(20, strlen($id1));
+
+        $id2 = $generateId->invoke(null);
+        $this->assertStringMatchesFormat('%x', $id2);
+        $this->assertEquals(20, strlen($id2));
+        $this->assertNotEquals($id1, $id2);
+    }
+}
