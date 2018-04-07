@@ -8,7 +8,7 @@ use Kirby\Toolkit\V;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\PermissionsException;
+use Kirby\Exception\PermissionException;
 
 class UserRules
 {
@@ -16,7 +16,7 @@ class UserRules
     public static function changeEmail(User $user, string $email): bool
     {
         if ($user->permissions()->changeEmail() !== true) {
-            throw new PermissionsException([
+            throw new PermissionException([
                 'key'  => 'user.changeEmail.permission',
                 'data' => ['name' => $user->name()]
             ]);
@@ -28,7 +28,7 @@ class UserRules
     public static function changeLanguage(User $user, string $language): bool
     {
         if ($user->permissions()->changeLanguage() !== true) {
-            throw new PermissionsException([
+            throw new PermissionException([
                 'key'  => 'user.changeLanguage.permission',
                 'data' => ['name' => $user->name()]
             ]);
@@ -40,7 +40,7 @@ class UserRules
     public static function changeName(User $user, string $name): bool
     {
         if ($user->permissions()->changeName() !== true) {
-            throw new PermissionsException([
+            throw new PermissionException([
                 'key'  => 'user.changeName.permission',
                 'data' => ['name' => $user->name()]
             ]);
@@ -52,7 +52,7 @@ class UserRules
     public static function changePassword(User $user, string $password): bool
     {
         if ($user->permissions()->changePassword() !== true) {
-            throw new PermissionsException([
+            throw new PermissionException([
                 'key'  => 'user.changePassword.permission',
                 'data' => ['name' => $user->name()]
             ]);
@@ -64,7 +64,7 @@ class UserRules
     public static function changeRole(User $user, string $role): bool
     {
         if ($user->permissions()->changeRole() !== true) {
-            throw new PermissionsException([
+            throw new PermissionException([
                 'key'  => 'user.changeRole.permission',
                 'data' => ['name' => $user->name()]
             ]);
@@ -86,7 +86,7 @@ class UserRules
     {
         if ($user->kirby()->users()->count() > 0) {
             if ($user->permissions()->create() !== true) {
-                throw new PermissionsException([
+                throw new PermissionException([
                     'key' => 'user.create.permission'
                 ]);
             }
@@ -105,7 +105,7 @@ class UserRules
     public static function delete(User $user): bool
     {
         if ($user->permissions()->delete() !== true) {
-            throw new PermissionsException([
+            throw new PermissionException([
                 'key'  => 'user.delete.permission',
                 'data' => ['name' => $user->name()]
             ]);
@@ -129,22 +129,22 @@ class UserRules
     public static function update(User $user, array $values = [], array $strings = []): bool
     {
         if ($user->permissions()->update() !== true) {
-            throw new PermissionsException([
+            throw new PermissionException([
                 'key'  => 'user.update.permission',
                 'data' => ['name' => $user->name()]
             ]);
         }
 
         if (isset($values['email']) === true) {
-            throw new Exception('Use the User::changeEmail() method to change the user email');
+            throw new \Exception('Use the User::changeEmail() method to change the user email');
         }
 
         if (isset($values['password']) === true) {
-            throw new Exception('Use the User::changePassword() method to change the user password');
+            throw new \Exception('Use the User::changePassword() method to change the user password');
         }
 
         if (isset($values['role']) === true) {
-            throw new Exception('Use the User::changeRole() method to change the user role');
+            throw new \Exception('Use the User::changeRole() method to change the user role');
         }
 
         return true;

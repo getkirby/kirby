@@ -46,9 +46,9 @@ class UserRulesTest extends TestCase
     {
         return [
             ['Email', 'domain.com', 'Please enter a valid email address'],
-            ['Language', 'english', 'Invalid user language'],
-            ['Password', '1234', 'The password must be at least 8 characters long'],
-            ['Role', 'rockstar', 'Invalid user role: "rockstar"']
+            ['Language', 'english', 'Please enter a valid language'],
+            ['Password', '1234', 'Please enter a valid password. Passwords must be at least 8 characters long.'],
+            ['Role', 'rockstar', 'Please enter a valid role']
         ];
     }
 
@@ -67,8 +67,8 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage A user with this email address already exists
+     * @expectedException Kirby\Exception\DuplicateException
+     * @expectedExceptionMessage A user with the email address "admin@domain.com" already exists
      */
     public function testChangeEmailDuplicate()
     {
@@ -78,7 +78,7 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException Kirby\Exception\LogicException
      * @expectedExceptionMessage The role for this user cannot be changed
      */
     public function testChangeRoleLastAdmin()
@@ -100,7 +100,7 @@ class UserRulesTest extends TestCase
     }
 
     // /**
-    //  * @expectedException Exception
+    //  * @expectedException Kirby\Exception\InvalidArgumentsException
     //  * @expectedExceptionMessage Please enter a valid email address
     //  */
     // public function testCreateInvalidPassword()
@@ -164,8 +164,8 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The user cannot be deleted
+     * @expectedException Kirby\Exception\LogicException
+     * @expectedExceptionMessage The last admin cannot be deleted
      */
     public function testDeleteLastAdmin()
     {
@@ -180,8 +180,8 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The user cannot be deleted
+     * @expectedException Kirby\Exception\LogicException
+     * @expectedExceptionMessage The last user cannot be deleted
      */
     public function testDeleteLastUser()
     {

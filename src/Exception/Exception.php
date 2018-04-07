@@ -37,7 +37,7 @@ class Exception extends \Exception
             // 1. Translation for provided key in current language
             // 2. Translation for provided key in default language
             if (isset($args['key']) === true) {
-                $message = App::instance()->translate(self::$prefix . '.' . $args['key'], null, $args['locale'] ?? null);
+                $message = App::instance()->translate(self::$prefix . '.' . $args['key']);
             }
         }
 
@@ -50,7 +50,7 @@ class Exception extends \Exception
             // 4. Translation for default key in current language
             // 5. Translation for default key in default language
             if ($message === null) {
-                $message = App::instance()->translate(self::$prefix . '.' . static::$defaultKey, null, $args['locale'] ?? null);
+                $message = App::instance()->translate(self::$prefix . '.' . static::$defaultKey);
             }
         }
 
