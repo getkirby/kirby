@@ -23,7 +23,7 @@ return [
             // assemble session options
             $options = [
                 'createMode' => 'cookie',
-                'long'       => $this->requestQuery('long') === 'true'
+                'long'       => $this->requestBody('long') === true
             ];
 
             // log in to the session
@@ -44,7 +44,7 @@ return [
             // assemble session options
             $options = [
                 'createMode' => 'header',
-                'long'       => $this->requestQuery('long') === 'true'
+                'long'       => $this->requestBody('long') === true
             ];
 
             // log in to the session
