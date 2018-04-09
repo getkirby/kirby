@@ -6,6 +6,7 @@ use Throwable;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use Kirby\Data\Handler\Json;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -304,6 +305,26 @@ class Session
     }
 
     /**
+     * Magic call method that proxies all calls to session data methods
+     *
+     * @param  string $name      Method name (one of set, increment, decrement, get, pull, remove, clear)
+     * @param  array  $arguments Method arguments
+     * @return mixed
+     */
+    public function __call(string $name, array $arguments)
+    {
+        // validate that we can handle the called method
+        if (!in_array($name, ['set', 'increment', 'decrement', 'get', 'pull', 'remove', 'clear'])) {
+            throw new BadMethodCallException([
+                'data'      => ['method' => 'Session::' . $name],
+                'translate' => false
+            ]);
+        }
+
+        return $this->data()->$name(...$arguments);
+    }
+
+    /**
      * Writes all changes to the session to the session store
      *
      * @return void
@@ -345,16 +366,6 @@ class Session
         $this->sessions->store()->set($this->tokenExpiry, $this->tokenId, $data);
         $this->sessions->store()->unlock($this->tokenExpiry, $this->tokenId);
         $this->writeMode = false;
-    }
-
-    /**
-     * Clears all session data
-     *
-     * @return void
-     */
-    public function clear()
-    {
-        $this->data()->clear();
     }
 
     /**

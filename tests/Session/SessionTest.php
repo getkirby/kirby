@@ -374,6 +374,51 @@ class SessionTest extends TestCase
         $this->assertEquals($newToken, $session->token());
     }
 
+    public function testDataMethods()
+    {
+        $session = new Session($this->sessions, null, []);
+        $session->data()->reload(['someString' => 'someValue', 'someInt' => 123]);
+
+        // get
+        $this->assertEquals('someValue', $session->get('someString', 'some default'));
+        $this->assertEquals('some default', $session->get('someOtherString', 'some default'));
+
+        // set
+        $session->set('someString', 'someOtherValue');
+        $this->assertEquals('someOtherValue', $session->data()->get('someString'));
+
+        // increment
+        $session->increment('someInt', 10);
+        $this->assertEquals(133, $session->data()->get('someInt'));
+
+        // decrement
+        $session->decrement('someInt', 20);
+        $this->assertEquals(113, $session->data()->get('someInt'));
+
+        // pull
+        $this->assertEquals('someOtherValue', $session->pull('someString', 'some default'));
+        $this->assertEquals('some default', $session->data()->get('someString', 'some default'));
+
+        // remove
+        $session->remove('someInt');
+        $this->assertNull($session->data()->get('someInt'));
+
+        // clear
+        $session->data()->reload(['someString' => 'someValue']);
+        $this->assertEquals(['someString' => 'someValue'], $session->get());
+        $session->clear();
+        $this->assertEquals([], $session->get());
+    }
+
+    /**
+     * @expectedException Kirby\Exception\BadMethodCallException
+     */
+    public function testInvalidMethod()
+    {
+        $session = new Session($this->sessions, null, []);
+        $session->someGibberish();
+    }
+
     public function testCommit()
     {
         $token = '9999999999.valid.' . $this->store->validKey;
@@ -450,17 +495,6 @@ class SessionTest extends TestCase
                 'someKey' => 'aDifferentValue'
             ]
         ], $data);
-    }
-
-    public function testClear()
-    {
-        $token = '9999999999.valid.' . $this->store->validKey;
-        $session = new Session($this->sessions, $token, []);
-
-        $session->data()->reload(['someKey' => 'someValue']);
-        $this->assertEquals('someValue', $session->data()->get('someKey'));
-        $session->clear();
-        $this->assertNull($session->data()->get('someKey'));
     }
 
     public function testDestroy()
