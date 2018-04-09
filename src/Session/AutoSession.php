@@ -23,28 +23,28 @@ class AutoSession
      *
      * @param SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
      * @param array               $options Optional additional options:
-     *                                     - `lengthNormal`: Length of normal sessions in seconds
-     *                                                       Defaults to 2 hours
-     *                                     - `lengthLong`:   Length of "remember me" sessions in seconds
-     *                                                       Defaults to 2 weeks
-     *                                     - `timeout`:      Activity timeout in seconds (integer or false for none)
-     *                                                       *Only* used for normal sessions
-     *                                                       Defaults to `1800` (half an hour)
-     *                                     - `cookieName`:   Name to use for the session cookie
-     *                                                       Defaults to `kirby_session`
-     *                                     - `gcInterval`:   How often should the garbage collector be run?
-     *                                                       Integer or `false` for never; defaults to `100`
+     *                                     - `durationNormal`: Duration of normal sessions in seconds
+     *                                                         Defaults to 2 hours
+     *                                     - `durationLong`:   Duration of "remember me" sessions in seconds
+     *                                                         Defaults to 2 weeks
+     *                                     - `timeout`:        Activity timeout in seconds (integer or false for none)
+     *                                                         *Only* used for normal sessions
+     *                                                         Defaults to `1800` (half an hour)
+     *                                     - `cookieName`:     Name to use for the session cookie
+     *                                                         Defaults to `kirby_session`
+     *                                     - `gcInterval`:     How often should the garbage collector be run?
+     *                                                         Integer or `false` for never; defaults to `100`
      *
      */
     public function __construct($store, array $options = [])
     {
         // merge options with defaults
         $this->options = array_merge([
-            'lengthNormal' => 7200,
-            'lengthLong'   => 1209600,
-            'timeout'      => 1800,
-            'cookieName'   => 'kirby_session',
-            'gcInterval'   => 100
+            'durationNormal' => 7200,
+            'durationLong'   => 1209600,
+            'timeout'        => 1800,
+            'cookieName'     => 'kirby_session',
+            'gcInterval'     => 100
         ], $options);
 
         // create an internal instance of the low-level Sessions class
@@ -79,11 +79,11 @@ class AutoSession
 
         // determine expiry options based on the session type
         if ($options['long'] === true) {
-            $length  = $this->options['lengthLong'];
-            $timeout = false;
+            $duration = $this->options['durationLong'];
+            $timeout  = false;
         } else {
-            $length  = $this->options['lengthNormal'];
-            $timeout = $this->options['timeout'];
+            $duration = $this->options['durationNormal'];
+            $timeout  = $this->options['timeout'];
         }
 
         // get the current session
@@ -98,7 +98,7 @@ class AutoSession
             $session = $this->createdSession ?? $this->sessions->create([
                 'mode'       => $options['createMode'],
                 'startTime'  => time(),
-                'expiryTime' => time() + $length,
+                'expiryTime' => time() + $duration,
                 'timeout'    => $timeout,
                 'renewable'  => true,
             ]);
@@ -110,8 +110,8 @@ class AutoSession
         // update the session configuration if the $options changed
         // always use the less strict value for compatibility with features
         // that depend on the less strict behavior
-        if ($length > $session->length()) {
-            $session->length($length);
+        if ($duration > $session->duration()) {
+            $session->duration($duration);
         }
         if (($timeout === false && $session->timeout() !== false) || $timeout > $session->timeout()) {
             $session->timeout($timeout);

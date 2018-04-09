@@ -34,7 +34,7 @@ class Session
     // persistent data
     protected $startTime;
     protected $expiryTime;
-    protected $length;
+    protected $duration;
     protected $timeout;
     protected $lastActivity;
     protected $renewable;
@@ -82,7 +82,7 @@ class Session
             // set data based on options
             $this->startTime  = static::timeToTimestamp($options['startTime'] ?? time());
             $this->expiryTime = static::timeToTimestamp($options['expiryTime'] ?? '+ 2 hours', $this->startTime);
-            $this->length     = $this->expiryTime - $this->startTime;
+            $this->duration   = $this->expiryTime - $this->startTime;
             $this->timeout    = $options['timeout'] ?? 1800;
             $this->renewable  = $options['renewable'] ?? true;
             $this->data       = new SessionData($this, []);
@@ -95,7 +95,7 @@ class Session
                     'translate' => false
                 ]);
             }
-            if ($this->length < 0) {
+            if ($this->duration < 0) {
                 // expiry time must be after start time
                 throw new InvalidArgumentException([
                     'data'      => ['method' => 'Session::__construct', 'argument' => '$options[\'startTime\' & \'expiryTime\']'],
@@ -181,7 +181,7 @@ class Session
 
     /**
      * Gets or sets the session expiry time
-     * Setting the expiry time also updates the length and regenerates the session token
+     * Setting the expiry time also updates the duration and regenerates the session token
      *
      * @param  string|integer $expiryTime Optional new expiry timestamp or time string to set
      * @return integer                    Timestamp
@@ -202,7 +202,7 @@ class Session
 
             $this->prepareForWriting();
             $this->expiryTime = $expiryTime;
-            $this->length     = $expiryTime - time();
+            $this->duration   = $expiryTime - time();
             $this->regenerateTokenIfNotNew();
         } elseif ($expiryTime !== null) {
             throw new InvalidArgumentException([
@@ -215,30 +215,30 @@ class Session
     }
 
     /**
-     * Gets or sets the session length
-     * Setting the length also updates the expiry time and regenerates the session token
+     * Gets or sets the session duration
+     * Setting the duration also updates the expiry time and regenerates the session token
      *
-     * @param  integer $length Optional new length in seconds to set
-     * @return integer         Number of seconds
+     * @param  integer $duration Optional new duration in seconds to set
+     * @return integer           Number of seconds
      */
-    public function length(int $length = null): int
+    public function duration(int $duration = null): int
     {
-        if (is_int($length)) {
-            // verify that the length is at least 1 second
-            if ($length <= 0) {
+        if (is_int($duration)) {
+            // verify that the duration is at least 1 second
+            if ($duration <= 0) {
                 throw new InvalidArgumentException([
-                    'data'      => ['method' => 'Session::length', 'argument' => '$length'],
+                    'data'      => ['method' => 'Session::duration', 'argument' => '$duration'],
                     'translate' => false
                 ]);
             }
 
             $this->prepareForWriting();
-            $this->length     = $length;
-            $this->expiryTime = time() + $length;
+            $this->duration   = $duration;
+            $this->expiryTime = time() + $duration;
             $this->regenerateTokenIfNotNew();
         }
 
-        return $this->length;
+        return $this->duration;
     }
 
     /**
@@ -350,7 +350,7 @@ class Session
             $data = [
                 'startTime'    => $this->startTime(),
                 'expiryTime'   => $this->expiryTime(),
-                'length'       => $this->length(),
+                'duration'     => $this->duration(),
                 'timeout'      => $this->timeout(),
                 'lastActivity' => $this->lastActivity,
                 'renewable'    => $this->renewable(),
@@ -393,7 +393,7 @@ class Session
     }
 
     /**
-     * Renews the session with the same session length
+     * Renews the session with the same session duration
      * Renewing also regenerates the session token
      *
      * @return void
@@ -409,7 +409,7 @@ class Session
         }
 
         $this->prepareForWriting();
-        $this->expiryTime = time() + $this->length();
+        $this->expiryTime = time() + $this->duration();
         $this->regenerateTokenIfNotNew();
     }
 
@@ -683,7 +683,7 @@ class Session
         // (re)initialize all instance variables
         $this->startTime    = $data['startTime'];
         $this->expiryTime   = $data['expiryTime'];
-        $this->length       = $data['length'];
+        $this->duration     = $data['duration'];
         $this->timeout      = $data['timeout'];
         $this->lastActivity = $data['lastActivity'];
         $this->renewable    = $data['renewable'];
@@ -730,12 +730,12 @@ class Session
 
     /**
      * Checks if the session can be renewed and if the last renewal
-     * was more than half a session length ago
+     * was more than half a session duration ago
      *
      * @return boolean
      */
     protected function needsRenewal(): bool
     {
-        return $this->renewable() === true && $this->expiryTime() - time() < $this->length() / 2;
+        return $this->renewable() === true && $this->expiryTime() - time() < $this->duration() / 2;
     }
 }

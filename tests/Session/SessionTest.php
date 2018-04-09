@@ -48,7 +48,7 @@ class SessionTest extends TestCase
         $session = new Session($this->sessions, null, []);
         $this->assertEquals($time, $session->startTime());
         $this->assertEquals($time + 7200, $session->expiryTime());
-        $this->assertEquals(7200, $session->length());
+        $this->assertEquals(7200, $session->duration());
         $this->assertEquals(1800, $session->timeout());
         $this->assertEquals($time, $activityProperty->getValue($session));
         $this->assertEquals(true, $session->renewable());
@@ -65,7 +65,7 @@ class SessionTest extends TestCase
         ]);
         $this->assertEquals($time + 60, $session->startTime());
         $this->assertEquals($time + 3660, $session->expiryTime());
-        $this->assertEquals(3600, $session->length());
+        $this->assertEquals(3600, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertEquals(null, $activityProperty->getValue($session));
         $this->assertEquals(false, $session->renewable());
@@ -75,7 +75,7 @@ class SessionTest extends TestCase
 
         // changing any value shouldn't initialize the session
         $session->expiryTime(9999999999);
-        $session->length(1000);
+        $session->duration(1000);
         $session->timeout(60);
         $session->renewable(true);
         $this->assertNull($session->token());
@@ -117,7 +117,7 @@ class SessionTest extends TestCase
     /**
      * @expectedException Kirby\Exception\InvalidArgumentException
      */
-    public function testCreateInvalidLength()
+    public function testCreateInvalidDuration()
     {
         new Session($this->sessions, null, [
             'startTime'  => time() + 60,
@@ -181,7 +181,7 @@ class SessionTest extends TestCase
         $originalToken = $session->token();
 
         $this->assertEquals(7777777777, $session->expiryTime());
-        $this->assertEquals(6777777777, $session->length());
+        $this->assertEquals(6777777777, $session->duration());
         $this->assertWriteMode(false, $session);
         $this->assertEquals(9999999999, $session->expiryTime(9999999999));
         $this->assertWriteMode(true, $session);
@@ -190,7 +190,7 @@ class SessionTest extends TestCase
         $this->assertEquals(9999999999, $session->expiryTime());
         $this->assertEquals(time() + 3600, $session->expiryTime('+ 1 hour'));
         $this->assertEquals(time() + 3600, $session->expiryTime());
-        $this->assertEquals(3600, $session->length());
+        $this->assertEquals(3600, $session->duration());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
     }
@@ -243,7 +243,7 @@ class SessionTest extends TestCase
         $session->expiryTime(time());
     }
 
-    public function testLength()
+    public function testDuration()
     {
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
@@ -254,10 +254,10 @@ class SessionTest extends TestCase
         $originalToken = $session->token();
 
         $this->assertEquals(7777777777, $session->expiryTime());
-        $this->assertEquals(6777777777, $session->length());
+        $this->assertEquals(6777777777, $session->duration());
         $this->assertWriteMode(false, $session);
-        $this->assertEquals(3600, $session->length(3600));
-        $this->assertEquals(3600, $session->length());
+        $this->assertEquals(3600, $session->duration(3600));
+        $this->assertEquals(3600, $session->duration());
         $this->assertEquals(time() + 3600, $session->expiryTime());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
@@ -266,25 +266,25 @@ class SessionTest extends TestCase
     /**
      * @expectedException Kirby\Exception\InvalidArgumentException
      */
-    public function testLengthInvalidTime1()
+    public function testDurationInvalidTime1()
     {
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
         ]);
-        $session->length(-1);
+        $session->duration(-1);
     }
 
     /**
      * @expectedException Kirby\Exception\InvalidArgumentException
      */
-    public function testLengthInvalidTime2()
+    public function testDurationInvalidTime2()
     {
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
         ]);
-        $session->length(0);
+        $session->duration(0);
     }
 
     public function testTimeout()
@@ -444,7 +444,7 @@ class SessionTest extends TestCase
         $this->assertEquals([
             'startTime'    => 0,
             'expiryTime'   => 9999999999,
-            'length'       => 9999999999,
+            'duration'     => 9999999999,
             'timeout'      => 3600,
             'lastActivity' => $time,
             'renewable'    => true,
@@ -458,7 +458,7 @@ class SessionTest extends TestCase
         $this->store->sessions['9999999999.valid'] = [
             'startTime'    => 0,
             'expiryTime'   => 9999999999,
-            'length'       => 9999999999,
+            'duration'     => 9999999999,
             'timeout'      => 1234,
             'lastActivity' => $time,
             'renewable'    => true,
@@ -486,7 +486,7 @@ class SessionTest extends TestCase
         $this->assertEquals([
             'startTime'    => 0,
             'expiryTime'   => 9999999999,
-            'length'       => 9999999999,
+            'duration'     => 9999999999,
             'timeout'      => 1234,
             'lastActivity' => $time,
             'renewable'    => false,
@@ -538,11 +538,11 @@ class SessionTest extends TestCase
         $this->assertWriteMode(false, $session);
 
         $this->assertEquals(9999999999, $session->expiryTime());
-        $this->assertEquals(8999999999, $session->length());
+        $this->assertEquals(8999999999, $session->duration());
         $time = time();
         $session->renew();
         $this->assertEquals($time + 8999999999, $session->expiryTime());
-        $this->assertEquals(8999999999, $session->length());
+        $this->assertEquals(8999999999, $session->duration());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
 
@@ -729,7 +729,7 @@ class SessionTest extends TestCase
         $this->assertEquals($token, $session->token());
         $this->assertEquals(0, $session->startTime());
         $this->assertEquals(9999999999, $session->expiryTime());
-        $this->assertEquals(9999999999, $session->length());
+        $this->assertEquals(9999999999, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertFalse($session->renewable());
         $this->assertEquals('valid', $session->data()->get('id'));
@@ -785,7 +785,7 @@ class SessionTest extends TestCase
         $this->assertEquals($tokenNew, $session->token());
         $this->assertEquals(0, $session->startTime());
         $this->assertEquals(9999999999, $session->expiryTime());
-        $this->assertEquals(9999999999, $session->length());
+        $this->assertEquals(9999999999, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertFalse($session->renewable());
         $this->assertEquals('valid', $session->data()->get('id'));
@@ -829,7 +829,7 @@ class SessionTest extends TestCase
         $this->assertEquals($token, $session->token());
         $this->assertEquals(0, $session->startTime());
         $this->assertEquals(9999999999, $session->expiryTime());
-        $this->assertEquals(9999999999, $session->length());
+        $this->assertEquals(9999999999, $session->duration());
         $this->assertEquals(3600, $session->timeout());
         $this->assertFalse($session->renewable());
         $this->assertEquals('timeoutActivity1', $session->data()->get('id'));
@@ -848,7 +848,7 @@ class SessionTest extends TestCase
         $this->assertEquals($token, $session->token());
         $this->assertEquals(0, $session->startTime());
         $this->assertEquals(9999999999, $session->expiryTime());
-        $this->assertEquals(9999999999, $session->length());
+        $this->assertEquals(9999999999, $session->duration());
         $this->assertEquals(3600, $session->timeout());
         $this->assertFalse($session->renewable());
         $this->assertEquals('timeoutActivity2', $session->data()->get('id'));
@@ -875,7 +875,7 @@ class SessionTest extends TestCase
         $this->assertEquals(0, $session->startTime());
         $this->assertGreaterThan($time + 2999999995, $session->expiryTime());
         $this->assertLessThan($time + 3000000005, $session->expiryTime());
-        $this->assertEquals(3000000000, $session->length());
+        $this->assertEquals(3000000000, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
         $this->assertEquals('renewal', $session->data()->get('id'));
@@ -889,7 +889,7 @@ class SessionTest extends TestCase
         $this->assertEquals($token, $session->token());
         $this->assertEquals(0, $session->startTime());
         $this->assertEquals(3000000000, $session->expiryTime());
-        $this->assertEquals(3000000000, $session->length());
+        $this->assertEquals(3000000000, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertFalse($session->renewable());
         $this->assertEquals('nonRenewable', $session->data()->get('id'));

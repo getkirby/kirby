@@ -81,7 +81,7 @@ class AutoSessionTest extends TestCase
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
         $this->assertEquals($time, $session->startTime());
-        $this->assertEquals(7200, $session->length());
+        $this->assertEquals(7200, $session->duration());
         $this->assertEquals($time + 7200, $session->expiryTime());
         $this->assertEquals(1800, $session->timeout());
         $this->assertTrue($session->renewable());
@@ -127,7 +127,7 @@ class AutoSessionTest extends TestCase
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
         $this->assertEquals($time, $session->startTime());
-        $this->assertEquals(1209600, $session->length());
+        $this->assertEquals(1209600, $session->duration());
         $this->assertEquals($time + 1209600, $session->expiryTime());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
@@ -135,40 +135,40 @@ class AutoSessionTest extends TestCase
         // session config update when switching to long session
         $autoSession = new AutoSession($this->store);
         $session = $autoSession->get();
-        $this->assertEquals(7200, $session->length());
+        $this->assertEquals(7200, $session->duration());
         $this->assertEquals(1800, $session->timeout());
         $session->data()->set('id', 'awesome session');
         $session->commit();
         Cookie::set('kirby_session', $session->token());
         $session = $autoSession->get(['long' => true]);
         $this->assertEquals('awesome session', $session->data()->get('id'));
-        $this->assertEquals(1209600, $session->length());
+        $this->assertEquals(1209600, $session->duration());
         $this->assertEquals(false, $session->timeout());
         Cookie::remove('kirby_session');
 
-        // custom length and timeout (normal session)
+        // custom duration and timeout (normal session)
         $autoSession = new AutoSession($this->store, [
-            'lengthNormal' => 1,
-            'lengthLong'   => 5,
-            'timeout'      => 1234
+            'durationNormal' => 1,
+            'durationLong'   => 5,
+            'timeout'        => 1234
         ]);
         $time = time();
         $session = $autoSession->get();
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
         $this->assertEquals($time, $session->startTime());
-        $this->assertEquals(1, $session->length());
+        $this->assertEquals(1, $session->duration());
         $this->assertEquals($time + 1, $session->expiryTime());
         $this->assertEquals(1234, $session->timeout());
         $this->assertTrue($session->renewable());
 
-        // custom length and timeout (long session)
+        // custom duration and timeout (long session)
         $time = time();
         $session = $autoSession->get(['long' => true]);
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
         $this->assertEquals($time, $session->startTime());
-        $this->assertEquals(5, $session->length());
+        $this->assertEquals(5, $session->duration());
         $this->assertEquals($time + 5, $session->expiryTime());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
@@ -176,25 +176,25 @@ class AutoSessionTest extends TestCase
         // session config update when the configuration changed
         $autoSession = new AutoSession($this->store);
         $session = $autoSession->get();
-        $this->assertEquals(7200, $session->length());
+        $this->assertEquals(7200, $session->duration());
         $this->assertEquals(1800, $session->timeout());
         $session->data()->set('id', 'awesome session');
         $session->commit();
         Cookie::set('kirby_session', $session->token());
 
         // lower values: shouldn't change anything
-        $autoSession = new AutoSession($this->store, ['lengthNormal' => 7100, 'timeout' => 1000]);
+        $autoSession = new AutoSession($this->store, ['durationNormal' => 7100, 'timeout' => 1000]);
         $session = $autoSession->get();
         $this->assertEquals('awesome session', $session->data()->get('id'));
-        $this->assertEquals(7200, $session->length());
+        $this->assertEquals(7200, $session->duration());
         $this->assertEquals(1800, $session->timeout());
         $session->commit();
 
         // higher values: should update
-        $autoSession = new AutoSession($this->store, ['lengthNormal' => 7300, 'timeout' => 1900]);
+        $autoSession = new AutoSession($this->store, ['durationNormal' => 7300, 'timeout' => 1900]);
         $session = $autoSession->get();
         $this->assertEquals('awesome session', $session->data()->get('id'));
-        $this->assertEquals(7300, $session->length());
+        $this->assertEquals(7300, $session->duration());
         $this->assertEquals(1900, $session->timeout());
         $session->commit();
 
@@ -202,7 +202,7 @@ class AutoSessionTest extends TestCase
         $autoSession = new AutoSession($this->store, ['timeout' => false]);
         $session = $autoSession->get();
         $this->assertEquals('awesome session', $session->data()->get('id'));
-        $this->assertEquals(7300, $session->length());
+        $this->assertEquals(7300, $session->duration());
         $this->assertEquals(false, $session->timeout());
     }
 

@@ -34,7 +34,7 @@ class TestSessionStore extends SessionStore
             '1000000000.expired' => [
                 'startTime'    => 0,
                 'expiryTime'   => 1000000000,
-                'length'       => 1000000000,
+                'duration'     => 1000000000,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => false,
@@ -47,7 +47,7 @@ class TestSessionStore extends SessionStore
             '3000000000.renewal' => [
                 'startTime'    => 0,
                 'expiryTime'   => 3000000000,
-                'length'       => 3000000000,
+                'duration'     => 3000000000,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => true,
@@ -60,7 +60,7 @@ class TestSessionStore extends SessionStore
             '3000000000.nonRenewable' => [
                 'startTime'    => 0,
                 'expiryTime'   => 3000000000,
-                'length'       => 3000000000,
+                'duration'     => 3000000000,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => false,
@@ -94,7 +94,7 @@ class TestSessionStore extends SessionStore
             '9999999999.notStarted' => [
                 'startTime'    => 7777777777,
                 'expiryTime'   => 9999999999,
-                'length'       => 2222222222,
+                'duration'     => 2222222222,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => false,
@@ -107,7 +107,7 @@ class TestSessionStore extends SessionStore
             '9999999999.timeout' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'length'       => 9999999999,
+                'duration'     => 9999999999,
                 'timeout'      => 3600,
                 'lastActivity' => 1000000000,
                 'renewable'    => false,
@@ -120,7 +120,7 @@ class TestSessionStore extends SessionStore
             '9999999999.timeoutActivity1' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'length'       => 9999999999,
+                'duration'     => 9999999999,
                 'timeout'      => 3600,
                 'lastActivity' => $time - 10,
                 'renewable'    => false,
@@ -134,7 +134,7 @@ class TestSessionStore extends SessionStore
             '9999999999.timeoutActivity2' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'length'       => 9999999999,
+                'duration'     => 9999999999,
                 'timeout'      => 3600,
                 'lastActivity' => $time - 500,
                 'renewable'    => false,
@@ -148,7 +148,7 @@ class TestSessionStore extends SessionStore
             '9999999999.valid' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'length'       => 9999999999,
+                'duration'     => 9999999999,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => false,
@@ -161,7 +161,7 @@ class TestSessionStore extends SessionStore
             '9999999999.valid2' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'length'       => 9999999999,
+                'duration'     => 9999999999,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => true,
