@@ -3,8 +3,6 @@
 namespace Kirby\Session;
 
 use Throwable;
-use Defuse\Crypto\Crypto;
-use Defuse\Crypto\Key;
 use Kirby\Data\Json;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
@@ -12,6 +10,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\Http\Url;
+use Kirby\Toolkit\Str;
 
 /**
  * @package   Kirby Session
@@ -41,8 +40,7 @@ class Session
     protected $data;
     protected $newSession;
 
-    // temporary data
-    protected $keyObject;
+    // temporary state flags
     protected $updatingLastActivity = false;
     protected $destroyed = false;
     protected $writeMode = false;
@@ -73,9 +71,15 @@ class Session
         if (is_string($token)) {
             // existing session
 
+            // set the token as instance vars
             $this->parseToken($token);
+
+            // initialize, but only try to write to the session if not read-only
+            // (only the case for moved sessions)
             $this->init();
-            $this->autoRenew();
+            if ($this->tokenKey !== null) {
+                $this->autoRenew();
+            }
         } elseif ($token === null) {
             // new session
 
@@ -138,7 +142,11 @@ class Session
     public function token()
     {
         if ($this->tokenExpiry !== null) {
-            return $this->tokenExpiry . '.' . $this->tokenId . '.' . $this->tokenKey;
+            if (is_string($this->tokenKey)) {
+                return $this->tokenExpiry . '.' . $this->tokenId . '.' . $this->tokenKey;
+            } else {
+                return $this->tokenExpiry . '.' . $this->tokenId;
+            }
         } else {
             return null;
         }
@@ -358,9 +366,9 @@ class Session
             ];
         }
 
-        // encrypt the data with the token key
+        // encode the data and attach an HMAC
         $data = Json::encode($data);
-        $data = Crypto::encrypt($data, $this->keyObject, true);
+        $data = hash_hmac('sha256', $data, $this->tokenKey) . ':' . $data;
 
         // store the data
         $this->sessions->store()->set($this->tokenExpiry, $this->tokenId, $data);
@@ -428,17 +436,14 @@ class Session
 
         $this->prepareForWriting();
 
-        // generate new $tokenId
+        // generate new token
         $tokenExpiry = $this->expiryTime;
         $tokenId     = $this->sessions->store()->createId($tokenExpiry);
-
-        // generate new key
-        $keyObject = Key::createNewRandomKey();
-        $tokenKey  = $keyObject->saveToAsciiSafeString();
+        $tokenKey    = bin2hex(random_bytes(32));
 
         // mark the old session as moved if there is one
         if ($this->tokenExpiry !== null) {
-            $this->newSession = $tokenExpiry . '.' . $tokenId . '.' . $tokenKey;
+            $this->newSession = $tokenExpiry . '.' . $tokenId;
             $this->commit();
 
             // we are now in the context of the new session
@@ -449,7 +454,6 @@ class Session
         $this->tokenExpiry = $tokenExpiry;
         $this->tokenId     = $tokenId;
         $this->tokenKey    = $tokenKey;
-        $this->keyObject   = $keyObject;
 
         // the new session needs to be written for the first time
         $this->writeMode = true;
@@ -516,6 +520,17 @@ class Session
             return;
         }
 
+        // don't allow writing for read-only sessions
+        // (only the case for moved sessions)
+        if ($this->tokenKey === null) {
+            throw new LogicException([
+                'key'       => 'session.readonly',
+                'data'      => ['token' => $this->token()],
+                'fallback'  => 'Session "' . $this->token() . '" is currently read-only because it was accessed via an old session token',
+                'translate' => false
+            ]);
+        }
+
         $this->sessions->store()->lock($this->tokenExpiry, $this->tokenId);
         $this->init();
         $this->writeMode = true;
@@ -524,16 +539,18 @@ class Session
     /**
      * Parses a token string into its parts and sets them as instance vars
      *
-     * @param  string $token Session token
+     * @param  string $token      Session token
+     * @param  bool   $withoutKey If true, $token is passed without key
      * @return void
      */
-    protected function parseToken(string $token)
+    protected function parseToken(string $token, bool $withoutKey = false)
     {
         // split the token into its parts
         $parts = explode('.', $token);
 
-        // only continue if the token has exactly three parts
-        if (count($parts) !== 3) {
+        // only continue if the token has exactly the right amount of parts
+        $expectedParts = ($withoutKey === true)? 2 : 3;
+        if (count($parts) !== $expectedParts) {
             throw new InvalidArgumentException([
                 'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],
                 'translate' => false
@@ -542,20 +559,14 @@ class Session
 
         $tokenExpiry = (int)$parts[0];
         $tokenId     = $parts[1];
-        $tokenKey    = $parts[2];
+        $tokenKey    = ($withoutKey === true)? null : $parts[2];
 
         // verify that all parts were parsed correctly using reassembly
-        if ($tokenExpiry . '.' . $tokenId . '.' . $tokenKey !== $token) {
-            throw new InvalidArgumentException([
-                'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],
-                'translate' => false
-            ]);
+        $expectedToken = $tokenExpiry . '.' . $tokenId;
+        if ($withoutKey === false) {
+            $expectedToken .= '.' . $tokenKey;
         }
-
-        // create the key object from the hexadecimal key in the token
-        try {
-            $keyObject = Key::loadFromAsciiSafeString($tokenKey);
-        } catch (Throwable $e) {
+        if ($expectedToken !== $token) {
             throw new InvalidArgumentException([
                 'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],
                 'translate' => false
@@ -565,7 +576,6 @@ class Session
         $this->tokenExpiry = $tokenExpiry;
         $this->tokenId     = $tokenId;
         $this->tokenKey    = $tokenKey;
-        $this->keyObject   = $keyObject;
     }
 
     /**
@@ -625,9 +635,22 @@ class Session
         // get the session data from the store
         $data = $this->sessions->store()->get($this->tokenExpiry, $this->tokenId);
 
-        // decrypt the data
+        // verify HMAC
+        // skip if we don't have the key (only the case for moved sessions)
+        $hmac = Str::before($data, ':');
+        $data = trim(Str::after($data, ':'));
+        if ($this->tokenKey !== null && hash_equals(hash_hmac('sha256', $data, $this->tokenKey), $hmac) !== true) {
+            throw new LogicException([
+                'key'       => 'session.invalid',
+                'data'      => ['token' => $this->token()],
+                'fallback'  => 'Session "' . $this->token() . '" is invalid',
+                'translate' => false,
+                'httpCode'  => 500
+            ]);
+        }
+
+        // decode the JSON data
         try {
-            $data = Crypto::decrypt($data, $this->keyObject, true);
             $data = Json::decode($data);
         } catch (Throwable $e) {
             throw new LogicException([
@@ -635,7 +658,8 @@ class Session
                 'data'      => ['token' => $this->token()],
                 'fallback'  => 'Session "' . $this->token() . '" is invalid',
                 'translate' => false,
-                'httpCode'  => 500
+                'httpCode'  => 500,
+                'previous'  => $e
             ]);
         }
 
@@ -652,7 +676,7 @@ class Session
 
         // follow to the new session if there is one
         if (isset($data['newSession'])) {
-            $this->parseToken($data['newSession']);
+            $this->parseToken($data['newSession'], true);
             return $this->init();
         }
 
@@ -669,8 +693,9 @@ class Session
             }
 
             // set a new activity timestamp, but only every few minutes for better performance
-            // don't do this if another call to init() is already doing it to prevent endless loops
-            if ($this->updatingLastActivity === false && time() - $data['lastActivity'] > $data['timeout'] / 15) {
+            // don't do this if another call to init() is already doing it to prevent endless loops;
+            // also don't do this for read-only sessions
+            if ($this->updatingLastActivity === false && $this->tokenKey !== null && time() - $data['lastActivity'] > $data['timeout'] / 15) {
                 $this->updatingLastActivity = true;
                 $this->prepareForWriting();
 
