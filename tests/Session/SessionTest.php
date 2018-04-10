@@ -5,8 +5,6 @@ namespace Kirby\Session;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-use Defuse\Crypto\Crypto;
-use Defuse\Crypto\Key;
 use Kirby\Http\Cookie;
 use Kirby\Toolkit\Str;
 
@@ -438,9 +436,6 @@ class SessionTest extends TestCase
         $this->assertWriteMode(false, $session);
         $this->assertFalse(isset($this->store->isLocked['9999999999.valid']));
 
-        $data = $this->store->get(9999999999, 'valid');
-        $data = Crypto::decrypt($data, $this->store->keyObject, true);
-        $data = json_decode($data, true);
         $this->assertEquals([
             'startTime'    => 0,
             'expiryTime'   => 9999999999,
@@ -452,7 +447,7 @@ class SessionTest extends TestCase
                 'id'      => 'someOtherId',
                 'someKey' => 'someValue'
             ]
-        ], $data);
+        ], $this->store->sessions['9999999999.valid']);
 
         // set different data like in a "different thread"
         $this->store->sessions['9999999999.valid'] = [
@@ -467,6 +462,7 @@ class SessionTest extends TestCase
                 'someKey' => 'aDifferentValue'
             ]
         ];
+        unset($this->store->hmacs['9999999999.valid']);
 
         // re-init test after committing
         $session->renewable(false);
@@ -480,9 +476,6 @@ class SessionTest extends TestCase
         $this->assertWriteMode(false, $session);
         $this->assertFalse(isset($this->store->isLocked['9999999999.valid']));
 
-        $data = $this->store->get(9999999999, 'valid');
-        $data = Crypto::decrypt($data, $this->store->keyObject, true);
-        $data = json_decode($data, true);
         $this->assertEquals([
             'startTime'    => 0,
             'expiryTime'   => 9999999999,
@@ -494,7 +487,7 @@ class SessionTest extends TestCase
                 'id'      => 'someOtherId',
                 'someKey' => 'aDifferentValue'
             ]
-        ], $data);
+        ], $this->store->sessions['9999999999.valid']);
     }
 
     public function testDestroy()
@@ -548,14 +541,12 @@ class SessionTest extends TestCase
 
         // validate that the old session now references the new one
         $oldTokenParts = explode('.', $originalToken);
-        $oldSession = $this->store->get(9999999999, $oldTokenParts[1]);
-        $oldSession = Crypto::decrypt($oldSession, Key::loadFromAsciiSafeString($oldTokenParts[2]), true);
-        $oldSession = json_decode($oldSession, true);
+        $newTokenParts = explode('.', $session->token());
         $this->assertEquals([
             'startTime'  => 1000000000,
             'expiryTime' => $time + 30,
-            'newSession' => $session->token()
-        ], $oldSession);
+            'newSession' => $newTokenParts[0] . '.' . $newTokenParts[1]
+        ], $this->store->sessions['9999999999.' . $oldTokenParts[1]]);
     }
 
     /**
@@ -591,16 +582,11 @@ class SessionTest extends TestCase
         $this->assertNotEquals($this->store->validKey, $newTokenParts[2]);
 
         // validate that the old session now references the new one
-        $oldSession = $this->store->get(9999999999, 'valid');
-        $oldSession = Crypto::decrypt($oldSession, $this->store->keyObject, true);
-        $oldSession = json_decode($oldSession, true);
-
-        // TODO: not testable because of possible time differences
-        // $this->assertEquals([
-        //     'startTime'  => 0,
-        //     'expiryTime' => $time + 30,
-        //     'newSession' => $newToken
-        // ], $oldSession);
+        $this->assertEquals([
+            'startTime'  => 0,
+            'expiryTime' => $time + 30,
+            'newSession' => $newTokenParts[0] . '.' . $newTokenParts[1]
+        ], $this->store->sessions['9999999999.valid']);
 
         // validate that a cookie has been set
         $this->assertEquals($newToken, Cookie::get('kirby_session'));
@@ -640,23 +626,38 @@ class SessionTest extends TestCase
         $this->assertEquals(124, $session->data()->get('someId'));
     }
 
+    /**
+     * @expectedException     Kirby\Exception\LogicException
+     * @expectedExceptionCode error.session.readonly
+     */
+    public function testPrepareForWritingReadonly()
+    {
+        $token = '9999999999.moved.' . $this->store->validKey;
+        $session = new Session($this->sessions, $token, []);
+
+        $session->data()->set('someId', 1);
+    }
+
     public function testParseToken()
     {
         $reflector = new ReflectionClass(Session::class);
         $parseToken = $reflector->getMethod('parseToken');
         $parseToken->setAccessible(true);
-        $keyObjectProperty = $reflector->getProperty('keyObject');
-        $keyObjectProperty->setAccessible(true);
+        $tokenKey = $reflector->getProperty('tokenKey');
+        $tokenKey->setAccessible(true);
 
         $session = new Session($this->sessions, null, []);
         $this->assertNull($session->token());
 
+        // full token
         $parseToken->invoke($session, '1234567890.thisIsMyAwesomeId.' . $this->store->validKey);
         $this->assertEquals('1234567890.thisIsMyAwesomeId.' . $this->store->validKey, $session->token());
+        $this->assertEquals($this->store->validKey, $tokenKey->getValue($session));
 
-        $keyObject = $keyObjectProperty->getValue($session);
-        $this->assertInstanceOf(Key::class, $keyObject);
-        $this->assertEquals($this->store->validKey, $keyObject->saveToAsciiSafeString());
+        // token without key
+        $parseToken->invoke($session, '1234567890.thisIsMyAwesomeId', true);
+        $this->assertEquals('1234567890.thisIsMyAwesomeId', $session->token());
+        $this->assertNull($tokenKey->getValue($session));
     }
 
     /**
@@ -682,8 +683,14 @@ class SessionTest extends TestCase
      */
     public function testParseTokenInvalidToken3()
     {
-        $token = '9999999999.thisIsNotAValidToken.thisIsDefinitelyNotHexadecimal';
-        $session = new Session($this->sessions, $token, []);
+        $reflector = new ReflectionClass(Session::class);
+        $parseToken = $reflector->getMethod('parseToken');
+        $parseToken->setAccessible(true);
+
+        $session = new Session($this->sessions, null, []);
+        $this->assertNull($session->token());
+
+        $parseToken->invoke($session, '1234567890.thisIsMyAwesomeId.' . $this->store->validKey, true);
     }
 
     public function testTimeToTimestamp()
@@ -752,9 +759,29 @@ class SessionTest extends TestCase
      * @expectedException     Kirby\Exception\LogicException
      * @expectedExceptionCode error.session.invalid
      */
-    public function testInitInvalidEncryption()
+    public function testInitWrongKey()
     {
         $token = '9999999999.valid.' . $this->store->invalidKey;
+        new Session($this->sessions, $token, []);
+    }
+
+    /**
+     * @expectedException     Kirby\Exception\LogicException
+     * @expectedExceptionCode error.session.invalid
+     */
+    public function testInitInvalidJson()
+    {
+        $token = '9999999999.invalidJson.' . $this->store->validKey;
+        new Session($this->sessions, $token, []);
+    }
+
+    /**
+     * @expectedException     Kirby\Exception\LogicException
+     * @expectedExceptionCode error.session.invalid
+     */
+    public function testInitInvalidStructure()
+    {
+        $token = '9999999999.invalidStructure.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 
@@ -781,17 +808,64 @@ class SessionTest extends TestCase
     public function testInitMoved()
     {
         // moved session: data should be identical to the actual one
-        $token    = '9999999999.moved.' . $this->store->validKey;
-        $tokenNew = '9999999999.valid.' . $this->store->validKey;
+        $token = '9999999999.moved.' . $this->store->validKey;
 
         $session = new Session($this->sessions, $token, []);
-        $this->assertEquals($tokenNew, $session->token());
+        $this->assertEquals('9999999999.valid', $session->token());
         $this->assertEquals(0, $session->startTime());
         $this->assertEquals(9999999999, $session->expiryTime());
         $this->assertEquals(9999999999, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertFalse($session->renewable());
         $this->assertEquals('valid', $session->data()->get('id'));
+    }
+
+    public function testInitMovedRenewal()
+    {
+        // moved session: data should be identical to the actual one
+        $token = '9999999999.movedRenewal.' . $this->store->validKey;
+
+        $session = new Session($this->sessions, $token, []);
+        $this->assertEquals('3000000000.renewal', $session->token());
+        $this->assertEquals(0, $session->startTime());
+        $this->assertEquals(3000000000, $session->expiryTime());
+        $this->assertEquals(3000000000, $session->duration());
+        $this->assertFalse($session->timeout());
+        $this->assertTrue($session->renewable());
+        $this->assertEquals('renewal', $session->data()->get('id'));
+
+        // new session should *not* be renewed because the new session is read-only
+        $this->assertWriteMode(false, $session);
+    }
+
+    /**
+     * @expectedException     Kirby\Exception\LogicException
+     * @expectedExceptionCode error.session.readonly
+     */
+    public function testInitMovedManualRenewal()
+    {
+        $token = '9999999999.movedRenewal.' . $this->store->validKey;
+
+        $session = new Session($this->sessions, $token, []);
+        $session->renew();
+    }
+
+    public function testInitTimeoutActivity()
+    {
+        // moved session: data should be identical to the actual one
+        $token = '9999999999.movedTimeoutActivity.' . $this->store->validKey;
+
+        $session = new Session($this->sessions, $token, []);
+        $this->assertEquals('9999999999.timeoutActivity2', $session->token());
+        $this->assertEquals(0, $session->startTime());
+        $this->assertEquals(9999999999, $session->expiryTime());
+        $this->assertEquals(9999999999, $session->duration());
+        $this->assertEquals(3600, $session->timeout());
+        $this->assertFalse($session->renewable());
+        $this->assertEquals('timeoutActivity2', $session->data()->get('id'));
+
+        // new session should *not* be refreshed because the new session is read-only
+        $this->assertWriteMode(false, $session);
     }
 
     /**
@@ -811,6 +885,16 @@ class SessionTest extends TestCase
     public function testInitMovedInvalid()
     {
         $token = '9999999999.movedInvalid.' . $this->store->validKey;
+        new Session($this->sessions, $token, []);
+    }
+
+    /**
+     * @expectedException     Kirby\Exception\LogicException
+     * @expectedExceptionCode error.session.invalid
+     */
+    public function testInitMovedWrongKey()
+    {
+        $token = '9999999999.moved.' . $this->store->invalidKey;
         new Session($this->sessions, $token, []);
     }
 

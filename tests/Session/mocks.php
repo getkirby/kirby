@@ -3,8 +3,7 @@
 namespace Kirby\Session;
 
 use Exception;
-use Defuse\Crypto\Crypto;
-use Defuse\Crypto\Key;
+use Kirby\Toolkit\Str;
 
 class InvalidSessionStore
 {
@@ -13,20 +12,17 @@ class InvalidSessionStore
 
 class TestSessionStore extends SessionStore
 {
-    public $validKey   = 'def000009c5f82228f47fda0a1577159d89c60bb9fdfd411781064f8d25900e3e90d6db39177f047d416945c8c74f7b610f1b41665737b8011dc6163a61bb37b993078ee';
-    public $invalidKey = 'def00000763e647b3fc50df0ef1796a0b56d4bec341801c145c54ced6a7bdc862cda5c9b201caf27d1ed26703b453b9660700eb90c264e011ad49e5e8bb89a81718a9a59';
+    public $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
+    public $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';
 
-    public $keyObject;
-    public $sessions;
+    public $sessions = [];
+    public $hmacs    = [];
     public $isLocked = [];
     public $collectedGarbage = false;
 
     public function __construct()
     {
         $time = time();
-
-        // set key object
-        $this->keyObject = Key::loadFromAsciiSafeString($this->validKey);
 
         // set test sessions
         $this->sessions = [
@@ -69,25 +65,45 @@ class TestSessionStore extends SessionStore
                 ]
             ],
 
+            // invalid JSON structure
+            '9999999999.invalidJson' => 'invalid-json',
+
+            // invalid hmac:json structure
+            '9999999999.invalidStructure' => 'invalid-structure',
+
             // valid session that has moved
             '9999999999.moved' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'newSession'   => '9999999999.valid.' . $this->validKey
+                'newSession'   => '9999999999.valid'
             ],
 
             // session that has moved but is expired
             '1000000000.movedExpired' => [
                 'startTime'    => 0,
                 'expiryTime'   => 1000000000,
-                'newSession'   => '9999999999.valid.' . $this->validKey
+                'newSession'   => '9999999999.valid'
             ],
 
             // session that has moved and the new session doesn't exist
             '9999999999.movedInvalid' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'newSession'   => '9999999999.doesNotExist.' . $this->invalidKey
+                'newSession'   => '9999999999.doesNotExist'
+            ],
+
+            // valid session that has moved to a nearly expired session
+            '9999999999.movedRenewal' => [
+                'startTime'    => 0,
+                'expiryTime'   => 9999999999,
+                'newSession'   => '3000000000.renewal'
+            ],
+
+            // valid session that has moved to a session that could be refreshed
+            '9999999999.movedTimeoutActivity' => [
+                'startTime'    => 0,
+                'expiryTime'   => 9999999999,
+                'newSession'   => '9999999999.timeoutActivity2'
             ],
 
             // valid session that isn't yet started
@@ -201,17 +217,30 @@ class TestSessionStore extends SessionStore
 
     public function get(int $expiryTime, string $id): string
     {
-        if ($this->exists($expiryTime, $id)) {
-            $data = $this->sessions[$expiryTime . '.' . $id];
+        $name = $expiryTime . '.' . $id;
 
-            // validate if this is an actual session or a test data session
-            if(is_string($data)) {
-                // actual, encrypted session, return as is
-                return $data;
+        if ($this->exists($expiryTime, $id)) {
+            $data = $this->sessions[$name];
+
+            // special cases
+            if ($data === 'invalid-json') {
+                $data = 'some gibberish';
+                return hash_hmac('sha256', $data, $this->validKey) . ':' . $data;
+            } elseif ($data === 'invalid-structure') {
+                return 'some gibberish';
             }
 
-            // encrypt the data so that it can be decrypted again
-            return Crypto::encrypt(json_encode($data), $this->keyObject, true);
+            // check if this is a created or test session
+            if (isset($this->hmacs[$name])) {
+                // created session: it has its own HMAC, prepend it again
+
+                return $this->hmacs[$name] . ':' . json_encode($data);
+            } else {
+                // test session, add an HMAC based on the $validKey
+
+                $data = json_encode($data);
+                return hash_hmac('sha256', $data, $this->validKey) . ':' . $data;
+            }
         } else {
             throw new Exception('Session does not exist');
         }
@@ -219,15 +248,24 @@ class TestSessionStore extends SessionStore
 
     public function set(int $expiryTime, string $id, string $data)
     {
+        $name = $expiryTime . '.' . $id;
+
         if (!$this->exists($expiryTime, $id)) {
             throw new Exception('Session does not exist');
         }
 
-        if (!isset($this->isLocked[$expiryTime . '.' . $id])) {
+        if (!isset($this->isLocked[$name])) {
             throw new Exception('Cannot write to a session that is not locked');
         }
 
-        $this->sessions[$expiryTime . '.' . $id] = $data;
+        // decode the data
+        $hmac = Str::before($data, ':');
+        $json = trim(Str::after($data, ':'));
+        $data = json_decode($json, true);
+
+        // store the HMAC separately for the get() method above
+        $this->hmacs[$name]    = $hmac;
+        $this->sessions[$name] = $data;
     }
 
     public function destroy(int $expiryTime, string $id)

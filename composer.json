@@ -25,7 +25,6 @@
         "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
         "phpmailer/phpmailer": "6.0.*",
-        "defuse/php-encryption": "2.2.*",
         "filp/whoops": "2.2.*",
         "true/punycode": "2.1.*"
     },
