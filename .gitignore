@@ -4,6 +4,7 @@
 /kirby
 /panel
 /site/accounts
+/site/sessions
 
 .vscode
 /docs
