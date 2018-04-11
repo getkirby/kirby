@@ -70,20 +70,6 @@ class BlueprintFieldsSection extends BlueprintSection
                     return $this->section()->field($fieldName)->toArray();
                 }
             ],
-            'patchField' => [
-                'pattern' => '(:any)',
-                'method'  => 'PATCH',
-                'action'  => function (string $fieldName) {
-                    return $this->section()->updateField($fieldName, $this->requestBody('value'))->toArray();
-                }
-            ],
-            'patchAll' => [
-                'pattern' => '/',
-                'method'  => 'PATCH',
-                'action'  => function () {
-                    return $this->section()->updateAll($this->requestBody())->toArray();
-                }
-            ]
         ];
     }
 
@@ -108,42 +94,6 @@ class BlueprintFieldsSection extends BlueprintSection
             'type'   => $this->type(),
             'values' => $this->form()->values(),
         ];
-    }
-
-    public function updateAll(array $values)
-    {
-        $this->values = $this->model()->content()->update($values)->toArray();
-
-        try {
-            $this->form()->isValid();
-        } catch (Exception $e) {
-            return $this;
-        }
-
-        $this->model = $this->model()->update($this->values, false);
-        return $this;
-    }
-
-    public function updateField(string $fieldName, $value)
-    {
-        $field = $this->field($fieldName)->clone([
-            'value' => $value
-        ]);
-
-        $model   = $this->model();
-        $payload = [$field->name() => $field->value()];
-
-        $this->values = $model->content()->update($payload)->toArray();
-
-        try {
-            $this->form()->isValid();
-        } catch (Exception $e) {
-            return $this;
-        }
-
-        $this->model  = $model->update($payload, false);
-        $this->values = null;
-        return $this;
     }
 
     public function values()
