@@ -29,10 +29,30 @@ class BlueprintTabs
                 continue;
             }
 
-            $width    = key($column);
             $sections = current($column);
+            $width    = key($column);
 
-            if (in_array($width, ['1/1', '1/2', '1/3', '1/4', '2/3', '3/4']) === false) {
+            // available column widths
+            $widths = [
+                '1/1',
+                '2/2',
+                '3/3',
+                '4/4',
+                '6/6',
+                '1/2',
+                '2/4',
+                '3/6',
+                '1/3',
+                '2/6',
+                '2/3',
+                '4/6',
+                '1/4',
+                '1/6',
+                '5/6',
+                '3/4',
+            ];
+
+            if (in_array($width, $widths) === false) {
                 throw new Exception('Invalid column width: ' . $width);
             }
 
