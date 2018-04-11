@@ -32,24 +32,23 @@ return function ($app) {
                 return new Kirby\Text\Tags($app->extensions('tags'));
             }
         ],
-        'Locales' => [
+        'Translations' => [
             'singleton' => true,
-            'type'      => Kirby\Cms\Locales::class,
+            'type'      => Kirby\Cms\Translations::class,
             'instance'  => function () use ($app) {
 
-                $locales = new Kirby\Cms\Locales();
+                $translations = new Kirby\Cms\Translations();
 
-                foreach (Kirby\Util\Dir::read($app->root('locales')) as $file) {
+                foreach (Kirby\Util\Dir::read($app->root('translations')) as $file) {
                     if (Kirby\Util\F::extension($file) !== 'json') {
                         continue;
                     }
 
-                    $locale = new Kirby\Cms\Locale(Kirby\Util\F::name($file));
-                    $locales->set($locale->id(), $locale);
+                    $translation = new Kirby\Cms\Translation(Kirby\Util\F::name($file));
+                    $translations->set($translation->id(), $translation);
                 }
 
-                return $locales;
-
+                return $translations;
             }
         ],
         'Markdown' => [

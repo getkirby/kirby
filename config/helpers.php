@@ -122,7 +122,7 @@ function svg(string $file)
 }
 
 /**
- * Returns translate string for key from locales file
+ * Returns translate string for key from translation file
  *
  * @param   string       $key
  * @param   string|null  $fallback

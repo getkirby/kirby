@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 
-class Locale extends Component
+class Translation extends Component
 {
 
     protected $code;
@@ -13,7 +13,7 @@ class Locale extends Component
     public function __construct($code)
     {
         $this->code = $code;
-        $this->root = dirname(dirname(__DIR__)) . '/locales/' . $this->code . '.json';
+        $this->root = dirname(dirname(__DIR__)) . '/translations/' . $this->code . '.json';
     }
 
     public function data()
@@ -27,7 +27,7 @@ class Locale extends Component
 
     public function direction(): string
     {
-        return $this->get('locale.direction', 'ltr');
+        return $this->get('translation.direction', 'ltr');
     }
 
     public function get(string $key, $default = null)
@@ -42,7 +42,7 @@ class Locale extends Component
 
     public function name(): string
     {
-        return $this->get('locale.name');
+        return $this->get('translation.name');
     }
 
     public function root(): string
@@ -55,14 +55,14 @@ class Locale extends Component
         return [
             'data'       => $this->data(),
             'id'         => $this->id(),
-            'name'       => $this->get('locale.name'),
-            'translator' => $this->get('locale.translator'),
+            'name'       => $this->get('translation.name'),
+            'translator' => $this->get('translation.translator'),
         ];
     }
 
     public function translator(): string
     {
-        return $this->get('locale.translator');
+        return $this->get('translation.translator');
     }
 
 }

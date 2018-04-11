@@ -1,7 +1,7 @@
 {
-    "locale.direction": "ltr",
-    "locale.name": "Deutsch",
-    "locale.translator": "Kirby Team",
+    "translation.direction": "ltr",
+    "translation.name": "Deutsch",
+    "translation.translator": "Kirby Team",
 
 
     "confirm": "Ok",

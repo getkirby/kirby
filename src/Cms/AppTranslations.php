@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-trait AppLocales
+trait AppTranslations
 {
 
     /**
@@ -16,13 +16,13 @@ trait AppLocales
     }
 
     /**
-     * Returns all available locales
+     * Returns all available translations
      *
-     * @return Locales
+     * @return Translations
      */
-    public function locales()
+    public function translations()
     {
-        return $this->component('locales');
+        return $this->component('translations');
     }
 
     /**
@@ -59,16 +59,16 @@ trait AppLocales
             }
         }
 
-        $locales = $this->locales();
+        $translations = $this->translations();
 
         // if current language file has translation, return it
-        if ($translation = $locales->get($locale)->get($key)) {
+        if ($translation = $translations->get($locale)->get($key)) {
             return $translation;
         }
 
         // otherwise use default language file or
         // return fallback string if no translation at all exists
-        return $locales->get($defaultLocale)->get($key, $fallback);
+        return $translations->get($defaultLocale)->get($key, $fallback);
     }
 
 }

@@ -30,11 +30,11 @@ return [
     ],
 
     /**
-     * Locales
+     * Translations
      */
-    'locales' => [
-        'model' => 'locale',
-        'type'  => Locales::class,
+    'Translations' => [
+        'model' => 'translation',
+        'type'  => Translations::class,
         'view'  => 'compact'
     ],
 

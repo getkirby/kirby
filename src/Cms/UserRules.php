@@ -132,7 +132,7 @@ class UserRules
 
     public static function validLanguage(User $user, string $language): bool
     {
-        if (in_array($language, $user->kirby()->locales()->keys(), true) === false) {
+        if (in_array($language, $user->kirby()->translations()->keys(), true) === false) {
             throw new Exception('Invalid user language');
         }
 

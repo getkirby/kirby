@@ -94,9 +94,9 @@ class Roots extends Ingredients
         return $this->loaders = $this->loaders ?? $this->kirby() . '/loaders';
     }
 
-    public function locales(): string
+    public function translations(): string
     {
-        return $this->locales = $this->locales ?? $this->kirby() . '/locales';
+        return $this->translations = $this->translations ?? $this->kirby() . '/translations';
     }
 
     public function media(): string

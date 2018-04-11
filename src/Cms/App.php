@@ -19,9 +19,9 @@ class App extends Component
 
     use AppCaches;
     use AppHooks;
-    use AppLocales;
     use AppOptions;
     use AppPlugins;
+    use AppTranslations;
 
     use HasSingleton;
 

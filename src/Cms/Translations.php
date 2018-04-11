@@ -4,10 +4,10 @@ namespace Kirby\Cms;
 
 use Closure;
 
-class Locales extends Collection
+class Translations extends Collection
 {
 
-    protected static $accept = Locale::class;
+    protected static $accept = Translation::class;
 
     public function __debuginfo(): array
     {

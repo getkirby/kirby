@@ -1,24 +1,23 @@
 <?php
 
 /**
- * Locale Routes
+ * Translations Routes
  */
 return [
-
     [
-        'pattern' => 'locales',
+        'pattern' => 'translations',
         'method'  => 'GET',
         'auth'    => false,
         'action'  => function () {
-            return $this->kirby()->locales();
+            return $this->kirby()->translations();
         }
     ],
     [
-        'pattern' => 'locales/(:any)',
+        'pattern' => 'translations/(:any)',
         'method'  => 'GET',
         'auth'    => false,
         'action'  => function (string $code) {
-            return $this->kirby()->locales()->find($code);
+            return $this->kirby()->translations()->find($code);
         }
     ]
 
