@@ -47,7 +47,7 @@ class UserField extends Field
             $options[] = [
                 'value' => $user->id(),
                 'text' => $user->name(),
-                'icon' => $user->avatar()->url()
+                'image' => $user->avatar()->exists() ? $user->avatar()->url() : null
             ];
         }
 
