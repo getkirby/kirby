@@ -2,7 +2,7 @@
 
 use Kirby\Cms\Children;
 use Kirby\Cms\Files;
-use Kirby\Cms\Locales;
+use Kirby\Cms\Translations;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Roles;
 use Kirby\Cms\Users;

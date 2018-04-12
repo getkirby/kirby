@@ -17,6 +17,7 @@
     "save": "Save",
     "saved": "Saved!",
     "revert": "Revert",
+    "install": "Install",
 
     "login": "Login",
     "logout": "Logout",
@@ -41,7 +42,6 @@
     "file.dimensions": "Dimensions",
     "file.dimensions.pixel": "Pixel",
     "file.orientation": "Orientation",
-
 
     "page.created": "The page has been created",
     "page.delete.confirm": "Do you really want to delete <br><strong>{title}</strong>?",
