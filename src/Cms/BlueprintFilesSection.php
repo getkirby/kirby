@@ -41,45 +41,9 @@ class BlueprintFilesSection extends BlueprintSection
 
     public function add(): bool
     {
-        $rules = $this->accept();
-
-        if ($rules === true) {
-            return true;
+        if ($this->isFull() === true) {
+            return false;
         }
-
-        $image = new Image($source);
-
-        if ($rules['mime'] !== null) {
-            if ((new MimeType($rules['mime']))->has($image->mime()) === false) {
-                throw new InvalidArgumentException([
-                    'key'  => 'file.invalid.mime.forbidden',
-                    'data' => ['mime' => $image->mime()]
-                ]);
-            }
-        }
-
-        $validations = [
-            'maxSize'     => ['size',   'max', 'The file is too large'],
-            'minSize'     => ['size',   'min', 'The file is too small'],
-            'maxWidth'    => ['width',  'max', 'The width of the image is too large'],
-            'minWidth'    => ['width',  'min', 'The width of the image is too small'],
-            'maxHeight'   => ['height', 'max', 'The height of the image is too large'],
-            'minHeight'   => ['height', 'min', 'The height of the image is too small'],
-            'orientation' => ['orientation', 'same', 'The orientation of the image is incorrect']
-        ];
-
-        foreach ($validations as $key => $arguments) {
-            if ($rules[$key] !== null) {
-                $property  = $arguments[0];
-                $validator = $arguments[1];
-                $message   = $arguments[2];
-
-                if (V::$validator($image->$property(), $rules[$key]) === false) {
-                    throw new Exception($message);
-                }
-            }
-        }
-
         return true;
     }
 
