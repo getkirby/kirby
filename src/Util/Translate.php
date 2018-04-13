@@ -55,7 +55,7 @@ trait Translate
         return $this->locale;
     }
 
-    protected function setLocale(string $locale = 'en'): self
+    protected function setLocale(string $locale = 'en_US'): self
     {
         $this->locale = empty($locale) === true ? $this->defaultLocale() : $locale;
         return $this;
