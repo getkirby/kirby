@@ -156,8 +156,7 @@ class UserRules
             ]);
         }
 
-        // TODO: Remove sha1() as soon as finding by email works again
-        if ($duplicate = $user->kirby()->users()->not($user)->find(sha1($email))) {
+        if ($duplicate = $user->kirby()->users()->not($user)->find($email)) {
             throw new DuplicateException([
                 'key'  => 'user.duplicate',
                 'data' => ['email' => $email]
