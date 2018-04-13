@@ -43,9 +43,12 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function changeRole(): bool
     {
-        if ($this->model()->isLastAdmin() === true) {
-            return false;
-        }
+        // TODO: This should not be in the permissions request,
+        // but is already tested for separately in UserRules.
+        // Otherwise incorrect Exceptions are thrown.
+        // if ($this->model()->isLastAdmin() === true) {
+        //     return false;
+        // }
 
         return $this->isAllowed('user', 'changeRole');
     }
@@ -57,9 +60,12 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function delete(): bool
     {
-        if ($this->model()->isLastAdmin() === true) {
-            return false;
-        }
+        // TODO: This should not be in the permissions request,
+        // but is already tested for separately in UserRules.
+        // Otherwise incorrect Exceptions are thrown.
+        // if ($this->model()->isLastAdmin() === true) {
+        //     return false;
+        // }
 
         return $this->isAllowed('user', 'delete');
     }

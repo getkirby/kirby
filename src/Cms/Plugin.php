@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 
 class Plugin extends Model

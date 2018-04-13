@@ -179,10 +179,12 @@ class UserRulesTest extends TestCase
      */
     public function testDeleteLastUser()
     {
-        // TODO: how can we test deleting last user, if last user has
-        // to be admin to be able to delete users, but than rather
-        // triggers error.user.delete.lastAdmin?
         $this->markTestIncomplete();
+        // TODO: this will always trigger error.user.delete.lastAdmin
+
+        $kirby = $this->appWithAdmin();
+        UserRules::delete($kirby->user('user@domain.com'));
+        UserRules::delete($kirby->user('admin@domain.com'));
     }
 
 }
