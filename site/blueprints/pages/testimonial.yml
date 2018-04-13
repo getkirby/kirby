@@ -1,5 +1,7 @@
 title: Testimonials
 
+num: zero
+
 columns:
   - 3/4: content
   - 1/4: image

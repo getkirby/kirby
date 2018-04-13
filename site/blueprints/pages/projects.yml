@@ -6,11 +6,15 @@ options:
 sections:
   drafts:
     extends: sections/projects
-    headline: Projects Drafts
+    headline:
+      en_US: Project drafts
+      de_DE: Projekt Entwürfe
     layout: list
     status: draft
 
   published:
     extends: sections/projects
-    headline: Published Projects
+    headline:
+      en_US: Published projects
+      de_DE: Veröffentlichte Projekte
     status: listed
