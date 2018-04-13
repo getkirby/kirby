@@ -106,5 +106,20 @@
   "user.language.changed": "Die Sprache wurde geändert",
   "user.language.select": "Bitte wähl eine Sprache aus …",
   "user.blueprint": "Du kannst weitere Abschnitte und Formularfelder für diese Nutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
-  "user.none": "Keine Nutzer"
+  "user.none": "Keine Nutzer",
+
+  "error.form.incomplete": "Bitte behebe alle Fehler …",
+  "error.form.converter.invalid": "Ungültiger Konverter \"{converter}\"",
+  "error.form.date.invalid": "Ungültiges Datum",
+  "error.form.email.invalid": "Ungültige E-mail-Adresse",
+  "error.form.layout.invalid": "Ungültiges Layout",
+  "error.form.max.invalid": "Der Werte liegt über dem Maximum",
+  "error.form.maxLength.invalid": "Der Wert ist zu lang",
+  "error.form.min.invalid": "Der Wert liegt unter dem Minimum",
+  "error.form.minLength.invalid": "Der Wert ist zu kurz",
+  "error.form.option.invalid": "Ungültige Option",
+  "error.form.field.required": "Das Feld ist Pflicht",
+  "error.form.time": "Ungültige Zeit",
+  "error.form.time.notation": "Ungültige Zeitnotation",
+  "error.form.url.invalid": "Ungültige URL"
 }
