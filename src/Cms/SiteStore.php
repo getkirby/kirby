@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\Dir;
 
 class SiteStore extends SiteStoreDefault

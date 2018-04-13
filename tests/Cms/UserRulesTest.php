@@ -46,9 +46,9 @@ class UserRulesTest extends TestCase
     {
         return [
             ['Email', 'domain.com', 'Please enter a valid email address'],
-            ['Language', 'english', 'Invalid user language'],
-            ['Password', '1234', 'The password must be at least 8 characters long'],
-            ['Role', 'rockstar', 'Invalid user role: "rockstar"']
+            ['Language', 'english', 'Please enter a valid language'],
+            ['Password', '1234', 'Please enter a valid password. Passwords must be at least 8 characters long.'],
+            ['Role', 'rockstar', 'Please enter a valid role']
         ];
     }
 
@@ -67,8 +67,8 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage A user with this email address already exists
+     * @expectedException Kirby\Exception\DuplicateException
+     * @expectedExceptionCode error.user.duplicate
      */
     public function testChangeEmailDuplicate()
     {
@@ -78,8 +78,8 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The role for this user cannot be changed
+     * @expectedException Kirby\Exception\LogicException
+     * @expectedExceptionCode error.user.changeRole.lastAdmin
      */
     public function testChangeRoleLastAdmin()
     {
@@ -100,7 +100,7 @@ class UserRulesTest extends TestCase
     }
 
     // /**
-    //  * @expectedException Exception
+    //  * @expectedException Kirby\Exception\InvalidArgumentsException
     //  * @expectedExceptionMessage Please enter a valid email address
     //  */
     // public function testCreateInvalidPassword()
@@ -164,34 +164,25 @@ class UserRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The user cannot be deleted
+     * @expectedException Kirby\Exception\LogicException
+     * @expectedExceptionCode error.user.delete.lastAdmin
      */
     public function testDeleteLastAdmin()
     {
-        $kirby = new App([
-            'users' => [
-                ['email' => 'user@domain.com', 'role' => 'editor'],
-                ['email' => 'admin@domain.com', 'role' => 'admin']
-            ]
-        ]);
-
+        $kirby = $this->appWithAdmin();
         UserRules::delete($kirby->user('admin@domain.com'));
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The user cannot be deleted
+     * @expectedException Kirby\Exception\LogicException
+     * @expectedExceptionCode error.user.delete.lastUser
      */
     public function testDeleteLastUser()
     {
-        $kirby = new App([
-            'users' => [
-                ['email' => 'user@domain.com', 'role' => 'editor'],
-            ]
-        ]);
-
-        UserRules::delete($kirby->users()->first());
+        // TODO: how can we test deleting last user, if last user has
+        // to be admin to be able to delete users, but than rather
+        // triggers error.user.delete.lastAdmin?
+        $this->markTestIncomplete();
     }
 
 }

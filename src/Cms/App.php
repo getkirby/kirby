@@ -3,8 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
-use Throwable;
 use Kirby\Form\Field;
 use Kirby\Toolkit\Url;
 use Kirby\Session\Session;
@@ -13,6 +11,10 @@ use Kirby\Util\F;
 use Kirby\Util\Factory;
 use Kirby\Util\Dir;
 use Kirby\Util\Str;
+
+use Exception;
+use Throwable;
+use Kirby\Exception\InvalidArgumentException;
 
 class App extends Component
 {

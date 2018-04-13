@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms\Mixins;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 trait BlueprintSectionMax
 {
@@ -24,7 +24,10 @@ trait BlueprintSectionMax
     {
         if ($max = $this->max()) {
             if ($this->total() > $max) {
-                throw new Exception('No more than ' . $max . ' entries allowed');
+                throw new InvalidArgumentException([
+                    'key'  => 'blueprint.section.max',
+                    'data' => ['max' => $max]
+                ]);
             }
         }
 

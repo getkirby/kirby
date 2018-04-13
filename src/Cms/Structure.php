@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The Structure class wraps
@@ -49,7 +49,7 @@ class Structure extends Collection
         }
 
         if (is_a($object, static::$accept) === false) {
-            throw new Exception(sprintf('Invalid "%s" object in collection', static::$accept));
+            throw new InvalidArgumentException(sprintf('Invalid "%s" object in collection', static::$accept));
         }
 
         // inject the collection for proper navigation

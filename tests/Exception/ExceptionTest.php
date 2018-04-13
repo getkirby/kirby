@@ -21,7 +21,8 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
             'key' => 'page.slug.invalid',
             'fallback' => 'The page slug "{slug}" is invalid',
             'data' => $data = ['slug' => 'project/(c'],
-            'httpCode' => $http = 500
+            'httpCode' => $http = 500,
+            'translate' => false
         ]);
 
         $this->assertInstanceOf(Exception::class, $exception);
@@ -30,6 +31,7 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('The page slug "project/(c" is invalid', $exception->getMessage());
         $this->assertEquals($http, $exception->getHttpCode());
         $this->assertEquals($data, $exception->getData());
+        $this->assertFalse($exception->isTranslated());
     }
 
     public function testDefaults()

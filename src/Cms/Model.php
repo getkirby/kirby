@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use stdClass;
 use ReflectionMethod;
 use Kirby\Util\Str;

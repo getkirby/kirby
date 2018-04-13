@@ -2,11 +2,15 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Http\Acceptance\MimeType;
 use Kirby\Image\Image;
 use Kirby\Toolkit\V;
 use Kirby\Util\F;
 use Kirby\Util\Str;
+
+use Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 
 class BlueprintFilesSection extends BlueprintSection
 {
@@ -40,7 +44,6 @@ class BlueprintFilesSection extends BlueprintSection
         if ($this->isFull() === true) {
             return false;
         }
-
         return true;
     }
 
@@ -159,12 +162,16 @@ class BlueprintFilesSection extends BlueprintSection
     {
         // make sure the basics are provided
         if (isset($data['filename'], $data['source']) === false) {
-            throw new Exception('Please provide a filename');
+            throw new InvalidArgumentException([
+                'key' => 'file.name.missing'
+            ]);
         }
 
         // check if adding files is allowed at all
         if ($this->add() === false) {
-            throw new Exception('No files can be added');
+            throw new LogicException([
+                'key' => 'blueprint.section.files.add'
+            ]);
         }
 
         return $this->parent()->createFile([
@@ -216,7 +223,9 @@ class BlueprintFilesSection extends BlueprintSection
     public function sort(array $input)
     {
         if ($this->sortable() === false) {
-            throw new Exception('Files cannot be sorted');
+            throw new LogicException([
+                'key' => 'blueprint.section.files.sort'
+            ]);
         }
 
         $files = $this->parent()->files();

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Throwable;
 use Kirby\Http\Response as BaseResponse;
 use Kirby\Http\Response\Json;

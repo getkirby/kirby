@@ -2,9 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Image\Image;
 use Kirby\Util\F;
+
+use Kirby\Exception\Exception;
 
 class AvatarStore extends AvatarStoreDefault
 {
@@ -21,7 +22,9 @@ class AvatarStore extends AvatarStoreDefault
 
         // overwrite the original
         if (F::copy($upload->root(), $this->root(), true) !== true) {
-            throw new Exception('The avatar could not be created');
+            throw new Exception([
+                'key' => 'avatar.create.fail',
+            ]);
         }
 
         // return a fresh clone
@@ -38,7 +41,9 @@ class AvatarStore extends AvatarStoreDefault
         $this->media()->delete($this->user());
 
         if (F::remove($this->root()) !== true) {
-            throw new Exception('The avatar could not be deleted');
+            throw new Exception([
+                'key' => 'avatar.delete.fail',
+            ]);
         }
 
         return true;

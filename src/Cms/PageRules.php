@@ -2,7 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 
 class PageRules
@@ -11,7 +14,7 @@ class PageRules
     public static function changeNum(Page $page, int $num = null): bool
     {
         if ($num !== null && $num < 0) {
-            throw new Exception('The page order number cannot be negative');
+            throw new InvalidArgumentException(['key' => 'page.num.invalid']);
         }
 
         return true;
@@ -20,11 +23,17 @@ class PageRules
     public static function changeSlug(Page $page, string $slug): bool
     {
         if ($page->permissions()->changeSlug() !== true) {
-            throw new Exception('The slug for this page cannot be changed');
+            throw new PermissionException([
+                'key'  => 'page.changeSlug.permission',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         if ($duplicate = $page->siblings()->not($page)->find($slug)) {
-            throw new Exception(sprintf('The URL appendix "%s" exists', $slug));
+            throw new DuplicateException([
+                'key'  => 'page.duplicate',
+                'data' => ['slug' => $slug]
+            ]);
         }
 
         return true;
@@ -40,18 +49,24 @@ class PageRules
             case 'unlisted':
                 return static::changeStatusToUnlisted($page);
             default:
-                throw new Exception('Invalid status');
+                throw new InvalidArgumentException(['key' => 'page.status.invalid']);
         }
     }
 
     public static function changeStatusToDraft(Page $page)
     {
         if ($page->permissions()->changeStatus() !== true) {
-            throw new Exception('The status for this page cannot be changed');
+            throw new PermissionException([
+                'key'  => 'page.changeStatus.permission',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         if ($page->isHomeOrErrorPage() === true) {
-            throw new Exception('This page cannot be converted to a draft');
+            throw new PermissionException([
+                'key'  => 'page.changeStatus.toDraft.invalid',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         return true;
@@ -60,11 +75,14 @@ class PageRules
     public static function changeStatusToListed(Page $page, int $position)
     {
         if ($page->permissions()->changeStatus() !== true) {
-            throw new Exception('The status for this page cannot be changed');
+            throw new PermissionException([
+                'key'  => 'page.changeStatus.permission',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         if ($position !== null && $position < 0) {
-            throw new Exception('Invalid position');
+            throw new InvalidArgumentException(['key' => 'page.num.invalid']);
         }
 
         if ($page->isDraft() === true && empty($page->errors()) === false) {
@@ -72,8 +90,6 @@ class PageRules
                 'key'     => 'page.changeStatus.incomplete',
                 'details' => $page->errors()
             ]);
-
-            throw new Exception('The page has errors and cannot be published');
         }
 
         return true;
@@ -82,7 +98,10 @@ class PageRules
     public static function changeStatusToUnlisted(Page $page)
     {
         if ($page->permissions()->changeStatus() !== true) {
-            throw new Exception('The status for this page cannot be changed');
+            throw new PermissionException([
+                'key'  => 'page.changeStatus.permission',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         return true;
@@ -91,7 +110,10 @@ class PageRules
     public static function changeTemplate(Page $page, string $template): bool
     {
         if ($page->permissions()->changeTemplate() !== true) {
-            throw new Exception('The template for this page cannot be changed');
+            throw new PermissionException([
+                'key'  => 'page.changeTemplate.permission',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         return true;
@@ -100,7 +122,10 @@ class PageRules
     public static function changeTitle(Page $page, string $title): bool
     {
         if ($page->permissions()->changeTitle() !== true) {
-            throw new Exception('The title for this page cannot be changed');
+            throw new PermissionException([
+                'key'  => 'page.changeTitle.permission',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         return true;
@@ -109,7 +134,7 @@ class PageRules
     public static function create(Page $page): bool
     {
         if ($page->permissions()->create() !== true) {
-            throw new Exception('This page cannot be created');
+            throw new PermissionException(['key' => 'page.create.permission']);
         }
 
         $siblings = $page->parentModel()->children();
@@ -117,11 +142,17 @@ class PageRules
         $slug     = $page->slug();
 
         if ($duplicate = $siblings->find($slug)) {
-            throw new Exception(sprintf('The URL appendix "%s" exists', $slug));
+            throw new DuplicateException([
+                'key'  => 'page.duplicate',
+                'data' => ['slug' => $slug]
+            ]);
         }
 
         if ($duplicate = $drafts->find($slug)) {
-            throw new Exception(sprintf('A draft with the URL appendix "%s" exists', $slug));
+            throw new DuplicateException([
+                'key'  => 'page.draft.duplicate',
+                'data' => ['slug' => $slug]
+            ]);
         }
 
         return true;
@@ -130,15 +161,15 @@ class PageRules
     public static function delete(Page $page, bool $force = false): bool
     {
         if ($page->permissions()->delete() !== true) {
-            throw new Exception('This page cannot be deleted');
+            throw new PermissionException(['key' => 'page.delete.permission']);
         }
 
         if ($page->exists() === false) {
-            throw new Exception('The page does not exist');
+            throw new NotFoundException(['key' => 'page.undefined']);
         }
 
         if ($page->hasChildren() === true && $force === false) {
-            throw new Exception('The page has children');
+            throw new LogicException(['key' => 'page.delete.hasChildren']);
         }
 
         return true;
@@ -147,7 +178,7 @@ class PageRules
     public static function update(Page $page, array $content = []): bool
     {
         if ($page->permissions()->update() !== true) {
-            throw new Exception('This page cannot be updated');
+            throw new PermissionException(['key' => 'page.update.permission']);
         }
 
         return true;

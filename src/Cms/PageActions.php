@@ -2,9 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\A;
 use Kirby\Util\Str;
+
+use Kirby\Exception\LogicException;
 
 trait PageActions
 {
@@ -386,7 +387,7 @@ trait PageActions
 
         // if the page is not included in the siblings something went wrong
         if ($index === false) {
-            throw new Exception('The page is not included in the sorting index');
+            throw new LogicException('The page is not included in the sorting index');
         }
 
         if ($position > count($keys)) {

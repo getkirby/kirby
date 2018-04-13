@@ -2,8 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\Dir;
+
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\LogicException;
 
 class UserStore extends UserStoreDefault
 {
@@ -50,11 +52,14 @@ class UserStore extends UserStoreDefault
         $newRoot = dirname($this->root()) . '/' . $user->email();
 
         if (is_dir($newRoot) === true) {
-            throw new Exception('A user with this email already exists');
+            throw new DuplicateException([
+                'key'  => 'user.duplicate',
+                'data' => ['email' => $email]
+            ]);
         }
 
         if (Dir::move($oldRoot, $newRoot) !== true) {
-            throw new Exception('The user directory could not be moved');
+            throw new LogicException('The user directory for "' . $email . '" could not be moved');
         }
 
         return $this->save($user);
@@ -125,7 +130,7 @@ class UserStore extends UserStoreDefault
     {
         // try to create the directory
         if (Dir::make($this->root()) !== true) {
-            throw new Exception('The user directory could not be created');
+            throw new LogicException('The user directory for "' . $user->email() . '" could not be created');
         }
 
         // create an empty storage file
@@ -155,7 +160,7 @@ class UserStore extends UserStoreDefault
 
         // delete the user directory
         if (Dir::remove($this->root()) !== true) {
-            throw new Exception('The user directory could not be deleted');
+            throw new LogicException('The user directory for "' . $this->user()->email() . '" could not be deleted');
         }
 
         return true;
@@ -214,7 +219,7 @@ class UserStore extends UserStoreDefault
         $content['role']     = $user->role();
 
         if ($this->base()->write($content) !== true) {
-            throw new Exception('The user information could not be saved');
+            throw new LogicException('The user information for "' . $user->email() . '" could not be saved');
         }
 
         return $user;

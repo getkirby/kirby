@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 trait AvatarActions
 {
@@ -42,7 +42,7 @@ trait AvatarActions
     public static function create(array $props): self
     {
         if (isset($props['source'], $props['user']) === false) {
-            throw new Exception('Please provide the "source" and "user" props for the Avatar');
+            throw new InvalidArgumentException('Please provide the "source" and "user" props for the Avatar');
         }
 
         // create the basic avatar and a test upload object

@@ -2,10 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
 use Kirby\Util\Dir;
 use Kirby\Util\F;
+
+use Exception;
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\LogicException;
 
 class PageStore extends PageStoreDefault
 {
@@ -106,11 +109,11 @@ class PageStore extends PageStoreDefault
         $oldFile = $this->base()->storage();
 
         if (Data::write($newFile, $data) !== true) {
-             throw new Exception('The new text file could not be written');
+             throw new LogicException('The new text file could not be written');
         }
 
         if (F::remove($oldFile) !== true) {
-            throw new Exception('The old text file could not be removed');
+            throw new LogicException('The old text file could not be removed');
        }
 
         return $newPage;
@@ -146,12 +149,15 @@ class PageStore extends PageStoreDefault
         $root = $page->root();
 
         if (is_dir($root) === true) {
-            throw new Exception('The draft already exists');
+            throw new DuplicateException([
+                'key'  => 'page.draft.duplicate',
+                'data' => ['slug' => $page->slug()]
+            ]);
         }
 
         // create the new page directory
         if (Dir::make($root) !== true) {
-            throw new Exception('The page directory cannot be created');
+            throw new LogicException('The page directory for "' . $page->slug() . '" cannot be created');
         }
 
         // write the text file
@@ -239,11 +245,11 @@ class PageStore extends PageStoreDefault
         $parent = dirname($new);
 
         if (Dir::make($parent, true) !== true) {
-            throw new Exception('The parent directory could not be created');
+            throw new LogicException('The parent directory cannot be created');
         }
 
         if (Dir::move($old, $new) !== true) {
-            throw new Exception('The directory could not be moved');
+            throw new LogicException('The page directory cannot be moved');
         }
 
         return true;
@@ -255,7 +261,10 @@ class PageStore extends PageStoreDefault
         $root  = $draft->parentModel()->root() . '/' . $draft->slug();
 
         if ($draft->isPage() === false) {
-            throw new Exception('The page is not a draft');
+            throw new LogicException([
+                'key'  => 'page.draft.invalid',
+                'data' => ['slug' => $draft->slug()]
+            ]);
         }
 
         $this->moveDirectory($draft->root(), $root);

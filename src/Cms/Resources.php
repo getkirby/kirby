@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
 use Kirby\Form\Field;
 
 class Resources extends Collection

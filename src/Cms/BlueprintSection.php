@@ -3,7 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Api\Api;
-use Exception;
+
+use Kirby\Exception\InvalidArgumentException;
 
 class BlueprintSection extends BlueprintObject
 {
@@ -51,13 +52,18 @@ class BlueprintSection extends BlueprintObject
     public static function factory(array $props)
     {
         if (isset($props['type']) === false) {
-            throw new Exception('Missing section type');
+            throw new InvalidArgumentException([
+                'key' => 'blueprint.section.type.missing',
+            ]);
         }
 
         $className = __NAMESPACE__ . '\\Blueprint' . ucfirst($props['type']) . 'Section';
 
         if (class_exists($className) === false) {
-            throw new Exception(sprintf('Invalid section type: "%s"', $props['type']));
+            throw new InvalidArgumentException([
+                'key'  => 'blueprint.section.type.missing',
+                'data' => ['type' => $props['type']]
+            ]);
         }
 
         return new $className($props);
@@ -96,7 +102,7 @@ class BlueprintSection extends BlueprintObject
             }
         }
 
-        throw new Exception('Unsupported model type');
+        throw new InvalidArgumentException('The model type "' . get_class($model) . '" is not supported');
     }
 
     /**
@@ -135,7 +141,7 @@ class BlueprintSection extends BlueprintObject
         $model = $this->model();
 
         if ($model === null) {
-            throw new Exception('Missing model');
+            throw new InvalidArgumentException('The section model is missing');
         }
 
         $defaults = [

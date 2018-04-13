@@ -2,11 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use ReflectionClass;
 use Kirby\Http\Response\Redirect;
 use Kirby\Util\F;
 use Kirby\Util\Str;
+
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 
 class Resource extends Model
 {
@@ -59,7 +61,7 @@ class Resource extends Model
             return static::forPlugin($model, ...$arguments);
         }
 
-        throw new Exception('Invalid model type');
+        throw new InvalidArgumentException('Invalid model type: ' . get_class($type));
     }
 
     public static function forFile(File $file): self
@@ -111,7 +113,7 @@ class Resource extends Model
             $file      = $directory . '/' . $file;
 
             if (F::exists($file, $directory) === false) {
-                throw new Exception(sprintf('Invalid asset "%s" in class "%s"', $file, $className));
+                throw new InvalidArgumentException(sprintf('Invalid asset "%s" in class "%s"', $file, $className));
             }
         }
 
@@ -132,7 +134,7 @@ class Resource extends Model
         $this->purge();
 
         if (F::link($this->src(), $this->root()) !== true) {
-            throw new Exception('The resource could not be linked');
+            throw new LogicException('The resource could not be linked');
         }
 
         return $this;

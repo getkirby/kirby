@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\LogicException;
 
 class PageStoreDefault extends Store
 {
@@ -35,7 +35,9 @@ class PageStoreDefault extends Store
             case 'unlisted':
                 return $this->changeStatusToUnlisted();
             default:
-                throw new Exception('Invalid status');
+                throw new InvalidArgumentException([
+                    'key' => 'page.status.invalid',
+                ]);
         }
     }
 
@@ -84,7 +86,10 @@ class PageStoreDefault extends Store
 
     public function delete(): bool
     {
-        throw new Exception('This page cannot be deleted');
+        throw new LogicException([
+            'key'  => 'page.delete',
+            'data' => ['slug' => $this->slug()]
+        ]);
     }
 
     public function drafts(): array

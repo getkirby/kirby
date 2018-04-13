@@ -7,6 +7,8 @@ use Kirby\Cache\Cache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
 
+use Kirby\Exception\InvalidArgumentException;
+
 trait AppCaches
 {
 
@@ -34,7 +36,10 @@ trait AppCaches
         ];
 
         if (array_key_exists($type, $types) === false) {
-            throw new Exception(sprintf('Invalid cache type "%s"', $type));
+            throw new InvalidArgumentException([
+                'key'  => 'app.invalid.cacheType',
+                'data' => ['type' => $type]
+            ]);
         }
 
         $className = $types[$type];

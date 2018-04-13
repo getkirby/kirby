@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms\Mixins;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 trait BlueprintSectionMin
 {
@@ -17,7 +17,9 @@ trait BlueprintSectionMin
     protected function setMin(int $min = null)
     {
         if ($min !== null && $min < 1) {
-            throw new Exception('The min value must be 1 or higher');
+            throw new InvalidArgumentException([
+                'key' => 'exception.blueprint.section.min.invalid',
+            ]);
         }
 
         $this->min = $min;
@@ -28,7 +30,10 @@ trait BlueprintSectionMin
     {
         if ($min = $this->min()) {
             if ($this->total() < $min) {
-                throw new Exception('At least ' . $min . ' entries required');
+                throw new InvalidArgumentException([
+                    'key'  => 'blueprint.section.min',
+                    'data' => ['min' => $min]
+                ]);
             }
         }
 

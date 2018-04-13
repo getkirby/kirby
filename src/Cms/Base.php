@@ -6,6 +6,8 @@ use Kirby\Data\Data;
 use Kirby\Util\Dir;
 use Kirby\Util\Properties;
 
+use Kirby\Exception\Exception;
+
 class Base
 {
     use Properties;
@@ -42,7 +44,7 @@ class Base
     public function delete(): bool
     {
         if (Dir::remove($this->root()) !== true) {
-            throw new Exception('The directory could not be deleted');
+            throw new Exception('The directory "'.  $this->root() . '" could not be deleted');
         }
 
         return true;

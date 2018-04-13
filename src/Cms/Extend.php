@@ -3,8 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
 use Kirby\Util\Str;
+
+use Kirby\Exception\InvalidArgumentException;
 
 class Extend
 {
@@ -13,11 +14,11 @@ class Extend
     {
         foreach ($callbacks as $name => $callback) {
             if (is_string($name) === false) {
-                throw new Exception(sprintf('Invalid "%s" name', $type));
+                throw new InvalidArgumentException(sprintf('Invalid "%s" name', $type));
             }
 
             if (is_a($callback, Closure::class) === false) {
-                throw new Exception(sprintf('Invalid "%s" definition for "%s"', $type, $name));
+                throw new InvalidArgumentException(sprintf('Invalid "%s" definition for "%s"', $type, $name));
             }
         }
 
@@ -46,11 +47,11 @@ class Extend
         foreach ($fields as $name => $class) {
 
             if (is_string($name) === false) {
-                throw new Exception('Invalid field type');
+                throw new InvalidArgumentException('Invalid field type');
             }
 
             if (is_string($class) === false) {
-                throw new Exception('Invalid field class definition');
+                throw new InvalidArgumentException('Invalid field class definition');
             }
 
             $result[$name] = [
@@ -87,7 +88,7 @@ class Extend
         foreach ($hooks as $name => $callbacks) {
 
             if (is_string($name) === false) {
-                throw new Exception('Invalid hook name');
+                throw new InvalidArgumentException('Invalid hook name');
             }
 
             if (is_array($callbacks) === false) {
@@ -98,7 +99,7 @@ class Extend
 
             foreach ($callbacks as $callback) {
                 if (is_a($callback, Closure::class) === false) {
-                    throw new Exception('Invalid hook function');
+                    throw new InvalidArgumentException('Invalid hook function');
                 }
 
                 $result[$name][] = $callback;
@@ -113,7 +114,7 @@ class Extend
     {
         foreach ($mixed as $name => $value) {
             if (is_string($name) === false) {
-                throw new Exception(sprintf('Invalid "%s" name', $type));
+                throw new InvalidArgumentException(sprintf('Invalid "%s" name', $type));
             }
         }
 
@@ -158,11 +159,11 @@ class Extend
 
         foreach ($routes as $name => $route) {
             if (is_array($route) === false) {
-                throw new Exception('Each route must be defined as array');
+                throw new InvalidArgumentException('Each route must be defined as array');
             }
 
             if (isset($route['pattern'], $route['action']) === false) {
-                throw new Exception('Each route must define at least a pattern and an action');
+                throw new InvalidArgumentException('Each route must define at least a pattern and an action');
             }
 
             $result[$name] = $route;
@@ -180,11 +181,11 @@ class Extend
     {
         foreach ($strings as $name => $string) {
             if (is_string($name) === false) {
-                throw new Exception(sprintf('Invalid "%s" name', $type));
+                throw new InvalidArgumentException(sprintf('Invalid "%s" name', $type));
             }
 
             if (is_string($string) === false) {
-                throw new Exception(sprintf('Invalid "%s" definition for "%s"', $type, $name));
+                throw new InvalidArgumentException(sprintf('Invalid "%s" definition for "%s"', $type, $name));
             }
         }
 

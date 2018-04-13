@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 class Permissions
 {
@@ -91,7 +91,7 @@ class Permissions
         }
 
         if ($this->hasAction($category, $action) === false) {
-            throw new Exception('Invalid permissions action');
+            throw new InvalidArgumentException('Invalid permissions action');
         }
 
         $this->actions[$category][$action] = $setting;
@@ -130,7 +130,7 @@ class Permissions
     protected function setCategory(string $category, bool $setting)
     {
         if ($this->hasCategory($category) === false) {
-            throw new Exception('Invalid permissions category');
+            throw new InvalidArgumentException('Invalid permissions category');
         }
 
         foreach ($this->actions[$category] as $actionName => $actionSetting) {

@@ -40,8 +40,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The page order number cannot be negative
+     * @expectedException Kirby\Exception\InvalidArgumentException
+     * @expectedExceptionCode error.page.num.invalid
      */
     public function testInvalidChangeNum()
     {
@@ -64,11 +64,12 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The slug for this page cannot be changed
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.changeSlug.permission
      */
     public function testChangeSlugWithHomepage()
     {
+        // TODO: should actually throw a different exception than above
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
@@ -81,11 +82,12 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The slug for this page cannot be changed
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.changeSlug.permission
      */
     public function testChangeSlugWithErrorPage()
     {
+        // TODO: should actually throw a different exception than above
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
@@ -98,8 +100,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The URL appendix "project-b" exists
+     * @expectedException Kirby\Exception\DuplicateException
+     * @expectedExceptionCode error.page.duplicate
      */
     public function testChangeSlugWithDuplicate()
     {
@@ -151,8 +153,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The page does not exist
+     * @expectedException Kirby\Exception\NotFoundException
+     * @expectedExceptionCode error.page.undefined
      */
     public function testDeleteNotExists()
     {
@@ -165,11 +167,12 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage This page cannot be deleted
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.delete.permission
      */
     public function testDeleteHomepage()
     {
+        // TODO: is there actually a check in the backend for this?
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
@@ -182,11 +185,12 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage This page cannot be deleted
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.delete.permission
      */
     public function testDeleteErrorPage()
     {
+        // TODO: is there actually a check in the backend for this?
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
@@ -199,8 +203,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The page has children
+     * @expectedException Kirby\Exception\LogicException
+     * @expectedExceptionCode error.page.delete.hasChildren
      */
     public function testDeleteWithChildren()
     {

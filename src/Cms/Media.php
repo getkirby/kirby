@@ -2,12 +2,15 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Image\Image;
 use Kirby\Image\Darkroom;
 use Kirby\FileSystem\Folder;
 use Kirby\Util\Str;
 use Kirby\Util\F;
+
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 
 class Media extends Component
 {
@@ -58,14 +61,14 @@ class Media extends Component
     {
 
         if ($file->exists() === false) {
-            throw new Exception('The source file does not exist');
+            throw new LogicException('The source file does not exist');
         }
 
         // thumb creation
         if (empty($attributes) === false) {
 
             if ($file->original() !== null) {
-                throw new Exception('Resized images cannot be further processed');
+                throw new LogicException('Resized images cannot be further processed');
             }
 
             $attributes = $this->darkroom()->preprocess($file->root(), $attributes);
@@ -155,7 +158,7 @@ class Media extends Component
         } elseif (is_a($model, User::class) === true) {
             $path = 'users/' . $model->id();
         } else {
-            throw new Exception('Invalid media model');
+            throw new InvalidArgumentException('Invalid media model');
         }
 
         if ($file !== null) {
@@ -185,7 +188,7 @@ class Media extends Component
                 }
 
                 if ($model === null) {
-                    throw new Exception('The page could not be found');
+                    throw new NotFoundException('The page could not be found');
                 }
 
                 $file = $model->file(basename($path));

@@ -2,11 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
 use Kirby\Form\Fields;
 use Kirby\Util\F;
 use Kirby\Util\I18n;
+
+use Exception;
+use Kirby\Exception\NotFoundException;
+
 
 /**
  * The Blueprint class converts an array from a
@@ -178,7 +181,10 @@ class Blueprint extends BlueprintObject
             return $field;
         }
 
-        throw new Exception('The field could not be found');
+        throw new NotFoundException([
+            'key'  => 'blueprint.field.notFound',
+            'data' => ['name' => $name]
+        ]);
     }
 
     /**
@@ -230,7 +236,11 @@ class Blueprint extends BlueprintObject
             return $blueprint;
         }
 
-        throw new Exception(sprintf('The blueprint "%s" could not be loaded', $name));
+        throw new NotFoundException([
+            'key'  => 'blueprint.notFound',
+            'data' => ['name' => $name]
+        ]);
+
     }
 
     /**
@@ -262,7 +272,7 @@ class Blueprint extends BlueprintObject
         try {
             return static::load($path);
         } catch (Exception $e) {
-            throw new Exception(sprintf('The mixin "%s" does not exist', $path));
+            throw new NotFoundException('The mixin "' . $path . '" could not be found');
         }
     }
 
@@ -328,7 +338,10 @@ class Blueprint extends BlueprintObject
             return $section;
         }
 
-        throw new Exception(sprintf('The section "%s" could not be found', $name));
+        throw new NotFoundException([
+            'key'  => 'blueprint.section.notFound',
+            'data' => ['name' => $name]
+        ]);
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Every field in a Kirby content text file
@@ -149,7 +149,7 @@ class ContentField
         } elseif (is_callable($value)) {
             $value = (string)$value->call($this, $this->value);
         } else {
-            throw new Exception('Invalid field value type: ' . gettype($value));
+            throw new InvalidArgumentException('Invalid field value type: ' . gettype($value));
         }
 
         $clone = clone $this;

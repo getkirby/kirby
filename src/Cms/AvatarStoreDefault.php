@@ -2,8 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Image\Image;
+
+use Kirby\Exception\Exception;
 
 class AvatarStoreDefault extends Store
 {
@@ -25,7 +26,9 @@ class AvatarStoreDefault extends Store
 
     public function delete(): bool
     {
-        throw new Exception('The avatar cannot be deleted');
+        throw new Exception([
+            'key' => 'avatar.delete.fail',
+        ]);
     }
 
     public function exists(): bool
@@ -45,7 +48,9 @@ class AvatarStoreDefault extends Store
 
     public function thumb(array $options = [])
     {
-        throw new Exception('The avatar cannot be resized');
+        throw new Exception([
+            'key' => 'avatar.thumb.fail',
+        ]);
     }
 
     public function url(): string

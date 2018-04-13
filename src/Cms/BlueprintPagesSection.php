@@ -2,9 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\A;
 use Kirby\Util\Str;
+
+use Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 
 class BlueprintPagesSection extends BlueprintSection
 {
@@ -154,17 +157,30 @@ class BlueprintPagesSection extends BlueprintSection
     public function post(array $data)
     {
         if ($this->add() === false) {
-            throw new Exception('You cannot add any pages to the section');
+            throw new LogicException([
+                'key' => 'blueprint.section.pages.add'
+            ]);
         }
 
-        // make sure the basics are provided
-        if (isset($data['slug'], $data['template']) === false) {
-            throw new Exception('Please provide a slug and template');
+        // make sure the slug is provided
+        if (isset($data['slug']) === false) {
+            throw new InvalidArgumentException([
+                'key' => 'page.slug.invalid'
+            ]);
+        }
+
+        // make sure the template is provided
+        if (isset($data['slug']) === false) {
+            throw new InvalidArgumentException([
+                'key' => 'page.template.missing'
+            ]);
         }
 
         // validate the template
         if (in_array($data['template'], $this->templates()) === false) {
-            throw new Exception('Invalid template');
+            throw new InvalidArgumentException([
+                'key' => 'page.template.invalid'
+            ]);
         }
 
         return $this->parent()->createChild([
@@ -208,7 +224,9 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted']) === false) {
-            throw new Exception('Invalid status: ' . $status);
+            throw new InvalidArgumentException([
+                'key' => 'page.status.invalid'
+            ]);
         }
 
         $this->status = $status;
@@ -235,7 +253,7 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         if (is_array($templates) === false) {
-            throw new Exception('Invalid template definition');
+            throw new InvalidArgumentException('Invalid template definition');
         }
 
         $this->templates = $templates;
@@ -255,11 +273,15 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         if (is_a($page, Page::class) === false) {
-            throw new Exception('The page cannot be dragged into this section');
+            throw new LogicException([
+                'key' => 'page.sort.section.type'
+            ]);
         }
 
         if (empty($this->templates()) === false && in_array($page->template(), $this->templates()) === false) {
-            throw new Exception('The page template is not allowed in this section');
+            throw new LogicException([
+                'key' => 'page.sort.section.template.invalid'
+            ]);
         }
 
         return $page->changeStatus($status, $position);

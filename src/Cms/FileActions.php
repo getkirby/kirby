@@ -2,8 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
+use Kirby\Image\Image;
 use Kirby\Util\Str;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait FileActions
 {
@@ -76,7 +78,7 @@ trait FileActions
     public static function create(array $props): self
     {
         if (isset($props['source'], $props['parent']) === false) {
-            throw new Exception('Please provide the "source" and "parent" props for the File');
+            throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
         }
 
         // prefer the filename from the props

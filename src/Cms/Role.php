@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\NotFoundException;
 
 class Role extends Model
 {
@@ -79,7 +80,7 @@ class Role extends Model
         try {
             return static::factory(Blueprint::load('users/' . $name), $inject);
         } catch (Exception $e) {
-            throw new Exception(sprintf('The role "%s" does not exist', $name));
+            throw new NotFoundException(sprintf('The role "%s" does not exist', $name));
         }
     }
 
