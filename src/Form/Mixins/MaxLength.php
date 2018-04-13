@@ -2,8 +2,9 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\MaxLengthException;
 use Kirby\Toolkit\V;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait MaxLength
 {
@@ -30,7 +31,9 @@ trait MaxLength
     {
         if ($this->isEmpty() === false && $this->maxLength() !== null) {
             if (V::maxLength($value, $this->maxLength()) === false) {
-                throw new MaxLengthException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.maxLength.invalid'
+                ]);
             }
         }
 

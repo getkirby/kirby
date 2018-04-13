@@ -2,8 +2,9 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\DateException;
 use Kirby\Toolkit\V;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait Date
 {
@@ -48,7 +49,9 @@ trait Date
     {
         if ($this->isEmpty($value) === false) {
             if (V::date($value) === false) {
-                throw new DateException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.date.invalid'
+                ]);
             }
         }
     }

@@ -2,8 +2,9 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\MaxException;
 use Kirby\Toolkit\V;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait Max
 {
@@ -30,7 +31,9 @@ trait Max
     {
         if ($this->isEmpty() === false && $this->max() !== null) {
             if ($value > $this->max()) {
-                throw $message !== null ? new MaxException($message) : new MaxException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.max.invalid'
+                ]);
             }
         }
 

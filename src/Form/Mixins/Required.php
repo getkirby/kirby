@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\MissingValueException;
+use Kirby\Exception\InvalidArgumentException;
 
 trait Required
 {
@@ -38,7 +38,9 @@ trait Required
     {
         if ($this->isEmpty($value) === true) {
             if ($this->isRequired() === true) {
-                throw new MissingValueException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.field.required'
+                ]);
             }
         }
 

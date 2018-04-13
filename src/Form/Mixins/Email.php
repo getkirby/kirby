@@ -2,8 +2,9 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\EmailException;
 use Kirby\Toolkit\V;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait Email
 {
@@ -12,7 +13,9 @@ trait Email
     {
         if ($this->isEmpty() === false) {
             if (V::email($value) === false) {
-                throw new EmailException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.email.invalid'
+                ]);
             }
         }
 

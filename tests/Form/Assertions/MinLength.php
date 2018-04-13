@@ -23,7 +23,7 @@ trait MinLength
             $this->assertValueIsInvalid([
                 'minLength' => Str::length($testValue) + 1,
                 'value'     => $testValue
-            ], 'minLength');
+            ], 'error.form.minLength.invalid');
 
         }
 

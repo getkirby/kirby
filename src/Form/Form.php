@@ -2,9 +2,6 @@
 
 namespace Kirby\Form;
 
-use Exception;
-use Kirby\Form\Exceptions\PropertyException;
-
 class Form extends Component
 {
 
@@ -62,7 +59,7 @@ class Form extends Component
 
         foreach ($this->fields as $name => $field) {
             $field['model']     = $model;
-            $field['name']      = $name              = $field['name'] ?? $name;
+            $field['name']      = $name = $field['name'] ?? $name;
             $field['value']     = $values[$lowerName = strtolower($name)] ?? null;
             $field['undefined'] = isset($values[$lowerName]) === false;
 

@@ -2,9 +2,10 @@
 
 namespace Kirby\Form;
 
-use Exception;
 use Closure;
 use Kirby\Collection\Collection;
+
+use Kirby\Exception\InvalidArgumentException;
 
 class Fields extends Collection
 {
@@ -26,7 +27,7 @@ class Fields extends Collection
         }
 
         if (is_a($field, Field::class) === false) {
-            throw new Exception('Invalid Field object in Fields collection');
+            throw new InvalidArgumentException('Invalid Field object in Fields collection');
         }
 
         return parent::__set($field->name(), $field);

@@ -2,8 +2,6 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\StepException;
-
 trait Step
 {
 

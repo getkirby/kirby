@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\PropertyException;
+use Kirby\Exception\InvalidArgumentException;
 
 trait Time
 {
@@ -28,7 +28,9 @@ trait Time
     protected function setNotation(int $notation = null)
     {
         if (in_array($notation, [12, 24], true) === false) {
-            throw new PropertyException('Invalid time notation');
+            throw new InvalidArgumentException([
+                'key' => 'form.time.notation'
+            ]);
         }
 
         $this->notation = $notation;

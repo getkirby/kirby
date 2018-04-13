@@ -2,8 +2,9 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\PropertyException;
 use Kirby\Util\Str;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait Converter
 {
@@ -56,7 +57,10 @@ trait Converter
     protected function setConverter(string $converter = null)
     {
         if ($converter !== null && in_array($converter, array_keys($this->converters())) === false) {
-            throw new PropertyException('Invalid converter');
+            throw new InvalidArgumentException([
+                'key'  => 'form.converter.invalid',
+                'data' => ['converter' => $converter]
+            ]);
         }
 
         $this->converter = $converter;

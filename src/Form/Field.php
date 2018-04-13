@@ -2,9 +2,6 @@
 
 namespace Kirby\Form;
 
-use Exception;
-use ReflectionClass;
-use ReflectionMethod;
 use Kirby\Form\Exceptions\PropertyException;
 
 class Field extends Component

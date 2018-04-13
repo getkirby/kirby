@@ -5,7 +5,7 @@ namespace Kirby\Form;
 use Kirby\Toolkit\V;
 use Kirby\Util\Str;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 class TagsField extends Field
 {
@@ -49,7 +49,7 @@ class TagsField extends Field
     public function setAccept(string $accept)
     {
         if (V::in($accept, ['all', 'options']) === false) {
-            throw new Exception(sprintf('"%s" is not a valid value for the "accept" option', $accept));
+            throw new InvalidArgumentException(sprintf('"%s" is not a valid value for the "accept" option', $accept));
         }
 
         return $this->accept = $accept;

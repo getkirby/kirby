@@ -7,12 +7,13 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
-use Kirby\Form\Exceptions\OptionException;
 use Kirby\Form\OptionsApi;
 use Kirby\Form\OptionsQuery;
 use Kirby\Util\A;
 use Kirby\Util\I18n;
 use Kirby\Util\Obj;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait Options
 {
@@ -21,9 +22,9 @@ trait Options
     protected $query = null;
     protected $api;
 
-    public function option(string $value) {
-        foreach($this->options() as $option)
-        {
+    public function option(string $value)
+    {
+        foreach ($this->options() as $option) {
             if ($option['value'] === $value) {
                 return $option;
             }
@@ -203,7 +204,9 @@ trait Options
     {
         if ($this->isEmpty($value) === false) {
             if (in_array($value, $this->values(), true) !== true) {
-                throw new OptionException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.option.invalid'
+                ]);
             }
         }
 
@@ -213,19 +216,17 @@ trait Options
     protected function validateMultipleOptions(array $value)
     {
         if ($this->isEmpty($value) === false) {
-
             $values = $this->values();
 
             foreach ($value as $key => $val) {
                 if (in_array($val, $values, true) === false) {
-                    throw new OptionException();
+                    throw new InvalidArgumentException([
+                        'key' => 'form.option.invalid'
+                    ]);
                 }
             }
-
         }
 
         return true;
     }
-
 }
-

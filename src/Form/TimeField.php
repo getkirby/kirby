@@ -2,8 +2,9 @@
 
 namespace Kirby\Form;
 
-use Kirby\Form\Exceptions\DateException;
 use Kirby\Toolkit\V;
+
+use Kirby\Exception\InvalidArgumentException;
 
 class TimeField extends DateField
 {
@@ -78,7 +79,9 @@ class TimeField extends DateField
     {
         if ($this->isEmpty($value) === false) {
             if (V::time($value) !== true) {
-                throw new DateException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.time.invalid'
+                ]);
             }
         }
 

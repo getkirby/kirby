@@ -148,6 +148,19 @@
     "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
 
     "error.form.incomplete": "Please fix all form errors …",
+    "error.form.converter.invalid": "Invalid converter \"{converter}\"",
+    "error.form.date.invalid": "Invalid date",
+    "error.form.email.invalid": "Invalid email address",
+    "error.form.layout.invalid": "Invalid layout",
+    "error.form.max.invalid": "The value is above the accepted maximum",
+    "error.form.maxLength.invalid": "The value is too long",
+    "error.form.min.invalid": "The value is below the accepted minimum",
+    "error.form.minLength.invalid": "The value is too short",
+    "error.form.option.invalid": "Invalid option",
+    "error.form.field.required": "The field is required",
+    "error.form.time": "Invalid time",
+    "error.form.time.notation": "Invalid time notation",
+    "error.form.url.invalid": "Invalid URL",
 
     "error.page.undefined": "The page cannot be found",
     "error.page.duplicate": "A page with the slug \"{slug}\" already exists",
@@ -177,6 +190,7 @@
 
     "error.site.update.permission": "You are not allowed to update the site",
 
+    "error.user.notFound": "The user \"{name}\" cannot be found",
     "error.user.delete": "The user \"{name}\" cannot be deleted",
     "error.user.duplicate": "A user with the email address \"{email}\" already exists",
     "error.user.changeEmail.permission": "You are not allowed to change the email for the user \"{name}\"",
