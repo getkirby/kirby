@@ -57,10 +57,6 @@ class PageBlueprintOptions extends BlueprintOptions
             return false;
         }
 
-        if (count($this->model()->blueprints()) <= 1) {
-            return false;
-        }
-
         return $this->isAllowed('page', 'changeTemplate');
     }
 

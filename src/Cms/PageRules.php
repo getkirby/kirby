@@ -116,6 +116,13 @@ class PageRules
             ]);
         }
 
+        if (count($page->blueprints()) <= 1) {
+            throw new LogicException([
+                'key'  => 'page.changeTemplate.invalid',
+                'data' => ['slug' => $page->slug()]
+            ]);
+        }
+
         return true;
     }
 
