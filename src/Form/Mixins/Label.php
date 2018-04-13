@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixins;
 
+use Kirby\Util\I18n;
+
 trait Label
 {
 
@@ -25,7 +27,7 @@ trait Label
      */
     protected function setLabel($label = null): self
     {
-        $this->label = $this->translate($label);
+        $this->label = I18n::translate($label);
         return $this;
     }
 

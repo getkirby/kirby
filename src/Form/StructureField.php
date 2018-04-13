@@ -28,7 +28,6 @@ class StructureField extends Field
     {
         return new Form([
             'fields' => $this->fields(),
-            'locale' => $this->locale(),
             'model'  => $this->model(),
             'values' => $values
         ]);

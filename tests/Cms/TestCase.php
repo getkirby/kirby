@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Kirby\Util\I18n;
 
 class TestCase extends BaseTestCase
 {
@@ -14,6 +15,10 @@ class TestCase extends BaseTestCase
     {
         App::removePlugins();
         Blueprint::$loaded = [];
+
+        I18n::$locale      = null;
+        I18n::$fallback    = [];
+        I18n::$translation = [];
     }
 
     public function tearDown()

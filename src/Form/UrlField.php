@@ -29,9 +29,7 @@ class UrlField extends TextField
 
     protected function defaultPlaceholder()
     {
-        return [
-            'en_US' => 'https://example.com'
-        ];
+        return 'https://example.com';
     }
 
     protected function validate($value): bool

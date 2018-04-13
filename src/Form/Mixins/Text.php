@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixins;
 
+use Kirby\Util\I18n;
+
 trait Text
 {
 
@@ -14,7 +16,7 @@ trait Text
 
     protected function setText(string $text = null)
     {
-        $this->text = $this->translate($text);
+        $this->text = I18n::translate($text);
         return $this;
     }
 

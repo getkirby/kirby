@@ -23,7 +23,7 @@
         "php": ">=7.0.0",
         "ext-mbstring": "*",
         "mustangostang/spyc": "*",
-        "erusev/parsedown-extra": "0.7.*",
+        "erusev/parsedown-extra": "0.7.0",
         "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
         "sentry/sentry": "^1.8",

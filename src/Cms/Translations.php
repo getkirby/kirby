@@ -2,25 +2,41 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Util\Dir;
+use Kirby\Util\F;
 
 class Translations extends Collection
 {
 
     protected static $accept = Translation::class;
 
-    public function __debuginfo(): array
+    public static function factory(array $translations)
     {
-        return $this->toArray();
-    }
+        $collection = new static;
 
-    public function __set(string $id, $object)
-    {
-        if (is_a($object, static::$accept) === false) {
-            throw new InvalidArgumentException(sprintf('Invalid object in collection. Accepted: "%s"', static::$accept));
+        foreach ($translations as $code => $props) {
+            $translation = new Translation($code, $props);
+            $collection->data[$translation->code()] = $translation;
         }
 
-        return $this->data[$object->id()] = $object;
+        return $collection;
+    }
+
+    public static function load(string $root)
+    {
+        $collection = new static;
+
+        foreach (Dir::read($root) as $filename) {
+
+            if (F::extension($filename) !== 'json') {
+                continue;
+            }
+
+            $translation = Translation::load($code = F::name($filename), $root . '/' . $filename);
+            $collection->data[$code] = $translation;
+        }
+
+        return $collection;
     }
 
 }

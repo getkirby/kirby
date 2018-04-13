@@ -105,8 +105,6 @@
     "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
     "user.none": "No users",
 
-    "error.test": "This is a test error",
-
     "error.access.login": "Invalid email or password",
     "error.access.panel": "You are not allowed to login to the panel",
 

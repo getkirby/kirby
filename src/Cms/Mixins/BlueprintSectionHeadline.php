@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms\Mixins;
 
+use Kirby\Util\I18n;
+
 trait BlueprintSectionHeadline
 {
 
@@ -14,7 +16,7 @@ trait BlueprintSectionHeadline
 
     protected function setHeadline($headline = null)
     {
-        $this->headline = $this->stringTemplate($this->translate($headline));
+        $this->headline = $this->stringTemplate(I18n::translate($headline));
         return $this;
     }
 

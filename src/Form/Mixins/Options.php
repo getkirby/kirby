@@ -55,7 +55,7 @@ trait Options
             }
 
             // translate the option text
-            $option['text'] = $this->translate($option['text']);
+            $option['text'] = I18n::translate($option['text']);
 
             // add the option to the list
             $options[] = $option;

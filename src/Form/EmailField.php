@@ -29,9 +29,7 @@ class EmailField extends TextField
 
     protected function defaultPlaceholder()
     {
-        return [
-            'en_US' => 'mail@example.com'
-        ];
+        return 'mail@example.com';
     }
 
     protected function validate($value): bool

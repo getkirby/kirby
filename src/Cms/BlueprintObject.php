@@ -2,12 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Translate;
-
 class BlueprintObject extends Component
 {
 
-    use Translate;
     use HasModel;
 
     /**

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Form\Fields;
 use Kirby\Util\F;
+use Kirby\Util\I18n;
 
 use Exception;
 use Kirby\Exception\NotFoundException;
@@ -419,7 +420,7 @@ class Blueprint extends BlueprintObject
      */
     protected function setTitle($title): self
     {
-        $this->title = $this->translate($title);
+        $this->title = I18n::translate($title);
         return $this;
     }
 

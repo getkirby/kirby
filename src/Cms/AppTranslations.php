@@ -2,17 +2,74 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Util\I18n;
+
 trait AppTranslations
 {
 
+    protected $translations;
+
     /**
-     * Returns the current locale
+     * Loads the fallback translation and
+     * runs the I18n setup.
      *
-     * @return string
+     * @return void
      */
-    public function locale(): string
+    protected function loadFallbackTranslation()
     {
-        return $this->locale;
+        I18n::$locale   = 'en_US';
+        I18n::$fallback = I18n::$translation = $this->translation(I18n::$locale)->data();
+    }
+
+    /**
+     * Loads the user translation
+     *
+     * @param string $locale
+     * @return void
+     */
+    protected function loadTranslation(string $locale)
+    {
+        if ($locale !== I18n::$locale && $translation = $this->translation($locale)) {
+            I18n::$locale      = $locale;
+            I18n::$translation = $translation->data();
+        }
+    }
+
+    /**
+     * Create your own set of translations
+     *
+     * @param array $translations
+     * @return self
+     */
+    protected function setTranslations(array $translations = null): self
+    {
+        if ($translations !== null) {
+            $this->translations = Translations::factory($translations);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Load a specific translation by locale
+     *
+     * @param string|null $locale
+     * @return Translation|null
+     */
+    public function translation(string $locale = null)
+    {
+        $locale = $locale ?? I18n::$locale;
+        $locale = basename($locale);
+
+        // prefer loading them from the translations collection
+        if (is_a($this->translations, Translations::class) === true) {
+            if ($translation = $this->translations()->find($locale)) {
+                return $translation;
+            }
+        }
+
+        // load from disk instead
+        return Translation::load($locale, $this->root('translations') . '/' . $locale . '.json');
     }
 
     /**
@@ -22,53 +79,11 @@ trait AppTranslations
      */
     public function translations()
     {
-        return $this->component('translations');
-    }
-
-    /**
-     * Sets the current locale
-     *
-     * @param string $locale
-     * @return self
-     */
-    protected function setLocale(string $locale = 'en'): self
-    {
-        $this->locale = empty($locale) === true ? $this->defaultLocale() : $locale;
-        return $this;
-    }
-
-    /**
-     * Returns translate string for key from locales file
-     *
-     * @param   string       $key
-     * @param   string|null  $fallback
-     * @param   string|null  $locale
-     * @return  string|null
-     */
-    public function translate(string $key, string $fallback = null, string $locale = null)
-    {
-        // TODO: define at a better place
-        $defaultLocale = 'en_US';
-
-        // TODO: handle short locales
-        if ($locale === null) {
-            if ($user = $this->user()) {
-                $locale = $user->language() ?? $defaultLocale;
-            } else {
-                $locale = $defaultLocale;
-            }
+        if (is_a($this->translations, Translations::class) === true) {
+            return $this->translations;
         }
 
-        $translations = $this->translations();
-
-        // if current language file has translation, return it
-        if ($translation = $translations->get($locale)->get($key)) {
-            return $translation;
-        }
-
-        // otherwise use default language file or
-        // return fallback string if no translation at all exists
-        return $translations->get($defaultLocale)->get($key, $fallback);
+        return Translations::load($this->root('translations'));
     }
 
 }

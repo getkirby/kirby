@@ -19,8 +19,8 @@
   "revert": "Zurücksetzen",
   "install": "Installieren",
 
-  "login": "Login",
-  "logout": "Logout",
+  "login": "Einloggen",
+  "logout": "Ausloggen",
 
   "welcome": "Willkommen!",
   "site": "Seite",
@@ -103,7 +103,5 @@
   "user.language.changed": "Die Sprache wurde geändert",
   "user.language.select": "Bitte wähl eine Sprache aus …",
   "user.blueprint": "Du kannst weitere Abschnitte und Formularfelder für diese Nutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
-  "user.none": "Keine Nutzer",
-
-  "error.test": "Das ist ein Testfehler"
+  "user.none": "Keine Nutzer"
 }

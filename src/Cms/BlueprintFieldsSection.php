@@ -49,7 +49,6 @@ class BlueprintFieldsSection extends BlueprintSection
 
         return new Form([
             'fields' => $fields,
-            'locale' => 'en',
             'model'  => $this->model(),
             'values' => $this->values ?? $this->model()->content()->toArray(),
         ]);

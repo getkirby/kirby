@@ -10,19 +10,25 @@ class Translation extends Component
     protected $code;
     protected $data;
 
-    public function __construct($code)
+    public function __construct(string $code, array $data)
     {
         $this->code = $code;
-        $this->root = dirname(dirname(__DIR__)) . '/translations/' . $this->code . '.json';
+        $this->data = $data;
     }
 
-    public function data()
+    public function author(): string
     {
-        if (is_array($this->data) === true) {
-            return $this->data;
-        }
+        return $this->get('translation.author', 'Kirby');
+    }
 
-        return $this->data = Data::read($this->root());
+    public function code(): string
+    {
+        return $this->code;
+    }
+
+    public function data(): array
+    {
+        return $this->data;
     }
 
     public function direction(): string
@@ -32,7 +38,7 @@ class Translation extends Component
 
     public function get(string $key, $default = null)
     {
-        return $this->data()[$key] ?? $default;
+        return $this->data[$key] ?? $default;
     }
 
     public function id(): string
@@ -40,29 +46,24 @@ class Translation extends Component
         return $this->code;
     }
 
-    public function name(): string
+    public static function load(string $code, string $root)
     {
-        return $this->get('translation.name');
+        return new Translation($code, Data::read($root));
     }
 
-    public function root(): string
+    public function name(): string
     {
-        return $this->root;
+        return $this->get('translation.name', $this->code);
     }
 
     public function toArray(): array
     {
         return [
-            'data'       => $this->data(),
-            'id'         => $this->id(),
-            'name'       => $this->get('translation.name'),
-            'translator' => $this->get('translation.translator'),
+            'code'   => $this->code(),
+            'data'   => $this->data(),
+            'name'   => $this->name(),
+            'author' => $this->author(),
         ];
-    }
-
-    public function translator(): string
-    {
-        return $this->get('translation.translator');
     }
 
 }

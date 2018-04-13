@@ -32,25 +32,6 @@ return function ($app) {
                 return new Kirby\Text\Tags($app->extensions('tags'));
             }
         ],
-        'Translations' => [
-            'singleton' => true,
-            'type'      => Kirby\Cms\Translations::class,
-            'instance'  => function () use ($app) {
-
-                $translations = new Kirby\Cms\Translations();
-
-                foreach (Kirby\Util\Dir::read($app->root('translations')) as $file) {
-                    if (Kirby\Util\F::extension($file) !== 'json') {
-                        continue;
-                    }
-
-                    $translation = new Kirby\Cms\Translation(Kirby\Util\F::name($file));
-                    $translations->set($translation->id(), $translation);
-                }
-
-                return $translations;
-            }
-        ],
         'Markdown' => [
             'singleton' => true,
             'type'      => Kirby\Text\Markdown::class,

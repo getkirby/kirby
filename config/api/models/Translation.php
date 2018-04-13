@@ -7,6 +7,9 @@ use Kirby\Cms\Translation;
  */
 return [
     'fields' => [
+        'author' => function (Translation $translation) {
+            return $translation->author();
+        },
         'data' => function (Translation $translation) {
             return $translation->data();
         },
@@ -18,9 +21,6 @@ return [
         },
         'name' => function (Translation $translation) {
             return $translation->name();
-        },
-        'translator' => function (Translation $translation) {
-            return $translation->translator();
         },
     ],
     'type'  => Translation::class,
