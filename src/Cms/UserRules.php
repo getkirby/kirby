@@ -154,7 +154,7 @@ class UserRules
     {
         if (V::email($email ?? null) === false) {
             throw new InvalidArgumentException([
-                'key' => 'user.invalid.email',
+                'key' => 'user.email.invalid',
             ]);
         }
 
@@ -173,7 +173,7 @@ class UserRules
     {
         if (in_array($language, $user->kirby()->translations()->keys(), true) === false) {
             throw new InvalidArgumentException([
-                'key' => 'user.invalid.language',
+                'key' => 'user.language.invalid',
             ]);
         }
 
@@ -184,7 +184,7 @@ class UserRules
     {
         if (Str::length($password ?? null) < 8) {
             throw new InvalidArgumentException([
-                'key' => 'user.invalid.password',
+                'key' => 'user.password.invalid',
             ]);
         }
 
@@ -198,7 +198,7 @@ class UserRules
         }
 
         throw new InvalidArgumentException([
-            'key' => 'user.invalid.role',
+            'key' => 'user.role.invalid',
         ]);
      }
 

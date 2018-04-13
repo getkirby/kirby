@@ -30,7 +30,7 @@ class AvatarRules
         // TODO: also allow PNG files
         if ($mime !== 'image/jpeg') {
             throw new InvalidArgumentException([
-                'key' => 'avatar.invalid.mime',
+                'key' => 'avatar.mime.invalid',
             ]);
         }
 
@@ -41,7 +41,7 @@ class AvatarRules
     {
         if ($width > 3000 || $height > 3000) {
             throw new InvalidArgumentException([
-                'key' => 'avatar.invalid.dimensions',
+                'key' => 'avatar.dimensions.invalid',
             ]);
         }
 

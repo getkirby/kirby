@@ -45,7 +45,10 @@ class Base
     {
         if (Dir::remove($this->root()) !== true) {
             throw new Exception([
-                'key' => 'app.directory.delete',
+                'key'       => 'app.directory.delete',
+                'fallback'  => 'The directory "{dir}" could not be deleted',
+                'data'      => ['dir' => $this->root()],
+                'translate' => false
             ]);
         }
 

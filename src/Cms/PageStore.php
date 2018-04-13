@@ -109,11 +109,19 @@ class PageStore extends PageStoreDefault
         $oldFile = $this->base()->storage();
 
         if (Data::write($newFile, $data) !== true) {
-             throw new Exception('The new text file could not be written');
+             throw new LogicException([
+                'key'       => 'page.textfile.create',
+                'fallback'  => 'The new text file could not be written',
+                'translate' => false
+            ]);
         }
 
         if (F::remove($oldFile) !== true) {
-            throw new Exception('The old text file could not be removed');
+            throw new LogicException([
+                'key'       => 'page.textfile.remove',
+                'fallback'  => 'The old text file could not be removed',
+                'translate' => false
+            ]);
        }
 
         return $newPage;
@@ -158,8 +166,10 @@ class PageStore extends PageStoreDefault
         // create the new page directory
         if (Dir::make($root) !== true) {
             throw new LogicException([
-                'key'  => 'page.directory.create',
-                'data' => ['slug' => $page->slug()]
+                'key'       => 'page.directory.create',
+                'fallback'  => 'The page directory for "{slug}" cannot be created',
+                'data'      => ['slug' => $page->slug()],
+                'translate' => false
             ]);
         }
 
@@ -248,13 +258,18 @@ class PageStore extends PageStoreDefault
         $parent = dirname($new);
 
         if (Dir::make($parent, true) !== true) {
-            throw new Exception('The parent directory could not be created');
+            throw new LogicException([
+                'key'       => 'page.directory.parent.create',
+                'fallback'  => 'The parent directory cannot be created',
+                'translate' => false
+            ]);
         }
 
         if (Dir::move($old, $new) !== true) {
             throw new LogicException([
-                'key'  => 'page.directory.move',
-                'data' => ['slug' => $old->slug()]
+                'key'       => 'page.directory.move',
+                'fallback'  => 'The page directory cannot be moved',
+                'translate' => false
             ]);
         }
 

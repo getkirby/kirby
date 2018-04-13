@@ -79,7 +79,9 @@ trait FileActions
     {
         if (isset($props['source'], $props['parent']) === false) {
             throw new InvalidArgumentException([
-                'key' => 'file.props.missing',
+                'key'       => 'file.props.missing',
+                'fallback'  => 'Please provide the "source" and "parent" props for the File',
+                'translate' => false
             ]);
         }
 

@@ -4,24 +4,24 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
 
-class AppLocalesTest extends \PHPUnit\Framework\TestCase
+class AppTranslationsTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testLocales()
+    public function testTranslations()
     {
         $app = App::instance();
-        $locales = $app->locales();
+        $translations = $app->translations();
 
-        $this->assertInstanceOf(Locales::class, $locales);
+        $this->assertInstanceOf(Translations::class, $translations);
 
         $i = 0;
 
-        foreach ($locales as $locale) {
-            $this->assertInstanceOf(Locale::class, $locale);
+        foreach ($translations as $translation) {
+            $this->assertInstanceOf(Translation::class, $translation);
             $i++;
         }
 
-        $this->assertEquals($i, $locales->count());
+        $this->assertEquals($i, $translations->count());
     }
 
     public function testTranslate()

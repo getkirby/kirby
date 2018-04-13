@@ -64,8 +64,10 @@ class Collection extends BaseCollection
     {
         if (is_a($object, static::$accept) === false) {
             throw new InvalidArgumentException([
-                'key'  => 'collection.object.invalid',
-                'data' => ['accept' => static::$accept]
+                'key'       => 'collection.object.invalid',
+                'fallback'  => 'Invalid object in collection. Accepted: "{accept}"',
+                'data'      => ['accept' => static::$accept],
+                'translate' => false
             ]);
         }
 

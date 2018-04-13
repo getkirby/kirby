@@ -163,7 +163,7 @@ class BlueprintFilesSection extends BlueprintSection
         // make sure the basics are provided
         if (isset($data['filename'], $data['source']) === false) {
             throw new InvalidArgumentException([
-                'key' => 'file.invalid.name.missing'
+                'key' => 'file.name.missing'
             ]);
         }
 
