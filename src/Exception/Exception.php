@@ -23,6 +23,9 @@ class Exception extends \Exception
 
     public function __construct(array $args = [])
     {
+        // Define whether message should/can be translated
+        $translate = ($args['translate'] ?? true) === true && class_exists(App::class) === true;
+
         // Define the Exception key
         $key = self::$prefix . '.' . ($args['key'] ?? static::$defaultKey);
 
@@ -34,7 +37,7 @@ class Exception extends \Exception
         // Fallback waterfall for message string
         $message = null;
 
-        if (($args['translate'] ?? true) === true && class_exists(App::class) === true) {
+        if ($translate) {
             // 1. Translation for provided key in current language
             // 2. Translation for provided key in default language
             if (isset($args['key']) === true) {
@@ -49,7 +52,7 @@ class Exception extends \Exception
             $this->isTranslated = false;
         }
 
-        if (class_exists(App::class)) {
+        if ($translate) {
             // 4. Translation for default key in current language
             // 5. Translation for default key in default language
             if ($message === null) {
