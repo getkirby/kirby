@@ -7,6 +7,12 @@ use PHPUnit\Framework\TestCase;
 class I18nTest extends TestCase
 {
 
+    public function setUp(){
+        I18n::$locale      = null;
+        I18n::$fallback    = [];
+        I18n::$translation = [];
+    }
+
     public function testTranslate()
     {
         I18n::$translation = [

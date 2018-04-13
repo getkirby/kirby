@@ -22,6 +22,7 @@ class App extends Component
     use AppOptions;
     use AppPlugins;
     use AppTranslations;
+    use AppUsers;
 
     use HasSingleton;
 
@@ -50,6 +51,9 @@ class App extends Component
 
         // configurable properties
         $this->setProperties($props);
+
+        // load the english translation
+        $this->loadFallbackTranslation();
 
         // load all extensions
         $this->extensionsFromSystem();
@@ -410,35 +414,6 @@ class App extends Component
     }
 
     /**
-     * Set the currently active user id
-     *
-     * @param  User|string $user
-     * @return self
-     */
-    protected function setUser($user = null): self
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-    /**
-     * Create your own set of app users
-     *
-     * @param array $users
-     * @return self
-     */
-    protected function setUsers(array $users = null): self
-    {
-        if ($users !== null) {
-            $this->users = Users::factory($users, [
-                'kirby' => $this
-            ]);
-        }
-
-        return $this;
-    }
-
-    /**
      * Returns the Server singleton
      *
      * @return Server
@@ -494,82 +469,6 @@ class App extends Component
 
         // set the default urls
         return $this->setUrls()->urls();
-    }
-
-    /**
-     * Returns a specific user by id
-     * or the current user if no id is given
-     *
-     * @param  string        $id
-     * @param  Session|array $session Session options or session object for getting the current user
-     * @return User|null
-     */
-    public function user(string $id = null, $session = null)
-    {
-        if ($id === null) {
-            if (is_a($this->user, User::class) === true) {
-                return $this->user;
-            }
-
-            if (is_string($this->user) === true) {
-                return $this->user = $this->users()->find($this->user);
-            }
-
-            try {
-                $authorization = $this->request()->headers()['Authorization'] ?? '';
-                if (Str::startsWith($authorization, 'Basic ') === true) {
-                    // HTTP Basic auth
-                    $credentials = base64_decode(substr($authorization, 6));
-                    $id       = Str::before($credentials, ':');
-                    $password = Str::after($credentials, ':');
-
-                    $user = $this->users()->find($id);
-
-                    if ($user->validatePassword($password) !== true) {
-                        return null;
-                    }
-                } else {
-                    // try session in header or cookie
-                    // use passed session options or session object if set
-                    if (is_array($session)) {
-                        $session = $this->session($session);
-                    } elseif (!is_a($session, Session::class)) {
-                        $session = $this->session(['detect' => true]);
-                    }
-
-                    $id = $session->data()->get('user.id');
-                    if (is_string($id) !== true) {
-                        return null;
-                    }
-
-                    $user = $this->users()->find($id);
-
-                    // in case the session needs to be updated, do it now
-                    // for better performance
-                    $session->commit();
-                }
-
-                return $this->user = $user;
-            } catch (Throwable $e) {
-                return null;
-            }
-        }
-
-        return $this->users()->find($id);
-    }
-
-    /**
-     * Returns all users
-     *
-     * @return Users
-     */
-    public function users(): Users
-    {
-        if (is_a($this->users, Users::class) === true) {
-            return $this->users;
-        }
-
-        return $this->users = Users::load($this->root('accounts'), ['kirby' => $this]);
     }
 
 }

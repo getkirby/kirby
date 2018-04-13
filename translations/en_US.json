@@ -105,8 +105,6 @@
     "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
     "user.none": "No users",
 
-    "error.test": "This is a test error",
-
     "error.form.errors": "Please fix all form errors …",
     "error.section.notFound": "The section type <strong>{type}</strong> does not exist. Please change the configuration in your blueprint.",
     "error.section.notLoaded": "The section could not be loaded",

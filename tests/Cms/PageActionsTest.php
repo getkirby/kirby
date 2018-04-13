@@ -107,6 +107,8 @@ class PageActionsTest extends TestCase
 
     public function testChangeTemplate()
     {
+        $this->markTestIncomplete();
+
         $this->assertHooks([
             'page.changeTemplate:before' => function (Page $page, string $template) {
                 $this->assertEquals('test', $page->template());

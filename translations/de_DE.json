@@ -109,7 +109,6 @@
   "user.language.select": "Bitte wähl eine Sprache aus …",
   "user.blueprint":
     "Du kannst weitere Abschnitte und Formularfelder für diese Nutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
-  "user.none": "Keine Nutzer",
+  "user.none": "Keine Nutzer"
 
-  "error.test": "Das ist ein Testfehler"
 }

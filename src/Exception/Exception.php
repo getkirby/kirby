@@ -4,6 +4,7 @@ namespace Kirby\Exception;
 
 use Kirby\Cms\App;
 use Kirby\Util\Str;
+use Kirby\Util\I18n;
 
 class Exception extends \Exception
 {
@@ -33,25 +34,28 @@ class Exception extends \Exception
         // Fallback waterfall for message string
         $message = null;
 
-        if (($args['translate'] ?? true) === true && class_exists(App::class) === true) {
+        // 1. Provided fallback message
+        // 2. Default fallback message
+        $fallback = $args['fallback'] ?? static::$defaultFallback;
+
+        // Handle translations
+        if (($args['translate'] ?? true) === true) {
+
             // 1. Translation for provided key in current language
             // 2. Translation for provided key in default language
             if (isset($args['key']) === true) {
-                $message = App::instance()->translate(self::$prefix . '.' . $args['key']);
+                $message = I18n::translate(self::$prefix . '.' . $args['key'], $fallback);
             }
 
             // 4. Translation for default key in current language
             // 5. Translation for default key in default language
             if ($message === null) {
-                $message = App::instance()->translate(self::$prefix . '.' . static::$defaultKey);
+                $message = I18n::translate(self::$prefix . '.' . static::$defaultKey, $fallback);
             }
         }
 
-        // 5. Provided fallback message
-        // 6. Default fallback message
-        if ($message === null) {
-            $message = $args['fallback'] ?? static::$defaultFallback;
-        }
+        // If the message is still null, take the fallback
+        $message = $message ?? $fallback;
 
         // Format message with passed data
         $message = Str::template($message, $this->data, '-');
