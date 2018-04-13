@@ -11,6 +11,7 @@ use Kirby\Form\Exceptions\OptionException;
 use Kirby\Form\OptionsApi;
 use Kirby\Form\OptionsQuery;
 use Kirby\Util\A;
+use Kirby\Util\I18n;
 use Kirby\Util\Obj;
 
 trait Options
