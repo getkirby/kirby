@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use TypeError;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use ReflectionMethod;
+use Kirby\Util\I18n;
 
 abstract class FieldTestCase extends BaseTestCase
 {
@@ -82,6 +83,8 @@ abstract class FieldTestCase extends BaseTestCase
         // simple
         $this->assertPropertyValue($property, 'test');
 
+        I18n::$locale = 'en';
+
         // translate
         $text = [
             'en' => 'english',
@@ -89,15 +92,15 @@ abstract class FieldTestCase extends BaseTestCase
         ];
 
         $field = $this->field([
-            $property => $text,
-            'locale' => 'en'
+            $property => $text
         ]);
 
         $this->assertEquals('english', $field->$property());
 
+        I18n::$locale = 'de';
+
         $field = $this->field([
-            $property => $text,
-            'locale' => 'de'
+            $property => $text
         ]);
 
         $this->assertEquals('deutsch', $field->$property());

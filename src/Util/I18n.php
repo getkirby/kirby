@@ -17,7 +17,7 @@ class I18n
             return $key[static::$locale] ?? $fallback;
         }
 
-        return static::$translation[$key] ?? static::$fallback[$key] ?? $fallback;
+        return static::$translation[$key] ?? static::$fallback[$key] ?? $fallback ?? $key;
     }
 
     public static function translateCount($key, int $count)

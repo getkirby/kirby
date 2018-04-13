@@ -6,12 +6,10 @@ use Exception;
 use ReflectionClass;
 use ReflectionMethod;
 use Kirby\Form\Exceptions\PropertyException;
-use Kirby\Util\Translate;
 
 class Field extends Component
 {
 
-    use Translate;
     use Mixins\Model;
 
     public static $types = [];

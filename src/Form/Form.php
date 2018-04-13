@@ -4,12 +4,10 @@ namespace Kirby\Form;
 
 use Exception;
 use Kirby\Form\Exceptions\PropertyException;
-use Kirby\Util\Translate;
 
 class Form extends Component
 {
 
-    use Translate;
     use Mixins\Model;
 
     protected $errors;
@@ -59,12 +57,10 @@ class Form extends Component
         }
 
         $model  = $this->model();
-        $locale = $this->locale();
         $values = array_change_key_case($this->values);
         $fields = [];
 
         foreach ($this->fields as $name => $field) {
-            $field['locale']    = $locale;
             $field['model']     = $model;
             $field['name']      = $name              = $field['name'] ?? $name;
             $field['value']     = $values[$lowerName = strtolower($name)] ?? null;

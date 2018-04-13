@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixins;
 
+use Kirby\Util\I18n;
+
 trait Placeholder
 {
 
@@ -19,7 +21,7 @@ trait Placeholder
 
     protected function setPlaceholder($placeholder = null)
     {
-        $this->placeholder = $this->translate($placeholder);
+        $this->placeholder = I18n::translate($placeholder);
         return $this;
     }
 

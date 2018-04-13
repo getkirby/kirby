@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixins;
 
+use Kirby\Util\I18n;
+
 trait Help
 {
 
@@ -25,7 +27,7 @@ trait Help
      */
     protected function setHelp($help = null): self
     {
-        $this->help = $this->translate($help);
+        $this->help = I18n::translate($help);
         return $this;
     }
 

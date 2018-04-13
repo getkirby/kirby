@@ -14,7 +14,7 @@ trait BlueprintSectionHeadline
 
     protected function setHeadline($headline = null)
     {
-        $this->headline = $this->stringTemplate($this->translate($headline));
+        $this->headline = $this->stringTemplate(I18n::translate($headline));
         return $this;
     }
 
