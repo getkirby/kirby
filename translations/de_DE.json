@@ -19,8 +19,8 @@
   "revert": "Zurücksetzen",
   "install": "Installieren",
 
-  "login": "Login",
-  "logout": "Logout",
+  "login": "Einloggen",
+  "logout": "Ausloggen",
 
   "welcome": "Willkommen!",
   "site": "Seite",
