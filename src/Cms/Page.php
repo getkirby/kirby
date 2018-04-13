@@ -3,9 +3,10 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
 use Kirby\Util\A;
 use Kirby\Util\Str;
+
+use Kirby\Exception\NotFoundException;
 
 /**
  * The Page class is the heart and soul of
