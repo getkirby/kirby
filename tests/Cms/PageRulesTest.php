@@ -204,7 +204,7 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\LogicException
-     * @expectedExceptionCode error.delete.hasChildren
+     * @expectedExceptionCode error.page.delete.hasChildren
      */
     public function testDeleteWithChildren()
     {
