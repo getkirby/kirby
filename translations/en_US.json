@@ -195,6 +195,8 @@
     "error.user.password.invalid": "Please enter a valid password. Passwords must be at least 8 characters long.",
     "error.user.password.undefined": "The user has no password",
     "error.user.password.notSame": "The passwords do not match",
-    "error.user.role.invalid": "Please enter a valid role"
+    "error.user.role.invalid": "Please enter a valid role",
+
+    "error.view.notFound": "This view does not exist"
 
 }
