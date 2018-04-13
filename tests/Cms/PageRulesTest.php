@@ -41,7 +41,7 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The page order number cannot be negative
+     * @expectedExceptionMessage Please enter a valid sorting number. Numbers must not be negative.
      */
     public function testInvalidChangeNum()
     {
@@ -65,7 +65,7 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The slug for this page cannot be changed
+     * @expectedExceptionMessage You are not allowed to change the slug for "test"
      */
     public function testChangeSlugWithHomepage()
     {
@@ -82,7 +82,7 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The slug for this page cannot be changed
+     * @expectedExceptionMessage You are not allowed to change the slug for "test"
      */
     public function testChangeSlugWithErrorPage()
     {
@@ -99,7 +99,7 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The URL appendix "project-b" exists
+     * @expectedExceptionMessage A page with the slug "project-b" already exists
      */
     public function testChangeSlugWithDuplicate()
     {
@@ -152,7 +152,7 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The page does not exist
+     * @expectedExceptionMessage The page cannot be found
      */
     public function testDeleteNotExists()
     {
@@ -166,10 +166,11 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage This page cannot be deleted
+     * @expectedExceptionMessage You are not allowed to delete "-"
      */
     public function testDeleteHomepage()
     {
+        // TODO: is there actually a check in the backend for this?
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
@@ -183,10 +184,11 @@ class PageRulesTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage This page cannot be deleted
+     * @expectedExceptionMessage You are not allowed to delete "-"
      */
     public function testDeleteErrorPage()
     {
+        // TODO: is there actually a check in the backend for this?
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
