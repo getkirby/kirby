@@ -11,13 +11,21 @@ class I18n
     public static $translation = [];
     public static $fallback = [];
 
-    public static function translate($key, string $fallback = null)
+    public static function translate($key, $fallback = null)
     {
         if (is_array($key) === true) {
-            return $key[static::$locale] ?? $fallback;
+            if (isset($key[static::$locale])) {
+                return $key[static::$locale];
+            }
+
+            if (is_array($fallback)) {
+                return $fallback[static::$locale] ?? null;
+            }
+
+            return $fallback;
         }
 
-        return static::$translation[$key] ?? static::$fallback[$key] ?? $fallback ?? $key;
+        return static::$translation[$key] ?? static::$fallback[$key] ?? $fallback;
     }
 
     public static function translateCount($key, int $count)

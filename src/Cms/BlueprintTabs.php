@@ -110,7 +110,7 @@ class BlueprintTabs
             $tab['columns'] = $this->columns($tab['columns']);
 
             // translate the label if necessary
-            $tab['label'] = I18n::translate($tab['label']);
+            $tab['label'] = I18n::translate($tab['label'], $tab['label']);
 
             ksort($tab);
 

@@ -407,7 +407,7 @@ class Blueprint extends BlueprintObject
      */
     protected function setTitle($title): self
     {
-        $this->title = I18n::translate($title);
+        $this->title = I18n::translate($title, $title);
         return $this;
     }
 
