@@ -21,7 +21,7 @@ trait Placeholder
 
     protected function setPlaceholder($placeholder = null)
     {
-        $this->placeholder = I18n::translate($placeholder);
+        $this->placeholder = I18n::translate($placeholder, $placeholder);
         return $this;
     }
 
