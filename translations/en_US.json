@@ -152,6 +152,8 @@
     "error.page.slug.invalid": "Please enter a valid URL prefix",
     "error.page.template.missing": "Please provide a template for the page",
     "error.page.template.invalid": "Please select a valid template",
+    "error.template.error.notFound": "The error template does not exist",
+    "error.template.default.notFound": "The default template does not exist",
     "error.page.status.invalid": "Please set a valid page status",
     "error.page.delete": "The page \"{slug}\" cannot be deleted",
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published",

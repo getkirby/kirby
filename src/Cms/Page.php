@@ -738,9 +738,13 @@ class Page extends Model
         // react if even the default template does not exist
         if ($template->exists() === false) {
             if ($this->isErrorPage() === true) {
-                throw new Exception('The error template does not exist');
+                throw new NotFoundException([
+                    'key' => 'template.error.notFound'
+                ]);
             } else {
-                throw new Exception('The default template does not exist');
+                throw new NotFoundException([
+                    'key' => 'template.default.notFound'
+                ]);
             }
         }
 
