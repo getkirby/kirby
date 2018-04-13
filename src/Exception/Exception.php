@@ -3,6 +3,7 @@
 namespace Kirby\Exception;
 
 use Kirby\Cms\App;
+use Kirby\Util\I18n;
 use Kirby\Util\Str;
 
 class Exception extends \Exception
@@ -47,7 +48,7 @@ class Exception extends \Exception
                 // 1. Translation for provided key in current language
                 // 2. Translation for provided key in default language
                 if (isset($args['key']) === true) {
-                    $message = App::instance()->translate(self::$prefix . '.' . $args['key']);
+                    $message = I18n::translate(self::$prefix . '.' . $args['key']);
                     $this->isTranslated = true;
                 }
             }
@@ -62,7 +63,7 @@ class Exception extends \Exception
                 // 4. Translation for default key in current language
                 // 5. Translation for default key in default language
                 if ($message === null) {
-                    $message = App::instance()->translate(self::$prefix . '.' . static::$defaultKey);
+                    $message = I18n::translate(self::$prefix . '.' . static::$defaultKey);
                     $this->isTranslated = true;
                 }
             }
