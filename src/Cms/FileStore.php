@@ -2,10 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
 use Kirby\Image\Image;
 use Kirby\Util\F;
+
+use Exception;
+use Kirby\Exception\LogicException;
 
 class FileStore extends FileStoreDefault
 {
@@ -35,7 +37,7 @@ class FileStore extends FileStoreDefault
         }
 
         if ($newFile->exists() === true) {
-            throw new Exception('The new file exists and cannot be overwritten');
+            throw new LogicException('The new file exists and cannot be overwritten');
         }
 
         // remove all public versions
@@ -71,7 +73,7 @@ class FileStore extends FileStoreDefault
 
         // overwrite the original
         if (F::copy($upload->root(), $this->root(), true) !== true) {
-            throw new Exception('The file could not be created');
+            throw new LogicException('The file could not be created');
         }
 
         if ($file->template() !== null) {
@@ -128,7 +130,7 @@ class FileStore extends FileStoreDefault
             return $this->root = $this->kirby()->root('content') . '/' . $file->filename();
         }
 
-        throw new Exception('Unexpected model type');
+        throw new InvalidArgumentException('Unexpected model type: ' . get_class($parent));
     }
 
     public function storeFile(): string
@@ -146,7 +148,7 @@ class FileStore extends FileStoreDefault
 
         if (empty($strings) === false) {
             if (Data::write($this->storeFile(), $file->content()->toArray()) !== true) {
-                throw new Exception('The file content could not be updated');
+                throw new LogicException('The file content could not be updated');
             }
         }
 

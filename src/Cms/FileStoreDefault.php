@@ -2,8 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Image\Image;
+
+use Kirby\Exception\LogicException;
 
 class FileStoreDefault extends Store
 {
@@ -39,7 +40,7 @@ class FileStoreDefault extends Store
 
     public function delete(): bool
     {
-        throw new Exception('This file cannot be deleted');
+        throw new LogicException('This file cannot be deleted');
     }
 
     public function exists(): bool
