@@ -110,7 +110,8 @@ trait HasContent
                 $form->isValid();
             } catch (Exception $e) {
                 throw new InvalidArgumentException([
-                    'details' => $form->errors()
+                    'fallback' => 'Invalid form with errors',
+                    'details'  => $form->errors()
                 ]);
             }
         }
