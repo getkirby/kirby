@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Closure;
+use Kirby\Exception\InvalidArgumentException;
 
 class Translations extends Collection
 {
@@ -17,7 +17,7 @@ class Translations extends Collection
     public function __set(string $id, $object)
     {
         if (is_a($object, static::$accept) === false) {
-            throw new Exception(sprintf('Invalid object in collection. Accepted: "%s"', static::$accept));
+            throw new InvalidArgumentException(sprintf('Invalid object in collection. Accepted: "%s"', static::$accept));
         }
 
         return $this->data[$object->id()] = $object;
