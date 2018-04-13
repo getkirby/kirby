@@ -2,9 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\Properties;
 use ReflectionMethod;
+
+use Kirby\Exception\InvalidArgumentException;
 
 abstract class Component
 {
@@ -55,7 +56,7 @@ abstract class Component
                     $method = new ReflectionMethod($this, $getterName);
 
                     if ($method->isStatic() === true || $method->getNumberOfRequiredParameters() > 0) {
-                        throw new Exception('Invalid getter');
+                        throw new InvalidArgumentException('Invalid component getter: ' . get_class($this) . '::' . $getterName);
                     }
 
                     $value = $this->$getterName();
