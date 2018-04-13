@@ -37,7 +37,7 @@ class RoleTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException Kirby\Exception\NotFoundException
      * @expectedExceptionMessage The role "does-not-exist" does not exist
      *
      * @return void

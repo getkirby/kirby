@@ -112,9 +112,7 @@ class UserRules
         }
 
         if ($user->isLastAdmin() === true) {
-            throw new LogicException([
-                'key' => 'user.delete.lastAdmin'
-            ]);
+            throw new LogicException(['key' => 'user.delete.lastAdmin']);
         }
 
         if ($user->isLastUser() === true) {

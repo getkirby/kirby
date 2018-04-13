@@ -68,7 +68,7 @@ class UserRulesTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\DuplicateException
-     * @expectedExceptionMessage A user with the email address "admin@domain.com" already exists
+     * @expectedExceptionCode error.user.duplicate
      */
     public function testChangeEmailDuplicate()
     {
@@ -79,7 +79,7 @@ class UserRulesTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\LogicException
-     * @expectedExceptionMessage The role for this user cannot be changed
+     * @expectedExceptionCode error.user.changeRole.lastAdmin
      */
     public function testChangeRoleLastAdmin()
     {
@@ -165,33 +165,24 @@ class UserRulesTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\LogicException
-     * @expectedExceptionMessage The last admin cannot be deleted
+     * @expectedExceptionCode error.user.delete.lastAdmin
      */
     public function testDeleteLastAdmin()
     {
-        $kirby = new App([
-            'users' => [
-                ['email' => 'user@domain.com', 'role' => 'editor'],
-                ['email' => 'admin@domain.com', 'role' => 'admin']
-            ]
-        ]);
-
+        $kirby = $this->appWithAdmin();
         UserRules::delete($kirby->user('admin@domain.com'));
     }
 
     /**
      * @expectedException Kirby\Exception\LogicException
-     * @expectedExceptionMessage The last user cannot be deleted
+     * @expectedExceptionCode error.user.delete.lastUser
      */
     public function testDeleteLastUser()
     {
-        $kirby = new App([
-            'users' => [
-                ['email' => 'user@domain.com', 'role' => 'editor'],
-            ]
-        ]);
-
-        UserRules::delete($kirby->users()->first());
+        // TODO: how can we test deleting last user, if last user has
+        // to be admin to be able to delete users, but than rather
+        // triggers error.user.delete.lastAdmin?
+        $this->markTestIncomplete();
     }
 
 }

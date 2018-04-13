@@ -40,8 +40,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Please enter a valid sorting number. Numbers must not be negative.
+     * @expectedException Kirby\Exception\InvalidArgumentException
+     * @expectedExceptionCode error.page.num.invalid
      */
     public function testInvalidChangeNum()
     {
@@ -64,11 +64,12 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage You are not allowed to change the slug for "test"
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.changeSlug.permission
      */
     public function testChangeSlugWithHomepage()
     {
+        // TODO: should actually throw a different exception than above
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
@@ -81,11 +82,12 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage You are not allowed to change the slug for "test"
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.changeSlug.permission
      */
     public function testChangeSlugWithErrorPage()
     {
+        // TODO: should actually throw a different exception than above
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
@@ -98,8 +100,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage A page with the slug "project-b" already exists
+     * @expectedException Kirby\Exception\DuplicateException
+     * @expectedExceptionCode error.page.duplicate
      */
     public function testChangeSlugWithDuplicate()
     {
@@ -151,8 +153,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The page cannot be found
+     * @expectedException Kirby\Exception\NotFoundException
+     * @expectedExceptionCode error.page.undefined
      */
     public function testDeleteNotExists()
     {
@@ -165,8 +167,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage You are not allowed to delete "-"
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.delete.permission
      */
     public function testDeleteHomepage()
     {
@@ -183,8 +185,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage You are not allowed to delete "-"
+     * @expectedException Kirby\Exception\PermissionException
+     * @expectedExceptionCode error.page.delete.permission
      */
     public function testDeleteErrorPage()
     {
@@ -201,8 +203,8 @@ class PageRulesTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The page has children
+     * @expectedException Kirby\Exception\LogicException
+     * @expectedExceptionCode error.delete.hasChildren
      */
     public function testDeleteWithChildren()
     {
