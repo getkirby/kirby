@@ -42,6 +42,8 @@ class I18nTest extends TestCase
 
     public function testTranslateArray()
     {
+        I18n::$locale = 'en';
+
         $this->assertEquals('Save', I18n::translate([
             'en' => 'Save'
         ]));
