@@ -2,9 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Session\Session;
 use Kirby\Toolkit\V;
+
+use Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 
 /**
  * The User class represents
@@ -283,13 +287,11 @@ class User extends Model
     public function login(string $password, $session = null)
     {
         if ($this->role()->permissions()->for('access', 'panel') === false) {
-            throw new PermissionsException([
-                'key'  => 'access.panel',
-            ]);
+            throw new PermissionsException(['key' => 'access.panel']);
         }
 
         if ($this->validatePassword($password) !== true) {
-            throw new Exception('Invalid email or password');
+            throw new PermissionsException(['key' => 'access.login']);
         }
 
         $this->loginPasswordless($session);
@@ -471,16 +473,15 @@ class User extends Model
     public function validatePassword(string $password = null): bool
     {
         if (empty($this->password()) === true) {
-            throw new Exception('The user has no password');
+            throw new NotFoundException(['key' => 'user.password.undefined']);
         }
 
         if ($password === null) {
-            throw new Exception('Invalid password');
-
+            throw new InvalidArgumentException(['key' => 'user.password.invalid']);
         }
 
         if (password_verify($password, $this->password()) !== true) {
-            throw new Exception('Invalid password');
+            throw new InvalidArgumentException(['key' => 'user.password.invalid']);
         }
 
         return true;

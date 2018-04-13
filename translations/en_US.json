@@ -107,6 +107,7 @@
 
     "error.test": "This is a test error",
 
+    "error.access.login": "Invalid email or password",
     "error.access.panel": "You are not allowed to login to the panel",
 
     "error.avatar.dimensions.invalid": "Please keep the width and height of the profile image below 3000 pixel",
@@ -191,6 +192,7 @@
     "error.user.email.invalid": "Please enter a valid email address",
     "error.user.language.invalid": "Please enter a valid language",
     "error.user.password.invalid": "Please enter a valid password. Passwords must be at least 8 characters long.",
+    "error.user.password.undefined": "The user has no password",
     "error.user.password.notSame": "The passwords do not match",
     "error.user.role.invalid": "Please enter a valid role"
 
