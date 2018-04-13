@@ -63,12 +63,7 @@ class Collection extends BaseCollection
     public function __set(string $id, $object)
     {
         if (is_a($object, static::$accept) === false) {
-            throw new InvalidArgumentException([
-                'key'       => 'collection.object.invalid',
-                'fallback'  => 'Invalid object in collection. Accepted: "{accept}"',
-                'data'      => ['accept' => static::$accept],
-                'translate' => false
-            ]);
+            throw new InvalidArgumentException('Invalid object in collection. Accepted: ' . static::$accept);
         }
 
         // inject the collection for proper navigation

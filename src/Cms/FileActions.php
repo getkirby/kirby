@@ -78,11 +78,7 @@ trait FileActions
     public static function create(array $props): self
     {
         if (isset($props['source'], $props['parent']) === false) {
-            throw new InvalidArgumentException([
-                'key'       => 'file.props.missing',
-                'fallback'  => 'Please provide the "source" and "parent" props for the File',
-                'translate' => false
-            ]);
+            throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
         }
 
         // prefer the filename from the props

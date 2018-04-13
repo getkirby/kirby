@@ -27,12 +27,7 @@ trait AppPlugins
             }
 
             if (is_array($values) === false) {
-                throw new InvalidArgumentException([
-                    'key'       => 'app.invalid.extension',
-                    'fallback'  => 'Extensions for "{type}" must be defined as array',
-                    'data'      => ['type' => $type],
-                    'translate' => false
-                ]);
+                throw new InvalidArgumentException('Extensions for "' . $type . '" must be defined as array');
             }
 
             $extends[$type] = Extend::$type($values, $plugin);
@@ -141,11 +136,7 @@ trait AppPlugins
         }
 
         if (is_array($props) === false) {
-            throw new InvalidArgumentException([
-                'key'       => 'app.plugin.invalid',
-                'fallback'  => 'Invalid plugin definition',
-                'translate' => false
-            ]);
+            throw new InvalidArgumentException('Invalid plugin definition');
         }
 
         // automatic root detection
@@ -155,12 +146,7 @@ trait AppPlugins
         $name   = $plugin->name();
 
         if (isset(static::$plugins[$name]) === true) {
-            throw new InvalidArgumentException([
-                'key'       => 'app.plugin.duplicate',
-                'fallback'  => 'The plugin "{name}" has already been registered',
-                'data'      => ['name' => $name],
-                'translate' => false
-            ]);
+            throw new DuplicateException('The plugin "'. $name . '" has already been registered');
         }
 
         return static::$plugins[$name] = $plugin;

@@ -102,12 +102,7 @@ class BlueprintSection extends BlueprintObject
             }
         }
 
-        throw new InvalidArgumentException([
-            'key'       => 'blueprint.section.model.invalid',
-            'fallback'  => 'The model type "{type}" is not supported',
-            'data'      => ['type' => get_class($model)],
-            'translate' => false
-        ]);
+        throw new InvalidArgumentException('The model type "' . get_class($model) . '" is not supported');
     }
 
     /**
@@ -146,11 +141,7 @@ class BlueprintSection extends BlueprintObject
         $model = $this->model();
 
         if ($model === null) {
-            throw new InvalidArgumentException([
-                'key'       => 'blueprint.section.model.missing',
-                'fallback'  => 'The section model is missing',
-                'translate' => false
-            ]);
+            throw new InvalidArgumentException('The section model is missing');
         }
 
         $defaults = [

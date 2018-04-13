@@ -252,7 +252,7 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         if (is_array($templates) === false) {
-            throw new Exception('Invalid template definition');
+            throw new InvalidArgumentException('Invalid template definition');
         }
 
         $this->templates = $templates;

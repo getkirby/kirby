@@ -36,7 +36,7 @@ class CollectionTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Invalid object in collection. Accepted: "Kirby\Cms\Model"
+     * @expectedExceptionMessage Invalid object in collection. Accepted: Kirby\Cms\Model
      */
     public function testWithInvalidStringItems()
     {
@@ -49,7 +49,7 @@ class CollectionTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Invalid object in collection. Accepted: "Kirby\Cms\Model"
+     * @expectedExceptionMessage Invalid object in collection. Accepted: Kirby\Cms\Model
      */
     public function testWithInvalidArrayItems()
     {

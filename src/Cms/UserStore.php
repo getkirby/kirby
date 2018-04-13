@@ -59,12 +59,7 @@ class UserStore extends UserStoreDefault
         }
 
         if (Dir::move($oldRoot, $newRoot) !== true) {
-            throw new LogicException([
-                'key'       => 'user.directory.move',
-                'fallback'  => 'The user directory for "{email}" could not be moved',
-                'data'      => ['email' => $email],
-                'translate' => false
-            ]);
+            throw new LogicException('The user directory for "' . $email . '" could not be moved');
         }
 
         return $this->save($user);
@@ -135,12 +130,7 @@ class UserStore extends UserStoreDefault
     {
         // try to create the directory
         if (Dir::make($this->root()) !== true) {
-            throw new LogicException([
-                'key'       => 'user.directory.create',
-                'fallback'  => 'The user directory for "{email}" could not be created',
-                'data'      => ['email' => $user->email()],
-                'translate' => false
-            ]);
+            throw new LogicException('The user directory for "' . $user->email() . '" could not be created');
         }
 
         // create an empty storage file
@@ -170,12 +160,7 @@ class UserStore extends UserStoreDefault
 
         // delete the user directory
         if (Dir::remove($this->root()) !== true) {
-            throw new LogicException([
-                'key'       => 'user.directory.delete',
-                'fallback'  => 'The user directory for "{email}" could not be deleted',
-                'data'      => ['email' => $this->user()->email()],
-                'translate' => false
-            ]);
+            throw new LogicException('The user directory for "' . $this->user()->email() . '" could not be deleted');
         }
 
         return true;
@@ -234,12 +219,7 @@ class UserStore extends UserStoreDefault
         $content['role']     = $user->role();
 
         if ($this->base()->write($content) !== true) {
-            throw new LogicException([
-                'key'       => 'user.file.save',
-                'fallback'  => 'The user information for "{email}" could not be saved',
-                'data'      => ['email' => $user->email()],
-                'translate' => false
-            ]);
+            throw new LogicException('The user information for "' . $user->email() . '" could not be saved');
         }
 
         return $user;

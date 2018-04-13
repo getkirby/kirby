@@ -42,11 +42,7 @@ trait AvatarActions
     public static function create(array $props): self
     {
         if (isset($props['source'], $props['user']) === false) {
-            throw new InvalidArgumentException([
-                'key'       => 'avatar.props.missing',
-                'fallback'  => 'Please provide the "source" and "user" props for the Avatar',
-                'translate' => false
-            ]);
+            throw new InvalidArgumentException('Please provide the "source" and "user" props for the Avatar');
         }
 
         // create the basic avatar and a test upload object

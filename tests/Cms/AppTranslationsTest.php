@@ -27,8 +27,8 @@ class AppTranslationsTest extends \PHPUnit\Framework\TestCase
     public function testTranslate()
     {
         $app = App::instance();
-        $this->assertEquals('Search', $app->translate('search'));
-        $this->assertEquals('Search', t('search'));
+        $this->assertEquals('User', $app->translate('user'));
+        $this->assertEquals('User', t('user'));
     }
 
     public function testTranslateFallback()
@@ -79,13 +79,7 @@ class AppTranslationsTest extends \PHPUnit\Framework\TestCase
 
     public function testExceptionPinned()
     {
-        $exception = new Exception([
-            'key'       => 'test',
-            'fallback'  => 'This would be the fallback error',
-            'translate' => false
-        ]);
-
-        $this->assertEquals('error.test', $exception->getKey());
+        $exception = new Exception('This would be the fallback error');
         $this->assertEquals('This would be the fallback error', $exception->getMessage());
     }
 

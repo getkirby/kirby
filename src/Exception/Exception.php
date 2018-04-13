@@ -21,60 +21,68 @@ class Exception extends \Exception
 
     private static $prefix = 'error';
 
-    public function __construct(array $args = [])
+    public function __construct($args = [])
     {
-        // Define whether message should/can be translated
-        $translate = ($args['translate'] ?? true) === true && class_exists(App::class) === true;
 
-        // Define the Exception key
-        $key = self::$prefix . '.' . ($args['key'] ?? static::$defaultKey);
-
-        // Set data and httpCode from provided arguments or defaults
-        $this->data = $args['data'] ?? static::$defaultData;
-        $this->httpCode = $args['httpCode'] ?? static::$defaultHttpCode;
-        $this->details = $args['details'] ?? static::$defaultDetails;
-
-        // Fallback waterfall for message string
-        $message = null;
-
-        if ($translate) {
-            // 1. Translation for provided key in current language
-            // 2. Translation for provided key in default language
-            if (isset($args['key']) === true) {
-                $message = App::instance()->translate(self::$prefix . '.' . $args['key']);
-                $this->isTranslated = true;
-            }
-        }
-
-        // 3. Provided fallback message
-        if ($message === null) {
-            $message = $args['fallback'] ?? null;
+        if (is_string($args) === true) {
             $this->isTranslated = false;
-        }
+            parent::__construct($args);
 
-        if ($translate) {
-            // 4. Translation for default key in current language
-            // 5. Translation for default key in default language
+        } else  {
+            // Define whether message can/should be translated
+            $translate = ($args['translate'] ?? true) === true && class_exists(App::class) === true;
+
+            // Define the Exception key
+            $key = self::$prefix . '.' . ($args['key'] ?? static::$defaultKey);
+
+            // Set data and httpCode from provided arguments or defaults
+            $this->data = $args['data'] ?? static::$defaultData;
+            $this->httpCode = $args['httpCode'] ?? static::$defaultHttpCode;
+            $this->details = $args['details'] ?? static::$defaultDetails;
+
+            // Fallback waterfall for message string
+            $message = null;
+
+            if ($translate) {
+                // 1. Translation for provided key in current language
+                // 2. Translation for provided key in default language
+                if (isset($args['key']) === true) {
+                    $message = App::instance()->translate(self::$prefix . '.' . $args['key']);
+                    $this->isTranslated = true;
+                }
+            }
+
+            // 3. Provided fallback message
             if ($message === null) {
-                $message = App::instance()->translate(self::$prefix . '.' . static::$defaultKey);
-                $this->isTranslated = true;
+                $message = $args['fallback'] ?? null;
+                $this->isTranslated = false;
             }
+
+            if ($translate) {
+                // 4. Translation for default key in current language
+                // 5. Translation for default key in default language
+                if ($message === null) {
+                    $message = App::instance()->translate(self::$prefix . '.' . static::$defaultKey);
+                    $this->isTranslated = true;
+                }
+            }
+
+            // 6. Default fallback message
+            if ($message === null) {
+                $message = static::$defaultFallback;
+                $this->isTranslated = false;
+            }
+
+            // Format message with passed data
+            $message = Str::template($message, $this->data, '-');
+
+            // Handover to Exception parent class constructor
+            parent::__construct($message, null, $args['previous'] ?? null);
+
+            // Set the Exception code to the key
+            $this->code = $key;
         }
 
-        // 6. Default fallback message
-        if ($message === null) {
-            $message = static::$defaultFallback;
-            $this->isTranslated = false;
-        }
-
-        // Format message with passed data
-        $message = Str::template($message, $this->data, '-');
-
-        // Handover to Exception parent class constructor
-        parent::__construct($message, null, $args['previous'] ?? null);
-
-        // Set the Exception code to the key
-        $this->code = $key;
     }
 
     final public function getData(): array

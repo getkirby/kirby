@@ -109,19 +109,11 @@ class PageStore extends PageStoreDefault
         $oldFile = $this->base()->storage();
 
         if (Data::write($newFile, $data) !== true) {
-             throw new LogicException([
-                'key'       => 'page.textfile.create',
-                'fallback'  => 'The new text file could not be written',
-                'translate' => false
-            ]);
+             throw new LogicException('The new text file could not be written');
         }
 
         if (F::remove($oldFile) !== true) {
-            throw new LogicException([
-                'key'       => 'page.textfile.remove',
-                'fallback'  => 'The old text file could not be removed',
-                'translate' => false
-            ]);
+            throw new LogicException('The old text file could not be removed');
        }
 
         return $newPage;
@@ -165,12 +157,7 @@ class PageStore extends PageStoreDefault
 
         // create the new page directory
         if (Dir::make($root) !== true) {
-            throw new LogicException([
-                'key'       => 'page.directory.create',
-                'fallback'  => 'The page directory for "{slug}" cannot be created',
-                'data'      => ['slug' => $page->slug()],
-                'translate' => false
-            ]);
+            throw new LogicException('The page directory for "' . $page->slug() . '" cannot be created');
         }
 
         // write the text file
@@ -258,19 +245,11 @@ class PageStore extends PageStoreDefault
         $parent = dirname($new);
 
         if (Dir::make($parent, true) !== true) {
-            throw new LogicException([
-                'key'       => 'page.directory.parent.create',
-                'fallback'  => 'The parent directory cannot be created',
-                'translate' => false
-            ]);
+            throw new LogicException('The parent directory cannot be created');
         }
 
         if (Dir::move($old, $new) !== true) {
-            throw new LogicException([
-                'key'       => 'page.directory.move',
-                'fallback'  => 'The page directory cannot be moved',
-                'translate' => false
-            ]);
+            throw new LogicException('The page directory cannot be moved');
         }
 
         return true;

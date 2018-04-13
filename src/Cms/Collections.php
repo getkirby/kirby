@@ -78,12 +78,7 @@ class Collections
         }
 
         if (isset($this->collections[$name]) === false) {
-            throw new NotFoundException([
-                'key'       => 'collection.notFound',
-                'fallback'  => 'The collection "{name}" cannot be found',
-                'data'      => ['name' => $name],
-                'translate' => false
-            ]);
+            throw new NotFoundException('The collection "' . $name . '" cannot be found');
         }
 
         $controller = new Controller($this->collections[$name]);
