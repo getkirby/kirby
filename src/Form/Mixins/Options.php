@@ -17,7 +17,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Options
 {
-
     protected $options = [];
     protected $query = null;
     protected $api;

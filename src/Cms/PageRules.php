@@ -10,7 +10,6 @@ use Kirby\Exception\PermissionException;
 
 class PageRules
 {
-
     public static function changeNum(Page $page, int $num = null): bool
     {
         if ($num !== null && $num < 0) {
@@ -190,5 +189,4 @@ class PageRules
 
         return true;
     }
-
 }

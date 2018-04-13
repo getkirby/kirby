@@ -9,7 +9,6 @@ use Kirby\Util\F;
 
 class Response extends BaseResponse
 {
-
     public static function errorPage($data = [], $contentType = 'html', $code = 404)
     {
         if ($code < 400 || $code > 600) {
@@ -87,5 +86,4 @@ class Response extends BaseResponse
         // create the response object for the page
         return new static($result, $mime, $code);
     }
-
 }

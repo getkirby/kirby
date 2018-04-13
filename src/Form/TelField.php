@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class TelField extends TextField
 {
-
     protected function defaultAutocomplete()
     {
         return 'tel';
@@ -24,5 +23,4 @@ class TelField extends TextField
     {
         return 'phone';
     }
-
 }

@@ -9,7 +9,6 @@ use Kirby\Exception\Exception;
 
 class AvatarStore extends AvatarStoreDefault
 {
-
     public function asset()
     {
         return new Image($this->root(), $this->url());
@@ -73,5 +72,4 @@ class AvatarStore extends AvatarStoreDefault
     {
         return $this->media()->create($this->user(), $this->avatar(), $options);
     }
-
 }

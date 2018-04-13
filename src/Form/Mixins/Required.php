@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Required
 {
-
     protected $required;
 
     protected function defaultRequired(): bool
@@ -46,5 +45,4 @@ trait Required
 
         return true;
     }
-
 }

@@ -128,7 +128,7 @@ class Pages extends Collection
 
         $this->index = new Children([], $this->parent);
 
-        foreach($this->data as $pageKey => $page) {
+        foreach ($this->data as $pageKey => $page) {
             $this->index->data[$pageKey] = $page;
 
             foreach ($page->index() as $childKey => $child) {
@@ -232,5 +232,4 @@ class Pages extends Collection
     {
         return $this->filterBy('isListed', '==', true);
     }
-
 }

@@ -16,7 +16,6 @@ use PHPMailer\PHPMailer\PHPMailer as Mailer;
 */
 class PHPMailer extends Email
 {
-
     public function send(bool $debug = false): bool
     {
         $mailer = new Mailer(true);
@@ -74,5 +73,4 @@ class PHPMailer extends Email
 
         return $this->isSent = $mailer->send();
     }
-
 }

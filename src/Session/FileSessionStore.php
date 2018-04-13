@@ -398,7 +398,9 @@ class FileSessionStore extends SessionStore
     protected function handle(string $name)
     {
         // return from cache
-        if (isset($this->handles[$name])) return $this->handles[$name];
+        if (isset($this->handles[$name])) {
+            return $this->handles[$name];
+        }
 
         $path = $this->path($name);
         if (!is_file($path)) {
@@ -434,13 +436,15 @@ class FileSessionStore extends SessionStore
      */
     protected function closeHandle(string $name)
     {
-        if (!isset($this->handles[$name])) return;
+        if (!isset($this->handles[$name])) {
+            return;
+        }
         $handle = $this->handles[$name];
 
         unset($this->handles[$name]);
         $result = fclose($handle);
 
-        if($result !== true) {
+        if ($result !== true) {
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',

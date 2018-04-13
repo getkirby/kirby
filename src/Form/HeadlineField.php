@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class HeadlineField extends Field
 {
-
     use Mixins\Label;
 
     protected $numbered;
@@ -34,5 +33,4 @@ class HeadlineField extends Field
         $this->numbered = $numbered;
         return $this;
     }
-
 }

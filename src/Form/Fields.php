@@ -57,5 +57,4 @@ class Fields extends Collection
 
         return $array;
     }
-
 }

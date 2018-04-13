@@ -4,7 +4,6 @@ namespace Kirby\Collection\Traits;
 
 trait Mutator
 {
-
     public function clone()
     {
         $clone = clone $this;
@@ -147,5 +146,4 @@ trait Mutator
         $this->data = array_map($callback, $this->data);
         return $this;
     }
-
 }

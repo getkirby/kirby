@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class SelectField extends Field
 {
-
     use Mixins\Icon;
     use Mixins\Label;
     use Mixins\Options;
@@ -23,5 +22,4 @@ class SelectField extends Field
 
         return true;
     }
-
 }

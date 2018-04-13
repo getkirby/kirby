@@ -13,5 +13,4 @@ trait Length
     {
         return $this->validateMaxLength($value) === true && $this->validateMinLength($value) === true;
     }
-
 }

@@ -37,5 +37,4 @@ trait Navigator
     {
         return array_values($this->data)[$n] ?? null;
     }
-
 }

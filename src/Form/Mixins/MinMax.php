@@ -13,5 +13,4 @@ trait MinMax
             $this->validateMax($value, $messages['max'] ?? null) === true &&
             $this->validateMin($value, $messages['min'] ?? null) === true;
     }
-
 }

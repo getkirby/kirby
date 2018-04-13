@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Max
 {
-
     protected $max;
 
     protected function defaultMax()
@@ -39,5 +38,4 @@ trait Max
 
         return true;
     }
-
 }

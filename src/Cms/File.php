@@ -19,7 +19,6 @@ use Kirby\Util\Str;
  */
 class File extends Model
 {
-
     use FileActions;
 
     use HasContent;
@@ -112,7 +111,6 @@ class File extends Model
         } else {
             $this->id = $this->filename();
         }
-
     }
 
     /**
@@ -344,5 +342,4 @@ class File extends Model
     {
         return $this->url ?? $this->url = $this->parent()->mediaUrl() . '/' . $this->filename();
     }
-
 }

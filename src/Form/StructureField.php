@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class StructureField extends Field
 {
-
     use Mixins\Counter;
     use Mixins\Fields;
     use Mixins\Help;
@@ -78,5 +77,4 @@ class StructureField extends Field
         $array['fields'] = $this->form([])->fields()->toOptions();
         return $array;
     }
-
 }

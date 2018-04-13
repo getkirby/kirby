@@ -22,7 +22,6 @@ use Kirby\Util\Str;
  */
 class Video extends Tag
 {
-
     protected function caption()
     {
         if ($caption = $this->attr('caption')) {

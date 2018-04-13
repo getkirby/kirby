@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Model
 {
-
     protected $model;
 
     protected function defaultModel()
@@ -28,5 +27,4 @@ trait Model
         $this->model = $model;
         return $this;
     }
-
 }

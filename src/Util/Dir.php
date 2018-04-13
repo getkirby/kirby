@@ -126,5 +126,4 @@ class Dir
 
         return rmdir($dir);
     }
-
 }

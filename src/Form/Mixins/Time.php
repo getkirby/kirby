@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Time
 {
-
     protected $notation;
     protected $step;
 
@@ -47,5 +46,4 @@ trait Time
     {
         return $this->step;
     }
-
 }

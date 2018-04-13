@@ -13,7 +13,6 @@ use Kirby\Collection\Traits\Sorter;
 
 class Collection extends Iterator
 {
-
     use Converter;
     use Finder;
     use Filter;
@@ -35,7 +34,6 @@ class Collection extends Iterator
 
     public function query(array $arguments): self
     {
-
         $result = clone $this;
 
         if (isset($arguments['not']) === true) {
@@ -78,5 +76,4 @@ class Collection extends Iterator
     {
         return $this->keys();
     }
-
 }

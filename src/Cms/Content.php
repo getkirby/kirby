@@ -132,7 +132,6 @@ class Content
      */
     public function not(...$keys): self
     {
-
         $copy = clone $this;
         $copy->fields = null;
 
@@ -141,7 +140,6 @@ class Content
         }
 
         return $copy;
-
     }
 
     /**
@@ -190,5 +188,4 @@ class Content
         $this->data = array_merge($this->data, (array)$content);
         return $this;
     }
-
 }

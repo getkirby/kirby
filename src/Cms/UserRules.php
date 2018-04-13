@@ -12,7 +12,6 @@ use Kirby\Exception\PermissionException;
 
 class UserRules
 {
-
     public static function changeEmail(User $user, string $email): bool
     {
         if ($user->permissions()->changeEmail() !== true) {
@@ -197,6 +196,5 @@ class UserRules
         throw new InvalidArgumentException([
             'key' => 'user.role.invalid',
         ]);
-     }
-
+    }
 }

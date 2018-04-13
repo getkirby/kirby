@@ -126,5 +126,4 @@ class Factory
         $this->factories[$name] = $factory;
         return $this;
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class Files extends Collection
 {
-
     protected static $accept = File::class;
 
     /**
@@ -43,5 +42,4 @@ class Files extends Collection
     {
         return $this->filterBy('group', '==', $group);
     }
-
 }

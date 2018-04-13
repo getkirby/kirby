@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Layout
 {
-
     protected $layout;
 
     protected function defaultLayout()
@@ -35,5 +34,4 @@ trait Layout
         $this->layout = $layout;
         return $this;
     }
-
 }

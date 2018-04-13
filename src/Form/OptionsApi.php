@@ -13,7 +13,6 @@ use Kirby\Exception\LogicException;
 
 class OptionsApi
 {
-
     use Properties;
 
     protected $data;
@@ -66,7 +65,6 @@ class OptionsApi
         $options = [];
 
         foreach ($result as $item) {
-
             $data = array_merge($this->data(), ['item' => $item]);
 
             $options[] = [
@@ -76,7 +74,6 @@ class OptionsApi
         }
 
         return $options;
-
     }
 
     protected function setData(array $data)
@@ -128,5 +125,4 @@ class OptionsApi
     {
         return $this->value;
     }
-
 }

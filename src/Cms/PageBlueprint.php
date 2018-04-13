@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PageBlueprint extends Blueprint
 {
-
     protected $num;
 
     public function num()
@@ -37,5 +36,4 @@ class PageBlueprint extends Blueprint
         $this->num = $num ?? 'default';
         return $this;
     }
-
 }

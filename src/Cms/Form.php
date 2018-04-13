@@ -6,7 +6,6 @@ use Kirby\Form\Form as BaseForm;
 
 class Form extends BaseForm
 {
-
     public static function for(Model $model, array $props = [])
     {
 
@@ -40,7 +39,5 @@ class Form extends BaseForm
         }
 
         return new static($props);
-
     }
-
 }

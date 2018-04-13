@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Prefix
 {
-
     protected $prefix;
 
     public function prefix()
@@ -17,5 +16,4 @@ trait Prefix
         $this->prefix = $prefix;
         return $this;
     }
-
 }

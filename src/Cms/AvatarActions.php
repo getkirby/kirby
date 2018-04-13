@@ -87,5 +87,4 @@ trait AvatarActions
     {
         return $this->store()->thumb($options);
     }
-
 }

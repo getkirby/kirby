@@ -8,7 +8,6 @@ use ReflectionMethod;
 
 trait Properties
 {
-
     protected $propertyData = [];
 
     public function clone(array $props = [])
@@ -126,5 +125,4 @@ trait Properties
             $this->setProperty($propertyName, $props[$propertyName] ?? null, true);
         }
     }
-
 }

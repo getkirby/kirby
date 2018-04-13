@@ -46,7 +46,6 @@ class V
      */
     public static function value($value, array $rules): bool
     {
-
         foreach ($rules as $validatorName => $validatorOptions) {
             if (is_int($validatorName)) {
                 $validatorName    = $validatorOptions;
@@ -63,7 +62,6 @@ class V
         }
 
         return true;
-
     }
 
     /**
@@ -77,7 +75,6 @@ class V
      */
     public static function input(array $input, array $rules): bool
     {
-
         foreach ($rules as $fieldName => $fieldRules) {
             $fieldValue = $input[$fieldName] ?? null;
 
@@ -101,7 +98,6 @@ class V
             }
 
             foreach ($fieldRules as $validatorName => $validatorOptions) {
-
                 V::value();
 
 

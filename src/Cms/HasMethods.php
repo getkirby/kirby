@@ -53,5 +53,4 @@ trait HasMethods
     {
         return isset(static::$methods[$method]) === true;
     }
-
 }

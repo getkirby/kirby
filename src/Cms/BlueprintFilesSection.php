@@ -14,7 +14,6 @@ use Kirby\Exception\LogicException;
 
 class BlueprintFilesSection extends BlueprintSection
 {
-
     const ACCEPT = Files::class;
 
     use Mixins\BlueprintSectionHeadline;
@@ -242,5 +241,4 @@ class BlueprintFilesSection extends BlueprintSection
     {
         return $this->template;
     }
-
 }

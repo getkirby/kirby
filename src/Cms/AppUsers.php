@@ -10,7 +10,6 @@ use Kirby\Session\Session;
 
 trait AppUsers
 {
-
     protected function currentUserFromBasicAuth(string $authorization)
     {
         $credentials = base64_decode(substr($authorization, 6));
@@ -123,7 +122,6 @@ trait AppUsers
         }
 
         try {
-
             $authorization = $this->request()->headers()['Authorization'] ?? '';
 
             if (Str::startsWith($authorization, 'Basic ') === true) {
@@ -131,7 +129,6 @@ trait AppUsers
             } else {
                 return $this->user = $this->currentUserFromSession($session);
             }
-
         } catch (Throwable $e) {
             return null;
         }
@@ -150,5 +147,4 @@ trait AppUsers
 
         return $this->users = Users::load($this->root('accounts'), ['kirby' => $this]);
     }
-
 }

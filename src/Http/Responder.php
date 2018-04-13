@@ -41,31 +41,31 @@ class Responder
     {
         // set all default handlers
         $this->handlers = array_merge([
-            'string' => function(string $input) {
+            'string' => function (string $input) {
                 return new Response($input);
             },
-            'int' => function(int $input) {
+            'int' => function (int $input) {
                 return new Response('', 'text/html', $input);
             },
-            'array' => function(array $input) {
+            'array' => function (array $input) {
                 return new Json($input);
             },
-            'true' => function() {
+            'true' => function () {
                 return new Response('');
             },
-            'false' => function() {
+            'false' => function () {
                 return new Response('Not found', 'text/html', 404);
             },
-            'object' => function($input) {
+            'object' => function ($input) {
                 return new Response('Unexpected object: ' . get_class($input), 'text/html', 500);
             },
-            'response' => function(Response $input) {
+            'response' => function (Response $input) {
                 return $input;
             },
-            'null' => function() {
+            'null' => function () {
                 return new Response('Not found', 'text/html', 404);
             },
-            'unknown' => function($input) {
+            'unknown' => function ($input) {
                 return new Response('Unexpected input: ' . gettype($input), 'text/html', 500);
             }
         ], $handlers);

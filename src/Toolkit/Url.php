@@ -138,17 +138,17 @@ class Url
 
         // make sure that URLs without any URI
         // end with a slash after the host
-        if(count($result) === 1) {
+        if (count($result) === 1) {
             $result = $result[0] . '/';
         } else {
             $result = implode('/', $result);
         }
 
-        if(empty($parts['query']) === false) {
+        if (empty($parts['query']) === false) {
             $result .= '?' . Query::toString($parts['query']);
         }
 
-        if(!empty($parts['hash'])) {
+        if (!empty($parts['hash'])) {
             $result .= '#' . $parts['hash'];
         }
 

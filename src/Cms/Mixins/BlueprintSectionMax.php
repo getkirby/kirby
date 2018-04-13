@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait BlueprintSectionMax
 {
-
     protected $max;
 
     public function max()
@@ -33,5 +32,4 @@ trait BlueprintSectionMax
 
         return true;
     }
-
 }

@@ -75,7 +75,6 @@ class Collection
 
     public function toResponse(): array
     {
-
         if ($query = $this->api->requestQuery('query')) {
             $this->data = $this->data->query($query);
         }
@@ -103,7 +102,6 @@ class Collection
                 'limit' => $pagination->limit(),
             ]
         ];
-
     }
 
     public function view(string $view)
@@ -111,5 +109,4 @@ class Collection
         $this->view = $view;
         return $this;
     }
-
 }

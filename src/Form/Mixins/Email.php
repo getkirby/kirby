@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Email
 {
-
     protected function validateEmail($value): bool
     {
         if ($this->isEmpty() === false) {
@@ -21,5 +20,4 @@ trait Email
 
         return true;
     }
-
 }

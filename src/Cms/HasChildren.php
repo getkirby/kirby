@@ -90,5 +90,4 @@ trait HasChildren
         $this->children = $children;
         return $this;
     }
-
 }

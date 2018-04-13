@@ -103,7 +103,8 @@ abstract class SessionStore
      *
      * @return string Random hex string with 20 bytes
      */
-    protected static function generateId(): string {
+    protected static function generateId(): string
+    {
         return bin2hex(random_bytes(10));
     }
 }

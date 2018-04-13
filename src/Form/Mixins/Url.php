@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Url
 {
-
     protected function validateUrl($value): bool
     {
         if ($this->isEmpty() === false) {
@@ -21,5 +20,4 @@ trait Url
 
         return true;
     }
-
 }

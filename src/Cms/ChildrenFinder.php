@@ -56,5 +56,4 @@ class ChildrenFinder extends PagesFinder
 
         return $page;
     }
-
 }

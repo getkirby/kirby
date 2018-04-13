@@ -308,7 +308,6 @@ class Url
      */
     public function base(): string
     {
-
         if (empty($this->host) === true) {
             throw new Exception('The host address is missing');
         }

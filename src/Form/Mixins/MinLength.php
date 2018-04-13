@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait MinLength
 {
-
     protected $minLength;
 
     protected function defaultMinLength()
@@ -39,5 +38,4 @@ trait MinLength
 
         return true;
     }
-
 }

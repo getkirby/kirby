@@ -43,5 +43,4 @@ class MimeType extends Acceptance
     {
         return fnmatch($item['value'], $pattern, FNM_PATHNAME) === true;
     }
-
 }

@@ -6,7 +6,6 @@ use Exception;
 
 class Finder
 {
-
     protected $collection;
 
     public function __construct($collection)
@@ -51,5 +50,4 @@ class Finder
     {
         return $this->collection()->get($key);
     }
-
 }

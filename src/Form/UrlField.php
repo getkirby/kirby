@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class UrlField extends TextField
 {
-
     use Mixins\Url;
 
     protected function defaultAutocomplete()
@@ -40,5 +39,4 @@ class UrlField extends TextField
 
         return true;
     }
-
 }

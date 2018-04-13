@@ -26,7 +26,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class ContentField
 {
-
     use HasMethods;
 
     /**
@@ -157,5 +156,4 @@ class ContentField
 
         return $clone;
     }
-
 }

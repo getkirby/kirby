@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Autocomplete
 {
-
     protected $autocomplete;
 
     public function autocomplete()
@@ -22,5 +21,4 @@ trait Autocomplete
         $this->autocomplete = $autocomplete;
         return $this;
     }
-
 }

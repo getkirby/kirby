@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Step
 {
-
     protected $step;
 
     protected function defaultStep()
@@ -27,5 +26,4 @@ trait Step
     {
         return true;
     }
-
 }

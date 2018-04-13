@@ -9,7 +9,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class BlueprintTabs
 {
-
     protected $blueprint;
     protected $tabs = [];
 
@@ -94,7 +93,6 @@ class BlueprintTabs
         $result = [];
 
         foreach ($tabs as $name => $tab) {
-
             if (is_string($name) === false) {
                 throw new InvalidArgumentException([
                     'key' => 'blueprint.tab.name.missing',
@@ -127,7 +125,6 @@ class BlueprintTabs
             ksort($tab);
 
             $result[$tab['name']] = $tab;
-
         }
 
         return $result;
@@ -137,5 +134,4 @@ class BlueprintTabs
     {
         return array_values($this->tabs($this->tabs));
     }
-
 }

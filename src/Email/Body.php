@@ -14,7 +14,6 @@ use Kirby\Util\Properties;
 */
 class Body
 {
-
     use Properties;
 
     protected $html;
@@ -46,5 +45,4 @@ class Body
         $this->text = $text;
         return $this;
     }
-
 }

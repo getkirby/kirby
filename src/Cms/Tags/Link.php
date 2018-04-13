@@ -8,7 +8,6 @@ use Kirby\Util\Str;
 
 class Link extends \Kirby\Text\Tags\Link
 {
-
     use Dependencies;
 
     protected function text(): string
@@ -53,5 +52,4 @@ class Link extends \Kirby\Text\Tags\Link
 
         return false;
     }
-
 }

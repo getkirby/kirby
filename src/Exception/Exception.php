@@ -8,7 +8,6 @@ use Kirby\Util\Str;
 
 class Exception extends \Exception
 {
-
     protected $data;
     protected $httpCode;
     protected $details;
@@ -24,12 +23,10 @@ class Exception extends \Exception
 
     public function __construct($args = [])
     {
-
         if (is_string($args) === true) {
             $this->isTranslated = false;
             parent::__construct($args);
-
-        } else  {
+        } else {
             // Define whether message can/should be translated
             $translate = ($args['translate'] ?? true) === true && class_exists(App::class) === true;
 
@@ -83,7 +80,6 @@ class Exception extends \Exception
             // Set the Exception code to the key
             $this->code = $key;
         }
-
     }
 
     final public function getData(): array
@@ -123,5 +119,4 @@ class Exception extends \Exception
             'code'      => $this->getHttpCode()
         ];
     }
-
 }

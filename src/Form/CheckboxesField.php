@@ -6,7 +6,6 @@ use Kirby\Util\Str;
 
 class CheckboxesField extends Field
 {
-
     use Mixins\Label;
     use Mixins\Options;
     use Mixins\Required;
@@ -29,5 +28,4 @@ class CheckboxesField extends Field
 
         return true;
     }
-
 }

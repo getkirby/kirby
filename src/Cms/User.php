@@ -21,7 +21,6 @@ use Kirby\Exception\PermissionException;
  */
 class User extends Model
 {
-
     use UserActions;
 
     use HasContent;
@@ -504,5 +503,4 @@ class User extends Model
 
         return $session;
     }
-
 }

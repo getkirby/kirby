@@ -9,7 +9,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class TagsField extends Field
 {
-
     use Mixins\Converter;
     use Mixins\Help;
     use Mixins\Icon;
@@ -69,7 +68,7 @@ class TagsField extends Field
         $value = $this->valueFromList($input, $this->separator());
 
         // transform into value-text objects
-        $value = array_map(function($tag) {
+        $value = array_map(function ($tag) {
             $option = $this->option($tag['value'] ?? $tag);
 
             return [
@@ -86,5 +85,4 @@ class TagsField extends Field
         $value = array_column($value, 'value');
         return $this->valueToList($value, $this->separator() . ' ');
     }
-
 }

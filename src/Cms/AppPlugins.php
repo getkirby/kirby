@@ -10,7 +10,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait AppPlugins
 {
-
     protected static $plugins = [];
 
     protected $extensions = [];
@@ -192,7 +191,6 @@ trait AppPlugins
         $loaded = [];
 
         foreach (Dir::read($root) as $dirname) {
-
             if (is_dir($root . '/' . $dirname) === false) {
                 continue;
             }
@@ -223,5 +221,4 @@ trait AppPlugins
     {
         static::$plugins = [];
     }
-
 }

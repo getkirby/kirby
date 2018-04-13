@@ -9,7 +9,6 @@ use Exception;
 
 trait Value
 {
-
     protected $default;
     protected $empty;
     protected $error;
@@ -172,5 +171,4 @@ trait Value
     {
         return (string)$value;
     }
-
 }

@@ -15,7 +15,6 @@ namespace Kirby\Http\Request;
  */
 class Query
 {
-
     use Data;
 
     /**

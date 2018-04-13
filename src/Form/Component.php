@@ -6,7 +6,6 @@ use Kirby\Util\Properties;
 
 abstract class Component
 {
-
     use Properties;
 
     public function __construct(array $props = [])
@@ -23,5 +22,4 @@ abstract class Component
 
         return $array;
     }
-
 }

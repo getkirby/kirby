@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Pattern
 {
-
     protected $pattern;
 
     protected function defaultPattern()
@@ -22,5 +21,4 @@ trait Pattern
     {
         return $this->pattern;
     }
-
 }

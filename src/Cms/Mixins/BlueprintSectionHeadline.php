@@ -6,7 +6,6 @@ use Kirby\Util\I18n;
 
 trait BlueprintSectionHeadline
 {
-
     protected $headline;
 
     public function headline(): string
@@ -19,5 +18,4 @@ trait BlueprintSectionHeadline
         $this->headline = $this->stringTemplate(I18n::translate($headline, $headline));
         return $this;
     }
-
 }

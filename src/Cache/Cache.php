@@ -29,7 +29,9 @@ class Cache
      *
      * @param array $params
      */
-    public function __construct(array $params = []) {}
+    public function __construct(array $params = [])
+    {
+    }
 
     /**
      * Write an item to the cache for a given number of minutes.
@@ -231,5 +233,4 @@ class Cache
     {
         return $this->options;
     }
-
 }

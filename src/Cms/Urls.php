@@ -12,7 +12,6 @@ namespace Kirby\Cms;
  */
 class Urls extends Ingredients
 {
-
     protected $api;
     protected $index;
     protected $media;
@@ -37,6 +36,4 @@ class Urls extends Ingredients
     {
         return $this->panel = $this->panel ?? rtrim($this->index(), '/') . '/panel';
     }
-
 }
-

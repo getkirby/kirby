@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Spellcheck
 {
-
     protected $spellcheck;
 
     protected function defaultSpellcheck(): bool
@@ -22,5 +21,4 @@ trait Spellcheck
     {
         return $this->spellcheck;
     }
-
 }

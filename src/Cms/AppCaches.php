@@ -11,7 +11,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait AppCaches
 {
-
     protected $caches = [];
 
     public function cache(string $key)
@@ -106,5 +105,4 @@ trait AppCaches
 
         return $prefixedKey;
     }
-
 }

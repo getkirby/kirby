@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Date
 {
-
     protected $format;
 
     protected function dateFromInput(string $value = null)
@@ -55,5 +54,4 @@ trait Date
             }
         }
     }
-
 }

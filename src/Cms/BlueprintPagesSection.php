@@ -11,7 +11,6 @@ use Kirby\Exception\LogicException;
 
 class BlueprintPagesSection extends BlueprintSection
 {
-
     const ACCEPT = Pages::class;
 
     use Mixins\BlueprintSectionHeadline;
@@ -311,5 +310,4 @@ class BlueprintPagesSection extends BlueprintSection
     {
         return $this->templates;
     }
-
 }

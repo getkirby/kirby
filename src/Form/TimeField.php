@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class TimeField extends DateField
 {
-
     use Mixins\Time;
 
     protected function defaultDefault()
@@ -87,6 +86,4 @@ class TimeField extends DateField
 
         return true;
     }
-
-
 }

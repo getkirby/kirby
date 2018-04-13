@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class RangeField extends NumberField
 {
-
     protected $append;
     protected $prepend;
 
@@ -44,5 +43,4 @@ class RangeField extends NumberField
         $this->prepend = $prepend;
         return $this;
     }
-
 }

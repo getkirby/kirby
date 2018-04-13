@@ -6,7 +6,6 @@ use Kirby\Util\I18n;
 
 trait Label
 {
-
     protected $label;
 
     protected function defaultLabel()
@@ -30,5 +29,4 @@ trait Label
         $this->label = I18n::translate($label, $label);
         return $this;
     }
-
 }

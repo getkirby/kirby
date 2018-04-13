@@ -7,7 +7,6 @@ use Kirby\Util\Str;
 
 class UsersFinder extends Finder
 {
-
     public function findByKey($key)
     {
         if (Str::contains($key, '@') === true) {
@@ -16,5 +15,4 @@ class UsersFinder extends Finder
 
         return parent::findByKey($key);
     }
-
 }

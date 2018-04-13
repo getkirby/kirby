@@ -15,7 +15,6 @@ use Kirby\Exception\NotFoundException;
 
 class OptionsQuery
 {
-
     use Properties;
 
     protected $aliases = [];
@@ -68,7 +67,6 @@ class OptionsQuery
         $options = [];
 
         foreach ($result as $item) {
-
             $alias = $this->resolve($item);
             $data  = array_merge($data, [$alias => $item]);
 
@@ -169,5 +167,4 @@ class OptionsQuery
     {
         return $this->value;
     }
-
 }

@@ -7,7 +7,6 @@ use Kirby\Exception\NotFoundException;
 
 class Role extends Model
 {
-
     protected $description;
     protected $name;
     protected $permissions;
@@ -131,5 +130,4 @@ class Role extends Model
     {
         return $this->title;
     }
-
 }

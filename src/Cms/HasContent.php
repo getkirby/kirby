@@ -122,5 +122,4 @@ trait HasContent
 
         return $this->commit('update', $values, $strings);
     }
-
 }

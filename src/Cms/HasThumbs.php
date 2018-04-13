@@ -66,5 +66,4 @@ trait HasThumbs
         $this->original = $original;
         return $this;
     }
-
 }

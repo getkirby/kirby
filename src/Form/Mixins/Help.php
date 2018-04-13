@@ -6,7 +6,6 @@ use Kirby\Util\I18n;
 
 trait Help
 {
-
     protected $help;
 
     protected function defaultHelp()
@@ -30,5 +29,4 @@ trait Help
         $this->help = I18n::translate($help, $help);
         return $this;
     }
-
 }

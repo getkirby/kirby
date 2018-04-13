@@ -29,5 +29,4 @@ trait HasTemplate
     {
         return $this->template = $this->template ?? $this->store()->template();
     }
-
 }

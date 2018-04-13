@@ -7,7 +7,6 @@ use Kirby\Exception\NotFoundException;
 
 class BlueprintFieldsSection extends BlueprintSection
 {
-
     protected $fields;
     protected $form;
     protected $values;
@@ -27,7 +26,6 @@ class BlueprintFieldsSection extends BlueprintSection
             'key'  => 'blueprint.field.notFound',
             'data' => ['name' => $name]
         ]);
-
     }
 
     public function fields()
@@ -79,7 +77,6 @@ class BlueprintFieldsSection extends BlueprintSection
 
     protected function setFields(array $fields): self
     {
-
         foreach ($fields as $name => $field) {
             $field = Blueprint::extend($field);
             $field['name'] = $name;
@@ -104,5 +101,4 @@ class BlueprintFieldsSection extends BlueprintSection
     {
         return $this->form()->values();
     }
-
 }

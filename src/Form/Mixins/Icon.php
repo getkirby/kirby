@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Icon
 {
-
     protected $icon;
 
     protected function defaultIcon()
@@ -28,5 +27,4 @@ trait Icon
         $this->icon = $icon;
         return $this;
     }
-
 }

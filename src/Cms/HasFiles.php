@@ -193,5 +193,4 @@ trait HasFiles
     {
         return $this->files()->filterBy('type', '==', 'video');
     }
-
 }

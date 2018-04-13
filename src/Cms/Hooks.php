@@ -92,5 +92,4 @@ class Hooks
             $function->call($this->bind, ...$arguments);
         }
     }
-
 }

@@ -6,7 +6,6 @@ use Kirby\Util\I18n;
 
 trait Placeholder
 {
-
     protected $placeholder;
 
     protected function defaultPlaceholder()
@@ -24,5 +23,4 @@ trait Placeholder
         $this->placeholder = I18n::translate($placeholder, $placeholder);
         return $this;
     }
-
 }

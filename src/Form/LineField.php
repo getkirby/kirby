@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class LineField extends Field
 {
-
     protected function defaultName(): string
     {
         return 'line';
@@ -17,5 +16,4 @@ class LineField extends Field
             'type' => $this->type(),
         ];
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class DateTimeField extends DateField
 {
-
     use Mixins\Time;
 
     protected function defaultDefault()
@@ -15,5 +14,4 @@ class DateTimeField extends DateField
 
         return null;
     }
-
 }

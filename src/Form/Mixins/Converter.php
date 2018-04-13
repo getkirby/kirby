@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait Converter
 {
-
     protected $converter;
 
     protected function convert($value)
@@ -66,5 +65,4 @@ trait Converter
         $this->converter = $converter;
         return $this;
     }
-
 }

@@ -6,7 +6,6 @@ use Kirby\Util\Properties;
 
 abstract class Store
 {
-
     protected $model;
 
     public function __construct(Model $model)
@@ -31,5 +30,4 @@ abstract class Store
     {
         return $this->model;
     }
-
 }

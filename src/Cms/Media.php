@@ -59,14 +59,12 @@ class Media extends Component
      */
     public function create(Component $model, Component $file, array $attributes = [])
     {
-
         if ($file->exists() === false) {
             throw new LogicException('The source file does not exist');
         }
 
         // thumb creation
         if (empty($attributes) === false) {
-
             if ($file->original() !== null) {
                 throw new LogicException('Resized images cannot be further processed');
             }
@@ -79,12 +77,9 @@ class Media extends Component
                 $this->link($file->root(), $root, 'copy');
                 $this->darkroom()->process($root, $attributes);
             }
-
         } else {
-
             $root = $this->root($model, $file);
             $this->link($file->root(), $root);
-
         }
 
         return $file->clone([
@@ -92,7 +87,6 @@ class Media extends Component
             'url'      => $this->url($model, $file, $attributes),
             'original' => $file
         ]);
-
     }
 
     /**
@@ -150,7 +144,6 @@ class Media extends Component
      */
     public function path(Component $model, Component $file = null, array $attributes = []): string
     {
-
         if (is_a($model, Page::class) === true) {
             $path = 'pages/' . $model->id();
         } elseif (is_a($model, Site::class) === true) {
@@ -176,7 +169,6 @@ class Media extends Component
      */
     public function resolve(App $app, string $type, string $path)
     {
-
         switch ($type) {
             case 'pages':
 
@@ -257,7 +249,6 @@ class Media extends Component
      */
     public function unlink(string $root): bool
     {
-
         if (is_dir($root) === true) {
             $folder = new Folder($root);
             $folder->delete();
@@ -279,7 +270,6 @@ class Media extends Component
         }
 
         return true;
-
     }
 
     /**
@@ -296,5 +286,4 @@ class Media extends Component
 
         return $this->url . '/' . $this->path($model, $file, $attributes);
     }
-
 }

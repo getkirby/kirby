@@ -149,7 +149,6 @@ class Image extends File
      */
     public function dimensions(): Dimensions
     {
-
         if ($this->dimensions !== null) {
             return $this->dimensions;
         }

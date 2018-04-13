@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class UserBlueprintOptions extends BlueprintOptions
 {
-
     protected $options = [
         'create'         => null,
         'changeEmail'    => null,
@@ -79,5 +78,4 @@ class UserBlueprintOptions extends BlueprintOptions
     {
         return $this->isAllowed('user', 'update');
     }
-
 }

@@ -12,7 +12,6 @@ namespace Kirby\Cms;
  */
 class Roots extends Ingredients
 {
-
     protected $accounts;
     protected $blueprints;
     protected $cache;
@@ -138,6 +137,4 @@ class Roots extends Ingredients
     {
         return $this->templates = $this->templates ?? $this->site() . '/templates';
     }
-
 }
-

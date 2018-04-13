@@ -69,7 +69,6 @@ trait Paginator
      */
     public function paginate(...$arguments)
     {
-
         if (is_array($arguments[0])) {
             $options = $arguments[0];
         } else {
@@ -129,5 +128,4 @@ trait Paginator
         // convert the array of chunks to a collection
         return $this->clone()->data($collection);
     }
-
 }

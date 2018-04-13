@@ -63,5 +63,4 @@ class FilesFinder extends Finder
     {
         return $this->findById($key);
     }
-
 }

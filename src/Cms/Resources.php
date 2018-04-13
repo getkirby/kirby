@@ -97,5 +97,4 @@ class Resources extends Collection
 
         return true;
     }
-
 }

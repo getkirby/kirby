@@ -12,7 +12,6 @@ use Kirby\Exception\LogicException;
 
 class PageStore extends PageStoreDefault
 {
-
     const PAGE_STORE_CLASS = PageStore::class;
     const FILE_STORE_CLASS = FileStore::class;
 
@@ -109,12 +108,12 @@ class PageStore extends PageStoreDefault
         $oldFile = $this->base()->storage();
 
         if (Data::write($newFile, $data) !== true) {
-             throw new LogicException('The new text file could not be written');
+            throw new LogicException('The new text file could not be written');
         }
 
         if (F::remove($oldFile) !== true) {
             throw new LogicException('The old text file could not be removed');
-       }
+        }
 
         return $newPage;
     }
@@ -297,5 +296,4 @@ class PageStore extends PageStoreDefault
 
         return $page;
     }
-
 }

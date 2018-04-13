@@ -6,7 +6,6 @@ use Exception;
 
 class Darkroom
 {
-
     public static $types = [
         'gd' => Darkroom\GdLib::class,
         'im' => Darkroom\ImageMagick::class,
@@ -85,5 +84,4 @@ class Darkroom
     {
         return $this->preprocess($file, $options);
     }
-
 }

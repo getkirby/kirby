@@ -8,7 +8,6 @@ use Kirby\Util\F;
 
 class ImageMagick extends Darkroom
 {
-
     protected function defaults(): array
     {
         return parent::defaults() + [
@@ -123,5 +122,4 @@ class ImageMagick extends Darkroom
     {
         return '-strip';
     }
-
 }

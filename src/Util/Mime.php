@@ -4,7 +4,6 @@ namespace Kirby\Util;
 
 class Mime
 {
-
     public static $types = [
         'hqx'   => 'application/mac-binhex40',
         'cpt'   => 'application/mac-compactpro',
@@ -154,7 +153,6 @@ class Mime
     public static function fromSvg(string $file)
     {
         if (file_exists($file) === true && F::extension($file) === 'svg') {
-
             libxml_use_internal_errors(true);
 
             $svg = new SimpleXMLElement(file_get_contents($file));
@@ -162,7 +160,6 @@ class Mime
             if ($svg !== false && $svg->getName() === 'svg') {
                 return 'image/svg+xml';
             }
-
         }
 
         return false;
@@ -170,8 +167,8 @@ class Mime
 
     public static function toExtension(string $mime)
     {
-        foreach(static::$types as $key => $value) {
-            if(is_array($value) === true && in_array($mime, $value) === true) {
+        foreach (static::$types as $key => $value) {
+            if (is_array($value) === true && in_array($mime, $value) === true) {
                 return $key;
             }
 
@@ -201,7 +198,7 @@ class Mime
         }
 
         // try to guess the mime type at least
-        if($mime === false) {
+        if ($mime === false) {
             $mime = static::fromExtension($extension);
         }
 
@@ -222,5 +219,4 @@ class Mime
     {
         return static::$types;
     }
-
 }

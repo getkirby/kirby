@@ -4,5 +4,7 @@
 /vendor
 composer.lock
 
+.php_cs.cache
+
 *.sublime-project
 *.sublime-workspace

@@ -189,7 +189,6 @@ class Route
      */
     public function regex(string $pattern): string
     {
-
         $search   = array_keys($this->wildcards['optional']);
         $replace  = array_values($this->wildcards['optional']);
 

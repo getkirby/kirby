@@ -6,7 +6,6 @@ use Kirby\Util\Str;
 
 class PageDraft extends Page
 {
-
     public function diruri(): string
     {
         if ($parent = $this->parent()) {
@@ -52,5 +51,4 @@ class PageDraft extends Page
     {
         return parent::url() . '/' . sha1($this->id() . $this->template());
     }
-
 }

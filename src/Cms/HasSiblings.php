@@ -11,7 +11,8 @@ namespace Kirby\Cms;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-trait HasSiblings {
+trait HasSiblings
+{
 
     /**
      * Returns the position / index in the collection
@@ -122,5 +123,4 @@ trait HasSiblings {
     {
         return $this->indexOf() === $n;
     }
-
 }

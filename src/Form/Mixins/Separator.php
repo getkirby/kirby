@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Separator
 {
-
     protected $separator;
 
     protected function defaultSeparator(): string
@@ -22,5 +21,4 @@ trait Separator
         $this->separator = $separator;
         return $this;
     }
-
 }

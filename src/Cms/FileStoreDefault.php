@@ -8,7 +8,6 @@ use Kirby\Exception\LogicException;
 
 class FileStoreDefault extends Store
 {
-
     const MODEL = File::class;
 
     public function asset()
@@ -74,5 +73,4 @@ class FileStoreDefault extends Store
             'content' => $this->file()->content()->update($strings)->toArray()
         ]);
     }
-
 }

@@ -129,7 +129,6 @@ class Collection extends BaseCollection
      */
     public function paginate(...$arguments)
     {
-
         if (is_array($arguments[0])) {
             $options = $arguments[0];
         } else {
@@ -180,5 +179,4 @@ class Collection extends BaseCollection
             return $object->toArray();
         });
     }
-
 }

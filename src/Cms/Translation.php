@@ -6,7 +6,6 @@ use Kirby\Data\Data;
 
 class Translation extends Component
 {
-
     protected $code;
     protected $data;
 
@@ -65,6 +64,4 @@ class Translation extends Component
             'author' => $this->author(),
         ];
     }
-
 }
-

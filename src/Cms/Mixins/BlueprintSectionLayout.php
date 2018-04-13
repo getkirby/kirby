@@ -4,7 +4,6 @@ namespace Kirby\Cms\Mixins;
 
 trait BlueprintSectionLayout
 {
-
     protected $layout;
 
     protected function defaultLayout(): string
@@ -22,5 +21,4 @@ trait BlueprintSectionLayout
         $this->layout = $layout;
         return $this;
     }
-
 }

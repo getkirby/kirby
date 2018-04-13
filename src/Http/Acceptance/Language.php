@@ -100,5 +100,4 @@ class Language extends Acceptance
     {
         return $item['locale'] === $pattern;
     }
-
 }

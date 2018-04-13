@@ -8,7 +8,6 @@ use Kirby\Exception\NotFoundException;
 
 class UserField extends Field
 {
-
     use Mixins\Help;
     use Mixins\Icon;
     use Mixins\Label;
@@ -41,7 +40,6 @@ class UserField extends Field
 
     public function options(): array
     {
-
         $options = [];
 
         foreach (App::instance()->users() as $user) {
@@ -76,5 +74,4 @@ class UserField extends Field
 
         return true;
     }
-
 }

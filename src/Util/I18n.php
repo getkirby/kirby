@@ -6,7 +6,6 @@ use Exception;
 
 class I18n
 {
-
     public static $locale = 'en';
     public static $translation = [];
     public static $fallback = [];
@@ -57,5 +56,4 @@ class I18n
 
         return str_replace('{{ count }}', $count, $message);
     }
-
 }

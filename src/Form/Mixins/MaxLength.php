@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait MaxLength
 {
-
     protected $maxLength;
 
     protected function defaultMaxLength()
@@ -39,5 +38,4 @@ trait MaxLength
 
         return true;
     }
-
 }

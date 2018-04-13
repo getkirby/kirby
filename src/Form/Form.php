@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class Form extends Component
 {
-
     use Mixins\Model;
 
     protected $errors;
@@ -67,7 +66,6 @@ class Form extends Component
         }
 
         return $this->fields = new Fields($fields);
-
     }
 
     public function stringValues(): array
@@ -124,7 +122,5 @@ class Form extends Component
         unset($array['model']);
 
         return $array;
-
     }
-
 }

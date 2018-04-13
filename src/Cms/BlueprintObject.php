@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class BlueprintObject extends Component
 {
-
     use HasModel;
 
     /**
@@ -48,5 +47,4 @@ class BlueprintObject extends Component
     {
         return $this->propertiesToArray();
     }
-
 }

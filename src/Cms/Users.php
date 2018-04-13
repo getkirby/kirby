@@ -59,7 +59,5 @@ class Users extends Collection
         }
 
         return $users;
-
     }
-
 }

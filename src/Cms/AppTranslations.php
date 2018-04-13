@@ -6,7 +6,6 @@ use Kirby\Util\I18n;
 
 trait AppTranslations
 {
-
     protected $translations;
 
     /**
@@ -85,5 +84,4 @@ trait AppTranslations
 
         return Translations::load($this->root('translations'));
     }
-
 }
