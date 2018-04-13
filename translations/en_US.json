@@ -136,6 +136,12 @@
     "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
     "error.file.name.missing": "The filename must not be empty",
+    "error.file.forbidden": "You are not allowed to upload {type} files",
+    "error.file.extension.missing": "The extensions for \"{filename}\" is missing",
+    "error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
+    "error.file.mime.differs": "The uploaded file must be of the same mime type \"{mime}\"",
+    "error.file.mime.missing": "The mime type for \"{filename}\" cannot be detected",
+    "error.file.mime.forbidden": "The mime type \"{mime}\" is not allowed",
     "error.file.changeName.permissions": "You are not allowed to change the name of \"{filename}\"",
     "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
 

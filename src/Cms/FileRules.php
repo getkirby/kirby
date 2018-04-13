@@ -5,9 +5,11 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\V;
 use Kirby\Util\Str;
 
-use Exception;
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+
 
 class FileRules
 {
@@ -42,11 +44,11 @@ class FileRules
     public static function create(File $file, Upload $upload): bool
     {
         if ($file->exists() === true) {
-            throw new Exception('The file exists and cannot be overwritten');
+            throw new LogicException('The file exists and cannot be overwritten');
         }
 
         if ($file->permissions()->create() !== true) {
-            throw new Exception('The file cannot be created');
+            throw new LogicException('The file cannot be created');
         }
 
         static::validExtension($file, $file->extension());
@@ -61,7 +63,7 @@ class FileRules
     public static function delete(File $file): bool
     {
         if ($file->permissions()->delete() !== true) {
-            throw new Exception('The file cannot be deleted');
+            throw new LogicException('The file cannot be deleted');
         }
 
         return true;
@@ -70,14 +72,17 @@ class FileRules
     public static function replace(File $file, Upload $upload): bool
     {
         if ($file->permissions()->replace() !== true) {
-            throw new Exception('The file cannot be replaced');
+            throw new LogicException('The file cannot be replaced');
         }
 
         static::validMime($file, $upload->mime());
 
 
         if ((string)$upload->mime() !== (string)$file->mime()) {
-            throw new Exception(sprintf('The mime type of the new file (%s) does not match the old one (%s)', $upload->mime(), $file->mime()));
+            throw new InvalidArgumentException([
+                'key'  => 'file.mime.differs',
+                'data' => ['mime' => $file->mime()]
+            ]);
         }
 
         $upload->match($file->blueprint()->accept());
@@ -88,7 +93,7 @@ class FileRules
     public static function update(File $file, array $content = []): bool
     {
         if ($file->permissions()->update() !== true) {
-            throw new Exception('The file cannot be updated');
+            throw new LogicException('The file cannot be updated');
         }
 
         return true;
@@ -100,15 +105,24 @@ class FileRules
         $extension = strtolower($extension);
 
         if (empty($extension)) {
-            throw new Exception('The extension is missing');
+            throw new InvalidArgumentException([
+                'key'  => 'file.extension.missing',
+                'data' => ['filename' => $file->filename()]
+            ]);
         }
 
         if (V::in($extension, ['php', 'html', 'htm', 'exe'])) {
-            throw new Exception(sprintf('Unallowed extension "%s"', $extension));
+            throw new InvalidArgumentException([
+                'key'  => 'file.invalid.extension.forbidden',
+                'data' => ['extension' => $extension]
+            ]);
         }
 
         if(Str::contains($extension, 'php')) {
-            throw new Exception('You are not allowed to upload PHP files');
+            throw new InvalidArgumentException([
+                'key'  => 'file.forbidden',
+                'data' => ['type' => 'PHP']
+            ]);
         }
 
         return true;
@@ -123,17 +137,25 @@ class FileRules
 
         // check for missing filenames
         if (empty($filename)) {
-            throw new Exception('The filename must not be empty');
+            throw new InvalidArgumentException([
+                'key'  => 'file.name.missing'
+            ]);
         }
 
         // Block htaccess files
         if(Str::startsWith($filename, '.ht')) {
-            throw new Exception('You are not allowed to upload Apache config files');
+            throw new InvalidArgumentException([
+                'key'  => 'file.forbidden',
+                'data' => ['type' => 'Apache config']
+            ]);
         }
 
         // Block invisible files
         if(Str::startsWith($filename, '.')) {
-            throw new Exception('You are not allowed to upload invisible files');
+            throw new InvalidArgumentException([
+                'key'  => 'file.forbidden',
+                'data' => ['type' => 'invisible']
+            ]);
         }
 
         return true;
@@ -147,15 +169,24 @@ class FileRules
         $mime = strtolower($mime);
 
         if (empty($mime)) {
-            throw new Exception('The mime type cannot be detected');
+            throw new InvalidArgumentException([
+                'key'  => 'file.mime.missing',
+                'data' => ['filename' => $file->filename()]
+            ]);
         }
 
         if (Str::contains($mime, 'php')) {
-            throw new Exception('You are not allowed to upload PHP files');
+            throw new InvalidArgumentException([
+                'key'  => 'file.forbidden',
+                'data' => ['type' => 'PHP']
+            ]);
         }
 
         if (V::in($mime, ['text/html', 'application/x-msdownload'])) {
-            throw new Exception(sprintf('Unallowed mime type "%s"', $mime));
+            throw new InvalidArgumentException([
+                'key'  => 'file.mime.forbidden',
+                'data' => ['mime' => $mime]
+            ]);
         }
 
         return true;
