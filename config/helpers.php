@@ -5,6 +5,7 @@ use Kirby\Cms\Url;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
 use Kirby\Util\F;
+use Kirby\Util\I18n;
 
 function css($url)
 {
@@ -124,14 +125,25 @@ function svg(string $file)
 /**
  * Returns translate string for key from translation file
  *
- * @param   string       $key
+ * @param   string|array $key
  * @param   string|null  $fallback
- * @param   string|null  $locale
- * @return  string
+ * @return  mixed
  */
-function t(string $key, string $fallback = null, string $locale = null): string
+function t($key, string $fallback = null)
 {
-    return App::instance()->translate($key, $fallback, $locale);
+    return I18n::translate($key, $fallback);
+}
+
+/**
+ * Translates a count
+ *
+ * @param   string|array $key
+ * @param   int  $count
+ * @return  mixed
+ */
+function tc($key, int $count)
+{
+    return I18n::translateCount($key, $count);
 }
 
 function u(string $path = null): string
