@@ -23,10 +23,10 @@
     "logout": "Logout",
 
     "welcome": "Welcome!",
-    "site": "Site",
     "settings": "Settings",
-    "users": "Users",
-    "account": "Your account",
+    "view.site": "Site",
+    "view.users": "Users",
+    "view.account": "Your account",
 
     "file.name": "Filename",
     "file.renamed": "The file has been renamed",

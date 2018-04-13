@@ -23,10 +23,10 @@
   "logout": "Ausloggen",
 
   "welcome": "Willkommen!",
-  "site": "Seite",
   "settings": "Einstellungen",
-  "users": "Benutzer",
-  "account": "Dein Account",
+  "view.site": "Seite",
+  "view.users": "Benutzer",
+  "view.account": "Dein Account",
 
   "file.name": "Dateiname",
   "file.renamed": "Die Datei wurde umbenannt",
