@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms\Mixins;
 
+use Kirby\Util\I18n;
+
 trait BlueprintSectionHeadline
 {
 
