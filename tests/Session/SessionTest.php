@@ -692,7 +692,7 @@ class SessionTest extends TestCase
 
         $this->assertEquals(1234567890, $timeToTimestamp->invoke(null, 1234567890));
         $this->assertEquals(1234567890, $timeToTimestamp->invoke(null, 1234567890, 1357924680));
-        $this->assertEquals(1514764800, $timeToTimestamp->invoke(null, '2018-01-01', 1357924680));
+        $this->assertEquals(1514761200, $timeToTimestamp->invoke(null, '2018-01-01', 1357924680));
         $this->assertEquals(strtotime('tomorrow'), $timeToTimestamp->invoke(null, 'tomorrow'));
         $this->assertEquals(strtotime('tomorrow', 1357924680), $timeToTimestamp->invoke(null, 'tomorrow', 1357924680));
     }
