@@ -2,8 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Util\Str;
+
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 
 /**
  * The Site class is the root element
@@ -326,7 +328,7 @@ class Site extends Model
     public function setErrorPage(Page $errorPage = null): self
     {
         if (is_a($this->errorPage, Page::class) === true) {
-            throw new Exception('The error page has already been set');
+            throw new LogicException('The error page has already been set');
         }
 
         $this->errorPage = $errorPage;
@@ -357,7 +359,7 @@ class Site extends Model
     public function setHomePage(Page $homePage = null): self
     {
         if (is_a($this->homePage, Page::class) === true) {
-            throw new Exception('The home page has already been set');
+            throw new LogicException('The home page has already been set');
         }
 
         $this->homePage = $homePage;
@@ -430,7 +432,7 @@ class Site extends Model
 
         // handle invalid pages
         if (is_a($page, Page::class) === false) {
-            throw new Exception('Invalid page object');
+            throw new InvalidArgumentException('Invalid page object');
         }
 
         // set the current active page
