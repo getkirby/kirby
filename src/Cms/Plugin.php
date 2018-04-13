@@ -2,8 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
+
+use Kirby\Exception\InvalidArgumentException;
 
 class Plugin extends Model
 {
@@ -83,7 +84,7 @@ class Plugin extends Model
     protected function setName(string $name)
     {
         if (preg_match('!^[a-z-]+\/[a-z-]+$!', $name) == false) {
-            throw new Exception('The plugin name must follow the format "abc/def"');
+            throw new InvalidArgumentException('The plugin name must follow the format "abc/def"');
         }
 
         $this->name = $name;
