@@ -150,6 +150,8 @@
     "error.page.delete": "The page \"{slug}\" cannot be deleted",
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
     "error.page.changeTemplate.invalid": "The template for this page cannot be changed",
+    "error.page.sort.section.type": "The page cannot be dragged into this section",
+    "error.page.sort.section.template.invalid": "The page template is not allowed in this section",
 
     "error.user.delete": "The user \"{name}\" cannot be deleted",
     "error.user.duplicate": "A user with the email address \"{email}\" already exists",

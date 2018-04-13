@@ -7,6 +7,7 @@ use Kirby\Util\Str;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 
 class BlueprintPagesSection extends BlueprintSection
 {
@@ -272,11 +273,15 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         if (is_a($page, Page::class) === false) {
-            throw new Exception('The page cannot be dragged into this section');
+            throw new LogicException([
+                'key' => 'page.sort.section.type'
+            ]);
         }
 
         if (empty($this->templates()) === false && in_array($page->template(), $this->templates()) === false) {
-            throw new Exception('The page template is not allowed in this section');
+            throw new LogicException([
+                'key' => 'page.sort.section.template.invalid'
+            ]);
         }
 
         return $page->changeStatus($status, $position);

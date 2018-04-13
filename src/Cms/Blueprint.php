@@ -271,7 +271,7 @@ class Blueprint extends BlueprintObject
         try {
             return static::load($path);
         } catch (Exception $e) {
-            throw new NotFoundException('The mixin "' . $patg . '" could not be found');
+            throw new NotFoundException('The mixin "' . $path . '" could not be found');
         }
     }
 
