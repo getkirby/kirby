@@ -20,12 +20,12 @@ install:
   - php coveralls.phar --version
 
 before_script:
-  - phpenv config-rm xdebug.ini
   - mkdir -p build/logs
   - ls -al
 
 script:
   - phpunit --coverage-clover build/logs/clover.xml
+  - phpenv config-rm xdebug.ini
   - vendor/bin/php-cs-fixer fix src/ --verbose --diff --dry-run
 
 after_success:
