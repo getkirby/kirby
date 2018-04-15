@@ -16,7 +16,7 @@ class NumberField extends Field
 
     protected function valueFromInput($value)
     {
-        return $value !== null ? floatval($value) : null;
+        return $this->isEmpty($value) === false ? floatval($value) : null;
     }
 
     protected function validate($value)
