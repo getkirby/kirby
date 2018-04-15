@@ -157,6 +157,7 @@
     "error.form.min.invalid": "The value is below the accepted minimum",
     "error.form.minLength.invalid": "The value is too short",
     "error.form.option.invalid": "Invalid option",
+    "error.form.field.notFound" : "The field type: <strong>{{ field.type }}</strong> does not exist",
     "error.form.field.required": "The field is required",
     "error.form.time": "Invalid time",
     "error.form.time.notation": "Invalid time notation",
