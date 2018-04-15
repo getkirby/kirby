@@ -14,17 +14,17 @@ class AppTranslationsTest extends TestCase
             'users' => [
                 [
                     'email' => 'admin@getkirby.com',
-                    'language' => 'de_DE'
+                    'language' => 'de'
                 ]
             ],
             'user' => 'admin@getkirby.com',
             'translations' => [
-                'en_US' => [
+                'en' => [
                     'save'       => 'Save',
                     'reset'      => 'Reset',
                     'error.test' => 'This is a test error',
                 ],
-                'de_DE' => [
+                'de' => [
                     'save'       => 'Speichern',
                     'error.test' => 'Das ist ein Testfehler',
                 ]

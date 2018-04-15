@@ -22,7 +22,7 @@ class TranslationTest extends TestCase
 
     public function testLoad()
     {
-        $translation = Translation::load('de', __DIR__ . '/fixtures/translations/de_DE.json');
+        $translation = Translation::load('de', __DIR__ . '/fixtures/translations/de.json');
 
         $this->assertEquals('de', $translation->code());
         $this->assertEquals('Deutsch', $translation->name());

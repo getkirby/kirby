@@ -83,7 +83,7 @@ class UserStoreDefault extends Store
 
     public function language(): string
     {
-        return 'en_US';
+        return 'en';
     }
 
     public function password()

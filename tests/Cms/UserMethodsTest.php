@@ -21,10 +21,10 @@ class UserMethodsTest extends TestCase
     {
         $user = new User([
             'email'    => 'user@domain.com',
-            'language' => 'en_US',
+            'language' => 'en',
         ]);
 
-        $this->assertEquals('en_US', $user->language());
+        $this->assertEquals('en', $user->language());
     }
 
     public function testDefaultLanguage()
@@ -33,7 +33,7 @@ class UserMethodsTest extends TestCase
             'email' => 'user@domain.com',
         ]);
 
-        $this->assertEquals('en_US', $user->language());
+        $this->assertEquals('en', $user->language());
     }
 
     public function testRole()

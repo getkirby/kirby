@@ -16,7 +16,7 @@ trait AppTranslations
      */
     protected function loadFallbackTranslation()
     {
-        I18n::$locale   = 'en_US';
+        I18n::$locale   = 'en';
         I18n::$fallback = I18n::$translation = $this->translation(I18n::$locale)->data();
     }
 

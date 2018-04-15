@@ -1,7 +1,7 @@
 {
     "translation.direction": "ltr",
     "translation.name": "English",
-    "translation.translator": "Kirby Team",
+    "translation.author": "Kirby Team",
 
     "confirm": "Ok",
     "cancel": "Cancel",

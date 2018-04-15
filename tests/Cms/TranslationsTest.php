@@ -8,17 +8,17 @@ class TranslationsTest extends TestCase
     public function testFactory()
     {
         $translations = Translations::factory([
-            'de_DE' => [
+            'de' => [
                 'translation.name' => 'Deutsch'
             ],
-            'en_US' => [
+            'en' => [
                 'translation.name' => 'English'
             ]
         ]);
 
         $this->assertCount(2, $translations);
-        $this->assertTrue($translations->has('de_DE'));
-        $this->assertTrue($translations->has('en_US'));
+        $this->assertTrue($translations->has('de'));
+        $this->assertTrue($translations->has('en'));
     }
 
     public function testLoad()
@@ -26,8 +26,8 @@ class TranslationsTest extends TestCase
         $translations = Translations::load(__DIR__ . '/fixtures/translations');
 
         $this->assertCount(2, $translations);
-        $this->assertTrue($translations->has('de_DE'));
-        $this->assertTrue($translations->has('en_US'));
+        $this->assertTrue($translations->has('de'));
+        $this->assertTrue($translations->has('en'));
     }
 
 }

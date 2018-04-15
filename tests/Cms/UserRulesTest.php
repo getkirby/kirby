@@ -25,7 +25,7 @@ class UserRulesTest extends TestCase
     {
         return [
             ['Email', 'editor@domain.com'],
-            ['Language', 'en_US'],
+            ['Language', 'en'],
             ['Password', '12345678'],
             ['Role', 'editor']
         ];
