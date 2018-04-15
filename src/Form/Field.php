@@ -2,7 +2,8 @@
 
 namespace Kirby\Form;
 
-use Kirby\Form\Exceptions\PropertyException;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 
 class Field extends Component
 {
@@ -59,14 +60,14 @@ class Field extends Component
     public static function factory(array $props)
     {
         if (isset($props['type']) === false) {
-            throw new PropertyException('Missing field type');
+            throw new NotFoundException('Missing field type');
         }
 
         $type  = $props['type'];
         $class = static::$types[$type] ?? __NAMESPACE__ . '\\' . ucfirst($type) . 'Field';
 
         if (class_exists($class) === false) {
-            throw new PropertyException(sprintf('Invalid field type: "%s"', $type));
+            throw new InvalidArgumentException(sprintf('Invalid field type: "%s"', $type));
         }
 
         return new $class($props);
