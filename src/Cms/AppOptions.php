@@ -7,7 +7,6 @@ use Kirby\Util\F;
 
 trait AppOptions
 {
-
     protected $options;
 
     /**
@@ -89,5 +88,4 @@ trait AppOptions
 
         return true;
     }
-
 }

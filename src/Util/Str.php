@@ -493,5 +493,4 @@ class Str
             return $data[$match[1]] ?? $fallback;
         }, $string);
     }
-
 }

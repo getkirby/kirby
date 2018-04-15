@@ -36,5 +36,4 @@ trait HasStore
         $className = $this->store;
         return new $className($this);
     }
-
 }

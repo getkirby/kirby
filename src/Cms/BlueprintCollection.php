@@ -6,7 +6,6 @@ use Closure;
 
 class BlueprintCollection extends Collection
 {
-
     protected static $accept = BlueprintObject::class;
 
     public function __debuginfo(): array
@@ -18,5 +17,4 @@ class BlueprintCollection extends Collection
     {
         return array_values(parent::toArray($map));
     }
-
 }

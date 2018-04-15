@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class UserBlueprint extends Blueprint
 {
-
     public function options()
     {
         if (is_a($this->options, UserBlueprintOptions::class) === true) {
@@ -13,5 +12,4 @@ class UserBlueprint extends Blueprint
 
         return $this->options = new UserBlueprintOptions($this->model, $this->options);
     }
-
 }

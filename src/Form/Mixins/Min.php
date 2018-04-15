@@ -2,12 +2,12 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\MinException;
 use Kirby\Toolkit\V;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait Min
 {
-
     protected $min;
 
     protected function defaultMin()
@@ -30,11 +30,12 @@ trait Min
     {
         if ($this->isEmpty() === false && $this->min() !== null) {
             if ($value < $this->min()) {
-                throw $message !== null ? new MinException($message) : new MinException();
+                throw $message !== null ? new InvalidArgumentException($message) : new InvalidArgumentException([
+                    'key' => 'form.min.invalid'
+                ]);
             }
         }
 
         return true;
     }
-
 }

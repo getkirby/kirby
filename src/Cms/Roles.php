@@ -51,5 +51,4 @@ class Roles extends Collection
         // return the collection sorted by name
         return $roles->sortBy('name', 'asc');
     }
-
 }

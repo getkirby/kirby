@@ -6,7 +6,6 @@ use Kirby\Collection\Finder as FinderClass;
 
 trait Finder
 {
-
     protected function finder()
     {
         return new FinderClass($this);
@@ -21,6 +20,4 @@ trait Finder
     {
         return $this->finder()->findBy($key, $value);
     }
-
 }
-

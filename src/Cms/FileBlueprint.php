@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FileBlueprint extends Blueprint
 {
-
     protected $accept = [];
 
     public function accept(): array
@@ -44,5 +43,4 @@ class FileBlueprint extends Blueprint
         $this->accept = array_merge($defaults, $accept);
         return $this;
     }
-
 }

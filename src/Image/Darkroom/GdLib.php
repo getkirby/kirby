@@ -8,7 +8,6 @@ use Kirby\Image\Darkroom;
 
 class GdLib extends Darkroom
 {
-
     public function process(string $file, array $options = []): array
     {
         $options = $this->preprocess($file, $options);
@@ -61,5 +60,4 @@ class GdLib extends Darkroom
 
         return $image->desaturate();
     }
-
 }

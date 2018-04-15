@@ -6,7 +6,6 @@ use Exception;
 
 class F
 {
-
     public static $types = [
         'archive' => [
             'gz',
@@ -145,7 +144,7 @@ class F
     public static function extension(string $file, string $extension = null): string
     {
         // overwrite the current extension
-        if($extension !== null) {
+        if ($extension !== null) {
             return static::name($file) . '.' . $extension;
         }
 
@@ -159,7 +158,8 @@ class F
      * @param string $extension
      * @return string|false
      */
-    public static function extensionToMime(string $extension) {
+    public static function extensionToMime(string $extension)
+    {
         return Mime::fromExtension($extension);
     }
 
@@ -186,7 +186,8 @@ class F
      * @param string $type
      * @return array
      */
-    public static function extensions(string $type = null) {
+    public static function extensions(string $type = null)
+    {
         if ($type === null) {
             return array_keys(Mime::types());
         }
@@ -357,7 +358,9 @@ class F
         $size = (int)$size;
 
         // avoid errors for invalid sizes
-        if ($size <= 0) return '0 kB';
+        if ($size <= 0) {
+            return '0 kB';
+        }
 
         // the math magic
         return round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . static::$units[$i];
@@ -494,7 +497,7 @@ class F
         // sanitize extension
         $extension = strtolower($extension);
 
-        foreach(static::$types as $type => $extensions) {
+        foreach (static::$types as $type => $extensions) {
             if (in_array($extension, $extensions) === true) {
                 return $type;
             }
@@ -567,5 +570,4 @@ class F
 
         return file_put_contents($file, $content, $mode) !== false;
     }
-
 }

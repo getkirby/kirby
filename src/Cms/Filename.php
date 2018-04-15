@@ -110,7 +110,6 @@ class Filename
         $result = [];
 
         foreach ($array as $key => $value) {
-
             if ($value === true) {
                 $value = '';
             }
@@ -125,7 +124,6 @@ class Filename
                 default:
                     $result[] = $key . $value;
             }
-
         }
 
         $attributes = implode('-', $result);
@@ -299,5 +297,4 @@ class Filename
     {
         return $this->name() . $this->attributesToString('-') . '.' . $this->extension();
     }
-
 }

@@ -19,7 +19,6 @@ use Kirby\Exception\LogicException;
  */
 class Site extends Model
 {
-
     use SiteActions;
 
     use HasChildren;
@@ -441,5 +440,4 @@ class Site extends Model
         // return the page
         return $page;
     }
-
 }

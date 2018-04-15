@@ -7,7 +7,6 @@ use Kirby\Cms\Url;
 
 class Image extends \Kirby\Text\Tags\Image
 {
-
     use Dependencies;
 
     /**
@@ -94,5 +93,4 @@ class Image extends \Kirby\Text\Tags\Image
 
         return Url::to($src);
     }
-
 }

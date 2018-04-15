@@ -18,7 +18,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class App extends Component
 {
-
     use AppCaches;
     use AppHooks;
     use AppOptions;
@@ -472,5 +471,4 @@ class App extends Component
         // set the default urls
         return $this->setUrls()->urls();
     }
-
 }

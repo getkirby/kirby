@@ -2,16 +2,17 @@
 
 namespace Kirby\Form;
 
-use Exception;
 use Kirby\Cms\Nest;
 use Kirby\Cms\Query;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Tempura;
 use Kirby\Util\Properties;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+
 class OptionsApi
 {
-
     use Properties;
 
     protected $data;
@@ -51,20 +52,19 @@ class OptionsApi
         $content = file_get_contents($this->url());
 
         if (empty($content) === true) {
-            throw new Exception('The options could not be fetched');
+            throw new LogicException('The options could not be fetched');
         }
 
         $data = json_decode($content, true);
 
         if (is_array($data) === false) {
-            throw new Exception('Invalid options format');
+            throw new InvalidArgumentException('Invalid options format');
         }
 
         $result  = (new Query($this->fetch(), Nest::create($data)))->result();
         $options = [];
 
         foreach ($result as $item) {
-
             $data = array_merge($this->data(), ['item' => $item]);
 
             $options[] = [
@@ -74,7 +74,6 @@ class OptionsApi
         }
 
         return $options;
-
     }
 
     protected function setData(array $data)
@@ -126,5 +125,4 @@ class OptionsApi
     {
         return $this->value;
     }
-
 }

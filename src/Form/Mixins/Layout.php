@@ -2,11 +2,10 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\PropertyException;
+use Kirby\Exception\InvalidArgumentException;
 
 trait Layout
 {
-
     protected $layout;
 
     protected function defaultLayout()
@@ -27,11 +26,12 @@ trait Layout
     protected function setLayout(string $layout = null)
     {
         if ($layout !== null && in_array($layout, $this->layouts()) === false) {
-            throw new PropertyException('Invalid layout');
+            throw new InvalidArgumentException([
+                'key' => 'form.layout.invalid'
+            ]);
         }
 
         $this->layout = $layout;
         return $this;
     }
-
 }

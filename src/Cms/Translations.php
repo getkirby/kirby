@@ -7,7 +7,6 @@ use Kirby\Util\F;
 
 class Translations extends Collection
 {
-
     protected static $accept = Translation::class;
 
     public static function factory(array $translations)
@@ -27,7 +26,6 @@ class Translations extends Collection
         $collection = new static;
 
         foreach (Dir::read($root) as $filename) {
-
             if (F::extension($filename) !== 'json') {
                 continue;
             }
@@ -38,5 +36,4 @@ class Translations extends Collection
 
         return $collection;
     }
-
 }

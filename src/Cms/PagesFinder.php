@@ -6,7 +6,6 @@ use Kirby\Collection\Finder;
 
 class PagesFinder extends Finder
 {
-
     public function findById($id)
     {
         $page = $this->collection()->get($id);
@@ -26,7 +25,6 @@ class PagesFinder extends Finder
         $query      = $startAt;
 
         foreach ($path as $key) {
-
             $query = ltrim($query . '/' . $key, '/');
             $item  = $collection->get($query) ?? null;
 
@@ -35,7 +33,6 @@ class PagesFinder extends Finder
             }
 
             $collection = $item->children();
-
         }
 
         return $item;
@@ -45,5 +42,4 @@ class PagesFinder extends Finder
     {
         return $this->findById($key);
     }
-
 }

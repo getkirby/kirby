@@ -6,7 +6,6 @@ use Dotenv\Dotenv;
 
 class Config
 {
-
     public static function for(App $app): array
     {
         // load env settings
@@ -39,5 +38,4 @@ class Config
 
         return true;
     }
-
 }

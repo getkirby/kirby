@@ -11,7 +11,6 @@ use Kirby\Exception\LogicException;
 
 class FileStore extends FileStoreDefault
 {
-
     protected $root;
 
     public function asset()
@@ -154,5 +153,4 @@ class FileStore extends FileStoreDefault
 
         return $file;
     }
-
 }

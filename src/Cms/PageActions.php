@@ -154,7 +154,7 @@ trait PageActions
         $data['title'] = $content->get('title')->value();
 
         // Go through all fields of new template
-        foreach($newFields as $newField) {
+        foreach ($newFields as $newField) {
             $name     = $newField->name();
             $oldField = $oldFields->get($name);
 
@@ -171,18 +171,17 @@ trait PageActions
                     $replaced[$name] = $oldFields->get($name)->label();
                 }
 
-            // Field does not exist in old template,
+                // Field does not exist in old template,
             // add with empty or preserved value
             } else {
                 $preserved    = $content->get($name);
                 $data[$name]  = $preserved ? $preserved->value(): null;
                 $added[$name] = $newField->label();
             }
-
         }
 
         // Go through all values to preserve them
-        foreach($content->fields() as $field) {
+        foreach ($content->fields() as $field) {
             $name     = $field->key();
             $newField = $newFields->get($name);
 
@@ -422,5 +421,4 @@ trait PageActions
 
         return true;
     }
-
 }

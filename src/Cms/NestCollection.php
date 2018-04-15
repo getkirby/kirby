@@ -22,5 +22,4 @@ class NestCollection extends BaseCollection
             return $object->toArray();
         });
     }
-
 }

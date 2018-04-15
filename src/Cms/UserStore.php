@@ -9,7 +9,6 @@ use Kirby\Exception\LogicException;
 
 class UserStore extends UserStoreDefault
 {
-
     protected $base;
     protected $data;
 
@@ -229,5 +228,4 @@ class UserStore extends UserStoreDefault
     {
         return $this->model();
     }
-
 }

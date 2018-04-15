@@ -170,5 +170,4 @@ class MimeType
     {
         return $this->name;
     }
-
 }

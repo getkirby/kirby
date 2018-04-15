@@ -63,7 +63,7 @@ class EmailFieldTest extends TextFieldTest
 
         $this->assertValueIsInvalid([
             'value' => 'mail[at]getkirby[dot]com'
-        ], 'email');
+        ], 'error.form.email.invalid');
     }
 
 }

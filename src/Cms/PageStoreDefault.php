@@ -6,7 +6,6 @@ use Kirby\Exception\LogicException;
 
 class PageStoreDefault extends Store
 {
-
     const PAGE_STORE_CLASS = PageStoreDefault::class;
     const FILE_STORE_CLASS = FileStoreDefault::class;
 
@@ -143,5 +142,4 @@ class PageStoreDefault extends Store
             'content' => $this->page()->content()->update($strings)->toArray()
         ]);
     }
-
 }

@@ -2,16 +2,13 @@
 
 namespace Kirby\Form\Mixins;
 
-use Exception;
-use Throwable;
 use Kirby\Data\Handler\Yaml;
-use Kirby\Form\Exceptions\DisabledFieldException;
-use Kirby\Form\Exceptions\ValidationException;
 use Kirby\Util\Str;
+
+use Exception;
 
 trait Value
 {
-
     protected $default;
     protected $empty;
     protected $error;
@@ -49,7 +46,7 @@ trait Value
                 'label'   => method_exists($this, 'label') ? $this->label() : ucfirst($this->name()),
                 'message' => $e->getMessage(),
                 'type'    => 'field',
-                'cause'   => $e->getType()
+                'cause'   => $e->getKey()
             ];
         }
     }
@@ -174,5 +171,4 @@ trait Value
     {
         return (string)$value;
     }
-
 }

@@ -3,11 +3,11 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
-use Kirby\Form\Exceptions\ValidationException;
+
+use Kirby\Exception\NotFoundException;
 
 class UserField extends Field
 {
-
     use Mixins\Help;
     use Mixins\Icon;
     use Mixins\Label;
@@ -40,7 +40,6 @@ class UserField extends Field
 
     public function options(): array
     {
-
         $options = [];
 
         foreach (App::instance()->users() as $user) {
@@ -66,11 +65,13 @@ class UserField extends Field
     {
         if ($value !== null) {
             if (App::instance()->user($value) === null) {
-                throw new ValidationException('The user cannot be found');
+                throw new NotFoundException([
+                    'key'  => 'user.notFound',
+                    'data' => ['name' => $value]
+                ]);
             }
         }
 
         return true;
     }
-
 }

@@ -6,5 +6,4 @@ use Kirby\Image\Image;
 
 class Upload extends Image
 {
-
 }

@@ -39,7 +39,6 @@ class Structure extends Collection
      */
     public function __set(string $id, $object)
     {
-
         if (is_array($object)) {
             $object = new StructureObject([
                 'parent'  => $this->parent,
@@ -57,5 +56,4 @@ class Structure extends Collection
 
         return parent::__set($object->id(), $object);
     }
-
 }

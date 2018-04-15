@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class TextareaField extends Field
 {
-
     use Mixins\Counter;
     use Mixins\Help;
     use Mixins\Icon;
@@ -33,5 +32,4 @@ class TextareaField extends Field
 
         return true;
     }
-
 }

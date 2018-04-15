@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class AvatarRules
 {
-
     public static function create(Avatar $avatar, Upload $source): bool
     {
         static::validMime($avatar, $source->mime());
@@ -47,5 +46,4 @@ class AvatarRules
 
         return true;
     }
-
 }

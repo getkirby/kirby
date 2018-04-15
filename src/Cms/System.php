@@ -6,7 +6,6 @@ use Kirby\Util\Str;
 
 class System
 {
-
     protected $app;
 
     public function __construct($app)
@@ -77,5 +76,4 @@ class System
     {
         return $this->status();
     }
-
 }

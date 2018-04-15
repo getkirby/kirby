@@ -2,11 +2,8 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\StepException;
-
 trait Step
 {
-
     protected $step;
 
     protected function defaultStep()
@@ -29,5 +26,4 @@ trait Step
     {
         return true;
     }
-
 }

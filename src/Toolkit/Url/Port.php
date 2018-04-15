@@ -26,5 +26,4 @@ class Port
         $port = intval(parse_url($url, PHP_URL_PORT));
         return ($port >= 1 && $port <= 65535) ? $port : false;
     }
-
 }

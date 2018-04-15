@@ -65,5 +65,4 @@ class Tempura
     {
         return $this->render();
     }
-
 }

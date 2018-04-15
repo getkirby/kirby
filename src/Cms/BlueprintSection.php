@@ -212,5 +212,4 @@ class BlueprintSection extends BlueprintObject
     {
         return $this->id();
     }
-
 }

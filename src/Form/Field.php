@@ -2,14 +2,10 @@
 
 namespace Kirby\Form;
 
-use Exception;
-use ReflectionClass;
-use ReflectionMethod;
 use Kirby\Form\Exceptions\PropertyException;
 
 class Field extends Component
 {
-
     use Mixins\Model;
 
     public static $types = [];
@@ -143,5 +139,4 @@ class Field extends Component
     {
         return $this->width;
     }
-
 }

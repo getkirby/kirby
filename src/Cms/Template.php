@@ -8,7 +8,6 @@ use Kirby\Util\F;
 
 class Template extends View
 {
-
     protected static $type = 'template';
     protected static $globals = [];
     protected $name;
@@ -71,5 +70,4 @@ class Template extends View
     {
         return App::instance()->root(static::$type . 's');
     }
-
 }

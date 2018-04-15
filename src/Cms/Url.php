@@ -43,5 +43,4 @@ class Url extends BaseUrl
 
         return $kirby->url() . '/' . rtrim($path, '/');
     }
-
 }

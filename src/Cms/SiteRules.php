@@ -6,12 +6,10 @@ use Exception;
 
 class SiteRules
 {
-
     public static function changeTitle(Site $site, string $title): bool
     {
         if ($site->permissions()->update() !== true) {
             throw new PermissionException(['key' => 'site.update.permission']);
-
         }
 
         return true;
@@ -25,5 +23,4 @@ class SiteRules
 
         return true;
     }
-
 }

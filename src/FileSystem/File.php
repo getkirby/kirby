@@ -308,7 +308,6 @@ class File
      */
     public function niceSize(): string
     {
-
         $size = $this->size();
 
         // avoid errors for invalid sizes
@@ -384,7 +383,6 @@ class File
     public function move(string $newRoot, bool $overwrite = false)
     {
         if (file_exists($newRoot) === true) {
-
             if ($overwrite === false) {
                 throw new Exception('A file at the new location: "' . $newRoot . '" already exists.');
             }

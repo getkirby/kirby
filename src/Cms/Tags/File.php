@@ -6,7 +6,6 @@ use Kirby\Cms\Url;
 
 class File extends \Kirby\Text\Tags\File
 {
-
     use Dependencies;
 
     /**
@@ -32,5 +31,4 @@ class File extends \Kirby\Text\Tags\File
     {
         return $this->attr('text', $this->filename());
     }
-
 }

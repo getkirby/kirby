@@ -155,5 +155,4 @@ class Iterator implements \Iterator
     {
         return $this->data;
     }
-
 }

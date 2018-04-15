@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PageBlueprintOptions extends BlueprintOptions
 {
-
     protected $aliases = [
         'status'   => 'changeStatus',
         'template' => 'changeTemplate',
@@ -88,5 +87,4 @@ class PageBlueprintOptions extends BlueprintOptions
     {
         return $this->isAllowed('page', 'update');
     }
-
 }

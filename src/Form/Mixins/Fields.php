@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Fields
 {
-
     protected $fields;
 
     protected function defaultFields(): array
@@ -22,5 +21,4 @@ trait Fields
         $this->fields = $fields;
         return $this;
     }
-
 }

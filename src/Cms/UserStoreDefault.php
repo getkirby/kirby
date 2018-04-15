@@ -107,5 +107,4 @@ class UserStoreDefault extends Store
     {
         return $this->model();
     }
-
 }

@@ -2,12 +2,12 @@
 
 namespace Kirby\Form\Mixins;
 
-use Kirby\Form\Exceptions\MinLengthException;
 use Kirby\Toolkit\V;
+
+use Kirby\Exception\InvalidArgumentException;
 
 trait MinLength
 {
-
     protected $minLength;
 
     protected function defaultMinLength()
@@ -30,11 +30,12 @@ trait MinLength
     {
         if ($this->isEmpty() === false && $this->minLength() !== null) {
             if (V::minLength($value, $this->minLength()) === false) {
-                throw new MinLengthException();
+                throw new InvalidArgumentException([
+                    'key' => 'form.minLength.invalid'
+                ]);
             }
         }
 
         return true;
     }
-
 }

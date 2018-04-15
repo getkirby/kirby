@@ -6,7 +6,6 @@ use Kirby\Exception\NotFoundException;
 
 class Email
 {
-
     protected $options;
     protected $preset;
     protected $props;
@@ -20,7 +19,8 @@ class Email
         'attachments' => 'file'
     ];
 
-    public function __construct($preset = [], array $props = []) {
+    public function __construct($preset = [], array $props = [])
+    {
         $this->options = $options = App::instance()->option('email');
 
         // load presets from options
@@ -39,7 +39,8 @@ class Email
         $this->template();
     }
 
-    protected function preset($preset) {
+    protected function preset($preset)
+    {
         // only passed props, not preset name
         if (is_string($preset) !== true) {
             return $preset;
@@ -78,7 +79,6 @@ class Email
                 $template = new EmailTemplate($this->props['template'], $data);
                 $this->props['body'] = $template->render();
             }
-
         }
     }
 
@@ -114,7 +114,8 @@ class Email
         }
     }
 
-    protected function transformProp($prop, $model) {
+    protected function transformProp($prop, $model)
+    {
         if (isset($this->props[$prop]) === true) {
             $this->props[$prop] = $this->{'transform' . ucfirst($model)}($this->props[$prop]);
         }
@@ -124,5 +125,4 @@ class Email
     {
         return $this->transformModel($user, User::class, 'email');
     }
-
 }

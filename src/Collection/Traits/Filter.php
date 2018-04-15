@@ -9,7 +9,6 @@ use Kirby\Toolkit\V;
 
 trait Filter
 {
-
     protected $filters = [
         'between'   => 'between',
         '*='        => 'contains',
@@ -50,7 +49,6 @@ trait Filter
 
     public function filterBy(string $attribute, $operator, ...$filter): self
     {
-
         if (count(func_get_args()) === 2) {
             $filter   = [$operator];
             $operator = '==';
@@ -86,5 +84,4 @@ trait Filter
         }
         return $collection;
     }
-
 }

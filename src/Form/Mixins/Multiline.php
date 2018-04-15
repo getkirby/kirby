@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Multiline
 {
-
     protected $multiline;
 
     protected function defaultMultiline(): bool
@@ -22,5 +21,4 @@ trait Multiline
     {
         return $this->multiline;
     }
-
 }

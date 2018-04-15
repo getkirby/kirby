@@ -211,5 +211,4 @@ class Acceptance
     {
         return $this->toString();
     }
-
 }

@@ -19,7 +19,6 @@ namespace Kirby\Cms;
  */
 class StructureObject extends Model
 {
-
     use HasContent;
     use HasSiblings;
 
@@ -139,5 +138,4 @@ class StructureObject extends Model
 
         return $array;
     }
-
 }

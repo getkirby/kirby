@@ -194,7 +194,6 @@ class Request
         $headers = [];
 
         foreach ($_SERVER as $key => $value) {
-
             if (substr($key, 0, 5) !== 'HTTP_' && substr($key, 0, 14) !== 'REDIRECT_HTTP_') {
                 continue;
             }
@@ -215,11 +214,8 @@ class Request
             $key = str_replace(' ', '-', $key);
 
             $headers[$key] = $value;
-
         }
 
         return $headers;
-
     }
-
 }

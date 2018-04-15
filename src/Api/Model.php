@@ -9,7 +9,6 @@ use Kirby\Util\Str;
 
 class Model
 {
-
     protected $api;
     protected $data;
     protected $fields;
@@ -61,7 +60,6 @@ class Model
 
     public function selection(): array
     {
-
         $select = $this->select;
 
         if ($select === null) {
@@ -70,8 +68,7 @@ class Model
 
         $selection = [];
 
-        foreach ($select as $key => $value)
-        {
+        foreach ($select as $key => $value) {
             if (is_int($key) === true) {
                 $selection[$value] = [
                     'view'   => null,
@@ -81,7 +78,6 @@ class Model
             }
 
             if (is_string($value) === true) {
-
                 if ($value === 'any') {
                     throw new Exception('Invalid sub view: "any"');
                 }
@@ -92,7 +88,6 @@ class Model
                 ];
 
                 continue;
-
             }
 
             if (is_array($value) === true) {
@@ -101,21 +96,17 @@ class Model
                     'select' => $value
                 ];
             }
-
         }
 
         return $selection;
-
     }
 
     public function toArray(): array
     {
-
         $select = $this->selection();
         $result = [];
 
         foreach ($this->fields as $key => $resolver) {
-
             if (array_key_exists($key, $select) === false || is_a($resolver, Closure::class) === false) {
                 continue;
             }
@@ -127,7 +118,6 @@ class Model
             }
 
             if (is_a($value, Collection::class) === true || is_a($value, Model::class) === true) {
-
                 $selection = $select[$key];
 
                 if ($subview = $selection['view']) {
@@ -181,5 +171,4 @@ class Model
 
         return $this->select($this->views[$name]);
     }
-
 }

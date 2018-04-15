@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class BlueprintConverter
 {
-
     public static function convertColumnsToTabs(array $data): array
     {
         if (isset($data['columns']) === false || isset($data['tabs']) === true) {
@@ -53,5 +52,4 @@ class BlueprintConverter
 
         return $data;
     }
-
 }

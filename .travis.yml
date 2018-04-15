@@ -26,9 +26,15 @@ before_script:
 
 script:
   - phpunit --coverage-clover build/logs/clover.xml
+  - phpenv config-rm xdebug.ini
+  - vendor/bin/php-cs-fixer fix src/ --verbose --diff --dry-run
 
 after_success:
   - travis_retry php coveralls.phar -v
+
+cache:
+  directories:
+    - $HOME/.php-cs-fixer
 
 matrix:
   fast_finish: true

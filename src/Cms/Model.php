@@ -105,5 +105,4 @@ abstract class Model extends Component
         $this->site = $site;
         return $this;
     }
-
 }

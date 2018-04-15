@@ -17,7 +17,6 @@ namespace Kirby\Http\Request;
  */
 class Files
 {
-
     use Data;
 
     /**

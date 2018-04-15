@@ -12,7 +12,6 @@ use Kirby\Exception\LogicException;
 
 class Resource extends Model
 {
-
     protected $path;
     protected $src;
     protected $type;
@@ -28,7 +27,8 @@ class Resource extends Model
         return dirname($this->root());
     }
 
-    public function extension() {
+    public function extension()
+    {
         return F::extension($this->src());
     }
 
@@ -92,7 +92,6 @@ class Resource extends Model
 
     public static function forPlugin(Plugin $plugin, string $path): self
     {
-
         $path = static::stripTimestamp($path);
 
         return new static([
@@ -107,7 +106,6 @@ class Resource extends Model
     public static function forClassAsset(string $className, string $file, array $props = [])
     {
         if (file_exists($file) === false) {
-
             $reflector = new ReflectionClass($className);
             $directory = dirname($reflector->getFileName());
             $file      = $directory . '/' . $file;
@@ -231,5 +229,4 @@ class Resource extends Model
     {
         return F::remove($this->root());
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class NumberField extends Field
 {
-
     use Mixins\Help;
     use Mixins\Icon;
     use Mixins\Label;
@@ -28,5 +27,4 @@ class NumberField extends Field
 
         return true;
     }
-
 }

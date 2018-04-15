@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 trait HasModel
 {
-
     protected $model;
 
     /**
@@ -28,5 +27,4 @@ trait HasModel
         $this->model = $model;
         return $this;
     }
-
 }

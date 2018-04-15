@@ -13,7 +13,6 @@ use Kirby\Util\Properties;
 
 class Api
 {
-
     use Properties;
 
     protected $authentication;
@@ -50,7 +49,6 @@ class Api
 
     public function call(string $path = null, string $method = 'GET', array $requestData = [])
     {
-
         $path = rtrim($path, '/');
 
         $this->setRequestMethod($method);
@@ -261,7 +259,6 @@ class Api
                     'code'      => 500
                 ];
             }
-
         }
 
         if ($result === null) {
@@ -298,7 +295,6 @@ class Api
 
     public function upload(Closure $callback, $single = false): array
     {
-
         $trials  = 0;
         $uploads = [];
         $errors  = [];
@@ -309,7 +305,6 @@ class Api
         }
 
         foreach ($files as $upload) {
-
             if (isset($upload['tmp_name']) === false && is_array($upload)) {
                 continue;
             }
@@ -317,7 +312,6 @@ class Api
             $trials++;
 
             try {
-
                 if ($upload['error'] !== 0) {
                     throw new Exception('Upload error');
                 }
@@ -329,7 +323,6 @@ class Api
                 }
 
                 $uploads[$upload['name']] = $data;
-
             } catch (Exception $e) {
                 $errors[$upload['name']] = $e->getMessage();
             }
@@ -337,12 +330,10 @@ class Api
             if ($single === true) {
                 break;
             }
-
         }
 
         // return a single upload response
         if ($trials === 1) {
-
             if (empty($errors) === false) {
                 return [
                     'status'  => 'error',
@@ -354,7 +345,6 @@ class Api
                 'status' => 'ok',
                 'data'   => current($uploads)
             ];
-
         }
 
         if (empty($errors) === false) {
@@ -368,7 +358,5 @@ class Api
             'status' => 'ok',
             'data'   => $uploads
         ];
-
     }
-
 }

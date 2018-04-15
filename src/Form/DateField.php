@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class DateField extends Field
 {
-
     use Mixins\Date;
     use Mixins\Help;
     use Mixins\Icon;
@@ -71,5 +70,4 @@ class DateField extends Field
     {
         return $this->dateToString($value);
     }
-
 }

@@ -10,7 +10,6 @@ use Kirby\Util\I18n;
 use Exception;
 use Kirby\Exception\NotFoundException;
 
-
 /**
  * The Blueprint class converts an array from a
  * blueprint file into an object with a Kirby-style
@@ -240,7 +239,6 @@ class Blueprint extends BlueprintObject
             'key'  => 'blueprint.notFound',
             'data' => ['name' => $name]
         ]);
-
     }
 
     /**
@@ -441,5 +439,4 @@ class Blueprint extends BlueprintObject
     {
         return $this->title;
     }
-
 }

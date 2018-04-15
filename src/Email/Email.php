@@ -19,7 +19,6 @@ use Exception;
 */
 class Email
 {
-
     use Properties;
 
     protected $attachments;
@@ -74,7 +73,8 @@ class Email
         return $this->from;
     }
 
-    public function isHtml() {
+    public function isHtml()
+    {
         return $this->body()->html() !== null;
     }
 
@@ -99,7 +99,7 @@ class Email
         }
 
         foreach ($email as $address) {
-            if(V::email($address) === false) {
+            if (V::email($address) === false) {
                 throw new Exception(sprintf('"%s" is not a valid email address', $address));
             }
         }
@@ -184,5 +184,4 @@ class Email
     {
         return $this->transport ?? $this->defaultTransport();
     }
-
 }

@@ -70,5 +70,4 @@ class Query
         }
         return http_build_query($query);
     }
-
 }

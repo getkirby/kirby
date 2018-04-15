@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class EmailField extends TextField
 {
-
     use Mixins\Email;
 
     protected function defaultAutocomplete()
@@ -40,5 +39,4 @@ class EmailField extends TextField
 
         return true;
     }
-
 }

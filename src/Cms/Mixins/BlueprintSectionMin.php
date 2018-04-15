@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait BlueprintSectionMin
 {
-
     protected $min;
 
     public function min()
@@ -39,6 +38,4 @@ trait BlueprintSectionMin
 
         return true;
     }
-
-
 }

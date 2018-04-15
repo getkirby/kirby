@@ -64,5 +64,4 @@ class Obj extends stdClass
     {
         return $this->toArray();
     }
-
 }

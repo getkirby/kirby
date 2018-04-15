@@ -99,7 +99,6 @@ class Collections
         $folder      = new Folder($app->root('collections'));
 
         foreach ($folder->files() as $file) {
-
             $collection = require $file;
 
             if (is_a($collection, Closure::class)) {
@@ -110,5 +109,4 @@ class Collections
 
         return new static($collections);
     }
-
 }

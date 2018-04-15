@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait BooleanValue
 {
-
     use Value;
 
     protected function valueFromInput($value)
@@ -16,5 +15,4 @@ trait BooleanValue
     {
         return $value === true ? 'true' : 'false';
     }
-
 }

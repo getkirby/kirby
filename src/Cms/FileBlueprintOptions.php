@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FileBlueprintOptions extends BlueprintOptions
 {
-
     protected $options = [
         'changeName' => null,
         'create'     => null,
@@ -42,5 +41,4 @@ class FileBlueprintOptions extends BlueprintOptions
     {
         return $this->isAllowed('file', 'update');
     }
-
 }

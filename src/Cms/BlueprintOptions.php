@@ -26,7 +26,6 @@ class BlueprintOptions
                 }
             }
         }
-
     }
 
     protected function isAllowed(string $category, string $action): bool
@@ -68,5 +67,4 @@ class BlueprintOptions
 
         return $result;
     }
-
 }

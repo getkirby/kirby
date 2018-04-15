@@ -20,5 +20,4 @@ trait HasErrors
 
         return $errors;
     }
-
 }

@@ -108,5 +108,4 @@ class Image extends Tag
     {
         return $this->value();
     }
-
 }

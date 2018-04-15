@@ -9,7 +9,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class Plugin extends Model
 {
-
     protected $extends;
     protected $info;
     protected $name;
@@ -102,5 +101,4 @@ class Plugin extends Model
     {
         return $this->propertiesToArray();
     }
-
 }

@@ -26,8 +26,8 @@ class Yaml extends Handler
      */
     public static function encode(array $data): string
     {
-        //                           $indent $wordwrap $no_opening_dashes
-        return Spyc::YAMLDump($data, false,  false,    true);
+        // $data, $indent, $wordwrap, $no_opening_dashes
+        return Spyc::YAMLDump($data, false, false, true);
     }
 
     /**

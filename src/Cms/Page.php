@@ -21,7 +21,6 @@ use Kirby\Exception\NotFoundException;
  */
 class Page extends Model
 {
-
     use PageActions;
     use HasChildren;
     use HasContent {
@@ -937,5 +936,4 @@ class Page extends Model
 
         return $this->site()->url() . '/' . $this->slug();
     }
-
 }

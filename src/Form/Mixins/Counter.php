@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Counter
 {
-
     protected $counter;
 
     public function counter(): bool
@@ -32,5 +31,4 @@ trait Counter
         $this->counter = $counter;
         return $this;
     }
-
 }

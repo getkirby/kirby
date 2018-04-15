@@ -123,5 +123,4 @@ class Pagination extends BasePagination
 
         return null;
     }
-
 }

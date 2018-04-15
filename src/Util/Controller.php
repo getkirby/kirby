@@ -8,7 +8,6 @@ use ReflectionFunction;
 
 class Controller
 {
-
     protected $function;
 
     public function __construct(Closure $function)
@@ -61,5 +60,4 @@ class Controller
 
         return new static($function);
     }
-
 }

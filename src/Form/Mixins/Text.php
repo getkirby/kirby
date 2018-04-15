@@ -6,7 +6,6 @@ use Kirby\Util\I18n;
 
 trait Text
 {
-
     protected $text;
 
     protected function defaultText(): string
@@ -24,5 +23,4 @@ trait Text
     {
         return markdown(kirbytext($this->text));
     }
-
 }

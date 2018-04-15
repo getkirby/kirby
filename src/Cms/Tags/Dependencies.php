@@ -123,5 +123,4 @@ trait Dependencies
 
         return App::instance()->site();
     }
-
 }

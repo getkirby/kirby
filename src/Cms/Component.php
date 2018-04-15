@@ -9,7 +9,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 abstract class Component
 {
-
     use Properties;
 
     /**
@@ -42,7 +41,6 @@ abstract class Component
         $array = [];
 
         foreach (static::$toArray as $propertyName) {
-
             $getterName    = $propertyName;
             $converterName = 'convert' . $propertyName . 'toArray';
 
@@ -52,7 +50,6 @@ abstract class Component
                 if (method_exists($this, $converterName)) {
                     $value = $this->$converterName();
                 } else {
-
                     $method = new ReflectionMethod($this, $getterName);
 
                     if ($method->isStatic() === true || $method->getNumberOfRequiredParameters() > 0) {
@@ -60,24 +57,20 @@ abstract class Component
                     }
 
                     $value = $this->$getterName();
-
                 }
 
                 // don't add object if it doesn't have its own toArray method
                 if (is_object($value) === false) {
                     $array[$propertyName] = $value;
                 }
-
             } catch (Exception $e) {
                 $array[$propertyName] = [
                     'error' => sprintf('%s in file %s on line %s', $e->getMessage(), $e->getFile(), $e->getLine())
                 ];
             }
-
         }
 
         ksort($array);
         return $array;
     }
-
 }

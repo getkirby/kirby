@@ -124,5 +124,4 @@ trait UserActions
     {
         return $this->commit('delete');
     }
-
 }

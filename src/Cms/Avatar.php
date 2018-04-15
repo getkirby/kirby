@@ -21,7 +21,6 @@ use Kirby\Exception\BadMethodCallException;
  */
 class Avatar extends Model
 {
-
     use AvatarActions;
 
     use HasStore;
@@ -184,5 +183,4 @@ class Avatar extends Model
     {
         return $this->user;
     }
-
 }

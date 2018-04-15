@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Exception;
 use Kirby\Cms\ContentField;
 use Kirby\Cms\Query;
 use Kirby\Cms\Tempura;
@@ -11,9 +10,11 @@ use Kirby\Util\Obj;
 use Kirby\Util\Properties;
 use Kirby\Util\Str;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+
 class OptionsQuery
 {
-
     use Properties;
 
     protected $aliases = [];
@@ -44,7 +45,7 @@ class OptionsQuery
 
         if (is_array($value) === true) {
             if (isset($value[$object]) === false) {
-                throw new Exception('Missing "' . $field . '" definition');
+                throw new NotFoundException('Missing "' . $field . '" definition');
             }
 
             $value = $value[$object];
@@ -66,7 +67,6 @@ class OptionsQuery
         $options = [];
 
         foreach ($result as $item) {
-
             $alias = $this->resolve($item);
             $data  = array_merge($data, [$alias => $item]);
 
@@ -117,7 +117,7 @@ class OptionsQuery
         }
 
         if (is_a($result, Collection::class) === false) {
-            throw new Exception('Invalid query result data');
+            throw new InvalidArgumentException('Invalid query result data');
         }
 
         return $result;
@@ -167,5 +167,4 @@ class OptionsQuery
     {
         return $this->value;
     }
-
 }

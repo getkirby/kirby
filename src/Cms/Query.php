@@ -57,7 +57,6 @@ class Query
         $data  = $this->data;
 
         while (count($parts)) {
-
             $part   = array_shift($parts);
             $info   = $this->info($part);
             $method = $info['method'];
@@ -66,11 +65,9 @@ class Query
             if (is_array($data)) {
                 $value = $data[$method] ?? null;
             } elseif (is_object($data)) {
-
                 if (method_exists($data, $method) || method_exists($data, '__call')) {
                     $value = $data->$method(...$info['args']);
                 }
-
             } elseif (is_scalar($data)) {
                 return $data;
             } else {
@@ -80,11 +77,9 @@ class Query
             if (is_array($value) || is_object($value)) {
                 $data = $value;
             }
-
         }
 
         return $value;
-
     }
 
     /**
@@ -103,7 +98,6 @@ class Query
         $parts = explode('.', $token);
 
         return $parts;
-
     }
 
     /**
@@ -115,12 +109,9 @@ class Query
      */
     protected function info(string $token): array
     {
-
         $args   = [];
         $method = preg_replace_callback('!\((.*?)\)!', function ($match) use (&$args) {
-
             $args = array_map(function ($arg) {
-
                 $arg = trim($arg);
                 $arg = str_replace('@@@', '.', $arg);
 
@@ -146,9 +137,7 @@ class Query
                 }
 
                 return $arg;
-
             }, str_getcsv($match[1], ','));
-
         }, $token);
 
         return [
@@ -156,5 +145,4 @@ class Query
             'args'   => $args
         ];
     }
-
 }

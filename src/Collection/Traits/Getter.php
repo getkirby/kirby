@@ -59,5 +59,4 @@ trait Getter
     {
         return $object->{$attribute}();
     }
-
 }

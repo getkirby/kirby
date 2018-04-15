@@ -14,7 +14,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 trait BlueprintSectionData
 {
-
     use BlueprintSectionMax;
     use BlueprintSectionMin;
 
@@ -73,7 +72,6 @@ trait BlueprintSectionData
 
     public function errors(): array
     {
-
         try {
             $this->validate();
             return [];
@@ -362,5 +360,4 @@ trait BlueprintSectionData
 
         return true;
     }
-
 }

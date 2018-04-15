@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class TextField extends Field
 {
-
     use Mixins\Autocomplete;
     use Mixins\Converter;
     use Mixins\Counter;
@@ -41,5 +40,4 @@ class TextField extends Field
     {
         return $this->convert(trim($input));
     }
-
 }

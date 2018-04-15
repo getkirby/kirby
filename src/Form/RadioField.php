@@ -4,7 +4,6 @@ namespace Kirby\Form;
 
 class RadioField extends Field
 {
-
     use Mixins\Label;
     use Mixins\Options;
     use Mixins\Required;
@@ -17,5 +16,4 @@ class RadioField extends Field
 
         return true;
     }
-
 }

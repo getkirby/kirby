@@ -9,7 +9,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class Extend
 {
-
     protected static function callbacks(string $type, array $callbacks): array
     {
         foreach ($callbacks as $name => $callback) {
@@ -45,7 +44,6 @@ class Extend
         $result = [];
 
         foreach ($fields as $name => $class) {
-
             if (is_string($name) === false) {
                 throw new InvalidArgumentException('Invalid field type');
             }
@@ -86,7 +84,6 @@ class Extend
         $result = [];
 
         foreach ($hooks as $name => $callbacks) {
-
             if (is_string($name) === false) {
                 throw new InvalidArgumentException('Invalid hook name');
             }
@@ -104,7 +101,6 @@ class Extend
 
                 $result[$name][] = $callback;
             }
-
         }
 
         return $result;
@@ -201,5 +197,4 @@ class Extend
     {
         return static::strings('template', $templates);
     }
-
 }

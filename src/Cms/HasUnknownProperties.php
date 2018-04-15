@@ -104,5 +104,4 @@ trait HasUnknownProperties
 
         return $array;
     }
-
 }

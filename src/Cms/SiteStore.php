@@ -6,7 +6,6 @@ use Kirby\Util\Dir;
 
 class SiteStore extends SiteStoreDefault
 {
-
     const PAGE_STORE_CLASS = PageStore::class;
     const FILE_STORE_CLASS = FileStore::class;
 
@@ -123,5 +122,4 @@ class SiteStore extends SiteStoreDefault
 
         return $site;
     }
-
 }

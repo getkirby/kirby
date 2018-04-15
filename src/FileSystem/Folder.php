@@ -250,7 +250,6 @@ class Folder
      */
     public function delete(): bool
     {
-
         if ($this->exists() === false) {
             return true;
         }
@@ -271,11 +270,9 @@ class Folder
                 $file = new File($root);
                 $file->delete();
             }
-
         }
 
         return rmdir($this->root);
-
     }
 
     /**

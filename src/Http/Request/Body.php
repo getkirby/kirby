@@ -16,7 +16,6 @@ namespace Kirby\Http\Request;
  */
 class Body
 {
-
     use Data;
 
     /**

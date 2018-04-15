@@ -2,12 +2,8 @@
 
 namespace Kirby\Form;
 
-use Exception;
-use Kirby\Form\Exceptions\PropertyException;
-
 class Form extends Component
 {
-
     use Mixins\Model;
 
     protected $errors;
@@ -62,7 +58,7 @@ class Form extends Component
 
         foreach ($this->fields as $name => $field) {
             $field['model']     = $model;
-            $field['name']      = $name              = $field['name'] ?? $name;
+            $field['name']      = $name = $field['name'] ?? $name;
             $field['value']     = $values[$lowerName = strtolower($name)] ?? null;
             $field['undefined'] = isset($values[$lowerName]) === false;
 
@@ -70,7 +66,6 @@ class Form extends Component
         }
 
         return $this->fields = new Fields($fields);
-
     }
 
     public function stringValues(): array
@@ -127,7 +122,5 @@ class Form extends Component
         unset($array['model']);
 
         return $array;
-
     }
-
 }

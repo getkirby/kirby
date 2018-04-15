@@ -22,7 +22,7 @@ trait MaxLength
             $this->assertValueIsInvalid([
                 'maxLength' => Str::length($testValue) - 1,
                 'value'     => $testValue
-            ], 'maxLength');
+            ], 'error.form.maxLength.invalid');
         }
 
     }

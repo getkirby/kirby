@@ -4,7 +4,6 @@ namespace Kirby\Form\Mixins;
 
 trait Size
 {
-
     protected $size;
 
     protected function setSize(string $size = null)
@@ -17,5 +16,4 @@ trait Size
     {
         return $this->size;
     }
-
 }

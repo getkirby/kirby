@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class SiteBlueprintOptions extends BlueprintOptions
 {
-
     protected $options = [
         'update' => null,
     ];
@@ -18,5 +17,4 @@ class SiteBlueprintOptions extends BlueprintOptions
     {
         return $this->isAllowed('site', 'update');
     }
-
 }

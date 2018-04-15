@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class Permissions
 {
-
     protected $actions = [
         'access' => [
             'panel' => true,
@@ -111,7 +110,6 @@ class Permissions
     protected function setCategories(array $settings)
     {
         foreach ($settings as $categoryName => $categoryActions) {
-
             if (is_bool($categoryActions) === true) {
                 $this->setCategory($categoryName, $categoryActions);
             }
@@ -121,7 +119,6 @@ class Permissions
                     $this->setAction($categoryName, $actionName, $actionSetting);
                 }
             }
-
         }
 
         return $this;
@@ -144,5 +141,4 @@ class Permissions
     {
         return $this->actions;
     }
-
 }

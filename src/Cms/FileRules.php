@@ -10,10 +10,8 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 
-
 class FileRules
 {
-
     public static function changeName(File $file, string $name): bool
     {
         if ($file->permissions()->changeName() !== true) {
@@ -118,7 +116,7 @@ class FileRules
             ]);
         }
 
-        if(Str::contains($extension, 'php')) {
+        if (Str::contains($extension, 'php')) {
             throw new InvalidArgumentException([
                 'key'  => 'file.forbidden',
                 'data' => ['type' => 'PHP']
@@ -126,7 +124,6 @@ class FileRules
         }
 
         return true;
-
     }
 
     public static function validFilename(File $file, string $filename)
@@ -143,7 +140,7 @@ class FileRules
         }
 
         // Block htaccess files
-        if(Str::startsWith($filename, '.ht')) {
+        if (Str::startsWith($filename, '.ht')) {
             throw new InvalidArgumentException([
                 'key'  => 'file.forbidden',
                 'data' => ['type' => 'Apache config']
@@ -151,7 +148,7 @@ class FileRules
         }
 
         // Block invisible files
-        if(Str::startsWith($filename, '.')) {
+        if (Str::startsWith($filename, '.')) {
             throw new InvalidArgumentException([
                 'key'  => 'file.forbidden',
                 'data' => ['type' => 'invisible']
@@ -159,7 +156,6 @@ class FileRules
         }
 
         return true;
-
     }
 
     public static function validMime(File $file, string $mime = null)
@@ -190,7 +186,5 @@ class FileRules
         }
 
         return true;
-
     }
-
 }

@@ -63,7 +63,7 @@ class UrlFieldTest extends TextFieldTest
 
         $this->assertValueIsInvalid([
             'value' => 'getkirby.com'
-        ], 'url');
+        ], 'error.form.url.invalid');
     }
 
 }

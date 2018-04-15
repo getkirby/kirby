@@ -50,5 +50,4 @@ trait Converter
     {
         return $this->toString();
     }
-
 }

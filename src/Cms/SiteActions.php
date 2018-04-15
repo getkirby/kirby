@@ -87,5 +87,4 @@ trait SiteActions
 
         return $this;
     }
-
 }
