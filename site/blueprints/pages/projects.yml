@@ -7,14 +7,14 @@ sections:
   drafts:
     extends: sections/projects
     headline:
-      en_US: Project drafts
-      de_DE: Projekt Entwürfe
+      en: Project drafts
+      de: Projekt Entwürfe
     layout: list
     status: draft
 
   published:
     extends: sections/projects
     headline:
-      en_US: Published projects
-      de_DE: Veröffentlichte Projekte
+      en: Published projects
+      de: Veröffentlichte Projekte
     status: listed
