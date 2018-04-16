@@ -230,6 +230,16 @@ class Site extends Model
     }
 
     /**
+     * Returns the root to the media folder for the site
+     *
+     * @return string
+     */
+    public function mediaRoot(): string
+    {
+        return $this->kirby()->root('media') . '/site';
+    }
+
+    /**
      * The site's base url for any files
      *
      * @return string

@@ -568,6 +568,16 @@ class Page extends Model
     }
 
     /**
+     * Returns the root to the media folder for the page
+     *
+     * @return string
+     */
+    public function mediaRoot(): string
+    {
+        return $this->kirby()->root('media') . '/pages/' . $this->id();
+    }
+
+    /**
      * The page's base url for any files
      *
      * @return string

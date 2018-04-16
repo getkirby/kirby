@@ -332,13 +332,23 @@ class User extends Model
     }
 
     /**
+     * Returns the root to the media folder for the user
+     *
+     * @return string
+     */
+    public function mediaRoot(): string
+    {
+        return $this->kirby()->root('media') . '/users/' . $this->id();
+    }
+
+    /**
      * Returns the media url for the user object
      *
      * @return string
      */
     public function mediaUrl(): string
     {
-        return $this->kirby()->media()->url($this);
+        return $this->kirby()->root('media') . '/users/' . $this->id();
     }
 
     /**

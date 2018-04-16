@@ -197,6 +197,26 @@ class File extends Model
     }
 
     /**
+     * Returns the absolute path to the file in the public media folder
+     *
+     * @return string
+     */
+    public function mediaRoot(): string
+    {
+        return $this->parent()->mediaRoot() . '/' . $this->filename();
+    }
+
+    /**
+     * Returns the absolute Url to the file in the public media folder
+     *
+     * @return string
+     */
+    public function mediaUrl(): string
+    {
+        return $this->parent()->mediaUrl() . '/' . $this->filename();
+    }
+
+    /**
      * Alias for the old way of fetching File
      * content. Nowadays `File::content()` should
      * be used instead.
@@ -340,6 +360,6 @@ class File extends Model
      */
     public function url()
     {
-        return $this->url ?? $this->url = $this->parent()->mediaUrl() . '/' . $this->filename();
+        return $this->url ?? $this->url = $this->mediaUrl();
     }
 }
