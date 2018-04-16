@@ -173,11 +173,17 @@ class BlueprintFilesSection extends BlueprintSection
             ]);
         }
 
-        return $this->parent()->createFile([
+        $file = $this->parent()->createFile([
             'source'   => $data['source'],
             'template' => $this->template(),
             'filename' => $this->filename($data['source'], $data['filename'])
         ]);
+
+        $file->resize(300, 300);
+        $file->crop(100);
+
+        return $file;
+
     }
 
     public function routes(): array
