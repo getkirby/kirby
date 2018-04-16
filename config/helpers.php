@@ -22,9 +22,9 @@ function get($key, $default = null)
     return App::instance()->request()->query()->get($key, $default);
 }
 
-function go($url)
+function go($url, int $code = 301)
 {
-    die(new Redirect(url($url)));
+    die(new Redirect(url($url), $code));
 }
 
 function js($src)
