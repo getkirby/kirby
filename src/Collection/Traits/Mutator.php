@@ -50,7 +50,7 @@ trait Mutator
      */
     public function __set(string $key, $value)
     {
-        $this->data[$key] = $value;
+        $this->data[strtolower($key)] = $value;
         return $this;
     }
 

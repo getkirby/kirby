@@ -17,8 +17,7 @@ trait Getter
             return $this->data[$key];
         }
 
-        $lowerkeys = array_change_key_case($this->data, CASE_LOWER);
-        return $lowerkeys[strtolower($key)] ?? null;
+        return $this->data[strtolower($key)] ?? null;
     }
 
     /**
