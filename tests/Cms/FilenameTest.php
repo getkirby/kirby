@@ -7,7 +7,7 @@ class FilenameTest extends TestCase
 
     public function testAttributesToArray()
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'width'     => 300,
             'height'    => 200,
             'crop'      => 'top left',
@@ -31,7 +31,7 @@ class FilenameTest extends TestCase
     {
         return [
             [
-                '300x200-crop-top-left-blur10-bw-q90',
+                '-300x200-crop-top-left-blur10-bw-q90',
                 [
                     'width'     => 300,
                     'height'    => 200,
@@ -42,20 +42,20 @@ class FilenameTest extends TestCase
                 ]
             ],
             [
-                '300x200',
+                '-300x200',
                 [
                     'width'  => 300,
                     'height' => 200,
                 ]
             ],
             [
-                'x200',
+                '-x200',
                 [
                     'height' => 200,
                 ]
             ],
             [
-                'crop',
+                '',
                 [
                     'crop' => 'center',
                 ]
@@ -68,9 +68,9 @@ class FilenameTest extends TestCase
      */
     public function testAttributesToString($expected, $options)
     {
-        $filename = new Filename('/test/some-file.jpg', $options);
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', $options);
 
-        $this->assertEquals($expected, $filename->attributesToString());
+        $this->assertEquals($expected, $filename->attributesToString('-'));
     }
 
     public function blurOptionProvider()
@@ -89,7 +89,7 @@ class FilenameTest extends TestCase
      */
     public function testBlur($value, $expected)
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'blur' => $value
         ]);
 
@@ -116,7 +116,7 @@ class FilenameTest extends TestCase
      */
     public function testCrop($anchor, $expected)
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'crop' => $anchor
         ]);
 
@@ -125,13 +125,13 @@ class FilenameTest extends TestCase
 
     public function testEmptyCrop()
     {
-        $filename = new Filename('/test/some-file.jpg');
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertFalse($filename->crop());
     }
 
     public function testDisabledCrop()
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'crop' => false
         ]);
 
@@ -140,7 +140,7 @@ class FilenameTest extends TestCase
 
     public function testInvalidCrop()
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'crop' => 'something'
         ]);
 
@@ -149,7 +149,7 @@ class FilenameTest extends TestCase
 
     public function testDimensions()
     {
-        $filename = new Filename('/test/some-file.jpg', $dimensions = [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', $dimensions = [
             'width'  => 300,
             'height' => 200
         ]);
@@ -159,14 +159,14 @@ class FilenameTest extends TestCase
 
     public function testEmptyDimensions()
     {
-        $filename = new Filename('/test/some-file.jpg');
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
 
         $this->assertEquals([], $filename->dimensions());
     }
 
     public function testDimensionsWithoutWidth()
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'height' => 300
         ]);
 
@@ -178,7 +178,7 @@ class FilenameTest extends TestCase
 
     public function testDimensionsWithoutHeight()
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'width' => 300
         ]);
 
@@ -190,19 +190,19 @@ class FilenameTest extends TestCase
 
     public function testExtension()
     {
-        $filename = new Filename('/test/some-file.jpg');
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertEquals('jpg', $filename->extension());
     }
 
     public function testUppercaseExtension()
     {
-        $filename = new Filename('/test/some-file.JPG');
+        $filename = new Filename('/test/some-file.JPG', '{{ name }}.{{ extension }}');
         $this->assertEquals('jpg', $filename->extension());
     }
 
     public function testJpegExtension()
     {
-        $filename = new Filename('/test/some-file.jpeg');
+        $filename = new Filename('/test/some-file.jpeg', '{{ name }}.{{ extension }}');
         $this->assertEquals('jpg', $filename->extension());
     }
 
@@ -223,7 +223,7 @@ class FilenameTest extends TestCase
      */
     public function testGrayscale($prop, $value, $expected)
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             $prop => $value
         ]);
 
@@ -232,13 +232,13 @@ class FilenameTest extends TestCase
 
     public function testName()
     {
-        $filename = new Filename('/var/www/some-file.jpg');
+        $filename = new Filename('/var/www/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertEquals('some-file', $filename->name());
     }
 
     public function testNameSanitization()
     {
-        $filename = new Filename('/var/www/söme file.jpg');
+        $filename = new Filename('/var/www/söme file.jpg', '{{ name }}.{{ extension }}');
         $this->assertEquals('some-file', $filename->name());
     }
 
@@ -258,7 +258,7 @@ class FilenameTest extends TestCase
      */
     public function testQuality($value, $expected)
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', 'some-file.jpg', [
             'quality' => $value
         ]);
 
@@ -270,15 +270,15 @@ class FilenameTest extends TestCase
      */
     public function testToString($expected, $attributes)
     {
-        $filename = new Filename('/test/some-file.jpg', $attributes);
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', $attributes);
 
-        $this->assertEquals('some-file-' . $expected . '.jpg', $filename->toString());
-        $this->assertEquals('some-file-' . $expected . '.jpg', (string)$filename);
+        $this->assertEquals('some-file' . $expected . '.jpg', $filename->toString());
+        $this->assertEquals('some-file' . $expected . '.jpg', (string)$filename);
     }
 
     public function testToStringWithFalsyAttributes()
     {
-        $filename = new Filename('/test/some-file.jpg', [
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', [
             'width'     => false,
             'height'    => false,
             'crop'      => false,
@@ -293,7 +293,7 @@ class FilenameTest extends TestCase
 
     public function testToStringWithoutAttributes()
     {
-        $filename = new Filename('/test/some-file.jpg');
+        $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertEquals('some-file.jpg', $filename->toString());
         $this->assertEquals('some-file.jpg', (string)$filename);
     }

@@ -315,7 +315,7 @@ class Filename
     {
         $tempura = new Tempura($this->template, [
             'name'       => $this->name(),
-            'attributes' => $this->attributesToString(),
+            'attributes' => $this->attributesToString('-'),
             'extension'  => $this->extension()
         ]);
 

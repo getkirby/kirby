@@ -150,7 +150,7 @@ trait FileActions
 
         $parent = $this->parent();
         $source = $this->root();
-        $root   = $parent->mediaRoot() . '/{{ name }}-{{ attributes }}.{{ extension }}';
+        $root   = $parent->mediaRoot() . '/{{ name }}{{ attributes }}.{{ extension }}';
         $thumb  = $this->kirby()->thumb($source, $root, $options);
 
         return $this->clone([
