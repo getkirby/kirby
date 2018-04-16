@@ -2,7 +2,9 @@ title: Site
 
 tabs:
   pages:
-    label: Pages
+    label:
+      en: Pages
+      de: Seiten
     icon: page
     columns:
       - 1/1: projects, blog, about, kitchensink, misc
