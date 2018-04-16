@@ -43,8 +43,10 @@ class System
 
     public function server(): bool
     {
-        $software = strtolower($_SERVER['SERVER_SOFTWARE'] ?? null);
-        return (Str::contains($software, 'apache') || Str::contains($software, 'nginx'));
+        $servers  = ['apache', 'nginx', 'caddy'];
+        $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
+
+        return preg_match('!(' . implode('|', $servers) . ')!i', $software) > 0;
     }
 
     public function mbString(): bool
