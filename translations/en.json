@@ -31,7 +31,7 @@
 
     "installation.issues.headline": "The panel cannot be installed",
     "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
-    "installation.issues.server": "Kirby requires <code>Apache</code> or <code>Nginx</code>",
+    "installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
     "installation.issues.mbstring": "The <code>MB String</code> extension is required",
     "installation.issues.curl": "The <code>CURL</code> extension is required",
     "installation.issues.accounts": "The <code>/site/accounts</code> folder does not exist or is not writable",
