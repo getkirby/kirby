@@ -21,11 +21,6 @@ abstract class Store
         return $this->model()->kirby();
     }
 
-    public function media()
-    {
-        return $this->model()->kirby()->media();
-    }
-
     public function model()
     {
         return $this->model;

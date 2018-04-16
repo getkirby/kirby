@@ -79,7 +79,7 @@ class SiteStore extends SiteStoreDefault
         $base  = $this->base();
         $site  = $this->site();
         $root  = $base->root();
-        $url   = $site->kirby()->media()->url($site);
+        $url   = $site->mediaUrl();
         $files = [];
 
         foreach ($this->base()->files() as $filename => $props) {

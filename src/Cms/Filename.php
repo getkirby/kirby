@@ -10,7 +10,7 @@ use Kirby\Util\Str;
  * into human readable filenames.
  *
  * ```php
- * $filename = new Filename('some-file.jpg', [
+ * $filename = new Filename('some-file.jpg', '{{ name }}-{{ attributes }}.{{ extension }}', [
  *   'crop'    => 'top left',
  *   'width'   => 300,
  *   'height'  => 200
@@ -43,6 +43,13 @@ class Filename
     protected $extension;
 
     /**
+     * The source original filename
+     *
+     * @var string
+     */
+    protected $filename;
+
+    /**
      * The sanitized file name
      *
      * @var string
@@ -50,13 +57,23 @@ class Filename
     protected $name;
 
     /**
+     * The template for the final name
+     *
+     * @var string
+     */
+    protected $template;
+
+    /**
      * Creates a new Filename object
      *
      * @param string $filename
+     * @param string $template
      * @param array  $attributes
      */
-    public function __construct(string $filename, array $attributes = [])
+    public function __construct(string $filename, string $template, array $attributes = [])
     {
+        $this->filename   = $filename;
+        $this->template   = $template;
         $this->attributes = $attributes;
         $this->extension  = $this->sanitizeExtension(pathinfo($filename, PATHINFO_EXTENSION));
         $this->name       = $this->sanitizeName(pathinfo($filename, PATHINFO_FILENAME));
@@ -119,13 +136,14 @@ class Filename
                     $result[] = $value;
                     break;
                 case 'crop':
-                    $result[] = ($value === 'center') ? $key : $key . '-' . $value;
+                    $result[] = ($value === 'center') ? null : $key . '-' . $value;
                     break;
                 default:
                     $result[] = $key . $value;
             }
         }
 
+        $result     = array_filter($result);
         $attributes = implode('-', $result);
 
         if (empty($attributes) === true) {
@@ -295,6 +313,12 @@ class Filename
      */
     public function toString(): string
     {
-        return $this->name() . $this->attributesToString('-') . '.' . $this->extension();
+        $tempura = new Tempura($this->template, [
+            'name'       => $this->name(),
+            'attributes' => $this->attributesToString(),
+            'extension'  => $this->extension()
+        ]);
+
+        return $tempura->render();
     }
 }

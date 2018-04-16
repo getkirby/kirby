@@ -2,9 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
-
 use Kirby\Exception\BadMethodCallException;
+use Kirby\Image\Image;
 
 /**
  * The Avatar class handles user images.
@@ -127,6 +126,26 @@ class Avatar extends Model
     public function exists(): bool
     {
         return $this->store()->exists();
+    }
+
+    /**
+     * Returns the absolute path to the file in the public media folder
+     *
+     * @return string
+     */
+    public function mediaRoot(): string
+    {
+        return $this->user()->mediaRoot() . '/' . $this->filename();
+    }
+
+    /**
+     * Returns the absolute Url to the file in the public media folder
+     *
+     * @return string
+     */
+    public function mediaUrl(): string
+    {
+        return $this->user()->mediaUrl() . '/' . $this->filename();
     }
 
     /**

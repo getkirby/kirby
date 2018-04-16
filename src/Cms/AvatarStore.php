@@ -2,10 +2,10 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
+use Kirby\Exception\LogicException;
 use Kirby\Image\Image;
 use Kirby\Util\F;
-
-use Kirby\Exception\Exception;
 
 class AvatarStore extends AvatarStoreDefault
 {
@@ -17,7 +17,7 @@ class AvatarStore extends AvatarStoreDefault
     public function create(Upload $upload)
     {
         // delete all public versions
-        $this->media()->delete($this->user());
+        $this->avatar()->unpublish();
 
         // overwrite the original
         if (F::copy($upload->root(), $this->root(), true) !== true) {
@@ -37,7 +37,7 @@ class AvatarStore extends AvatarStoreDefault
         }
 
         // delete all public versions
-        $this->media()->delete($this->user());
+        $this->avatar()->unpublish();
 
         if (F::remove($this->root()) !== true) {
             throw new Exception([
@@ -66,10 +66,5 @@ class AvatarStore extends AvatarStoreDefault
     public function root(): string
     {
         return $this->kirby()->root('accounts') . '/' . $this->user()->email() . '/profile.jpg';
-    }
-
-    public function thumb(array $options = [])
-    {
-        return $this->media()->create($this->user(), $this->avatar(), $options);
     }
 }

@@ -7,6 +7,7 @@ use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\View;
 use Kirby\Util\Str;
+use Kirby\Util\F;
 
 return function ($kirby) {
 
@@ -38,9 +39,22 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/(:any)/(:all)',
-            'action'  => function (string $type, string $path) use ($kirby) {
-                return new Redirect($kirby->media()->resolve($kirby, $type, $path)->url(), 307);
+            'pattern' => [
+                'media/site/(:any)',
+                'media/pages/(:all)',
+            ],
+            'action'  => function ($path) use ($kirby) {
+                if ($file = $kirby->file($path)) {
+                    go($file->publish()->url(), 307);
+                }
+            }
+        ],
+        [
+            'pattern' => 'media/users/(:any)/profile.(jpg|png)',
+            'action'  => function ($id, $extension) use ($kirby) {
+                if ($user = $kirby->users()->findBy('id', $id)) {
+                    go($user->avatar()->publish()->url(), 307);
+                }
             }
         ],
         [

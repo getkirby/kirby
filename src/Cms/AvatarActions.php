@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Util\F;
 
 trait AvatarActions
 {
@@ -64,6 +65,18 @@ trait AvatarActions
     }
 
     /**
+     * Move the file to the public media folder
+     * if it's not already there.
+     *
+     * @return self
+     */
+    public function publish(): self
+    {
+        F::link($this->root(), $this->mediaRoot());
+        return $this;
+    }
+
+    /**
      * Replaces the avatar file with a new one.
      * This is handled by the store.
      *
@@ -85,6 +98,37 @@ trait AvatarActions
      */
     public function thumb(array $options = []): self
     {
-        return $this->store()->thumb($options);
+        if ($this->original() !== null) {
+            throw new LogicException('Resized images cannot be further processed');
+        }
+
+        $user   = $this->user();
+        $source = $this->root();
+        $root   = $user->mediaRoot() . '/profile.jpg';
+        $thumb  = $this->kirby()->thumb($source, $root, $options);
+
+        return $this->clone([
+            'root'     => $thumb,
+            'url'      => $user->mediaUrl() . '/' . basename($thumb),
+            'original' => $this
+        ]);
     }
+
+    /**
+     * Remove all public versions of this file
+     *
+     * @return self
+     */
+    public function unpublish(): self
+    {
+        // delete all thumbnails
+        foreach (F::similar($this->mediaRoot(), '-*') as $similar) {
+            F::remove($similar);
+        }
+
+        F::remove($this->mediaRoot());
+
+        return $this;
+    }
+
 }

@@ -61,7 +61,7 @@ class PageStore extends PageStoreDefault
 
         $this->moveDirectory($oldRoot, $newRoot);
 
-        $this->media()->delete($oldPage);
+        Dir::remove($oldPage->mediaRoot());
 
         return $newPage;
     }
@@ -168,13 +168,18 @@ class PageStore extends PageStoreDefault
 
     public function delete(): bool
     {
+        $page = $this->page();
+
+        // delete all public media files
+        Dir::remove($page->mediaRoot());
+
         // delete the content folder for this page
-        Dir::remove($this->page()->root());
+        Dir::remove($page->root());
 
         // if the page is a draft and the _drafts folder
         // is now empty. clean it up.
-        if ($this->page()->isDraft() === true) {
-            $draftsDir = dirname($this->page()->root());
+        if ($page->isDraft() === true) {
+            $draftsDir = dirname($page->root());
 
             if (Dir::isEmpty($draftsDir) === true) {
                 Dir::remove($draftsDir);
@@ -214,7 +219,7 @@ class PageStore extends PageStoreDefault
     {
         $base      = $this->base();
         $page      = $this->page();
-        $url       = $this->media()->url($page);
+        $url       = $page->mediaUrl();
         $extension = $base->extension();
         $files     = [];
 

@@ -10,14 +10,6 @@ return function ($app) {
                 return new Kirby\Api\Api(include __DIR__ . '/api.php');
             }
         ],
-        'Darkroom' => [
-            'singleton' => true,
-            'type'      => Kirby\Image\Darkroom::class,
-            'instance'  => function () use ($app) {
-                $options = (array)$app->option('thumbs');
-                return Kirby\Image\Darkroom::factory($options['driver'] ?? 'gd', $options);
-            }
-        ],
         'Email' => [
             'singleton' => true,
             'type'      => Kirby\Email\Email::class,
@@ -39,13 +31,6 @@ return function ($app) {
                 return new Kirby\Text\Markdown([
                     'breaks' => true
                 ]);
-            }
-        ],
-        'Media' => [
-            'singleton' => true,
-            'type'      => Kirby\Cms\Media::class,
-            'instance'  => function (array $props) {
-                return new Kirby\Cms\Media($props);
             }
         ],
         'Pagination' => [

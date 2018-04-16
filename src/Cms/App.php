@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Form\Field;
+use Kirby\Image\Darkroom;
 use Kirby\Toolkit\Url;
 use Kirby\Session\Session;
 use Kirby\Util\Controller;
@@ -172,6 +173,28 @@ class App extends Component
     }
 
     /**
+     * Finds any file in the content directory
+     *
+     * @param string $path
+     * @return File|null
+     */
+    public function file(string $path)
+    {
+        $id       = dirname($path);
+        $filename = basename($path);
+
+        if ($id === '.') {
+            return $this->site()->file($filename);
+        }
+
+        if ($page = $this->site()->find($id)) {
+            return $page->file($filename);
+        }
+
+        return null;
+    }
+
+    /**
      * The Hooks registry
      *
      * @return Hooks
@@ -186,17 +209,13 @@ class App extends Component
     }
 
     /**
-     * Returns the Media manager object
+     * Returns any page from the content folder
      *
-     * @return Media
+     * @return Page|null
      */
-    public function media(): Media
+    public function page(string $id)
     {
-        return $this->component('media', [
-            'darkroom' => $this->component('darkroom'),
-            'root'     => $this->root('media'),
-            'url'      => $this->url('media')
-        ]);
+        return $this->site()->find($id);
     }
 
     /**
@@ -235,8 +254,14 @@ class App extends Component
         try {
             return $this->component('response', $this->call($path, $method));
         } catch (Throwable $e) {
+
+            if ($this->option('debug')) {
+                throw $e;
+            }
+
             error_log($e);
             return $this->component('response', $e);
+
         }
     }
 
@@ -444,6 +469,30 @@ class App extends Component
     public function system(): System
     {
         return new System($this);
+    }
+
+    /**
+     * Thumbnail creator
+     *
+     * @param string $src
+     * @param string $dst
+     * @param array $options
+     * @return null
+     */
+    public function thumb(string $src, string $dst, array $attributes = [])
+    {
+        $options    = $this->options('thumbs', []);
+        $darkroom   = Darkroom::factory($options['driver'] ?? 'gd', $options);
+        $attributes = $darkroom->preprocess($src, $attributes);
+        $root       = (new Filename($src, $dst, $attributes))->toString();
+
+        // check if the thumbnail has to be regenerated
+        if (file_exists($root) !== true || filemtime($root) < filemtime($src)) {
+            F::copy($src, $root);
+            $darkroom->process($root, $attributes);
+        }
+
+        return $root;
     }
 
     /**

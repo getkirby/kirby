@@ -348,7 +348,7 @@ class User extends Model
      */
     public function mediaUrl(): string
     {
-        return $this->kirby()->root('media') . '/users/' . $this->id();
+        return $this->kirby()->url('media') . '/users/' . $this->id();
     }
 
     /**

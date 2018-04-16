@@ -116,11 +116,6 @@ class PageStoreDefault extends Store
         return null;
     }
 
-    public function media()
-    {
-        return $this->kirby()->media();
-    }
-
     public function page()
     {
         return $this->model;

@@ -18,7 +18,7 @@ class UserStore extends UserStoreDefault
     public function avatar()
     {
         return new Avatar([
-            'url'   => $this->media()->url($this->user()) . '/profile.jpg',
+            'url'   => $this->user()->mediaUrl() . '/profile.jpg',
             'user'  => $this->user(),
             'store' => AvatarStore::class
         ]);
@@ -45,7 +45,7 @@ class UserStore extends UserStoreDefault
             return $user;
         }
 
-        $this->media()->delete($this->user());
+        Dir::remove($this->user()->mediaRoot());
 
         $oldRoot = $this->root();
         $newRoot = dirname($this->root()) . '/' . $user->email();
@@ -155,7 +155,7 @@ class UserStore extends UserStoreDefault
         }
 
         // delete all public assets for this user
-        $this->media()->delete($this->user());
+        Dir::remove($this->user()->mediaRoot());
 
         // delete the user directory
         if (Dir::remove($this->root()) !== true) {

@@ -428,6 +428,14 @@ class F
      */
     public static function remove(string $file): bool
     {
+        if (strpos($file, '*') !== false) {
+            foreach (glob($file) as $f) {
+                static::remove($f);
+            }
+
+            return true;
+        }
+
         $file = realpath($file);
 
         if (file_exists($file) === false) {
@@ -457,6 +465,22 @@ class F
         $end       = empty($extension) === false ? '.' . Str::slug($extension) : '';
 
         return Str::slug($name, '-', 'a-z0-9@._-') . $end;
+    }
+
+    /**
+     * Tries to find similar or the same file by
+     * building a glob based on the path
+     *
+     * @param string $path
+     * @return array
+     */
+    public static function similar(string $path, string $pattern = '*'): array
+    {
+        $dir       = dirname($path);
+        $name      = static::name($path);
+        $extension = static::extension($path);
+        $glob      = $dir . '/' . $name . $pattern . '.' . $extension;
+        return glob($glob);
     }
 
     /**

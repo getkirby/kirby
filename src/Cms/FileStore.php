@@ -40,7 +40,7 @@ class FileStore extends FileStoreDefault
         }
 
         // remove all public versions
-        $this->media()->delete($oldFile->parent(), $oldFile);
+        $this->unpublish();
 
         // rename the main file
         F::move($oldRoot, $newRoot);
@@ -49,7 +49,7 @@ class FileStore extends FileStoreDefault
         F::move($oldStore, $newStore);
 
         // create a new public version
-        $this->media()->create($newFile->parent(), $newFile);
+        $newFile->publish();
 
         return $newFile;
     }
@@ -68,7 +68,7 @@ class FileStore extends FileStoreDefault
         $file = $this->file();
 
         // delete all public versions
-        $this->media()->delete($file->parent(), $file);
+        $file->unpublish();
 
         // overwrite the original
         if (F::copy($upload->root(), $this->root(), true) !== true) {
@@ -80,7 +80,7 @@ class FileStore extends FileStoreDefault
         }
 
         // create a new public file
-        $this->media()->create($file->parent(), $file);
+        $file->publish();
 
         // return a fresh clone
         return $file->clone();
@@ -88,8 +88,7 @@ class FileStore extends FileStoreDefault
 
     public function delete(): bool
     {
-        // delete all public versions
-        $this->media()->delete($this->file()->parent(), $this->file());
+        $this->file()->unpublish();
 
         F::remove($this->storeFile());
         F::remove($this->root());

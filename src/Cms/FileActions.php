@@ -2,10 +2,11 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
-use Kirby\Util\Str;
-
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Image\Image;
+use Kirby\Util\F;
+use Kirby\Util\Str;
 
 trait FileActions
 {
@@ -103,6 +104,18 @@ trait FileActions
     }
 
     /**
+     * Move the file to the public media folder
+     * if it's not already there.
+     *
+     * @return self
+     */
+    public function publish(): self
+    {
+        F::link($this->root(), $this->mediaRoot());
+        return $this;
+    }
+
+    /**
      * Replaces the file. The source must
      * be an absolute path to a file or a Url.
      * The store handles the replacement so it
@@ -131,16 +144,37 @@ trait FileActions
      */
     public function thumb(array $options = []): self
     {
-        $media = $this->kirby()->media();
-
-        try {
-            if ($this->page() === null) {
-                return $media->create($this->site(), $this, $options);
-            }
-
-            return $media->create($this->page(), $this, $options);
-        } catch (Exception $e) {
-            return $this;
+        if ($this->original() !== null) {
+            throw new LogicException('Resized images cannot be further processed');
         }
+
+        $parent = $this->parent();
+        $source = $this->root();
+        $root   = $parent->mediaRoot() . '/{{ name }}-{{ attributes }}.{{ extension }}';
+        $thumb  = $this->kirby()->thumb($source, $root, $options);
+
+        return $this->clone([
+            'root'     => $thumb,
+            'url'      => $parent->mediaUrl() . '/' . basename($thumb),
+            'original' => $this
+        ]);
     }
+
+    /**
+     * Remove all public versions of this file
+     *
+     * @return self
+     */
+    public function unpublish(): self
+    {
+        // delete all thumbnails
+        foreach (F::similar($this->mediaRoot(), '-*') as $similar) {
+            F::remove($similar);
+        }
+
+        F::remove($this->mediaRoot());
+
+        return $this;
+    }
+
 }

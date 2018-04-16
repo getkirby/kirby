@@ -13,7 +13,7 @@ class UserStoreDefault extends Store
     public function avatar()
     {
         return new Avatar([
-            'url'  => $this->media()->url($this->user()) . '/profile.jpg',
+            'url'  => $this->mediaUrl() . '/profile.jpg',
             'user' => $this->user(),
         ]);
     }
