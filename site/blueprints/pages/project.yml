@@ -34,6 +34,7 @@ sections:
 			text:
 				label: Text
 				type: textarea
+				size: medium
 
 	cover:
 		extends: sections/image
