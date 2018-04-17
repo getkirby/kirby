@@ -77,7 +77,6 @@
   "structure.delete.confirm": "Möchtest du diesen Eintrag wirklich löschen?",
 
   "user": "Benutzer",
-  "user.create": "Neuen Benutzer hinzufügen",
   "user.created": "Der Benutzer wurde erstellt",
   "user.name": "Name",
   "user.name.change": "Nutzer umbenennen",

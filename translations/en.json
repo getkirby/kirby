@@ -119,7 +119,8 @@
     "user.none": "No users",
 
     "error.access.login": "Invalid email or password",
-    "error.access.panel": "You are not allowed to login to the panel",
+    "error.access.panel": "You are not allowed to access the panel",
+    "error.access.view": "You are not allowed to access this view in the panel",
 
     "error.avatar.dimensions.invalid": "Please keep the width and height of the profile image below 3000 pixel",
     "error.avatar.mime.invalid": "User profile images must be JPEG or PNG files",
