@@ -80,6 +80,29 @@ class System
         return in_array(false, array_values($this->status()), true) === false;
     }
 
+    /**
+     * Loads the license file and returns
+     * the license information if available
+     *
+     * @return array|false
+     */
+    public function license()
+    {
+        $file = $this->app->root('config') . '/license.php';
+
+        if (file_exists($file) === false) {
+            return false;
+        }
+
+        $license = (array)require $file;
+
+        if (isset($license['code'], $license['type'], $license['issued']) === false) {
+            return false;
+        }
+
+        return $license;
+    }
+
     public function mbString(): bool
     {
         return extension_loaded('mbstring');
