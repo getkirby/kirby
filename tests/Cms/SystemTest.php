@@ -34,4 +34,47 @@ class SystemTest extends TestCase
         $this->assertEquals($expected, $server);
     }
 
+    public function serverNameProvider()
+    {
+        return [
+            ['localhost', true],
+            ['mydomain.local', true],
+            ['mydomain.test', true],
+            ['mydomain.dev', true],
+            ['mydomain.com', false],
+        ];
+    }
+
+    /**
+     * @dataProvider serverNameProvider
+     */
+    public function testIsLocalWithServerNames($name, $expected)
+    {
+        $_SERVER['SERVER_NAME'] = $name;
+
+        $system = new System(new App);
+        $this->assertEquals($expected, $system->isLocal());
+    }
+
+    public function serverAddressProvider()
+    {
+        return [
+            ['127.0.0.1', true],
+            ['::1', true],
+            ['0.0.0.0', true],
+            ['1.2.3.4', false],
+        ];
+    }
+
+    /**
+     * @dataProvider serverAddressProvider
+     */
+    public function testIsLocalWithServerAddresses($address, $expected)
+    {
+        $_SERVER['SERVER_ADDR'] = $address;
+
+        $system = new System(new App);
+        $this->assertEquals($expected, $system->isLocal());
+    }
+
 }

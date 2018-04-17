@@ -16,14 +16,63 @@ class System
     public function status(): array
     {
         return [
-            'php'       => $this->php(),
-            'server'    => $this->server(),
-            'mbstring'  => $this->mbstring(),
-            'curl'      => $this->curl(),
-            'media'     => $this->media(),
             'accounts'  => $this->accounts(),
             'content'   => $this->content(),
+            'curl'      => $this->curl(),
+            'isLocal'   => $this->isLocal(),
+            'mbstring'  => $this->mbstring(),
+            'media'     => $this->media(),
+            'php'       => $this->php(),
+            'server'    => $this->server(),
         ];
+    }
+
+    public function accounts(): bool
+    {
+        return is_writable($this->app->root('accounts'));
+    }
+
+    public function content(): bool
+    {
+        return is_writable($this->app->root('content'));
+    }
+
+    public function curl(): bool
+    {
+        return extension_loaded('curl');
+    }
+
+    public function isInstalled(): bool
+    {
+        return $this->app->users()->count() > 0;
+    }
+
+    public function isLocal(): bool
+    {
+        $server = $this->app->server();
+        $host   = $server->host();
+
+        if ($host === 'localhost') {
+            return true;
+        }
+
+        if (in_array($server->address(), ['::1', '127.0.0.1', '0.0.0.0']) === true) {
+            return true;
+        }
+
+        if (Str::endsWith($host, '.dev') === true) {
+            return true;
+        }
+
+        if (Str::endsWith($host, '.local') === true) {
+            return true;
+        }
+
+        if (Str::endsWith($host, '.test') === true) {
+            return true;
+        }
+
+        return false;
     }
 
     public function isOk(): bool
@@ -31,9 +80,14 @@ class System
         return in_array(false, array_values($this->status()), true) === false;
     }
 
-    public function isInstalled(): bool
+    public function mbString(): bool
     {
-        return $this->app->users()->count() > 0;
+        return extension_loaded('mbstring');
+    }
+
+    public function media(): bool
+    {
+        return is_writable($this->app->root('media'));
     }
 
     public function php(): bool
@@ -47,31 +101,6 @@ class System
         $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
 
         return preg_match('!(' . implode('|', $servers) . ')!i', $software) > 0;
-    }
-
-    public function mbString(): bool
-    {
-        return extension_loaded('mbstring');
-    }
-
-    public function curl(): bool
-    {
-        return extension_loaded('curl');
-    }
-
-    public function media(): bool
-    {
-        return is_writable($this->app->root('media'));
-    }
-
-    public function accounts(): bool
-    {
-        return is_writable($this->app->root('accounts'));
-    }
-
-    public function content(): bool
-    {
-        return is_writable($this->app->root('content'));
     }
 
     public function toArray(): array
