@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Data;
 
 class Translation extends Component
@@ -47,7 +48,12 @@ class Translation extends Component
 
     public static function load(string $code, string $root)
     {
-        return new Translation($code, Data::read($root));
+        try {
+            return new Translation($code, Data::read($root));
+        } catch (Exception $e) {
+            error_log(sprintf('The translation "%s" could not be loaded', $code));
+            return new Translation($code, []);
+        }
     }
 
     public function name(): string

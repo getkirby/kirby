@@ -20,7 +20,8 @@ class UrlsTest extends TestCase
      */
     public function testDefaulUrl($url, $method)
     {
-        $urls = new Urls();
+        $app  = new App();
+        $urls = $app->urls();
 
         $this->assertEquals($url, $urls->$method());
     }
@@ -40,10 +41,13 @@ class UrlsTest extends TestCase
      */
     public function testWithCustomBaseUrl($url, $method)
     {
-        $urls = new Urls([
-            'index' => 'https://getkirby.com'
+        $app = new App([
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ]
         ]);
 
+        $urls = $app->urls();
         $this->assertEquals($url, $urls->$method());
     }
 
@@ -62,14 +66,16 @@ class UrlsTest extends TestCase
      */
     public function testWithCustomUrl($url, $method)
     {
-
-        $urls = new Urls([
-            'index' => 'https://getkirby.com',
-            'media' => 'https://cdn.getkirby.com',
-            'panel' => 'https://getkirby.com/admin',
-            'api'   => 'https://getkirby.com/rest'
+        $app = new App([
+            'urls' => [
+                'index' => 'https://getkirby.com',
+                'media' => 'https://cdn.getkirby.com',
+                'panel' => 'https://getkirby.com/admin',
+                'api'   => 'https://getkirby.com/rest'
+            ]
         ]);
 
+        $urls = $app->urls();
         $this->assertEquals($url, $urls->$method());
     }
 

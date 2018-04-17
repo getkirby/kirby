@@ -2,47 +2,40 @@
 
 namespace Kirby\Cms;
 
-/**
- * The Ingredients class can be
- * used to define simple attributes
- * and their getters to put options/urls/roots
- * etc. into a nice object
- *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- */
-abstract class Ingredients
+use Closure;
+
+class Ingredients
 {
-    /**
-     * Sets all defined class properties
-     * which can also be found in the values array
-     *
-     * @param array $values
-     */
-    public function __construct(array $values = null)
+    protected $ingredients;
+
+    public function __construct(array $ingredients)
     {
-        if ($values !== null) {
-            foreach (get_object_vars($this) as $key => $value) {
-                $this->$key = $values[$key] ?? null;
-            }
-        }
+        $this->ingredients = $ingredients;
     }
 
-    /**
-     * Exports all defined class properties
-     *
-     * @return array
-     */
-    public function toArray(): array
+    public function __call(string $method, array $args = null)
     {
-        $array = [];
-        foreach (get_object_vars($this) as $key => $value) {
-            $array[$key] = $this->$key();
+        return $this->ingredients[$method] ?? null;
+    }
+
+    public function __get(string $key)
+    {
+        return $this->ingredients[$key] ?? null;
+    }
+
+    public static function bake(array $ingredients): self
+    {
+        foreach ($ingredients as $name => $ingredient) {
+            if (is_a($ingredient, Closure::class) === true) {
+                $ingredients[$name] = $ingredient($ingredients);
+            }
         }
 
-        ksort($array);
-        return $array;
+        return new static($ingredients);
+    }
+
+    public function toArray(): array
+    {
+        return $this->ingredients;
     }
 }

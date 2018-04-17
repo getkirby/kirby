@@ -254,14 +254,12 @@ class App extends Component
         try {
             return $this->component('response', $this->call($path, $method));
         } catch (Throwable $e) {
-
             if ($this->option('debug')) {
                 throw $e;
             }
 
             error_log($e);
             return $this->component('response', $e);
-
         }
     }
 
@@ -297,22 +295,17 @@ class App extends Component
      */
     public function root($type = 'index'): string
     {
-        return $this->roots()->$type();
+        return $this->roots->__get($type);
     }
 
     /**
      * Returns the directory structure
      *
-     * @return Roots
+     * @return Ingredients
      */
-    public function roots(): Roots
+    public function roots(): Ingredients
     {
-        if (is_a($this->roots, Roots::class) === true) {
-            return $this->roots;
-        }
-
-        // set the default roots
-        return $this->setRoots()->roots();
+        return $this->roots;
     }
 
     /**
@@ -411,7 +404,8 @@ class App extends Component
      */
     protected function setRoots(array $roots = null)
     {
-        $this->roots = new Roots($roots);
+        $roots = array_merge(require static::$root . '/config/roots.php', (array)$roots);
+        $this->roots = Ingredients::bake($roots);
         return $this;
     }
 
@@ -435,7 +429,8 @@ class App extends Component
      */
     protected function setUrls(array $urls = null)
     {
-        $this->urls = new Urls(array_merge(['index' => Url::index()], (array)$urls));
+        $urls = array_merge(require static::$root . '/config/urls.php', (array)$urls);
+        $this->urls = Ingredients::bake($urls);
         return $this;
     }
 
@@ -503,21 +498,16 @@ class App extends Component
      */
     public function url($type = 'index'): string
     {
-        return $this->urls()->$type();
+        return $this->urls->__get($type);
     }
 
     /**
      * Returns the url structure
      *
-     * @return Urls
+     * @return Ingredients
      */
-    public function urls(): Urls
+    public function urls(): Ingredients
     {
-        if (is_a($this->urls, Urls::class) === true) {
-            return $this->urls;
-        }
-
-        // set the default urls
-        return $this->setUrls()->urls();
+        return $this->urls;
     }
 }

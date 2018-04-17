@@ -32,7 +32,7 @@ class RootsTest extends TestCase
      */
     public function testDefaulRoot($root, $method)
     {
-        $roots = new Roots();
+        $roots = (new App)->roots();
 
         $this->assertEquals($root, $roots->$method());
     }
@@ -63,9 +63,13 @@ class RootsTest extends TestCase
      */
     public function testCustomIndexRoot($root, $method)
     {
-        $roots = new Roots([
-            'index' => '/var/www/getkirby.com'
+        $app = new App([
+            'roots' => [
+                'index' => '/var/www/getkirby.com'
+            ]
         ]);
+
+        $roots = $app->roots();
 
         $this->assertEquals($root, $roots->$method());
     }
@@ -96,14 +100,18 @@ class RootsTest extends TestCase
         $base   = '/var/www/getkirby.com';
         $public = $base . '/public';
 
-        $roots = new Roots([
-            'index'   => $public,
-            'media'   => $public . '/media',
-            'panel'   => $public . '/panel',
-            'kirby'   => $base . '/kirby',
-            'content' => $base . '/content',
-            'site'    => $base . '/site'
+        $app = new App([
+            'roots' => [
+                'index'   => $public,
+                'media'   => $public . '/media',
+                'panel'   => $public . '/panel',
+                'kirby'   => $base . '/kirby',
+                'content' => $base . '/content',
+                'site'    => $base . '/site'
+            ]
         ]);
+
+        $roots = $app->roots();
 
         $this->assertEquals($root, $roots->$method());
     }

@@ -50,7 +50,7 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/users/(:any)/profile.(jpg|png)',
+            'pattern' => 'media/users/(:any)/profile.jpg',
             'action'  => function ($id, $extension) use ($kirby) {
                 if ($user = $kirby->users()->findBy('id', $id)) {
                     go($user->avatar()->publish()->url(), 307);
