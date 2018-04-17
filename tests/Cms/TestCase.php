@@ -13,7 +13,7 @@ class TestCase extends BaseTestCase
 
     public function setUp()
     {
-        App::removePlugins();
+        App::destroy();
         Blueprint::$loaded = [];
 
         I18n::$locale      = null;
@@ -23,7 +23,7 @@ class TestCase extends BaseTestCase
 
     public function tearDown()
     {
-        App::removePlugins();
+        App::destroy();
         Blueprint::$loaded = [];
     }
 
@@ -98,7 +98,7 @@ class TestCase extends BaseTestCase
             };
         }
 
-        App::removePlugins();
+        App::destroy();
 
         $app = new App(array_merge([
             'hooks' => $hooks,

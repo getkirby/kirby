@@ -27,7 +27,7 @@ class PageActionsTest extends TestCase
 
     public function setUp()
     {
-        App::removePlugins();
+        App::destroy();
     }
 
     public function pageDummy()
@@ -185,6 +185,13 @@ class PageActionsTest extends TestCase
 
     public function testCreateFile()
     {
+        new App([
+            'users' => [
+                ['email' => 'admin@getkirby.com', 'role' => 'admin']
+            ],
+            'user' => 'admin@getkirby.com'
+        ]);
+
         $parent = $this->pageDummy();
         $file   = $parent->createFile([
             'source' => __DIR__ . '/fixtures/files/test.js'

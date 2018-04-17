@@ -85,7 +85,7 @@ class PluginTest extends TestCase
 
     public function testPrefixedOptions()
     {
-        App::removePlugins();
+        App::destroy();
 
         App::plugin([
             'name' => 'developer/plugin',
@@ -99,7 +99,7 @@ class PluginTest extends TestCase
         $app = new App;
         $this->assertEquals('bar', $app->option('developer.plugin.foo'));
 
-        App::removePlugins();
+        App::destroy();
     }
 
 }

@@ -115,6 +115,7 @@ class UserRulesTest extends TestCase
 
     public function testUpdate()
     {
+        $app  = $this->appWithAdmin();
         $user = new User(['email' => 'user@domain.com']);
         $this->assertTrue(UserRules::update($user, $input = [
             'zodiac' => 'lion'
@@ -127,6 +128,7 @@ class UserRulesTest extends TestCase
      */
     public function testUpdateWithEmail()
     {
+        $app  = $this->appWithAdmin();
         $user = new User(['email' => 'user@domain.com']);
         $this->assertTrue(UserRules::update($user, $input = [
             'email' => 'admin@domain.com'
@@ -139,6 +141,7 @@ class UserRulesTest extends TestCase
      */
     public function testUpdateWithPassword()
     {
+        $app  = $this->appWithAdmin();
         $user = new User(['email' => 'user@domain.com']);
         $this->assertTrue(UserRules::update($user, $input = [
             'password' => '12345678'
@@ -151,6 +154,7 @@ class UserRulesTest extends TestCase
      */
     public function testUpdateWithRole()
     {
+        $app  = $this->appWithAdmin();
         $user = new User(['email' => 'user@domain.com']);
         $this->assertTrue(UserRules::update($user, $input = [
             'role' => 'editor'
@@ -159,6 +163,7 @@ class UserRulesTest extends TestCase
 
     public function testDelete()
     {
+        $app  = $this->appWithAdmin();
         $user = new User(['email' => 'user@domain.com']);
         $this->assertTrue(UserRules::delete($user));
     }

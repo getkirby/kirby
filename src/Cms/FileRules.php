@@ -46,7 +46,7 @@ class FileRules
         }
 
         if ($file->permissions()->create() !== true) {
-            throw new LogicException('The file cannot be created');
+            throw new PermissionException('The file cannot be created');
         }
 
         static::validExtension($file, $file->extension());

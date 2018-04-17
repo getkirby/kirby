@@ -26,8 +26,7 @@ class App extends Component
     use AppTranslations;
     use AppUsers;
 
-    use HasSingleton;
-
+    protected static $instance;
     protected static $root;
 
     protected $collections;
@@ -162,6 +161,16 @@ class App extends Component
     }
 
     /**
+     * Destroy the instance singleton and
+     * purge other static props
+     */
+    public static function destroy()
+    {
+        static::$plugins  = [];
+        static::$instance = null;
+    }
+
+    /**
      * Returns the Email singleton
      *
      * @return Email
@@ -206,6 +215,21 @@ class App extends Component
         }
 
         return $this->hooks = new Hooks($this);
+    }
+
+    /**
+     * Returns the current App instance
+     *
+     * @param self $instance
+     * @return self
+     */
+    public static function instance(self $instance = null): self
+    {
+        if ($instance === null) {
+            return static::$instance ?? new static;
+        }
+
+        return static::$instance = $instance;
     }
 
     /**

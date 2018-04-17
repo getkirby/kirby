@@ -7,7 +7,7 @@ class SiteActionsTest extends TestCase
 
     public function setUp()
     {
-        App::removePlugins();
+        App::destroy();
     }
 
     public function testUpdate()

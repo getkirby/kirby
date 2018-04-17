@@ -210,15 +210,4 @@ trait AppPlugins
         return $loaded;
     }
 
-    /**
-     * Remove all registered plugins
-     * This is especially useful in
-     * testing scenarios
-     *
-     * @return void
-     */
-    public static function removePlugins()
-    {
-        static::$plugins = [];
-    }
 }
