@@ -1,8 +1,8 @@
 <?php
 
 use Kirby\Api\Api;
+use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
-use Kirby\Cms\Resources;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\View;
@@ -33,9 +33,17 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/plugins/(:any)/(:any)/(:all).(css|js|jpg|png|gif|svg)',
-            'action'  => function (string $provider, string $pluginName, string $path, string $extension) use ($kirby) {
-                return $kirby->plugin($provider . '/' . $pluginName)->resource($path . '.' . $extension)->link()->redirect();
+            'pattern' => 'media/plugins/index.(css|js)',
+            'action'  => function (string $extension) use ($kirby) {
+                return new Response(PluginAssets::index($extension), $extension);
+            }
+        ],
+        [
+            'pattern' => 'media/plugins/(:any)/(:any)/(:all).(css|gif|js|jpg|png|svg|webp)',
+            'action'  => function (string $provider, string $pluginName, string $filename, string $extension) use ($kirby) {
+                if ($url = PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension)) {
+                    go($url);
+                }
             }
         ],
         [

@@ -8,6 +8,32 @@ class Dir
 {
 
     /**
+     * Read the directory and all subdirectories
+     *
+     * @param string $dir
+     * @param array $ignore
+     * @return array
+     */
+    public static function index(string $dir, bool $recursive = false, array $ignore = null, string $path = null)
+    {
+        $result = [];
+        $dir    = realpath($dir);
+        $items  = static::read($dir);
+
+        foreach ($items as $item) {
+            $root     = $dir . '/' . $item;
+            $entry    = $path !== null ? $path . '/' . $item: $item;
+            $result[] = $entry;
+
+            if ($recursive === true && is_dir($root) === true) {
+                $result = array_merge($result, static::index($root, true, $ignore, $entry));
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Checks if the folder has any contents
      *
      * @return boolean

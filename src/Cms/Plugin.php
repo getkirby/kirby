@@ -6,6 +6,7 @@ use Kirby\Data\Data;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Util\F;
 
 class Plugin extends Model
 {
@@ -26,18 +27,6 @@ class Plugin extends Model
         $this->root    = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
 
         unset($this->extends['root']);
-    }
-
-    /**
-     * Returns the plugin css file if it exists
-     * otherwise it will return null
-     *
-     * @return string|null
-     */
-    public function css()
-    {
-        $css = $this->root() . '/index.css';
-        return file_exists($css) === true ? $css : null;
     }
 
     public function extends(): array
@@ -61,21 +50,19 @@ class Plugin extends Model
         return $this->info = $info;
     }
 
-    /**
-     * Returns the plugin js file if it exists
-     * otherwise it will return null
-     *
-     * @return string|null
-     */
-    public function js()
-    {
-        $js = $this->root() . '/index.js';
-        return file_exists($js) === true ? $js : null;
-    }
-
     public function manifest(): string
     {
         return $this->root() . '/composer.json';
+    }
+
+    public function mediaRoot(): string
+    {
+        return App::instance()->root('media') . '/plugins/' . $this->name();
+    }
+
+    public function mediaUrl(): string
+    {
+        return App::instance()->url('media') . '/plugins/' . $this->name();
     }
 
     public function name(): string
@@ -91,11 +78,6 @@ class Plugin extends Model
     public function prefix(): string
     {
         return str_replace('/', '.', $this->name());
-    }
-
-    public function resource(string $path)
-    {
-        return Resource::forPlugin($this, $path);
     }
 
     public function root(): string
