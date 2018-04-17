@@ -176,7 +176,6 @@ class PageRulesTest extends TestCase
      */
     public function testDeleteHomepage()
     {
-        // TODO: is there actually a check in the backend for this?
         $site = new Site();
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
