@@ -125,23 +125,17 @@ trait AppPlugins
     /**
      * Kirby plugin factory and getter
      *
-     * @param string|array $props If a string is passed it will be used as getter. Otherwise as factory.
+     * @param string $name
+     * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
      * @return Plugin|null
      */
-    public static function plugin($props)
+    public static function plugin(string $name, array $extends = null)
     {
-        if (is_string($props) === true) {
-            return static::$plugins[$props] ?? null;
+        if ($extends === null) {
+            return static::$plugins[$name] ?? null;
         }
 
-        if (is_array($props) === false) {
-            throw new InvalidArgumentException('Invalid plugin definition');
-        }
-
-        // automatic root detection
-        $props['root'] = $props['root'] ?? dirname(debug_backtrace()[0]['file']);
-
-        $plugin = new Plugin($props);
+        $plugin = new Plugin($name, $extends);
         $name   = $plugin->name();
 
         if (isset(static::$plugins[$name]) === true) {

@@ -50,12 +50,9 @@ class AppCachesTest extends TestCase
 
     public function testPluginDefaultCache()
     {
-        App::plugin([
-            'name' => 'developer/plugin',
-            'extends' => [
-                'options' => [
-                    'cache' => true
-                ]
+        App::plugin('developer/plugin', [
+            'options' => [
+                'cache' => true
             ]
         ]);
 
@@ -64,12 +61,9 @@ class AppCachesTest extends TestCase
 
     public function testPluginCustomCache()
     {
-        App::plugin([
-            'name' => 'developer/plugin',
-            'extends' => [
-                'options' => [
-                    'cache.api' => true
-                ]
+        App::plugin('developer/plugin', [
+            'options' => [
+                'cache.api' => true
             ]
         ]);
 

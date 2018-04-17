@@ -19,9 +19,25 @@ class Plugin extends Model
         return $this->info()[$key] ?? null;
     }
 
-    public function __construct(array $props = [])
+    public function __construct(string $name, array $extends = [])
     {
-        $this->setProperties($props);
+        $this->setName($name);
+        $this->extends = $extends;
+        $this->root    = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
+
+        unset($this->extends['root']);
+    }
+
+    /**
+     * Returns the plugin css file if it exists
+     * otherwise it will return null
+     *
+     * @return string|null
+     */
+    public function css()
+    {
+        $css = $this->root() . '/index.css';
+        return file_exists($css) === true ? $css : null;
     }
 
     public function extends(): array
@@ -43,6 +59,18 @@ class Plugin extends Model
         }
 
         return $this->info = $info;
+    }
+
+    /**
+     * Returns the plugin js file if it exists
+     * otherwise it will return null
+     *
+     * @return string|null
+     */
+    public function js()
+    {
+        $js = $this->root() . '/index.js';
+        return file_exists($js) === true ? $js : null;
     }
 
     public function manifest(): string
@@ -75,12 +103,6 @@ class Plugin extends Model
         return $this->root;
     }
 
-    protected function setExtends(array $extends = null)
-    {
-        $this->extends = $extends;
-        return $this;
-    }
-
     protected function setName(string $name)
     {
         if (preg_match('!^[a-z-]+\/[a-z-]+$!', $name) == false) {
@@ -88,12 +110,6 @@ class Plugin extends Model
         }
 
         $this->name = $name;
-        return $this;
-    }
-
-    protected function setRoot(string $root)
-    {
-        $this->root = $root;
         return $this;
     }
 

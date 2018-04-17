@@ -7,12 +7,8 @@ class PluginTest extends TestCase
 
     public function testProps()
     {
-        $plugin = new Plugin([
-            'name'    => 'getkirby/test-plugin',
-            'root'    => __DIR__,
-            'extends' => [
-
-            ]
+        $plugin = new Plugin('getkirby/test-plugin', [
+            'root' => __DIR__,
         ]);
 
         $this->assertEquals('getkirby/test-plugin', $plugin->name());
@@ -22,8 +18,7 @@ class PluginTest extends TestCase
 
     public function testManifest()
     {
-        $plugin = new Plugin([
-            'name' => 'getkirby/test-plugin',
+        $plugin = new Plugin('getkirby/test-plugin', [
             'root' => __DIR__
         ]);
 
@@ -32,8 +27,7 @@ class PluginTest extends TestCase
 
     public function testEmptyInfo()
     {
-        $plugin = new Plugin([
-            'name' => 'getkirby/test-plugin',
+        $plugin = new Plugin('getkirby/test-plugin', [
             'root' => __DIR__
         ]);
 
@@ -42,8 +36,7 @@ class PluginTest extends TestCase
 
     public function testInfo()
     {
-        $plugin = new Plugin([
-            'name' => 'getkirby/test-plugin',
+        $plugin = new Plugin('getkirby/test-plugin', [
             'root' => __DIR__ . '/fixtures/plugin'
         ]);
 
@@ -64,8 +57,7 @@ class PluginTest extends TestCase
 
     public function testMagicCaller()
     {
-        $plugin = new Plugin([
-            'name' => 'getkirby/test-plugin',
+        $plugin = new Plugin('getkirby/test-plugin', [
             'root' => __DIR__ . '/fixtures/plugin'
         ]);
 
@@ -75,10 +67,7 @@ class PluginTest extends TestCase
 
     public function testPrefix()
     {
-        $plugin = new Plugin([
-            'name' => 'getkirby/test-plugin',
-            'root' => __DIR__
-        ]);
+        $plugin = new Plugin('getkirby/test-plugin', []);
 
         $this->assertEquals('getkirby.test-plugin', $plugin->prefix());
     }
@@ -87,12 +76,9 @@ class PluginTest extends TestCase
     {
         App::destroy();
 
-        App::plugin([
-            'name' => 'developer/plugin',
-            'extends' => [
-                'options' => [
-                    'foo' => 'bar'
-                ]
+        App::plugin('developer/plugin', [
+            'options' => [
+                'foo' => 'bar'
             ]
         ]);
 
