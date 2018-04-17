@@ -35,7 +35,7 @@ return function ($kirby) {
         [
             'pattern' => 'media/plugins/index.(css|js)',
             'action'  => function (string $extension) use ($kirby) {
-                return new Response(PluginAssets::index($extension), $extension);
+                return new Response(PluginAssets::index($extension), F::extensionToMime($extension));
             }
         ],
         [
