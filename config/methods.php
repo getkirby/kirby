@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\ContentField;
 use Kirby\Cms\Structure;
+use Kirby\Cms\Url;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Html\Element\A;
@@ -94,8 +95,7 @@ return function (App $app) {
             return strtotime($this->value());
         },
         'toUrl' => function () {
-            // TODO: solve this without using the helper
-            return url($this->value());
+            return Url::to($this->value());
         },
         'toUser' => function () use ($app) {
             return $app->users()->find($this->value());

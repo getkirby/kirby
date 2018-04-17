@@ -3,6 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Exception;
+use Throwable;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field;
 use Kirby\Image\Darkroom;
 use Kirby\Toolkit\Url;
@@ -12,10 +15,6 @@ use Kirby\Util\F;
 use Kirby\Util\Factory;
 use Kirby\Util\Dir;
 use Kirby\Util\Str;
-
-use Exception;
-use Throwable;
-use Kirby\Exception\InvalidArgumentException;
 
 class App extends Component
 {
@@ -253,15 +252,16 @@ class App extends Component
             return $this->path;
         }
 
-        /**
-         * Fetch the default request path
-         * TODO: move this to its own place
-         */
-        $requestUri  = parse_url($this->server()->get('request_uri'), PHP_URL_PATH);
-        $scriptName  = $this->server()->get('script_name');
+        // check for path detection requirements
+        if (isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME']) === false) {
+            throw new InvalidArgumentException('The current path cannot be detected');
+        }
+
+        $requestUri  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $scriptName  = $_SERVER['SCRIPT_NAME'];
         $scriptFile  = basename($scriptName);
         $scriptDir   = dirname($scriptName);
-        $scriptPath  = $scriptFile === 'index.php' ? $scriptDir: $scriptName;
+        $scriptPath  = $scriptFile === 'index.php' ? $scriptDir : $scriptName;
         $requestPath = preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri);
 
         return $this->setPath($requestPath)->path;

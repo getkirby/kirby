@@ -8,8 +8,7 @@ use Kirby\Cms\User;
  */
 return [
     'default' => function () {
-        // TODO: replace with the current user
-        return $this->users()->first();
+        return $this->user();
     },
     'fields' => [
         'avatar' => function (User $user) {
