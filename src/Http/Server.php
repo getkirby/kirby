@@ -14,6 +14,17 @@ namespace Kirby\Http;
  */
 class Server
 {
+
+    /**
+     * Returns the server's IP address
+     *
+     * @return string
+     */
+    public static function address(): string
+    {
+        return static::get('SERVER_ADDR');
+    }
+
     /**
      * Gets a value from the _SERVER array
      *

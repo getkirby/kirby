@@ -32,8 +32,6 @@ trait AppOptions
             return $this->options;
         }
 
-        $this->optionsFromEnv();
-
         $fromExtensions = $this->optionsFromExtensions();
         $fromFiles      = $this->optionsFromFiles();
 
@@ -47,14 +45,14 @@ trait AppOptions
      */
     protected function optionsFromFiles(): array
     {
-        // TODO: implement host detection
-        $host = 'localhost';
-        $root = $this->root('config');
+        $server = $this->server();
+        $root   = $this->root('config');
 
         $main = (array)F::load($root . '/config.php', []);
-        $host = (array)F::load($root . '/config.' . $host . '.php', []);
+        $host = (array)F::load($root . '/config.' . basename($server->host()) . '.php', []);
+        $addr = (array)F::load($root . '/config.' . basename($server->address()) . '.php', []);
 
-        return array_replace_recursive($main, $host);
+        return array_replace_recursive($main, $host, $addr);
     }
 
     /**
@@ -67,25 +65,4 @@ trait AppOptions
         return $this->extensions('options');
     }
 
-    /**
-     * Load the env file
-     * This is not injected into the options
-     * namespace, but availbale seperatedly
-     * via env() or $_ENV
-     *
-     * @return boolean
-     */
-    protected function optionsFromEnv(): bool
-    {
-        $root = $this->root('env');
-
-        if (file_exists($root . '/.env') !== true) {
-            return false;
-        }
-
-        $dotenv = new Dotenv($root);
-        $dotenv->load();
-
-        return true;
-    }
 }
