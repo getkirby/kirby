@@ -19,7 +19,6 @@ class System
             'accounts'  => $this->accounts(),
             'content'   => $this->content(),
             'curl'      => $this->curl(),
-            'isLocal'   => $this->isLocal(),
             'mbstring'  => $this->mbstring(),
             'media'     => $this->media(),
             'php'       => $this->php(),

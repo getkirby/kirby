@@ -63,16 +63,20 @@ return [
     [
         'pattern' => 'auth/logout',
         'method'  => 'POST',
+        'auth'    => false,
         'action'  => function () {
 
             // verify that we are logged in via session
             $authorization = $this->requestHeaders('Authorization', '');
+
             if (Str::startsWith($authorization, 'Basic ')) {
                 throw new Exception('Cannot log out of HTTP Basic authentication');
             }
 
             // logout of the current, detected session
-            $this->user()->logout();
+            if ($user = $this->user()) {
+                $user->logout();
+            }
 
             return [
                 'status' => 'ok'

@@ -10,15 +10,25 @@ return [
         'method'  => 'GET',
         'auth'    => false,
         'action'  => function () {
+            return $this->kirby()->system();
+        }
+    ],
+    [
+        'pattern' => 'system/register',
+        'method'  => 'POST',
+        'action'  => function () {
+            return $this->upload(function ($source) {
 
-            $system = $this->kirby()->system();
+                if (F::mime($source) !== 'text/x-php') {
+                    throw new Exception('Invalid license file');
+                }
 
-            return [
-                'isOk'        => $system->isOk(),
-                'isInstalled' => $system->isInstalled(),
-                'details'     => $system->toArray()
-            ];
+                if (F::copy($source, $this->kirby()->root('config') . '/license.php') !== true) {
+                    throw new Exception('The license file could not be uploaded');
+                }
 
+                return true;
+            });
         }
     ],
     [

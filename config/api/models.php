@@ -17,6 +17,7 @@ return [
     'Role'          => include __DIR__ . '/models/Role.php',
     'Site'          => include __DIR__ . '/models/Site.php',
     'SiteBlueprint' => include __DIR__ . '/models/SiteBlueprint.php',
+    'System'        => include __DIR__ . '/models/System.php',
     'Translation'   => include __DIR__ . '/models/Translation.php',
     'User'          => include __DIR__ . '/models/User.php',
     'UserBlueprint' => include __DIR__ . '/models/UserBlueprint.php',

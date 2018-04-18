@@ -19,6 +19,7 @@
     "revert": "Revert",
     "retry": "Try again",
     "install": "Install",
+    "loading": "Loading",
 
     "login": "Login",
     "logout": "Logout",
@@ -28,6 +29,7 @@
     "view.site": "Site",
     "view.users": "Users",
     "view.account": "Your account",
+    "view.installation": "Installation",
 
     "installation.issues.headline": "The panel cannot be installed",
     "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
@@ -85,6 +87,9 @@
 
     "structure.add.first": "Click to add the first item …",
     "structure.delete.confirm": "Do you really want to delete this item?",
+
+    "upload.errors": "Error",
+    "upload.progress": "Uploading …",
 
     "user": "User",
     "user.create": "Add a new user",
@@ -224,5 +229,8 @@
     "error.user.password.notSame": "The passwords do not match",
     "error.user.role.invalid": "Please enter a valid role",
 
-    "error.view.notFound": "This view does not exist"
+    "error.view.notFound": "This view does not exist",
+
+    "field.textarea.headline": "Headline"
+
 }
