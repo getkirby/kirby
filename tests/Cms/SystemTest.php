@@ -54,6 +54,9 @@ class SystemTest extends TestCase
 
         $system = new System(new App);
         $this->assertEquals($expected, $system->isLocal());
+
+        // reset SERVER_NAME
+        $_SERVER['SERVER_NAME'] = null;
     }
 
     public function serverAddressProvider()
@@ -75,6 +78,9 @@ class SystemTest extends TestCase
 
         $system = new System(new App);
         $this->assertEquals($expected, $system->isLocal());
+
+        // reset SERVER_ADDR
+        $_SERVER['SERVER_ADDR'] = null;
     }
 
 }
