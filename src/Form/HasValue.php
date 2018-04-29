@@ -82,11 +82,6 @@ trait HasValue
         $this->value = $this->valueToApi();
     }
 
-    public function validate(string $type)
-    {
-        Validate::$type($this);
-    }
-
     public function value()
     {
         return $this->value;

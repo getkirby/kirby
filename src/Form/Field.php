@@ -92,4 +92,9 @@ class Field
 
         return $array;
     }
+
+    public function validate(string $validator, string $prop = 'value')
+    {
+        return Validate::{$validator}($this, $prop);
+    }
 }
