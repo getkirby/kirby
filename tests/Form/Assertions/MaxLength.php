@@ -11,7 +11,6 @@ trait MaxLength
     {
         $this->assertPropertyDefault('maxLength', $default);
         $this->assertPropertyValue('maxLength', 10);
-        $this->assertPropertyIsOptional('maxLength');
 
         if ($testValue !== null) {
             $this->assertValueIsValid([

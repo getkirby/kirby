@@ -9,7 +9,6 @@ trait Converter
     {
         $this->assertPropertyCanBeNull('converter');
         $this->assertPropertyDefault('converter', $default);
-        $this->assertPropertyIsOptional('converter');
         $this->assertPropertyValues('converter', [
             'lower',
             'slug',
@@ -17,5 +16,4 @@ trait Converter
             'upper'
         ]);
     }
-
 }

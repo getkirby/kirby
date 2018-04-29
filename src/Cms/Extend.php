@@ -43,17 +43,17 @@ class Extend
     {
         $result = [];
 
-        foreach ($fields as $name => $class) {
+        foreach ($fields as $name => $path) {
             if (is_string($name) === false) {
                 throw new InvalidArgumentException('Invalid field type');
             }
 
-            if (is_string($class) === false) {
-                throw new InvalidArgumentException('Invalid field class definition');
+            if (is_string($path) === false) {
+                throw new InvalidArgumentException('Invalid field  definition');
             }
 
             $result[$name] = [
-                'class'  => $class,
+                'path'   => $path,
                 'plugin' => $plugin
             ];
         }

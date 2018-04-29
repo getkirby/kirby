@@ -38,13 +38,19 @@ class ExtendTest extends TestCase
     public function testFields()
     {
         $result = Extend::fields([
-            'a' => 'a',
-            'b' => 'b'
+            'a' => __DIR__ . '/fixtures/fields/EmptyField.php',
+            'b' => __DIR__ . '/fixtures/fields/EmptyField.php'
         ]);
 
         $expected = [
-            'a' => ['class' => 'a', 'plugin' => null],
-            'b' => ['class' => 'b', 'plugin' => null]
+            'a' => [
+                'path' =>  __DIR__ . '/fixtures/fields/EmptyField.php',
+                'plugin' => null
+            ],
+            'b' => [
+                'path' =>  __DIR__ . '/fixtures/fields/EmptyField.php',
+                'plugin' => null
+            ]
         ];
 
         $this->assertEquals($expected, $result);

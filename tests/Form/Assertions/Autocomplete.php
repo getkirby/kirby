@@ -12,7 +12,6 @@ trait Autocomplete
         }
 
         $this->assertPropertyDefault('autocomplete', $default);
-        $this->assertPropertyIsOptional('autocomplete');
     }
 
 }

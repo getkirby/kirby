@@ -11,7 +11,6 @@ trait Name
             $this->assertPropertyDefault('name', $default);
         }
 
-        $this->assertPropertyIsRequired('name');
         $this->assertPropertyValue('name', 'test');
     }
 

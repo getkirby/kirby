@@ -3,10 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Form\Field;
-use Kirby\Form\TextField;
 use Kirby\Image\Image;
 
-class DummyField extends TextField {}
 class DummyPage  extends Page {}
 
 class AppPluginsTest extends TestCase
@@ -76,16 +74,19 @@ class AppPluginsTest extends TestCase
     {
         $app = new App([
             'fields' => [
-                'dummy' => DummyField::class
+                'dummy' => __DIR__ . '/fixtures/fields/DummyField.php'
             ]
         ]);
 
         $field = Field::factory([
-            'type' => 'dummy',
-            'name' => 'dummy'
+            'type'  => 'dummy',
+            'name'  => 'dummy',
+            'peter' => 'shaw'
         ]);
 
-        $this->assertInstanceOf(DummyField::class, $field);
+        $this->assertInstanceOf(Field::class, $field);
+        $this->assertEquals('simpson', $field->homer());
+        $this->assertEquals('shaw', $field->peter());
     }
 
     public function testHook()

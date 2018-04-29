@@ -49,7 +49,7 @@ trait AppPlugins
     protected function extendFields(array $fields)
     {
         foreach ($fields as $name => $field) {
-            Field::$types[$name] = $field['class'];
+            Field::$types[$name] = $field['path'];
         }
     }
 
@@ -117,6 +117,7 @@ trait AppPlugins
     {
         $this->extend([
             'blueprints'   =>  include static::$root . '/config/blueprints.php',
+            'fields'       =>  include static::$root . '/config/fields.php',
             'fieldMethods' => (include static::$root . '/config/methods.php')($this),
             'tags'         =>  include static::$root . '/config/tags.php'
         ]);

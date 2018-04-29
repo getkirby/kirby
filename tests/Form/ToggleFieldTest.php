@@ -2,17 +2,9 @@
 
 namespace Kirby\Form;
 
-class ToggleFieldTest extends CheckboxFieldTest
+class ToggleFieldTest extends FieldTestCase
 {
 
-    public function className(): string
-    {
-        return ToggleField::class;
-    }
-
-    public function testType()
-    {
-        $this->assertTypeProperty('toggle');
-    }
+    static protected $type = 'toggle';
 
 }

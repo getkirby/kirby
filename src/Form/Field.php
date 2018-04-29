@@ -5,57 +5,44 @@ namespace Kirby\Form;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
-class Field extends Component
+class Field
 {
-    use Mixins\Model;
+
+    use HasOptions;
+    use HasValue;
 
     public static $types = [];
 
-    protected $propertyAliases = [
-        'readonly' => 'disabled'
-    ];
+    protected $props;
+    protected $methods;
 
-    protected $disabled;
-    protected $name;
-    protected $type;
-    protected $width;
-
-    public function __construct(array $props)
+    public function __call(string $name, array $arguments)
     {
-        foreach ($this->propertyAliases as $alias => $prop) {
-            if (isset($props[$alias]) === true) {
-                $props[$prop] = $props[$alias];
-                unset($props[$alias]);
-            }
+        if ($this->props()->has($name) === true) {
+            return $this->props()->{$name}(...$arguments);
         }
 
-        parent::__construct($props);
-    }
+        if ($this->methods()->has($name) === true) {
+            return $this->methods()->{$name}(...$arguments);
+        }
 
-    public static function assets(): array
-    {
-        return [];
-    }
-
-    protected function defaultDisabled(): bool
-    {
-        return false;
-    }
-
-    protected function defaultName()
-    {
         return null;
     }
 
-    public function disabled(): bool
+    public function __construct(array $props, string $field)
     {
-        return $this->disabled;
+        $definition = require $field;
+
+        $this->props = new FieldProps($this, $definition['props'] ?? []);
+        $this->methods = new FieldMethods($this, $definition['methods'] ?? []);
+
+        // Separate value from other arguments
+        $this->setValue($props['value'] ?? null);
+        unset($props['value']);
+
+        $this->props()->setProps($props);
     }
 
-    protected function defaultWidth(): string
-    {
-        return '1/1';
-    }
 
     public static function factory(array $props)
     {
@@ -63,81 +50,46 @@ class Field extends Component
             throw new NotFoundException('Missing field type');
         }
 
-        $type  = $props['type'];
-        $class = static::$types[$type] ?? __NAMESPACE__ . '\\' . ucfirst($type) . 'Field';
+        // ensure that type prop is first
+        $props = array_merge(
+            ['type' =>  $props['type']],
+            $props
+        );
 
-        if (class_exists($class) === false) {
+        if (isset(static::$types[$props['type']]) === false) {
             throw new InvalidArgumentException(sprintf('Invalid field type: "%s"', $type));
         }
 
-        return new $class($props);
+        return new static($props, static::$types[$props['type']]);
     }
 
     public function isDisabled(): bool
     {
-        return $this->disabled;
+        return $this->disabled();
     }
 
-    public function name(): string
+    public function methods(): FieldMethods
     {
-        return $this->name;
+        return $this->methods;
     }
 
-    /**
-     * @param boolean $disabled
-     * @return self
-     */
-    protected function setDisabled(bool $disabled = false): self
+    public function props(): FieldProps
     {
-        $this->disabled = $disabled;
-        return $this;
-    }
-
-    /**
-     * Set the field name
-     *
-     * @param string $name
-     * @return self
-     */
-    protected function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    protected function setWidth(string $width = '1/1'): self
-    {
-        $this->width = $width;
-        return $this;
+        return $this->props;
     }
 
     public function toArray(): array
     {
-        $array = parent::toArray();
+        $array = array_merge(
+            $this->props()->toArray(),
+            ['value' => $this->value()]
+        );
 
-        // never include the model in the output
         unset($array['model']);
 
+        // keep it tidy
+        ksort($array);
+
         return $array;
-    }
-
-    public function type(): string
-    {
-        $className = get_called_class();
-        $from      = strrpos($className, '\\');
-
-        if ($from !== false) {
-            $className = substr($className, $from + 1);
-        }
-
-        $className = str_replace('Field', '', $className);
-        $className = strtolower($className);
-
-        return $className;
-    }
-
-    public function width(): string
-    {
-        return $this->width;
     }
 }

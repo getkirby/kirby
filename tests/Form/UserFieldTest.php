@@ -5,39 +5,15 @@ namespace Kirby\Form;
 class UserFieldTest extends FieldTestCase
 {
 
-    public function className(): string
-    {
-        return UserField::class;
-    }
-
-    public function testHelp()
-    {
-        $this->assertHelpProperty();
-    }
+    static protected $type = 'user';
 
     public function testIcon()
     {
         $this->assertIconProperty('user');
     }
 
-    public function testLabel()
-    {
-        $this->assertLabelProperty('User');
-    }
-
-    public function testName()
-    {
-        $this->assertNameProperty('user');
-    }
-
     public function testRequired()
     {
         $this->assertRequiredProperty();
     }
-
-    public function testType()
-    {
-        $this->assertTypeProperty('user');
-    }
-
 }

@@ -9,7 +9,6 @@ trait Required
     {
         $this->assertPropertyDefault('required', $default);
         $this->assertPropertyIsBool('required');
-        $this->assertPropertyIsOptional('required');
     }
 
 }

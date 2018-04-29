@@ -5,15 +5,7 @@ namespace Kirby\Form;
 class TelFieldTest extends TextFieldTest
 {
 
-    public function className(): string
-    {
-        return TelField::class;
-    }
-
-    public function defaultName()
-    {
-        return 'phone';
-    }
+    static protected $type = 'tel';
 
     public function testAutocomplete()
     {
@@ -25,11 +17,6 @@ class TelFieldTest extends TextFieldTest
         return $this->assertIconProperty('phone');
     }
 
-    public function testLabel()
-    {
-        return $this->assertLabelProperty('Phone');
-    }
-
     public function testMaxLength()
     {
         $this->assertMaxLengthProperty(null, '1234');
@@ -39,15 +26,4 @@ class TelFieldTest extends TextFieldTest
     {
         $this->assertMinLengthProperty(null, '1234');
     }
-
-    public function testName()
-    {
-        $this->assertNameProperty('phone');
-    }
-
-    public function testType()
-    {
-        $this->assertTypeProperty('tel');
-    }
-
 }

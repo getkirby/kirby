@@ -9,7 +9,6 @@ trait Disabled
     {
         $this->assertPropertyDefault('disabled', $default);
         $this->assertPropertyIsBool('disabled');
-        $this->assertPropertyIsOptional('disabled');
     }
 
 }

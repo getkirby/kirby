@@ -5,10 +5,7 @@ namespace Kirby\Form;
 class TextFieldTest extends FieldTestCase
 {
 
-    public function className(): string
-    {
-        return TextField::class;
-    }
+    static protected $type = 'text';
 
     public function testAutocomplete()
     {
@@ -18,11 +15,6 @@ class TextFieldTest extends FieldTestCase
     public function testConverter()
     {
         $this->assertConverterProperty();
-    }
-
-    public function testHelp()
-    {
-        $this->assertHelpProperty();
     }
 
     public function testIcon()
@@ -40,16 +32,6 @@ class TextFieldTest extends FieldTestCase
         $this->assertMinLengthProperty();
     }
 
-    public function testLabel()
-    {
-        $this->assertLabelProperty('Text');
-    }
-
-    public function testName()
-    {
-        $this->assertNameProperty('text');
-    }
-
     public function testPlaceholder()
     {
         $this->assertPlaceholderProperty();
@@ -59,10 +41,4 @@ class TextFieldTest extends FieldTestCase
     {
         $this->assertRequiredProperty();
     }
-
-    public function testType()
-    {
-        $this->assertTypeProperty('text');
-    }
-
 }

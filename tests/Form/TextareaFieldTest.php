@@ -5,15 +5,7 @@ namespace Kirby\Form;
 class TextareaFieldTest extends FieldTestCase
 {
 
-    public function className(): string
-    {
-        return TextareaField::class;
-    }
-
-    public function testHelp()
-    {
-        $this->assertHelpProperty();
-    }
+    static protected $type = 'textarea';
 
     public function testIcon()
     {
@@ -30,16 +22,6 @@ class TextareaFieldTest extends FieldTestCase
         $this->assertMinLengthProperty();
     }
 
-    public function testLabel()
-    {
-        $this->assertLabelProperty('Text');
-    }
-
-    public function testName()
-    {
-        $this->assertNameProperty('text');
-    }
-
     public function testPlaceholder()
     {
         $this->assertPlaceholderProperty();
@@ -49,10 +31,4 @@ class TextareaFieldTest extends FieldTestCase
     {
         $this->assertRequiredProperty();
     }
-
-    public function testType()
-    {
-        $this->assertTypeProperty('textarea');
-    }
-
 }

@@ -4,7 +4,7 @@ namespace Kirby\Form;
 
 class Form extends Component
 {
-    use Mixins\Model;
+    use Model;
 
     protected $errors;
     protected $fields;
@@ -73,8 +73,8 @@ class Form extends Component
         $values = [];
 
         foreach ($this->fields() as $field) {
-            if (method_exists($field, 'stringValue') === true) {
-                $values[$field->name()] = $field->stringValue();
+            if (method_exists($field, 'valueToString') === true) {
+                $values[$field->name()] = $field->valueToString();
             }
         }
 

@@ -5,15 +5,7 @@ namespace Kirby\Form;
 class EmailFieldTest extends TextFieldTest
 {
 
-    public function className(): string
-    {
-        return EmailField::class;
-    }
-
-    public function defaultName()
-    {
-        return 'email';
-    }
+    static protected $type = 'email';
 
     public function testAutocomplete()
     {
@@ -23,11 +15,6 @@ class EmailFieldTest extends TextFieldTest
     public function testIcon()
     {
         return $this->assertIconProperty('email');
-    }
-
-    public function testLabel()
-    {
-        return $this->assertLabelProperty('Email');
     }
 
     public function testMaxLength()
@@ -40,19 +27,9 @@ class EmailFieldTest extends TextFieldTest
         $this->assertMinLengthProperty(null, 'mail@example.com');
     }
 
-    public function testName()
-    {
-        $this->assertNameProperty('email');
-    }
-
     public function testPlaceholder()
     {
         return $this->assertPlaceholderProperty('mail@example.com');
-    }
-
-    public function testType()
-    {
-        $this->assertTypeProperty('email');
     }
 
     public function testValue()

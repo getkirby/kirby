@@ -5,15 +5,7 @@ namespace Kirby\Form;
 class UrlFieldTest extends TextFieldTest
 {
 
-    public function className(): string
-    {
-        return UrlField::class;
-    }
-
-    public function defaultName()
-    {
-        return 'url';
-    }
+    static protected $type = 'url';
 
     public function testAutocomplete()
     {
@@ -23,11 +15,6 @@ class UrlFieldTest extends TextFieldTest
     public function testIcon()
     {
         return $this->assertIconProperty('url');
-    }
-
-    public function testLabel()
-    {
-        return $this->assertLabelProperty('Url');
     }
 
     public function testMaxLength()
@@ -40,19 +27,9 @@ class UrlFieldTest extends TextFieldTest
         $this->assertMinLengthProperty(null, 'https://example.com');
     }
 
-    public function testName()
-    {
-        $this->assertNameProperty('url');
-    }
-
     public function testPlaceholder()
     {
         return $this->assertPlaceholderProperty('https://example.com');
-    }
-
-    public function testType()
-    {
-        $this->assertTypeProperty('url');
     }
 
     public function testValue()
@@ -65,5 +42,4 @@ class UrlFieldTest extends TextFieldTest
             'value' => 'getkirby.com'
         ], 'error.form.url.invalid');
     }
-
 }

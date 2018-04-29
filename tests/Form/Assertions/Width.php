@@ -9,7 +9,6 @@ trait Width
     {
         $this->assertPropertyDefault('width', $default);
         $this->assertPropertyValue('width', '1/2');
-        $this->assertPropertyIsOptional('width');
     }
 
 }

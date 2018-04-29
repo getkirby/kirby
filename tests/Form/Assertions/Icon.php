@@ -12,7 +12,6 @@ trait Icon
         }
 
         $this->assertPropertyDefault('icon', $default);
-        $this->assertPropertyIsOptional('icon');
     }
 
 }

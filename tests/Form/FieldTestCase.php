@@ -2,12 +2,10 @@
 
 namespace Kirby\Form;
 
-use TypeError;
-use PHPUnit\Framework\TestCase as BaseTestCase;
 use ReflectionMethod;
 use Kirby\Util\I18n;
 
-abstract class FieldTestCase extends BaseTestCase
+abstract class FieldTestCase extends \PHPUnit\Framework\TestCase
 {
 
     use Assertions\Autocomplete;
@@ -25,6 +23,18 @@ abstract class FieldTestCase extends BaseTestCase
     use Assertions\Value;
     use Assertions\Width;
 
+    static protected $type;
+
+    public function setUp()
+    {
+        Field::$types[static::$type] = dirname(dirname(__DIR__)) . '/config/fields/' . ucfirst(static::$type) . 'Field.php';
+    }
+
+    public function tearDown()
+    {
+        Field::$types = [];
+    }
+
     public function assertPropertyCanBeNull(string $property)
     {
         $this->assertNull($this->field([$property => null])->$property());
@@ -32,13 +42,8 @@ abstract class FieldTestCase extends BaseTestCase
 
     public function assertPropertyDefault(string $property, $default)
     {
-        $props = $this->defaultProperties();
-        unset($props[$property]);
-
-        $field = $this->fieldInstance($props);
-
         // by not setting the property
-        $this->assertEquals($default, $field->$property());
+        $this->assertEquals($default, $this->field()->$property());
 
         // by setting the property to null
         $this->assertEquals($default, $this->field([$property => null])->$property());
@@ -50,25 +55,9 @@ abstract class FieldTestCase extends BaseTestCase
         $this->assertFalse($this->field([$property => false])->$property());
     }
 
-    public function assertPropertyIsRequired(string $property)
+    public function assertPropertyValue(string $property, $value, $expected = null)
     {
-        $method = new ReflectionMethod($this->className(), 'set' . $property);
-        $param  = $method->getParameters()[0];
-
-        $this->assertFalse($param->isOptional());
-    }
-
-    public function assertPropertyIsOptional(string $property)
-    {
-        $method = new ReflectionMethod($this->className(), 'set' . $property);
-        $param  = $method->getParameters()[0];
-
-        $this->assertTrue($param->isOptional());
-    }
-
-    public function assertPropertyValue(string $property, $value)
-    {
-        $this->assertEquals($value, $this->field([$property => $value])->$property());
+        $this->assertEquals($expected ?? $value, $this->field([$property => $value])->$property());
     }
 
     public function assertPropertyValues(string $property, array $values)
@@ -104,25 +93,14 @@ abstract class FieldTestCase extends BaseTestCase
         ]);
 
         $this->assertEquals('deutsch', $field->$property());
-
-    }
-
-    abstract public function className();
-
-    public function defaultProperties(): array
-    {
-        return [];
     }
 
     public function field(array $propsData = [])
     {
-        return $this->fieldInstance(array_merge($this->defaultProperties(), $propsData));
-    }
-
-    public function fieldInstance(array $props = [])
-    {
-        $className = $this->className();
-        return new $className($props);
+        return Field::factory(array_merge(
+            $propsData,
+            ['type' => static::$type]
+        ));
     }
 
     public function testDisabled()
@@ -130,8 +108,28 @@ abstract class FieldTestCase extends BaseTestCase
         $this->assertDisabledProperty();
     }
 
-    abstract public function testName();
-    abstract public function testType();
+    public function testHelp()
+    {
+        $this->assertHelpProperty();
+    }
+
+    /**
+     * @group failing
+     */
+    public function testLabel()
+    {
+        return $this->assertLabelProperty(ucfirst(static::$type));
+    }
+
+    public function testName()
+    {
+        $this->assertNameProperty(static::$type);
+    }
+
+    public function testType()
+    {
+        $this->assertTypeProperty(static::$type);
+    }
 
     public function testWidth()
     {

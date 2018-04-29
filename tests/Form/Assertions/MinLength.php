@@ -11,7 +11,6 @@ trait MinLength
     {
         $this->assertPropertyDefault('minLength', $default);
         $this->assertPropertyValue('minLength', 10);
-        $this->assertPropertyIsOptional('minLength');
 
         if ($testValue !== null) {
 
