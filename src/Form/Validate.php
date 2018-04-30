@@ -93,8 +93,8 @@ class Validate
 
     public static function minmax(Field $field, string $prop)
     {
-        static::min($field);
-        static::max($field);
+        static::min($field, $prop);
+        static::max($field, $prop);
     }
 
     public static function multipleOptions(Field $field, string $prop)

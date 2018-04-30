@@ -57,7 +57,7 @@ class Field
         );
 
         if (isset(static::$types[$props['type']]) === false) {
-            throw new InvalidArgumentException(sprintf('Invalid field type: "%s"', $type));
+            throw new InvalidArgumentException(sprintf('Invalid field type: "%s"', $props['type']));
         }
 
         return new static($props, static::$types[$props['type']]);
