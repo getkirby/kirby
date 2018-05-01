@@ -12,6 +12,7 @@ class Form extends BaseForm
         // set a few defaults
         $props['values'] = array_merge($model->content()->toArray(), $props['values'] ?? []);
         $props['fields'] = $props['fields'] ?? [];
+        $props['model']  = $model;
 
         // search for the blueprint
         if (method_exists($model, 'blueprint') === true && $blueprint = $model->blueprint()) {

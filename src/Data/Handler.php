@@ -32,5 +32,5 @@ abstract class Handler
      * @param  string $string
      * @return array
      */
-    abstract public static function decode(string $string): array;
+    abstract public static function decode($string): array;
 }

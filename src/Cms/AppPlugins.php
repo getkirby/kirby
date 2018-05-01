@@ -48,9 +48,7 @@ trait AppPlugins
 
     protected function extendFields(array $fields)
     {
-        foreach ($fields as $name => $field) {
-            Field::$types[$name] = $field['path'];
-        }
+        Field::$types = array_merge(Field::$types, $fields);
     }
 
     protected function extendPageMethods(array $methods)
@@ -115,6 +113,10 @@ trait AppPlugins
      */
     protected function extensionsFromSystem()
     {
+        // Field Mixins
+        Field::$mixins['options'] = include static::$root . '/config/field-mixins/options.php';
+
+        // extendable stuff
         $this->extend([
             'blueprints'   =>  include static::$root . '/config/blueprints.php',
             'fields'       =>  include static::$root . '/config/fields.php',

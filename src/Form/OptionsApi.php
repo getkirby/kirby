@@ -57,6 +57,8 @@ class OptionsApi
 
         $data = json_decode($content, true);
 
+        var_dump(Nest::create($data)->first());
+
         if (is_array($data) === false) {
             throw new InvalidArgumentException('Invalid options format');
         }

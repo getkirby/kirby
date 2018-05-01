@@ -218,6 +218,10 @@ class Str
      */
     public static function split($string, string $separator = ',', int $length = 1): array
     {
+        if (is_array($string) === true) {
+            return $string;
+        }
+
         $string = trim($string, $separator);
         $parts  = explode($separator, $string);
         $out    = [];

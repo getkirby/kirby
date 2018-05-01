@@ -118,7 +118,7 @@ trait HasContent
 
         // get the data values array
         $values  = $form->values();
-        $strings = $form->stringValues();
+        $strings = $form->strings();
 
         return $this->commit('update', $values, $strings);
     }

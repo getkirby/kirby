@@ -78,7 +78,7 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
-        $field = Field::factory([
+        $field = new Field([
             'type'  => 'dummy',
             'name'  => 'dummy',
             'peter' => 'shaw'

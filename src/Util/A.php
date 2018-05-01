@@ -64,6 +64,16 @@ class A
     }
 
     /**
+     * @return string
+     */
+    public static function join($value, $separator = ', ') {
+        if (is_string($value) === true) {
+            return $value;
+        }
+        return implode($separator, $value);
+    }
+
+    /**
      * Plucks a single column from an array
      *
      * <code>

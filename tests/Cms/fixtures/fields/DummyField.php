@@ -2,7 +2,11 @@
 
 return [
     'props' => [
-        'homer' => 'simpson',
-        'peter' => 'pan'
+        'homer' => function ($homer = 'simpson') {
+            return $homer;
+        },
+        'peter' => function ($peter = 'pan') {
+            return $peter;
+        }
     ]
 ];

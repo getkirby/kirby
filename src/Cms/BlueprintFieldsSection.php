@@ -47,8 +47,8 @@ class BlueprintFieldsSection extends BlueprintSection
 
         return new Form([
             'fields' => $fields,
-            'model'  => $this->model(),
             'values' => $this->values ?? $this->model()->content()->toArray(),
+            'model'  => $this->model(),
         ]);
     }
 

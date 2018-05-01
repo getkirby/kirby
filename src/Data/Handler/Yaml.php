@@ -36,8 +36,16 @@ class Yaml extends Handler
      * @param  string $string
      * @return array
      */
-    public static function decode(string $yaml): array
+    public static function decode($yaml): array
     {
+        if ($yaml === null) {
+            return [];
+        }
+
+        if (is_array($yaml) === true) {
+            return $yaml;
+        }
+
         $result = Spyc::YAMLLoadString($yaml);
 
         if (is_array($result)) {

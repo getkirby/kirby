@@ -35,27 +35,6 @@ class ExtendTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFields()
-    {
-        $result = Extend::fields([
-            'a' => __DIR__ . '/fixtures/fields/EmptyField.php',
-            'b' => __DIR__ . '/fixtures/fields/EmptyField.php'
-        ]);
-
-        $expected = [
-            'a' => [
-                'path' =>  __DIR__ . '/fixtures/fields/EmptyField.php',
-                'plugin' => null
-            ],
-            'b' => [
-                'path' =>  __DIR__ . '/fixtures/fields/EmptyField.php',
-                'plugin' => null
-            ]
-        ];
-
-        $this->assertEquals($expected, $result);
-    }
-
     public function testFieldMethods()
     {
         $result = Extend::fieldMethods($expected = [

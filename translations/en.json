@@ -160,6 +160,7 @@
 
     "error.form.incomplete": "Please fix all form errors …",
     "error.form.converter.invalid": "Invalid converter \"{converter}\"",
+    "error.form.boolean.invalid": "Invalid boolean value",
     "error.form.date.invalid": "Invalid date",
     "error.form.email.invalid": "Invalid email address",
     "error.form.layout.invalid": "Invalid layout",

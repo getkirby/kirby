@@ -2,125 +2,107 @@
 
 namespace Kirby\Form;
 
-class Form extends Component
+use Kirby\Collection\Collection;
+
+class Form
 {
-    use Model;
 
     protected $errors;
     protected $fields;
     protected $values;
 
-    protected function defaultFields(): array
+    public function __construct(array $props)
     {
-        return [];
-    }
+        $fields = $props['fields'] ?? [];
+        $values = $props['values'] ?? [];
+        $inject = $props;
 
-    protected function defaultValues(): array
-    {
-        return [];
+        unset($inject['fields'], $inject['values']);
+
+        $this->fields = new Fields;
+
+        foreach ($fields as $name => $props) {
+
+            // inject the name
+            $props['name'] = $name;
+
+            // inject the value
+            if (isset($values[$name]) === true) {
+                $props['value'] = $values[$name];
+            }
+
+            $field = new Field($props, $inject);
+
+            if ($field->save() !== false) {
+                $this->values[$name] = $field->value();
+            }
+
+            $this->fields->append($name, $field);
+        }
     }
 
     public function errors(): array
     {
-        $errors = [];
+        if ($this->errors !== null) {
+            return $this->errors;
+        }
 
-        foreach ($this->fields() as $field) {
-            if (method_exists($field, 'error') === true) {
-                if ($error = $field->error()) {
-                    $errors[] = $error;
-                }
+        $this->errors = [];
+
+        foreach ($this->fields as $field) {
+            if (empty($field->errors()) === false) {
+                $this->errors[$field->name()] = $field->errors();
             }
         }
 
-        return $errors;
-    }
-
-    public function isValid(): bool
-    {
-        foreach ($this->fields() as $field) {
-            if (method_exists($field, 'isValid') === true) {
-                $field->isValid();
-            }
-        }
-
-        return true;
+        return $this->errors;
     }
 
     public function fields()
     {
-        if (is_a($this->fields, Fields::class) === true) {
-            return $this->fields;
-        }
-
-        $model  = $this->model();
-        $values = array_change_key_case($this->values);
-        $fields = [];
-
-        foreach ($this->fields as $name => $field) {
-            $field['model']     = $model;
-            $field['name']      = $name = $field['name'] ?? $name;
-            $field['value']     = $values[$lowerName = strtolower($name)] ?? null;
-            $field['undefined'] = isset($values[$lowerName]) === false;
-
-            $fields[$name] = $field;
-        }
-
-        return $this->fields = new Fields($fields);
+        return $this->fields;
     }
 
-    public function stringValues(): array
-    {
-        $values = [];
-
-        foreach ($this->fields() as $field) {
-            if (method_exists($field, 'valueToString') === true) {
-                $values[$field->name()] = $field->valueToString();
-            }
-        }
-
-        return $values;
-    }
-
-    public function hasErrors(): bool
+    public function isInvalid(): bool
     {
         return empty($this->errors()) === false;
     }
 
-    protected function setFields(array $fields)
+    public function isValid(): bool
     {
-        $this->fields = $fields;
-        return $this;
+        return empty($this->errors()) === true;
     }
 
-    protected function setValues(array $values = [])
+    public function toArray()
     {
-        $this->values = $values;
-        return $this;
-    }
-
-    public function values(array $data = null): array
-    {
-        $result = [];
-
-        foreach ($this->fields() as $field) {
-            if (method_exists($field, 'value') === true) {
-                $result[$field->name()] = $field->value();
-            }
-        }
-
-        return $result;
-    }
-
-    public function toArray(): array
-    {
-        $array = parent::toArray();
-
-        // convert all field objects to arrays
-        $array['fields'] = $this->fields()->toArray();
-
-        // remove the model from the result array
-        unset($array['model']);
+        $array = [
+            'errors' => $this->errors(),
+            'fields' => $this->fields->toArray(function ($item) {
+                return $item->toArray();
+            }),
+            'invalid' => $this->isInvalid(),
+            'values'  => $this->values,
+        ];
 
         return $array;
     }
+
+    public function strings(): array
+    {
+        $array = [];
+
+        foreach ($this->fields as $field) {
+            if ($field->save() !== false) {
+                $array[$field->name()] = $field->toString();
+            }
+        }
+
+        return $array;
+    }
+
+    public function values(): array
+    {
+        return $this->values;
+    }
+
 }

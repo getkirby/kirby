@@ -39,26 +39,9 @@ class Extend
         return $blueprints;
     }
 
-    public static function fields(array $fields, Plugin $plugin = null): array
+    public static function fields(array $fields): array
     {
-        $result = [];
-
-        foreach ($fields as $name => $path) {
-            if (is_string($name) === false) {
-                throw new InvalidArgumentException('Invalid field type');
-            }
-
-            if (is_string($path) === false) {
-                throw new InvalidArgumentException('Invalid field  definition');
-            }
-
-            $result[$name] = [
-                'path'   => $path,
-                'plugin' => $plugin
-            ];
-        }
-
-        return $result;
+        return $fields;
     }
 
     public static function fieldMethods(array $fieldMethods): array

@@ -23,7 +23,7 @@ class Fields extends Collection
         if (is_array($field)) {
             // use the array key as name if the name is not set
             $field['name'] = $field['name'] ?? $name;
-            $field = Field::factory($field);
+            $field = new Field($field);
         }
 
         if (is_a($field, Field::class) === false) {

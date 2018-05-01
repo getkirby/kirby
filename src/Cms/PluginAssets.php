@@ -20,7 +20,7 @@ class PluginAssets
         $kirby    = App::instance();
         $cache    = $kirby->root('media') . '/plugins/.index.' . $extension;
         $build    = false;
-        $modified = [];
+        $modified = [0];
         $assets   = [];
 
         foreach ($kirby->plugins() as $plugin) {
@@ -30,6 +30,10 @@ class PluginAssets
                 $assets[]   = $file;
                 $modified[] = filemtime($file);
             }
+        }
+
+        if (empty($assets)) {
+            return false;
         }
 
         if (file_exists($cache) === false || filemtime($cache) < max($modified)) {
