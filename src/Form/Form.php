@@ -51,7 +51,10 @@ class Form
 
         foreach ($this->fields as $field) {
             if (empty($field->errors()) === false) {
-                $this->errors[$field->name()] = $field->errors();
+                $this->errors[$field->name()] = [
+                    'label' => $field->label(),
+                    'message' => $field->errors()
+                ];
             }
         }
 
@@ -87,7 +90,7 @@ class Form
         return $array;
     }
 
-    public function strings(): array
+        public function strings(): array
     {
         $array = [];
 

@@ -106,9 +106,7 @@ trait HasContent
 
         // validate the input
         if ($validate === true) {
-            try {
-                $form->isValid();
-            } catch (Exception $e) {
+            if ($form->isInvalid() === true) {
                 throw new InvalidArgumentException([
                     'fallback' => 'Invalid form with errors',
                     'details'  => $form->errors()

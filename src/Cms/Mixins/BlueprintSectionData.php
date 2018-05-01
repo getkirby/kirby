@@ -106,9 +106,9 @@ trait BlueprintSectionData
         if ($icon = $item->blueprint()->icon()) {
             if (Str::isEmoji($icon) === true) {
                 return [
-                    'type'  => 'emoji',
+                    'type'  => $icon,
                     'back'  => 'white',
-                    'emoji' => $icon
+                    'emoji' => true
                 ];
             }
 

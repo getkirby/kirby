@@ -59,7 +59,7 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'media/users/(:any)/profile.jpg',
-            'action'  => function ($id, $extension) use ($kirby) {
+            'action'  => function ($id) use ($kirby) {
                 if ($user = $kirby->users()->findBy('id', $id)) {
                     go($user->avatar()->publish()->url(), 307);
                 }
