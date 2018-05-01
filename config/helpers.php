@@ -42,9 +42,15 @@ function kirbytag($input)
     return App::instance()->component('kirbytext')->tag($input);
 }
 
-function kirbytext($text)
+function kirbytext($text, $markdown = true)
 {
-    return App::instance()->component('kirbytext')->parse($text);
+    $text = App::instance()->component('kirbytext')->parse($text);
+
+    if ($markdown === true) {
+        $text = markdown($text);
+    }
+
+    return $text;
 }
 
 function markdown($text)

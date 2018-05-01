@@ -32,7 +32,10 @@ return [
     ],
     'methods' => [
         'form' => function (array $values = []) {
-            return new Form($this->props['fields'], $values, $this->data);
+            return new Form(array_merge([
+                'fields' => $this->props['fields'],
+                'values' => $values,
+            ], $this->data));
         }
     ],
     'validations' => [

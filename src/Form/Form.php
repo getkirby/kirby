@@ -9,7 +9,7 @@ class Form
 
     protected $errors;
     protected $fields;
-    protected $values;
+    protected $values = [];
 
     public function __construct(array $props)
     {
