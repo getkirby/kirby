@@ -64,14 +64,7 @@ class BlueprintFieldsSection extends BlueprintSection
                 'action'  => function () {
                     return $this->section()->toArray();
                 }
-            ],
-            'field' => [
-                'pattern' => '(:any)',
-                'method'  => 'GET',
-                'action'  => function (string $fieldName) {
-                    return $this->section()->field($fieldName)->toArray();
-                }
-            ],
+            ]
         ];
     }
 

@@ -107,7 +107,7 @@ trait BlueprintSectionData
             if (Str::isEmoji($icon) === true) {
                 return [
                     'type'  => $icon,
-                    'back'  => 'white',
+                    'back'  => 'black',
                     'emoji' => true
                 ];
             }
