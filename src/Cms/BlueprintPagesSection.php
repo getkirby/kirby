@@ -97,8 +97,11 @@ class BlueprintPagesSection extends BlueprintSection
         }
 
         if ($this->sortBy() && $this->sortable() === false) {
-            $data = $data->sortBy(...Str::split($this->sortBy(), ' '));
+            //$data = $data->sortBy(...Str::split($this->sortBy(), ' '));
         }
+
+        // $data = $data->sortBy('num', 'asc');
+
 
         // store the original data to reapply pagination later
         $this->originalData = $data;

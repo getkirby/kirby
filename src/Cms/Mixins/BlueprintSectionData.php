@@ -38,9 +38,10 @@ trait BlueprintSectionData
         $pagination = $this->pagination();
 
         return [
-            'limit' => $pagination->limit(),
-            'page'  => $pagination->page(),
-            'total' => $pagination->total(),
+            'limit'  => $pagination->limit(),
+            'offset' => $pagination->offset(),
+            'page'   => $pagination->page(),
+            'total'  => $pagination->total(),
         ];
     }
 

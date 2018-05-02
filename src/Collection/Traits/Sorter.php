@@ -2,6 +2,8 @@
 
 namespace Kirby\Collection\Traits;
 
+use Kirby\Util\Str;
+
 trait Sorter
 {
 
@@ -13,67 +15,40 @@ trait Sorter
      * @param   $method     int     The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
      * @return  SortGroup
      */
-    public function sortBy(): self
-    {
-        // there is no need to sort empty collections
-        if (empty($this->data) === true) {
-            return $this;
-        }
+    public function sortBy() {
 
         $args       = func_get_args();
-        $array      = $this->data;
-        $collection = $this->clone();
+        $collection = clone $this;
+        $array      = $collection->data;
+        $params     = array();
 
-        // loop through all method arguments and find sets of fields to sort by
-        $fields = [];
-        foreach ($args as $arg) {
-            // get the index of the latest field array inside the $fields array
-            $currentField = ($fields)? count($fields) - 1 : 0;
+        if(empty($array)) return $collection;
 
-            // detect the type of argument
-            // sorting direction
-            $argLower = strtolower($arg);
-            if ($arg === SORT_ASC || $argLower === 'asc') {
-                $fields[$currentField]['direction'] = SORT_ASC;
-            } elseif ($arg === SORT_DESC || $argLower === 'desc') {
-                $fields[$currentField]['direction'] = SORT_DESC;
-
-            // other string: The field name
-            } elseif (is_string($arg)) {
-                $values = $collection->toArray(function ($value) use ($collection, $arg) {
-                    $value = $collection->getAttribute($value, $arg);
-
-                    // make sure that we return something sortable
-                    // but don't convert other scalars (especially numbers) to strings!
-                    if (is_scalar($value)) {
-                        return $value;
-                    } else {
-                        return (string)$value;
-                    }
-                });
-
-                $fields[] = ['field' => $arg, 'values' => $values];
-
-            // flags
+        foreach($args as $i => $param) {
+            if(is_string($param)) {
+                if(strtolower($param) === 'desc') {
+                ${"param_$i"} = SORT_DESC;
+                } else if(strtolower($param) === 'asc') {
+                ${"param_$i"} = SORT_ASC;
+                } else {
+                ${"param_$i"} = array();
+                foreach($array as $index => $row) {
+                    ${"param_$i"}[$index] = is_array($row) ? Str::lower($row[$param]) : str::lower($row->$param());
+                }
+                }
             } else {
-                $fields[$currentField]['flags'] = $arg;
+                ${"param_$i"} = $args[$i];
             }
+            $params[] = &${"param_$i"};
         }
 
-        // build the multisort params in the right order
-        $params = [];
-        foreach ($fields as $field) {
-            $params[] = $field['values']    ?? [];
-            $params[] = $field['direction'] ?? SORT_ASC;
-            $params[] = $field['flags']     ?? SORT_REGULAR;
-        }
         $params[] = &$array;
 
-        // array_multisort receives $params as separate params
-        array_multisort(...$params);
+        call_user_func_array('array_multisort', $params);
 
-        // $array has been overwritten by array_multisort
-        return $collection->data($array);
+        $collection->data = $array;
+
+        return $collection;
     }
 
     /**

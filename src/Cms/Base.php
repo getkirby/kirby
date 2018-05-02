@@ -81,6 +81,8 @@ class Base
 
         $scan = scandir($root);
 
+        natsort($scan);
+
         foreach ($scan as $item) {
             if (in_array($item, $this->ignore) === true) {
                 continue;

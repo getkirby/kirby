@@ -97,9 +97,10 @@ class Collection
         return [
             'data'       => $this->toArray(),
             'pagination' => [
-                'page'  => $pagination->page(),
-                'total' => $pagination->total(),
-                'limit' => $pagination->limit(),
+                'page'   => $pagination->page(),
+                'total'  => $pagination->total(),
+                'offset' => $pagination->offset(),
+                'limit'  => $pagination->limit(),
             ]
         ];
     }
