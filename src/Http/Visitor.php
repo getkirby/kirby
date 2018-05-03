@@ -130,6 +130,11 @@ class Visitor
         return $this;
     }
 
+    public function acceptance($mimeType): float
+    {
+        return (new MimeType($mimeType))->quality();
+    }
+
     /**
      * Checks if the user accepts the given mime type
      *

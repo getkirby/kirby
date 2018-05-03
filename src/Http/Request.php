@@ -90,10 +90,40 @@ class Request
      */
     public function __construct(array $options = [])
     {
-        $this->method   = new Method($options['method'] ?? null);
-        $this->query    = new Query($options['query']  ?? null);
-        $this->body     = new Body($options['body']   ?? null);
-        $this->files    = new Files($options['files']  ?? null);
+        $this->method = new Method($options['method'] ?? null);
+        $this->query  = new Query($options['query']  ?? null);
+        $this->body   = new Body($options['body']   ?? null);
+        $this->files  = new Files($options['files']  ?? null);
+    }
+
+    /**
+     * Detects ajax requests
+     *
+     * @return boolean
+     */
+    public function ajax(): bool
+    {
+        return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+    }
+
+    /**
+     * Checks if the request has been made from the command line
+     *
+     * @return boolean
+     */
+    public function cli(): bool
+    {
+        if (defined('STDIN') === true) {
+            return true;
+        }
+
+        $term = getenv('TERM');
+
+        if (substr(PHP_SAPI, 0, 3) === 'cgi' && $term && $term !== 'unknown') {
+            return true;
+        }
+
+        return false;
     }
 
     /**

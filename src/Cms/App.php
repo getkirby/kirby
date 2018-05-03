@@ -7,6 +7,7 @@ use Exception;
 use Throwable;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field;
+use Kirby\Http\Visitor;
 use Kirby\Image\Darkroom;
 use Kirby\Toolkit\Url;
 use Kirby\Session\Session;
@@ -19,6 +20,7 @@ use Kirby\Util\Str;
 class App extends Component
 {
     use AppCaches;
+    use AppErrors;
     use AppHooks;
     use AppOptions;
     use AppPlugins;
@@ -59,6 +61,9 @@ class App extends Component
         $this->extensionsFromSystem();
         $this->extensionsFromProps($props);
         $this->extensionsFromPlugins();
+
+        // handle those damn errors
+        $this->handleErrors();
 
         // set the singleton
         static::$instance = $this;
@@ -534,4 +539,15 @@ class App extends Component
     {
         return $this->urls;
     }
+
+    /**
+     * Returns the visitor object
+     *
+     * @return Visitor
+     */
+    public function visitor()
+    {
+        return new Visitor();
+    }
+
 }

@@ -22,6 +22,7 @@ return function ($kirby) {
             'pattern' => 'api/(:all)',
             'method'  => 'ALL',
             'action'  => function ($path = null) use ($kirby) {
+
                 $request = $kirby->request();
 
                 return $kirby->component('api')->render($path, $this->method(), [

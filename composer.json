@@ -28,7 +28,8 @@
         "claviska/simpleimage": "3.3.*",
         "sentry/sentry": "^1.8",
         "phpmailer/phpmailer": "^6.0",
-        "defuse/php-encryption": "^2.1"
+        "defuse/php-encryption": "^2.1",
+        "filp/whoops": "^2.1"
     },
     "minimum-stability": "dev",
     "require-dev": {
