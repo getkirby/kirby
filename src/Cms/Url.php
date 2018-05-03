@@ -43,4 +43,16 @@ class Url extends BaseUrl
 
         return $kirby->url() . '/' . rtrim($path, '/');
     }
+
+    public static function toTemplateAsset(string $assetPath, string $extension)
+    {
+        $kirby = App::instance();
+        $page  = $kirby->site()->page();
+        $path  = $assetPath . '/' . $page->template() . '.' . $extension;
+        $file  = $kirby->root('assets') . '/' . $path;
+        $url   = $kirby->url('assets') . '/' . $path;
+
+        return file_exists($file) === true ? $url : null;
+    }
+
 }

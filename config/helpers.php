@@ -2,14 +2,38 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Url;
+use Kirby\Html\Attributes;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
 use Kirby\Util\F;
 use Kirby\Util\I18n;
 
-function css($url)
+function attr(array $attr = null, $before = null, $after = null)
 {
-    return '<link rel="stylesheet" href="' . url($url) . '">';
+    if ($attrs = (new Attributes($attr))->toString()) {
+        return $before . $attrs. $after;
+    }
+
+    return null;
+}
+
+function css($url, $media = null)
+{
+    if (is_array($url) === true) {
+        $links = array_map(function ($url) use ($media) {
+            return css($url, $media);
+        }, $url);
+
+        return implode(PHP_EOL, $links);
+    }
+
+    $tag = '<link rel="stylesheet" href="%s"' . attr(['media' => $media], ' ') . '>';
+
+    if ($url === '@auto' && $assetUrl = Url::toTemplateAsset('css/templates', 'css')) {
+        return sprintf($tag, $assetUrl);
+    } else {
+        return sprintf($tag, Url::to($url));
+    }
 }
 
 function env($key, $default = null)
@@ -19,7 +43,7 @@ function env($key, $default = null)
 
 function get($key, $default = null)
 {
-    return App::instance()->request()->query()->get($key, $default);
+    return App::instance()->request()->get($key, $default);
 }
 
 function go($url, int $code = 301)
@@ -27,9 +51,23 @@ function go($url, int $code = 301)
     die(new Redirect(url($url), $code));
 }
 
-function js($src)
+function js($src, $async = null)
 {
-    return '<script src="' . url($src) . '"></script>';
+    if (is_array($src) === true) {
+        $scripts = array_map(function ($src) use ($async) {
+            return js($src, $async);
+        }, $src);
+
+        return implode(PHP_EOL, $scripts);
+    }
+
+    $tag = '<script src="%s"' . attr(['async' => $async], ' ') . '></script>';
+
+    if ($src === '@auto' && $assetUrl = Url::toTemplateAsset('js/templates', 'js')) {
+        return sprintf($tag, $assetUrl);
+    } else {
+        return sprintf($tag, Url::to($src));
+    }
 }
 
 function kirby()

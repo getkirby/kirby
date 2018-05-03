@@ -9,6 +9,9 @@ return [
     'base' => function (array $urls) {
         return rtrim($urls['index'], '/');
     },
+    'assets' => function (array $urls) {
+        return $urls['base'] . '/assets';
+    },
     'api' => function (array $urls) {
         return $urls['base'] . '/api';
     },

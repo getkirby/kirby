@@ -7,6 +7,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Form;
 use Kirby\Cms\Response;
+use Kirby\Cms\Url;
 
 use Kirby\Data\Handler\Yaml;
 use Kirby\Util\A;
@@ -28,5 +29,6 @@ class_alias(Site::class, 'Site');
 class_alias(Response::class, 'Response');
 class_alias(Structure::class, 'Structure');
 class_alias(Str::class, 'Str');
+class_alias(Url::class, 'Url');
 class_alias(V::class, 'V');
 class_alias(Yaml::class, 'Yaml');

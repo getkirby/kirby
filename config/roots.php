@@ -14,6 +14,11 @@ return [
         return realpath(__DIR__ . '/../../');
     },
 
+    // assets
+    'assets' => function (array $roots) {
+        return $roots['index'] . '/assets';
+    },
+
     // content
     'content' => function (array $roots) {
         return $roots['index'] . '/content';
