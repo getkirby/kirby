@@ -8,7 +8,18 @@ return [
         'icon' => function (string $icon = 'user') {
             return $icon;
         },
-        'options' => function () {
+    ],
+    'computed' => [
+        'default' => function () {
+            if ($this->props['default']) {
+                return $this->props['default'];
+            }
+
+            if ($user = App::instance()->user()) {
+                return $user->id();
+            }
+        },
+        'users' => function () {
             $options = [];
 
             foreach (App::instance()->users() as $user) {
@@ -20,17 +31,6 @@ return [
             }
 
             return $options;
-        },
-    ],
-    'computed' => [
-        'default' => function () {
-            if ($this->props['default']) {
-                return $this->props['default'];
-            }
-
-            if ($user = App::instance()->user()) {
-                return $user->id();
-            }
         },
     ],
     'validations' => [
