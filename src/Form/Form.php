@@ -17,6 +17,9 @@ class Form
         $values = $props['values'] ?? [];
         $inject = $props;
 
+        // lowercase all value names
+        $values = array_change_key_case($values);
+
         unset($inject['fields'], $inject['values']);
 
         $this->fields = new Fields;
@@ -24,7 +27,7 @@ class Form
         foreach ($fields as $name => $props) {
 
             // inject the name
-            $props['name'] = $name;
+            $props['name'] = $name = strtolower($name);
 
             // inject the value
             if (isset($values[$name]) === true) {
