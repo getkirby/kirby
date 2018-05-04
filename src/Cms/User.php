@@ -286,11 +286,11 @@ class User extends Model
     public function login(string $password, $session = null)
     {
         if ($this->role()->permissions()->for('access', 'panel') === false) {
-            throw new PermissionsException(['key' => 'access.panel']);
+            throw new PermissionException(['key' => 'access.panel']);
         }
 
         if ($this->validatePassword($password) !== true) {
-            throw new PermissionsException(['key' => 'access.login']);
+            throw new PermissionException(['key' => 'access.login']);
         }
 
         $this->loginPasswordless($session);
