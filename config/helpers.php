@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Url;
 use Kirby\Html\Attributes;
+use Kirby\Html\Element\Video;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
 use Kirby\Util\F;
@@ -29,16 +30,13 @@ function css($url, $media = null)
 
     $tag = '<link rel="stylesheet" href="%s"' . attr(['media' => $media], ' ') . '>';
 
-    if ($url === '@auto' && $assetUrl = Url::toTemplateAsset('css/templates', 'css')) {
-        return sprintf($tag, $assetUrl);
+    if ($url === '@auto') {
+        if ($assetUrl = Url::toTemplateAsset('css/templates', 'css')) {
+            return sprintf($tag, $assetUrl);
+        }
     } else {
         return sprintf($tag, Url::to($url));
     }
-}
-
-function env($key, $default = null)
-{
-    return $_ENV[$key] ?? $default;
 }
 
 function get($key, $default = null)
@@ -46,9 +44,56 @@ function get($key, $default = null)
     return App::instance()->request()->get($key, $default);
 }
 
+/**
+ * Embeds a Github Gist
+ *
+ * @param string $url
+ * @param string $file
+ * @return string
+ */
+function gist(string $url, string $file = null): string
+{
+    return kirbytag([
+        'gist' => $url,
+        'file' => $file,
+    ]);
+}
+
 function go($url, int $code = 301)
 {
     die(new Redirect(url($url), $code));
+}
+
+/**
+ * Return an image from any page
+ * specified by the path
+ *
+ * Example:
+ * <?= image('some/page/myimage.jpg') ?>
+ *
+ * @param string $path
+ * @return File|null
+ */
+function image(string $path = null)
+{
+    if ($path === null) {
+        return page()->image();
+    }
+
+    $uri      = dirname($path);
+    $filename = basename($path);
+
+    if ($uri == '.') {
+        $uri = null;
+    }
+
+    $page = $uri === '/' ? site() : page($uri);
+
+    if ($page) {
+        return $page->image($filename);
+    } else {
+        return null;
+    }
 }
 
 function js($src, $async = null)
@@ -63,8 +108,10 @@ function js($src, $async = null)
 
     $tag = '<script src="%s"' . attr(['async' => $async], ' ') . '></script>';
 
-    if ($src === '@auto' && $assetUrl = Url::toTemplateAsset('js/templates', 'js')) {
-        return sprintf($tag, $assetUrl);
+    if ($src === '@auto') {
+        if ($assetUrl = Url::toTemplateAsset('js/templates', 'js')) {
+            return sprintf($tag, $assetUrl);
+        }
     } else {
         return sprintf($tag, Url::to($src));
     }
@@ -142,11 +189,17 @@ function snippet($name, $data = [], $return = false)
 
     $snippet = App::instance()->component('snippet', $name, $data);
 
-    if ($return === true) {
-        return $snippet->render();
+    try {
+        $output = $snippet->render();
+    } catch (Exception $e) {
+        $output = null;
     }
 
-    echo $snippet->render();
+    if ($return === true) {
+        return $output;
+    }
+
+    echo $output;
 }
 
 function svg(string $file)
@@ -190,6 +243,25 @@ function tc($key, int $count)
     return I18n::translateCount($key, $count);
 }
 
+/**
+ * Builds a Twitter link
+ *
+ * @param string $username
+ * @param string $text
+ * @param string $title
+ * @param string $class
+ * @return string
+ */
+function twitter(string $username, string $text = null, string $title = null, string $class = null): string
+{
+    return kirbytag([
+        'twitter' => $username,
+        'text'    => $text,
+        'title'   => $title,
+        'class'   => $class
+    ]);
+}
+
 function u(string $path = null): string
 {
     return Url::to();
@@ -200,3 +272,17 @@ function url(string $path = null): string
     return Url::to($path);
 }
 
+function video(...$arguments)
+{
+    return Video::create(...$arguments);
+}
+
+function vimeo(...$arguments)
+{
+    return Video::create(...$arguments);
+}
+
+function youtube(...$arguments)
+{
+    return Video::create(...$arguments);
+}
