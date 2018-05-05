@@ -32,6 +32,16 @@ class Collection extends Iterator
         $this->set($data);
     }
 
+    public function isEven(): bool
+    {
+        return $this->count() % 2 === 0;
+    }
+
+    public function isOdd(): bool
+    {
+        return $this->count() % 2 !== 0;
+    }
+
     public function query(array $arguments): self
     {
         $result = clone $this;
