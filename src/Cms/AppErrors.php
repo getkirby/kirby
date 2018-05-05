@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Http\Response\Json;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler;
@@ -57,21 +58,33 @@ trait AppErrors
         $whoops  = new Whoops;
         $handler = new CallbackHandler(function ($exception, $inspector, $run) {
 
+            if (is_a($exception, Exception::class) === true) {
+                $httpCode = $exception->getHttpCode();
+                $code     = $exception->getCode();
+                $details  = $exception->getDetails();
+            } else {
+                $httpCode = 500;
+                $code     = $exception->getCode();
+                $details  = null;
+            }
+
             if($this->option('debug') === true) {
                 echo new Json([
                     'status'    => 'error',
                     'exception' => get_class($exception),
-                    'code'      => $exception->getCode(),
+                    'code'      => $code,
                     'message'   => $exception->getMessage(),
+                    'details'   => $details,
                     'file'      => ltrim($exception->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
                     'line'      => $exception->getLine(),
-                ], $exception->getCode() > 0 ? $exception->getCode() : 500);
+                ], $httpCode);
             } else {
                 echo new Json([
                     'status'  => 'error',
-                    'code'    => 0,
+                    'code'    => $code,
+                    'details' => $details,
                     'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/cheatsheet/options/debug',
-                ], 500);
+                ], $httpCode);
             }
 
             return Handler::QUIT;
