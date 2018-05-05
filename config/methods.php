@@ -80,6 +80,10 @@ return function (App $app) {
                 $a->attr($attr1);
             }
 
+            if ($this->parent()->isActive()) {
+                $a->attr('aria-current', 'page');
+            }
+
             return $a;
         },
         'toPage' => function () use ($app) {
