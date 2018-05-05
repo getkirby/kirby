@@ -45,6 +45,16 @@ class Pages extends Collection
     protected $index = null;
 
     /**
+     * Returns all audio files of all children
+     *
+     * @return Files
+     */
+    public function audio(): Files
+    {
+        return $this->files()->filterBy("type", "audio");
+    }
+
+    /**
      * Returns all children for each page in the array
      *
      * @return Pages
@@ -60,6 +70,26 @@ class Pages extends Collection
         }
 
         return $children;
+    }
+
+    /**
+     * Returns all code files of all children
+     *
+     * @return Files
+     */
+    public function code(): Files
+    {
+        return $this->files()->filterBy("type", "code");
+    }
+
+    /**
+     * Returns all documents of all children
+     *
+     * @return Files
+     */
+    public function documents(): Files
+    {
+        return $this->files()->filterBy("type", "document");
     }
 
     /**
@@ -99,6 +129,24 @@ class Pages extends Collection
     }
 
     /**
+     * Returns all files of all children
+     *
+     * @return Files
+     */
+    public function files(): Files
+    {
+        $files = new Files([], $this->parent);
+
+        foreach ($this->data as $pageKey => $page) {
+            foreach ($page->files() as $fileKey => $file) {
+                $files->data[$fileKey] = $file;
+            }
+        }
+
+        return $files;
+    }
+
+    /**
      * Custom getter that is able to find
      * extension pages
      *
@@ -112,6 +160,16 @@ class Pages extends Collection
         }
 
         return App::instance()->extension('pages', $key);
+    }
+
+    /**
+     * Returns all images of all children
+     *
+     * @return Files
+     */
+    public function images(): Files
+    {
+        return $this->files()->filterBy("type", "image");
     }
 
     /**
@@ -221,6 +279,27 @@ class Pages extends Collection
         }
 
         return $this;
+    }
+
+    /**
+     * Filter all pages by the given template
+     *
+     * @param string $template
+     * @return self
+     */
+    public function template(string $template): self
+    {
+        return $this->filterBy('template', '==', $template);
+    }
+
+    /**
+     * Returns all video files of all children
+     *
+     * @return Files
+     */
+    public function videos(): Files
+    {
+        return $this->files()->filterBy("type", "video");
     }
 
     /**
