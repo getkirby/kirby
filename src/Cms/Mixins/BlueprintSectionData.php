@@ -156,7 +156,7 @@ trait BlueprintSectionData
         }
 
         if (is_a($imageSource, File::class) === true && $imageSource->type() === 'image') {
-            $imageSettings['url'] = $this->layout() === 'list' ? $imageSource->crop(100)->url() : $imageSource->resize(300, 300)->url();
+            $imageSettings['url'] = $this->layout() === 'list' ? $imageSource->crop(100)->url() : $imageSource->resize(400, 400)->url();
         } else {
             $imageSettings['url'] = false;
         }
