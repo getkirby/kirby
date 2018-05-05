@@ -38,8 +38,15 @@ class Files extends Collection
         return new FilesFinder($this, null);
     }
 
-    public function group(string $group): self
+    /**
+     * Filter all files by the given template
+     *
+     * @param string $template
+     * @return self
+     */
+    public function template(string $template): self
     {
-        return $this->filterBy('group', '==', $group);
+        return $this->filterBy('template', '==', $template);
     }
+
 }
