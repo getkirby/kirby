@@ -114,6 +114,22 @@ class File extends Model
     }
 
     /**
+     * Converts the file object to a string
+     * In case of an image, it will create an image tag
+     * Otherwise it will return the url
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        if ($this->type() === 'image') {
+            return '<img src="' . $this->url() . '" alt="' . $this->alt() . '">';
+        }
+
+        return $this->url();
+    }
+
+    /**
      * Returns the Asset object
      *
      * @return Image
