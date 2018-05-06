@@ -92,7 +92,7 @@ class Site extends Model
      *
      * @var string
      */
-    protected $url = '/';
+    protected $url;
 
     /**
      * Creates a new Site object
@@ -408,9 +408,9 @@ class Site extends Model
      * @param string $url
      * @return void
      */
-    protected function setUrl(string $url = null): self
+    protected function setUrl($url = null): self
     {
-        $this->url = rtrim($url, '/');
+        $this->url = $url;
         return $this;
     }
 
@@ -421,7 +421,7 @@ class Site extends Model
      */
     public function url()
     {
-        return $this->url ?? '/';
+        return $this->url ?? $this->kirby()->url();
     }
 
     /**
