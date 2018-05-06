@@ -141,7 +141,12 @@ class Base
 
     public function read(): array
     {
-        return Data::read($this->storage());
+        try {
+            return Data::read($this->storage());
+        } catch (\Exception $e) {
+            error_log($this->storage() . ' does not exist');
+            return [];
+        }
     }
 
     public function root(): string
