@@ -944,6 +944,6 @@ class Page extends Model
             return $this->url = $this->parent()->url() . '/' . $this->slug();
         }
 
-        return $this->site()->url() . '/' . $this->slug();
+        return $this->url = $this->site()->url() . '/' . $this->slug();
     }
 }
