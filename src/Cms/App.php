@@ -441,11 +441,17 @@ class App extends Component
     /**
      * Sets a custom Site object
      *
-     * @param Site $site
+     * @param array|Site $site
      * @return self
      */
-    protected function setSite(Site $site = null)
+    protected function setSite($site = null)
     {
+        if (is_array($site) === true) {
+            $site = new Site($site + [
+                'kirby' => $this
+            ]);
+        }
+
         $this->site = $site;
         return $this;
     }
