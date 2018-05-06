@@ -55,7 +55,7 @@ class Json extends Response
         }
 
         if (is_array($body) === true) {
-            return parent::body(json_encode($body, $pretty === true ? JSON_PRETTY_PRINT : null));
+            return parent::body(json_encode($body, $pretty === true ? JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES : null));
         }
 
         return parent::body($body);
