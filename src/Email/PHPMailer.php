@@ -59,12 +59,12 @@ class PHPMailer extends Email
         // smtp transport settings
         if ($this->transport()['type'] === 'smtp') {
             $mailer->isSMTP();
-            $mailer->Host = $this->transport()['host'] ?? null;
-            $mailer->SMTPAuth = $this->transport()['auth'] ?? false;
-            $mailer->Username = $this->transport()['user'] ?? null;
-            $mailer->Password = $this->transport()['password'] ?? null;
-            $mailer->SMTPSecure = ($this->transport()['ssl'] ?? true) ? 'ssl' : null;
-            $mailer->Port = $this->transport()['port'] ?? null;
+            $mailer->Host       = $this->transport()['host'] ?? null;
+            $mailer->SMTPAuth   = $this->transport()['auth'] ?? false;
+            $mailer->Username   = $this->transport()['username'] ?? null;
+            $mailer->Password   = $this->transport()['password'] ?? null;
+            $mailer->SMTPSecure = ($this->transport()['ssl'] ?? true) ? 'ssl': null;
+            $mailer->Port       = $this->transport()['port'] ?? null;
         }
 
         if ($debug === true) {
