@@ -34,8 +34,15 @@ trait AppOptions
 
         $fromExtensions = $this->optionsFromExtensions();
         $fromFiles      = $this->optionsFromFiles();
+        $options        = array_replace_recursive($fromExtensions, $fromFiles);
 
-        return $this->options = array_replace_recursive($fromExtensions, $fromFiles);
+        // register routes and hooks from options
+        $this->extend([
+            'routes' => $options['routes'] ?? [],
+            'hooks'  => $options['hooks']  ?? []
+        ]);
+
+        return $this->options = $options;
     }
 
     /**
