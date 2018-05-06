@@ -166,7 +166,7 @@ class Email
 
     protected function setTransport($transport = null)
     {
-        $this->setTransport = $transport;
+        $this->transport = $transport;
         return $this;
     }
 
