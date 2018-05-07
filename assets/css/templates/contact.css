@@ -1,0 +1,34 @@
+.contact section h2 {
+  margin-bottom: 1rem;
+  font-weight: 900;
+  font-size: 1.5rem;
+  letter-spacing: .01em;
+}
+.contact section:not(:last-child) {
+  padding-bottom: 6rem;
+}
+
+.contact-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 4rem;
+}
+.contact-options h3 {
+  color: var(--color-secondary);
+  display: inline-block;
+  font-weight: 500;
+}
+
+.twitter ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1.5rem;
+  line-height: 1.25em;
+}
+.twitter li {
+  padding-left: 0;
+  border-left: 8px solid var(--color-brand);
+}
+.twitter-name {
+  font-weight: 500;
+}

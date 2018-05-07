@@ -13,7 +13,7 @@ sections:
       username:
         label: Username
         type:  text
-        prefix: "@"
+        before: "@"
         icon:  user
         width: 1/2
       tweet:

@@ -1,0 +1,60 @@
+.events {
+  display: grid;
+  grid-gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  padding-bottom: 10vh;
+}
+.events-list h2 {
+  margin-bottom: 1.5rem;
+}
+
+.event {
+  position: relative;
+  background: var(--color-secondary);
+  color: #fff;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+}
+.event a {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 17.5vw;
+}
+.event header,
+.event footer {
+  position: relative;
+  z-index: 2;
+}
+.event header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.event header h3 {
+  font-weight: 500;
+  line-height: 1.5em;
+}
+.event header time {
+  font-size: .875rem;
+  color: #000;
+}
+.event figure img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  overflow: hidden;
+  filter: grayscale(100%);
+  mix-blend-mode: multiply;
+}
+.event footer {
+  font-size: .875rem;
+  color: #000;
+}

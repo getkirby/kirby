@@ -1,12 +1,13 @@
-  <footer class="footer cf" role="contentinfo">
-    <div class="wrap wide">
+  </div>
 
-      <div class="footer-copyright"><?php $site->copyright()->kirbytext() ?></div>
+  <footer class="footer">
+    <div class="footer-content">
+      <a href="">&copy; 2018 / Kirby Starterkit</a>
 
-      <p class="footer-madewithkirby">
-        <a href="http://getkirby.com/made-with-kirby-and-love">Made with Kirby and <b class="heart">♥</b></a>
-      </p>
-
+      <nav class="social">
+        <a href="">Twitter</a>
+        <a href="">Instagram</a>
+      </nav>
     </div>
   </footer>
 

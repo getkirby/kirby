@@ -1,0 +1,67 @@
+Title: Restaurant Menu
+
+----
+
+Starters: 
+
+- 
+  dish: Some Soup
+  description: "It's a hot fluid. Could be soup."
+  price: 7.99
+- 
+  dish: Big fat salad
+  description: "It's not really a salad"
+  price: 5.99
+- 
+  dish: Chicken Nuggets
+  description: vegetarian
+  price: 10.99
+
+----
+
+Pasta: 
+
+- 
+  dish: Tortellini with some cheese sauce
+  description: >
+    We take the cheapest cheese we can get
+    at Lidl
+  price: 19.99
+- 
+  dish: Lasagne
+  description: Minced meat / dough ratio = 1:12
+  price: 17.99
+- 
+  dish: Spaghetti alla Vongole
+  description: "Don't take them in all months with a R, I, J, D, E, S or N"
+  price: 22.99
+
+----
+
+Meat: 
+
+- 
+  dish: Beef
+  description: With mayonnaise
+  price: 25.99
+- 
+  dish: Pigeon
+  description: Those from the streets
+  price: 26.99
+- 
+  dish: Pork
+  description: With Ketchup
+  price: 24.99
+
+----
+
+Desert: 
+
+- 
+  dish: Deep fried Mars
+  description: "It's scottish. Don't ask"
+  price: 3.99
+- 
+  dish: Nespresso
+  description: You can keep the capsule
+  price: 7.99

@@ -1,0 +1,5 @@
+title: Shop
+----
+Intro:
+
+We don't offer a full check-out process or customer management in Kirby. You could build that on top of it, but most of the time it's probably more feasable to integrate something like (link: https://snipcart.com text: Snipcart.) A full product listing is done in a matter of minutes with Kirby though, as shown in this example.

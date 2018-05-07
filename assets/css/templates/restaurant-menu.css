@@ -1,0 +1,48 @@
+.dishes {
+  line-height: 1.5em;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+}
+.dishes:not(:last-child) {
+  border-bottom: 8px solid #ddd;
+}
+.dishes h2 {
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  color: var(--color-secondary);
+  font-weight: 400;
+}
+
+.dish {
+  display: grid;
+  grid-column-gap: .5rem;
+  grid-template-columns: 1fr 4rem;
+  padding: .25rem 0;
+}
+.dish-name {
+  font-size: 1rem;
+  font-weight: 500;
+  grid-column: 1;
+  grid-row: 1;
+}
+.dish-description {
+  color: #777;
+  font-size: .875rem;
+  grid-row: 2;
+}
+.dish-price {
+  text-align: right;
+  grid-column: 3;
+  color: var(--color-secondary);
+}
+
+
+@media screen and (min-width: 45em) {
+  .dish {
+    grid-template-columns: auto 1fr 4rem;
+    grid-template-rows: 1fr;
+  }
+  .dish-description {
+    grid-row: 1;
+  }
+}

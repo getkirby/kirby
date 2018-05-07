@@ -6,8 +6,41 @@ Description: This is Kirby's Starterkit.
 
 ----
 
-Copyright: © 2009–(date: Year) (link: http://getkirby.com text: The Kirby Team)
+Copyright: Kirby Kitchensink
 
 ----
 
-Title: Kirby Starterkit
+Title: Kirby Kitchensink
+
+----
+
+Twitter: getkirby
+
+----
+
+Instagram: getkirby
+
+----
+
+Metatitle: Kirby Kitchensink
+
+----
+
+Metadescription: This is Kirby's demo installation with lots of hopefully interesting examples
+
+----
+
+Tags: 
+
+- 
+  name: Design
+  value: design
+- 
+  name: Architecture
+  value: architecture
+- 
+  name: Photography
+  value: photography
+- 
+  name: Technology
+  value: technology

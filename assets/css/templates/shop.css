@@ -1,0 +1,25 @@
+.shop {
+  display: grid;
+  grid-gap: 3rem;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media screen and (min-width: 30em) {
+  .shop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 70em) {
+  .shop {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+.product {
+  line-height: 1.5em;
+  text-align: center;
+}
+.product-price {
+  color: var(--color-secondary);
+}

@@ -1,10 +1,15 @@
 title: Contact
 
+icon: ☎️
+
 fields:
 
   intro:
     label: Intro
     type: textarea
+  address:
+    label: Address
+    type: geo
   contactoptions:
     label: Contact Options
     type: structure
@@ -36,6 +41,7 @@ fields:
         width: 1/2
       twitter:
         label: Twitter Username
+        before: "@"
         type: text
         icon: twitter
         width: 1/2

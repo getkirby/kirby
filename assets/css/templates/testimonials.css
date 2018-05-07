@@ -1,0 +1,45 @@
+.testimonials {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+.testimonials h1 {
+  text-align: center;
+}
+.testimonial {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 4.5rem;
+}
+.testimonial figure {
+  width: 4rem;
+  height: 4rem;
+  margin-right: 1.5rem;
+}
+.testimonial blockquote {
+  max-width: 25rem;
+  line-height: 1.5em;
+}
+.testimonial-quote {
+  margin-bottom: 1rem;
+  background: var(--color-brand);
+  padding: 1rem;
+}
+.testimonial-author a {
+  font-weight: 500;
+}
+.testimonial img {
+  border-radius: 50%;
+}
+
+.testimonial:nth-child(even) {
+  direction: rtl;
+}
+.testimonial:nth-child(even) .testimonial-quote {
+  background: var(--color-secondary);
+}
+.testimonial:nth-child(even) > * {
+  direction: ltr;
+}
+.testimonial:nth-child(even) figure {
+  margin-left: 1.5rem;
+}

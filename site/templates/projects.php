@@ -1,19 +1,20 @@
 <?php snippet('header') ?>
 
-  <main class="main" role="main">
+<main>
+  <?php snippet('intro') ?>
 
-    <header class="wrap">
-      <h1><?= $page->title()->html() ?></h1>
-      <div class="intro text">
-        <?= $page->text()->kirbytext() ?>
-      </div>
-      <hr />
-    </header>
-
-    <div class="wrap wide">
-      <?php snippet('showcase') ?>
-    </div>
-
-  </main>
+  <ul class="projects"<?= attr(['data-even' => $page->children()->listed()->isEven()], ' ') ?>>
+    <?php foreach ($page->children()->listed() as $project): ?>
+    <li>
+      <a href="<?= $project->url() ?>">
+        <figure>
+          <?= $project->images()->findBy("template", "cover") ?>
+          <figcaption><?= $project->title() ?> <small><?= $project->year() ?></small></figcaption>
+        </figure>
+      </a>
+    </li>
+    <?php endforeach ?>
+  </ul>
+</main>
 
 <?php snippet('footer') ?>

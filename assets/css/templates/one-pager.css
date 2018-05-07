@@ -1,0 +1,51 @@
+.one-pager .intro {
+  text-align: center;
+}
+
+.one-pager-gallery-section {
+  max-width: 45rem;
+  margin: 0 auto 3rem;
+}
+.one-pager-gallery-section ul {
+  display: grid;
+  line-height: 0;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+}
+
+.one-pager-video-section {
+  margin: 0 auto 3rem;
+  max-width: 45rem;
+}
+.one-pager-video-section figure {
+  position: relative;
+  padding-bottom: 52.65%;
+  background: #000;
+  box-shadow: rgba(0, 0, 0, .2) 0 5px 20px;
+}
+.one-pager-video-section iframe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.one-pager-headline-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.one-pager-headline-section h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+  color: var(--color-secondary);
+}
+
+.one-pager-text-section {
+  max-width: 40rem;
+  margin: 0 auto 3rem;
+}

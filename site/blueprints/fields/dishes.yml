@@ -12,6 +12,6 @@ fields:
   price:
     label: Price
     type: number
-    prefix: €
+    before: €
     step: 0.01
     width: 1/3

@@ -1,7 +1,0 @@
-headline: Team
-type: pages
-parent: site.find("about")
-layout: list
-templates: team
-item:
-  info: "{{ page.position }}"

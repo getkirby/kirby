@@ -1,0 +1,58 @@
+.article:not(:last-child) {
+  padding-bottom: 10vh;
+}
+
+.article-header {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.article-header h2 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1em;
+  margin-bottom: .25rem;
+}
+.article-header time {
+  font-size: .875rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 1.5rem;
+  color: var(--color-secondary);
+}
+
+.article-tags {
+  font-size: .875rem;
+  line-height: 1.5em;
+  color: #777;
+}
+.article-author {
+  font-size: .875rem;
+  line-height: 1.5em;
+}
+
+
+.article-text {
+  grid-row-start: 2;
+  grid-row-end: -1;
+  grid-column-start: 2;
+  max-width: 40rem;
+}
+
+@media screen and (min-width: 45rem) {
+  .article {
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: 1fr 3fr;
+  }
+  .article-text {
+    margin-right: 12rem;
+  }
+  .article-text figure {
+    display: grid;
+    grid-template-columns: 1fr 10rem;
+    grid-gap: 2rem;
+    margin-right: -12rem;
+  }
+}
+
+

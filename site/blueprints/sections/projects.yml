@@ -7,5 +7,6 @@ templates: project
 item:
   image:
     src: page.images.filterBy("template", "cover").first
-    ratio: 3/2
+    ratio: 1/1
+    cover: true
   info: "{{ page.year }}"

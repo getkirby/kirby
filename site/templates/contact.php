@@ -1,41 +1,40 @@
 <?php snippet('header') ?>
 
-  <main class="main" role="main">
+<main class="contact">
+  <?php snippet('intro') ?>
 
-    <header class="wrap">
-      <h1><?= $page->title()->html() ?></h1>
-      <div class="intro text">
-        <?= $page->intro()->kirbytext() ?>
-      </div>
-      <hr />
-    </header>
+  <section>
+    <h2>Get in Touch</h2>
+    <ul class="contact-options">
+      <?php foreach ($page->contactoptions()->toStructure() as $item): ?>
+        <li class="text">
+          <h3><?= $item->title()->html() ?></h3>
+          <p class="contact-item-text">
+            <?= $item->text()->html() ?>
+          </p>
+          <p class="contact-item-action">
+            <a href="<?= $item->url()->html() ?>"><?= $item->linktext()->html() ?></a>
+          </p>
+        </li>
+      <?php endforeach ?>
+    </ul>
+  </section>
 
-    <div class="wrap wide">
-      <h2>Get in Touch</h2>
+  <section class="twitter">
+    <h2>Follow us on Twitter</h2>
 
-      <ul class="contact-options">
-        <?php foreach($page->contactoptions()->toStructure() as $item): ?>
-        <?php $icon = $item->icon()->toFile(); ?>
-          <li class="contact-item column">
-            <div class="contact-item-content">
-              <img src="<?= $icon->url() ?>" width="<?= $icon->width() ?>" alt="<?= $item->title()->html() ?> icon" class="contact-item-icon" />
-              <h3 class="contact-item-title"><?= $item->title()->html() ?></h3>
-              <p class="contact-item-text">
-                <?= $item->text()->html() ?>
-              </p>
-            </div>
-            <p class="contact-item-action">
-              <a href="<?= $item->url()->html() ?>" class="contact-action btn"><?= $item->linktext()->html() ?></a>
-            </p>
-          </li>
-        <?php endforeach ?>
-      </ul>
-    </div>
+    <ul>
+      <?php foreach ($page->twitter()->toStructure() as $account): ?>
+      <li>
+        <a href="https://twitter.com/<?= $account->twitter() ?>">
+          <p class="twitter-name"><?= $account->name() ?></p>
+          <p class="twitter-account">@<?= $account->twitter() ?></p>
+        </a>
+      </li>
+      <?php endforeach ?>
+    </ul>
+  </section>
 
-    <div class="contact-twitter text wrap cf">
-      <?= $page->text()->kirbytext() ?>
-    </div>
-
-  </main>
+</main>
 
 <?php snippet('footer') ?>

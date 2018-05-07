@@ -1,5 +1,7 @@
 title: Projects
 
+icon: 🖼
+
 options:
   delete: false
 
@@ -18,3 +20,6 @@ sections:
       en: Published projects
       de: Veröffentlichte Projekte
     status: listed
+    item:
+      image:
+        ratio: 3/2

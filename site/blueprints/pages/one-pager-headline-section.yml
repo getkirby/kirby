@@ -1,5 +1,7 @@
 title: Headline Section
 
+icon: title
+
 fields:
   headline:
     label: Headline

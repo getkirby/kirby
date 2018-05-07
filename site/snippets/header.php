@@ -5,22 +5,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-  <title><?= $site->title()->html() ?> | <?= $page->title()->html() ?></title>
-  <meta name="description" content="<?= $site->description()->html() ?>">
+  <title><?= $site->title() ?> | <?= $page->title() ?></title>
 
-  <?= css('assets/css/index.css') ?>
+  <meta property="og:title" content="<?= $site->metaTitle() ?>">
+  <meta property="og:description" content="<?= $site->metaDescription() ?>">
+
+  <?= css(['assets/css/index.css', '@auto']) ?>
 
 </head>
 <body>
 
-  <header class="header wrap wide" role="banner">
-    <div class="grid">
+  <div class="page">
+    <header class="header">
+      <a class="logo" href="/">Løgø</a>
 
-      <div class="branding column">
-        <a href="<?= url() ?>" rel="home"><?= $site->title()->html() ?></a>
-      </div>
+      <nav id="menu" class="menu">
+        <label for="menu-toggle">Menu</label>
+        <input id="menu-toggle" type="checkbox" />
+        <span class="menu-dropdown">
+          <?php foreach ($site->children()->listed() as $page): ?>
+          <?= $page->title()->link() ?>
+          <?php endforeach ?>
+        </span>
+      </nav>
+    </header>
 
-      <?php snippet('menu') ?>
-
-    </div>
-  </header>

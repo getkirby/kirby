@@ -7,61 +7,56 @@ tabs:
       de: Seiten
     icon: page
     columns:
-      - 1/1: projects, blog, about, kitchensink, misc
-  social:
-    label: Social
+      - 1/1: kitchensink
+  footer:
+    label: Footer
     icon: twitter
     columns:
-      - 1/1: social
+      - 1/1: footer
   seo:
     label: SEO
     icon: search
     columns:
       - 2/3: seoContent
       - 1/3: seoImages
+  taxonomy:
+    label: Taxonomy
+    icon: tag
+    columns:
+      - 1/1: tags
 
 sections:
 
-  projects:
-    extends: sections/projects
-    layout: list
-    status: all
-
-  blog:
-    extends: sections/articles
-
-  about:
-    extends: sections/team
-    headline: About
-
+  # PAGES TAB
   kitchensink:
-    headline: Kitchensink
+    headline: Examples
     type: pages
-    parent: site.find("kitchensink")
+    status: listed
     item:
       image: false
+      info: "{{ page.template }}"
 
-  misc:
-    headline: Misc
-    type: pages
-    templates:
-      - home
-      - contact
-    item:
-      image: false
-
-  social:
+  # FOOTER TAB
+  footer:
     type: fields
     fields:
+      copyright:
+        label: Copyright
+        type: text
+        before: ©
       twitter:
         label: Twitter Account
         type: text
         icon: twitter
-      facebook:
-        label: Facebook Account
+        width: 1/2
+        before: "@"
+      instagram:
+        label: Instagram Account
         type: text
-        icon: facebook
+        icon: instagram
+        width: 1/2
 
+  # SEO TAB
   seoContent:
     type: fields
     fields:
@@ -72,8 +67,26 @@ sections:
       metaDescription:
         label: Meta Description
         type: textarea
+        buttons: false
 
   seoImages:
     type: files
     headline: Seo Images
     min: 1
+
+  # TAXONOMY TAB
+  tags:
+    type: fields
+    fields:
+      tags:
+        label: Tags
+        type: structure
+        fields:
+          name:
+            label: Tag
+            type: text
+            width: 1/2
+          value:
+            label: Value
+            type: text
+            width: 1/2

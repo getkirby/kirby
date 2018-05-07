@@ -1,0 +1,21 @@
+Title: Kirby Workshop
+
+----
+
+From: 2018-05-09 00:00:00
+
+----
+
+To: 2018-05-09 00:00:00
+
+----
+
+Location: Düsseldorf, Germany
+
+----
+
+Text: It's a workshop. About Kirby. A Kirby workshop.
+
+----
+
+Link: https://getkirby.com

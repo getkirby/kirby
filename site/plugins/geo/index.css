@@ -1,0 +1,22 @@
+.kirby-geo-field-map {
+  padding-bottom: 25%;
+  cursor: default !important;
+}
+
+.kirby-geo-field-map * {
+  cursor: default !important;
+}
+
+.kirby-geo-field-info {
+  position: relative;
+  font-size: 1rem;
+  padding: .5rem;
+  line-height: 1.25rem;
+  background: #fff;
+}
+.kirby-geo-field-info .kirby-button {
+  position: absolute;
+  top: 50%;
+  right: .75rem;
+  transform: translateY(-50%);
+}

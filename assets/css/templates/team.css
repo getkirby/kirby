@@ -1,0 +1,34 @@
+.team {
+  display: grid;
+  grid-gap: 3rem;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media screen and (min-width: 30em) {
+  .team {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 70em) {
+  .team {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+.member {
+  line-height: 1.5em;
+}
+.member-position {
+  color: var(--color-secondary);
+}
+.member > span {
+  display: block;
+  line-height: 0;
+  background: var(--color-brand);
+  margin-bottom: 1.75rem;
+}
+.member img {
+  filter: grayscale(100%);
+  mix-blend-mode: multiply;
+}

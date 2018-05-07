@@ -23,13 +23,20 @@ sections:
     fields:
       date:
         label: Date
-        type: datetime
+        type: date
+        time: true
         default: now
+      author:
+        label: Author
+        type: user
       tags:
         label: Tags
         type: tags
         options: query
-        query: site.find("blog").children
+        query:
+          fetch: site.tags.toStructure.sortBy("name", "asc")
+          text: "{{ structureItem.name }}"
+          value: "{{ structureItem.value }}"
 
   images:
     extends: sections/images

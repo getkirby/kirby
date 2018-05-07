@@ -1,29 +1,31 @@
 <?php snippet('header') ?>
 
-  <main class="main" role="main">
-
-    <header class="wrap">
-      <h1><?= $page->title()->html() ?></h1>
-      <div class="intro text">
-        <?= $page->intro()->kt() ?>
-      </div>
-      <hr />
-    </header>
-
-    <div class="text wrap">
-      <?= $page->text()->kt() ?>
+<main>
+  <header class="intro">
+    <h1>Kirby Kitchensink</h1>
+    <div class="intro-text">
+      There's magic in every new beginning
     </div>
+  </header>
 
-    <section class="projects-section">
+  <ul class="grid">
+    <?php foreach ($site->children()->listed() as $example): ?>
+    <li>
+      <a href="<?= $example->url() ?>">
+        <figure>
+          <img src="https://picsum.photos/500/500/?random&t=<?= $example->indexOf() ?>" alt="">
+          <figcaption>
+            <span>
+              <span class="example-icon"><?= $example->blueprint()->icon() ?></span>
+              <span class="example-name"><?= $example->title() ?></span>
+            </span>
+          </figcaption>
+        </figure>
+      </a>
+    </li>
+    <?php endforeach ?>
+  </ul>
 
-      <div class="wrap wide">
-        <h2>Latest Projects</h2>
-        <?php snippet('showcase', ['limit' => 3]) ?>
-        <p class="projects-section-more"><a href="<?= page('projects')->url() ?>" class="btn">show all projects &hellip;</a></p>
-      </div>
-
-    </section>
-
-  </main>
+</main>
 
 <?php snippet('footer') ?>

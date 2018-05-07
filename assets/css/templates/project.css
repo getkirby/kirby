@@ -1,0 +1,64 @@
+.project-cover {
+  position: relative;
+  line-height: 0;
+  margin-bottom: 6rem;
+}
+.project-cover figcaption {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: rgba(0,0,0, .5);
+  text-align: center;
+  color: #fff;
+  line-height: 1;
+  padding: 1.5rem;
+}
+.project-cover h1 {
+  font-size: 3rem;
+}
+.project-cover .text {
+  font-size: 1.25rem;
+  max-width: 20rem;
+  margin: 1.5rem auto 0;
+  color: var(--color-brand);
+}
+.project-text {
+  max-width: 40rem;
+  margin: 0 auto 6rem;
+}
+.project-year {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--color-secondary);
+  text-align: center;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+.project-tags {
+  color: var(--color-secondary);
+  text-align: center;
+}
+
+.project-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  margin: 0 auto;
+  grid-gap: 1rem;
+  max-width: 60rem;
+  justify-content: center;
+}
+.project-gallery[data-even] {
+  grid-template-columns: repeat(4, 1fr);
+}
+.project-gallery[data-count="1"] {
+  grid-template-columns: 1fr;
+}
+.project-gallery[data-count="2"] {
+  grid-template-columns: 1fr 1fr;
+}

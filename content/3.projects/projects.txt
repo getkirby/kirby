@@ -1,0 +1,5 @@
+Title: Projects
+----
+Intro:
+
+Project and work galleries in all forms and sizes can be realized very quickly. This one has a dedicated cover image for every project. Projects can be sorted via drag & drop in the panel and each project has its own page with a nice gallery.

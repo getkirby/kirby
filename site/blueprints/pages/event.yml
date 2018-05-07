@@ -1,5 +1,7 @@
 title: Event
 
+icon: calendar
+
 num: "{{ page.from.toDate('Ymd') }}"
 
 sections:
@@ -19,16 +21,11 @@ sections:
       location:
         label: Location
         type: text
-      text:
-        label: Description
-        type: textarea
+        width: 1/2
       link:
         label: Link
         type: url
-
-  image:
-    type: files
-    headline: Image
-    max: 1
-    item:
-      info: "{{ file.dimensions }} / {{ file.niceSize }}"
+        width: 1/2
+      text:
+        label: Description
+        type: textarea

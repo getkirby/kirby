@@ -1,33 +1,45 @@
 <?php snippet('header') ?>
 
-  <main class="main" role="main">
-    
-    <header class="wrap">
-      <h1><?= $page->title()->html() ?></h1>
-      <div class="intro text">
-        <?= $page->year() ?>
-      </div>
-      <hr />
+<main class="project">
+  <article>
+
+    <header>
+      <?php if ($cover = $page->images()->findBy("template", "cover")): ?>
+      <figure class="project-cover">
+        <?= $cover ?>
+        <figcaption>
+          <div>
+            <h1><?= $page->headline()->or($page->title()) ?></h1>
+            <?php if($page->intro()->isNotEmpty()): ?>
+            <div class="text">
+              <?= $page->intro()->kt() ?>
+            </div>
+            <?php endif ?>
+          </div>
+        </figcaption>
+      </figure>
+      <?php endif ?>
     </header>
-    
-    <div class="text wrap">
-      
-      <?= $page->text()->kirbytext() ?>
 
-      <?php
-      // Images for the "project" template are sortable. You
-      // can change the display by clicking the 'edit' button
-      // above the files list in the sidebar.
-      foreach($page->images()->sortBy('sort', 'asc') as $image): ?>
-        <figure>
-          <img src="<?= $image->url() ?>" alt="<?= $page->title()->html() ?>" />
-        </figure>
-      <?php endforeach ?>
-      
+    <div class="project-text text">
+      <time class="project-year"><?= $page->year() ?></time>
+      <?= $page->text()->kt() ?>
+
+      <?php if ($page->tags()->isNotEmpty()): ?>
+      <p class="project-tags"># <?= $page->tags() ?></p>
+      <?php endif ?>
     </div>
-    
-    <?php snippet('prevnext') ?>
 
-  </main>
+    <ul class="project-gallery"<?= attr(['data-even' => $gallery->isEven(), 'data-count' => $gallery->count()], ' ') ?>>
+      <?php foreach ($gallery as $image): ?>
+      <li>
+        <figure>
+          <?= $image->crop(800, 1000) ?>
+        </figure>
+      </li>
+      <?php endforeach ?>
+    </ul>
+  </article>
+</main>
 
 <?php snippet('footer') ?>

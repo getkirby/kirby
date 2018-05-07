@@ -1,30 +1,38 @@
 title: Team
 
-icon: user
+icon: 😺
 
 columns:
-  - 2/3: content
-  - 1/3: image
+  - 1/2: content
+  - 1/2: hires, team
 
 sections:
+
   content:
     type: fields
     fields:
-      position:
-        label: Position
-        type: text
-      phone:
-        label: Phone
-        type: tel
-        width: 1/2
-      email:
-        label: Email
-        type: email
-        width: 1/2
-      about:
-        label: About
+      intro:
+        label: Intro
+        type: textarea
+      text:
+        label: Text
         type: textarea
 
-	image:
-    extends: sections/image
-		min: 1
+  hires:
+    headline: New Team Members
+    type: pages
+    status: draft
+    layout: list
+    templates: team-member
+    status: drafts
+    item:
+      info: "{{ page.position }}"
+
+  team:
+    headline: Team
+    type: pages
+    layout: list
+    templates: team-member
+    status: listed
+    item:
+      info: "{{ page.position }}"

@@ -1,0 +1,13 @@
+title: Video Section
+
+icon: video
+
+fields:
+  videoId:
+    before: https://youtube.com?watch=
+    label: Video
+    type: text
+    icon: video
+    help: Copy the video ID from youtube here to embed the video.
+
+

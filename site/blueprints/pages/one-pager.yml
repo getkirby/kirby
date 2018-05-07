@@ -6,10 +6,11 @@ sections:
   sections:
     headline: Sections
     type: pages
-    status: listed
+    status: all
     item:
       info: "{{ page.template }}"
-    template:
+    templates:
       - one-pager-headline-section
       - one-pager-gallery-section
       - one-pager-text-section
+      - one-pager-video-section

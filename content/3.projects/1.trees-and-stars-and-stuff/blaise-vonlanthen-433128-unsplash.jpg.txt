@@ -1,0 +1,5 @@
+Template: image
+
+----
+
+Sort: 1
