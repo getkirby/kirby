@@ -8,6 +8,7 @@ tabs:
     icon: page
     columns:
       - 1/1: kitchensink
+      - 1/1: playground
   footer:
     label: Footer
     icon: twitter
@@ -35,6 +36,14 @@ sections:
     item:
       image: false
       info: "{{ page.template }}"
+
+  playground:
+    headline: Playground
+    type: pages
+    templates:
+      - form
+      - sandbox
+
 
   # FOOTER TAB
   footer:
