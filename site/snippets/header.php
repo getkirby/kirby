@@ -17,7 +17,7 @@
 
   <div class="page">
     <header class="header">
-      <a class="logo" href="/">Løgø</a>
+      <a class="logo" href="<?= $site->url() ?>">Løgø</a>
 
       <nav id="menu" class="menu">
         <label for="menu-toggle">Menu</label>
