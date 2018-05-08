@@ -4,6 +4,8 @@ icon: 🖼
 
 options:
   delete: false
+  status: false
+  url: false
 
 sections:
   drafts:
