@@ -40,7 +40,7 @@ class FileStore extends FileStoreDefault
         }
 
         // remove all public versions
-        $this->unpublish();
+        $this->file()->unpublish();
 
         // rename the main file
         F::move($oldRoot, $newRoot);
