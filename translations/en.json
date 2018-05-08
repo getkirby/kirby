@@ -196,7 +196,7 @@
     "error.page.update.permission": "You are not allowed to update \"{slug}\"",
     "error.page.create.permission": "You are not allowed to create \"{slug}\"",
     "error.page.changeSlug.permission": "You are not allowed to change the slug for \"{slug}\"",
-    "error.page.changeStatus.permission": "You are not allowed to change the status for \"{slug}\"",
+    "error.page.changeStatus.permission": "The status for this page cannot be changed",
     "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
     "error.page.changeStatus.toDraft.invalid": "The page \"{slug}\" cannot be converted to a draft",
     "error.page.changeTemplate.invalid": "The template for the page \"{slug}\" cannot be changed",
