@@ -7,9 +7,6 @@ fields:
   intro:
     label: Intro
     type: textarea
-  address:
-    label: Address
-    type: geo
   contactoptions:
     label: Contact Options
     type: structure
