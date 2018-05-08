@@ -36,8 +36,8 @@ class BlueprintOptions
             return false;
         }
 
-        if ($user->role()->id() === 'admin') {
-            return true;
+        if ($this->options[$action] === false) {
+            return false;
         }
 
         if (is_bool($this->options[$action]) === true) {
