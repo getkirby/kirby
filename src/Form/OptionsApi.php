@@ -49,10 +49,11 @@ class OptionsApi
             return $this->options;
         }
 
-        $content = file_get_contents($this->url());
+        $content = @file_get_contents($this->url());
 
         if (empty($content) === true) {
-            throw new LogicException('The options could not be fetched');
+            error_log('The options could not be fetched from: ' . $this->url());
+            return [];
         }
 
         $data = json_decode($content, true);
