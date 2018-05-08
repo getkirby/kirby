@@ -1,0 +1,45 @@
+Name: developer@getkirby.com
+
+----
+
+Street: 
+
+----
+
+Zip: 
+
+----
+
+City: 
+
+----
+
+Country: 
+
+----
+
+Website: 
+
+----
+
+Twitter: 
+
+----
+
+Bio: 
+
+----
+
+Email: developer@getkirby.com
+
+----
+
+Language: en
+
+----
+
+Password: $2y$10$ezVu96Jg3RE8B9u0hD.lBeNdU4TRDM4oYZbUkKWpTY8kYl/LXVr2i
+
+----
+
+Role: admin

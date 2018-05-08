@@ -2,9 +2,15 @@ title: Team
 
 icon: 😺
 
+options:
+  url: false
+  status: false
+  delete: false
+
 columns:
-  - 1/2: content
-  - 1/2: hires, team
+  - 1/1: content
+  - 1/1: hires
+  - 1/1: team
 
 sections:
 
@@ -13,9 +19,6 @@ sections:
     fields:
       intro:
         label: Intro
-        type: textarea
-      text:
-        label: Text
         type: textarea
 
   hires:
@@ -31,8 +34,11 @@ sections:
   team:
     headline: Team
     type: pages
-    layout: list
+    layout: cards
     templates: team-member
     status: listed
     item:
       info: "{{ page.position }}"
+      image:
+        ratio: 1/1
+        cover: true

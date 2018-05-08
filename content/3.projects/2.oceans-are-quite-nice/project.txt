@@ -10,8 +10,12 @@ Text: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo l
 
 ----
 
-Headline: Room with chairs
+Headline: Oceans are quite nice
 
 ----
 
 Tags: 
+
+----
+
+Intro: 

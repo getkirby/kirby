@@ -2,6 +2,11 @@ title: Events
 
 icon: 📅
 
+options:
+  url: false
+  status: false
+  delete: false
+
 sections:
 
   drafts:

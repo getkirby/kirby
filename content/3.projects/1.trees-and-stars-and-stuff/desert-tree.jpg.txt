@@ -1,0 +1,13 @@
+Template: cover
+
+----
+
+Alt: 
+
+----
+
+Align: 
+
+----
+
+Caption: 

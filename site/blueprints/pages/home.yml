@@ -1,5 +1,10 @@
 title: Home
 
+options:
+  url: false
+  status: false
+  delete: false
+
 sections:
   content:
     type: fields

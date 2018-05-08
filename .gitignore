@@ -3,7 +3,7 @@
 /media
 /kirby
 /panel
-/site/accounts
+# /site/accounts
 /site/sessions
 
 .vscode
