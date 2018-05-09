@@ -28,7 +28,7 @@ sections:
         label: About
         type: textarea
 
-	image:
+  image:
     extends: sections/image
     min: 1
     item:
