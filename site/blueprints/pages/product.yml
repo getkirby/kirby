@@ -3,50 +3,50 @@ title: Product
 num: zero
 
 columns:
-	- 1/3: image
-	- 2/3: data
+  - 1/3: image
+  - 2/3: data
 
 sections:
 
-	# all images displayed as nice cards
-	image:
-		extends: sections/image
-		template: cover
-		min: 1
-		item:
-			image:
-				ratio: 1/1
+  # all images displayed as nice cards
+  image:
+    extends: sections/image
+    template: cover
+    min: 1
+    item:
+      image:
+        ratio: 1/1
 
-	# the form for the page
-	data:
-		type: fields
-		fields:
-			price:
-				label: Price
-				type: number
-				step: 0.01
-				before: €
-			design:
-				label: Design by …
-				type: text
-			sizes:
-				label: Sizes
-				type: checkboxes
-				default:
-					- S
-					- M
-					- L
-					- XL
-					- XXL
-				options:
-					- S
-					- M
-					- L
-					- XL
-					- XXL
-			link:
-				label: Link
-				type: url
-			description:
-				label: Description
-				type: textarea
+  # the form for the page
+  data:
+    type: fields
+    fields:
+      price:
+        label: Price
+        type: number
+        step: 0.01
+        before: €
+      design:
+        label: Design by …
+        type: text
+      sizes:
+        label: Sizes
+        type: checkboxes
+        default:
+          - S
+          - M
+          - L
+          - XL
+          - XXL
+        options:
+          - S
+          - M
+          - L
+          - XL
+          - XXL
+      link:
+        label: Link
+        type: url
+      description:
+        label: Description
+        type: textarea
