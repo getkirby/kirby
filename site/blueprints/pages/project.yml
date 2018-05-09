@@ -7,40 +7,41 @@ columns:
 
 sections:
 
-	# the form for the page
-	content:
-		type: fields
-		fields:
-			headline:
+  # the form for the page
+  content:
+    type: fields
+    fields:
+      headline:
         label: Headline
         type: text
         width: 3/4
         help: This is a really nice headline
-			year:
-				label: Year
-				type: number
-				min: 2000
-				default: 2018
-				required: true
-				width: 1/4
-			tags:
-				label: Tags
-				type: tags
-			intro:
-				label: Intro
-				type: textarea
-				size: small
-			text:
-				label: Text
-				type: textarea
-				size: large
+      year:
+        label: Year
+        type: number
+        min: 2000
+        default: 2018
+        required: true
+        width: 1/4
+      tags:
+        label: Tags
+        type: tags
+      intro:
+        label: Intro
+        type: textarea
+        size: small
+      text:
+        label: Text
+        type: textarea
+        size: large
 
-	cover:
-		extends: sections/image
-		template: cover
-		min: 1
+  cover:
+    extends: sections/image
+    template: cover
+    min: 1
+    max: 3
 
-	gallery:
+  gallery:
     extends: sections/images
     headline: Gallery
     template: image
