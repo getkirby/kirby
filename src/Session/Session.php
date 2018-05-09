@@ -458,6 +458,7 @@ class Session
         if ($this->mode === 'cookie') {
             Cookie::set($this->sessions->cookieName(), $this->token(), [
                 'lifetime' => $this->tokenExpiry,
+                'path'     => '/' . Url::path(Url::index()),
                 'secure'   => Url::scheme() === 'https',
                 'httpOnly' => true
             ]);
