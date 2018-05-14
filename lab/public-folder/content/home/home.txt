@@ -1,0 +1,3 @@
+Title: Home
+----
+Text: Welcome to the static site
