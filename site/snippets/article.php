@@ -7,7 +7,10 @@
       <time><?= $article->date('d F Y') ?></time>
 
       <p class="article-tags"> # <?= $article->tags() ?></p>
-      <p class="article-author">by <?= $article->author()->toUser()->name() ?></p>
+
+      <?php if ($author = $article->author()->toUser()): ?>
+      <p class="article-author">by <?= $author->name() ?></p>
+      <?php endif ?>
     </a>
   </header>
 
