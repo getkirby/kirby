@@ -86,7 +86,7 @@ class Tags
      * @param  array $data Additional data that will be passed down to the tag class
      * @return string
      */
-    public function parse(string $text, array $data = []): string
+    public function parse(string $text = null, array $data = []): string
     {
         return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) use ($data) {
             try {
