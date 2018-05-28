@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Util\Dir;
 use Kirby\Util\Str;
 
 class System
@@ -11,6 +12,9 @@ class System
     public function __construct($app)
     {
         $this->app = $app;
+
+        // try to create all folders that could be missing
+        $this->init();
     }
 
     public function status(): array
@@ -39,6 +43,13 @@ class System
     public function curl(): bool
     {
         return extension_loaded('curl');
+    }
+
+    public function init()
+    {
+        Dir::make($this->app->root('accounts'));
+        Dir::make($this->app->root('content'));
+        Dir::make($this->app->root('media'));
     }
 
     public function isInstalled(): bool
