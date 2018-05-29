@@ -1,7 +1,7 @@
 {
     "name": "getkirby/cms",
-    "description": "Kirby Cms",
-    "version": "1.0.0-alpha10",
+    "description": "Kirby CMS",
+    "type": "kirby-cms",
     "keywords": ["kirby", "cms"],
     "homepage": "https://getkirby.com",
     "authors": [
@@ -17,10 +17,9 @@
         "forum": "https://forum.getkirby.com",
         "source": "https://github.com/getkirby/kirby"
     },
-    "repositories": [
-    ],
     "require": {
         "php": ">=7.0.0",
+        "getkirby/composer-installer": "*",
         "ext-mbstring": "*",
         "mustangostang/spyc": "*",
         "erusev/parsedown-extra": "*",
@@ -31,11 +30,11 @@
         "filp/whoops": "^2.1",
         "true/punycode": "~2.0"
     },
-    "minimum-stability": "dev",
     "require-dev": {
         "phpunit/phpunit": "^6.0",
         "friendsofphp/php-cs-fixer": "^2.11.1"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "files": [
             "config/helpers.php",
