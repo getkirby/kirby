@@ -5,6 +5,7 @@
 /panel
 /site/accounts
 /site/sessions
+/vendor
 
 .vscode
 /docs

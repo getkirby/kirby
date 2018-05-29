@@ -1,0 +1,12 @@
+{
+    "require": {
+        "getkirby/cms": "^3.0"
+    },
+    "minimum-stability": "alpha",
+    "repositories": [
+        {
+            "type": "composer",
+            "url":  "https://composer.getkirby.com"
+        }
+    ]
+}
