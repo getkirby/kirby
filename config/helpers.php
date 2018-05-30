@@ -3,7 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Url;
 use Kirby\Html\Attributes;
-use Kirby\Html\Element\Video;
+use Kirby\Html\Html;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
 use Kirby\Util\F;
@@ -274,15 +274,15 @@ function url(string $path = null): string
 
 function video(...$arguments)
 {
-    return Video::create(...$arguments);
+    return Html::video(...$arguments);
 }
 
 function vimeo(...$arguments)
 {
-    return Video::create(...$arguments);
+    return Html::video(...$arguments);
 }
 
 function youtube(...$arguments)
 {
-    return Video::create(...$arguments);
+    return Html::video(...$arguments);
 }
