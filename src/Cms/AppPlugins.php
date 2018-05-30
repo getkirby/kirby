@@ -20,6 +20,7 @@ trait AppPlugins
         'fieldMethods' => [],
         'fields' => [],
         'hooks' => [],
+        'options' => [],
         'pages' => [],
         'pageMethods' => [],
         'pageModels' => [],
@@ -98,7 +99,7 @@ trait AppPlugins
             $options = $prefixed;
         }
 
-        return $this->extensions['options'] = array_merge($this->extensions['options'], $options);
+        return $this->extensions['options'] = $this->options = array_merge($this->options, $options);
     }
 
     protected function extendPageMethods(array $methods): array

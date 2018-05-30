@@ -36,7 +36,6 @@ return [
     'file' => [
         'attr' => [
             'class',
-            'download',
             'rel',
             'target',
             'text',
@@ -57,7 +56,7 @@ return [
 
             return Html::a($file->url(), $this->text, [
                 'class'    => $this->class,
-                'download' => $this->download,
+                'download' => true,
                 'rel'      => $this->rel,
                 'target'   => $this->target,
                 'title'    => $this->title,

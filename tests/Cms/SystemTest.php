@@ -28,7 +28,7 @@ class SystemTest extends TestCase
     {
         $_SERVER['SERVER_SOFTWARE'] = $software;
 
-        $system = new System(null);
+        $system = new System(new App);
         $server = $system->server();
 
         $this->assertEquals($expected, $server);

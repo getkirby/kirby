@@ -99,26 +99,6 @@ class PageRulesTest extends TestCase
         PageRules::changeSlug($page, 'test-a');
     }
 
-    /**
-     * @expectedException Kirby\Exception\DuplicateException
-     * @expectedExceptionCode error.page.duplicate
-     */
-    public function testChangeSlugWithDuplicate()
-    {
-        $page = new Page([
-            'kirby' => $this->appWithAdmin(),
-            'slug'  => 'test',
-        ]);
-
-        $pages = new Pages([
-            $page->clone(['slug' => 'project-a']),
-            $page->clone(['slug' => 'project-b']),
-            $page->clone(['slug' => 'project-c'])
-        ]);
-
-        PageRules::changeSlug($pages->first(), 'project-b');
-    }
-
     public function testChangeTemplate()
     {
         // TODO: this currently fails, since there is only 1 template

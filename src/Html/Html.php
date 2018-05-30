@@ -21,17 +21,6 @@ class Html
 {
 
     /**
-     * Can be used to switch to trailing slashes if required
-     *
-     * ```php
-     * html::$void = ' />'
-     * ```
-     *
-     * @var string $void
-     */
-    public static $void = '>';
-
-    /**
      * An internal store for a html entities translation table
      *
      * @var array
@@ -71,7 +60,25 @@ class Html
         '&lsaquo;' => '&#8249;', '&rsaquo;' => '&#8250;', '&euro;' => '&#8364;'
     ];
 
-    public static function __callStatic($tag, array $arguments = [])
+    /**
+     * Can be used to switch to trailing slashes if required
+     *
+     * ```php
+     * html::$void = ' />'
+     * ```
+     *
+     * @var string $void
+     */
+    public static $void = '>';
+
+    /**
+     * Generic HTML tag generator
+     *
+     * @param string $tag
+     * @param array $arguments
+     * @return string
+     */
+    public static function __callStatic(string $tag, array $arguments = []): string
     {
         if (static::isVoid($tag) === true) {
             return Html::tag($tag, null, ...$arguments);
@@ -81,125 +88,27 @@ class Html
     }
 
     /**
-     * Checks if a tag is self-closing
+     * Generates an a tag
      *
-     * @param string $tag
-     * @return bool
+     * @param string $href The url for the a tag
+     * @param mixed $text The optional text. If null, the url will be used as text
+     * @param array $attr Additional attributes for the tag
+     * @return string the generated html
      */
-    public static function isVoid(string $tag): bool
+    public static function a(string $href = null, $text = null, array $attr = []): string
     {
 
-        $void = [
-            'area',
-            'base',
-            'br',
-            'col',
-            'command',
-            'embed',
-            'hr',
-            'img',
-            'input',
-            'keygen',
-            'link',
-            'meta',
-            'param',
-            'source',
-            'track',
-            'wbr',
-        ];
+        $attr = array_merge(['href' => $href], $attr);
 
-        return in_array(strtolower($tag), $void);
-
-    }
-
-    /**
-     * Returns the full array with all HTML entities
-     *
-     * @return array
-     */
-    public static function entities(): array
-    {
-        return static::$entities;
-    }
-
-    /**
-     * Converts a string to a html-safe string
-     *
-     * @param  string  $string
-     * @param  boolean $keepTags True: lets stuff inside html tags untouched.
-     * @return string  The html string
-     */
-    public static function encode(string $string = null, bool $keepTags = true): string
-    {
-        if ($keepTags === true) {
-            return stripslashes(implode('', preg_replace_callback('/^([^<].+[^>])$/', function($match) {
-                return htmlentities($match[1], ENT_COMPAT, 'utf-8');
-            }, preg_split('/(<.+?>)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE))));
+        if (empty($text) === true) {
+            $text = $href;
         }
 
-        return htmlentities($string, ENT_COMPAT, 'utf-8');
-    }
+        // add rel=noopener to target blank links to improve security
+        $attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
 
-    /**
-     * Removes all html tags and encoded chars from a string
-     *
-     * <code>
-     *
-     * echo html::decode('some <em>crazy</em> stuff');
-     * // output: some uber crazy stuff
-     *
-     * </code>
-     *
-     * @param  string  $string
-     * @return string  The html string
-     */
-    public static function decode(string $string = null): string
-    {
-        $string = strip_tags($string);
-        return html_entity_decode($string, ENT_COMPAT, 'utf-8');
-    }
+        return static::tag('a', $text, $attr);
 
-    /**
-     * Converts lines in a string into html breaks
-     *
-     * @param string $string
-     * @return string
-     */
-    public static function breaks(string $string = null): string
-    {
-        return nl2br($string);
-    }
-
-    /**
-     * Generates an Html tag with optional content and attributes
-     *
-     * @param string $name The name of the tag, i.e. "a"
-     * @param mixed $content The content if availble. Pass null to generate a self-closing tag, Pass an empty string to generate empty content
-     * @param array $attr An associative array with additional attributes for the tag
-     * @return string The generated Html
-     */
-    public static function tag(string $name, $content = null, array $attr = []): string
-    {
-        $html = '<' . $name;
-        $attr = static::attr($attr);
-
-        if (empty($attr) === false) {
-            $html .= ' ' . $attr;
-        }
-
-        if (static::isVoid($name) === true) {
-            $html .= static::$void;
-        } else {
-            if (is_array($content) === true) {
-                $content = implode($content);
-            } else {
-                $content = static::encode($content, false);
-            }
-
-            $html .= '>' . $content . '</' . $name . '>';
-        }
-
-        return $html;
     }
 
     /**
@@ -214,6 +123,8 @@ class Html
 
         if (is_array($name) === true) {
             $attributes = [];
+
+            asort($name);
 
             foreach ($name as $key => $val) {
                 $a = static::attr($key, $val);
@@ -249,31 +160,36 @@ class Html
         }
 
         return strtolower($name) . '="' . $value . '"';
-
     }
 
     /**
-     * Generates an a tag
+     * Converts lines in a string into html breaks
      *
-     * @param string $href The url for the a tag
-     * @param mixed $text The optional text. If null, the url will be used as text
-     * @param array $attr Additional attributes for the tag
-     * @return string the generated html
+     * @param string $string
+     * @return string
      */
-    public static function a(string $href = null, $text = null, array $attr = []): string
+    public static function breaks(string $string = null): string
     {
+        return nl2br($string);
+    }
 
-        $attr = array_merge(['href' => $href], $attr);
-
-        if (empty($text) === true) {
-            $text = $href;
-        }
-
-        // add rel=noopener to target blank links to improve security
-        $attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
-
-        return static::tag('a', $text, $attr);
-
+    /**
+     * Removes all html tags and encoded chars from a string
+     *
+     * <code>
+     *
+     * echo html::decode('some <em>crazy</em> stuff');
+     * // output: some uber crazy stuff
+     *
+     * </code>
+     *
+     * @param  string  $string
+     * @return string  The html string
+     */
+    public static function decode(string $string = null): string
+    {
+        $string = strip_tags($string);
+        return html_entity_decode($string, ENT_COMPAT, 'utf-8');
     }
 
     /**
@@ -303,6 +219,34 @@ class Html
         $attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
 
         return static::tag('a', $text, $attr);
+    }
+
+    /**
+     * Converts a string to a html-safe string
+     *
+     * @param  string  $string
+     * @param  boolean $keepTags True: lets stuff inside html tags untouched.
+     * @return string  The html string
+     */
+    public static function encode(string $string = null, bool $keepTags = true): string
+    {
+        if ($keepTags === true) {
+            return stripslashes(implode('', preg_replace_callback('/^([^<].+[^>])$/', function($match) {
+                return htmlentities($match[1], ENT_COMPAT, 'utf-8');
+            }, preg_split('/(<.+?>)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE))));
+        }
+
+        return htmlentities($string, ENT_COMPAT, 'utf-8');
+    }
+
+    /**
+     * Returns the full array with all HTML entities
+     *
+     * @return array
+     */
+    public static function entities(): array
+    {
+        return static::$entities;
     }
 
     /**
@@ -371,6 +315,37 @@ class Html
         return static::tag('img', null, $attr);
     }
 
+    /**
+     * Checks if a tag is self-closing
+     *
+     * @param string $tag
+     * @return bool
+     */
+    public static function isVoid(string $tag): bool
+    {
+
+        $void = [
+            'area',
+            'base',
+            'br',
+            'col',
+            'command',
+            'embed',
+            'hr',
+            'img',
+            'input',
+            'keygen',
+            'link',
+            'meta',
+            'param',
+            'source',
+            'track',
+            'wbr',
+        ];
+
+        return in_array(strtolower($tag), $void);
+
+    }
 
     /**
      * Add noopeener noreferrer to rels when target is _blank
@@ -386,6 +361,38 @@ class Html
         }
 
         return $rel;
+    }
+
+    /**
+     * Generates an Html tag with optional content and attributes
+     *
+     * @param string $name The name of the tag, i.e. "a"
+     * @param mixed $content The content if availble. Pass null to generate a self-closing tag, Pass an empty string to generate empty content
+     * @param array $attr An associative array with additional attributes for the tag
+     * @return string The generated Html
+     */
+    public static function tag(string $name, $content = null, array $attr = []): string
+    {
+        $html = '<' . $name;
+        $attr = static::attr($attr);
+
+        if (empty($attr) === false) {
+            $html .= ' ' . $attr;
+        }
+
+        if (static::isVoid($name) === true) {
+            $html .= static::$void;
+        } else {
+            if (is_array($content) === true) {
+                $content = implode($content);
+            } else {
+                $content = static::encode($content, false);
+            }
+
+            $html .= '>' . $content . '</' . $name . '>';
+        }
+
+        return $html;
     }
 
     public static function video(string $url, array $options = [], array $attr = []): string

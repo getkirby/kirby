@@ -171,15 +171,6 @@ class PagePropsTest extends TestCase
         $this->assertEquals('/test', $page->url());
     }
 
-    public function testDefaultUrlWithDuplicateLeadingSlash()
-    {
-        $page = new Page([
-            'slug' => '/test'
-        ]);
-
-        $this->assertEquals('/test', $page->url());
-    }
-
     /**
      * @expectedException TypeError
      */
