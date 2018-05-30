@@ -8,6 +8,28 @@ class Dir
 {
 
     /**
+     * Get all subdirectories
+     *
+     * @param string $dir
+     * @return array
+     */
+    public static function dirs(string $dir, array $ignore = null): array
+    {
+        return array_filter(static::read($dir, $ignore), 'is_dir');
+    }
+
+    /**
+     * Get all files
+     *
+     * @param string $dir
+     * @return array
+     */
+    public static function files(string $dir, array $ignore = null): array
+    {
+        return array_filter(static::read($dir, $ignore), 'is_file');
+    }
+
+    /**
      * Read the directory and all subdirectories
      *
      * @param string $dir

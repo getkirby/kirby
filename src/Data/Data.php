@@ -3,8 +3,7 @@
 namespace Kirby\Data;
 
 use Exception;
-
-use Kirby\FileSystem\File;
+use Kirby\Toolkit\F;
 
 /**
  * Universal Data writer and reader class.
@@ -115,14 +114,13 @@ class Data
      */
     public static function read(string $file, string $type = null): array
     {
-        $fileObject = new File($file);
-        $type = $type ?? $fileObject->extension();
-
-        if ($fileObject->exists() !== true) {
+        if (file_exists($file) !== true) {
             throw new Exception('The file "' . $file . '" does not exist');
         }
 
-        return static::handler($type)->decode($fileObject->read());
+        $type = $type ?? F::extension($file);
+
+        return static::handler($type)->decode(F::read($file));
     }
 
     /**
@@ -135,9 +133,7 @@ class Data
      */
     public static function write(string $file, array $data = [], string $type = null): bool
     {
-        $file = new File($file);
-        $type = $type ?? $file->extension();
-
-        return $file->write(static::handler($type)->encode($data));
+        $type = $type ?? F::extension($file);
+        return F::write($file, static::handler($type)->encode($data));
     }
 }

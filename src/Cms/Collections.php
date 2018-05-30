@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Exception\NotFoundException;
-use Kirby\FileSystem\Folder;
 use Kirby\Toolkit\Controller;
 
 /**
@@ -95,9 +94,9 @@ class Collections
     public static function load(App $app): self
     {
         $collections = $app->extensions('collections');
-        $folder      = new Folder($app->root('collections'));
+        $root        = $app->root('collections');
 
-        foreach ($folder->files() as $file) {
+        foreach (glob($root . '/*.php') as $file) {
             $collection = require $file;
 
             if (is_a($collection, Closure::class)) {
