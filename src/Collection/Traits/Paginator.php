@@ -2,7 +2,7 @@
 
 namespace Kirby\Collection\Traits;
 
-use Kirby\Pagination\Pagination;
+use Kirby\Toolkit\Pagination;
 
 /**
  * Paginator

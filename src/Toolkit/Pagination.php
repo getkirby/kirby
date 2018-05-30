@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Pagination;
+namespace Kirby\Toolkit;
 
 use Exception;
 

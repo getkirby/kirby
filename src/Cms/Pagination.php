@@ -2,13 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Pagination\Pagination as BasePagination;
 use Kirby\Http\Url;
+use Kirby\Toolkit\Pagination as BasePagination;
 
 /**
  * The extended Pagination class handles
  * URLs in addition to the pagination features
- * from Kirby\Pagination\Pagination
+ * from Kirby\Toolkit\Pagination
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
