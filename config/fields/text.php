@@ -1,8 +1,8 @@
 <?php
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Util\I18n;
-use Kirby\Util\Str;
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 return [
     'props' => [

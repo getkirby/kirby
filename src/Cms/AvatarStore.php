@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Image\Image;
-use Kirby\Util\F;
+use Kirby\Toolkit\F;
 
 class AvatarStore extends AvatarStoreDefault
 {

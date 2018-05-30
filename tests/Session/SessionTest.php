@@ -8,7 +8,7 @@ use ReflectionClass;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use Kirby\Http\Cookie;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 require_once(__DIR__ . '/mocks.php');
 

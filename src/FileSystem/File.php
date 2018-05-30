@@ -4,7 +4,7 @@ namespace Kirby\FileSystem;
 
 use Exception;
 use Kirby\FileSystem\File\MimeType;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 /**
  * Flexible File object with a set of helpful

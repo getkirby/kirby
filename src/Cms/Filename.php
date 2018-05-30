@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 /**
  * The Filename class handles complex

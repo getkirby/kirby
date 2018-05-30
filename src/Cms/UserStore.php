@@ -2,10 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Dir;
-
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\Dir;
 
 class UserStore extends UserStoreDefault
 {

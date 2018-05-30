@@ -2,8 +2,8 @@
 
 namespace Kirby\Data\Handler;
 
-use Kirby\Util\Str;
 use Kirby\Data\Handler;
+use Kirby\Toolkit\Str;
 
 /**
  * Kirby Txt Data Handler

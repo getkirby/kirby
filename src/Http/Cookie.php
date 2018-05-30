@@ -2,7 +2,7 @@
 
 namespace Kirby\Http;
 
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 /**
  * Cookie - This class makes cookie handling easy

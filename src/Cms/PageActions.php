@@ -2,10 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\A;
-use Kirby\Util\Str;
-
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 trait PageActions
 {

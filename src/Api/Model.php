@@ -5,7 +5,7 @@ namespace Kirby\Api;
 use Closure;
 use Exception;
 
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 class Model
 {

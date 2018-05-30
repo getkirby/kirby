@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Dir;
+use Kirby\Toolkit\Dir;
 
 class SiteStore extends SiteStoreDefault
 {

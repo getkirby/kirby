@@ -3,8 +3,8 @@
 namespace Kirby\Exception;
 
 use Kirby\Cms\App;
-use Kirby\Util\I18n;
-use Kirby\Util\Str;
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 class Exception extends \Exception
 {

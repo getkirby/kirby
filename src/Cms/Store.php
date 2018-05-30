@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Properties;
+use Kirby\Toolkit\Properties;
 
 abstract class Store
 {

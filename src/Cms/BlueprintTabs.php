@@ -2,10 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Str;
-use Kirby\Util\I18n;
-
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\I18n;
 
 class BlueprintTabs
 {

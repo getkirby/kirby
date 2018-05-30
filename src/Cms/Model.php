@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use stdClass;
 use ReflectionMethod;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 abstract class Model extends Component
 {

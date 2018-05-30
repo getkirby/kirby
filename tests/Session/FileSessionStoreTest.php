@@ -5,8 +5,8 @@ namespace Kirby\Session;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-use Kirby\Util\Dir;
-use Kirby\Util\F;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 
 class FileSessionStoreTest extends TestCase
 {

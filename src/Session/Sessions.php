@@ -7,7 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Http\Cookie;
 use Kirby\Http\Request;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 /**
  * Sessions - Base class for all session fiddling

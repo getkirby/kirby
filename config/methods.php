@@ -8,8 +8,8 @@ use Kirby\Cms\Url;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Html\Element\A;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
-use Kirby\Util\Str;
 
 /**
  * Field method setup

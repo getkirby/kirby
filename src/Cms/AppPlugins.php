@@ -2,12 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Form\Field;
-use Kirby\Text\KirbyTag;
-use Kirby\Util\Dir;
-
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field;
+use Kirby\Text\KirbyTag;
+use Kirby\Toolkit\Dir;
+
 
 trait AppPlugins
 {

@@ -2,15 +2,14 @@
 
 namespace Kirby\Cms\Mixins;
 
+use Exception;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Query;
-use Kirby\Util\Str;
-
-use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Str;
 
 trait BlueprintSectionData
 {

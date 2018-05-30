@@ -11,11 +11,11 @@ use Kirby\Http\Visitor;
 use Kirby\Image\Darkroom;
 use Kirby\Toolkit\Url;
 use Kirby\Session\Session;
-use Kirby\Util\Controller;
-use Kirby\Util\F;
-use Kirby\Util\Factory;
-use Kirby\Util\Dir;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Controller;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\Factory;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\Str;
 
 class App extends Component
 {

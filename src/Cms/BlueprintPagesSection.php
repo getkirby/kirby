@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\A;
-use Kirby\Util\Str;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;

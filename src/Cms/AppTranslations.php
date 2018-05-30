@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\I18n;
+use Kirby\Toolkit\I18n;
 
 trait AppTranslations
 {

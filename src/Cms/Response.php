@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Throwable;
 use Kirby\Http\Response as BaseResponse;
 use Kirby\Http\Response\Json;
-use Kirby\Util\F;
+use Kirby\Toolkit\F;
 
 class Response extends BaseResponse
 {

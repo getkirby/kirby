@@ -2,11 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
-
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Util\F;
+use Kirby\Toolkit\F;
 
 class Plugin extends Model
 {

@@ -3,8 +3,8 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use Kirby\Util\Str;
 use Kirby\Image\Image;
+use Kirby\Toolkit\Str;
 
 /**
 * A set of validator methods

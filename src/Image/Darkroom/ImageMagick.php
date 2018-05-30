@@ -4,7 +4,7 @@ namespace Kirby\Image\Darkroom;
 
 use Exception;
 use Kirby\Image\Darkroom;
-use Kirby\Util\F;
+use Kirby\Toolkit\F;
 
 class ImageMagick extends Darkroom
 {

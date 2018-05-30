@@ -6,9 +6,9 @@ use ArgumentCountError;
 use Closure;
 use Exception;
 use TypeError;
-use Kirby\Util\I18n;
 use Kirby\Data\Handler\Yaml;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\I18n;
 
 class Field
 {

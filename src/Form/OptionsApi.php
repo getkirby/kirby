@@ -6,10 +6,9 @@ use Kirby\Cms\Nest;
 use Kirby\Cms\Query;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Tempura;
-use Kirby\Util\Properties;
-
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\Properties;
 
 class OptionsApi
 {

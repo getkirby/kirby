@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Util\F;
+use Kirby\Toolkit\F;
 
 trait AvatarActions
 {

@@ -4,7 +4,7 @@ namespace Kirby\Cache;
 
 use Exception;
 use Kirby\Http\Session as BaseSession;
-use Kirby\Util\A;
+use Kirby\Toolkit\A;
 
 /**
 * Session Cache

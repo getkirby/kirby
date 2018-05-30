@@ -2,9 +2,9 @@
 
 namespace Kirby\Html;
 
-use Kirby\Util\Str;
 use Kirby\Html\Element\Video;
 use Kirby\Html\Element\Gist;
+use Kirby\Toolkit\Str;
 
 /**
 * Html

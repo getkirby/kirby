@@ -8,8 +8,8 @@ use Kirby\Html\Element\Img;
 use Kirby\Http\Response;
 use Kirby\Http\Response\Download;
 use Kirby\Http\Acceptance\MimeType;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
-use Kirby\Util\Str;
 
 /**
  * Image

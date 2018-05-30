@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Collection\Finder;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 class UsersFinder extends Finder
 {

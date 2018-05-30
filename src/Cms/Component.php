@@ -2,10 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Properties;
-use ReflectionMethod;
-
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Properties;
+use ReflectionMethod;
 
 abstract class Component
 {

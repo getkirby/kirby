@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Toolkit\View;
-use Kirby\Util\F;
+use Kirby\Toolkit\F;
 
 class Template extends View
 {

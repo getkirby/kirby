@@ -2,13 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\V;
-use Kirby\Util\Str;
-
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 class FileRules
 {

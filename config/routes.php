@@ -5,9 +5,9 @@ use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\View;
-use Kirby\Util\Str;
-use Kirby\Util\F;
 
 return function ($kirby) {
 

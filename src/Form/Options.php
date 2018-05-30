@@ -8,9 +8,9 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
-use Kirby\Util\A;
-use Kirby\Util\I18n;
-use Kirby\Util\Obj;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Obj;
 
 class Options
 {

@@ -5,8 +5,8 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Image\Image;
-use Kirby\Util\F;
-use Kirby\Util\Str;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 
 trait FileActions
 {

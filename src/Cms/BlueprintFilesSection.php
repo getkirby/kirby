@@ -5,8 +5,8 @@ namespace Kirby\Cms;
 use Kirby\Http\Acceptance\MimeType;
 use Kirby\Image\Image;
 use Kirby\Toolkit\V;
-use Kirby\Util\F;
-use Kirby\Util\Str;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;

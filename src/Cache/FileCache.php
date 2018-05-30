@@ -3,8 +3,8 @@
 namespace Kirby\Cache;
 
 use Exception;
-use Kirby\Util\Dir;
-use Kirby\Util\F;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 
 /**
  * File Cache

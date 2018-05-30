@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Dir;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\Str;
 
 class System
 {

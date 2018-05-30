@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
-use Kirby\Util\I18n;
+use Kirby\Toolkit\I18n;
 
 class AppTranslationsTest extends TestCase
 {

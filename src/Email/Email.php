@@ -2,8 +2,8 @@
 
 namespace Kirby\Email;
 
+use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\V;
-use Kirby\Util\Properties;
 
 use Exception;
 

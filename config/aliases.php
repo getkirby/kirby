@@ -12,11 +12,11 @@ use Kirby\Cms\Url;
 
 use Kirby\Data\Handler\Yaml;
 
-use Kirby\Util\A;
-use Kirby\Util\Dir;
-use Kirby\Util\F;
-use Kirby\Util\I18n;
-use Kirby\Util\Str;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 class_alias(A::class, 'A');

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Util;
+namespace Kirby\Toolkit;
 
 /**
  * A set of handy string methods

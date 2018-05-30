@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Image\Image;
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 /**
  * The File class is a wrapper around

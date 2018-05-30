@@ -4,9 +4,9 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Form\Field;
-use Kirby\Util\Dir;
-use Kirby\Util\Str;
 use Kirby\Session\Session;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\Str;
 
 trait AppUsers
 {

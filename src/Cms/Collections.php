@@ -3,10 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Util\Controller;
-use Kirby\FileSystem\Folder;
-
 use Kirby\Exception\NotFoundException;
+use Kirby\FileSystem\Folder;
+use Kirby\Toolkit\Controller;
 
 /**
  * Manages and loads all collections

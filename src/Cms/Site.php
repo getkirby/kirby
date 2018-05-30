@@ -2,10 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Str;
-
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\Str;
 
 /**
  * The Site class is the root element

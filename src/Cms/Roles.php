@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Dir;
-use Kirby\Util\F;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 
 class Roles extends Collection
 {

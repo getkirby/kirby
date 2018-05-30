@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Util;
+namespace Kirby\Toolkit;
 
 use PHPUnit\Framework\TestCase;
 

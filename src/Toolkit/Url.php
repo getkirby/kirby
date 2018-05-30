@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Url\Fragments;
 use Kirby\Toolkit\Url\Hash;
 use Kirby\Toolkit\Url\Host;
@@ -10,8 +12,6 @@ use Kirby\Toolkit\Url\Path;
 use Kirby\Toolkit\Url\Port;
 use Kirby\Toolkit\Url\Query;
 use Kirby\Toolkit\Url\Scheme;
-use Kirby\Util\A;
-use Kirby\Util\Str;
 
 /**
  * A set of handy methods to work with URLs

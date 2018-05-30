@@ -2,12 +2,11 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
-use Kirby\Image\Image;
-use Kirby\Util\F;
-
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
+use Kirby\Image\Image;
+use Kirby\Toolkit\F;
 
 class FileStore extends FileStoreDefault
 {

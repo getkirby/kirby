@@ -2,7 +2,7 @@
 
 namespace Kirby\Email;
 
-use Kirby\Util\Properties;
+use Kirby\Toolkit\Properties;
 
 /**
  * @package   Kirby Email

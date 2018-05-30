@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Util\Obj;
+use Kirby\Toolkit\Obj;
 
 class NestObject extends Obj
 {

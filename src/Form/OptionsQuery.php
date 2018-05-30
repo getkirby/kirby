@@ -6,12 +6,11 @@ use Kirby\Cms\ContentField;
 use Kirby\Cms\Query;
 use Kirby\Cms\Tempura;
 use Kirby\Collection\Collection;
-use Kirby\Util\Obj;
-use Kirby\Util\Properties;
-use Kirby\Util\Str;
-
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\Obj;
+use Kirby\Toolkit\Properties;
+use Kirby\Toolkit\Str;
 
 class OptionsQuery
 {

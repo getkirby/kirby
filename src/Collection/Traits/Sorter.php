@@ -2,7 +2,7 @@
 
 namespace Kirby\Collection\Traits;
 
-use Kirby\Util\Str;
+use Kirby\Toolkit\Str;
 
 trait Sorter
 {

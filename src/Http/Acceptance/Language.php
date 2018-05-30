@@ -2,9 +2,8 @@
 
 namespace Kirby\Http\Acceptance;
 
-use Kirby\Util\Str;
-
 use Kirby\Http\Acceptance;
+use Kirby\Toolkit\Str;
 
 /**
  * HTTP Language Acceptance negotiation

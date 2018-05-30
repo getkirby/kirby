@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Dotenv\Dotenv;
-use Kirby\Util\F;
+use Kirby\Toolkit\F;
 
 trait AppOptions
 {

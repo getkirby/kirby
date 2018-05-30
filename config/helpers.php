@@ -6,8 +6,8 @@ use Kirby\Html\Attributes;
 use Kirby\Html\Html;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
-use Kirby\Util\F;
-use Kirby\Util\I18n;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\I18n;
 
 function attr(array $attr = null, $before = null, $after = null)
 {

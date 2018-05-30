@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Util\I18n;
+use Kirby\Toolkit\I18n;
 
 return [
     'save' => false,

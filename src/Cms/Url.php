@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Url as BaseUrl;
-use Kirby\Util\Str;
 
 class Url extends BaseUrl
 {

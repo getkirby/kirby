@@ -9,7 +9,7 @@ use Throwable;
 use Kirby\Http\Router;
 use Kirby\Http\Router\Route;
 use Kirby\Http\Response\Json;
-use Kirby\Util\Properties;
+use Kirby\Toolkit\Properties;
 
 class Api
 {

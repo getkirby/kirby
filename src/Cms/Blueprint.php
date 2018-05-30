@@ -4,8 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Form\Fields;
-use Kirby\Util\F;
-use Kirby\Util\I18n;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\I18n;
 
 use Exception;
 use Kirby\Exception\NotFoundException;

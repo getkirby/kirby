@@ -2,8 +2,8 @@
 
 namespace Kirby\Http;
 
-use Kirby\Util\A;
-use Kirby\Util\Str;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 /**
  * Http Acceptance negotiation

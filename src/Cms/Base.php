@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Util\Dir;
-use Kirby\Util\Properties;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\Properties;
 
 use Kirby\Exception\Exception;
 
