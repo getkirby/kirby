@@ -19,9 +19,14 @@ return function ($app) {
         ],
         'Kirbytext' => [
             'singleton' => true,
-            'type'      => Kirby\Text\Tags::class,
+            'type'      => Kirby\Text\KirbyText::class,
             'instance'  => function () use ($app) {
-                return new Kirby\Text\Tags($app->extensions('tags'));
+
+                // pass all Kirby options to the tags
+                Kirby\Text\KirbyTag::$options = $app->options();
+
+                return new Kirby\Text\KirbyText;
+
             }
         ],
         'Markdown' => [

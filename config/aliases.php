@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Html;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\Structure;
@@ -10,6 +11,7 @@ use Kirby\Cms\Response;
 use Kirby\Cms\Url;
 
 use Kirby\Data\Handler\Yaml;
+
 use Kirby\Util\A;
 use Kirby\Util\Dir;
 use Kirby\Util\F;
@@ -22,7 +24,8 @@ class_alias(App::class, 'Kirby');
 class_alias(Dir::class, 'Dir');
 class_alias(F::class, 'F');
 class_alias(File::class, 'File');
-//class_alias(Form::class, 'Form');
+class_alias(Html::class, 'Html');
+class_alias(Form::class, 'Form');
 class_alias(I18n::class, 'I18n');
 class_alias(Page::class, 'Page');
 class_alias(Site::class, 'Site');

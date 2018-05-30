@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Form\Field;
+use Kirby\Text\KirbyTag;
 use Kirby\Util\Dir;
 
 use Kirby\Exception\DuplicateException;
@@ -12,54 +13,127 @@ trait AppPlugins
 {
     protected static $plugins = [];
 
-    protected $extensions = [];
+    protected $extensions = [
+        'blueprints' => [],
+        'collections' => [],
+        'controllers' => [],
+        'fieldMethods' => [],
+        'fields' => [],
+        'hooks' => [],
+        'pages' => [],
+        'pageMethods' => [],
+        'pageModels' => [],
+        'routes' => [],
+        'snippets' => [],
+        'tags' => [],
+        'templates' => []
+    ];
+
     protected $pluginsAreLoaded = false;
 
     public function extend(array $extensions, Plugin $plugin = null): array
     {
-        $extends = [];
-
-        foreach ($extensions as $type => $values) {
-            if (method_exists(Extend::class, $type) === false) {
-                // ignore invalid extensions
-                continue;
+        foreach ($this->extensions as $type => $registered) {
+            if (isset($extensions[$type]) === true) {
+                $this->{'extend' . $type}($extensions[$type], $plugin);
             }
-
-            if (is_array($values) === false) {
-                throw new InvalidArgumentException('Extensions for "' . $type . '" must be defined as array');
-            }
-
-            $extends[$type] = Extend::$type($values, $plugin);
         }
 
-        // extensions that need to be registered instantly
-        $this->extendFieldMethods($extends['fieldMethods'] ?? []);
-        $this->extendFields($extends['fields'] ?? []);
-        $this->extendPageMethods($extends['pageMethods'] ?? []);
-        $this->extendPageModels($extends['pageModels'] ?? []);
-
-        return $this->extensions = array_replace_recursive($this->extensions, $extends);
+        return $this->extensions;
     }
 
-    protected function extendFieldMethods(array $methods)
+    protected function extendBlueprints(array $blueprints): array
     {
-        ContentField::$methods = array_merge(ContentField::$methods, $methods);
+        return $this->extensions['blueprints'] = array_merge($this->extensions['blueprints'], $blueprints);
     }
 
-    protected function extendFields(array $fields)
+    protected function extendCollections(array $collections): array
     {
-        Field::$types = array_merge(Field::$types, $fields);
+        return $this->extensions['collections'] = array_merge($this->extensions['collections'], $collections);
     }
 
-    protected function extendPageMethods(array $methods)
+    protected function extendControllers(array $controllers): array
     {
-        Page::$methods = array_merge(Page::$methods, $methods);
+        return $this->extensions['controllers'] = array_merge($this->extensions['controllers'], $controllers);
     }
 
-    protected function extendPageModels(array $models)
+    protected function extendFieldMethods(array $methods): array
     {
-        // page models
-        Page::$models = array_merge(Page::$models, $models);
+        return $this->extensions['fieldMethods'] = ContentField::$methods = array_merge(ContentField::$methods, $methods);
+    }
+
+    protected function extendFields(array $fields): array
+    {
+        return $this->extensions['fields'] = Field::$types = array_merge(Field::$types, $fields);
+    }
+
+    protected function extendHooks(array $hooks): array
+    {
+        foreach ($hooks as $name => $callbacks) {
+            if (isset($this->extensions['hooks'][$name]) === false) {
+                $this->extensions['hooks'][$name] = [];
+            }
+
+            if (is_array($callbacks) === false) {
+                $callbacks = [$callbacks];
+            }
+
+            foreach ($callbacks as $callback) {
+                $this->extensions['hooks'][$name][] = $callback;
+            }
+        }
+
+        return $this->extensions['hooks'];
+    }
+
+    protected function extendOptions(array $options, Plugin $plugin = null): array
+    {
+        if ($plugin !== null) {
+            $prefixed = [];
+
+            foreach ($options as $key => $value) {
+                $prefixed[$plugin->prefix() . '.' . $key] = $value;
+            }
+
+            $options = $prefixed;
+        }
+
+        return $this->extensions['options'] = array_merge($this->extensions['options'], $options);
+    }
+
+    protected function extendPageMethods(array $methods): array
+    {
+        return $this->extensions['pageMethods'] = Page::$methods = array_merge(Page::$methods, $methods);
+    }
+
+    protected function extendPageModels(array $models): array
+    {
+        return $this->extensions['pageModels'] = Page::$models = array_merge(Page::$models, $models);
+    }
+
+    protected function extendPages(array $pages): array
+    {
+        return $this->extensions['pages'] = array_merge($this->extensions['pages'], $pages);
+    }
+
+    protected function extendRoutes(array $routes): array
+    {
+        return $this->extensions['routes'] = array_merge($this->extensions['routes'], $routes);
+    }
+
+    protected function extendSnippets(array $snippets): array
+    {
+        return $this->extensions['snippets'] = array_merge($this->extensions['snippets'], $snippets);
+    }
+
+    protected function extendTags(array $tags): array
+    {
+        return $this->extensions['tags'] = KirbyTag::$types = array_merge(KirbyTag::$types, $tags);
+    }
+
+    protected function extendTemplates(array $templates): array
+    {
+        return $this->extensions['templates'] = array_merge($this->extensions['templates'], $templates);
     }
 
     public function extension(string $type, string $name, $fallback = null)
@@ -116,13 +190,16 @@ trait AppPlugins
         // Field Mixins
         Field::$mixins['options'] = include static::$root . '/config/field-mixins/options.php';
 
-        // extendable stuff
-        $this->extend([
-            'blueprints'   =>  include static::$root . '/config/blueprints.php',
-            'fields'       =>  include static::$root . '/config/fields.php',
-            'fieldMethods' => (include static::$root . '/config/methods.php')($this),
-            'tags'         =>  include static::$root . '/config/tags.php'
-        ]);
+        // Tag Aliases
+        KirbyTag::$aliases = [
+            'youtube' => 'video',
+            'vimeo'   => 'video'
+        ];
+
+        $this->extendBlueprints(include static::$root . '/config/blueprints.php');
+        $this->extendFields(include static::$root . '/config/fields.php');
+        $this->extendFieldMethods((include static::$root . '/config/methods.php')($this));
+        $this->extendTags(include static::$root . '/config/tags.php');
     }
 
     /**

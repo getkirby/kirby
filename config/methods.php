@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\ContentField;
 use Kirby\Cms\Structure;
+use Kirby\Cms\Page;
 use Kirby\Cms\Url;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
@@ -119,15 +120,15 @@ return function (App $app) {
             return htmlentities($this->value(), ENT_COMPAT, 'utf-8');
         },
         'kirbytext' => function () use ($app) {
-            return $this->value(function ($value) use ($app) {
-                return $app->component('kirbytext')->parse((string)$value, [
-                    'field' => $this
-                ]);
-            })->markdown();
+            return $this->kirbytags()->markdown();
         },
         'kirbytags' => function () use ($app) {
             return $this->value(function ($value) use ($app) {
-                return $app->component('kirbytext')->parse((string)$value, [
+                return $app->component('kirbytext')->parse($value, [
+                    'kirby' => $app,
+                    'site'  => $app->site(),
+                    'model' => $model = $this->parent(),
+                    'page'  => is_a($model, Page::class) ? $model : null,
                     'field' => $this
                 ]);
             });

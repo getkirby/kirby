@@ -41,7 +41,7 @@ class Url extends BaseUrl
             return $path;
         }
 
-        return $kirby->url() . '/' . rtrim($path, '/');
+        return $kirby->url() . '/' . trim($path, '/');
     }
 
     public static function toTemplateAsset(string $assetPath, string $extension)

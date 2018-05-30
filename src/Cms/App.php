@@ -191,16 +191,17 @@ class App extends Component
      * @param string $path
      * @return File|null
      */
-    public function file(string $path)
+    public function file(string $path, $parent = null)
     {
+        $parent   = $parent ?? $this->site();
         $id       = dirname($path);
         $filename = basename($path);
 
         if ($id === '.') {
-            return $this->site()->file($filename);
+            return $parent->file($filename);
         }
 
-        if ($page = $this->site()->find($id)) {
+        if ($page = $parent->find($id)) {
             return $page->file($filename);
         }
 
@@ -241,9 +242,10 @@ class App extends Component
      *
      * @return Page|null
      */
-    public function page(string $id)
+    public function page(string $id, $parent = null)
     {
-        return $this->site()->find($id);
+        $parent = $parent ?? $this->site();
+        return $parent->find($id);
     }
 
     /**

@@ -182,6 +182,25 @@ class Str
     }
 
     /**
+     * Encode a string (used for email addresses)
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function encode(string $string): string
+    {
+        $encoded = '';
+
+        for ($i = 0; $i < static::length($string); $i++) {
+            $char = static::substr($string, $i, 1);
+            list(, $code) = unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'));
+            $encoded .= rand(1, 2) == 1 ? '&#' . $code . ';' : '&#x' . dechex($code) . ';';
+        }
+
+        return $encoded;
+    }
+
+    /**
      * Tries to detect the string encoding
      *
      * @param  string $string
