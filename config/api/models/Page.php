@@ -26,6 +26,9 @@ return [
         'files' => function (Page $page) {
             return $page->files();
         },
+        'hasChildren' => function (Page $page) {
+            return $page->hasChildren();
+        },
         'id' => function (Page $page) {
             return $page->id();
         },
