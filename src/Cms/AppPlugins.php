@@ -7,7 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\Dir;
-
+use Kirby\Toolkit\V;
 
 trait AppPlugins
 {
@@ -27,7 +27,8 @@ trait AppPlugins
         'routes' => [],
         'snippets' => [],
         'tags' => [],
-        'templates' => []
+        'templates' => [],
+        'validators' => []
     ];
 
     protected $pluginsAreLoaded = false;
@@ -135,6 +136,11 @@ trait AppPlugins
     protected function extendTemplates(array $templates): array
     {
         return $this->extensions['templates'] = array_merge($this->extensions['templates'], $templates);
+    }
+
+    protected function extendValidators(array $validators): array
+    {
+        return $this->extensions['validators'] = V::$validators = array_merge(V::$validators, $validators);
     }
 
     public function extension(string $type, string $name, $fallback = null)
