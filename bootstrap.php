@@ -7,5 +7,3 @@ if (is_dir(__DIR__ . '/vendor')) {
 }
 
 define('DS', '/');
-
-require __DIR__ . '/config/sentry.php';
