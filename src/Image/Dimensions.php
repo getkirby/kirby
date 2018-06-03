@@ -310,9 +310,13 @@ class Dimensions
     {
         if (!$this->ratio()) {
             return false;
-        } elseif ($this->portrait()) {
+        }
+
+        if ($this->portrait()) {
             return 'portrait';
-        } elseif ($this->landscape()) {
+        }
+
+        if ($this->landscape()) {
             return 'landscape';
         }
 
