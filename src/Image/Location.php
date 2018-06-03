@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Image\Exif;
+namespace Kirby\Image;
 
 /**
 * Returns the latitude and longitude values

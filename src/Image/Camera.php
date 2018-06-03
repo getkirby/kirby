@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Image\Exif;
+namespace Kirby\Image;
 
 /**
 * Small class which hold info about the camera

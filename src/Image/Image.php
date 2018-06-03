@@ -153,29 +153,15 @@ class Image extends File
             return $this->dimensions;
         }
 
-        $width  = 0;
-        $height = 0;
-
         if (in_array($this->mime(), ['image/jpeg', 'image/png', 'image/gif'])) {
-            $size   = $this->imagesize();
-            $width  = $size[0] ?? 0;
-            $height = $size[1] ?? 0;
-        } elseif ($this->extension() === 'svg') {
-            $content = $this->read();
-            $xml     = simplexml_load_string($content);
-            if ($xml !== false) {
-                $attr   = $xml->attributes();
-                $width  = floatval($attr->width);
-                $height = floatval($attr->height);
-                if (($width === 0.0 || $height === 0.0) && empty($attr->viewBox) === false) {
-                    $box    = Str::split($attr->viewBox, ' ');
-                    $width  = floatval($box[2] ?? 0);
-                    $height = floatval($box[3] ?? 0);
-                }
-            }
+            return $this->dimensions = Dimensions::forImage($this->root);
         }
 
-        return $this->dimensions = new Dimensions($width, $height);
+        if ($this->extension() === 'svg') {
+            return $this->dimensions = Dimensions::forSvg($this->root);
+        }
+
+        return $this->dimensions = new Dimensions(0, 0);
     }
 
     /**

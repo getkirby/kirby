@@ -18,18 +18,18 @@ class Dimensions
 {
 
     /**
-     * the width of the parent object
-     *
-     * @var int
-     */
-    public $width = 0;
-
-    /**
      * the height of the parent object
      *
      * @var int
      */
     public $height = 0;
+
+    /**
+     * the width of the parent object
+     *
+     * @var int
+     */
+    public $width = 0;
 
     /**
      * Constructor
@@ -44,13 +44,42 @@ class Dimensions
     }
 
     /**
-     * Returns the width
+     * Improved var_dump() output
      *
-     * @return int
+     * @return array
      */
-    public function width(): int
+    public function __debuginfo(): array
     {
-        return $this->width;
+        return $this->toArray();
+    }
+
+    /**
+     * Echos the dimensions as width × height
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->width . ' × ' . $this->height;
+    }
+
+    /**
+     * Crops the dimensions by width and height
+     *
+     * @param    int         $width
+     * @param    int         $height
+     * @return   Dimensions
+     */
+    public function crop(int $width, int $height = null): self
+    {
+        $this->width  = $width;
+        $this->height = $width;
+
+        if ($height !== 0 && $height !== null) {
+            $this->height = $height;
+        }
+
+        return $this;
     }
 
     /**
@@ -61,28 +90,6 @@ class Dimensions
     public function height(): int
     {
         return $this->height;
-    }
-
-    /**
-     * Calculates and returns the ratio
-     *
-     * <code>
-     *
-     * $dimensions = new Dimensions(1200, 768);
-     * echo $dimensions->ratio();
-     * // output: 1.5625
-     *
-     * </code>
-     *
-     * @return float
-     */
-    public function ratio(): float
-    {
-        if ($this->width !== 0 && $this->height !== 0) {
-            return ($this->width / $this->height);
-        }
-
-        return 0;
     }
 
     /**
@@ -135,6 +142,32 @@ class Dimensions
         }
 
         return $this;
+    }
+
+    /**
+     * Recalculates the width and height to fit the given height
+     *
+     * <code>
+     *
+     * $dimensions = new Dimensions(1200, 768);
+     * $dimensions->fitHeight(500);
+     *
+     * echo $dimensions->width();
+     * // output: 781
+     *
+     * echo $dimensions->height();
+     * // output: 500
+     *
+     * </code>
+     *
+     * @param   int         $fit    the max height
+     * @param   bool        $force  If true, the dimensions will be
+     *                              upscaled to fit the box if smaller
+     * @return  Dimensions          object with recalculated dimensions
+     */
+    public function fitHeight(int $fit, bool $force = false): self
+    {
+        return $this->fitSize('height', $fit, $force);
     }
 
     /**
@@ -191,32 +224,6 @@ class Dimensions
     }
 
     /**
-     * Recalculates the width and height to fit the given height
-     *
-     * <code>
-     *
-     * $dimensions = new Dimensions(1200, 768);
-     * $dimensions->fitHeight(500);
-     *
-     * echo $dimensions->width();
-     * // output: 781
-     *
-     * echo $dimensions->height();
-     * // output: 500
-     *
-     * </code>
-     *
-     * @param   int         $fit    the max height
-     * @param   bool        $force  If true, the dimensions will be
-     *                              upscaled to fit the box if smaller
-     * @return  Dimensions          object with recalculated dimensions
-     */
-    public function fitHeight(int $fit, bool $force = false): self
-    {
-        return $this->fitSize('height', $fit, $force);
-    }
-
-    /**
      * Recalculates the dimensions by the width and height
      *
      * @param   int         $width      the max height
@@ -246,33 +253,52 @@ class Dimensions
     }
 
     /**
-     * @param   int         $width
-     * @param   int         $height
-     * @param   bool        $force
-     * @return  Dimensions
+     * Detect the dimensions for an image file
+     *
+     * @param string $root
+     * @return self
      */
-    public function resize(int $width, int $height, bool $force = false): self
+    public static function forImage(string $root): self
     {
-        return $this->fitWidthAndHeight($width, $height, $force);
+        $size = getimagesize($root);
+        return new static($size[0] ?? 0, $size[1] ?? 1);
     }
 
     /**
-     * Crops the dimensions by width and height
+     * Detect the dimensions for a svg file
      *
-     * @param    int         $width
-     * @param    int         $height
-     * @return   Dimensions
+     * @param string $root
+     * @return self
      */
-    public function crop(int $width, int $height = null): self
+    public static function forSvg(string $root): self
     {
-        $this->width  = $width;
-        $this->height = $width;
+        $content = file_get_contents($root);
+        $height  = 0;
+        $width   = 0;
+        $xml     = simplexml_load_string($content);
 
-        if ($height !== 0 && $height !== null) {
-            $this->height = $height;
+        if ($xml !== false) {
+            $attr   = $xml->attributes();
+            $width  = floatval($attr->width);
+            $height = floatval($attr->height);
+            if (($width === 0.0 || $height === 0.0) && empty($attr->viewBox) === false) {
+                $box    = explode(' ', $attr->viewBox);
+                $width  = floatval($box[2] ?? 0);
+                $height = floatval($box[3] ?? 0);
+            }
         }
 
-        return $this;
+        return new static($width, $height);
+    }
+
+    /**
+     * Checks if the dimensions are landscape
+     *
+     * @return bool
+     */
+    public function landscape(): bool
+    {
+        return $this->width > $this->height;
     }
 
     /**
@@ -304,13 +330,36 @@ class Dimensions
     }
 
     /**
-     * Checks if the dimensions are landscape
+     * Calculates and returns the ratio
      *
-     * @return bool
+     * <code>
+     *
+     * $dimensions = new Dimensions(1200, 768);
+     * echo $dimensions->ratio();
+     * // output: 1.5625
+     *
+     * </code>
+     *
+     * @return float
      */
-    public function landscape(): bool
+    public function ratio(): float
     {
-        return $this->width > $this->height;
+        if ($this->width !== 0 && $this->height !== 0) {
+            return ($this->width / $this->height);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param   int         $width
+     * @param   int         $height
+     * @param   bool        $force
+     * @return  Dimensions
+     */
+    public function resize(int $width, int $height, bool $force = false): self
+    {
+        return $this->fitWidthAndHeight($width, $height, $force);
     }
 
     /**
@@ -340,22 +389,13 @@ class Dimensions
     }
 
     /**
-     * Echos the dimensions as width × height
+     * Returns the width
      *
-     * @return string
+     * @return int
      */
-    public function __toString(): string
+    public function width(): int
     {
-        return $this->width . ' × ' . $this->height;
+        return $this->width;
     }
 
-    /**
-     * Improved var_dump() output
-     *
-     * @return array
-     */
-    public function __debuginfo(): array
-    {
-        return $this->toArray();
-    }
 }

@@ -2,8 +2,6 @@
 
 namespace Kirby\Image;
 
-use Kirby\Image\Exif\Camera;
-use Kirby\Image\Exif\Location;
 use Kirby\Toolkit\V;
 
 /**
@@ -32,13 +30,13 @@ class Exif
 
     /**
      * the camera object with model and make
-     * @var Exif\Camera
+     * @var Camera
      */
     protected $camera;
 
     /**
      * the location object
-     * @var Exif\Location
+     * @var Location
      */
     protected $location;
 
