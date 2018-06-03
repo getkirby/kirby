@@ -5,7 +5,7 @@ namespace Kirby\Session;
 use Throwable;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
-use Kirby\Data\Handler\Json;
+use Kirby\Data\Json;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;

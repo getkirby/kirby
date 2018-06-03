@@ -6,7 +6,7 @@ use ArgumentCountError;
 use Closure;
 use Exception;
 use TypeError;
-use Kirby\Data\Handler\Yaml;
+use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\I18n;
 

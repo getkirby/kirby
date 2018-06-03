@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Data\Handler;
+namespace Kirby\Data;
 
 use PHPUnit\Framework\TestCase;
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace Kirby\Data\Handler;
+namespace Kirby\Data;
 
 use Exception;
 use Spyc;
-use Kirby\Data\Handler;
 
 /**
  * Simple Wrapper around Symfony's Yaml Component

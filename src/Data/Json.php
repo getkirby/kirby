@@ -1,9 +1,8 @@
 <?php
 
-namespace Kirby\Data\Handler;
+namespace Kirby\Data;
 
 use Exception;
-use Kirby\Data\Handler;
 
 /**
  * Simple Wrapper around json_encode and json_decode
@@ -16,7 +15,6 @@ use Kirby\Data\Handler;
  */
 class Json extends Handler
 {
-
     /**
      * Converts an array to an encoded JSON string
      *
@@ -38,7 +36,7 @@ class Json extends Handler
     {
         $result = json_decode($json, true);
 
-        if (is_array($result)) {
+        if (is_array($result) === true) {
             return $result;
         } else {
             throw new Exception('JSON string is invalid');

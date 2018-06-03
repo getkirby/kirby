@@ -9,7 +9,9 @@ class_alias(Kirby\Cms\Site::class, 'Site');
 class_alias(Kirby\Cms\Structure::class, 'Structure');
 class_alias(Kirby\Cms\Url::class, 'Url');
 
-class_alias(Kirby\Data\Handler\Yaml::class, 'Yaml');
+class_alias(Kirby\Data\Data::class, 'Data');
+class_alias(Kirby\Data\Json::class, 'Json');
+class_alias(Kirby\Data\Yaml::class, 'Yaml');
 
 class_alias(Kirby\Toolkit\A::class, 'A');
 class_alias(Kirby\Toolkit\Dir::class, 'Dir');

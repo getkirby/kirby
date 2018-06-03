@@ -6,8 +6,8 @@ use Kirby\Cms\Html;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Page;
 use Kirby\Cms\Url;
-use Kirby\Data\Handler\Json;
-use Kirby\Data\Handler\Yaml;
+use Kirby\Data\Json;
+use Kirby\Data\Yaml;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 

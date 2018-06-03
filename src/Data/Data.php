@@ -29,7 +29,7 @@ class Data
      *
      * @var array
      */
-    protected static $handlerAliases = [
+    public static $aliases = [
         'yml'   => 'yaml',
         'md'    => 'txt',
         'mdown' => 'txt'
@@ -40,44 +40,26 @@ class Data
      *
      * @var array
      */
-    protected static $handlers = [
-        'json' => 'Kirby\Data\Handler\Json',
-        'yaml' => 'Kirby\Data\Handler\Yaml',
-        'txt'  => 'Kirby\Data\Handler\Txt',
-        'php'  => 'Kirby\Data\Handler\Php'
+    public static $handlers = [
+        'json' => Json::class,
+        'yaml' => Yaml::class,
+        'txt'  => Txt::class,
     ];
 
     /**
-     * Setter and getter for handlers
+     * Handler getter
      *
      * @param  string          $type
-     * @param  string|null     $className
-     * @return Handler|string
+     * @return Handler|null
      */
-    public static function handler(string $type, string $className = null)
+    public static function handler(string $type)
     {
         // normalize the type
-        $type = strtolower($type);
-
-        if ($className === null) {
-            return static::getHandler($type);
-        }
-
-        return static::setHandler($type, $className);
-    }
-
-    /**
-     * Helper for getting handlers
-     *
-     * @param  string   $type
-     * @return Handler
-     */
-    protected static function getHandler(string $type): Handler
-    {
+        $type    = strtolower($type);
         $handler = static::$handlers[$type] ?? null;
 
-        if ($handler === null && isset(static::$handlerAliases[$type]) === true) {
-            $handler = static::$handlers[static::$handlerAliases[$type]] ?? null;
+        if ($handler === null && isset(static::$aliases[$type]) === true) {
+            $handler = static::$handlers[static::$aliases[$type]] ?? null;
         }
 
         if ($handler === null) {
@@ -88,19 +70,27 @@ class Data
     }
 
     /**
-     * Helper for setting handlers
+     * Decode data with the specified handler
      *
-     * @param  string   $type
-     * @param  string   $className
+     * @param string $data
+     * @param string $type
+     * @return array
+     */
+    public static function decode(string $data = null, string $type): array
+    {
+        return static::handler($type)->decode($data);
+    }
+
+    /**
+     * Encode data with the specified handler
+     *
+     * @param array $data
+     * @param string $type
      * @return string
      */
-    protected static function setHandler(string $type, string $className): string
+    public static function encode(array $data = null, string $type): string
     {
-        if (is_subclass_of($className, Handler::class) === false) {
-            throw new Exception($className . ' must extend Kirby\Data\Handler');
-        }
-
-        return static::$handlers[$type] = $className;
+        return static::handler($type)->encode($data);
     }
 
     /**
@@ -114,13 +104,7 @@ class Data
      */
     public static function read(string $file, string $type = null): array
     {
-        if (file_exists($file) !== true) {
-            throw new Exception('The file "' . $file . '" does not exist');
-        }
-
-        $type = $type ?? F::extension($file);
-
-        return static::handler($type)->decode(F::read($file));
+        return static::handler($type ?? F::extension($file))->read($file);
     }
 
     /**
@@ -128,12 +112,13 @@ class Data
      * The data handler is automatically chosen by
      * the extension if not specified.
      *
-     * @param  array    $data
+     * @param  string    $file
+     * @param  array     $data
+     * @param  string    $type
      * @return boolean
      */
     public static function write(string $file, array $data = [], string $type = null): bool
     {
-        $type = $type ?? F::extension($file);
-        return F::write($file, static::handler($type)->encode($data));
+        return static::handler($type ?? F::extension($file))->write($file, $data);
     }
 }

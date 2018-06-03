@@ -2,10 +2,10 @@
 
 namespace Kirby\Data;
 
-use Kirby\Data\Handler\Json;
-use Kirby\Data\Handler\Yaml;
-use Kirby\Data\Handler\Php;
-use Kirby\Data\Handler\Txt;
+use Kirby\Data\Json;
+use Kirby\Data\Yaml;
+use Kirby\Data\Php;
+use Kirby\Data\Txt;
 
 use PHPUnit\Framework\TestCase;
 

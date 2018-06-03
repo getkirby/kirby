@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\App;
-use Kirby\Data\Handler\Yaml;
+use Kirby\Data\Yaml;
 
 class FieldMethodsTest extends TestCase
 {

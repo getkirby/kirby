@@ -1,8 +1,7 @@
 <?php
 
-namespace Kirby\Data\Handler;
+namespace Kirby\Data;
 
-use Kirby\Data\Handler;
 use Kirby\Toolkit\Str;
 
 /**
@@ -97,31 +96,19 @@ class Txt extends Handler
 
         // loop through all fields and add them to the content
         foreach ($fields as $field) {
-            $result = static::decodeField($field);
-            if ($result !== false) {
-                $data[$result['key']] = $result['value'];
+
+            $pos = strpos($field, ':');
+            $key = str_replace(['-', ' '], '_', strtolower(trim(substr($field, 0, $pos))));
+
+            // Don't add fields with empty keys
+            if (empty($key) === true) {
+                continue;
             }
+
+            $data[$key] = trim(substr($field, $pos + 1));
         }
 
         return $data;
     }
 
-    /**
-     * Helper for parsing a single field to key and value
-     *
-     * @param  string       $field
-     * @return array|false
-     */
-    protected static function decodeField(string $field)
-    {
-        $pos = strpos($field, ':');
-        $key = str_replace(['-', ' '], '_', strtolower(trim(substr($field, 0, $pos))));
-
-        // Don't add fields with empty keys
-        if (empty($key) === true) {
-            return false;
-        }
-
-        return ['key' => $key, 'value' => trim(substr($field, $pos + 1))];
-    }
 }
