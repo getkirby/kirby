@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Html;
+namespace Kirby\Toolkit;
 
 class HtmlTest extends TestCase
 {

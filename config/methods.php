@@ -2,12 +2,12 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\ContentField;
+use Kirby\Cms\Html;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Page;
 use Kirby\Cms\Url;
 use Kirby\Data\Handler\Json;
 use Kirby\Data\Handler\Yaml;
-use Kirby\Html\Element\A;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -72,20 +72,19 @@ return function (App $app) {
             return intval($value);
         },
         'toLink' => function ($attr1 = null, $attr2 = null) {
-            $a = new A($this->parent()->url(), $this->value());
-
             if (is_string($attr1) === true) {
-                $a->attr('href', url($attr1));
-                $a->attr($attr2);
+                $href = $attr1;
+                $attr = $attr2;
             } else {
-                $a->attr($attr1);
+                $href = $this->parent()->url();
+                $attr = $attr1;
             }
 
             if ($this->parent()->isActive()) {
-                $a->attr('aria-current', 'page');
+                $attr['aria-current'] = 'page';
             }
 
-            return $a;
+            return Html::a($href, $this->value(), $attr);
         },
         'toPage' => function () use ($app) {
             return $app->site()->find($this->value());

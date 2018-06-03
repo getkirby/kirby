@@ -170,6 +170,7 @@ class PageStore extends PageStoreDefault
     {
         $page = $this->page();
 
+
         // delete all public media files
         Dir::remove($page->mediaRoot());
 

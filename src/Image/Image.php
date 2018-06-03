@@ -4,10 +4,10 @@ namespace Kirby\Image;
 
 use Exception;
 use Kirby\FileSystem\File;
-use Kirby\Html\Element\Img;
 use Kirby\Http\Response;
 use Kirby\Http\Response\Download;
 use Kirby\Http\Acceptance\MimeType;
+use Kirby\Toolkit\Html;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -291,15 +291,11 @@ class Image extends File
 
     /**
      * @param  array  $attr
-     * @return Img
+     * @return string
      */
-    public function html(array $attr = []): Img
+    public function html(array $attr = []): string
     {
-        if (isset($attr['alt']) === false) {
-            $attr['alt'] = '';
-        }
-        $img = new Img($this->url(), $attr);
-        return $img;
+        return Html::img($this->url(), $attr);
     }
 
     /**

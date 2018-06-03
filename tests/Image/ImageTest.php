@@ -2,7 +2,6 @@
 
 namespace Kirby\Image;
 
-use Kirby\Html\Element\Img;
 use Kirby\Http\Response;
 
 class ImageTest extends TestCase
@@ -143,10 +142,9 @@ class ImageTest extends TestCase
 
     public function testHtml()
     {
-        $image  = $this->_image();
-        $html   = $image->html();
-        $this->assertInstanceOf(Img::class, $html);
-        $this->assertEquals('http://getkirby.com/cat.jpg', $html->attr('src'));
+        $image = $this->_image();
+        $html  = $image->html();
+        $this->assertEquals('<img alt="" src="http://getkirby.com/cat.jpg">', $html);
     }
 
     public function testToArray()

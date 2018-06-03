@@ -1,10 +1,8 @@
 <?php
 
-namespace Kirby\Html;
+namespace Kirby\Toolkit;
 
-use Kirby\Html\Element\Video;
-use Kirby\Html\Element\Gist;
-use Kirby\Toolkit\Str;
+use Exception;
 
 /**
 * Html
@@ -282,8 +280,15 @@ class Html
      */
     public static function gist(string $url, string $file = null, array $attr = []): string
     {
-        // TODO: solve this here directly
-        return (new Gist($url, $file, $attr))->toHtml();
+        if ($file === null) {
+            $src = $url . '.js';
+        } else {
+            $src = $url . '.js?file=' . $file;
+        }
+
+        return static::tag('script', null, array_merge($attr, [
+            'src' => $src
+        ]));
     }
 
     /**
@@ -397,8 +402,87 @@ class Html
 
     public static function video(string $url, array $options = [], array $attr = []): string
     {
-        // TODO: solve this here directly
-        return (new Video($url, $options, $attr))->toHtml();
+        // YouTube video
+        if (preg_match('!youtu!i', $src) === 1) {
+            return static::youtube($src, $options['youtube'] ?? [], $attr);
+        }
+
+        // Vimeo video
+        if (preg_match('!vimeo!i', $src) === 1) {
+            return static::vimeo($src, $options['vimeo'] ?? [], $attr);
+        }
+
+        throw new Exception('Unexpected video type');
+    }
+
+    public static function vimeo(string $url, array $options = [], array $attr = []): string
+    {
+        if (preg_match('!vimeo.com\/([0-9]+)!i', $src, $array) === 1) {
+            $id = $array[1];
+        } else {
+            throw new Exception('Invalid Vimeo source');
+        }
+
+        // build the options query
+        if (!empty($options)) {
+            $query = '?' . http_build_query($options);
+        } else {
+            $query = '';
+        }
+
+        $src = 'https://player.vimeo.com/video/' . $id . $query;
+
+        return static::iframe($src, array_merge(['allowfullscreen' => true], $attr));
+    }
+
+    public static function youtube(string $url, array $options = [], array $attr = []): string
+    {
+        // youtube embed domain
+        $domain = 'youtube.com';
+        $id     = null;
+
+        $schemes = [
+            // http://www.youtube.com/embed/d9NF2edxy-M
+            ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)'],
+            // https://www.youtube-nocookie.com/embed/d9NF2edxy-M
+            [
+                'pattern' => 'youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)',
+                'domain'  => 'www.youtube-nocookie.com'
+            ],
+            // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M
+            [
+                'pattern' => 'youtube-nocookie.com\/watch\?v=([a-zA-Z0-9_-]+)',
+                'domain'  => 'www.youtube-nocookie.com'
+            ],
+            // http://www.youtube.com/watch?v=d9NF2edxy-M
+            ['pattern' => 'v=([a-zA-Z0-9_-]+)'],
+            // http://youtu.be/d9NF2edxy-M
+            ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)']
+        ];
+
+        foreach ($schemes as $schema) {
+            if (preg_match('!' . $schema['pattern'] . '!i', $src, $array) === 1) {
+                $domain = $schema['domain'] ?? $domain;
+                $id     = $array[1];
+                break;
+            }
+        }
+
+        // no match
+        if ($id === null) {
+            throw new Exception('Invalid Youtube source');
+        }
+
+        // build the options query
+        if (!empty($options)) {
+            $query = '?' . http_build_query($options);
+        } else {
+            $query = '';
+        }
+
+        $src = 'https://' . $domain . '/embed/' . $id . $query;
+
+        return static::iframe($src, array_merge(['allowfullscreen' => true], $attr));
     }
 
 }

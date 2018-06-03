@@ -1,9 +1,8 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Html;
 use Kirby\Cms\Url;
-use Kirby\Html\Attributes;
-use Kirby\Html\Html;
 use Kirby\Http\Response\Redirect;
 use Kirby\Toolkit\View;
 use Kirby\Toolkit\F;
@@ -11,8 +10,8 @@ use Kirby\Toolkit\I18n;
 
 function attr(array $attr = null, $before = null, $after = null)
 {
-    if ($attrs = (new Attributes($attr))->toString()) {
-        return $before . $attrs. $after;
+    if ($attrs = Html::attr($attr)) {
+        return $before . $attrs . $after;
     }
 
     return null;
