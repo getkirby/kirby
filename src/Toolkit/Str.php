@@ -462,6 +462,19 @@ class Str
     }
 
     /**
+     * Runs a string query.
+     * Check out the Query class for more information.
+     *
+     * @param string $query
+     * @param array $data
+     * @return string|null
+     */
+    public static function query(string $query, array $data = [])
+    {
+        return (new Query($query, $data))->result();
+    }
+
+    /**
      * Shortens a string and adds an ellipsis if the string is too long
      *
      * <code>
@@ -510,10 +523,14 @@ class Str
      * @param  string  $fallback A fallback if a token does not have any matches
      * @return string            The filled-in string
      */
-    public static function template(string $string, array $data = [], string $fallback = null): string
+    public static function template(string $string = null, array $data = [], string $fallback = null): string
     {
-        return preg_replace_callback('!{(.*?)}!', function ($match) use ($data, $fallback) {
-            return $data[$match[1]] ?? $fallback;
+        return preg_replace_callback('!{{(.*?)}}!', function ($match) use ($data, $fallback) {
+            $query = trim($match[1]);
+            if (strpos($query, '.') !== false) {
+                return (new Query($match[1], $data))->result() ?? $fallback;
+            }
+            return $data[$query] ?? $fallback;
         }, $string);
     }
 }

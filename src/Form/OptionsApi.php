@@ -4,11 +4,11 @@ namespace Kirby\Form;
 
 use Kirby\Cms\Nest;
 use Kirby\Cms\Structure;
-use Kirby\Cms\Tempura;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Properties;
+use Kirby\Toolkit\Str;
 
 class OptionsApi
 {
@@ -39,7 +39,7 @@ class OptionsApi
     protected function field(string $field, array $data)
     {
         $value = $this->$field();
-        return (new Tempura($value, $data))->render();
+        return Str::template($value, $data);
     }
 
     public function options(): array
@@ -120,7 +120,7 @@ class OptionsApi
 
     public function url(): string
     {
-        return (new Tempura($this->url, $this->data()))->render();
+        return Str::template($this->url, $this->data());
     }
 
     public function value()

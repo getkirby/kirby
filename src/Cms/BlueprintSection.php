@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Api\Api;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Query;
+use Kirby\Toolkit\Str;
 
 class BlueprintSection extends BlueprintObject
 {
@@ -157,7 +158,7 @@ class BlueprintSection extends BlueprintObject
 
     public function stringTemplate(string $template = null, array $data = [])
     {
-        return (new Tempura($template, $this->stringQueryData($data)))->render();
+        return Str::template($template, $this->stringQueryData($data));
     }
 
     /**

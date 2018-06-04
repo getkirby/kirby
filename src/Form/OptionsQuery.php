@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\ContentField;
-use Kirby\Cms\Tempura;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Collection;
@@ -50,7 +49,7 @@ class OptionsQuery
             $value = $value[$object];
         }
 
-        return (new Tempura($value, $data))->render();
+        return Str::template($value, $data);
     }
 
     public function options(): array

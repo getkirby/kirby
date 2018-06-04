@@ -263,9 +263,52 @@ class StrTest extends TestCase
 
     public function testTemplate()
     {
-        $string = 'From {b} to {a}';
+        $string = 'From {{ b }} to {{ a }}';
         $this->assertEquals('From here to there', Str::template($string, ['a' => 'there', 'b' => 'here']));
         $this->assertEquals('From  to ', Str::template($string, []));
         $this->assertEquals('From - to -', Str::template($string, [], '-'));
     }
+
+    public function testTemplateWithString()
+    {
+        $template = Str::template('Hello {{ user }}', [
+            'user' => 'homer'
+        ]);
+
+        $this->assertEquals('Hello homer', $template);
+    }
+
+    public function testTemplateWithArray()
+    {
+        $template = Str::template('Hello {{ user.username }}', [
+            'user' => [
+                'username' => 'homer'
+            ]
+        ]);
+
+        $this->assertEquals('Hello homer', $template);
+    }
+
+    public function testTemplateWithObject()
+    {
+        $template = Str::template('Hello {{ user.username }}', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals('Hello homer', $template);
+    }
+
+    public function testTemplateWithObjectMethod()
+    {
+        $template = Str::template('{{ user.username }} says: {{ user.says("hi") }}', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals('homer says: hi', $template);
+    }
+
+
+
+
+
 }

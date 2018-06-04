@@ -313,12 +313,10 @@ class Filename
      */
     public function toString(): string
     {
-        $tempura = new Tempura($this->template, [
+        return Str::template($this->template, [
             'name'       => $this->name(),
             'attributes' => $this->attributesToString('-'),
             'extension'  => $this->extension()
         ]);
-
-        return $tempura->render();
     }
 }

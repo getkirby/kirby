@@ -103,7 +103,7 @@ class BlueprintFilesSection extends BlueprintSection
                 'index' => $this->total() + 1
             ];
 
-            $name = (new Tempura($template, $data))->render();
+            $name = Str::template($template, $data);
         }
 
         $name = Str::slug($name);

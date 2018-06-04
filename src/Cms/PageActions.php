@@ -321,13 +321,13 @@ trait PageActions
 
                 return $num;
             default:
-                $template = new Tempura($mode, [
+                $template = Str::template($mode, [
                     'kirby' => $this->kirby(),
                     'page'  => $this,
                     'site'  => $this->site(),
                 ]);
 
-                return intval($template->render());
+                return intval($template);
         }
     }
 
