@@ -117,18 +117,6 @@ class Pages extends Collection
     }
 
     /**
-     * Initialize the PagesFinder class,
-     * which is handling findBy and find
-     * methods
-     *
-     * @return PagesFinder
-     */
-    protected function finder()
-    {
-        return new PagesFinder($this);
-    }
-
-    /**
      * Returns all files of all children
      *
      * @return Files
@@ -144,6 +132,43 @@ class Pages extends Collection
         }
 
         return $files;
+    }
+
+    public function findById($id)
+    {
+        $page = $this->get($id);
+
+        if (!$page) {
+            $page = $this->findByIdRecursive($id);
+        }
+
+        return $page;
+    }
+
+    public function findByIdRecursive($id)
+    {
+        $path       = explode('/', $id);
+        $collection = $this;
+        $item       = null;
+        $query      = null;
+
+        foreach ($path as $key) {
+            $query = ltrim($query . '/' . $key, '/');
+            $item  = $collection->get($query) ?? null;
+
+            if ($item === null) {
+                return null;
+            }
+
+            $collection = $item->children();
+        }
+
+        return $item;
+    }
+
+    public function findByKey($key)
+    {
+        return $this->findById($key);
     }
 
     /**

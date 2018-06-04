@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Collection;
+namespace Kirby\Toolkit;
 
 class Iterator implements \Iterator
 {

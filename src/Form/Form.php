@@ -2,7 +2,7 @@
 
 namespace Kirby\Form;
 
-use Kirby\Collection\Collection;
+use Kirby\Toolkit\Collection;
 
 class Form
 {

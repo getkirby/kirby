@@ -29,13 +29,28 @@ class Files extends Collection
         return $collection;
     }
 
-    protected function finder()
+    /**
+     * Tries to find a file by id/filename
+     *
+     * @param string $id
+     * @return File|null
+     */
+    public function findById($id)
     {
-        if (is_a($this->parent, Page::class) === true) {
-            return new FilesFinder($this, $this->parent->id());
-        }
+        return $this->get(ltrim($this->parent->id() . '/' . $id, '/'));
+    }
 
-        return new FilesFinder($this, null);
+    /**
+     * Alias for FilesFinder::findById() which is
+     * used internally in the Files collection to
+     * map the get method correctly.
+     *
+     * @param string $key
+     * @return File|null
+     */
+    public function findByKey($key)
+    {
+        return $this->findById($key);
     }
 
     /**

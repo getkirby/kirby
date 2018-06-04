@@ -3,9 +3,8 @@
 namespace Kirby\Form;
 
 use Closure;
-use Kirby\Collection\Collection;
-
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Collection;
 
 class Fields extends Collection
 {

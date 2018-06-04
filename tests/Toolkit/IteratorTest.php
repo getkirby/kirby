@@ -1,8 +1,6 @@
 <?php
 
-namespace Kirby\Collection;
-
-use PHPUnit\Framework\TestCase;
+namespace Kirby\Toolkit;
 
 class IteratorTest extends TestCase
 {

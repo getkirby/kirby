@@ -1,12 +1,8 @@
 <?php
 
-namespace Kirby\Collection\Traits;
+namespace Kirby\Toolkit;
 
-use Kirby\Collection\Collection;
-
-use PHPUnit\Framework\TestCase;
-
-class ConverterTest extends TestCase
+class CollectionConverterTest extends TestCase
 {
 
     public function testToArray()

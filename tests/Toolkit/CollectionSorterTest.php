@@ -1,10 +1,6 @@
 <?php
 
-namespace Kirby\Collection\Traits;
-
-use Kirby\Collection\Collection;
-
-use PHPUnit\Framework\TestCase;
+namespace Kirby\Toolkit;
 
 class MockObject
 {
@@ -22,7 +18,7 @@ class MockObject
 
 }
 
-class SorterTest extends TestCase
+class CollectionSorterTest extends TestCase
 {
 
     public function testSortBy()

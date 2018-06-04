@@ -3,9 +3,8 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Collection\Collection as BaseCollection;
-
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Collection as BaseCollection;
 
 /**
  * The Collection class serves as foundation

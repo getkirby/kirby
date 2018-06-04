@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\Str;
 
 class Users extends Collection
 {
@@ -29,16 +30,13 @@ class Users extends Collection
         return $collection;
     }
 
-    /**
-     * Initialize the UsersFinder class,
-     * which is handling findBy and find
-     * methods
-     *
-     * @return UsersFinder
-     */
-    protected function finder()
+    public function findByKey($key)
     {
-        return new UsersFinder($this);
+        if (Str::contains($key, '@') === true) {
+            $key = sha1($key);
+        }
+
+        return parent::findByKey($key);
     }
 
     public static function load(string $root, array $inject = []): self

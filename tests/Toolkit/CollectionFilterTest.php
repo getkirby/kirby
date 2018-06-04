@@ -1,12 +1,8 @@
 <?php
 
-namespace Kirby\Collection\Traits;
+namespace Kirby\Toolkit;
 
-use Kirby\Collection\Collection;
-
-use PHPUnit\Framework\TestCase;
-
-class FilterTest extends TestCase
+class CollectionFilterTest extends TestCase
 {
 
     public function testFilterArray()
@@ -129,7 +125,7 @@ class FilterTest extends TestCase
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage Missing filter class for operator: $%
+     * @expectedExceptionMessage Missing filter for operator: $%
      */
     public function testFilterByUnknown()
     {

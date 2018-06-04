@@ -1,12 +1,8 @@
 <?php
 
-namespace Kirby\Collection\Traits;
+namespace Kirby\Toolkit;
 
-use Kirby\Collection\Collection;
-
-use PHPUnit\Framework\TestCase;
-
-class PaginatorTest extends TestCase
+class CollectionPaginatorTest extends TestCase
 {
 
     public function testSlice()

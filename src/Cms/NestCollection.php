@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Collection\Collection as BaseCollection;
+use Kirby\Toolkit\Collection as BaseCollection;
 
 class NestCollection extends BaseCollection
 {
