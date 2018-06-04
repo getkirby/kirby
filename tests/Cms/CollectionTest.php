@@ -5,16 +5,19 @@ namespace Kirby\Cms;
 class MockObject extends Model
 {
 
-    use HasUnknownProperties;
-
     public function __construct(array $props = [])
     {
-        $this->setUnknownProperties($props);
+        $this->id = $props['id'];
     }
 
     public function id()
     {
-        return $this->getUnknownProperty('id');
+        return $this->id;
+    }
+
+    public function toArray(): array
+    {
+        return ['id' => $this->id];
     }
 
 }
