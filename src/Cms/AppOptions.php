@@ -7,7 +7,7 @@ use Kirby\Toolkit\F;
 
 trait AppOptions
 {
-    protected $options = [];
+    protected $options;
 
     /**
      * Load a specific configuration option

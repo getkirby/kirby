@@ -149,7 +149,7 @@ class F
         }
 
         // return the current extension
-        return strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        return Str::lower(pathinfo($file, PATHINFO_EXTENSION));
     }
 
     /**
@@ -236,6 +236,10 @@ class F
      */
     public static function isWritable(string $file): bool
     {
+        if (file_exists($file) === false) {
+            return is_writable(dirname($file));
+        }
+
         return is_writable($file);
     }
 
@@ -311,23 +315,54 @@ class F
     }
 
     /**
+     * Get the file's last modification time.
+     *
+     * @param  string $file
+     * @param  string $format
+     * @param  string $handler date or strftime
+     * @return mixed
+     */
+    public static function modified(string $file, string $format = null, string $handler = 'date')
+    {
+        if (file_exists($file) === true) {
+            if (is_null($format) === true) {
+                return filemtime($file);
+            }
+            return $handler($format, filemtime($file));
+        }
+        return false;
+    }
+
+    /**
      * Moves a file to a new location
      *
-     * @param  string $old The current path for the file
-     * @param  string $new The path to the new location
+     * @param  string  $oldRoot The current path for the file
+     * @param  string  $newRoot The path to the new location
+     * @param  boolean $force Force move if the target file exists
      * @return boolean
      */
-    public static function move(string $old, string $new): bool
+    public static function move(string $oldRoot, string $newRoot, bool $force = false): bool
     {
-        if ($old === $new) {
-            return true;
-        }
-
-        if (file_exists($old) === false || file_exists($new) === true) {
+        // check if the file exists
+        if (file_exists($oldRoot) === false) {
             return false;
         }
 
-        return rename($old, $new);
+        if (file_exists($newRoot) === true) {
+            if ($force === false) {
+                return false;
+            }
+
+            // delete the existing file
+            unlink($newRoot);
+        }
+
+        // actually move the file if it exists
+        if (rename($oldRoot, $newRoot) !== true) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -379,10 +414,39 @@ class F
         }
 
         if (is_readable($file) === false) {
-            throw new Exception('The file is not readable');
+            throw new Exception('The file "' . $file . '" is not readable');
         }
 
         return file_get_contents($file);
+    }
+
+    /**
+     * Changes the name of the file without
+     * touching the extension
+     *
+     * @param  string $file
+     * @param  string $newName
+     * @param  bool   $overwrite Force overwrite existing files
+     * @return string|false
+     */
+    public static function rename(string $file, string $newName, bool $overwrite = false)
+    {
+        // create the new name
+        $name = static::safeName(basename($newName));
+
+        // overwrite the root
+        $newRoot = rtrim(dirname($file) . '/' . $name . '.' . F::extension($file), '.');
+
+        // nothing has changed
+        if ($newRoot === $file) {
+            return $newRoot;
+        }
+
+        if (F::move($file, $newRoot) !== true) {
+            return false;
+        }
+
+        return $newRoot;
     }
 
     /**
@@ -590,6 +654,10 @@ class F
             if (Dir::make(dirname($file)) === false) {
                 return false;
             }
+        }
+
+        if (static::isWritable($file) === false) {
+            throw new Exception('The file "' . $file . '" is not writable');
         }
 
         return file_put_contents($file, $content, $mode) !== false;

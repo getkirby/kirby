@@ -84,7 +84,7 @@ return function (App $app) {
                 $attr['aria-current'] = 'page';
             }
 
-            return Html::a($href, $this->value(), $attr);
+            return Html::a($href, $this->value(), $attr ?? []);
         },
         'toPage' => function () use ($app) {
             return $app->site()->find($this->value());

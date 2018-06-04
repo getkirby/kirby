@@ -74,6 +74,10 @@ class Dir
      */
     public static function make(string $dir, bool $recursive = true): bool
     {
+        if (empty($dir) === true) {
+            return false;
+        }
+
         if (is_dir($dir) === true) {
             return true;
         }

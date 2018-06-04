@@ -18,13 +18,12 @@ class DataTest extends TestCase
     {
         $this->assertInstanceOf(Yaml::class, Data::handler('yaml'));
         $this->assertInstanceOf(Json::class, Data::handler('json'));
-        $this->assertInstanceOf(Php::class, Data::handler('php'));
         $this->assertInstanceOf(Txt::class, Data::handler('txt'));
     }
 
     public function testCustomHandler()
     {
-        Data::handler('test', CustomHandler::class);
+        Data::$handlers['test'] = CustomHandler::class;
         $this->assertInstanceOf(CustomHandler::class, Data::handler('test'));
     }
 
@@ -37,15 +36,6 @@ class DataTest extends TestCase
         Data::handler('foo');
     }
 
-    /**
-     * @expectedException  Exception
-     * @expectedExceptionMessage stdClass must extend Kirby\Data\Handler
-     */
-    public function testInvalidHandler()
-    {
-        Data::handler('test', 'stdClass');
-    }
-
     public function testReadWrite()
     {
         $data = [
@@ -53,7 +43,7 @@ class DataTest extends TestCase
             'email' => 'homer@simpson.com'
         ];
 
-        $handlers = ['json', 'yml', 'txt', 'php'];
+        $handlers = ['json', 'yml', 'txt'];
 
         foreach ($handlers as $handler) {
             $file = __DIR__ . '/tmp/data.' . $handler;

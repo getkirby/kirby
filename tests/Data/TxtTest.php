@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 class TxtTest extends TestCase
 {
 
+    const FIXTURES = __DIR__ . '/fixtures';
+
     public function testEncodeDecode()
     {
         $array = [
@@ -32,7 +34,7 @@ class TxtTest extends TestCase
         ];
 
         $data = Txt::encode($array);
-        $this->assertEquals(file_get_contents(dirname(__DIR__) . '/fixtures/test.txt'), $data);
+        $this->assertEquals(file_get_contents(static::FIXTURES . '/test.txt'), $data);
     }
 
     public function testDecodeFile()
@@ -41,7 +43,7 @@ class TxtTest extends TestCase
             'title' => 'Title'
         ];
 
-        $data = Txt::decode(file_get_contents(dirname(__DIR__) . '/fixtures/emptyfield.txt'));
+        $data = Txt::decode(file_get_contents(static::FIXTURES . '/emptyfield.txt'));
         $this->assertEquals($array, $data);
     }
 

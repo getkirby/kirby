@@ -3,10 +3,10 @@
 namespace Kirby\Image;
 
 use Exception;
-use Kirby\FileSystem\File;
 use Kirby\Http\Response;
 use Kirby\Http\Response\Download;
 use Kirby\Http\Acceptance\MimeType;
+use Kirby\Toolkit\File;
 use Kirby\Toolkit\Html;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
@@ -52,58 +52,50 @@ class Image extends File
     }
 
     /**
-     * Returns the url
+     * Improved var_dump() output
      *
-     * @return string
+     * @return array
      */
-    public function url()
+    public function __debuginfo(): array
     {
-        return $this->url;
+        return array_merge($this->toArray(), [
+            'dimensions' => $this->dimensions(),
+            'exif'       => $this->exif(),
+        ]);
     }
 
     /**
-     * Returns a md5 hash of the root
+     * Returns a full link to this file
+     * Perfect for debugging in connection with echo
      *
      * @return string
      */
-    public function hash(): string
+    public function __toString(): string
     {
-        return md5($this->root);
+        return $this->root;
     }
 
     /**
-     * Returns the file content as base64 encoded string
+     * Returns the dimensions of the file if possible
      *
-     * @return string
+     * @return Dimensions
      */
-    public function base64(): string
+    public function dimensions(): Dimensions
     {
-        return base64_encode($this->read());
-    }
+        if ($this->dimensions !== null) {
+            return $this->dimensions;
+        }
 
-    /**
-     * Returns the file as data uri
-     *
-     * @return string
-     */
-    public function dataUri(): string
-    {
-        return 'data:' . $this->mime() . ';base64,' . $this->base64();
-    }
+        if (in_array($this->mime(), ['image/jpeg', 'image/png', 'image/gif'])) {
+            return $this->dimensions = Dimensions::forImage($this->root);
+        }
 
-    /**
-     * Sends an appropriate header for the asset
-     *
-     * @param  boolean          $send
-     * @return Response|string
-     */
-    public function header(bool $send = true)
-    {
-        $response = new Response();
-        $response->type($this->mime());
-        return $send === true ? $response->send() : $response;
-    }
+        if ($this->extension() === 'svg') {
+            return $this->dimensions = Dimensions::forSvg($this->root);
+        }
 
+        return $this->dimensions = new Dimensions(0, 0);
+    }
 
     /*
      * Automatically sends all needed headers for the file to be downloaded
@@ -133,6 +125,38 @@ class Image extends File
     }
 
     /**
+     * Sends an appropriate header for the asset
+     *
+     * @param  boolean          $send
+     * @return Response|string
+     */
+    public function header(bool $send = true)
+    {
+        $response = new Response();
+        $response->type($this->mime());
+        return $send === true ? $response->send() : $response;
+    }
+
+    /**
+     * Returns the height of the asset
+     *
+     * @return int
+     */
+    public function height(): int
+    {
+        return $this->dimensions()->height();
+    }
+
+    /**
+     * @param  array  $attr
+     * @return string
+     */
+    public function html(array $attr = []): string
+    {
+        return Html::img($this->url(), $attr);
+    }
+
+    /**
      * Returns the PHP imagesize array
      *
      * @return array
@@ -143,25 +167,33 @@ class Image extends File
     }
 
     /**
-     * Returns the dimensions of the file if possible
+     * Checks if the dimensions of the asset are portrait
      *
-     * @return Dimensions
+     * @return boolean
      */
-    public function dimensions(): Dimensions
+    public function isPortrait(): bool
     {
-        if ($this->dimensions !== null) {
-            return $this->dimensions;
-        }
+        return $this->dimensions()->portrait();
+    }
 
-        if (in_array($this->mime(), ['image/jpeg', 'image/png', 'image/gif'])) {
-            return $this->dimensions = Dimensions::forImage($this->root);
-        }
+    /**
+     * Checks if the dimensions of the asset are landscape
+     *
+     * @return boolean
+     */
+    public function isLandscape(): bool
+    {
+        return $this->dimensions()->landscape();
+    }
 
-        if ($this->extension() === 'svg') {
-            return $this->dimensions = Dimensions::forSvg($this->root);
-        }
-
-        return $this->dimensions = new Dimensions(0, 0);
+    /**
+     * Checks if the dimensions of the asset are square
+     *
+     * @return boolean
+     */
+    public function isSquare(): bool
+    {
+        return $this->dimensions()->square();
     }
 
     /**
@@ -205,26 +237,6 @@ class Image extends File
     }
 
     /**
-     * Returns the width of the asset
-     *
-     * @return int
-     */
-    public function width(): int
-    {
-        return $this->dimensions()->width();
-    }
-
-    /**
-     * Returns the height of the asset
-     *
-     * @return int
-     */
-    public function height(): int
-    {
-        return $this->dimensions()->height();
-    }
-
-    /**
      * Returns the ratio of the asset
      *
      * @return float
@@ -232,36 +244,6 @@ class Image extends File
     public function ratio(): float
     {
         return $this->dimensions()->ratio();
-    }
-
-    /**
-     * Checks if the dimensions of the asset are portrait
-     *
-     * @return boolean
-     */
-    public function isPortrait(): bool
-    {
-        return $this->dimensions()->portrait();
-    }
-
-    /**
-     * Checks if the dimensions of the asset are landscape
-     *
-     * @return boolean
-     */
-    public function isLandscape(): bool
-    {
-        return $this->dimensions()->landscape();
-    }
-
-    /**
-     * Checks if the dimensions of the asset are square
-     *
-     * @return boolean
-     */
-    public function isSquare(): bool
-    {
-        return $this->dimensions()->square();
     }
 
     /**
@@ -276,15 +258,6 @@ class Image extends File
     }
 
     /**
-     * @param  array  $attr
-     * @return string
-     */
-    public function html(array $attr = []): string
-    {
-        return Html::img($this->url(), $attr);
-    }
-
-    /**
      * Converts the media object to a
      * plain PHP array
      *
@@ -292,25 +265,11 @@ class Image extends File
      */
     public function toArray(): array
     {
-        return [
-            'root'         => $this->root(),
-            'url'          => $this->url(),
-            'hash'         => $this->hash(),
-            'folder'       => $this->folder(),
-            'filename'     => $this->filename(),
-            'name'         => $this->name(),
-            'safeName'     => File::safeName($this->name()),
-            'extension'    => $this->extension(),
-            'size'         => $this->size(),
-            'niceSize'     => $this->niceSize(),
-            'modified'     => $this->modified('c'),
-            'mime'         => $this->mime(),
-            'type'         => $this->type(),
+        return array_merge(parent::toArray(), [
             'dimensions'   => $this->dimensions()->toArray(),
-            'isWritable'   => $this->isWritable(),
-            'isReadable'   => $this->isReadable(),
+            'exif'         => $this->exif()->toArray(),
             'header'       => $this->header(false),
-        ];
+        ]);
     }
 
     /**
@@ -325,26 +284,23 @@ class Image extends File
     }
 
     /**
-     * Returns a full link to this file
-     * Perfect for debugging in connection with echo
+     * Returns the url
      *
      * @return string
      */
-    public function __toString(): string
+    public function url()
     {
-        return $this->root;
+        return $this->url;
     }
 
     /**
-     * Improved var_dump() output
+     * Returns the width of the asset
      *
-     * @return array
+     * @return int
      */
-    public function __debuginfo(): array
+    public function width(): int
     {
-        return array_merge($this->toArray(), [
-            'dimensions' => $this->dimensions(),
-            'exif'       => $this->exif(),
-        ]);
+        return $this->dimensions()->width();
     }
+
 }

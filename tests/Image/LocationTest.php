@@ -1,7 +1,6 @@
 <?php
 
-namespace Kirby\Image\Exif;
-
+namespace Kirby\Image;
 
 use PHPUnit\Framework\TestCase;
 

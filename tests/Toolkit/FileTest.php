@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\FileSystem;
+namespace Kirby\Toolkit;
 
 function blockMethod($method, $args)
 {
@@ -33,6 +33,8 @@ function unlink($file)
 class FileTest extends TestCase
 {
 
+    const FIXTURES = __DIR__ . '/fixtures/files';
+
     public static $block = [];
 
     protected function setUp()
@@ -42,13 +44,13 @@ class FileTest extends TestCase
 
     protected function _file($filename = 'test.js')
     {
-        return new File(static::FIXTURES . '/files/' . $filename);
+        return new File(static::FIXTURES . '/' . $filename);
     }
 
     public function testRoot()
     {
         $file = $this->_file();
-        $this->assertEquals(static::FIXTURES . '/files/test.js', $file->root());
+        $this->assertEquals(static::FIXTURES . '/test.js', $file->root());
     }
 
     public function testExists()
@@ -84,18 +86,6 @@ class FileTest extends TestCase
         $this->assertEquals('test', $file->name());
     }
 
-    public function testSafeName()
-    {
-        // with extension
-        $this->assertEquals('uber-genious.txt', File::safeName('über genious.txt'));
-
-        // with unsafe extension
-        $this->assertEquals('uber-genious.taxt', File::safeName('über genious.täxt'));
-
-        // without extension
-        $this->assertEquals('uber-genious', File::safeName('über genious'));
-    }
-
     public function testExtension()
     {
         $file = $this->_file();
@@ -117,7 +107,7 @@ class FileTest extends TestCase
     public function testUnknownType()
     {
         $file = $this->_file('test.kirby');
-        $this->assertFalse($file->type());
+        $this->assertNull($file->type());
     }
 
     public function testSize()
@@ -134,7 +124,7 @@ class FileTest extends TestCase
 
         // non-existing file
         $file = $this->_file('does/not/exist.js');
-        $this->assertEquals('0 B', $file->niceSize());
+        $this->assertEquals('0 kB', $file->niceSize());
     }
 
     public function testModified()
@@ -169,7 +159,7 @@ class FileTest extends TestCase
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage The file is not writable
+     * @expectedExceptionMessage is not writable
      */
     public function testWriteUnwritable()
     {
@@ -181,7 +171,7 @@ class FileTest extends TestCase
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage The file could not be written
+     * @expectedExceptionMessage could not be written
      */
     public function testWriteFail()
     {
@@ -196,19 +186,15 @@ class FileTest extends TestCase
         $this->assertEquals(file_get_contents($file->root()), $file->read());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The file does not exist:
-     */
     public function testReadNotExist()
     {
         $file = $this->_file('missing.txt');
-        $file->read();
+        $this->assertEquals(null, $file->read());
     }
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage The file is not readable:
+     * @expectedExceptionMessage is not readable
      */
     public function testReadUnreadble()
     {
@@ -233,16 +219,16 @@ class FileTest extends TestCase
         $this->assertFalse(file_exists($newRoot));
         $this->assertEquals($oldRoot, $file->root());
 
-        $file->move($newRoot);
+        $moved = $file->move($newRoot);
 
         $this->assertFalse(file_exists($oldRoot));
         $this->assertTrue(file_exists($newRoot));
-        $this->assertEquals($newRoot, $file->root());
+        $this->assertEquals($newRoot, $moved->root());
     }
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage already exists.
+     * @expectedExceptionMessage could not be moved
      */
     public function testMoveToExisting()
     {
@@ -252,17 +238,17 @@ class FileTest extends TestCase
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage The file does not exist
+     * @expectedExceptionMessage could not be moved
      */
     public function testMoveNonExisting()
     {
         $file = $this->_file('a.txt');
-        $file->move(static::FIXTURES . '/files/b.txt');
+        $file->move(static::FIXTURES . '/b.txt');
     }
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage could not be moved to
+     * @expectedExceptionMessage could not be moved
      */
     public function testMoveFail()
     {
@@ -296,7 +282,7 @@ class FileTest extends TestCase
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage already exists.
+     * @expectedExceptionMessage could not be copied
      */
     public function testCopyToExisting()
     {
@@ -306,17 +292,17 @@ class FileTest extends TestCase
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage The file does not exist
+     * @expectedExceptionMessage could not be copied
      */
     public function testCopyNonExisting()
     {
         $file = $this->_file('a.txt');
-        $file->copy(static::FIXTURES . '/files/b.txt');
+        $file->copy(static::FIXTURES . '/b.txt');
     }
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage could not be copied to
+     * @expectedExceptionMessage could not be copied
      */
     public function testCopyFail()
     {
@@ -328,13 +314,12 @@ class FileTest extends TestCase
     public function testRename()
     {
         $file = $this->_file();
-        $result = $file->rename('awesome');
+        $renamed = $file->rename('awesome');
 
-        $this->assertEquals($file, $result);
-        $this->assertEquals('awesome.js', $file->filename());
-        $this->assertEquals('awesome', $file->name());
+        $this->assertEquals('awesome.js', $renamed->filename());
+        $this->assertEquals('awesome', $renamed->name());
 
-        $file->rename('test');
+        $renamed->rename('test');
     }
 
     public function testRenameSameRoot()

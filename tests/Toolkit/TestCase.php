@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\FileSystem;
+namespace Kirby\Toolkit;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {

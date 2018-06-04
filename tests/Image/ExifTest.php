@@ -35,19 +35,19 @@ class ExifTest extends TestCase
     public function testCamera()
     {
         $exif = $this->_exif();
-        $this->assertInstanceOf(Exif\Camera::class, $exif->camera());
+        $this->assertInstanceOf(Camera::class, $exif->camera());
 
         // from cache
-        $this->assertInstanceOf(Exif\Camera::class, $exif->camera());
+        $this->assertInstanceOf(Camera::class, $exif->camera());
     }
 
     public function testLocation()
     {
         $exif = $this->_exif();
-        $this->assertInstanceOf(Exif\Location::class, $exif->location());
+        $this->assertInstanceOf(Location::class, $exif->location());
 
         // from cache
-        $this->assertInstanceOf(Exif\Location::class, $exif->location());
+        $this->assertInstanceOf(Location::class, $exif->location());
     }
 
     public function testTimestamp()
