@@ -7,7 +7,7 @@ namespace Kirby\Toolkit;
  * query arrays and objects, including their
  * methods with a very simple string-based syntax.
  *
- * @package   Kirby Cms
+ * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier

@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 /**
  * A set of handy string methods
  *
- * @package   Kirby Util
+ * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier

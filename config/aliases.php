@@ -1,21 +1,38 @@
 <?php
 
-class_alias(Kirby\Cms\App::class, 'Kirby');
-class_alias(Kirby\Cms\Dir::class, 'Dir');
-class_alias(Kirby\Cms\File::class, 'File');
-class_alias(Kirby\Cms\Html::class, 'Html');
-class_alias(Kirby\Cms\Page::class, 'Page');
-class_alias(Kirby\Cms\Response::class, 'Response');
-class_alias(Kirby\Cms\Site::class, 'Site');
-class_alias(Kirby\Cms\Structure::class, 'Structure');
-class_alias(Kirby\Cms\Url::class, 'Url');
+$aliases = [
 
-class_alias(Kirby\Data\Data::class, 'Data');
-class_alias(Kirby\Data\Json::class, 'Json');
-class_alias(Kirby\Data\Yaml::class, 'Yaml');
+    // cms classes
+    'dir'       => 'Kirby\Cms\Dir',
+    'file'      => 'Kirby\Cms\File',
+    'html'      => 'Kirby\Cms\Html',
+    'kirby'     => 'Kirby\Cms\App',
+    'page'      => 'Kirby\Cms\Page',
+    'response'  => 'Kirby\Cms\Response',
+    'site'      => 'Kirby\Cms\Site',
+    'structure' => 'Kirby\Cms\Structure',
+    'url'       => 'Kirby\Cms\Url',
 
-class_alias(Kirby\Toolkit\A::class, 'A');
-class_alias(Kirby\Toolkit\F::class, 'F');
-class_alias(Kirby\Toolkit\I18n::class, 'I18n');
-class_alias(Kirby\Toolkit\Str::class, 'Str');
-class_alias(Kirby\Toolkit\V::class, 'V');
+    // data handler
+    'data'      => 'Kirby\Data\Data',
+    'json'      => 'Kirby\Data\Json',
+    'yaml'      => 'Kirby\Data\Yaml',
+
+    // toolkit classes
+    'a'         => 'Kirby\Toolkit\A',
+    'f'         => 'Kirby\Toolkit\F',
+    'i18n'      => 'Kirby\Toolkit\I18n',
+    'str'       => 'Kirby\Toolkit\Str',
+    'v'         => 'Kirby\Toolkit\V',
+
+];
+
+spl_autoload_register(function ($class) use ($aliases) {
+
+    $class = strtolower($class);
+
+    if (isset($aliases[$class]) === true) {
+        class_alias($aliases[$class], $class);
+    }
+
+});

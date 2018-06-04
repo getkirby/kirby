@@ -1,5 +1,9 @@
 <?php
 
+use Kirby\Cms\App;
+use Kirby\Cms\Html;
+use Kirby\Cms\Url;
+
 /**
  * Default KirbyTags definition
  */
@@ -42,7 +46,7 @@ return [
             'title'
         ],
         'html' => function () {
-            $file = Kirby::instance()->file($this->value, $this->page());
+            $file = App::instance()->file($this->value, $this->page());
 
             if ($file === null) {
                 return $this->text;
