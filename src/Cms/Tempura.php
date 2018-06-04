@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Query;
+
 /**
  * The Tempura class can be used to
  * replace template strings with data from arrays and objects,

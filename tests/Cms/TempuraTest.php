@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\QueryTestUser;
+
 class TempuraTest extends TestCase
 {
 

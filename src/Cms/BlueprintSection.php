@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Api\Api;
-
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Query;
 
 class BlueprintSection extends BlueprintObject
 {

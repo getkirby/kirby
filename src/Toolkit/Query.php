@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Toolkit;
 
 /**
  * The Query class can be used to

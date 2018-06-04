@@ -3,13 +3,13 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\ContentField;
-use Kirby\Cms\Query;
 use Kirby\Cms\Tempura;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Properties;
+use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 
 class OptionsQuery
