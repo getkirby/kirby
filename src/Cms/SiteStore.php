@@ -2,26 +2,18 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
+use Kirby\Data\Data;
 
 class SiteStore extends SiteStoreDefault
 {
     const PAGE_STORE_CLASS = PageStore::class;
     const FILE_STORE_CLASS = FileStore::class;
 
-    protected $base;
+    protected $inventory;
 
-    public function base()
+    public function inventory()
     {
-        if (is_a($this->base, Base::class) === true) {
-            return $this->base;
-        }
-
-        return $this->base = new Base([
-            'extension' => 'txt',
-            'root'      => $this->site()->root(),
-            'type'      => 'site',
-        ]);
+        return $this->inventory ?? $this->inventory = Dir::inventory($this->site()->root());
     }
 
     public function children(): array
@@ -30,10 +22,9 @@ class SiteStore extends SiteStoreDefault
         $url      = $site->url();
         $children = [];
 
-        foreach ($this->base()->children() as $slug => $props) {
+        foreach ($this->inventory()['children'] as $props) {
             $children[] = $props + [
-                'slug'  => $slug,
-                'url'   => $url . '/' . $slug,
+                'url'   => $url . '/' . $props['slug'],
                 'store' => static::PAGE_STORE_CLASS
             ];
         }
@@ -43,25 +34,22 @@ class SiteStore extends SiteStoreDefault
 
     public function content()
     {
-        return $this->base()->read();
+        return Data::read($this->inventory()['content']);
     }
 
     public function drafts(): array
     {
-        $site   = $this->site();
-        $url    = $site->url();
-        $drafts = [];
-        $base   = new Base([
-            'extension' => 'txt',
-            'root'      => $site->root() . '/_drafts',
-        ]);
+        $site      = $this->site();
+        $url       = $site->url();
+        $drafts    = [];
+        $inventory = Dir::inventory($site->root() . '/_drafts');
 
-        foreach ($base->children() as $slug => $props) {
+        foreach ($inventory['children'] as $props) {
             $drafts[] = [
                 'num'    => $props['num'],
-                'slug'   => $slug,
+                'slug'   => $props['slug'],
                 'status' => 'draft',
-                'url'    => $url . '/_drafts/' . $slug,
+                'url'    => $url . '/_drafts/' . $props['slug'],
                 'store'  => static::PAGE_STORE_CLASS
             ];
         }
@@ -82,7 +70,7 @@ class SiteStore extends SiteStoreDefault
         $url   = $site->mediaUrl();
         $files = [];
 
-        foreach ($this->base()->files() as $filename => $props) {
+        foreach ($this->inventory()['files'] as $filename => $props) {
             $file = [
                 'filename' => $filename,
                 'store'    => static::FILE_STORE_CLASS,
@@ -97,12 +85,12 @@ class SiteStore extends SiteStoreDefault
 
     public function id()
     {
-        return $this->base()->root();
+        return $this->root();
     }
 
     public function root()
     {
-        return $this->base()->root();
+        return $this->site()->root();
     }
 
     public function site()
@@ -118,7 +106,7 @@ class SiteStore extends SiteStoreDefault
             return $site;
         }
 
-        $this->base()->write($site->content()->toArray());
+        Data::write($this->inventory['content'], $site->content()->toArray());
 
         return $site;
     }

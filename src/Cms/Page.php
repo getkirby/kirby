@@ -360,12 +360,8 @@ class Page extends Model
      */
     public static function factory($props): self
     {
-        if (empty(static::$models) === true) {
-            return new static($props);
-        }
-
-        if (empty($props['template']) === false) {
-            return static::model($props['template'], $props);
+        if (empty($props['model']) === false) {
+            return static::model($props['model'], $props);
         }
 
         return new static($props);

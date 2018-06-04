@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
 use Exception;
@@ -15,19 +14,12 @@ class PageStore extends PageStoreDefault
     const PAGE_STORE_CLASS = PageStore::class;
     const FILE_STORE_CLASS = FileStore::class;
 
-    protected $base;
+    protected $inventory;
     protected $root;
 
-    public function base()
+    public function inventory()
     {
-        if (is_a($this->base, Base::class) === true) {
-            return $this->base;
-        }
-
-        return $this->base = new Base([
-            'extension' => 'txt',
-            'root'      => $this->page()->root()
-        ]);
+        return $this->inventory ?? $this->inventory = Dir::inventory($this->page()->root());
     }
 
     public function changeNum(int $num = null)
@@ -102,10 +94,9 @@ class PageStore extends PageStoreDefault
             return parent::changeTemplate($template, $data);
         }
 
-
         $newPage = parent::changeTemplate($template, $data);
-        $newFile = $newPage->root() . '/' . $newPage->template() . '.' . $this->base()->extension();
-        $oldFile = $this->base()->storage();
+        $newFile = $newPage->root() . '/' . $newPage->template() . '.txt';
+        $oldFile = $this->inventory()['content'];
 
         if (Data::write($newFile, $data) !== true) {
             throw new LogicException('The new text file could not be written');
@@ -122,11 +113,9 @@ class PageStore extends PageStoreDefault
     {
         $children = [];
 
-        foreach ($this->base()->children() as $slug => $props) {
-            $children[] = $props + [
-                'slug'   => $slug,
-                'store'  => static::PAGE_STORE_CLASS
-            ];
+        foreach ($this->inventory()['children'] as $props) {
+            $props['store'] = static::PAGE_STORE_CLASS;
+            $children[] = $props;
         }
 
         return $children;
@@ -134,7 +123,7 @@ class PageStore extends PageStoreDefault
 
     public function content()
     {
-        return $this->base()->read();
+        return Data::read($this->inventory()['content']);
     }
 
     public function create()
@@ -170,7 +159,6 @@ class PageStore extends PageStoreDefault
     {
         $page = $this->page();
 
-
         // delete all public media files
         Dir::remove($page->mediaRoot());
 
@@ -192,18 +180,14 @@ class PageStore extends PageStoreDefault
 
     public function drafts(): array
     {
-        $drafts = [];
-        $parent = $this->page();
-        $base   = new Base([
-            'extension' => 'txt',
-            'root'      => $parent->root() . '/_drafts',
-        ]);
+        $drafts    = [];
+        $parent    = $this->page();
+        $inventory = Dir::inventory($parent->root() . '/_drafts');
 
-        foreach ($base->children() as $slug => $props) {
+        foreach ($inventory['children'] as $props) {
             $drafts[] = $props + [
-                'slug'   => $slug,
                 'status' => 'draft',
-                'url'    => $parent->url() . '/_drafts/' . $slug,
+                'url'    => $parent->url() . '/_drafts/' . $props['slug'],
                 'store'  => static::PAGE_STORE_CLASS
             ];
         }
@@ -213,18 +197,16 @@ class PageStore extends PageStoreDefault
 
     public function exists(): bool
     {
-        return is_dir($this->base()->root()) === true;
+        return is_dir($this->page()->root()) === true;
     }
 
     public function files(): array
     {
-        $base      = $this->base();
         $page      = $this->page();
         $url       = $page->mediaUrl();
-        $extension = $base->extension();
         $files     = [];
 
-        foreach ($this->base()->files() as $filename => $props) {
+        foreach ($this->inventory()['files'] as $filename => $props) {
             $files[] = [
                 'filename' => $filename,
                 'url'      => $url . '/' . $filename,
@@ -237,12 +219,12 @@ class PageStore extends PageStoreDefault
 
     public function id(): string
     {
-        return $this->base()->root();
+        return $this->page()->root();
     }
 
     public function modified()
     {
-        return filemtime($this->base()->storage());
+        return filemtime($this->inventory()['content']);
     }
 
     protected function moveDirectory(string $old, string $new): bool
@@ -287,7 +269,7 @@ class PageStore extends PageStoreDefault
 
     public function template(): string
     {
-        return $this->base()->type();
+        return $this->inventory()['template'];
     }
 
     public function update(array $values = [], array $strings = [])
@@ -298,7 +280,7 @@ class PageStore extends PageStoreDefault
             return $page;
         }
 
-        $this->base()->write($page->content()->toArray());
+        Data::write($this->inventory()['content'], $page->content()->toArray());
 
         return $page;
     }
