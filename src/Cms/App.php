@@ -21,7 +21,6 @@ class App extends Component
 {
     use AppCaches;
     use AppErrors;
-    use AppHooks;
     use AppOptions;
     use AppPlugins;
     use AppTranslations;
@@ -525,6 +524,22 @@ class App extends Component
         }
 
         return $root;
+    }
+
+    /**
+     *  Trigger a hook by name
+     *
+     * @param string $name
+     * @param mixed ...$arguments
+     * @return void
+     */
+    public function trigger(string $name, ...$arguments)
+    {
+        if ($functions = $this->extension('hooks', $name)) {
+            foreach ($functions as $function) {
+                $function->call($this, ...$arguments);
+            }
+        }
     }
 
     /**
