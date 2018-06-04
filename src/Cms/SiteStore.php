@@ -64,7 +64,6 @@ class SiteStore extends SiteStoreDefault
 
     public function files(): array
     {
-        $base  = $this->base();
         $site  = $this->site();
         $root  = $base->root();
         $url   = $site->mediaUrl();
