@@ -25,8 +25,8 @@ class PageModelTest extends TestCase
     public function testPageModelWithTemplate()
     {
         $page = Page::factory([
-            'slug'     => 'test',
-            'template' => 'article',
+            'slug'  => 'test',
+            'model' => 'article',
         ]);
 
         $this->assertInstanceOf(ArticlePage::class, $page);
@@ -36,8 +36,8 @@ class PageModelTest extends TestCase
     public function testMissingPageModel()
     {
         $page = Page::factory([
-            'slug'     => 'test',
-            'template' => 'project',
+            'slug'  => 'test',
+            'model' => 'project',
         ]);
 
         $this->assertInstanceOf(Page::class, $page);

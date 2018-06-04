@@ -155,8 +155,8 @@ class AppPluginsTest extends TestCase
         ]);
 
         $page = Page::factory([
-            'slug'     => 'test',
-            'template' => 'dummy'
+            'slug'  => 'test',
+            'model' => 'dummy'
         ]);
 
         $this->assertInstanceOf(DummyPage::class, $page);

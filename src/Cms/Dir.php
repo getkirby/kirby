@@ -18,16 +18,16 @@ class Dir extends \Kirby\Toolkit\Dir
 
         $dir = realpath($dir);
 
-        if ($dir === false) {
-            throw new Exception('The directory does not exist');
-        }
-
         $inventory = [
             'children' => [],
             'files'    => [],
             'template' => 'default',
             'content'  => null,
         ];
+
+        if ($dir === false) {
+            return $inventory;
+        }
 
         foreach (static::read($dir) as $item) {
 
