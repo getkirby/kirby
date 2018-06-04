@@ -2,13 +2,14 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\Dir;
+use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
-use Kirby\Toolkit\Dir;
 
 class UserStore extends UserStoreDefault
 {
-    protected $base;
+    protected $inventory;
     protected $data;
 
     /**
@@ -23,17 +24,9 @@ class UserStore extends UserStoreDefault
         ]);
     }
 
-    public function base()
+    public function inventory()
     {
-        if (is_a($this->base, Base::class) === true) {
-            return $this->base;
-        }
-
-        return $this->base = new Base([
-            'root'      => $this->root(),
-            'extension' => 'txt',
-            'type'      => 'user'
-        ]);
+        return $this->inventory ?? $this->inventory = Dir::inventory($this->root());
     }
 
     public function changeEmail(string $email)
@@ -144,7 +137,7 @@ class UserStore extends UserStoreDefault
             return $this->data;
         }
 
-        return $this->data = $this->base()->read();
+        return $this->data = Data::read($this->inventory()['content']);
     }
 
     public function delete(): bool
@@ -166,7 +159,7 @@ class UserStore extends UserStoreDefault
 
     public function exists(): bool
     {
-        return is_dir($this->root()) === true && file_exists($this->base()->storage()) === true;
+        return file_exists($this->inventory()['content']) === true;
     }
 
     public function id()
@@ -216,9 +209,7 @@ class UserStore extends UserStoreDefault
         $content['password'] = $user->hashPassword($user->password());
         $content['role']     = $user->role();
 
-        if ($this->base()->write($content) !== true) {
-            throw new LogicException('The user information for "' . $user->email() . '" could not be saved');
-        }
+        Data::write($this->inventory()['content'], $content);
 
         return $user;
     }
