@@ -70,6 +70,46 @@ trait HasChildren
     }
 
     /**
+     * Deprecated! Use Page::hasUnlistedChildren
+     *
+     * @return boolean
+     */
+    public function hasInvisibleChildren(): bool
+    {
+        return $this->children()->invisible()->count() > 0;
+    }
+
+    /**
+     * Checks if the page has any listed children
+     *
+     * @return boolean
+     */
+    public function hasListedChildren(): bool
+    {
+        return $this->children()->listed()->count() > 0;
+    }
+
+    /**
+     * Checks if the page has any unlisted children
+     *
+     * @return boolean
+     */
+    public function hasUnlistedChildren(): bool
+    {
+        return $this->children()->unlisted()->count() > 0;
+    }
+
+    /**
+     * Deprecated! Use Page::hasListedChildren
+     *
+     * @return boolean
+     */
+    public function hasVisibleChildren(): bool
+    {
+        return $this->children()->listed()->count() > 0;
+    }
+
+    /**
      * Creates a flat child index
      *
      * @return Pages

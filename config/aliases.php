@@ -23,6 +23,7 @@ $aliases = [
     'collection' => 'Kirby\Toolkit\Collection',
     'f'          => 'Kirby\Toolkit\F',
     'i18n'       => 'Kirby\Toolkit\I18n',
+    'obj'        => 'Kirby\Toolkit\Obj',
     'str'        => 'Kirby\Toolkit\Str',
     'v'          => 'Kirby\Toolkit\V',
 

@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\ContentField;
 use Kirby\Cms\Html;
+use Kirby\Cms\KirbyText;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Page;
 use Kirby\Cms\Url;
@@ -124,11 +125,10 @@ return function (App $app) {
         },
         'kirbytags' => function () use ($app) {
             return $this->value(function ($value) use ($app) {
-                return $app->component('kirbytext')->parse($value, [
+                return KirbyText::parse($value, [
                     'kirby'  => $app,
                     'site'   => $app->site(),
-                    'parent' => $model = $this->parent(),
-                    'page'   => is_a($model, Page::class) ? $model : null,
+                    'parent' => $this->parent(),
                     'field'  => $this
                 ]);
             });
@@ -180,7 +180,9 @@ return function (App $app) {
             });
         },
         'widont' => function () {
-            throw new Exception('Not implemented yet');
+            return $this->value(function ($value) {
+                return Str::widont($value);
+            });
         },
         'words' => function () {
             throw new Exception('Not implemented yet');
@@ -211,8 +213,8 @@ return function (App $app) {
         'kt' => function () {
             return $this->kirbytext();
         },
-        'link' => function () {
-            return $this->toLink();
+        'link' => function (...$attributes) {
+            return $this->toLink(...$attributes);
         },
         'md' => function () {
             return $this->markdown();

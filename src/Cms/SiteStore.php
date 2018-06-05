@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Throwable;
 
 class SiteStore extends SiteStoreDefault
 {
@@ -34,7 +35,11 @@ class SiteStore extends SiteStoreDefault
 
     public function content()
     {
-        return Data::read($this->inventory()['content']);
+        try {
+            return Data::read($this->inventory()['content']);
+        } catch (Throwable $e) {
+            return [];
+        }
     }
 
     public function drafts(): array

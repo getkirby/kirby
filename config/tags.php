@@ -46,7 +46,7 @@ return [
             'title'
         ],
         'html' => function () {
-            $file = App::instance()->file($this->value, $this->page());
+            $file = App::instance()->file($this->value, $this->parent());
 
             if ($file === null) {
                 return $this->text;
@@ -96,7 +96,7 @@ return [
         ],
         'html' => function () {
             $this->src  = Url::to($this->value);
-            $this->file = Kirby::instance()->file($this->value, $this->page());
+            $this->file = Kirby::instance()->file($this->value, $this->parent());
 
             if ($this->file) {
                 $this->src     = $this->file->url();
@@ -117,13 +117,13 @@ return [
                 ]);
             };
 
-            $image = Html::img($this->src, array(
+            $image = Html::img($this->src, [
                 'width'  => $this->width,
                 'height' => $this->height,
                 'class'  => $this->imgclass,
                 'title'  => $this->title,
                 'alt'    => $this->alt ?? ' '
-            ));
+            ]);
 
             return Html::figure([ $link($image) ], $this->caption, [
                 'class' => $this->class

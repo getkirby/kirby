@@ -7,6 +7,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Image\Image;
 use Kirby\Toolkit\F;
+use Throwable;
 
 class FileStore extends FileStoreDefault
 {
@@ -57,7 +58,7 @@ class FileStore extends FileStoreDefault
     {
         try {
             return Data::read($this->storeFile());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return [];
         }
     }

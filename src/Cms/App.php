@@ -208,20 +208,6 @@ class App extends Component
     }
 
     /**
-     * The Hooks registry
-     *
-     * @return Hooks
-     */
-    public function hooks(): Hooks
-    {
-        if (is_a($this->hooks, Hooks::class) === true) {
-            return $this->hooks;
-        }
-
-        return $this->hooks = new Hooks($this);
-    }
-
-    /**
      * Returns the current App instance
      *
      * @param self $instance

@@ -2,12 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
-use Kirby\Toolkit\F;
-
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\F;
+use Throwable;
 
 class PageStore extends PageStoreDefault
 {
@@ -121,9 +121,13 @@ class PageStore extends PageStoreDefault
         return $children;
     }
 
-    public function content()
+    public function content(): array
     {
-        return Data::read($this->inventory()['content']);
+        try {
+            return Data::read($this->inventory()['content']);
+        } catch (Throwable $e) {
+            return [];
+        }
     }
 
     public function create()

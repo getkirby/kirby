@@ -6,6 +6,7 @@ use Kirby\Cms\Dir;
 use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
+use Throwable;
 
 class UserStore extends UserStoreDefault
 {
@@ -137,7 +138,11 @@ class UserStore extends UserStoreDefault
             return $this->data;
         }
 
-        return $this->data = Data::read($this->inventory()['content']);
+        try {
+            return $this->data = Data::read($this->inventory()['content']);
+        } catch (Throwable $e) {
+            return $this->data = [];
+        }
     }
 
     public function delete(): bool

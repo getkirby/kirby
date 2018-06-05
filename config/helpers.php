@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Html;
+use Kirby\Cms\KirbyText;
 use Kirby\Cms\Url;
 use Kirby\Http\Response\Redirect;
 use Kirby\Text\KirbyTag;
@@ -128,6 +129,12 @@ function kirby()
 
 function kirbytag($type, string $value = null, array $attr = null)
 {
+    KirbyTag::$data = [
+        'kirby' => $kirby = App::instance(),
+        'site'  => $site  = $kirby->site(),
+        'page'  => $site->page(),
+    ];
+
     if (is_array($type) === true) {
         return KirbyTag::factory(key($type), current($type), $type);
     }
@@ -137,13 +144,40 @@ function kirbytag($type, string $value = null, array $attr = null)
 
 function kirbytext($text, $markdown = true)
 {
-    $text = App::instance()->component('kirbytext')->parse($text);
+    $text = KirbyText::parse($text);
 
     if ($markdown === true) {
         $text = markdown($text);
     }
 
     return $text;
+}
+
+/**
+ * A super simple class autoloader
+ *
+ * @param array $classmap
+ * @param string $base
+ * @return void
+ */
+function load(array $classmap, string $base = null) {
+
+    spl_autoload_register(function ($class) use ($classmap, $base) {
+
+        $class = strtolower($class);
+
+        if (!isset($classmap[$class])) {
+            return false;
+        }
+
+        if ($base) {
+            include $base . '/' . $classmap[$class];
+        } else {
+            include $classmap[$class];
+        }
+
+    });
+
 }
 
 function markdown($text)
@@ -197,10 +231,10 @@ function snippet($name, $data = [], $return = false)
 
     $snippet = App::instance()->component('snippet', $name, $data);
 
-    try {
-        $output = $snippet->render();
-    } catch (Exception $e) {
+    if ($snippet->exists() === false) {
         $output = null;
+    } else {
+        $output = $snippet->render();
     }
 
     if ($return === true) {

@@ -533,4 +533,42 @@ class Str
             return $data[$query] ?? $fallback;
         }, $string);
     }
+
+    /**
+     * Removes all html tags and encoded chars from a string
+     *
+     * <code>
+     *
+     * echo str::unhtml('some <em>crazy</em> stuff');
+     * // output: some uber crazy stuff
+     *
+     * </code>
+     *
+     * @param  string  $string
+     * @return string  The html string
+     */
+    public static function unhtml(string $string = null): string
+    {
+        return Html::decode($string);
+    }
+
+    /**
+     * The widont function makes sure that there are no
+     * typographical widows at the end of a paragraph –
+     * that's a single word in the last line
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function widont(string $string = null): string
+    {
+        return preg_replace_callback('|([^\s])\s+([^\s]+)\s*$|u', function ($matches) {
+            if(static::contains($matches[2], '-')) {
+                return $matches[1] . ' ' . str_replace('-', '&#8209;', $matches[2]);
+            } else {
+                return $matches[1] . '&nbsp;' . $matches[2];
+            }
+        }, $string);
+    }
+
 }
