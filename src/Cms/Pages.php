@@ -145,12 +145,12 @@ class Pages extends Collection
         return $page;
     }
 
-    public function findByIdRecursive($id)
+    public function findByIdRecursive($id, $startAt = null)
     {
         $path       = explode('/', $id);
         $collection = $this;
         $item       = null;
-        $query      = null;
+        $query      = $startAt;
 
         foreach ($path as $key) {
             $query = ltrim($query . '/' . $key, '/');

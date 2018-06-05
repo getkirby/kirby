@@ -19,11 +19,12 @@ $aliases = [
     'yaml'      => 'Kirby\Data\Yaml',
 
     // toolkit classes
-    'a'         => 'Kirby\Toolkit\A',
-    'f'         => 'Kirby\Toolkit\F',
-    'i18n'      => 'Kirby\Toolkit\I18n',
-    'str'       => 'Kirby\Toolkit\Str',
-    'v'         => 'Kirby\Toolkit\V',
+    'a'          => 'Kirby\Toolkit\A',
+    'collection' => 'Kirby\Toolkit\Collection',
+    'f'          => 'Kirby\Toolkit\F',
+    'i18n'       => 'Kirby\Toolkit\I18n',
+    'str'        => 'Kirby\Toolkit\Str',
+    'v'          => 'Kirby\Toolkit\V',
 
 ];
 

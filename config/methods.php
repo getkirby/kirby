@@ -115,8 +115,9 @@ return function (App $app) {
             throw new Exception('Not implemented yet');
         },
         'html' => function () {
-            // TODO: test compatibility with old Html::encode
-            return htmlentities($this->value(), ENT_COMPAT, 'utf-8');
+            return $this->value(function ($value) {
+                return htmlentities($value, ENT_COMPAT, 'utf-8');
+            });
         },
         'kirbytext' => function () use ($app) {
             return $this->kirbytags()->markdown();
@@ -124,11 +125,11 @@ return function (App $app) {
         'kirbytags' => function () use ($app) {
             return $this->value(function ($value) use ($app) {
                 return $app->component('kirbytext')->parse($value, [
-                    'kirby' => $app,
-                    'site'  => $app->site(),
-                    'model' => $model = $this->parent(),
-                    'page'  => is_a($model, Page::class) ? $model : null,
-                    'field' => $this
+                    'kirby'  => $app,
+                    'site'   => $app->site(),
+                    'parent' => $model = $this->parent(),
+                    'page'   => is_a($model, Page::class) ? $model : null,
+                    'field'  => $this
                 ]);
             });
         },

@@ -4,9 +4,10 @@ use Kirby\Cms\App;
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
 use Kirby\Http\Response\Redirect;
-use Kirby\Toolkit\View;
+use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\View;
 
 function attr(array $attr = null, $before = null, $after = null)
 {
@@ -61,6 +62,10 @@ function gist(string $url, string $file = null): string
 function go($url, int $code = 301)
 {
     die(new Redirect(url($url), $code));
+}
+
+function html(string $string = null, bool $keepTags = false) {
+    return Html::encode($string, $keepTags);
 }
 
 /**
@@ -121,9 +126,13 @@ function kirby()
     return App::instance();
 }
 
-function kirbytag($input)
+function kirbytag($type, string $value = null, array $attr = null)
 {
-    return App::instance()->component('kirbytext')->tag($input);
+    if (is_array($type) === true) {
+        return KirbyTag::factory(key($type), current($type), $type);
+    }
+
+    return KirbyTag::factory($type, $value, $attr);
 }
 
 function kirbytext($text, $markdown = true)
@@ -263,7 +272,7 @@ function twitter(string $username, string $text = null, string $title = null, st
 
 function u(string $path = null): string
 {
-    return Url::to();
+    return Url::to($path);
 }
 
 function url(string $path = null): string

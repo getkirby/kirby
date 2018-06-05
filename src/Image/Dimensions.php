@@ -87,7 +87,7 @@ class Dimensions
      *
      * @return int
      */
-    public function height(): int
+    public function height()
     {
         return $this->height;
     }
@@ -165,7 +165,7 @@ class Dimensions
      *                              upscaled to fit the box if smaller
      * @return  Dimensions          object with recalculated dimensions
      */
-    public function fitHeight(int $fit, bool $force = false): self
+    public function fitHeight(int $fit = null, bool $force = false): self
     {
         return $this->fitSize('height', $fit, $force);
     }
@@ -179,7 +179,7 @@ class Dimensions
      *                              upscaled to fit the box if smaller
      * @return  Dimensions          object with recalculated dimensions
     */
-    protected function fitSize(string $ref, int $fit, bool $force = false): self
+    protected function fitSize(string $ref, int $fit = null, bool $force = false): self
     {
         if ($fit === 0) {
             return $this;
@@ -231,7 +231,7 @@ class Dimensions
      * @param   bool        $force
      * @return  Dimensions
      */
-    public function fitWidthAndHeight(int $width, int $height, bool $force = false): self
+    public function fitWidthAndHeight(int $width = null, int $height = null, bool $force = false): self
     {
         if ($this->width > $this->height) {
             $this->fitWidth($width, $force);
@@ -361,7 +361,7 @@ class Dimensions
      * @param   bool        $force
      * @return  Dimensions
      */
-    public function resize(int $width, int $height, bool $force = false): self
+    public function resize(int $width = null, int $height = null, bool $force = false): self
     {
         return $this->fitWidthAndHeight($width, $height, $force);
     }
