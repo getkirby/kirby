@@ -173,7 +173,11 @@ trait AppPlugins
     {
         // register all their extensions
         foreach ($this->plugins() as $plugin) {
-            $this->extend($plugin->extends(), $plugin);
+            $extends = $plugin->extends();
+
+            if (empty($extends) === false) {
+                $this->extend($extends, $plugin);
+            }
         }
     }
 
