@@ -179,6 +179,9 @@ class Url
         $uri->scheme   = null;
         $uri->username = null;
 
+        // remove the trailing slash from the path
+        $uri->path->trailingSlash(false);
+
         $url = $base ? $uri->base() : $uri->toString();
         $url = str_replace('www.', '', $url);
 

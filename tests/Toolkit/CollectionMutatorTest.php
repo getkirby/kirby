@@ -138,4 +138,56 @@ class CollectionMutatorTest extends TestCase
         $this->assertEquals('zwei-ish', $collection->two());
     }
 
+    public function testPluck()
+    {
+        $collection = new Collection([
+            [
+                'username' => 'homer',
+            ],
+            [
+                'username' => 'marge',
+            ]
+        ]);
+
+        $this->assertEquals(['homer', 'marge'], $collection->pluck('username'));
+    }
+
+    public function testPluckAndSplit()
+    {
+        $collection = new Collection([
+            [
+                'simpsons' => 'homer, marge',
+            ],
+            [
+                'simpsons' => 'maggie, bart, lisa',
+            ]
+        ]);
+
+        $expected = [
+            'homer', 'marge', 'maggie', 'bart', 'lisa'
+        ];
+
+        $this->assertEquals($expected, $collection->pluck('simpsons', ', '));
+    }
+
+    public function testPluckUnique()
+    {
+        $collection = new Collection([
+            [
+                'user' => 'homer',
+            ],
+            [
+                'user' => 'homer',
+            ],
+            [
+                'user' => 'marge',
+            ]
+        ]);
+
+        $expected = ['homer', 'marge'];
+
+        $this->assertEquals($expected, $collection->pluck('user', null, true));
+    }
+
+
 }

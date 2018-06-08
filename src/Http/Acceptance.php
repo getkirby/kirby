@@ -33,7 +33,7 @@ class Acceptance
     {
         foreach ($this->parse($input) as $quality => $values) {
             foreach ($values as $value) {
-                $this->items[$value] = $this->item($value, floatval($quality));
+                $this->items[] = $this->item($value, floatval($quality));
             }
         }
     }

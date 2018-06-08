@@ -11,7 +11,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
-use Kirby\Toolkit\Url\Scheme;
+use Kirby\Http\Url;
 
 /**
  * @package   Kirby Session
@@ -458,7 +458,7 @@ class Session
         if ($this->mode === 'cookie') {
             Cookie::set($this->sessions->cookieName(), $this->token(), [
                 'lifetime' => $this->tokenExpiry,
-                'secure'   => Scheme::isSecure(),
+                'secure'   => Url::scheme() === 'https',
                 'httpOnly' => true
             ]);
         } else {

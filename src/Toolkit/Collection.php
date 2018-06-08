@@ -458,6 +458,36 @@ class Collection extends Iterator
     }
 
     /**
+     * Extracts all values for a single field into
+     * a new array
+     *
+     * @param string $field
+     * @param string $split
+     * @param bool $unique
+     * @return array
+     */
+    public function pluck(string $field, string $split = null, bool $unique = false): array
+    {
+        $result = [];
+
+        foreach ($this->data as $item) {
+            $row = $this->getAttribute($item, $field);
+
+            if ($split !== null) {
+                $result = array_merge($result, Str::split($row, $split));
+            } else {
+                $result[] = $row;
+            }
+        }
+
+        if ($unique === true) {
+            $result = array_unique($result);
+        }
+
+        return array_values($result);
+    }
+
+    /**
      * Prepends an element to the data array
      *
      * @param  mixed       $key
