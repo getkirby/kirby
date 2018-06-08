@@ -5,15 +5,21 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 use Throwable;
+use Kirby\Api\Api;
+use Kirby\Data\Data;
+use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field;
+use Kirby\Http\Router;
+use Kirby\Http\Request;
+use Kirby\Http\Server;
 use Kirby\Http\Visitor;
 use Kirby\Image\Darkroom;
+use Kirby\Session\AutoSession as Session;
 use Kirby\Toolkit\Url;
-use Kirby\Session\Session;
+use Kirby\Toolkit\Url\Query as UrlQuery;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Factory;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 
@@ -28,17 +34,22 @@ class App extends Component
 
     protected static $instance;
     protected static $root;
+    protected static $version;
 
     protected $collections;
-    protected $components;
     protected $path;
     protected $roles;
     protected $roots;
     protected $routes;
+    protected $router;
+    protected $server;
+    protected $session;
     protected $site;
+    protected $system;
     protected $urls;
     protected $user;
     protected $users;
+    protected $visitor;
 
     /**
      * Creates a new App instance
@@ -66,6 +77,16 @@ class App extends Component
 
         // set the singleton
         static::$instance = $this;
+    }
+
+    /**
+     * Returns the Api instance
+     *
+     * @return Api
+     */
+    public function api(): Api
+    {
+        return $this->api = $this->api ?? new Api(static::$root . '/api.php');
     }
 
     /**
@@ -106,36 +127,7 @@ class App extends Component
      */
     public function collections(): Collections
     {
-        if (is_a($this->collections, Collections::class)) {
-            return $this->collections;
-        }
-
-        return $this->collections = Collections::load($this);
-    }
-
-    /**
-     * @return Factory
-     */
-    public function components(): Factory
-    {
-        if (is_a($this->components, Factory::class)) {
-            return $this->components;
-        }
-
-        // set the default components
-        return $this->setComponents()->components;
-    }
-
-    /**
-     * Returns a component instance
-     *
-     * @param string $className
-     * @param mixed ...$arguments
-     * @return mixed
-     */
-    public function component(string $className, ...$arguments)
-    {
-        return $this->components()->get($className, ...$arguments);
+        return $this->collections = $this->collections ?? Collections::load($this);
     }
 
     /**
@@ -178,10 +170,9 @@ class App extends Component
      *
      * @return Email
      */
-    public function email($preset = [], array $props = [])
+    public function email($preset = [], array $props = []): Emailer
     {
-        $email = new Email($preset, $props);
-        return $this->component('email', $email->toArray());
+        return new Emailer((new Email($preset, $props))->toArray(), $props['debug'] ?? false);
     }
 
     /**
@@ -223,14 +214,91 @@ class App extends Component
     }
 
     /**
+     * Renders a single KirbyTag with the given attributes
+     *
+     * @param string $type
+     * @param string $value
+     * @param array $attr
+     * @param array $data
+     * @return string
+     */
+    public function kirbytag(string $type, string $value = null, array $attr = [], array $data = []): string
+    {
+        $data['kirby']  = $data['kirby']  ?? $this;
+        $data['site']   = $data['site']   ?? $data['kirby']->site();
+        $data['parent'] = $data['parent'] ?? $data['site']->page();
+
+        return (new KirbyTag($type, $value, $attr, $data, $this->options))->render();
+    }
+
+    /**
+     * KirbyTags Parser
+     *
+     * @param string $text
+     * @param array $data
+     * @return string
+     */
+    public function kirbytags(string $text = null, array $data = []): string
+    {
+        $data['kirby']  = $data['kirby']  ?? $this;
+        $data['site']   = $data['site']   ?? $data['kirby']->site();
+        $data['parent'] = $data['parent'] ?? $data['site']->page();
+
+        return KirbyTags::parse($text, $data, $this->options, $this->extensions['hooks']);
+    }
+
+    /**
+     * Parses KirbyTags first and Markdown afterwards
+     *
+     * @param string $text
+     * @param array $data
+     * @return string
+     */
+    public function kirbytext(string $text = null, array $data = []): string
+    {
+        $text = $this->kirbytags($text, $data);
+        $text = $this->markdown($text);
+
+        return $text;
+    }
+
+    /**
+     * Parses Markdown
+     *
+     * @param string $text
+     * @return string
+     */
+    public function markdown(string $text = null): string
+    {
+        return $this->extensions['components']['markdown']->call($this, $text, $this->options['markdown'] ?? []);
+    }
+
+    /**
      * Returns any page from the content folder
      *
      * @return Page|null
      */
     public function page(string $id, $parent = null)
     {
-        $parent = $parent ?? $this->site();
-        return $parent->find($id);
+        return ($parent ?? $this->site())->find($id);
+    }
+
+    /**
+     * Creates a Pagination object
+     *
+     * @return Pagination
+     */
+    public function pagination(array $options = []): Pagination
+    {
+        $config  = $this->options['pagination'] ?? [];
+        $request = $this->request();
+
+        $options['limit']    = $options['limit']    ?? $config['limit'] ?? 20;
+        $options['variable'] = $options['variable'] ?? $config['variable'] ?? 'page';
+        $options['page']     = $options['page']     ?? $request->query()->get($options['variable'], 1);
+        $options['url']      = $options['url']      ?? $request->url();
+
+        return new Pagination($options);
     }
 
     /**
@@ -268,14 +336,14 @@ class App extends Component
     public function render(string $path = null, string $method = null)
     {
         try {
-            return $this->component('response', $this->call($path, $method));
+            return $this->response($this->call($path, $method));
         } catch (Throwable $e) {
             if ($this->option('debug')) {
                 throw $e;
             }
 
             error_log($e);
-            return $this->component('response', $e);
+            return $this->response($e);
         }
     }
 
@@ -284,9 +352,17 @@ class App extends Component
      *
      * @return Request
      */
-    public function request()
+    public function request(): Request
     {
-        return $this->component('request');
+        return $this->request = $this->request ?? new Request;
+    }
+
+    /**
+     * @return Response
+     */
+    public function response($input): Response
+    {
+        return $this->extensions['components']['response']->call($this, $input);
     }
 
     /**
@@ -296,11 +372,7 @@ class App extends Component
      */
     public function roles(): Roles
     {
-        if (is_a($this->roles, Roles::class) === true) {
-            return $this->roles;
-        }
-
-        return $this->roles = Roles::load($this->root('roles'));
+        return $this->roles = $this->roles ?? Roles::load($this->root('roles'));
     }
 
     /**
@@ -329,9 +401,9 @@ class App extends Component
      *
      * @return Router
      */
-    public function router()
+    public function router(): Router
     {
-        return $this->component('router', $this->routes());
+        return $this->router = $this->router ?? new Router($this->routes());
     }
 
     /**
@@ -357,29 +429,10 @@ class App extends Component
      * @param  array   $options Additional options, see the session component
      * @return Session
      */
-    public function session(array $options = [])
+    public function session(array $options = []): Session
     {
-        return $this->component('session')->get($options);
-    }
-
-    /**
-     * Creates the Factory class instance
-     * with all registered components
-     *
-     * @param array $components
-     * @return self
-     */
-    protected function setComponents(array $components = null): self
-    {
-        $defaultComponentsCreator = include static::$root . '/config/components.php';
-        $defaultComponentsConfig  = [];
-
-        if (is_a($defaultComponentsCreator, Closure::class)) {
-            $defaultComponentsConfig = (array)$defaultComponentsCreator($this);
-        }
-
-        $this->components = new Factory(array_merge($defaultComponentsConfig, (array)$components));
-        return $this;
+        $this->session = $this->session ?? new Session($this->root('sessions'), $this->options['session'] ?? []);
+        return $this->session->get($options);
     }
 
     /**
@@ -457,13 +510,13 @@ class App extends Component
     }
 
     /**
-     * Returns the Server singleton
+     * Returns the Server object
      *
      * @return Server
      */
-    public function server()
+    public function server(): Server
     {
-        return $this->component('server');
+        return $this->server = $this->server ?? new Server;
     }
 
     /**
@@ -471,11 +524,32 @@ class App extends Component
      */
     public function site(): Site
     {
-        if (is_a($this->site, Site::class)) {
-            return $this->site;
-        }
+        return $this->site = $this->site ?? new Site([
+            'errorPageId' => $this->options['error'] ?? 'error',
+            'homePageId'  => $this->options['home']  ?? 'home',
+            'kirby'       => $this,
+            'store'       => SiteStore::class,
+            'url'         => $this->url('index'),
+        ]);
+    }
 
-        return $this->site = $this->component('site');
+    /**
+     * Applies the smartypants rule on the text
+     *
+     * @param string $text
+     * @return string
+     */
+    public function smartypants(string $text = null): string
+    {
+        return $this->extensions['components']['smartypants']->call($this, $text, $this->options['smartypants']);
+    }
+
+    /**
+     * @return Snippet
+     */
+    public function snippet(string $name, array $data = []): Snippet
+    {
+        return $this->extensions['components']['snippet']->call($this, $name, $data);
     }
 
     /**
@@ -485,7 +559,15 @@ class App extends Component
      */
     public function system(): System
     {
-        return new System($this);
+        return $this->system = $this->system ?? new System($this);
+    }
+
+    /**
+     * @return Template
+     */
+    public function template(string $name, array $data = [], string $appendix = null): Template
+    {
+        return $this->extensions['components']['template']->call($this, $name, $data, $appendix);
     }
 
     /**
@@ -550,13 +632,24 @@ class App extends Component
     }
 
     /**
+     * Returns the current version number from
+     * the composer.json (Keep that up to date! :))
+     *
+     * @return string|null
+     */
+    public static function version()
+    {
+        return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+    }
+
+    /**
      * Returns the visitor object
      *
      * @return Visitor
      */
-    public function visitor()
+    public function visitor(): Visitor
     {
-        return new Visitor();
+        return $this->visitor = $this->visitor ?? new Visitor();
     }
 
 }

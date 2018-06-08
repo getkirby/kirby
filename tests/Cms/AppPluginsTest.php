@@ -53,7 +53,7 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $kirby->controller('test'));
     }
 
-    public function testContentFieldMethod()
+    public function testFieldMethod()
     {
         $kirby = new App([
             'fieldMethods' => [
@@ -67,7 +67,7 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('test', $page->customField()->test());
 
         // reset methods
-        ContentField::$methods = [];
+        Field::$methods = [];
     }
 
     public function testField()

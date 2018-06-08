@@ -15,24 +15,31 @@ class Obj extends stdClass
     public function __construct(array $data = [])
     {
         foreach ($data as $key => $val) {
-            if (is_string($key) === false || Str::length($key) === 0) {
-                continue;
-            }
-
-            $this->{strtolower($key)} = $val;
+            $this->$key = $val;
         }
     }
 
     /**
      * Magic getter
      *
-     * @param string $method
+     * @param string $property
      * @param array $arguments
      * @return mixed
      */
-    public function __call(string $method, array $arguments)
+    public function __call(string $property, array $arguments)
     {
-        return $this->{strtolower($method)} ?? null;
+        return $this->$property ?? null;
+    }
+
+    /**
+     * Magic property getter
+     *
+     * @param string $property
+     * @return mixed
+     */
+    public function __get(string $property)
+    {
+        return null;
     }
 
     /**
@@ -53,6 +60,16 @@ class Obj extends stdClass
         }
 
         return $result;
+    }
+
+    /**
+     * Converts the object to a json string
+     *
+     * @return string
+     */
+    public function toJson(...$arguments): string
+    {
+        return json_encode($this->toArray(), ...$arguments);
     }
 
     /**

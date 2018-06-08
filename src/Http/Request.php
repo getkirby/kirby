@@ -81,6 +81,13 @@ class Request
     protected $files;
 
     /**
+     * Request URL object
+     *
+     * @var Uri
+     */
+    protected $url;
+
+    /**
      * Creates a new Request object
      * You can either pass your own request
      * data via the $options array or use
@@ -91,9 +98,10 @@ class Request
     public function __construct(array $options = [])
     {
         $this->method = new Method($options['method'] ?? null);
-        $this->query  = new Query($options['query']  ?? null);
-        $this->body   = new Body($options['body']   ?? null);
-        $this->files  = new Files($options['files']  ?? null);
+        $this->query  = new Query($options['query'] ?? null);
+        $this->body   = new Body($options['body'] ?? null);
+        $this->files  = new Files($options['files'] ?? null);
+        $this->url    = empty($options['url']) === true ? Uri::current() : new Uri($options['url']);
     }
 
     /**
@@ -113,17 +121,7 @@ class Request
      */
     public function cli(): bool
     {
-        if (defined('STDIN') === true) {
-            return true;
-        }
-
-        $term = getenv('TERM');
-
-        if (substr(PHP_SAPI, 0, 3) === 'cgi' && $term && $term !== 'unknown') {
-            return true;
-        }
-
-        return false;
+        return Server::cli();
     }
 
     /**
@@ -248,4 +246,10 @@ class Request
 
         return $headers;
     }
+
+    public function url()
+    {
+        return $this->url;
+    }
+
 }

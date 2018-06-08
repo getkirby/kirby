@@ -148,7 +148,7 @@ class Collection extends BaseCollection
         $options = array_filter($options);
 
         // initialize the pagination instance
-        $this->pagination = App::instance()->component('Pagination', $options);
+        $this->pagination = App::instance()->pagination($options);
 
         // slice and clone the collection according to the pagination
         return $this->slice($this->pagination->offset(), $this->pagination->limit());

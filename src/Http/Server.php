@@ -26,6 +26,26 @@ class Server
     }
 
     /**
+     * Checks if the request is being served by the CLI
+     *
+     * @return boolean
+     */
+    public static function cli(): bool
+    {
+        if (defined('STDIN') === true) {
+            return true;
+        }
+
+        $term = getenv('TERM');
+
+        if (substr(PHP_SAPI, 0, 3) === 'cgi' && $term && $term !== 'unknown') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Gets a value from the _SERVER array
      *
      * <code>

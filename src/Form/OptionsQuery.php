@@ -2,7 +2,7 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\ContentField;
+use Kirby\Cms\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Collection;
@@ -105,8 +105,8 @@ class OptionsQuery
             foreach ($result as $key => $item) {
                 if (is_scalar($item) === true) {
                     $result[$key] = new Obj([
-                        'key'   => new ContentField('key', $key),
-                        'value' => new ContentField('value', $item),
+                        'key'   => new Field(null, 'key', $key),
+                        'value' => new Field(null, 'value', $item),
                     ]);
                 }
             }

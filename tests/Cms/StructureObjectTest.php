@@ -77,7 +77,7 @@ class StructureObjectTest extends TestCase
         $this->assertEquals([], $object->content()->toArray());
     }
 
-    public function testContentFields()
+    public function testFields()
     {
         $object = new StructureObject([
             'id'      => 'test',
@@ -87,14 +87,14 @@ class StructureObjectTest extends TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(ContentField::class, $object->title());
-        $this->assertInstanceOf(ContentField::class, $object->text());
+        $this->assertInstanceOf(Field::class, $object->title());
+        $this->assertInstanceOf(Field::class, $object->text());
 
         $this->assertEquals('Title', $object->title()->value());
         $this->assertEquals('Text', $object->text()->value());
     }
 
-    public function testContentFieldsParent()
+    public function testFieldsParent()
     {
         $parent = new Page(['slug' => 'test']);
         $object = new StructureObject([

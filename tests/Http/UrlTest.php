@@ -7,226 +7,113 @@ use PHPUnit\Framework\TestCase;
 class UrlTest extends TestCase
 {
 
-    protected function setUp()
+    protected $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
+    protected $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
+    protected $_docs = 'http://getkirby.com/docs/';
+
+    public function setUp()
     {
-        $this->example1 = 'https://getkirby.com';
-        $this->example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/?q=awesome#top';
+        Url::$current = null;
+        Url::$home    = '/';
     }
 
-    public function testOriginal()
+    public function testCurrent()
     {
-        $url = new Url($this->example1);
-        $this->assertEquals($url->original(), $this->example1);
+        $this->assertEquals('http://0.0.0.0', Url::current());
+
+        Url::$current = $this->_yts;
+        $this->assertEquals($this->_yts, Url::current());
     }
 
-    public function testValidScheme()
+    public function testCurrentDir()
     {
-        $url = new Url;
-
-        $url->scheme('http');
-        $this->assertEquals('http', $url->scheme());
-
-        $url->scheme('https');
-        $this->assertEquals('https', $url->scheme());
+        Url::$current = $this->_yts;
+        $this->assertEquals('https://www.youtube.com', Url::currentDir());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid URL scheme: abc
-     */
-    public function testInvalidScheme()
+    public function testHome()
     {
-        $url = new Url;
-        $url->scheme('abc');
+        $this->assertEquals('/', Url::home());
     }
 
-    public function testValidHost()
+    public function testTo()
     {
-        $url = new Url;
-
-        $url->host('getkirby.com');
-        $this->assertEquals('getkirby.com', $url->host());
+        $this->assertEquals('/', Url::to());
+        $this->assertEquals($this->_yt, Url::to($this->_yt));
+        $this->assertEquals('/getkirby.com', Url::to('getkirby.com'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid host format:
-     */
-    public function testInvalidHost()
+    public function testLast()
     {
-        $url = new Url;
-        $url->host(false);
+        $this->assertEquals('', Url::last());
     }
 
-    public function testValidPort()
+    public function testBuild()
     {
-        $url = new Url;
+        $this->assertEquals('http://0.0.0.0', Url::build());
 
-        $url->port(1234);
-        $this->assertEquals(1234, $url->port());
+        Url::$current = $this->_yts;
 
-        $url->port(false);
-        $this->assertEquals(false, $url->port());
+        // build with defaults
+        $this->assertEquals('https://www.youtube.com/watch?v=9q_aXttJduk', Url::build());
+
+        // build with different host
+        $this->assertEquals('https://kirbyvideo.com/watch?v=9q_aXttJduk', Url::build(['host' => 'kirbyvideo.com']));
+
+        // build from parts
+        $parts = [
+            'path'     => ['hello', 'kitty', 'mickey', 'mouse'],
+            'query'    => ['get' => 'kirby'],
+            'fragment' => 'foo'
+        ];
+        $result = 'http://getkirby.com/hello/kitty/mickey/mouse?get=kirby#foo';
+        $this->assertEquals($result, Url::build($parts, 'http://getkirby.com'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid port format: 0
-     */
-    public function testInvalidPortFormat1()
+    public function testIsAbsolute()
     {
-        $url = new Url;
-        $url->port(0);
+        $this->assertTrue(Url::isAbsolute('http://getkirby.com/docs'));
+        $this->assertTrue(Url::isAbsolute('https://getkirby.com/docs'));
+        $this->assertTrue(Url::isAbsolute('//getkirby.com/docs'));
+        $this->assertFalse(Url::isAbsolute('../getkirby.com/docs'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid port format: a
-     */
-    public function testInvalidPortFormat2()
+    public function testMakeAbsolute()
     {
-        $url = new Url;
-        $url->port('a');
+        $this->assertEquals('http://getkirby.com', Url::makeAbsolute('http://getkirby.com'));
+        $this->assertEquals('/docs/cheatsheet', Url::makeAbsolute('docs/cheatsheet'));
+        $this->assertEquals('http://getkirby.com/docs/cheatsheet', Url::makeAbsolute('docs/cheatsheet', 'http://getkirby.com'));
+        $this->assertEquals('http://getkirby.com', Url::makeAbsolute('', 'http://getkirby.com'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid port format: 12010210210
-     */
-    public function testInvalidPortFormat3()
+    public function testFix()
     {
-        $url = new Url;
-        $url->port(12010210210);
-    }
-
-    public function testValidUsername()
-    {
-        $url = new Url;
-
-        $url->username('testuser');
-        $this->assertEquals('testuser', $url->username());
-
-        $url->username(false);
-        $this->assertEquals(false, $url->username());
-    }
-
-    public function testValidPassword()
-    {
-        $url = new Url;
-
-        $url->password('weakpassword');
-        $this->assertEquals('weakpassword', $url->password());
-
-        $url->password(false);
-        $this->assertEquals(false, $url->password());
-    }
-
-    public function testValidPath()
-    {
-        $url = new Url;
-
-        $url->path('/a/b/c');
-        $this->assertEquals('/a/b/c', $url->path());
-
-        $url->path(false);
-        $this->assertEquals(false, $url->path());
-    }
-
-    public function testValidQuery()
-    {
-        $url = new Url;
-
-        $url->query('foo=bar');
-        $this->assertEquals('foo=bar', $url->query());
-
-        $url->query('?foo=bar');
-        $this->assertEquals('foo=bar', $url->query());
-
-        $url->query(false);
-        $this->assertEquals(false, $url->query());
-    }
-
-    public function testValidFragment()
-    {
-        $url = new Url;
-
-        $url->fragment('top');
-        $this->assertEquals('top', $url->fragment());
-
-        $url->fragment('#top');
-        $this->assertEquals('top', $url->fragment());
-
-        $url->fragment(false);
-        $this->assertEquals(false, $url->fragment());
-    }
-
-    public function testAuth()
-    {
-        $url = new Url;
-        $url->username('testuser');
-        $url->password('weakpassword');
-
-        $this->assertEquals('testuser:weakpassword', $url->auth());
+        $this->assertEquals('http://getkirby.com', Url::fix('getkirby.com'));
+        $this->assertEquals('ftp://getkirby.com', Url::fix('ftp://getkirby.com'));
     }
 
     public function testBase()
     {
-        $url = new Url;
-        $url->scheme('https');
-        $url->host('getkirby.com');
-
-        $this->assertEquals('https://getkirby.com', $url->base());
-
-        $url->username('testuser');
-        $url->password('weakpassword');
-
-        $this->assertEquals('https://testuser:weakpassword@getkirby.com', $url->base());
-
-        $url->port(3000);
-        $this->assertEquals('https://testuser:weakpassword@getkirby.com:3000', $url->base());
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The host address is missing
-     */
-    public function testBaseWithoutHost()
-    {
-        $url = new Url;
-        $url->base();
+        $this->assertEquals('http://0.0.0.0', Url::base());
+        $this->assertEquals('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
     }
 
     public function testShort()
     {
-        $url = new Url($this->example2);
-        $this->assertEquals('getkirby.com/docs/getting-started', $url->short());
-        $this->assertEquals('getkirby.com/…', $url->short(13));
+        $this->assertEquals('getkirby.com/docs', Url::short($this->_docs));
+        $this->assertEquals('getkirby.com/docs', Url::short($this->_docs, 100));
+        $this->assertEquals('getkirby.com…', Url::short($this->_docs, 12));
+        $this->assertEquals('getkirby.com', Url::short($this->_docs, 20, true));
+        $this->assertEquals('getkirby.com###', Url::short($this->_docs, 12, false, '###'));
     }
 
-    public function testToArray()
+    public function testIdn()
     {
-        $url = new Url($this->example2);
-
-        $this->assertEquals([
-            'scheme'   => 'https',
-            'host'     => 'getkirby.com',
-            'port'     => 3000,
-            'path'     => '/docs/getting-started/',
-            'username' => 'testuser',
-            'password' => 'weakpassword',
-            'query'    => 'q=awesome',
-            'fragment' => 'top',
-        ], $url->toArray());
+        $this->assertEquals('https://täst.de', Url::idn('https://xn--tst-qla.de'));
     }
 
-    public function testToString()
+    public function testIndex()
     {
-        $url = new Url($this->example1);
-        $this->assertEquals($this->example1, $url->toString());
-        $this->assertEquals($this->example1, (string)$url);
-
-        $url = new Url($this->example2);
-        $this->assertEquals($this->example2, $url->toString());
-        $this->assertEquals($this->example2, (string)$url);
+        $this->assertEquals('/', Url::index());
     }
 }

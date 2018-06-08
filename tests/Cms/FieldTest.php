@@ -2,32 +2,32 @@
 
 namespace Kirby\Cms;
 
-class ContentFieldTest extends TestCase
+class FieldTest extends TestCase
 {
 
     public function test__debuginfo()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
         $this->assertEquals(['title' => 'Title'], $field->__debuginfo());
     }
 
     public function testKey()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
         $this->assertEquals('title', $field->key());
     }
 
     public function testParent()
     {
         $parent = new Page(['slug' => 'test']);
-        $field  = new ContentField('title', 'Title', $parent);
+        $field  = new Field($parent, 'title', 'Title');
 
         $this->assertEquals($parent, $field->parent());
     }
 
     public function testToString()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
 
         $this->assertEquals('Title', $field->toString());
         $this->assertEquals('Title', $field->__toString());
@@ -36,19 +36,19 @@ class ContentFieldTest extends TestCase
 
     public function testToArray()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
         $this->assertEquals(['title' => 'Title'], $field->toArray());
     }
 
     public function testValue()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
         $this->assertEquals('Title', $field->value());
     }
 
     public function testValueSetter()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
         $this->assertEquals('Title', $field->value());
         $field = $field->value('Modified');
         $this->assertEquals('Modified', $field->value());
@@ -56,7 +56,7 @@ class ContentFieldTest extends TestCase
 
     public function testValueCallbackSetter()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
         $this->assertEquals('Title', $field->value());
         $field = $field->value(function ($value) {
             return 'Modified';
@@ -70,7 +70,7 @@ class ContentFieldTest extends TestCase
      */
     public function testInvalidValueSetter()
     {
-        $field = new ContentField('title', 'Title');
+        $field = new Field(null, 'title', 'Title');
         $field->value(new Page(['slug' => 'yay']));
     }
 

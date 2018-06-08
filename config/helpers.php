@@ -2,10 +2,8 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Html;
-use Kirby\Cms\KirbyText;
 use Kirby\Cms\Url;
 use Kirby\Http\Response\Redirect;
-use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\View;
@@ -60,7 +58,7 @@ function gist(string $url, string $file = null): string
     ]);
 }
 
-function go($url, int $code = 301)
+function go($url = null, int $code = 301)
 {
     die(new Redirect(url($url), $code));
 }
@@ -127,30 +125,23 @@ function kirby()
     return App::instance();
 }
 
-function kirbytag($type, string $value = null, array $attr = null)
+function kirbytag($type, string $value = null, array $attr = []): string
 {
-    KirbyTag::$data = [
-        'kirby' => $kirby = App::instance(),
-        'site'  => $site  = $kirby->site(),
-        'page'  => $site->page(),
-    ];
-
     if (is_array($type) === true) {
-        return KirbyTag::factory(key($type), current($type), $type);
+        return App::instance()->kirbytag(key($type), current($type), $type);
     }
 
-    return KirbyTag::factory($type, $value, $attr);
+    return App::instance()->kirbytag($type, $value, $attr);
 }
 
-function kirbytext($text, $markdown = true)
+function kirbytags(string $text = null, array $data = []): string
 {
-    $text = KirbyText::parse($text);
+    return App::instance()->kirbytags($text, $data);
+}
 
-    if ($markdown === true) {
-        $text = markdown($text);
-    }
-
-    return $text;
+function kirbytext(string $text = null, array $data = []): string
+{
+    return App::instance()->kirbytext($text, $data);
 }
 
 /**
@@ -161,7 +152,6 @@ function kirbytext($text, $markdown = true)
  * @return void
  */
 function load(array $classmap, string $base = null) {
-
     spl_autoload_register(function ($class) use ($classmap, $base) {
 
         $class = strtolower($class);
@@ -177,12 +167,11 @@ function load(array $classmap, string $base = null) {
         }
 
     });
-
 }
 
-function markdown($text)
+function markdown(string $text = null): string
 {
-    return App::instance()->component('markdown')->parse($text);
+    return App::instance()->markdown($text);
 }
 
 function option(string $key, $default = null)
@@ -218,9 +207,9 @@ function site()
     return App::instance()->site();
 }
 
-function smartypants($text)
+function smartypants(string $text = null): string
 {
-    return App::instance()->component('smartypants')->parse($text);
+    return App::instance()->smartypants($text);
 }
 
 function snippet($name, $data = [], $return = false)
@@ -229,7 +218,7 @@ function snippet($name, $data = [], $return = false)
         $data = ['item' => $data];
     }
 
-    $snippet = App::instance()->component('snippet', $name, $data);
+    $snippet = App::instance()->snippet($name, $data);
 
     if ($snippet->exists() === false) {
         $output = null;

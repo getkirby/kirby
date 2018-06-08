@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Url;
 use Kirby\Toolkit\Pagination as BasePagination;
 
 /**
@@ -17,6 +16,13 @@ use Kirby\Toolkit\Pagination as BasePagination;
  */
 class Pagination extends BasePagination
 {
+
+    /**
+     * Variable name for query strings
+     *
+     * @var string
+     */
+    protected $name;
 
     /**
      * The base URL
@@ -37,7 +43,8 @@ class Pagination extends BasePagination
      *     'page'  => 1,
      *     'limit' => 10,
      *     'total' => 120,
-     *     'url'   => 'https://getkirby.com/blog'
+     *     'name'  => 'p',
+     *     'url'   => new Uri('https://getkirby.com/blog')
      * ]);
      * ```
      *
@@ -46,7 +53,8 @@ class Pagination extends BasePagination
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->url = $params['url'] ?? '';
+        $this->url  = $params['url']  ?? App::instance()->request()->url();
+        $this->name = $params['name'] ?? 'page';
     }
 
     /**
@@ -91,22 +99,22 @@ class Pagination extends BasePagination
      *
      * @return string|null
      */
-    public function pageUrl(int $page = null)
+    public function pageUrl(int $page = null): string
     {
         if ($page === null) {
             return $this->pageUrl($this->page());
         }
 
+        $url  = clone $this->url;
+        $name = $this->name;
+
         if ($page === 1) {
-            return $this->url;
+            $url->query->$name = null;
+        } elseif ($this->hasPage($page) === true) {
+            $url->query->$name = $page;
         }
 
-        if ($this->hasPage($page) === true) {
-            // TODO: add url builder here to avoid breaking the queries
-            return $this->url . '?page=' . $page;
-        }
-
-        return null;
+        return $url->toString();
     }
 
     /**

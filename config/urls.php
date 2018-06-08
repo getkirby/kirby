@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Toolkit\Url;
+use Kirby\Cms\Url;
 
 return [
     'index' => function () {

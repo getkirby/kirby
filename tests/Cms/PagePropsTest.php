@@ -182,31 +182,16 @@ class PagePropsTest extends TestCase
         ]);
     }
 
-    public function slugProvider()
+    public function testSlug()
     {
-        return [
-            ['test', 'test'],
-            ['test/child', 'test-child'],
-            ['test/child/grand-child', 'test-child-grand-child'],
-        ];
+        $page = new Page(['slug' => 'test']);
+        $this->assertEquals('test', $page->slug());
     }
 
-    /**
-     * @dataProvider slugProvider
-     */
-    public function testSlug($id, $slug)
+    public function testUid()
     {
-        $page = new Page(['slug' => $id]);
-        $this->assertEquals($slug, $page->slug());
-    }
-
-    /**
-     * @dataProvider slugProvider
-     */
-    public function testUid($id, $slug)
-    {
-        $page = new Page(['slug' => $id]);
-        $this->assertEquals($slug, $page->uid());
+        $page = new Page(['slug' => 'test']);
+        $this->assertEquals('test', $page->uid());
     }
 
 }

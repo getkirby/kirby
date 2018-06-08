@@ -298,7 +298,7 @@ class Page extends Model
      */
     public function dirname(): string
     {
-        return $this->num() !== null ? $this->num() . '.' . $this->slug() : $this->slug();
+        return $this->num() !== null ? $this->num() . Dir::$numSeparator . $this->slug() : $this->slug();
     }
 
     /**
@@ -733,11 +733,11 @@ class Page extends Model
         ]);
 
         // try to create the page template
-        $template = $kirby->component('template', $this->template(), [], $contentType);
+        $template = $kirby->template($this->template(), [], $contentType);
 
         // fall back to the default template if it doesn't exist
         if ($template->exists() === false) {
-            $template = $kirby->component('template', 'default', [], $contentType);
+            $template = $kirby->template('default', [], $contentType);
         }
 
         // react if even the default template does not exist
@@ -838,7 +838,7 @@ class Page extends Model
      */
     protected function setSlug(string $slug): self
     {
-        $this->slug = Str::slug($slug);
+        $this->slug = $slug;
         return $this;
     }
 
@@ -887,9 +887,9 @@ class Page extends Model
     /**
      * Returns the title field or the slug as fallback
      *
-     * @return ContentField
+     * @return Field
      */
-    public function title(): ContentField
+    public function title(): Field
     {
         return $this->content()->get('title')->or($this->slug());
     }

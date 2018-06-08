@@ -9,7 +9,7 @@ class Nest
     public static function create($data, $parent = null)
     {
         if (is_scalar($data) === true) {
-            return new ContentField($data, $data);
+            return new Field($parent, $data, $data);
         }
 
         $result = [];
@@ -18,7 +18,7 @@ class Nest
             if (is_array($value) === true) {
                 $result[$key] = static::create($value, $parent);
             } elseif (is_string($value) === true) {
-                $result[$key] = new ContentField($key, $value, $parent);
+                $result[$key] = new Field($parent, $key, $value);
             }
         }
 

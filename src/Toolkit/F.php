@@ -298,7 +298,7 @@ class F
      * @param string $mime
      * @return string|false
      */
-    public static function mimeToExtension(string $mime)
+    public static function mimeToExtension(string $mime = null)
     {
         return Mime::toExtension($mime);
     }

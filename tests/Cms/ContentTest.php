@@ -40,7 +40,7 @@ class ContentTest extends TestCase
         $content = $this->mockObject();
         $field   = $content->get('title');
 
-        $this->assertInstanceOf(ContentField::class, $field);
+        $this->assertInstanceOf(Field::class, $field);
         $this->assertEquals('Test Content', $field->value());
     }
 
@@ -49,7 +49,7 @@ class ContentTest extends TestCase
         $content = $this->mockObject();
         $field   = $content->get('nonExistingField');
 
-        $this->assertInstanceOf(ContentField::class, $field);
+        $this->assertInstanceOf(Field::class, $field);
         $this->assertEquals(null, $field->value());
     }
 
@@ -59,7 +59,7 @@ class ContentTest extends TestCase
         $fields  = $content->get();
 
         foreach ($this->mockData() as $key => $value) {
-            $this->assertInstanceOf(ContentField::class, $fields[$key]);
+            $this->assertInstanceOf(Field::class, $fields[$key]);
             $this->assertEquals($key, $fields[$key]->key());
             $this->assertEquals($value, $fields[$key]->value());
         }

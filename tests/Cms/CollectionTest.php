@@ -75,7 +75,7 @@ class CollectionTest extends TestCase
     public function testGetAttributeWithField()
     {
         $object = new MockObject([
-            'id' => new ContentField('id', 'a')
+            'id' => new Field(null, 'id', 'a')
         ]);
 
         $collection = new Collection();

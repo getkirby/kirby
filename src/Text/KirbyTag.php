@@ -10,17 +10,17 @@ class KirbyTag
 {
 
     public static $aliases = [];
-    public static $options = [];
     public static $types = [];
-    public static $data = [];
 
     public $attrs = [];
+    public $data = [];
+    public $options = [];
     public $type  = null;
     public $value = null;
 
     public function __call(string $name, array $arguments = [])
     {
-        return static::$data[$name] ?? $this->$name;
+        return $this->data[$name] ?? $this->$name;
     }
 
     public static function __callStatic(string $type, array $arguments = [])
@@ -28,7 +28,7 @@ class KirbyTag
         return (new static($type, ...$arguments))->render();
     }
 
-    public function __construct(string $type, string $value = null, array $attrs = [])
+    public function __construct(string $type, string $value = null, array $attrs = [], array $data = [], array $options = [])
     {
         if (isset(static::$types[$type]) === false) {
             if (isset(static::$aliases[$type]) === false) {
@@ -42,10 +42,12 @@ class KirbyTag
             $this->$attrName = $attrValue;
         }
 
-        $this->attrs = $attrs;
-        $this->$type = $value;
-        $this->type  = $type;
-        $this->value = $value;
+        $this->attrs   = $attrs;
+        $this->data    = $data;
+        $this->options = $options;
+        $this->$type   = $value;
+        $this->type    = $type;
+        $this->value   = $value;
     }
 
     public function __get(string $attr)
@@ -58,7 +60,7 @@ class KirbyTag
         return (new static(...$arguments))->render();
     }
 
-    public static function parse(string $string): string
+    public static function parse(string $string, array $data = [], array $options = []): string
     {
         // remove the brackets
         $tag  = trim(rtrim(ltrim($string, '('), ')'));
@@ -86,12 +88,12 @@ class KirbyTag
 
         $value = array_shift($attributes);
 
-        return (new static($type, $value, $attributes))->render();
+        return (new static($type, $value, $attributes, $data, $options))->render();
     }
 
     public function option(string $key, $default = null)
     {
-        return static::$options[$key] ?? $default;
+        return $this->options[$key] ?? $default;
     }
 
     public function render()

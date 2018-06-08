@@ -1,9 +1,8 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\ContentField;
+use Kirby\Cms\Field;
 use Kirby\Cms\Html;
-use Kirby\Cms\KirbyText;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Page;
 use Kirby\Cms\Url;
@@ -121,13 +120,16 @@ return function (App $app) {
             });
         },
         'kirbytext' => function () use ($app) {
-            return $this->kirbytags()->markdown();
+            return $this->value(function ($value) use ($app) {
+                return $app->kirbytext($value, [
+                    'parent' => $this->parent(),
+                    'field'  => $this
+                ]);
+            });
         },
         'kirbytags' => function () use ($app) {
             return $this->value(function ($value) use ($app) {
-                return KirbyText::parse($value, [
-                    'kirby'  => $app,
-                    'site'   => $app->site(),
+                return $app->kirbytags($value, [
                     'parent' => $this->parent(),
                     'field'  => $this
                 ]);
@@ -140,7 +142,7 @@ return function (App $app) {
         },
         'markdown' => function () use ($app) {
             return $this->value(function ($value) use ($app) {
-                return $app->component('markdown')->parse((string)$value);
+                return $app->markdown($value);
             });
         },
         'or' => function ($fallback = null) {
@@ -148,7 +150,7 @@ return function (App $app) {
                 return $this;
             }
 
-            if (is_a($fallback, ContentField::class)) {
+            if (is_a($fallback, Field::class)) {
                 return $fallback;
             }
 

@@ -165,7 +165,7 @@ class Mime
         return false;
     }
 
-    public static function toExtension(string $mime)
+    public static function toExtension(string $mime = null)
     {
         foreach (static::$types as $key => $value) {
             if (is_array($value) === true && in_array($mime, $value) === true) {

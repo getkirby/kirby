@@ -70,6 +70,7 @@ class Markdown
 
         $parser->setBreaksEnabled($this->options['breaks']);
 
-        return $parser->text($text);
+        // we need the @ here, because parsedown has some notice issues :(
+        return @$parser->text($text);
     }
 }

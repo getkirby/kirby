@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\Field;
+use Kirby\Form\Field as FormField;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\V;
@@ -16,6 +16,7 @@ trait AppPlugins
     protected $extensions = [
         'blueprints' => [],
         'collections' => [],
+        'components' => [],
         'controllers' => [],
         'fieldMethods' => [],
         'fields' => [],
@@ -54,6 +55,11 @@ trait AppPlugins
         return $this->extensions['collections'] = array_merge($this->extensions['collections'], $collections);
     }
 
+    protected function extendComponents(array $components): array
+    {
+        return $this->extensions['components'] = array_merge($this->extensions['components'], $components);
+    }
+
     protected function extendControllers(array $controllers): array
     {
         return $this->extensions['controllers'] = array_merge($this->extensions['controllers'], $controllers);
@@ -61,12 +67,12 @@ trait AppPlugins
 
     protected function extendFieldMethods(array $methods): array
     {
-        return $this->extensions['fieldMethods'] = ContentField::$methods = array_merge(ContentField::$methods, $methods);
+        return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, $methods);
     }
 
     protected function extendFields(array $fields): array
     {
-        return $this->extensions['fields'] = Field::$types = array_merge(Field::$types, $fields);
+        return $this->extensions['fields'] = FormField::$types = array_merge(FormField::$types, $fields);
     }
 
     protected function extendHooks(array $hooks): array
@@ -86,6 +92,11 @@ trait AppPlugins
         }
 
         return $this->extensions['hooks'];
+    }
+
+    protected function extendMarkdown(Closure $markdown): array
+    {
+        return $this->extensions['markdown'] = $markdown;
     }
 
     protected function extendOptions(array $options, Plugin $plugin = null): array
@@ -121,6 +132,11 @@ trait AppPlugins
     protected function extendRoutes(array $routes): array
     {
         return $this->extensions['routes'] = array_merge($this->extensions['routes'], $routes);
+    }
+
+    protected function extendSmartypants(Closure $smartypants): array
+    {
+        return $this->extensions['smartypants'] = $smartypants;
     }
 
     protected function extendSnippets(array $snippets): array
@@ -198,8 +214,8 @@ trait AppPlugins
      */
     protected function extensionsFromSystem()
     {
-        // Field Mixins
-        Field::$mixins['options'] = include static::$root . '/config/field-mixins/options.php';
+        // Form Field Mixins
+        FormField::$mixins['options'] = include static::$root . '/config/field-mixins/options.php';
 
         // Tag Aliases
         KirbyTag::$aliases = [
@@ -207,10 +223,12 @@ trait AppPlugins
             'vimeo'   => 'video'
         ];
 
+        $this->extendComponents(include static::$root . '/config/components.php');
         $this->extendBlueprints(include static::$root . '/config/blueprints.php');
         $this->extendFields(include static::$root . '/config/fields.php');
         $this->extendFieldMethods((include static::$root . '/config/methods.php')($this));
         $this->extendTags(include static::$root . '/config/tags.php');
+
     }
 
     /**

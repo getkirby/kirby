@@ -2,11 +2,13 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Url as BaseUrl;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Url as BaseUrl;
 
 class Url extends BaseUrl
 {
+
+    public static $home = null;
 
     /**
      * Returns the Url to the homepage
@@ -15,33 +17,7 @@ class Url extends BaseUrl
      */
     public static function home(): string
     {
-        return App::instance()->url();
-    }
-
-    /**
-     * Smart resolver for internal and external urls
-     *
-     * @param string $path
-     * @return string
-     */
-    public static function to(string $path = null): string
-    {
-        $kirby = App::instance();
-        $path  = trim($path);
-
-        if ($path === '' || $path === '/') {
-            return $kirby->url();
-        }
-
-        if (static::isAbsolute($path) === true) {
-            return $path;
-        }
-
-        if (Str::startsWith($path, '#') === true) {
-            return $path;
-        }
-
-        return $kirby->url() . '/' . trim($path, '/');
+        return static::$home = static::$home ?? App::instance()->url();
     }
 
     public static function toTemplateAsset(string $assetPath, string $extension)

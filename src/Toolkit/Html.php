@@ -403,13 +403,13 @@ class Html
     public static function video(string $url, array $options = [], array $attr = []): string
     {
         // YouTube video
-        if (preg_match('!youtu!i', $src) === 1) {
-            return static::youtube($src, $options['youtube'] ?? [], $attr);
+        if (preg_match('!youtu!i', $url) === 1) {
+            return static::youtube($url, $options['youtube'] ?? [], $attr);
         }
 
         // Vimeo video
-        if (preg_match('!vimeo!i', $src) === 1) {
-            return static::vimeo($src, $options['vimeo'] ?? [], $attr);
+        if (preg_match('!vimeo!i', $url) === 1) {
+            return static::vimeo($url, $options['vimeo'] ?? [], $attr);
         }
 
         throw new Exception('Unexpected video type');
@@ -417,7 +417,7 @@ class Html
 
     public static function vimeo(string $url, array $options = [], array $attr = []): string
     {
-        if (preg_match('!vimeo.com\/([0-9]+)!i', $src, $array) === 1) {
+        if (preg_match('!vimeo.com\/([0-9]+)!i', $url, $array) === 1) {
             $id = $array[1];
         } else {
             throw new Exception('Invalid Vimeo source');
@@ -430,9 +430,9 @@ class Html
             $query = '';
         }
 
-        $src = 'https://player.vimeo.com/video/' . $id . $query;
+        $url = 'https://player.vimeo.com/video/' . $id . $query;
 
-        return static::iframe($src, array_merge(['allowfullscreen' => true], $attr));
+        return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
     }
 
     public static function youtube(string $url, array $options = [], array $attr = []): string
@@ -461,7 +461,7 @@ class Html
         ];
 
         foreach ($schemes as $schema) {
-            if (preg_match('!' . $schema['pattern'] . '!i', $src, $array) === 1) {
+            if (preg_match('!' . $schema['pattern'] . '!i', $url, $array) === 1) {
                 $domain = $schema['domain'] ?? $domain;
                 $id     = $array[1];
                 break;
@@ -480,9 +480,9 @@ class Html
             $query = '';
         }
 
-        $src = 'https://' . $domain . '/embed/' . $id . $query;
+        $url = 'https://' . $domain . '/embed/' . $id . $query;
 
-        return static::iframe($src, array_merge(['allowfullscreen' => true], $attr));
+        return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
     }
 
 }

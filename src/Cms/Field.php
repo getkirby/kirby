@@ -24,7 +24,7 @@ use Kirby\Exception\InvalidArgumentException;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class ContentField
+class Field
 {
     use HasMethods;
 
@@ -54,11 +54,11 @@ class ContentField
     /**
      * Creates a new field object
      *
+     * @param object $parent
      * @param string $key
      * @param mixed  $value
-     * @param object $parent
      */
-    public function __construct(string $key, $value, $parent = null)
+    public function __construct($parent = null, string $key, $value)
     {
         $this->key    = $key;
         $this->value  = $value;

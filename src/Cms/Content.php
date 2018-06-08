@@ -44,6 +44,18 @@ class Content
     protected $parent;
 
     /**
+     * Magic getter for content fields
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return Field
+     */
+    public function __call(string $name, array $arguments = []): Field
+    {
+        return $this->get($name);
+    }
+
+    /**
      * Creates a new Content object
      *
      * @param array $data
@@ -109,7 +121,7 @@ class Content
             return $this->fields[$key];
         }
 
-        return $this->fields[$key] = new ContentField($key, $this->data()[$key] ?? null, $this->parent);
+        return $this->fields[$key] = new Field($this->parent, $key, $this->data()[$key] ?? null);
     }
 
     /**

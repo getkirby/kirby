@@ -8,6 +8,7 @@ use Kirby\Toolkit\F;
 class Dir extends \Kirby\Toolkit\Dir
 {
 
+    public static $numSeparator = '_';
     protected static $inventory = [];
 
     public static function inventory(string $dir, string $content = 'txt'): array
@@ -40,7 +41,7 @@ class Dir extends \Kirby\Toolkit\Dir
 
             if (is_dir($root) === true) {
 
-                $dot  = strpos($item, '.');
+                $dot  = strpos($item, static::$numSeparator);
                 $num  = null;
                 $slug = $item;
 

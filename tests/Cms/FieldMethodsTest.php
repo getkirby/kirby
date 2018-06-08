@@ -16,7 +16,7 @@ class FieldMethodsTest extends TestCase
 
     public function field($value = '')
     {
-        return new ContentField('test', $value);
+        return new Field(null, 'test', $value);
     }
 
     public function testFieldMethodCombination()

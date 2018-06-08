@@ -25,7 +25,7 @@ return function ($kirby) {
 
                 $request = $kirby->request();
 
-                return $kirby->component('api')->render($path, $this->method(), [
+                return $kirby->api()->render($path, $this->method(), [
                     'body'    => $request->body()->toArray(),
                     'files'   => $request->files()->toArray(),
                     'headers' => $request->headers(),
