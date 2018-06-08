@@ -57,7 +57,7 @@ class PHPMailer extends Email
         }
 
         // smtp transport settings
-        if ($this->transport()['type'] === 'smtp') {
+        if (($this->transport()['type'] ?? 'mail') === 'smtp') {
             $mailer->isSMTP();
             $mailer->Host       = $this->transport()['host'] ?? null;
             $mailer->SMTPAuth   = $this->transport()['auth'] ?? false;

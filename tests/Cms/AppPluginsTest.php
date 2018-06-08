@@ -2,10 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Form\Field;
+use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
 
-class DummyPage  extends Page {}
+class DummyPage extends Page {}
 
 class AppPluginsTest extends TestCase
 {
@@ -78,13 +78,13 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
-        $field = new Field([
+        $field = new FormField([
             'type'  => 'dummy',
             'name'  => 'dummy',
             'peter' => 'shaw'
         ]);
 
-        $this->assertInstanceOf(Field::class, $field);
+        $this->assertInstanceOf(FormField::class, $field);
         $this->assertEquals('simpson', $field->homer());
         $this->assertEquals('shaw', $field->peter());
     }

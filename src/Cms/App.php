@@ -427,9 +427,9 @@ class App extends Component
      * Returns the current session object
      *
      * @param  array   $options Additional options, see the session component
-     * @return Session
+     * @return Session|AutoSession
      */
-    public function session(array $options = []): Session
+    public function session(array $options = [])
     {
         $this->session = $this->session ?? new Session($this->root('sessions'), $this->options['session'] ?? []);
         return $this->session->get($options);

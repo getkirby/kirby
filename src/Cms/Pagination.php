@@ -99,7 +99,7 @@ class Pagination extends BasePagination
      *
      * @return string|null
      */
-    public function pageUrl(int $page = null): string
+    public function pageUrl(int $page = null)
     {
         if ($page === null) {
             return $this->pageUrl($this->page());
@@ -108,9 +108,13 @@ class Pagination extends BasePagination
         $url  = clone $this->url;
         $name = $this->name;
 
+        if ($this->hasPage($page) === false) {
+            return null;
+        }
+
         if ($page === 1) {
             $url->query->$name = null;
-        } elseif ($this->hasPage($page) === true) {
+        } else {
             $url->query->$name = $page;
         }
 

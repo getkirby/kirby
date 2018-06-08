@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Uri;
+
 class PaginationTest extends TestCase
 {
 
@@ -11,7 +13,7 @@ class PaginationTest extends TestCase
             'page'  => 1,
             'limit' => 10,
             'total' => 120,
-            'url'   => 'https://getkirby.com'
+            'url'   => new Uri('https://getkirby.com')
         ], $options));
     }
 
