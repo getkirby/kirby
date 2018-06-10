@@ -86,7 +86,7 @@ class App extends Component
      */
     public function api(): Api
     {
-        return $this->api = $this->api ?? new Api(static::$root . '/api.php');
+        return $this->api = $this->api ?? new Api(include static::$root . '/config/api.php');
     }
 
     /**
@@ -360,7 +360,7 @@ class App extends Component
     /**
      * @return Response
      */
-    public function response($input): Response
+    public function response($input)
     {
         return $this->extensions['components']['response']->call($this, $input);
     }
