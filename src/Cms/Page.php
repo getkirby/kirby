@@ -129,6 +129,11 @@ class Page extends Model
      */
     public function __call(string $method, array $arguments = [])
     {
+        // public property access
+        if (isset($this->$method) === true) {
+            return $this->$method;
+        }
+
         // page methods
         if ($this->hasMethod($method)) {
             return $this->call($method, $arguments);
@@ -635,6 +640,17 @@ class Page extends Model
     public function num()
     {
         return $this->num;
+    }
+
+    /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @return string
+     */
+    public function panelUrl(): string
+    {
+        return $this->kirby()->url('panel') . '/pages/' . str_replace('/', '+', $this->id());
     }
 
     /**

@@ -89,6 +89,11 @@ class File extends Model
      */
     public function __call(string $method, array $arguments = [])
     {
+        // public property access
+        if (isset($this->$method) === true) {
+            return $this->$method;
+        }
+
         if (method_exists($this->asset(), $method)) {
             return $this->asset()->$method(...$arguments);
         }
@@ -264,6 +269,18 @@ class File extends Model
     public function page()
     {
         return is_a($this->parent(), Page::class) === true ? $this->parent() : null;
+    }
+
+    /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @param bool $relative
+     * @return string
+     */
+    public function panelUrl(bool $relative = false): string
+    {
+        return $this->parent()->panelUrl($relative) . '/files/' . $this->filename();
     }
 
     /**

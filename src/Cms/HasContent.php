@@ -25,6 +25,11 @@ trait HasContent
      */
     public function __call(string $method, array $arguments = [])
     {
+        // public property access
+        if (isset($this->$method) === true) {
+            return $this->$method;
+        }
+
         return $this->content()->get($method, $arguments);
     }
 

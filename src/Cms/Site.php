@@ -284,6 +284,17 @@ class Site extends Model
     }
 
     /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @return string
+     */
+    public function panelUrl(): string
+    {
+        return $this->kirby()->url('panel') . '/pages';
+    }
+
+    /**
      * Returns the permissions object for this site
      *
      * @return SiteBlueprintOptions

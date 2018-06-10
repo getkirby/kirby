@@ -362,6 +362,17 @@ class User extends Model
     }
 
     /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @return string
+     */
+    public function panelUrl(): string
+    {
+        return $this->kirby()->url('panel') . '/users/' . $this->id();
+    }
+
+    /**
      * Returns the encrypted user password
      *
      * @return string

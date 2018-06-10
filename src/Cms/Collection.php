@@ -165,6 +165,18 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Searches the collection
+     *
+     * @param string $query
+     * @param array $params
+     * @return self
+     */
+    public function search(string $query = null, $params = [])
+    {
+        return Search::collection($this, $query, $params);
+    }
+
+    /**
      * Converts all objects in the collection
      * to an array. This can also take a callback
      * function to further modify the array result.
