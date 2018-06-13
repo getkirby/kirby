@@ -17,17 +17,25 @@ function attr(array $attr = null, $before = null, $after = null)
     return null;
 }
 
-function css($url, $media = null)
+/**
+ * Creates one or multiple CSS link tags
+ *
+ * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
+ * @param string|array $attr Pass an array of attributes for the link tag or a media attribute string
+ * @return string|null
+ */
+function css($url, $attr = null)
 {
     if (is_array($url) === true) {
-        $links = array_map(function ($url) use ($media) {
-            return css($url, $media);
+        $links = array_map(function ($url) use ($attr) {
+            return css($url, $attr);
         }, $url);
 
         return implode(PHP_EOL, $links);
     }
 
-    $tag = '<link rel="stylesheet" href="%s"' . attr(['media' => $media], ' ') . '>';
+    $attr = is_array($attr) ? attr($attr, ' ') : attr(['media' => $attr], ' ');
+    $tag  = '<link rel="stylesheet" href="%s"' . $attr . '>';
 
     if ($url === '@auto') {
         if ($assetUrl = Url::toTemplateAsset('css/templates', 'css')) {
@@ -120,7 +128,7 @@ function js($src, $async = null)
     }
 }
 
-function kirby()
+function kirby(): App
 {
     return App::instance();
 }
