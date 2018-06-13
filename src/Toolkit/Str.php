@@ -256,6 +256,17 @@ class Str
     }
 
     /**
+     * Convert a string to kebab case.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public static function kebab(string $value = null): string
+    {
+        return static::snake($value, '-');
+    }
+
+    /**
      * A UTF-8 safe version of strtolower()
      *
      * @param  string  $string
@@ -505,6 +516,22 @@ class Str
         }
 
         return static::substr($string, 0, $length) . $appendix;
+    }
+
+    /**
+     * Convert a string to snake case.
+     *
+     * @param  string  $value
+     * @param  string  $delimiter
+     * @return string
+     */
+    public static function snake(string $value = null, string $delimiter = '_'): string
+    {
+        if (!ctype_lower($value)) {
+            $value = preg_replace('/\s+/u', '', ucwords($value));
+            $value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
+        }
+        return $value;
     }
 
     /**
