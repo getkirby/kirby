@@ -158,6 +158,12 @@ return function (App $app) {
                 return $fallback;
             });
         },
+
+        /**
+         * @param int $length The number of characters in the string
+         * @param string $appendix An optional replacement for the missing rest
+         * @return Kirby\Cms\Field
+         */
         'short' => function (int $length, string $appendix = '…') {
             return $this->value(function ($value) use ($length, $appendix) {
                 return Str::short($this->value(), $length, $appendix);
