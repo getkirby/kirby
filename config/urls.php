@@ -13,13 +13,13 @@ return [
         return $urls['base'] . '/assets';
     },
     'api' => function (array $urls) {
-        return $urls['base'] . '/api';
+        return $urls['base'] . '/' . ($this->option('api')['folder'] ?? 'api');
     },
     'media' => function (array $urls) {
         return $urls['base'] . '/media';
     },
     'panel' => function (array $urls) {
-        return $urls['base'] . '/panel';
+        return $urls['base'] . '/' . ($this->option('panel')['folder'] ?? 'panel');
     }
 ];
 

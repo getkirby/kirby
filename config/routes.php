@@ -4,6 +4,7 @@ use Kirby\Api\Api;
 use Kirby\Cms\Panel;
 use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\F;
@@ -11,6 +12,9 @@ use Kirby\Toolkit\Str;
 use Kirby\Toolkit\View;
 
 return function ($kirby) {
+
+    $api   = $kirby->option('api')['folder']   ?? 'api';
+    $panel = $kirby->option('panel')['folder'] ?? 'panel';
 
     return [
         [
@@ -20,9 +24,12 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'api/(:all)',
+            'pattern' => $api . '/(:all)',
             'method'  => 'ALL',
             'action'  => function ($path = null) use ($kirby) {
+                if ($kirby->option('api') === false) {
+                    throw new NotFoundException();
+                }
 
                 $request = $kirby->request();
 
@@ -37,6 +44,10 @@ return function ($kirby) {
         [
             'pattern' => 'media/panel/(:any)/(:all)',
             'action'  => function (string $version, string $path) use ($kirby) {
+                if ($kirby->option('panel') === false) {
+                    throw new NotFoundException();
+                }
+
                 go(Panel::link($kirby, $path));
             }
         ],
@@ -55,8 +66,12 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'panel/(:all?)',
+            'pattern' => $panel . '/(:all?)',
             'action'  => function () use ($kirby) {
+                if ($kirby->option('panel') === false) {
+                    throw new NotFoundException();
+                }
+
                 return Panel::render($kirby);
             }
         ],

@@ -55,9 +55,9 @@ class Panel
             'pluginCss' => $kirby->url('media') . '/plugins/index.css',
             'pluginJs'  => $kirby->url('media') . '/plugins/index.js',
             'icons'     => F::read($kirby->root('panel') . '/dist/img/icons.svg'),
-            'panelUrl'  => $kirby->url('panel'),
+            'panelUrl'  => $url = $kirby->url('panel'),
             'options'   => [
-                'url'         => $kirby->url('panel'),
+                'url'         => $url,
                 'site'        => $kirby->url('index'),
                 'api'         => $kirby->url('api'),
                 'translation' => 'en',
