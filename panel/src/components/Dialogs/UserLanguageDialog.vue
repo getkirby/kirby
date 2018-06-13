@@ -1,0 +1,78 @@
+<template>
+  <kirby-dialog
+    ref="dialog"
+    :button="$t('change')"
+    theme="positive"
+    icon="check"
+    @submit="$refs.form.submit()"
+  >
+    <kirby-form
+      ref="form"
+      :fields="fields"
+      v-model="user"
+      @submit="submit"
+    />
+  </kirby-dialog>
+</template>
+
+<script>
+import DialogMixin from "@/mixins/dialog.js";
+
+export default {
+  mixins: [DialogMixin],
+  data() {
+    return {
+      user: {
+        language: "en"
+      },
+      languages: []
+    };
+  },
+  computed: {
+    fields() {
+      return {
+        language: {
+          label: this.$t("user.language"),
+          type: "select",
+          icon: "globe",
+          options: this.languages,
+          required: true
+        }
+      };
+    }
+  },
+  created() {
+    this.$api.translation.options().then(languages => {
+      this.languages = languages;
+    });
+  },
+  methods: {
+    open(id) {
+      this.$api.user.get(id, { view: "compact" }).then(user => {
+        this.user = user;
+        this.$refs.dialog.open();
+      });
+    },
+    submit() {
+      this.$api.user
+        .changeLanguage(this.user.id, this.user.language)
+        .then(user => {
+          this.user = user;
+
+          // If current panel user, update store to switch language
+          if (this.$store.state.user.current.id === this.user.id) {
+            this.$store.dispatch("user/language", this.user.language);
+          }
+
+          this.success({
+            message: this.$t("user.language.changed"),
+            event: "user.changeLanguage"
+          });
+        })
+        .catch(error => {
+          this.$refs.dialog.error(error.message);
+        });
+    }
+  }
+};
+</script>

@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Api\Api;
+use Kirby\Cms\Panel;
 use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
 use Kirby\Http\Response\Redirect;
@@ -45,6 +46,12 @@ return function ($kirby) {
                 if ($url = PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension)) {
                     go($url);
                 }
+            }
+        ],
+        [
+            'pattern' => 'panel/(:all?)',
+            'action'  => function () use ($kirby) {
+                echo (new Panel($kirby))->render();
             }
         ],
         [

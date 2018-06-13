@@ -1,0 +1,32 @@
+{
+  "name": "getkirby/panel",
+  "description": "Kirby Panel",
+  "keywords": ["kirby", "cms", "interface", "panel"],
+  "homepage": "https://getkirby.com",
+  "authors": [
+    {
+      "name": "Bastian Allgeier",
+      "email": "bastian@getkirby.com",
+      "homepage": "http://bastianallgeier.com"
+    }
+  ],
+  "support": {
+    "email": "support@getkirby.com",
+    "issues": "https://github.com/getkirby/kirby/issues",
+    "forum": "https://forum.getkirby.com",
+    "source": "https://github.com/getkirby/kirby"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/k-next/kirby"
+    }
+  ],
+  "require": {
+    "getkirby/cms": "dev-develop"
+  },
+  "minimum-stability": "dev",
+  "archive": {
+    "exclude": ["/.gitignore"]
+  }
+}
