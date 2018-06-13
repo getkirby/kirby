@@ -35,6 +35,12 @@ return function ($kirby) {
             }
         ],
         [
+            'pattern' => 'media/panel/(:any)/(:all)',
+            'action'  => function (string $version, string $path) use ($kirby) {
+                go(Panel::link($kirby, $path));
+            }
+        ],
+        [
             'pattern' => 'media/plugins/index.(css|js)',
             'action'  => function (string $extension) use ($kirby) {
                 return new Response(PluginAssets::index($extension), F::extensionToMime($extension));
@@ -51,7 +57,7 @@ return function ($kirby) {
         [
             'pattern' => 'panel/(:all?)',
             'action'  => function () use ($kirby) {
-                echo (new Panel($kirby))->render();
+                return Panel::render($kirby);
             }
         ],
         [

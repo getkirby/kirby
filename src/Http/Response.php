@@ -2,6 +2,8 @@
 
 namespace Kirby\Http;
 
+use Throwable;
+
 /**
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -212,6 +214,11 @@ class Response
      */
     public function __toString(): string
     {
-        return $this->send();
+        try {
+            return $this->send();
+        } catch (Throwable $e) {
+            error_log($e);
+            return '';
+        }
     }
 }

@@ -31,7 +31,7 @@ return [
 
     // panel
     'panel' => function (array $roots) {
-        return $roots['index'] . '/panel';
+        return $roots['kirby'] . '/panel';
     },
 
     // site

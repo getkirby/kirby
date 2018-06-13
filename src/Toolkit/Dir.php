@@ -66,6 +66,29 @@ class Dir
     }
 
     /**
+     * Create a (symbolic) link to a directory
+     *
+     * @param string $source
+     * @param string $link
+     * @param string $method
+     * @return boolean
+     */
+    public static function link(string $source, string $link, string $method = 'link'): bool
+    {
+        Dir::make(dirname($link), true);
+
+        if (is_dir($link) === true) {
+            return true;
+        }
+
+        if (is_dir($source) === false) {
+            throw new Exception(sprintf('The directory "%s" does not exist and cannot be linked', $source));
+        }
+
+        return $method($source, $link);
+    }
+
+    /**
      * Creates a new directory
      *
      * @param   string  $dir The path for the new directory
@@ -162,6 +185,10 @@ class Dir
             return true;
         }
 
+        if (is_link($dir) === true) {
+            return unlink($dir);
+        }
+
         foreach (scandir($dir) as $childName) {
             if (in_array($childName, ['.', '..']) === true) {
                 continue;
@@ -169,7 +196,9 @@ class Dir
 
             $child = $dir . '/' . $childName;
 
-            if (is_dir($child) === true) {
+            if (is_link($child) === true) {
+                unlink($child);
+            } elseif (is_dir($child) === true) {
                 static::remove($child);
             } else {
                 F::remove($child);
