@@ -144,16 +144,14 @@ class Server
     {
         $host = static::get('HTTP_X_FORWARDED_HOST');
 
-        if (!empty($host)) {
-            return $host;
+        if (empty($host) === true) {
+            $host = static::get('SERVER_NAME');
         }
 
-        $host = static::get('SERVER_NAME');
-
-        if (!empty($host)) {
-            return $host;
+        if (empty($host) === true) {
+            $host = static::get('SERVER_ADDR');
         }
 
-        return static::get('SERVER_ADDR');
+        return explode(':', $host)[0];
     }
 }
