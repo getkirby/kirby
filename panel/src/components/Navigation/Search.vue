@@ -4,8 +4,8 @@
       <div class="kirby-search-input">
         <input
           ref="input"
-          type="text"
           v-model="query"
+          type="text"
           @input="search"
           @keydown.down.prevent="down"
           @keydown.up.prevent="up"
@@ -24,7 +24,7 @@
           <kirby-button v-if="page.hasChildren" icon="angle-right" @click="query = page.id + '/'; search()" />
         </li>
       </ul>
-      <div class="kirby-search-empty" v-if="pages.length === 0">
+      <div v-if="pages.length === 0" class="kirby-search-empty">
         No Supages
       </div>
     </div>
@@ -96,7 +96,7 @@ export default {
       this.$api.page.search(parent, data).then(response => {
         this.pages = response.data;
         this.selected = -1;
-      }).catch(e => {
+      }).catch(() => {
         this.pages = [];
         this.selected = -1;
       });
