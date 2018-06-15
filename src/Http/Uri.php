@@ -194,13 +194,18 @@ class Uri
         return $base;
     }
 
-    public static function current(array $props = []): self
+    /**
+     * @param array $props
+     * @param boolean $forwarded
+     * @return self
+     */
+    public static function current(array $props = [], bool $forwarded = false): self
     {
         $uri = parse_url(Server::get('REQUEST_URI'));
         $url = new static(array_merge([
             'scheme' => Server::https() === true ? 'https' : 'http',
-            'host'   => Server::host(),
-            'port'   => Server::port(),
+            'host'   => Server::host($forwarded),
+            'port'   => Server::port($forwarded),
             'path'   => $uri['path'] ?? null,
             'query'  => $uri['query'] ?? null,
         ], $props));
