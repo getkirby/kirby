@@ -9,32 +9,32 @@ window.panel.plugins = {
   views: {},
 };
 
-window.panel.plugin = (plugin, parts) => {
+window.panel.plugin = function (plugin, parts) {
   // Components
-  resolve(parts, "components", (name, options) => {
+  resolve(parts, "components", function (name, options) {
     window.panel.plugins["components"][name] = options;
   });
 
   // Fields
-  resolve(parts, "fields", (name, options) => {
+  resolve(parts, "fields", function (name, options) {
     window.panel.plugins["fields"][`kirby-${name}-field`] = options;
   });
 
   // Sections
-  resolve(parts, "sections", (name, options) => {
+  resolve(parts, "sections", function (name, options) {
     window.panel.plugins["components"][`kirby-${name}-section`] = options;
   });
 
   // Translations
-  resolve(parts, "translations", (locale, strings) => {
-    window.panel.plugins["translations"][locale] = {
-      ...window.panel.plugins["translations"][locale],
-      ...strings
-    };
+  resolve(parts, "translations", function (locale, strings) {
+    window.panel.plugins["translations"][locale] = Object.assign(
+      window.panel.plugins["translations"][locale],
+      strings
+    );
   });
 
   // Vue.use
-  resolve(parts, "use", (name, options) => {
+  resolve(parts, "use", function (name, options) {
     window.panel.plugins["use"].push(options);
   });
 
