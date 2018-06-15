@@ -79,20 +79,22 @@ export default {
           label: this.$t("user.email"),
           type: "email",
           link: false,
-          placeholder: this.$t("user.email.placeholder")
+          placeholder: this.$t("user.email.placeholder"),
+          required: true
         },
         password: {
           label: this.$t("user.password"),
           type: "password",
           placeholder: this.$t("user.password") + " …",
-          minLength: 8
+          required: true
         },
         language: {
           label: this.$t("user.language"),
           type: "select",
           options: this.languages,
           icon: "globe",
-          empty: false
+          empty: false,
+          required: true
         }
       };
     }

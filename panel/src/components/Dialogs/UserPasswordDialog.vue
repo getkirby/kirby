@@ -36,16 +36,12 @@ export default {
           label: this.$t("user.password.new"),
           type: "password",
           icon: "key",
-          minLength: 8,
-          counter: true,
           required: true
         },
         passwordConfirmation: {
           label: this.$t("user.password.new.confirm"),
           icon: "key",
           type: "password",
-          minLength: 8,
-          counter: true,
           required: true
         }
       };
