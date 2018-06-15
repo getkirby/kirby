@@ -20,7 +20,7 @@ return [
             return $avatar->filename();
         },
         'mime' => function (Avatar $avatar) {
-            return $avatar->mime() ? $avatar->mime()->name() : null;
+            return $avatar->mime();
         },
         'modified' => function (Avatar $avatar) {
             return $avatar->modified('c');

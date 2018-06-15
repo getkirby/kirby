@@ -30,7 +30,7 @@ return [
             return $file->id();
         },
         'mime' => function (File $file) {
-            return $file->mime() ? $file->mime()->name() : null;
+            return $file->mime();
         },
         'modified' => function (File $file) {
             return $file->modified('c');
