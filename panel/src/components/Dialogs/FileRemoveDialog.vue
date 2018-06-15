@@ -23,11 +23,15 @@ export default {
   },
   methods: {
     open(parent, filename) {
-      this.$api.file.get(parent, filename).then(file => {
-        this.parent = file.parent;
-        this.filename = file.filename;
-        this.$refs.dialog.open();
-      });
+      this.$api.file.get(parent, filename)
+        .then(file => {
+          this.parent = file.parent;
+          this.filename = file.filename;
+          this.$refs.dialog.open();
+        })
+        .catch (error => {
+          this.$store.dispatch('notification/error', error);
+        });
     },
     submit() {
       this.$api.file

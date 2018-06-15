@@ -122,7 +122,11 @@ export default {
           this.form.status = page.status;
           this.form.position = page.num;
           this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
         });
+
     },
     submit() {
       this.$refs.form.submit();

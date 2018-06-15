@@ -6,10 +6,14 @@ export default {
   extends: PageRename,
   methods: {
     open() {
-      this.$api.site.get({ select: ["title"] }).then(site => {
-        this.page = site;
-        this.$refs.dialog.open();
-      });
+      this.$api.site.get({ select: ["title"] })
+        .then(site => {
+          this.page = site;
+          this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
+        });
     },
     submit() {
       this.$api.site

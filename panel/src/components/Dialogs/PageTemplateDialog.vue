@@ -62,6 +62,9 @@ export default {
             value: blueprint.name
           }));
           this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
         });
     },
     submit() {

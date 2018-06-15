@@ -24,10 +24,14 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.user.get(id).then(user => {
-        this.user = user;
-        this.$refs.dialog.open();
-      });
+      this.$api.user.get(id)
+        .then(user => {
+          this.user = user;
+          this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
+        });
     },
     submit() {
       this.$api.user

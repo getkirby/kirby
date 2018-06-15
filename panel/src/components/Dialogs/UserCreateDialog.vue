@@ -61,10 +61,14 @@ export default {
   },
   methods: {
     open() {
-      this.$api.role.options().then(roles => {
-        this.roles = roles;
-        this.$refs.dialog.open();
-      });
+      this.$api.role.options()
+        .then(roles => {
+          this.roles = roles;
+          this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
+        });
     },
     create() {
       this.$api.user

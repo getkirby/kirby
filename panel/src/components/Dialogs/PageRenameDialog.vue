@@ -43,10 +43,14 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.page.get(id, { select: ["id", "title"] }).then(page => {
-        this.page = page;
-        this.$refs.dialog.open();
-      });
+      this.$api.page.get(id, { select: ["id", "title"] })
+        .then(page => {
+          this.page = page;
+          this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
+        });
     },
     submit() {
       this.$api.page

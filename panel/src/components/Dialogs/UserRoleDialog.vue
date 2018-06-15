@@ -45,14 +45,18 @@ export default {
     open(id) {
       this.id = id;
 
-      this.$api.user.get(id).then(user => {
-        this.$api.role.options().then(roles => {
-          this.roles = roles;
-          this.user = user;
-          this.user.role = this.user.role.name;
-          this.$refs.dialog.open();
+      this.$api.user.get(id)
+        .then(user => {
+          this.$api.role.options().then(roles => {
+            this.roles = roles;
+            this.user = user;
+            this.user.role = this.user.role.name;
+            this.$refs.dialog.open();
+          });
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
         });
-      });
     },
     submit() {
       this.$api.user

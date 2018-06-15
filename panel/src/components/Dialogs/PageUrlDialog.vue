@@ -62,11 +62,15 @@ export default {
       }
     },
     open(id) {
-      this.$api.page.get(id).then(page => {
-        this.page = page;
-        this.sluggify(this.page.slug);
-        this.$refs.dialog.open();
-      });
+      this.$api.page.get(id)
+        .then(page => {
+          this.page = page;
+          this.sluggify(this.page.slug);
+          this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
+        });
     },
     submit() {
       if (this.slug === this.page.slug) {

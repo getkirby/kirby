@@ -57,6 +57,9 @@ export default {
         .then(file => {
           this.file = file;
           this.$refs.dialog.open();
+        })
+        .catch (error => {
+          this.$store.dispatch('notification/error', error);
         });
     },
     sluggify(input) {
