@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Throwable;
 
 class F
 {
@@ -551,11 +552,15 @@ class F
      * Returns the size of a file.
      *
      * @param  mixed  $file The path
-     * @return mixed
+     * @return int
      */
-    public static function size(string $file)
+    public static function size(string $file): int
     {
-        return filesize($file);
+        try {
+            return filesize($file);
+        } catch (Throwable $e) {
+            return 0;
+        }
     }
 
     /**
