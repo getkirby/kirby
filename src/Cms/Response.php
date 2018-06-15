@@ -25,7 +25,11 @@ class Response extends BaseResponse
             'errorType'    => null
         ], $data);
 
-        return static::page(App::instance()->site()->errorPage(), $data, $contentType, $code);
+        if ($errorPage = App::instance()->site()->errorPage()) {
+            return static::page($errorPage, $data, $contentType, $code);
+        }
+
+        return new Response(':(', 'text/html', 404);
     }
 
     public static function for($input, $data = [], $contentType = 'html', $code = 200)
