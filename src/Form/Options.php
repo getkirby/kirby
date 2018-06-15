@@ -59,6 +59,7 @@ class Options
 
         // default data setup
         $data = [
+            'kirby' => $kirby,
             'site'  => $kirby->site(),
             'users' => $kirby->users(),
         ];
