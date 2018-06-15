@@ -8,9 +8,9 @@
       <div class="kirby-login-buttons">
         <label class="kirby-login-checkbox">
           <kirby-checkbox-input
-            :value="user.long"
+            :value="user.remember"
             label="Keep me logged in"
-            @input="user.long = $event"
+            @input="user.remember = $event"
           />
         </label>
         <kirby-button
@@ -36,7 +36,7 @@ export default {
       user: {
         email: "",
         password: "",
-        long: false
+        remember: false
       }
     };
   },
