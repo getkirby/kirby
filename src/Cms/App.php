@@ -61,6 +61,17 @@ class App extends Component
         // the kirby folder directory
         static::$root = dirname(dirname(__DIR__));
 
+        // register all roots to be able to load stuff afterwards
+        $this->bakeRoots($props['roots'] ?? []);
+
+        // stuff from config and additional options
+        $this->optionsFromSystem();
+        $this->optionsFromProps($props['options'] ?? []);
+
+        // create all urls after the config, so possible
+        // options can be taken into account
+        $this->bakeUrls($props['urls'] ?? []);
+
         // configurable properties
         $this->setProperties($props);
 
@@ -70,6 +81,7 @@ class App extends Component
         // load all extensions
         $this->extensionsFromSystem();
         $this->extensionsFromProps($props);
+        $this->extensionsFromOptions();
         $this->extensionsFromPlugins();
 
         // handle those damn errors
@@ -87,6 +99,32 @@ class App extends Component
     public function api(): Api
     {
         return $this->api = $this->api ?? new Api(include static::$root . '/config/api.php');
+    }
+
+    /**
+     * Sets the directory structure
+     *
+     * @param array $roots
+     * @return self
+     */
+    protected function bakeRoots(array $roots = null)
+    {
+        $roots = array_merge(require static::$root . '/config/roots.php', (array)$roots);
+        $this->roots = Ingredients::bake($roots);
+        return $this;
+    }
+
+    /**
+     * Sets the Url structure
+     *
+     * @param array $urls
+     * @return self
+     */
+    protected function bakeUrls(array $urls = null)
+    {
+        $urls = array_merge(require static::$root . '/config/urls.php', (array)$urls);
+        $this->urls = Ingredients::bake($urls);
+        return $this;
     }
 
     /**
@@ -466,19 +504,6 @@ class App extends Component
     }
 
     /**
-     * Sets the directory structure
-     *
-     * @param array $roots
-     * @return self
-     */
-    protected function setRoots(array $roots = null)
-    {
-        $roots = array_merge(require static::$root . '/config/roots.php', (array)$roots);
-        $this->roots = Ingredients::bake($roots);
-        return $this;
-    }
-
-    /**
      * Sets a custom Site object
      *
      * @param array|Site $site
@@ -493,19 +518,6 @@ class App extends Component
         }
 
         $this->site = $site;
-        return $this;
-    }
-
-    /**
-     * Sets the Url structure
-     *
-     * @param array $urls
-     * @return self
-     */
-    protected function setUrls(array $urls = null)
-    {
-        $urls = array_merge(require static::$root . '/config/urls.php', (array)$urls);
-        $this->urls = Ingredients::bake($urls);
         return $this;
     }
 

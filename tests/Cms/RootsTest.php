@@ -23,7 +23,6 @@ class RootsTest extends TestCase
             [$site . '/templates', 'templates'],
             [$site . '/plugins', 'plugins'],
             [$site . '/blueprints', 'blueprints'],
-            [$index . '/panel', 'panel'],
         ];
     }
 
@@ -54,7 +53,6 @@ class RootsTest extends TestCase
             [$site . '/templates', 'templates'],
             [$site . '/plugins', 'plugins'],
             [$site . '/blueprints', 'blueprints'],
-            [$index . '/panel', 'panel'],
         ];
     }
 
@@ -83,7 +81,6 @@ class RootsTest extends TestCase
         return [
             [$public, 'index'],
             [$public . '/media', 'media'],
-            [$public . '/panel', 'panel'],
             [$base . '/kirby', 'kirby'],
             [$base . '/content', 'content'],
             [$base . '/site', 'site'],
@@ -104,7 +101,6 @@ class RootsTest extends TestCase
             'roots' => [
                 'index'   => $public,
                 'media'   => $public . '/media',
-                'panel'   => $public . '/panel',
                 'kirby'   => $base . '/kirby',
                 'content' => $base . '/content',
                 'site'    => $base . '/site'

@@ -10,7 +10,6 @@ class UrlsTest extends TestCase
         return [
             ['/',      'index'],
             ['/media', 'media'],
-            ['/panel', 'panel'],
             ['/api',   'api'],
         ];
     }
@@ -20,7 +19,12 @@ class UrlsTest extends TestCase
      */
     public function testDefaulUrl($url, $method)
     {
-        $app  = new App();
+        $app  = new App([
+            'roots' => [
+                'index' => __DIR__
+            ]
+        ]);
+
         $urls = $app->urls();
 
         $this->assertEquals($url, $urls->$method());
@@ -31,8 +35,6 @@ class UrlsTest extends TestCase
         return [
             ['https://getkirby.com',       'index'],
             ['https://getkirby.com/media', 'media'],
-            ['https://getkirby.com/panel', 'panel'],
-            ['https://getkirby.com/api',   'api'],
         ];
     }
 
@@ -56,8 +58,6 @@ class UrlsTest extends TestCase
         return [
             ['https://getkirby.com',       'index'],
             ['https://cdn.getkirby.com',   'media'],
-            ['https://getkirby.com/admin', 'panel'],
-            ['https://getkirby.com/rest',  'api'],
         ];
     }
 
@@ -70,8 +70,6 @@ class UrlsTest extends TestCase
             'urls' => [
                 'index' => 'https://getkirby.com',
                 'media' => 'https://cdn.getkirby.com',
-                'panel' => 'https://getkirby.com/admin',
-                'api'   => 'https://getkirby.com/rest'
             ]
         ]);
 

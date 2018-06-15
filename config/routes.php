@@ -13,8 +13,8 @@ use Kirby\Toolkit\View;
 
 return function ($kirby) {
 
-    $api   = $kirby->option('api')['folder']   ?? 'api';
-    $panel = $kirby->option('panel')['folder'] ?? 'panel';
+    $api   = $kirby->options['api']['folder']   ?? 'api';
+    $panel = $kirby->options['panel']['folder'] ?? 'panel';
 
     return [
         [

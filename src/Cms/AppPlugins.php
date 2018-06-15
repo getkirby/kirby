@@ -111,7 +111,7 @@ trait AppPlugins
             $options = $prefixed;
         }
 
-        return $this->extensions['options'] = array_merge($this->extensions['options'], $options);
+        return $this->extensions['options'] = $this->options = array_replace_recursive($this->options, $options);
     }
 
     protected function extendPageMethods(array $methods): array
@@ -178,6 +178,21 @@ trait AppPlugins
         return $this->extensions[$type] ?? [];
     }
 
+    /**
+     * Register extensions that could be located in
+     * the options array. I.e. hooks and routes can be
+     * setup from the config.
+     *
+     * @return array
+     */
+    protected function extensionsFromOptions()
+    {
+        // register routes and hooks from options
+        $this->extend([
+            'routes' => $this->options['routes'] ?? [],
+            'hooks'  => $this->options['hooks']  ?? []
+        ]);
+    }
 
     /**
      * Apply all plugin extensions

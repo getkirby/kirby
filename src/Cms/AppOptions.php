@@ -18,7 +18,7 @@ trait AppOptions
      */
     public function option(string $key, $default = null)
     {
-        return $this->options()[$key] ?? $default;
+        return $this->options[$key] ?? $default;
     }
 
     /**
@@ -28,21 +28,17 @@ trait AppOptions
      */
     public function options(): array
     {
-        if (is_array($this->options) === true) {
-            return $this->options;
-        }
+        return $this->options;
+    }
 
-        $fromExtensions = $this->optionsFromExtensions();
-        $fromFiles      = $this->optionsFromFiles();
-        $options        = array_replace_recursive($fromExtensions, $fromFiles);
-
-        // register routes and hooks from options
-        $this->extend([
-            'routes' => $options['routes'] ?? [],
-            'hooks'  => $options['hooks']  ?? []
-        ]);
-
-        return $this->options = $options;
+    /**
+     * Inject options from Kirby instance props
+     *
+     * @return array
+     */
+    protected function optionsFromProps(array $options = [])
+    {
+        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
@@ -50,7 +46,7 @@ trait AppOptions
      *
      * @return array
      */
-    protected function optionsFromFiles(): array
+    protected function optionsFromSystem(): array
     {
         $server = $this->server();
         $root   = $this->root('config');
@@ -59,17 +55,7 @@ trait AppOptions
         $host = (array)F::load($root . '/config.' . basename($server->host()) . '.php', []);
         $addr = (array)F::load($root . '/config.' . basename($server->address()) . '.php', []);
 
-        return array_replace_recursive($main, $host, $addr);
-    }
-
-    /**
-     * Load all options from plugins
-     *
-     * @return array
-     */
-    protected function optionsFromExtensions(): array
-    {
-        return $this->extensions('options');
+        return $this->options = array_replace_recursive($main, $host, $addr);
     }
 
 }

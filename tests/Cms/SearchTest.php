@@ -38,8 +38,8 @@ class SearchTest extends TestCase
         $search = Search::collection($collection, 'm', ['minlength' => 1]);
         $this->assertCount(3, $search);
 
-        $this->assertEquals(1, $search->first()->searchHits());
-        $this->assertEquals(2, $search->first()->searchScore());
+        $this->assertEquals(2, $search->first()->searchHits());
+        $this->assertEquals(4, $search->first()->searchScore());
     }
 
 
