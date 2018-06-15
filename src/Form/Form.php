@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Throwable;
 use Kirby\Toolkit\Collection;
 
 class Form
@@ -34,7 +35,16 @@ class Form
                 $props['value'] = $values[$name];
             }
 
-            $field = new Field($props, $inject);
+            try {
+                $field = new Field($props, $inject);
+            } catch (Throwable $e) {
+                $field = new Field([
+                    'name'  => $props['name'],
+                    'label' => 'Field Error',
+                    'type'  => 'info',
+                    'text'  => $e->getMessage(),
+                ], $inject);
+            }
 
             if ($field->save() !== false) {
                 $this->values[$name] = $field->value();
