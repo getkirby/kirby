@@ -260,6 +260,10 @@ class Dimensions
      */
     public static function forImage(string $root): self
     {
+        if (file_exists($root) === false) {
+            return new static(0, 0);
+        }
+
         $size = getimagesize($root);
         return new static($size[0] ?? 0, $size[1] ?? 1);
     }
