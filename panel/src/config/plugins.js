@@ -16,10 +16,10 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
 });
 
 Object.entries(window.panel.plugins.fields).forEach(([name, options]) => {
-  if (!options.template) {
+  if (!options.template && !options.render) {
     window.panel.error(
       "Broken plugin field",
-      `No template provided when loading plugin field "${name}". The field has not been registered.`
+      `No template or render method provided when loading plugin field "${name}". The field has not been registered.`
     );
     return;
   }
