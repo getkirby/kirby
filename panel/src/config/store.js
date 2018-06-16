@@ -53,7 +53,10 @@ export default new Vuex.Store({
     },
     title(context, title) {
       context.commit("SET_TITLE", title);
-      document.title = title + " | " + context.state.system.info.title;
+      document.title = title;
+      if (context.state.system.info.title) {
+        document.title += " | " + context.state.system.info.title;
+      }
     },
     view(context, view) {
       context.commit("SET_VIEW", view);
