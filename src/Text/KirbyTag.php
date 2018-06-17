@@ -6,6 +6,9 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\BadMethodCallException;
 
+/**
+ * Representation and parse of a single KirbyTag.
+ */
 class KirbyTag
 {
 
