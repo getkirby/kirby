@@ -7,6 +7,8 @@ use Kirby\Http\Router\Route;
 use Kirby\Http\Router\Result;
 
 /**
+ * Our Router
+ *
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com

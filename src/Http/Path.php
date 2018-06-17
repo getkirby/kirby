@@ -5,6 +5,10 @@ namespace Kirby\Http;
 use Kirby\Toolkit\Stack;
 use Kirby\Toolkit\Str;
 
+/**
+ * A wrapper around an URL path
+ * that converts the path into a Kirby stack
+ */
 class Path extends Stack
 {
 

@@ -5,6 +5,10 @@ namespace Kirby\Http;
 use Throwable;
 
 /**
+ * Representation of an Http response,
+ * to simplify sending correct headers
+ * and Http status codes.
+ *
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com

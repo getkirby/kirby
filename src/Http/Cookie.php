@@ -5,7 +5,7 @@ namespace Kirby\Http;
 use Kirby\Toolkit\Str;
 
 /**
- * Cookie - This class makes cookie handling easy
+ * This class makes cookie handling easy
  *
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>

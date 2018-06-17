@@ -4,6 +4,11 @@ namespace Kirby\Http;
 
 use Kirby\Toolkit\Obj;
 
+/**
+ * A wrapper around a URL query string
+ * that converts it into a Kirby Obj for easier
+ * access of each query attribute.
+ */
 class Query extends Obj
 {
 
