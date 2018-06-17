@@ -4,6 +4,10 @@ namespace Kirby\Image;
 
 use Exception;
 
+/**
+ * A wrapper around resizing and cropping
+ * via GDLib, ImageMagick or other libraries.
+ */
 class Darkroom
 {
     public static $types = [

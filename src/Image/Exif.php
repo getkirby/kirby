@@ -5,7 +5,7 @@ namespace Kirby\Image;
 use Kirby\Toolkit\V;
 
 /**
- * Exif - Reads exif data from a given media object
+ * Reads exif data from a given image object
  *
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>

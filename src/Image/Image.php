@@ -12,7 +12,10 @@ use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 /**
- * Image
+ * A representation of an image/media file
+ * with dimensions, optional exif data and
+ * a connection to our darkroom classes to resize/crop
+ * images.
  *
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>
