@@ -5,6 +5,12 @@ namespace Kirby\Form;
 use Throwable;
 use Kirby\Toolkit\Collection;
 
+/**
+ * The main form class, that is being
+ * used to create a list of form fields
+ * and handles global form validation
+ * and submission
+ */
 class Form
 {
 

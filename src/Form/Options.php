@@ -12,6 +12,12 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Obj;
 
+/**
+ * Foundation for the Options query
+ * classes, that are used to generate
+ * options arrays for select fiels,
+ * radio boxes, checkboxes and more.
+ */
 class Options
 {
 

@@ -10,6 +10,11 @@ use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\I18n;
 
+/**
+ * Form Field object that takes a Vue component style
+ * array of properties and methods and converts them
+ * to a usable field option array for the API.
+ */
 class Field
 {
 

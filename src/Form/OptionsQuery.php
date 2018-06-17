@@ -11,6 +11,12 @@ use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 
+/**
+ * Option Queries are run against any set
+ * of data. In case of Kirby, you can query
+ * pages, files, users or structures to create
+ * options out of them.
+ */
 class OptionsQuery
 {
     use Properties;

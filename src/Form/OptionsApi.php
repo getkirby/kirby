@@ -10,6 +10,10 @@ use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
 
+/**
+ * The OptionsApi class handles fetching options
+ * from any REST API with valid JSON data.
+ */
 class OptionsApi
 {
     use Properties;

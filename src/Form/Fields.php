@@ -6,6 +6,9 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection;
 
+/**
+ * A collection of Field objects
+ */
 class Fields extends Collection
 {
 
