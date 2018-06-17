@@ -7,7 +7,7 @@ use Kirby\Http\Session as BaseSession;
 use Kirby\Toolkit\A;
 
 /**
-* Session Cache
+* Session Cache Driver
 *
 * @package   Kirby Cache
 * @author    Bastian Allgeier <bastian@getkirby.com>

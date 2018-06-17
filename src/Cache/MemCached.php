@@ -3,7 +3,7 @@
 namespace Kirby\Cache;
 
 /**
-* Memcached
+* Memcached Driver
 *
 * @package   Kirby Cache
 * @author    Bastian Allgeier <bastian@getkirby.com>

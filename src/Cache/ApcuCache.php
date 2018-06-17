@@ -3,7 +3,7 @@
 namespace Kirby\Cache;
 
 /**
- * APCu Cache
+ * APCu Cache Driver
  *
  * @package   Kirby Cache
  * @author    Bastian Allgeier <bastian@getkirby.com>
