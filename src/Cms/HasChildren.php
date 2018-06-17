@@ -52,6 +52,8 @@ trait HasChildren
     }
 
     /**
+     * Returns a collection of all children of children
+     *
      * @return Pages
      */
     public function grandChildren(): Pages

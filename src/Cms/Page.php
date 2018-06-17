@@ -161,6 +161,8 @@ class Page extends Model
     }
 
     /**
+     * Returns the blueprint object
+     *
      * @return PageBlueprint
      */
     public function blueprint(): PageBlueprint
@@ -325,6 +327,8 @@ class Page extends Model
     }
 
     /**
+     * Searches for a child draft by id
+     *
      * @param string $path
      * @return PageDraft|null
      */
@@ -607,6 +611,12 @@ class Page extends Model
         return new static($props);
     }
 
+    /**
+     * Returns the last modification date of the page
+     *
+     * @param string $format
+     * @return int|string
+     */
     public function modified(string $format = 'U')
     {
         return date($format, $this->store()->modified());
@@ -723,6 +733,17 @@ class Page extends Model
         return $this->prevAll()->visible()->last();
     }
 
+    /**
+     * Renders the page with the given data.
+     *
+     * An optional content type can be passed to
+     * render a content representation instead of
+     * the default template.
+     *
+     * @param array $data
+     * @param string $contentType
+     * @return string
+     */
     public function render(array $data = [], $contentType = 'html'): string
     {
         $kirby = $this->kirby();
@@ -885,7 +906,10 @@ class Page extends Model
     }
 
     /**
-     * @return string draft, listed or unlisted
+     * Returns the page status, which
+     * can be `draft`, `listed` or `unlisted`
+     *
+     * @return string
      */
     public function status()
     {

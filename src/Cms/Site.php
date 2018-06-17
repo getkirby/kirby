@@ -104,6 +104,8 @@ class Site extends Model
     }
 
     /**
+     * Returns the blueprint object
+     *
      * @return SiteBlueprint
      */
     public function blueprint(): SiteBlueprint

@@ -23,6 +23,8 @@ trait HasTemplate
     }
 
     /**
+     * Returns the final template
+     *
      * @return string|null
      */
     public function template()

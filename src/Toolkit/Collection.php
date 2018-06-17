@@ -163,7 +163,12 @@ class Collection extends Iterator
         return $result;
     }
 
-    public function clone()
+    /**
+     * Returns a cloned instance of the collection
+     *
+     * @return self
+     */
+    public function clone(): self
     {
         return clone $this;
     }
@@ -213,6 +218,13 @@ class Collection extends Iterator
         return $collection->set($items);
     }
 
+    /**
+     * Filters the collection by a custom
+     * filter function or an array of filters
+     *
+     * @param Closure $filter
+     * @return self
+     */
     public function filter($filter): self
     {
         if (is_array($filter)) {
@@ -233,6 +245,15 @@ class Collection extends Iterator
         throw new Exception('The filter method needs either an array of filterBy rules or a closure function to be passed as parameter.');
     }
 
+    /**
+     * Filters the collection by one of the predefined
+     * filter methods.
+     *
+     * @param string $attribute
+     * @param string $operator
+     * @param mixed ...$filter
+     * @return self
+     */
     public function filterBy(string $attribute, $operator, ...$filter): self
     {
         if (count(func_get_args()) === 2) {
@@ -256,6 +277,12 @@ class Collection extends Iterator
         return $collection;
     }
 
+    /**
+     * Find one or multiple collection items by id
+     *
+     * @param string ...$keys
+     * @return mixed
+     */
     public function find(...$keys)
     {
         if (count($keys) === 1) {
@@ -274,6 +301,13 @@ class Collection extends Iterator
         return $collection->data = $result;
     }
 
+    /**
+     * Find a single item by an attribute and its value
+     *
+     * @param string $attribute
+     * @param mixed $value
+     * @return mixed
+     */
     public function findBy(string $attribute, $value)
     {
         foreach ($this->data as $key => $item) {
@@ -284,6 +318,12 @@ class Collection extends Iterator
         return null;
     }
 
+    /**
+     * Find a single item by key (id)
+     *
+     * @param string $key
+     * @return mixed
+     */
     public function findByKey($key)
     {
         return $this->get($key);
@@ -339,18 +379,28 @@ class Collection extends Iterator
         return $object->{$attribute}();
     }
 
+    /**
+     * Checks if the number of items in the collection is even
+     *
+     * @return boolean
+     */
     public function isEven(): bool
     {
         return $this->count() % 2 === 0;
     }
 
+    /**
+     * Checks if the number of items in the collection is odd
+     *
+     * @return boolean
+     */
     public function isOdd(): bool
     {
         return $this->count() % 2 !== 0;
     }
 
     /**
-     * Returns the last element from the array
+     * Returns the last element from the collection
      *
      * @return mixed
      */
@@ -384,7 +434,7 @@ class Collection extends Iterator
     }
 
     /**
-     * Returns the nth element from the array
+     * Returns the nth element from the collection
      *
      * @param integer $n
      * @return mixed
@@ -510,6 +560,14 @@ class Collection extends Iterator
         return $this;
     }
 
+    /**
+     * Runs a combination of filterBy, sortBy, not
+     * offset, limit and paginate on the collection.
+     * Any part of the query is optional.
+     *
+     * @param array $arguments
+     * @return self
+     */
     public function query(array $arguments): self
     {
         $result = clone $this;

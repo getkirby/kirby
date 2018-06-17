@@ -10,6 +10,13 @@ trait Properties
 {
     protected $propertyData = [];
 
+    /**
+     * Creates an instance with the same
+     * initial properties.
+     *
+     * @param array $props
+     * @return void
+     */
     public function clone(array $props = [])
     {
         return new static(array_replace_recursive($this->propertyData, $props));

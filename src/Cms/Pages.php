@@ -134,6 +134,14 @@ class Pages extends Collection
         return $files;
     }
 
+    /**
+     * Finds a page in the collection by id.
+     * This works recursively for children and
+     * children of children, etc.
+     *
+     * @param string $id
+     * @return mixed
+     */
     public function findById($id)
     {
         $page = $this->get($id);
@@ -145,6 +153,13 @@ class Pages extends Collection
         return $page;
     }
 
+    /**
+     * Finds a child or child of a child recursively.
+     *
+     * @param string $id
+     * @param string $startAt
+     * @return mixed
+     */
     public function findByIdRecursive($id, $startAt = null)
     {
         $path       = explode('/', $id);
@@ -166,6 +181,12 @@ class Pages extends Collection
         return $item;
     }
 
+    /**
+     * Uses the specialized find by id method
+     *
+     * @param string $key
+     * @return mixed
+     */
     public function findByKey($key)
     {
         return $this->findById($key);
