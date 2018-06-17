@@ -398,6 +398,16 @@ class Html
         return $html;
     }
 
+    /**
+     * Creates a video embed via iframe for Youtube or Vimeo
+     * videos. The embed Urls are automatically detected from
+     * the given Url.
+     *
+     * @param string $url
+     * @param array $options
+     * @param array $attr
+     * @return string
+     */
     public static function video(string $url, array $options = [], array $attr = []): string
     {
         // YouTube video
@@ -413,6 +423,14 @@ class Html
         throw new Exception('Unexpected video type');
     }
 
+    /**
+     * Embeds a Vimeo video by URL in an iframe
+     *
+     * @param string $url
+     * @param array $options
+     * @param array $attr
+     * @return string
+     */
     public static function vimeo(string $url, array $options = [], array $attr = []): string
     {
         if (preg_match('!vimeo.com\/([0-9]+)!i', $url, $array) === 1) {
@@ -433,6 +451,14 @@ class Html
         return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
     }
 
+    /**
+     * Embeds a Youtube video by URL in an iframe
+     *
+     * @param string $url
+     * @param array $options
+     * @param array $attr
+     * @return string
+     */
     public static function youtube(string $url, array $options = [], array $attr = []): string
     {
         // youtube embed domain

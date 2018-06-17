@@ -8,6 +8,14 @@ use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\View;
 
+/**
+ * Generates a list of HTML attributes
+ *
+ * @param array $attr A list of attributes as key/value array
+ * @param string $before An optional string that will be prepended if the result is not empty
+ * @param string $after An optional string that will be appended if the result is not empty
+ * @return string
+ */
 function attr(array $attr = null, $before = null, $after = null)
 {
     if ($attrs = Html::attr($attr)) {
@@ -46,6 +54,25 @@ function css($url, $attr = null)
     }
 }
 
+/**
+ * Smart version of echo with an if condition as first argument
+ *
+ * @param mixed $condition
+ * @param mixed $value The string to be echoed if the condition is true
+ * @param mixed $alternative An alternative string which should be echoed when the condition is false
+ */
+function e($condition, $value, $alternative = null)
+{
+    echo r($condition, $value, $alternative);
+}
+
+/**
+ * Shortcut for $kirby->request()->get()
+ *
+ * @param   mixed    $key The key to look for. Pass false or null to return the entire request array.
+ * @param   mixed    $default Optional default value, which should be returned if no element has been found
+ * @return  mixed
+ */
 function get($key, $default = null)
 {
     return App::instance()->request()->get($key, $default);
@@ -66,11 +93,37 @@ function gist(string $url, string $file = null): string
     ]);
 }
 
-function go($url = null, int $code = 301)
+/**
+ * Redirects to the given Urls
+ * Urls can be relative or absolute.
+ *
+ * @param string $url
+ * @param integer $code
+ * @return void
+ */
+function go(string $url = null, int $code = 301)
 {
     die(new Redirect(url($url), $code));
 }
 
+/**
+ * Shortcut for html()
+ *
+ * @param string $text unencoded text
+ * @param bool $keepTags
+ * @return string
+ */
+function h(string $string = null, bool $keepTags = false) {
+    return Html::encode($string, $keepTags);
+}
+
+/**
+ * Creates safe html by encoding special characters
+ *
+ * @param string $text unencoded text
+ * @param bool $keepTags
+ * @return string
+ */
 function html(string $string = null, bool $keepTags = false) {
     return Html::encode($string, $keepTags);
 }
@@ -107,6 +160,13 @@ function image(string $path = null)
     }
 }
 
+/**
+ * Creates a script tag to load a javascript file
+ *
+ * @param string|array $src
+ * @param string|array $async
+ * @return void
+ */
 function js($src, $async = null)
 {
     if (is_array($src) === true) {
@@ -128,11 +188,24 @@ function js($src, $async = null)
     }
 }
 
+/**
+ * Returns the Kirby object in any situation
+ *
+ * @return App
+ */
 function kirby(): App
 {
     return App::instance();
 }
 
+/**
+ * Makes it possible to use any defined Kirbytag as standalone function
+ *
+ * @param string|array $type
+ * @param string $value
+ * @param array $attr
+ * @return string
+ */
 function kirbytag($type, string $value = null, array $attr = []): string
 {
     if (is_array($type) === true) {
@@ -142,11 +215,27 @@ function kirbytag($type, string $value = null, array $attr = []): string
     return App::instance()->kirbytag($type, $value, $attr);
 }
 
+/**
+ * Parses KirbyTags in the given string. Shortcut
+ * for `$kirby->kirbytags($text, $data)`
+ *
+ * @param string $text
+ * @param array $data
+ * @return string
+ */
 function kirbytags(string $text = null, array $data = []): string
 {
     return App::instance()->kirbytags($text, $data);
 }
 
+/**
+ * Parses KirbyTags and Markdown in the
+ * given string. Shortcut for `$kirby->kirbytext()`
+ *
+ * @param string $text
+ * @param array $data
+ * @return string
+ */
 function kirbytext(string $text = null, array $data = []): string
 {
     return App::instance()->kirbytext($text, $data);
@@ -177,21 +266,48 @@ function load(array $classmap, string $base = null) {
     });
 }
 
+/**
+ * Parses markdown in the given string. Shortcut for
+ * `$kirby->markdown($text)`
+ *
+ * @param string $text
+ * @return string
+ */
 function markdown(string $text = null): string
 {
     return App::instance()->markdown($text);
 }
 
+/**
+ * Shortcut for `$kirby->option($key, $default)`
+ *
+ * @param string $key
+ * @param mixed $default
+ * @return void
+ */
 function option(string $key, $default = null)
 {
     return App::instance()->option($key, $default);
 }
 
+/**
+ * Fetches a single page or multiple pages by
+ * id or the current page when no id is specified
+ *
+ * @param string|array ...$id
+ * @return Page|null
+ */
 function page(...$id)
 {
     return App::instance()->site()->find(...$id);
 }
 
+/**
+ * Helper to build page collections
+ *
+ * @param string|array ...$id
+ * @return Pages
+ */
 function pages(...$id)
 {
     return App::instance()->site()->find(...$id);
@@ -203,24 +319,71 @@ function pages(...$id)
  * @param mixed $condition
  * @param mixed $value The string to be returned if the condition is true
  * @param mixed $alternative An alternative string which should be returned when the condition is false
- * @return null
+ * @return mixed
  */
 function r($condition, $value, $alternative = null)
 {
     return $condition ? $value : $alternative;
 }
 
+/**
+ * Returns the currrent site object
+ *
+ * @return Site
+ */
 function site()
 {
     return App::instance()->site();
 }
 
+/**
+ * Determines the size/length of numbers, strings, arrays and countable objects
+ *
+ * @param mixed $value
+ * @return int
+ */
+function size($value): int
+{
+    if (is_numeric($value)) {
+        return $value;
+    }
+
+    if (is_string($value)) {
+        return Str::length(trim($value));
+    }
+
+    if (is_array($value)) {
+        return count($value);
+    }
+
+    if (is_object($value)) {
+        if ($value instanceof Countable) {
+            return count($value);
+        }
+    }
+}
+
+/**
+ * Enhances the given string with
+ * smartypants. Shortcut for `$kirby->smartypants($text)`
+ *
+ * @param string $text
+ * @return string
+ */
 function smartypants(string $text = null): string
 {
     return App::instance()->smartypants($text);
 }
 
-function snippet($name, $data = [], $return = false)
+/**
+ * Embeds a snippet from the snippet folder
+ *
+ * @param string $name
+ * @param array $data
+ * @param boolean $return
+ * @return string
+ */
+function snippet(string $name, array $data = [], bool $return = false)
 {
     if (is_object($data) === true) {
         $data = ['item' => $data];
@@ -241,6 +404,13 @@ function snippet($name, $data = [], $return = false)
     echo $output;
 }
 
+/**
+ * Includes an SVG file by absolute or
+ * relative file path.
+ *
+ * @param string $file
+ * @return string
+ */
 function svg(string $file)
 {
     $root = App::instance()->root();
@@ -301,27 +471,78 @@ function twitter(string $username, string $text = null, string $title = null, st
     ]);
 }
 
+/**
+ * Shortcut for url()
+ *
+ * @param string $path
+ * @return string
+ */
 function u(string $path = null): string
 {
     return Url::to($path);
 }
 
+/**
+ * Builds an absolute URL for a given path
+ *
+ * @param string $path
+ * @return string
+ */
 function url(string $path = null): string
 {
     return Url::to($path);
 }
 
-function video(...$arguments)
+/**
+ * Creates a video embed via iframe for Youtube or Vimeo
+ * videos. The embed Urls are automatically detected from
+ * the given Url.
+ *
+ * @param string $url
+ * @param array $options
+ * @param array $attr
+ * @return string
+ */
+function video(string $url, array $options = [], array $attr = []): string
 {
-    return Html::video(...$arguments);
+    return Html::video($url, $options, $attr);
 }
 
-function vimeo(...$arguments)
+/**
+ * Embeds a Vimeo video by URL in an iframe
+ *
+ * @param string $url
+ * @param array $options
+ * @param array $attr
+ * @return string
+ */
+function vimeo(string $url, array $options = [], array $attr = []): string
 {
-    return Html::video(...$arguments);
+    return Html::video($url, $options, $attr);
 }
 
-function youtube(...$arguments)
+/**
+ * The widont function makes sure that there are no
+ * typographical widows at the end of a paragraph –
+ * that's a single word in the last line
+ *
+ * @param string|null $string
+ * @return string
+ */
+function widont(string $string = null): string
 {
-    return Html::video(...$arguments);
+    return Str::widont($string);
+}
+
+/**
+ * Embeds a Youtube video by URL in an iframe
+ *
+ * @param string $url
+ * @param array $options
+ * @param array $attr
+ * @return string
+ */
+function youtube(string $url, array $options = [], array $attr = []): string
+{
+    return Html::video($url, $options, $attr);
 }
