@@ -5,11 +5,7 @@ namespace Kirby\Toolkit;
 use Exception;
 
 /**
- * @package   Kirby Pagination
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * Basic pagination handling
  */
 class Pagination
 {

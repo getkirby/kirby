@@ -4,6 +4,9 @@ namespace Kirby\Toolkit;
 
 use Exception;
 
+/**
+ * Localization class, roughly inspired by VueI18n
+ */
 class I18n
 {
     public static $locale = 'en';

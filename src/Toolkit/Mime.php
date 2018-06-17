@@ -2,6 +2,9 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * Mime type detection/guessing
+ */
 class Mime
 {
     public static $types = [

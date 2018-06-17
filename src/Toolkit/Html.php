@@ -5,16 +5,14 @@ namespace Kirby\Toolkit;
 use Exception;
 
 /**
-* Html
-*
-* Html builder for the most common elements
-*
-* @package   Kirby Toolkit
-* @author    Bastian Allgeier <bastian@getkirby.com>
-* @link      http://getkirby.com
-* @copyright Bastian Allgeier
-* @license   http://www.opensource.org/licenses/mit-license.php MIT License
-*/
+ * Html builder for the most common elements
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ */
 class Html
 {
 

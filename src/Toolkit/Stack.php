@@ -2,6 +2,11 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * A wrapper around simple arrays with
+ * a much nicer chainable API for advanced
+ * sorting, manipulation and navigation.
+ */
 class Stack extends Iterator
 {
     public function __construct(array $items)

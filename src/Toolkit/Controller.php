@@ -6,6 +6,11 @@ use Closure;
 use Exception;
 use ReflectionFunction;
 
+/**
+ * A smart extension of Closures with
+ * magic dependency injection based on the
+ * defined variable names.
+ */
 class Controller
 {
     protected $function;

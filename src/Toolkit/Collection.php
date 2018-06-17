@@ -5,6 +5,11 @@ namespace Kirby\Toolkit;
 use Closure;
 use Exception;
 
+/**
+ * The collection class provides a nicer
+ * interface around arrays of arrays or objects,
+ * with advanced filters, sorting, navigation and more.
+ */
 class Collection extends Iterator
 {
     public static $filters = [

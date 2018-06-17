@@ -4,6 +4,9 @@ namespace Kirby\Toolkit;
 
 use Exception;
 
+/**
+ * Low level directory handling utilities
+ */
 class Dir
 {
 

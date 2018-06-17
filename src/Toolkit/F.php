@@ -5,6 +5,9 @@ namespace Kirby\Toolkit;
 use Exception;
 use Throwable;
 
+/**
+ * Low level file handling utilities
+ */
 class F
 {
     public static $types = [

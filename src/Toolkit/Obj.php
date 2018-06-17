@@ -4,6 +4,10 @@ namespace Kirby\Toolkit;
 
 use stdClass;
 
+/**
+ * Super simple stdClass extension with
+ * magic getter methods for all properties
+ */
 class Obj extends stdClass
 {
 
