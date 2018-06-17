@@ -2,6 +2,10 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Extension of the basic blueprint class
+ * to handle all blueprints for pages.
+ */
 class PageBlueprint extends Blueprint
 {
     protected $num;

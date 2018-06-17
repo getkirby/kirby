@@ -8,6 +8,12 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\View;
 
+/**
+ * The Panel class is only responsible to create
+ * a working panel view with all the right URLs
+ * and other panel options. The view template is
+ * located in `kirby/views/panel.php`
+ */
 class Panel
 {
 

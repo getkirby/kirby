@@ -23,6 +23,11 @@ use Kirby\Toolkit\F;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 
+/**
+ * The App object is a big-ass monolith that's
+ * in the center between all the other CMS classes.
+ * It's the $kirby object in templates and handles
+ */
 class App extends Component
 {
     use AppCaches;

@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * The AvatarRules class contains validators for all avatar actions.
+ */
 class AvatarRules
 {
     public static function create(Avatar $avatar, Upload $source): bool

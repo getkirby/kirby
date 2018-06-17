@@ -6,6 +6,9 @@ use stdClass;
 use ReflectionMethod;
 use Kirby\Toolkit\Str;
 
+/**
+ * Foundation for Page, Site, File and User models.
+ */
 abstract class Model extends Component
 {
 

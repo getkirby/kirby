@@ -4,6 +4,11 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * Handles permission definition in each user
+ * blueprint and wraps a couple useful methods
+ * around it to check for available permissions.
+ */
 class Permissions
 {
     protected $actions = [

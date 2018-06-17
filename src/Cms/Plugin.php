@@ -7,6 +7,11 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\F;
 
+/**
+ * Represents a Plugin and handles parsing of
+ * the composer.json. It also creates the prefix
+ * and media url for the plugin.
+ */
 class Plugin extends Model
 {
     protected $extends;

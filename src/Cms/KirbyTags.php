@@ -4,6 +4,10 @@ namespace Kirby\Cms;
 
 use Exception;
 
+/**
+ * Extension of `Kirby\Text\KirbyTags` that introduces
+ * `kirbytags:before` and `kirbytags:after` hooks
+ */
 class KirbyTags extends \Kirby\Text\KirbyTags
 {
 

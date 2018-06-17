@@ -4,6 +4,11 @@ namespace Kirby\Cms;
 
 use Closure;
 
+/**
+ * Extension of the Pages collection, with
+ * a modified findById method to search for
+ * relative IDs starting from the current page.
+ */
 class Children extends Pages
 {
 

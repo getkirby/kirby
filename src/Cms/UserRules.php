@@ -9,6 +9,9 @@ use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
+/**
+ * Validators for all user actions
+ */
 class UserRules
 {
     public static function changeEmail(User $user, string $email): bool

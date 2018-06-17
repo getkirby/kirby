@@ -5,6 +5,13 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 
+/**
+ * Extension of the Collection class that
+ * provides a Users::factory method to convert
+ * an array into a Users collection with User
+ * objects and a Users::load method to load
+ * user accounts from disk.
+ */
 class Users extends Collection
 {
     protected static $accept = User::class;

@@ -2,6 +2,11 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Basic representation of the `options` setting
+ * in blueprints. Each model (Page, File, Site)
+ * has their own specific implementation of this.
+ */
 class BlueprintOptions
 {
     protected $model;

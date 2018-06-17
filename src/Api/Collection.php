@@ -6,6 +6,12 @@ use Closure;
 use Exception;
 use Kirby\Toolkit\Str;
 
+/**
+ * The Collection class is a wrapper
+ * around our Kirby Collections and handles
+ * stuff like pagination and proper JSON output
+ * for collections in REST calls.
+ */
 class Collection
 {
     protected $api;

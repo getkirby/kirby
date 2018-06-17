@@ -5,6 +5,11 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
+/**
+ * Plugin assets are automatically copied/linked
+ * to the media folder, to make them publicly
+ * available. This class handles the magic around that.
+ */
 class PluginAssets
 {
 

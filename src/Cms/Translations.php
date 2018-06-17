@@ -5,6 +5,12 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
+/**
+ * A collection of all available Translations.
+ * Provides a factory method to convert an array
+ * to a collection of Translation objects and load
+ * method to load all translations from disk
+ */
 class Translations extends Collection
 {
     protected static $accept = Translation::class;

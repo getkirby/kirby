@@ -6,6 +6,12 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Properties;
 use ReflectionMethod;
 
+/**
+ * Foundation for all other models and objects,
+ * that handles toArray and toJson methods.
+ *
+ * TODO: refactor this. We don't necessarily need this
+ */
 abstract class Component
 {
     use Properties;

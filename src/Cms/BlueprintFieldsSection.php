@@ -5,6 +5,12 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Exception\NotFoundException;
 
+/**
+ * Fields sections are basically just
+ * forms. They can contain any number of
+ * fields. The section also handles validation
+ * and submission of forms.
+ */
 class BlueprintFieldsSection extends BlueprintSection
 {
     protected $fields;

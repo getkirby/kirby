@@ -5,6 +5,10 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Exception\NotFoundException;
 
+/**
+ * Represents a User role with attached
+ * permissions. Roles are defined by user blueprints.
+ */
 class Role extends Model
 {
     protected $description;

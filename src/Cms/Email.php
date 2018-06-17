@@ -4,6 +4,12 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 
+/**
+ * Wrapper around our PHPMailer package, which
+ * handles all the magic connections between Kirby
+ * and sending emails, like email templates, file
+ * attachments, etc.
+ */
 class Email
 {
     protected $options;

@@ -2,6 +2,11 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Normalizes user options in user blueprints
+ * and checks for each option, if the current
+ * user is allowed to execute it.
+ */
 class UserBlueprintOptions extends BlueprintOptions
 {
     protected $options = [

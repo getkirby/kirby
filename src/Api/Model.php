@@ -7,6 +7,15 @@ use Exception;
 
 use Kirby\Toolkit\Str;
 
+/**
+ * The API Model class can be wrapped around any
+ * kind of object. Each model defines a set of properties that
+ * are availabel in REST calls. Those properties are defined as
+ * simple Closures which are resolved on demand. This is inspired
+ * by GraphQLs architecture and makes it possible to load
+ * only the model data that is needed for the current API call.
+ *
+ */
 class Model
 {
     protected $api;

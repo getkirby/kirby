@@ -9,6 +9,9 @@ use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
+/**
+ * Validators for all file actions
+ */
 class FileRules
 {
     public static function changeName(File $file, string $name): bool

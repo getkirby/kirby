@@ -5,6 +5,14 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
+/**
+ * Extension of the Collection class that
+ * introduces `Roles::factory()` to convert an
+ * array of role definitions into a proper
+ * collection with Role objects. It also has
+ * a `Roles::load()` method that handles loading
+ * role definitions from disk.
+ */
 class Roles extends Collection
 {
     protected static $accept = Role::class;

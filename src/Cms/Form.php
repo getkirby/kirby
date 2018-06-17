@@ -4,6 +4,11 @@ namespace Kirby\Cms;
 
 use Kirby\Form\Form as BaseForm;
 
+/**
+ * Extension of `Kirby\Form\Form` that introduces
+ * a Form::for method that creates a proper form
+ * definition for any Cms Model.
+ */
 class Form extends BaseForm
 {
     public static function for(Model $model, array $props = [])

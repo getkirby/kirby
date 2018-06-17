@@ -11,6 +11,12 @@ use Kirby\Http\Router\Route;
 use Kirby\Http\Response\Json;
 use Kirby\Toolkit\Properties;
 
+/**
+ * The API class is a generic container
+ * for API routes, models and collections and is used
+ * to run our REST API. You can find our API setup
+ * in kirby/config/api.php
+ */
 class Api
 {
     use Properties;

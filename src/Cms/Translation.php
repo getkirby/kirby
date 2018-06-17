@@ -5,6 +5,10 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Data\Data;
 
+/**
+ * Wrapper around Kirby's localization files,
+ * which are store in `kirby/translations`.
+ */
 class Translation extends Component
 {
     protected $code;

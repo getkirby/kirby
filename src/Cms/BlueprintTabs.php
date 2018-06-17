@@ -6,6 +6,11 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\I18n;
 
+/**
+ * Representation of all tabs in a blueprint.
+ * It handles additional normalization of each
+ * tab.
+ */
 class BlueprintTabs
 {
     protected $blueprint;

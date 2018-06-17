@@ -5,6 +5,12 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Toolkit\F;
 
+/**
+ * Extension of the Toolkit Dir class with a new
+ * Dir::inventory method, that handles scanning directories
+ * and converts the results into our children, files and
+ * other page stuff.
+ */
 class Dir extends \Kirby\Toolkit\Dir
 {
 

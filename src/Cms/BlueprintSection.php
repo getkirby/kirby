@@ -7,6 +7,10 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 
+/**
+ * Foundation for all blueprint sections
+ * (BlueprintPagesSection, BlueprintFilesSection, etc.)
+ */
 class BlueprintSection extends BlueprintObject
 {
 

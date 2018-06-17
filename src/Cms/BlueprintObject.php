@@ -2,6 +2,11 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Foundation for all other Blueprint objects/models
+ *
+ * TODO: refactor this. We don't really need it.
+ */
 class BlueprintObject extends Component
 {
     use HasModel;

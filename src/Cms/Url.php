@@ -5,6 +5,12 @@ namespace Kirby\Cms;
 use Kirby\Http\Url as BaseUrl;
 use Kirby\Toolkit\Str;
 
+/**
+ * Extension of the Kirby\Http\Url class
+ * with a specific Url::home method that always
+ * creates the correct base Url and a template asset
+ * Url builder.
+ */
 class Url extends BaseUrl
 {
 

@@ -2,6 +2,12 @@
 
 namespace Kirby\Cms;
 
+/**
+ * An extended version of the Collection
+ * class, that has custom find methods and
+ * a Files::factory method to convert an array
+ * into a Files collection.
+ */
 class Files extends Collection
 {
     protected static $accept = File::class;

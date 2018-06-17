@@ -2,6 +2,11 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Normalizes site options in the site blueprint
+ * and checks for each option, if the current
+ * user is allowed to execute it.
+ */
 class SiteBlueprintOptions extends BlueprintOptions
 {
     protected $options = [

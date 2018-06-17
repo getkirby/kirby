@@ -5,6 +5,14 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 
+/**
+ * The System class gathers all information
+ * about the server, PHP and other environment
+ * parameters and checks for a valid setup.
+ *
+ * This is mostly used by the panel installer
+ * to check if the panel can be installed at all.
+ */
 class System
 {
     protected $app;

@@ -5,6 +5,9 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Exception\PermissionException;
 
+/**
+ * Validators for all site actions
+ */
 class SiteRules
 {
     public static function changeTitle(Site $site, string $title): bool

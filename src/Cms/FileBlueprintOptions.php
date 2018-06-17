@@ -2,6 +2,11 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Normalizes file options in file blueprints
+ * and checks for each option, if the current
+ * user is allowed to execute it.
+ */
 class FileBlueprintOptions extends BlueprintOptions
 {
     protected $options = [

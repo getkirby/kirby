@@ -2,6 +2,11 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Normalizes page options in page blueprints
+ * and checks for each option, if the current
+ * user is allowed to execute it.
+ */
 class PageBlueprintOptions extends BlueprintOptions
 {
     protected $aliases = [

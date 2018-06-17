@@ -4,6 +4,10 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\Str;
 
+/**
+ * An extended version of the Page object
+ * that represents a draft.
+ */
 class PageDraft extends Page
 {
     public function diruri(): string

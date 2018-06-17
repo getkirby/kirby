@@ -4,6 +4,12 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\Str;
 
+/**
+ * The Search class extracts the
+ * search logic from collections, to
+ * provide a more globally usable interface
+ * for any searches.
+ */
 class Search
 {
 

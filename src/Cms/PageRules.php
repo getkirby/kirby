@@ -8,6 +8,9 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 
+/**
+ * Validators for all page actions
+ */
 class PageRules
 {
     public static function changeNum(Page $page, int $num = null): bool

@@ -4,6 +4,12 @@ namespace Kirby\Cms;
 
 use Closure;
 
+/**
+ * The Ingredients class is the foundation for
+ * $kirby->urls() and $kirby->roots() objects.
+ * Those are configured in `kirby/config/urls.php`
+ * and `kirby/config/roots.php`
+ */
 class Ingredients
 {
     protected $ingredients;

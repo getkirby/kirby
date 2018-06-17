@@ -2,6 +2,10 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Converts simplified blueprint setups into a
+ * normalized blueprint with tabs and sections.
+ */
 class BlueprintConverter
 {
     public static function convertColumnsToTabs(array $data): array

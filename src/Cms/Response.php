@@ -7,6 +7,12 @@ use Kirby\Http\Response as BaseResponse;
 use Kirby\Http\Response\Json;
 use Kirby\Toolkit\F;
 
+/**
+ * Custom response object with a pretty mighty
+ * Response::for method, that can convert any relevant
+ * CMS object into a proper response and also provides
+ * responses for the error and home pages.
+ */
 class Response extends BaseResponse
 {
     public static function errorPage($data = [], $contentType = 'html', $code = 404)
