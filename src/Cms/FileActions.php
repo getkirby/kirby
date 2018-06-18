@@ -148,6 +148,12 @@ trait FileActions
             throw new LogicException('Resized images cannot be further processed');
         }
 
+        $resizable = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
+
+        if (in_array($this->extension(), $resizable) === false) {
+            return $this;
+        }
+
         $parent = $this->parent();
         $source = $this->root();
         $root   = $parent->mediaRoot() . '/{{ name }}{{ attributes }}.{{ extension }}';

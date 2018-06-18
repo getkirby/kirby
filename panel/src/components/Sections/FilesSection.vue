@@ -58,7 +58,6 @@ export default {
       isLoading: true,
       min: null,
       max: null,
-      name: null,
       issue: false,
       layout: "list",
       page: 1,
@@ -105,7 +104,6 @@ export default {
           this.add = response.add;
           this.min = response.min;
           this.max = response.max;
-          this.name = repsonse.name;
           this.template = response.template;
           this.pagination = response.pagination;
           this.sortable = response.sortable === true && this.data.length > 1;

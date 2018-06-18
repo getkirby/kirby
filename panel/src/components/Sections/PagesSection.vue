@@ -68,7 +68,6 @@ export default {
       isLoading: true,
       min: null,
       max: null,
-      name: null,
       layout: "list",
       status: null,
       page: 1,
@@ -121,7 +120,6 @@ export default {
           this.sortable = response.sortable;
           this.min = response.min;
           this.max = response.max;
-          this.name = response.name;
           this.layout = response.layout || "list";
           this.link = response.link;
           this.error = response.errors[0];
