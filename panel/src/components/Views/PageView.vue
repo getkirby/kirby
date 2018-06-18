@@ -164,9 +164,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.kirby-page-view .kirby-header .kirby-headline {
-  max-width: 35rem;
-}
-</style>
