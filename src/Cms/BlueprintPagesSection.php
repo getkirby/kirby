@@ -74,21 +74,27 @@ class BlueprintPagesSection extends BlueprintSection
             return $this->data;
         }
 
+        $parent = $this->parent();
+
+        if ($parent === null) {
+            throw new LogicException('The parent page cannot be found');
+        }
+
         switch ($this->status()) {
             case 'draft':
-                $data = $this->parent()->drafts();
+                $data = $parent->drafts();
                 break;
             case 'listed':
-                $data = $this->parent()->children()->listed();
+                $data = $parent->children()->listed();
                 break;
             case 'published':
-                $data = $this->parent()->children();
+                $data = $parent->children();
                 break;
             case 'unlisted':
-                $data = $this->parent()->children()->unlisted();
+                $data = $parent->children()->unlisted();
                 break;
             default:
-                $data = $this->parent()->children()->merge('drafts');
+                $data = $parent->children()->merge('drafts');
         }
 
         // filter by all set templates

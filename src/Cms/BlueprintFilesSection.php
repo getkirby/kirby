@@ -58,7 +58,13 @@ class BlueprintFilesSection extends BlueprintSection
             return $this->data;
         }
 
-        $data = $this->parent()->files();
+        $parent = $this->parent();
+
+        if ($parent === null) {
+            throw new LogicException('The parent page cannot be found');
+        }
+
+        $data = $parent->files();
 
         // filter by the template
         if ($template = $this->template()) {
