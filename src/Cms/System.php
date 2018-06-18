@@ -144,6 +144,27 @@ class System
         return preg_match('!(' . implode('|', $servers) . ')!i', $software) > 0;
     }
 
+    /**
+     * Upgrade to the new folder separator
+     *
+     * @param string $root
+     * @return void
+     */
+    public static function upgradeContent(string $root)
+    {
+        $index = Dir::read($root);
+
+        foreach ($index as $dir) {
+            $oldRoot = $root . '/' . $dir;
+            $newRoot = preg_replace('!\/([0-9]+)\-!', '/$1_', $oldRoot);
+
+            if (is_dir($oldRoot) === true) {
+                Dir::move($oldRoot, $newRoot);
+                static::upgradeContent($newRoot);
+            }
+        }
+    }
+
     public function toArray(): array
     {
         return $this->status();
