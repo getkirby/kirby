@@ -33,16 +33,11 @@ return [
             return $page;
         }
 
-        $parentId = dirname($id);
-        $draftId  = basename($id);
-        $parent   = $parentId === '.' ? $this->site() : $this->site()->find($parentId);
-
-        if ($parent && $draft = $parent->drafts()->find($draftId)) {
+        if ($draft = $this->site()->draft($id)) {
             return $draft;
         }
 
         throw new Exception(sprintf('The page "%s" cannot be found', $id));
-
     },
     'site' => function () {
         return $this->kirby()->site();
