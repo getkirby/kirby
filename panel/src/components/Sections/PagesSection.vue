@@ -16,7 +16,7 @@
     <template v-if="issue">
       <kirby-box theme="negative">
         <kirby-text size="small">
-          <strong>{{ $t("error.blueprint.section.notLoaded") }}:</strong>
+          <strong>{{ $t("error.blueprint.section.notLoaded", { name: this.name }) }}:</strong>
           {{ issue }}
         </kirby-text>
       </kirby-box>
@@ -68,6 +68,7 @@ export default {
       isLoading: true,
       min: null,
       max: null,
+      name: null,
       layout: "list",
       status: null,
       page: 1,
@@ -120,6 +121,7 @@ export default {
           this.sortable = response.sortable;
           this.min = response.min;
           this.max = response.max;
+          this.name = response.name;
           this.layout = response.layout || "list";
           this.link = response.link;
           this.error = response.errors[0];
