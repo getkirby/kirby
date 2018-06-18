@@ -68,7 +68,7 @@ class BlueprintFilesSection extends BlueprintSection
         if ($this->sortBy() && $this->sortable() === false) {
             $data = $data->sortBy(...Str::split($this->sortBy(), ' '));
         } elseif ($this->sortable() === true) {
-            $data = $data->sortBy('sort', 'desc');
+            $data = $data->sortBy('sort', 'asc');
         }
 
         // store the original data to reapply pagination later
