@@ -155,6 +155,9 @@ class PageStore extends PageStoreDefault
         // write the text file
         touch($root . '/' . $page->template() . '.txt');
 
+        // reset the inventory
+        $this->inventory = null;
+
         // write the content file
         return $page->update(null, false);
     }

@@ -15,14 +15,9 @@ class Dir extends \Kirby\Toolkit\Dir
 {
 
     public static $numSeparator = '_';
-    protected static $inventory = [];
 
     public static function inventory(string $dir, string $content = 'txt'): array
     {
-        if (isset(static::$inventory[$dir]) === true) {
-            return static::$inventory[$dir];
-        }
-
         $dir = realpath($dir);
 
         $inventory = [
@@ -101,7 +96,7 @@ class Dir extends \Kirby\Toolkit\Dir
             }
         }
 
-        return static::$inventory[$dir] = $inventory;
+        return $inventory;
     }
 
 }
