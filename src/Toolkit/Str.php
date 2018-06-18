@@ -539,7 +539,7 @@ class Str
      *
      * <code>
      *
-     * echo Str::template('From {b} to {a}', ['a' => 'there', 'b' => 'here']);
+     * echo Str::template('From {{ b }} to {{ a }}', ['a' => 'there', 'b' => 'here']);
      * // output: From here to there
      *
      * </code>
@@ -550,9 +550,9 @@ class Str
      * @param  string  $fallback A fallback if a token does not have any matches
      * @return string            The filled-in string
      */
-    public static function template(string $string = null, array $data = [], string $fallback = null): string
+    public static function template(string $string = null, array $data = [], string $fallback = null, string $start = '{{', string $end = '}}'): string
     {
-        return preg_replace_callback('!{{(.*?)}}!', function ($match) use ($data, $fallback) {
+        return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback) {
             $query = trim($match[1]);
             if (strpos($query, '.') !== false) {
                 return (new Query($match[1], $data))->result() ?? $fallback;
