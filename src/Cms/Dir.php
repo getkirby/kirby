@@ -36,7 +36,11 @@ class Dir extends \Kirby\Toolkit\Dir
             return $inventory;
         }
 
-        foreach (static::read($dir) as $item) {
+        $items = Dir::read($dir);
+
+        natsort($items);
+
+        foreach ($items as $item) {
 
             // ignore all items with a leading dot
             if (in_array(substr($item, 0, 1), ['.', '_']) === true) {
