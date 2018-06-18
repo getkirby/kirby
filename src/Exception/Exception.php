@@ -72,7 +72,7 @@ class Exception extends \Exception
             }
 
             // Format message with passed data
-            $message = Str::template($message, $this->data, '-');
+            $message = Str::template($message, $this->data, '-', '{', '}');
 
             // Handover to Exception parent class constructor
             parent::__construct($message, null, $args['previous'] ?? null);
