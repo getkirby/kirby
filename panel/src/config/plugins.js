@@ -1,6 +1,6 @@
 import Vue from "vue";
 import auth from "./auth.js";
-import { ucfirst, lcfirst } from "@ui/helpers/stringCase.js";
+import { ucfirst, lcfirst } from "@/ui/helpers/stringCase.js";
 
 const registerComponent = (name, component) => {
   if (Vue.options.components[name]) {

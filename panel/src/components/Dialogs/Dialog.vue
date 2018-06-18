@@ -1,5 +1,5 @@
 <script>
-import Dialog from "@ui/components/Navigation/Dialog.vue";
+import Dialog from "@/ui/components/Navigation/Dialog.vue";
 
 export default {
   extends: Dialog,

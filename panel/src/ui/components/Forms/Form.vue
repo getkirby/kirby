@@ -1,0 +1,70 @@
+<template>
+  <form
+    ref="form"
+    method="POST"
+    autocomplete="off"
+    class="kirby-form"
+    novalidate
+    @submit.prevent="onSubmit"
+  >
+    <slot name="header"></slot>
+    <slot>
+      <kirby-fieldset
+        ref="fields"
+        :disabled="disabled"
+        :fields="fields"
+        :validate="validate"
+        v-model="value"
+        v-on="$listeners"
+      />
+    </slot>
+    <slot name="footer"></slot>
+    <input ref="submitter" class="kirby-form-submitter" type="submit">
+  </form>
+</template>
+
+<script>
+export default {
+  props: {
+    disabled: Boolean,
+    fields: {
+      type: [Array, Object],
+      default() {
+        return {};
+      }
+    },
+    validate: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  data() {
+    return {
+      errors: {},
+    }
+  },
+  methods: {
+    focus(name) {
+      this.$refs.fields.focus(name);
+    },
+    onSubmit() {
+      this.$emit("submit", this.value);
+    },
+    submit() {
+      this.$refs.submitter.click();
+    }
+  }
+};
+</script>
+
+<style>
+.kirby-form-submitter {
+  display: none;
+}
+</style>

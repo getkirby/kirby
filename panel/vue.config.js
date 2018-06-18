@@ -7,7 +7,7 @@ module.exports = {
     loaderOptions: {
       sass: {
         data: fs.readFileSync(
-          "./node_modules/getkirby-ui/src/main.scss",
+          "./src/ui/main.scss",
           "utf-8"
         )
       }
@@ -18,8 +18,7 @@ module.exports = {
       resolve: {
         modules: [path.resolve("./node_modules")],
         alias: {
-          vue$: "vue/dist/vue.esm.js",
-          "@ui": "getkirby-ui/src"
+          vue$: "vue/dist/vue.esm.js"
         }
       }
     };

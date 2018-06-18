@@ -1,0 +1,128 @@
+<template>
+  <input
+    ref="input"
+    v-bind="{
+      autocomplete,
+      autofocus,
+      disabled,
+      id,
+      maxlength,
+      minlength,
+      name,
+      pattern,
+      placeholder,
+      required,
+      spellcheck,
+      type,
+      value
+    }"
+    class="kirby-text-input"
+    v-on="listeners"
+  />
+</template>
+
+<script>
+import {
+  required,
+  minLength,
+  maxLength,
+  email,
+  url
+} from "vuelidate/lib/validators";
+
+export default {
+  inheritAttrs: false,
+  class: "kirby-text-input",
+  props: {
+    autocomplete: {
+      type: [Boolean, String],
+      default: "off"
+    },
+    autofocus: Boolean,
+    disabled: Boolean,
+    id: [Number, String],
+    maxlength: Number,
+    minlength: Number,
+    name: [Number, String],
+    pattern: String,
+    placeholder: String,
+    required: Boolean,
+    spellcheck: {
+      type: [Boolean, String],
+      default: "off"
+    },
+    type: {
+      type: String,
+      default: "text"
+    },
+    value: String
+  },
+  data() {
+    return {
+      listeners: {
+        ...this.$listeners,
+        input: (event) => this.onInput(event.target.value)
+      }
+    }
+  },
+  watch: {
+    value() {
+      this.onInvalid();
+    }
+  },
+  mounted() {
+    this.onInvalid();
+
+    if (this.$props.autofocus) {
+      this.focus();
+    }
+
+    if (this.$props.preselect) {
+      this.select();
+    }
+  },
+  methods: {
+    focus() {
+      this.$refs.input.focus();
+    },
+    onInput(value) {
+      this.$emit("input", value);
+    },
+    onInvalid() {
+      this.$emit("invalid", this.$v.$invalid, this.$v);
+    },
+    select() {
+      this.$refs.input.select();
+    }
+  },
+  validations() {
+    return {
+      value: {
+        required: this.required ? required : true,
+        minLength: this.minlength ? minLength(this.minlength) : true,
+        maxLength: this.maxlength ? maxLength(this.maxlength) : true,
+        email: this.type === "email" ? email : true,
+        url: this.type === "url" ? url : true
+      }
+    };
+  }
+}
+
+</script>
+
+<style lang="scss">
+.kirby-text-input {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+.kirby-text-input:focus {
+  outline: 0;
+}
+.kirby-text-input:invalid {
+  box-shadow: none;
+  outline: 0;
+}
+</style>

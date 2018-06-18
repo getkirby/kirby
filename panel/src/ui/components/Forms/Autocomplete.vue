@@ -1,0 +1,76 @@
+<template>
+  <kirby-dropdown class="kirby-autocomplete">
+    <slot />
+    <kirby-dropdown-content ref="dropdown" @close="$emit('close', $event)">
+      <kirby-dropdown-item
+        v-for="(item, index) in matches"
+        :key="index"
+        v-bind="item"
+        @click="onSelect(item)"
+        @keydown.tab.prevent="onSelect(item)"
+        @keydown.enter.prevent="onSelect(item)"
+        @keydown.left.prevent="close"
+        @keydown.backspace.prevent="close"
+        @keydown.delete.prevent="close"
+      >
+      {{ item.text }}
+      </kirby-dropdown-item>
+    </kirby-dropdown-content>
+    {{ query }}
+  </kirby-dropdown>
+</template>
+
+<script>
+export default {
+  props: {
+    limit: 10,
+    skip: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    options: Array,
+    query: String
+  },
+  data() {
+    return {
+      matches: [],
+      selected: {text: null}
+    };
+  },
+  methods: {
+    close() {
+      this.$refs.dropdown.close();
+    },
+    onSelect(value) {
+      this.$refs.dropdown.close();
+      this.$emit("select", value);
+    },
+    search(query) {
+      if (query.length < 1) {
+        return;
+      }
+
+      if (this.skip.indexOf(query) !== -1) {
+        return;
+      }
+
+      // Filter options by query to retrieve items (no more than this.limit)
+      const regex = new RegExp(query, "ig");
+
+      this.matches = this.options
+        .filter(option => this.skip.indexOf(option.text) === -1)
+        .filter(option => option.text.match(regex) !== null)
+        .slice(0, this.limit);
+
+      this.$emit("search", query, this.matches);
+      this.$refs.dropdown.open();
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+
+</style>

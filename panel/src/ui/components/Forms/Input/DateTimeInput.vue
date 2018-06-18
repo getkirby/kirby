@@ -1,0 +1,116 @@
+<template>
+  <div class="kirby-datetime-input">
+    <kirby-date-input
+      ref="dateInput"
+      :autofocus="autofocus"
+      :required="required"
+      :id="id"
+      :disabled="disabled"
+      :value="dateValue"
+      @input="setDate"
+    />
+    <kirby-time-input
+      ref="timeInput"
+      :required="required"
+      :disabled="disabled"
+      :value="timeValue"
+      v-bind="timeOptions"
+      @input="setTime"
+    />
+  </div>
+</template>
+
+<script>
+import DateInput from "./DateInput.vue";
+import { DateTime } from "luxon";
+import { required } from "vuelidate/lib/validators";
+
+export default {
+  inheritAttrs: false,
+  props: {
+    ...DateInput.props,
+    time: {
+      type: [Boolean, Object],
+      default() {
+        return {
+
+        };
+      }
+    },
+    value: String
+  },
+  data() {
+    return {
+      dateValue: this.parseDate(this.value),
+      timeValue: this.parseTime(this.value),
+      timeOptions: this.setTimeOptions(),
+    };
+  },
+  mounted() {
+    this.onInvalid();
+  },
+  watch: {
+    value(value) {
+      this.dateValue = this.parseDate(value);
+      this.timeValue = this.parseTime(value);
+      this.onInvalid();
+    }
+  },
+  methods: {
+    focus() {
+      this.$refs.input.focus();
+    },
+    onInput() {
+      if (this.dateValue === null) {
+        this.$emit("input", null);
+        return;
+      }
+
+      let value = this.timeValue === null ?
+          this.dateValue :
+          this.dateValue + "T" + this.timeValue;
+
+      this.$emit("input", value);
+    },
+    onInvalid() {
+      this.$emit("invalid", this.$v.$invalid, this.$v);
+    },
+    parseDate(value) {
+      const dt = DateTime.fromISO(value);
+      return dt.isValid ? dt.toISODate() : null;
+    },
+    parseTime(value) {
+      const dt = DateTime.fromISO(value);
+      return dt.isValid ? dt.toFormat("T") : null;
+    },
+    setDate(value) {
+      this.dateValue = this.parseDate(value);
+      this.onInput();
+    },
+    setTime(value) {
+      this.timeValue = this.parseTime(value);
+      this.onInput();
+    },
+    setTimeOptions() {
+      return this.time === true ? {} : this.time;
+    }
+  },
+  validations() {
+    return {
+      value: {
+        required: this.required ? required : true
+      }
+    };
+  }
+}
+
+</script>
+
+<style lang="scss">
+.kirby-datetime-input {
+  display: flex;
+}
+.kirby-datetime-input .kirby-time-input {
+  padding-left: $field-input-padding;
+}
+</style>

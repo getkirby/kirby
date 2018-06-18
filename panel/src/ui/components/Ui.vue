@@ -1,0 +1,67 @@
+<template>
+  <div class="kirby-ui">
+    <kirby-icons />
+    <slot />
+  </div>
+</template>
+
+<script>
+import Vue from "vue";
+import Icons from "./Misc/Icons.vue";
+import Ui from '../ui.js'
+
+Vue.use(Ui);
+
+export default {
+  components: {
+    "kirby-icons": Icons
+  }
+};
+
+</script>
+
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
+
+/* @font-face {
+  font-family: "Roboto";
+  src: url("../assets/fonts/roboto-regular-webfont.woff2") format("woff2"),
+    url("../assets/fonts/roboto-regular-webfont.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("../assets/fonts/roboto-medium-webfont.woff2") format("woff2"),
+    url("../assets/fonts/roboto-medium-webfont.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+} */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+html {
+  font-family: $font-family-sans;
+  background: $color-background;
+  color: $color-dark;
+}
+.kirby-ui a {
+  color: inherit;
+  text-decoration: none;
+}
+.kirby-ui li {
+  list-style: none;
+}
+.kirby-ui strong,
+.kirby-ui b {
+  font-weight: $font-weight-bold;
+}
+
+</style>

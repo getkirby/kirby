@@ -1,0 +1,180 @@
+<template>
+  <div class="kirby-time-input">
+    <kirby-select-input
+      ref="hour"
+      :id="id"
+      :autofocus="autofocus"
+      :options="hours"
+      :required="required"
+      :disabled="disabled"
+      v-model="hour"
+      placeholder="––"
+      empty="––"
+      @input="onInput"
+      @invalid="onInvalid"
+    />
+    <span class="kirby-time-input-separator">:</span>
+    <kirby-select-input
+      ref="minute"
+      :options="minutes"
+      :required="required"
+      :disabled="disabled"
+      v-model="minute"
+      placeholder="––"
+      empty="––"
+      @input="onInput"
+      @invalid="onInvalid"
+    />
+    <kirby-select-input
+      v-if="notation === 12"
+      ref="meridiem"
+      :empty="false"
+      :options="[
+        { value: 'AM', text: 'AM' },
+        { value: 'PM', text: 'PM' },
+      ]"
+      :required="required"
+      :disabled="disabled"
+      v-model="meridiem"
+      class="kirby-time-input-meridiem"
+      @input="onInput"
+    />
+  </div>
+</template>
+
+<script>
+import { DateTime } from "luxon";
+import padZero from "../../../helpers/padZero.js";
+
+export default {
+  inheritAttrs: false,
+  props: {
+    autofocus: Boolean,
+    disabled: Boolean,
+    id: [String, Number],
+    notation: {
+      type: Number,
+      default: 24
+    },
+    required: Boolean,
+    step: {
+      type: Number,
+      default: 5
+    },
+    value: {
+      type: String
+    },
+  },
+  data() {
+    return this.toObject(this.value);
+  },
+  watch: {
+    value(value) {
+      this.select(this.toObject(value));
+    }
+  },
+  computed: {
+    hours() {
+      return this.options(
+        this.notation === 24 ? 0 : 1,
+        this.notation === 24 ? 23 : 12,
+      );
+    },
+    minutes() {
+      return this.options(0, 59, this.step);
+    },
+    format() {
+      return this.notation === 24 ? 'H:m' : 'h:m a';
+    },
+  },
+  methods: {
+    focus() {
+      this.$refs.hour.focus();
+    },
+    onInput(value) {
+      if (value === "") {
+        this.reset();
+        this.$emit("input", null);
+        return;
+      }
+
+      const h = padZero(this.hour || 0);
+      const m = padZero(this.minute || 0);
+      const a = this.meridiem || "AM";
+
+      const time = this.notation === 24 ? `${h}:${m}` : `${h}:${m} ${a}`;
+      const date = DateTime.fromFormat(time, this.format);
+
+      if (date.isValid === false) {
+        this.$emit("input", null);
+        return;
+      }
+
+      this.$emit("input", date.toFormat("T"));
+    },
+    onInvalid($invalid, $v) {
+      this.$emit("invalid", $invalid, $v);
+    },
+    options(start, end, step = 1) {
+      let options = [];
+
+      for (var x = start; x <= end; x += step) {
+        options.push({
+          value: x,
+          text: padZero(x)
+        });
+      }
+
+      return options;
+    },
+    reset() {
+      this.hour = null;
+      this.minute = null;
+      this.meridiem = null;
+    },
+    round(time) {
+      time.minute = Math.floor(time.minute / this.step) * this.step;
+      return time;
+    },
+    select(time) {
+      this.hour     = time.hour;
+      this.minute   = time.minute;
+      this.meridiem = time.meridiem;
+    },
+    toObject(value) {
+      const date = DateTime.fromISO(value);
+
+      if (date.isValid === false) {
+        return {
+          hour: null,
+          minute: null,
+          meridiem: null
+        };
+      }
+
+      const time = {
+        hour: date.toFormat(this.notation === 24 ? 'H' : 'h'),
+        minute: date.toFormat('m'),
+        meridiem: date.toFormat('a')
+      };
+
+      return this.round(time);
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.kirby-time-input {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  line-height: 1;
+}
+.kirby-time-input-separator {
+  padding: 0 $field-input-padding / 4;
+}
+.kirby-time-input-meridiem {
+  padding-left: $field-input-padding;
+}
+</style>
