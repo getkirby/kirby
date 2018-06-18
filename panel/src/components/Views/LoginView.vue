@@ -53,7 +53,8 @@ export default {
         password: {
           label: this.$t("user.password"),
           type: "password",
-          minLength: 8
+          minLength: 8,
+          counter: false
         }
       };
     },
