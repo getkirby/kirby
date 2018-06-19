@@ -1,21 +1,21 @@
 <template>
   <nav v-if="hasChanges" class="kirby-form-buttons">
-    <kirby-button
-      icon="undo"
-      theme="negative"
-      class="kirby-form-button"
-      @click="reset"
-    >
-      {{ $t("revert") }}
-    </kirby-button>
-    <kirby-button
-      icon="check"
-      theme="positive"
-      class="kirby-form-button"
-      @click="save"
-    >
-      {{ $t("save") }}
-    </kirby-button>
+    <kirby-view>
+      <kirby-button
+        icon="undo"
+        class="kirby-form-button"
+        @click="reset"
+      >
+        {{ $t("revert") }}
+      </kirby-button>
+      <kirby-button
+        icon="check"
+        class="kirby-form-button"
+        @click="save"
+      >
+        {{ $t("save") }}
+      </kirby-button>
+    </kirby-view>
   </nav>
 </template>
 
@@ -98,7 +98,12 @@ export default {
 
 <style lang="scss">
 .kirby-form-buttons {
+  background: $color-positive-on-dark;
+}
+.kirby-form-buttons .kirby-view {
   display: flex;
+  height: 2.5rem;
+  justify-content: space-between;
   align-items: center;
 }
 .kirby-form-button {

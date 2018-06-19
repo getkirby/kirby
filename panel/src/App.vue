@@ -5,6 +5,7 @@
     <main class="kirby-panel-view">
       <router-view />
     </main>
+    <kirby-form-buttons />
     <kirby-license-bar />
     <kirby-error-dialog />
     <div v-if="offline" class="kirby-offline-warning">

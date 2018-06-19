@@ -88,7 +88,6 @@
           >
             {{ notification.message }}
           </kirby-button>
-          <kirby-form-buttons v-else />
           <kirby-button icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
