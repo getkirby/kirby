@@ -22,10 +22,13 @@ class ServerTest extends TestCase
         $_SERVER['SERVER_PORT'] = 777;
         $this->assertEquals(777, Server::port());
         unset($_SERVER['SERVER_PORT']);
+    }
 
+    public function testForwardedPort()
+    {
         // HTTP_X_FORWARDED_PORT
         $_SERVER['HTTP_X_FORWARDED_PORT'] = 999;
-        $this->assertEquals(999, Server::port());
+        $this->assertEquals(999, Server::port(true));
         unset($_SERVER['HTTP_X_FORWARDED_PORT']);
     }
 
@@ -53,11 +56,6 @@ class ServerTest extends TestCase
     {
         $this->assertEquals('', Server::host());
 
-        // HTTP_X_FORWARDED_HOST
-        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
-        $this->assertEquals('kirby', Server::host());
-        unset($_SERVER['HTTP_X_FORWARDED_HOST']);
-
         // SERVER_NAME
         $_SERVER['SERVER_NAME'] = 'foo';
         $this->assertEquals('foo', Server::host());
@@ -68,4 +66,13 @@ class ServerTest extends TestCase
         $this->assertEquals('bar', Server::host());
         unset($_SERVER['SERVER_ADDR']);
     }
+
+    public function testForwardedHost()
+    {
+        // HTTP_X_FORWARDED_HOST
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
+        $this->assertEquals('kirby', Server::host(true));
+        unset($_SERVER['HTTP_X_FORWARDED_HOST']);
+    }
+
 }
