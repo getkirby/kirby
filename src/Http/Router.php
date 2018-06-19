@@ -56,11 +56,9 @@ class Router
             }
 
             foreach ($methods as $method) {
-
                 foreach ($patterns as $pattern) {
                     $this->routes[$method][$pattern] = new Route($pattern, $method, $props['action'], $props);
                 }
-
             }
 
         }
@@ -82,11 +80,27 @@ class Router
             throw new Exception('Invalid routing method: ' . $method);
         }
 
-        foreach ($this->routes[$method] as $pattern => $route) {
-            $arguments = $route->parse($pattern, $path);
+        // remove leading and trailing slashes
+        $path = trim($path, '/');
 
-            if ($arguments !== false) {
-                return $route;
+        // direct access to home routes
+        if ($path === '') {
+
+            if (isset($this->routes[$method]['']) === true) {
+                return $this->routes[$method][''];
+            }
+
+            if (isset($this->routes[$method]['/']) === true) {
+                return $this->routes[$method]['/'];
+            }
+
+        } else {
+            foreach ($this->routes[$method] as $pattern => $route) {
+                $arguments = $route->parse($pattern, $path);
+
+                if ($arguments !== false) {
+                    return $route;
+                }
             }
         }
 

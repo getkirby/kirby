@@ -27,7 +27,7 @@ class Route
      *
      * @var array
      */
-    protected $arguments;
+    protected $arguments = [];
 
     /**
      * An array of all passed attributes
