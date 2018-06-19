@@ -107,7 +107,10 @@ export default {
 
       Object.keys(this.fields).forEach(fieldName => {
         const field = this.fields[fieldName];
-        data[fieldName] = field.default || null;
+
+        if (field.default) {
+          data[fieldName] = field.default;
+        }
       });
 
       this.items.push(data);
@@ -142,9 +145,6 @@ export default {
       this.$emit("input", this.items);
     },
     onInput() {
-
-      console.log(this.items);
-
       this.$emit("input", this.items);
     },
     remove() {
