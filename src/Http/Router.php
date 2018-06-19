@@ -3,12 +3,8 @@
 namespace Kirby\Http;
 
 use Exception;
-use Kirby\Http\Router\Route;
-use Kirby\Http\Router\Result;
 
 /**
- * Our Router
- *
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com
@@ -46,38 +42,28 @@ class Router
      */
     public function __construct(array $routes = [])
     {
-        $this->register($routes);
-    }
+        foreach ($routes as $props) {
 
-    /**
-     * Registers one or multiple routes
-     *
-     * @param  array|Route $route
-     * @return Router
-     */
-    public function register($route): self
-    {
-        if (is_a($route, Route::class) === true) {
-            foreach ($route->method() as $method) {
-                foreach ($route->pattern() as $pattern) {
-                    $this->routes[$method][$pattern] = $route;
-                }
+            if (isset($props['pattern'], $props['action']) === false) {
+                throw new Exception('Invalid route parameters');
             }
-            return $this;
-        }
 
-        if (is_array($route) === true) {
-            foreach ($route as $r) {
-                if (is_a($r, Route::class) === true) {
-                    $this->register($r);
-                } else {
-                    $this->register(new Route($r['pattern'] ?? '', $r['method'] ?? 'GET', $r['action'], $r));
-                }
+            $methods  = array_map('trim', explode('|', strtoupper($props['method'] ?? 'GET')));
+            $patterns = is_array($props['pattern']) === false ? [$props['pattern']] : $props['pattern'];
+
+            if ($methods === ['ALL']) {
+                $methods = array_keys($this->routes);
             }
-            return $this;
-        }
 
-        throw new Exception('Invalid data to register routes');
+            foreach ($methods as $method) {
+
+                foreach ($patterns as $pattern) {
+                    $this->routes[$method][$pattern] = new Route($pattern, $method, $props['action'], $props);
+                }
+
+            }
+
+        }
     }
 
     /**
@@ -92,17 +78,15 @@ class Router
      */
     public function find(string $path, string $method)
     {
-        $path = rtrim($path, '/');
-
         if (isset($this->routes[$method]) === false) {
             throw new Exception('Invalid routing method: ' . $method);
         }
 
         foreach ($this->routes[$method] as $pattern => $route) {
-            $arguments = $route->arguments($pattern, $path);
+            $arguments = $route->parse($pattern, $path);
 
             if ($arguments !== false) {
-                return new Result($pattern, $method, $route->action(), $arguments, $route->attributes());
+                return $route;
             }
         }
 
@@ -120,7 +104,7 @@ class Router
      * @param  string $method
      * @return mixed
      */
-    public function call(string $path = '/', string $method = 'GET')
+    public function call(string $path = '', string $method = 'GET')
     {
         $result = $this->find($path, $method);
         return $result->action()->call($result, ...$result->arguments());
