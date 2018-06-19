@@ -358,7 +358,7 @@ class User extends Model
      */
     public function name(): string
     {
-        return $this->name ?? $this->name = $this->content()->get('name')->or($this->email())->value();
+        return $this->name ?? $this->name = $this->content()->get('name')->value();
     }
 
     /**

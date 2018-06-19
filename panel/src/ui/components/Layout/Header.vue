@@ -1,6 +1,6 @@
 <template>
   <header class="kirby-header">
-    <kirby-headline tag="h1" size="huge" @dblclick="$emit('edit')">
+    <kirby-headline tag="h1" size="huge" @click="$emit('edit')">
       <slot />
     </kirby-headline>
     <kirby-bar>

@@ -128,7 +128,7 @@ export default {
             let item = {
               id: user.id,
               icon: { type: "user", back: "black" },
-              text: user.name,
+              text: user.name || user.email,
               info: user.role.title,
               link: "/users/" + user.id,
               options: ready => {

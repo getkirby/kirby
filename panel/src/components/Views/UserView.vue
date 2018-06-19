@@ -2,30 +2,14 @@
   <kirby-error-view v-if="issue">
     {{ issue.message }}
   </kirby-error-view>
-  <kirby-view v-else-if="ready" class="kirby-user-view">
-    <kirby-header
-      :editable="permissions.changeName"
-      :tabs="tabs"
-      :tab="tab"
-      @edit="action('rename')"
-    >
-      <kirby-button class="kirby-user-view-image" @click="$refs.upload.open()">
-        <kirby-image
-          v-if="avatar"
-          :cover="true"
-          :src="avatar"
-          ratio="1/1"
-        />
-        <kirby-icon v-else type="user" />
-      </kirby-button>
+  <div v-else-if="ready" class="kirby-user-view">
 
-      {{ user.name }}
+    <kirby-view class="kirby-user-profile">
 
-      <kirby-button-group slot="left">
         <template v-if="avatar">
           <kirby-dropdown>
-            <kirby-button icon="image" @click="$refs.picture.toggle()">
-              {{ $t('user.avatar') }}
+            <kirby-button @click="$refs.picture.toggle()" class="kirby-user-view-image">
+              <kirby-image v-if="avatar" :cover="true" :src="avatar" ratio="1/1" />
             </kirby-button>
             <kirby-dropdown-content ref="picture">
               <kirby-dropdown-item icon="upload" @click="$refs.upload.open()">
@@ -38,48 +22,69 @@
           </kirby-dropdown>
         </template>
         <template v-else>
-          <kirby-button icon="image" @click="$refs.upload.open()">
-            {{ $t('user.avatar') }}
+          <kirby-button class="kirby-user-view-image" @click="$refs.upload.open()">
+            <kirby-icon type="user" />
           </kirby-button>
         </template>
-        <kirby-dropdown>
-          <kirby-button icon="cog" @click="$refs.settings.toggle()">
-            {{ $t('settings') }}
-          </kirby-button>
-          <kirby-dropdown-content ref="settings" :options="options" @action="action" />
-        </kirby-dropdown>
-      </kirby-button-group>
-      <kirby-button-group v-if="user.id && $route.name === 'User'" slot="right">
-        <kirby-button :disabled="!prev" v-bind="prev" icon="angle-left" />
-        <kirby-button :disabled="!next" v-bind="next" icon="angle-right" />
-      </kirby-button-group>
-    </kirby-header>
 
-    <kirby-tabs
-      v-if="user && tabs.length"
-      ref="tabs"
-      :key="'user-' + user.id + '-tabs'"
-      :parent="'users/' + user.id"
-      :tabs="tabs"
-      @tab="tab = $event"
-    />
 
-    <kirby-box v-else-if="ready" :text="$t('user.blueprint', { role: user.role.name })" />
+        <kirby-button-group>
+          <kirby-button icon="email" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</kirby-button>
+          <kirby-button icon="bolt" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</kirby-button>
+          <kirby-button icon="globe" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</kirby-button>
+        </kirby-button-group>
+    </kirby-view>
 
-    <kirby-user-role-dialog ref="role" @success="fetch" />
-    <kirby-user-rename-dialog ref="rename" @success="fetch" />
-    <kirby-user-password-dialog ref="password" />
-    <kirby-user-language-dialog ref="language" @success="fetch" />
-    <kirby-user-remove-dialog ref="remove" />
+    <kirby-view>
 
-    <kirby-upload
-      ref="upload"
-      :url="uploadApi"
-      :multiple="false"
-      accept="image/jpeg"
-      @success="uploadedAvatar"
-    />
-  </kirby-view>
+      <kirby-header
+        :editable="permissions.changeName"
+        :tabs="tabs"
+        :tab="tab"
+        @edit="action('rename')"
+      >
+        <span v-if="user.name.length === 0" class="kirby-user-name-placeholder">{{ $t('user.name') }} …</span>
+        <template v-else>{{ user.name }}</template>
+        <kirby-button-group slot="left">
+          <kirby-dropdown>
+            <kirby-button icon="cog" @click="$refs.settings.toggle()">
+              {{ $t('settings') }}
+            </kirby-button>
+            <kirby-dropdown-content ref="settings" :options="options" @action="action" />
+          </kirby-dropdown>
+        </kirby-button-group>
+        <kirby-button-group v-if="user.id && $route.name === 'User'" slot="right">
+          <kirby-button :disabled="!prev" v-bind="prev" icon="angle-left" />
+          <kirby-button :disabled="!next" v-bind="next" icon="angle-right" />
+        </kirby-button-group>
+      </kirby-header>
+
+      <kirby-tabs
+        v-if="user && tabs.length"
+        ref="tabs"
+        :key="'user-' + user.id + '-tabs'"
+        :parent="'users/' + user.id"
+        :tabs="tabs"
+        @tab="tab = $event"
+      />
+
+      <kirby-box v-else-if="ready" :text="$t('user.blueprint', { role: user.role.name })" />
+
+      <kirby-user-role-dialog ref="role" @success="fetch" />
+      <kirby-user-rename-dialog ref="rename" @success="fetch" />
+      <kirby-user-password-dialog ref="password" />
+      <kirby-user-language-dialog ref="language" @success="fetch" />
+      <kirby-user-remove-dialog ref="remove" />
+
+      <kirby-upload
+        ref="upload"
+        :url="uploadApi"
+        :multiple="false"
+        accept="image/jpeg"
+        @success="uploadedAvatar"
+      />
+    </kirby-view>
+  </div>
 
 </template>
 
@@ -165,6 +170,8 @@ export default {
         case "remove":
           this.$refs.remove.open(this.user.id);
           break;
+        default:
+          this.$store.dispatch("notification/error", "Not yet implemented");
       }
     },
     fetch() {
@@ -211,32 +218,49 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-user-view .kirby-header .kirby-headline {
-  position: relative;
-  padding-left: 1.5em;
+
+.kirby-user-profile {
+  background: $color-white;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  line-height: 0;
 }
-.kirby-user-view-image {
-  position: absolute;
-  width: 2rem;
-  height: 2rem;
-  top: 50%;
-  left: -0.375rem;
-  margin-top: -1.375rem;
-  border-radius: 50%;
-  overflow: hidden;
+
+.kirby-user-profile .kirby-button-group {
+  margin-left: 1.5rem;
+}
+.kirby-user-profile .kirby-button-group .kirby-button {
+  display: block;
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+}
+
+.kirby-user-profile .kirby-dropdown-content {
+  margin-top: .5rem;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .kirby-user-view-image .kirby-image {
-  width: 2rem;
-  height: 2rem;
-  overflow: hidden;
+  width: 4rem;
+  height: 4rem;
   line-height: 0;
-  background: red;
 }
 .kirby-user-view-image .kirby-icon {
-  width: 2em;
-  height: 2em;
+  width: 4rem;
+  height: 4rem;
   background: $color-dark;
-  border-radius: 50%;
   color: $color-light-grey;
 }
+
+.kirby-user-name-placeholder {
+  color: $color-light-grey;
+  transition: color .3s;
+}
+.kirby-user-name-placeholder:hover {
+  color: $color-dark;
+}
+
+
 </style>
