@@ -19,7 +19,7 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     {
         $exception = new Exception([
             'key' => 'page.slug.invalid',
-            'fallback' => 'The page slug "{{ slug }}" is invalid',
+            'fallback' => 'The page slug "{ slug }" is invalid',
             'data' => $data = ['slug' => 'project/(c'],
             'httpCode' => $http = 500,
             'translate' => false
