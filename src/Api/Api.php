@@ -322,7 +322,16 @@ class Api
                     throw new Exception('Upload error');
                 }
 
-                $data = $callback($upload['tmp_name'], $upload['name']);
+                $filename = basename($upload['name']);
+                $source   = dirname($upload['tmp_name']) . '/' . uniqid() . '.' . $filename;
+
+                // move the file to a location including the extension,
+                // for better mime detection
+                if (move_uploaded_file($upload['tmp_name'], $source) === false) {
+                    throw new Exception('The uploaded file could not be moved');
+                }
+
+                $data = $callback($source, $filename);
 
                 if (is_object($data) === true) {
                     $data = $this->resolve($data)->toArray();

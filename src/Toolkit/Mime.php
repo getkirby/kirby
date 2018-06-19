@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use SimpleXMLElement;
+
 /**
  * Mime type detection/guessing
  */
@@ -155,7 +157,7 @@ class Mime
 
     public static function fromSvg(string $file)
     {
-        if (file_exists($file) === true && F::extension($file) === 'svg') {
+        if (file_exists($file) === true) {
             libxml_use_internal_errors(true);
 
             $svg = new SimpleXMLElement(file_get_contents($file));
@@ -189,16 +191,18 @@ class Mime
      * @param string $file
      * @return string|false
      */
-    public static function type(string $file)
+    public static function type(string $file, string $extension = null)
     {
         // use the standard finfo extension
         $mime = static::fromFileInfo($file);
-        $extension = F::extension($file);
 
         // use the mime_content_type function
         if ($mime === false) {
             $mime = static::fromMimeContentType($file);
         }
+
+        // get the extension or extract it from the filename
+        $extension = $extension ?? F::extension($file);
 
         // try to guess the mime type at least
         if ($mime === false) {
@@ -206,7 +210,7 @@ class Mime
         }
 
         // fix broken mime detection for svg files with style attribute
-        if ($mime === 'text/html' && $extension === 'svg') {
+        if (in_array($mime, ['text/html', 'text/plain']) === true && $extension === 'svg') {
             $mime = static::fromSvg($file);
         }
 
