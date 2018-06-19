@@ -266,6 +266,18 @@ export default {
     }
   }
 
+  /* Select Boxes */
+  &[data-type="select"] {
+    position: relative;
+
+    .kirby-input-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
   /* Tags */
   &[data-type="tags"] {
     .kirby-tags-input {
