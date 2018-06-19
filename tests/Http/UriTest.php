@@ -45,7 +45,19 @@ class UriTest extends TestCase
     public function testMissingHost()
     {
         $url = new Uri(['host' => false]);
-        $this->assertEquals('0.0.0.0', $url->host());
+        $this->assertEquals(null, $url->host());
+    }
+
+    public function testIsAbsolute()
+    {
+        $url = new Uri(['host' => 'localhost']);
+        $this->assertTrue($url->isAbsolute());
+    }
+
+    public function testIsNotAbsolute()
+    {
+        $url = new Uri;
+        $this->assertFalse($url->isAbsolute());
     }
 
     public function testValidPort()
@@ -160,7 +172,7 @@ class UriTest extends TestCase
     public function testBaseWithoutHost()
     {
         $url = new Uri;
-        $this->assertEquals('http://0.0.0.0', $url->base());
+        $this->assertEquals(null, $url->base());
     }
 
     public function testToArray()

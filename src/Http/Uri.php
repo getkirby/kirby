@@ -245,8 +245,20 @@ class Uri
      */
     public function idn(): self
     {
-        $this->setHost(Idn::decode($this->host));
+        if (empty($this->host) === false) {
+            $this->setHost(Idn::decode($this->host));
+        }
         return $this;
+    }
+
+    /**
+     * Checks if the host exists
+     *
+     * @return bool
+     */
+    public function isAbsolute(): bool
+    {
+        return empty($this->host) === false;
     }
 
     /**
@@ -269,7 +281,7 @@ class Uri
      */
     public function setHost(string $host = null): self
     {
-        $this->host = empty($host) ? '0.0.0.0' : $host;
+        $this->host = $host;
         return $this;
     }
 
@@ -377,7 +389,12 @@ class Uri
      */
     public function toString(): string
     {
-        $url  = $this->base();
+        $url = $this->base();
+
+        if (empty($url) === true) {
+            return '/';
+        }
+
         $url .= $this->path->toString(true);
         $url .= $this->query->toString(true);
 
@@ -396,7 +413,9 @@ class Uri
      */
     public function unIdn(): self
     {
-        $this->setHost(Idn::encode($this->host));
+        if (empty($this->host) === false) {
+            $this->setHost(Idn::encode($this->host));
+        }
         return $this;
     }
 

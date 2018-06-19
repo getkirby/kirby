@@ -19,7 +19,7 @@ class UrlTest extends TestCase
 
     public function testCurrent()
     {
-        $this->assertEquals('http://0.0.0.0', Url::current());
+        $this->assertEquals('/', Url::current());
 
         Url::$current = $this->_yts;
         $this->assertEquals($this->_yts, Url::current());
@@ -50,7 +50,7 @@ class UrlTest extends TestCase
 
     public function testBuild()
     {
-        $this->assertEquals('http://0.0.0.0', Url::build());
+        $this->assertEquals('/', Url::build());
 
         Url::$current = $this->_yts;
 
@@ -94,7 +94,7 @@ class UrlTest extends TestCase
 
     public function testBase()
     {
-        $this->assertEquals('http://0.0.0.0', Url::base());
+        $this->assertEquals(null, Url::base());
         $this->assertEquals('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
     }
 
