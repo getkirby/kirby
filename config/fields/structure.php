@@ -28,6 +28,13 @@ return [
             }
 
             return $value;
+        },
+        'fields' => function () {
+            $form = new Form([
+                'fields' => $this->props['fields']
+            ]);
+
+            return $form->fields()->toArray();
         }
     ],
     'methods' => [
