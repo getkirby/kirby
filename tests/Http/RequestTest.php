@@ -4,6 +4,10 @@ namespace Kirby\Http;
 
 use PHPUnit\Framework\TestCase;
 
+use Kirby\Http\Request\Query;
+use Kirby\Http\Request\Body;
+use Kirby\Http\Request\Files;
+
 class RequestTest extends TestCase
 {
 
@@ -23,7 +27,7 @@ class RequestTest extends TestCase
             'files'  => ['upload' => $file]
         ]);
 
-        $this->assertTrue($request->is('post'));
+        $this->assertTrue($request->is('POST'));
         $this->assertEquals('a', $request->body()->get('a'));
         $this->assertEquals('b', $request->query()->get('b'));
         $this->assertEquals($file, $request->file('upload'));
@@ -33,10 +37,9 @@ class RequestTest extends TestCase
     {
         $request = new Request();
 
-        $this->assertInstanceOf('Kirby\Http\Request\Method', $request->method());
-        $this->assertInstanceOf('Kirby\Http\Request\Query', $request->query());
-        $this->assertInstanceOf('Kirby\Http\Request\Body', $request->body());
-        $this->assertInstanceOf('Kirby\Http\Request\Files', $request->files());
+        $this->assertInstanceOf(Query::class, $request->query());
+        $this->assertInstanceOf(Body::class, $request->body());
+        $this->assertInstanceOf(Files::class, $request->files());
     }
 
     public function testQuery()
@@ -68,6 +71,6 @@ class RequestTest extends TestCase
     public function testIs()
     {
         $request = new Request();
-        $this->assertTrue($request->is('get'));
+        $this->assertTrue($request->is('GET'));
     }
 }

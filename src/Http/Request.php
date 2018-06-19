@@ -97,11 +97,23 @@ class Request
      */
     public function __construct(array $options = [])
     {
-        $this->method = new Method($options['method'] ?? null);
-        $this->query  = new Query($options['query'] ?? null);
-        $this->body   = new Body($options['body'] ?? null);
-        $this->files  = new Files($options['files'] ?? null);
-        $this->url    = empty($options['url']) === true ? Uri::current() : new Uri($options['url']);
+        $this->method = $options['method'] ?? $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+        if (isset($options['query']) === true) {
+            $this->query = new Query($options['query']);
+        }
+
+        if (isset($options['body']) === true) {
+            $this->body = new Body($options['body']);
+        }
+
+        if (isset($options['files']) === true) {
+            $this->files = new Files($options['files']);
+        }
+
+        if (isset($options['url']) === true) {
+            $this->url = new Uri($options['url']);
+        }
     }
 
     /**
@@ -125,11 +137,11 @@ class Request
     }
 
     /**
-     * Returns the Method object
+     * Returns the request method
      *
-     * @return Method
+     * @return string
      */
-    public function method(): Method
+    public function method(): string
     {
         return $this->method;
     }
@@ -141,7 +153,7 @@ class Request
      */
     public function query(): Query
     {
-        return $this->query;
+        return $this->query = $this->query ?? new Query();
     }
 
     /**
@@ -174,7 +186,7 @@ class Request
      */
     public function body(): Body
     {
-        return $this->body;
+        return $this->body = $this->body ?? new Body();
     }
 
     /**
@@ -184,7 +196,7 @@ class Request
      */
     public function files(): Files
     {
-        return $this->files;
+        return $this->files = $this->files ?? new Files();
     }
 
     /**
@@ -196,7 +208,7 @@ class Request
      */
     public function file(string $key)
     {
-        return $this->files->get($key);
+        return $this->files()->get($key);
     }
 
     /**
@@ -208,7 +220,7 @@ class Request
      */
     public function is(string $method): bool
     {
-        return $this->method()->is($method);
+        return $this->method === $method;
     }
 
     /**
@@ -247,9 +259,9 @@ class Request
         return $headers;
     }
 
-    public function url()
+    public function url(): Uri
     {
-        return $this->url;
+        return $this->url = $this->url ?? Uri::current();
     }
 
 }
