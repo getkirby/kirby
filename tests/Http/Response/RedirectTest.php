@@ -22,6 +22,12 @@ class RedirectTest extends TestCase
         $this->assertEquals('https://getkirby.com', $redirect->location());
     }
 
+    public function testInternationalLocation()
+    {
+        $redirect = new Redirect('https://täst.de');
+        $this->assertEquals('https://xn--tst-qla.de', $redirect->location());
+    }
+
     /**
      * @runInSeparateProcess
      */

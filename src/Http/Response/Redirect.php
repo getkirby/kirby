@@ -3,6 +3,7 @@
 namespace Kirby\Http\Response;
 
 use Kirby\Http\Response;
+use Kirby\Http\Url;
 
 /**
  * @package   Kirby Http
