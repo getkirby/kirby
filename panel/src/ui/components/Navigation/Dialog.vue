@@ -62,7 +62,7 @@ export default {
       this.notification = null;
       this.isOpen = true;
       this.$emit("open");
-      this.$events.$on("key.escape", this.close);
+      this.$events.$on("keydown.esc", this.close);
 
       this.$nextTick(() => {
         var autofocus = this.$el.querySelector(
@@ -77,7 +77,7 @@ export default {
       this.notification = null;
       this.isOpen = false;
       this.$emit("close");
-      this.$events.$off("key.escape", this.close);
+      this.$events.$off("keydown.esc", this.close);
     },
     cancel() {
       this.$emit("cancel");

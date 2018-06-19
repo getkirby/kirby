@@ -1,12 +1,12 @@
 export default {
   created() {
     this.fetch();
-    this.$events.$on("key.arrowLeft", this.toPrev);
-    this.$events.$on("key.arrowRight", this.toNext);
+    this.$events.$on("keydown.left", this.toPrev);
+    this.$events.$on("keydown.right", this.toNext);
   },
   destroyed() {
-    this.$events.$off("key.arrowLeft", this.toPrev);
-    this.$events.$off("key.arrowRight", this.toNext);
+    this.$events.$off("keydown.left", this.toPrev);
+    this.$events.$off("keydown.right", this.toNext);
   },
   watch: {
     $route() {

@@ -7,7 +7,7 @@
       :validate="true"
       v-model="values"
       @input="input"
-      @submit="$events.$emit('key.save')"
+      @submit="$events.$emit('keydown.cmd.s')"
     />
   </section>
 </template>

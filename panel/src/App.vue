@@ -31,12 +31,12 @@ export default {
   created() {
     this.$events.$on("offline", this.isOffline);
     this.$events.$on("online", this.isOnline);
-    this.$events.$on('key.cmd+f', this.search);
+    this.$events.$on('keydown.cmd.shift.f', this.search);
   },
   destroyed() {
     this.$events.$off("offline", this.isOffline);
     this.$events.$off("online", this.isOnline);
-    this.$events.$off('key.cmd+f', this.search);
+    this.$events.$off('keydown.cmd.shift.f', this.search);
   },
   methods: {
     isOnline() {

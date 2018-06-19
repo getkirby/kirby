@@ -52,25 +52,42 @@ export default {
           }
         },
         keydown(e) {
+
+          let parts = ['keydown'];
+
           // with meta or control key
           if (e.metaKey || e.ctrlKey) {
-            switch (e.code) {
-              case "KeyS":
-                e.preventDefault();
-                this.$emit("key.save", e);
-                return true;
-              default:
-                this.$emit("key.cmd+" + e.key, e);
-                return true;
-            }
+            parts.push('cmd');
           }
 
-          if (typeof e.code === "string") {
-            this.$emit("key." + lcfirst(e.code), e);
-          } else {
-            this.$emit("key." + e.code);
+          if (e.altKey === true) {
+            parts.push("alt");
           }
 
+          if (e.shiftKey === true) {
+            parts.push('shift');
+          }
+
+          let key = lcfirst(e.key);
+
+          // key replacements
+          const keys = {
+            "escape": "esc",
+            "arrowUp": "up",
+            "arrowDown": "down",
+            "arrowLeft": "left",
+            "arrowRight": "right"
+          };
+
+          if (keys[key]) {
+            key = keys[key];
+          }
+
+          if (["alt", "control", "shift", "meta"].includes(key) === false) {
+            parts.push(key);
+          }
+
+          this.$emit(parts.join("."), e);
           this.$emit("keydown", e);
         },
         keyup(e) {

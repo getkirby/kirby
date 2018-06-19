@@ -43,11 +43,11 @@ export default {
   },
   created() {
     this.refresh();
-    this.$events.$on("key.save", this.save);
+    this.$events.$on("keydown.cmd.s", this.save);
     this.$events.$on("form.changed", this.refresh);
   },
   destroyed() {
-    this.$events.$off("key.save", this.save);
+    this.$events.$off("keydown.cmd.s", this.save);
     this.$events.$off("form.changed", this.refresh);
   },
   methods: {
@@ -59,7 +59,10 @@ export default {
       this.$events.$emit("form.reset");
       this.refresh();
     },
-    save() {
+    save(e) {
+
+      e.preventDefault();
+
       this.$api
         .patch(this.id.substr(1), this.$cache.get(this.id))
         .then(() => {

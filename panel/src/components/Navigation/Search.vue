@@ -12,6 +12,8 @@
           @keydown.tab.prevent="tab"
           @keydown.enter="enter"
           @keydown.esc="close"
+          @keydown.cmd.left.prevent="back"
+          @keydown.cmd.right.prevent="tab"
         >
         <kirby-button icon="parent" v-show="parent.length" @click="back" />
         <kirby-button icon="cancel" @click="close" />
@@ -46,7 +48,11 @@ export default {
   },
   mounted() {
 
-    this.search(this.$route.params.path + '/');
+    if (this.$route.params.path) {
+      this.search(this.$route.params.path + '/');
+    } else {
+      this.search();
+    }
 
     // put the query into the input
     this.q = '/' + this.path;
@@ -65,6 +71,10 @@ export default {
 
   },
   methods: {
+    open(event) {
+      event.preventDefault();
+      this.$store.dispatch("search", true);
+    },
     parse(path) {
       this.path   = String(path || '').replace('+', '/');
 

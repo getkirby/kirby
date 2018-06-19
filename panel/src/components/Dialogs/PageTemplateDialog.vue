@@ -68,7 +68,7 @@ export default {
         });
     },
     submit() {
-      this.$events.$emit("key.save");
+      this.$events.$emit("keydown.cmd.s");
       this.$api.page
         .template(this.page.id, this.page.template)
         .then(() => {
