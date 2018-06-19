@@ -45,7 +45,7 @@ class Redirect extends Response
             return $this->location;
         }
 
-        return $this->location = $location;
+        return $this->location = Url::unIdn($location);
     }
 
     /**
