@@ -4,24 +4,25 @@
       <div class="kirby-search-input">
         <input
           ref="input"
-          v-model="query"
+          v-model="q"
           type="text"
-          @input="search"
+          @input="search(q)"
           @keydown.down.prevent="down"
           @keydown.up.prevent="up"
           @keydown.tab.prevent="tab"
           @keydown.enter="enter"
           @keydown.esc="close"
         >
+        <kirby-button icon="parent" v-show="parent.length" @click="back" />
         <kirby-button icon="cancel" @click="close" />
       </div>
       <ul>
-        <li v-for="(page, pageIndex) in pages" :key="page.id" :data-selected="selected === pageIndex">
-          <kirby-link :to="'/pages/' + page.id" @click="click(pageIndex)">
+        <li v-for="(page, pageIndex) in pages" :key="page.id" @mouseover="selected = pageIndex" :data-selected="selected === pageIndex">
+          <kirby-link :to="'/pages/' + page.id.replace('/', '+')" @click="click(pageIndex)">
             <strong>{{ page.title }}</strong>
             <small>{{ page.id }}</small>
           </kirby-link>
-          <kirby-button v-if="page.hasChildren" icon="angle-right" @click="query = page.id + '/'; search()" />
+          <kirby-button v-if="page.hasChildren" icon="angle-right" @click="selected = pageIndex; tab()" />
         </li>
       </ul>
       <div v-if="pages.length === 0" class="kirby-search-empty">
@@ -36,20 +37,49 @@ export default {
   data() {
     return {
       pages: [],
-      query: (this.$route.params.path || '') + '/',
+      parent: '',
+      path: '',
+      q: '',
+      query: null,
       selected: -1
     }
   },
-  watch: {
-    $route() {
-      this.query = (this.$route.params.path || '') + '/';
-    }
-  },
   mounted() {
-    this.search();
-    this.$refs.input.select();
+
+    this.search(this.$route.params.path + '/');
+
+    // put the query into the input
+    this.q = '/' + this.path;
+
+    const start = this.parent.lastIndexOf('/') + 2;
+    const end   = this.q.length;
+
+    this.$nextTick(() => {
+      if (this.$refs.input.setSelectionRange) {
+        this.$refs.input.setSelectionRange(start, end);
+        this.$refs.input.focus();
+      } else {
+        this.$refs.input.select();
+      }
+    });
+
   },
   methods: {
+    parse(path) {
+      this.path   = String(path || '').replace('+', '/');
+
+      const parts = this.path.toLowerCase().split('/');
+
+      this.parent = parts.slice(0, -1).join('/');
+      this.query  = parts.slice(-1)[0];
+    },
+    back() {
+      const parent = this.q.replace(/\/$/, '').split('/').slice(0, -1).join('/');
+
+      this.q = parent + '/';
+      this.search(this.q);
+      this.$refs.input.focus();
+    },
     click(index) {
       this.selected = index;
       this.tab();
@@ -66,34 +96,33 @@ export default {
       let page = this.pages[this.selected] || this.pages[0];
 
       if (page) {
-        this.query = page.id + "/";
-        this.search();
+        this.search(page.id);
         this.navigate(page);
       }
     },
     navigate(page) {
-      this.$router.push("/pages/" + page.id);
+      this.$router.push("/pages/" + page.id.replace('/', '+'));
       this.$store.dispatch("search", false);
     },
-    search() {
+    search(path) {
 
-      let parent = this.query.toLowerCase().split('/').slice(0, -1).join('/');
-      let query  = this.query.toLowerCase().split('/').slice(-1)[0];
-      let data   = null;
+      this.parse(path);
 
-      if (query) {
+      let data = null;
+
+      if (this.query.length) {
         data = {
           filterBy: [
             {
               field: "uid",
               operator: "*=",
-              value: query
+              value: this.query
             },
           ]
         };
       }
 
-      this.$api.page.search(parent, data).then(response => {
+      this.$api.page.search(this.parent, data).then(response => {
         this.pages = response.data;
         this.selected = -1;
       }).catch(() => {
@@ -105,8 +134,8 @@ export default {
       const page = this.pages[this.selected];
 
       if (page) {
-        this.query = page.id + '/';
-        this.search();
+        this.q = '/' + page.id + '/';
+        this.search(this.q);
 
         if (page.hasChildren === false) {
           this.navigate(page);
@@ -157,8 +186,10 @@ export default {
 .kirby-search input:focus {
   outline: 0;
 }
-.kirby-search li {
+.kirby-search ul {
   background: #fff;
+}
+.kirby-search li {
   border-bottom: 1px solid $color-background;
   line-height: 1.125;
   display: flex;
@@ -180,9 +211,10 @@ export default {
   font-size: $font-size-tiny;
   color: $color-dark-grey;
 }
-.kirby-search li[data-selected] a {
+.kirby-search li[data-selected] {
   outline: 2px solid $color-focus;
   background: $color-focus-outline;
+  border-bottom: 1px solid transparent;
 }
 .kirby-search-empty {
   padding: .825rem .75rem;

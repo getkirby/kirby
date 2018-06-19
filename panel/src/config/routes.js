@@ -16,6 +16,7 @@ import UserView from "@/components/Views/UserView.vue";
 export default [
   {
     path: "/",
+    name: "Home",
     redirect: "/site"
   },
   {
