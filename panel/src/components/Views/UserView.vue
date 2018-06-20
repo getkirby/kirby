@@ -4,36 +4,37 @@
   </kirby-error-view>
   <div v-else-if="ready" class="kirby-user-view">
 
-    <kirby-view class="kirby-user-profile">
+    <div class="kirby-user-profile">
+      <kirby-view >
 
-        <template v-if="avatar">
-          <kirby-dropdown>
-            <kirby-button @click="$refs.picture.toggle()" class="kirby-user-view-image">
-              <kirby-image v-if="avatar" :cover="true" :src="avatar" ratio="1/1" />
+          <template v-if="avatar">
+            <kirby-dropdown>
+              <kirby-button @click="$refs.picture.toggle()" class="kirby-user-view-image">
+                <kirby-image v-if="avatar" :cover="true" :src="avatar" ratio="1/1" />
+              </kirby-button>
+              <kirby-dropdown-content ref="picture">
+                <kirby-dropdown-item icon="upload" @click="$refs.upload.open()">
+                  {{ $t('change') }}
+                </kirby-dropdown-item>
+                <kirby-dropdown-item icon="trash" @click="action('picture.delete')">
+                  {{ $t('delete') }}
+                </kirby-dropdown-item>
+              </kirby-dropdown-content>
+            </kirby-dropdown>
+          </template>
+          <template v-else>
+            <kirby-button class="kirby-user-view-image" @click="$refs.upload.open()">
+              <kirby-icon type="user" />
             </kirby-button>
-            <kirby-dropdown-content ref="picture">
-              <kirby-dropdown-item icon="upload" @click="$refs.upload.open()">
-                {{ $t('change') }}
-              </kirby-dropdown-item>
-              <kirby-dropdown-item icon="trash" @click="action('picture.delete')">
-                {{ $t('delete') }}
-              </kirby-dropdown-item>
-            </kirby-dropdown-content>
-          </kirby-dropdown>
-        </template>
-        <template v-else>
-          <kirby-button class="kirby-user-view-image" @click="$refs.upload.open()">
-            <kirby-icon type="user" />
-          </kirby-button>
-        </template>
+          </template>
 
-
-        <kirby-button-group>
-          <kirby-button icon="email" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</kirby-button>
-          <kirby-button icon="bolt" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</kirby-button>
-          <kirby-button icon="globe" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</kirby-button>
-        </kirby-button-group>
-    </kirby-view>
+          <kirby-button-group>
+            <kirby-button icon="email" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</kirby-button>
+            <kirby-button icon="bolt" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</kirby-button>
+            <kirby-button icon="globe" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</kirby-button>
+          </kirby-button-group>
+      </kirby-view>
+    </div>
 
     <kirby-view>
 
@@ -68,7 +69,7 @@
         @tab="tab = $event"
       />
 
-      <kirby-box v-else-if="ready" :text="$t('user.blueprint', { role: user.role.name })" />
+      <kirby-box v-else-if="ready" theme="info" :text="$t('user.blueprint', { role: user.role.name })" />
 
       <kirby-user-role-dialog ref="role" @success="fetch" />
       <kirby-user-rename-dialog ref="rename" @success="fetch" />
@@ -200,7 +201,7 @@ export default {
             this.$store.dispatch("breadcrumb", []);
           }
 
-          this.$store.dispatch("title", this.user.name);
+          this.$store.dispatch("title", this.user.name || this.user.email);
         })
         .catch(error => {
           this.issue = error;
@@ -221,6 +222,8 @@ export default {
 
 .kirby-user-profile {
   background: $color-white;
+}
+.kirby-user-profile > .kirby-view {
   padding-top: 3rem;
   padding-bottom: 3rem;
   display: flex;
