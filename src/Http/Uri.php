@@ -275,7 +275,11 @@ class Uri
             $path = null;
         }
 
-        return static::current(array_merge($props, ['path' => $path]), $forwarded);
+        return static::current(array_merge($props, [
+            'path'     => $path,
+            'query'    => null,
+            'fragment' => null,
+        ]), $forwarded);
     }
 
 
