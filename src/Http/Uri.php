@@ -57,6 +57,13 @@ class Uri
     protected $port;
 
     /**
+     * All original properties
+     *
+     * @var array
+     */
+    protected $props;
+
+    /**
      * The optional query string without leading ?
      *
      * @var Query
@@ -114,7 +121,7 @@ class Uri
             $props['password'] = $props['pass'] ?? null;
         }
 
-        $this->setProperties($props);
+        $this->setProperties($this->props = $props);
     }
 
     /**
@@ -169,12 +176,13 @@ class Uri
 
     /**
      * Returns the base url (scheme + host)
+     * without trailing slash
      *
      * @return string
      */
     public function base()
     {
-        if (empty($this->host) === true) {
+        if (empty($this->host) === true || $this->host === '/') {
             return null;
         }
 
@@ -250,6 +258,26 @@ class Uri
         }
         return $this;
     }
+
+    /**
+     * Creates an Uri object for the URL to the index.php
+     * or any other executed script.
+     *
+     * @param array $props
+     * @param bool $forwarded
+     * @return string
+     */
+    public static function index(array $props = [], bool $forwarded = false): self
+    {
+        $path = trim(dirname(Server::get('SCRIPT_NAME')), '/');
+
+        if ($path === '.') {
+            $path = null;
+        }
+
+        return static::current(array_merge($props, ['path' => $path]), $forwarded);
+    }
+
 
     /**
      * Checks if the host exists
@@ -332,6 +360,11 @@ class Uri
     public function setPath($path = null): self
     {
         $this->path = is_a($path, Path::class) ? $path : new Path($path);
+
+        if (($this->props['trailingSlash'] ?? false) === true) {
+            $this->path->trailingSlash(true);
+        }
+
         return $this;
     }
 
@@ -389,13 +422,15 @@ class Uri
      */
     public function toString(): string
     {
-        $url = $this->base();
+        $url   = $this->base();
+        $trail = true;
 
         if (empty($url) === true) {
-            return '/';
+            $url   = '/';
+            $trail = false;
         }
 
-        $url .= $this->path->toString(true);
+        $url .= $this->path->toString($trail);
         $url .= $this->query->toString(true);
 
         if (empty($this->fragment) === false) {

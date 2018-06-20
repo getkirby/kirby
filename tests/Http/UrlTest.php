@@ -112,8 +112,37 @@ class UrlTest extends TestCase
         $this->assertEquals('https://täst.de', Url::idn('https://xn--tst-qla.de'));
     }
 
-    public function testIndex()
+    public function scriptNameProvider()
     {
-        $this->assertEquals('/', Url::index());
+        return [
+            [null, 'index.php', '/'],
+            [null, '/index.php', '/'],
+            [null, '', '/'],
+            [null, '/', '/'],
+            [null, '/kirby/index.php', '/kirby'],
+            [null, 'kirby/index.php', '/kirby'],
+            [null, '/kirby/super.php', '/kirby'],
+            [null, 'kirby/super.php', '/kirby'],
+
+            ['localhost', 'index.php', 'http://localhost'],
+            ['localhost', '/index.php', 'http://localhost'],
+            ['localhost', '', 'http://localhost'],
+            ['localhost', '/', 'http://localhost'],
+            ['localhost', '/kirby/index.php', 'http://localhost/kirby'],
+            ['localhost', 'kirby/index.php', 'http://localhost/kirby'],
+            ['localhost', '/kirby/super.php', 'http://localhost/kirby'],
+            ['localhost', 'kirby/super.php', 'http://localhost/kirby'],
+        ];
+    }
+
+    /**
+     * @dataProvider scriptNameProvider
+     */
+    public function testIndex($host, $scriptName, $expected)
+    {
+        $_SERVER['SERVER_NAME'] = $host;
+        $_SERVER['SCRIPT_NAME'] = $scriptName;
+
+        $this->assertEquals($expected, Url::index());
     }
 }

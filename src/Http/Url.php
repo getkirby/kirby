@@ -81,13 +81,16 @@ class Url
         return static::$home;
     }
 
-    public static function index(): string
+    /**
+     * Returns the url to the executed script
+     *
+     * @param array $props
+     * @param bool $forwarded
+     * @return string
+     */
+    public static function index(array $props = [], bool $forwarded = false): string
     {
-        if (Server::cli() === true) {
-            return '/';
-        }
-
-        return static::base() . preg_replace('!\/index\.php$!i', '', Server::get('SCRIPT_NAME'));
+        return Uri::index($props, $forwarded)->toString();
     }
 
     /**
@@ -140,11 +143,13 @@ class Url
      * Returns the path for the given url
      *
      * @param string|array|null $url
+     * @param bool|null $leadingSlash
+     * @param bool|null $trailingSlash
      * @return mixed
      */
-    public static function path($url = null): string
+    public static function path($url = null, bool $leadingSlash = null, bool $trailingSlash = null): string
     {
-        return Url::toObject($url)->path()->toString();
+        return Url::toObject($url)->path()->toString($leadingSlash, $trailingSlash);
     }
 
     /**
