@@ -34,6 +34,17 @@ abstract class Model extends Component
     protected $site;
 
     /**
+     * Makes it possible to convert the entire model
+     * to a string. Mostly useful for debugging
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->id();
+    }
+
+    /**
      * Returns the default parent collection
      *
      * @return Collection
