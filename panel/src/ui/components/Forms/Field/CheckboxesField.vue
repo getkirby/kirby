@@ -1,6 +1,5 @@
 <template>
   <kirby-field
-    :input="_uid + '-0'"
     :counter="counterOptions"
     v-bind="$props"
     class="kirby-checkboxes-field"

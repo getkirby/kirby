@@ -1,5 +1,5 @@
 <template>
-  <kirby-field :input="_uid + '-0'" v-bind="$props" class="kirby-radio-field">
+  <kirby-field v-bind="$props" class="kirby-radio-field">
     <kirby-input
       ref="input"
       :id="_uid"
