@@ -313,7 +313,7 @@ class App extends Component
      */
     public function markdown(string $text = null): string
     {
-        return $this->extensions['components']['markdown']->call($this, $text, $this->options['markdown'] ?? []);
+        return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? []);
     }
 
     /**
@@ -405,7 +405,7 @@ class App extends Component
      */
     public function response($input)
     {
-        return $this->extensions['components']['response']->call($this, $input);
+        return $this->extensions['components']['response']($this, $input);
     }
 
     /**
@@ -558,7 +558,7 @@ class App extends Component
      */
     public function smartypants(string $text = null): string
     {
-        return $this->extensions['components']['smartypants']->call($this, $text, $this->options['smartypants'] ?? []);
+        return $this->extensions['components']['smartypants']($this, $text, $this->options['smartypants'] ?? []);
     }
 
     /**
@@ -566,7 +566,7 @@ class App extends Component
      */
     public function snippet(string $name, array $data = []): Snippet
     {
-        return $this->extensions['components']['snippet']->call($this, $name, $data);
+        return $this->extensions['components']['snippet']($this, $name, $data);
     }
 
     /**
@@ -584,7 +584,7 @@ class App extends Component
      */
     public function template(string $name, array $data = [], string $appendix = null): Template
     {
-        return $this->extensions['components']['template']->call($this, $name, $data, $appendix);
+        return $this->extensions['components']['template']($this, $name, $data, $appendix);
     }
 
     /**

@@ -1,12 +1,13 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Response;
 use Kirby\Cms\Snippet;
 use Kirby\Cms\Template;
 use Kirby\Text\SmartyPants;
 
 return [
-    'markdown' => function (string $text = null, array $options = []): string {
+    'markdown' => function (App $kirby, string $text = null, array $options = []): string {
         static $markdown;
 
         if (isset($markdown) === false) {
@@ -18,20 +19,20 @@ return [
         // we need the @ here, because parsedown has some notice issues :(
         return @$markdown->text($text);
     },
-    'response' => function ($input) {
+    'response' => function (App $kirby, $input) {
         return Response::for($input);
     },
-    'smartypants' => function (string $text = null, array $options = []): string {
+    'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
         static $smartypants;
 
         $smartypants = $smartypants ?? new Smartypants($options);
 
         return $smartypants->parse($text);
     },
-    'snippet' => function (string $name, array $data = []) {
+    'snippet' => function (App $kirby, string $name, array $data = []) {
         return new Snippet($name, $data);
     },
-    'template' => function (string $name, array $data = [], string $appendix = null) {
+    'template' => function (App $kirby, string $name, array $data = [], string $appendix = null) {
         return new Template($name, $data, $appendix);
     }
 ];
