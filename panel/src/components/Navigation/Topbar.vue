@@ -123,7 +123,7 @@ export default {
       }
     },
     isVisible() {
-      return this.user && !this.$route.meta.outside;
+      return this.user && !this.$route.meta.outside && this.view;
     }
   }
 };
