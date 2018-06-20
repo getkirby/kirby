@@ -372,7 +372,10 @@ class VTest extends TestCase
         $this->assertTrue(V::url('http://1337.net'));
         $this->assertTrue(V::url('http://a.b-c.de'));
         $this->assertTrue(V::url('http://223.255.255.254'));
+        // TODO: Find better regex to also cover the following
         // $this->assertTrue(V::url('http://special---offer.com/'));
+        // $this->assertTrue(V::url('http://localhost/test/'));
+        // $this->assertTrue(V::url('http://localhost:8080/test'));
 
         $this->assertFalse(V::url('foo'));
         $this->assertFalse(V::url('http://'));
