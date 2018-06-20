@@ -221,7 +221,7 @@ class FieldMethodsTest extends TestCase
     public function testSmartypants()
     {
         $text     = '"Test"';
-        $expected = 'Test';
+        $expected = '&#8220;Test&#8221;';
 
         $this->assertEquals($expected, $this->field($text)->smartypants());
     }
