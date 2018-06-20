@@ -140,12 +140,34 @@ export default {
 }
 .kirby-collection > *:empty {
   position: relative;
-  border: 1px solid $color-border;
-  border-radius: $border-radius;
-  background: $color-inset;
-  margin-bottom: 2px;
-  height: 38px;
 }
+
+.kirby-collection > *:empty:after {
+  content: "0";
+  font-size: $font-size-tiny;
+  margin-bottom: 2px;
+  padding: 0 1rem;
+  height: 38px;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  color: $color-focus-on-dark;
+  text-align: center;
+  background: rgba($color-focus-on-dark, .1);
+  border-left: 2px solid $color-focus-on-dark;
+}
+
+/* .kirby-collection > *:empty:after {
+  content: "";
+  color: $color-light-grey;
+  font-size: $font-size-small;
+  background: lighten($color-light-grey, 30%);
+  border-left: 38px solid rgba($color-border, .35);
+  display: block;
+  padding: .675rem 1rem;
+  height: 38px;
+  margin-bottom: 2px;
+} */
 
 .kirby-collection .kirby-cards[data-over] .kirby-box,
 .kirby-collection .kirby-list[data-over] .kirby-box {

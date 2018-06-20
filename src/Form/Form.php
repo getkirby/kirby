@@ -48,6 +48,7 @@ class Form
                     'name'  => $props['name'],
                     'label' => 'Field Error',
                     'type'  => 'info',
+                    'theme' => 'negative',
                     'text'  => $e->getMessage(),
                 ], $inject);
             }

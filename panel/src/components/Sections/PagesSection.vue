@@ -10,9 +10,6 @@
       </kirby-button-group>
     </header>
 
-
-
-
     <template v-if="issue">
       <kirby-box theme="negative">
         <kirby-text size="small">

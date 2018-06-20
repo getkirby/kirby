@@ -25,16 +25,6 @@ export default {
   border: 1px solid $color-border;
   word-wrap: break-word;
 }
-.kirby-box[data-theme="negative"] {
-  background: $color-negative-outline;
-  border: 1px solid $color-negative-border;
-  color: $color-black;
-}
-.kirby-box[data-theme="positive"] {
-  background: $color-positive-outline;
-  border: 1px solid $color-positive-border;
-  color: $color-black;
-}
 .kirby-box[data-theme="code"] {
   background: $color-dark;
   border: 1px solid $color-black;
@@ -54,5 +44,31 @@ export default {
   align-items: center;
   line-height: 2rem;
   text-align: left;
+}
+
+/** TODO: refactor this and remove the stuff above if possible **/
+.kirby-box[data-theme="positive"] {
+  background: lighten($color-positive-on-dark, 25%);
+  border: 0;
+  border-left: 2px solid $color-positive-on-dark;
+  padding: .5rem 1.5rem;
+}
+.kirby-box[data-theme="negative"] {
+  background: lighten($color-negative-on-dark, 25%);
+  border: 0;
+  border-left: 2px solid $color-negative-on-dark;
+  padding: .5rem 1.5rem;
+}
+.kirby-box[data-theme="notice"] {
+  background: lighten($color-notice-on-dark, 25%);
+  border: 0;
+  border-left: 2px solid $color-notice-on-dark;
+  padding: .5rem 1.5rem;
+}
+.kirby-box[data-theme="info"] {
+  background: lighten($color-focus-on-dark, 25%);
+  border: 0;
+  border-left: 2px solid $color-focus-on-dark;
+  padding: .5rem 1.5rem;
 }
 </style>
