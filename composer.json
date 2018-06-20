@@ -1,7 +1,6 @@
 {
     "name": "getkirby/cms",
     "description": "Kirby CMS",
-    "type": "kirby-cms",
     "keywords": ["kirby", "cms"],
     "homepage": "https://getkirby.com",
     "authors": [
@@ -19,7 +18,6 @@
     },
     "require": {
         "php": ">=7.0.0",
-        "getkirby/composer-installer": "*",
         "ext-mbstring": "*",
         "mustangostang/spyc": "*",
         "erusev/parsedown-extra": "*",
