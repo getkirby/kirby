@@ -71,7 +71,7 @@ export default {
   content: "";
   height: 0.5rem;
   background: linear-gradient(
-    bottom,
+    to top,
     rgba($color-dark, 0.05),
     rgba($color-dark, 0)
   );
