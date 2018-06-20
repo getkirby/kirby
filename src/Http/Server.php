@@ -16,6 +16,13 @@ class Server
 {
 
     /**
+     * Cache for the cli status
+     *
+     * @var bool|null
+     */
+    public static $cli;
+
+    /**
      * Returns the server's IP address
      *
      * @return string
@@ -32,17 +39,21 @@ class Server
      */
     public static function cli(): bool
     {
+        if (static::$cli !== null) {
+            return static::$cli;
+        }
+
         if (defined('STDIN') === true) {
-            return true;
+            return static::$cli = true;
         }
 
         $term = getenv('TERM');
 
         if (substr(PHP_SAPI, 0, 3) === 'cgi' && $term && $term !== 'unknown') {
-            return true;
+            return static::$cli = true;
         }
 
-        return false;
+        return static::$cli = false;
     }
 
     /**

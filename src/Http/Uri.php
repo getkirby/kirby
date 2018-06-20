@@ -269,7 +269,11 @@ class Uri
      */
     public static function index(array $props = [], bool $forwarded = false): self
     {
-        $path = trim(dirname(Server::get('SCRIPT_NAME')), '/');
+        if (Server::cli() === true) {
+            $path = null;
+        } else {
+            $path = trim(dirname(Server::get('SCRIPT_NAME')), '/');
+        }
 
         if ($path === '.') {
             $path = null;

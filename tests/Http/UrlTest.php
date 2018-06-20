@@ -143,6 +143,11 @@ class UrlTest extends TestCase
         $_SERVER['SERVER_NAME'] = $host;
         $_SERVER['SCRIPT_NAME'] = $scriptName;
 
+        // overwrite cli detection
+        Server::$cli = false;
+
         $this->assertEquals($expected, Url::index());
+
+        Server::$cli = null;
     }
 }

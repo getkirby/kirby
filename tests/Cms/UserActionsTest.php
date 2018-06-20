@@ -63,11 +63,11 @@ class UserActionsTest extends TestCase
     {
         $this->assertHooks([
             'user.changeName:before' => function (User $user, string $name) {
-                $this->assertEquals('test@getkirby.com', $user->name());
+                $this->assertEquals(null, $user->name());
                 $this->assertEquals('Awesome User', $name);
             },
             'user.changeName:after' => function (User $newUser, User $oldUser) {
-                $this->assertEquals('test@getkirby.com', $oldUser->name());
+                $this->assertEquals(null, $oldUser->name());
                 $this->assertEquals('Awesome User', $newUser->name());
             }
         ], function ($app) {

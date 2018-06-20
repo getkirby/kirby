@@ -354,9 +354,9 @@ class User extends Model
     /**
      * Returns the user's name
      *
-     * @return string
+     * @return string|null
      */
-    public function name(): string
+    public function name()
     {
         return $this->name ?? $this->name = $this->content()->get('name')->value();
     }
