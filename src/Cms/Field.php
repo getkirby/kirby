@@ -26,7 +26,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Field
 {
-    use HasMethods;
 
     /**
      * The field name
@@ -34,6 +33,13 @@ class Field
      * @var string
      */
     protected $key;
+
+    /**
+     * Registered field methods
+     *
+     * @var array
+     */
+    public static $methods = [];
 
     /**
      * The parent object if available.
@@ -49,7 +55,23 @@ class Field
      *
      * @var mixed
      */
-    protected $value;
+    public $value;
+
+    /**
+     * Magic caller for field methods
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments = [])
+    {
+        if (isset(static::$methods[$method]) === true) {
+            return static::$methods[$method]($this, ...$arguments);
+        }
+
+        return $this;
+    }
 
     /**
      * Creates a new field object

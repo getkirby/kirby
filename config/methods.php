@@ -19,144 +19,140 @@ return function (App $app) {
     return [
 
         // states
-        'isEmpty' => function () {
-            return empty($this->value());
+        'isEmpty' => function ($field) {
+            return empty($field->value);
         },
-        'isFalse' => function () {
-            return $this->toBool() === false;
+        'isFalse' => function ($field) {
+            return $field->toBool() === false;
         },
-        'isNotEmpty' => function () {
-            return $this->isEmpty() === false;
+        'isNotEmpty' => function ($field) {
+            return $field->isEmpty() === false;
         },
-        'isTrue' => function () {
-            return $this->toBool() === true;
+        'isTrue' => function ($field) {
+            return $field->toBool() === true;
         },
-        'isValid' => function ($validator, ...$arguments) {
-            return V::$validator($this->value(), ...$arguments);
+        'isValid' => function ($field, $validator, ...$arguments) {
+            return V::$validator($field->value, ...$arguments);
         },
 
         // converters
-        'toData' => function ($method = ',') {
+        'toData' => function ($field, $method = ',') {
             switch ($method) {
                 case 'yaml':
-                    return Yaml::decode($this->value());
+                    return Yaml::decode($field->value);
                 case 'json':
-                    return Json::decode($this->value());
+                    return Json::decode($field->value);
                 default:
-                    return $this->split($method);
+                    return $field->split($method);
             }
         },
-        'toBool' => function ($default = false) {
-            $value = $this->isEmpty() ? $default : $this->value();
+        'toBool' => function ($field, $default = false) {
+            $value = $field->isEmpty() ? $default : $field->value;
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
         },
-        'toDate' => function ($format = null) {
-            if (empty($this->value()) === false) {
-                return $format === null ? $this->toTimestamp() : date($format, $this->toTimestamp());
+        'toDate' => function ($field, $format = null) {
+            if (empty($field->value) === false) {
+                return $format === null ? $field->toTimestamp() : date($format, $field->toTimestamp());
             }
 
             return null;
         },
-        'toExcerpt' => function () {
-            return $this;
+        'toExcerpt' => function ($field) {
+            return $field;
         },
-        'toFile' => function () {
-            return $this->parent()->file($this->value());
+        'toFile' => function ($field) {
+            return $field->parent()->file($field->value);
         },
-        'toFloat' => function ($default = 0) {
-            $value = $this->isEmpty() ? $default : $this->value();
+        'toFloat' => function ($field, $default = 0) {
+            $value = $field->isEmpty() ? $default : $field->value;
             return floatval($value);
         },
-        'toInt' => function ($default = 0) {
-            $value = $this->isEmpty() ? $default : $this->value();
+        'toInt' => function ($field, $default = 0) {
+            $value = $field->isEmpty() ? $default : $field->value;
             return intval($value);
         },
-        'toLink' => function ($attr1 = null, $attr2 = null) {
+        'toLink' => function ($field, $attr1 = null, $attr2 = null) {
             if (is_string($attr1) === true) {
                 $href = $attr1;
                 $attr = $attr2;
             } else {
-                $href = $this->parent()->url();
+                $href = $field->parent()->url();
                 $attr = $attr1;
             }
 
-            if ($this->parent()->isActive()) {
+            if ($field->parent()->isActive()) {
                 $attr['aria-current'] = 'page';
             }
 
-            return Html::a($href, $this->value(), $attr ?? []);
+            return Html::a($href, $field->value, $attr ?? []);
         },
-        'toPage' => function () use ($app) {
-            return $app->site()->find($this->value());
+        'toPage' => function ($field) use ($app) {
+            return $app->site()->find($field->value);
         },
-        'toPages' => function (string $separator = 'yaml') use ($app) {
-            return $app->site()->find(...$this->toData('yaml'));
+        'toPages' => function ($field, string $separator = 'yaml') use ($app) {
+            return $app->site()->find(...$field->toData('yaml'));
         },
-        'toStructure' => function () {
-            return new Structure(Yaml::decode($this->value()), $this->parent());
+        'toStructure' => function ($field) {
+            return new Structure(Yaml::decode($field->value), $field->parent());
         },
-        'toTimestamp' => function () {
-            return strtotime($this->value());
+        'toTimestamp' => function ($field) {
+            return strtotime($field->value);
         },
-        'toUrl' => function () {
-            return Url::to($this->value());
+        'toUrl' => function ($field) {
+            return Url::to($field->value);
         },
-        'toUser' => function () use ($app) {
-            return $app->users()->find($this->value());
+        'toUser' => function ($field) use ($app) {
+            return $app->users()->find($field->value);
         },
 
         // inspectors
-        'length' => function () {
-            return Str::length($this->value());
+        'length' => function ($field) {
+            return Str::length($field->value);
         },
 
         // manipulators
-        'escape' => function () {
+        'escape' => function ($field) {
             throw new Exception('Not implemented yet');
         },
-        'html' => function () {
-            return $this->value(function ($value) {
-                return htmlentities($value, ENT_COMPAT, 'utf-8');
-            });
+        'html' => function ($field) {
+            $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
+            return $field;
         },
-        'kirbytext' => function () use ($app) {
-            return $this->value(function ($value) use ($app) {
-                return $app->kirbytext($value, [
-                    'parent' => $this->parent(),
-                    'field'  => $this
-                ]);
-            });
+        'kirbytext' => function ($field) use ($app) {
+            $field->value = $app->kirbytext($field->value, [
+                'parent' => $field->parent(),
+                'field'  => $field
+            ]);
+
+            return $field;
         },
-        'kirbytags' => function () use ($app) {
-            return $this->value(function ($value) use ($app) {
-                return $app->kirbytags($value, [
-                    'parent' => $this->parent(),
-                    'field'  => $this
-                ]);
-            });
+        'kirbytags' => function ($field) use ($app) {
+            $field->value = $app->kirbytags($field->value, [
+                'parent' => $field->parent(),
+                'field'  => $field
+            ]);
+
+            return $field;
         },
-        'lower' => function () {
-            return $this->value(function ($value) {
-                return Str::lower($value);
-            });
+        'lower' => function ($field) {
+            $field->value = Str::lower($field->value);
+            return $field;
         },
-        'markdown' => function () use ($app) {
-            return $this->value(function ($value) use ($app) {
-                return $app->markdown($value);
-            });
+        'markdown' => function ($field) use ($app) {
+            $field->value = $app->markdown($field->value);
+            return $field;
         },
-        'or' => function ($fallback = null) {
-            if ($this->isNotEmpty()) {
-                return $this;
+        'or' => function ($field, $fallback = null) {
+            if ($field->isNotEmpty()) {
+                return $field;
             }
 
             if (is_a($fallback, Field::class)) {
                 return $fallback;
             }
 
-            return $this->value(function ($value) use ($fallback) {
-                return $fallback;
-            });
+            $field->value = $fallback;
+            return $field;
         },
 
         /**
@@ -164,80 +160,75 @@ return function (App $app) {
          * @param string $appendix An optional replacement for the missing rest
          * @return Kirby\Cms\Field
          */
-        'short' => function (int $length, string $appendix = '…') {
-            return $this->value(function ($value) use ($length, $appendix) {
-                return Str::short($this->value(), $length, $appendix);
-            });
+        'short' => function ($field, int $length, string $appendix = '…') {
+            $field->value = Str::short($field->value, $length, $appendix);
+            return $field;
         },
         'slug' => function () {
-            return $this->value(function ($value) {
-                return Str::slug($value);
-            });
+            $field->value = Str::slug($field->value);
+            return $field;
         },
-        'smartypants' => function () use ($app) {
-            return $this->value(function ($value) use ($app) {
-                return $app->smartypants()->parse((string)$value);
-            });
+        'smartypants' => function ($field) use ($app) {
+            $field->value = $app->smartypants($field->value);
+            return $field;
         },
-        'split' => function ($separator = ',') {
-            return Str::split((string)$this->value(), $separator);
+        'split' => function ($field, $separator = ',') {
+            return Str::split((string)$field->value, $separator);
         },
-        'upper' => function () {
-            return $this->value(function ($value) {
-                return Str::upper($value);
-            });
+        'upper' => function ($field) {
+            $field->value = Str::upper($field->value);
+            return $field;
         },
-        'widont' => function () {
-            return $this->value(function ($value) {
-                return Str::widont($value);
-            });
+        'widont' => function ($field) {
+            $field->value = Str::widont($field->value);
+            return $field;
         },
-        'words' => function () {
+        'words' => function ($field) {
             throw new Exception('Not implemented yet');
         },
-        'xml' => function () {
+        'xml' => function ($field) {
             throw new Exception('Not implemented yet');
         },
 
         // Aliases
-        'bool' => function () {
-            return $this->toBool();
+        'bool' => function ($field) {
+            return $field->toBool();
         },
-        'esc' => function () {
-            return $this->escape();
+        'esc' => function ($field) {
+            return $field->escape();
         },
-        'excerpt' => function () {
-            return $this->toExcerpt();
+        'excerpt' => function ($field) {
+            return $field->toExcerpt();
         },
-        'float' => function () {
-            return $this->toFloat();
+        'float' => function ($field) {
+            return $field->toFloat();
         },
-        'h' => function () {
-            return $this->html();
+        'h' => function ($field) {
+            return $field->html();
         },
-        'int' => function () {
-            return $this->toInt();
+        'int' => function ($field) {
+            return $field->toInt();
         },
-        'kt' => function () {
-            return $this->kirbytext();
+        'kt' => function ($field) {
+            return $field->kirbytext();
         },
-        'link' => function (...$attributes) {
-            return $this->toLink(...$attributes);
+        'link' => function ($field, ...$attributes) {
+            return $field->toLink(...$attributes);
         },
-        'md' => function () {
-            return $this->markdown();
+        'md' => function ($field) {
+            return $field->markdown();
         },
-        'sp' => function () {
-            return $this->smartypants();
+        'sp' => function ($field) {
+            return $field->smartypants();
         },
-        'v' => function (...$arguments) {
-            return $this->isValid(...$arguments);
+        'v' => function ($field, ...$arguments) {
+            return $field->isValid(...$arguments);
         },
-        'yaml' => function () {
-            return $this->toData('yaml');
+        'yaml' => function ($field) {
+            return $field->toData('yaml');
         },
-        'x' => function () {
-            return $this->xml();
+        'x' => function ($field) {
+            return $field->xml();
         }
 
     ];
