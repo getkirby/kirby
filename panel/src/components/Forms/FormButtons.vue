@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
 .kirby-form-buttons {
-  background: $color-positive-on-dark;
+  background: $color-focus-on-dark;
 }
 .kirby-form-buttons .kirby-view {
   display: flex;
