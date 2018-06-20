@@ -23,7 +23,7 @@ class Url extends BaseUrl
      */
     public static function home(): string
     {
-        return static::$home = static::$home ?? App::instance()->url();
+        return App::instance()->url();
     }
 
     public static function toTemplateAsset(string $assetPath, string $extension)

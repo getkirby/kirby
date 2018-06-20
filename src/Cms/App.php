@@ -558,7 +558,7 @@ class App extends Component
      */
     public function smartypants(string $text = null): string
     {
-        return $this->extensions['components']['smartypants']->call($this, $text, $this->options['smartypants']);
+        return $this->extensions['components']['smartypants']->call($this, $text, $this->options['smartypants'] ?? []);
     }
 
     /**

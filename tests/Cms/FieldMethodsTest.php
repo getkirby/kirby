@@ -79,12 +79,22 @@ class FieldMethodsTest extends TestCase
 
     public function testToBool()
     {
-        $this->markTestIncomplete();
+        $this->assertTrue($this->field('1')->toBool());
+        $this->assertTrue($this->field('true')->toBool());
+        $this->assertFalse($this->field('0')->toBool());
+        $this->assertFalse($this->field('false')->toBool());
     }
 
     public function testToDate()
     {
-        $this->markTestIncomplete();
+        $field = $this->field('2012-12-12');
+        $ts    = strtotime('2012-12-12');
+        $date  = '12.12.2012';
+
+        $this->assertEquals($ts, $field->toDate());
+        $this->assertEquals($date, $field->toDate('d.m.Y'));
+
+        $this->markTestIncomplete('test different date handler');
     }
 
     public function testToExcerpt()
@@ -99,12 +109,16 @@ class FieldMethodsTest extends TestCase
 
     public function testToFloat()
     {
-        $this->markTestIncomplete();
+        $field    = $this->field('1.2');
+        $expected = 1.2;
+
+        $this->assertEquals($expected, $field->toFloat());
     }
 
     public function testToInt()
     {
-        $this->markTestIncomplete();
+        $this->assertEquals(1, $this->field('1')->toInt());
+        $this->assertTrue(is_int($this->field('1')->toInt()));
     }
 
     public function testToLink()
@@ -122,9 +136,26 @@ class FieldMethodsTest extends TestCase
         $this->markTestIncomplete();
     }
 
-    public function testToUrl()
+    public function testToDefaultUrl()
     {
-        $this->markTestIncomplete();
+        $field    = $this->field('super/cool');
+        $expected = '/super/cool';
+
+        $this->assertEquals($expected, $field->toUrl());
+    }
+
+    public function testToCustomUrl()
+    {
+        $app = new App([
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ]
+        ]);
+
+        $field    = $this->field('super/cool');
+        $expected = 'https://getkirby.com/super/cool';
+
+        $this->assertEquals($expected, $field->toUrl());
     }
 
     public function testToUser()
@@ -132,77 +163,90 @@ class FieldMethodsTest extends TestCase
         $this->markTestIncomplete();
     }
 
-    public function length()
+    public function testLength()
+    {
+        $this->assertEquals(3, $this->field('abc')->length());
+    }
+
+    public function testEscape()
     {
         $this->markTestIncomplete();
     }
 
-    public function escape()
+    public function testHtml()
+    {
+        $this->assertEquals('&ouml;', $this->field('ö')->html());
+    }
+
+    public function testKirbytext()
+    {
+        $kirbytext = '(link: # text: Test)';
+        $expected  = '<p><a href="#">Test</a></p>';
+
+        $this->assertEquals($expected, $this->field($kirbytext)->kirbytext());
+        $this->assertEquals($expected, $this->field($kirbytext)->kt());
+    }
+
+    public function testKirbytags()
+    {
+        $kirbytext = '(link: # text: Test)';
+        $expected  = '<a href="#">Test</a>';
+
+        $this->assertEquals($expected, $this->field($kirbytext)->kirbytags());
+    }
+
+    public function testLower()
+    {
+        $this->assertEquals('abc', $this->field('ABC')->lower());
+    }
+
+    public function testMarkdown()
+    {
+        $markdown = '**Test**';
+        $expected = '<p><strong>Test</strong></p>';
+
+        $this->assertEquals($expected, $this->field($markdown)->markdown());
+    }
+
+    public function testOr()
     {
         $this->markTestIncomplete();
     }
 
-    public function html()
+    public function testShort()
+    {
+        $this->assertEquals('abc…', $this->field('abcd')->short(3));
+    }
+
+    public function testSmartypants()
+    {
+        $text     = '"Test"';
+        $expected = 'Test';
+
+        $this->assertEquals($expected, $this->field($text)->smartypants());
+    }
+
+    public function testSplit()
     {
         $this->markTestIncomplete();
     }
 
-    public function kirbytext()
+    public function testUpper()
+    {
+        $this->assertEquals('ABC', $this->field('abc')->upper());
+    }
+
+    public function testWidont()
     {
         $this->markTestIncomplete();
     }
 
-    public function kirbytags()
+    public function testWords()
     {
         $this->markTestIncomplete();
     }
 
-    public function lower()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function markdown()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function or()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function short()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function smartypants()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function split()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function upper()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function widont()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function words()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function xml()
+    public function testXml()
     {
         $this->markTestIncomplete();
     }
