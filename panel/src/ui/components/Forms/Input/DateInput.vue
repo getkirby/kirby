@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { DateTime } from "luxon";
+import dayjs from "dayjs";
 import padZero from "../../../helpers/padZero.js";
 
 export default {
@@ -57,46 +57,46 @@ export default {
   },
   data() {
     return {
-      date: DateTime.fromISO(this.value),
+      date: dayjs(this.value),
       minDate: this.calculate(this.min, "min"),
       maxDate: this.calculate(this.max, "max")
     };
   },
   computed: {
     day() {
-      return isNaN(this.date.day) ? "" : this.date.day;
+      return isNaN(this.date.date()) ? "" : this.date.date();
     },
     days() {
-      return this.options(1, this.date.daysInMonth || 0, "days");
+      return this.options(1, this.date.daysInMonth() || 0, "days");
     },
     month() {
-      return isNaN(this.date.month) ? "" : this.date.month;
+      return isNaN(this.date.month()) ? "" : this.date.month() + 1;
     },
     months() {
       return this.options(1, 12, "months");
     },
     year() {
-      return isNaN(this.date.year) ? "" : this.date.year;
+      return isNaN(this.date.year()) ? "" : this.date.year();
     },
     years() {
-      return this.options(this.minDate.year, this.maxDate.year);
+      return this.options(this.minDate.year(), this.maxDate.year());
     }
   },
   watch: {
     value() {
-      this.date = DateTime.fromISO(this.value);
+      this.date = dayjs(this.value);
     }
   },
   methods: {
     calculate(value, what) {
       const calc = {
-        min: {run: "minus", take: "startOf"},
-        max: {run: "plus", take: "endOf" },
+        min: {run: "subtract", take: "startOf"},
+        max: {run: "add", take: "endOf" },
       }[what];
 
-      let date = value ? DateTime.fromISO(value) : null;
-      if (!date || date.isValid === false) {
-        date = DateTime.local()[calc.run]({ years: 10 })[calc.take]("year");
+      let date = value ? dayjs(value) : null;
+      if (!date || date.isValid() === false) {
+        date = dayjs()[calc.run](10, 'year')[calc.take]("year");
       }
       return date;
     },
@@ -104,12 +104,12 @@ export default {
       this.$refs.day.focus();
     },
     onInput() {
-      if (this.date.isValid === false) {
+      if (this.date.isValid() === false) {
         this.$emit("input", "");
         return;
       }
 
-      this.$emit("input", this.date.toISO());
+      this.$emit("input", this.date.toISOString());
     },
     onInvalid($invalid, $v) {
       this.$emit("invalid", $invalid, $v);
@@ -128,23 +128,23 @@ export default {
     },
     set(key, value) {
       if (!value) {
-        this.date = DateTime.fromISO("invalid");
+        this.date = dayjs("invalid");
         this.onInput();
         return;
       }
 
-      if (this.date.isValid === false) {
-        this.date = DateTime.local();
+      if (this.date.isValid() === false) {
+        this.date = dayjs();
       }
 
-      this.date = this.date.set({[key]: value});
+      this.date = this.date.set(key, parseInt(value));
       this.onInput();
     },
     setInvalid() {
-      this.date = DateTime.fromISO("invalid");
+      this.date = dayjs("invalid");
     },
     setDay(day) {
-      this.set("day", day);
+      this.set("date", day);
     },
     setMonth(month) {
       this.set("month", month);

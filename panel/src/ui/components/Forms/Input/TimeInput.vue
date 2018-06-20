@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { DateTime } from "luxon";
+import dayjs from "dayjs";
 import padZero from "../../../helpers/padZero.js";
 
 export default {
@@ -82,10 +82,7 @@ export default {
     },
     minutes() {
       return this.options(0, 59, this.step);
-    },
-    format() {
-      return this.notation === 24 ? 'H:m' : 'h:m a';
-    },
+    }
   },
   methods: {
     focus() {
@@ -103,14 +100,14 @@ export default {
       const a = this.meridiem || "AM";
 
       const time = this.notation === 24 ? `${h}:${m}` : `${h}:${m} ${a}`;
-      const date = DateTime.fromFormat(time, this.format);
+      const date = dayjs(new Date("2000-01-01 " + time));
 
-      if (date.isValid === false) {
+      if (date.isValid() === false) {
         this.$emit("input", null);
         return;
       }
 
-      this.$emit("input", date.toFormat("T"));
+      this.$emit("input", date.format("HH:mm"));
     },
     onInvalid($invalid, $v) {
       this.$emit("invalid", $invalid, $v);
@@ -142,9 +139,9 @@ export default {
       this.meridiem = time.meridiem;
     },
     toObject(value) {
-      const date = DateTime.fromISO(value);
+      const date = dayjs(new Date("2000-01-01 " + value));
 
-      if (date.isValid === false) {
+      if (date.isValid() === false) {
         return {
           hour: null,
           minute: null,
@@ -153,9 +150,9 @@ export default {
       }
 
       const time = {
-        hour: date.toFormat(this.notation === 24 ? 'H' : 'h'),
-        minute: date.toFormat('m'),
-        meridiem: date.toFormat('a')
+        hour: date.format(this.notation === 24 ? 'H' : 'h'),
+        minute: date.format('m'),
+        meridiem: date.format('A')
       };
 
       return this.round(time);

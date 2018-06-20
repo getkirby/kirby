@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { DateTime, Info } from "luxon";
+import dayjs from "dayjs";
 import padZero from "../../helpers/padZero.js";
 
 export default {
@@ -56,54 +56,74 @@ export default {
     disabled: Boolean
   },
   data() {
-    const current = DateTime.fromISO(this.value);
+    const current = dayjs(this.value);
 
     return {
-      day: current.day,
-      month: current.month,
-      year: current.year,
-      today: DateTime.local(),
+      day: current.date(),
+      month: current.month(),
+      year: current.year(),
+      today: dayjs(),
       current: current,
     };
   },
   watch: {
     value(value) {
-      const current = DateTime.fromISO(value);
-      this.day     = current.day;
-      this.month   = current.month;
-      this.year    = current.year;
+      const current = dayjs(value);
+      this.day     = current.date();
+      this.month   = current.month();
+      this.year    = current.year();
       this.current = current;
     }
   },
   computed: {
     date() {
-      return DateTime.fromObject({
-        day: this.day,
-        month: this.month,
-        year: this.year
-      });
+      return dayjs(`${this.year}-${this.month + 1}-${this.day}`);
     },
     numberOfDays() {
-      return this.date.daysInMonth;
+      return this.date.daysInMonth();
     },
     numberOfWeeks() {
       return Math.ceil((this.numberOfDays + this.firstWeekday - 1) / 7);
     },
     firstWeekday() {
-      return this.date.set({ day: 1 }).weekday;
+      const weekday = this.date.clone().startOf('month').day();
+      return weekday > 0 ? weekday : 7;
     },
     weekdays() {
-      return Info.weekdays("short");
+      //TODO: i18n
+      return [
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat',
+        'Sun'
+      ];
     },
     monthnames() {
-      return Info.months("short");
+      //TODO: i18n
+      return [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+      ];
     },
     months() {
       var options = [];
 
       this.monthnames.forEach((item, index) => {
         options.push({
-          value: index + 1,
+          value: index,
           text: item
         });
       });
@@ -140,55 +160,55 @@ export default {
       return days;
     },
     next() {
-      let next = this.date.plus({ months: 1 });
+      let next = this.date.clone().add(1, 'month');
       this.set(next);
     },
     isToday(day) {
       return (
-        this.month === this.today.month &&
-        this.year === this.today.year &&
-        day === this.today.day
+        this.month === this.today.month() &&
+        this.year === this.today.year() &&
+        day === this.today.date()
       );
     },
     isCurrent(day) {
       return (
-        this.month === this.current.month &&
-        this.year === this.current.year &&
-        day === this.current.day
+        this.month === this.current.month() &&
+        this.year === this.current.year() &&
+        day === this.current.date()
       );
     },
     prev() {
-      let prev = this.date.minus({ months: 1 });
+      let prev = this.date.clone().subtract(1, 'month');
       this.set(prev);
     },
     go(year, month) {
       if (year === "today") {
-        year = this.today.year;
-        month = this.today.month;
+        year = this.today.year();
+        month = this.today.month();
       }
 
       this.year = year;
       this.month = month;
     },
     set(date) {
-      this.day = date.day;
-      this.month = date.month;
-      this.year = date.year;
+      this.day = date.date();
+      this.month = date.month();
+      this.year = date.year();
     },
     select(day) {
       if (day) {
         this.day = day;
       }
 
-      const date = DateTime.fromObject({
-        day: this.day,
-        month: this.month,
-        year: this.year,
-        hour: this.current.hour,
-        minute: this.current.minute
-      });
+      const date = dayjs(new Date(
+        this.year,
+        this.month,
+        this.day,
+        this.current.hour(),
+        this.current.minute()
+      ));
 
-      this.$emit("input", date.toISO());
+      this.$emit("input", date.toISOString());
     }
   }
 };

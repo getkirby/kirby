@@ -22,7 +22,7 @@
 
 <script>
 import DateInput from "./DateInput.vue";
-import { DateTime } from "luxon";
+import dayjs from "dayjs";
 import { required } from "vuelidate/lib/validators";
 
 export default {
@@ -76,19 +76,19 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     parseDate(value) {
-      const dt = DateTime.fromISO(value);
-      return dt.isValid ? dt.toISODate() : null;
+      const dt = dayjs(value);
+      return dt.isValid() ? dt.format("YYYY-MM-DD") : null;
     },
     parseTime(value) {
-      const dt = DateTime.fromISO(value);
-      return dt.isValid ? dt.toFormat("T") : null;
+      const dt = dayjs(value);
+      return dt.isValid() ? dt.format("HH:mm") : null;
     },
     setDate(value) {
       this.dateValue = this.parseDate(value);
       this.onInput();
     },
     setTime(value) {
-      this.timeValue = this.parseTime(value);
+      this.timeValue = value;
       this.onInput();
     },
     setTimeOptions() {
