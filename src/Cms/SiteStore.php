@@ -110,7 +110,7 @@ class SiteStore extends SiteStoreDefault
             return $site;
         }
 
-        Data::write($this->inventory['content'], $site->content()->toArray());
+        Data::write($this->inventory()['content'], $site->content()->toArray());
 
         return $site;
     }
