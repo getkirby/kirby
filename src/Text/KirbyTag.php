@@ -102,7 +102,7 @@ class KirbyTag
     public function render()
     {
         if (is_a(static::$types[$this->type]['html'], Closure::class) === true) {
-            return static::$types[$this->type]['html']->call($this, $this);
+            return static::$types[$this->type]['html']($this, $this);
         }
 
         throw new BadMethodCallException('Invalid tag render function in tag: ' . $this->type);
