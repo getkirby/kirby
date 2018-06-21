@@ -151,10 +151,9 @@ export default {
   display: flex;
   flex-grow: 1;
   align-items: center;
-  color: $color-focus-on-dark;
   text-align: center;
-  background: rgba($color-focus-on-dark, .1);
-  border-left: 2px solid $color-focus-on-dark;
+  background: rgba($color-border, .35);
+  border-left: 2px solid $color-border;
 }
 
 /* .kirby-collection > *:empty:after {
