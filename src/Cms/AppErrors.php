@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response\Json;
 use Whoops\Run as Whoops;
@@ -22,12 +23,14 @@ trait AppErrors
 
     protected function handleErrors()
     {
+        $request = $this->request();
+
         // TODO: implement acceptance
-        if ($this->request()->ajax()) {
+        if ($request->ajax()) {
             return $this->handleJsonErrors();
         }
 
-        if ($this->request()->cli()) {
+        if ($request->cli()) {
             return $this->handleCliErrors();
         }
 
@@ -38,19 +41,37 @@ trait AppErrors
     {
         $whoops = new Whoops;
 
-        if($this->option('debug') === true) {
-            $handler = new PrettyPageHandler;
-            $handler->setPageTitle('Kirby CMS Debugger');
+        if ($this->option('debug') === true) {
+
+            if ($this->option('whoops', true) === true) {
+                $handler = new PrettyPageHandler;
+                $handler->setPageTitle('Kirby CMS Debugger');
+
+                $whoops->pushHandler($handler);
+                $whoops->register();
+            }
+
         } else {
+
             $handler = new CallbackHandler(function ($exception, $inspector, $run) {
-                // TODO: implement fatal view
-                die ("The site is currently offline");
+                error_log($exception);
+
+                $fatal = $this->option('fatal');
+
+                if (is_a($fatal, Closure::class) === true) {
+                    echo $fatal($this);
+                } else {
+                    include static::$root . '/views/fatal.php';
+                }
+
                 return Handler::QUIT;
             });
+
+            $whoops->pushHandler($handler);
+            $whoops->register();
+
         }
 
-        $whoops->pushHandler($handler);
-        $whoops->register();
     }
 
     protected function handleJsonErrors()

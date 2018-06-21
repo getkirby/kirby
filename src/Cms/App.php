@@ -378,16 +378,7 @@ class App extends Component
      */
     public function render(string $path = null, string $method = null)
     {
-        try {
-            return $this->response($this->call($path, $method));
-        } catch (Throwable $e) {
-            if ($this->option('debug')) {
-                throw $e;
-            }
-
-            error_log($e);
-            return $this->response($e);
-        }
+        return $this->response($this->call($path, $method));
     }
 
     /**
