@@ -58,6 +58,11 @@ class KirbyTag
         return null;
     }
 
+    public function attr(string $name, $default = null)
+    {
+        return $this->$name ?? $default;
+    }
+
     public static function factory(...$arguments)
     {
         return (new static(...$arguments))->render();
