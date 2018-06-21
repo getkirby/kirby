@@ -104,9 +104,9 @@ export default {
   },
   search(parent, query) {
     if (parent) {
-      return api.post('/pages/' + parent + '/children/search?select=id,title,hasChildren', query);
+      return api.post('pages/' + parent.replace('/', '+') + '/children/search?select=id,title,hasChildren', query);
     } else {
-      return api.post('/site/children/search?select=id,title,hasChildren', query);
+      return api.post('site/children/search?select=id,title,hasChildren', query);
     }
   },
   status(id, status, position) {

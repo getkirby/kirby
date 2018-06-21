@@ -78,10 +78,18 @@ export default {
     parse(path) {
       this.path   = String(path || '').replace('+', '/');
 
-      const parts = this.path.toLowerCase().split('/');
+      const parts = this.path.toLowerCase().replace(/^\//, '').split('/');
 
-      this.parent = parts.slice(0, -1).join('/');
-      this.query  = parts.slice(-1)[0];
+      this.parent = '';
+      this.query  = '';
+
+      if (parts.length === 1) {
+        this.query = parts[0];
+      } else if (parts.length > 1) {
+        this.parent = parts.slice(0, -1).join('/');
+        this.query  = parts.slice(-1)[0];
+      }
+
     },
     back() {
       const parent = this.q.replace(/\/$/, '').split('/').slice(0, -1).join('/');
