@@ -101,13 +101,16 @@ class Collection
         }
 
         return [
+            'code'       => 200,
             'data'       => $this->toArray(),
             'pagination' => [
                 'page'   => $pagination->page(),
                 'total'  => $pagination->total(),
                 'offset' => $pagination->offset(),
                 'limit'  => $pagination->limit(),
-            ]
+            ],
+            'status' => 'ok',
+            'type'   => 'collection'
         ];
     }
 

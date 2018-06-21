@@ -21,10 +21,17 @@ export default {
         if (json.status && json.status === "error") {
           throw json;
         }
+
+        let response = json;
+
+        if (json.data && json.type && json.type === "model") {
+          response = json.data;
+        }
+
         this.running--;
         api.config.onComplete();
         api.config.onSuccess(json);
-        return json;
+        return response;
       })
       .catch(error => {
         this.running--;

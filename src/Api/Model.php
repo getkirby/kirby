@@ -160,7 +160,12 @@ class Model
             $model = $model->view($view);
         }
 
-        return $model->toArray();
+        return [
+            'code'   => 200,
+            'data'   => $model->toArray(),
+            'status' => 'ok',
+            'type'   => 'model'
+        ];
     }
 
     public function view(string $name)
