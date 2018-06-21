@@ -20,7 +20,6 @@
 
   <script>window.panel = <?= json_encode($options, JSON_UNESCAPED_SLASHES) ?></script>
 
-  <script src="<?= $assetUrl ?>/js/manifest.js"></script>
   <script src="<?= $assetUrl ?>/js/plugins.js"></script>
   <script src="<?= $assetUrl ?>/js/vendor.js"></script>
   <script src="<?= $pluginJs ?>"></script>
