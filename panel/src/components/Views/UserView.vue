@@ -44,7 +44,7 @@
         :tab="tab"
         @edit="action('rename')"
       >
-        <span v-if="user.name.length === 0" class="kirby-user-name-placeholder">{{ $t('user.name') }} …</span>
+        <span v-if="!user.name || user.name.length === 0" class="kirby-user-name-placeholder">{{ $t('user.name') }} …</span>
         <template v-else>{{ user.name }}</template>
         <kirby-button-group slot="left">
           <kirby-dropdown>
