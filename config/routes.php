@@ -48,7 +48,7 @@ return function ($kirby) {
                     throw new NotFoundException();
                 }
 
-                go(Panel::link($kirby, $path));
+                go(Panel::link($kirby, $path), 307);
             }
         ],
         [

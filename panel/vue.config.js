@@ -13,6 +13,7 @@ module.exports = {
       }
     }
   },
+  productionSourceMap: false,
   configureWebpack: () => {
     let custom = {
       resolve: {

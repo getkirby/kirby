@@ -39,7 +39,7 @@ class Panel
         }
 
         // create a symlink to the dist folder
-        if (Dir::link($kirby->root('panel') . '/dist', $mediaRoot . '/' . $versionHash, 'symlink') !== true) {
+        if (Dir::link($kirby->root('panel') . '/dist', $mediaRoot . '/' . $versionHash) !== true) {
             throw new Exception('Panel assets could not be linked');
         }
 

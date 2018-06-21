@@ -73,10 +73,9 @@ class Dir
      *
      * @param string $source
      * @param string $link
-     * @param string $method
      * @return boolean
      */
-    public static function link(string $source, string $link, string $method = 'link'): bool
+    public static function link(string $source, string $link): bool
     {
         Dir::make(dirname($link), true);
 
@@ -88,7 +87,7 @@ class Dir
             throw new Exception(sprintf('The directory "%s" does not exist and cannot be linked', $source));
         }
 
-        return $method($source, $link);
+        return symlink($source, $link);
     }
 
     /**
