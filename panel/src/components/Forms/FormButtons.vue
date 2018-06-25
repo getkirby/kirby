@@ -61,6 +61,10 @@ export default {
     },
     save(e) {
 
+      if (!e) {
+        return false;
+      }
+
       e.preventDefault();
 
       this.$api

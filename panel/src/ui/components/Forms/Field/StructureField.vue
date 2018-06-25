@@ -1,5 +1,5 @@
 <template>
-  <kirby-field :input="_uid" v-bind="$props" class="kirby-structure-field">
+  <kirby-field v-bind="$props" class="kirby-structure-field">
     <template slot="options">
       <kirby-button
         ref="add"
@@ -30,9 +30,10 @@
           v-for="(item, index) in items"
           :key="index"
           :data-active="isActive(index)"
+          @click.stop
           class="kirby-structure-item"
         >
-          <div class="kirby-structure-item-wrapper">
+          <div v-if="!isActive(index)" class="kirby-structure-item-wrapper">
             <kirby-button class="kirby-structure-item-handle" icon="sort" />
             <div class="kirby-structure-item-content">
               <p
@@ -46,7 +47,6 @@
               </p>
             </div>
             <nav v-if="!disabled" class="kirby-structure-item-options">
-              <kirby-button :icon="isActive(index) ? 'angle-up' : 'angle-down'" class="kirby-structure-option" @click="toggle(index)" />
               <kirby-button icon="trash" class="kirby-structure-option" @click="confirmRemove(index)" />
             </nav>
           </div>
@@ -57,6 +57,7 @@
               v-model="items[index]"
               class="kirby-structure-fieldset"
               @input="onInput"
+              @submit="close(index)"
             />
           </div>
         </li>
@@ -93,7 +94,8 @@ export default {
   data() {
     return {
       items: this.value,
-      active: null
+      active: null,
+      trash: null
     };
   },
   watch: {
@@ -103,9 +105,13 @@ export default {
   },
   mounted() {
     this.$events.$on('keydown.esc', this.close);
+    this.$events.$on('keydown.cmd.s', this.close);
+    this.$events.$on('click', this.close);
   },
   destroyed() {
     this.$events.$off('keydown.esc', this.close);
+    this.$events.$off('keydown.cmd.s', this.close);
+    this.$events.$off('click', this.close);
   },
   methods: {
     add() {
@@ -120,14 +126,17 @@ export default {
       });
 
       this.items.push(data);
-      this.active = this.items.length - 1;
       this.onInput();
+
+      this.$nextTick(() => {
+        this.open(this.items.length - 1);
+      });
     },
     close() {
       this.active = null;
     },
     confirmRemove(index) {
-      this.active = index;
+      this.trash = index;
       this.$refs.remove.open();
     },
     focus() {
@@ -161,8 +170,13 @@ export default {
       });
     },
     remove() {
-      this.items.splice(this.active, 1);
-      this.active = null;
+
+      if (this.trash === null) {
+        return false;
+      }
+
+      this.items.splice(this.trash, 1);
+      this.trash = null;
       this.$refs.remove.close();
       this.onInput();
     },
@@ -192,7 +206,8 @@ export default {
 }
 .kirby-structure-item.sortable-ghost {
   background: $color-inset;
-  box-shadow: $color-border 0 0 0 1px inset, $box-shadow-inset;
+  box-shadow: $box-shadow-inset;
+  outline: 2px solid $color-focus;
 }
 .kirby-structure-item.sortable-ghost * {
   visibility: hidden;
@@ -201,7 +216,7 @@ export default {
 .kirby-structure-item[data-active] {
   position: relative;
   z-index: 1;
-  box-shadow: rgba($color-dark, .1) 0 0px 30px, $color-backdrop 0 0 0 3000px;
+  box-shadow: rgba($color-dark, .3) 0 0px 30px;
 }
 .kirby-structure-item-handle {
   width: 2rem;
@@ -238,6 +253,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   border-right: 1px solid $color-background;
+  cursor: pointer;
 }
 .kirby-structure-item-text:not(:first-child) {
   display: none;
@@ -273,6 +289,7 @@ export default {
   position: relative;
   background: $color-background;
   padding: 2rem 2rem 3rem;
+  border-radius: $border-radius;
 
   &::before {
     position: absolute;
@@ -281,8 +298,5 @@ export default {
     right: 2.5rem;
     margin-right: -6px;
   }
-}
-.kirby-structure-item:last-child .kirby-structure-form {
-  border-bottom: 1px solid $color-border;
 }
 </style>
