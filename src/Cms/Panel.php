@@ -7,6 +7,7 @@ use Kirby\Http\Response;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\View;
+use Throwable;
 
 /**
  * The Panel class is only responsible to create
@@ -21,30 +22,33 @@ class Panel
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
-     * @return string
+     * @param App $kirby
+     * @return bool
      */
-    public static function link(App $kirby, string $path): string
+    public static function link(App $kirby): bool
     {
         $mediaRoot   = $kirby->root('media') . '/panel';
         $panelRoot   = $kirby->root('panel') . '/dist';
-        $fileRoot    = $panelRoot . '/' . $path;
         $versionHash = md5($kirby->version());
+        $versionRoot = $mediaRoot . '/' . $versionHash;
+
+        // check if the version already exists
+        if (is_dir($versionRoot) === true) {
+            return false;
+        }
 
         // delete the panel folder and all previous versions
         Dir::remove($mediaRoot);
 
-        // check if the requested file exists at all
-        if (F::exists($fileRoot, $panelRoot) === false) {
-            throw new Exception('The file does not exist');
-        }
+        // recreate the panel folder
+        Dir::make($mediaRoot, true);
 
         // create a symlink to the dist folder
-        if (Dir::link($kirby->root('panel') . '/dist', $mediaRoot . '/' . $versionHash) !== true) {
+        if (Dir::copy($kirby->root('panel') . '/dist', $versionRoot) !== true) {
             throw new Exception('Panel assets could not be linked');
         }
 
-        // redirect to the newly created file
-        return $kirby->url('media') . '/panel/' . $versionHash . '/' . $path;
+        return true;
     }
 
     /**
@@ -55,6 +59,15 @@ class Panel
      */
     public static function render(App $kirby): Response
     {
+
+        try {
+            if (static::link($kirby) === true) {
+                go($kirby->request()->url());
+            }
+        } catch (Throwable $e) {
+            die('The panel assets cannot be installed properly. Please check permissions of your media folder.');
+        }
+
         $view = new View($kirby->root('kirby') . '/views/panel.php', [
             'kirby'     => $kirby,
             'assetUrl'  => $kirby->url('media') . '/panel/' . md5($kirby->version()),

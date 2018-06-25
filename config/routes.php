@@ -42,16 +42,6 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/panel/(:any)/(:all)',
-            'action'  => function (string $version, string $path) use ($kirby) {
-                if ($kirby->option('panel') === false) {
-                    throw new NotFoundException();
-                }
-
-                go(Panel::link($kirby, $path), 307);
-            }
-        ],
-        [
             'pattern' => 'media/plugins/index.(css|js)',
             'action'  => function (string $extension) use ($kirby) {
                 return new Response(PluginAssets::index($extension), F::extensionToMime($extension));
