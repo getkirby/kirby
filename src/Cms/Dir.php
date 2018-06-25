@@ -46,13 +46,13 @@ class Dir extends \Kirby\Toolkit\Dir
 
             if (is_dir($root) === true) {
 
-                $dot  = strpos($item, static::$numSeparator);
-                $num  = null;
-                $slug = $item;
-
-                if ($dot !== false) {
-                    $num  = substr($item, 0, $dot);
-                    $slug = substr($item, $dot + 1);
+                // extract the slug and num of the directory
+                if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $item, $match)) {
+                    $num  = $match[1];
+                    $slug = $match[2];
+                } else {
+                    $num  = null;
+                    $slug = $item;
                 }
 
                 $inventory['children'][] = [

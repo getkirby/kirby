@@ -35,9 +35,14 @@ trait PageActions
      */
     public function changeSlug(string $slug): self
     {
+        // if the slug stays exactly the same,
+        // nothing needs to be done.
         if ($slug === $this->slug()) {
             return $this;
         }
+
+        // always sanitize the slug
+        $slug = Str::slug($slug);
 
         return $this->commit('changeSlug', $slug);
     }
