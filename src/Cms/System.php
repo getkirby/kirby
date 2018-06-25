@@ -138,7 +138,7 @@ class System
 
     public function server(): bool
     {
-        $servers  = ['apache', 'nginx', 'caddy'];
+        $servers  = ['apache', 'nginx', 'caddy', 'php'];
         $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
 
         return preg_match('!(' . implode('|', $servers) . ')!i', $software) > 0;
