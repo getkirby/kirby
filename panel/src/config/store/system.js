@@ -3,7 +3,7 @@ import Api from "@/api/api.js";
 export default {
   namespaced: true,
   state: {
-    info: {}
+    info: {},
   },
   mutations: {
     SET_INFO(state, info) {
@@ -24,22 +24,28 @@ export default {
       }
 
       // reload the system info
-      return Api.system.info({ view: "panel" }).then(info => {
-        context.commit("SET_INFO", {
-          isReady: info.isInstalled && info.isOk,
-          ...info
-        });
+      return Api.system
+        .info({ view: "panel" })
+        .then(info => {
+          context.commit("SET_INFO", {
+            isReady: info.isInstalled && info.isOk,
+            ...info
+          });
 
-        context.dispatch("translation/install", info.translation, {
-          root: true
-        });
-        context.dispatch("translation/activate", info.translation.id, {
-          root: true
-        });
-        context.dispatch("user/current", info.user, { root: true });
+          context.dispatch("translation/install", info.translation, {
+            root: true
+          });
+          context.dispatch("translation/activate", info.translation.id, {
+            root: true
+          });
+          context.dispatch("user/current", info.user, { root: true });
 
-        return context.state.info;
-      });
+          return context.state.info;
+        }).catch(() => {
+          context.commit("SET_INFO", {
+            isBroken: true
+          });
+        });
     }
   }
 };

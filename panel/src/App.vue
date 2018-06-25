@@ -1,17 +1,21 @@
 <template>
-  <div :data-loading="$store.state.isLoading" class="kirby-panel">
+  <div v-if="!$store.state.system.info.isBroken" :data-loading="$store.state.isLoading" class="kirby-panel">
     <kirby-topbar />
     <kirby-search v-if="$store.state.search" v-bind="$store.state.search" />
+    <kirby-license-bar />
     <main class="kirby-panel-view">
       <router-view />
     </main>
     <kirby-form-buttons />
-    <kirby-license-bar />
     <kirby-error-dialog />
     <div v-if="offline" class="kirby-offline-warning">
       <p>The panel is currently offline</p>
     </div>
   </div>
+
+  <kirby-error-view v-else>
+    The panel cannot connect to the API 😭
+  </kirby-error-view>
 </template>
 
 <script>

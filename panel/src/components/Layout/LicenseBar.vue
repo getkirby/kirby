@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <div v-if="isVisible" class="kirby-license-bar">
+  <div v-if="isVisible">
+    <div class="kirby-license-bar">
       <p>This is an unregistered demo of Kirby.
-        <a href="#register" @click.prevent="dropzone = true">Register</a> or
-        <a target="blank" href="https://getkirby.com/buy">Buy a license</a>
+        <a href="#register" @click.prevent="dropzone = true">Register</a>&nbsp;or&nbsp;<a target="blank" href="https://getkirby.com/buy">Buy a license</a>
       </p>
     </div>
     <kirby-dropzone v-if="dropzone" class="kirby-license-dropzone" @drop="drop">
@@ -29,9 +28,21 @@ export default {
   },
   computed: {
     isVisible() {
-      return (
-        !this.$route.meta.outside && !this.$store.state.system.info.license
-      );
+
+      if (this.$route.meta.outside) {
+        return false;
+      }
+
+      if (!this.$store.state.system.info.isOk) {
+        return false;
+      }
+
+      if (!this.$store.state.system.info.license) {
+        return true;
+      }
+
+      return false;
+
     }
   },
   methods: {
@@ -59,27 +70,15 @@ export default {
 <style lang="scss">
 .kirby-license-bar {
   position: relative;
-  height: 2.5rem;
   flex-shrink: 0;
-  background: white;
-}
-.kirby-license-bar::before {
-  position: absolute;
-  top: -0.5rem;
-  left: 0;
-  right: 0;
-  content: "";
-  height: 0.5rem;
-  background: linear-gradient(
-    to top,
-    rgba($color-dark, 0.05),
-    rgba($color-dark, 0)
-  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-notice-on-dark;
 }
 .kirby-license-bar p {
   text-align: center;
-  padding: 0.5rem 1rem;
-  line-height: 1.5em;
+  padding: .625rem 1rem;
 }
 .kirby-license-bar a {
   font-weight: 500;
