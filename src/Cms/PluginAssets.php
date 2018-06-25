@@ -95,14 +95,15 @@ class PluginAssets
     public static function resolve(string $pluginName, string $filename)
     {
         if ($plugin = App::instance()->plugin($pluginName)) {
+
             $source = $plugin->root() . '/assets/' . $filename;
 
             if (F::exists($source, $plugin->root()) === true) {
                 // do some spring cleaning for older files
                 static::clean($pluginName);
 
-                $target = $plugin->mediaRoot() . '/' . $path;
-                $url    = $plugin->mediaUrl() . '/' . $path;
+                $target = $plugin->mediaRoot() . '/' . $filename;
+                $url    = $plugin->mediaUrl() . '/' . $filename;
 
                 F::link($source, $target, 'symlink');
 

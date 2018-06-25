@@ -50,8 +50,9 @@ return function ($kirby) {
         [
             'pattern' => 'media/plugins/(:any)/(:any)/(:all).(css|gif|js|jpg|png|svg|webp)',
             'action'  => function (string $provider, string $pluginName, string $filename, string $extension) use ($kirby) {
+
                 if ($url = PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension)) {
-                    go($url);
+                    go($url, 307);
                 }
             }
         ],
