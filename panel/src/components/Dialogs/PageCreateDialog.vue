@@ -29,7 +29,7 @@ export default {
       section: null,
       templates: [],
       page: {
-        title: null,
+        title: '',
         template: null
       }
     };
@@ -67,6 +67,12 @@ export default {
       this.$refs.dialog.open();
     },
     submit() {
+
+      if (this.page.title.length === 0) {
+        this.$refs.dialog.error('Please enter a title');
+        return false;
+      }
+
       const data = {
         template: this.page.template,
         slug: slug(this.page.title),
