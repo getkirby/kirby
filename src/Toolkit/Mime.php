@@ -214,6 +214,11 @@ class Mime
             $mime = static::fromSvg($file);
         }
 
+        // normalize image/svg file type
+        if ($mime === 'image/svg') {
+            $mime = 'image/svg+xml';
+        }
+
         return $mime;
     }
 
