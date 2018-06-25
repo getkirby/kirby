@@ -127,6 +127,11 @@ class App extends Component
      */
     protected function bakeUrls(array $urls = null)
     {
+        // inject the index URL from the config
+        if (isset($this->options['url']) === true) {
+            $urls['index'] = $this->options['url'];
+        }
+
         $urls = array_merge(require static::$root . '/config/urls.php', (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
