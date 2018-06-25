@@ -192,6 +192,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+$structure-item-height: 38px;
+
 .kirby-structure-field {
   list-style: none;
 }
@@ -239,21 +242,25 @@ export default {
 }
 .kirby-structure-item-content {
   display: grid;
-  grid-column-gap: 2px;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   background: $color-white;
-  height: calc(2.25rem + 1px);
+  height: $structure-item-height;
+  align-items: center;
+  overflow: hidden;
 }
 .kirby-structure-item-text {
   padding: 0 0.75rem;
-  display: flex;
-  align-items: center;
   font-size: $font-size-small;
   white-space: nowrap;
   overflow: hidden;
+  height: $structure-item-height;
+  line-height: $structure-item-height;
   text-overflow: ellipsis;
   border-right: 1px solid $color-background;
   cursor: pointer;
+}
+.kirby-structure-item-text:hover {
+  background: rgba($color-background, .5);
 }
 .kirby-structure-item-text:not(:first-child) {
   display: none;
@@ -261,7 +268,7 @@ export default {
   font-size: $font-size-small;
 
   @media screen and (min-width: 45rem) {
-    display: flex;
+    display: block;
   }
 }
 .kirby-structure-content {
