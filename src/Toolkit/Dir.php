@@ -11,6 +11,42 @@ class Dir
 {
 
     /**
+     * Copy the directory to a new destination
+     *
+     * @param string $dir
+     * @param string $target
+     * @return bool
+     */
+    public static function copy(string $dir, string $target): bool
+    {
+
+        if (is_dir($dir) === false) {
+            throw new Exception('The directory "' . $dir . '" does not exist');
+        }
+
+        if (is_dir($target) === true) {
+            throw new Exception('The target directory "' . $target . '" exists');
+        }
+
+        if (static::make($target) !== true) {
+            throw new Exception('The target directory "' . $target . '" could not be created');
+        }
+
+        foreach (static::read($dir) as $name) {
+            $root = $dir . '/' . $name;
+
+            if (is_dir($root) === true) {
+                static::copy($root, $target . '/' . $name);
+            } else {
+                F::copy($root, $target . '/' . $name);
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
      * Get all subdirectories
      *
      * @param string $dir
