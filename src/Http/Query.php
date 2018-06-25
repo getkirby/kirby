@@ -11,7 +11,6 @@ use Kirby\Toolkit\Obj;
  */
 class Query extends Obj
 {
-
     public function __construct($query)
     {
         if (is_string($query) === true) {
@@ -46,5 +45,4 @@ class Query extends Obj
 
         return $query;
     }
-
 }

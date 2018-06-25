@@ -93,7 +93,6 @@ class Html
      */
     public static function a(string $href = null, $text = null, array $attr = []): string
     {
-
         $attr = array_merge(['href' => $href], $attr);
 
         if (empty($text) === true) {
@@ -104,7 +103,6 @@ class Html
         $attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
 
         return static::tag('a', $text, $attr);
-
     }
 
     /**
@@ -116,7 +114,6 @@ class Html
      */
     public static function attr($name, $value = null): string
     {
-
         if (is_array($name) === true) {
             $attributes = [];
 
@@ -227,7 +224,7 @@ class Html
     public static function encode(string $string = null, bool $keepTags = true): string
     {
         if ($keepTags === true) {
-            return stripslashes(implode('', preg_replace_callback('/^([^<].+[^>])$/', function($match) {
+            return stripslashes(implode('', preg_replace_callback('/^([^<].+[^>])$/', function ($match) {
                 return htmlentities($match[1], ENT_COMPAT, 'utf-8');
             }, preg_split('/(<.+?>)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE))));
         }
@@ -326,7 +323,6 @@ class Html
      */
     public static function isVoid(string $tag): bool
     {
-
         $void = [
             'area',
             'base',
@@ -347,7 +343,6 @@ class Html
         ];
 
         return in_array(strtolower($tag), $void);
-
     }
 
     /**
@@ -508,5 +503,4 @@ class Html
 
         return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
     }
-
 }

@@ -13,7 +13,6 @@ use Kirby\Toolkit\F;
  */
 class Dir extends \Kirby\Toolkit\Dir
 {
-
     public static $numSeparator = '_';
 
     public static function inventory(string $dir, string $content = 'txt'): array
@@ -60,9 +59,7 @@ class Dir extends \Kirby\Toolkit\Dir
                     'num'  => $num,
                     'slug' => $slug,
                 ];
-
             } else {
-
                 $extension = pathinfo($item, PATHINFO_EXTENSION);
 
                 if ($extension === $content) {
@@ -80,14 +77,11 @@ class Dir extends \Kirby\Toolkit\Dir
                         'root'      => $root,
                     ];
                 }
-
             }
-
         }
 
         // inject models
         if (empty($inventory['children']) === false && empty(Page::$models) === false) {
-
             $glob = '{' . implode(',', array_keys(Page::$models)) . '}.' . $content;
 
             foreach ($inventory['children'] as $key => $child) {
@@ -98,5 +92,4 @@ class Dir extends \Kirby\Toolkit\Dir
 
         return $inventory;
     }
-
 }

@@ -6,7 +6,6 @@ use Kirby\Exception\InvalidArgumentException;
 
 class Component
 {
-
     public static $types = [];
 
     protected $component;
@@ -74,5 +73,4 @@ class Component
             $this->$computedName = $computedFunction->call($this);
         }
     }
-
 }

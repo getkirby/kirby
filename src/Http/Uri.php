@@ -18,7 +18,6 @@ use Kirby\Toolkit\Str;
  */
 class Uri
 {
-
     use Properties;
 
     /**
@@ -461,5 +460,4 @@ class Uri
         }
         return $this;
     }
-
 }

@@ -69,5 +69,4 @@ class Files extends Collection
     {
         return $this->filterBy('template', '==', $template);
     }
-
 }

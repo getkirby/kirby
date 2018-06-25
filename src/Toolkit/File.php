@@ -334,5 +334,4 @@ class File
 
         return true;
     }
-
 }

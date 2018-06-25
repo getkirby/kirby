@@ -13,7 +13,6 @@ use Whoops\Handler\CallbackHandler;
 
 trait AppErrors
 {
-
     protected function handleCliErrors()
     {
         $whoops = new Whoops;
@@ -42,7 +41,6 @@ trait AppErrors
         $whoops = new Whoops;
 
         if ($this->option('debug') === true) {
-
             if ($this->option('whoops', true) === true) {
                 $handler = new PrettyPageHandler;
                 $handler->setPageTitle('Kirby CMS Debugger');
@@ -50,9 +48,7 @@ trait AppErrors
                 $whoops->pushHandler($handler);
                 $whoops->register();
             }
-
         } else {
-
             $handler = new CallbackHandler(function ($exception, $inspector, $run) {
                 error_log($exception);
 
@@ -69,16 +65,13 @@ trait AppErrors
 
             $whoops->pushHandler($handler);
             $whoops->register();
-
         }
-
     }
 
     protected function handleJsonErrors()
     {
         $whoops  = new Whoops;
         $handler = new CallbackHandler(function ($exception, $inspector, $run) {
-
             if (is_a($exception, Exception::class) === true) {
                 $httpCode = $exception->getHttpCode();
                 $code     = $exception->getCode();
@@ -89,7 +82,7 @@ trait AppErrors
                 $details  = null;
             }
 
-            if($this->option('debug') === true) {
+            if ($this->option('debug') === true) {
                 echo new Json([
                     'status'    => 'error',
                     'exception' => get_class($exception),
@@ -109,11 +102,9 @@ trait AppErrors
             }
 
             return Handler::QUIT;
-
         });
 
         $whoops->pushHandler($handler);
         $whoops->register();
     }
-
 }

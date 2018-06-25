@@ -17,7 +17,6 @@ use Kirby\Toolkit\I18n;
  */
 class Field
 {
-
     public static $mixins = [];
     public static $types = [];
 
@@ -199,7 +198,6 @@ class Field
         $result = [];
 
         foreach ($props as $name => $callback) {
-
             if (is_a($callback, Closure::class) === false) {
                 $result[$name] = $callback;
                 continue;
@@ -222,7 +220,8 @@ class Field
         return $result;
     }
 
-    public function save() {
+    public function save()
+    {
         return $this->definition['save'] ?? true;
     }
 
@@ -301,12 +300,10 @@ class Field
                 }
             }
         }
-
     }
 
     public function value()
     {
         return $this->save() ? $this->__call("value") : null;
     }
-
 }

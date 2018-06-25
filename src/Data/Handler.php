@@ -64,5 +64,4 @@ abstract class Handler
     {
         return F::write($file, static::encode($data));
     }
-
 }

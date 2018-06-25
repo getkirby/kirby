@@ -20,7 +20,6 @@ use Kirby\Toolkit\Obj;
  */
 class Options
 {
-
     protected static function aliases(): array
     {
         return [
@@ -154,5 +153,4 @@ class Options
 
         return $optionsQuery->options();
     }
-
 }

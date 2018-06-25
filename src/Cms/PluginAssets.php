@@ -112,5 +112,4 @@ class PluginAssets
 
         return null;
     }
-
 }

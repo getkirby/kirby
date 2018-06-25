@@ -59,7 +59,6 @@ class Panel
      */
     public static function render(App $kirby): Response
     {
-
         try {
             if (static::link($kirby) === true) {
                 go($kirby->request()->url());
@@ -86,5 +85,4 @@ class Panel
 
         return new Response($view->render());
     }
-
 }

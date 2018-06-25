@@ -687,7 +687,6 @@ class Collection extends Iterator
      */
     public function sortBy()
     {
-
         $args       = func_get_args();
         $collection = clone $this;
         $array      = $collection->data;
@@ -701,7 +700,7 @@ class Collection extends Iterator
             if (is_string($param) === true) {
                 if (strtolower($param) === 'desc') {
                     ${"param_$i"} = SORT_DESC;
-                } elseif(strtolower($param) === 'asc') {
+                } elseif (strtolower($param) === 'asc') {
                     ${"param_$i"} = SORT_ASC;
                 } else {
                     ${"param_$i"} = [];
@@ -722,7 +721,6 @@ class Collection extends Iterator
         $collection->data = $array;
 
         return $collection;
-
     }
 
     /**
@@ -758,5 +756,4 @@ class Collection extends Iterator
     {
         return implode('<br />', $this->keys());
     }
-
 }

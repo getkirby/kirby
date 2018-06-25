@@ -405,5 +405,4 @@ class Dimensions
     {
         return $this->width;
     }
-
 }

@@ -263,5 +263,4 @@ class Request
     {
         return $this->url = $this->url ?? Uri::current();
     }
-
 }

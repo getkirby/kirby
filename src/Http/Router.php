@@ -43,7 +43,6 @@ class Router
     public function __construct(array $routes = [])
     {
         foreach ($routes as $props) {
-
             if (isset($props['pattern'], $props['action']) === false) {
                 throw new Exception('Invalid route parameters');
             }
@@ -60,7 +59,6 @@ class Router
                     $this->routes[$method][$pattern] = new Route($pattern, $method, $props['action'], $props);
                 }
             }
-
         }
     }
 
@@ -85,7 +83,6 @@ class Router
 
         // direct access to home routes
         if ($path === '') {
-
             if (isset($this->routes[$method]['']) === true) {
                 return $this->routes[$method][''];
             }
@@ -93,7 +90,6 @@ class Router
             if (isset($this->routes[$method]['/']) === true) {
                 return $this->routes[$method]['/'];
             }
-
         } else {
             foreach ($this->routes[$method] as $pattern => $route) {
                 $arguments = $route->parse($pattern, $path);

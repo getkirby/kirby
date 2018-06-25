@@ -13,7 +13,6 @@ use Kirby\Toolkit\Str;
  */
 class Url extends BaseUrl
 {
-
     public static $home = null;
 
     /**
@@ -36,5 +35,4 @@ class Url extends BaseUrl
 
         return file_exists($file) === true ? $url : null;
     }
-
 }

@@ -22,7 +22,6 @@ class Children extends Pages
      */
     public function findById($id)
     {
-
         $startAt = $this->parent ? $this->parent->id(): '';
         $page    = $this->get(ltrim($startAt . '/' . $id, '/'));
 
@@ -32,5 +31,4 @@ class Children extends Pages
 
         return $page;
     }
-
 }

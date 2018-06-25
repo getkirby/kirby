@@ -12,7 +12,6 @@ use Kirby\Toolkit\Str;
  */
 class Search
 {
-
     public static function files(string $query = null, $params = [])
     {
         return App::instance()->site()->index()->files()->search($query, $params);
@@ -23,7 +22,6 @@ class Search
      */
     public static function collection(Collection $collection, string $query = null, $params = [])
     {
-
         if (is_string($params) === true) {
             $params = ['fields' => Str::split($params, '|')];
         }
@@ -37,7 +35,7 @@ class Search
 
         $options     = array_merge($defaults, $params);
         $collection  = clone $collection;
-        $searchwords = preg_replace('/(\s)/u',',', $query);
+        $searchwords = preg_replace('/(\s)/u', ',', $query);
         $searchwords = Str::split($searchwords, ',', $options['minlength']);
 
         if (empty($options['stopwords']) === false) {
@@ -54,7 +52,6 @@ class Search
 
         $preg    = '!(' . implode('|', $searchwords) . ')!i';
         $results = $collection->filter(function ($item) use ($query, $searchwords, $preg, $options) {
-
             $data = $item->content()->toArray();
             $keys = array_keys($data);
             $keys[] = 'id';
@@ -67,13 +64,11 @@ class Search
             $item->searchScore = 0;
 
             foreach ($keys as $key) {
-
                 $score = $options['score'][$key] ?? 1;
                 $value = $key === 'id' ? $item->id() : $data[$key];
 
                 // check for a match
                 if ($matches = preg_match_all($preg, $value, $r)) {
-
                     $item->searchHits  += $matches;
                     $item->searchScore += $matches * $score;
 
@@ -81,13 +76,10 @@ class Search
                     if ($matches = preg_match_all('!' . preg_quote($query) . '!i', $value, $r)) {
                         $item->searchScore += $matches * $score;
                     }
-
                 }
-
             }
 
             return $item->searchHits > 0 ? true : false;
-
         });
 
         return $results->sortBy('searchScore', SORT_DESC);
@@ -102,5 +94,4 @@ class Search
     {
         return App::instance()->users()->search($query, $params);
     }
-
 }

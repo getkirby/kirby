@@ -96,7 +96,6 @@ class Txt extends Handler
 
         // loop through all fields and add them to the content
         foreach ($fields as $field) {
-
             $pos = strpos($field, ':');
             $key = str_replace(['-', ' '], '_', strtolower(trim(substr($field, 0, $pos))));
 
@@ -110,5 +109,4 @@ class Txt extends Handler
 
         return $data;
     }
-
 }

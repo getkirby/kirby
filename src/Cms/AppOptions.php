@@ -57,5 +57,4 @@ trait AppOptions
 
         return $this->options = array_replace_recursive($main, $host, $addr);
     }
-
 }

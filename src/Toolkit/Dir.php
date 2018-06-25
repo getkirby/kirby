@@ -19,7 +19,6 @@ class Dir
      */
     public static function copy(string $dir, string $target): bool
     {
-
         if (is_dir($dir) === false) {
             throw new Exception('The directory "' . $dir . '" does not exist');
         }
@@ -43,7 +42,6 @@ class Dir
         }
 
         return true;
-
     }
 
     /**

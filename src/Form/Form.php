@@ -13,7 +13,6 @@ use Kirby\Toolkit\Collection;
  */
 class Form
 {
-
     protected $errors;
     protected $fields;
     protected $values = [];
@@ -110,7 +109,7 @@ class Form
         return $array;
     }
 
-        public function strings(): array
+    public function strings(): array
     {
         $array = [];
 
@@ -127,5 +126,4 @@ class Form
     {
         return $this->values;
     }
-
 }

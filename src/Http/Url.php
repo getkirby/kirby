@@ -10,7 +10,6 @@ use Kirby\Toolkit\Str;
  */
 class Url
 {
-
     public static $home    = '/';
     public static $current = null;
 
@@ -223,5 +222,4 @@ class Url
     {
         return $url === null ? Uri::current() : new Uri($url);
     }
-
 }

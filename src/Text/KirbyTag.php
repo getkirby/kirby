@@ -11,7 +11,6 @@ use Kirby\Exception\BadMethodCallException;
  */
 class KirbyTag
 {
-
     public static $aliases = [];
     public static $types = [];
 
@@ -117,5 +116,4 @@ class KirbyTag
     {
         return $this->type;
     }
-
 }

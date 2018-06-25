@@ -66,7 +66,8 @@ class A
     /**
      * @return string
      */
-    public static function join($value, $separator = ', ') {
+    public static function join($value, $separator = ', ')
+    {
         if (is_string($value) === true) {
             return $value;
         }

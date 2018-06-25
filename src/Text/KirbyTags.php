@@ -12,7 +12,6 @@ use Exception;
  */
 class KirbyTags
 {
-
     public static function parse(string $text = null, array $data = [], array $options = []): string
     {
         return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) use ($data, $options) {
@@ -23,5 +22,4 @@ class KirbyTags
             }
         }, $text);
     }
-
 }

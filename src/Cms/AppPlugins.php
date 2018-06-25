@@ -243,7 +243,6 @@ trait AppPlugins
         $this->extendFields(include static::$root . '/config/fields.php');
         $this->extendFieldMethods((include static::$root . '/config/methods.php')($this));
         $this->extendTags(include static::$root . '/config/tags.php');
-
     }
 
     /**
@@ -330,5 +329,4 @@ trait AppPlugins
 
         return $loaded;
     }
-
 }

@@ -53,7 +53,6 @@ class BlueprintFilesSection extends BlueprintSection
      */
     public function data(): Files
     {
-
         if ($this->data !== null) {
             return $this->data;
         }
@@ -190,7 +189,6 @@ class BlueprintFilesSection extends BlueprintSection
         $file->crop(100);
 
         return $file;
-
     }
 
     public function routes(): array

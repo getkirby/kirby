@@ -130,5 +130,4 @@ trait AvatarActions
 
         return $this;
     }
-
 }

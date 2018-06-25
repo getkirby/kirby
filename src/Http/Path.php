@@ -11,7 +11,6 @@ use Kirby\Toolkit\Str;
  */
 class Path extends Stack
 {
-
     protected $leadingSlash  = false;
     protected $trailingSlash = false;
 
@@ -58,5 +57,4 @@ class Path extends Stack
         $this->trailingSlash = $slash;
         return $this;
     }
-
 }

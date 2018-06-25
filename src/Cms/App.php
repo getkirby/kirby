@@ -659,5 +659,4 @@ class App extends Component
     {
         return $this->visitor = $this->visitor ?? new Visitor();
     }
-
 }

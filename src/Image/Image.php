@@ -306,5 +306,4 @@ class Image extends File
     {
         return $this->dimensions()->width();
     }
-
 }
