@@ -30,7 +30,7 @@ class RoleTest extends TestCase
     public function testFactory()
     {
         $app  = $this->app();
-        $role = Role::load('editor');
+        $role = Role::load(__DIR__ . '/fixtures/blueprints/users/editor.yml');
 
         $this->assertEquals('editor', $role->name());
         $this->assertEquals('Editor', $role->title());

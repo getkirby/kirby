@@ -41,13 +41,11 @@ class Roles extends Collection
         $roles = new static;
 
         foreach (Dir::read($root) as $filename) {
-            $name = F::name($filename);
-
-            if (is_file($root . '/' . $filename) === false || $name === 'default') {
+            if ($filename === 'default.yml') {
                 continue;
             }
 
-            $role = Role::load($name, $inject);
+            $role = Role::load($root . '/' . $filename, $inject);
             $roles->set($role->id(), $role);
         }
 

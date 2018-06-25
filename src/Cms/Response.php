@@ -64,11 +64,14 @@ class Response extends BaseResponse
             ]), $contentType, $input->getCode());
         }
 
-        // Pages by id
+        // Simple HTML response
         if (is_string($input) === true) {
-            if ($page = App::instance()->site()->find($input)) {
-                return static::page($page, $data, $contentType, $code);
-            }
+            return new static($input);
+        }
+
+        // array to json conversion
+        if (is_array($input) === true) {
+            return static::json($input);
         }
 
         // Fallback

@@ -3,7 +3,9 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\F;
 
 /**
  * Represents a User role with attached
@@ -78,10 +80,15 @@ class Role extends Model
         return $this->name() === 'nobody';
     }
 
-    public static function load(string $name, array $inject = []): self
+    public static function load(string $file, array $inject = []): self
     {
+        $name = F::name($file);
+
         try {
-            return static::factory(Blueprint::load('users/' . $name), $inject);
+            $data = Data::read($file);
+            $data['name'] = $name;
+
+            return static::factory($data, $inject);
         } catch (Exception $e) {
             throw new NotFoundException(sprintf('The role "%s" does not exist', $name));
         }
