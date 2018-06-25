@@ -42,7 +42,7 @@ class Response extends BaseResponse
     {
         // Empty input
         if (empty($input) === true) {
-            return static::errorPage('Not found', $contentType, $code);
+            return static::errorPage('Not found', $contentType, 404);
         }
 
         // Responses

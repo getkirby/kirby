@@ -87,7 +87,11 @@ return function ($kirby) {
         [
             'pattern' => '(:all)\.([a-z]{2,5})',
             'action'  => function (string $path, string $extension) use ($kirby) {
-                return Response::for($kirby->site()->find($path), [], $extension);
+                if ($page = $kirby->site()->find($path)) {
+                    return Response::for($page, [], $extension);
+                }
+
+                return null;
             }
         ],
         [
