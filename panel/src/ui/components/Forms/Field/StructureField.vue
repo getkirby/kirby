@@ -23,7 +23,7 @@
         element="ul"
         class="kirby-structure"
         @input="onInput"
-        @choose="active = null"
+        @choose="close"
         @end="onInput"
       >
         <li
@@ -101,6 +101,12 @@ export default {
       this.items = value;
     }
   },
+  mounted() {
+    this.$events.$on('keydown.esc', this.close);
+  },
+  destroyed() {
+    this.$events.$off('keydown.esc', this.close);
+  },
   methods: {
     add() {
       let data = {};
@@ -117,6 +123,9 @@ export default {
       this.active = this.items.length - 1;
       this.onInput();
     },
+    close() {
+      this.active = null;
+    },
     confirmRemove(index) {
       this.active = index;
       this.$refs.remove.open();
@@ -128,10 +137,7 @@ export default {
       return this.active === index;
     },
     jump(index, field) {
-      this.active = index;
-      this.$nextTick(() => {
-        this.$refs.form[index].focus(field);
-      });
+      this.open(index, field);
     },
     displayText(value) {
       if (typeof value === "object") {
@@ -147,6 +153,13 @@ export default {
     onInput() {
       this.$emit("input", this.items);
     },
+    open(index, field) {
+      this.active = index;
+
+      this.$nextTick(() => {
+        this.$refs.form[index].focus(field);
+      });
+    },
     remove() {
       this.items.splice(this.active, 1);
       this.active = null;
@@ -155,12 +168,9 @@ export default {
     },
     toggle(index) {
       if (this.active === index) {
-        this.active = null;
+        this.close();
       } else {
-        this.active = index;
-        this.$nextTick(() => {
-          this.$refs.form[index].focus();
-        });
+        this.open(index);
       }
     },
   }
