@@ -30,32 +30,42 @@ export default {
       templates: [],
       page: {
         title: '',
+        slug: '',
         template: null
       }
     };
   },
+  watch: {
+    "page.title"(title) {
+      this.page.slug = slug(title);
+    }
+  },
   computed: {
     fields() {
-      let fields = {
+      return {
         title: {
           label: this.$t("page.title"),
           type: "text",
           required: true,
           icon: "title"
-        }
-      };
-
-      if (this.templates.length > 1) {
-        fields.template = {
+        },
+        slug: {
+          label: this.$t("page.slug"),
+          type: "text",
+          required: true,
+          counter: false,
+          icon: "url"
+        },
+        template: {
           name: "template",
           label: this.$t("page.template"),
           type: "select",
           required: true,
+          icon: "code",
+          empty: false,
           options: this.templates
-        };
-      }
-
-      return fields;
+        }
+      };
     }
   },
   methods: {
@@ -75,7 +85,7 @@ export default {
 
       const data = {
         template: this.page.template,
-        slug: slug(this.page.title),
+        slug: this.page.slug,
         content: {
           title: this.page.title
         }
