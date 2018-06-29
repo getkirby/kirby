@@ -19,7 +19,6 @@ export default {
   },
   methods: {
     remove() {
-      console.log("yay");
       if (this.removable) {
         this.$emit("remove");
       }
