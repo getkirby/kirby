@@ -70,7 +70,7 @@ export default {
       return this.options(1, this.date.daysInMonth() || 31, "days");
     },
     month() {
-      return isNaN(this.date.month()) ? "" : this.date.month() + 1;
+      return isNaN(this.date.date()) ? "" : this.date.month() + 1;
     },
     months() {
       return this.options(1, 12, "months");
@@ -127,27 +127,50 @@ export default {
       return options;
     },
     set(key, value) {
-      if (!value) {
-        this.date = dayjs("invalid");
+
+      if (value === "" || value === null || value === false || value === -1) {
+        this.setInvalid();
         this.onInput();
         return;
       }
 
       if (this.date.isValid() === false) {
-        this.date = dayjs();
+        this.setInitialDate(key, value);
+        this.onInput();
+        return;
       }
 
+      let prev    = this.date;
+      let prevDay = this.date.date();
+
       this.date = this.date.set(key, parseInt(value));
+
+      if (key === "month" && this.date.date() !== prevDay) {
+        this.date = prev.set("date", 1).set("month", value).endOf("month");
+      }
+
       this.onInput();
     },
     setInvalid() {
       this.date = dayjs("invalid");
     },
+    setInitialDate(key, value) {
+      const current = dayjs();
+
+      this.date = dayjs().set(key, parseInt(value));
+
+      // if the inital day moved the month, let's move it back
+      if (key === "date" && current.month() !== this.date.month()) {
+        this.date = current.endOf("month");
+      }
+
+      return this.date;
+    },
     setDay(day) {
       this.set("date", day);
     },
     setMonth(month) {
-      this.set("month", month);
+      this.set("month", month - 1);
     },
     setYear(year) {
       this.set("year", year);
