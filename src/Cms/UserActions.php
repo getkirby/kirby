@@ -102,14 +102,16 @@ trait UserActions
      */
     public static function create(array $props = null): self
     {
+        $userProps = $props;
+
         // hash the password before creating the user
-        if (isset($props['password']) === true) {
-            $props['password'] = static::hashPassword($props['password']);
+        if (isset($userProps['password']) === true) {
+            $userProps['password'] = static::hashPassword($userProps['password']);
         }
 
-        $user = new static($props);
-        $user->rules()->create($user);
-        $user->kirby()->trigger('user.create:before', $props);
+        $user = new static($userProps);
+        $user->rules()->create($user, $props);
+        $user->kirby()->trigger('user.create:before', $userProps);
         $result = $user->store()->create($user);
         $user->kirby()->trigger('user.create:after', $result);
         return $result;

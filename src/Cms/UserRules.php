@@ -83,21 +83,21 @@ class UserRules
         return true;
     }
 
-    public static function create(User $user): bool
+    public static function create(User $user, array $props = []): bool
     {
+        static::validEmail($user, $props['email']);
+        static::validLanguage($user, $props['language']);
+
+        if (empty($props['password']) === false) {
+            static::validPassword($user, $props['password']);
+        }
+
         if ($user->kirby()->users()->count() > 0) {
             if ($user->permissions()->create() !== true) {
                 throw new PermissionException([
                     'key' => 'user.create.permission'
                 ]);
             }
-        }
-
-        static::validEmail($user, $user->email());
-        static::validLanguage($user, $user->language());
-
-        if ($user->password() !== null) {
-            static::validPassword($user, $user->password());
         }
 
         return true;
