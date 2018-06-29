@@ -29,7 +29,7 @@ export default function(to, from, next) {
         message: Vue.i18n.translate("error.access.view")
       });
 
-      next("/");
+      return next("/");
     }
 
     next();
