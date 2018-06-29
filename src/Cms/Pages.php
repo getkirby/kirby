@@ -330,12 +330,16 @@ class Pages extends Collection
     /**
      * Filter all pages by the given template
      *
-     * @param string $template
+     * @param null|string|array $template
      * @return self
      */
-    public function template(string $template): self
+    public function template($template): self
     {
-        return $this->filterBy('template', '==', $template);
+        if (empty($template) === true) {
+            return $this;
+        }
+
+        return $this->filterBy('template', is_array($template) ? 'in' : '==', $template);
     }
 
     /**
