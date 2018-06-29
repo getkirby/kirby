@@ -28,7 +28,7 @@
         </li>
       </ul>
       <div v-if="pages.length === 0" class="kirby-search-empty">
-        No Supages
+        {{ $t('search.noSubpages') }}
       </div>
     </div>
   </div>

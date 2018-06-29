@@ -83,6 +83,8 @@
     "page.template.changed": "The template has been changed",
     "page.sorted": "Sorted!",
 
+    "search.noSubpages": "No subpages",
+
     "site.renamed": "The site has been renamed",
 
     "structure.add.first": "Click to add the first item …",
