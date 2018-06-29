@@ -56,7 +56,7 @@ export default {
     disabled: Boolean
   },
   data() {
-    const current = dayjs(this.value);
+    const current = this.value ? dayjs(this.value) : dayjs();
 
     return {
       day: current.date(),
