@@ -1,8 +1,10 @@
 
 export function ucfirst (string) {
-  return string.charAt(0).toUpperCase() + string.substr(1);
+  const str = String(string);
+  return str.charAt(0).toUpperCase() + str.substr(1);
 }
 
 export function lcfirst (string) {
-  return string.charAt(0).toLowerCase() + string.substr(1);
+  const str = String(string);
+  return str.charAt(0).toLowerCase() + str.substr(1);
 }
