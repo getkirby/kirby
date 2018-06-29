@@ -155,18 +155,6 @@ export default {
   display: block;
 }
 
-/* .kirby-collection > *:empty:after {
-  content: "";
-  color: $color-light-grey;
-  font-size: $font-size-small;
-  background: lighten($color-light-grey, 30%);
-  border-left: 38px solid rgba($color-border, .35);
-  display: block;
-  padding: .675rem 1rem;
-  height: 38px;
-  margin-bottom: 2px;
-} */
-
 .kirby-collection .kirby-cards[data-over] .kirby-box,
 .kirby-collection .kirby-list[data-over] .kirby-box {
   display: none;
