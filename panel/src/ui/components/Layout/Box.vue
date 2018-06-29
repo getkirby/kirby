@@ -18,12 +18,14 @@ export default {
 <style lang="scss">
 
 .kirby-box {
-  background: $color-inset;
+  background: lighten($color-light-grey, 25%);
   border-radius: $border-radius;
   padding: .375rem .75rem;
   line-height: 1.25rem;
-  border: 1px solid $color-border;
+  border-left: 2px solid $color-light-grey;
+  padding: .5rem 1.5rem;
   word-wrap: break-word;
+  font-size: $font-size-small;
 }
 .kirby-box[data-theme="code"] {
   background: $color-dark;

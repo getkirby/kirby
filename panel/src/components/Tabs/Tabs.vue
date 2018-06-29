@@ -1,5 +1,5 @@
 <template>
-  <kirby-box v-if="tabs.length === 0" text="This page has no blueprint setup yet" />
+  <kirby-box v-if="tabs.length === 0" text="This page has no blueprint setup yet" theme="info" />
   <kirby-sections
     v-else-if="tab"
     :parent="parent"

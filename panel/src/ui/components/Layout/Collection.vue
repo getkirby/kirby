@@ -143,17 +143,16 @@ export default {
 }
 
 .kirby-collection > *:empty:after {
-  content: "0";
-  font-size: $font-size-tiny;
-  margin-bottom: 2px;
-  padding: 0 1rem;
-  height: 38px;
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  text-align: center;
-  background: rgba($color-border, .35);
-  border-left: 2px solid $color-border;
+  background: lighten($color-light-grey, 27.5%);
+  border-radius: $border-radius;
+  padding: .375rem .75rem;
+  line-height: 1.25rem;
+  border-left: 2px solid $color-light-grey;
+  padding: .5rem 1.5rem;
+  word-wrap: break-word;
+  font-size: $font-size-small;
+  content: "\00A0";
+  display: block;
 }
 
 /* .kirby-collection > *:empty:after {
