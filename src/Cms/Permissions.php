@@ -35,6 +35,7 @@ class Permissions
             'update' => true
         ],
         'site' => [
+            'changeTitle' => true,
             'update' => true
         ],
         'users' => [
@@ -47,6 +48,15 @@ class Permissions
             'delete' => true,
             'update' => true
         ],
+        'user' => [
+            'changeEmail' => true,
+            'changeLanguage' => true,
+            'changeName' => true,
+            'changePassword' => true,
+            'changeRole' => true,
+            'delete' => true,
+            'update' => true
+        ]
     ];
 
     public function __construct($settings = [])
@@ -62,11 +72,6 @@ class Permissions
 
     public function for(string $category = null, string $action = null)
     {
-        // check for globally blocked access
-        if (isset($this->actions['access'][$category]) === true && $this->actions['access'][$category] === false) {
-            return false;
-        }
-
         if ($action === null) {
             if ($this->hasCategory($category) === false) {
                 return false;

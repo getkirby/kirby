@@ -20,29 +20,34 @@ class UserBlueprintOptions extends BlueprintOptions
         'update'         => null,
     ];
 
+    protected $scope;
+
     public function __construct(User $model, array $options = null)
     {
+        $currentUser = App::instance()->user();
+        $this->scope = $currentUser && $currentUser->is($model) ? 'user' : 'users';
+
         parent::__construct($model, $options);
     }
 
     public function changeEmail(): bool
     {
-        return $this->isAllowed('users', 'changeEmail');
+        return $this->isAllowed($this->scope, 'changeEmail');
     }
 
     public function changeLanguage(): bool
     {
-        return $this->isAllowed('users', 'changeLanguage');
+        return $this->isAllowed($this->scope, 'changeLanguage');
     }
 
     public function changeName(): bool
     {
-        return $this->isAllowed('users', 'changeName');
+        return $this->isAllowed($this->scope, 'changeName');
     }
 
     public function changePassword(): bool
     {
-        return $this->isAllowed('users', 'changePassword');
+        return $this->isAllowed($this->scope, 'changePassword');
     }
 
     public function changeRole(): bool
@@ -54,12 +59,12 @@ class UserBlueprintOptions extends BlueprintOptions
         //     return false;
         // }
 
-        return $this->isAllowed('users', 'changeRole');
+        return $this->isAllowed($this->scope, 'changeRole');
     }
 
     public function create(): bool
     {
-        return $this->isAllowed('users', 'create');
+        return $this->isAllowed($this->scope, 'create');
     }
 
     public function delete(): bool
@@ -71,7 +76,7 @@ class UserBlueprintOptions extends BlueprintOptions
         //     return false;
         // }
 
-        return $this->isAllowed('users', 'delete');
+        return $this->isAllowed($this->scope, 'delete');
     }
 
     protected function user()
@@ -81,6 +86,6 @@ class UserBlueprintOptions extends BlueprintOptions
 
     public function update(): bool
     {
-        return $this->isAllowed('users', 'update');
+        return $this->isAllowed($this->scope, 'update');
     }
 }

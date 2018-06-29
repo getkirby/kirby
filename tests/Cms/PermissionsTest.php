@@ -25,6 +25,9 @@ class PermissionsTest extends TestCase
             ['pages', 'delete'],
             ['pages', 'update'],
 
+            ['site', 'changeTitle'],
+            ['site', 'update'],
+
             ['users', 'changeEmail'],
             ['users', 'changeLanguage'],
             ['users', 'changeName'],
@@ -33,6 +36,14 @@ class PermissionsTest extends TestCase
             ['users', 'create'],
             ['users', 'delete'],
             ['users', 'update'],
+
+            ['user', 'changeEmail'],
+            ['user', 'changeLanguage'],
+            ['user', 'changeName'],
+            ['user', 'changePassword'],
+            ['user', 'changeRole'],
+            ['user', 'delete'],
+            ['user', 'update'],
         ];
     }
 
@@ -76,16 +87,6 @@ class PermissionsTest extends TestCase
         ]);
 
         $this->assertTrue($p->for($category, $action));
-
-        if (in_array($category, ['pages', 'users']) === true) {
-            $p = new Permissions([
-                'access' => [
-                    $category => false
-                ]
-            ]);
-
-            $this->assertFalse($p->for($category, $action));
-        }
 
     }
 
