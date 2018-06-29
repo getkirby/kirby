@@ -6,7 +6,7 @@
     <kirby-header>
       {{ $t('view.users') }}
       <kirby-button-group slot="left">
-        <kirby-button :disabled="permissions.create === false" icon="add" @click="$refs.create.open()">{{ $t('user.create') }}</kirby-button>
+        <kirby-button :disabled="$permissions.users.create === false" icon="add" @click="$refs.create.open()">{{ $t('user.create') }}</kirby-button>
       </kirby-button-group>
       <kirby-button-group slot="right">
         <kirby-dropdown>
@@ -63,8 +63,7 @@ export default {
       total: null,
       users: [],
       roles: [],
-      issue: null,
-      permissions: this.$permissions.user
+      issue: null
     };
   },
   computed: {

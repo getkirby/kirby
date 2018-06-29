@@ -38,7 +38,7 @@ class PageBlueprintOptions extends BlueprintOptions
             return false;
         }
 
-        return $this->isAllowed('page', 'changeSlug');
+        return $this->isAllowed('pages', 'changeSlug');
     }
 
     public function changeStatus(): bool
@@ -47,12 +47,12 @@ class PageBlueprintOptions extends BlueprintOptions
             return false;
         }
 
-        return $this->isAllowed('page', 'changeStatus');
+        return $this->isAllowed('pages', 'changeStatus');
     }
 
     public function changeTitle(): bool
     {
-        return $this->isAllowed('page', 'changeTitle');
+        return $this->isAllowed('pages', 'changeTitle');
     }
 
     public function changeTemplate(): bool
@@ -65,12 +65,12 @@ class PageBlueprintOptions extends BlueprintOptions
             return false;
         }
 
-        return $this->isAllowed('page', 'changeTemplate');
+        return $this->isAllowed('pages', 'changeTemplate');
     }
 
     public function create(): bool
     {
-        return $this->isAllowed('page', 'create');
+        return $this->isAllowed('pages', 'create');
     }
 
     public function delete(): bool
@@ -79,21 +79,21 @@ class PageBlueprintOptions extends BlueprintOptions
             return false;
         }
 
-        return $this->isAllowed('page', 'delete');
+        return $this->isAllowed('pages', 'delete');
     }
 
     public function preview(): bool
     {
-        return $this->isAllowed('page', 'preview');
+        return $this->isAllowed('pages', 'preview');
     }
 
     public function read(): bool
     {
-        return $this->isAllowed('page', 'read');
+        return $this->isAllowed('pages', 'read');
     }
 
     public function update(): bool
     {
-        return $this->isAllowed('page', 'update');
+        return $this->isAllowed('pages', 'update');
     }
 }

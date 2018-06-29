@@ -17,14 +17,14 @@ class Permissions
             'users' => true,
             'site'  => true
         ],
-        'file' => [
+        'files' => [
             'changeName' => true,
             'create' => true,
             'delete' => true,
             'replace' => true,
             'update' => true
         ],
-        'page' => [
+        'pages' => [
             'changeSlug' => true,
             'changeStatus' => true,
             'changeTemplate' => true,
@@ -37,7 +37,7 @@ class Permissions
         'site' => [
             'update' => true
         ],
-        'user' => [
+        'users' => [
             'changeEmail' => true,
             'changeLanguage' => true,
             'changeName' => true,

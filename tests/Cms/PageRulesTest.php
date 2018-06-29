@@ -24,6 +24,9 @@ class PageRulesTest extends TestCase
                     'email' => 'test@getkirby.com',
                     'role'  => 'admin'
                 ]
+            ],
+            'roots' => [
+                'index' => '/dev/null'
             ]
         ]);
     }

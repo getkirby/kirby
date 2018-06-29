@@ -101,7 +101,7 @@ export default {
           this.accept = response.accept || "*";
           this.error = response.errors[0];
           this.headline = response.headline;
-          this.add = response.add && this.$permissions.file.create;
+          this.add = response.add && this.$permissions.files.create;
           this.min = response.min;
           this.max = response.max;
           this.template = response.template;

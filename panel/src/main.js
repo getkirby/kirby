@@ -14,9 +14,7 @@ import "./config/plugins.js";
 import cache from "./config/cache.js";
 import router from "./config/router.js";
 import store from "./config/store.js";
-import access from "./config/access.js";
 
-Vue.use(access);
 Vue.use(cache);
 
 window.panel.app = new Vue({

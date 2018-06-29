@@ -24,26 +24,26 @@ class FileBlueprintOptions extends BlueprintOptions
 
     public function changeName(): bool
     {
-        return $this->isAllowed('file', 'changeName');
+        return $this->isAllowed('files', 'changeName');
     }
 
     public function create(): bool
     {
-        return $this->isAllowed('file', 'create');
+        return $this->isAllowed('files', 'create');
     }
 
     public function delete(): bool
     {
-        return $this->isAllowed('file', 'delete');
+        return $this->isAllowed('files', 'delete');
     }
 
     public function replace(): bool
     {
-        return $this->isAllowed('file', 'replace');
+        return $this->isAllowed('files', 'replace');
     }
 
     public function update(): bool
     {
-        return $this->isAllowed('file', 'update');
+        return $this->isAllowed('files', 'update');
     }
 }
