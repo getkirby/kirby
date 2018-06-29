@@ -78,6 +78,9 @@
   "structure.add.first": "Klicke um den ersten Eintrag zu erstellen …",
   "structure.delete.confirm": "Möchtest du diesen Eintrag wirklich löschen?",
 
+  "upload.errors": "Fehler",
+  "upload.progress": "Hochladen …",
+
   "user": "Benutzer",
   "user.created": "Der Benutzer wurde erstellt",
   "user.name": "Name",
