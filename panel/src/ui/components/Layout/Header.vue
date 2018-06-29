@@ -1,7 +1,7 @@
 <template>
   <header class="kirby-header">
     <kirby-headline tag="h1" size="huge">
-      <span v-if="$listeners.edit" @click="$emit('edit')" class="kirby-headline-editable">
+      <span v-if="$listeners.edit" class="kirby-headline-editable" @click="$emit('edit')">
         <slot />
         <kirby-icon type="edit" />
       </span>
@@ -12,7 +12,7 @@
       <slot slot="right" name="right" class="kirby-header-right" />
     </kirby-bar>
 
-    <div v-if="tabs && tabs.length > 1" class="kirby-header-tabs" :data-compact="tabs.length >= 5">
+    <div v-if="tabs && tabs.length > 1" :data-compact="tabs.length >= 5" class="kirby-header-tabs">
       <nav>
         <kirby-button
           v-for="(tab, tabIndex) in tabs"

@@ -12,14 +12,19 @@
           @keydown.tab.prevent="tab"
           @keydown.enter="enter"
           @keydown.esc="close"
-          @keydown.cmd.left.prevent="back"
-          @keydown.cmd.right.prevent="tab"
+          @keydown.meta.left.prevent="back"
+          @keydown.meta.right.prevent="tab"
         >
-        <kirby-button icon="parent" v-show="parent.length" @click="back" />
+        <kirby-button v-show="parent.length" icon="parent" @click="back" />
         <kirby-button icon="cancel" @click="close" />
       </div>
       <ul>
-        <li v-for="(page, pageIndex) in pages" :key="page.id" @mouseover="selected = pageIndex" :data-selected="selected === pageIndex">
+        <li
+          v-for="(page, pageIndex) in pages"
+          :key="page.id"
+          :data-selected="selected === pageIndex"
+          @mouseover="selected = pageIndex"
+        >
           <kirby-link :to="'/pages/' + page.id.replace('/', '+')" @click="click(pageIndex)">
             <strong>{{ page.title }}</strong>
             <small>{{ page.id }}</small>

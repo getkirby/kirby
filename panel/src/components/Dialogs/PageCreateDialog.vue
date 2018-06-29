@@ -35,11 +35,6 @@ export default {
       }
     };
   },
-  watch: {
-    "page.title"(title) {
-      this.page.slug = slug(title);
-    }
-  },
   computed: {
     fields() {
       return {
@@ -66,6 +61,11 @@ export default {
           options: this.templates
         }
       };
+    }
+  },
+  watch: {
+    "page.title"(title) {
+      this.page.slug = slug(title);
     }
   },
   methods: {

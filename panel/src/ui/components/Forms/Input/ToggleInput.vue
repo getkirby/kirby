@@ -40,18 +40,6 @@ export default {
       }
     }
   },
-  mounted() {
-    this.onInvalid();
-
-    if (this.$props.autofocus) {
-      this.focus();
-    }
-  },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
   computed: {
     label() {
       if (Array.isArray(this.text)) {
@@ -59,6 +47,18 @@ export default {
       }
 
       return this.text;
+    }
+  },
+  watch: {
+    value() {
+      this.onInvalid();
+    }
+  },
+  mounted() {
+    this.onInvalid();
+
+    if (this.$props.autofocus) {
+      this.focus();
     }
   },
   methods: {
