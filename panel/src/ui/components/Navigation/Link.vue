@@ -1,5 +1,6 @@
 <template>
   <a
+    v-if="to"
     ref="link"
     :disabled="disabled"
     :href="href"
@@ -12,6 +13,13 @@
   >
     <slot />
   </a>
+  <span
+    v-else
+    :title="title"
+    class="kirby-link"
+  >
+    <slot />
+  </span>
 </template>
 
 <script>
@@ -22,10 +30,7 @@ export default {
     tabindex: String,
     target: String,
     title: String,
-    to: {
-      type: String,
-      required: true
-    }
+    to: String,
   },
   data() {
     return {

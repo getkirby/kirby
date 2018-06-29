@@ -13,7 +13,7 @@
         @keydown.backspace.prevent="close"
         @keydown.delete.prevent="close"
       >
-      {{ item.text }}
+        {{ item.text }}
       </kirby-dropdown-item>
     </kirby-dropdown-content>
     {{ query }}
@@ -60,8 +60,22 @@ export default {
       const regex = new RegExp(query, "ig");
 
       this.matches = this.options
-        .filter(option => this.skip.indexOf(option.text) === -1)
-        .filter(option => option.text.match(regex) !== null)
+        .filter(option => {
+
+          // skip all options without valid text
+          if (!option.text) {
+            return false;
+          }
+
+          // skip all options in the skip array
+          if (this.skip.indexOf(option.text) !== -1) {
+            return false;
+          }
+
+          // match the search with the text
+          return option.text.match(regex) !== null;
+
+        })
         .slice(0, this.limit);
 
       this.$emit("search", query, this.matches);

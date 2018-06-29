@@ -47,10 +47,9 @@ return [
         'userData' => function ($user) {
             return [
                 'email' => $user->email(),
-                'name'  => $user->name(),
-                'text'  => $user->name(),
+                'name'  => $name = $user->name() ?? $user->email(),
+                'text'  => $name,
                 'image' => $user->avatar()->exists() ? $user->avatar()->url() : null,
-                'link'  => '/users/' . $user->id(),
                 'icon'  => 'user'
             ];
         },
