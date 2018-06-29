@@ -68,7 +68,6 @@ export default {
 }
 .kirby-field[data-disabled] {
   cursor: not-allowed;
-  opacity: 0.25;
 }
 .kirby-field[data-disabled] * {
   pointer-events: none;

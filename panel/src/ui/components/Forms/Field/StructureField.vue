@@ -2,6 +2,7 @@
   <kirby-field v-bind="$props" class="kirby-structure-field">
     <template slot="options">
       <kirby-button
+        v-if="!disabled"
         ref="add"
         :id="_uid"
         icon="add"
@@ -13,7 +14,7 @@
 
     <template>
       <kirby-box v-if="items.length === 0" theme="button">
-        <kirby-button icon="add" @click="add">{{ "Click to add the first item …" | t("structure.add.first") }}</kirby-button>
+        <kirby-button :disabled="disabled" icon="add" @click="add">{{ "Click to add the first item …" | t("structure.add.first") }}</kirby-button>
       </kirby-box>
       <kirby-draggable
         v-else

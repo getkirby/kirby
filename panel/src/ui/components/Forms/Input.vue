@@ -112,6 +112,10 @@ export default {
     box-shadow: $color-focus-outline 0 0 0 2px;
   }
 
+  &[data-disabled] {
+    background: $color-background;
+  }
+
   &[data-invalid] {
     border: $field-input-invalid-border;
     box-shadow: 0;

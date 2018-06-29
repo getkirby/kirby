@@ -11,6 +11,7 @@
       <kirby-input
         ref="input"
         :id="_uid"
+        :disabled="disabled"
         v-model="typed"
         type="text"
         theme="field"
