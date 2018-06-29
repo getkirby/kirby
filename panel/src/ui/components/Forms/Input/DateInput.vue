@@ -67,7 +67,7 @@ export default {
       return isNaN(this.date.date()) ? "" : this.date.date();
     },
     days() {
-      return this.options(1, this.date.daysInMonth() || 0, "days");
+      return this.options(1, this.date.daysInMonth() || 31, "days");
     },
     month() {
       return isNaN(this.date.month()) ? "" : this.date.month() + 1;
