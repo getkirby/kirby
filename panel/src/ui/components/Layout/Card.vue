@@ -144,6 +144,7 @@ export default {
   line-height: 1;
   text-overflow: ellipsis;
   font-size: $font-size-small;
+  overflow: hidden;
 }
 .kirby-card-info {
   color: $color-light-grey;
@@ -151,6 +152,7 @@ export default {
   text-overflow: ellipsis;
   font-size: $font-size-small;
   padding-top: .5rem;
+  overflow: hidden;
 }
 .kirby-card-options {
   position: absolute;
