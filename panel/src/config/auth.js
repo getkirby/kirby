@@ -18,7 +18,6 @@ export default function(to, from, next) {
 
     // no access? redirect to website
     if (access.panel === false) {
-      alert("You don't have panel access");
       window.location.href = config.site;
       return false;
     }
