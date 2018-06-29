@@ -35,7 +35,8 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
-        change: (event) => this.onInput(event.target.checked)
+        change: (event) => this.onInput(event.target.checked),
+        keydown: this.onEnter
       }
     }
   },
@@ -63,6 +64,11 @@ export default {
   methods: {
     focus() {
       this.$refs.input.focus();
+    },
+    onEnter(e) {
+      if (e.key === "Enter") {
+        this.$refs.input.click();
+      }
     },
     onInput(checked) {
       this.$emit("input", checked);
