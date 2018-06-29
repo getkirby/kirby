@@ -147,10 +147,6 @@ export default [
     name: "NotFound",
     beforeEnter: (to, from, next) => {
       next("/");
-      store.dispatch(
-        "notification/error",
-        Vue.i18n.translate("error.view.notFound")
-      );
     }
   }
 ];
