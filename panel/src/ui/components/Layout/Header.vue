@@ -1,7 +1,11 @@
 <template>
   <header class="kirby-header">
-    <kirby-headline tag="h1" size="huge" @click="$emit('edit')">
-      <slot />
+    <kirby-headline tag="h1" size="huge">
+      <span v-if="$listeners.edit" @click="$emit('edit')" class="kirby-headline-editable">
+        <slot />
+        <kirby-icon type="edit" />
+      </span>
+      <slot v-else />
     </kirby-headline>
     <kirby-bar>
       <slot slot="left" name="left" class="kirby-header-left" />
@@ -54,6 +58,21 @@ export default {
 .kirby-header .kirby-headline {
   min-height: 1.25em;
 }
+.kirby-header .kirby-headline-editable {
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+}
+.kirby-header .kirby-headline-editable .kirby-icon {
+  color: $color-light-grey;
+  margin-left: .5rem;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.kirby-header .kirby-headline-editable:hover .kirby-icon {
+  opacity: 1;
+}
+
 .kirby-header-tabs {
   position: relative;
   background: #e9e9e9;
@@ -67,7 +86,6 @@ export default {
   margin-left: -1px;
   margin-right: -1px;
 }
-
 .kirby-header-tabs[data-compact] .kirby-tab-button:not([aria-current]) .kirby-button-text {
   display: none;
 }
@@ -94,7 +112,6 @@ export default {
     max-width: 13rem;
   }
 }
-
 .kirby-tab-button .kirby-button-text {
   padding-top: .375rem;
   padding-left: 0 !important; // there's another rule that has a higher specificity and breaks alignment otherwise
@@ -111,11 +128,9 @@ export default {
   }
 
 }
-
 .kirby-tab-button:last-child {
   border-right: 1px solid transparent;
 }
-
 .kirby-tab-button[aria-current] {
   position: relative;
   background: $color-background;
