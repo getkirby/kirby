@@ -64,7 +64,7 @@ export default {
       users: [],
       roles: [],
       issue: null,
-      permissions: this.$store.state.user.current.permissions.user
+      permissions: this.$permissions.user
     };
   },
   computed: {

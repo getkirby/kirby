@@ -1,3 +1,4 @@
+import Vue from "vue";
 import Api from "@/api/api.js";
 import router from "@/config/router.js";
 
@@ -10,6 +11,14 @@ export default {
   mutations: {
     SET_CURRENT(state, user) {
       state.current = user;
+
+      if (user && user.permissions) {
+        Vue.prototype.$user        = user;
+        Vue.prototype.$permissions = user.permissions;
+      } else {
+        Vue.prototype.$user = null;
+        Vue.prototype.$permissions = null;
+      }
     },
     SET_PATH(state, path) {
       state.path = path;
