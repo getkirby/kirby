@@ -15,7 +15,7 @@
                 :key="'menu-item-' + viewName"
               >
                 <kirby-dropdown-item
-                  :disabled="access[viewName] === false"
+                  :disabled="$permissions.access[viewName] === false"
                   :icon="view.icon"
                   :link="view.link"
                 >
@@ -108,9 +108,6 @@ export default {
     },
     user() {
       return this.$store.state.user.current;
-    },
-    access() {
-      return this.user.permissions.access !== false;
     },
     notification() {
       if (
