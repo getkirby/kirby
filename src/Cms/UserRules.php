@@ -19,7 +19,7 @@ class UserRules
         if ($user->permissions()->changeEmail() !== true) {
             throw new PermissionException([
                 'key'  => 'user.changeEmail.permission',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 
@@ -31,7 +31,7 @@ class UserRules
         if ($user->permissions()->changeLanguage() !== true) {
             throw new PermissionException([
                 'key'  => 'user.changeLanguage.permission',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 
@@ -43,7 +43,7 @@ class UserRules
         if ($user->permissions()->changeName() !== true) {
             throw new PermissionException([
                 'key'  => 'user.changeName.permission',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 
@@ -55,7 +55,7 @@ class UserRules
         if ($user->permissions()->changePassword() !== true) {
             throw new PermissionException([
                 'key'  => 'user.changePassword.permission',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 
@@ -67,7 +67,7 @@ class UserRules
         if ($user->permissions()->changeRole() !== true) {
             throw new PermissionException([
                 'key'  => 'user.changeRole.permission',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 
@@ -76,7 +76,7 @@ class UserRules
         if ($role !== 'admin' && $user->isLastAdmin() === true) {
             throw new LogicException([
                 'key'  => 'user.changeRole.lastAdmin',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 
@@ -108,7 +108,7 @@ class UserRules
         if ($user->permissions()->delete() !== true) {
             throw new PermissionException([
                 'key'  => 'user.delete.permission',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 
@@ -130,7 +130,7 @@ class UserRules
         if ($user->permissions()->update() !== true) {
             throw new PermissionException([
                 'key'  => 'user.update.permission',
-                'data' => ['name' => $user->name()]
+                'data' => ['name' => $user->username()]
             ]);
         }
 

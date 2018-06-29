@@ -362,6 +362,18 @@ class User extends Model
     }
 
     /**
+     * Returns the username
+     * which is the given name or the email
+     * as a fallback
+     *
+     * @return string
+     */
+    public function username(): string
+    {
+        return $this->name() ?? $this->email();
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *

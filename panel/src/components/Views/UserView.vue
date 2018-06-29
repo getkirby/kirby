@@ -33,9 +33,9 @@
         </template>
 
         <kirby-button-group>
-          <kirby-button icon="email" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</kirby-button>
-          <kirby-button icon="bolt" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</kirby-button>
-          <kirby-button icon="globe" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</kirby-button>
+          <kirby-button icon="email" :disabled="!permissions.changeEmail" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</kirby-button>
+          <kirby-button icon="bolt"  :disabled="!permissions.changeRole" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</kirby-button>
+          <kirby-button icon="globe" :disabled="!permissions.changeLanguage" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</kirby-button>
         </kirby-button-group>
       </kirby-view>
     </div>
@@ -120,7 +120,10 @@ export default {
         next: null
       },
       permissions: {
-        changeName: false
+        changeEmail: true,
+        changeName: true,
+        changeLanguage: true,
+        changeRole: true
       },
       issue: null,
       avatar: null,
@@ -243,6 +246,9 @@ export default {
   padding-top: .25rem;
   padding-bottom: .25rem;
 }
+.kirby-user-profile .kirby-button-group .kirby-button[disabled] {
+  opacity: 1;
+}
 
 .kirby-user-profile .kirby-dropdown-content {
   margin-top: .5rem;
@@ -265,7 +271,7 @@ export default {
   color: $color-light-grey;
   transition: color .3s;
 }
-.kirby-user-name-placeholder:hover {
+.kirby-header[data-editable] .kirby-user-name-placeholder:hover {
   color: $color-dark;
 }
 

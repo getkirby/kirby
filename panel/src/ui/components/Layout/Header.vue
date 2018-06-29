@@ -1,7 +1,7 @@
 <template>
-  <header class="kirby-header">
+  <header class="kirby-header" :data-editable="editable">
     <kirby-headline tag="h1" size="huge">
-      <span v-if="$listeners.edit" class="kirby-headline-editable" @click="$emit('edit')">
+      <span v-if="editable && $listeners.edit" class="kirby-headline-editable" @click="$emit('edit')">
         <slot />
         <kirby-icon type="edit" />
       </span>
@@ -33,6 +33,7 @@
 <script>
 export default {
   props: {
+    editable: Boolean,
     tabs: Array,
     tab: Object
   },
