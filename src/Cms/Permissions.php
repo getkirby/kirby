@@ -15,7 +15,7 @@ class Permissions
         'access' => [
             'panel' => true,
             'users' => true,
-            'site'  => true
+            'pages' => true
         ],
         'files' => [
             'changeName' => true,
@@ -49,7 +49,7 @@ class Permissions
         ],
     ];
 
-    public function __construct($settings)
+    public function __construct($settings = [])
     {
         if (is_bool($settings) === true) {
             return $this->setAll($settings);
@@ -62,6 +62,11 @@ class Permissions
 
     public function for(string $category = null, string $action = null)
     {
+        // check for globally blocked access
+        if (isset($this->actions['access'][$category]) === true && $this->actions['access'][$category] === false) {
+            return false;
+        }
+
         if ($action === null) {
             if ($this->hasCategory($category) === false) {
                 return false;
