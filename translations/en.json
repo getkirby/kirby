@@ -208,6 +208,7 @@
     "error.page.sort.section.type": "The page cannot be dragged into this section",
     "error.page.sort.section.template.invalid": "The page template is not allowed in this section",
 
+    "error.site.changeTitle.permission": "You are not allowed to change the title of the site",
     "error.site.update.permission": "You are not allowed to update the site",
 
     "error.user.notFound": "The user \"{name}\" cannot be found",

@@ -10,6 +10,9 @@ return [
         'name' => function (SiteBlueprint $blueprint) {
             return $blueprint->name();
         },
+        'options' => function (SiteBlueprint $blueprint) {
+            return $blueprint->options()->toArray();
+        },
         'tabs' => function (SiteBlueprint $blueprint) {
             return $blueprint->tabs()->toArray();
         },

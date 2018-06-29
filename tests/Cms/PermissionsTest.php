@@ -21,7 +21,6 @@ class PermissionsTest extends TestCase
             ['pages', 'changeTemplate'],
             ['pages', 'changeTitle'],
             ['pages', 'create'],
-            ['pages', 'preview'],
             ['pages', 'delete'],
             ['pages', 'update'],
 

@@ -3,7 +3,7 @@
     {{ issue.message }}
   </kirby-error-view>
   <kirby-view v-else key="site-view" class="kirby-site-view">
-    <kirby-header :tabs="tabs" :tab="tab" @edit="action('rename')">
+    <kirby-header :tabs="tabs" :tab="tab" :editable="permissions.changeTitle" @edit="action('rename')">
       {{ site.title }}
       <kirby-button-group slot="left">
         <kirby-button icon="open" @click="action('preview')">
@@ -42,7 +42,10 @@ export default {
       issue: null,
       tab: null,
       tabs: [],
-      options: null
+      options: null,
+      permissions: {
+        changeTitle: true
+      }
     };
   },
   created() {
@@ -55,6 +58,7 @@ export default {
         .then(site => {
           this.site = site;
           this.tabs = site.blueprint.tabs;
+          this.permissions = site.blueprint.options;
           this.options = ready => {
             this.$api.site.options().then(options => {
               ready(options);

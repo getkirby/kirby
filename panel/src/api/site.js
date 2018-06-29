@@ -19,7 +19,7 @@ export default {
         click: "rename",
         icon: "title",
         text: Vue.i18n.translate("rename"),
-        disabled: !options.update
+        disabled: !options.changeTitle
       });
 
       return result;

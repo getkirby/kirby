@@ -15,7 +15,6 @@ class Permissions
         'access' => [
             'panel' => true,
             'users' => true,
-            'pages' => true
         ],
         'files' => [
             'changeName' => true,
@@ -31,7 +30,6 @@ class Permissions
             'changeTitle' => true,
             'create' => true,
             'delete' => true,
-            'preview' => true,
             'update' => true
         ],
         'site' => [

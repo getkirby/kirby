@@ -10,12 +10,18 @@ namespace Kirby\Cms;
 class SiteBlueprintOptions extends BlueprintOptions
 {
     protected $options = [
+        'changeTitle' => null,
         'update' => null,
     ];
 
     public function __construct(Site $model, array $options = null)
     {
         parent::__construct($model, $options);
+    }
+
+    public function changeTitle(): bool
+    {
+        return $this->isAllowed('site', 'changeTitle');
     }
 
     public function update(): bool
