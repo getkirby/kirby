@@ -73,4 +73,30 @@ class Component
             $this->$computedName = $computedFunction->call($this);
         }
     }
+
+    public function toArray()
+    {
+        if (is_a($this->options['toArray'] ?? null, Closure::class) === true) {
+            return $this->options['toArray']->call($this);
+        }
+
+        $array = [];
+
+        foreach ($this->attrs ?? [] as $key => $value) {
+            $array[$key] = $this->$key;
+        }
+
+        foreach ($this->options['props'] ?? [] as $key => $value) {
+            $array[$key] = $this->$key;
+        }
+
+        foreach ($this->options['computed'] ?? [] as $key => $value) {
+            $array[$key] = $this->$key;
+        }
+
+        ksort($array);
+
+        return $array;
+    }
+
 }
