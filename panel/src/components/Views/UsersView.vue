@@ -39,7 +39,7 @@
         @action="action"
       />
     </template>
-    <template v-else>
+    <template v-else-if="total === 0">
       <kirby-box :text="$t('user.none')" />
     </template>
 
@@ -60,7 +60,7 @@ export default {
     return {
       page: 1,
       limit: 20,
-      total: 0,
+      total: null,
       users: [],
       roles: [],
       issue: null,
