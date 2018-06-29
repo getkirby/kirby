@@ -108,7 +108,7 @@ export default {
             return page;
           });
 
-          this.add = response.add;
+          this.add = response.add && this.$permissions.page.create;
           this.blueprints = response.blueprints;
           this.pagination = response.pagination;
           this.status = response.status;
