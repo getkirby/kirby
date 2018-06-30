@@ -64,7 +64,14 @@ export default {
     };
   },
   methods: {
-    focus() {
+    focus(e) {
+      // prevent focussing on first input element,
+      // if click is already targetting another input element
+      if (e.target && e.target.tagName === 'INPUT') {
+        e.target.focus();
+        return;
+      }
+
       const input = this.$el.querySelector("input, select, textarea");
 
       if (input) {
