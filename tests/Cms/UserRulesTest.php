@@ -90,13 +90,14 @@ class UserRulesTest extends TestCase
 
     public function testCreate()
     {
-        $user = new User([
+        $user = new User($props = [
             'email'    => 'user@domain.com',
             'password' => '12345678',
+            'language' => 'en',
             'kirby'    => $this->appWithAdmin()
         ]);
 
-        $this->assertTrue(UserRules::create($user));
+        $this->assertTrue(UserRules::create($user, $props));
     }
 
     // /**
