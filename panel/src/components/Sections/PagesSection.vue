@@ -205,14 +205,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.kirby-pages-section-flag .kirby-icon {
-  opacity: 0.25;
-  transition: opacity 0.3s;
-}
-.kirby-pages-section-flag:focus .kirby-icon,
-.kirby-pages-section-flag:hover .kirby-icon {
-  opacity: 1;
-}
-</style>
