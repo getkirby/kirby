@@ -219,6 +219,8 @@ export default {
         e.target.selectionStart === e.target.selectionEnd
       ) {
         this.navigate("last");
+        this.$refs.autocomplete.close();
+        e.preventDefault();
         e.target.blur();
       }
     },
