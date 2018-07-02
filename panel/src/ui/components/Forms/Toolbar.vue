@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="buttons" class="kirby-toolbar">
+  <nav v-if="buttons" class="kirby-toolbar" @click.stop>
 
     <template v-for="(button, buttonIndex) in layout">
 
@@ -31,17 +31,6 @@
         </kirby-dropdown>
       </template>
 
-      <!-- dialog -->
-      <template v-else-if="button.dialog">
-        <kirby-button
-          :icon="button.icon"
-          :key="buttonIndex"
-          tabindex="-1"
-          class="kirby-toolbar-button"
-          @click="dialog(button.dialog)"
-        />
-      </template>
-
       <!-- single button -->
       <template v-else>
         <kirby-button
@@ -55,16 +44,10 @@
 
     </template>
 
-    <kirby-email-dialog ref="emailDialog" @cancel="cancel" @submit="command('insert', $event)" />
-    <kirby-link-dialog ref="linkDialog" @cancel="cancel" @submit="command('insert', $event)" />
-
   </nav>
 </template>
 
 <script>
-
-import EmailDialog from "./Toolbar/EmailDialog.vue";
-import LinkDialog from "./Toolbar/LinkDialog.vue";
 
 const list = function(type) {
 
@@ -83,10 +66,6 @@ const list = function(type) {
 };
 
 export default {
-  components: {
-    "kirby-email-dialog": EmailDialog,
-    "kirby-link-dialog": LinkDialog
-  },
   commands: {
     headlines: {
       label: "Headline",
@@ -130,13 +109,15 @@ export default {
       label: "Link",
       icon: "url",
       shortcut: "l",
-      dialog: "linkDialog"
+      command: "dialog",
+      args: "link"
     },
     email: {
       label: "Email",
       icon: "email",
       shortcut: "e",
-      dialog: "emailDialog",
+      command: "dialog",
+      args: "email"
     },
     code: {
       label: "Code",
@@ -177,6 +158,14 @@ export default {
       default: true,
     }
   },
+  mounted() {
+    this.$events.$on('click', this.blur);
+    this.$events.$on('keydown.esc', this.cancel);
+  },
+  destroyed() {
+    this.$events.$off('click', this.blur);
+    this.$events.$off('keydown.esc', this.cancel);
+  },
   data() {
 
     let layout    = {};
@@ -214,8 +203,11 @@ export default {
     };
   },
   methods: {
+    blur() {
+      this.$emit('blur');
+    },
     cancel() {
-      this.$emit("cancel");
+      this.$emit('cancel');
     },
     command(command, callback) {
       if (typeof command === "function") {
@@ -223,11 +215,6 @@ export default {
       } else {
         this.$emit("command", command, callback);
       }
-    },
-    dialog(dialog) {
-      this.command("info", (input, selection) => {
-        this.$refs[dialog].open(input, selection);
-      });
     },
     shortcut(shortcut, $event) {
 
@@ -241,11 +228,7 @@ export default {
 
         $event.preventDefault();
 
-        if (button.dialog) {
-          this.dialog(button.dialog);
-        } else {
-          this.command(button.command, button.args);
-        }
+        this.command(button.command, button.args);
 
       }
     }
@@ -256,13 +239,20 @@ export default {
 <style lang="scss">
 .kirby-toolbar {
   display: flex;
-  flex-wrap: wrap;
+  background: $color-white;
+  box-shadow: $box-shadow;
+  border: 1px solid $color-border;
+  border-radius: $border-radius;
 }
 .kirby-toolbar-divider {
-  padding: 0 .5rem;
+  width: 1px;
+  background: $color-border;
 }
 .kirby-toolbar-button {
-  padding: 0 .5rem;
-  height: 2rem;
+  padding: 0 .75rem;
+  height: 36px;
+}
+.kirby-toolbar-button:hover {
+  background: rgba($color-background, .5);
 }
 </style>

@@ -16,24 +16,40 @@
       }"
       :data-size="size"
       class="kirby-textarea-input-native"
+      @blur="onBlur"
+      @click="onClick"
       @focus="onFocus"
       @input="onInput"
+      @select="onSelect"
       @keydown.meta.enter="onSubmit"
       @keydown.meta="onShortcut"
     />
     <kirby-toolbar
-      v-if="!disabled && buttons !== false "
+      v-if="!disabled && buttons !== false && toolbar"
       ref="toolbar"
       :buttons="buttons"
-      @cancel="focus"
+      :style="{
+        top: caret.top + 'px',
+        left: caret.left + 'px'
+      }"
+      @blur="toolbar = false"
+      @cancel="cancel"
       @command="onCommand"
     />
+
+    <kirby-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
+    <kirby-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
+
   </div>
 </template>
 
 <script>
+
 import Toolbar from "../Toolbar.vue";
+import EmailDialog from "../Toolbar/EmailDialog.vue";
+import LinkDialog from "../Toolbar/LinkDialog.vue";
 import autosize from "autosize";
+import caret from "textarea-caret";
 import {
   required,
   minLength,
@@ -43,7 +59,9 @@ import {
 export default {
   inheritAttrs: false,
   components: {
-    "kirby-toolbar": Toolbar
+    "kirby-toolbar": Toolbar,
+    "kirby-email-dialog": EmailDialog,
+    "kirby-link-dialog": LinkDialog
   },
   props: {
     autofocus: Boolean,
@@ -75,6 +93,15 @@ export default {
       });
     }
   },
+  data() {
+    return {
+      caret: {
+        top: 0,
+        left: 0,
+      },
+      toolbar: false
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       autosize(this.$refs.input);
@@ -89,13 +116,25 @@ export default {
     if (this.$props.preselect) {
       this.select();
     }
+
   },
   methods: {
+    cancel() {
+      this.$refs.input.focus();
+      this.toolbar = false;
+    },
+    dialog(dialog) {
+      if (this.$refs[dialog + "Dialog"]) {
+        this.$refs[dialog + "Dialog"].open(this.$refs.input, this.selection());
+      } else {
+        throw "Invalid toolbar dialog";
+      }
+    },
     focus() {
       this.$refs.input.focus();
     },
-    info() {
-      return true;
+    getCaret() {
+      return caret(this.$refs.input, this.$refs.input.selectionEnd);
     },
     insert(text) {
 
@@ -121,6 +160,16 @@ export default {
     resize() {
       autosize.update(this.$refs.input);
     },
+    onBlur($event) {
+      if ($event.relatedTarget && this.$el.contains($event.relatedTarget) === false) {
+        this.toolbar = false;
+      }
+    },
+    onClick() {
+      if (this.$refs.input.selectionStart === this.$refs.input.selectionEnd) {
+        this.toolbar = false;
+      }
+    },
     onCommand(command, callback) {
 
       if (typeof this[command] !== "function") {
@@ -133,15 +182,46 @@ export default {
       } else {
         this[command](callback);
       }
+
+      this.toolbar = false;
     },
     onFocus($event) {
       this.$emit("focus", $event);
     },
     onInput($event) {
+      this.toolbar = false;
       this.$emit("input", $event.target.value);
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
+    },
+    onSelect($event)
+    {
+      this.toolbar = true;
+
+      this.$nextTick(() => {
+
+        const caret         = this.getCaret();
+        const toolbarWidth  = this.$refs.toolbar.$el.offsetWidth;
+        const textareaWidth = this.$el.offsetWidth;
+        const maxLeft       = textareaWidth - toolbarWidth + 16;
+        let left            = caret.left - Math.round(toolbarWidth / 2);
+
+        if (left < 0) {
+          left = -16;
+        }
+
+        if (left > maxLeft) {
+          left = maxLeft;
+        }
+
+        this.caret = {
+          top: caret.top,
+          left: left,
+        };
+
+      });
+
     },
     onShortcut($event) {
       if (this.buttons !== false && $event.key !== "Meta" && this.$refs.toolbar) {
@@ -178,6 +258,9 @@ export default {
 </script>
 
 <style lang="scss">
+.kirby-textarea-input {
+  position: relative;
+}
 .kirby-textarea-input-native {
   resize: none;
   border: 0;
@@ -207,11 +290,12 @@ export default {
   min-height: 45rem;
 }
 
-.kirby-textarea-input .kirby-toolbar-button {
-  color: $color-border;
-}
-.kirby-textarea-input:focus-within .kirby-toolbar-button  {
-  color: $color-dark;
+.kirby-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-150%);
+  z-index: z-index("toolbar");
 }
 
 </style>

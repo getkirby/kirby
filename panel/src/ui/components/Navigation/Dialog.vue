@@ -65,11 +65,14 @@ export default {
       this.$events.$on("keydown.esc", this.close);
 
       this.$nextTick(() => {
-        var autofocus = this.$el.querySelector(
-          "input, textarea, select, button:not([data-options])"
-        );
-        if (autofocus) {
-          autofocus.focus();
+        if (this.$el && this.$el.querySelector) {
+          const autofocus = this.$el.querySelector(
+            "input, textarea, select, button:not([data-options])"
+          );
+
+          if (autofocus) {
+            autofocus.focus();
+          }
         }
       });
     },

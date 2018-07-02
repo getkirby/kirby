@@ -108,7 +108,7 @@ export default {
   pointer-events: none;
   background: rgba($color-dark, 0.7);
   box-shadow: $color-focus-on-dark 0 0 0 3px;
-  z-index: z-index("focusmode");
+  z-index: z-index("dropzone");
   border-radius: $border-radius;
 }
 .kirby-dropzone-overlay p {
