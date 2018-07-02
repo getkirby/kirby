@@ -120,7 +120,7 @@ export default {
         ];
       }
 
-      this.$api.user
+      this.$api.users
         .list(query)
         .then(response => {
           this.total = response.pagination.total;
@@ -132,7 +132,7 @@ export default {
               info: user.role.title,
               link: "/users/" + user.id,
               options: ready => {
-                this.$api.user
+                this.$api.users
                   .options(user.id, "list")
                   .then(options => ready(options));
               },

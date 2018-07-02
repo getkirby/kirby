@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.user.get(id, { view: "compact" })
+      this.$api.users.get(id, { view: "compact" })
         .then(user => {
           this.user = user;
           this.$refs.dialog.open();
@@ -58,7 +58,7 @@ export default {
         });
     },
     submit() {
-      this.$api.user
+      this.$api.users
         .changeLanguage(this.user.id, this.user.language)
         .then(user => {
           this.user = user;

@@ -135,7 +135,7 @@ export default {
     prev() {
       if (this.user.prev) {
         return {
-          link: this.$api.user.link(this.user.prev.id),
+          link: this.$api.users.link(this.user.prev.id),
           tooltip: this.user.prev.name
         };
       }
@@ -143,7 +143,7 @@ export default {
     next() {
       if (this.user.next) {
         return {
-          link: this.$api.user.link(this.user.next.id),
+          link: this.$api.users.link(this.user.next.id),
           tooltip: this.user.next.name
         };
       }
@@ -165,7 +165,7 @@ export default {
           this.$refs.password.open(this.user.id);
           break;
         case "picture.delete":
-          this.$api.user.deleteAvatar(this.id).then(() => {
+          this.$api.users.deleteAvatar(this.id).then(() => {
             this.$store.dispatch(
               "notification/success",
               this.$t("user.avatar.deleted")
@@ -187,7 +187,7 @@ export default {
       }
     },
     fetch() {
-      this.$api.user
+      this.$api.users
         .get(this.id, { view: "panel" })
         .then(user => {
           this.user = user;
@@ -195,7 +195,7 @@ export default {
           this.ready = true;
           this.permissions = user.blueprint.options;
           this.options = ready => {
-            this.$api.user.options(this.user.id).then(options => {
+            this.$api.users.options(this.user.id).then(options => {
               ready(options);
             });
           };
@@ -207,7 +207,7 @@ export default {
           }
 
           if (this.$route.name === "User") {
-            this.$store.dispatch("breadcrumb", this.$api.user.breadcrumb(user));
+            this.$store.dispatch("breadcrumb", this.$api.users.breadcrumb(user));
           } else {
             this.$store.dispatch("breadcrumb", []);
           }

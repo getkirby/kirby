@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.user.get(id, { select: ["id", "name"] })
+      this.$api.users.get(id, { select: ["id", "name"] })
         .then(user => {
           this.user = user;
           this.$refs.dialog.open();
@@ -52,7 +52,7 @@ export default {
         });
     },
     submit() {
-      this.$api.user
+      this.$api.users
         .changeName(this.user.id, this.user.name)
         .then(() => {
           this.success({

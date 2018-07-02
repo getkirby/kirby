@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.user.get(id)
+      this.$api.users.get(id)
         .then(user => {
           this.user = user;
           this.$refs.dialog.open();
@@ -34,7 +34,7 @@ export default {
         });
     },
     submit() {
-      this.$api.user
+      this.$api.users
         .delete(this.user.id)
         .then(() => {
           this.success({

@@ -45,7 +45,7 @@ export default {
     open(id) {
       this.id = id;
 
-      this.$api.user.get(id)
+      this.$api.users.get(id)
         .then(user => {
           this.$api.role.options().then(roles => {
             this.roles = roles;
@@ -59,7 +59,7 @@ export default {
         });
     },
     submit() {
-      this.$api.user
+      this.$api.users
         .changeRole(this.user.id, this.user.role)
         .then(() => {
           this.success({

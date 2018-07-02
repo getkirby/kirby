@@ -71,7 +71,7 @@ export default {
         });
     },
     create() {
-      this.$api.user
+      this.$api.users
         .create(this.user)
         .then(() => {
           this.user = {

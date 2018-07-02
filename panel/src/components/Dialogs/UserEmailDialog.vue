@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.user.get(id, { select: ["id", "email"] })
+      this.$api.users.get(id, { select: ["id", "email"] })
         .then(user => {
           this.user = user;
           this.$refs.dialog.open();
@@ -52,7 +52,7 @@ export default {
         });
     },
     submit() {
-      this.$api.user
+      this.$api.users
         .changeEmail(this.user.id, this.user.email)
         .then(response => {
 
@@ -62,7 +62,7 @@ export default {
           };
 
           if (this.$route.name === "User") {
-            payload.route = this.$api.user.link(response.id);
+            payload.route = this.$api.users.link(response.id);
           }
 
           this.success(payload);

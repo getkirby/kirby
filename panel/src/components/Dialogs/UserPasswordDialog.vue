@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.user.get(id)
+      this.$api.users.get(id)
         .then(user => {
           this.user = user;
           this.$refs.dialog.open();
@@ -76,7 +76,7 @@ export default {
         return false;
       }
 
-      this.$api.user
+      this.$api.users
         .changePassword(this.user.id, this.values.password)
         .then(() => {
           this.success({

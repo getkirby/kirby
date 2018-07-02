@@ -7,7 +7,7 @@ import system from "./system.js";
 import section from "./section.js";
 import site from "./site.js";
 import translation from "./translation.js";
-import user from "./user.js";
+import users from "./users.js";
 
 export default {
   config: {
@@ -27,6 +27,6 @@ export default {
   section: section,
   site: site,
   translation: translation,
-  user: user,
+  users: users,
   ...request
 };
