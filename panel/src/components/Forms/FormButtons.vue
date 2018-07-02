@@ -108,7 +108,6 @@ export default {
 }
 .kirby-form-buttons .kirby-view {
   display: flex;
-  height: 2.5rem;
   justify-content: space-between;
   align-items: center;
 }
@@ -116,7 +115,15 @@ export default {
   font-weight: 500;
   white-space: nowrap;
   line-height: 1;
+  height: 2.5rem;
   display: flex;
+  padding: 0 1rem;
   align-items: center;
+}
+.kirby-form-button:first-child {
+  margin-left: -1rem;
+}
+.kirby-form-button:last-child {
+  margin-right: -1rem;
 }
 </style>
