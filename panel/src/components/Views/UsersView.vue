@@ -94,7 +94,7 @@ export default {
     }
   },
   created() {
-    this.$api.role.options().then(roles => {
+    this.$api.roles.options().then(roles => {
       this.roles = roles;
       this.fetch();
     });

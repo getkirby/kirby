@@ -47,7 +47,7 @@ export default {
 
       this.$api.users.get(id)
         .then(user => {
-          this.$api.role.options().then(roles => {
+          this.$api.roles.options().then(roles => {
             this.roles = roles;
             this.user = user;
             this.user.role = this.user.role.name;

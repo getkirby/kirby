@@ -2,7 +2,7 @@ import auth from "./auth.js";
 import files from "./files.js";
 import pages from "./pages.js";
 import request from "./request.js";
-import role from "./role.js";
+import roles from "./roles.js";
 import system from "./system.js";
 import section from "./section.js";
 import site from "./site.js";
@@ -22,7 +22,7 @@ export default {
   auth: auth,
   files: files,
   pages: pages,
-  role: role,
+  roles: roles,
   system: system,
   section: section,
   site: site,

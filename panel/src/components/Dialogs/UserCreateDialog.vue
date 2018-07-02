@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     open() {
-      this.$api.role.options()
+      this.$api.roles.options()
         .then(roles => {
           this.roles = roles;
           this.$refs.dialog.open();
