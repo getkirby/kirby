@@ -90,6 +90,8 @@
   "user.delete.confirm": "Möchtest du wirklich <br><strong>{email}</strong> löschen?",
   "user.deleted": "Der Nutzer wurde gelöscht",
   "user.email": "E-Mail",
+  "user.email.change": "E-Mail ändern",
+  "user.email.changed": "Die E-Mail Adresse wurde geändert",
   "user.email.placeholder": "mail@example.de",
   "user.password": "Passwort",
   "user.password.change": "Passwort ändern",

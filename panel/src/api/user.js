@@ -58,6 +58,13 @@ export default {
       });
 
       result.push({
+        click: "email",
+        icon: "email",
+        text: Vue.i18n.translate("user.email.change"),
+        disabled: !options.changeEmail
+      });
+
+      result.push({
         click: "role",
         icon: "bolt",
         text: Vue.i18n.translate("user.role.change"),

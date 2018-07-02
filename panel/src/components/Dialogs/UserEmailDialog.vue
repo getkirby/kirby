@@ -55,11 +55,17 @@ export default {
       this.$api.user
         .changeEmail(this.user.id, this.user.email)
         .then(response => {
-          this.success({
+
+          let payload = {
             message: this.$t("user.email.changed"),
             event: "user.changeEmail",
-            route: "/users/" + response.id
-          });
+          };
+
+          if (this.$route.name === "User") {
+            payload.route = this.$api.user.link(response.id);
+          }
+
+          this.success(payload);
         })
         .catch(error => {
           this.$refs.dialog.error(error.message);

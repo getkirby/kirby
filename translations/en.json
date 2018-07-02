@@ -103,6 +103,8 @@
     "user.delete.confirm": "Do you really want to delete <br><strong>{email}</strong>?",
     "user.deleted": "The user has been deleted",
     "user.email": "Email",
+    "user.email.change": "Change email",
+    "user.email.changed": "The email address has been changed",
     "user.email.placeholder": "mail@example.com",
     "user.password": "Password",
     "user.password.change": "Change password",

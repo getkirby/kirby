@@ -44,11 +44,12 @@
     </template>
 
     <kirby-user-create-dialog ref="create" @success="fetch" />
-    <kirby-user-role-dialog ref="role" @success="fetch" />
-    <kirby-user-rename-dialog ref="rename" @success="fetch" />
-    <kirby-user-password-dialog ref="password" />
+    <kirby-user-email-dialog ref="email" @success="fetch" />
     <kirby-user-language-dialog ref="language" @success="fetch" />
+    <kirby-user-password-dialog ref="password" />
     <kirby-user-remove-dialog ref="remove" @success="fetch" />
+    <kirby-user-rename-dialog ref="rename" @success="fetch" />
+    <kirby-user-role-dialog ref="role" @success="fetch" />
 
   </kirby-view>
 
@@ -171,6 +172,9 @@ export default {
       switch (action) {
         case "edit":
           this.$router.push("/users/" + user.id);
+          break;
+        case "email":
+          this.$refs.email.open(user.id);
           break;
         case "role":
           this.$refs.role.open(user.id);
