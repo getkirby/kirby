@@ -14,7 +14,7 @@ export default {
     onComplete() {},
     onSuccess() {},
     onError(error) {
-      console.log(error.message);
+      window.console.log(error.message);
       throw error;
     }
   },

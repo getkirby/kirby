@@ -13,7 +13,7 @@
     <template v-if="issue">
       <kirby-box theme="negative">
         <kirby-text size="small">
-          <strong>{{ $t("error.blueprint.section.notLoaded", { name: this.name }) }}:</strong>
+          <strong>{{ $t("error.blueprint.section.notLoaded", { name: name }) }}:</strong>
           {{ issue }}
         </kirby-text>
       </kirby-box>

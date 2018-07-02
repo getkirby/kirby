@@ -146,7 +146,7 @@ export default {
           this.$store.dispatch("title", this.filename);
         })
         .catch(error => {
-          console.error(error);
+          window.console.error(error);
           this.issue = error;
         });
     },

@@ -33,9 +33,9 @@
         </template>
 
         <kirby-button-group>
-          <kirby-button icon="email" :disabled="!permissions.changeEmail" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</kirby-button>
-          <kirby-button icon="bolt"  :disabled="!permissions.changeRole" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</kirby-button>
-          <kirby-button icon="globe" :disabled="!permissions.changeLanguage" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</kirby-button>
+          <kirby-button :disabled="!permissions.changeEmail" icon="email" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</kirby-button>
+          <kirby-button :disabled="!permissions.changeRole" icon="bolt" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</kirby-button>
+          <kirby-button :disabled="!permissions.changeLanguage" icon="globe" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</kirby-button>
         </kirby-button-group>
       </kirby-view>
     </div>
