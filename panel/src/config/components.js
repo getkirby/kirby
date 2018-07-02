@@ -3,21 +3,22 @@ import Vue from "vue";
 /* Dialogs */
 import Dialog from "@/components/Dialogs/Dialog.vue";
 import ErrorDialog from "@/components/Dialogs/ErrorDialog.vue";
-import FileRenameDialog from "@/components/Dialogs/FileRenameDialog.vue";
 import FileRemoveDialog from "@/components/Dialogs/FileRemoveDialog.vue";
+import FileRenameDialog from "@/components/Dialogs/FileRenameDialog.vue";
 import PageCreateDialog from "@/components/Dialogs/PageCreateDialog.vue";
-import PageUrlDialog from "@/components/Dialogs/PageUrlDialog.vue";
-import PageStatusDialog from "@/components/Dialogs/PageStatusDialog.vue";
-import PageRenameDialog from "@/components/Dialogs/PageRenameDialog.vue";
 import PageRemoveDialog from "@/components/Dialogs/PageRemoveDialog.vue";
+import PageRenameDialog from "@/components/Dialogs/PageRenameDialog.vue";
+import PageStatusDialog from "@/components/Dialogs/PageStatusDialog.vue";
 import PageTemplateDialog from "@/components/Dialogs/PageTemplateDialog.vue";
+import PageUrlDialog from "@/components/Dialogs/PageUrlDialog.vue";
 import SiteRenameDialog from "@/components/Dialogs/SiteRenameDialog.vue";
 import UserCreateDialog from "@/components/Dialogs/UserCreateDialog.vue";
+import UserEmailDialog from "@/components/Dialogs/UserEmailDialog.vue";
+import UserLanguageDialog from "@/components/Dialogs/UserLanguageDialog.vue";
+import UserPasswordDialog from "@/components/Dialogs/UserPasswordDialog.vue";
+import UserRemoveDialog from "@/components/Dialogs/UserRemoveDialog.vue";
 import UserRenameDialog from "@/components/Dialogs/UserRenameDialog.vue";
 import UserRoleDialog from "@/components/Dialogs/UserRoleDialog.vue";
-import UserPasswordDialog from "@/components/Dialogs/UserPasswordDialog.vue";
-import UserLanguageDialog from "@/components/Dialogs/UserLanguageDialog.vue";
-import UserRemoveDialog from "@/components/Dialogs/UserRemoveDialog.vue";
 
 Vue.component("kirby-dialog", Dialog);
 Vue.component("kirby-error-dialog", ErrorDialog);
@@ -31,11 +32,12 @@ Vue.component("kirby-page-template-dialog", PageTemplateDialog);
 Vue.component("kirby-page-url-dialog", PageUrlDialog);
 Vue.component("kirby-site-rename-dialog", SiteRenameDialog);
 Vue.component("kirby-user-create-dialog", UserCreateDialog);
+Vue.component("kirby-user-email-dialog", UserEmailDialog);
+Vue.component("kirby-user-language-dialog", UserLanguageDialog);
+Vue.component("kirby-user-password-dialog", UserPasswordDialog);
+Vue.component("kirby-user-remove-dialog", UserRemoveDialog);
 Vue.component("kirby-user-rename-dialog", UserRenameDialog);
 Vue.component("kirby-user-role-dialog", UserRoleDialog);
-Vue.component("kirby-user-password-dialog", UserPasswordDialog);
-Vue.component("kirby-user-language-dialog", UserLanguageDialog);
-Vue.component("kirby-user-remove-dialog", UserRemoveDialog);
 
 /* Forms */
 import FormButtons from "@/components/Forms/FormButtons.vue";

@@ -6,6 +6,7 @@ use Kirby\Cms\Dir;
 use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 class UserStore extends UserStoreDefault
@@ -54,7 +55,7 @@ class UserStore extends UserStoreDefault
             throw new LogicException('The user directory for "' . $email . '" could not be moved');
         }
 
-        return $this->save($user);
+        return $user;
     }
 
     public function changeLanguage(string $language)
@@ -208,11 +209,13 @@ class UserStore extends UserStoreDefault
         $content = $user->content()->toArray();
 
         // store main information in the content file
-        $content['email']    = $user->email();
         $content['language'] = $user->language();
         $content['name']     = $user->name();
         $content['password'] = $user->hashPassword($user->password());
         $content['role']     = $user->role();
+
+        // remove the email. It's already stored in the directory
+        unset($content['email']);
 
         Data::write($this->inventory()['content'], $content);
 

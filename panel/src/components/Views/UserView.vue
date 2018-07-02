@@ -75,11 +75,12 @@
 
       <kirby-box v-else-if="ready" :text="$t('user.blueprint', { role: user.role.name })" theme="info" />
 
-      <kirby-user-role-dialog ref="role" @success="fetch" />
-      <kirby-user-rename-dialog ref="rename" @success="fetch" />
-      <kirby-user-password-dialog ref="password" />
+      <kirby-user-email-dialog ref="email" />
       <kirby-user-language-dialog ref="language" @success="fetch" />
+      <kirby-user-password-dialog ref="password" />
       <kirby-user-remove-dialog ref="remove" />
+      <kirby-user-rename-dialog ref="rename" @success="fetch" />
+      <kirby-user-role-dialog ref="role" @success="fetch" />
 
       <kirby-upload
         ref="upload"
@@ -154,6 +155,15 @@ export default {
   methods: {
     action(action) {
       switch (action) {
+        case "email":
+          this.$refs.email.open(this.user.id);
+          break;
+        case "language":
+          this.$refs.language.open(this.user.id);
+          break;
+        case "password":
+          this.$refs.password.open(this.user.id);
+          break;
         case "picture.delete":
           this.$api.user.deleteAvatar(this.id).then(() => {
             this.$store.dispatch(
@@ -163,20 +173,14 @@ export default {
             this.avatar = null;
           });
           break;
-        case "role":
-          this.$refs.role.open(this.user.id);
-          break;
-        case "password":
-          this.$refs.password.open(this.user.id);
-          break;
-        case "language":
-          this.$refs.language.open(this.user.id);
+        case "remove":
+          this.$refs.remove.open(this.user.id);
           break;
         case "rename":
           this.$refs.rename.open(this.user.id);
           break;
-        case "remove":
-          this.$refs.remove.open(this.user.id);
+        case "role":
+          this.$refs.role.open(this.user.id);
           break;
         default:
           this.$store.dispatch("notification/error", "Not yet implemented");
