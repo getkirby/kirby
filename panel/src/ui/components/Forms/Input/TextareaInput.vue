@@ -201,11 +201,13 @@ export default {
 
       this.$nextTick(() => {
 
-        const caret         = this.getCaret();
+        const startCaret = caret(this.$refs.input, this.$refs.input.selectionStart);
+        const endCaret   = caret(this.$refs.input, this.$refs.input.selectionEnd);
+
         const toolbarWidth  = this.$refs.toolbar.$el.offsetWidth;
         const textareaWidth = this.$el.offsetWidth;
         const maxLeft       = textareaWidth - toolbarWidth + 16;
-        let left            = caret.left - Math.round(toolbarWidth / 2);
+        let left            = endCaret.left - Math.round(toolbarWidth / 2);
 
         if (left < 0) {
           left = -16;
@@ -216,7 +218,7 @@ export default {
         }
 
         this.caret = {
-          top: caret.top,
+          top: startCaret.top,
           left: left,
         };
 
