@@ -85,7 +85,7 @@ export default {
         .then(response => {
           this.data = response.data.map(page => {
             page.options = ready => {
-              this.$api.page
+              this.$api.pages
                 .options(page.id, "list")
                 .then(options => ready(options));
             };

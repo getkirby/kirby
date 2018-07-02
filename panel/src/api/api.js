@@ -1,6 +1,6 @@
 import auth from "./auth.js";
 import file from "./file.js";
-import page from "./page.js";
+import pages from "./pages.js";
 import request from "./request.js";
 import role from "./role.js";
 import system from "./system.js";
@@ -21,7 +21,7 @@ export default {
   },
   auth: auth,
   file: file,
-  page: page,
+  pages: pages,
   role: role,
   system: system,
   section: section,

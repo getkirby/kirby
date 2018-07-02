@@ -25,7 +25,7 @@ export default {
     if (!page) {
       url = "site/files/" + filename;
     } else {
-      url = api.page.url(page, "files/" + filename);
+      url = api.pages.url(page, "files/" + filename);
     }
 
     if (path) {
@@ -145,7 +145,7 @@ export default {
   breadcrumb(file, self = true) {
     var breadcrumb = file.parents.map(parent => ({
       label: parent.slug,
-      link: api.page.link(parent.id)
+      link: api.pages.link(parent.id)
     }));
 
     if (self === true) {

@@ -62,7 +62,7 @@ export default {
       }
     },
     open(id) {
-      this.$api.page.get(id)
+      this.$api.pages.get(id)
         .then(page => {
           this.page = page;
           this.sluggify(this.page.slug);
@@ -90,7 +90,7 @@ export default {
         return;
       }
 
-      this.$api.page
+      this.$api.pages
         .slug(this.page.id, this.slug)
         .then(page => {
           const payload = {
@@ -103,7 +103,7 @@ export default {
             this.$route.params.path &&
             this.page.id === this.$route.params.path.replace(/\+/g, "/")
           ) {
-            payload.route = this.$api.page.link(page.id);
+            payload.route = this.$api.pages.link(page.id);
           }
 
           this.success(payload);

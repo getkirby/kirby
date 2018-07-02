@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.page
+      this.$api.pages
         .get(id, { select: ["id", "template", "blueprints"] })
         .then(page => {
           if (page.blueprints.length <= 1) {
@@ -69,7 +69,7 @@ export default {
     },
     submit() {
       this.$events.$emit("keydown.cmd.s");
-      this.$api.page
+      this.$api.pages
         .template(this.page.id, this.page.template)
         .then(() => {
           this.success({

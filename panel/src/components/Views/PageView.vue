@@ -41,7 +41,7 @@
       v-if="page.id"
       ref="tabs"
       :key="'page-' + page.id + '-tabs'"
-      :parent="$api.page.url(page.id)"
+      :parent="$api.pages.url(page.id)"
       :blueprint="blueprint"
       :tabs="tabs"
       @tab="tab = $event"
@@ -93,7 +93,7 @@ export default {
     prev() {
       if (this.page.prev) {
         return {
-          link: this.$api.page.link(this.page.prev.id),
+          link: this.$api.pages.link(this.page.prev.id),
           tooltip: this.page.prev.title
         };
       }
@@ -101,20 +101,20 @@ export default {
     next() {
       if (this.page.next) {
         return {
-          link: this.$api.page.link(this.page.next.id),
+          link: this.$api.pages.link(this.page.next.id),
           tooltip: this.page.next.title
         };
       }
     },
     status() {
       return this.page.status !== null
-        ? this.$api.page.states()[this.page.status]
+        ? this.$api.pages.states()[this.page.status]
         : null;
     }
   },
   methods: {
     fetch() {
-      this.$api.page
+      this.$api.pages
         .get(this.path, { view: "panel" })
         .then(page => {
           this.page = page;
@@ -122,12 +122,12 @@ export default {
           this.permissions = page.blueprint.options;
           this.tabs = page.blueprint.tabs;
           this.options = ready => {
-            this.$api.page.options(this.page.id).then(options => {
+            this.$api.pages.options(this.page.id).then(options => {
               ready(options);
             });
           };
 
-          this.$store.dispatch("breadcrumb", this.$api.page.breadcrumb(page));
+          this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
           this.$store.dispatch("title", this.page.title);
         })
         .catch(error => {

@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     fields() {
-      const states = this.$api.page.states();
+      const states = this.$api.pages.states();
 
       let fields = {
         status: {
@@ -100,7 +100,7 @@ export default {
       return options;
     },
     open(id) {
-      this.$api.page
+      this.$api.pages
         .get(id, {
           select: ["id", "status", "num", "errors", "siblings", "blueprint"]
         })
@@ -132,7 +132,7 @@ export default {
       this.$refs.form.submit();
     },
     changeStatus() {
-      this.$api.page
+      this.$api.pages
         .status(this.page.id, this.form.status, this.form.position || 1)
         .then(response => {
           let message = "";

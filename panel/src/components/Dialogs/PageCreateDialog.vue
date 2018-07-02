@@ -95,7 +95,7 @@ export default {
         .post(this.parent + "/" + this.section, data)
         .then(page => {
           this.success({
-            route: this.$api.page.link(page.id),
+            route: this.$api.pages.link(page.id),
             message: this.$t("page.created"),
             event: "page.create"
           });

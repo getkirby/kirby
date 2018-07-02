@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.page.get(id)
+      this.$api.pages.get(id)
         .then(page => {
           this.page = page;
           this.$refs.dialog.open();
@@ -34,7 +34,7 @@ export default {
         });
     },
     submit() {
-      this.$api.page
+      this.$api.pages
         .delete(this.page.id)
         .then(() => {
           // remove data from cache

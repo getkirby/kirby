@@ -145,7 +145,7 @@ export default {
         };
       }
 
-      this.$api.page.search(this.parent, data).then(response => {
+      this.$api.pages.search(this.parent, data).then(response => {
         this.pages = response.data;
         this.selected = -1;
       }).catch(() => {

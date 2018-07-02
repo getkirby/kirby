@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     open(id) {
-      this.$api.page.get(id, { select: ["id", "title"] })
+      this.$api.pages.get(id, { select: ["id", "title"] })
         .then(page => {
           this.page = page;
           this.$refs.dialog.open();
@@ -53,7 +53,7 @@ export default {
         });
     },
     submit() {
-      this.$api.page
+      this.$api.pages
         .title(this.page.id, this.page.title)
         .then(() => {
           this.success({
