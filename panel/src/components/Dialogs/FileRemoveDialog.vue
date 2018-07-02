@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     open(parent, filename) {
-      this.$api.file.get(parent, filename)
+      this.$api.files.get(parent, filename)
         .then(file => {
           this.parent = file.parent;
           this.filename = file.filename;
@@ -34,7 +34,7 @@ export default {
         });
     },
     submit() {
-      this.$api.file
+      this.$api.files
         .delete(this.parent.id, this.filename)
         .then(() => {
           // remove data from cache

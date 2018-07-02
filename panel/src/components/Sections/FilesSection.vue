@@ -90,7 +90,7 @@ export default {
         .then(response => {
           this.data = response.data.map(file => {
             file.options = ready => {
-              this.$api.file
+              this.$api.files
                 .options(file.parent, file.filename, "list")
                 .then(options => ready(options));
             };
@@ -161,7 +161,7 @@ export default {
     },
     replace(file) {
       this.$refs.upload.open({
-        url: config.api + "/" + this.$api.file.url(file.parent, file.filename),
+        url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
         accept: file.mime,
         multiple: false
       });

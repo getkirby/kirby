@@ -50,7 +50,7 @@ export default {
   methods: {
     open(parent, filename) {
       this.parent = parent;
-      this.$api.file
+      this.$api.files
         .get(parent, filename, {
           select: ["id", "filename", "name", "extension"]
         })
@@ -66,7 +66,7 @@ export default {
       return slug(input);
     },
     submit() {
-      this.$api.file
+      this.$api.files
         .rename(this.parent, this.file.filename, this.file.name)
         .then(file => {
           let payload = {
@@ -75,7 +75,7 @@ export default {
           };
 
           if (this.$route.name === "File") {
-            payload.route = this.$api.file.link(this.parent, file.filename);
+            payload.route = this.$api.files.link(this.parent, file.filename);
           }
 
           this.success(payload);

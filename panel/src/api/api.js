@@ -1,5 +1,5 @@
 import auth from "./auth.js";
-import file from "./file.js";
+import files from "./files.js";
 import pages from "./pages.js";
 import request from "./request.js";
 import role from "./role.js";
@@ -20,7 +20,7 @@ export default {
     }
   },
   auth: auth,
-  file: file,
+  files: files,
   pages: pages,
   role: role,
   system: system,

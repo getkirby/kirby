@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     preview() {
-      return this.$api.file.preview(this.file);
+      return this.$api.files.preview(this.file);
     }
   }
 };

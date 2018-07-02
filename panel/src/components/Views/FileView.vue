@@ -37,7 +37,7 @@
         v-if="file.id"
         ref="tabs"
         :key="'file-' + file.id + '-tabs'"
-        :parent="$api.file.url(file.parent.id, file.filename)"
+        :parent="$api.files.url(file.parent.id, file.filename)"
         :tabs="tabs"
       />
 
@@ -103,7 +103,7 @@ export default {
     prev() {
       if (this.file.prev) {
         return {
-          link: this.$api.file.link(
+          link: this.$api.files.link(
             this.file.parent.id,
             this.file.prev.filename
           ),
@@ -114,7 +114,7 @@ export default {
     next() {
       if (this.file.next) {
         return {
-          link: this.$api.file.link(
+          link: this.$api.files.link(
             this.file.parent.id,
             this.file.next.filename
           ),
@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     fetch() {
-      this.$api.file
+      this.$api.files
         .get(this.path, this.filename, { view: "panel" })
         .then(file => {
           this.file = file;
@@ -133,16 +133,16 @@ export default {
           this.name = file.name;
           this.tabs = file.blueprint.tabs;
           this.permissions = file.blueprint.options;
-          this.preview = this.$api.file.preview(file);
+          this.preview = this.$api.files.preview(file);
           this.options = ready => {
-            this.$api.file
+            this.$api.files
               .options(this.file.parent.id, this.file.filename)
               .then(options => {
                 ready(options);
               });
           };
 
-          this.$store.dispatch("breadcrumb", this.$api.file.breadcrumb(file));
+          this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(file));
           this.$store.dispatch("title", this.filename);
         })
         .catch(error => {
@@ -163,7 +163,7 @@ export default {
             url:
               config.api +
               "/" +
-              this.$api.file.url(this.file.parent.id, this.file.filename),
+              this.$api.files.url(this.file.parent.id, this.file.filename),
             accept: this.file.mime
           });
           break;
@@ -184,7 +184,7 @@ export default {
         return true;
       }
 
-      this.$api.file.rename(this.path, this.file.filename, name).then(file => {
+      this.$api.files.rename(this.path, this.file.filename, name).then(file => {
         this.$router.push("/pages/" + this.path + "/files/" + file.filename);
         this.$store.dispatch("notification/success", this.$t("file.renamed"));
       });
