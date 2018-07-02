@@ -17,7 +17,7 @@ export default {
   },
   actions: {
     load(context, id) {
-      return Api.translation.get(id);
+      return Api.translations.get(id);
     },
     install(context, translation) {
       context.commit("INSTALL", translation);

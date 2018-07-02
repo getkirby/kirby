@@ -6,7 +6,7 @@ import role from "./role.js";
 import system from "./system.js";
 import section from "./section.js";
 import site from "./site.js";
-import translation from "./translation.js";
+import translations from "./translations.js";
 import users from "./users.js";
 
 export default {
@@ -26,7 +26,7 @@ export default {
   system: system,
   section: section,
   site: site,
-  translation: translation,
+  translations: translations,
   users: users,
   ...request
 };

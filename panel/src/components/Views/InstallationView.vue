@@ -126,7 +126,7 @@ export default {
           this.$router.push("/login");
         }
 
-        this.$api.translation.options().then(languages => {
+        this.$api.translations.options().then(languages => {
           this.languages = languages;
 
           this.system = system;
