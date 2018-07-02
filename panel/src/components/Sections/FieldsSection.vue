@@ -52,7 +52,7 @@ export default {
     },
     fetch() {
       this.$api
-        .section(this.parent, this.name)
+        .get(this.parent + "/" + this.name)
         .then(response => {
           this.errors = response.errors;
           this.fields = response.fields;

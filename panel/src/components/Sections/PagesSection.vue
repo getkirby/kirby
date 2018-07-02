@@ -81,7 +81,7 @@ export default {
   methods: {
     fetch() {
       this.$api
-        .section(this.parent, this.name, { page: this.page })
+        .get(this.parent + "/" + this.name, { page: this.page })
         .then(response => {
           this.data = response.data.map(page => {
             page.options = ready => {
