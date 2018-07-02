@@ -41,7 +41,7 @@ export default {
           type: "text",
           required: true,
           icon: "title",
-          postfix: "." + this.file.extension,
+          after: "." + this.file.extension,
           preselect: true
         }
       };

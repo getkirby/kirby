@@ -7,6 +7,7 @@
     <kirby-header
       :tabs="tabs"
       :tab="tab"
+      :editable="permissions.changeTitle"
       @edit="action('rename')"
     >
       {{ page.title }}
