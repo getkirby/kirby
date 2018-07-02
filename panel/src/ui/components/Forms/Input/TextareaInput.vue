@@ -98,8 +98,21 @@ export default {
       return true;
     },
     insert(text) {
-      this.$refs.input.focus();
+
+      const input    = this.$refs.input;
+      const prevalue = input.value;
+
+      input.focus();
+
       document.execCommand("insertText", false, text);
+
+      // document.execCommand did not work
+      if (input.value === prevalue) {
+        const value = input.value.slice(0, input.selectionStart) + text + input.value.slice(input.selectionEnd);
+        input.value = value;
+        this.$emit("input", value);
+      }
+
       this.resize();
     },
     prepend(prepend) {
