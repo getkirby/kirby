@@ -67,7 +67,7 @@ export default {
     focus(e) {
       // prevent focussing on first input element,
       // if click is already targetting another input element
-      if (e.target && e.target.tagName === 'INPUT') {
+      if (e && e.target && e.target.tagName === 'INPUT') {
         e.target.focus();
         return;
       }
