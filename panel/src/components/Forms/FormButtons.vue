@@ -65,7 +65,9 @@ export default {
         return false;
       }
 
-      e.preventDefault();
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
 
       this.$api
         .patch(this.id.substr(1), this.$cache.get(this.id))

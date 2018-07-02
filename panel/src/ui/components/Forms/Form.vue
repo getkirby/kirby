@@ -15,7 +15,7 @@
         :fields="fields"
         :validate="validate"
         v-model="value"
-        v-on="$listeners"
+        v-on="listeners"
       />
     </slot>
     <slot name="footer"></slot>
@@ -47,6 +47,10 @@ export default {
   data() {
     return {
       errors: {},
+      listeners: {
+        ...this.$listeners,
+        submit: this.onSubmit
+      }
     }
   },
   methods: {

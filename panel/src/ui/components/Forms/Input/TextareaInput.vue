@@ -148,6 +148,9 @@ export default {
         this.$refs.toolbar.shortcut($event.key, $event);
       }
     },
+    onSubmit($event) {
+      return this.$emit("submit", $event);
+    },
     select() {
       this.$refs.select();
     },

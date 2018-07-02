@@ -7,7 +7,7 @@
       :validate="true"
       v-model="values"
       @input="input"
-      @submit="$events.$emit('keydown.cmd.s')"
+      @submit="onSubmit"
     />
   </section>
 </template>
@@ -69,6 +69,9 @@ export default {
           this.issue = error;
           this.isLoading = false;
         });
+    },
+    onSubmit($event) {
+      this.$events.$emit("keydown.cmd.s", $event);
     }
   }
 };
