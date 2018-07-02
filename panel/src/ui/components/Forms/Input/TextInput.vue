@@ -46,6 +46,7 @@ export default {
     name: [Number, String],
     pattern: String,
     placeholder: String,
+    preselect: Boolean,
     required: Boolean,
     spellcheck: {
       type: [Boolean, String],
