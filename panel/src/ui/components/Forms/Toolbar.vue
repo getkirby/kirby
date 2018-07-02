@@ -256,7 +256,7 @@ export default {
 <style lang="scss">
 .kirby-toolbar {
   display: flex;
-  width: 100%;
+  flex-wrap: wrap;
 }
 .kirby-toolbar-divider {
   padding: 0 .5rem;
