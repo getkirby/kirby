@@ -61,6 +61,7 @@ export default {
           name: "position",
           label: this.$t("page.num.select"),
           type: "select",
+          empty: false,
           options: this.sortingOptions()
         };
       }

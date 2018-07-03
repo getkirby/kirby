@@ -94,10 +94,13 @@ export default {
               unlisted: "toggle-off"
             };
 
+            page.sortable = page.permissions.sort;
+
             page.flag = {
               label: null,
               class: "kirby-list-collection-toggle kirby-pages-section-flag",
               icon: icons[page.status],
+              disabled: page.permissions.changeStatus === false,
               click: () => {
                 this.action(page, "status");
               }
