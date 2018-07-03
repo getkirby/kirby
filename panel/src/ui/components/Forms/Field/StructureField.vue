@@ -238,6 +238,9 @@ $structure-item-height: 38px;
   cursor: -webkit-grab;
   transition: opacity .3s;
 }
+.kirby-structure:hover .kirby-structure-item-handle {
+  opacity: .25;
+}
 .kirby-structure-item-handle:active {
   cursor: -webkit-grabbing;
 }

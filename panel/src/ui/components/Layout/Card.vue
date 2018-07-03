@@ -118,7 +118,6 @@ export default {
   width: $list-item-height;
   height: $list-item-height;
   border-radius: 50%;
-  cursor: pointer;
   opacity: 0;
   color: $color-white;
   z-index: 1;
@@ -127,6 +126,9 @@ export default {
 }
 .kirby-card .kirby-sort-handle:active {
   cursor: -webkit-grabbing;
+}
+.kirby-cards:hover .kirby-sort-handle {
+  opacity: .25;
 }
 .kirby-card:hover .kirby-sort-handle {
   opacity: 1;
@@ -163,7 +165,7 @@ export default {
 .kirby-card-icon .kirby-icon-emoji {
   font-size: 3rem;
 }
-.kirby-card-icon svg {
+.kirby-card-icon .kirby-icon svg {
   width: 3rem;
   height: 3rem;
   color: rgba($color-white, 0.5);

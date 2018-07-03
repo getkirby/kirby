@@ -94,8 +94,8 @@ $list-item-height: 38px;
   left: -$list-item-height;
   width: $list-item-height;
   height: $list-item-height;
+  color: $color-dark;
   opacity: 0;
-  color: $color-border;
   z-index: 1;
   cursor: -webkit-grab;
   transition: color .3s, opacity .3s;
@@ -104,10 +104,10 @@ $list-item-height: 38px;
   cursor: -webkit-grabbing;
 }
 .kirby-list:hover .kirby-sort-handle {
-  opacity: 1;
+  opacity: .25;
 }
 .kirby-list-item:hover .kirby-sort-handle {
-  color: $color-dark;
+  opacity: 1;
 }
 
 .kirby-list-item-image {
