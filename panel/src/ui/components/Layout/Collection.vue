@@ -4,16 +4,15 @@
       :list="items"
       :options="dragOptions"
       :element="elements.list"
-      :move="onMove"
       @change="$emit('change', $event)"
       @end="onEnd"
     >
       <component
         v-for="(item, index) in items"
         :is="elements.item"
+        :class="{'kirby-draggable-item': item.sortable}"
         :key="index"
         v-bind="item"
-        class="kirby-draggable-item"
         @action="$emit('action', item, $event)"
         @dragstart.prevent
       />
@@ -113,16 +112,6 @@ export default {
         this.over.removeAttribute("data-over");
       }
       this.$emit("sort", this.items);
-    },
-    onMove(evt) {
-
-      if (this.over) {
-        this.over.removeAttribute("data-over");
-      }
-
-      this.over = evt.to;
-      this.over.setAttribute("data-over", true);
-
     }
   }
 }
@@ -167,9 +156,8 @@ export default {
   height: 38px !important;
   margin-bottom: 2px;
 }
-
-
 .kirby-collection .sortable-ghost * {
   visibility: hidden;
 }
+
 </style>

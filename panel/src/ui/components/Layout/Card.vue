@@ -57,6 +57,7 @@
 import ratioPadding from "../../helpers/ratioPadding.js";
 
 export default {
+  inheritAttrs: false,
   props: {
     flag: Object,
     icon: {

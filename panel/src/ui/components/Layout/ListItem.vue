@@ -48,6 +48,7 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     element: {
       type: String,
