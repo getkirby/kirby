@@ -36,7 +36,8 @@ export default {
           type: "select",
           icon: "globe",
           options: this.languages,
-          required: true
+          required: true,
+          empty: false
         }
       };
     }
