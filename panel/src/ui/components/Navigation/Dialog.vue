@@ -21,7 +21,7 @@
                 {{ "Cancel" | t("cancel") }}
               </kirby-button>
               <kirby-button :icon="icon" :theme="theme" @click="submit">
-                {{ button | t("confirm") }}
+                {{ button || t("confirm") }}
               </kirby-button>
             </kirby-button-group>
           </footer>
