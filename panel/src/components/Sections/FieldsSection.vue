@@ -54,12 +54,12 @@ export default {
       this.$api
         .get(this.parent + "/" + this.name)
         .then(response => {
-          this.errors = response.errors;
-          this.fields = response.fields;
-          this.stored = response.values;
+          this.errors = response.options.errors;
+          this.fields = response.options.fields;
+          this.stored = response.data;
           this.values = Object.assign(
             {},
-            response.values,
+            response.data,
             this.$cache.get(this.id) || {}
           );
           this.$events.$emit("form.changed");

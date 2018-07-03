@@ -197,7 +197,20 @@ class BlueprintSection extends BlueprintObject
      */
     public function toArray(): array
     {
-        return $this->propertiesToArray();
+        $props   = $this->propertiesToArray();
+        $options = $props;
+
+        unset($options['data']);
+        unset($options['pagination']);
+
+        return [
+            'code'       => 200,
+            'data'       => $props['data'],
+            'options'    => $options,
+            'pagination' => $props['pagination'],
+            'status'     => 'ok',
+            'type'       => 'section'
+        ];
     }
 
     /**

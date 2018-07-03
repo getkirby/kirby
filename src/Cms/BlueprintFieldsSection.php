@@ -87,12 +87,19 @@ class BlueprintFieldsSection extends BlueprintSection
 
     public function toArray(): array
     {
+        $form = $this->form();
+
         return [
-            'errors' => $this->form()->errors(),
-            'fields' => $this->form()->fields()->toOptions(),
-            'name'   => $this->name(),
-            'type'   => $this->type(),
-            'values' => $this->form()->values(),
+            'code'   => 200,
+            'data'   => $form->values(),
+            'options' => [
+                'errors' => $form->errors(),
+                'fields' => $form->fields()->toOptions(),
+                'name'   => $this->name(),
+                'type'   => $this->type(),
+            ],
+            'status' => 'ok',
+            'type'   => 'section'
         ];
     }
 

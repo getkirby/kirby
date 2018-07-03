@@ -108,19 +108,19 @@ export default {
             return page;
           });
 
-          this.add = response.add && this.$permissions.pages.create;
-          this.blueprints = response.blueprints;
+          this.add        = response.options.add && this.$permissions.pages.create;
+          this.blueprints = response.options.blueprints;
           this.pagination = response.pagination;
-          this.status = response.status;
-          this.group = response.group;
-          this.headline = response.headline;
-          this.sortable = response.sortable;
-          this.min = response.min;
-          this.max = response.max;
-          this.layout = response.layout || "list";
-          this.link = response.link;
-          this.error = response.errors[0];
-          this.isLoading = false;
+          this.status     = response.options.status;
+          this.group      = response.options.group;
+          this.headline   = response.options.headline;
+          this.sortable   = response.options.sortable;
+          this.min        = response.options.min;
+          this.max        = response.options.max;
+          this.layout     = response.options.layout || "list";
+          this.link       = response.options.link;
+          this.error      = response.options.errors[0];
+          this.isLoading  = false;
         })
         .catch(error => {
           this.isLoading = false;

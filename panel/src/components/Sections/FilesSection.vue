@@ -98,17 +98,17 @@ export default {
             return file;
           });
 
-          this.accept = response.accept || "*";
-          this.error = response.errors[0];
-          this.headline = response.headline;
-          this.add = response.add && this.$permissions.files.create;
-          this.min = response.min;
-          this.max = response.max;
-          this.template = response.template;
+          this.accept     = response.options.accept || "*";
+          this.error      = response.options.errors[0];
+          this.headline   = response.options.headline;
+          this.add        = response.options.add && this.$permissions.files.create;
+          this.min        = response.options.min;
+          this.max        = response.options.max;
+          this.template   = response.options.template;
           this.pagination = response.pagination;
-          this.sortable = response.sortable === true && this.data.length > 1;
-          this.layout = response.layout || "list";
-          this.isLoading = false;
+          this.sortable   = response.options.sortable === true && this.data.length > 1;
+          this.layout     = response.options.layout || "list";
+          this.isLoading  = false;
         })
         .catch(error => {
           this.isLoading = false;
