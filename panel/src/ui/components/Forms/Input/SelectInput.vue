@@ -10,6 +10,7 @@
         required,
         value
       }"
+      :disabled="disabled || options.length === 1"
       class="kirby-select-input-native"
       v-on="listeners"
     >
@@ -140,5 +141,8 @@ export default {
   z-index: 1;
   cursor: pointer;
   appearance: none;
+}
+.kirby-select-input-native[disabled] {
+  cursor: default;
 }
 </style>
