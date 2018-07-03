@@ -20,7 +20,12 @@
         v-else
         v-model="items"
         :data-disabled="disabled"
-        :options="{disabled: disabled, forceFallback: true, handle: '.kirby-structure-item-handle'}"
+        :options="{
+          disabled: disabled,
+          forceFallback: true,
+          handle: '.kirby-structure-item-handle',
+          fallbackClass: 'sortable-fallback'
+        }"
         element="ul"
         class="kirby-structure"
         @input="onInput"
@@ -208,16 +213,15 @@ $structure-item-height: 38px;
   margin-bottom: 2px;
   box-shadow: $box-shadow-card;
 }
-.kirby-structure-item:last-child {
-  margin-bottom: 0;
-}
 .kirby-structure-item.sortable-ghost {
   background: $color-inset;
-  box-shadow: $box-shadow-inset;
+  box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
   outline: 2px solid $color-focus;
+  margin-bottom: 2px;
+  z-index: 1;
 }
-.kirby-structure-item.sortable-ghost * {
-  visibility: hidden;
+.kirby-structure-item.sortable-fallback {
+  opacity: .25 !important;
 }
 
 .kirby-structure-item[data-active] {
@@ -226,18 +230,22 @@ $structure-item-height: 38px;
   box-shadow: rgba($color-dark, .3) 0 0px 30px;
 }
 .kirby-structure-item-handle {
-  width: 2rem;
-  background: $color-white;
+  position: absolute;
+  width: $structure-item-height;
+  height: $structure-item-height;
+  left: -$structure-item-height;
+  opacity: 0;
   cursor: -webkit-grab;
-  flex-shrink: 0;
-  border-right: 1px solid $color-background;
+  transition: opacity .3s;
 }
 .kirby-structure-item-handle:active {
   cursor: -webkit-grabbing;
 }
-.kirby-structure-item-handle svg {
-  opacity: 0.25;
+.kirby-structure-item:hover .kirby-structure-item-handle {
+  opacity: 1;
 }
+
+
 .kirby-structure-item-wrapper {
   display: flex;
 }
