@@ -86,6 +86,20 @@ class PageRules
 
     public static function changeStatusToListed(Page $page, int $position)
     {
+        // no need to check for status changing permissions,
+        // instead we need to check for sorting permissions
+        if ($page->isListed() === true) {
+
+            if ($page->isSortable() !== true) {
+                throw new PermissionException([
+                    'key'  => 'page.sort.permission',
+                    'data' => ['slug' => $page->slug()]
+                ]);
+            }
+
+            return true;
+        }
+
         if ($page->permissions()->changeStatus() !== true) {
             throw new PermissionException([
                 'key'  => 'page.changeStatus.permission',
