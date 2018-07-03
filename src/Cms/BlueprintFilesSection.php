@@ -32,7 +32,7 @@ class BlueprintFilesSection extends BlueprintSection
                 'template' => $template
             ]);
 
-            return $file->blueprint()->accept()['mime'];
+            return $file->blueprint()->accept()['mime'] ?? '*';
         }
 
         return null;
