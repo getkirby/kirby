@@ -169,4 +169,9 @@ export default {
   font: inherit;
   color: $color-negative;
 }
+
+.kirby-installation-view .kirby-button[type="submit"] {
+  padding: 1rem;
+  margin-left: -1rem;
+}
 </style>
