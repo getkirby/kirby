@@ -91,14 +91,12 @@ $list-item-height: 38px;
 }
 .kirby-list-item .kirby-sort-handle {
   position: absolute;
-  left: 0;
+  left: -$list-item-height;
   width: $list-item-height;
   height: $list-item-height;
-  background: $color-dark;
   cursor: pointer;
   opacity: 0;
-  color: $color-white;
-  left: 0;
+  color: $color-dark;
   z-index: 1;
   cursor: -webkit-grab;
   transition: color .3s;

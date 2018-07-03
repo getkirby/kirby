@@ -59,6 +59,7 @@ export default {
       return {
         sort: this.sortable,
         forceFallback: true,
+        fallbackClass: "sortable-fallback",
         filter: ".disabled",
         delay: 1,
         draggable: ".kirby-draggable-item",
@@ -140,16 +141,14 @@ export default {
 }
 
 .kirby-collection .sortable-ghost {
-  background: $color-inset;
-  height: auto;
+  position: relative;
   outline: 2px solid $color-focus;
+  z-index: 1;
+  box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
 }
-.kirby-collection .kirby-list .sortable-ghost {
-  height: 38px !important;
-  margin-bottom: 2px;
-}
-.kirby-collection .sortable-ghost * {
-  visibility: hidden;
+.kirby-collection .sortable-fallback {
+  opacity: .25 !important;
+  overflow: hidden;
 }
 
 </style>
