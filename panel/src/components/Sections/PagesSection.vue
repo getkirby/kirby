@@ -205,3 +205,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+
+.kirby-pages-section-flag[disabled] {
+  opacity: .25;
+}
+</style>

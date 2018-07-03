@@ -139,13 +139,6 @@ export default {
   display: block;
 }
 
-.kirby-collection .kirby-cards[data-over] .kirby-box,
-.kirby-collection .kirby-list[data-over] .kirby-box {
-  display: none;
-}
-.kirby-collection[data-layout="cards"] .kirby-cards {
-}
-
 .kirby-collection .sortable-ghost {
   background: $color-inset;
   height: auto;
