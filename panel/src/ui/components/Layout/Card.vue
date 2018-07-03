@@ -123,7 +123,7 @@ export default {
   color: $color-white;
   z-index: 1;
   cursor: -webkit-grab;
-  transition: color .3s;
+  transition: opacity .3s;
 }
 .kirby-card .kirby-sort-handle:active {
   cursor: -webkit-grabbing;

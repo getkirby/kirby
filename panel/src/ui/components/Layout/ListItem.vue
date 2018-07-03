@@ -99,7 +99,7 @@ $list-item-height: 38px;
   color: $color-dark;
   z-index: 1;
   cursor: -webkit-grab;
-  transition: color .3s;
+  transition: opacity .3s;
 }
 .kirby-list-item .kirby-sort-handle:active {
   cursor: -webkit-grabbing;
