@@ -30,6 +30,7 @@ return [
             $this->user(null, $options)->loginPasswordless();
 
             return [
+                'code'   => 200,
                 'status' => 'ok',
                 'user'   => $this->resolve($this->user())->view('auth')->toArray()
             ];
@@ -51,6 +52,7 @@ return [
             $this->user(null, $options)->loginPasswordless();
 
             return [
+                'code'   => 200,
                 'status' => 'ok',
                 // TODO: Remove the following line once the token is transmitted on the
                 //       top-level of the response anyway
@@ -79,6 +81,7 @@ return [
             }
 
             return [
+                'code'   => 200,
                 'status' => 'ok'
             ];
 
