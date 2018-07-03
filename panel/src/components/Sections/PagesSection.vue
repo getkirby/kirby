@@ -81,6 +81,9 @@ export default {
       this.$api
         .get(this.parent + "/" + this.name, { page: this.page })
         .then(response => {
+
+          const states = this.$api.pages.states();
+
           this.data = response.data.map(page => {
             page.options = ready => {
               this.$api.pages
@@ -97,9 +100,9 @@ export default {
             page.sortable = page.permissions.sort;
 
             page.flag = {
-              label: null,
-              class: "kirby-list-collection-toggle kirby-pages-section-flag",
-              icon: icons[page.status],
+              tooltip: states[page.status].label,
+              class: "kirby-status-flag kirby-status-flag-" + page.status,
+              icon: page.permissions.changeStatus === false ? "protected" : "circle",
               disabled: page.permissions.changeStatus === false,
               click: () => {
                 this.action(page, "status");
@@ -205,10 +208,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-
-.kirby-pages-section-flag[disabled] {
-  opacity: .25;
-}
-</style>

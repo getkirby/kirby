@@ -17,8 +17,9 @@
         </kirby-button>
         <kirby-button
           v-if="status"
+          :class="['kirby-status-flag', 'kirby-status-flag-' + page.status]"
           :disabled="permissions.changeStatus === false"
-          :icon="status.icon"
+          :icon="permissions.changeStatus === false ? 'protected' : 'circle'"
           @click="action('status')"
         >
           {{ status.label }}
@@ -165,3 +166,22 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.kirby-status-flag svg {
+  width: 14px;
+  height: 14px;
+}
+.kirby-status-flag-listed .kirby-icon {
+  color: $color-positive-on-dark;
+}
+.kirby-status-flag-unlisted .kirby-icon {
+  color: $color-focus-on-dark;
+}
+.kirby-status-flag-draft .kirby-icon {
+  color: $color-negative-on-dark;
+}
+.kirby-status-flag[disabled] {
+  opacity: 1;
+}
+</style>
