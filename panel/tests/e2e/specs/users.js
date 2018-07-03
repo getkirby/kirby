@@ -4,7 +4,7 @@ describe("UsersView", () => {
   context("Load", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
     });
 
     it("visits /users", () => {
@@ -15,7 +15,7 @@ describe("UsersView", () => {
     it("visits /users/(:any)", () => {
       cy.url().should('match', /\/users$/)
       cy.contains("developer@getkirby.com").click();
-      cy.get(".kirby-headline").should("contain", "developer@getkirby.com");
+      cy.get(".kirby-headline").should("contain", "Name …");
       cy.url().should('match', /\/users\/([a-z0-9]*)$/);
     });
   });
@@ -23,7 +23,7 @@ describe("UsersView", () => {
   context("Role filter", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
       cy.contains(".kirby-dropdown", "Role: All").as("dropdown");
       cy.contains("Role: All").as("button");
       cy.get(".kirby-list-collection-item").as("rows");
@@ -45,7 +45,7 @@ describe("UsersView", () => {
   context("Create new user", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
       cy.contains("Add a new user").as('button');
       cy.get('.kirby-dialog').first().as('dialog');
     });
@@ -76,7 +76,7 @@ describe("UsersView", () => {
   context("Delete user", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
       cy.contains(".kirby-list-collection-item", "peter@lustig.de").as("row");
       cy.get("@row").find('.kirby-list-collection-options').click();
       cy.get("@row").contains("Delete").click();
@@ -97,35 +97,35 @@ describe("UsersView", () => {
   context("Rename user", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
     });
   });
 
   context("Change user's role", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
     });
   });
 
   context("Change password", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
     });
   });
 
   context("Change language", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
     });
   });
 
   context("Permissions", () => {
     beforeEach(() => {
       cy.login("admin");
-      cy.visit("/panel/users");
+      cy.visit("/users");
     });
   });
 });

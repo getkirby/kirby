@@ -5,8 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
-    "e2e": "vue-cli-service e2e",
-    "e2e:open": "vue-cli-service e2e:open",
+    "e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "precommit": "pretty-quick --staged",
     "sandbox": "vue serve ./src/ui/main.js"

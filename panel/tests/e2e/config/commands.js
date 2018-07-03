@@ -8,15 +8,13 @@ Cypress.Commands.add('login', (type) => {
       return users[type];
     }).then(user => {
       cy.request({
-        url: '/api/auth',
+        url: '/api/auth/login',
         method: 'POST',
-        body: {
-          email: user.email,
+        auth: {
+          username: user.email,
           password: user.password
         }
-      }).then(auth => {
-        localStorage.setItem("auth", auth.body.token);
-      });
+      })
     });
 
   })

@@ -2,7 +2,7 @@
 describe("Login", () => {
   context("UI interaction", () => {
     beforeEach(() => {
-      cy.visit("/panel/login");
+      cy.visit("/login");
     });
 
     it("displays errors on login", () => {
@@ -19,7 +19,7 @@ describe("Login", () => {
       }).then(user => {
         cy.get("input[name=email]").type(user.email);
         cy.get("input[name=password]").type(user.password + "{enter}");
-        cy.get(".kirby-headline").should("contain", "Kirby Starterkit");
+        cy.get(".kirby-headline").should("contain", "Kirby Kitchensink");
         cy.url().should("include", "/site");
       });
     });
@@ -31,12 +31,12 @@ describe("Login", () => {
     });
 
     it("can visit /site", () => {
-      cy.visit("/panel/site");
-      cy.get(".kirby-headline").should("contain", "Kirby Starterkit");
+      cy.visit("/site");
+      cy.get(".kirby-headline").should("contain", "Kirby Kitchensink");
     });
 
     it("can visit /users", () => {
-      cy.visit("/panel/users");
+      cy.visit("/users");
       cy.get(".kirby-headline").should("contain", "Users");
     });
   });
