@@ -30,6 +30,7 @@ class Permissions
             'changeTitle' => true,
             'create' => true,
             'delete' => true,
+            'sort'   => true,
             'update' => true
         ],
         'site' => [

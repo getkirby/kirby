@@ -552,6 +552,32 @@ class Page extends Model
     }
 
     /**
+     * Check if a page can be sorted
+     *
+     * @return boolean
+     */
+    public function isSortable(): bool
+    {
+        if ($this->isErrorPage() === true) {
+            return false;
+        }
+
+        if ($this->isListed() !== true) {
+            return false;
+        }
+
+        if ($this->blueprint()->num() !== 'default') {
+            return false;
+        }
+
+        if ($this->blueprint()->options()->sort() !== true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Checks if the page has no sorting number
      *
      * @return boolean

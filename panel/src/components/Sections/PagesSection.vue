@@ -25,7 +25,6 @@
         :items="data"
         :pagination="pagination"
         :sortable="true"
-        :group="group"
         @change="sort"
         @paginate="paginate"
         @action="action"
@@ -60,7 +59,6 @@ export default {
       data: [],
       issue: false,
       error: false,
-      group: null,
       headline: null,
       isLoading: true,
       min: null,
@@ -112,7 +110,6 @@ export default {
           this.blueprints = response.options.blueprints;
           this.pagination = response.pagination;
           this.status     = response.options.status;
-          this.group      = response.options.group;
           this.headline   = response.options.headline;
           this.sortable   = response.options.sortable;
           this.min        = response.options.min;

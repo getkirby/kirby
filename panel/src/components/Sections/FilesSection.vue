@@ -27,7 +27,7 @@
           :items="data"
           :pagination="pagination"
           :sortable="sortable"
-          :draggable="true"
+          :draggable="false"
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -88,15 +88,6 @@ export default {
       this.$api
         .get(this.parent + "/" + this.name, { page: this.page })
         .then(response => {
-          this.data = response.data.map(file => {
-            file.options = ready => {
-              this.$api.files
-                .options(file.parent, file.filename, "list")
-                .then(options => ready(options));
-            };
-
-            return file;
-          });
 
           this.accept     = response.options.accept || "*";
           this.error      = response.options.errors[0];
@@ -106,9 +97,23 @@ export default {
           this.max        = response.options.max;
           this.template   = response.options.template;
           this.pagination = response.pagination;
-          this.sortable   = response.options.sortable === true && this.data.length > 1;
+          this.sortable   = response.options.sortable === true && response.data.length > 1;
           this.layout     = response.options.layout || "list";
           this.isLoading  = false;
+
+
+          this.data = response.data.map(file => {
+            file.options = ready => {
+              this.$api.files
+                .options(file.parent, file.filename, "list")
+                .then(options => ready(options));
+            };
+
+            file.sortable = this.sortable;
+
+            return file;
+          });
+
         })
         .catch(error => {
           this.isLoading = false;

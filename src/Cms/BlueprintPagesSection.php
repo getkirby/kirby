@@ -21,7 +21,6 @@ class BlueprintPagesSection extends BlueprintSection
     protected $blueprints;
     protected $sortable;
     protected $status;
-    protected $group;
     protected $templates;
 
     public function add(): bool
@@ -121,16 +120,6 @@ class BlueprintPagesSection extends BlueprintSection
         return 'all';
     }
 
-    public function group(): string
-    {
-        $parent = $this->parent();
-
-        if (is_a($parent, Site::class) === true) {
-            return 'site';
-        } else {
-            return $parent->id();
-        }
-    }
 
     protected function itemImageDefault($item)
     {
@@ -147,15 +136,16 @@ class BlueprintPagesSection extends BlueprintSection
         $stringTemplateData = [$this->modelType($item) => $item];
 
         return [
-            'icon'   => $this->itemIcon($item),
-            'id'     => $item->id(),
-            'image'  => $this->itemImage($item, $stringTemplateData),
-            'info'   => $this->itemValue($item, 'info', $stringTemplateData),
-            'link'   => $this->itemLink($item),
-            'parent' => $item->parent() ? $item->parent()->id() : null,
-            'status' => $item->status(),
-            'text'   => $this->itemValue($item, 'title', $stringTemplateData),
-            'url'    => $item->url()
+            'icon'     => $this->itemIcon($item),
+            'id'       => $item->id(),
+            'image'    => $this->itemImage($item, $stringTemplateData),
+            'info'     => $this->itemValue($item, 'info', $stringTemplateData),
+            'link'     => $this->itemLink($item),
+            'parent'   => $item->parent() ? $item->parent()->id(): null,
+            'status'   => $item->status(),
+            'sortable' => $item->isSortable(),
+            'text'     => $this->itemValue($item, 'title', $stringTemplateData),
+            'url'      => $item->url()
         ];
     }
 

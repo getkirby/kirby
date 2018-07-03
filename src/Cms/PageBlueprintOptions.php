@@ -24,6 +24,7 @@ class PageBlueprintOptions extends BlueprintOptions
         'create'         => null,
         'delete'         => null,
         'preview'        => null,
+        'sort'           => null,
         'update'         => null,
     ];
 
@@ -90,6 +91,11 @@ class PageBlueprintOptions extends BlueprintOptions
     public function read(): bool
     {
         return $this->isAllowed('pages', 'read');
+    }
+
+    public function sort(): bool
+    {
+        return $this->isAllowed('pages', 'sort');
     }
 
     public function update(): bool

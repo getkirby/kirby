@@ -1,5 +1,6 @@
 <template>
   <component :is="element" class="kirby-list-item" v-on="$listeners">
+    <kirby-icon v-if="sortable" class="kirby-sort-handle" type="sort" />
     <kirby-link
       v-tab
       :to="link"
@@ -62,6 +63,7 @@ export default {
         };
       }
     },
+    sortable: Boolean,
     text: String,
     target: String,
     info: String,
@@ -86,6 +88,27 @@ $list-item-height: 38px;
   margin-bottom: 2px;
   box-shadow: $box-shadow-card;
 }
+.kirby-list-item .kirby-sort-handle {
+  position: absolute;
+  left: 0;
+  width: $list-item-height;
+  height: $list-item-height;
+  background: $color-dark;
+  cursor: pointer;
+  opacity: 0;
+  color: $color-white;
+  left: 0;
+  z-index: 1;
+  cursor: -webkit-grab;
+  transition: color .3s;
+}
+.kirby-list-item .kirby-sort-handle:active {
+  cursor: -webkit-grabbing;
+}
+.kirby-list-item:hover .kirby-sort-handle {
+  opacity: 1;
+}
+
 .kirby-list-item-image {
   width: $list-item-height;
   height: $list-item-height;

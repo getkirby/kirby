@@ -15,6 +15,7 @@
         v-bind="item"
         class="kirby-draggable-item"
         @action="$emit('action', item, $event)"
+        @dragstart.prevent
       />
     </kirby-draggable>
 
@@ -31,7 +32,6 @@
 
 export default {
   props: {
-    group: String,
     items: {
       type: [Array, Object],
       default() {
@@ -64,11 +64,7 @@ export default {
         filter: ".disabled",
         delay: 1,
         draggable: ".kirby-draggable-item",
-        disabled: !this.sortable && !this.draggable,
-        group: {
-          name: this.group,
-        }
-
+        handle: ".kirby-sort-handle",
       };
     },
     elements() {

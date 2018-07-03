@@ -32,6 +32,9 @@ return [
         'id' => function (Page $page) {
             return $page->id();
         },
+        'isSortable' => function (Page $page) {
+            return $page->isSortable();
+        },
         'next' => function (Page $page) {
             return $page->next();
         },
