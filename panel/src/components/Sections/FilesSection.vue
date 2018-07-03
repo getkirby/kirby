@@ -27,7 +27,6 @@
           :items="data"
           :pagination="pagination"
           :sortable="sortable"
-          :draggable="false"
           @sort="sort"
           @paginate="paginate"
           @action="action"

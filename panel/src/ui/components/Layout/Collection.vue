@@ -42,7 +42,6 @@ export default {
       default: "list",
     },
     sortable: Boolean,
-    draggable: Boolean,
     pagination: {
       type: [Boolean, Object],
       default() {
