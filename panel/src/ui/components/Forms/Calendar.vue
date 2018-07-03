@@ -287,12 +287,13 @@ $cell-padding: 0.25rem 0.5rem;
   color: $color-positive-on-dark;
 }
 .kirby-calendar-today {
-  text-align: right;
+  text-align: center;
+  padding-top: .5rem;
 }
 .kirby-calendar-today .kirby-button {
   color: $color-focus-on-dark;
   font-size: $font-size-tiny;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 .kirby-calendar-today .kirby-button-text {
   opacity: 1;
