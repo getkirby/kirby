@@ -94,18 +94,20 @@ $list-item-height: 38px;
   left: -$list-item-height;
   width: $list-item-height;
   height: $list-item-height;
-  cursor: pointer;
   opacity: 0;
-  color: $color-dark;
+  color: $color-border;
   z-index: 1;
   cursor: -webkit-grab;
-  transition: opacity .3s;
+  transition: color .3s, opacity .3s;
 }
 .kirby-list-item .kirby-sort-handle:active {
   cursor: -webkit-grabbing;
 }
-.kirby-list-item:hover .kirby-sort-handle {
+.kirby-list:hover .kirby-sort-handle {
   opacity: 1;
+}
+.kirby-list-item:hover .kirby-sort-handle {
+  color: $color-dark;
 }
 
 .kirby-list-item-image {
