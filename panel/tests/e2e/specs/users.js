@@ -1,32 +1,37 @@
-
+const reset = () => {
+  cy.exec("npm run starterkit:reset");
+  cy.install();
+  cy.login("admin");
+  cy.createUser("editor");
+};
 
 describe("UsersView", () => {
+
+  beforeEach(() => {
+    cy.login("admin");
+    cy.visit("/users");
+  });
+
+
   context("Load", () => {
-    beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
-    });
+
+    before(reset);
 
     it("visits /users", () => {
       cy.url().should('include', '/users')
       cy.get(".kirby-headline").should("contain", "Users");
     });
 
-    it("visits /users/(:any)", () => {
-      cy.url().should('match', /\/users$/)
-      cy.contains("developer@getkirby.com").click();
-      cy.get(".kirby-headline").should("contain", "Name …");
-      cy.url().should('match', /\/users\/([a-z0-9]*)$/);
-    });
   });
 
   context("Role filter", () => {
+
+    before(reset);
+
     beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
       cy.contains(".kirby-dropdown", "Role: All").as("dropdown");
       cy.contains("Role: All").as("button");
-      cy.get(".kirby-list-collection-item").as("rows");
+      cy.get(".kirby-list-item").as("rows");
     });
 
     it("shows users for admin role", () => {
@@ -43,49 +48,49 @@ describe("UsersView", () => {
   });
 
   context("Create new user", () => {
+
+    before(reset);
+
     beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
       cy.contains("Add a new user").as('button');
+      cy.get('@button').should('be.visible').click();
       cy.get('.kirby-dialog').first().as('dialog');
     });
 
     it("cancels", () => {
-      cy.get('@button').should('be.visible').click();
       cy.get('@dialog')
-        .should("visible")
+        .should("be.visible")
         .and("contain", "Email")
         .and("contain", "Password")
         .and("contain", "Role")
         .and("contain", "Create");
       cy.get('@dialog').should("be.visible").contains("Cancel").click();
-      cy.wait(100);
-      cy.get('@dialog').should("not.visible");
+      cy.get('.kirby-dialog').should('not.exist');
     });
 
     it("creates", () => {
-      cy.get('@button').click();
       cy.get('@dialog').find("input[name=email]").type("peter@lustig.de");
       cy.get('@dialog').find("input[name=password]").type("password123");
       cy.get('@dialog').contains("Create").click();
-      cy.contains(".kirby-notification", "The user has been created");
+      cy.contains(".kirby-topbar-notification", "The user has been created");
       cy.contains(".kirby-collection", "peter@lustig.de");
     });
   });
 
   context("Delete user", () => {
+
+    before(reset);
+
     beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
-      cy.contains(".kirby-list-collection-item", "peter@lustig.de").as("row");
-      cy.get("@row").find('.kirby-list-collection-options').click();
+      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.kirby-list-item-toggle').click();
       cy.get("@row").contains("Delete").click();
-      cy.contains(".kirby-dialog", "Do you really want to delete peter@lustig.de").as("dialog");
+      cy.contains(".kirby-dialog", "Do you really want to delete editor@getkirby.com").as("dialog");
     });
 
     it("cancels", () => {
       cy.get("@dialog").contains("Cancel").click();
-      cy.get("@row").contains("peter@lustig.de");
+      cy.get("@row").contains("editor@getkirby.com");
     });
 
     it("deletes", () => {
@@ -95,37 +100,87 @@ describe("UsersView", () => {
   });
 
   context("Rename user", () => {
+
+    before(reset);
+
     beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
+      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.kirby-list-item-toggle').click();
+      cy.get("@row").contains("Rename").click();
+      cy.contains(".kirby-dialog", "Name").as("dialog");
     });
+
+    it("cancels", () => {
+      cy.get("@dialog").contains("Cancel").click();
+      cy.get("@row").contains("editor@getkirby.com");
+    });
+
+    it("renames", () => {
+      cy.get("@dialog").find("input[name=name]").type("Editor")
+      cy.get("@dialog").contains("Rename").click();
+      cy.get("@row").contains('Editor');
+    });
+
+  });
+
+  context("Change user's email", () => {
+
+    before(reset);
+
+    beforeEach(() => {
+      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.kirby-list-item-toggle').click();
+      cy.get("@row").contains("Change email").click();
+      cy.contains(".kirby-dialog", "Email").as("dialog");
+    });
+
+    it("cancels", () => {
+      cy.get("@dialog").contains("Cancel").click();
+      cy.get("@row").contains("editor@getkirby.com");
+    });
+
+    it("changes", () => {
+      cy.get("@dialog").find("input[name=email]").type("peter@lustig.de")
+      cy.get("@dialog").contains("Change").click();
+      cy.get("@row").contains("peter@lustig.de");
+    });
+
   });
 
   context("Change user's role", () => {
+
+    before(reset);
+
     beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
+      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.kirby-list-item-toggle').click();
+      cy.get("@row").contains("Change role").click();
+      cy.contains(".kirby-dialog", "Select a new role").as("dialog");
     });
+
+    it("cancels", () => {
+      cy.get("@dialog").contains("Cancel").click();
+      cy.get("@row").contains("editor@getkirby.com").contains("Editor");
+    });
+
+    it("changes", () => {
+      cy.get("@dialog").contains("Admin").click()
+      cy.get("@dialog").contains("Change role").click();
+      cy.get("@row").contains("editor@getkirby.com").contains("Admin");
+    });
+
   });
 
   context("Change password", () => {
-    beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
-    });
+
   });
 
   context("Change language", () => {
-    beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
-    });
+
   });
 
   context("Permissions", () => {
-    beforeEach(() => {
-      cy.login("admin");
-      cy.visit("/users");
-    });
+
   });
+
 });

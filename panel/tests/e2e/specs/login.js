@@ -1,5 +1,11 @@
 
 describe("Login", () => {
+
+  before(() => {
+    cy.exec("npm run starterkit:reset");
+    cy.install();
+  });
+
   context("UI interaction", () => {
     beforeEach(() => {
       cy.visit("/login");
