@@ -60,18 +60,6 @@ export default {
       }
     };
   },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
-  mounted() {
-    this.onInvalid();
-
-    if (this.$props.autofocus) {
-      this.focus();
-    }
-  },
   computed: {
     label() {
       const fallback = this.options[0] ? this.options[0].text : null;
@@ -82,6 +70,18 @@ export default {
       }
 
       return label;
+    }
+  },
+  watch: {
+    value() {
+      this.onInvalid();
+    }
+  },
+  mounted() {
+    this.onInvalid();
+
+    if (this.$props.autofocus) {
+      this.focus();
     }
   },
   methods: {

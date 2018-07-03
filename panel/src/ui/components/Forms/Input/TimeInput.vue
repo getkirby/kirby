@@ -68,20 +68,20 @@ export default {
   data() {
     return this.toObject(this.value);
   },
-  watch: {
-    value(value) {
-      this.select(this.toObject(value));
-    }
-  },
   computed: {
     hours() {
       return this.options(
         this.notation === 24 ? 0 : 1,
-        this.notation === 24 ? 23 : 12,
+        this.notation === 24 ? 23 : 12
       );
     },
     minutes() {
       return this.options(0, 59, this.step);
+    }
+  },
+  watch: {
+    value(value) {
+      this.select(this.toObject(value));
     }
   },
   methods: {

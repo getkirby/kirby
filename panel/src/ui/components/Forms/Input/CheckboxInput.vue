@@ -49,16 +49,16 @@ export default {
       }
     }
   },
+  watch: {
+    value() {
+      this.onInvalid();
+    }
+  },
   mounted() {
     this.onInvalid();
 
     if (this.$props.autofocus) {
       this.focus();
-    }
-  },
-  watch: {
-    value() {
-      this.onInvalid();
     }
   },
   methods: {

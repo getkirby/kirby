@@ -46,15 +46,15 @@ export default {
       timeOptions: this.setTimeOptions(),
     };
   },
-  mounted() {
-    this.onInvalid();
-  },
   watch: {
     value(value) {
       this.dateValue = this.parseDate(value);
       this.timeValue = this.parseTime(value);
       this.onInvalid();
     }
+  },
+  mounted() {
+    this.onInvalid();
   },
   methods: {
     focus() {

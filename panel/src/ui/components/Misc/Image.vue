@@ -49,6 +49,11 @@ export default {
       }
     };
   },
+  computed: {
+    ratioPadding() {
+      return ratioPadding(this.ratio || "1/1");
+    }
+  },
   created() {
     let img = new Image();
 
@@ -64,11 +69,6 @@ export default {
 
     img.src = this.src;
   },
-  computed: {
-    ratioPadding() {
-      return ratioPadding(this.ratio || "1/1");
-    }
-  }
 };
 </script>
 

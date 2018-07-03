@@ -15,7 +15,7 @@ Api.config.onComplete = () => {
 
 Api.config.onError = error => {
   if (config.debug) {
-    console.error(error);
+    window.console.error(error);
   }
 
   // handle requests that return no auth

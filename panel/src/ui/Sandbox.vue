@@ -145,7 +145,7 @@ export default {
   },
   data() {
     return {
-      console: console,
+      console: window.console,
       headerTabs: this.createTabs(3),
       headerTabsMany: this.createTabs(7),
       items: {
@@ -388,7 +388,7 @@ export default {
       }
     },
     onSort(items) {
-      console.log(items);
+      window.console.log(items);
     },
   }
 }

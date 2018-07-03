@@ -3,7 +3,12 @@
     {{ issue.message }}
   </kirby-error-view>
   <kirby-view v-else key="site-view" class="kirby-site-view">
-    <kirby-header :tabs="tabs" :tab="tab" :editable="permissions.changeTitle" @edit="action('rename')">
+    <kirby-header 
+      :tabs="tabs" 
+      :tab="tab" 
+      :editable="permissions.changeTitle" 
+      @edit="action('rename')"
+    >
       {{ site.title }}
       <kirby-button-group slot="left">
         <kirby-button icon="open" @click="action('preview')">

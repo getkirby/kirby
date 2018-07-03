@@ -68,18 +68,6 @@ export default {
       }
     };
   },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
-  mounted() {
-    this.onInvalid();
-
-    if (this.$props.autofocus) {
-      this.focus();
-    }
-  },
   computed: {
     label() {
       return this.value !== null ? this.format(this.value) : "–";
@@ -90,6 +78,18 @@ export default {
     },
     position() {
       return this.value !== null ? this.value : this.center;
+    }
+  },
+  watch: {
+    value() {
+      this.onInvalid();
+    }
+  },
+  mounted() {
+    this.onInvalid();
+
+    if (this.$props.autofocus) {
+      this.focus();
     }
   },
   methods: {

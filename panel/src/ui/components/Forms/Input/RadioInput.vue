@@ -9,7 +9,7 @@
         type="radio"
         class="kirby-radio-input-native"
         @change="onInput(option.value)"
-      />
+      >
       <label :for="id + '-' + index">
         <template v-if="option.info">
           <span class="kirby-radio-input-text">{{ option.text }}</span>

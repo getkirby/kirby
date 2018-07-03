@@ -101,19 +101,6 @@ export default {
       })
     };
   },
-  mounted() {
-    this.onInvalid();
-
-    if (this.$props.autofocus) {
-      this.focus();
-    }
-  },
-  watch: {
-    value(value) {
-      this.tags = this.prepareTags(value);
-      this.onInvalid();
-    }
-  },
   computed: {
     draggable() {
       return this.tags.length > 1;
@@ -123,6 +110,19 @@ export default {
     },
     skip() {
       return this.tags.map(tag => tag.text);
+    }
+  },
+  watch: {
+    value(value) {
+      this.tags = this.prepareTags(value);
+      this.onInvalid();
+    }
+  },
+  mounted() {
+    this.onInvalid();
+
+    if (this.$props.autofocus) {
+      this.focus();
     }
   },
   methods: {

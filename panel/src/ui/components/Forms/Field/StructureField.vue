@@ -31,8 +31,8 @@
           v-for="(item, index) in items"
           :key="index"
           :data-active="isActive(index)"
-          @click.stop
           class="kirby-structure-item"
+          @click.stop
         >
           <div v-if="!isActive(index)" class="kirby-structure-item-wrapper">
             <kirby-button class="kirby-structure-item-handle" icon="sort" />
@@ -44,7 +44,7 @@
                 class="kirby-structure-item-text"
                 @click="jump(index, fieldName)"
               >
-                {{ displayText(item[fieldName])  }}
+                {{ displayText(item[fieldName]) }}
               </p>
             </div>
             <nav v-if="!disabled" class="kirby-structure-item-options">

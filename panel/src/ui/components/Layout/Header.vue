@@ -1,5 +1,5 @@
 <template>
-  <header class="kirby-header" :data-editable="editable">
+  <header :data-editable="editable" class="kirby-header">
     <kirby-headline tag="h1" size="huge">
       <span v-if="editable && $listeners.edit" class="kirby-headline-editable" @click="$emit('edit')">
         <slot />

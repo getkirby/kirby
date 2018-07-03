@@ -4,7 +4,7 @@ import config from "./config.js";
 
 Vue.config.errorHandler = error => {
   if (config.debug) {
-    console.error(error);
+    window.console.error(error);
   }
 
   store.dispatch("notification/error", {
@@ -15,7 +15,7 @@ Vue.config.errorHandler = error => {
 window.panel = window.panel || {};
 window.panel.error = (notification, msg) => {
   if (config.debug) {
-    console.error(notification + ": " + msg);
+    window.console.error(notification + ": " + msg);
   }
 
   store.dispatch(

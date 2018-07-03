@@ -7,7 +7,7 @@
     novalidate
     @submit.prevent="onSubmit"
   >
-    <slot name="header"></slot>
+    <slot name="header"/>
     <slot>
       <kirby-fieldset
         ref="fields"
@@ -18,7 +18,7 @@
         v-on="listeners"
       />
     </slot>
-    <slot name="footer"></slot>
+    <slot name="footer"/>
     <input ref="submitter" class="kirby-form-submitter" type="submit">
   </form>
 </template>

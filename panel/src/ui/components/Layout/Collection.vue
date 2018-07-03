@@ -56,14 +56,6 @@ export default {
       list: this.items
     }
   },
-  watch: {
-    items() {
-      this.list = this.items;
-    },
-    $props() {
-      this.$forceUpdate();
-    }
-  },
   computed: {
     dragOptions() {
       return {
@@ -108,6 +100,14 @@ export default {
         hide: false,
         ...options
       };
+    }
+  },
+  watch: {
+    items() {
+      this.list = this.items;
+    },
+    $props() {
+      this.$forceUpdate();
     }
   },
   over: null,

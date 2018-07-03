@@ -57,12 +57,12 @@ import {
 } from "vuelidate/lib/validators";
 
 export default {
-  inheritAttrs: false,
   components: {
     "kirby-toolbar": Toolbar,
     "kirby-email-dialog": EmailDialog,
     "kirby-link-dialog": LinkDialog
   },
+  inheritAttrs: false,
   props: {
     autofocus: Boolean,
     buttons: {
@@ -85,14 +85,6 @@ export default {
     theme: String,
     value: String,
   },
-  watch: {
-    value() {
-      this.onInvalid();
-      this.$nextTick(() => {
-        this.resize();
-      });
-    }
-  },
   data() {
     return {
       caret: {
@@ -100,6 +92,14 @@ export default {
         left: 0,
       },
       toolbar: false
+    }
+  },
+  watch: {
+    value() {
+      this.onInvalid();
+      this.$nextTick(() => {
+        this.resize();
+      });
     }
   },
   mounted() {
@@ -173,7 +173,7 @@ export default {
     onCommand(command, callback) {
 
       if (typeof this[command] !== "function") {
-        console.warn(command + " is not a valid command");
+        window.console.warn(command + " is not a valid command");
         return;
       }
 
@@ -195,7 +195,7 @@ export default {
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
-    onSelect($event)
+    onSelect()
     {
       this.toolbar = true;
 

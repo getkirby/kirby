@@ -52,14 +52,14 @@ export default {
       }
     };
   },
-  watch: {
-    value(value) {
-      this.date = value;
-    }
-  },
   computed: {
     inputType() {
       return this.time === false ? "date" : "datetime";
+    }
+  },
+  watch: {
+    value(value) {
+      this.date = value;
     }
   },
   methods: {

@@ -4,7 +4,7 @@ import { ucfirst, lcfirst } from "@/ui/helpers/stringCase.js";
 
 const registerComponent = (name, component) => {
   if (Vue.options.components[name]) {
-    console.warn(`Plugin is replacing "${name}"`);
+    window.console.warn(`Plugin is replacing "${name}"`);
   }
 
   Vue.component(name, component);

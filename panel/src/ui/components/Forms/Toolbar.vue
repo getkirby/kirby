@@ -158,14 +158,6 @@ export default {
       default: true,
     }
   },
-  mounted() {
-    this.$events.$on('click', this.blur);
-    this.$events.$on('keydown.esc', this.cancel);
-  },
-  destroyed() {
-    this.$events.$off('click', this.blur);
-    this.$events.$off('keydown.esc', this.cancel);
-  },
   data() {
 
     let layout    = {};
@@ -201,6 +193,14 @@ export default {
       layout: layout,
       shortcuts: shortcuts
     };
+  },
+  mounted() {
+    this.$events.$on('click', this.blur);
+    this.$events.$on('keydown.esc', this.cancel);
+  },
+  destroyed() {
+    this.$events.$off('click', this.blur);
+    this.$events.$off('keydown.esc', this.cancel);
   },
   methods: {
     blur() {

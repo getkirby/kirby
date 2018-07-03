@@ -66,15 +66,6 @@ export default {
       current: current,
     };
   },
-  watch: {
-    value(value) {
-      const current = dayjs(value);
-      this.day     = current.date();
-      this.month   = current.month();
-      this.year    = current.year();
-      this.current = current;
-    }
-  },
   computed: {
     date() {
       return dayjs(`${this.year}-${this.month + 1}-${this.day}`);
@@ -141,6 +132,15 @@ export default {
       }
 
       return options;
+    }
+  },
+  watch: {
+    value(value) {
+      const current = dayjs(value);
+      this.day     = current.date();
+      this.month   = current.month();
+      this.year    = current.year();
+      this.current = current;
     }
   },
   methods: {

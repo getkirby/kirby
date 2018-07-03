@@ -5,6 +5,7 @@
         <component
           v-if="hasFieldType(field.type)"
           :is="'kirby-' + field.type + '-field'"
+          :name="fieldName"
           :ref="fieldName"
           :validate="validate"
           :disabled="disabled || field.disabled"

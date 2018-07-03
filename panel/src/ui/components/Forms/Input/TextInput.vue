@@ -18,7 +18,7 @@
     }"
     class="kirby-text-input"
     v-on="listeners"
-  />
+  >
 </template>
 
 <script>

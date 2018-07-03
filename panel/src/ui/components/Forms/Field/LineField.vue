@@ -1,5 +1,5 @@
 <template>
-  <hr class="kirby-line-field" />
+  <hr class="kirby-line-field" >
 </template>
 
 <style lang="scss">

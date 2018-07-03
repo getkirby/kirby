@@ -3,7 +3,8 @@
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="kirby-password-field">
+    class="kirby-password-field"
+  >
     <kirby-input
       ref="input"
       :id="_uid"
