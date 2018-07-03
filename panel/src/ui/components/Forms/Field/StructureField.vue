@@ -108,11 +108,13 @@ export default {
     this.$events.$on('keydown.esc', this.close);
     this.$events.$on('keydown.cmd.s', this.close);
     this.$events.$on('click', this.close);
+    this.$events.$on("field.structure.close", this.close);
   },
   destroyed() {
     this.$events.$off('keydown.esc', this.close);
     this.$events.$off('keydown.cmd.s', this.close);
     this.$events.$off('click', this.close);
+    this.$events.$off("field.structure.close", this.close);
   },
   methods: {
     add() {
@@ -147,6 +149,7 @@ export default {
       return this.active === index;
     },
     jump(index, field) {
+      this.$events.$emit("field.structure.close");
       this.open(index, field);
     },
     displayText(value) {
