@@ -49,7 +49,8 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit --stderr --coverage-html=tests/coverage"
+        "test": "./vendor/bin/phpunit --stderr --coverage-html=tests/coverage",
+        "zip": "composer archive --format=zip --file=dist"
     },
     "archive": {
         "exclude": [
