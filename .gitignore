@@ -2,7 +2,7 @@
 
 /tests/coverage
 /vendor
-composer.lock
+dist.zip
 
 .php_cs.cache
 
