@@ -2,7 +2,8 @@
 
 /tests/coverage
 /vendor
-dist.zip
+/dist.zip
+/dist
 
 .php_cs.cache
 

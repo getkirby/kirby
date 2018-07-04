@@ -56,7 +56,6 @@
     "archive": {
         "exclude": [
             ".*",
-            "/*.json",
             "/*.dist",
             "/*.md",
             "test.php",
