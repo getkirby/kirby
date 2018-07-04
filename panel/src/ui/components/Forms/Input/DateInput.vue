@@ -1,19 +1,17 @@
 <template>
   <div class="kirby-date-input">
     <kirby-select-input
-      ref="days"
-      :autofocus="autofocus"
-      :id="id"
-      :options="days"
+      ref="years"
+      :options="years"
       :disabled="disabled"
       :required="required"
-      :value="day"
-      placeholder="––"
-      empty="––"
-      @input="setDay"
+      :value="year"
+      placeholder="––––"
+      empty="––––"
+      @input="setYear"
       @invalid="onInvalid"
     />
-    <span class="kirby-date-input-separator">.</span>
+    <span class="kirby-date-input-separator">-</span>
     <kirby-select-input
       ref="months"
       :options="months"
@@ -25,16 +23,18 @@
       @input="setMonth"
       @invalid="onInvalid"
     />
-    <span class="kirby-date-input-separator">.</span>
+    <span class="kirby-date-input-separator">-</span>
     <kirby-select-input
-      ref="years"
-      :options="years"
+      ref="days"
+      :autofocus="autofocus"
+      :id="id"
+      :options="days"
       :disabled="disabled"
       :required="required"
-      :value="year"
-      placeholder="––––"
-      empty="––––"
-      @input="setYear"
+      :value="day"
+      placeholder="––"
+      empty="––"
+      @input="setDay"
       @invalid="onInvalid"
     />
   </div>

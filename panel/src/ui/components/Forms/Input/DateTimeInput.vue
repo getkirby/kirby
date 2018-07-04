@@ -32,9 +32,7 @@ export default {
     time: {
       type: [Boolean, Object],
       default() {
-        return {
-
-        };
+        return {};
       }
     },
     value: String
