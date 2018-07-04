@@ -197,13 +197,32 @@ class FileSessionStoreTest extends TestCase
     public function testDestroyAlreadyDestroyed()
     {
         // make sure we get a handle
-        $this->store->get(1234567890, 'abcdefghijabcdefghij');
+        $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
 
         // simulate that another thread deleted the file
         unlink($this->root . '/1234567890.abcdefghijabcdefghij.sess');
 
         // shouldn't throw an Exception
         $this->store->destroy(1234567890, 'abcdefghijabcdefghij');
+    }
+
+    /**
+     * @expectedException     Kirby\Exception\NotFoundException
+     * @expectedExceptionCode error.session.filestore.notFound
+     */
+    public function testAccessAfterDestroy()
+    {
+        // make sure we get a handle
+        $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->store->lock(1234567890, 'abcdefghijabcdefghij');
+        $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+
+        // simulate that another thread deleted the file
+        unlink($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+
+        // now it should throw even if there is already a handle
+        $this->store->set(1234567890, 'abcdefghijabcdefghij', 'something else');
     }
 
     public function testCollectGarbage()
