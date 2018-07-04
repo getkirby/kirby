@@ -144,6 +144,7 @@ export default {
       this.active = null;
     },
     confirmRemove(index) {
+      this.close();
       this.trash = index;
       this.$refs.remove.open();
     },
