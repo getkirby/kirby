@@ -2,9 +2,6 @@
 
 return [
     'props' => [
-        'format' => function (string $format = DATE_W3C) {
-            return $format;
-        },
         'icon' => function (string $icon = "calendar") {
             return $icon;
         },
@@ -24,6 +21,9 @@ return [
     'computed' => [
         'default' => function () {
             return $this->props['default'] ?? ($this->required() ? 'today' : null);
+        },
+        'format' => function () {
+            return $this->props['format'] ?? ($this->time() === false ? 'Y-m-d' : 'Y-m-d H:i');
         }
     ],
     'methods' => [
@@ -34,7 +34,7 @@ return [
         },
         'toString' => function ($value): string {
             if ($date = strtotime($value)) {
-                return date('Y-m-d H:i:s', $date);
+                return date($this->format(), $date);
             }
 
             return '';
