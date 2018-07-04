@@ -60,6 +60,7 @@
             "/*.dist",
             "/*.md",
             "test.php",
+            "/scripts",
             "/panel/*",
             "!/panel/dist/*",
             "/panel/dist/index.html",
