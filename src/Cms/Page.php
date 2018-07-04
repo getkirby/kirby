@@ -860,12 +860,16 @@ class Page extends Model
     /**
      * Sets the Blueprint object
      *
-     * @param PageBlueprint|null $blueprint
+     * @param array|null $blueprint
      * @return self
      */
-    protected function setBlueprint(PageBlueprint $blueprint = null): self
+    protected function setBlueprint(array $blueprint = null): self
     {
-        $this->blueprint = $blueprint;
+        if ($blueprint !== null) {
+            $blueprint['model'] = $this;
+            $this->blueprint = new PageBlueprint($blueprint);
+        }
+
         return $this;
     }
 

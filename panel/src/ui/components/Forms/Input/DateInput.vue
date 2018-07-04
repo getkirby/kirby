@@ -83,8 +83,8 @@ export default {
     }
   },
   watch: {
-    value() {
-      this.date = dayjs(this.value);
+    value(value) {
+      this.date = dayjs(value);
     }
   },
   methods: {

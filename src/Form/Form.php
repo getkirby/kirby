@@ -19,6 +19,7 @@ class Form
 
     public function __construct(array $props)
     {
+
         $fields = $props['fields'] ?? [];
         $values = $props['values'] ?? [];
         $inject = $props;
@@ -33,12 +34,8 @@ class Form
         foreach ($fields as $name => $props) {
 
             // inject the name
-            $props['name'] = $name = strtolower($name);
-
-            // inject the value
-            if (isset($values[$name]) === true) {
-                $props['value'] = $values[$name];
-            }
+            $props['name']  = $name = strtolower($name);
+            $props['value'] = $values[$name] ?? null;
 
             try {
                 $field = new Field($props, $inject);
