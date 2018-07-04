@@ -151,8 +151,11 @@ class FileSessionStore extends SessionStore
         $name = $this->name($expiryTime, $id);
         $path = $this->path($name);
 
-        // check if the file is already unlocked
+        // check if the file is already unlocked or doesn't exist
         if (!isset($this->isLocked[$name])) {
+            return;
+        } elseif ($this->exists($expiryTime, $id) === false) {
+            unset($this->isLocked[$name]);
             return;
         }
 
@@ -295,11 +298,20 @@ class FileSessionStore extends SessionStore
         $name = $this->name($expiryTime, $id);
         $path = $this->path($name);
 
-        // make sure we have an exclusive lock
-        $this->lock($expiryTime, $id);
+        // close the file, otherwise we can't delete it on Windows;
+        // deletion is *not* thread-safe because of this, but
+        // resurrection of the file is prevented in $this->set() because of
+        // the check in $this->handle() every time any method is called
+        $this->unlock($expiryTime, $id);
+        $this->closeHandle($name);
 
-        // delete the file, but only if it still exists
-        if ($this->exists($expiryTime, $id) === true && @unlink($path) !== true) {
+        // we don't need to delete files that don't exist anymore
+        if ($this->exists($expiryTime, $id) === false) {
+            return;
+        }
+
+        // file still exists, delete it
+        if (@unlink($path) !== true) {
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',
@@ -307,10 +319,6 @@ class FileSessionStore extends SessionStore
                 'httpCode'  => 500
             ]);
         }
-
-        // make sure that internal class state is cleaned
-        $this->unlock($expiryTime, $id);
-        $this->closeHandle($name);
     }
 
     /**
@@ -397,12 +405,10 @@ class FileSessionStore extends SessionStore
      */
     protected function handle(string $name)
     {
-        // return from cache
-        if (isset($this->handles[$name])) {
-            return $this->handles[$name];
-        }
-
+        // always verify that the file still exists, even if we already have a handle;
+        // ensures thread-safeness for recently deleted sessions, see $this->destroy()
         $path = $this->path($name);
+        clearstatcache();
         if (!is_file($path)) {
             throw new NotFoundException([
                 'key'       => 'session.filestore.notFound',
@@ -411,6 +417,11 @@ class FileSessionStore extends SessionStore
                 'translate' => false,
                 'httpCode'  => 404
             ]);
+        }
+
+        // return from cache
+        if (isset($this->handles[$name])) {
+            return $this->handles[$name];
         }
 
         // open a new handle
