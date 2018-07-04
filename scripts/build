@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Building Kirby"
+
+cd panel
+npm i
+npm run build
+
+cd ../
+composer run-script zip
