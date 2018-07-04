@@ -22,15 +22,27 @@ And start webpack:
 npm run serve
 ```
 
-## How to build
+## Commands
+
+### Serve
+
+To start the webpack watcher and browsersync
+
+```
+npm run serve
+```
+
+### Build
+
+To upate the dist files
 
 ```
 npm run build
 ```
 
-## e2e Tests
+### e2e
 
-We are using cypress for end to end tests. You can start it with…
+To start end to end tests via Cypress
 
 ```
 npm run e2e
