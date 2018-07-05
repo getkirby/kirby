@@ -37,18 +37,18 @@ class Route
     protected $attributes = [];
 
     /**
-     * The registered request method(s)
+     * The registered request method
      *
-     * @var array
+     * @var string
      */
-    protected $method = [];
+    protected $method;
 
     /**
-     * The registered pattern(s)
+     * The registered pattern
      *
-     * @var array
+     * @var string
      */
-    protected $pattern = [];
+    protected $pattern;
 
     /**
      * Wildcards, which can be used in
