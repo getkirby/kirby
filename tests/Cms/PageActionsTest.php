@@ -42,11 +42,11 @@ class PageActionsTest extends TestCase
         ]);
 
         return $page->clone([
-            'blueprint' => new PageBlueprint([
+            'blueprint' => [
                 'model' => $page,
                 'title' => 'test',
                 'name'  => 'test'
-            ])
+            ]
         ]);
     }
 
@@ -222,7 +222,7 @@ class PageActionsTest extends TestCase
     {
         $page = $this->pageDummy();
         $page = $page->clone([
-            'blueprint' => new PageBlueprint([
+            'blueprint' => [
                 'name'   => 'test',
                 'title'  => 'test',
                 'model'  => $page,
@@ -234,7 +234,7 @@ class PageActionsTest extends TestCase
                         'type' => 'text'
                     ]
                 ]
-            ])
+            ]
         ]);
 
         $this->assertHooks([
@@ -277,7 +277,7 @@ class PageActionsTest extends TestCase
 
         $page = $this->pageDummy();
         $page = $page->clone([
-            'blueprint' => new PageBlueprint([
+            'blueprint' => [
                 'name'   => 'test',
                 'title'  => 'test',
                 'model'  => $page,
@@ -286,7 +286,7 @@ class PageActionsTest extends TestCase
                         'type' => 'text'
                     ]
                 ]
-            ])
+            ]
         ]);
 
         $page->update(['headline' => 'test']);

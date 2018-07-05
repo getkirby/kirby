@@ -154,10 +154,10 @@ class BlueprintMixinTest extends TestCase
             ]
         ]);
 
-        $sections = $blueprint->sections()->toArray();
+        $sections = $blueprint->sections();
 
-        $this->assertEquals('Gallery', $sections[0]['headline']);
-        $this->assertEquals('files', $sections[0]['type']);
+        $this->assertEquals('Gallery', $sections->first()->headline());
+        $this->assertEquals('files', $sections->first()->type());
     }
 
     public function testFieldMixin()
