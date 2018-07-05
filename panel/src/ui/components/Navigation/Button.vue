@@ -107,7 +107,6 @@ button::-moz-focus-inner {
 .kirby-button {
   position: relative;
   font-size: $font-size-small;
-  font-family: $font-family-sans;
   transition: color 0.3s;
 
   &:focus,

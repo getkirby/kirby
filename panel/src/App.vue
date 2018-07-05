@@ -70,9 +70,7 @@ export default {
 }
 
 html {
-  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
+  font-family: $font-family-sans;
   background: #efefef;
   overflow: hidden;
   height: 100%;
