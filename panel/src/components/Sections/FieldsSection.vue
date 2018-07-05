@@ -1,6 +1,9 @@
 <template>
   <section class="kirby-fields-section">
-    <kirby-box v-if="issue" :text="issue.message" />
+    <template v-if="issue">
+      <kirby-headline class="kirby-fields-issue-headline">Error</kirby-headline>
+      <kirby-box :text="issue.message" theme="negative" />
+    </template>
     <kirby-form
       v-else
       :fields="fields"
@@ -78,6 +81,9 @@ export default {
 </script>
 
 <style>
+.kirby-fields-issue-headline {
+  margin-bottom: .5rem;
+}
 .kirby-fields-section input[type="submit"] {
   display: none;
 }
