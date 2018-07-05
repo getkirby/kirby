@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isVisible">
+  <div v-if="false">
     <div class="kirby-license-bar">
       <p>This is an unregistered demo of Kirby.
         <a href="#register" @click.prevent="dropzone = true">Register</a>&nbsp;or&nbsp;<a target="blank" href="https://getkirby.com/buy">Buy a license</a>
