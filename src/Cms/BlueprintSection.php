@@ -66,7 +66,7 @@ class BlueprintSection extends BlueprintObject
 
         if (class_exists($className) === false) {
             throw new InvalidArgumentException([
-                'key'  => 'blueprint.section.type.missing',
+                'key'  => 'blueprint.section.type.invalid',
                 'data' => ['type' => $props['type']]
             ]);
         }

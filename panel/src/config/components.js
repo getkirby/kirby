@@ -58,11 +58,13 @@ Vue.component("kirby-topbar", Topbar);
 
 /* Sections */
 import Sections from "@/components/Sections/Sections.vue";
+import InfoSection from "@/components/Sections/InfoSection.vue";
 import PagesSection from "@/components/Sections/PagesSection.vue";
 import FilesSection from "@/components/Sections/FilesSection.vue";
 import FieldsSection from "@/components/Sections/FieldsSection.vue";
 
 Vue.component("kirby-sections", Sections);
+Vue.component("kirby-info-section", InfoSection);
 Vue.component("kirby-pages-section", PagesSection);
 Vue.component("kirby-files-section", FilesSection);
 Vue.component("kirby-fields-section", FieldsSection);

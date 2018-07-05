@@ -13,7 +13,7 @@
           @submit="$emit('submit', $event)"
         />
         <template v-else>
-          <kirby-box :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex" :text="$t('error.blueprint.section.type.invalid', { type: section.type })" />
+          <kirby-box :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex" :text="$t('error.blueprint.section.type.invalid', { type: section.type })" theme="negative" />
         </template>
       </template>
     </kirby-column>
