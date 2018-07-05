@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Route;
+
 class AppTest extends TestCase
 {
 
@@ -40,5 +42,33 @@ class AppTest extends TestCase
     //     ]);
     //     $this->assertInstanceOf(\Kirby\Email\Email::class, $email);
     // }
+
+    public function testRoute()
+    {
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home',
+                    ],
+                    [
+                        'slug' => 'projects',
+                    ]
+                ]
+            ]
+        ]);
+
+        $response = $app->call('projects');
+        $route    = $app->route();
+
+        $this->assertInstanceOf(Page::class, $response);
+        $this->assertInstanceOf(Route::class, $route);
+
+    }
+
 
 }

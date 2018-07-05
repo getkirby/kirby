@@ -436,6 +436,16 @@ class App extends Component
     }
 
     /**
+     * Returns the currently active route
+     *
+     * @return Route|null
+     */
+    public function route()
+    {
+        return $this->router()->route();
+    }
+
+    /**
      * Returns the Router singleton
      *
      * @return Router

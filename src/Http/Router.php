@@ -15,6 +15,14 @@ class Router
 {
 
     /**
+     * Store for the current route,
+     * if one can be found
+     *
+     * @var Route|null
+     */
+    protected $route;
+
+    /**
      * All registered routes, sorted by
      * their request method. This makes
      * it faster to find the right route
@@ -63,6 +71,25 @@ class Router
     }
 
     /**
+     * Calls the Router by path and method.
+     * This will try to find a Route object
+     * and then call the Route action with
+     * the appropriate arguments and a Result
+     * object.
+     *
+     * @param  string $path
+     * @param  string $method
+     * @return mixed
+     */
+    public function call(string $path = '', string $method = 'GET')
+    {
+        return $this
+            ->find($path, $method)
+            ->action()
+            ->call($this->route, ...$this->route->arguments());
+    }
+
+    /**
      * Finds a Route object by path and method
      * The Route's arguments method is used to
      * find matches and return all the found
@@ -84,18 +111,18 @@ class Router
         // direct access to home routes
         if ($path === '') {
             if (isset($this->routes[$method]['']) === true) {
-                return $this->routes[$method][''];
+                return $this->route = $this->routes[$method][''];
             }
 
             if (isset($this->routes[$method]['/']) === true) {
-                return $this->routes[$method]['/'];
+                return $this->route = $this->routes[$method]['/'];
             }
         } else {
             foreach ($this->routes[$method] as $pattern => $route) {
                 $arguments = $route->parse($pattern, $path);
 
                 if ($arguments !== false) {
-                    return $route;
+                    return $this->route = $route;
                 }
             }
         }
@@ -104,19 +131,16 @@ class Router
     }
 
     /**
-     * Calls the Router by path and method.
-     * This will try to find a Route object
-     * and then call the Route action with
-     * the appropriate arguments and a Result
-     * object.
+     * Returns the current route.
+     * This will only return something,
+     * once Router::find() has been called
+     * and only if a route was found.
      *
-     * @param  string $path
-     * @param  string $method
-     * @return mixed
+     * @return Route|null
      */
-    public function call(string $path = '', string $method = 'GET')
+    public function route()
     {
-        $result = $this->find($path, $method);
-        return $result->action()->call($result, ...$result->arguments());
+        return $this->route;
     }
+
 }
