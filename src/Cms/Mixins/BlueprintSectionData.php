@@ -290,7 +290,7 @@ trait BlueprintSectionData
     public function parent()
     {
         if (is_string($this->parent) === true) {
-            return $this->parent = $this->stringQuery($this->parent);
+            $this->parent = $this->stringQuery($this->parent);
         }
 
         if ($this->parent === null) {
