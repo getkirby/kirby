@@ -18,7 +18,7 @@
         "source": "https://github.com/getkirby/kirby"
     },
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "ext-mbstring": "*",
         "mustangostang/spyc": "0.6.*",
         "erusev/parsedown-extra": "0.8.*",
