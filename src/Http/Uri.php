@@ -276,6 +276,8 @@ class Uri
             $path = str_replace('\\', '/', $path);
             // remove the script
             $path = dirname($path);
+            // replace those fucking backslashes again
+            $path = str_replace('\\', '/', $path);
             // remove the leading and trailing slashes
             $path = trim($path, '/');
         }
