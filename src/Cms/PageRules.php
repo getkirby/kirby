@@ -89,7 +89,6 @@ class PageRules
         // no need to check for status changing permissions,
         // instead we need to check for sorting permissions
         if ($page->isListed() === true) {
-
             if ($page->isSortable() !== true) {
                 throw new PermissionException([
                     'key'  => 'page.sort.permission',

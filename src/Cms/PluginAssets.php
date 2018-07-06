@@ -95,7 +95,6 @@ class PluginAssets
     public static function resolve(string $pluginName, string $filename)
     {
         if ($plugin = App::instance()->plugin($pluginName)) {
-
             $source = $plugin->root() . '/assets/' . $filename;
 
             if (F::exists($source, $plugin->root()) === true) {

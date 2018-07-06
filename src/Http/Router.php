@@ -142,5 +142,4 @@ class Router
     {
         return $this->route;
     }
-
 }

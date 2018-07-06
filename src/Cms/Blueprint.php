@@ -378,7 +378,6 @@ class Blueprint extends BlueprintObject
             }
 
             $sections->set($section->id(), $section);
-
         }
 
         return $this->sections = $sections;

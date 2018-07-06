@@ -12,7 +12,6 @@ use Kirby\Exception\NotFoundException;
  */
 class BlueprintInfoSection extends BlueprintSection
 {
-
     protected $headline;
     protected $theme;
     protected $text;
@@ -47,5 +46,4 @@ class BlueprintInfoSection extends BlueprintSection
             'status' => 'ok',
         ];
     }
-
 }

@@ -19,7 +19,6 @@ class Form
 
     public function __construct(array $props)
     {
-
         $fields = $props['fields'] ?? [];
         $values = $props['values'] ?? [];
         $inject = $props;
