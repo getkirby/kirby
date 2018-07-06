@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bbbeced336c5b14d06b64b4025a42f3c",
-    "content-hash": "892ccf9a16af8839254eaf78767df3b6",
+    "hash": "12c0546e3741d0b35d12fc8f8593a510",
+    "content-hash": "81fcc48917bb2a8d1b48164f53301b58",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -157,16 +157,16 @@
         },
         {
             "name": "erusev/parsedown-extra",
-            "version": "dev-master",
+            "version": "0.8.0-beta-1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown-extra.git",
-                "reference": "f21b40a1973b6674903a6da9857ee215e8839f96"
+                "reference": "e756b1bf8642ab1091403e902b0503f1cec7527d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown-extra/zipball/f21b40a1973b6674903a6da9857ee215e8839f96",
-                "reference": "f21b40a1973b6674903a6da9857ee215e8839f96",
+                "url": "https://api.github.com/repos/erusev/parsedown-extra/zipball/e756b1bf8642ab1091403e902b0503f1cec7527d",
+                "reference": "e756b1bf8642ab1091403e902b0503f1cec7527d",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                 "parsedown",
                 "parser"
             ],
-            "time": "2018-05-08 22:06:04"
+            "time": "2018-05-08 21:54:32"
         },
         {
             "name": "filp/whoops",
@@ -372,16 +372,16 @@
         },
         {
             "name": "mustangostang/spyc",
-            "version": "dev-master",
+            "version": "0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mustangostang/spyc.git",
-                "reference": "576c42ecbc9630b52a95da3279f07278572c6b15"
+                "reference": "23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mustangostang/spyc/zipball/576c42ecbc9630b52a95da3279f07278572c6b15",
-                "reference": "576c42ecbc9630b52a95da3279f07278572c6b15",
+                "url": "https://api.github.com/repos/mustangostang/spyc/zipball/23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d",
+                "reference": "23c35ae854d835f2d7bcc3e3ad743d7e57a8c14d",
                 "shasum": ""
             },
             "require": {
@@ -418,7 +418,7 @@
                 "yaml",
                 "yml"
             ],
-            "time": "2017-07-23 16:38:44"
+            "time": "2017-02-24 16:06:33"
         },
         {
             "name": "paragonie/random_compat",

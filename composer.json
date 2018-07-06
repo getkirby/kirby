@@ -8,7 +8,7 @@
         {
             "name": "Bastian Allgeier",
             "email": "bastian@getkirby.com",
-            "homepage": "http://bastianallgeier.com"
+            "homepage": "https://getkirby.com"
         }
     ],
     "support": {
@@ -20,14 +20,14 @@
     "require": {
         "php": ">=7.0.0",
         "ext-mbstring": "*",
-        "mustangostang/spyc": "*",
-        "erusev/parsedown-extra": "*",
+        "mustangostang/spyc": "0.6.*",
+        "erusev/parsedown-extra": "0.8.*",
         "michelf/php-smartypants": "1.8.*",
         "claviska/simpleimage": "3.3.*",
-        "phpmailer/phpmailer": "^6.0",
-        "defuse/php-encryption": "^2.1",
-        "filp/whoops": "^2.1",
-        "true/punycode": "~2.0"
+        "phpmailer/phpmailer": "6.0.*",
+        "defuse/php-encryption": "2.2.*",
+        "filp/whoops": "2.2.*",
+        "true/punycode": "2.1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
