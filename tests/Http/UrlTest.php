@@ -10,11 +10,19 @@ class UrlTest extends TestCase
     protected $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
     protected $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
     protected $_docs = 'http://getkirby.com/docs/';
+    protected $_SERVER = null;
 
     public function setUp()
     {
         Url::$current = null;
         Url::$home    = '/';
+
+        $this->_SERVER = $_SERVER;
+    }
+
+    public function tearDown()
+    {
+        $_SERVER = $this->_SERVER;
     }
 
     public function testCurrent()
@@ -110,6 +118,47 @@ class UrlTest extends TestCase
     public function testIdn()
     {
         $this->assertEquals('https://täst.de', Url::idn('https://xn--tst-qla.de'));
+    }
+
+    public function scriptNameProvider()
+    {
+        return [
+            [null, 'index.php', '/'],
+            [null, '/index.php', '/'],
+            [null, '', '/'],
+            [null, '/', '/'],
+            [null, '/kirby/index.php', '/kirby'],
+            [null, 'kirby/index.php', '/kirby'],
+            [null, '/kirby/super.php', '/kirby'],
+            [null, 'kirby/super.php', '/kirby'],
+            [null, 'kirby\super.php', '/kirby'],
+
+            ['localhost', 'index.php', 'http://localhost'],
+            ['localhost', '/index.php', 'http://localhost'],
+            ['localhost', '', 'http://localhost'],
+            ['localhost', '/', 'http://localhost'],
+            ['localhost', '/kirby/index.php', 'http://localhost/kirby'],
+            ['localhost', 'kirby/index.php', 'http://localhost/kirby'],
+            ['localhost', '/kirby/super.php', 'http://localhost/kirby'],
+            ['localhost', 'kirby/super.php', 'http://localhost/kirby'],
+            ['localhost', 'kirby\super.php', 'http://localhost/kirby'],
+        ];
+    }
+
+    /**
+     * @dataProvider scriptNameProvider
+     */
+    public function testIndex($host, $scriptName, $expected)
+    {
+        $_SERVER['SERVER_NAME'] = $host;
+        $_SERVER['SCRIPT_NAME'] = $scriptName;
+
+        // overwrite cli detection
+        Server::$cli = false;
+
+        $this->assertEquals($expected, Url::index());
+
+        Server::$cli = null;
     }
 
 }

@@ -7,10 +7,19 @@ use PHPUnit\Framework\TestCase;
 class UriTest extends TestCase
 {
 
+    protected $_SERVER = null;
+
     protected function setUp()
     {
         $this->example1 = 'https://getkirby.com';
         $this->example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/?q=awesome#top';
+
+        $this->_SERVER = $_SERVER;
+    }
+
+    public function tearDown()
+    {
+        $_SERVER = $this->_SERVER;
     }
 
     public function testValidScheme()
@@ -200,47 +209,6 @@ class UriTest extends TestCase
         $url = new Uri($this->example2);
         $this->assertEquals($this->example2, $url->toString());
         $this->assertEquals($this->example2, (string)$url);
-    }
-
-    public function scriptNameProvider()
-    {
-        return [
-            [null, 'index.php', '/'],
-            [null, '/index.php', '/'],
-            [null, '', '/'],
-            [null, '/', '/'],
-            [null, '/kirby/index.php', '/kirby'],
-            [null, 'kirby/index.php', '/kirby'],
-            [null, '/kirby/super.php', '/kirby'],
-            [null, 'kirby/super.php', '/kirby'],
-            [null, 'kirby\super.php', '/kirby'],
-
-            ['localhost', 'index.php', 'http://localhost'],
-            ['localhost', '/index.php', 'http://localhost'],
-            ['localhost', '', 'http://localhost'],
-            ['localhost', '/', 'http://localhost'],
-            ['localhost', '/kirby/index.php', 'http://localhost/kirby'],
-            ['localhost', 'kirby/index.php', 'http://localhost/kirby'],
-            ['localhost', '/kirby/super.php', 'http://localhost/kirby'],
-            ['localhost', 'kirby/super.php', 'http://localhost/kirby'],
-            ['localhost', 'kirby\super.php', 'http://localhost/kirby'],
-        ];
-    }
-
-    /**
-     * @dataProvider scriptNameProvider
-     */
-    public function testIndex($host, $scriptName, $expected)
-    {
-        $_SERVER['SERVER_NAME'] = $host;
-        $_SERVER['SCRIPT_NAME'] = $scriptName;
-
-        // overwrite cli detection
-        Server::$cli = false;
-
-        $this->assertEquals($expected, Uri::index()->toString());
-
-        Server::$cli = null;
     }
 
 }

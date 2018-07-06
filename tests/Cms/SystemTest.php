@@ -7,6 +7,18 @@ use Exception;
 class SystemTest extends TestCase
 {
 
+    protected $_SERVER = null;
+
+    public function setUp()
+    {
+        $this->_SERVER = $_SERVER;
+    }
+
+    public function tearDown()
+    {
+        $_SERVER = $this->_SERVER;
+    }
+
     public function serverProvider()
     {
         return [

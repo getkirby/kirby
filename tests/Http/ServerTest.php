@@ -7,6 +7,18 @@ use PHPUnit\Framework\TestCase;
 class ServerTest extends TestCase
 {
 
+    protected $_SERVER = null;
+
+    public function setUp()
+    {
+        $this->_SERVER = $_SERVER;
+    }
+
+    public function tearDown()
+    {
+        $_SERVER = $this->_SERVER;
+    }
+
     public function testGet()
     {
         $this->assertInternalType('array', Server::get());
@@ -21,7 +33,6 @@ class ServerTest extends TestCase
         // SERVER_PORT
         $_SERVER['SERVER_PORT'] = 777;
         $this->assertEquals(777, Server::port());
-        unset($_SERVER['SERVER_PORT']);
     }
 
     public function testForwardedPort()
@@ -29,7 +40,6 @@ class ServerTest extends TestCase
         // HTTP_X_FORWARDED_PORT
         $_SERVER['HTTP_X_FORWARDED_PORT'] = 999;
         $this->assertEquals(999, Server::port(true));
-        unset($_SERVER['HTTP_X_FORWARDED_PORT']);
     }
 
     public function testHttps()
@@ -39,17 +49,14 @@ class ServerTest extends TestCase
         // $_SERVER['HTTPS']
         $_SERVER['HTTPS'] = 'https';
         $this->assertTrue(Server::https());
-        unset($_SERVER['HTTPS']);
 
         // Port 443
         $_SERVER['SERVER_PORT'] = 443;
         $this->assertTrue(Server::https());
-        unset($_SERVER['SERVER_PORT']);
 
         // HTTP_X_FORWARDED_PROTO = https
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $this->assertTrue(Server::https());
-        unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
     }
 
     public function testHost()
@@ -59,12 +66,16 @@ class ServerTest extends TestCase
         // SERVER_NAME
         $_SERVER['SERVER_NAME'] = 'foo';
         $this->assertEquals('foo', Server::host());
-        unset($_SERVER['SERVER_NAME']);
 
         // SERVER_ADDR
+
+        // remove the server name to fall back on the address
+        unset($_SERVER['SERVER_NAME']);
+
+        // set the address
         $_SERVER['SERVER_ADDR'] = 'bar';
+
         $this->assertEquals('bar', Server::host());
-        unset($_SERVER['SERVER_ADDR']);
     }
 
     public function testForwardedHost()
@@ -72,7 +83,6 @@ class ServerTest extends TestCase
         // HTTP_X_FORWARDED_HOST
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
         $this->assertEquals('kirby', Server::host(true));
-        unset($_SERVER['HTTP_X_FORWARDED_HOST']);
     }
 
 }
