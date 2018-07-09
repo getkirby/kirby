@@ -159,7 +159,7 @@ export default {
       this.open(index, field);
     },
     displayText(value) {
-      if (typeof value === "object") {
+      if (typeof value === "object" && value !== null) {
         return "…";
       }
 
