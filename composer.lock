@@ -979,12 +979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "4cee75b1fc5bc09b02c026ce01ed03213fa2dbb2"
+                "reference": "880c58f02773f374d2b17303f7b73218c70e266b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/4cee75b1fc5bc09b02c026ce01ed03213fa2dbb2",
-                "reference": "4cee75b1fc5bc09b02c026ce01ed03213fa2dbb2",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/880c58f02773f374d2b17303f7b73218c70e266b",
+                "reference": "880c58f02773f374d2b17303f7b73218c70e266b",
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1067,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-07-05 07:36:33"
+            "time": "2018-07-09 09:22:07"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2442,12 +2442,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "36ce1ad5fd372fc352f787943e03a6e11f018c2e"
+                "reference": "352654b8b95d21eddabe4967bce1e84e5c17ecb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/36ce1ad5fd372fc352f787943e03a6e11f018c2e",
-                "reference": "36ce1ad5fd372fc352f787943e03a6e11f018c2e",
+                "url": "https://api.github.com/repos/symfony/console/zipball/352654b8b95d21eddabe4967bce1e84e5c17ecb1",
+                "reference": "352654b8b95d21eddabe4967bce1e84e5c17ecb1",
                 "shasum": ""
             },
             "require": {
@@ -2502,7 +2502,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-05 15:39:28"
+            "time": "2018-07-09 14:07:29"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2672,12 +2672,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "72f3c0dc4d3103c192b6b68ff79edb0307e4d1c0"
+                "reference": "433e2f9db2d4f6edfe1068ae7017ed23c10499ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/72f3c0dc4d3103c192b6b68ff79edb0307e4d1c0",
-                "reference": "72f3c0dc4d3103c192b6b68ff79edb0307e4d1c0",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/433e2f9db2d4f6edfe1068ae7017ed23c10499ae",
+                "reference": "433e2f9db2d4f6edfe1068ae7017ed23c10499ae",
                 "shasum": ""
             },
             "require": {
@@ -2718,7 +2718,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2018-05-31 11:26:55"
+            "time": "2018-07-07 16:01:39"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2898,12 +2898,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "3bca3baddc791a60b8a1e199892ef270b74b0877"
+                "reference": "d6f417d21efe2a2b91c0c8a19d938c5db18d81d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/3bca3baddc791a60b8a1e199892ef270b74b0877",
-                "reference": "3bca3baddc791a60b8a1e199892ef270b74b0877",
+                "url": "https://api.github.com/repos/symfony/process/zipball/d6f417d21efe2a2b91c0c8a19d938c5db18d81d3",
+                "reference": "d6f417d21efe2a2b91c0c8a19d938c5db18d81d3",
                 "shasum": ""
             },
             "require": {
@@ -2939,7 +2939,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-31 10:18:23"
+            "time": "2018-07-06 18:45:13"
         },
         {
             "name": "symfony/stopwatch",
