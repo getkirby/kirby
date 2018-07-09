@@ -44,7 +44,7 @@ class Camera
      *
      * @return string
      */
-    public function make(): string
+    public function make(): ?string
     {
         return $this->make;
     }
@@ -54,7 +54,7 @@ class Camera
      *
      * @return string
      */
-    public function model(): string
+    public function model(): ?string
     {
         return $this->model;
     }
