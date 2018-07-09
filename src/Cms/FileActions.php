@@ -111,7 +111,7 @@ trait FileActions
      */
     public function publish(): self
     {
-        F::link($this->root(), $this->mediaRoot());
+        F::copy($this->root(), $this->mediaRoot());
         return $this;
     }
 
