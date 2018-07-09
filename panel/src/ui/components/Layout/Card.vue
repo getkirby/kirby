@@ -93,10 +93,13 @@ export default {
   position: relative;
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   background: $color-white;
   border-radius: $border-radius;
   box-shadow: $box-shadow-card;
+}
+.kirby-sections > .kirby-column[data-width="1/4"] .kirby-card {
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
 }
 .kirby-card a {
   display: block;

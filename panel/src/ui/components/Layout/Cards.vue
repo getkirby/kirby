@@ -23,6 +23,9 @@ export default {
 .kirby-cards {
   display: grid;
   grid-gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.kirby-sections > .kirby-column[data-width="1/4"] .kirby-cards {
   grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
 }
 </style>
