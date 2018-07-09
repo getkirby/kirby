@@ -199,6 +199,10 @@ export default {
     {
       this.toolbar = true;
 
+      if (this.buttons === false) {
+        return;
+      }
+
       this.$nextTick(() => {
 
         const startCaret = caret(this.$refs.input, this.$refs.input.selectionStart);
