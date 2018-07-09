@@ -69,6 +69,7 @@ class Panel
 
         $view = new View($kirby->root('kirby') . '/views/panel.php', [
             'kirby'     => $kirby,
+            'config'    => $kirby->option('panel'),
             'assetUrl'  => $kirby->url('media') . '/panel/' . md5($kirby->version()),
             'pluginCss' => $kirby->url('media') . '/plugins/index.css',
             'pluginJs'  => $kirby->url('media') . '/plugins/index.js',

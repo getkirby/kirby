@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="<?= $assetUrl ?>/css/fonts.css">
   <link rel="stylesheet" href="<?= $assetUrl ?>/css/app.css">
   <link rel="stylesheet" href="<?= $pluginCss ?>">
+  <?php if (isset($config['css'])) : ?>
+    <link rel="stylesheet" href="<?= $kirby->url() . '/' . $config['css'] ?>">
+  <?php endif ?>
   <link rel="shortcut icon" href="<?= $assetUrl ?>/favicon.ico">
 
   <base href="<?= $panelUrl ?>">
@@ -23,6 +26,9 @@
   <script src="<?= $assetUrl ?>/js/plugins.js"></script>
   <script src="<?= $assetUrl ?>/js/vendor.js"></script>
   <script src="<?= $pluginJs ?>"></script>
+  <?php if (isset($config['js'])) : ?>
+    <script src="<?= $kirby->url() . '/' . $config['js'] ?>"></script>
+  <?php endif ?>
   <script src="<?= $assetUrl ?>/js/app.js"></script>
 
 </body>
