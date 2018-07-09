@@ -56,8 +56,10 @@ export default {
   },
   methods: {
     focus(name) {
-      if (name && this.hasField(name) && typeof this.$refs[name][0].focus === "function") {
-        this.$refs[name][0].focus();
+      if (name) {
+        if (this.hasField(name) && typeof this.$refs[name][0].focus === "function") {
+          this.$refs[name][0].focus();
+        }
         return;
       }
 

@@ -55,7 +55,9 @@ export default {
   },
   methods: {
     focus(name) {
-      this.$refs.fields.focus(name);
+      if (this.$refs.fields && this.$refs.fields.focus) {
+        this.$refs.fields.focus(name);
+      }
     },
     onSubmit() {
       this.$emit("submit", this.value);

@@ -176,7 +176,9 @@ export default {
       this.active = index;
 
       this.$nextTick(() => {
-        this.$refs.form[index].focus(field);
+        if (this.$refs.form[index]) {
+          this.$refs.form[index].focus(field);
+        }
       });
     },
     remove() {
