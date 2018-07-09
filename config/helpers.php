@@ -4,6 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
 use Kirby\Http\Response\Redirect;
+use Kirby\Http\Server;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\View;
@@ -52,6 +53,29 @@ function css($url, $attr = null)
     } else {
         return sprintf($tag, Url::to($url));
     }
+}
+
+/**
+ * Simple object and variable dumper
+ * to help with debugging.
+ *
+ * @param mixed $variable
+ * @param boolean $echo
+ * @return string
+ */
+function dump($variable, bool $echo = true): string
+{
+    if (Server::cli() === true) {
+        $output = print_r($variable, true) . PHP_EOL;
+    } else {
+        $output = '<pre>' . print_r($variable, true) . '</pre>';
+    }
+
+    if ($echo === true) {
+        echo $output;
+    }
+
+    return $output;
 }
 
 /**

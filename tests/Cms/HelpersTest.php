@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\App as Kirby;
+use Kirby\Http\Server;
 
 class HelpersTest extends TestCase
 {
@@ -22,6 +23,18 @@ class HelpersTest extends TestCase
         $expected = '<link rel="stylesheet" href="https://getkirby.com/assets/css/index.css">';
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testDumpHelperOnCli()
+    {
+        $this->assertEquals("test\n", dump('test', false));
+    }
+
+    public function testDumpHelperOnServer()
+    {
+        Server::$cli = false;
+        $this->assertEquals("<pre>test</pre>", dump('test', false));
+        Server::$cli = null;
     }
 
     public function testJsHelper()
