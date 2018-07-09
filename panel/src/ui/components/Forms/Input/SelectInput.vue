@@ -10,7 +10,7 @@
         required,
         value
       }"
-      :disabled="disabled || options.length === 1"
+      :disabled="disabled"
       class="kirby-select-input-native"
       v-on="listeners"
     >
