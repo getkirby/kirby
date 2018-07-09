@@ -49,12 +49,13 @@
                 class="kirby-structure-item-text"
                 @click="jump(index, fieldName)"
               >
-
-                <template v-if="field.type === 'user'">
-                  {{ item[fieldName].email }}
-                </template>
-                <template v-else>
-                  {{ displayText(item[fieldName]) }}
+                <template v-if="item[fieldName]">
+                  <template v-if="field.type === 'user'">
+                    {{ item[fieldName].email }}
+                  </template>
+                  <template v-else>
+                    {{ displayText(item[fieldName]) }}
+                  </template>
                 </template>
               </p>
             </div>
