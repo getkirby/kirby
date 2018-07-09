@@ -119,6 +119,9 @@ export default {
 
 <style lang="scss">
 
+.kirby-collection {
+  user-select: none;
+}
 .kirby-collection > *:not(:empty) {
   min-height: 38px;
   margin-bottom: 2px;
