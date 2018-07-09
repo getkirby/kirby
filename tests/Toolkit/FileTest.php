@@ -192,16 +192,12 @@ class FileTest extends TestCase
         $this->assertEquals(null, $file->read());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage is not readable
-     */
     public function testReadUnreadble()
     {
         $file = new File(static::FIXTURES . '/tmp/unreadable.txt');
         $file->write('test');
         chmod($file->root(), 000);
-        $file->read();
+        $this->assertEquals(null, $file->read());
     }
 
     public function testMove()

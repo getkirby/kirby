@@ -413,7 +413,7 @@ class F
      */
     public static function read(string $file)
     {
-        return file_get_contents($file);
+        return @file_get_contents($file);
     }
 
     /**
