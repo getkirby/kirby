@@ -251,4 +251,16 @@ class FieldMethodsTest extends TestCase
         $this->markTestIncomplete();
     }
 
+    public function testYaml()
+    {
+        $data = [
+            'a',
+            'b',
+            'c'
+        ];
+
+        $yaml = Yaml::encode($data);
+        $this->assertEquals($data, $this->field($yaml)->yaml());
+    }
+
 }
