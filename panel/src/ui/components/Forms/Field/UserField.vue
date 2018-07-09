@@ -64,7 +64,9 @@ export default {
   },
   methods: {
     focus() {
-      this.$refs.input.focus();
+      if (this.$refs.input) {
+        this.$refs.input.focus();
+      }
     },
     removeUser() {
       this.user = null;
