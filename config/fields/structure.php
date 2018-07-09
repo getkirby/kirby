@@ -31,7 +31,8 @@ return [
         },
         'fields' => function () {
             $form = new Form([
-                'fields' => $this->props['fields']
+                'fields' => $this->props['fields'],
+                'model'  => $this->data['model'] ?? null
             ]);
 
             return $form->fields()->toArray();
@@ -42,6 +43,7 @@ return [
             return new Form(array_merge([
                 'fields' => $this->props['fields'],
                 'values' => $values,
+                'model'  => $this->data['model'] ?? null
             ], $this->data));
         }
     ],
