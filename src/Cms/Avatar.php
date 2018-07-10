@@ -26,17 +26,6 @@ class Avatar extends Model
     use HasThumbs;
 
     /**
-     * Properties that should be converted to array
-     * in Avatar::toArray
-     *
-     * @var array
-     */
-    protected static $toArray = [
-        'url',
-        'exists'
-    ];
-
-    /**
      * The Image object, which
      * is being wrapped by this class.
      *
@@ -89,6 +78,11 @@ class Avatar extends Model
         throw new BadMethodCallException([
             'data' => ['method' => 'Avatar::' . $method]
         ]);
+    }
+
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
     }
 
     /**
@@ -181,6 +175,19 @@ class Avatar extends Model
     {
         $this->user = $user;
         return $this;
+    }
+
+    /**
+     * Converts the most important asset
+     * properties to an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return array_merge($this->asset()->toArray(), [
+            'url' => $this->url(),
+        ]);
     }
 
     /**

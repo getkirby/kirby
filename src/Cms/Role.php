@@ -23,6 +23,16 @@ class Role extends Model
         $this->setProperties($props);
     }
 
+    /**
+     * Improved var_dump() output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
+    }
+
     public function __toString(): string
     {
         return $this->name();
@@ -140,5 +150,22 @@ class Role extends Model
     public function title(): string
     {
         return $this->title;
+    }
+
+    /**
+     * Converts the most important role
+     * properties to an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'description' => $this->description(),
+            'id'          => $this->id(),
+            'name'        => $this->name(),
+            'permissions' => $this->permissions()->toArray(),
+            'title'       => $this->title(),
+        ];
     }
 }
