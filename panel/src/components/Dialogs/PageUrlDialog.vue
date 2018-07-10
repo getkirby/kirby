@@ -83,10 +83,7 @@ export default {
       }
 
       if (this.slug.length === 0) {
-        this.$store.dispatch(
-          "notification/error",
-          this.$t("error.page.slug.invalid")
-        );
+        this.$refs.dialog.error(this.$t("error.page.slug.invalid"));
         return;
       }
 
