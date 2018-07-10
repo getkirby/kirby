@@ -1,7 +1,7 @@
 <template>
   <fieldset class="kirby-fieldset">
     <kirby-grid>
-      <kirby-column v-for="(field, fieldName) in fields" :key="fieldName" :width="field.width">
+      <kirby-column v-for="(field, fieldName) in fields" v-if="field.type !== 'hidden'" :key="fieldName" :width="field.width">
         <component
           v-if="hasFieldType(field.type)"
           :is="'kirby-' + field.type + '-field'"
