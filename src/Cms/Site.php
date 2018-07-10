@@ -26,15 +26,6 @@ class Site extends Model
     use HasFiles;
     use HasStore;
 
-    protected static $toArray = [
-        'children',
-        'content',
-        'errorPage',
-        'files',
-        'homePage',
-        'url'
-    ];
-
     /**
      * The SiteBlueprint object
      *
@@ -101,6 +92,20 @@ class Site extends Model
     public function __construct(array $props = [])
     {
         $this->setProperties($props);
+    }
+
+    /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return array_merge($this->toArray(), [
+            'content'  => $this->content(),
+            'children' => $this->children(),
+            'files'    => $this->files(),
+        ]);
     }
 
     /**
@@ -424,6 +429,23 @@ class Site extends Model
     {
         $this->url = $url;
         return $this;
+    }
+
+    /**
+     * Converts the most important site
+     * properties to an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'errorPage' => $this->errorPage() ? $this->errorPage()->id(): false,
+            'homePage'  => $this->homePage() ? $this->homePage()->id(): false,
+            'page'      => $this->page() ? $this->page()->id(): false,
+            'title'     => $this->title()->value(),
+            'url'       => $this->url(),
+        ];
     }
 
     /**
