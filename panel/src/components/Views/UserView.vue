@@ -241,14 +241,16 @@ export default {
   align-items: center;
   line-height: 0;
 }
-
 .kirby-user-profile .kirby-button-group {
-  margin-left: 1.5rem;
+  margin-left: .75rem;
+  overflow: hidden;
 }
 .kirby-user-profile .kirby-button-group .kirby-button {
   display: block;
   padding-top: .25rem;
   padding-bottom: .25rem;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .kirby-user-profile .kirby-button-group .kirby-button[disabled] {
   opacity: 1;
