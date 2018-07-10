@@ -206,6 +206,7 @@
     "error.page.changeTemplate.invalid": "The template for the page \"{slug}\" cannot be changed",
     "error.page.changeTemplate.permission": "You are not allowed to change the template for \"{slug}\"",
     "error.page.changeTitle.permission": "You are not allowed to change the title for \"{slug}\"",
+    "error.page.changeTitle.empty": "The title must not be empty",
     "error.page.num.invalid": "Please enter a valid sorting number. Numbers must not be negative.",
     "error.page.sort.permissions": "The page \"{slug}\" cannot be sorted",
     "error.page.sort.section.type": "The page cannot be dragged into this section",

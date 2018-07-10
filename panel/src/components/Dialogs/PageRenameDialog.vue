@@ -53,6 +53,12 @@ export default {
         });
     },
     submit() {
+
+      if (this.page.title.length === 0) {
+        this.$refs.dialog.error(this.$t("error.page.changeTitle.empty"));
+        return;
+      }
+
       this.$api.pages
         .title(this.page.id, this.page.title)
         .then(() => {

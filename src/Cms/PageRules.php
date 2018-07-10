@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Toolkit\Str;
 
 /**
  * Validators for all page actions
@@ -153,6 +154,12 @@ class PageRules
 
     public static function changeTitle(Page $page, string $title): bool
     {
+        if (Str::length($title) === 0) {
+            throw new InvalidArgumentException([
+                'key' => 'page.changeTitle.empty',
+            ]);
+        }
+
         if ($page->permissions()->changeTitle() !== true) {
             throw new PermissionException([
                 'key'  => 'page.changeTitle.permission',
