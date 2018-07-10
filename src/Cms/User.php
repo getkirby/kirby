@@ -370,7 +370,7 @@ class User extends Model
      */
     public function username(): string
     {
-        return $this->name() ?? $this->email();
+        return empty($this->name()) ? $this->email() : $this->name();
     }
 
     /**

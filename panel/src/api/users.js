@@ -42,7 +42,7 @@ export default {
     return [
       {
         link: "/users/" + user.id,
-        label: user.name
+        label: user.username
       }
     ];
   },

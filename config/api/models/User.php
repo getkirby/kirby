@@ -50,6 +50,9 @@ return [
         },
         'role' => function (User $user) {
             return $user->role();
+        },
+        'username' => function (User $user) {
+            return $user->username();
         }
     ],
     'type'  => User::class,
@@ -94,6 +97,7 @@ return [
             'options',
             'prev' => ['id', 'name'],
             'role',
+            'username',
         ],
     ]
 ];
