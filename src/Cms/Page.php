@@ -161,6 +161,21 @@ class Page extends Model
     }
 
     /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return array_merge($this->toArray(), [
+            'content'    => $this->content(),
+            'children'   => $this->children(),
+            'siblings'   => $this->siblings(),
+            'files'      => $this->files(),
+        ]);
+    }
+
+    /**
      * Returns the blueprint object
      *
      * @return PageBlueprint
