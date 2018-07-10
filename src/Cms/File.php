@@ -29,17 +29,6 @@ class File extends Model
     use HasThumbs;
 
     /**
-     * All properties that should be included
-     * in File::toArray
-     *
-     * @var array
-     */
-    protected static $toArray = [
-        'model',
-        'url'
-    ];
-
-    /**
      * The parent asset object
      * This is used to do actual file
      * method calls, like size, mime, etc.
@@ -116,6 +105,19 @@ class File extends Model
         } else {
             $this->id = $this->filename();
         }
+    }
+
+    /**
+     * Improved var_dump() output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return array_merge($this->toArray(), [
+            'content'  => $this->content(),
+            'siblings' => $this->siblings(),
+        ]);
     }
 
     /**
