@@ -146,8 +146,13 @@ class App extends Component
     {
         $path   = $path   ?? $this->path();
         $method = $method ?? $this->request()->method();
+        $route  = $this->router()->find($path, $method);
 
-        return $this->router()->call($path, $method);
+        $this->trigger('route:before', $route, $path, $method);
+        $result = $route->action()->call($route, ...$route->arguments());
+        $this->trigger('route:after', $route, $path, $method, $result);
+
+        return $result;
     }
 
     /**
