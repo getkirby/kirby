@@ -1,5 +1,6 @@
-// https://docs.cypress.io/guides/guides/plugins-guide.html
+/* eslint-env node */
 
-module.exports = (on, config) => {
+// https://docs.cypress.io/guides/guides/plugins-guide.html
+module.exports = () => {
 
 }

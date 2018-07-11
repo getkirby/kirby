@@ -1,7 +1,7 @@
 <template>
   <section class="kirby-info-section">
     <kirby-headline class="kirby-info-section-headline">{{ headline }}</kirby-headline>
-    <kirby-box v-html="text" :theme="theme" />
+    <kirby-box :theme="theme" v-html="text" />
   </section>
 </template>
 

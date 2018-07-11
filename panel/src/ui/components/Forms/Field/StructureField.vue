@@ -87,7 +87,13 @@
       </kirby-dialog>
     </template>
 
-    <kirby-dialog ref="escapeDialog" theme="negative" :button="$t('discard')" icon="trash" @submit="discard">
+    <kirby-dialog 
+      ref="escapeDialog" 
+      :button="$t('discard')" 
+      theme="negative" 
+      icon="trash" 
+      @submit="discard"
+    >
       {{ "Do you really want to discard this item?" | t("structure.discard.confirm") }}
     </kirby-dialog>
 

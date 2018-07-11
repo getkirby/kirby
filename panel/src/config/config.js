@@ -1,3 +1,5 @@
+/* global process */
+
 const panel = window.panel || {};
 const defaults = {
   assets: "@/assets",

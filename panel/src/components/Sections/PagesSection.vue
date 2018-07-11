@@ -91,12 +91,6 @@ export default {
                 .then(options => ready(options));
             };
 
-            const icons = {
-              draft: "draft",
-              listed: "toggle-on",
-              unlisted: "toggle-off"
-            };
-
             page.sortable = page.permissions.sort;
 
             page.flag = {
