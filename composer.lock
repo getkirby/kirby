@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "535bea6aec7be6b94be098a8bbe3b6bb",
-    "content-hash": "2d5cf41081d8870461c6ca2b1f8ee538",
+    "hash": "b54ea062a31abae7a228302517dc47f6",
+    "content-hash": "9d0190e55bbbae5bf57aa61d0fdef3d6",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -979,12 +979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "3e4f0ca08fdb3714f0fc6b84a64c812b35c1deac"
+                "reference": "0a8d8de0449d74065bac744ab67f249cb1115182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/3e4f0ca08fdb3714f0fc6b84a64c812b35c1deac",
-                "reference": "3e4f0ca08fdb3714f0fc6b84a64c812b35c1deac",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/0a8d8de0449d74065bac744ab67f249cb1115182",
+                "reference": "0a8d8de0449d74065bac744ab67f249cb1115182",
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1067,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-07-10 13:06:23"
+            "time": "2018-07-11 07:21:59"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2442,12 +2442,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "352654b8b95d21eddabe4967bce1e84e5c17ecb1"
+                "reference": "b203891a206dd5fe867e22fcacfdf2a28e787c1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/352654b8b95d21eddabe4967bce1e84e5c17ecb1",
-                "reference": "352654b8b95d21eddabe4967bce1e84e5c17ecb1",
+                "url": "https://api.github.com/repos/symfony/console/zipball/b203891a206dd5fe867e22fcacfdf2a28e787c1f",
+                "reference": "b203891a206dd5fe867e22fcacfdf2a28e787c1f",
                 "shasum": ""
             },
             "require": {
@@ -2502,7 +2502,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-09 14:07:29"
+            "time": "2018-07-11 09:58:49"
         },
         {
             "name": "symfony/event-dispatcher",

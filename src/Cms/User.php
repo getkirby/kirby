@@ -543,6 +543,4 @@ class User extends Model
             'username' => $this->username()
         ];
     }
-
-
 }
