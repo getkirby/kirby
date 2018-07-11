@@ -55,6 +55,7 @@ export default {
           name: "template",
           label: this.$t("page.template"),
           type: "select",
+          disabled: this.templates.length === 1,
           required: true,
           icon: "code",
           empty: false,
