@@ -485,6 +485,46 @@ class Page extends Model
     }
 
     /**
+     * Checks if the page is a direct or indirect ancestor of the given $page object
+     *
+     * @return boolean
+     */
+    public function isAncestorOf(Page $child): bool
+    {
+        return $child->parents()->has($this->id()) === true;
+    }
+
+    /**
+     * Checks if the page is a child of the given page
+     *
+     * @return boolean
+     */
+    public function isChildOf(Page $parent): bool
+    {
+        return $this->parent()->is($parent);
+    }
+
+    /**
+     * Checks if the page is a descendant of the given page
+     *
+     * @return boolean
+     */
+    public function isDescendantOf(Page $parent): bool
+    {
+        return $this->parents()->has($parent->id()) === true;
+    }
+
+    /**
+     * Checks if the page is a descendant of the currently active page
+     *
+     * @return boolean
+     */
+    public function isDescendantOfActive(): bool
+    {
+        return $this->isDescendantOf($this->site()->page());
+    }
+
+    /**
      * Checks if the current page is a draft
      *
      * @return boolean
