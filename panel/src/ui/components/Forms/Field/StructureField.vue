@@ -44,6 +44,7 @@
             <div class="kirby-structure-item-content">
               <p
                 v-for="(field, fieldName) in fields"
+                v-if="field.type !== 'hidden'"
                 :key="fieldName"
                 :title="field.label"
                 class="kirby-structure-item-text"
