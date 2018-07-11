@@ -1,5 +1,5 @@
 <template>
-  <kirby-field v-bind="$props" class="kirby-structure-field">
+  <kirby-field v-bind="$props" class="kirby-structure-field" @click.native.stop>
     <template slot="options">
       <kirby-button
         v-if="!disabled"
@@ -87,6 +87,10 @@
       </kirby-dialog>
     </template>
 
+    <kirby-dialog ref="escapeDialog" theme="negative" :button="$t('discard')" icon="trash" @submit="discard">
+      {{ "Do you really want to discard this item?" | t("structure.discard.confirm") }}
+    </kirby-dialog>
+
   </kirby-field>
 </template>
 
@@ -118,19 +122,25 @@ export default {
     }
   },
   mounted() {
-    this.$events.$on('keydown.esc', this.close);
+    this.$events.$on('keydown.esc', this.escape);
     this.$events.$on('keydown.cmd.s', this.close);
-    this.$events.$on('click', this.close);
-    this.$events.$on("field.structure.close", this.close);
+    this.$events.$on('click', this.escape);
+    this.$events.$on("field.structure.close", this.escape);
   },
   destroyed() {
-    this.$events.$off('keydown.esc', this.close);
+    this.$events.$off('keydown.esc', this.escape);
     this.$events.$off('keydown.cmd.s', this.close);
-    this.$events.$off('click', this.close);
-    this.$events.$off("field.structure.close", this.close);
+    this.$events.$off('click', this.escape);
+    this.$events.$off("field.structure.close", this.escape);
   },
   methods: {
     add() {
+
+      if (this.active !== null) {
+        this.escape();
+        return false;
+      }
+
       let data = {};
 
       Object.keys(this.fields).forEach(fieldName => {
@@ -155,6 +165,22 @@ export default {
       this.close();
       this.trash = index;
       this.$refs.remove.open();
+    },
+    escape() {
+      if (this.active !== null && this.items[this.active]) {
+        if (Object.keys(this.items[this.active]).length === 0) {
+          this.$refs.escapeDialog.open();
+          return;
+        }
+      }
+
+      this.close();
+    },
+    discard() {
+      this.trash  = this.active;
+      this.active = null;
+      this.remove();
+      this.$refs.escapeDialog.close();
     },
     focus() {
       this.$refs.add.focus();

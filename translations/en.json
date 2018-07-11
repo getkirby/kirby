@@ -3,9 +3,10 @@
     "translation.name": "English",
     "translation.author": "Kirby Team",
 
+    "add": "Add",
     "confirm": "Ok",
     "cancel": "Cancel",
-    "add": "Add",
+    "discard": "Discard",
     "open": "Open",
     "upload": "Upload",
     "change": "Change",
@@ -89,6 +90,7 @@
 
     "structure.add.first": "Click to add the first item …",
     "structure.delete.confirm": "Do you really want to delete this item?",
+    "structure.discard.confirm": "Do you want to discard the new item?",
 
     "upload.errors": "Error",
     "upload.progress": "Uploading …",
