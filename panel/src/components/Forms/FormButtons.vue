@@ -28,12 +28,7 @@ export default {
   },
   computed: {
     id() {
-
-      if (this.$route.name === "Account") {
-        return '/users/' + this.$store.state.user.current.id;
-      }
-
-      return this.$route.path;
+      return this.$cache.id(this.$route, this.$store);
     }
   },
   watch: {

@@ -1,6 +1,13 @@
 export default {
   install(Vue) {
     Vue.prototype.$cache = {
+      id(route, store) {
+        if (route.name === "Account") {
+          return '/users/' + store.state.user.current.id + route.hash;
+        }
+
+        return route.path + route.hash;
+      },
       exists(id) {
         return this.get(id) !== null;
       },
