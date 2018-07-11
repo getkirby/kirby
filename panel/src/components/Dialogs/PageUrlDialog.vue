@@ -77,7 +77,7 @@ export default {
         this.$refs.dialog.close();
         this.$store.dispatch(
           "notification/success",
-          this.$t("page.status.changed.same")
+          this.$t("page.url.changed.same")
         );
         return;
       }
@@ -91,7 +91,7 @@ export default {
         .slug(this.page.id, this.slug)
         .then(page => {
           const payload = {
-            message: this.$t("page.status.changed", { url: page.id }),
+            message: this.$t("page.url.changed", { url: page.id }),
             event: "page.changeSlug"
           };
 
