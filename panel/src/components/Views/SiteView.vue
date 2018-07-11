@@ -3,10 +3,10 @@
     {{ issue.message }}
   </kirby-error-view>
   <kirby-view v-else key="site-view" class="kirby-site-view">
-    <kirby-header 
-      :tabs="tabs" 
-      :tab="tab" 
-      :editable="permissions.changeTitle" 
+    <kirby-header
+      :tabs="tabs"
+      :tab="tab"
+      :editable="permissions.changeTitle"
       @edit="action('rename')"
     >
       {{ site.title }}

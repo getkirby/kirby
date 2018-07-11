@@ -8,6 +8,7 @@
     :disabled="disabled"
     :data-tabbed="tabbed"
     :data-theme="theme"
+    :data-responsive="responsive"
     :tabindex="tabindex"
     :target="target"
     :title="tooltip"
@@ -42,6 +43,7 @@ export default {
     id: [String, Number],
     image: [String, Object],
     link: String,
+    responsive: Boolean,
     target: String,
     tabindex: String,
     theme: String,
@@ -118,6 +120,15 @@ button::-moz-focus-inner {
 
   * {
     vertical-align: middle;
+  }
+}
+
+/* hide button text on small screens */
+.kirby-button[data-responsive] .kirby-button-text {
+  display: none;
+
+  @media screen and (min-width: $breakpoint-small) {
+    display: inline;
   }
 }
 

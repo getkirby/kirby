@@ -10,7 +10,7 @@
       </kirby-button-group>
       <kirby-button-group slot="right">
         <kirby-dropdown>
-          <kirby-button icon="funnel" @click="$refs.roles.toggle()">
+          <kirby-button :responsive="true" icon="funnel" @click="$refs.roles.toggle()">
             {{ $t("user.role") }}: {{ role ? role.text : $t("user.role.all") }}
           </kirby-button>
           <kirby-dropdown-content ref="roles" align="right">

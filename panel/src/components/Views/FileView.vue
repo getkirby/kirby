@@ -14,11 +14,11 @@
         {{ file.filename }}
 
         <kirby-button-group slot="left">
-          <kirby-button icon="open" @click="action('download')">
+          <kirby-button :responsive="true" icon="open" @click="action('download')">
             {{ $t("open") }}
           </kirby-button>
           <kirby-dropdown>
-            <kirby-button icon="cog" @click="$refs.settings.toggle()">
+            <kirby-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
               {{ $t('settings') }}
             </kirby-button>
             <kirby-dropdown-content ref="settings" :options="options" @action="action" />

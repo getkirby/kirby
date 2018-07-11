@@ -12,7 +12,7 @@
     >
       {{ page.title }}
       <kirby-button-group slot="left">
-        <kirby-button icon="open" @click="action('preview')">
+        <kirby-button :responsive="true" icon="open" @click="action('preview')">
           {{ $t('open') }}
         </kirby-button>
         <kirby-button
@@ -20,12 +20,13 @@
           :class="['kirby-status-flag', 'kirby-status-flag-' + page.status]"
           :disabled="permissions.changeStatus === false"
           :icon="permissions.changeStatus === false ? 'protected' : 'circle'"
+          :responsive="true"
           @click="action('status')"
         >
           {{ status.label }}
         </kirby-button>
         <kirby-dropdown>
-          <kirby-button icon="cog" @click="$refs.settings.toggle()">
+          <kirby-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
             {{ $t('settings') }}
           </kirby-button>
           <kirby-dropdown-content ref="settings" :options="options" @action="action" />
