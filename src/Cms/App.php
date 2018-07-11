@@ -633,7 +633,17 @@ class App extends Component
     public function trigger(string $name, ...$arguments)
     {
         if ($functions = $this->extension('hooks', $name)) {
+            static $triggered = [];
+
             foreach ($functions as $function) {
+                if (in_array($function, $triggered[$name] ?? []) === true) {
+                    continue;
+                }
+
+                // mark the hook as triggered, to avoid endless loops
+                $triggered[$name][] = $function;
+
+                // bind the App object to the hook
                 $function->call($this, ...$arguments);
             }
         }
