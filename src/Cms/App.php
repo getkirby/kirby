@@ -16,6 +16,7 @@ use Kirby\Http\Server;
 use Kirby\Http\Visitor;
 use Kirby\Image\Darkroom;
 use Kirby\Session\AutoSession as Session;
+use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\Url;
 use Kirby\Toolkit\Url\Query as UrlQuery;
 use Kirby\Toolkit\Controller;
