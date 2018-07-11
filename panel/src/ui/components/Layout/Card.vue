@@ -125,6 +125,7 @@ export default {
   color: $color-white;
   z-index: 1;
   cursor: -webkit-grab;
+  will-change: opacity;
   transition: opacity .3s;
 }
 .kirby-card .kirby-sort-handle:active {
