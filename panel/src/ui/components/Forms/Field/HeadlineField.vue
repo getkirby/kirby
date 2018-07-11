@@ -1,5 +1,5 @@
 <template>
-  <kirby-headline class="kirby-headline-field">
+  <kirby-headline class="kirby-headline-field" :data-numbered="numbered">
     {{ label }}
   </kirby-headline>
 </template>
@@ -7,32 +7,34 @@
 <script>
 export default {
   props: {
-    label: String
+    label: String,
+    numbered: Boolean
   }
 };
 </script>
 
 <style lang="scss">
+body {
+  counter-reset: headline-counter;
+}
 .kirby-headline-field {
   position: relative;
   margin-bottom: -0.5rem;
   padding-top: 3rem;
-  padding-left: 1.5em;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid $color-border;
-  counter-increment: count;
+  border-bottom: 1px dashed $color-border;
 }
 
-.kirby-headline-field.kirby-headline > span {
-  padding: 0;
-}
-
-.kirby-headline-field::before {
-  position: absolute;
-  content: counter(count, decimal-leading-zero);
-  padding-bottom: 0.5rem;
-  left: 0;
+.kirby-headline-field[data-numbered]::before {
+  counter-increment: headline-counter;
+  content: counter(headline-counter, decimal-leading-zero);
   color: $color-focus;
   font-weight: 400;
+  padding-right: .5rem;
+}
+
+/* don't add the top padding, if the headline is the very first form element */
+.kirby-fieldset > .kirby-grid .kirby-column:first-child .kirby-headline-field {
+  padding-top: 0;
 }
 </style>
