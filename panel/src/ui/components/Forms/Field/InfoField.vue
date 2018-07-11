@@ -1,7 +1,9 @@
 <template>
   <div class="kirby-field kirby-info-field">
     <kirby-headline>{{ label }}</kirby-headline>
-    <kirby-box :theme="theme" v-html="text" />
+    <kirby-box :theme="theme">
+      <kirby-text v-html="text" />
+    </kirby-box>
   </div>
 </template>
 

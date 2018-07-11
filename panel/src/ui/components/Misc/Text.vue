@@ -27,12 +27,7 @@ export default {
   margin-bottom: 1.5em;
 }
 .kirby-text a {
-  border-bottom: 2px solid $color-border;
-  transition: border-bottom-color 0.3s;
-}
-.kirby-text a:focus,
-.kirby-text a:hover {
-  border-bottom-color: $color-dark;
+  text-decoration: underline;
 }
 .kirby-text > *:last-child {
   margin-bottom: 0;
