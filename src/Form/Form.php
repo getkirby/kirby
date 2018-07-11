@@ -39,9 +39,10 @@ class Form
             try {
                 $field = new Field($props, $inject);
             } catch (Throwable $e) {
+                error_log($e);
                 $field = new Field([
                     'name'  => $props['name'],
-                    'label' => 'Field Error',
+                    'label' => 'Error in "' . $props['name'] . '" field',
                     'type'  => 'info',
                     'theme' => 'negative',
                     'text'  => $e->getMessage(),
