@@ -8,7 +8,7 @@
     @open="enter"
   >
     <kirby-text>{{ error.message }}</kirby-text>
-    <dl v-if="error.details && error.details.length" class="kirby-error-details">
+    <dl v-if="error.details && Object.keys(error.details).length" class="kirby-error-details">
       <template v-for="(detail, index) in error.details">
         <dt :key="'detail-label-' + index">{{ detail.label }}</dt>
         <dd :key="'detail-message-' + index">
