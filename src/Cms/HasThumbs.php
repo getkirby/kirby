@@ -12,6 +12,17 @@ trait HasThumbs
      * @var File|Avatar
      */
     protected $original;
+    protected $modifications = [];
+
+    public function blur($pixels = true)
+    {
+        return $this->thumb(['blur' => $pixels]);
+    }
+
+    public function bw()
+    {
+        return $this->thumb(['grayscale' => true]);
+    }
 
     public function crop(int $width, int $height = null, $options = null)
     {
@@ -36,6 +47,17 @@ trait HasThumbs
     }
 
     /**
+     * Returns applied modifications after
+     * thumbnail generation.
+     *
+     * @return array|null
+     */
+    public function modifications(): ?array
+    {
+        return $this->modifications;
+    }
+
+    /**
      * Returns the original object
      *
      * @return File|Avatar
@@ -45,6 +67,11 @@ trait HasThumbs
         return $this->original;
     }
 
+    public function quality(int $quality)
+    {
+        return $this->thumb(['quality' => $quality]);
+    }
+
     public function resize(int $width = null, int $height = null, int $quality = null)
     {
         return $this->thumb([
@@ -52,6 +79,12 @@ trait HasThumbs
             'height'  => $height,
             'quality' => $quality
         ]);
+    }
+
+    protected function setModifications(array $modifications = []): self
+    {
+        $this->modifications = $modifications;
+        return $this;
     }
 
     /**
@@ -66,4 +99,36 @@ trait HasThumbs
         $this->original = $original;
         return $this;
     }
+
+    /**
+     * Creates a modified version of images
+     * The media manager takes care of generating
+     * those modified versions and putting them
+     * in the right place. This is normally the
+     * /media folder of your installation, but
+     * could potentially also be a CDN or any other
+     * place.
+     *
+     * @param array $options
+     * @return self
+     */
+    public function thumb(array $options = []): self
+    {
+        if ($this->original() !== null) {
+            $original = $this->original();
+            $options  = array_merge($this->modifications(), $options);
+        } else {
+            $original = $this;
+        }
+
+        $kirby = $this->kirby();
+        $url   = $kirby->component('file::url')($kirby, $this, $options);
+
+        return $this->clone([
+            'modifications' => $options,
+            'original'      => $original,
+            'url'           => $url,
+        ]);
+    }
+
 }

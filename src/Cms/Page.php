@@ -49,6 +49,8 @@ class Page extends Model
         'content',
         'files',
         'id',
+        'mediaUrl',
+        'mediaRoot',
         'num',
         'parent',
         'slug',

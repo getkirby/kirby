@@ -395,6 +395,6 @@ class File extends Model
      */
     public function url()
     {
-        return $this->url ?? $this->url = $this->mediaUrl();
+        return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this);
     }
 }

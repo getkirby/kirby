@@ -181,7 +181,7 @@ class Dimensions
     */
     protected function fitSize(string $ref, int $fit = null, bool $force = false): self
     {
-        if ($fit === 0) {
+        if ($fit === 0 || $fit === null) {
             return $this;
         }
 
@@ -218,7 +218,7 @@ class Dimensions
      *                              upscaled to fit the box if smaller
      * @return  Dimensions          object with recalculated dimensions
     */
-    public function fitWidth(int $fit, bool $force = false): self
+    public function fitWidth(int $fit = null, bool $force = false): self
     {
         return $this->fitSize('width', $fit, $force);
     }

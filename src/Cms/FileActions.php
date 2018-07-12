@@ -131,42 +131,6 @@ trait FileActions
     }
 
     /**
-     * Creates a modified version of images
-     * The media manager takes care of generating
-     * those modified versions and putting them
-     * in the right place. This is normally the
-     * /media folder of your installation, but
-     * could potentially also be a CDN or any other
-     * place.
-     *
-     * @param array $options
-     * @return self
-     */
-    public function thumb(array $options = []): self
-    {
-        if ($this->original() !== null) {
-            throw new LogicException('Resized images cannot be further processed');
-        }
-
-        $resizable = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
-
-        if (in_array($this->extension(), $resizable) === false) {
-            return $this;
-        }
-
-        $parent = $this->parent();
-        $source = $this->root();
-        $root   = $parent->mediaRoot() . '/{{ name }}{{ attributes }}.{{ extension }}';
-        $thumb  = $this->kirby()->thumb($source, $root, $options);
-
-        return $this->clone([
-            'root'     => $thumb,
-            'url'      => $parent->mediaUrl() . '/' . basename($thumb),
-            'original' => $this
-        ]);
-    }
-
-    /**
      * Remove all public versions of this file
      *
      * @return self

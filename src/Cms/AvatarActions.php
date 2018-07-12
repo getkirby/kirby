@@ -89,32 +89,6 @@ trait AvatarActions
     }
 
     /**
-     * Main thumb generation method.
-     * This is also reused by crop and resize
-     * methods in the HasThumbs trait.
-     *
-     * @param array $options
-     * @return self
-     */
-    public function thumb(array $options = []): self
-    {
-        if ($this->original() !== null) {
-            throw new LogicException('Resized images cannot be further processed');
-        }
-
-        $user   = $this->user();
-        $source = $this->root();
-        $root   = $user->mediaRoot() . '/profile.jpg';
-        $thumb  = $this->kirby()->thumb($source, $root, $options);
-
-        return $this->clone([
-            'root'     => $thumb,
-            'url'      => $user->mediaUrl() . '/' . basename($thumb),
-            'original' => $this
-        ]);
-    }
-
-    /**
      * Remove all public versions of this file
      *
      * @return self

@@ -67,13 +67,47 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => [
-                'media/site/(:any)',
-                'media/pages/(:all)',
-            ],
-            'action'  => function ($path) use ($kirby) {
-                if ($file = $kirby->file($path)) {
+            'pattern' => 'media/pages/(:all)/(:any)',
+            'action'  => function ($path, $filename) use ($kirby) {
+
+                $page = $kirby->page($path) ?? $kirby->site()->draft($path);
+
+                if ($page) {
+                    if ($file = $page->file($filename)) {
+                        go($file->publish()->url(), 307);
+                    }
+
+                    $url     = $page->mediaUrl() . '/' . $filename;
+                    $thumb   = $page->mediaRoot() . '/' . $filename;
+                    $options = Data::read($job = $thumb . '.json');
+
+                    if (empty($options) === false && $file = $page->file($options['filename'])) {
+                        $kirby->thumb($file->root(), $thumb, $options);
+                        F::remove($job);
+                        go($url, 307);
+                    }
+                }
+
+            }
+        ],
+        [
+            'pattern' => 'media/site/(:any)',
+            'action'  => function ($filename) use ($kirby) {
+
+                $site = $kirby->site();
+
+                if ($file = $site->file($filename)) {
                     go($file->publish()->url(), 307);
+                }
+
+                $url     = $site->mediaUrl() . '/' . $filename;
+                $thumb   = $site->mediaRoot() . '/' . $filename;
+                $options = Data::read($job = $thumb . '.json');
+
+                if (empty($options) === false && $file = $site->file($options['filename'])) {
+                    $kirby->thumb($file->root(), $thumb, $options);
+                    F::remove($job);
+                    go($url, 307);
                 }
             }
         ],

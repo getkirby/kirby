@@ -143,6 +143,16 @@ class Avatar extends Model
     }
 
     /**
+     * Returns the parent model
+     *
+     * @return User
+     */
+    public function parent()
+    {
+        return $this->user();
+    }
+
+    /**
      * Returns the AvatarRules class to
      * validate any important action.
      *

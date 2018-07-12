@@ -185,9 +185,6 @@ class BlueprintFilesSection extends BlueprintSection
             'filename' => $this->filename($data['source'], $data['filename'])
         ]);
 
-        $file->resize(400, 400);
-        $file->crop(100);
-
         return $file;
     }
 

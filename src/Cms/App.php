@@ -185,6 +185,17 @@ class App extends Component
     }
 
     /**
+     * Returns a core component
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function component($name)
+    {
+        return $this->extensions['components'][$name] ?? null;
+    }
+
+    /**
      * Calls a page controller by name
      * and with the given arguments
      *
@@ -607,20 +618,9 @@ class App extends Component
      * @param array $options
      * @return null
      */
-    public function thumb(string $src, string $dst, array $attributes = [])
+    public function thumb(string $src, string $dst, array $options = [])
     {
-        $options    = $this->option('thumbs', []);
-        $darkroom   = Darkroom::factory($options['driver'] ?? 'gd', $options);
-        $attributes = $darkroom->preprocess($src, $attributes);
-        $root       = (new Filename($src, $dst, $attributes))->toString();
-
-        // check if the thumbnail has to be regenerated
-        if (file_exists($root) !== true || filemtime($root) < filemtime($src)) {
-            F::copy($src, $root);
-            $darkroom->process($root, $attributes);
-        }
-
-        return $root;
+        return $this->extensions['components']['thumb']($this, $src, $dst, $options);
     }
 
     /**
