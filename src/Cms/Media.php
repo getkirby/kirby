@@ -16,18 +16,10 @@ class Media
             if ($filename === 'profile.jpg') {
                 return $model->avatar()->publish()->url();
             }
-
-            $file = $model->avatar();
         } else {
             if ($file = $model->file($filename)) {
                 return $file->publish()->url();
             }
-
-            $file = $model->file($options['filename']);
-        }
-
-        if (!$file) {
-            return false;
         }
 
         try {
@@ -36,7 +28,13 @@ class Media
             $thumb   = $model->mediaRoot() . '/' . $filename;
             $options = Data::read($job = $thumb . '.json');
 
-            if (empty($options) === true) {
+            if (is_a($model, User::class) === true) {
+                $file = $model->avatar();
+            } else {
+                $file = $model->file($options['filename']);
+            }
+
+            if (!$file || empty($options) === true) {
                 return false;
             }
 
