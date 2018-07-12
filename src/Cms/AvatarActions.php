@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\F;
 
@@ -13,7 +14,7 @@ trait AvatarActions
      *
      * 1. checks the action rules
      * 2. sends the before hook
-     * 3. commits the store action
+     * 3. commits the action callback
      * 4. sends the after hook
      * 5. returns the result
      *
@@ -21,13 +22,13 @@ trait AvatarActions
      * @param mixed ...$arguments
      * @return mixed
      */
-    protected function commit(string $action, ...$arguments)
+    protected function commit(string $action, $arguments = [], Closure $callback)
     {
         $old = $this->hardcopy();
 
-        $this->rules()->$action($this, ...$arguments);
-        $this->kirby()->trigger('avatar.' . $action . ':before', $this, ...$arguments);
-        $result = $this->store()->$action(...$arguments);
+        $this->rules()->$action(...$arguments);
+        $this->kirby()->trigger('avatar.' . $action . ':before', ...$arguments);
+        $result = $callback(...$arguments);
         $this->kirby()->trigger('avatar.' . $action . ':after', $result, $old);
         return $result;
     }
@@ -50,7 +51,23 @@ trait AvatarActions
         $avatar = new static($props);
         $upload = new Upload($props['source']);
 
-        return $avatar->commit('create', $upload);
+        return $avatar->commit('create', [$avatar, $upload], function ($avatar, $upload) {
+
+            // delete all public versions
+            $avatar->unpublish();
+
+            // overwrite the original
+            if (F::copy($upload->root(), $avatar->root(), true) !== true) {
+                throw new Exception([
+                    'key' => 'avatar.create.fail',
+                ]);
+            }
+
+            // return a fresh clone
+            return $avatar->clone();
+
+        });
+
     }
 
     /**
@@ -61,7 +78,24 @@ trait AvatarActions
      */
     public function delete(): bool
     {
-        return $this->commit('delete');
+        return $this->commit('delete', [$this], function ($avatar) {
+
+            if ($avatar->exists() === false) {
+                return true;
+            }
+
+            // delete all public versions
+            $avatar->unpublish();
+
+            if (F::remove($avatar->root()) !== true) {
+                throw new Exception([
+                    'key' => 'avatar.delete.fail',
+                ]);
+            }
+
+            return true;
+
+        });
     }
 
     /**
@@ -72,7 +106,7 @@ trait AvatarActions
      */
     public function publish(): self
     {
-        F::link($this->root(), $this->mediaRoot());
+        F::copy($this->root(), $this->mediaRoot());
         return $this;
     }
 
@@ -85,7 +119,22 @@ trait AvatarActions
      */
     public function replace(string $source): self
     {
-        return $this->commit('replace', new Upload($source));
+        return $this->commit('replace', [$this, new Upload($source)], function ($avatar, $upload) {
+
+            // delete all public versions
+            $avatar->unpublish();
+
+            // overwrite the original
+            if (F::copy($upload->root(), $avatar->root(), true) !== true) {
+                throw new Exception([
+                    'key' => 'avatar.replace.fail',
+                ]);
+            }
+
+            // return a fresh clone
+            return $avatar->clone();
+
+        });
     }
 
     /**

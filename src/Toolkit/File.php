@@ -29,7 +29,7 @@ class File
      *
      * @param string $root Absolute file path
      */
-    public function __construct(string $root)
+    public function __construct(string $root = null)
     {
         $this->root = $root;
     }
@@ -267,9 +267,9 @@ class File
     /**
      * Returns the given file path
      *
-     * @return string
+     * @return string|null
      */
-    public function root()
+    public function root(): ?string
     {
         return $this->root;
     }

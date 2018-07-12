@@ -411,6 +411,16 @@ class User extends Model
     }
 
     /**
+     * The absolute path to the user directory
+     *
+     * @return string
+     */
+    public function root(): string
+    {
+        return $this->kirby()->root('accounts') . '/' . $this->id();
+    }
+
+    /**
      * Returns the UserRules class to
      * validate any important action.
      *
