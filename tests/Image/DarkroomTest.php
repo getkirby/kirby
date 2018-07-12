@@ -46,7 +46,7 @@ class DarkroomTest extends TestCase
     public function testDefaults()
     {
         $darkroom = new Darkroom();
-        $options  = $darkroom->preprocess($this->file());
+        $options  = $darkroom->preprocess('/dev/null');
 
         $this->assertEquals(true, $options['autoOrient']);
         $this->assertEquals(false, $options['crop']);
