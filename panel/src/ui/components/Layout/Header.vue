@@ -61,14 +61,13 @@ export default {
 }
 .kirby-header .kirby-headline-editable {
   cursor: pointer;
-  display: flex;
-  align-items: baseline;
 }
 .kirby-header .kirby-headline-editable .kirby-icon {
   color: $color-light-grey;
   margin-left: .5rem;
   opacity: 0;
   transition: opacity .3s;
+  display: inline-block;
 }
 .kirby-header .kirby-headline-editable:hover .kirby-icon {
   opacity: 1;
