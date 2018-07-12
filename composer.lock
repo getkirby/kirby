@@ -979,12 +979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "0a8d8de0449d74065bac744ab67f249cb1115182"
+                "reference": "50b5e05034bfb0ef334b970da10a701d6675c94e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/0a8d8de0449d74065bac744ab67f249cb1115182",
-                "reference": "0a8d8de0449d74065bac744ab67f249cb1115182",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/50b5e05034bfb0ef334b970da10a701d6675c94e",
+                "reference": "50b5e05034bfb0ef334b970da10a701d6675c94e",
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1067,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-07-11 07:21:59"
+            "time": "2018-07-12 13:35:03"
         },
         {
             "name": "myclabs/deep-copy",
