@@ -74,4 +74,20 @@ class FieldTest extends TestCase
         $field->value(new Page(['slug' => 'yay']));
     }
 
+    public function testCloningInMethods()
+    {
+        Field::$methods = [
+            'test' => function ($field) {
+                $field->value = 'Test';
+                return $field;
+            }
+        ];
+
+        $original = new Field(null, 'title', 'Title');
+        $modified = $original->test();
+
+        $this->assertEquals('Title', $original->value);
+        $this->assertEquals('Test', $modified->value);
+    }
+
 }
