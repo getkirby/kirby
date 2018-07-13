@@ -32,10 +32,12 @@ return [
         $attributes = $darkroom->preprocess($file->root(), $options);
 
         // create url and root
-        $parent = $file->parent();
-        $dst    = $parent->mediaRoot() . '/{{ name }}{{ attributes }}.{{ extension }}';
-        $thumb  = (new Filename($file->root(), $dst, $attributes))->toString();
-        $job    = $thumb . '.json';
+        $parent    = $file->parent();
+        $mediaRoot = $parent->mediaRoot();
+        $dst       = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
+        $thumb     = (new Filename($file->root(), $dst, $attributes))->toString();
+        $thumbName = basename($thumb);
+        $job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
         if (file_exists($thumb) === false || filemtime($this->root()) > filemtime($thumb)) {
             F::remove($thumb);
@@ -45,7 +47,7 @@ return [
             ]));
         }
 
-        return $parent->mediaUrl() . '/' . basename($thumb);
+        return $parent->mediaUrl() . '/' . $thumbName;
 
     },
     'markdown' => function (App $kirby, string $text = null, array $options = []): string {

@@ -23,10 +23,12 @@ class Media
         }
 
         try {
-            $kirby   = $model->kirby();
-            $url     = $model->mediaUrl() . '/' . $filename;
-            $thumb   = $model->mediaRoot() . '/' . $filename;
-            $options = Data::read($job = $thumb . '.json');
+            $kirby     = $model->kirby();
+            $url       = $model->mediaUrl() . '/' . $filename;
+            $mediaRoot = $model->mediaRoot();
+            $thumb     = $mediaRoot . '/' . $filename;
+            $job       = $mediaRoot . '/.jobs/' . $filename . '.json';
+            $options   = Data::read($job);
 
             if (is_a($model, User::class) === true) {
                 $file = $model->avatar();
