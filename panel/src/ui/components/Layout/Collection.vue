@@ -62,6 +62,7 @@ export default {
         fallbackClass: "sortable-fallback",
         filter: ".disabled",
         delay: 1,
+        disabled: this.sortable === false,
         draggable: ".kirby-draggable-item",
         handle: ".kirby-sort-handle",
       };

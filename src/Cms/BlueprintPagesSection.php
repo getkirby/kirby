@@ -112,7 +112,7 @@ class BlueprintPagesSection extends BlueprintSection
             $data = $data->filterBy('template', 'in', $templates);
         }
 
-        if ($this->sortBy() && $this->sortable() === false) {
+        if ($this->sortBy()) {
             $data = $data->sortBy(...Str::split($this->sortBy(), ' '));
         }
 
@@ -299,6 +299,10 @@ class BlueprintPagesSection extends BlueprintSection
     public function sortable(): bool
     {
         if ($this->status() !== 'listed') {
+            return false;
+        }
+
+        if ($this->sortBy() !== null) {
             return false;
         }
 

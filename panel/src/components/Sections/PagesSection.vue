@@ -24,7 +24,7 @@
         :layout="layout"
         :items="data"
         :pagination="pagination"
-        :sortable="true"
+        :sortable="sortable"
         @change="sort"
         @paginate="paginate"
         @action="action"
@@ -91,7 +91,7 @@ export default {
                 .then(options => ready(options));
             };
 
-            page.sortable = page.permissions.sort;
+            page.sortable = page.permissions.sort && response.options.sortable;
 
             page.flag = {
               tooltip: states[page.status].label,

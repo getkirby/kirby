@@ -343,7 +343,7 @@ trait BlueprintSectionData
 
     public function sortable(): bool
     {
-        return $this->sortable;
+        return $this->sortable && !$this->sortBy;
     }
 
     public function sortBy()
