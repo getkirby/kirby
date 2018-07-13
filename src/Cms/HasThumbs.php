@@ -130,5 +130,4 @@ trait HasThumbs
             'url'           => $url,
         ]);
     }
-
 }

@@ -249,5 +249,4 @@ class BlueprintFilesSection extends BlueprintSection
     {
         return $this->template;
     }
-
 }

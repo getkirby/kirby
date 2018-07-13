@@ -65,9 +65,7 @@ trait AvatarActions
 
             // return a fresh clone
             return $avatar->clone();
-
         });
-
     }
 
     /**
@@ -79,7 +77,6 @@ trait AvatarActions
     public function delete(): bool
     {
         return $this->commit('delete', [$this], function ($avatar) {
-
             if ($avatar->exists() === false) {
                 return true;
             }
@@ -94,7 +91,6 @@ trait AvatarActions
             }
 
             return true;
-
         });
     }
 
@@ -133,7 +129,6 @@ trait AvatarActions
 
             // return a fresh clone
             return $avatar->clone();
-
         });
     }
 

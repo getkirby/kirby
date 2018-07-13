@@ -8,7 +8,6 @@ use Throwable;
 
 class Media
 {
-
     public static function link(Model $model, $filename)
     {
         // TODO: this should be refactored when users get normal files
@@ -46,7 +45,5 @@ class Media
         } catch (Throwable $e) {
             return false;
         }
-
     }
-
 }

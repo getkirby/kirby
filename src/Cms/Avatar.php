@@ -20,7 +20,6 @@ use Kirby\Image\Image;
  */
 class Avatar extends Model
 {
-
     use AvatarActions;
     use HasThumbs;
 
