@@ -79,7 +79,7 @@ export default {
   preview(file) {
     if (file.type === "image") {
       return {
-        image: file.url + "?v=" + file.modified
+        image: file.url
       };
     }
 
