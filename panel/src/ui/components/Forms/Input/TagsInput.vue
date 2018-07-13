@@ -1,5 +1,6 @@
 <template>
   <kirby-draggable
+    ref="box"
     v-model="tags"
     :options="{disabled: !draggable, forceFallback: true, draggable: '.kirby-tag', delay: 1}"
     class="kirby-tags-input"
@@ -37,7 +38,8 @@
           v-model.trim="newTag"
           autocomplete="off"
           type="text"
-          @input="newTag = $event.target.value; $refs.autocomplete.search(newTag)"
+          @input="type($event.target.value)"
+          @blur="blurInput"
           @keydown.left="leaveInput"
           @keydown.enter="enter"
           @keydown.tab="tab"
@@ -138,14 +140,23 @@ export default {
       this.addTag({ text: string, value: string });
     },
     addTag(tag) {
+      this.addTagToIndex(tag);
+      this.$refs.autocomplete.close();
+      this.$refs.input.focus();
+    },
+    addTagToIndex(tag) {
       if (this.index(tag) === -1 && (!this.max || this.tags.length < this.max)) {
         this.tags.push(tag);
         this.onInput(this.tags);
       }
 
       this.newTag = null;
-      this.$refs.autocomplete.close();
-      this.$refs.input.focus();
+    },
+    blurInput() {
+      if (this.$refs.input.value.length) {
+        this.addTagToIndex(this.$refs.input.value);
+        this.$refs.autocomplete.close();
+      }
     },
     edit(tag) {
       this.newTag = tag.text;
@@ -275,6 +286,10 @@ export default {
         event.preventDefault();
         this.addString(this.newTag);
       }
+    },
+    type(value) {
+      this.newTag = value;
+      this.$refs.autocomplete.search(value);
     }
   },
   validations() {
