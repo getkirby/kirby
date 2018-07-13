@@ -14,6 +14,9 @@ $page['type'] = PageDraft::class;
 $page['fields']['siblings'] = function (PageDraft $page) {
     return $page->parentModel()->children()->not($page);
 };
+$page['fields']['url'] = function (PageDraft $page) {
+    return $page->previewUrl();
+};
 
 
 return $page;

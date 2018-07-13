@@ -301,7 +301,7 @@ class BlueprintPagesSection extends BlueprintSection
 
     public function sortable(): bool
     {
-        if ($this->status() !== 'listed') {
+        if ($this->status() !== 'listed' && $this->status() !== 'all') {
             return false;
         }
 

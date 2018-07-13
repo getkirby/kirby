@@ -19,8 +19,12 @@ class PageDraft extends Page
         return '_drafts/' . $this->dirname();
     }
 
-    public function isVerified(string $token)
+    public function isVerified(string $token = null)
     {
+        if ($token === null) {
+            return false;
+        }
+
         return sha1($this->id() . $this->template()) === $token;
     }
 
@@ -51,8 +55,13 @@ class PageDraft extends Page
         return $parent;
     }
 
-    public function url(): string
+    public function token(): string
     {
-        return parent::url() . '/' . sha1($this->id() . $this->template());
+        return sha1($this->id() . $this->template());
+    }
+
+    public function previewUrl(): string
+    {
+        return $this->url() . '?token=' . $this->token();
     }
 }
