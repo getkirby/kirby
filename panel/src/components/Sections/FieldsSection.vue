@@ -51,7 +51,7 @@ export default {
     },
     fetch() {
       this.$api
-        .get(this.parent + "/" + this.name)
+        .get(this.parent + "/sections/" + this.name)
         .then(response => {
           this.errors = response.options.errors;
           this.fields = response.options.fields;

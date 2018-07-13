@@ -98,7 +98,7 @@ return [
         }
     ],
     [
-        'pattern' => 'site/files/(:any)/(:any)/(:all?)',
+        'pattern' => 'site/files/(:any)/sections/(:any)/(:all?)',
         'method'  => 'ALL',
         'action'  => function (string $filename, string $sectionName, string $path = '') {
             return $this->file(null, $filename)->blueprint()->section($sectionName)->apiCall($this, $path);
@@ -119,7 +119,7 @@ return [
         }
     ],
     [
-        'pattern' => 'site/(:any)/(:all?)',
+        'pattern' => 'site/sections/(:any)/(:all?)',
         'method'  => 'ALL',
         'action'  => function (string $sectionName, string $path = '') {
             return $this->site()->blueprint()->section($sectionName)->apiCall($this, $path);

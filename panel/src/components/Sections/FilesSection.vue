@@ -66,7 +66,7 @@ export default {
   computed: {
     uploadParams() {
       return {
-        url: config.api + "/" + this.parent + "/" + this.name,
+        url: config.api + "/" + this.parent + "/sections/" + this.name,
         accept: this.accept
       };
     }
@@ -85,7 +85,7 @@ export default {
   methods: {
     fetch() {
       this.$api
-        .get(this.parent + "/" + this.name, { page: this.page })
+        .get(this.parent + "/sections/" + this.name, { page: this.page })
         .then(response => {
 
           this.accept     = response.options.accept || "*";
@@ -129,7 +129,7 @@ export default {
       });
 
       this.$api
-        .patch(this.parent + "/" + this.name + "/sort", { items })
+        .patch(this.parent + "/sections/" + this.name + "/sort", { items })
         .then(() => {
           this.$store.dispatch("notification/success", this.$t("file.sorted"));
         })

@@ -93,7 +93,7 @@ export default {
       };
 
       this.$api
-        .post(this.parent + "/" + this.section, data)
+        .post(this.parent + "/sections/" + this.section, data)
         .then(page => {
           this.success({
             route: this.$api.pages.link(page.id),

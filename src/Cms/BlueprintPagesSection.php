@@ -185,8 +185,11 @@ class BlueprintPagesSection extends BlueprintSection
             ]);
         }
 
+        // get the names of all accepted blueprints
+        $blueprints = array_column($this->blueprints(), 'name');
+
         // validate the template
-        if (in_array($data['template'], $this->templates()) === false) {
+        if (in_array($data['template'], $blueprints) === false) {
             throw new InvalidArgumentException([
                 'key' => 'page.template.invalid'
             ]);

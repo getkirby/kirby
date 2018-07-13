@@ -79,7 +79,7 @@ export default {
   methods: {
     fetch() {
       this.$api
-        .get(this.parent + "/" + this.name, { page: this.page })
+        .get(this.parent + "/sections/" + this.name, { page: this.page })
         .then(response => {
 
           const states = this.$api.pages.states();
@@ -140,7 +140,7 @@ export default {
         const position = event[type].newIndex + 1 + this.pagination.offset;
 
         this.$api
-          .patch(this.parent + "/" + this.name + "/sort", {
+          .patch(this.parent + "/sections/" + this.name + "/sort", {
             page: element.id,
             status: this.status,
             position: position
