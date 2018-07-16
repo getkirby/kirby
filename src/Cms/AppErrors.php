@@ -45,6 +45,10 @@ trait AppErrors
                 $handler = new PrettyPageHandler;
                 $handler->setPageTitle('Kirby CMS Debugger');
 
+                if ($editor = $this->option('editor')) {
+                    $handler->setEditor($editor);
+                }
+
                 $whoops->pushHandler($handler);
                 $whoops->register();
             }
