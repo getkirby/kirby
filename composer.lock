@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b3dadd31c55b784a8a59646efbfaa47d",
-    "content-hash": "627b2ca7eb8f6715d5987beed6e39840",
+    "hash": "bf8414a219be84c5181a096cd3df5b77",
+    "content-hash": "8a5fe82a1396608be8a15fe62c723095",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -2442,12 +2442,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "e968bd293d0b4f50c7c0dcb889a5fd16c6c803fc"
+                "reference": "1c70c40179c51bf22d3e71ece107272566a82f29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/e968bd293d0b4f50c7c0dcb889a5fd16c6c803fc",
-                "reference": "e968bd293d0b4f50c7c0dcb889a5fd16c6c803fc",
+                "url": "https://api.github.com/repos/symfony/console/zipball/1c70c40179c51bf22d3e71ece107272566a82f29",
+                "reference": "1c70c40179c51bf22d3e71ece107272566a82f29",
                 "shasum": ""
             },
             "require": {
@@ -2503,20 +2503,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-13 11:25:15"
+            "time": "2018-07-16 14:05:48"
         },
         {
             "name": "symfony/contracts",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/contract.git",
-                "reference": "e1748c562db4a7db480d3105702727ccb78032be"
+                "url": "https://github.com/symfony/contracts.git",
+                "reference": "316e2120250017445eef76c1b9a80ee863f90d6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contract/zipball/e1748c562db4a7db480d3105702727ccb78032be",
-                "reference": "e1748c562db4a7db480d3105702727ccb78032be",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/316e2120250017445eef76c1b9a80ee863f90d6e",
+                "reference": "316e2120250017445eef76c1b9a80ee863f90d6e",
                 "shasum": ""
             },
             "require": {
@@ -2530,7 +2530,7 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Symfony\\Contract\\": ""
+                    "Symfony\\Contracts\\": ""
                 },
                 "exclude-from-classmap": [
                     "**/Tests/"
@@ -2560,7 +2560,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-07-11 08:17:42"
+            "time": "2018-07-13 17:06:58"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2568,12 +2568,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "3e94e277a0ebe32861129e1eb96b0c07aab8988d"
+                "reference": "b2ddcd44764896bfdeec3c5ef2a2eb00eee8478a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/3e94e277a0ebe32861129e1eb96b0c07aab8988d",
-                "reference": "3e94e277a0ebe32861129e1eb96b0c07aab8988d",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b2ddcd44764896bfdeec3c5ef2a2eb00eee8478a",
+                "reference": "b2ddcd44764896bfdeec3c5ef2a2eb00eee8478a",
                 "shasum": ""
             },
             "require": {
@@ -2624,7 +2624,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-11 08:17:42"
+            "time": "2018-07-16 14:05:48"
         },
         {
             "name": "symfony/filesystem",
@@ -2682,12 +2682,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "fdf3ebd1f340fbf666de59745b1f86d021d34e94"
+                "reference": "31e8fe0c8e55ec05508c3f85e85f11e4b094ca9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/fdf3ebd1f340fbf666de59745b1f86d021d34e94",
-                "reference": "fdf3ebd1f340fbf666de59745b1f86d021d34e94",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/31e8fe0c8e55ec05508c3f85e85f11e4b094ca9d",
+                "reference": "31e8fe0c8e55ec05508c3f85e85f11e4b094ca9d",
                 "shasum": ""
             },
             "require": {
@@ -2723,7 +2723,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-06-19 21:38:29"
+            "time": "2018-07-16 12:56:42"
         },
         {
             "name": "symfony/options-resolver",
@@ -3006,12 +3006,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "249f1b61d378d8e461db5e92c37ccf62f9c2e9fb"
+                "reference": "e656f8243ff25f65737cd1aa368fe9cf84855b5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/249f1b61d378d8e461db5e92c37ccf62f9c2e9fb",
-                "reference": "249f1b61d378d8e461db5e92c37ccf62f9c2e9fb",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/e656f8243ff25f65737cd1aa368fe9cf84855b5e",
+                "reference": "e656f8243ff25f65737cd1aa368fe9cf84855b5e",
                 "shasum": ""
             },
             "require": {
@@ -3048,7 +3048,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-11 08:17:42"
+            "time": "2018-07-13 17:06:58"
         },
         {
             "name": "theseer/tokenizer",
