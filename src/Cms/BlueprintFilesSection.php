@@ -152,14 +152,15 @@ class BlueprintFilesSection extends BlueprintSection
         }
 
         return [
+            'dragText' => $item->dragText(),
             'filename' => $item->filename(),
             'id'       => $item->id(),
+            'image'    => $this->itemImage($item, $stringTemplateData),
+            'info'     => $this->itemValue($item, 'info', $stringTemplateData),
+            'link'     => $this->itemLink($item),
             'parent'   => $parent,
             'text'     => $this->itemValue($item, 'title', $stringTemplateData),
-            'image'    => $this->itemImage($item, $stringTemplateData),
-            'link'     => $this->itemLink($item),
-            'info'     => $this->itemValue($item, 'info', $stringTemplateData),
-            'url'      => $item->url()
+            'url'      => $item->url(),
         ];
     }
 

@@ -369,6 +369,24 @@ class Page extends Model
     }
 
     /**
+     * Provides a kirbytag or markdown
+     * tag for the page, which will be
+     * used in the panel, when the page
+     * gets dragged onto a textarea
+     *
+     * @return string
+     */
+    public function dragText($type = 'kirbytext'): string
+    {
+        switch ($type) {
+            case 'kirbytext':
+                return '(link: ' . $this->id() . ' text: ' . $this->title() . ')';
+            case 'markdown':
+                return '[' . $this->title() . '](' . $this->url() . ')';
+        }
+    }
+
+    /**
      * Checks if the page exists in the store
      *
      * @return bool

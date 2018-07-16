@@ -189,6 +189,32 @@ class File extends Model
         return FileStoreDefault::class;
     }
 
+    /**
+     * Provides a kirbytag or markdown
+     * tag for the file, which will be
+     * used in the panel, when the file
+     * gets dragged onto a textarea
+     *
+     * @return string
+     */
+    public function dragText($type = 'kirbytext'): string
+    {
+        switch ($type) {
+            case 'kirbytext':
+                if ($this->type() === 'image') {
+                    return '(image: ' . $this->id() . ')';
+                } else {
+                    return '(file: ' . $this->id() . ')';
+                }
+            case 'markdown':
+                if ($this->type() === 'image') {
+                    return '![' . $this->alt() . '](' . $this->url() . ')';
+                } else {
+                    return '[' . $this->filename() . '](' . $this->url() . ')';
+                }
+        }
+    }
+
     public function exists(): bool
     {
         return $this->store()->exists();

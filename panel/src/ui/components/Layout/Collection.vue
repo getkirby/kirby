@@ -14,7 +14,7 @@
         :key="index"
         v-bind="item"
         @action="$emit('action', item, $event)"
-        @dragstart.prevent
+        @dragstart="onDragStart($event, item.dragText)"
       />
     </kirby-draggable>
 
@@ -113,6 +113,12 @@ export default {
         this.over.removeAttribute("data-over");
       }
       this.$emit("sort", this.items);
+    },
+    onDragStart($event, dragText) {
+      this.$store.dispatch("drag", {
+        type: "text",
+        data: dragText
+      });
     }
   }
 }

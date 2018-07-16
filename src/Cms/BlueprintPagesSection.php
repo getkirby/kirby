@@ -20,6 +20,7 @@ class BlueprintPagesSection extends BlueprintSection
 
     protected $add;
     protected $blueprints;
+    protected $dragTextType;
     protected $sortable;
     protected $status;
     protected $templates;
@@ -131,6 +132,14 @@ class BlueprintPagesSection extends BlueprintSection
         return 'all';
     }
 
+    protected function dragTextType()
+    {
+        if ($this->dragTextType !== null) {
+            return $this->dragTextType;
+        }
+
+        return $this->dragTextType = (App::instance()->option('panel')['kirbytext'] ?? true) ? 'kirbytext' : 'markdown';
+    }
 
     protected function itemImageDefault($item)
     {
@@ -147,6 +156,7 @@ class BlueprintPagesSection extends BlueprintSection
         $stringTemplateData = [$this->modelType($item) => $item];
 
         return [
+            'dragText'         => $item->dragText($this->dragTextType()),
             'icon'             => $this->itemIcon($item),
             'id'               => $item->id(),
             'image'            => $this->itemImage($item, $stringTemplateData),

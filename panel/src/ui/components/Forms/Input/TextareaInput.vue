@@ -1,5 +1,5 @@
 <template>
-  <div :data-theme="theme" class="kirby-textarea-input">
+  <div :data-theme="theme" :data-over="over" class="kirby-textarea-input">
     <textarea
       ref="input"
       v-bind="{
@@ -23,6 +23,9 @@
       @select="onSelect"
       @keydown.meta.enter="onSubmit"
       @keydown.meta="onShortcut"
+      @dragover="onOver"
+      @dragleave="onOut"
+      @drop="onDrop"
     />
     <kirby-toolbar
       v-if="!disabled && buttons !== false && toolbar"
@@ -39,6 +42,7 @@
 
     <kirby-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
     <kirby-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
+    <kirby-upload ref="upload" />
 
   </div>
 </template>
@@ -91,6 +95,7 @@ export default {
         top: 0,
         left: 0,
       },
+      over: false,
       toolbar: false
     }
   },
@@ -185,6 +190,14 @@ export default {
 
       this.toolbar = false;
     },
+    onDrop() {
+      const drag = this.$store.state.drag;
+
+      if (drag && drag.type === "text") {
+        this.focus();
+        this.insert(drag.data);
+      }
+    },
     onFocus($event) {
       this.$emit("focus", $event);
     },
@@ -194,6 +207,19 @@ export default {
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
+    },
+    onOut($event) {
+      this.$refs.input.blur();
+      this.over = false;
+    },
+    onOver($event) {
+      const drag = this.$store.state.drag;
+
+      if (drag && drag.type === "text") {
+        $event.dataTransfer.dropEffect = "copy";
+        this.focus();
+        this.over = true;
+      }
     },
     onSelect()
     {

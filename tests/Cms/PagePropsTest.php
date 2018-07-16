@@ -14,6 +14,30 @@ class PagePropsTest extends TestCase
     {
         parent::setUp();
         App::destroy();
+        new App();
+    }
+
+    public function testDragText()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $this->assertEquals('(link: test text: test)', $page->dragText());
+        $this->assertEquals('[test](/test)', $page->dragText('markdown'));
+    }
+
+    public function testDragTextWithTitle()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'content' => [
+                'title' => 'Test Title'
+            ]
+        ]);
+
+        $this->assertEquals('(link: test text: Test Title)', $page->dragText());
+        $this->assertEquals('[Test Title](/test)', $page->dragText('markdown'));
     }
 
     public function testId()

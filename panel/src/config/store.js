@@ -16,10 +16,14 @@ export default new Vuex.Store({
     title: null,
     view: null,
     search: false,
+    drag: null
   },
   mutations: {
     SET_BREADCRUMB(state, breadcrumb) {
       state.breadcrumb = breadcrumb;
+    },
+    SET_DRAG(state, drag) {
+      state.drag = drag;
     },
     SET_SEARCH(state, search) {
       if (search === true) {
@@ -45,11 +49,14 @@ export default new Vuex.Store({
     breadcrumb(context, breadcrumb) {
       context.commit("SET_BREADCRUMB", breadcrumb);
     },
+    drag(context, drag) {
+      context.commit("SET_DRAG", drag);
+    },
     isLoading(context, loading) {
       context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
     },
     search(context, search) {
-      context.commit('SET_SEARCH', search);
+      context.commit("SET_SEARCH", search);
     },
     title(context, title) {
       context.commit("SET_TITLE", title);
