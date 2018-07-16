@@ -43,6 +43,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/children',
+        'method'  => 'POST',
+        'action'  => function (string $id) {
+            return $this->page($id)->createChild($this->requestBody());
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/children/search',
         'method'  => 'POST',
         'action'  => function (string $id) {

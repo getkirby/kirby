@@ -173,45 +173,6 @@ class BlueprintPagesSection extends BlueprintSection
         ];
     }
 
-    public function post(array $data)
-    {
-        if ($this->add() === false) {
-            throw new LogicException([
-                'key' => 'blueprint.section.pages.add'
-            ]);
-        }
-
-        // make sure the slug is provided
-        if (isset($data['slug']) === false) {
-            throw new InvalidArgumentException([
-                'key' => 'page.slug.invalid'
-            ]);
-        }
-
-        // make sure the template is provided
-        if (isset($data['slug']) === false) {
-            throw new InvalidArgumentException([
-                'key' => 'page.template.missing'
-            ]);
-        }
-
-        // get the names of all accepted blueprints
-        $blueprints = array_column($this->blueprints(), 'name');
-
-        // validate the template
-        if (in_array($data['template'], $blueprints) === false) {
-            throw new InvalidArgumentException([
-                'key' => 'page.template.invalid'
-            ]);
-        }
-
-        return $this->parent()->createChild([
-            'content'  => $data['content'],
-            'slug'     => $data['slug'],
-            'template' => $data['template']
-        ]);
-    }
-
     public function routes(): array
     {
         return [
@@ -220,13 +181,6 @@ class BlueprintPagesSection extends BlueprintSection
                 'method'  => 'GET',
                 'action'  => function () {
                     return $this->section()->paginate($this->requestQuery('page', 1), $this->requestQuery('limit'))->toArray();
-                }
-            ],
-            'create' => [
-                'pattern' => '/',
-                'method'  => 'POST',
-                'action'  => function () {
-                    return $this->section()->post($this->requestBody());
                 }
             ],
             'sort' => [

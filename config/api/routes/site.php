@@ -26,6 +26,13 @@ return [
         }
     ],
     [
+        'pattern' => 'site/children',
+        'method'  => 'POST',
+        'action'  => function () {
+            return $this->site()->createChild($this->requestBody());
+        }
+    ],
+    [
         'pattern' => 'site/children/search',
         'method'  => 'POST',
         'action'  => function () {
