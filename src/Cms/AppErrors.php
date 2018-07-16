@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Exception\Exception;
-use Kirby\Http\Response\Json;
+use Kirby\Http\Response;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler;
 use Whoops\Handler\PrettyPageHandler;
@@ -83,7 +83,7 @@ trait AppErrors
             }
 
             if ($this->option('debug') === true) {
-                echo new Json([
+                echo Response::json([
                     'status'    => 'error',
                     'exception' => get_class($exception),
                     'code'      => $code,
@@ -93,7 +93,7 @@ trait AppErrors
                     'line'      => $exception->getLine(),
                 ], $httpCode);
             } else {
-                echo new Json([
+                echo Response::json([
                     'status'  => 'error',
                     'code'    => $code,
                     'details' => $details,

@@ -83,11 +83,6 @@ class Response extends BaseResponse
         return static::page(App::instance()->site()->homePage(), $data, $contentType, $code);
     }
 
-    public static function json(array $data = [])
-    {
-        return new Json($data);
-    }
-
     public static function page(Page $page, array $data = [], $contentType = 'html', $code = 200)
     {
         // render and optionally cache the page
@@ -99,4 +94,19 @@ class Response extends BaseResponse
         // create the response object for the page
         return new static($result, $mime, $code);
     }
+
+    /**
+     * Adjusted redirect creation which
+     * parses locations with the Url::to method
+     * first.
+     *
+     * @param string $location
+     * @param int $code
+     * @return self
+     */
+    public static function redirect(string $location = '/', int $code = 301)
+    {
+        return parent::redirect(Url::to($location), $code);
+    }
+
 }

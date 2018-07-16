@@ -7,8 +7,7 @@ use Exception;
 use Throwable;
 
 use Kirby\Http\Router;
-use Kirby\Http\Router\Route;
-use Kirby\Http\Response\Json;
+use Kirby\Http\Response;
 use Kirby\Toolkit\Properties;
 
 /**
@@ -293,10 +292,10 @@ class Api
         $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
 
         if (($result['status'] ?? 'ok') === 'error') {
-            return new Json($result, $result['code'] ?? 400, $pretty);
+            return Response::json($result, $result['code'] ?? 400, $pretty);
         }
 
-        return new Json($result, 200, $pretty);
+        return Response::json($result, 200, $pretty);
     }
 
     public function upload(Closure $callback, $single = false): array

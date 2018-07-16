@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Exception;
 use Throwable;
 
 /**
@@ -61,110 +62,177 @@ class Response
      * @param string  $type
      * @param integer $code
      */
-    public function __construct(string $body = '', string $type = 'text/html', int $code = 200)
+    public function __construct($body = '', string $type = 'text/html', int $code = 200, array $headers = [], string $charset = 'UTF-8')
     {
-        $this->body($body);
-        $this->type($type);
-        $this->code($code);
+        // array construction
+        if (is_array($body) === true) {
+            $params  = $body;
+            $body    = $params['body'] ?? '';
+            $type    = $params['type'] ?? $type;
+            $code    = $params['code'] ?? $code;
+            $headers = $params['headers'] ?? $headers;
+            $charset = $params['charset'] ?? $charset;
+        }
+
+        // regular construction
+        $this->body    = $body;
+        $this->type    = $type;
+        $this->code    = $code;
+        $this->headers = $headers;
+        $this->charset = $charset;
     }
 
     /**
-     * Setter and getter for the body
+     * Improved var_dump() output
      *
-     * @param  string|array|null $body
-     * @return string
-     */
-    public function body($body = null): string
-    {
-        if ($body === null) {
-            return $this->body;
-        }
-
-        if (is_array($body)) {
-            return $this->body = implode($body);
-        }
-
-        return $this->body = $body;
-    }
-
-    /**
-     * Setter and getter for all headers
-     *
-     * The setter will overwrite already
-     * set headers.
-     *
-     * @param  array|null $headers
      * @return array
      */
-    public function headers(array $headers = null): array
+    public function __debuginfo(): array
     {
-        if ($headers === null) {
-            return $this->headers;
-        }
-
-        return $this->headers = $headers;
+        return $this->toArray();
     }
 
     /**
-     * Setter and getter for headers
+     * Makes it possible to convert the
+     * entire response object to a string
+     * to send the headers and print the body
      *
-     * @param  string      $key   Name of the header
-     * @param  string|null $value The header value.
-     *                            Pass null to receive the current header value
-     * @return string|null
-     */
-    public function header(string $key, string $value = null)
-    {
-        if ($value === null) {
-            return $this->headers[$key] ?? null;
-        }
-
-        return $this->headers[$key] = $value;
-    }
-
-    /**
-     * Setter and getter for the content type
-     *
-     * @param  string|null $type
      * @return string
      */
-    public function type(string $type = null): string
+    public function __toString(): string
     {
-        if ($type === null) {
-            return $this->type;
+        try {
+            return $this->send();
+        } catch (Throwable $e) {
+            error_log($e);
+            return '';
         }
-
-        return $this->type = $type;
     }
 
     /**
-     * Setter and getter for the content type charset
+     * Getter for the body
      *
-     * @param  string|null $charset
      * @return string
      */
-    public function charset(string $charset = null): string
+    public function body(): string
     {
-        if ($charset === null) {
-            return $this->charset;
-        }
-
-        return $this->charset = $charset;
+        return $this->body;
     }
 
     /**
-     * Setter and getter for the HTTP status code
+     * Getter for the content type charset
      *
-     * @param  int|null $code
+     * @return string
+     */
+    public function charset(): string
+    {
+        return $this->charset;
+    }
+
+    /**
+     * Getter for the HTTP status code
+     *
      * @return int
      */
-    public function code(int $code = null): int
+    public function code(): int
     {
-        if ($code === null) {
-            return $this->code;
+        return $this->code;
+    }
+
+    /**
+     * Creates a response that triggers
+     * a file download for the given file
+     *
+     * @param string $file
+     * @param string $filename
+     * @return self
+     */
+    public static function download(string $file, string $filename = null)
+    {
+        if (file_exists($file) === false) {
+            throw new Exception('The file could not be found');
         }
 
-        return $this->code = $code;
+        $filename = $filename ?? basename($file);
+        $modified = filemtime($file);
+        $body     = file_get_contents($file);
+        $size     = strlen($body);
+
+        return new static([
+            'body'    => $body,
+            'type'    => 'application/force-download',
+            'headers' => [
+                'Pragma'                    => 'public',
+                'Expires'                   => '0',
+                'Last-Modified'             => gmdate('D, d M Y H:i:s', $modified) . ' GMT',
+                'Content-Disposition'       => 'attachment; filename="' . $filename . '"',
+                'Content-Transfer-Encoding' => 'binary',
+                'Content-Length'            => $size,
+                'Connection'                => 'close'
+            ]
+        ]);
+    }
+
+    /**
+     * Getter for single headers
+     *
+     * @param  string      $key   Name of the header
+     * @return string|null
+     */
+    public function header(string $key): ?string
+    {
+        return $this->headers[$key] ?? null;
+    }
+
+    /**
+     * Getter for all headers
+     *
+     * @return array
+     */
+    public function headers(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Creates a json response with appropriate
+     * header and automatic conversion of arrays.
+     *
+     * @param string|array $body
+     * @param integer $code
+     * @param boolean $pretty
+     * @return self
+     */
+    public static function json($body = '', int $code = 200, bool $pretty = false)
+    {
+        if (is_array($body) === true) {
+            $body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES : null);
+        }
+
+        return new static([
+            'body' => $body,
+            'code' => $code,
+            'type' => 'application/json'
+        ]);
+    }
+
+    /**
+     * Creates a redirect response,
+     * which will send the visitor to the
+     * given location.
+     *
+     * @param string $location
+     * @param integer $code
+     * @return self
+     */
+    public static function redirect(string $location = '/', int $code = 301)
+    {
+        return new static([
+            'code' => $code,
+            'headers' => [
+                'Location' => Url::unIdn($location)
+            ]
+        ]);
     }
 
     /**
@@ -175,17 +243,16 @@ class Response
      */
     public function send(): string
     {
-
         // send the status response code
         http_response_code($this->code());
-
-        // send the content type header
-        header('Content-Type:' . $this->type() . '; charset=' . $this->charset());
 
         // send all custom headers
         foreach ($this->headers() as $key => $value) {
             header($key . ': ' . $value);
         }
+
+        // send the content type header
+        header('Content-Type:' . $this->type() . '; charset=' . $this->charset());
 
         // print the response body
         return $this->body();
@@ -210,19 +277,13 @@ class Response
     }
 
     /**
-     * Makes it possible to convert the
-     * entire response object to a string
-     * to send the headers and print the body
+     * Getter for the content type
      *
      * @return string
      */
-    public function __toString(): string
+    public function type(): string
     {
-        try {
-            return $this->send();
-        } catch (Throwable $e) {
-            error_log($e);
-            return '';
-        }
+        return $this->type;
     }
+
 }

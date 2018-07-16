@@ -2,8 +2,8 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Html;
+use Kirby\Cms\Redirect;
 use Kirby\Cms\Url;
-use Kirby\Http\Response\Redirect;
 use Kirby\Http\Server;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -127,7 +127,7 @@ function gist(string $url, string $file = null): string
  */
 function go(string $url = null, int $code = 301)
 {
-    die(new Redirect(url($url), $code));
+    die(Response::redirect($url, $code));
 }
 
 /**

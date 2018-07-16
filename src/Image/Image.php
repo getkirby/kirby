@@ -4,7 +4,6 @@ namespace Kirby\Image;
 
 use Exception;
 use Kirby\Http\Response;
-use Kirby\Http\Response\Download;
 use Kirby\Http\Acceptance\MimeType;
 use Kirby\Toolkit\File;
 use Kirby\Toolkit\Html;
@@ -109,8 +108,7 @@ class Image extends File
      */
     public function download($filename = null): string
     {
-        $download = new Download($this->root, $filename ?? $this->filename());
-        return $download->send();
+        return Response::download($this->root, $filename ?? $this->filename());
     }
 
     /**
