@@ -60,14 +60,18 @@ export default {
       issue: false,
       layout: "list",
       page: 1,
-      pagination: {}
+      pagination: {},
+      template: null,
     };
   },
   computed: {
     uploadParams() {
       return {
-        url: config.api + "/" + this.parent + "/sections/" + this.name,
-        accept: this.accept
+        url: config.api + "/" + this.parent + "/files",
+        accept: this.accept,
+        attributes: {
+          template: this.template
+        }
       };
     }
   },

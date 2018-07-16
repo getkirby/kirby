@@ -91,32 +91,6 @@ class BlueprintFilesSection extends BlueprintSection
         return true;
     }
 
-    public function filename($source, $filename, $template = null)
-    {
-        $extension = F::extension($filename);
-        $name      = F::name($filename);
-
-        if (empty($template) === false) {
-            $image = new Image($source);
-            $data  = [
-                'file' => [
-                    'height'      => $image->height(),
-                    'name'        => F::name($filename),
-                    'orientation' => $image->orientation(),
-                    'type'        => $image->type(),
-                    'width'       => $image->width(),
-                ],
-                'index' => $this->total() + 1
-            ];
-
-            $name = Str::template($template, $data);
-        }
-
-        $name = Str::slug($name);
-
-        return $name . '.' . $extension;
-    }
-
     protected function itemTitle($item)
     {
         return $item->filename();
@@ -164,31 +138,6 @@ class BlueprintFilesSection extends BlueprintSection
         ];
     }
 
-    public function upload(array $data)
-    {
-        // make sure the basics are provided
-        if (isset($data['filename'], $data['source']) === false) {
-            throw new InvalidArgumentException([
-                'key' => 'file.name.missing'
-            ]);
-        }
-
-        // check if adding files is allowed at all
-        if ($this->add() === false) {
-            throw new LogicException([
-                'key' => 'blueprint.section.files.add'
-            ]);
-        }
-
-        $file = $this->parent()->createFile([
-            'source'   => $data['source'],
-            'template' => $this->template(),
-            'filename' => $this->filename($data['source'], $data['filename'])
-        ]);
-
-        return $file;
-    }
-
     public function routes(): array
     {
         return [
@@ -197,19 +146,6 @@ class BlueprintFilesSection extends BlueprintSection
                 'method'  => 'GET',
                 'action'  => function () {
                     return $this->section()->paginate($this->requestQuery('page', 1), $this->requestQuery('limit', 20))->toArray();
-                }
-            ],
-            'create' => [
-                'pattern' => '/',
-                'method'  => 'POST',
-                'action'  => function () {
-                    return $this->upload(function ($source, $filename) {
-                        return $this->section()->upload([
-                            'content'  => $this->requestBody('content'),
-                            'filename' => $filename,
-                            'source'   => $source,
-                        ]);
-                    });
                 }
             ],
             'sort' => [

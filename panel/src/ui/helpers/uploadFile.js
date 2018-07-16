@@ -15,7 +15,10 @@ export default (file, params) => {
   const formData = new FormData();
 
   formData.append(options.field, file);
-  formData.append("attributes", JSON.stringify(options.attributes));
+
+  Object.keys(options.attributes).forEach(key => {
+    formData.append(key, options.attributes[key]);
+  });
 
   const xhr = new XMLHttpRequest();
 
