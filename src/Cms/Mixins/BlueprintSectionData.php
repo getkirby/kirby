@@ -197,19 +197,6 @@ trait BlueprintSectionData
         ];
     }
 
-    protected function itemValue($item, string $key, array $data)
-    {
-        if ($value = $this->item[$key] ?? null) {
-            return $this->stringTemplate($value, $data);
-        }
-
-        if (method_exists($this, 'item' . $key) === true) {
-            return $this->{'item' . $key}($item);
-        }
-
-        return null;
-    }
-
     public function limit(): int
     {
         return $this->limit;

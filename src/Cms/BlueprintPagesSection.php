@@ -160,11 +160,11 @@ class BlueprintPagesSection extends BlueprintSection
             'icon'             => $this->itemIcon($item),
             'id'               => $item->id(),
             'image'            => $this->itemImage($item, $stringTemplateData),
-            'info'             => $this->itemValue($item, 'info', $stringTemplateData),
+            'info'             => $item->toString($this->item['info'] ?? ''),
             'link'             => $this->itemLink($item),
             'parent'           => $item->parent() ? $item->parent()->id(): null,
             'status'           => $item->status(),
-            'text'             => $this->itemValue($item, 'title', $stringTemplateData),
+            'text'             => $item->toString($this->item['title'] ?? '{{ page.title }}'),
             'url'              => $item->url(),
             'permissions'      => [
                 'sort'         => $item->isSortable(),

@@ -130,10 +130,10 @@ class BlueprintFilesSection extends BlueprintSection
             'filename' => $item->filename(),
             'id'       => $item->id(),
             'image'    => $this->itemImage($item, $stringTemplateData),
-            'info'     => $this->itemValue($item, 'info', $stringTemplateData),
+            'info'     => $item->toString($this->item['info'] ?? ''),
             'link'     => $this->itemLink($item),
             'parent'   => $parent,
-            'text'     => $this->itemValue($item, 'title', $stringTemplateData),
+            'text'     => $item->toString($this->item['title'] ?? '{{ file.filename }}'),
             'url'      => $item->url(),
         ];
     }
