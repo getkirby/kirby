@@ -41,11 +41,17 @@ return [
         'next' => function (File $file) {
             return $file->next();
         },
+        'nextWithTemplate' => function (File $file) {
+            return $file->nextAll()->template($file->template())->first();
+        },
         'options' => function (File $file) {
             return $file->blueprint()->options()->toArray();
         },
         'prev' => function (File $file) {
             return $file->prev();
+        },
+        'prevWithTemplate' => function (File $file) {
+            return $file->prevAll()->template($file->template())->last();
         },
         'niceSize' => function (File $file) {
             return $file->niceSize();
@@ -106,11 +112,11 @@ return [
             'mime',
             'modified',
             'name',
-            'next' => 'compact',
+            'nextWithTemplate' => 'compact',
             'niceSize',
             'parent' => 'compact',
             'parents' => ['id', 'slug', 'title'],
-            'prev' => 'compact',
+            'prevWithTemplate' => 'compact',
             'template',
             'type',
             'url'

@@ -129,6 +129,8 @@ export default {
         .get(this.path, this.filename, { view: "panel" })
         .then(file => {
           this.file = file;
+          this.file.next = file.nextWithTemplate;
+          this.file.prev = file.prevWithTemplate;
           this.file.url = file.url + "?v=" + file.modified;
           this.name = file.name;
           this.tabs = file.blueprint.tabs;
