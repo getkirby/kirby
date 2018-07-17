@@ -141,7 +141,7 @@ class Role extends Model
         return $this;
     }
 
-    protected function setTitle($title): self
+    protected function setTitle($title = null): self
     {
         $this->title = $title;
         return $this;
@@ -149,7 +149,7 @@ class Role extends Model
 
     public function title(): string
     {
-        return $this->title;
+        return $this->title = $this->title ?? ucfirst($this->name());
     }
 
     /**

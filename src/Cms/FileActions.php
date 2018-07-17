@@ -146,4 +146,35 @@ trait FileActions
 
         return $this;
     }
+
+    /**
+     * Updates the file data
+     *
+     * @param array $input
+     * @param boolean $validate
+     * @return self
+     */
+    public function update(array $input = null, bool $validate = true): self
+    {
+        $form = Form::for($this, [
+            'values' => $input
+        ]);
+
+        // validate the input
+        if ($validate === true) {
+            if ($form->isInvalid() === true) {
+                throw new InvalidArgumentException([
+                    'fallback' => 'Invalid form with errors',
+                    'details'  => $form->errors()
+                ]);
+            }
+        }
+
+        // get the data values array
+        $values  = $form->values();
+        $strings = $form->strings();
+
+        return $this->commit('update', $values, $strings);
+    }
+
 }

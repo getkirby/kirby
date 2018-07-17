@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+use Kirby\Data\Data;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\V;
 
 trait UserActions
@@ -15,7 +18,35 @@ trait UserActions
      */
     public function changeEmail(string $email): self
     {
-        return $this->commit('changeEmail', $email);
+        return $this->commit('changeEmail', [$this, $email], function ($user, $email) {
+
+            if ($user->exists() === false) {
+                return $user->clone([
+                    'email' => $email
+                ]);
+            }
+
+            Dir::remove($user->mediaRoot());
+
+            $oldRoot = $user->root();
+            $newRoot = dirname($user->root()) . '/' . $email;
+
+            if (is_dir($newRoot) === true) {
+                throw new DuplicateException([
+                    'key'  => 'user.duplicate',
+                    'data' => ['email' => $email]
+                ]);
+            }
+
+            if (Dir::move($oldRoot, $newRoot) !== true) {
+                throw new LogicException('The user directory for "' . $email . '" could not be moved');
+            }
+
+            return $user->clone([
+                'email' => $email,
+            ]);
+
+        });
     }
 
     /**
@@ -26,7 +57,9 @@ trait UserActions
      */
     public function changeLanguage(string $language): self
     {
-        return $this->commit('changeLanguage', $language);
+        return $this->commit('changeLanguage', [$this, $language], function ($user, $language) {
+            return $user->clone(['language' => $language])->save();
+        });
     }
 
     /**
@@ -37,7 +70,9 @@ trait UserActions
      */
     public function changeName(string $name): self
     {
-        return $this->commit('changeName', $name);
+        return $this->commit('changeName', [$this, $name], function ($user, $name) {
+            return $user->clone(['name' => $name])->save();
+        });
     }
 
     /**
@@ -48,17 +83,9 @@ trait UserActions
      */
     public function changePassword(string $password): self
     {
-        $this->rules()->changePassword($this, $password);
-        $this->kirby()->trigger('user.changePassword:before', $this);
-
-        // hash password after checking rules
-        $password = $this->hashPassword($password);
-
-        // store the new password
-        $result = $this->store()->changePassword($password);
-
-        $this->kirby()->trigger('user.changePassword:after', $result, $this);
-        return $result;
+        return $this->commit('changePassword', [$this, $password], function ($user, $password) {
+            return $user->clone(['password' => $user->hashPassword($password)])->save();
+        });
     }
 
     /**
@@ -69,7 +96,9 @@ trait UserActions
      */
     public function changeRole(string $role): self
     {
-        return $this->commit('changeRole', $role);
+        return $this->commit('changeRole', [$this, $role], function ($user, $role) {
+            return $user->clone(['role' => $role])->save();
+        });
     }
 
     /**
@@ -77,21 +106,22 @@ trait UserActions
      *
      * 1. checks the action rules
      * 2. sends the before hook
-     * 3. commits the store action
+     * 3. commits the action
      * 4. sends the after hook
      * 5. returns the result
      *
      * @param string $action
-     * @param mixed ...$arguments
+     * @param array $arguments
+     * @param Closure $callback
      * @return mixed
      */
-    protected function commit(string $action, ...$arguments)
+    protected function commit(string $action, $arguments = [], Closure $callback)
     {
         $old = $this->hardcopy();
 
-        $this->rules()->$action($this, ...$arguments);
-        $this->kirby()->trigger('user.' . $action . ':before', $this, ...$arguments);
-        $result = $this->store()->$action(...$arguments);
+        $this->rules()->$action(...$arguments);
+        $this->kirby()->trigger('user.' . $action . ':before', ...$arguments);
+        $result = $callback(...$arguments);
         $this->kirby()->trigger('user.' . $action . ':after', $result, $old);
         return $result;
     }
@@ -102,19 +132,22 @@ trait UserActions
      */
     public static function create(array $props = null): self
     {
-        $userProps = $props;
+        $user = new static($props);
 
-        // hash the password before creating the user
-        if (isset($userProps['password']) === true) {
-            $userProps['password'] = static::hashPassword($userProps['password']);
-        }
+        return $user->commit('create', [$user, $props], function ($user, $props) {
 
-        $user = new static($userProps);
-        $user->rules()->create($user, $props);
-        $user->kirby()->trigger('user.create:before', $userProps);
-        $result = $user->store()->create($user);
-        $user->kirby()->trigger('user.create:after', $result);
-        return $result;
+            // try to create the directory
+            if (Dir::make($user->root()) !== true) {
+                throw new LogicException('The user directory for "' . $user->email() . '" could not be created');
+            }
+
+            // create an empty storage file
+            touch($user->root() . '/user.txt');
+
+            // write the user data
+            return $user->save();
+
+        });
     }
 
     /**
@@ -124,6 +157,77 @@ trait UserActions
      */
     public function delete(): bool
     {
-        return $this->commit('delete');
+        return $this->commit('delete', [$this], function ($user) {
+
+            if ($user->exists() === false) {
+                return true;
+            }
+
+            // delete all public assets for this user
+            Dir::remove($user->mediaRoot());
+
+            // delete the user directory
+            if (Dir::remove($user->root()) !== true) {
+                throw new LogicException('The user directory for "' . $user->email() . '" could not be deleted');
+            }
+
+            return true;
+
+        });
     }
+
+    /**
+     * Stores the user object on disk
+     *
+     * @return self
+     */
+    public function save(): self
+    {
+        $content = $this->content()->toArray();
+
+        // store main information in the content file
+        $content['language'] = $this->language();
+        $content['name']     = $this->name();
+        $content['password'] = $this->hashPassword($this->password());
+        $content['role']     = $this->role()->id();
+
+        // remove the email. It's already stored in the directory
+        unset($content['email']);
+
+        Data::write($this->root() . '/user.txt', $content);
+
+        return $this;
+    }
+
+    /**
+     * Updates the user content
+     *
+     * @param array $input
+     * @param boolean $validate
+     * @return self
+     */
+    public function update(array $input = null, bool $validate = true): self
+    {
+        $form = Form::for($this, [
+            'values' => $input
+        ]);
+
+        // validate the input
+        if ($validate === true && $form->isInvalid() === true) {
+            throw new InvalidArgumentException([
+                'fallback' => 'Invalid form with errors',
+                'details'  => $form->errors()
+            ]);
+        }
+
+        return $this->commit('update', [$this, $form->values(), $form->strings()], function ($user, $values, $strings) {
+            $content = $user
+                ->content()
+                ->update($strings)
+                ->toArray();
+
+            return $user->clone(['content' => $content])->save();
+        });
+    }
+
 }

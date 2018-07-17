@@ -85,8 +85,8 @@ class UserRules
 
     public static function create(User $user, array $props = []): bool
     {
-        static::validEmail($user, $props['email']);
-        static::validLanguage($user, $props['language']);
+        static::validEmail($user, $user->email());
+        static::validLanguage($user, $user->language());
 
         if (empty($props['password']) === false) {
             static::validPassword($user, $props['password']);

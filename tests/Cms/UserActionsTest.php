@@ -5,124 +5,114 @@ namespace Kirby\Cms;
 class UserActionsTest extends TestCase
 {
 
-    public function appProps(): array
+    public function setUp()
     {
-        return [
-            'blueprints' => [
-                'users/admin' => [
-                    'name'   => 'admin',
-                    'title'  => 'Admin',
-                    'fields' => [
-                        'website' => [
-                            'type' => 'url'
-                        ]
-                    ]
-                ]
-            ],
+        $this->app = new App([
             'roles' => [
                 [
-                    'title' => 'Admin',
-                    'name'  => 'admin'
+                    'name' => 'admin'
                 ],
                 [
-                    'title' => 'Editor',
-                    'name'  => 'editor'
+                    'name' => 'editor'
                 ]
             ],
+            'roots' => [
+                'index'    => '/dev/null',
+                'accounts' => $accounts = __DIR__ . '/fixtures/accounts',
+            ],
+            'user'  => 'admin@domain.com',
             'users' => [
                 [
-                    'email' => 'test@getkirby.com',
+                    'email' => 'admin@domain.com',
                     'role'  => 'admin'
                 ],
                 [
-                    'email' => 'editor@getkirby.com',
+                    'email' => 'editor@domain.com',
                     'role'  => 'editor'
                 ]
-            ]
-        ];
+            ],
+        ]);
+
+        Dir::remove($accounts);
+
+    }
+
+    public function tearDown()
+    {
+        Dir::remove(__DIR__ . '/fixtures/accounts');
     }
 
     public function testChangeEmail()
     {
-        $this->assertHooks([
-            'user.changeEmail:before' => function (User $user, string $email) {
-                $this->assertEquals('test@getkirby.com', $user->email());
-                $this->assertEquals('another@getkirby.com', $email);
-            },
-            'user.changeEmail:after' => function (User $newUser, User $oldUser) {
-                $this->assertEquals('another@getkirby.com', $newUser->email());
-                $this->assertEquals('test@getkirby.com', $oldUser->email());
-            }
-        ], function ($app) {
-            $result = $app->user()->changeEmail('another@getkirby.com');
-            $this->assertEquals('another@getkirby.com', $result->email());
-        }, $this->appProps());
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeEmail('another@domain.com');
+
+        $this->assertEquals('another@domain.com', $user->email());
+    }
+
+    public function testChangeLanguage()
+    {
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeLanguage('de');
+
+        $this->assertEquals('de', $user->language());
     }
 
     public function testChangeName()
     {
-        $this->assertHooks([
-            'user.changeName:before' => function (User $user, string $name) {
-                $this->assertEquals(null, $user->name());
-                $this->assertEquals('Awesome User', $name);
-            },
-            'user.changeName:after' => function (User $newUser, User $oldUser) {
-                $this->assertEquals(null, $oldUser->name());
-                $this->assertEquals('Awesome User', $newUser->name());
-            }
-        ], function ($app) {
-            $result = $app->user()->changeName('Awesome User');
-            $this->assertEquals('Awesome User', $result->name());
-        }, $this->appProps());
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeName('Edith Thor');
+
+        $this->assertEquals('Edith Thor', $user->name());
     }
 
     public function testChangePassword()
     {
-        $this->assertHooks([
-            'user.changePassword:before' => function (User $user) {
-                $this->assertInstanceOf(User::class, $user);
-            },
-            'user.changePassword:after' => function (User $newUser, User $oldUser) {
-                $this->assertNotEquals($newUser->password(), $oldUser->password());
-            }
-        ], function ($app) {
-            $app->user()->changePassword('top-secret');
-        }, $this->appProps());
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changePassword('topsecret2018');
+
+        $this->assertTrue($user->validatePassword('topsecret2018'));
     }
 
     public function testChangeRole()
     {
-        $this->assertHooks([
-            'user.changeRole:before' => function (User $user, string $role) {
-                $this->assertEquals('editor', $user->role()->name());
-                $this->assertEquals('admin', $role);
-            },
-            'user.changeRole:after' => function (User $newUser, User $oldUser) {
-                $this->assertEquals('admin', $newUser->role()->name());
-                $this->assertEquals('editor', $oldUser->role()->name());
-            }
-        ], function ($app) {
-            $app->users()->find('editor@getkirby.com')->changeRole('admin');
-        }, $this->appProps());
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeRole('editor');
+
+        $this->assertEquals('editor', $user->role());
+    }
+
+    public function testCreate()
+    {
+        $user = User::create([
+            'email' => 'new@domain.com',
+            'role'  => 'editor',
+        ]);
+
+        $this->assertTrue($user->exists());
+
+        $this->assertEquals('new@domain.com', $user->email());
+        $this->assertEquals('editor', $user->role());
+    }
+
+    public function testDelete()
+    {
+        $user = $this->app->user('editor@domain.com');
+        $user->save();
+
+        $this->assertFileExists($user->root() . '/user.txt');
+        $user->delete();
+        $this->assertFileNotExists($user->root() . '/user.txt');
     }
 
     public function testUpdate()
     {
-        $this->assertHooks([
-            'user.update:before' => function (User $user, array $values, array $strings) {
-                $this->assertEquals(null, $user->website()->value());
-                $this->assertEquals('https://test.com', $strings['website']);
-            },
-            'user.update:after' => function (User $newUser, User $oldUser) {
-                $this->assertEquals('https://test.com', $newUser->website()->value());
-                $this->assertEquals(null, $oldUser->website()->value());
-            }
-        ], function ($app) {
-            $app->user()->update([
-                'website' => 'https://test.com',
-            ]);
-        }, $this->appProps());
-    }
+        $user = $this->app->user('editor@domain.com');
+        $user->update([
+            'website' => $url = 'https://editor.com'
+        ]);
 
+        $this->assertEquals($url, $user->website()->value());
+    }
 
 }

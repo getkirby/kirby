@@ -3,12 +3,14 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
+use Throwable;
 
 /**
  * The User class represents
@@ -26,7 +28,6 @@ class User extends Model
     use HasContent;
     use HasErrors;
     use HasSiblings;
-    use HasStore;
 
     /**
      * @var Avatar
@@ -37,6 +38,11 @@ class User extends Model
      * @var UserBlueprint
      */
     protected $blueprint;
+
+    /**
+     * @var array
+     */
+    protected $data;
 
     /**
      * @var string
@@ -101,11 +107,14 @@ class User extends Model
      */
     public function avatar(): Avatar
     {
-        if (is_a($this->avatar, Avatar::class) === true) {
+        if ($this->avatar !== null) {
             return $this->avatar;
         }
 
-        return $this->avatar = $this->store()->avatar();
+        return $this->avatar = new Avatar([
+            'url'   => $this->mediaUrl() . '/profile.jpg',
+            'user'  => $this
+        ]);
     }
 
     /**
@@ -144,9 +153,44 @@ class User extends Model
         return $this->collection = $this->kirby()->users();
     }
 
-    protected function defaultStore()
+    /**
+     * Returns the content
+     *
+     * @return Content
+     */
+    public function content(): Content
     {
-        return UserStoreDefault::class;
+        if ($this->content !== null) {
+            return $this->content;
+        }
+
+        $data = $this->data();
+
+        // remove unwanted stuff from the content object
+        unset($data['email']);
+        unset($data['language']);
+        unset($data['password']);
+        unset($data['role']);
+
+        return $this->setContent($data)->content();
+    }
+
+    /**
+     * Reads all user data from disk
+     *
+     * @return array
+     */
+    protected function data(): array
+    {
+        if ($this->data !== null) {
+            return $this->data;
+        }
+
+        try {
+            return $this->data = Data::read($this->root() . '/user.txt');
+        } catch (Throwable $e) {
+            return $this->data = [];
+        }
     }
 
     /**
@@ -160,13 +204,13 @@ class User extends Model
     }
 
     /**
-     * Checks if the user exists in the store
+     * Checks if the user exists
      *
      * @return boolean
      */
     public function exists(): bool
     {
-        return $this->store()->exists();
+        return is_file($this->root() . '/user.txt') === true;
     }
 
     /**
@@ -261,7 +305,7 @@ class User extends Model
      */
     public function language(): string
     {
-        return $this->language ?? $this->language = $this->store()->language();
+        return $this->language ?? $this->language = $this->data()['language'] ?? 'en';
     }
 
     /**
@@ -344,9 +388,9 @@ class User extends Model
      *
      * @return string|null
      */
-    public function name()
+    public function name(): ?string
     {
-        return $this->name ?? $this->name = $this->content()->get('name')->value();
+        return $this->name = $this->name ?? $this->content()->get('name')->value();
     }
 
     /**
@@ -375,11 +419,11 @@ class User extends Model
     /**
      * Returns the encrypted user password
      *
-     * @return string
+     * @return string|null
      */
-    public function password()
+    public function password(): ?string
     {
-        return $this->password ?? $this->store()->password();
+        return $this->password = $this->password ?? $this->data()['password'] ?? null;
     }
 
     /**
@@ -401,7 +445,7 @@ class User extends Model
             return $this->role;
         }
 
-        $roleName = $this->role ?? $this->store()->role();
+        $roleName = $this->role ?? $this->data()['role'] ?? 'visitor';
 
         if ($role = $this->kirby()->roles()->find($roleName)) {
             return $this->role = $role;
@@ -417,7 +461,7 @@ class User extends Model
      */
     public function root(): string
     {
-        return $this->kirby()->root('accounts') . '/' . $this->id();
+        return $this->kirby()->root('accounts') . '/' . $this->email();
     }
 
     /**
@@ -439,10 +483,7 @@ class User extends Model
      */
     protected function setEmail(string $email): self
     {
-        $email = strtolower(trim($email));
-
-        $this->email = $email;
-
+        $this->email = strtolower(trim($email));
         return $this;
     }
 
@@ -526,10 +567,10 @@ class User extends Model
     protected function sessionFromOptions($session): Session
     {
         // use passed session options or session object if set
-        if (is_array($session)) {
-            $session = $this->kirby->session($session);
-        } elseif (!is_a($session, Session::class)) {
-            $session = $this->kirby->session(['detect' => true]);
+        if (is_array($session) === true) {
+            $session = $this->kirby()->session($session);
+        } elseif (is_a($session, Session::class) === false) {
+            $session = $this->kirby()->session(['detect' => true]);
         }
 
         return $session;

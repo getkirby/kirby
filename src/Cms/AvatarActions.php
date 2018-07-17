@@ -20,6 +20,7 @@ trait AvatarActions
      *
      * @param string $action
      * @param mixed ...$arguments
+     * @param Closure $callback
      * @return mixed
      */
     protected function commit(string $action, $arguments = [], Closure $callback)
