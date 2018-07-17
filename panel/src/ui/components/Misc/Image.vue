@@ -8,7 +8,7 @@
   >
     <span :style="'padding-bottom:' + ratioPadding">
       <transition name="kirby-image-transition">
-        <img v-if="loaded" :src="src" :alt="alt || ''" >
+        <img v-if="loaded" :src="src" :alt="alt || ''" @dragstart.prevent>
       </transition>
       <kirby-loader
         v-if="!loaded && !error"
