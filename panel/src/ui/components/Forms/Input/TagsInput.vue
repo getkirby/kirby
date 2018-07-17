@@ -263,7 +263,8 @@ export default {
     },
     remove(tag) {
       // get neighboring tags
-      let prev = this.get("prev");
+      const prev = this.get("prev");
+      const next = this.get("next");
 
       // remove tag and fire input event
       this.tags.splice(this.index(tag), 1);
@@ -271,6 +272,8 @@ export default {
 
       if (prev) {
         prev.ref.focus();
+      } else if (next) {
+        next.ref.focus();
       } else {
         this.$refs.input.focus();
       }
