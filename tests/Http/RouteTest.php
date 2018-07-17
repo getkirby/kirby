@@ -41,11 +41,11 @@ class RouteTest extends TestCase
         $route = $this->_route();
         $this->assertEquals('a/([0-9]+)/b', $route->regex('a/(:num)/b'));
         $this->assertEquals('a/([a-zA-Z]+)/b', $route->regex('a/(:alpha)/b'));
-        $this->assertEquals('a/([a-zA-Z0-9\.\-_%= \+]+)/b', $route->regex('a/(:any)/b'));
+        $this->assertEquals('a/([a-zA-Z0-9\.\-_%= \+\@]+)/b', $route->regex('a/(:any)/b'));
         $this->assertEquals('a/(.*)', $route->regex('a/(:all)'));
         $this->assertEquals('a(?:/([0-9]+))?', $route->regex('a/(:num?)'));
         $this->assertEquals('a(?:/([a-zA-Z]+))?', $route->regex('a/(:alpha?)'));
-        $this->assertEquals('a(?:/([a-zA-Z0-9\.\-_%= ]+))?', $route->regex('a/(:any?)'));
+        $this->assertEquals('a(?:/([a-zA-Z0-9\.\-_%= \+\@]+))?', $route->regex('a/(:any?)'));
         $this->assertEquals('a(?:/(.*))?', $route->regex('a/(:all?)'));
     }
 

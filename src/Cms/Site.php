@@ -461,7 +461,7 @@ class Site extends Model
         }
 
         return Str::template($template, [
-            'site'  => $this->site(),
+            'site'  => $this,
             'kirby' => $this->kirby()
         ]);
     }
