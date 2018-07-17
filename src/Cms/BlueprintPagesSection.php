@@ -110,7 +110,7 @@ class BlueprintPagesSection extends BlueprintSection
 
         // filter by all set templates
         if ($templates = $this->templates()) {
-            $data = $data->filterBy('template', 'in', $templates);
+            $data = $data->template($templates);
         }
 
         if ($this->sortBy()) {
@@ -148,7 +148,7 @@ class BlueprintPagesSection extends BlueprintSection
 
     protected function itemLink($item)
     {
-        return '/pages/' . str_replace('/', '+', $item->id());
+        return '/pages/' . $item->panelId();
     }
 
     protected function itemToResult($item)
