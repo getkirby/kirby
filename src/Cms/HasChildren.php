@@ -52,6 +52,16 @@ trait HasChildren
     }
 
     /**
+     * Finds a single page or draft
+     *
+     * @return Page|null
+     */
+    public function findPageOrDraft(string $path)
+    {
+        return $this->children()->find($path) ?? $this->drafts()->find($path);
+    }
+
+    /**
      * Returns a collection of all children of children
      *
      * @return Pages

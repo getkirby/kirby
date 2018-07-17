@@ -98,8 +98,20 @@ return function ($kirby) {
         [
             'pattern' => '(:all)\.([a-z]{2,5})',
             'action'  => function (string $path, string $extension) use ($kirby) {
+
+                // try to resolve content representations for pages
                 if ($page = $kirby->site()->find($path)) {
                     return Response::for($page, [], $extension);
+                }
+
+                $id       = dirname($path);
+                $filename = basename($path) . '.' . $extension;
+
+                // try to resolve image urls for pages and drafts
+                if ($page = $kirby->site()->findPageOrDraft($id)) {
+                    if ($file = $page->file($filename)) {
+                        go($file->mediaUrl(), 307);
+                    }
                 }
 
                 return null;
@@ -112,13 +124,9 @@ return function ($kirby) {
                     return $page;
                 }
 
-                // authenticated users may see drafts
-                if (Str::contains($path, '_drafts') === true) {
-
-                    if ($draft = $kirby->site()->draft($path)) {
-                        if ($draft->isVerified(get('token'))) {
-                            return $draft;
-                        }
+                if ($draft = $kirby->site()->draft($path)) {
+                    if ($draft->isVerified(get('token'))) {
+                        return $draft;
                     }
                 }
 
