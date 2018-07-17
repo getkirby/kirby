@@ -61,6 +61,7 @@ class Panel
     {
         try {
             if (static::link($kirby) === true) {
+                usleep(1);
                 go($kirby->request()->url());
             }
         } catch (Throwable $e) {
