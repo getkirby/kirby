@@ -130,4 +130,10 @@ class FilePropsTest extends TestCase
         return $this->assertNull($this->file()->original());
     }
 
+    public function testToString()
+    {
+        $file = new File(['filename' => 'super.jpg']);
+        $this->assertEquals('super.jpg', $file->toString('{{ file.filename }}'));
+    }
+
 }

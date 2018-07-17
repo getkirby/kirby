@@ -212,6 +212,12 @@ class PagePropsTest extends TestCase
         $this->assertEquals('test', $page->slug());
     }
 
+    public function testToString()
+    {
+        $page = new Page(['slug' => 'test']);
+        $this->assertEquals('test', $page->toString('{{ page.slug }}'));
+    }
+
     public function testUid()
     {
         $page = new Page(['slug' => 'test']);

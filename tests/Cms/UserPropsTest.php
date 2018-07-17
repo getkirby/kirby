@@ -79,4 +79,10 @@ class UserPropsTest extends TestCase
         $user = new User(['email' => []]);
     }
 
+    public function testToString()
+    {
+        $user = new User(['email' => 'user@domain.com']);
+        $this->assertEquals('user@domain.com', $user->toString('{{ user.email }}'));
+    }
+
 }
