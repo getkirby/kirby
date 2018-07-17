@@ -2,13 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Session\Session;
-use Kirby\Toolkit\V;
-
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Session\Session;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
+
 
 /**
  * The User class represents
@@ -553,4 +554,24 @@ class User extends Model
             'username' => $this->username()
         ];
     }
+
+    /**
+     * String template builder
+     *
+     * @param string|null $template
+     * @return string
+     */
+    public function toString(string $template = null): string
+    {
+        if ($template === null) {
+            return $this->email();
+        }
+
+        return Str::template($template, [
+            'user'  => $this,
+            'site'  => $this->site(),
+            'kirby' => $this->kirby()
+        ]);
+    }
+
 }

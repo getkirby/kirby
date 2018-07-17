@@ -426,6 +426,25 @@ class File extends Model
     }
 
     /**
+     * String template builder
+     *
+     * @param string|null $template
+     * @return string
+     */
+    public function toString(string $template = null): string
+    {
+        if ($template === null) {
+            return $this->id();
+        }
+
+        return Str::template($template, [
+            'file'  => $this,
+            'site'  => $this->site(),
+            'kirby' => $this->kirby()
+        ]);
+    }
+
+    /**
      * Returns the Url
      *
      * @return string
