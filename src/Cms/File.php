@@ -246,6 +246,17 @@ class File extends Model
     }
 
     /**
+     * Compares the current object with the given file object
+     *
+     * @param File $file
+     * @return bool
+     */
+    public function is(File $file): bool
+    {
+        return $this->id() === $file->id();
+    }
+
+    /**
      * Returns the absolute path to the file in the public media folder
      *
      * @return string
