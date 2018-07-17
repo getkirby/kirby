@@ -182,13 +182,6 @@ class BlueprintPagesSection extends BlueprintSection
                 'action'  => function () {
                     return $this->section()->paginate($this->requestQuery('page', 1), $this->requestQuery('limit'))->toArray();
                 }
-            ],
-            'sort' => [
-                'pattern' => 'sort',
-                'method'  => 'PATCH',
-                'action'  => function () {
-                    return $this->section()->sort($this->requestBody('page'), $this->requestBody('status'), $this->requestBody('position'));
-                }
             ]
         ];
     }
@@ -234,33 +227,6 @@ class BlueprintPagesSection extends BlueprintSection
 
         $this->templates = $templates;
         return $this;
-    }
-
-    public function sort(string $id, string $status, int $position = null)
-    {
-        if (in_array($this->status(), ['all', 'published']) === true) {
-            $status = 'listed';
-        }
-
-        $page = $this->parent()->children()->findBy('id', $id);
-
-        if ($page === null) {
-            $page = $this->parent()->drafts()->findBy('id', $id);
-        }
-
-        if (is_a($page, Page::class) === false) {
-            throw new LogicException([
-                'key' => 'page.sort.section.type'
-            ]);
-        }
-
-        if (empty($this->templates()) === false && in_array($page->template(), $this->templates()) === false) {
-            throw new LogicException([
-                'key' => 'page.sort.section.template.invalid'
-            ]);
-        }
-
-        return $page->changeStatus($status, $position);
     }
 
     public function sortable(): bool

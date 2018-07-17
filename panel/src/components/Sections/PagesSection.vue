@@ -139,12 +139,7 @@ export default {
         const element = event[type].element;
         const position = event[type].newIndex + 1 + this.pagination.offset;
 
-        this.$api
-          .patch(this.parent + "/sections/" + this.name + "/sort", {
-            page: element.id,
-            status: this.status,
-            position: position
-          })
+        this.$api.pages.status(element.id, this.status, position)
           .then(() => {
             this.$store.dispatch(
               "notification/success",
