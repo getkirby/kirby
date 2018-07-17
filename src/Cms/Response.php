@@ -55,6 +55,11 @@ class Response extends BaseResponse
             return static::page($input, $data, $contentType, $code);
         }
 
+        // Files
+        if (is_a($input, File::class)) {
+            return static::redirect($input->mediaUrl(), 307);
+        }
+
         // Exceptions
         if (is_a($input, Throwable::class)) {
             return static::errorPage(array_merge($data, [

@@ -29,7 +29,7 @@ return function ($kirby) {
             'method'  => 'ALL',
             'action'  => function ($path = null) use ($kirby) {
                 if ($kirby->option('api') === false) {
-                    throw new NotFoundException();
+                    return null;
                 }
 
                 $request = $kirby->request();
@@ -53,7 +53,7 @@ return function ($kirby) {
             'action'  => function (string $provider, string $pluginName, string $filename, string $extension) use ($kirby) {
 
                 if ($url = PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension)) {
-                    go($url, 307);
+                    return Response::redirect($url, 307);
                 }
             }
         ],
@@ -61,7 +61,7 @@ return function ($kirby) {
             'pattern' => $panel . '/(:all?)',
             'action'  => function () use ($kirby) {
                 if ($kirby->option('panel') === false) {
-                    throw new NotFoundException();
+                    return null;
                 }
 
                 return Panel::render($kirby);
@@ -73,7 +73,7 @@ return function ($kirby) {
                 $page = $kirby->page($path) ?? $kirby->site()->draft($path);
 
                 if ($page && $url = Media::link($page, $filename)) {
-                    go($url, 307);
+                    return Response::redirect($url, 307);
                 }
             }
         ],
@@ -81,7 +81,7 @@ return function ($kirby) {
             'pattern' => 'media/site/(:any)',
             'action'  => function ($filename) use ($kirby) {
                 if ($url = Media::link($kirby->site(), $filename)) {
-                    go($url, 307);
+                    return Response::redirect($url, 307);
                 }
             }
         ],
@@ -91,7 +91,7 @@ return function ($kirby) {
                 $user = $kirby->users()->find($id);
 
                 if ($user && $url = Media::link($user, $filename)) {
-                    go($url, 307);
+                    return Response::redirect($url, 307);
                 }
             }
         ],
@@ -109,12 +109,11 @@ return function ($kirby) {
 
                 // try to resolve image urls for pages and drafts
                 if ($page = $kirby->site()->findPageOrDraft($id)) {
-                    if ($file = $page->file($filename)) {
-                        go($file->mediaUrl(), 307);
-                    }
+                    return $page->file($filename);
                 }
 
-                return null;
+                // try to resolve site files at least
+                return $kirby->site()->file($filename);
             }
         ],
         [
