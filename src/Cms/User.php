@@ -10,7 +10,6 @@ use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
-
 /**
  * The User class represents
  * panel users as well as frontend users.
@@ -573,5 +572,4 @@ class User extends Model
             'kirby' => $this->kirby()
         ]);
     }
-
 }

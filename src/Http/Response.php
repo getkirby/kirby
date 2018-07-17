@@ -285,5 +285,4 @@ class Response
     {
         return $this->type;
     }
-
 }

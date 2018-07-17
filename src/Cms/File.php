@@ -206,6 +206,7 @@ class File extends Model
                 } else {
                     return '(file: ' . $this->id() . ')';
                 }
+                // no break
             case 'markdown':
                 if ($this->type() === 'image') {
                     return '![' . $this->alt() . '](' . $this->url() . ')';

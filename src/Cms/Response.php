@@ -113,5 +113,4 @@ class Response extends BaseResponse
     {
         return parent::redirect(Url::to($location), $code);
     }
-
 }
