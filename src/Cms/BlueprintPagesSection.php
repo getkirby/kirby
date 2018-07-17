@@ -146,11 +146,6 @@ class BlueprintPagesSection extends BlueprintSection
         return $item->image();
     }
 
-    protected function itemLink($item)
-    {
-        return '/pages/' . $item->panelId();
-    }
-
     protected function itemToResult($item)
     {
         $stringTemplateData = [$this->modelType($item) => $item];
@@ -161,7 +156,7 @@ class BlueprintPagesSection extends BlueprintSection
             'id'               => $item->id(),
             'image'            => $this->itemImage($item, $stringTemplateData),
             'info'             => $item->toString($this->item['info'] ?? ''),
-            'link'             => $this->itemLink($item),
+            'link'             => '/pages/' . $item->panelId(),
             'parent'           => $item->parent() ? $item->parent()->id(): null,
             'status'           => $item->status(),
             'text'             => $item->toString($this->item['title'] ?? '{{ page.title }}'),

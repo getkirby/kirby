@@ -63,12 +63,7 @@ class BlueprintFilesSection extends BlueprintSection
             throw new LogicException('The parent page cannot be found');
         }
 
-        $data = $parent->files();
-
-        // filter by the template
-        if ($template = $this->template()) {
-            $data = $data->filterBy('template', $template);
-        }
+        $data = $parent->files()->template($this->template());
 
         if ($this->sortBy() && $this->sortable() === false) {
             $data = $data->sortBy(...Str::split($this->sortBy(), ' '));
@@ -109,7 +104,7 @@ class BlueprintFilesSection extends BlueprintSection
     protected function itemLink($item)
     {
         if (is_a($item->parent(), Page::class) === true) {
-            return '/pages/' . str_replace('/', '+', $item->parent()->id()) . '/files/' . $item->filename();
+            return '/pages/' . $item->parent()->panelId() . '/files/' . $item->filename();
         }
 
         return '/site/files/' . $item->filename();
