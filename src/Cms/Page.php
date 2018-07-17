@@ -754,6 +754,17 @@ class Page extends Model
     }
 
     /**
+     * Returns the escaped Id, which is
+     * used in the panel to make routing work properly
+     *
+     * @return string
+     */
+    public function panelId(): string
+    {
+        return str_replace('/', '+', $this->id());
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
@@ -761,7 +772,7 @@ class Page extends Model
      */
     public function panelUrl(): string
     {
-        return $this->kirby()->url('panel') . '/pages/' . str_replace('/', '+', $this->id());
+        return $this->kirby()->url('panel') . '/pages/' . $this->panelId();
     }
 
     /**
