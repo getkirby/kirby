@@ -110,7 +110,7 @@ export default {
           this.blueprints = response.options.blueprints;
           this.pagination = response.pagination;
           this.status     = response.options.status;
-          this.headline   = response.options.headline;
+          this.headline   = response.options.headline || " ";
           this.sortable   = response.options.sortable;
           this.min        = response.options.min;
           this.max        = response.options.max;

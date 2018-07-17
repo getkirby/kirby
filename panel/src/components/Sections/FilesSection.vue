@@ -94,7 +94,7 @@ export default {
 
           this.accept     = response.options.accept || "*";
           this.error      = response.options.errors[0];
-          this.headline   = response.options.headline;
+          this.headline   = response.options.headline || " ";
           this.add        = response.options.add && this.$permissions.files.create;
           this.min        = response.options.min;
           this.max        = response.options.max;
