@@ -568,7 +568,7 @@ class Collection extends Iterator
      * @param array $arguments
      * @return self
      */
-    public function query(array $arguments): self
+    public function query(array $arguments = [])
     {
         $result = clone $this;
 
