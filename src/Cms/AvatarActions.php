@@ -26,7 +26,6 @@ trait AvatarActions
     {
         $old = $this->hardcopy();
 
-        $this->rules()->$action(...$arguments);
         $this->kirby()->trigger('avatar.' . $action . ':before', ...$arguments);
         $result = $callback(...$arguments);
         $this->kirby()->trigger('avatar.' . $action . ':after', $result, $old);
@@ -50,6 +49,13 @@ trait AvatarActions
         // create the basic avatar and a test upload object
         $avatar = new static($props);
         $upload = new Upload($props['source']);
+
+        // validate the uploaded mime type
+        if ($upload->mime() !== 'image/jpeg') {
+            throw new InvalidArgumentException([
+                'key' => 'avatar.mime.invalid',
+            ]);
+        }
 
         return $avatar->commit('create', [$avatar, $upload], function ($avatar, $upload) {
 
@@ -115,7 +121,16 @@ trait AvatarActions
      */
     public function replace(string $source): self
     {
-        return $this->commit('replace', [$this, new Upload($source)], function ($avatar, $upload) {
+        $upload = new Upload($source);
+
+        // validate the uploaded mime type
+        if ($upload->mime() !== 'image/jpeg') {
+            throw new InvalidArgumentException([
+                'key' => 'avatar.mime.invalid',
+            ]);
+        }
+
+        return $this->commit('replace', [$this, $upload], function ($avatar, $upload) {
 
             // delete all public versions
             $avatar->unpublish();

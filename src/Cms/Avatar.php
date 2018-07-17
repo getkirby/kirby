@@ -165,17 +165,6 @@ class Avatar extends Model
     }
 
     /**
-     * Returns the AvatarRules class to
-     * validate any important action.
-     *
-     * @return AvatarRules
-     */
-    protected function rules(): AvatarRules
-    {
-        return new AvatarRules();
-    }
-
-    /**
      * Sets the root for the avatar file
      *
      * @param string $root
