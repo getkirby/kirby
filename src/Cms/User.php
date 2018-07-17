@@ -107,11 +107,7 @@ class User extends Model
      */
     public function avatar(): Avatar
     {
-        if ($this->avatar !== null) {
-            return $this->avatar;
-        }
-
-        return $this->avatar = new Avatar([
+        return $this->avatar = $this->avatar ?? new Avatar([
             'url'   => $this->mediaUrl() . '/profile.jpg',
             'user'  => $this
         ]);
@@ -239,11 +235,7 @@ class User extends Model
      */
     public function id(): string
     {
-        if ($this->id !== null) {
-            return $this->id;
-        }
-
-        return $this->id = sha1($this->email());
+        return $this->id = $this->id ?? sha1($this->email());
     }
 
     /**
@@ -390,7 +382,7 @@ class User extends Model
      */
     public function name(): ?string
     {
-        return $this->name = $this->name ?? $this->content()->get('name')->value();
+        return $this->name = $this->name ?? $this->data()['name'] ?? null;
     }
 
     /**

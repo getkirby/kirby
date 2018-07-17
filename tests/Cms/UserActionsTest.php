@@ -18,7 +18,7 @@ class UserActionsTest extends TestCase
             ],
             'roots' => [
                 'index'    => '/dev/null',
-                'accounts' => $accounts = __DIR__ . '/fixtures/accounts',
+                'accounts' => $accounts = __DIR__ . '/fixtures/users',
             ],
             'user'  => 'admin@domain.com',
             'users' => [
@@ -39,7 +39,7 @@ class UserActionsTest extends TestCase
 
     public function tearDown()
     {
-        Dir::remove(__DIR__ . '/fixtures/accounts');
+        Dir::remove(__DIR__ . '/fixtures/users');
     }
 
     public function testChangeEmail()
