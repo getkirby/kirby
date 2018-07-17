@@ -4,6 +4,7 @@
       :list="items"
       :options="dragOptions"
       :element="elements.list"
+      @start="onStart"
       @change="$emit('change', $event)"
       @end="onEnd"
     >
@@ -113,11 +114,17 @@ export default {
         this.over.removeAttribute("data-over");
       }
       this.$emit("sort", this.items);
+      this.$store.dispatch("drag", null);
     },
     onDragStart($event, dragText) {
       this.$store.dispatch("drag", {
         type: "text",
         data: dragText
+      });
+    },
+    onStart() {
+      this.$store.dispatch("drag", {
+        type: "item"
       });
     }
   }
@@ -126,9 +133,6 @@ export default {
 
 <style lang="scss">
 
-.kirby-collection {
-  user-select: none;
-}
 .kirby-collection > *:not(:empty) {
   min-height: 38px;
   margin-bottom: 2px;

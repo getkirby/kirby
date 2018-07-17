@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!$store.state.system.info.isBroken" :data-loading="$store.state.isLoading" class="kirby-panel">
+  <div v-if="!$store.state.system.info.isBroken" :data-dragging="$store.state.drag" :data-loading="$store.state.isLoading" class="kirby-panel">
     <kirby-topbar />
     <kirby-search v-if="$store.state.search" v-bind="$store.state.search" />
     <kirby-license-bar />
@@ -30,7 +30,8 @@ export default {
   },
   data() {
     return {
-      offline: false
+      offline: false,
+      dragging: false
     };
   },
   created() {
@@ -126,6 +127,11 @@ b {
   animation: Loading 0.5s;
 }
 .kirby-panel[data-loading]::after,
+
+.kirby-panel[data-dragging] {
+  user-select: none;
+}
+
 .kirby-offline-warning {
   position: fixed;
   content: " ";
