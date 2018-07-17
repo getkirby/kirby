@@ -6,7 +6,11 @@ return [
     'save' => false,
     'props' => [
         'text' => function ($value = null) {
-            return kirbytext(I18n::translate($value, $value));
+
+            $text = I18n::translate($value, $value);
+            $text = $this->model()->toString($text);
+
+            return kirbytext($text);
         },
     ],
 ];

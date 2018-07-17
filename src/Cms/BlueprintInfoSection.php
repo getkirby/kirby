@@ -34,13 +34,18 @@ class BlueprintInfoSection extends BlueprintSection
         return $this;
     }
 
+    public function text()
+    {
+        return App::instance()->kirbytext($this->model()->toString($this->text));
+    }
+
     public function toArray(): array
     {
         return [
             'code' => 200,
             'data' => [
                 'headline' => $this->headline,
-                'text'     => App::instance()->kirbytext($this->text),
+                'text'     => $this->text(),
                 'theme'    => $this->theme
             ],
             'status' => 'ok',
