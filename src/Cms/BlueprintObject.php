@@ -9,7 +9,6 @@ namespace Kirby\Cms;
  */
 class BlueprintObject extends Component
 {
-    use HasModel;
 
     /**
      * The parent collection
@@ -17,6 +16,11 @@ class BlueprintObject extends Component
      * @var Collection
      */
     protected $collection;
+
+    /**
+     * @var Page|Site|File|User
+     */
+    protected $model;
 
     public function __construct(array $props = [])
     {
@@ -35,6 +39,16 @@ class BlueprintObject extends Component
     }
 
     /**
+     * Returns the parent model
+     *
+     * @return Page|File|Site|User
+     */
+    public function model()
+    {
+        return $this->model;
+    }
+
+    /**
      * Sets the parent Collection object
      * This is used to handle traversal methods
      * like next, prev, etc.
@@ -45,6 +59,18 @@ class BlueprintObject extends Component
     public function setCollection(Collection $collection = null)
     {
         $this->collection = $collection;
+        return $this;
+    }
+
+    /**
+     * Sets the parent model
+     *
+     * @param Page|File|User|Site $model
+     * @return self
+     */
+    protected function setModel($model = null)
+    {
+        $this->model = $model;
         return $this;
     }
 
