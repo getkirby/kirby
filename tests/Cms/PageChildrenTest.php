@@ -8,7 +8,7 @@ class PageChildrenTest extends TestCase
     public function testDefaultChildren()
     {
         $page = new Page(['slug' => 'test']);
-        $this->assertInstanceOf(Children::class, $page->children());
+        $this->assertInstanceOf(Pages::class, $page->children());
         $this->assertCount(0, $page->children());
     }
 

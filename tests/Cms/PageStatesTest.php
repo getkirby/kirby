@@ -12,8 +12,11 @@ class PageStatesTest extends TestCase
      */
     public function setUp()
     {
-        parent::setUp();
-        App::destroy();
+        new App([
+            'roots' => [
+                'index' => __DIR__ . '/fixtures/PageStatesTest'
+            ]
+        ]);
     }
 
     public function family()

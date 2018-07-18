@@ -8,7 +8,7 @@ use Kirby\Toolkit\Collection as BaseCollection;
 
 /**
  * The Collection class serves as foundation
- * for the Pages, Files, Children, Users and Structure
+ * for the Pages, Files, Users and Structure
  * classes. It handles object validation and sets
  * the parent collection property for each object.
  * The `getAttribute` method is also adjusted to
@@ -32,8 +32,7 @@ class Collection extends BaseCollection
 
     /**
      * Stores the parent object, which is needed
-     * in some collections to get the finder methods
-     * right. Especially in the ChildrenFinder class.
+     * in some collections to get the finder methods right.
      *
      * @var object
      */

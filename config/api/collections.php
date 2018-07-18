@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Children;
 use Kirby\Cms\Files;
 use Kirby\Cms\Translations;
 use Kirby\Cms\Pages;
@@ -17,7 +16,7 @@ return [
      */
     'children' => [
         'model' => 'page',
-        'type'  => Children::class,
+        'type'  => Pages::class,
         'view'  => 'compact'
     ],
 

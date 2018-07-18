@@ -2,11 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
-use Throwable;
 
 /**
  * The Site class is the root element
@@ -145,49 +143,6 @@ class Site extends Model
     }
 
     /**
-     * Returns the Children collection
-     *
-     * @return Pages
-     */
-    public function children()
-    {
-        if (is_a($this->children, Pages::class) === true) {
-            return $this->children;
-        }
-
-        $this->children = new Pages([], $this);
-
-        foreach ($this->inventory()['children'] as $props) {
-            $props['site'] = $this;
-
-            $child = Page::factory($props);
-            $this->children->data[$child->id()] = $child;
-        }
-
-        return $this->children;
-    }
-
-    /**
-     * Returns the content object
-     *
-     * @return Content
-     */
-    public function content(): Content
-    {
-        if (is_a($this->content, Content::class) === true) {
-            return $this->content;
-        }
-
-        try {
-            $data = Data::read($this->contentFile());
-        } catch (Throwable $e) {
-            $data = [];
-        }
-
-        return $this->setContent($data)->content();
-    }
-
-    /**
      * Returns the absolute path to the site's
      * content text file
      *
@@ -196,49 +151,6 @@ class Site extends Model
     public function contentFile(): string
     {
         return $this->root() . '/site.txt';
-    }
-
-    /**
-     * Returns a draft object by the path
-     * if one can be found
-     *
-     * @param string $path
-     * @return PageDraft|null
-     */
-    public function draft(string $path)
-    {
-        return PageDraft::seek($this, $path);
-    }
-
-    /**
-     * Return all drafts for the site
-     *
-     * @return Pages
-     */
-    public function drafts(): Pages
-    {
-        if (is_a($this->drafts, Pages::class) === true) {
-            return $this->drafts;
-        }
-
-        $url       = $this->url() . '/_drafts';
-        $inventory = Dir::inventory($this->root() . '/_drafts');
-
-        $this->drafts = new Pages([], $this);
-
-        foreach ($inventory['children'] as $props) {
-            $draft = Page::factory([
-                'num'    => $props['num'],
-                'site'   => $this,
-                'slug'   => $props['slug'],
-                'status' => 'draft',
-                'url'    => $url . '/' . $props['slug']
-            ]);
-
-            $this->drafts->data[$draft->id()] = $draft;
-        }
-
-        return $this->drafts;
     }
 
     /**
@@ -273,32 +185,6 @@ class Site extends Model
     public function exists(): bool
     {
         return is_dir($this->root()) === true;
-    }
-
-    /**
-     * Returns the Files collection
-     *
-     * @return Files
-     */
-    public function files(): Files
-    {
-        if (is_a($this->files, Files::class) === true) {
-            return $this->files;
-        }
-
-        $this->files = new Files([], $this);
-
-        foreach ($this->inventory()['files'] as $filename => $props) {
-            $file = new File([
-                'filename' => $filename,
-                'parent'   => $this,
-                'site'     => $this
-            ]);
-
-            $this->files->data[$file->id()] = $file;
-        }
-
-        return $this->files;
     }
 
     /**

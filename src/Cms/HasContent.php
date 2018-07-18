@@ -3,7 +3,9 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Throwable;
 
 trait HasContent
 {
@@ -55,7 +57,13 @@ trait HasContent
             return $this->content;
         }
 
-        return $this->setContent($this->store()->content())->content();
+        try {
+            $data = Data::read($this->contentFile());
+        } catch (Throwable $e) {
+            $data = [];
+        }
+
+        return $this->setContent($data)->content();
     }
 
     /**

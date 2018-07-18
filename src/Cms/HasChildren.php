@@ -13,6 +13,20 @@ trait HasChildren
     protected $children;
 
     /**
+     * Returns the Pages collection
+     *
+     * @return Pages
+     */
+    public function children()
+    {
+        if (is_a($this->children, Pages::class) === true) {
+            return $this->children;
+        }
+
+        return $this->children = Pages::factory($this->inventory()['children'], $this);
+    }
+
+    /**
      * Return a list of ids for the model's
      * toArray method
      *
@@ -24,10 +38,37 @@ trait HasChildren
     }
 
     /**
+     * Searches for a child draft by id
+     *
+     * @param string $path
+     * @return PageDraft|null
+     */
+    public function draft(string $path)
+    {
+        return PageDraft::seek($this, $path);
+    }
+
+    /**
+     * Return all drafts for the site
+     *
+     * @return Pages
+     */
+    public function drafts(): Pages
+    {
+        if (is_a($this->drafts, Pages::class) === true) {
+            return $this->drafts;
+        }
+
+        $inventory = Dir::inventory($this->root() . '/_drafts');
+
+        return $this->drafts = Pages::factory($inventory['children'], $this);
+    }
+
+    /**
      * Finds one or multiple children by id
      *
      * @param string ...$arguments
-     * @return Pages|Children
+     * @return Pages
      */
     public function find(...$arguments)
     {
@@ -117,15 +158,16 @@ trait HasChildren
     /**
      * Sets the Children collection
      *
-     * @param Pages|Children|null $children
+     * @param array|null $children
      * @return self
      */
     protected function setChildren(array $children = null)
     {
         if ($children !== null) {
-            $this->children = Children::factory($children, $this);
+            $this->children = Pages::factory($children, $this);
         }
 
         return $this;
     }
+
 }

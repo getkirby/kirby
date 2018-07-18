@@ -6,10 +6,8 @@ namespace Kirby\Cms;
  * The Pages collection contains
  * any number and mixture of page objects
  * They don't necessarily have to belong
- * to the same parent in comparison to
- * the Children collection. The Children
- * collection is based on the Pages
- * collection though.
+ * to the same parent unless it is passed
+ * as second argument in the constructor.
  *
  * Pages collection can be constructed very
  * easily:
@@ -101,14 +99,26 @@ class Pages extends Collection
      * @param string $class
      * @return Pages
      */
-    public static function factory(array $pages, Model $parent = null, array $inject = [], string $class = Page::class)
+    public static function factory(array $pages, Model $parentModel, string $class = Page::class)
     {
-        $children = new static([], $parent);
+        $children = new static([], $parentModel);
+        $kirby    = $parentModel->kirby();
+
+        if (is_a($parentModel, Page::class) === true) {
+            $parent = $parentModel;
+            $site   = $parentModel->site();
+        } else {
+            $parent = null;
+            $site   = $parentModel;
+        }
 
         foreach ($pages as $props) {
-            $page = $class::factory($props + $inject + [
-                'collection' => $children
-            ]);
+            $props['collection'] = $children;
+            $props['kirby']      = $kirby;
+            $props['parent']     = $parent;
+            $props['site']       = $site;
+
+            $page = $class::factory($props);
 
             $children->data[$page->id()] = $page;
         }
@@ -147,7 +157,8 @@ class Pages extends Collection
         $page = $this->get($id);
 
         if (!$page) {
-            $page = $this->findByIdRecursive($id);
+            $start = is_a($this->parent, Page::class) === true ? $this->parent->id() : '';
+            $page  = $this->findByIdRecursive($id, $start);
         }
 
         return $page;
@@ -226,11 +237,11 @@ class Pages extends Collection
      */
     public function index(): Pages
     {
-        if (is_a($this->index, Children::class) === true) {
+        if (is_a($this->index, Pages::class) === true) {
             return $this->index;
         }
 
-        $this->index = new Children([], $this->parent);
+        $this->index = new Pages([], $this->parent);
 
         foreach ($this->data as $pageKey => $page) {
             $this->index->data[$pageKey] = $page;

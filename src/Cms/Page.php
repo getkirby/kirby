@@ -168,13 +168,6 @@ class Page extends Model
     public function __construct(array $props)
     {
         $this->setProperties($props);
-
-        // set the id, depending on the parent
-        if ($parent = $this->parent()) {
-            $this->id = $parent->id() . '/' . $this->slug();
-        } else {
-            $this->id = $this->slug();
-        }
     }
 
     /**
@@ -273,33 +266,6 @@ class Page extends Model
     }
 
     /**
-     * Returns the Children collection for this page
-     * The HasChildren trait takes care of the rest
-     *
-     * @return Pages|Children
-     */
-    public function children()
-    {
-        if (is_a($this->children, Pages::class) === true) {
-            return $this->children;
-        }
-
-        $site = $this->site();
-
-        $this->children = new Children([], $this);
-
-        foreach ($this->inventory()['children'] as $props) {
-            $props['parent'] = $this;
-            $props['site']   = $site;
-
-            $child = Page::factory($props);
-            $this->children->data[$child->id()] = $child;
-        }
-
-        return $this->children;
-    }
-
-    /**
      * Clone the page object and
      * optionally convert it to a draft object
      *
@@ -331,26 +297,6 @@ class Page extends Model
         }
 
         return $this->collection = new Pages([$this]);
-    }
-
-    /**
-     * Returns the content object
-     *
-     * @return Content
-     */
-    public function content(): Content
-    {
-        if (is_a($this->content, Content::class) === true) {
-            return $this->content;
-        }
-
-        try {
-            $data = Data::read($this->contentFile());
-        } catch (Throwable $e) {
-            $data = [];
-        }
-
-        return $this->setContent($data)->content();
     }
 
     /**
@@ -390,50 +336,6 @@ class Page extends Model
         }
 
         return $this->diruri = $this->dirname();
-    }
-
-    /**
-     * Searches for a child draft by id
-     *
-     * @param string $path
-     * @return PageDraft|null
-     */
-    public function draft(string $path)
-    {
-        return PageDraft::seek($path);
-    }
-
-    /**
-     * Return all drafts for the site
-     *
-     * @return Children
-     */
-    public function drafts(): Children
-    {
-        if (is_a($this->drafts, Children::class) === true) {
-            return $this->drafts;
-        }
-
-        $inventory = Dir::inventory($this->root() . '/_drafts');
-        $site      = $this->site();
-        $url       = $this->url() . '/_drafts';
-
-        $this->drafts = new Children([], $this);
-
-        foreach ($inventory['children'] as $props) {
-            $draft = Page::factory([
-                'num'    => $props['num'],
-                'parent' => $this,
-                'site'   => $site,
-                'slug'   => $props['slug'],
-                'status' => 'draft',
-                'url'    => $url . '/' . $props['slug']
-            ]);
-
-            $this->drafts->data[$draft->id()] = $draft;
-        }
-
-        return $this->drafts;
     }
 
     /**
@@ -477,34 +379,6 @@ class Page extends Model
         }
 
         return new static($props);
-    }
-
-    /**
-     * Returns the Files collection
-     *
-     * @return Files
-     */
-    public function files(): Files
-    {
-        if (is_a($this->files, Files::class) === true) {
-            return $this->files;
-        }
-
-        $site = $this->site();
-
-        $this->files = new Files([], $this);
-
-        foreach ($this->inventory()['files'] as $filename => $props) {
-            $file = new File([
-                'filename' => $filename,
-                'parent'   => $this,
-                'site'     => $site
-            ]);
-
-            $this->files->data[$file->id()] = $file;
-        }
-
-        return $this->files;
     }
 
     /**
@@ -558,7 +432,16 @@ class Page extends Model
      */
     public function id(): string
     {
-        return $this->id;
+        if ($this->id !== null) {
+            return $this->id;
+        }
+
+        // set the id, depending on the parent
+        if ($parent = $this->parent()) {
+            return $this->id = $parent->id() . '/' . $this->slug();
+        }
+
+        return $this->id = $this->slug();
     }
 
     /**
@@ -630,7 +513,11 @@ class Page extends Model
      */
     public function isDescendantOfActive(): bool
     {
-        return $this->isDescendantOf($this->site()->page());
+        if ($active = $this->site()->page()) {
+            return $this->isDescendantOf($active);
+        }
+
+        return false;
     }
 
     /**
