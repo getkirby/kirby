@@ -24,7 +24,6 @@ class File extends Model
     use FileActions;
 
     use HasContent;
-    use HasErrors;
     use HasSiblings;
     use HasThumbs;
 
@@ -233,6 +232,22 @@ class File extends Model
                     return '[' . $this->filename() . '](' . $this->url() . ')';
                 }
         }
+    }
+
+    /**
+     * Returns all content validation errors
+     *
+     * @return array
+     */
+    public function errors(): array
+    {
+        $errors = [];
+
+        foreach ($this->blueprint()->sections() as $section) {
+            $errors = array_merge($errors, $section->errors());
+        }
+
+        return $errors;
     }
 
     /**

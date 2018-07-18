@@ -25,7 +25,6 @@ class Page extends Model
     use PageActions;
     use HasChildren;
     use HasContent;
-    use HasErrors;
     use HasFiles;
     use HasMethods;
     use HasSiblings;
@@ -365,6 +364,22 @@ class Page extends Model
             case 'markdown':
                 return '[' . $this->title() . '](' . $this->url() . ')';
         }
+    }
+
+    /**
+     * Returns all content validation errors
+     *
+     * @return array
+     */
+    public function errors(): array
+    {
+        $errors = [];
+
+        foreach ($this->blueprint()->sections() as $section) {
+            $errors = array_merge($errors, $section->errors());
+        }
+
+        return $errors;
     }
 
     /**

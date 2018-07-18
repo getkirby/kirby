@@ -26,7 +26,6 @@ class User extends Model
     use UserActions;
 
     use HasContent;
-    use HasErrors;
     use HasSiblings;
 
     /**
@@ -207,6 +206,22 @@ class User extends Model
     public function email(): string
     {
         return $this->email;
+    }
+
+    /**
+     * Returns all content validation errors
+     *
+     * @return array
+     */
+    public function errors(): array
+    {
+        $errors = [];
+
+        foreach ($this->blueprint()->sections() as $section) {
+            $errors = array_merge($errors, $section->errors());
+        }
+
+        return $errors;
     }
 
     /**

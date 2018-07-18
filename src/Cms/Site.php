@@ -22,7 +22,6 @@ class Site extends Model
 
     use HasChildren;
     use HasContent;
-    use HasErrors;
     use HasFiles;
 
     /**
@@ -161,6 +160,22 @@ class Site extends Model
     public function errorPageId(): string
     {
         return $this->errorPageId ?? 'error';
+    }
+
+    /**
+     * Returns all content validation errors
+     *
+     * @return array
+     */
+    public function errors(): array
+    {
+        $errors = [];
+
+        foreach ($this->blueprint()->sections() as $section) {
+            $errors = array_merge($errors, $section->errors());
+        }
+
+        return $errors;
     }
 
     /**
