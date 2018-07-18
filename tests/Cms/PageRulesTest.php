@@ -2,16 +2,6 @@
 
 namespace Kirby\Cms;
 
-class FakePageStore extends PageStoreDefault
-{
-
-    public function exists(): bool
-    {
-        return true;
-    }
-
-}
-
 class PageRulesTest extends TestCase
 {
 
@@ -133,16 +123,11 @@ class PageRulesTest extends TestCase
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
-            'store' => FakePageStore::class
         ]);
 
         $this->assertTrue(PageRules::delete($page));
     }
 
-    /**
-     * @expectedException Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.page.undefined
-     */
     public function testDeleteNotExists()
     {
         $page = new Page([
@@ -150,7 +135,7 @@ class PageRulesTest extends TestCase
             'slug'  => 'test',
         ]);
 
-        PageRules::delete($page);
+        $this->assertTrue(PageRules::delete($page));
     }
 
     /**
@@ -163,7 +148,6 @@ class PageRulesTest extends TestCase
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
-            'store' => FakePageStore::class,
             'site'  => $site
         ]);
         $site->setHomepage($page);
@@ -181,7 +165,6 @@ class PageRulesTest extends TestCase
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',
-            'store' => FakePageStore::class,
             'site'  => $site
         ]);
         $site->setErrorPage($page);
@@ -201,7 +184,6 @@ class PageRulesTest extends TestCase
                 ['slug' => 'a'],
                 ['slug' => 'b']
             ],
-            'store' => FakePageStore::class,
         ]);
 
         PageRules::delete($page);
@@ -216,7 +198,6 @@ class PageRulesTest extends TestCase
                 ['slug' => 'a'],
                 ['slug' => 'b']
             ],
-            'store' => FakePageStore::class,
         ]);
 
 

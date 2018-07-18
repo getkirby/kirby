@@ -61,11 +61,7 @@ abstract class Model extends Component
      */
     public function kirby(): App
     {
-        if (is_a($this->kirby, App::class)) {
-            return $this->kirby;
-        }
-
-        return $this->kirby = App::instance();
+        return $this->kirby = $this->kirby ?? App::instance();
     }
 
     /**
@@ -75,11 +71,7 @@ abstract class Model extends Component
      */
     public function site()
     {
-        if (is_a($this->site, Site::class)) {
-            return $this->site;
-        }
-
-        return $this->site = $this->kirby()->site();
+        return $this->site = $this->site ?? $this->kirby()->site();
     }
 
     /**

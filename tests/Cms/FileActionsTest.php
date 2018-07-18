@@ -82,6 +82,7 @@ class FileActionsTest extends TestCase
      */
     public function testChangeName(File $file)
     {
+
         // create an empty dummy file
         F::write($file->root(), '');
         // ...and an empty content file for it

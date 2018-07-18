@@ -18,8 +18,8 @@ class FileRules
     {
         if ($file->permissions()->changeName() !== true) {
             throw new PermissionException([
-                'key'  => 'exception.file.changeName.permissions',
-                'data' => ['filename' => $file->name()]
+                'key'  => 'file.changeName.permissions',
+                'data' => ['filename' => $file->filename()]
             ]);
         }
 
@@ -28,8 +28,8 @@ class FileRules
 
         if ($duplicate) {
             throw new DuplicateException([
-                'key'  => 'exception.file.duplicate',
-                'data' => ['filename' => $duplicate->name()]
+                'key'  => 'file.duplicate',
+                'data' => ['filename' => $duplicate->filename()]
             ]);
         }
 

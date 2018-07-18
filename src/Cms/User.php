@@ -172,6 +172,16 @@ class User extends Model
     }
 
     /**
+     * Returns the absolute path to the user content file
+     *
+     * @return string
+     */
+    public function contentFile(): string
+    {
+        return $this->root() . '/user.txt';
+    }
+
+    /**
      * Reads all user data from disk
      *
      * @return array
@@ -183,7 +193,7 @@ class User extends Model
         }
 
         try {
-            return $this->data = Data::read($this->root() . '/user.txt');
+            return $this->data = Data::read($this->contentFile());
         } catch (Throwable $e) {
             return $this->data = [];
         }

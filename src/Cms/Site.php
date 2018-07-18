@@ -33,13 +33,6 @@ class Site extends Model
     protected $blueprint;
 
     /**
-     * A list of all drafts
-     *
-     * @var Pages
-     */
-    protected $drafts;
-
-    /**
      * The error page object
      *
      * @var Page
@@ -53,13 +46,6 @@ class Site extends Model
      * @var string
      */
     protected $errorPageId = 'error';
-
-    /**
-     * The files collection
-     *
-     * @var Files
-     */
-    protected $files;
 
     /**
      * The home page object

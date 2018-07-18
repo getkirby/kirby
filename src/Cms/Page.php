@@ -307,7 +307,18 @@ class Page extends Model
      */
     public function contentFile(): ?string
     {
-        return $this->contentFile = $this->contentFile ?? $this->inventory()['content'];
+        // use the cached version
+        if ($this->contentFile !== null) {
+            return $this->contentFile;
+        }
+
+        // create from template if the template is already set
+        if ($template = $this->template()) {
+            return $this->contentFile = $this->root() . '/' . $template . '.txt';
+        }
+
+        // detect from the inventory
+        return $this->contentFile = $this->inventory()['content'];
     }
 
     /**
@@ -363,7 +374,7 @@ class Page extends Model
      */
     public function exists(): bool
     {
-        return is_dir($this->page()->root()) === true;
+        return is_dir($this->root()) === true;
     }
 
     /**
@@ -1076,25 +1087,6 @@ class Page extends Model
     public function uid(): string
     {
         return $this->slug();
-    }
-
-    /**
-     * Updates the page data
-     *
-     * @param array $input
-     * @param boolean $validate
-     * @return self
-     */
-    public function update(array $input = null, bool $validate = true): self
-    {
-        $result = $this->updateContent($input, $validate);
-
-        // if num is created from page content, update num on content update
-        if ($this->isListed() === true && in_array($this->blueprint()->num(), ['zero', 'default']) === false) {
-            $this->changeNum();
-        }
-
-        return $result;
     }
 
     /**

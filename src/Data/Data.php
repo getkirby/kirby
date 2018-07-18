@@ -117,7 +117,7 @@ class Data
      * @param  string    $type
      * @return boolean
      */
-    public static function write(string $file, array $data = [], string $type = null): bool
+    public static function write(string $file = null, array $data = [], string $type = null): bool
     {
         return static::handler($type ?? F::extension($file))->write($file, $data);
     }

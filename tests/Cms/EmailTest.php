@@ -93,7 +93,10 @@ class EmailTest extends TestCase
     public function testEmailWithObjects()
     {
         $app = new App([
-            'site' => new Site()
+            'site' => new Site(),
+            'roots' => [
+                'content' => '/content'
+            ]
         ]);
 
         $from = new User(['email' => 'sales@company.com']);
@@ -126,8 +129,8 @@ class EmailTest extends TestCase
             'someone@gmail.com'
         ], $email->toArray()['to']);
         $this->assertEquals([
-            'report.pdf',
-            'graph.png'
+            '/content/report.pdf',
+            '/content/graph.png'
         ], $email->toArray()['attachments']);
     }
 

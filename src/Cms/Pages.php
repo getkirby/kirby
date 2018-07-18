@@ -99,17 +99,18 @@ class Pages extends Collection
      * @param string $class
      * @return Pages
      */
-    public static function factory(array $pages, Model $parentModel, string $class = Page::class)
+    public static function factory(array $pages, Model $model = null, string $class = Page::class)
     {
-        $children = new static([], $parentModel);
-        $kirby    = $parentModel->kirby();
+        $model    = $model ?? App::instance()->site();
+        $children = new static([], $model);
+        $kirby    = $model->kirby();
 
-        if (is_a($parentModel, Page::class) === true) {
-            $parent = $parentModel;
-            $site   = $parentModel->site();
+        if (is_a($model, Page::class) === true) {
+            $parent = $model;
+            $site   = $model->site();
         } else {
             $parent = null;
-            $site   = $parentModel;
+            $site   = $model;
         }
 
         foreach ($pages as $props) {

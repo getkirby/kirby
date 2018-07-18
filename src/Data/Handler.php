@@ -60,7 +60,7 @@ abstract class Handler
      * @param  array    $data
      * @return boolean
      */
-    public static function write(string $file, array $data = []): bool
+    public static function write(string $file = null, array $data = []): bool
     {
         return F::write($file, static::encode($data));
     }

@@ -145,7 +145,7 @@ class F
      * @param  string  $extension Set an optional extension to overwrite the current one
      * @return string
      */
-    public static function extension(string $file, string $extension = null): string
+    public static function extension(string $file = null, string $extension = null): string
     {
         // overwrite the current extension
         if ($extension !== null) {

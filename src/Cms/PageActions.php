@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 trait PageActions
@@ -214,7 +216,7 @@ trait PageActions
         }
 
         return $this->commit('changeTitle', [$this, $title], function ($page, $title) {
-
+            return $page->clone(['content' => ['title' => $title]])->save();
         });
     }
 
@@ -259,7 +261,8 @@ trait PageActions
     public static function create(array $props): self
     {
         // clean up the slug
-        $props['slug'] = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
+        $props['slug']     = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
+        $props['template'] = strtolower($props['template'] ?? 'default');
 
         // create a temporary page object
         $page = PageDraft::factory($props);
@@ -274,15 +277,12 @@ trait PageActions
             }
 
             // create the new page directory
-            if (Dir::make($root) !== true) {
+            if (Dir::make($page->root()) !== true) {
                 throw new LogicException('The page directory for "' . $page->slug() . '" cannot be created');
             }
 
-            // reset the inventory
-            $page->inventory = null;
-
             // write the content file
-            return $page->save();
+            return $page->clone()->save();
 
         });
     }
@@ -496,10 +496,6 @@ trait PageActions
      */
     public function save(): self
     {
-        if ($this->exists() === false) {
-            return $this;
-        }
-
         Data::write($this->contentFile(), $this->content()->toArray());
         return $this;
     }
@@ -512,7 +508,7 @@ trait PageActions
      * @param string $new       New blueprint
      * @return array
      */
-    public function transferData(Content $content, string $old, string $new): array
+    protected function transferData(Content $content, string $old, string $new): array
     {
         // Prepare data
         $data      = [];
@@ -598,11 +594,7 @@ trait PageActions
             }
         }
 
-        // get the data values array
-        $values  = $form->values();
-        $strings = $form->strings();
-
-        return $this->commit('update', [$this, $form->values(), $form->strings()], function ($page, $values, $strings) {
+        $result = $this->commit('update', [$this, $form->values(), $form->strings()], function ($page, $values, $strings) {
             $content = $page
                 ->content()
                 ->update($strings)
@@ -610,6 +602,13 @@ trait PageActions
 
             return $page->clone(['content' => $content])->save();
         });
+
+        // if num is created from page content, update num on content update
+        if ($this->isListed() === true && in_array($this->blueprint()->num(), ['zero', 'default']) === false) {
+            $this->changeNum();
+        }
+
+        return $result;
     }
 
 }

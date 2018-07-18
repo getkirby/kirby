@@ -13,6 +13,13 @@ trait HasChildren
     protected $children;
 
     /**
+     * The list of available drafts
+     *
+     * @var Pages
+     */
+    protected $drafts;
+
+    /**
      * Returns the Pages collection
      *
      * @return Pages
