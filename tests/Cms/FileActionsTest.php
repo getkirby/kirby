@@ -4,75 +4,76 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Image\Image;
-
-class ReplaceableTestFile extends File
-{
-    public function mime()
-    {
-        return 'text/plain';
-    }
-}
-
-class FileActionsTestStore extends FileStoreDefault
-{
-
-    public static $exists = true;
-
-    public function create(Upload $upload)
-    {
-        return $this->file();
-    }
-
-    public function delete(): bool
-    {
-        static::$exists = false;
-        return true;
-    }
-
-    public function exists(): bool
-    {
-        return static::$exists;
-    }
-
-}
-
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\Dir;
 
 class FileActionsTest extends TestCase
 {
 
-    protected function pageFile()
+    protected $app;
+    protected $fixtures;
+
+    public function app()
     {
-        $parent = new Page([
-            'slug'  => 'test',
-            'store' => PageStoreDefault::class
+        return new App([
+            'roots' => [
+               'index' => $this->fixtures = __DIR__ . '/fixtures/FileActionsTest'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'  => 'test',
+                        'files' => [
+                            [
+                                'filename' => 'page.js'
+                            ]
+                        ]
+                    ]
+                ],
+                'files' => [
+                    [
+                        'filename' => 'site.js'
+                    ]
+                ],
+            ],
+            'users' => [
+                [
+                    'email' => 'admin@domain.com',
+                    'role'  => 'admin'
+                ]
+            ],
+            'user' => 'admin@domain.com'
         ]);
-
-        $file = new File([
-            'filename' => 'test.jpg',
-            'parent'   => $parent,
-            'store'    => FileActionsTestStore::class
-        ]);
-
-        return $file;
     }
 
-    protected function siteFile()
+    public function setUp()
     {
-        $parent = new Site();
-        $file   = new File([
-            'filename' => 'test.jpg',
-            'parent'   => $parent,
-            'store'    => FileActionsTestStore::class,
-        ]);
+        $this->app = $this->app();
+        Dir::make($this->fixtures);
+    }
 
-        return $file;
+    public function tearDown()
+    {
+        Dir::remove($this->fixtures);
+    }
+
+    public function parentProvider()
+    {
+        $app = $this->app();
+
+        return [
+            [$app->site()],
+            [$app->site()->children()->first()]
+        ];
     }
 
     public function fileProvider()
     {
+        $app = $this->app();
+
         return [
-            [$this->pageFile()],
-            [$this->siteFile()]
+            [$app->site()->file()],
+            [$app->site()->children()->files()->first()]
         ];
     }
 
@@ -81,88 +82,144 @@ class FileActionsTest extends TestCase
      */
     public function testChangeName(File $file)
     {
-        $this->assertHooks([
-            'file.changeName:before' => function (File $file, string $name) {
-                $this->assertEquals('awesome', $name);
-            },
-            'file.changeName:after' => function (File $newFile, File $oldFile) {
-                $this->assertEquals('awesome', $newFile->name());
-                $this->assertEquals('test', $oldFile->name());
-            }
-        ], function () use ($file) {
-            $result = $file->changeName('awesome');
-            $this->assertEquals('awesome.jpg', $result->filename());
-        });
+        // create an empty dummy file
+        F::write($file->root(), '');
+        // ...and an empty content file for it
+        F::write($file->contentFile(), '');
+
+        $this->assertFileExists($file->root());
+        $this->assertFileExists($file->contentFile());
+
+        $result = $file->changeName('test');
+
+        $this->assertNotEquals($file->root(), $result->root());
+        $this->assertEquals('test.js', $result->filename());
+        $this->assertFileExists($result->root());
+        $this->assertFileExists($result->contentFile());
     }
 
-    public function testCreate()
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testCreate($parent)
     {
-        FileActionsTestStore::$exists = false;
+        $source = $this->fixtures . '/source.md';
 
-        $parent = new Page([
-            'slug'  => 'test',
-            'store' => PageStoreDefault::class
+        // create the dummy source
+        F::write($source, '# Test');
+
+        $result = File::create([
+            'filename' => 'test.md',
+            'source'   => $source,
+            'parent'   => $parent
         ]);
 
-        $this->assertHooks([
-            'file.create:before' => function (File $file, Upload $upload) use ($parent) {
-                $this->assertEquals('test.js', $upload->filename());
-                $this->assertEquals($parent, $file->parent());
-            },
-            'file.create:after' => function (File $file) use ($parent) {
-                $this->assertEquals('test.js', $file->filename());
-                $this->assertEquals($parent, $file->parent());
-            }
-        ], function () use ($parent) {
-            $result = File::create([
-                'source' => __DIR__ . '/fixtures/files/test.js',
-                'parent' => $parent,
-                'store'  => FileActionsTestStore::class
-            ]);
-
-            $this->assertEquals('test.js', $result->filename());
-            $this->assertEquals($parent, $result->parent());
-        });
-
+        $this->assertFileExists($result->root());
+        $this->assertFileExists($parent->root() . '/test.md');
     }
 
     /**
      * @dataProvider fileProvider
      */
-    public function testDelete($file)
+    public function testDelete(File $file)
     {
-        FileActionsTestStore::$exists = true;
+        // create an empty dummy file
+        F::write($file->root(), '');
+        // ...and an empty content file for it
+        F::write($file->contentFile(), '');
 
-        $this->assertHooks([
-            'file.delete:before' => function (File $file) {
-                $this->assertTrue($file->exists());
-            },
-            'file.delete:after' => function (bool $result, File $file) {
-                $this->assertFalse($file->exists());
-                $this->assertTrue($result);
-            }
-        ], function () use ($file) {
-            $file->delete();
-        });
+        $this->assertFileExists($file->root());
+        $this->assertFileExists($file->contentFile());
+
+        $result = $file->delete();
+
+        $this->assertTrue($result);
+
+        $this->assertFileNotExists($file->root());
+        $this->assertFileNotExists($file->contentFile());
     }
 
-    public function testReplace()
+    /**
+     * @dataProvider fileProvider
+     */
+    public function testPublish($file)
     {
-        $file = new ReplaceableTestFile([
-            'filename' => 'yay.js',
-            'parent'   => new Page(['slug' => 'test']),
-            'store'    => FileActionsTestStore::class
+        // create an empty dummy file
+        F::write($file->root(), '');
+
+        $this->assertFileNotExists($file->mediaRoot());
+
+        $file->publish();
+
+        $this->assertFileExists($file->mediaRoot());
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testReplace($parent)
+    {
+        $original    = $this->fixtures . '/original.md';
+        $replacement = $this->fixtures . '/replacement.md';
+
+        // create the dummy files
+        F::write($original, '# Original');
+        F::write($replacement, '# Replacement');
+
+        $originalFile = File::create([
+            'filename' => 'test.md',
+            'source'   => $original,
+            'parent'   => $parent
         ]);
 
-        $this->assertHooks([
-            'file.replace:before' => function (File $file, Upload $upload) {
-                $this->assertEquals('test.js', $upload->filename());
-            },
-            'file.replace:after' => function (File $newFile, File $oldFile) {
-            }
-        ], function () use ($file) {
-            $file->replace(__DIR__ . '/fixtures/files/test.js');
-        });
+        $this->assertEquals(F::read($original), F::read($originalFile->root()));
+
+        $replacedFile = $originalFile->replace($replacement);
+
+        $this->assertEquals(F::read($replacement), F::read($replacedFile->root()));
+    }
+
+    /**
+     * @dataProvider fileProvider
+     */
+    public function testSave($file)
+    {
+        // create an empty dummy file
+        F::write($file->root(), '');
+
+        $this->assertFileExists($file->root());
+        $this->assertFileNotExists($file->contentFile());
+
+        $file = $file->clone(['caption' => 'test'])->save();
+
+        $this->assertFileExists($file->contentFile());
+    }
+
+    /**
+     * @dataProvider fileProvider
+     */
+    public function testUnpublish($file)
+    {
+        // create an empty dummy file
+        F::write($file->root(), '');
+
+        $this->assertFileNotExists($file->mediaRoot());
+        $file->publish();
+        $this->assertFileExists($file->mediaRoot());
+        $file->unpublish();
+        $this->assertFileNotExists($file->mediaRoot());
+    }
+
+    /**
+     * @dataProvider fileProvider
+     */
+    public function testUpdate($file)
+    {
+        $file->update([
+            'caption' => $caption = 'test'
+        ]);
+
+        $this->assertEquals($caption, $file->caption()->value());
     }
 
 }

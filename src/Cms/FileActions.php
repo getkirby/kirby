@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Image\Image;
@@ -30,16 +32,35 @@ trait FileActions
             return $this;
         }
 
-        return $this->commit('changeName', $name);
-    }
+        return $this->commit('changeName', [$this, $name], function ($oldFile, $name) {
 
-    /**
-     * @param integer $num
-     * @return self
-     */
-    public function changeSort(int $num): self
-    {
-        return $this->commit('changeSort', $num);
+            $newFile = $oldFile->clone([
+                'filename' => $name . '.' . $oldFile->extension()
+            ]);
+
+            if ($oldFile->exists() === false) {
+                return $newFile;
+            }
+
+            if ($newFile->exists() === true) {
+                throw new LogicException('The new file exists and cannot be overwritten');
+            }
+
+            // remove all public versions
+            $oldFile->unpublish();
+
+            // rename the main file
+            F::move($oldFile->root(), $newFile->root());
+
+            // rename the content file
+            F::move($oldFile->contentFile(), $newFile->contentFile());
+
+            // create a new public version
+            $newFile->publish();
+
+            return $newFile;
+
+        });
     }
 
     /**
@@ -55,15 +76,16 @@ trait FileActions
      * @param mixed ...$arguments
      * @return mixed
      */
-    protected function commit(string $action, ...$arguments)
+    protected function commit(string $action, array $arguments, Closure $callback)
     {
-        $old = $this->hardcopy();
+        $old   = $this->hardcopy();
+        $kirby = $this->kirby();
 
-        $this->rules()->$action($this, ...$arguments);
-        $this->kirby()->trigger('file.' . $action . ':before', $this, ...$arguments);
-        $result = $this->store()->$action(...$arguments);
-        $this->kirby()->trigger('file.' . $action . ':after', $result, $old);
-        $this->kirby()->cache('pages')->flush();
+        $this->rules()->$action(...$arguments);
+        $kirby->trigger('file.' . $action . ':before', ...$arguments);
+        $result = $callback(...$arguments);
+        $kirby->trigger('file.' . $action . ':after', $result, $old);
+        $kirby->cache('pages')->flush();
         return $result;
     }
 
@@ -89,7 +111,26 @@ trait FileActions
         $file   = new static($props);
         $upload = new Upload($props['source']);
 
-        return $file->commit('create', $upload);
+        return $file->commit('create', [$file, $upload], function ($file, $upload) {
+
+            // delete all public versions
+            $file->unpublish();
+
+            // overwrite the original
+            if (F::copy($upload->root(), $file->root(), true) !== true) {
+                throw new LogicException('The file could not be created');
+            }
+
+            // store the content if necessary
+            $file->save();
+
+            // create a new public file
+            $file->publish();
+
+            // return a fresh clone
+            return $file->clone();
+
+        });
     }
 
     /**
@@ -100,7 +141,14 @@ trait FileActions
      */
     public function delete(): bool
     {
-        return $this->commit('delete');
+        return $this->commit('delete', [$this], function ($file) {
+            $file->unpublish();
+
+            F::remove($file->contentFile());
+            F::remove($file->root());
+
+            return true;
+        });
     }
 
     /**
@@ -127,7 +175,40 @@ trait FileActions
      */
     public function replace(string $source): self
     {
-        return $this->commit('replace', new Upload($source));
+        return $this->commit('replace', [$this, new Upload($source)], function ($file, $upload) {
+
+            // delete all public versions
+            $file->unpublish();
+
+            // overwrite the original
+            if (F::copy($upload->root(), $file->root(), true) !== true) {
+                throw new LogicException('The file could not be created');
+            }
+
+            // create a new public file
+            $file->publish();
+
+            // return a fresh clone
+            return $file->clone();
+
+        });
+    }
+
+    /**
+     * Stores the file meta content on disk
+     *
+     * @return self
+     */
+    public function save(): self
+    {
+        $content = $this->content()->toArray();
+
+        // store main information in the content file
+        $content['template'] = $this->template();
+
+        Data::write($this->contentFile(), $content);
+
+        return $this;
     }
 
     /**
@@ -170,11 +251,14 @@ trait FileActions
             }
         }
 
-        // get the data values array
-        $values  = $form->values();
-        $strings = $form->strings();
+        return $this->commit('update', [$this, $form->values(), $form->strings()], function ($file, $values, $strings) {
+            $content = $file
+                ->content()
+                ->update($strings)
+                ->toArray();
 
-        return $this->commit('update', $values, $strings);
+            return $file->clone(['content' => $content])->save();
+        });
     }
 
 }
