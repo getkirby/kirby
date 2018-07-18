@@ -15,7 +15,7 @@ class Iterator implements \Iterator
      *
      * @var array
      */
-    protected $data = [];
+    public $data = [];
 
     /**
      * Constructor

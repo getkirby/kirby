@@ -180,7 +180,10 @@ trait HasFiles
      */
     protected function setFiles(array $files = null): self
     {
-        $this->files = $files;
+        if ($files !== null) {
+            $this->files = Files::factory($files, $this);
+        }
+
         return $this;
     }
 

@@ -173,6 +173,10 @@ class Dir
             return false;
         }
 
+        if (static::make(dirname($new), true) !== true) {
+            throw new Exception('The parent directory cannot be created');
+        }
+
         return rename($old, $new);
     }
 

@@ -2,9 +2,11 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The Site class is the root element
@@ -24,7 +26,6 @@ class Site extends Model
     use HasContent;
     use HasErrors;
     use HasFiles;
-    use HasStore;
 
     /**
      * The SiteBlueprint object
@@ -32,6 +33,13 @@ class Site extends Model
      * @var SiteBlueprint
      */
     protected $blueprint;
+
+    /**
+     * A list of all drafts
+     *
+     * @var Pages
+     */
+    protected $drafts;
 
     /**
      * The error page object
@@ -71,11 +79,25 @@ class Site extends Model
     protected $homePageId = 'home';
 
     /**
+     * Cache for the inventory array
+     *
+     * @var array
+     */
+    protected $inventory;
+
+    /**
      * The current page object
      *
      * @var Page
      */
     protected $page;
+
+    /**
+     * The absolute path to the site directory
+     *
+     * @var string
+     */
+    protected $root;
 
     /**
      * The page url
@@ -133,15 +155,47 @@ class Site extends Model
             return $this->children;
         }
 
-        return $this->children = Pages::factory($this->children ?? $this->store()->children(), $this, [
-            'kirby' => $this->kirby(),
-            'site'  => $this,
-        ]);
+        $this->children = new Pages([], $this);
+
+        foreach ($this->inventory()['children'] as $props) {
+            $props['site'] = $this;
+
+            $child = Page::factory($props);
+            $this->children->data[$child->id()] = $child;
+        }
+
+        return $this->children;
     }
 
-    protected function defaultStore()
+    /**
+     * Returns the content object
+     *
+     * @return Content
+     */
+    public function content(): Content
     {
-        return SiteStoreDefault::class;
+        if (is_a($this->content, Content::class) === true) {
+            return $this->content;
+        }
+
+        try {
+            $data = Data::read($this->contentFile());
+        } catch (Throwable $e) {
+            $data = [];
+        }
+
+        return $this->setContent($data)->content();
+    }
+
+    /**
+     * Returns the absolute path to the site's
+     * content text file
+     *
+     * @return string
+     */
+    public function contentFile(): string
+    {
+        return $this->root() . '/site.txt';
     }
 
     /**
@@ -163,10 +217,28 @@ class Site extends Model
      */
     public function drafts(): Pages
     {
-        return Pages::factory($this->store()->drafts(), $this, [
-            'kirby' => $this->kirby(),
-            'site'  => $this,
-        ], PageDraft::class);
+        if (is_a($this->drafts, Pages::class) === true) {
+            return $this->drafts;
+        }
+
+        $url       = $this->url() . '/_drafts';
+        $inventory = Dir::inventory($this->root() . '/_drafts');
+
+        $this->drafts = new Pages([], $this);
+
+        foreach ($inventory['children'] as $props) {
+            $draft = Page::factory([
+                'num'    => $props['num'],
+                'site'   => $this,
+                'slug'   => $props['slug'],
+                'status' => 'draft',
+                'url'    => $url . '/' . $props['slug']
+            ]);
+
+            $this->drafts->data[$draft->id()] = $draft;
+        }
+
+        return $this->drafts;
     }
 
     /**
@@ -194,6 +266,16 @@ class Site extends Model
     }
 
     /**
+     * Checks if the site exists on disk
+     *
+     * @return boolean
+     */
+    public function exists(): bool
+    {
+        return is_dir($this->root()) === true;
+    }
+
+    /**
      * Returns the Files collection
      *
      * @return Files
@@ -204,11 +286,19 @@ class Site extends Model
             return $this->files;
         }
 
-        return $this->files = Files::factory($this->files ?? $this->store()->files(), $this, [
-            'kirby'  => $this->kirby(),
-            'parent' => $this,
-            'site'   => $this,
-        ]);
+        $this->files = new Files([], $this);
+
+        foreach ($this->inventory()['files'] as $filename => $props) {
+            $file = new File([
+                'filename' => $filename,
+                'parent'   => $this,
+                'site'     => $this
+            ]);
+
+            $this->files->data[$file->id()] = $file;
+        }
+
+        return $this->files;
     }
 
     /**
@@ -233,6 +323,17 @@ class Site extends Model
     public function homePageId(): string
     {
         return $this->homePageId ?? 'home';
+    }
+
+    /**
+     * Creates an inventory of all files
+     * and children in the site directory
+     *
+     * @return array
+     */
+    public function inventory(): array
+    {
+        return $this->inventory ?? $this->inventory = Dir::inventory($this->root());
     }
 
     /**
@@ -318,7 +419,7 @@ class Site extends Model
      */
     public function root(): string
     {
-        return $this->kirby()->root('content');
+        return $this->root = $this->root ?? $this->kirby()->root('content');
     }
 
     /**

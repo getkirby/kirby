@@ -201,6 +201,10 @@ trait FileActions
      */
     public function save(): self
     {
+        if ($this->exists() === false) {
+            return $this;
+        }
+
         $content = $this->content()->toArray();
 
         // store main information in the content file

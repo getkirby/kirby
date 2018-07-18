@@ -3,9 +3,11 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The Page class is the heart and soul of
@@ -22,15 +24,11 @@ class Page extends Model
 {
     use PageActions;
     use HasChildren;
-    use HasContent {
-        update as protected updateContent;
-    }
+    use HasContent;
     use HasErrors;
     use HasFiles;
     use HasMethods;
     use HasSiblings;
-    use HasStore;
-    use HasTemplate;
 
     /**
      * Registry with all Page models
@@ -67,6 +65,11 @@ class Page extends Model
     protected $blueprint;
 
     /**
+     * @var string
+     */
+    protected $contentFile;
+
+    /**
      * Sorting number + slug
      *
      * @var string
@@ -86,6 +89,11 @@ class Page extends Model
      * @var string
      */
     protected $id;
+
+    /**
+     * @var array
+     */
+    protected $inventory;
 
     /**
      * The sorting number
@@ -114,6 +122,13 @@ class Page extends Model
      * @var string
      */
     protected $slug;
+
+    /**
+     * The intended page template
+     *
+     * @var string
+     */
+    protected $template;
 
     /**
      * The page url
@@ -269,11 +284,19 @@ class Page extends Model
             return $this->children;
         }
 
-        return $this->children = Children::factory($this->children ?? $this->store()->children(), $this, [
-            'kirby'  => $this->kirby(),
-            'site'   => $this->site(),
-            'parent' => $this
-        ]);
+        $site = $this->site();
+
+        $this->children = new Children([], $this);
+
+        foreach ($this->inventory()['children'] as $props) {
+            $props['parent'] = $this;
+            $props['site']   = $site;
+
+            $child = Page::factory($props);
+            $this->children->data[$child->id()] = $child;
+        }
+
+        return $this->children;
     }
 
     /**
@@ -303,16 +326,42 @@ class Page extends Model
             return $this->collection;
         }
 
-        if ($parent = $this->parent()) {
+        if ($parent = $this->parentModel()) {
             return $this->collection = $parent->children();
         }
 
         return $this->collection = new Pages([$this]);
     }
 
-    protected function defaultStore()
+    /**
+     * Returns the content object
+     *
+     * @return Content
+     */
+    public function content(): Content
     {
-        return PageStoreDefault::class;
+        if (is_a($this->content, Content::class) === true) {
+            return $this->content;
+        }
+
+        try {
+            $data = Data::read($this->contentFile());
+        } catch (Throwable $e) {
+            $data = [];
+        }
+
+        return $this->setContent($data)->content();
+    }
+
+    /**
+     * Returns the content text file
+     * which is found by the inventory method
+     *
+     * @return string|null
+     */
+    public function contentFile(): ?string
+    {
+        return $this->contentFile = $this->contentFile ?? $this->inventory()['content'];
     }
 
     /**
@@ -355,17 +404,36 @@ class Page extends Model
     }
 
     /**
-     * Return all drafts for the page
+     * Return all drafts for the site
      *
      * @return Children
      */
     public function drafts(): Children
     {
-        return Children::factory($this->store()->drafts(), $this, [
-            'kirby'  => $this->kirby(),
-            'site'   => $this->site(),
-            'parent' => $this
-        ], PageDraft::class);
+        if (is_a($this->drafts, Children::class) === true) {
+            return $this->drafts;
+        }
+
+        $inventory = Dir::inventory($this->root() . '/_drafts');
+        $site      = $this->site();
+        $url       = $this->url() . '/_drafts';
+
+        $this->drafts = new Children([], $this);
+
+        foreach ($inventory['children'] as $props) {
+            $draft = Page::factory([
+                'num'    => $props['num'],
+                'parent' => $this,
+                'site'   => $site,
+                'slug'   => $props['slug'],
+                'status' => 'draft',
+                'url'    => $url . '/' . $props['slug']
+            ]);
+
+            $this->drafts->data[$draft->id()] = $draft;
+        }
+
+        return $this->drafts;
     }
 
     /**
@@ -387,13 +455,13 @@ class Page extends Model
     }
 
     /**
-     * Checks if the page exists in the store
+     * Checks if the page exists on disk
      *
      * @return bool
      */
     public function exists(): bool
     {
-        return $this->store()->exists();
+        return is_dir($this->page()->root()) === true;
     }
 
     /**
@@ -422,11 +490,21 @@ class Page extends Model
             return $this->files;
         }
 
-        return $this->files = Files::factory($this->files ?? $this->store()->files(), $this, [
-            'kirby'  => $this->kirby(),
-            'parent' => $this,
-            'site'   => $this->site(),
-        ]);
+        $site = $this->site();
+
+        $this->files = new Files([], $this);
+
+        foreach ($this->inventory()['files'] as $filename => $props) {
+            $file = new File([
+                'filename' => $filename,
+                'parent'   => $this,
+                'site'     => $site
+            ]);
+
+            $this->files->data[$file->id()] = $file;
+        }
+
+        return $this->files;
     }
 
     /**
@@ -481,6 +559,17 @@ class Page extends Model
     public function id(): string
     {
         return $this->id;
+    }
+
+    /**
+     * Returns the inventory of files
+     * children and content files
+     *
+     * @return array
+     */
+    public function inventory(): array
+    {
+        return $this->inventory = $this->inventory ?? Dir::inventory($this->root());
     }
 
     /**
@@ -720,7 +809,7 @@ class Page extends Model
      */
     public function modified(string $format = 'U')
     {
-        return date($format, $this->store()->modified());
+        return date($format, filemtime($this->contentFile()));
     }
 
     /**
@@ -996,6 +1085,18 @@ class Page extends Model
     }
 
     /**
+     * Sets the intended template
+     *
+     * @param string $template
+     * @return self
+     */
+    protected function setTemplate(string $template = null): self
+    {
+        $this->template = $template ? strtolower($template) : null;
+        return $this;
+    }
+
+    /**
      * Sets the Url
      *
      * @param string $url
@@ -1038,6 +1139,16 @@ class Page extends Model
         }
 
         return 'listed';
+    }
+
+    /**
+     * Returns the final template
+     *
+     * @return string
+     */
+    public function template(): string
+    {
+        return $this->template = $this->template ?? $this->inventory()['template'];
     }
 
     /**

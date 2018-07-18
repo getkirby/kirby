@@ -24,23 +24,6 @@ trait HasChildren
     }
 
     /**
-     * Returns the Children collection
-     *
-     * Overwrite this for specific Children
-     * fetching logic for each model.
-     *
-     * @return Pages|Children
-     */
-    public function children()
-    {
-        if (is_a($this->children, Pages::class)) {
-            return $this->children;
-        }
-
-        return $this->children = new Pages([]);
-    }
-
-    /**
      * Finds one or multiple children by id
      *
      * @param string ...$arguments
@@ -139,7 +122,10 @@ trait HasChildren
      */
     protected function setChildren(array $children = null)
     {
-        $this->children = $children;
+        if ($children !== null) {
+            $this->children = Children::factory($children, $this);
+        }
+
         return $this;
     }
 }
