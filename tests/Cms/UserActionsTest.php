@@ -5,6 +5,9 @@ namespace Kirby\Cms;
 class UserActionsTest extends TestCase
 {
 
+    protected $app;
+    protected $fixtures;
+
     public function setUp()
     {
         $this->app = new App([
@@ -18,7 +21,7 @@ class UserActionsTest extends TestCase
             ],
             'roots' => [
                 'index'    => '/dev/null',
-                'accounts' => $accounts = __DIR__ . '/fixtures/users',
+                'accounts' => $this->fixtures = __DIR__ . '/fixtures/UserActionsTest',
             ],
             'user'  => 'admin@domain.com',
             'users' => [
@@ -33,13 +36,13 @@ class UserActionsTest extends TestCase
             ],
         ]);
 
-        Dir::remove($accounts);
+        Dir::remove($this->fixtures);
 
     }
 
     public function tearDown()
     {
-        Dir::remove(__DIR__ . '/fixtures/users');
+        Dir::remove($this->fixtures);
     }
 
     public function testChangeEmail()

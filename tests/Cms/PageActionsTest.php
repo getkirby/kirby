@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
 class PageActionsTest extends TestCase
@@ -127,7 +128,14 @@ class PageActionsTest extends TestCase
 
     public function testCreateFile()
     {
+        F::write($source = $this->fixtures . '/source.md', '');
 
+        $file = $this->site()->find('test')->createFile([
+            'filename' => 'test.md',
+            'source'   => $source
+        ]);
+
+        $this->assertEquals('test.md', $file->filename());
     }
 
     public function testCreateNum()
