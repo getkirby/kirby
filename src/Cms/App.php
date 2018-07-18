@@ -568,7 +568,6 @@ class App extends Component
             'errorPageId' => $this->options['error'] ?? 'error',
             'homePageId'  => $this->options['home']  ?? 'home',
             'kirby'       => $this,
-            'store'       => SiteStore::class,
             'url'         => $this->url('index'),
         ]);
     }

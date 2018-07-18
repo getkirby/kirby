@@ -18,9 +18,6 @@ class Users extends Collection
 
     public function create(array $data)
     {
-        // move this into a UsersStore class
-        $data['store'] = UserStore::class;
-
         return User::create($data);
     }
 
@@ -57,7 +54,6 @@ class Users extends Collection
 
             $user = new User([
                 'email' => $userDirectory,
-                'store' => UserStore::class
             ] + $inject);
 
             $users->set($user->id(), $user);
