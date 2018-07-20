@@ -142,7 +142,7 @@ export default {
     if (self === true) {
       breadcrumb.push({
         label: page.slug,
-        link: this.link(page.id)
+        link: this.link(page.id) + '?' + new Date().getTime(),
       });
     }
 

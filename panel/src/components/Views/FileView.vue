@@ -36,7 +36,7 @@
       <kirby-tabs
         v-if="file.id"
         ref="tabs"
-        :key="'file-' + file.id + '-tabs'"
+        :key="'file-' + file.id + '-tabs-' + new Date().getTime()"
         :parent="$api.files.url(file.parent.id, file.filename)"
         :tabs="tabs"
       />

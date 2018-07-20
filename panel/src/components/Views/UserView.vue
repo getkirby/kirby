@@ -67,7 +67,7 @@
       <kirby-tabs
         v-if="user && tabs.length"
         ref="tabs"
-        :key="'user-' + user.id + '-tabs'"
+        :key="'user-' + user.id + '-tabs-' + new Date().getTime()"
         :parent="'users/' + user.id"
         :tabs="tabs"
         @tab="tab = $event"

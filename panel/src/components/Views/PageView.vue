@@ -42,7 +42,7 @@
     <kirby-tabs
       v-if="page.id"
       ref="tabs"
-      :key="'page-' + page.id + '-tabs'"
+      :key="'page-' + page.id + '-tabs-' + new Date().getTime()"
       :parent="$api.pages.url(page.id)"
       :blueprint="blueprint"
       :tabs="tabs"
