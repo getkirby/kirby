@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "588d55cc51f4d2cde417c025e80e856e",
-    "content-hash": "06e58a30a206e728ce642550ebb7296e",
+    "hash": "3028bc0690ecbcfc4efd9a9b30cf65d8",
+    "content-hash": "bb0ede88c7c4bd4401e0966c1d45b90e",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -1740,12 +1740,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "36101dc9c31b9c49ad41f20de48fc1af8c34e5f8"
+                "reference": "2d53bd5ae8ec6f81bb3be9d397f1f4cfac69ff97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/36101dc9c31b9c49ad41f20de48fc1af8c34e5f8",
-                "reference": "36101dc9c31b9c49ad41f20de48fc1af8c34e5f8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2d53bd5ae8ec6f81bb3be9d397f1f4cfac69ff97",
+                "reference": "2d53bd5ae8ec6f81bb3be9d397f1f4cfac69ff97",
                 "shasum": ""
             },
             "require": {
@@ -1816,7 +1816,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-07-13 03:31:38"
+            "time": "2018-07-19 06:58:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
