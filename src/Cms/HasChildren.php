@@ -68,7 +68,7 @@ trait HasChildren
 
         $inventory = Dir::inventory($this->root() . '/_drafts');
 
-        return $this->drafts = Pages::factory($inventory['children'], $this);
+        return $this->drafts = Pages::factory($inventory['children'], $this, PageDraft::class);
     }
 
     /**
