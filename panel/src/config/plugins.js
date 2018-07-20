@@ -1,5 +1,6 @@
 import Vue from "vue";
 import auth from "./auth.js";
+import store from "./store.js";
 import { ucfirst, lcfirst } from "@/ui/helpers/stringCase.js";
 
 const registerComponent = (name, component) => {
@@ -17,10 +18,7 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
 
 Object.entries(window.panel.plugins.fields).forEach(([name, options]) => {
   if (!options.template && !options.render) {
-    window.panel.error(
-      "Broken plugin field",
-      `No template or render method provided when loading plugin field "${name}". The field has not been registered.`
-    );
+    store.dispatch("notification/error", `No template or render method provided when loading plugin field "${name}". The field has not been registered.`);
     return;
   }
 
@@ -43,10 +41,7 @@ Object.entries(window.panel.plugins.translations).forEach(
 Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
   // Check for all required properties
   if (!options.component) {
-    window.panel.error(
-      "Broken plugin view",
-      `No view component provided when loading view "${name}". The view has not been registered.`
-    );
+    store.dispatch("notification/error", `No view component provided when loading view "${name}". The view has not been registered.`);
     delete window.panel.plugins.views[name];
     return;
   }
