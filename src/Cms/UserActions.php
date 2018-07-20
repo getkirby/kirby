@@ -132,7 +132,13 @@ trait UserActions
      */
     public static function create(array $props = null): self
     {
-        $user = new static($props);
+        $data = $props;
+
+        if (isset($props['password']) === true) {
+            $data['password'] = static::hashPassword($props['password']);
+        }
+
+        $user = new static($data);
 
         return $user->commit('create', [$user, $props], function ($user, $props) {
 

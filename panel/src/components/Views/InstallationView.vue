@@ -80,7 +80,8 @@ export default {
           type: "email",
           link: false,
           placeholder: this.$t("user.email.placeholder"),
-          required: true
+          required: true,
+          autofocus: true
         },
         password: {
           label: this.$t("user.password"),
