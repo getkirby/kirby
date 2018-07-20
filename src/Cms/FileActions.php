@@ -33,7 +33,6 @@ trait FileActions
         }
 
         return $this->commit('changeName', [$this, $name], function ($oldFile, $name) {
-
             $newFile = $oldFile->clone([
                 'filename' => $name . '.' . $oldFile->extension()
             ]);
@@ -59,7 +58,6 @@ trait FileActions
             $newFile->publish();
 
             return $newFile;
-
         });
     }
 
@@ -129,7 +127,6 @@ trait FileActions
 
             // return a fresh clone
             return $file->clone();
-
         });
     }
 
@@ -190,7 +187,6 @@ trait FileActions
 
             // return a fresh clone
             return $file->clone();
-
         });
     }
 
@@ -264,5 +260,4 @@ trait FileActions
             return $file->clone(['content' => $content])->save();
         });
     }
-
 }

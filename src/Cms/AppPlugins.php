@@ -311,7 +311,6 @@ trait AppPlugins
         $loaded = [];
 
         foreach (Dir::read($root) as $dirname) {
-
             if (in_array(substr($dirname, 0, 1), ['.', '_']) === true) {
                 continue;
             }

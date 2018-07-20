@@ -19,7 +19,6 @@ trait UserActions
     public function changeEmail(string $email): self
     {
         return $this->commit('changeEmail', [$this, $email], function ($user, $email) {
-
             if ($user->exists() === false) {
                 return $user->clone([
                     'email' => $email
@@ -45,7 +44,6 @@ trait UserActions
             return $user->clone([
                 'email' => $email,
             ]);
-
         });
     }
 
@@ -152,7 +150,6 @@ trait UserActions
 
             // write the user data
             return $user->save();
-
         });
     }
 
@@ -164,7 +161,6 @@ trait UserActions
     public function delete(): bool
     {
         return $this->commit('delete', [$this], function ($user) {
-
             if ($user->exists() === false) {
                 return true;
             }
@@ -178,7 +174,6 @@ trait UserActions
             }
 
             return true;
-
         });
     }
 
@@ -235,5 +230,4 @@ trait UserActions
             return $user->clone(['content' => $content])->save();
         });
     }
-
 }

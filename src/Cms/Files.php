@@ -26,7 +26,6 @@ class Files extends Collection
         $kirby      = $parent->kirby();
 
         foreach ($files as $props) {
-
             $props['collection'] = $collection;
             $props['kirby']      = $kirby;
             $props['parent']     = $parent;

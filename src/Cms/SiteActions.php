@@ -149,5 +149,4 @@ trait SiteActions
             return $site->clone(['content' => $content])->save();
         });
     }
-
 }

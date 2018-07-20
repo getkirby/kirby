@@ -28,7 +28,6 @@ trait PageActions
         }
 
         return $this->commit('changeNum', [$this, $num], function ($oldPage, $num) {
-
             $newPage = $oldPage->clone(['num' => $num]);
 
             if ($oldPage->exists() === false) {
@@ -40,7 +39,6 @@ trait PageActions
             }
 
             return $newPage;
-
         });
     }
 
@@ -62,7 +60,6 @@ trait PageActions
         $slug = Str::slug($slug);
 
         return $this->commit('changeSlug', [$this, $slug], function ($oldPage, $slug) {
-
             $newPage = $oldPage->clone(['slug' => $slug]);
 
             if ($oldPage->exists() === false) {
@@ -76,7 +73,6 @@ trait PageActions
             Dir::remove($oldPage->mediaRoot());
 
             return $newPage;
-
         });
     }
 
@@ -105,7 +101,6 @@ trait PageActions
     protected function changeStatusToDraft(): self
     {
         $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
-
             $draft = $page->clone(['num' => null], PageDraft::class);
 
             if ($page->exists() === false) {
@@ -117,7 +112,6 @@ trait PageActions
             }
 
             return $draft;
-
         });
 
         $page->parentModel()->purge();
@@ -182,7 +176,6 @@ trait PageActions
         $transfer = $this->transferData($this->content(), $old, $new);
 
         return $this->commit('changeTemplate', [$this, $template, $transfer['data']], function ($oldPage, $template, $content) {
-
             $newPage = $oldPage->clone([
                 'content'  => $content,
                 'template' => $template
@@ -199,7 +192,6 @@ trait PageActions
             }
 
             return $newPage;
-
         });
     }
 
@@ -268,7 +260,6 @@ trait PageActions
         $page = PageDraft::factory($props);
 
         return $page->commit('create', [$page, $props], function ($page, $props) {
-
             if ($page->exists() === true) {
                 throw new DuplicateException([
                     'key'  => 'page.draft.duplicate',
@@ -283,7 +274,6 @@ trait PageActions
 
             // write the content file
             return $page->clone()->save();
-
         });
     }
 
@@ -363,7 +353,6 @@ trait PageActions
     public function delete(bool $force = false): bool
     {
         $result = $this->commit('delete', [$this, $force], function ($page, $force) {
-
             if ($page->exists() === false) {
                 return true;
             }
@@ -395,7 +384,6 @@ trait PageActions
             }
 
             return true;
-
         });
 
         $this->parentModel()->purge();
@@ -610,5 +598,4 @@ trait PageActions
 
         return $result;
     }
-
 }

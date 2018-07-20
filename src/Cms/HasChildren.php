@@ -186,5 +186,4 @@ trait HasChildren
 
         return $this;
     }
-
 }

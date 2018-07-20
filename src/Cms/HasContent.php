@@ -103,5 +103,4 @@ trait HasContent
         $this->content = $content;
         return $this;
     }
-
 }
