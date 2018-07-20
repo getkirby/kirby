@@ -9,6 +9,7 @@
       ref="input"
       :id="_uid"
       v-bind="$props"
+      type="textarea"
       theme="field"
       v-on="$listeners"
     />
