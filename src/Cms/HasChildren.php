@@ -113,6 +113,16 @@ trait HasChildren
     }
 
     /**
+     * Checks if the model has any drafts
+     *
+     * @return boolean
+     */
+    public function hasDrafts(): bool
+    {
+        return $this->drafts()->count() > 0;
+    }
+
+    /**
      * Deprecated! Use Page::hasUnlistedChildren
      *
      * @return boolean
