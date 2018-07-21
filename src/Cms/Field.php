@@ -110,6 +110,25 @@ class Field
         return $this->toString();
     }
 
+    /**
+     * Checks if the field content is empty
+     *
+     * @return boolean
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->value) === true;
+    }
+
+    /**
+     * Checks if the field content is not empty
+     *
+     * @return boolean
+     */
+    public function isNotEmpty(): bool
+    {
+        return empty($this->value) === false;
+    }
 
     /**
      * Returns the name of the field
@@ -119,6 +138,26 @@ class Field
     public function key(): string
     {
         return $this->key;
+    }
+
+    /**
+     * Provides a fallback if the field value is empty
+     *
+     * @param mixed $fallback
+     * @return self
+     */
+    public function or($fallback = null)
+    {
+        if ($this->isNotEmpty()) {
+            return $this;
+        }
+
+        if (is_a($fallback, Field::class)) {
+            return $fallback;
+        }
+
+        $this->value = $fallback;
+        return $this;
     }
 
     /**

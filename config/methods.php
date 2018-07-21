@@ -19,14 +19,8 @@ return function (App $app) {
     return [
 
         // states
-        'isEmpty' => function ($field) {
-            return empty($field->value);
-        },
         'isFalse' => function ($field) {
             return $field->toBool() === false;
-        },
-        'isNotEmpty' => function ($field) {
-            return $field->isEmpty() === false;
         },
         'isTrue' => function ($field) {
             return $field->toBool() === true;
@@ -140,18 +134,6 @@ return function (App $app) {
         },
         'markdown' => function ($field) use ($app) {
             $field->value = $app->markdown($field->value);
-            return $field;
-        },
-        'or' => function ($field, $fallback = null) {
-            if ($field->isNotEmpty()) {
-                return $field;
-            }
-
-            if (is_a($fallback, Field::class)) {
-                return $fallback;
-            }
-
-            $field->value = $fallback;
             return $field;
         },
 
