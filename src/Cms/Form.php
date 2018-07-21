@@ -25,7 +25,7 @@ class Form extends BaseForm
 
             // add the title field for sites and pages
             if (isset($props['fields']['title']) === false) {
-                if (is_a($model, Page::class) === true || is_a($model, Site::class)) {
+                if (is_a($model, 'Kirby\Cms\Page') === true || is_a($model, 'Kirby\Cms\Site')) {
                     $props['fields']['title'] = [
                         'type' => 'hidden'
                     ];

@@ -23,11 +23,11 @@ class Options
     protected static function aliases(): array
     {
         return [
-            File::class            => 'file',
-            Obj::class             => 'arrayItem',
-            Page::class            => 'page',
-            StructureObject::class => 'structureItem',
-            User::class            => 'user',
+            'Kirby\Cms\File'            => 'file',
+            'Kirby\Toolkit\Obj'         => 'arrayItem',
+            'Kirby\Cms\Page'            => 'page',
+            'Kirby\Cms\StructureObject' => 'structureItem',
+            'Kirby\Cms\User'            => 'user',
         ];
     }
 

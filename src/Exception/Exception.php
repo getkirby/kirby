@@ -33,7 +33,7 @@ class Exception extends \Exception
             parent::__construct($args);
         } else {
             // Define whether message can/should be translated
-            $translate = ($args['translate'] ?? true) === true && class_exists(App::class) === true;
+            $translate = ($args['translate'] ?? true) === true && class_exists('Kirby\Cms\App') === true;
 
             // Define the Exception key
             $key = self::$prefix . '.' . ($args['key'] ?? static::$defaultKey);

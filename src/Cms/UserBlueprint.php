@@ -10,7 +10,7 @@ class UserBlueprint extends Blueprint
 {
     public function options()
     {
-        if (is_a($this->options, UserBlueprintOptions::class) === true) {
+        if (is_a($this->options, 'Kirby\Cms\UserBlueprintOptions') === true) {
             return $this->options;
         }
 

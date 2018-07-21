@@ -95,10 +95,10 @@ class BlueprintSection extends BlueprintObject
     {
         $model = $model ?? $this->model();
         $types = [
-            'page' => Page::class,
-            'site' => Site::class,
-            'file' => File::class,
-            'user' => User::class
+            'page' => 'Kirby\Cms\Page',
+            'site' => 'Kirby\Cms\Site',
+            'file' => 'Kirby\Cms\File',
+            'user' => 'Kirby\Cms\User'
         ];
 
         foreach ($types as $type => $className) {

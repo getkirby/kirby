@@ -21,14 +21,6 @@ class Structure extends Collection
 {
 
     /**
-     * Only accept StructureObjects for
-     * items in the collection. Arrays work too.
-     *
-     * @var string
-     */
-    protected static $accept = StructureObject::class;
-
-    /**
      * The internal setter for collection items.
      * This makes sure that nothing unexpected ends
      * up in the collection. You can pass arrays or
@@ -47,12 +39,8 @@ class Structure extends Collection
             ]);
         }
 
-        if (is_a($object, static::$accept) === false) {
-            throw new InvalidArgumentException(sprintf('Invalid "%s" object in collection', static::$accept));
-        }
-
         // inject the collection for proper navigation
-        $object->setCollection($this);
+        $object->collection = $this;
 
         return parent::__set($object->id(), $object);
     }

@@ -45,7 +45,7 @@ trait AppUsers
         }
 
         // try session in header or cookie
-        if (is_a($session, Session::class) === false) {
+        if (is_a($session, 'Kirby\Session\Session') === false) {
             $session = $this->session(['detect' => true]);
         }
 
@@ -112,7 +112,7 @@ trait AppUsers
             return $this->users()->find($id);
         }
 
-        if (is_a($this->user, User::class) === true) {
+        if (is_a($this->user, 'Kirby\Cms\User') === true) {
             $this->loadTranslation($this->user->language());
             return $this->user;
         }
@@ -141,7 +141,7 @@ trait AppUsers
      */
     public function users(): Users
     {
-        if (is_a($this->users, Users::class) === true) {
+        if (is_a($this->users, 'Kirby\Cms\Users') === true) {
             return $this->users;
         }
 

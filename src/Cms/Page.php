@@ -191,7 +191,7 @@ class Page extends Model
      */
     public function blueprint(): PageBlueprint
     {
-        if (is_a($this->blueprint, PageBlueprint::class) === true) {
+        if (is_a($this->blueprint, 'Kirby\Cms\PageBlueprint') === true) {
             return $this->blueprint;
         }
 
@@ -209,7 +209,7 @@ class Page extends Model
             $blueprints = [];
 
             foreach ($parent->blueprint()->sections() as $section) {
-                if (is_a($section, BlueprintPagesSection::class) === false) {
+                if (is_a($section, 'Kirby\Cms\BlueprintPagesSection') === false) {
                     continue;
                 }
 
@@ -248,7 +248,7 @@ class Page extends Model
         }
 
         // check for a custom ignore rule
-        if (is_a($ignore, Closure::class)) {
+        if (is_a($ignore, 'Closure') === true) {
             if ($ignore($this) === true) {
                 return false;
             }
@@ -287,7 +287,7 @@ class Page extends Model
      */
     public function collection()
     {
-        if (is_a($this->collection, Collection::class)) {
+        if (is_a($this->collection, 'Kirby\Cms\Collection')) {
             return $this->collection;
         }
 
@@ -553,7 +553,7 @@ class Page extends Model
      */
     public function isDraft(): bool
     {
-        return static::class === PageDraft::class;
+        return static::class === 'Kirby\Cms\PageDraft';
     }
 
     /**
@@ -706,7 +706,7 @@ class Page extends Model
         if ($class = (static::$models[$name] ?? null)) {
             $object = new $class($props);
 
-            if (is_a($object, Page::class)) {
+            if (is_a($object, 'Kirby\Cms\Page') === true) {
                 return $object;
             }
         }

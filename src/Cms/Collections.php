@@ -99,7 +99,7 @@ class Collections
         foreach (glob($root . '/*.php') as $file) {
             $collection = require $file;
 
-            if (is_a($collection, Closure::class)) {
+            if (is_a($collection, 'Closure')) {
                 $name = pathinfo($file, PATHINFO_FILENAME);
                 $collections[$name] = $collection;
             }

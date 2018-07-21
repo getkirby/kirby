@@ -46,22 +46,22 @@ class Response extends BaseResponse
         }
 
         // Responses
-        if (is_a($input, BaseResponse::class) === true) {
+        if (is_a($input, 'Kirby\Http\Response') === true) {
             return $input;
         }
 
         // Pages
-        if (is_a($input, Page::class)) {
+        if (is_a($input, 'Kirby\Cms\Page')) {
             return static::page($input, $data, $contentType, $code);
         }
 
         // Files
-        if (is_a($input, File::class)) {
+        if (is_a($input, 'Kirby\Cms\File')) {
             return static::redirect($input->mediaUrl(), 307);
         }
 
         // Exceptions
-        if (is_a($input, Throwable::class)) {
+        if (is_a($input, 'Throwable')) {
             return static::errorPage(array_merge($data, [
                 'errorMessage' => $input->getMessage(),
                 'errorCode'    => $input->getCode(),

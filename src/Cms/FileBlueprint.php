@@ -17,7 +17,7 @@ class FileBlueprint extends Blueprint
 
     public function options()
     {
-        if (is_a($this->options, FileBlueprintOptions::class) === true) {
+        if (is_a($this->options, 'Kirby\Cms\FileBlueprintOptions') === true) {
             return $this->options;
         }
 

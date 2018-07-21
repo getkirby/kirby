@@ -10,7 +10,7 @@ class SiteBlueprint extends Blueprint
 {
     public function options()
     {
-        if (is_a($this->options, SiteBlueprintOptions::class) === true) {
+        if (is_a($this->options, 'Kirby\Cms\SiteBlueprintOptions') === true) {
             return $this->options;
         }
 

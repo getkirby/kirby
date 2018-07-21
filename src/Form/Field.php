@@ -198,7 +198,7 @@ class Field
         $result = [];
 
         foreach ($props as $name => $callback) {
-            if (is_a($callback, Closure::class) === false) {
+            if (is_a($callback, 'Closure') === false) {
                 $result[$name] = $callback;
                 continue;
             }
@@ -292,7 +292,7 @@ class Field
                 continue;
             }
 
-            if (is_a($validation, Closure::class) === true) {
+            if (is_a($validation, 'Closure') === true) {
                 try {
                     $validation->call($this, $this->value());
                 } catch (Exception $e) {

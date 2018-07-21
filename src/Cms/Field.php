@@ -152,7 +152,7 @@ class Field
             return $this;
         }
 
-        if (is_a($fallback, Field::class)) {
+        if (is_a($fallback, 'Kirby\Cms\Field') === true) {
             return $fallback;
         }
 

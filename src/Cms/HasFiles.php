@@ -84,7 +84,7 @@ trait HasFiles
      */
     public function files(): Files
     {
-        if (is_a($this->files, Files::class) === true) {
+        if (is_a($this->files, 'Kirby\Cms\Files') === true) {
             return $this->files;
         }
 

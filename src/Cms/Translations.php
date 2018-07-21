@@ -13,7 +13,6 @@ use Kirby\Toolkit\F;
  */
 class Translations extends Collection
 {
-    protected static $accept = Translation::class;
 
     public static function factory(array $translations)
     {

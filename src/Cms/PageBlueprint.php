@@ -17,7 +17,7 @@ class PageBlueprint extends Blueprint
 
     public function options()
     {
-        if (is_a($this->options, PageBlueprintOptions::class) === true) {
+        if (is_a($this->options, 'Kirby\Cms\PageBlueprintOptions') === true) {
             return $this->options;
         }
 

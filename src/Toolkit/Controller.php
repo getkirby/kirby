@@ -59,7 +59,7 @@ class Controller
 
         $function = require $file;
 
-        if (is_a($function, Closure::class) === false) {
+        if (is_a($function, 'Closure') === false) {
             return null;
         }
 

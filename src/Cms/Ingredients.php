@@ -32,7 +32,7 @@ class Ingredients
     public static function bake(array $ingredients): self
     {
         foreach ($ingredients as $name => $ingredient) {
-            if (is_a($ingredient, Closure::class) === true) {
+            if (is_a($ingredient, 'Closure') === true) {
                 $ingredients[$name] = $ingredient($ingredients);
             }
         }

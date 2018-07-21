@@ -14,7 +14,6 @@ use Kirby\Exception\LogicException;
 
 class BlueprintFilesSection extends BlueprintSection
 {
-    const ACCEPT = Files::class;
 
     use Mixins\BlueprintSectionHeadline;
     use Mixins\BlueprintSectionLayout;
@@ -103,7 +102,7 @@ class BlueprintFilesSection extends BlueprintSection
 
     protected function itemLink($item)
     {
-        if (is_a($item->parent(), Page::class) === true) {
+        if (is_a($item->parent(), 'Kirby\Cms\Page') === true) {
             return '/pages/' . $item->parent()->panelId() . '/files/' . $item->filename();
         }
 
@@ -114,7 +113,7 @@ class BlueprintFilesSection extends BlueprintSection
     {
         $stringTemplateData = [$this->modelType($item) => $item];
 
-        if (is_a($item->parent(), Page::class) === true) {
+        if (is_a($item->parent(), 'Kirby\Cms\Page') === true) {
             $parent = $item->parent()->id();
         } else {
             $parent = null;

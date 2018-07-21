@@ -61,7 +61,7 @@ trait AppTranslations
         $locale = basename($locale);
 
         // prefer loading them from the translations collection
-        if (is_a($this->translations, Translations::class) === true) {
+        if (is_a($this->translations, 'Kirby\Cms\Translations') === true) {
             if ($translation = $this->translations()->find($locale)) {
                 return $translation;
             }
@@ -78,7 +78,7 @@ trait AppTranslations
      */
     public function translations()
     {
-        if (is_a($this->translations, Translations::class) === true) {
+        if (is_a($this->translations, 'Kirby\Cms\Translations') === true) {
             return $this->translations;
         }
 

@@ -105,7 +105,7 @@ class KirbyTag
 
     public function render()
     {
-        if (is_a(static::$types[$this->type]['html'], Closure::class) === true) {
+        if (is_a(static::$types[$this->type]['html'], 'Closure') === true) {
             return static::$types[$this->type]['html']($this, $this);
         }
 

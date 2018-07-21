@@ -11,8 +11,8 @@ use Exception;
 class Darkroom
 {
     public static $types = [
-        'gd' => Darkroom\GdLib::class,
-        'im' => Darkroom\ImageMagick::class,
+        'gd' => 'Kirby\Image\Darkroom\GdLib',
+        'im' => 'Kirby\Image\Darkroom\ImageMagick'
     ];
 
     protected $settings = [];

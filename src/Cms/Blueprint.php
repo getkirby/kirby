@@ -194,7 +194,7 @@ class Blueprint extends BlueprintObject
      */
     public function fields()
     {
-        if (is_a($this->fields, BlueprintCollection::class) === true) {
+        if (is_a($this->fields, 'Kirby\Cms\BlueprintCollection') === true) {
             return $this->fields;
         }
 
@@ -349,7 +349,7 @@ class Blueprint extends BlueprintObject
      */
     public function sections(): BlueprintCollection
     {
-        if (is_a($this->sections, BlueprintCollection::class) === true) {
+        if (is_a($this->sections, 'Kirby\Cms\BlueprintCollection') === true) {
             return $this->sections;
         }
 

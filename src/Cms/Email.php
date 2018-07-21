@@ -95,7 +95,7 @@ class Email
 
     protected function transformFile($file)
     {
-        return $this->transformModel($file, File::class, 'root');
+        return $this->transformModel($file, 'Kirby\Cms\File', 'root');
     }
 
     protected function transformModel($value, $class, $content)
@@ -111,7 +111,7 @@ class Email
         }
 
         // value is an array or collection, call transform on each item
-        if (is_array($value) === true || is_a($value, Collection::class) === true) {
+        if (is_array($value) === true || is_a($value, 'Kirby\Cms\Collection') === true) {
             $models = [];
             foreach ($value as $model) {
                 $models[] = $this->transformModel($model, $class, $content);
@@ -129,6 +129,6 @@ class Email
 
     protected function transformUser($user)
     {
-        return $this->transformModel($user, User::class, 'email');
+        return $this->transformModel($user, 'Kirby\Cms\User', 'email');
     }
 }

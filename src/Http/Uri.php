@@ -374,7 +374,7 @@ class Uri
      */
     public function setPath($path = null): self
     {
-        $this->path = is_a($path, Path::class) ? $path : new Path($path);
+        $this->path = is_a($path, 'Kirby\Http\Path') === true ? $path : new Path($path);
 
         if (($this->props['trailingSlash'] ?? false) === true) {
             $this->path->trailingSlash(true);
@@ -389,7 +389,7 @@ class Uri
      */
     public function setQuery($query = null): self
     {
-        $this->query = is_a($query, Query::class) ? $query : new Query($query);
+        $this->query = is_a($query, 'Kirby\Http\Query') === true ? $query : new Query($query);
         return $this;
     }
 

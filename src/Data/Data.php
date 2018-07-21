@@ -41,9 +41,9 @@ class Data
      * @var array
      */
     public static $handlers = [
-        'json' => Json::class,
-        'yaml' => Yaml::class,
-        'txt'  => Txt::class,
+        'json' => 'Kirby\Data\Json',
+        'yaml' => 'Kirby\Data\Yaml',
+        'txt'  => 'Kirby\Data\Txt'
     ];
 
     /**

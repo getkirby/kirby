@@ -101,7 +101,7 @@ class Api
         }
 
         // lazy-load data wrapped in Closures
-        if (is_a($this->data[$key], Closure::class) === true) {
+        if (is_a($this->data[$key], 'Closure') === true) {
             return $this->data[$key]->call($this, ...$args);
         }
 
@@ -170,7 +170,7 @@ class Api
 
     public function resolve($object)
     {
-        if (is_a($object, Model::class) === true || is_a($object, Collection::class) === true) {
+        if (is_a($object, 'Kirby\Api\Model') === true || is_a($object, 'Kirby\Api\Collection') === true) {
             return $object;
         }
 
@@ -252,7 +252,7 @@ class Api
         } catch (Throwable $e) {
             error_log($e);
 
-            if (is_a($e, \Kirby\Exception\Exception::class) === true) {
+            if (is_a($e, 'Kirby\Exception\Exception') === true) {
                 $result = ['status' => 'error'] + $e->toArray();
             } else {
                 $result = [

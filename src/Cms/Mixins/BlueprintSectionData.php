@@ -48,7 +48,7 @@ trait BlueprintSectionData
     {
         $parent = $this->parent();
 
-        if (is_a($parent, Page::class) === true) {
+        if (is_a($parent, 'Kirby\Cms\Page') === true) {
             return $parent->id();
         }
 
@@ -154,7 +154,7 @@ trait BlueprintSectionData
             $imageSource = (new Query($imageSource, $data))->result();
         }
 
-        if (is_a($imageSource, File::class) === true && $imageSource->type() === 'image') {
+        if (is_a($imageSource, 'Kirby\Cms\File') === true && $imageSource->type() === 'image') {
             $url  = $this->layout() === 'list' ? $imageSource->crop(100)->url() : $imageSource->resize(400, 400)->url();
             $url .= '?t=' . $imageSource->modified();
 
@@ -218,7 +218,7 @@ trait BlueprintSectionData
             return $this->linkForModel($parent);
         }
 
-        if ($parentClass === Page::class && $parent->is($model) === false) {
+        if ($parentClass === 'Kirby\Cms\Page' && $parent->is($model) === false) {
             return $this->linkForModel($parent);
         }
 
@@ -227,15 +227,15 @@ trait BlueprintSectionData
 
     protected function linkForModel($model)
     {
-        if (is_a($model, Page::class) === true) {
+        if (is_a($model, 'Kirby\Cms\Page') === true) {
             return '/pages/' . str_replace('/', '+', $model->id());
         }
 
-        if (is_a($model, Site::class) === true) {
+        if (is_a($model, 'Kirby\Cms\Site') === true) {
             return '/pages';
         }
 
-        if (is_a($model, User::class) === true) {
+        if (is_a($model, 'Kirby\Cms\User') === true) {
             return '/users/' . $model->id();
         }
     }

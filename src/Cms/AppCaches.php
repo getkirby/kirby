@@ -2,10 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cache\ApcuCache;
 use Kirby\Cache\Cache;
-use Kirby\Cache\FileCache;
-use Kirby\Cache\MemCached;
 
 use Kirby\Exception\InvalidArgumentException;
 
@@ -29,9 +26,9 @@ trait AppCaches
         // TODO: make this configurable
         $type  = strtolower($options['type']);
         $types = [
-            'apcu'      => ApcuCache::class,
-            'file'      => FileCache::class,
-            'memcached' => MemCached::class,
+            'apcu'      => 'Kirby\Cache\ApcuCache',
+            'file'      => 'Kirby\Cache\FileCache',
+            'memcached' => 'Kirby\Cache\MemCache',
         ];
 
         if (array_key_exists($type, $types) === false) {

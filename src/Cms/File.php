@@ -156,7 +156,7 @@ class File extends Model
      */
     public function blueprint(): FileBlueprint
     {
-        if (is_a($this->blueprint, FileBlueprint::class) === true) {
+        if (is_a($this->blueprint, 'Kirby\Cms\FileBlueprint') === true) {
             return $this->blueprint;
         }
 
@@ -170,7 +170,7 @@ class File extends Model
      */
     public function collection(): Files
     {
-        if (is_a($this->collection, Files::class) === true) {
+        if (is_a($this->collection, 'Kirby\Cms\Files') === true) {
             return $this->collection;
         }
 
@@ -184,7 +184,7 @@ class File extends Model
      */
     public function content(): Content
     {
-        if (is_a($this->content, Content::class) === true) {
+        if (is_a($this->content, 'Kirby\Cms\Content') === true) {
             return $this->content;
         }
 
@@ -291,7 +291,7 @@ class File extends Model
             return $this->id;
         }
 
-        if (is_a($this->parent(), Page::class) === true) {
+        if (is_a($this->parent(), 'Kirby\Cms\Page') === true) {
             return $this->id = $this->parent()->id() . '/' . $this->filename();
         }
 
@@ -360,7 +360,7 @@ class File extends Model
      */
     public function page()
     {
-        return is_a($this->parent(), Page::class) === true ? $this->parent() : null;
+        return is_a($this->parent(), 'Kirby\Cms\Page') === true ? $this->parent() : null;
     }
 
     /**
@@ -392,7 +392,7 @@ class File extends Model
      */
     public function parents(): Pages
     {
-        if (is_a($this->parent(), Page::class) === true) {
+        if (is_a($this->parent(), 'Kirby\Cms\Page') === true) {
             return $this->parent()->parents()->prepend($this->parent()->id(), $this->parent());
         }
 
@@ -483,7 +483,7 @@ class File extends Model
      */
     public function site(): Site
     {
-        return is_a($this->parent(), Site::class) === true ? $this->parent() : $this->kirby()->site();
+        return is_a($this->parent(), 'Kirby\Cms\Site') === true ? $this->parent() : $this->kirby()->site();
     }
 
     /**

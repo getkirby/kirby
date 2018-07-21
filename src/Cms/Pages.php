@@ -92,13 +92,13 @@ class Pages extends Collection
      * @param string $class
      * @return Pages
      */
-    public static function factory(array $pages, Model $model = null, string $class = Page::class)
+    public static function factory(array $pages, Model $model = null, string $class = 'Kirby\Cms\Page')
     {
         $model    = $model ?? App::instance()->site();
         $children = new static([], $model);
         $kirby    = $model->kirby();
 
-        if (is_a($model, Page::class) === true) {
+        if (is_a($model, 'Kirby\Cms\Page') === true) {
             $parent = $model;
             $site   = $model->site();
         } else {
@@ -151,7 +151,7 @@ class Pages extends Collection
         $page = $this->get($id);
 
         if (!$page) {
-            $start = is_a($this->parent, Page::class) === true ? $this->parent->id() : '';
+            $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
             $page  = $this->findByIdRecursive($id, $start);
         }
 
@@ -231,7 +231,7 @@ class Pages extends Collection
      */
     public function index(): Pages
     {
-        if (is_a($this->index, Pages::class) === true) {
+        if (is_a($this->index, 'Kirby\Cms\Pages') === true) {
             return $this->index;
         }
 
@@ -311,7 +311,7 @@ class Pages extends Collection
         }
 
         // append a single page
-        if (is_a($args[0], Page::class) === true) {
+        if (is_a($args[0], 'Kirby\Cms\Page') === true) {
             $collection = clone $this;
             return $collection->set($args[0]->id(), $args[0]);
         }

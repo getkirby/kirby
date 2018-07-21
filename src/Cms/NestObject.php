@@ -17,7 +17,7 @@ class NestObject extends Obj
         $result = [];
 
         foreach ((array)$this as $key => $value) {
-            if (is_a($value, Field::class) === true) {
+            if (is_a($value, 'Kirby\Cms\Field') === true) {
                 $result[$key] = $value->value();
                 continue;
             }

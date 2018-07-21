@@ -28,7 +28,7 @@ class Collection
         $this->view  = $schema['view'] ?? null;
 
         if ($data === null) {
-            if (is_a($schema['default'] ?? null, Closure::class) === false) {
+            if (is_a($schema['default'] ?? null, 'Closure') === false) {
                 throw new Exception('Missing collection data');
             }
 

@@ -76,7 +76,7 @@ class Component
 
     public function toArray()
     {
-        if (is_a($this->options['toArray'] ?? null, Closure::class) === true) {
+        if (is_a($this->options['toArray'] ?? null, 'Closure') === true) {
             return $this->options['toArray']->call($this);
         }
 

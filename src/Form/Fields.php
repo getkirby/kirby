@@ -28,7 +28,7 @@ class Fields extends Collection
             $field = new Field($field);
         }
 
-        if (is_a($field, Field::class) === false) {
+        if (is_a($field, 'Kirby\Form\Field') === false) {
             throw new InvalidArgumentException('Invalid Field object in Fields collection');
         }
 

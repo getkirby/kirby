@@ -120,7 +120,7 @@ class Site extends Model
      */
     public function blueprint(): SiteBlueprint
     {
-        if (is_a($this->blueprint, SiteBlueprint::class) === true) {
+        if (is_a($this->blueprint, 'Kirby\Cms\SiteBlueprint') === true) {
             return $this->blueprint;
         }
 
@@ -145,7 +145,7 @@ class Site extends Model
      */
     public function errorPage()
     {
-        if (is_a($this->errorPage, Page::class) === true) {
+        if (is_a($this->errorPage, 'Kirby\Cms\Page') === true) {
             return $this->errorPage;
         }
 
@@ -195,7 +195,7 @@ class Site extends Model
      */
     public function homePage()
     {
-        if (is_a($this->homePage, Page::class) === true) {
+        if (is_a($this->homePage, 'Kirby\Cms\Page') === true) {
             return $this->homePage;
         }
 
@@ -261,7 +261,7 @@ class Site extends Model
             return $this->find($path);
         }
 
-        if (is_a($this->page, Page::class) === true) {
+        if (is_a($this->page, 'Kirby\Cms\Page') === true) {
             return $this->page;
         }
 
@@ -341,7 +341,7 @@ class Site extends Model
      */
     public function setErrorPage(Page $errorPage = null): self
     {
-        if (is_a($this->errorPage, Page::class) === true) {
+        if (is_a($this->errorPage, 'Kirby\Cms\Page') === true) {
             throw new LogicException('The error page has already been set');
         }
 
@@ -372,7 +372,7 @@ class Site extends Model
      */
     public function setHomePage(Page $homePage = null): self
     {
-        if (is_a($this->homePage, Page::class) === true) {
+        if (is_a($this->homePage, 'Kirby\Cms\Page') === true) {
             throw new LogicException('The home page has already been set');
         }
 
@@ -480,7 +480,7 @@ class Site extends Model
         }
 
         // handle invalid pages
-        if (is_a($page, Page::class) === false) {
+        if (is_a($page, 'Kirby\Cms\Page') === false) {
             throw new InvalidArgumentException('Invalid page object');
         }
 

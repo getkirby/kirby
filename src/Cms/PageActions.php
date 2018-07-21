@@ -101,7 +101,7 @@ trait PageActions
     protected function changeStatusToDraft(): self
     {
         $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
-            $draft = $page->clone(['num' => null], PageDraft::class);
+            $draft = $page->clone(['num' => null], 'Kirby\Cms\PageDraft');
 
             if ($page->exists() === false) {
                 return $draft;
@@ -398,7 +398,7 @@ trait PageActions
             return $this;
         }
 
-        $page = $this->clone([], Page::class);
+        $page = $this->clone([], 'Kirby\Cms\Page');
 
         if ($this->exists() === false) {
             return $page;

@@ -11,7 +11,7 @@ class Media
     public static function link(Model $model, $filename)
     {
         // TODO: this should be refactored when users get normal files
-        if (is_a($model, User::class) === true) {
+        if (is_a($model, 'Kirby\Cms\User') === true) {
             if ($filename === 'profile.jpg') {
                 return $model->avatar()->publish()->url();
             }
@@ -29,7 +29,7 @@ class Media
             $job       = $mediaRoot . '/.jobs/' . $filename . '.json';
             $options   = Data::read($job);
 
-            if (is_a($model, User::class) === true) {
+            if (is_a($model, 'Kirby\Cms\User') === true) {
                 $file = $model->avatar();
             } else {
                 $file = $model->file($options['filename']);

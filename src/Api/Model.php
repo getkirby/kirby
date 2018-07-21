@@ -37,7 +37,7 @@ class Model
         }
 
         if ($data === null) {
-            if (is_a($schema['default'] ?? null, Closure::class) === false) {
+            if (is_a($schema['default'] ?? null, 'Closure') === false) {
                 throw new Exception('Missing model data');
             }
 
@@ -116,7 +116,7 @@ class Model
         $result = [];
 
         foreach ($this->fields as $key => $resolver) {
-            if (array_key_exists($key, $select) === false || is_a($resolver, Closure::class) === false) {
+            if (array_key_exists($key, $select) === false || is_a($resolver, 'Closure') === false) {
                 continue;
             }
 
@@ -126,7 +126,7 @@ class Model
                 $value = $this->api->resolve($value);
             }
 
-            if (is_a($value, Collection::class) === true || is_a($value, Model::class) === true) {
+            if (is_a($value, 'Kirby\Api\Collection') === true || is_a($value, 'Kirby\Api\Model') === true) {
                 $selection = $select[$key];
 
                 if ($subview = $selection['view']) {

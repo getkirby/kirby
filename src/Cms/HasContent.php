@@ -53,7 +53,7 @@ trait HasContent
      */
     public function content(): Content
     {
-        if (is_a($this->content, Content::class) === true) {
+        if (is_a($this->content, 'Kirby\Cms\Content') === true) {
             return $this->content;
         }
 

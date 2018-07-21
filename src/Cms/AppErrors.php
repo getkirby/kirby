@@ -58,7 +58,7 @@ trait AppErrors
 
                 $fatal = $this->option('fatal');
 
-                if (is_a($fatal, Closure::class) === true) {
+                if (is_a($fatal, 'Closure') === true) {
                     echo $fatal($this);
                 } else {
                     include static::$root . '/views/fatal.php';
@@ -76,7 +76,7 @@ trait AppErrors
     {
         $whoops  = new Whoops;
         $handler = new CallbackHandler(function ($exception, $inspector, $run) {
-            if (is_a($exception, Exception::class) === true) {
+            if (is_a($exception, 'Kirby\Exception\Exception') === true) {
                 $httpCode = $exception->getHttpCode();
                 $code     = $exception->getCode();
                 $details  = $exception->getDetails();

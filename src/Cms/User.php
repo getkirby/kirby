@@ -119,7 +119,7 @@ class User extends Model
      */
     public function blueprint()
     {
-        if (is_a($this->blueprint, Blueprint::class) === true) {
+        if (is_a($this->blueprint, 'Kirby\Cms\Blueprint') === true) {
             return $this->blueprint;
         }
 
@@ -141,7 +141,7 @@ class User extends Model
      */
     public function collection(): Users
     {
-        if (is_a($this->collection, Users::class) === true) {
+        if (is_a($this->collection, 'Kirby\Cms\Users') === true) {
             return $this->collection;
         }
 
@@ -458,7 +458,7 @@ class User extends Model
      */
     public function role(): Role
     {
-        if (is_a($this->role, Role::class) === true) {
+        if (is_a($this->role, 'Kirby\Cms\Role') === true) {
             return $this->role;
         }
 
@@ -586,7 +586,7 @@ class User extends Model
         // use passed session options or session object if set
         if (is_array($session) === true) {
             $session = $this->kirby()->session($session);
-        } elseif (is_a($session, Session::class) === false) {
+        } elseif (is_a($session, 'Kirby\Session\Session') === false) {
             $session = $this->kirby()->session(['detect' => true]);
         }
 
