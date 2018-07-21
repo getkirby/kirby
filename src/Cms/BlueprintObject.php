@@ -15,7 +15,7 @@ class BlueprintObject extends Component
      *
      * @var Collection
      */
-    protected $collection;
+    public $collection;
 
     /**
      * @var Page|Site|File|User

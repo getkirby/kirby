@@ -29,13 +29,6 @@ class Pages extends Collection
 {
 
     /**
-     * Only accepts Page objects
-     *
-     * @var string
-     */
-    protected static $accept = Page::class;
-
-    /**
      * Cache for the index
      *
      * @var null|Pages

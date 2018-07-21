@@ -10,7 +10,6 @@ namespace Kirby\Cms;
  */
 class Files extends Collection
 {
-    protected static $accept = File::class;
 
     /**
      * Creates a files collection from an array of props

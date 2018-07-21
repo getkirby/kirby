@@ -24,13 +24,6 @@ class Collection extends BaseCollection
 {
 
     /**
-     * Accepts any extension of the Object class
-     *
-     * @var string
-     */
-    protected static $accept = Model::class;
-
-    /**
      * Stores the parent object, which is needed
      * in some collections to get the finder methods right.
      *
@@ -60,14 +53,9 @@ class Collection extends BaseCollection
      */
     public function __set(string $id, $object)
     {
-        if (is_a($object, static::$accept) === false) {
-            throw new InvalidArgumentException('Invalid object in collection. Accepted: ' . static::$accept);
-        }
-
         // inject the collection for proper navigation
-        $object->setCollection($this);
-
-        return parent::__set($object->id(), $object);
+        $object->collection = $this;
+        $this->data[$object->id()] = $object;
     }
 
     /**
@@ -110,7 +98,7 @@ class Collection extends BaseCollection
     {
         $collection = $this->clone();
         foreach ($keys as $key) {
-            if (is_a($key, static::$accept)) {
+            if (is_object($key) === true) {
                 $key = $key->id();
             }
             unset($collection->$key);

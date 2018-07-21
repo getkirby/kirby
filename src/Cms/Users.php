@@ -14,7 +14,6 @@ use Kirby\Toolkit\Str;
  */
 class Users extends Collection
 {
-    protected static $accept = User::class;
 
     public function create(array $data)
     {

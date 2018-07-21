@@ -37,32 +37,6 @@ class CollectionTest extends TestCase
         $this->assertEquals($c, $collection->last());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid object in collection. Accepted: Kirby\Cms\Model
-     */
-    public function testWithInvalidStringItems()
-    {
-        $collection = new Collection([
-            'a',
-            'b',
-            'c'
-        ]);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid object in collection. Accepted: Kirby\Cms\Model
-     */
-    public function testWithInvalidArrayItems()
-    {
-        $collection = new Collection([
-            ['a' => 'a'],
-            ['b' => 'b'],
-            ['c' => 'c'],
-        ]);
-    }
-
     public function testGetAttribute()
     {
         $object     = new MockObject(['id' => 'a']);

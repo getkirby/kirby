@@ -17,7 +17,7 @@ abstract class Model extends Component
      *
      * @var Collection
      */
-    protected $collection;
+    public $collection;
 
     /**
      * The parent Kirby instance
