@@ -107,7 +107,7 @@ trait FileActions
 
         // create the basic file and a test upload object
         $file   = new static($props);
-        $upload = new Upload($props['source']);
+        $upload = new Image($props['source']);
 
         return $file->commit('create', [$file, $upload], function ($file, $upload) {
 
@@ -172,7 +172,7 @@ trait FileActions
      */
     public function replace(string $source): self
     {
-        return $this->commit('replace', [$this, new Upload($source)], function ($file, $upload) {
+        return $this->commit('replace', [$this, new Image($source)], function ($file, $upload) {
 
             // delete all public versions
             $file->unpublish();

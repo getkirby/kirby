@@ -6,6 +6,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Image\Image;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -41,7 +42,7 @@ class FileRules
         return true;
     }
 
-    public static function create(File $file, Upload $upload): bool
+    public static function create(File $file, Image $upload): bool
     {
         if ($file->exists() === true) {
             throw new LogicException('The file exists and cannot be overwritten');
@@ -69,7 +70,7 @@ class FileRules
         return true;
     }
 
-    public static function replace(File $file, Upload $upload): bool
+    public static function replace(File $file, Image $upload): bool
     {
         if ($file->permissions()->replace() !== true) {
             throw new LogicException('The file cannot be replaced');

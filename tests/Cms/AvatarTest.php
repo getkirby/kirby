@@ -22,7 +22,7 @@ class AvatarTest extends TestCase
                 'media'    => static::FIXTURES . '/media',
             ],
             'hooks' => [
-                'avatar.create:before' => function (Avatar $avatar, Upload $upload) {
+                'avatar.create:before' => function (Avatar $avatar, Image $upload) {
                     AvatarTest::$triggered[] = 'avatar.create:before';
                 },
                 'avatar.create:after' => function (Avatar $avatar) {
@@ -34,7 +34,7 @@ class AvatarTest extends TestCase
                 'avatar.delete:after' => function (bool $result) {
                     AvatarTest::$triggered[] = 'avatar.delete:after';
                 },
-                'avatar.replace:before' => function (Avatar $avatar, Upload $upload) {
+                'avatar.replace:before' => function (Avatar $avatar, Image $upload) {
                     AvatarTest::$triggered[] = 'avatar.replace:before';
                 },
                 'avatar.replace:after' => function (Avatar $avatar) {
