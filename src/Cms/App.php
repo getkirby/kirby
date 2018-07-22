@@ -17,32 +17,33 @@ use Kirby\Http\Visitor;
 use Kirby\Image\Darkroom;
 use Kirby\Session\AutoSession as Session;
 use Kirby\Text\KirbyTag;
-use Kirby\Toolkit\Url;
-use Kirby\Toolkit\Url\Query as UrlQuery;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\Url;
 
 /**
  * The App object is a big-ass monolith that's
  * in the center between all the other CMS classes.
  * It's the $kirby object in templates and handles
  */
-class App extends Component
+class App
 {
     use AppCaches;
     use AppErrors;
-    use AppOptions;
     use AppPlugins;
     use AppTranslations;
     use AppUsers;
+    use Properties;
 
     protected static $instance;
     protected static $root;
     protected static $version;
 
     protected $collections;
+    protected $options;
     protected $path;
     protected $roles;
     protected $roots;
@@ -95,6 +96,23 @@ class App extends Component
 
         // set the singleton
         static::$instance = $this;
+    }
+
+    /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return [
+            'version' => $this->version(),
+            'request' => $this->request(),
+            'site'    => $this->site(),
+            'urls'    => $this->urls(),
+            'roots'   => $this->roots(),
+            'options' => $this->options(),
+        ];
     }
 
     /**
@@ -336,6 +354,55 @@ class App extends Component
     public function markdown(string $text = null): string
     {
         return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? []);
+    }
+
+    /**
+     * Load a specific configuration option
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function option(string $key, $default = null)
+    {
+        return $this->options[$key] ?? $default;
+    }
+
+    /**
+     * Returns all configuration options
+     *
+     * @return array
+     */
+    public function options(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * Inject options from Kirby instance props
+     *
+     * @return array
+     */
+    protected function optionsFromProps(array $options = [])
+    {
+        return $this->options = array_replace_recursive($this->options, $options);
+    }
+
+    /**
+     * Load all options from files in site/config
+     *
+     * @return array
+     */
+    protected function optionsFromSystem(): array
+    {
+        $server = $this->server();
+        $root   = $this->root('config');
+
+        $main = (array)F::load($root . '/config.php', []);
+        $host = (array)F::load($root . '/config.' . basename($server->host()) . '.php', []);
+        $addr = (array)F::load($root . '/config.' . basename($server->address()) . '.php', []);
+
+        return $this->options = array_replace_recursive($main, $host, $addr);
     }
 
     /**
