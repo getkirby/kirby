@@ -117,6 +117,22 @@ class Request
     }
 
     /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return [
+            'body'   => $this->body(),
+            'files'  => $this->files(),
+            'method' => $this->method(),
+            'query'  => $this->query(),
+            'url'    => $this->url()
+        ];
+    }
+
+    /**
      * Detects ajax requests
      *
      * @return boolean
