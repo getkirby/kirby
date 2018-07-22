@@ -128,7 +128,7 @@ class Request
             'files'  => $this->files(),
             'method' => $this->method(),
             'query'  => $this->query(),
-            'url'    => $this->url()
+            'url'    => $this->url()->toString()
         ];
     }
 

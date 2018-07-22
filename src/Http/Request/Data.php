@@ -20,6 +20,16 @@ trait Data
 {
 
     /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
      * The data provider method has to be
      * implemented by each class using this Trait
      * and has to return an associative array
