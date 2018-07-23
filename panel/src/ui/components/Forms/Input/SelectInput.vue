@@ -50,7 +50,10 @@ export default {
       }
     },
     required: Boolean,
-    value: [String, Number, Boolean]
+    value: {
+      type: [String, Number, Boolean],
+      default: ""
+    }
   },
   data() {
     return {
