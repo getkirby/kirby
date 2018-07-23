@@ -428,7 +428,10 @@ class Site extends Model
     public function toArray(): array
     {
         return [
+            'children'  => $this->children()->keys(),
+            'content'   => $this->content()->toArray(),
             'errorPage' => $this->errorPage() ? $this->errorPage()->id(): false,
+            'files'     => $this->files()->keys(),
             'homePage'  => $this->homePage() ? $this->homePage()->id(): false,
             'page'      => $this->page() ? $this->page()->id(): false,
             'title'     => $this->title()->value(),

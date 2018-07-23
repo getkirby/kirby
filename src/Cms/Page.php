@@ -37,26 +37,6 @@ class Page extends Model
     public static $models = [];
 
     /**
-     * Properties that should be converted to array
-     *
-     * @var array
-     */
-    protected static $toArray = [
-        'children',
-        'content',
-        'files',
-        'id',
-        'mediaUrl',
-        'mediaRoot',
-        'num',
-        'parent',
-        'slug',
-        'template',
-        'uid',
-        'url'
-    ];
-
-    /**
      * The PageBlueprint object
      *
      * @var PageBlueprint
@@ -1072,6 +1052,29 @@ class Page extends Model
     public function title(): Field
     {
         return $this->content()->get('title')->or($this->slug());
+    }
+
+    /**
+     * Converts the most important
+     * properties to array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'children'  => $this->children()->keys(),
+            'content'   => $this->content()->toArray(),
+            'files'     => $this->files()->keys(),
+            'id'        => $this->id(),
+            'mediaUrl'  => $this->mediaUrl(),
+            'mediaRoot' => $this->mediaRoot(),
+            'num'       => $this->num(),
+            'parent'    => $this->parent() ? $this->parent()->id() : null,
+            'slug'      => $this->slug(),
+            'template'  => $this->template(),
+            'url'       => $this->url()
+        ];
     }
 
     /**
