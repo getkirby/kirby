@@ -1,5 +1,5 @@
 <template>
-  <kirby-headline :data-numbered="numbered" class="kirby-headline-field">
+  <kirby-headline :data-numbered="numbered" size="large" class="kirby-headline-field">
     {{ label }}
   </kirby-headline>
 </template>
@@ -19,10 +19,7 @@ body {
 }
 .kirby-headline-field {
   position: relative;
-  margin-bottom: -0.5rem;
-  padding-top: 3rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px dashed $color-border;
+  padding-top: 1.5rem;
 }
 
 .kirby-headline-field[data-numbered]::before {
@@ -30,7 +27,7 @@ body {
   content: counter(headline-counter, decimal-leading-zero);
   color: $color-focus;
   font-weight: 400;
-  padding-right: .5rem;
+  padding-right: .25rem;
 }
 
 /* don't add the top padding, if the headline is the very first form element */
