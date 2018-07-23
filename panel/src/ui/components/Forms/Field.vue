@@ -5,9 +5,9 @@
     @focusin="$emit('focus', $event)"
   >
     <slot name="header">
-      <header v-if="label || $slots.label || $slots.options" class="kirby-field-header">
+      <header class="kirby-field-header">
         <slot name="label">
-          <label :for="input" class="kirby-field-label">{{ label }} <abbr v-if="required" title="This field is required">*</abbr></label>
+          <label :for="input" class="kirby-field-label">{{ label || " " }} <abbr v-if="required" title="This field is required">*</abbr></label>
         </slot>
         <slot name="options" />
         <slot name="counter">
