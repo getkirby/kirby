@@ -103,7 +103,7 @@ trait FileActions
         }
 
         // prefer the filename from the props
-        $props['filename'] = $props['filename'] ?? basename($props['source']);
+        $props['filename'] = F::safeName($props['filename'] ?? basename($props['source']));
 
         // create the basic file and a test upload object
         $file   = new static($props);
