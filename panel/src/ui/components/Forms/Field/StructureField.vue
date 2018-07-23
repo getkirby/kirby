@@ -79,7 +79,7 @@
       <kirby-dialog
         v-if="!disabled"
         ref="remove"
-        button="Delete"
+        :button="$t('delete')"
         theme="negative"
         @submit="remove"
       >
