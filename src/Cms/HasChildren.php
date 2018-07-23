@@ -186,4 +186,20 @@ trait HasChildren
 
         return $this;
     }
+
+    /**
+     * Sets the Drafts collection
+     *
+     * @param array|null $drafts
+     * @return self
+     */
+    protected function setDrafts(array $drafts = null)
+    {
+        if ($drafts !== null) {
+            $this->drafts = Pages::factory($drafts, $this, 'Kirby\Cms\PageDraft');
+        }
+
+        return $this;
+    }
+
 }

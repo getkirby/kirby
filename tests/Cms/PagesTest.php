@@ -14,6 +14,64 @@ class PagesTest extends TestCase
         ]);
     }
 
+    public function testChildren()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'children' => [
+                    ['slug' => 'aa'],
+                    ['slug' => 'ab']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'children' => [
+                    ['slug' => 'ba'],
+                    ['slug' => 'bb']
+                ]
+            ]
+        ]);
+
+        $expected = [
+            'a/aa',
+            'a/ab',
+            'b/ba',
+            'b/bb',
+        ];
+
+        $this->assertEquals($expected, $pages->children()->keys());
+    }
+
+    public function testDrafts()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'drafts' => [
+                    ['slug' => 'aa'],
+                    ['slug' => 'ab']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'drafts' => [
+                    ['slug' => 'ba'],
+                    ['slug' => 'bb']
+                ]
+            ]
+        ]);
+
+        $expected = [
+            'a/aa',
+            'a/ab',
+            'b/ba',
+            'b/bb',
+        ];
+
+        $this->assertEquals($expected, $pages->drafts()->keys());
+    }
+
     public function testFind()
     {
         $this->assertIsPage($this->pages()->find('a'), 'a');

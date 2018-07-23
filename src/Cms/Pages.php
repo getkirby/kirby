@@ -84,6 +84,24 @@ class Pages extends Collection
     }
 
     /**
+     * Fetch all drafts for all pages in the collection
+     *
+     * @return Pages
+     */
+    public function drafts()
+    {
+        $drafts = new Pages([], $this->parent);
+
+        foreach ($this->data as $pageKey => $page) {
+            foreach ($page->drafts() as $draftKey => $draft) {
+                $drafts->data[$draftKey] = $draft;
+            }
+        }
+
+        return $drafts;
+    }
+
+    /**
      * Creates a pages collection from an array of props
      *
      * @param array $pages
