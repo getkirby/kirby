@@ -62,7 +62,7 @@ class Response
      * @param string  $type
      * @param integer $code
      */
-    public function __construct($body = '', string $type = 'text/html', int $code = 200, array $headers = [], string $charset = 'UTF-8')
+    public function __construct($body = '', string $type = null, int $code = null, array $headers = [], string $charset = 'UTF-8')
     {
         // array construction
         if (is_array($body) === true) {
@@ -76,8 +76,8 @@ class Response
 
         // regular construction
         $this->body    = $body;
-        $this->type    = $type;
-        $this->code    = $code;
+        $this->type    = $type ?? 'text/html';
+        $this->code    = $code ?? 200;
         $this->headers = $headers;
         $this->charset = $charset;
     }
