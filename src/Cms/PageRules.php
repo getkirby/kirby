@@ -172,6 +172,13 @@ class PageRules
 
     public static function create(Page $page): bool
     {
+        if ($page->exists() === true) {
+            throw new DuplicateException([
+                'key'  => 'page.draft.duplicate',
+                'data' => ['slug' => $page->slug()]
+            ]);
+        }
+
         if ($page->permissions()->create() !== true) {
             throw new PermissionException(['key' => 'page.create.permission']);
         }

@@ -4,6 +4,10 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Data\Data;
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentLogicException;
+use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\V;
 

@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentLogicException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
@@ -265,12 +267,6 @@ trait PageActions
         $page = PageDraft::factory($props);
 
         return $page->commit('create', [$page, $props], function ($page, $props) {
-            if ($page->exists() === true) {
-                throw new DuplicateException([
-                    'key'  => 'page.draft.duplicate',
-                    'data' => ['slug' => $page->slug()]
-                ]);
-            }
 
             // create the new page directory
             if (Dir::make($page->root()) !== true) {
