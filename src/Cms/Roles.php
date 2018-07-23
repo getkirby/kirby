@@ -15,7 +15,6 @@ use Kirby\Toolkit\F;
  */
 class Roles extends Collection
 {
-
     public static function factory(array $roles, array $inject = []): self
     {
         $collection = new static;

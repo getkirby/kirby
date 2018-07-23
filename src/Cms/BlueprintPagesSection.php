@@ -12,7 +12,6 @@ use Kirby\Exception\LogicException;
 
 class BlueprintPagesSection extends BlueprintSection
 {
-
     use Mixins\BlueprintSectionHeadline;
     use Mixins\BlueprintSectionLayout;
     use Mixins\BlueprintSectionData;

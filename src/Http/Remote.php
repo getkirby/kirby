@@ -142,7 +142,6 @@ class Remote
             CURLOPT_SSL_VERIFYPEER   => false,
             CURLOPT_HEADER           => false,
             CURLOPT_HEADERFUNCTION   => function ($curl, $header) {
-
                 $parts = Str::split($header, ':');
 
                 if (empty($parts[0]) === false && empty($parts[1]) === false) {
@@ -151,7 +150,6 @@ class Remote
                 }
 
                 return strlen($header);
-
             }
         ];
 
@@ -224,7 +222,6 @@ class Remote
         curl_close($this->curl);
 
         return $this;
-
     }
 
     /**
@@ -236,7 +233,6 @@ class Remote
      */
     public static function get(string $url, array $params = [])
     {
-
         $defaults = [
             'method' => 'GET',
             'data'   => [],
@@ -253,7 +249,6 @@ class Remote
         unset($options['data']);
 
         return new static($url, $options);
-
     }
 
     /**
@@ -333,5 +328,4 @@ class Remote
     {
         return $this->options['url'];
     }
-
 }
