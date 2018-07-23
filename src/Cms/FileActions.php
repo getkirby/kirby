@@ -161,6 +161,18 @@ trait FileActions
     }
 
     /**
+     * Alias for changeName
+     *
+     * @param string $name
+     * @param bool $sanitize
+     * @return self
+     */
+    public function rename(string $name, bool $sanitize = true)
+    {
+        return $this->changeName($name, $sanitize);
+    }
+
+    /**
      * Replaces the file. The source must
      * be an absolute path to a file or a Url.
      * The store handles the replacement so it
