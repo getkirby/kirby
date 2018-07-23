@@ -24,7 +24,7 @@ trait FileActions
     public function changeName(string $name, bool $sanitize = true): self
     {
         if ($sanitize === true) {
-            $name = Str::slug($name);
+            $name = F::safeName($name);
         }
 
         // don't rename if not necessary

@@ -15,6 +15,15 @@ class FTest extends TestCase
 
         // without extension
         $this->assertEquals('uber-genious', F::safeName('über genious'));
+
+        // with leading dash
+        $this->assertEquals('super.jpg', F::safeName('-super.jpg'));
+
+        // with leading underscore
+        $this->assertEquals('super.jpg', F::safeName('_super.jpg'));
+
+        // with leading dot
+        $this->assertEquals('super.jpg', F::safeName('.super.jpg'));
     }
 
 }
