@@ -1,11 +1,14 @@
 <?php
 
 use Kirby\Form\Form;
+use Kirby\Cms\Blueprint;
 
 return [
     'props' => [
         'fields' => function (array $fields) {
-            return $fields;
+            return array_map(function ($field) {
+                return Blueprint::extend($field);
+            }, $fields);
         },
         'min' => function (int $min = null) {
             return $min;
@@ -30,12 +33,7 @@ return [
             return $value;
         },
         'fields' => function () {
-            $form = new Form([
-                'fields' => $this->props['fields'],
-                'model'  => $this->data['model'] ?? null
-            ]);
-
-            return $form->fields()->toArray();
+            return $this->form()->fields()->toArray();
         }
     ],
     'methods' => [
