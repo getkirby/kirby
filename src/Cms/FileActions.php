@@ -62,6 +62,24 @@ trait FileActions
     }
 
     /**
+     * Changes the file's sorting number in the meta file
+     *
+     * @param integer $sort
+     * @return self
+     */
+    public function changeSort(int $sort)
+    {
+        return $this->commit('changeSort', [$this, $sort], function ($file, $sort) {
+            $content = $file
+                ->content()
+                ->update(['sort' => $sort])
+                ->toArray();
+
+            return $file->clone(['content' => $content])->save();
+        });
+    }
+
+    /**
      * Commits a file action, by following these steps
      *
      * 1. checks the action rules
