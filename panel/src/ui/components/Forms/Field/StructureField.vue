@@ -50,7 +50,7 @@
                 class="kirby-structure-item-text"
                 @click="jump(index, fieldName)"
               >
-                <template v-if="item[fieldName]">
+                <template v-if="item[fieldName] !== undefined">
                   <template v-if="field.type === 'user'">
                     {{ item[fieldName].email }}
                   </template>
@@ -87,11 +87,11 @@
       </kirby-dialog>
     </template>
 
-    <kirby-dialog 
-      ref="escapeDialog" 
-      :button="$t('discard')" 
-      theme="negative" 
-      icon="trash" 
+    <kirby-dialog
+      ref="escapeDialog"
+      :button="$t('discard')"
+      theme="negative"
+      icon="trash"
       @submit="discard"
     >
       {{ "Do you really want to discard this item?" | t("structure.discard.confirm") }}
