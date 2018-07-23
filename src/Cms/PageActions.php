@@ -208,7 +208,12 @@ trait PageActions
         }
 
         return $this->commit('changeTitle', [$this, $title], function ($page, $title) {
-            return $page->clone(['content' => ['title' => $title]])->save();
+            $content = $page
+                ->content()
+                ->update(['title' => $title])
+                ->toArray();
+
+            return $page->clone(['content' => $content])->save();
         });
     }
 
