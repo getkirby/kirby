@@ -148,6 +148,7 @@ export default {
   line-height: 1;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
+  min-height: 2.25rem;
 }
 .kirby-card-image,
 .kirby-card-icon {
