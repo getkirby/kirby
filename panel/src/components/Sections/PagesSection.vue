@@ -139,7 +139,7 @@ export default {
         const element = event[type].element;
         const position = event[type].newIndex + 1 + this.pagination.offset;
 
-        this.$api.pages.status(element.id, this.status, position)
+        this.$api.pages.status(element.id, "listed", position)
           .then(() => {
             this.$store.dispatch(
               "notification/success",
