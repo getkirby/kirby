@@ -112,6 +112,20 @@ class PageActionsTest extends TestCase
         $this->assertTrue($page->exists());
     }
 
+    /**
+     * @expectedException Kirby\Exception\DuplicateException
+     */
+    public function testCreateDuplicate()
+    {
+        $page = Page::create([
+            'slug' => 'new-page',
+        ]);
+
+        $page = Page::create([
+            'slug' => 'new-page',
+        ]);
+    }
+
     public function testCreateChild()
     {
         $page    = $this->site()->find('test')->save();
