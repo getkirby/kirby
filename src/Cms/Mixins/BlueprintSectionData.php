@@ -242,7 +242,7 @@ trait BlueprintSectionData
 
     public function originalData()
     {
-        if (is_a($this->originalData, static::ACCEPT) === true) {
+        if ($this->originalData !== null) {
             return $this->originalData;
         }
 
