@@ -172,11 +172,12 @@ class Str
             $string = preg_replace('![' . preg_quote($separator) . ']{2,}!', $separator, $string);
         }
 
-        // trim trailing and leading dashes
-        $string = trim($string, $separator);
-
         // replace slashes with dashes
         $string = str_replace('/', $separator, $string);
+
+        // trim leading and trailing non-word-chars
+        $string = preg_replace('!^[^a-z0-9]+!', '', $string);
+        $string = preg_replace('![^a-z0-9]+$!', '', $string);
 
         return $string;
     }

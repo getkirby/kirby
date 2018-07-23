@@ -523,7 +523,6 @@ class F
         $name          = static::name($string);
         $extension     = static::extension($string);
         $safeName      = Str::slug($name, '-', 'a-z0-9@._-');
-        $safeName      = preg_replace('!^[-_.]!', '', $safeName);
         $safeExtension = empty($extension) === false ? '.' . Str::slug($extension) : '';
 
         return $safeName . $safeExtension;
