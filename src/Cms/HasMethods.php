@@ -13,24 +13,6 @@ trait HasMethods
     public static $methods = [];
 
     /**
-     * Magic caller
-     *
-     * @param string $method
-     * @param array $args
-     * @return mixed
-     */
-    public function __call(string $method, array $arguments = [])
-    {
-        // methods
-        if ($this->hasMethod($method)) {
-            return $this->call($method, $arguments);
-        }
-
-        // return an unmodified object otherwise
-        return $this;
-    }
-
-    /**
      * Calls a registered method class with the
      * passed arguments
      *
@@ -38,7 +20,7 @@ trait HasMethods
      * @param  array  $args
      * @return mixed
      */
-    public function call(string $method, array $args = [])
+    public function callMethod(string $method, array $args = [])
     {
         return static::$methods[$method]->call($this, ...$args);
     }

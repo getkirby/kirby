@@ -36,6 +36,13 @@ class Pages extends Collection
     protected $index = null;
 
     /**
+     * All registered pages methods
+     *
+     * @var array
+     */
+    public static $methods = [];
+
+    /**
      * Returns all audio files of all children
      *
      * @return Files

@@ -23,6 +23,23 @@ use Kirby\Toolkit\Collection as BaseCollection;
 class Collection extends BaseCollection
 {
 
+    use HasMethods;
+
+    /**
+     * Magic getter function
+     *
+     * @param  string $key
+     * @param  mixed  $arguments
+     * @return mixed
+     */
+    public function __call(string $key, $arguments)
+    {
+        // collection methods
+        if ($this->hasMethod($key)) {
+            return $this->callMethod($key, $arguments);
+        }
+    }
+
     /**
      * Stores the parent object, which is needed
      * in some collections to get the finder methods right.

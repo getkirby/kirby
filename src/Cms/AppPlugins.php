@@ -19,12 +19,15 @@ trait AppPlugins
         'components' => [],
         'controllers' => [],
         'fieldMethods' => [],
+        'fileMethods' => [],
+        'filesMethods' => [],
         'fields' => [],
         'hooks' => [],
         'options' => [],
         'pages' => [],
         'pageMethods' => [],
         'pageModels' => [],
+        'pagesMethods' => [],
         'routes' => [],
         'snippets' => [],
         'tags' => [],
@@ -63,6 +66,16 @@ trait AppPlugins
     protected function extendControllers(array $controllers): array
     {
         return $this->extensions['controllers'] = array_merge($this->extensions['controllers'], $controllers);
+    }
+
+    protected function extendFileMethods(array $methods): array
+    {
+        return $this->extensions['fileMethods'] = File::$methods = array_merge(File::$methods, $methods);
+    }
+
+    protected function extendFilesMethods(array $methods): array
+    {
+        return $this->extensions['filesMethods'] = Files::$methods = array_merge(Files::$methods, $methods);
     }
 
     protected function extendFieldMethods(array $methods): array
@@ -117,6 +130,11 @@ trait AppPlugins
     protected function extendPageMethods(array $methods): array
     {
         return $this->extensions['pageMethods'] = Page::$methods = array_merge(Page::$methods, $methods);
+    }
+
+    protected function extendPagesMethods(array $methods): array
+    {
+        return $this->extensions['pagesMethods'] = Pages::$methods = array_merge(Pages::$methods, $methods);
     }
 
     protected function extendPageModels(array $models): array

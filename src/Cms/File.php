@@ -24,6 +24,7 @@ class File extends Model
     use FileActions;
 
     use HasContent;
+    use HasMethods;
     use HasSiblings;
     use HasThumbs;
 
@@ -52,6 +53,13 @@ class File extends Model
      * @var string
      */
     protected $filename;
+
+    /**
+     * All registered file methods
+     *
+     * @var array
+     */
+    public static $methods = [];
 
     /**
      * The parent object
@@ -96,6 +104,11 @@ class File extends Model
 
         if (method_exists($this->asset(), $method)) {
             return $this->asset()->$method(...$arguments);
+        }
+
+        // file methods
+        if ($this->hasMethod($method)) {
+            return $this->callMethod($method, $arguments);
         }
 
         return $this->content()->get($method, $arguments);

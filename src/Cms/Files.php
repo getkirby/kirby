@@ -12,6 +12,13 @@ class Files extends Collection
 {
 
     /**
+     * All registered files methods
+     *
+     * @var array
+     */
+    public static $methods = [];
+
+    /**
      * Creates a files collection from an array of props
      *
      * @param array $files

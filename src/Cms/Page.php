@@ -30,6 +30,13 @@ class Page extends Model
     use HasSiblings;
 
     /**
+     * All registered page methods
+     *
+     * @var array
+     */
+    public static $methods = [];
+
+    /**
      * Registry with all Page models
      *
      * @var array
@@ -132,7 +139,7 @@ class Page extends Model
 
         // page methods
         if ($this->hasMethod($method)) {
-            return $this->call($method, $arguments);
+            return $this->callMethod($method, $arguments);
         }
 
         // return page content otherwise
