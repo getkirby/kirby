@@ -135,7 +135,7 @@ class PageActionsTest extends TestCase
         ]);
 
         $this->assertTrue($subpage->exists());
-        $this->assertEquals('the-template', $subpage->template());
+        $this->assertEquals('the-template', $subpage->intendedTemplate()->name());
         $this->assertEquals('subpage', $subpage->slug());
         $this->assertEquals('test/subpage', $subpage->id());
     }

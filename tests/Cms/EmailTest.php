@@ -80,8 +80,8 @@ class EmailTest extends TestCase
     }
 
     /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The email "subscription" cannot be found
+     * @expectedException        Kirby\Exception\NotFoundException
+     * @expectedExceptionMessage The email template "subscription" cannot be found
      */
     public function testEmailInvalidTemplate()
     {

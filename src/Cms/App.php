@@ -43,6 +43,7 @@ class App
     protected static $version;
 
     protected $collections;
+    public $data = [];
     protected $options;
     protected $path;
     protected $roles;
@@ -221,21 +222,55 @@ class App
      * @param array $arguments
      * @return array
      */
-    public function controller(string $name, array $arguments = []): array
+    public function controller(string $name, array $arguments = [], string $contentType = 'html'): array
     {
         $name = basename(strtolower($name));
 
-        // site controller
-        if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
+        if ($controller = $this->controllerLookup($name, $contentType)) {
             return (array)$controller->call($this, $arguments);
         }
 
-        // registry controller
-        if ($controller = $this->extension('controllers', $name)) {
+        if ($contentType !== 'html') {
+
+            // no luck for a specific representation controller?
+            // let's try the html controller instead
+            if ($controller = $this->controllerLookup($name)) {
+                return (array)$controller->call($this, $arguments);
+            }
+
+        }
+
+        // still no luck? Let's take the site controller
+        if ($controller = $this->controllerLookup('site')) {
             return (array)$controller->call($this, $arguments);
         }
 
         return [];
+    }
+
+    /**
+     * Try to find a controller by name
+     *
+     * @param string $name
+     * @return Closure|null
+     */
+    protected function controllerLookup(string $name, string $contentType = 'html'): ?Controller
+    {
+        if ($contentType !== null && $contentType !== 'html') {
+            $name .= '.' . $contentType;
+        }
+
+        // controller on disk
+        if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
+            return $controller;
+        }
+
+        // registry controller
+        if ($controller = $this->extension('controllers', $name)) {
+            return is_a($controller, Controller::class) ? $controller : new Controller($controller);
+        }
+
+        return null;
     }
 
     /**
@@ -653,9 +688,9 @@ class App
     /**
      * @return Snippet
      */
-    public function snippet(string $name, array $data = []): Snippet
+    public function snippet(string $name, array $data = []): ?string
     {
-        return $this->extensions['components']['snippet']($this, $name, $data);
+        return $this->extensions['components']['snippet']($this, $name, array_merge($this->data, $data));
     }
 
     /**
@@ -671,9 +706,9 @@ class App
     /**
      * @return Template
      */
-    public function template(string $name, array $data = [], string $appendix = null): Template
+    public function template(string $name, string $type = 'html'): Template
     {
-        return $this->extensions['components']['template']($this, $name, $data, $appendix);
+        return $this->extensions['components']['template']($this, $name, $type);
     }
 
     /**

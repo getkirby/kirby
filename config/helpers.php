@@ -415,17 +415,11 @@ function snippet(string $name, $data = [], bool $return = false)
 
     $snippet = App::instance()->snippet($name, $data);
 
-    if ($snippet->exists() === false) {
-        $output = null;
-    } else {
-        $output = $snippet->render();
-    }
-
     if ($return === true) {
-        return $output;
+        return $snippet;
     }
 
-    echo $output;
+    echo $snippet;
 }
 
 /**

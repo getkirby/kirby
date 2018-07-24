@@ -64,7 +64,7 @@ class SiteActionsTest extends TestCase
         ]);
 
         $this->assertEquals('test', $page->slug());
-        $this->assertEquals('test', $page->template());
+        $this->assertEquals('test', $page->intendedTemplate()->name());
     }
 
     public function testCreateFile()

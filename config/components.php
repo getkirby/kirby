@@ -4,12 +4,12 @@ use Kirby\Cms\App;
 use Kirby\Cms\Model;
 use Kirby\Cms\Filename;
 use Kirby\Cms\Response;
-use Kirby\Cms\Snippet;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
 use Kirby\Image\Darkroom;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Tpl as Snippet;
 
 return [
     'file::url' => function (App $kirby, Model $file, array $options = []) {
@@ -73,10 +73,16 @@ return [
         return $smartypants->parse($text);
     },
     'snippet' => function (App $kirby, string $name, array $data = []) {
-        return new Snippet($name, $data);
+        $file = $kirby->root('snippets') . '/' . $name . '.php';
+
+        if (file_exists($file) === false) {
+            $file = $kirby->extensions('snippets')[$name] ?? null;
+        }
+
+        return Snippet::load($file, $data);
     },
-    'template' => function (App $kirby, string $name, array $data = [], string $appendix = null) {
-        return new Template($name, $data, $appendix);
+    'template' => function (App $kirby, string $name, string $type = 'html') {
+        return new Template($name, $type);
     },
     'thumb' => function (App $kirby, string $src, string $dst, array $options) {
 

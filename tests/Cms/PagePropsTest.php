@@ -155,14 +155,14 @@ class PagePropsTest extends TestCase
         $this->assertEquals('default', $page->template());
     }
 
-    public function testTemplate()
+    public function testIntendedTemplate()
     {
         $page = new Page([
             'slug'     => 'test',
             'template' => 'testTemplate'
         ]);
 
-        $this->assertEquals('testtemplate', $page->template());
+        $this->assertEquals('testtemplate', $page->intendedTemplate()->name());
     }
 
     /**

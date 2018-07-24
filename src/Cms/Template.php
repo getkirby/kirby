@@ -5,26 +5,31 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Toolkit\View;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Tpl;
+use Throwable;
 
-class Template extends View
+class Template
 {
-    protected static $type = 'template';
-    protected static $globals = [];
+
+    public static $data = [];
+
     protected $name;
+    protected $type;
 
-    public function __construct(string $name, array $data = [], string $contentType = null)
+    public function __construct(string $name, string $type = 'html')
     {
-        $this->data = $data;
         $this->name = strtolower($name);
-
-        if ($contentType !== null && $contentType !== 'html') {
-            $this->name .= '.' . $contentType;
-        }
+        $this->type = $type;
     }
 
-    public function data(): array
+    public function __toString(): string
     {
-        return array_merge(static::$globals, $this->data);
+        return $this->name;
+    }
+
+    public function exists(): bool
+    {
+        return file_exists($this->file());
     }
 
     public function extension(): string
@@ -32,28 +37,16 @@ class Template extends View
         return 'php';
     }
 
-    public function file()
+    public function file(): ?string
     {
+        $type = $this->type();
+        $name = $type !== null && $type !== 'html' ? $this->name() . '.' . $type : $this->name();
+
         try {
-            return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
+            return F::realpath($this->root() . '/' . $name . '.' . $this->extension(), $this->root());
         } catch (Exception $e) {
-            // try to load the template from the registry
-            return App::instance()->extension(static::$type . 's', $this->name());
+            return App::instance()->extension('templates', $name);
         }
-    }
-
-    public static function globals(array $globals = null): array
-    {
-        if ($globals === null) {
-            return static::$globals;
-        }
-
-        return static::$globals = $globals;
-    }
-
-    protected function missingViewMessage(): string
-    {
-        return sprintf('The %s "%s" cannot be found', static::$type, $this->name());
     }
 
     public function name(): string
@@ -61,13 +54,22 @@ class Template extends View
         return $this->name;
     }
 
-    public function render(): string
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function render(array $data = []): string
     {
-        return parent::render();
+        return Tpl::load($this->file(), $data);
     }
 
     public function root(): string
     {
-        return App::instance()->root(static::$type . 's');
+        return App::instance()->root('templates');
+    }
+
+    public function type(): string
+    {
+        return $this->type;
     }
 }

@@ -33,10 +33,10 @@ class AppComponentsTest extends TestCase
 
     public function testSnippet()
     {
-        $app     = new App();
+        $app = new App();
         $snippet = $app->snippet('default');
 
-        $this->assertInstanceOf(Snippet::class, $snippet);
+        $this->assertEquals('', $snippet);
     }
 
     public function testTemplate()

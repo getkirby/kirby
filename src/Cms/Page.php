@@ -77,6 +77,14 @@ class Page extends Model
     protected $id;
 
     /**
+     * The template, that should be loaded
+     * if it exists
+     *
+     * @var Template
+     */
+    protected $intendedTemplate;
+
+    /**
      * @var array
      */
     protected $inventory;
@@ -308,6 +316,27 @@ class Page extends Model
     }
 
     /**
+     * Call the page controller
+     *
+     * @param array $data
+     * @param string $contentType
+     * @return array
+     */
+    public function controller($data = [], $contentType = 'html'): array
+    {
+        // create the template data
+        $data = array_merge($data, [
+            'kirby' => $kirby = $this->kirby(),
+            'site'  => $site  = $this->site(),
+            'pages' => $site->children(),
+            'page'  => $site->visit($this)
+        ]);
+
+        // call the template controller if there's one.
+        return array_merge($kirby->controller($this->template()->name(), $data, $contentType), $data);
+    }
+
+    /**
      * Sorting number + Slug
      *
      * @return string
@@ -439,6 +468,17 @@ class Page extends Model
     }
 
     /**
+     * Checks if the intended template
+     * for the page exists.
+     *
+     * @return boolean
+     */
+    public function hasTemplate(): bool
+    {
+        return $this->intendedTemplate() === $this->template();
+    }
+
+    /**
      * Returns the Page Id
      *
      * @return string
@@ -455,6 +495,21 @@ class Page extends Model
         }
 
         return $this->id = $this->slug();
+    }
+
+    /**
+     * Returns the template that should be
+     * loaded if it exists.
+     *
+     * @return Template
+     */
+    public function intendedTemplate()
+    {
+        if ($this->intendedTemplate !== null) {
+            return $this->intendedTemplate;
+        }
+
+        return $this->setTemplate($this->inventory()['template'])->intendedTemplate();
     }
 
     /**
@@ -861,52 +916,46 @@ class Page extends Model
             }
         }
 
-        // create all globals for the
-        // controller, template and snippets
-        $globals = array_merge($data, [
-            'kirby' => $kirby,
-            'site'  => $site = $this->site(),
-            'pages' => $site->children(),
-            'page'  => $site->visit($this)
-        ]);
+        // fetch all data for the page
+        $kirby->data = $this->controller($data, $contentType);
 
-        // try to create the page template
-        $template = $kirby->template($this->template(), [], $contentType);
-
-        // fall back to the default template if it doesn't exist
-        if ($template->exists() === false) {
-            $template = $kirby->template('default', [], $contentType);
+        if ($contentType === 'html') {
+            $template = $this->template();
+        } else {
+            $template = $this->representation($contentType);
         }
 
-        // react if even the default template does not exist
         if ($template->exists() === false) {
-            if ($this->isErrorPage() === true) {
-                throw new NotFoundException([
-                    'key' => 'template.error.notFound'
-                ]);
-            } else {
-                throw new NotFoundException([
-                    'key' => 'template.default.notFound'
-                ]);
-            }
+            throw new NotFoundException([
+                'key' => 'template.default.notFound'
+            ]);
         }
-
-        // call the template controller if there's one.
-        $globals = array_merge($kirby->controller($template->name(), $globals), $globals);
-
-        // make all globals available
-        // for templates and snippets
-        Template::globals($globals);
 
         // render the page
-        $result = $template->render();
+        $result = $template->render($kirby->data);
 
         // render the template and cache the result
         if ($cache !== null) {
             $cache->set($cacheId, $result);
         }
 
-        return $result;
+        return new Response($result, $contentType);
+    }
+
+    /**
+     * @return Template
+     */
+    public function representation($type)
+    {
+        $kirby          = $this->kirby();
+        $template       = $this->template();
+        $representation = $kirby->template($template->name(), $type);
+
+        if ($representation->exists() === true) {
+            return $representation;
+        }
+
+        throw new NotFoundException('The content representation cannot be found');
     }
 
     /**
@@ -992,7 +1041,10 @@ class Page extends Model
      */
     protected function setTemplate(string $template = null): self
     {
-        $this->template = $template ? strtolower($template) : null;
+        if ($template !== null) {
+            $this->intendedTemplate = $this->kirby()->template($template);
+        }
+
         return $this;
     }
 
@@ -1044,11 +1096,21 @@ class Page extends Model
     /**
      * Returns the final template
      *
-     * @return string
+     * @return Template
      */
-    public function template(): string
+    public function template()
     {
-        return $this->template = $this->template ?? $this->inventory()['template'];
+        if ($this->template !== null) {
+            return $this->template;
+        }
+
+        $intended = $this->intendedTemplate();
+
+        if ($intended->exists() === true) {
+            return $this->template = $intended;
+        }
+
+        return $this->template = $this->kirby()->template('default');
     }
 
     /**
