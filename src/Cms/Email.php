@@ -83,7 +83,6 @@ class Email
 
             // fallback to single email text template
             } else {
-
                 $template = $this->templateFile($this->props['template']);
 
                 if (file_exists($template) === false) {

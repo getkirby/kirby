@@ -50,5 +50,4 @@ class Tpl
 
         throw $exception;
     }
-
 }

@@ -22,7 +22,6 @@ use Kirby\Toolkit\Collection as BaseCollection;
  */
 class Collection extends BaseCollection
 {
-
     use HasMethods;
 
     /**

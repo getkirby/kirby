@@ -237,7 +237,6 @@ class App
             if ($controller = $this->controllerLookup($name)) {
                 return (array)$controller->call($this, $arguments);
             }
-
         }
 
         // still no luck? Let's take the site controller

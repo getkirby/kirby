@@ -10,7 +10,6 @@ use Throwable;
 
 class Template
 {
-
     public static $data = [];
 
     protected $name;
