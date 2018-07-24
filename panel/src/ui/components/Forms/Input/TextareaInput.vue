@@ -208,7 +208,7 @@ export default {
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
-    onOut($event) {
+    onOut() {
       this.$refs.input.blur();
       this.over = false;
     },
