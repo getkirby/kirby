@@ -173,6 +173,23 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('testValue', $kirby->option('testOption'));
     }
 
+    public function testPluginOption()
+    {
+        App::plugin('test/plugin', [
+            'options' => [
+                'foo' => 'bar'
+            ]
+        ]);
+
+        $kirby = new App([
+            'options' => [
+                'test.plugin.foo' => 'another-bar'
+            ]
+        ]);
+
+        $this->assertEquals('another-bar', $kirby->option('test.plugin.foo'));
+    }
+
     public function testRoute()
     {
         $kirby = new App([
