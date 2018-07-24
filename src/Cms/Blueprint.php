@@ -370,6 +370,7 @@ class Blueprint extends BlueprintObject
             } catch (Exception $e) {
                 $section = BlueprintSection::factory([
                     'headline' => 'Error',
+                    'model'    => $this->model(),
                     'name'     => $props['name'],
                     'type'     => 'info',
                     'theme'    => 'negative',
