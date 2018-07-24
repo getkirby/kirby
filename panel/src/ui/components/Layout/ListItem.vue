@@ -152,6 +152,9 @@ $list-item-height: 38px;
   font-style: normal;
   margin-right: 1rem;
   flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: $font-size-small;
   color: $list-item-text-color;
 }
@@ -160,6 +163,9 @@ $list-item-height: 38px;
   font-size: $font-size-tiny;
   color: $list-item-info-color;
   display: none;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   @media screen and (min-width: $breakpoint-small) {
     display: block;
