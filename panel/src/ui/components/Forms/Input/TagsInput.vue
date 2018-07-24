@@ -40,6 +40,7 @@
           type="text"
           @input="type($event.target.value)"
           @blur="blurInput"
+          @keydown.meta.s="blurInput"
           @keydown.left="leaveInput"
           @keydown.enter="enter"
           @keydown.tab="tab"
@@ -152,7 +153,11 @@ export default {
 
       this.newTag = null;
     },
-    blurInput() {
+    blurInput(event) {
+      if (this.$refs.autocomplete.$el && this.$refs.autocomplete.$el.contains(event.relatedTarget)) {
+        return;
+      }
+
       if (this.$refs.input.value.length) {
         this.addTagToIndex(this.$refs.input.value);
         this.$refs.autocomplete.close();
