@@ -63,7 +63,7 @@ return [
             return $page->status();
         },
         'template' => function (Page $page) {
-            return $page->template();
+            return $page->intendedTemplate()->name();
         },
         'title' => function (Page $page) {
             return $page->title()->value();

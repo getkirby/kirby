@@ -190,7 +190,7 @@ class Page extends Model
             return $this->blueprint;
         }
 
-        return $this->blueprint = PageBlueprint::factory('pages/' . $this->template(), 'pages/default', $this);
+        return $this->blueprint = PageBlueprint::factory('pages/' . $this->intendedTemplate(), 'pages/default', $this);
     }
 
     /**
@@ -307,7 +307,7 @@ class Page extends Model
         }
 
         // create from template if the template is already set
-        if ($template = $this->template()) {
+        if ($template = $this->intendedTemplate()) {
             return $this->contentFile = $this->root() . '/' . $template . '.txt';
         }
 

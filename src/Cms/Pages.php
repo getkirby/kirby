@@ -363,13 +363,19 @@ class Pages extends Collection
      * @param null|string|array $template
      * @return self
      */
-    public function template($template): self
+    public function template($templates): self
     {
-        if (empty($template) === true) {
+        if (empty($templates) === true) {
             return $this;
         }
 
-        return $this->filterBy('template', is_array($template) ? 'in' : '==', $template);
+        if (is_array($templates) === false) {
+            $templates = [$templates];
+        }
+
+        return $this->filter(function ($page) use ($templates) {
+            return in_array($page->intendedTemplate()->name(), $templates);
+        });
     }
 
     /**
