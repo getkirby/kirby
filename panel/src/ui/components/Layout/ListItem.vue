@@ -145,7 +145,7 @@ $list-item-height: 38px;
   text-overflow: ellipsis;
   align-items: baseline;
   width: 100%;
-  line-height: 1;
+  line-height: 1.25rem;
   padding: .5rem .75rem;
 }
 .kirby-list-item-text em {
