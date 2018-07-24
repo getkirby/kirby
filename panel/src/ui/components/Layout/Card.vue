@@ -144,8 +144,8 @@ export default {
 
 
 .kirby-card-content {
-  padding: .75rem .75rem;
-  line-height: 1;
+  padding: .625rem .75rem;
+  line-height: 1.25rem;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   min-height: 2.25rem;
@@ -179,7 +179,7 @@ export default {
   display: block;
   font-weight: $font-weight-normal;
   white-space: nowrap;
-  line-height: 1;
+  line-height: 1.25;
   text-overflow: ellipsis;
   font-size: $font-size-small;
   overflow: hidden;
@@ -189,7 +189,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: $font-size-small;
-  padding-top: .5rem;
+  padding-top: .25rem;
   overflow: hidden;
 }
 .kirby-card-options {
