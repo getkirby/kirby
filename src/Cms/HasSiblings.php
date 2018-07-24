@@ -27,7 +27,7 @@ trait HasSiblings
     /**
      * Returns the next item in the collection if available
      *
-     * @return Component|null
+     * @return Model|null
      */
     public function next()
     {
@@ -47,7 +47,7 @@ trait HasSiblings
     /**
      * Returns the previous item in the collection if available
      *
-     * @return Component|null
+     * @return Model|null
      */
     public function prev()
     {

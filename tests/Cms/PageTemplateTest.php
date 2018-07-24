@@ -7,11 +7,6 @@ use PHPUnit\Framework\TestCase as TestCase;
 class PageTemplateTest extends TestCase
 {
 
-    /**
-     * Deregister any plugins for the page
-     *
-     * @return void
-     */
     public function setUp()
     {
         $this->app = new App([
