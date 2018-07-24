@@ -124,7 +124,7 @@ trait AppPlugins
             $options = $prefixed;
         }
 
-        return $this->extensions['options'] = $this->options = array_replace_recursive($this->options, $options);
+        return $this->extensions['options'] = $this->options = array_replace_recursive($options, $this->options);
     }
 
     protected function extendPageMethods(array $methods): array

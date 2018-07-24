@@ -72,7 +72,7 @@ class App
         $this->bakeRoots($props['roots'] ?? []);
 
         // stuff from config and additional options
-        $this->optionsFromSystem();
+        $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
 
         // create all urls after the config, so possible
@@ -393,7 +393,7 @@ class App
      *
      * @return array
      */
-    protected function optionsFromSystem(): array
+    protected function optionsFromConfig(): array
     {
         $server = $this->server();
         $root   = $this->root('config');
