@@ -64,7 +64,7 @@
               <kirby-button icon="trash" class="kirby-structure-option" @click="confirmRemove(index)" />
             </nav>
           </div>
-          <div v-if="!disabled" v-show="isActive(index)" class="kirby-structure-form">
+          <div v-if="!disabled && isActive(index)" class="kirby-structure-form">
             <kirby-fieldset
               ref="form"
               :fields="fields"
@@ -216,8 +216,8 @@ export default {
       this.active = index;
 
       this.$nextTick(() => {
-        if (this.$refs.form[index]) {
-          this.$refs.form[index].focus(field);
+        if (this.$refs.form[0]) {
+          this.$refs.form[0].focus(field);
         }
       });
     },
