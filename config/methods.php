@@ -51,9 +51,6 @@ return function (App $app) {
 
             return null;
         },
-        'toExcerpt' => function ($field) {
-            return $field;
-        },
         'toFile' => function ($field) {
             return $field->parent()->file($field->value);
         },
@@ -105,9 +102,6 @@ return function (App $app) {
         },
 
         // manipulators
-        'escape' => function ($field) {
-            throw new Exception('Not implemented yet');
-        },
         'html' => function ($field) {
             $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
             return $field;
@@ -164,12 +158,6 @@ return function (App $app) {
         'widont' => function ($field) {
             $field->value = Str::widont($field->value);
             return $field;
-        },
-        'words' => function ($field) {
-            throw new Exception('Not implemented yet');
-        },
-        'xml' => function ($field) {
-            throw new Exception('Not implemented yet');
         },
 
         // aliases
