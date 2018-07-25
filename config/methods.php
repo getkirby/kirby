@@ -172,46 +172,10 @@ return function (App $app) {
             throw new Exception('Not implemented yet');
         },
 
-        // Aliases
-        'bool' => function ($field) {
-            return $field->toBool();
-        },
-        'esc' => function ($field) {
-            return $field->escape();
-        },
-        'excerpt' => function ($field) {
-            return $field->toExcerpt();
-        },
-        'float' => function ($field) {
-            return $field->toFloat();
-        },
-        'h' => function ($field) {
-            return $field->html();
-        },
-        'int' => function ($field) {
-            return $field->toInt();
-        },
-        'kt' => function ($field) {
-            return $field->kirbytext();
-        },
-        'link' => function ($field, ...$attributes) {
-            return $field->toLink(...$attributes);
-        },
-        'md' => function ($field) {
-            return $field->markdown();
-        },
-        'sp' => function ($field) {
-            return $field->smartypants();
-        },
-        'v' => function ($field, ...$arguments) {
-            return $field->isValid(...$arguments);
-        },
+        // aliases
         'yaml' => function ($field) {
             return $field->toData('yaml');
         },
-        'x' => function ($field) {
-            return $field->xml();
-        }
 
     ];
 

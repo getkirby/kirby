@@ -28,6 +28,13 @@ class Field
 {
 
     /**
+     * Field method aliases
+     *
+     * @var array
+     */
+    public static $aliases = [];
+
+    /**
      * The field name
      *
      * @var string
@@ -68,6 +75,14 @@ class Field
     {
         if (isset(static::$methods[$method]) === true) {
             return static::$methods[$method](clone $this, ...$arguments);
+        }
+
+        if (isset(static::$aliases[$method]) === true) {
+            $method = static::$aliases[$method];
+
+            if (isset(static::$methods[$method]) === true) {
+                return static::$methods[$method](clone $this, ...$arguments);
+            }
         }
 
         return $this;

@@ -256,6 +256,22 @@ trait AppPlugins
             'vimeo'   => 'video'
         ];
 
+        // Field method aliases
+        Field::$aliases = [
+            'bool'    => 'toBool',
+            'esc'     => 'escape',
+            'excerpt' => 'toExcerpt',
+            'float'   => 'toFloat',
+            'h'       => 'html',
+            'int'     => 'toInt',
+            'kt'      => 'kirbytext',
+            'link'    => 'toLink',
+            'md'      => 'markdown',
+            'sp'      => 'smartypants',
+            'v'       => 'isValid',
+            'x'       => 'xml'
+        ];
+
         $this->extendComponents(include static::$root . '/config/components.php');
         $this->extendBlueprints(include static::$root . '/config/blueprints.php');
         $this->extendFields(include static::$root . '/config/fields.php');
