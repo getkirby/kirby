@@ -127,7 +127,7 @@ function gist(string $url, string $file = null): string
  */
 function go(string $url = null, int $code = 301)
 {
-    // die(Response::redirect($url, $code));
+    die(Response::redirect($url, $code));
 }
 
 /**
