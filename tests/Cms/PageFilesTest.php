@@ -5,10 +5,20 @@ namespace Kirby\Cms;
 class PageFilesTest extends TestCase
 {
 
+    public function setUp()
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/PageFilesTest'
+            ]
+        ]);
+    }
+
     public function testDefaultFiles()
     {
         $page = new Page(['slug' => 'test']);
         $this->assertInstanceOf(Files::class, $page->files());
+
         $this->assertCount(0, $page->files());
     }
 

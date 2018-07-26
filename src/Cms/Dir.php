@@ -15,7 +15,7 @@ class Dir extends \Kirby\Toolkit\Dir
 {
     public static $numSeparator = '_';
 
-    public static function inventory(string $dir, string $content = 'txt'): array
+    public static function inventory(string $dir, string $contentExtension = 'txt'): array
     {
         $dir = realpath($dir);
 
@@ -23,7 +23,6 @@ class Dir extends \Kirby\Toolkit\Dir
             'children' => [],
             'files'    => [],
             'template' => 'default',
-            'content'  => null,
         ];
 
         if ($dir === false) {
@@ -32,6 +31,10 @@ class Dir extends \Kirby\Toolkit\Dir
 
         $items = Dir::read($dir);
 
+        // a temporary store for all content files
+        $content = [];
+
+        // sort all items naturally to avoid sorting issues later
         natsort($items);
 
         foreach ($items as $item) {
@@ -62,14 +65,8 @@ class Dir extends \Kirby\Toolkit\Dir
             } else {
                 $extension = pathinfo($item, PATHINFO_EXTENSION);
 
-                if ($extension === $content) {
-                    $basename  = pathinfo($item, PATHINFO_FILENAME);
-                    $extension = pathinfo($basename, PATHINFO_EXTENSION);
-
-                    if (empty($extension) === true) {
-                        $inventory['template'] = $basename;
-                        $inventory['content']  = $root;
-                    }
+                if ($extension === $contentExtension) {
+                    $content[] = pathinfo($item, PATHINFO_FILENAME);
                 } else {
                     $inventory['files'][$item] = [
                         'filename'  => $item,
@@ -80,6 +77,51 @@ class Dir extends \Kirby\Toolkit\Dir
             }
         }
 
+        $inventory = static::inventoryContent($dir, $inventory, $content);
+        $inventory = static::inventoryModels($inventory);
+
+        return $inventory;
+    }
+
+    /**
+     * Take all content files,
+     * remove those who are meta files and
+     * detect the main content file
+     *
+     * @param array $inventory
+     * @param array $content
+     * @return array
+     */
+    protected static function inventoryContent(string $dir, array $inventory, array $content): array
+    {
+        // filter meta files from the content file
+        if (empty($content) === true) {
+            $inventory['template'] = 'default';
+            return $inventory;
+        }
+
+        foreach ($content as $contentName) {
+            // could be a meta file. i.e. cover.jpg
+            if (isset($inventory['files'][$contentName]) === true) {
+                continue;
+            }
+
+            // it's most likely the template
+            $inventory['template'] = $contentName;
+        }
+
+        return $inventory;
+    }
+
+    /**
+     * Go through all inventory children
+     * and inject a model for each
+     *
+     * @param array $inventory
+     * @return array
+     */
+    protected static function inventoryModels(array $inventory): array
+    {
         // inject models
         if (empty($inventory['children']) === false && empty(Page::$models) === false) {
             $glob = '{' . implode(',', array_keys(Page::$models)) . '}.' . $content;
@@ -92,4 +134,5 @@ class Dir extends \Kirby\Toolkit\Dir
 
         return $inventory;
     }
+
 }
