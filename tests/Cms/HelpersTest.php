@@ -20,7 +20,23 @@ class HelpersTest extends TestCase
     public function testCssHelper()
     {
         $result   = css('assets/css/index.css');
-        $expected = '<link rel="stylesheet" href="https://getkirby.com/assets/css/index.css">';
+        $expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testCssHelperWithMediaOption()
+    {
+        $result   = css('assets/css/index.css', 'print');
+        $expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testCssHelperWithAttrs()
+    {
+        $result   = css('assets/css/index.css', ['integrity' => 'nope']);
+        $expected = '<link href="https://getkirby.com/assets/css/index.css" integrity="nope" rel="stylesheet">';
 
         $this->assertEquals($expected, $result);
     }
@@ -41,6 +57,22 @@ class HelpersTest extends TestCase
     {
         $result   = js('assets/js/index.js');
         $expected = '<script src="https://getkirby.com/assets/js/index.js"></script>';
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testJsHelperWithAsyncOption()
+    {
+        $result   = js('assets/js/index.js', true);
+        $expected = '<script async src="https://getkirby.com/assets/js/index.js"></script>';
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testJsHelperWithAttrs()
+    {
+        $result   = js('assets/js/index.js', ['integrity' => 'nope']);
+        $expected = '<script integrity="nope" src="https://getkirby.com/assets/js/index.js"></script>';
 
         $this->assertEquals($expected, $result);
     }

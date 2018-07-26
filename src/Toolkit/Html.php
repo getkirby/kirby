@@ -117,7 +117,7 @@ class Html
         if (is_array($name) === true) {
             $attributes = [];
 
-            asort($name);
+            ksort($name);
 
             foreach ($name as $key => $val) {
                 $a = static::attr($key, $val);

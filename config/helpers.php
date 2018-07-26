@@ -30,29 +30,35 @@ function attr(array $attr = null, $before = null, $after = null)
  * Creates one or multiple CSS link tags
  *
  * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
- * @param string|array $attr Pass an array of attributes for the link tag or a media attribute string
+ * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
  * @return string|null
  */
-function css($url, $attr = null)
+function css($url, $options = null)
 {
     if (is_array($url) === true) {
-        $links = array_map(function ($url) use ($attr) {
-            return css($url, $attr);
+        $links = array_map(function ($url) use ($options) {
+            return css($url, $options);
         }, $url);
 
         return implode(PHP_EOL, $links);
     }
 
-    $attr = is_array($attr) ? attr($attr, ' ') : attr(['media' => $attr], ' ');
-    $tag  = '<link rel="stylesheet" href="%s"' . $attr . '>';
+    $href = $url === '@auto' ? Url::toTemplateAsset('css/templates', 'css') : Url::to($url);
 
-    if ($url === '@auto') {
-        if ($assetUrl = Url::toTemplateAsset('css/templates', 'css')) {
-            return sprintf($tag, $assetUrl);
-        }
-    } else {
-        return sprintf($tag, Url::to($url));
+    $attr = [
+        'href' => $href,
+        'rel'  => 'stylesheet'
+    ];
+
+    if (is_string($options) === true) {
+        $attr['media'] = $options;
     }
+
+    if (is_array($options) === true) {
+        $attr = array_merge($options, $attr);
+    }
+
+    return '<link ' . attr($attr) . '>';
 }
 
 /**
@@ -188,28 +194,33 @@ function image(string $path = null)
  * Creates a script tag to load a javascript file
  *
  * @param string|array $src
- * @param string|array $async
+ * @param string|array $options
  * @return void
  */
-function js($src, $async = null)
+function js($url, $options = null)
 {
-    if (is_array($src) === true) {
-        $scripts = array_map(function ($src) use ($async) {
-            return js($src, $async);
-        }, $src);
+    if (is_array($url) === true) {
+        $scripts = array_map(function ($url) use ($options) {
+            return js($url, $options);
+        }, $url);
 
         return implode(PHP_EOL, $scripts);
     }
 
-    $tag = '<script src="%s"' . attr(['async' => $async], ' ') . '></script>';
+    $src  = $url === '@auto' ? Url::toTemplateAsset('js/templates', 'js') : Url::to($url);
+    $attr = [
+        'src' => $src,
+    ];
 
-    if ($src === '@auto') {
-        if ($assetUrl = Url::toTemplateAsset('js/templates', 'js')) {
-            return sprintf($tag, $assetUrl);
-        }
-    } else {
-        return sprintf($tag, Url::to($src));
+    if (is_bool($options) === true) {
+        $attr['async'] = $options;
     }
+
+    if (is_array($options) === true) {
+        $attr = array_merge($options, $attr);
+    }
+
+    return '<script ' . attr($attr) . '></script>';
 }
 
 /**
