@@ -78,7 +78,7 @@ class Dir extends \Kirby\Toolkit\Dir
         }
 
         $inventory = static::inventoryContent($dir, $inventory, $content);
-        $inventory = static::inventoryModels($inventory);
+        $inventory = static::inventoryModels($inventory, $contentExtension);
 
         return $inventory;
     }
@@ -120,11 +120,11 @@ class Dir extends \Kirby\Toolkit\Dir
      * @param array $inventory
      * @return array
      */
-    protected static function inventoryModels(array $inventory): array
+    protected static function inventoryModels(array $inventory, string $contentExtension): array
     {
         // inject models
         if (empty($inventory['children']) === false && empty(Page::$models) === false) {
-            $glob = '{' . implode(',', array_keys(Page::$models)) . '}.' . $content;
+            $glob = '{' . implode(',', array_keys(Page::$models)) . '}.' . $contentExtension;
 
             foreach ($inventory['children'] as $key => $child) {
                 $modelFile = glob($child['root'] . '/' . $glob, GLOB_BRACE)[0] ?? null;
