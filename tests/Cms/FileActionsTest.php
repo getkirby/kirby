@@ -120,6 +120,44 @@ class FileActionsTest extends TestCase
     }
 
     /**
+     * @dataProvider parentProvider
+     */
+    public function testCreateHooks($parent)
+    {
+        $phpunit = $this;
+        $before  = false;
+        $after   = false;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'file.create:before' => function (File $file, Image $image) use (&$before, $phpunit, $parent) {
+                    $before = true;
+                },
+                'file.create:after' => function (File $file) use (&$after, $phpunit, $parent) {
+
+                    $phpunit->assertTrue($file->siblings()->has($file));
+                    $phpunit->assertTrue($file->parent()->files()->has($file));
+                    $phpunit->assertEquals('test.md', $file->filename());
+
+                    $after = true;
+                }
+            ]
+        ]);
+
+        // create the dummy source
+        F::write($source = $this->fixtures . '/source.md', '# Test');
+
+        $result = File::create([
+            'filename' => 'test.md',
+            'source'   => $source,
+            'parent'   => $parent
+        ]);
+
+        $this->assertTrue($before);
+        $this->assertTrue($after);
+    }
+
+    /**
      * @dataProvider fileProvider
      */
     public function testDelete(File $file)

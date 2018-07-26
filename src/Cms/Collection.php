@@ -88,6 +88,22 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Checks if the given object or id
+     * is in the collection
+     *
+     * @param string|object
+     * @return boolean
+     */
+    public function has($id): bool
+    {
+        if (is_object($id) === true) {
+            $id = $id->id();
+        }
+
+        return parent::has($id);
+    }
+
+    /**
      * Correct position detection for objects.
      * The method will automatically detect objects
      * or ids and then search accordingly.

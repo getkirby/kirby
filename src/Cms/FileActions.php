@@ -143,6 +143,9 @@ trait FileActions
             // create a new public file
             $file->publish();
 
+            // add the file to the list of siblings
+            $file->siblings()->append($file->id(), $file);
+
             // return a fresh clone
             return $file->clone();
         });
