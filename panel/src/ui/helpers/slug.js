@@ -1,5 +1,7 @@
 import slugify from "slugify";
 
 export default text => {
-  return slugify(text).toLowerCase();
+  return slugify(text, {
+    remove: /[$*_+~.,;:()'"`!?§$%/=#\-@]/g
+  }).toLowerCase();
 };
