@@ -28,6 +28,7 @@ class Page extends Model
     use HasFiles;
     use HasMethods;
     use HasSiblings;
+    use HasTranslations;
 
     /**
      * All registered page methods
@@ -102,6 +103,13 @@ class Page extends Model
      * @var Page|null
      */
     protected $parent;
+
+    /**
+     * Absolute path to the page directory
+     *
+     * @var string
+     */
+    protected $root;
 
     /**
      * The parent Site object
@@ -977,7 +985,7 @@ class Page extends Model
      */
     public function root(): string
     {
-        return $this->kirby()->root('content') . '/' . $this->diruri();
+        return $this->root = $this->root ?? $this->kirby()->root('content') . '/' . $this->diruri();
     }
 
     /**
@@ -1029,6 +1037,18 @@ class Page extends Model
     protected function setParent(Page $parent = null): self
     {
         $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * Sets the absolute path to the page directory
+     *
+     * @param string|null $root
+     * @return self
+     */
+    protected function setRoot(string $root = null): self
+    {
+        $this->root = $root;
         return $this;
     }
 

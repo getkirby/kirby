@@ -72,6 +72,17 @@ class Language extends Model
     }
 
     /**
+     * Returns the language code
+     * when the language is converted to a string
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->code();
+    }
+
+    /**
      * Returns the language code/id.
      * The language code is used in
      * text file names as appendix.
@@ -123,6 +134,16 @@ class Language extends Model
     public function name(): string
     {
         return $this->name;
+    }
+
+    /**
+     * Returns the routing pattern for the language
+     *
+     * @return string
+     */
+    public function pattern(): string
+    {
+        return $this->url;
     }
 
     /**
@@ -181,7 +202,7 @@ class Language extends Model
      */
     protected function setUrl(string $url = null): self
     {
-        $this->url = $url !== null ? rtrim($url, '/') : $this->code;
+        $this->url = $url !== null ? trim($url, '/') : $this->code;
         return $this;
     }
 
@@ -195,7 +216,7 @@ class Language extends Model
     {
         return [
             'code'      => $this->code(),
-            'default'   => $this->default(),
+            'default'   => $this->isDefault(),
             'direction' => $this->direction(),
             'locale'    => $this->locale(),
             'name'      => $this->name(),

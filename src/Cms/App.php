@@ -9,6 +9,7 @@ use Kirby\Api\Api;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Form\Field;
 use Kirby\Http\Router;
 use Kirby\Http\Request;
@@ -42,8 +43,11 @@ class App
     protected static $root;
     protected static $version;
 
-    protected $collections;
     public $data = [];
+    public $language;
+
+    protected $collections;
+    protected $languages;
     protected $options;
     protected $path;
     protected $roles;
@@ -81,7 +85,7 @@ class App
         $this->bakeUrls($props['urls'] ?? []);
 
         // configurable properties
-        $this->setProperties($props);
+        $this->setOptionalProperties($props, ['path', 'roles', 'site']);
 
         // load the english translation
         $this->loadFallbackTranslation();
@@ -380,6 +384,31 @@ class App
     }
 
     /**
+     * Returns the current language
+     *
+     * @param string|null $code
+     * @return Language|null
+     */
+    public function language(string $code = null): ?Language
+    {
+        if ($code !== null) {
+            return $this->languages()->find($code);
+        }
+
+        return $this->language = $this->language ?? $this->languages()->findDefault();
+    }
+
+    /**
+     * Returns all available site languages
+     *
+     * @return Languages
+     */
+    public function languages(): Languages
+    {
+        return $this->languages = $this->languages ?? Languages::load();
+    }
+
+    /**
      * Parses Markdown
      *
      * @param string $text
@@ -512,6 +541,57 @@ class App
     public function request(): Request
     {
         return $this->request = $this->request ?? new Request;
+    }
+
+    /**
+     * Path resolver for the router
+     *
+     * @param string $path
+     * @param Language $language
+     * @return mixed
+     */
+    public function resolve(string $path, Language $language = null)
+    {
+        // set the current language
+        $this->language = $language;
+
+        // the site is needed a couple times here
+        $site = $this->site();
+
+        if ($page = $site->find($path)) {
+            return $page;
+        }
+
+        if ($draft = $site->draft($path)) {
+            if ($draft->isVerified(get('token'))) {
+                return $draft;
+            }
+        }
+
+        // try to resolve content representations if the path has an extension
+        $extension = F::extension($path);
+        $path      = rtrim($path, '.' . $extension);
+
+        // stop when there's no extension
+        if (empty($extension) === true) {
+            return null;
+        }
+
+        // try to find the page for the representation
+        if ($page = $site->find($path)) {
+            return Response::for($page, [], $extension);
+        }
+
+        $id       = dirname($path);
+        $filename = basename($path) . '.' . $extension;
+
+        // try to resolve image urls for pages and drafts
+        if ($page = $site->findPageOrDraft($id)) {
+            return $page->file($filename);
+        }
+
+        // try to resolve site files at least
+        return $site->file($filename);
     }
 
     /**

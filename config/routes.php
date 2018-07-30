@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Api\Api;
+use Kirby\Cms\App;
 use Kirby\Cms\Media;
 use Kirby\Cms\Panel;
 use Kirby\Cms\PluginAssets;
@@ -17,7 +18,7 @@ return function ($kirby) {
     $api   = $kirby->options['api']['slug']   ?? 'api';
     $panel = $kirby->options['panel']['slug'] ?? 'panel';
 
-    return [
+    $routes = [
         [
             'pattern' => '',
             'action'  => function () use ($kirby) {
@@ -94,45 +95,32 @@ return function ($kirby) {
                     return Response::redirect($url, 307);
                 }
             }
-        ],
-        [
-            'pattern' => '(:all)\.([a-z]{2,5})',
-            'action'  => function (string $path, string $extension) use ($kirby) {
-
-                // try to resolve content representations for pages
-                if ($page = $kirby->site()->find($path)) {
-                    return Response::for($page, [], $extension);
-                }
-
-                $id       = dirname($path);
-                $filename = basename($path) . '.' . $extension;
-
-                // try to resolve image urls for pages and drafts
-                if ($page = $kirby->site()->findPageOrDraft($id)) {
-                    return $page->file($filename);
-                }
-
-                // try to resolve site files at least
-                return $kirby->site()->file($filename);
-            }
-        ],
-        [
-            'pattern' => '(:all)',
-            'action'  => function (string $path) use ($kirby) {
-                if ($page = $kirby->site()->find($path)) {
-                    return $page;
-                }
-
-                if ($draft = $kirby->site()->draft($path)) {
-                    if ($draft->isVerified(get('token'))) {
-                        return $draft;
-                    }
-                }
-
-                return null;
-            }
         ]
     ];
+
+    // Multi-language setup
+    if (empty($kirby->options['languages']) === false) {
+        foreach ($kirby->languages() as $language) {
+            $routes[] = [
+                'pattern' => trim($language->pattern() . '/(:all)', '/'),
+                'action'  => function ($path) use ($kirby, $language) {
+                    return $kirby->resolve($path, $language);
+                }
+            ];
+        }
+
+        return $routes;
+    }
+
+    // Single-language setup
+    $routes[] = [
+        'pattern' => '(:all)',
+        'action'  => function (string $path) use ($kirby) {
+            return $kirby->resolve($path);
+        }
+    ];
+
+    return $routes;
 
 };
 
