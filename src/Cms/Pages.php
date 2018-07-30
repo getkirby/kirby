@@ -223,6 +223,17 @@ class Pages extends Collection
     }
 
     /**
+     * Alias for Pages::findById
+     *
+     * @param string $id
+     * @return Page|null
+     */
+    public function findByUri(string $id)
+    {
+        return $this->findById($id);
+    }
+
+    /**
      * Custom getter that is able to find
      * extension pages
      *

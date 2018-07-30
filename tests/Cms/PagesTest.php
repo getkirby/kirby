@@ -79,6 +79,34 @@ class PagesTest extends TestCase
         $this->assertIsPage($this->pages()->find('c'), 'c');
     }
 
+    public function findByIdAndUri()
+    {
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'grandma',
+                    'children' => [
+                        [
+                            'slug' => 'mother',
+                            'children' => [
+                                [
+                                    'slug' => 'child',
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertIsPage($site->findById('grandma'), 'grandma');
+        $this->assertIsPage($site->findByUri('grandma'), 'grandma');
+        $this->assertIsPage($site->findById('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->findByUri('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->findByUri('grandma/mother/child'), 'grandma/mother/child');
+    }
+
     public function testInvisible()
     {
         $this->assertCount(1, $this->pages()->invisible());
