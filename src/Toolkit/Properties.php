@@ -73,16 +73,20 @@ trait Properties
         return $array;
     }
 
-    protected function setOptionalProperties($props, $optional)
+    protected function setOptionalProperties(array $props, array $optional)
     {
+        $this->propertyData = array_merge($this->propertyData, $props);
+
         foreach ($optional as $propertyName) {
             if (isset($props[$propertyName]) === true) {
-                $this->setProperty($propertyName, $props[$propertyName]);
+                $this->{'set' . $propertyName}($props[$propertyName]);
+            } else {
+                $this->{'set' . $propertyName}();
             }
         }
     }
 
-    protected function setProperties($props)
+    protected function setProperties($props, array $keys = null)
     {
         foreach (get_object_vars($this) as $name => $default) {
             if ($name === 'propertyData') {
@@ -126,10 +130,15 @@ trait Properties
         return $this->{'set' . $name}($value);
     }
 
-    protected function setRequiredProperties($props, $required)
+    protected function setRequiredProperties(array $props, array $required)
     {
         foreach ($required as $propertyName) {
-            $this->setProperty($propertyName, $props[$propertyName] ?? null, true);
+            if (isset($props[$propertyName]) !== true) {
+                throw new Exception(sprintf('The property "%s" is required', $name));
+            }
+
+            $this->{'set' . $propertyName}($props[$propertyName]);
         }
     }
+
 }
