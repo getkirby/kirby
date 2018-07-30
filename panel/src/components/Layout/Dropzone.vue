@@ -65,7 +65,7 @@ export default {
         }
       }
     },
-    onLeave($event) {
+    onLeave() {
       this.reset();
     },
     onOver($event) {

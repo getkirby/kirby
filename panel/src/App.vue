@@ -1,5 +1,10 @@
 <template>
-  <div v-if="!$store.state.system.info.isBroken" :data-dragging="$store.state.drag" :data-loading="$store.state.isLoading" class="kirby-panel">
+  <div
+    v-if="!$store.state.system.info.isBroken"
+    :data-dragging="$store.state.drag"
+    :data-loading="$store.state.isLoading"
+    class="kirby-panel"
+  >
     <kirby-topbar />
     <kirby-search v-if="$store.state.search" v-bind="$store.state.search" />
     <kirby-license-bar />
