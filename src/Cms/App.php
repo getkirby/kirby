@@ -85,7 +85,14 @@ class App
         $this->bakeUrls($props['urls'] ?? []);
 
         // configurable properties
-        $this->setOptionalProperties($props, ['path', 'roles', 'site']);
+        $this->setOptionalProperties($props, [
+            'path',
+            'roles',
+            'site',
+            'translations',
+            'user',
+            'users'
+        ]);
 
         // load the english translation
         $this->loadFallbackTranslation();
