@@ -134,7 +134,7 @@ trait Properties
     {
         foreach ($required as $propertyName) {
             if (isset($props[$propertyName]) !== true) {
-                throw new Exception(sprintf('The property "%s" is required', $name));
+                throw new Exception(sprintf('The property "%s" is required', $propertyName));
             }
 
             $this->{'set' . $propertyName}($props[$propertyName]);
