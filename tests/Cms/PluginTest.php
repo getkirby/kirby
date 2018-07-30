@@ -16,6 +16,21 @@ class PluginTest extends TestCase
         $this->assertEquals([], $plugin->extends());
     }
 
+    public function testNameWithValidInput()
+    {
+        $plugin = new Plugin($name = 'abc-1234/DEF-56789', []);
+
+        $this->assertEquals($name, $plugin->name());
+    }
+
+    /**
+     * @expectedException Kirby\Exception\InvalidArgumentException
+     */
+    public function testNameWithInvalidInput()
+    {
+        new Plugin('äöü/!!!', []);
+    }
+
     public function testManifest()
     {
         $plugin = new Plugin('getkirby/test-plugin', [
