@@ -27,6 +27,17 @@ function attr(array $attr = null, $before = null, $after = null)
 }
 
 /**
+ * Returns the result of a collection by name
+ *
+ * @param string $name
+ * @return Collection|null
+ */
+function collection(string $name)
+{
+    return App::instance()->collection($name);
+}
+
+/**
  * Creates one or multiple CSS link tags
  *
  * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading

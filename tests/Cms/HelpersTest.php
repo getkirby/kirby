@@ -17,6 +17,27 @@ class HelpersTest extends TestCase
         ]);
     }
 
+    public function testCollectionHelper()
+    {
+        $app = new App([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ],
+            'collections' => [
+                'test' => function ($pages) {
+                    return $pages;
+                }
+            ]
+        ]);
+
+        $collection = collection('test');
+
+        $this->assertCount(1, $collection);
+        $this->assertEquals('test', $collection->first()->slug());
+    }
+
     public function testCssHelper()
     {
         $result   = css('assets/css/index.css');
