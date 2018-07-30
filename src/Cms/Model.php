@@ -12,7 +12,6 @@ use Kirby\Toolkit\Str;
  */
 abstract class Model
 {
-
     use Properties;
 
     /**
@@ -124,5 +123,4 @@ abstract class Model
     {
         return $this->propertiesToArray();
     }
-
 }

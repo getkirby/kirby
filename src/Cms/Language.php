@@ -212,5 +212,4 @@ class Language extends Model
     {
         return Url::to($this->url);
     }
-
 }

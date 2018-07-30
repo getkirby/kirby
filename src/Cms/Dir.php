@@ -134,5 +134,4 @@ class Dir extends \Kirby\Toolkit\Dir
 
         return $inventory;
     }
-
 }

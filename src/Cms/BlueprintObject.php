@@ -11,7 +11,6 @@ use Kirby\Toolkit\Properties;
  */
 class BlueprintObject
 {
-
     use Properties;
 
     /**
@@ -87,5 +86,4 @@ class BlueprintObject
     {
         return $this->propertiesToArray();
     }
-
 }

@@ -97,11 +97,9 @@ class Collection extends BaseCollection
      */
     public function groupBy(string $field, bool $i = true)
     {
-
         $groups = new Collection([], $this->parent());
 
         foreach ($this->data as $key => $item) {
-
             $value = $this->getAttribute($item, $field);
 
             // make sure that there's always a proper value to group by
@@ -121,11 +119,9 @@ class Collection extends BaseCollection
                 // add the item to an existing group
                 $groups->data[$value]->set($key, $item);
             }
-
         }
 
         return $groups;
-
     }
 
     /**
