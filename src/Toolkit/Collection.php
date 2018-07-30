@@ -298,7 +298,8 @@ class Collection extends Iterator
         }
 
         $collection = clone $this;
-        return $collection->data = $result;
+        $collection->data = $result;
+        return $collection;
     }
 
     /**

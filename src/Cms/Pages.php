@@ -242,6 +242,10 @@ class Pages extends Collection
      */
     public function get($key, $default = null)
     {
+        if ($key === null) {
+            return null;
+        }
+
         if ($item = parent::get($key)) {
             return $item;
         }

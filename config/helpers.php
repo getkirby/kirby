@@ -188,7 +188,7 @@ function image(string $path = null)
     $uri      = dirname($path);
     $filename = basename($path);
 
-    if ($uri == '.') {
+    if ($uri === '.') {
         $uri = null;
     }
 
@@ -345,6 +345,10 @@ function option(string $key, $default = null)
  */
 function page(...$id)
 {
+    if (empty($id) === true) {
+        return App::instance()->site()->page();
+    }
+
     return App::instance()->site()->find(...$id);
 }
 
