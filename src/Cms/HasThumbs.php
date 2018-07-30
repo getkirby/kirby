@@ -33,6 +33,8 @@ trait HasThumbs
             $quality = $options;
         } elseif (is_string($options)) {
             $crop = $options;
+        } elseif (is_a($options, 'Kirby\Cms\Field') === true) {
+            $crop = $options->value();
         } elseif (is_array($options)) {
             $quality = $options['quality'] ?? $quality;
             $crop    = $options['crop']    ?? $crop;
