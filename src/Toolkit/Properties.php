@@ -140,5 +140,4 @@ trait Properties
             $this->{'set' . $propertyName}($props[$propertyName]);
         }
     }
-
 }
