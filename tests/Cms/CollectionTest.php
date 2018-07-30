@@ -7,12 +7,18 @@ class MockObject extends Model
 
     public function __construct(array $props = [])
     {
-        $this->id = $props['id'];
+        $this->id    = $props['id'];
+        $this->group = $props['group'] ?? null;
     }
 
     public function id()
     {
         return $this->id;
+    }
+
+    public function group()
+    {
+        return $this->group;
     }
 
     public function toArray(): array
@@ -56,6 +62,27 @@ class CollectionTest extends TestCase
         $value      = $collection->getAttribute($object, 'id');
 
         $this->assertEquals('a', $value);
+    }
+
+    public function testGroupBy()
+    {
+
+        $collection = new Collection([
+            $a = new MockObject(['id' => 'a', 'group' => 'a']),
+            $b = new MockObject(['id' => 'b', 'group' => 'a']),
+            $c = new MockObject(['id' => 'c', 'group' => 'b']),
+        ]);
+
+        $groups = $collection->groupBy('group');
+
+        $this->assertInstanceOf(Collection::class, $groups);
+        $this->assertCount(2, $groups);
+
+        $groupA = $groups->first();
+        $groupB = $groups->last();
+
+        $this->assertCount(2, $groupA);
+        $this->assertCount(1, $groupB);
     }
 
     public function testIndexOfWithObject()
