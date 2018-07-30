@@ -34,6 +34,7 @@ $aliases = [
     'i18n'       => 'Kirby\Toolkit\I18n',
     'obj'        => 'Kirby\Toolkit\Obj',
     'str'        => 'Kirby\Toolkit\Str',
+    'tpl'        => 'Kirby\Toolkit\Tpl',
     'v'          => 'Kirby\Toolkit\V',
 
 ];
