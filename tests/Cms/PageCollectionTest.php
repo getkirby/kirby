@@ -55,14 +55,26 @@ class PageCollectionTest extends TestCase
         $this->assertFalse($collection->last()->hasNext());
     }
 
-    public function testHasNextInvisible()
+    public function testHasNextListed()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'unlisted'],
+            ['slug' => 'listed', 'num' => 1],
+        ]);
+
+        $this->assertTrue($collection->first()->hasNextListed());
+        $this->assertFalse($collection->last()->hasNextListed());
     }
 
-    public function testHasNextVisible()
+    public function testHasNextUnlisted()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'unlisted'],
+        ]);
+
+        $this->assertTrue($collection->first()->hasNextUnlisted());
+        $this->assertFalse($collection->last()->hasNextUnlisted());
     }
 
     public function testHasPrev()
@@ -73,14 +85,26 @@ class PageCollectionTest extends TestCase
         $this->assertFalse($collection->first()->hasPrev());
     }
 
-    public function testHasPrevInvisible()
+    public function testHasPrevListed()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'unlisted'],
+        ]);
+
+        $this->assertFalse($collection->first()->hasPrevListed());
+        $this->assertTrue($collection->last()->hasPrevListed());
     }
 
-    public function testHasPrevVisible()
+    public function testHasPrevUnlisted()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'unlisted'],
+            ['slug' => 'listed', 'num' => 1]
+        ]);
+
+        $this->assertFalse($collection->first()->hasPrevUnlisted());
+        $this->assertTrue($collection->last()->hasPrevUnlisted());
     }
 
     public function testIndexOf()
@@ -135,14 +159,26 @@ class PageCollectionTest extends TestCase
         $this->assertEquals($first->nextAll()->last(),  $collection->nth(2));
     }
 
-    public function testNextInvisible()
+    public function testNextListed()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'unlisted-b'],
+            ['slug' => 'listed', 'num' => 1],
+        ]);
+
+        $this->assertEquals('listed', $collection->first()->nextListed()->slug());
     }
 
-    public function testNextVisible()
+    public function testNextUnlisted()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'listed-b', 'num' => 2],
+            ['slug' => 'unlisted'],
+        ]);
+
+        $this->assertEquals('unlisted', $collection->first()->nextUnlisted()->slug());
     }
 
     public function testPrev()
@@ -163,14 +199,26 @@ class PageCollectionTest extends TestCase
         $this->assertEquals($last->prevAll()->last(),  $collection->nth(1));
     }
 
-    public function testPrevInvisible()
+    public function testPrevListed()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'unlisted-b'],
+        ]);
+
+        $this->assertEquals('listed', $collection->last()->prevListed()->slug());
     }
 
-    public function testPrevVisible()
+    public function testPrevUnlisted()
     {
-        $this->markTestIncomplete();
+        $collection = Pages::factory([
+            ['slug' => 'unlisted'],
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'listed-b', 'num' => 2],
+        ]);
+
+        $this->assertEquals('unlisted', $collection->last()->prevUnlisted()->slug());
     }
 
     public function testSiblings()
@@ -185,11 +233,6 @@ class PageCollectionTest extends TestCase
         $this->assertEquals($children, $page->siblings());
         $this->assertEquals($children, $children->first()->siblings());
         $this->assertEquals($children, $children->last()->siblings());
-    }
-
-    public function testSiblingsWithoutCurrentPage()
-    {
-        $this->markTestIncomplete();
     }
 
 }

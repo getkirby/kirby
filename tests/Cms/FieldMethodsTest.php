@@ -104,7 +104,17 @@ class FieldMethodsTest extends TestCase
 
     public function testToFile()
     {
-        $this->markTestIncomplete();
+        $page = new Page([
+            'content' => [
+                'cover' => 'cover.jpg'
+            ],
+            'files' => [
+                ['filename' => 'cover.jpg']
+            ],
+            'slug' => 'test'
+        ]);
+
+        $this->assertEquals('cover.jpg', $page->cover()->toFile()->filename());
     }
 
     public function testToFloat()
@@ -123,17 +133,51 @@ class FieldMethodsTest extends TestCase
 
     public function testToLink()
     {
-        $this->markTestIncomplete();
+        $page = new Page([
+            'slug' => 'test',
+            'content' => [
+                'title' => 'Test'
+            ]
+        ]);
+
+        $expected = '<a href="/test">Test</a>';
+
+        $this->assertEquals($expected, $page->title()->toLink());
     }
 
     public function testToPage()
     {
-        $this->markTestIncomplete();
+        $app = new App([
+            'site' => [
+                'children' => [
+                    ['slug' => 'a'],
+                    ['slug' => 'b']
+                ]
+            ]
+        ]);
+
+        $a = $app->page('a');
+        $b = $app->page('b');
+
+        $this->assertEquals($a, $this->field('a')->toPage());
+        $this->assertEquals($b, $this->field('b')->toPage());
     }
 
     public function testToStructure()
     {
-        $this->markTestIncomplete();
+        $data = [
+            ['title' => 'a'],
+            ['title' => 'b']
+        ];
+
+        $yaml = Yaml::encode($data);
+
+        $field     = $this->field($yaml);
+        $structure = $field->toStructure();
+
+        $this->assertCount(2, $structure);
+        $this->assertEquals('a', $structure->first()->title()->value());
+        $this->assertEquals('b', $structure->last()->title()->value());
     }
 
     public function testToDefaultUrl()
@@ -160,7 +204,18 @@ class FieldMethodsTest extends TestCase
 
     public function testToUser()
     {
-        $this->markTestIncomplete();
+        $app = new App([
+            'users' => [
+                ['email' => 'a@company.com'],
+                ['email' => 'b@company.com']
+            ]
+        ]);
+
+        $a = $app->user('a@company.com');
+        $b = $app->user('b@company.com');
+
+        $this->assertEquals($a, $this->field('a@company.com')->toUser());
+        $this->assertEquals($b, $this->field('b@company.com')->toUser());
     }
 
     public function testLength()
@@ -210,7 +265,8 @@ class FieldMethodsTest extends TestCase
 
     public function testOr()
     {
-        $this->markTestIncomplete();
+        $this->assertEquals('field value', $this->field('field value')->or('fallback')->value());
+        $this->assertEquals('fallback', $this->field()->or('fallback')->value());
     }
 
     public function testShort()
@@ -228,7 +284,10 @@ class FieldMethodsTest extends TestCase
 
     public function testSplit()
     {
-        $this->markTestIncomplete();
+        $text = 'a, b, c';
+        $expected = ['a', 'b', 'c'];
+
+        $this->assertEquals($expected, $this->field($text)->split());
     }
 
     public function testUpper()

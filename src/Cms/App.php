@@ -118,12 +118,13 @@ class App
     public function __debuginfo(): array
     {
         return [
-            'version' => $this->version(),
-            'request' => $this->request(),
-            'site'    => $this->site(),
-            'urls'    => $this->urls(),
-            'roots'   => $this->roots(),
-            'options' => $this->options(),
+            'languages' => $this->languages(),
+            'options'   => $this->options(),
+            'request'   => $this->request(),
+            'roots'     => $this->roots(),
+            'site'      => $this->site(),
+            'urls'      => $this->urls(),
+            'version'   => $this->version(),
         ];
     }
 

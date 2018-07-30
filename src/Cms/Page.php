@@ -23,6 +23,7 @@ use Throwable;
 class Page extends Model
 {
     use PageActions;
+    use PageSiblings;
     use HasChildren;
     use HasContent;
     use HasFiles;
@@ -443,50 +444,6 @@ class Page extends Model
     }
 
     /**
-     * Checks if there's a next invisible
-     * page in the siblings collection
-     *
-     * @return bool
-     */
-    public function hasNextInvisible(): bool
-    {
-        return $this->nextInvisible() !== null;
-    }
-
-    /**
-     * Checks if there's a next visible
-     * page in the siblings collection
-     *
-     * @return bool
-     */
-    public function hasNextVisible(): bool
-    {
-        return $this->nextVisible() !== null;
-    }
-
-    /**
-     * Checks if there's a previous invisible
-     * page in the siblings collection
-     *
-     * @return bool
-     */
-    public function hasPrevInvisible(): bool
-    {
-        return $this->prevInvisible() !== null;
-    }
-
-    /**
-     * Checks if there's a previous visible
-     * page in the siblings collection
-     *
-     * @return bool
-     */
-    public function hasPrevVisible(): bool
-    {
-        return $this->prevVisible() !== null;
-    }
-
-    /**
      * Checks if the intended template
      * for the page exists.
      *
@@ -787,26 +744,6 @@ class Page extends Model
     }
 
     /**
-     * Returns the next invisible page if it exists
-     *
-     * @return self|null
-     */
-    public function nextInvisible()
-    {
-        return $this->nextAll()->invisible()->first();
-    }
-
-    /**
-     * Returns the next visible page if it exists
-     *
-     * @return self|null
-     */
-    public function nextVisible()
-    {
-        return $this->nextAll()->visible()->first();
-    }
-
-    /**
      * Returns the sorting number
      *
      * @return integer|null
@@ -886,26 +823,6 @@ class Page extends Model
     public function permissions()
     {
         return $this->blueprint()->options();
-    }
-
-    /**
-     * Returns the previous invisible page
-     *
-     * @return self|null
-     */
-    public function prevInvisible()
-    {
-        return $this->prevAll()->invisible()->first();
-    }
-
-    /**
-     * Returns the previous visible page
-     *
-     * @return self|null
-     */
-    public function prevVisible()
-    {
-        return $this->prevAll()->visible()->last();
     }
 
     /**

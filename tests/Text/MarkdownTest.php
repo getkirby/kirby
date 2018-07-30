@@ -39,7 +39,6 @@ class MarkdownTest extends TestCase
 
     public function testParseWithExtra()
     {
-        $this->markTestIncomplete();
         $markdown = new Markdown(['extra' => true]);
         $md       = file_get_contents(static::FIXTURES . '/markdown.md');
         $html     = file_get_contents(static::FIXTURES . '/markdownextra.html');
