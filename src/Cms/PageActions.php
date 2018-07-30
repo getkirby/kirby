@@ -23,7 +23,7 @@ trait PageActions
     protected function changeNum(int $num = null): self
     {
         // always make sure to have the right sorting number
-        $num = $this->createNum($num);
+        $num = $num !== null ? $this->createNum($num) : null;
 
         if ($num === $this->num()) {
             return $this;
