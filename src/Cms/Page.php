@@ -1198,6 +1198,10 @@ class Page extends Model
             return $this->url;
         }
 
+        if ($this->isHomePage() === true) {
+            return $this->url = $this->site()->url();
+        }
+
         if ($parent = $this->parent()) {
             return $this->url = $this->parent()->url() . '/' . $this->slug();
         }

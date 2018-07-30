@@ -233,6 +233,19 @@ class PagePropsTest extends TestCase
         ]);
     }
 
+    public function testHomeUrl()
+    {
+        $app = new App([
+            'site' => [
+                'children' => [
+                    ['slug' => 'home']
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('/', $app->site()->find('home')->url());
+    }
+
     public function testSlug()
     {
         $page = new Page(['slug' => 'test']);
