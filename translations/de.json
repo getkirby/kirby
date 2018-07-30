@@ -86,14 +86,15 @@
   "upload.progress": "Hochladen …",
 
   "user": "Benutzer",
+  "user.create": "Benutzer anlegen",
   "user.created": "Der Benutzer wurde erstellt",
   "user.name": "Name",
-  "user.name.change": "Nutzer umbenennen",
+  "user.name.change": "Benutzer umbenennen",
   "user.name.changed": "Der Name wurde geändert",
-  "user.delete": "Nutzer löschen",
+  "user.delete": "Benutzer löschen",
   "user.delete.confirm":
     "Möchtest du wirklich <br><strong>{email}</strong> löschen?",
-  "user.deleted": "Der Nutzer wurde gelöscht",
+  "user.deleted": "Der Benutzer wurde gelöscht",
   "user.email": "E-Mail",
   "user.email.change": "E-Mail ändern",
   "user.email.changed": "Die E-Mail Adresse wurde geändert",
@@ -117,8 +118,8 @@
   "user.language.changed": "Die Sprache wurde geändert",
   "user.language.select": "Bitte wähl eine Sprache aus …",
   "user.blueprint":
-    "Du kannst weitere Abschnitte und Formularfelder für diese Nutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
-  "user.none": "Keine Nutzer",
+    "Du kannst weitere Abschnitte und Formularfelder für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
+  "user.none": "Keine Benutzer",
 
   "error.form.incomplete": "Bitte behebe alle Fehler …",
   "error.form.converter.invalid": "Ungültiger Konverter \"{converter}\"",
