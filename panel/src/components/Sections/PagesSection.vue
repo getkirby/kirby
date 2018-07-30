@@ -160,7 +160,7 @@ export default {
       switch (action) {
         case "create":
           this.$refs.create.open(
-            this.parent,
+            this.link || this.parent,
             this.name,
             this.blueprints.map(blueprint => {
               return {
