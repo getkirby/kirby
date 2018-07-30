@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1a437fe021583cce856e4c5d010d9961",
-    "content-hash": "ddbf9eedf03b84a30793024bf57a3ca6",
+    "hash": "ca30c095d198746c7a734cd1d9475857",
+    "content-hash": "e18e48eb4f630b2327fb67ea86f188b5",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -979,12 +979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "d32f78b4051de422ab079e7e1ec0645c528451d6"
+                "reference": "807a2994a7d5daeba88530ad45fb0963bfb6888e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/d32f78b4051de422ab079e7e1ec0645c528451d6",
-                "reference": "d32f78b4051de422ab079e7e1ec0645c528451d6",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/807a2994a7d5daeba88530ad45fb0963bfb6888e",
+                "reference": "807a2994a7d5daeba88530ad45fb0963bfb6888e",
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1067,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-07-20 13:16:08"
+            "time": "2018-07-30 13:22:58"
         },
         {
             "name": "myclabs/deep-copy",
