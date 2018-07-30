@@ -337,6 +337,17 @@ class Page extends Model
     }
 
     /**
+     * Returns a number indicating how deep the page
+     * is nested within the content folder
+     *
+     * @return integer
+     */
+    public function depth(): int
+    {
+        return $this->depth = $this->depth ?? (substr_count($this->id(), '/') + 1);
+    }
+
+    /**
      * Sorting number + Slug
      *
      * @return string

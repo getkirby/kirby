@@ -17,6 +17,33 @@ class PagePropsTest extends TestCase
         new App();
     }
 
+    public function testDepth()
+    {
+
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'grandma',
+                    'children' => [
+                        [
+                            'slug' => 'mother',
+                            'children' => [
+                                [
+                                    'slug' => 'child',
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(1, $site->find('grandma')->depth());
+        $this->assertEquals(2, $site->find('grandma/mother')->depth());
+        $this->assertEquals(3, $site->find('grandma/mother/child')->depth());
+    }
+
+
     public function testDragText()
     {
         $page = new Page([
