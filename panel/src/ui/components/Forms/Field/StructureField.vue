@@ -51,12 +51,7 @@
                 @click="jump(index, fieldName)"
               >
                 <template v-if="item[fieldName] !== undefined">
-                  <template v-if="field.type === 'user'">
-                    {{ item[fieldName].email }}
-                  </template>
-                  <template v-else>
-                    {{ displayText(item[fieldName]) }}
-                  </template>
+                  {{ displayText(field, item[fieldName]) }}
                 </template>
               </p>
             </div>
@@ -102,6 +97,7 @@
 
 <script>
 import Field from "../Field.vue";
+import dayjs from "dayjs";
 
 export default {
   inheritAttrs: false,
@@ -198,7 +194,24 @@ export default {
       this.$events.$emit("field.structure.close");
       this.open(index, field);
     },
-    displayText(value) {
+    displayText(field, value) {
+
+      switch (field.type) {
+        case "user":
+          return value.email;
+        case "date":
+          const date = dayjs(value);
+          return date.isValid() ? date.format("YYYY-MM-DD") : "";
+        case "tags":
+        case "checkboxes":
+          return value.map(item => {
+            return item.text;
+          }).join(", ");
+        case "select":
+          const option = field.options.filter(item => item.value === value)[0];
+          return option ? option.text : null;
+      }
+
       if (typeof value === "object" && value !== null) {
         return "…";
       }
