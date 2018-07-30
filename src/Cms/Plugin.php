@@ -91,8 +91,8 @@ class Plugin extends Model
 
     protected function setName(string $name)
     {
-        if (preg_match('!^[a-z-]+\/[a-z-]+$!', $name) == false) {
-            throw new InvalidArgumentException('The plugin name must follow the format "abc/def"');
+        if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) == false) {
+            throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');
         }
 
         $this->name = $name;
