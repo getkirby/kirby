@@ -54,7 +54,7 @@ export default {
           label: this.$t("user.password"),
           type: "password",
           minLength: 8,
-          autocomplete: "password",
+          autocomplete: "current-password",
           counter: false
         }
       };
