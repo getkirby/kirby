@@ -105,6 +105,10 @@ return function (App $app) {
         },
 
         // manipulators
+        'excerpt' => function ($field, int $chars = 0, bool $strip = true, string $rep = '…') {
+            $field->value = Str::excerpt($field->value, $chars, $strip, $rep);
+            return $field;
+        },
         'html' => function ($field) {
             $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
             return $field;

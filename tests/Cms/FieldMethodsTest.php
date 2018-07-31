@@ -101,11 +101,6 @@ class FieldMethodsTest extends TestCase
         $this->markTestIncomplete('test different date handler');
     }
 
-    public function testToExcerpt()
-    {
-        $this->markTestIncomplete();
-    }
-
     public function testToFile()
     {
         $page = new Page([
@@ -239,6 +234,14 @@ class FieldMethodsTest extends TestCase
     public function testEscape()
     {
         $this->markTestIncomplete();
+    }
+
+    public function testExcerpt()
+    {
+        $string   = 'This is a long text<br>with some html';
+        $expected = 'This is a long text with …';
+
+        $this->assertEquals($expected, $this->field($string)->excerpt(27)->value());
     }
 
     public function testHtml()
