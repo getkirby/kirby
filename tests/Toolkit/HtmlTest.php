@@ -136,4 +136,81 @@ class HtmlTest extends TestCase
         $this->assertEquals($expected, $html);
     }
 
+    public function testFigure()
+    {
+        $html = Html::figure('test');
+        $expected = '<figure>test</figure>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testFigureWithAttributes()
+    {
+        $html = Html::figure('test', null, ['class' => 'figure']);
+        $expected = '<figure class="figure">test</figure>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testFigureWithCaption()
+    {
+        $html = Html::figure('test', 'yay');
+        $expected = '<figure>test<figcaption>yay</figcaption></figure>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testGist()
+    {
+        $html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff');
+        $expected = '<script src="' . $url . '.js"></script>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testGistWithFile()
+    {
+        $html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff', 'kirbycontent.txt');
+        $expected = '<script src="' . $url . '.js?file=kirbycontent.txt"></script>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testIframe()
+    {
+        $html = Html::iframe($url = 'https://getkirby.com');
+        $expected = '<iframe src="' . $url . '"></iframe>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testImg()
+    {
+        $html = Html::img($src = 'https://getkirby.com/image.jpg');
+        $expected = '<img alt="" src="' . $src . '">';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testRel()
+    {
+        $html = Html::rel('me');
+        $expected = 'me';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testRelWithTarget()
+    {
+        $html = Html::rel(null, '_blank');
+        $expected = 'noopener noreferrer';
+
+        $this->assertEquals($expected, $html);
+
+        $html = Html::rel('me', '_blank');
+        $expected = 'me noopener noreferrer';
+
+        $this->assertEquals($expected, $html);
+    }
+
 }
