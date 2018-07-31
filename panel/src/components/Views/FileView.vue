@@ -174,23 +174,6 @@ export default {
           break;
       }
     },
-    updateFilename(name) {
-      name = slug(name);
-
-      if (name.length === 0) {
-        this.$store.dispatch("alert", this.$t("error.file.name.missing"));
-        return;
-      }
-
-      if (name === this.name) {
-        return true;
-      }
-
-      this.$api.files.rename(this.path, this.file.filename, name).then(file => {
-        this.$router.push("/pages/" + this.path + "/files/" + file.filename);
-        this.$store.dispatch("notification/success", this.$t("file.renamed"));
-      });
-    },
     uploaded() {
       this.fetch();
       this.$store.dispatch("notification/success", this.$t("file.replaced"));
