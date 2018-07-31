@@ -69,13 +69,11 @@ class Xml
         $nextLevel  = $level + 1;
 
         if (is_array($children) === true) {
-
             unset($children['@attributes'], $children['@value']);
 
             $childTags = [];
 
             foreach ($children as $childName => $childItems) {
-
                 if (is_array($childItems) === true) {
 
                     // another tag with attributes
@@ -88,7 +86,6 @@ class Xml
                             $childTags[] = static::create($childItem, $childName, false, $nextLevel);
                         }
                     }
-
                 } else {
                     $childTags[] = static::tag($childName, $childItems, null, $indent);
                 }
@@ -97,7 +94,6 @@ class Xml
             if (empty($childTags) === false) {
                 $value = $childTags;
             }
-
         }
 
         $result  = $head === true ? '<?xml version="1.0" encoding="utf-8"?>' . PHP_EOL : null;
@@ -205,5 +201,4 @@ class Xml
 
         return $xml;
     }
-
 }
