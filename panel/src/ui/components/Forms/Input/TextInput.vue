@@ -119,6 +119,10 @@ export default {
   font: inherit;
   color: inherit;
 }
+.kirby-text-input::placeholder {
+  color: $color-light-grey;
+}
+
 .kirby-text-input:focus {
   outline: 0;
 }

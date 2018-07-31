@@ -302,6 +302,9 @@ export default {
   line-height: 1.5em;
   color: inherit;
 }
+.kirby-textarea-input-native::placeholder {
+  color: $color-light-grey;
+}
 .kirby-textarea-input-native:focus {
   outline: 0;
 }

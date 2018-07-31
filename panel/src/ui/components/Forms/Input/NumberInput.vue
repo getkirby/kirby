@@ -106,6 +106,9 @@ export default {
   font: inherit;
   color: inherit;
 }
+.kirby-number-input::placeholder {
+  color: $color-light-grey;
+}
 .kirby-number-input:focus {
   outline: 0;
 }
