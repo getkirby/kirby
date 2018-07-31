@@ -190,7 +190,7 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('another-bar', $kirby->option('test.plugin.foo'));
     }
 
-    public function testRoute()
+    public function testRoutes()
     {
         $kirby = new App([
             'routes' => [
@@ -201,6 +201,24 @@ class AppPluginsTest extends TestCase
                     }
                 ]
             ]
+        ]);
+
+        $this->assertEquals('test', $kirby->call('test'));
+    }
+
+    public function testRoutesCallback()
+    {
+        $kirby = new App([
+            'routes' => function () {
+                return [
+                    [
+                        'pattern' => 'test',
+                        'action'  => function () {
+                            return 'test';
+                        }
+                    ]
+                ];
+            }
         ]);
 
         $this->assertEquals('test', $kirby->call('test'));

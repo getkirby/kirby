@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field as FormField;
@@ -147,8 +148,18 @@ trait AppPlugins
         return $this->extensions['pages'] = array_merge($this->extensions['pages'], $pages);
     }
 
-    protected function extendRoutes(array $routes): array
+    /**
+     * Registers additional routes
+     *
+     * @param array|Closure $routes
+     * @return array
+     */
+    protected function extendRoutes($routes): array
     {
+        if (is_a($routes, Closure::class) === true) {
+            $routes = $routes($this);
+        }
+
         return $this->extensions['routes'] = array_merge($this->extensions['routes'], $routes);
     }
 
