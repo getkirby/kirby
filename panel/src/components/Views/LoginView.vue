@@ -14,7 +14,6 @@
           />
         </label>
         <kirby-button
-          :disabled="!valid"
           class="kirby-login-button"
           icon="check"
           type="submit"
@@ -58,9 +57,6 @@ export default {
           counter: false
         }
       };
-    },
-    valid() {
-      return this.user.email.length && this.user.password.length >= 8;
     }
   },
   created() {
