@@ -144,7 +144,7 @@ export default {
   },
   breadcrumb(file, self = true) {
     var breadcrumb = file.parents.map(parent => ({
-      label: parent.slug,
+      label: parent.title,
       link: api.pages.link(parent.id)
     }));
 
