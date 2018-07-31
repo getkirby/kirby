@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ca30c095d198746c7a734cd1d9475857",
-    "content-hash": "e18e48eb4f630b2327fb67ea86f188b5",
+    "hash": "33f61069f525b450294e6cd46b2a352e",
+    "content-hash": "389bcb76cb534399e097f346da8ba8c8",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -979,12 +979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "807a2994a7d5daeba88530ad45fb0963bfb6888e"
+                "reference": "7a20c51f47b112fc207dc7e7990a9ba35aac9af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/807a2994a7d5daeba88530ad45fb0963bfb6888e",
-                "reference": "807a2994a7d5daeba88530ad45fb0963bfb6888e",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/7a20c51f47b112fc207dc7e7990a9ba35aac9af9",
+                "reference": "7a20c51f47b112fc207dc7e7990a9ba35aac9af9",
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1067,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-07-30 13:22:58"
+            "time": "2018-07-30 18:28:20"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1428,12 +1428,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "dcf425ffc656e958ebf9780b796072e3daf44614"
+                "reference": "dbfc2600dee41b0ca3786f274bc1287d85d1c8bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/dcf425ffc656e958ebf9780b796072e3daf44614",
-                "reference": "dcf425ffc656e958ebf9780b796072e3daf44614",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/dbfc2600dee41b0ca3786f274bc1287d85d1c8bf",
+                "reference": "dbfc2600dee41b0ca3786f274bc1287d85d1c8bf",
                 "shasum": ""
             },
             "require": {
@@ -1483,7 +1483,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-07-18 09:55:46"
+            "time": "2018-07-31 07:47:46"
         },
         {
             "name": "phpunit/php-code-coverage",
