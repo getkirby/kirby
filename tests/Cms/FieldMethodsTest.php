@@ -11,7 +11,11 @@ class FieldMethodsTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        new App();
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
     }
 
     public function field($value = '')

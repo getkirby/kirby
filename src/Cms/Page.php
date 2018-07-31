@@ -517,7 +517,13 @@ class Page extends Model
      */
     public function isActive(): bool
     {
-        return $this->site()->page()->is($this);
+        if ($page = $this->site()->page()) {
+            if ($page->is($this) === true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -643,7 +649,17 @@ class Page extends Model
      */
     public function isOpen(): bool
     {
-        return $this->isActive() || $this->site()->page()->parents()->has($this->id());
+        if ($this->isActive() === true) {
+            return true;
+        }
+
+        if ($page = $this->site()->page()) {
+            if ($page->parents()->has($this->id()) === true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
