@@ -13,7 +13,6 @@ use Kirby\Toolkit\Properties;
  */
 class ContentTranslation
 {
-
     use Properties;
 
     /**
@@ -161,5 +160,4 @@ class ContentTranslation
     {
         return $this->slug = $this->slug ?? ($this->content()['slug'] ?? null);
     }
-
 }

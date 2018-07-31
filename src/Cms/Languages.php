@@ -44,5 +44,4 @@ class Languages extends Collection
 
         return $languages;
     }
-
 }

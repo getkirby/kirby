@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 trait HasTranslations
 {
-
     protected $translations;
 
     protected function setTranslations(array $translations = null)
@@ -41,5 +40,4 @@ trait HasTranslations
 
         return $this->translations;
     }
-
 }

@@ -88,5 +88,4 @@ trait PageSiblings
     {
         return $this->prevAll()->unlisted()->first();
     }
-
 }
