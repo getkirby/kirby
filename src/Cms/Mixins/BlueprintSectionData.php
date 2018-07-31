@@ -104,7 +104,7 @@ trait BlueprintSectionData
     protected function itemIcon($item)
     {
         if ($icon = $item->blueprint()->icon()) {
-            if (Str::isEmoji($icon) === true) {
+            if (strlen($icon) !== Str::length($icon)) {
                 return [
                     'type'  => $icon,
                     'back'  => 'black',
