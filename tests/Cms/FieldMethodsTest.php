@@ -315,7 +315,8 @@ class FieldMethodsTest extends TestCase
 
     public function testWords()
     {
-        $this->markTestIncomplete();
+        $text = 'this is an example text';
+        $this->assertEquals(5, $this->field($text)->words());
     }
 
     public function testXml()

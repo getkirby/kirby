@@ -100,6 +100,9 @@ return function (App $app) {
         'length' => function ($field) {
             return Str::length($field->value);
         },
+        'words' => function ($field) {
+            return str_word_count(strip_tags($field->value));
+        },
 
         // manipulators
         'html' => function ($field) {
