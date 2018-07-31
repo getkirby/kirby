@@ -324,7 +324,7 @@ class FieldMethodsTest extends TestCase
 
     public function testXml()
     {
-        $this->markTestIncomplete();
+        $this->assertEquals('&#246;&#228;&#252;', $this->field('öäü')->xml()->value());
     }
 
     public function testYaml()

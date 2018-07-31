@@ -10,6 +10,7 @@ use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
+use Kirby\Toolkit\Xml;
 
 /**
  * Field method setup
@@ -135,6 +136,10 @@ return function (App $app) {
         },
         'markdown' => function ($field) use ($app) {
             $field->value = $app->markdown($field->value);
+            return $field;
+        },
+        'xml' => function ($field) {
+            $field->value = Xml::encode($field->value);
             return $field;
         },
 

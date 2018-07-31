@@ -160,7 +160,7 @@ class Str
      * @param  bool $caseInsensitive
      * @return bool
      */
-    public static function contains(string $string, string $needle, bool $caseInsensitive = false): bool
+    public static function contains(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
         return call_user_func($caseInsensitive === true ? 'stristr' : 'strstr', $string, $needle) !== false;
     }
