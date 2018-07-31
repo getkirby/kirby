@@ -43,6 +43,9 @@
   "file.dimensions": "Dimensionen",
   "file.dimensions.pixel": "Pixel",
   "file.orientation": "Ausrichtung",
+  "file.orientation.landscape": "Querformat",
+  "file.orientation.portrait": "Hochformat",
+  "file.orientation.square": "Quadrat",
 
   "page.created": "Die Seite wurde erstellt",
   "page.delete.confirm":

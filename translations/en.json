@@ -55,6 +55,9 @@
     "file.dimensions": "Dimensions",
     "file.dimensions.pixel": "Pixel",
     "file.orientation": "Orientation",
+    "file.orientation.landscape": "Landscape",
+    "file.orientation.portrait": "Portrait",
+    "file.orientation.square": "Square",
 
     "page.created": "The page has been created",
     "page.delete.confirm": "Do you really want to delete <br><strong>{title}</strong>?",

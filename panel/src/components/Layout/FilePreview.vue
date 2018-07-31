@@ -43,7 +43,7 @@
           </li>
           <li>
             <h3>{{ $t("file.orientation") }}</h3>
-            <p v-if="file.dimensions">{{ file.dimensions.orientation }}</p>
+            <p v-if="file.dimensions">{{ $t("file.orientation." + file.dimensions.orientation) }}</p>
             <p v-else>—</p>
           </li>
         </ul>
