@@ -116,13 +116,14 @@ export default {
 
 .kirby-card .kirby-sort-handle {
   position: absolute;
-  top: .175rem;
-  left: 0;
-  width: $list-item-height;
-  height: $list-item-height;
-  border-radius: 50%;
+  top: .75rem;
+  right: .75rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: $border-radius;
+  background: $color-white;
   opacity: 0;
-  color: $color-white;
+  color: $color-dark;
   z-index: 1;
   cursor: -webkit-grab;
   will-change: opacity;
@@ -136,9 +137,6 @@ export default {
 }
 .kirby-card:hover .kirby-sort-handle {
   opacity: 1;
-}
-.kirby-card .kirby-sort-handle svg {
-  filter: drop-shadow(0 1px 1px #000);
 }
 
 
