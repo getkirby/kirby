@@ -1,7 +1,7 @@
 <template>
   <kirby-dialog
     ref="dialog"
-    :button="$t('create')"
+    :button="$t('page.create')"
     :notification="notification"
     size="medium"
     theme="positive"

@@ -59,7 +59,8 @@
     "file.orientation.portrait": "Portrait",
     "file.orientation.square": "Square",
 
-    "page.created": "The page has been created",
+    "page.create": "Create draft",
+    "page.created": "The draft has been created",
     "page.delete.confirm": "Do you really want to delete <br><strong>{title}</strong>?",
     "page.deleted": "The page has been deleted",
     "page.rename.fromTitle": "Create from title",

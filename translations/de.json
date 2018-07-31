@@ -47,7 +47,8 @@
   "file.orientation.portrait": "Hochformat",
   "file.orientation.square": "Quadrat",
 
-  "page.created": "Die Seite wurde erstellt",
+  "page.create": "Entwurf erstellen",
+  "page.created": "Der Entwurf wurde erstellt",
   "page.delete.confirm":
     "Möchtest du wirklich <br><strong>{title}</strong> löschen?",
   "page.deleted": "Die Seite wurde gelöscht",
