@@ -102,6 +102,25 @@ class Str
     ];
 
     /**
+     * Returns the rest of the string after the given character
+     *
+     * @param  string   $string
+     * @param  string   $needle
+     * @param  bool     $caseInsensitive
+     * @return string
+     */
+    public static function after(string $string, string $needle, bool $caseInsensitive = false): string
+    {
+        $position = static::position($string, $needle, $caseInsensitive);
+
+        if ($position === false) {
+            return false;
+        } else {
+            return static::substr($string, $position + 1);
+        }
+    }
+
+    /**
      * Convert a string to 7-bit ASCII.
      *
      * @param  string  $string
@@ -115,39 +134,35 @@ class Str
     }
 
     /**
-     * Convert a string to a safe version to be used in a URL
+     * Returns the beginning of a string before the given character
      *
-     * @param  string  $string     The unsafe string
-     * @param  string  $separator  To be used instead of space and
-     *                             other non-word characters.
-     * @param  string  $allowed    List of all allowed characters (regex)
-     * @return string              The safe string
+     * @param  string   $string
+     * @param  string   $needle
+     * @param  bool     $caseInsensitive
+     * @return string
      */
-    public static function slug(string $string = null, string $separator = null, string $allowed = null): string
+    public static function before(string $string, string $needle, bool $caseInsensitive = false): string
     {
-        $separator = $separator ?? static::$defaults['slug']['separator'];
-        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
+        $position = static::position($string, $needle, $caseInsensitive);
 
-        $string = trim($string);
-        $string = static::lower($string);
-        $string = static::ascii($string);
-
-        // replace spaces with simple dashes
-        $string = preg_replace('![^' . $allowed . ']!i', $separator, $string);
-
-        if (strlen($separator) > 0) {
-            // remove double separators
-            $string = preg_replace('![' . preg_quote($separator) . ']{2,}!', $separator, $string);
+        if ($position === false) {
+            return false;
+        } else {
+            return static::substr($string, 0, $position);
         }
+    }
 
-        // replace slashes with dashes
-        $string = str_replace('/', $separator, $string);
-
-        // trim leading and trailing non-word-chars
-        $string = preg_replace('!^[^a-z0-9]+!', '', $string);
-        $string = preg_replace('![^a-z0-9]+$!', '', $string);
-
-        return $string;
+    /**
+     * Checks if a str contains another string
+     *
+     * @param  string  $string
+     * @param  string  $needle
+     * @param  bool $caseInsensitive
+     * @return bool
+     */
+    public static function contains(string $string, string $needle, bool $caseInsensitive = false): bool
+    {
+        return call_user_func($caseInsensitive === true ? 'stristr' : 'strstr', $string, $needle) !== false;
     }
 
     /**
@@ -181,166 +196,6 @@ class Str
     }
 
     /**
-     * A UTF-8 safe version of substr()
-     *
-     * @param  string  $string
-     * @param  int     $start
-     * @param  int     $length
-     * @return string
-     */
-    public static function substr(string $string = null, int $start = 0, int $length = null): string
-    {
-        return mb_substr($string, $start, $length, 'UTF-8');
-    }
-
-    /**
-     * Better alternative for explode()
-     * It takes care of removing empty values
-     * and it has a built-in way to skip values
-     * which are too short.
-     *
-     * @param  string  $string The string to split
-     * @param  string  $separator The string to split by
-     * @param  int     $length The min length of values.
-     * @return array   An array of found values
-     */
-    public static function split($string, string $separator = ',', int $length = 1): array
-    {
-        if (is_array($string) === true) {
-            return $string;
-        }
-
-        $string = trim($string, $separator);
-        $parts  = explode($separator, $string);
-        $out    = [];
-
-        foreach ($parts as $p) {
-            $p = trim($p);
-            if (static::length($p) > 0 && static::length($p) >= $length) {
-                $out[] = $p;
-            }
-        }
-
-        return $out;
-    }
-
-    /**
-     * Convert a string to kebab case.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public static function kebab(string $value = null): string
-    {
-        return static::snake($value, '-');
-    }
-
-    /**
-     * A UTF-8 safe version of strtolower()
-     *
-     * @param  string  $string
-     * @return string
-     */
-    public static function lower(string $string = null): string
-    {
-        return mb_strtolower($string, 'UTF-8');
-    }
-
-    /**
-     * A UTF-8 safe version of strotoupper()
-     *
-     * @param  string  $string
-     * @return string
-     */
-    public static function upper(string $string = null): string
-    {
-        return mb_strtoupper($string, 'UTF-8');
-    }
-
-    /**
-     * A UTF-8 safe version of strlen()
-     *
-     * @param  string  $string
-     * @return int
-     */
-    public static function length(string $string = null): int
-    {
-        return mb_strlen($string, 'UTF-8');
-    }
-
-    /**
-     * A UTF-8 safe version of ucfirst()
-     *
-     * @param  string $string
-     * @return string
-     */
-    public static function ucfirst(string $string = null): string
-    {
-        return static::upper(static::substr($string, 0, 1)) . static::lower(static::substr($string, 1));
-    }
-
-    /**
-     * A UTF-8 safe version of ucwords()
-     *
-     * @param  string  $string
-     * @return string
-     */
-    public static function ucwords(string $string = null): string
-    {
-        return mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
-    }
-
-
-    /**
-     * Checks if a str contains another string
-     *
-     * @param  string  $string
-     * @param  string  $needle
-     * @param  bool $caseInsensitive
-     * @return bool
-     */
-    public static function contains(string $string, string $needle, bool $caseInsensitive = false): bool
-    {
-        return call_user_func($caseInsensitive === true ? 'stristr' : 'strstr', $string, $needle) !== false;
-    }
-
-    /**
-     * Returns the position of a needle in a string
-     * if it can be found
-     *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
-     * @return int|bool
-     */
-    public static function position(string $string, string $needle, bool $caseInsensitive = false)
-    {
-        if ($caseInsensitive === true) {
-            $string = static::lower($string);
-            $needle = static::lower($needle);
-        }
-
-        return mb_strpos($string, $needle, 0, 'UTF-8');
-    }
-
-    /**
-     * Checks if a string starts with the passed needle
-     *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
-     * @return bool
-     */
-    public static function startsWith(string $string, string $needle, bool $caseInsensitive = false): bool
-    {
-        if ($needle === '') {
-            return true;
-        }
-
-        return static::position($string, $needle, $caseInsensitive) === 0;
-    }
-
-    /**
      * Checks if a string ends with the passed needle
      *
      * @param  string   $string
@@ -365,62 +220,38 @@ class Str
     }
 
     /**
-     * Returns the beginning of a string before the given character
+     * Creates an excerpt of a string
+     * It removes all html tags first and then cuts the string
+     * according to the specified number of chars.
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
-     * @return string
+     * @param  string  $string The string to be shortened
+     * @param  int     $chars The final number of characters the string should have
+     * @param  boolean $strip True: remove the HTML tags from the string first
+     * @param  string  $rep The element, which should be added if the string is too long. Ellipsis is the default.
+     * @return string  The shortened string
      */
-    public static function before(string $string, string $needle, bool $caseInsensitive = false): string
+    public static function excerpt($string, $chars = 140, $strip = true, $rep = '…')
     {
-        $position = static::position($string, $needle, $caseInsensitive);
-
-        if ($position === false) {
-            return false;
-        } else {
-            return static::substr($string, 0, $position);
+        if ($strip === true) {
+            $string = strip_tags(str_replace('<', ' <', $string));
         }
-    }
 
-    /**
-     * Returns the beginning of a string until the given character
-     *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
-     * @return string
-     */
-    public static function until(string $string, string $needle, bool $caseInsensitive = false): string
-    {
-        $position = static::position($string, $needle, $caseInsensitive);
+        // replace line breaks with spaces
+        $string = str_replace(PHP_EOL, ' ', trim($string));
 
-        if ($position === false) {
-            return false;
-        } else {
-            return static::substr($string, 0, $position + static::length($needle));
+        // remove double spaces
+        $string = preg_replace('![ ]{2,}!', ' ', $string);
+
+        if ($chars === 0) {
+            return $string;
         }
-    }
 
-    /**
-     * Returns the rest of the string after the given character
-     *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
-     * @return string
-     */
-    public static function after(string $string, string $needle, bool $caseInsensitive = false): string
-    {
-        $position = static::position($string, $needle, $caseInsensitive);
-
-        if ($position === false) {
-            return false;
-        } else {
-            return static::substr($string, $position + 1);
+        if (static::length($string) <= $chars) {
+            return $string;
         }
-    }
 
+        return static::substr($string, 0, strrpos(static::substr($string, 0, $chars), ' ')) . ' ' . $rep;
+    }
 
     /**
      * Returns the rest of the string starting from the given character
@@ -439,6 +270,58 @@ class Str
         } else {
             return static::substr($string, $position);
         }
+    }
+
+    /**
+     * Convert a string to kebab case.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public static function kebab(string $value = null): string
+    {
+        return static::snake($value, '-');
+    }
+
+    /**
+     * A UTF-8 safe version of strlen()
+     *
+     * @param  string  $string
+     * @return int
+     */
+    public static function length(string $string = null): int
+    {
+        return mb_strlen($string, 'UTF-8');
+    }
+
+    /**
+     * A UTF-8 safe version of strtolower()
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function lower(string $string = null): string
+    {
+        return mb_strtolower($string, 'UTF-8');
+    }
+
+    /**
+     * Returns the position of a needle in a string
+     * if it can be found
+     *
+     * @param  string   $string
+     * @param  string   $needle
+     * @param  bool     $caseInsensitive
+     * @return int|bool
+     */
+    public static function position(string $string, string $needle, bool $caseInsensitive = false)
+    {
+        if ($caseInsensitive === true) {
+            $string = static::lower($string);
+            $needle = static::lower($needle);
+        }
+
+        return mb_strpos($string, $needle, 0, 'UTF-8');
     }
 
     /**
@@ -488,6 +371,42 @@ class Str
     }
 
     /**
+     * Convert a string to a safe version to be used in a URL
+     *
+     * @param  string  $string     The unsafe string
+     * @param  string  $separator  To be used instead of space and
+     *                             other non-word characters.
+     * @param  string  $allowed    List of all allowed characters (regex)
+     * @return string              The safe string
+     */
+    public static function slug(string $string = null, string $separator = null, string $allowed = null): string
+    {
+        $separator = $separator ?? static::$defaults['slug']['separator'];
+        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
+
+        $string = trim($string);
+        $string = static::lower($string);
+        $string = static::ascii($string);
+
+        // replace spaces with simple dashes
+        $string = preg_replace('![^' . $allowed . ']!i', $separator, $string);
+
+        if (strlen($separator) > 0) {
+            // remove double separators
+            $string = preg_replace('![' . preg_quote($separator) . ']{2,}!', $separator, $string);
+        }
+
+        // replace slashes with dashes
+        $string = str_replace('/', $separator, $string);
+
+        // trim leading and trailing non-word-chars
+        $string = preg_replace('!^[^a-z0-9]+!', '', $string);
+        $string = preg_replace('![^a-z0-9]+$!', '', $string);
+
+        return $string;
+    }
+
+    /**
      * Convert a string to snake case.
      *
      * @param  string  $value
@@ -501,6 +420,67 @@ class Str
             $value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
         }
         return $value;
+    }
+
+    /**
+     * Better alternative for explode()
+     * It takes care of removing empty values
+     * and it has a built-in way to skip values
+     * which are too short.
+     *
+     * @param  string  $string The string to split
+     * @param  string  $separator The string to split by
+     * @param  int     $length The min length of values.
+     * @return array   An array of found values
+     */
+    public static function split($string, string $separator = ',', int $length = 1): array
+    {
+        if (is_array($string) === true) {
+            return $string;
+        }
+
+        $string = trim($string, $separator);
+        $parts  = explode($separator, $string);
+        $out    = [];
+
+        foreach ($parts as $p) {
+            $p = trim($p);
+            if (static::length($p) > 0 && static::length($p) >= $length) {
+                $out[] = $p;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Checks if a string starts with the passed needle
+     *
+     * @param  string   $string
+     * @param  string   $needle
+     * @param  bool     $caseInsensitive
+     * @return bool
+     */
+    public static function startsWith(string $string, string $needle, bool $caseInsensitive = false): bool
+    {
+        if ($needle === '') {
+            return true;
+        }
+
+        return static::position($string, $needle, $caseInsensitive) === 0;
+    }
+
+    /**
+     * A UTF-8 safe version of substr()
+     *
+     * @param  string  $string
+     * @param  int     $start
+     * @param  int     $length
+     * @return string
+     */
+    public static function substr(string $string = null, int $start = 0, int $length = null): string
+    {
+        return mb_substr($string, $start, $length, 'UTF-8');
     }
 
     /**
@@ -531,6 +511,28 @@ class Str
     }
 
     /**
+     * A UTF-8 safe version of ucfirst()
+     *
+     * @param  string $string
+     * @return string
+     */
+    public static function ucfirst(string $string = null): string
+    {
+        return static::upper(static::substr($string, 0, 1)) . static::lower(static::substr($string, 1));
+    }
+
+    /**
+     * A UTF-8 safe version of ucwords()
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function ucwords(string $string = null): string
+    {
+        return mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
+    }
+
+    /**
      * Removes all html tags and encoded chars from a string
      *
      * <code>
@@ -546,6 +548,36 @@ class Str
     public static function unhtml(string $string = null): string
     {
         return Html::decode($string);
+    }
+
+    /**
+     * Returns the beginning of a string until the given character
+     *
+     * @param  string   $string
+     * @param  string   $needle
+     * @param  bool     $caseInsensitive
+     * @return string
+     */
+    public static function until(string $string, string $needle, bool $caseInsensitive = false): string
+    {
+        $position = static::position($string, $needle, $caseInsensitive);
+
+        if ($position === false) {
+            return false;
+        } else {
+            return static::substr($string, 0, $position + static::length($needle));
+        }
+    }
+
+    /**
+     * A UTF-8 safe version of strotoupper()
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function upper(string $string = null): string
+    {
+        return mb_strtoupper($string, 'UTF-8');
     }
 
     /**

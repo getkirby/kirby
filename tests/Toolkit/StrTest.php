@@ -7,6 +7,80 @@ use PHPUnit\Framework\TestCase;
 class StrTest extends TestCase
 {
 
+    public function testAfter()
+    {
+        $string = 'Hellö Wörld';
+
+        // case sensitive
+        $this->assertEquals(' Wörld', Str::after($string, 'ö'));
+        $this->assertEquals(false, Str::after($string, 'Ö'));
+        $this->assertEquals(false, Str::after($string, 'x'));
+
+        // case insensitive
+        $this->assertEquals(' Wörld', Str::after($string, 'ö', true));
+        $this->assertEquals(' Wörld', Str::after($string, 'Ö', true));
+        $this->assertEquals(false, Str::after($string, 'x'));
+    }
+
+    public function testEncoding()
+    {
+        $this->assertEquals('UTF-8', Str::encoding('ÖÄÜ'));
+    }
+
+    public function testExcerpt()
+    {
+        $string   = 'This is a long text<br>with some html';
+        $expected = 'This is a long text with …';
+        $result   = Str::excerpt($string, 27);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testExcerptWithoutChars()
+    {
+        $string   = 'This is a long text<br>with some html';
+        $expected = 'This is a long text with some html';
+        $result   = Str::excerpt($string);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testExcerptWithoutStripping()
+    {
+        $string   = 'This is a long text<br>with some html';
+        $expected = 'This is a long text<br>with …';
+        $result   = Str::excerpt($string, 30, false);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testExcerptWithDifferentRep()
+    {
+        $string   = 'This is a long text<br>with some html';
+        $expected = 'This is a long text with ...';
+        $result   = Str::excerpt($string, 27, true, '...');
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testExcerptWithSpaces()
+    {
+        $string   = 'This is a long text   <br>with some html';
+        $expected = 'This is a long text with …';
+        $result   = Str::excerpt($string, 27);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testExcerptWithLineBreaks()
+    {
+        $string   = 'This is a long text ' . PHP_EOL . ' with some html';
+        $expected = 'This is a long text with …';
+        $result   = Str::excerpt($string, 27);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function testSlug()
     {
         // Double dashes
@@ -48,11 +122,6 @@ class StrTest extends TestCase
 
         // Reset str defaults
         Str::$defaults['slug'] = $defaults;
-    }
-
-    public function testEncoding()
-    {
-        $this->assertEquals('UTF-8', Str::encoding('ÖÄÜ'));
     }
 
     public function testSubstr()
@@ -214,21 +283,6 @@ class StrTest extends TestCase
         $this->assertEquals(false, Str::until($string, 'x'));
     }
 
-    public function testAfter()
-    {
-        $string = 'Hellö Wörld';
-
-        // case sensitive
-        $this->assertEquals(' Wörld', Str::after($string, 'ö'));
-        $this->assertEquals(false, Str::after($string, 'Ö'));
-        $this->assertEquals(false, Str::after($string, 'x'));
-
-        // case insensitive
-        $this->assertEquals(' Wörld', Str::after($string, 'ö', true));
-        $this->assertEquals(' Wörld', Str::after($string, 'Ö', true));
-        $this->assertEquals(false, Str::after($string, 'x'));
-    }
-
     public function testFrom()
     {
         $string = 'Hellö Wörld';
@@ -306,9 +360,5 @@ class StrTest extends TestCase
 
         $this->assertEquals('homer says: hi', $template);
     }
-
-
-
-
 
 }
