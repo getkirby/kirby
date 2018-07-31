@@ -148,6 +148,9 @@ class FieldMethodsTest extends TestCase
     public function testToPage()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'site' => [
                 'children' => [
                     ['slug' => 'a'],
@@ -191,6 +194,9 @@ class FieldMethodsTest extends TestCase
     public function testToCustomUrl()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'urls' => [
                 'index' => 'https://getkirby.com'
             ]
@@ -205,6 +211,9 @@ class FieldMethodsTest extends TestCase
     public function testToUser()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'users' => [
                 ['email' => 'a@company.com'],
                 ['email' => 'b@company.com']
