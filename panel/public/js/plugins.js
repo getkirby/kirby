@@ -4,7 +4,6 @@ window.panel.plugins = {
   components: {},
   fields: {},
   routes: [],
-  translations: {},
   use: [],
   views: {},
 };
@@ -23,14 +22,6 @@ window.panel.plugin = function (plugin, parts) {
   // Sections
   resolve(parts, "sections", function (name, options) {
     window.panel.plugins["components"][`kirby-${name}-section`] = options;
-  });
-
-  // Translations
-  resolve(parts, "translations", function (locale, strings) {
-    window.panel.plugins["translations"][locale] = Object.assign(
-      window.panel.plugins["translations"][locale],
-      strings
-    );
   });
 
   // Vue.use

@@ -30,13 +30,6 @@ Object.entries(window.panel.plugins.fields).forEach(([name, options]) => {
   registerComponent(name, options);
 });
 
-// Translation strings
-Object.entries(window.panel.plugins.translations).forEach(
-  ([locale, strings]) => {
-    Vue.i18n.add(locale, strings);
-  }
-);
-
 // Views
 Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
   // Check for all required properties
