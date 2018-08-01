@@ -20,7 +20,7 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->props['default'] ?? ($this->required() ? 'now' : null);
+            return $this->props['default'] ?? ($this->required() ? date(DATE_W3C) : null);
         },
         'format' => function () {
             return $this->props['format'] ?? ($this->time() === false ? 'Y-m-d' : 'Y-m-d H:i');
