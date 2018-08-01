@@ -197,19 +197,23 @@ export default {
     displayText(field, value) {
 
       switch (field.type) {
-        case "user":
+        case "user": {
           return value.email;
-        case "date":
+        }
+        case "date": {
           const date = dayjs(value);
           return date.isValid() ? date.format("YYYY-MM-DD") : "";
+        }
         case "tags":
-        case "checkboxes":
+        case "checkboxes": {
           return value.map(item => {
             return item.text;
           }).join(", ");
-        case "select":
+        }
+        case "select": {
           const option = field.options.filter(item => item.value === value)[0];
           return option ? option.text : null;
+        }
       }
 
       if (typeof value === "object" && value !== null) {
