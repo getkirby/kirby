@@ -43,11 +43,11 @@ class I18n
      * Translates a given message
      * according to the currently set locale
      *
-     * @param string $key
-     * @param string|null $fallback
+     * @param string|array $key
+     * @param string|array|null $fallback
      * @return string|array|null
      */
-    public static function translate($key, string $fallback = null, string $locale = null)
+    public static function translate($key, $fallback = null, string $locale = null)
     {
         $locale = $locale ?? static::$locale;
 

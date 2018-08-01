@@ -16,9 +16,9 @@ class TestCase extends BaseTestCase
         App::destroy();
         Blueprint::$loaded = [];
 
-        I18n::$locale      = null;
-        I18n::$fallback    = [];
-        I18n::$translation = [];
+        I18n::$locale       = null;
+        I18n::$fallback     = 'en';
+        I18n::$translations = [];
     }
 
     public function tearDown()

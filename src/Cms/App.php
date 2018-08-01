@@ -94,8 +94,8 @@ class App
             'users'
         ]);
 
-        // load the english translation
-        $this->loadFallbackTranslation();
+        // setup the I18n class with the translation loader
+        $this->i18n();
 
         // load all extensions
         $this->extensionsFromSystem();

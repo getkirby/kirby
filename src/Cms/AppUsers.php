@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Form\Field;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 trait AppUsers
@@ -18,7 +19,7 @@ trait AppUsers
         $user        = $this->users()->find($id);
 
         if ($user->validatePassword($password) === true) {
-            $this->loadTranslation($user->language());
+            I18n::$locale = $user->language();
             return $user;
         }
 
@@ -29,8 +30,7 @@ trait AppUsers
     {
         if ($user = $this->users()->find($username)) {
             // Init the user language
-            $this->loadTranslation($user->language());
-
+            I18n::$locale = $user->language();
             return $user;
         }
 
@@ -56,8 +56,7 @@ trait AppUsers
         }
 
         if ($user = $this->users()->find($id)) {
-            // Init the user language
-            $this->loadTranslation($user->language());
+            I18n::$locale = $user->language();
 
             // in case the session needs to be updated, do it now
             // for better performance
@@ -113,7 +112,7 @@ trait AppUsers
         }
 
         if (is_a($this->user, 'Kirby\Cms\User') === true) {
-            $this->loadTranslation($this->user->language());
+            I18n::$locale = $this->user->language();
             return $this->user;
         }
 

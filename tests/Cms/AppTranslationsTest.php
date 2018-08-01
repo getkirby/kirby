@@ -72,6 +72,9 @@ class AppTranslationsTest extends TestCase
 
     public function testExceptionWithoutLanguage()
     {
+        I18n::$load = null;
+        I18n::$translations = [];
+
         $exception = new Exception([
             'key'      => 'test',
             'fallback' => $fallbackError = 'This would be the fallback error'

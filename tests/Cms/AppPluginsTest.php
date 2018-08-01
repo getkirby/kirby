@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
+use Kirby\Toolkit\I18n;
 
 class DummyPage extends Page {}
 
