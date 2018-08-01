@@ -85,5 +85,4 @@ class Obj extends stdClass
     {
         return json_encode($this->toArray(), ...$arguments);
     }
-
 }
