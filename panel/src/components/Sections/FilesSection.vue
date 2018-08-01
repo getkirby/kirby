@@ -23,6 +23,7 @@
     <template v-else>
       <k-dropzone :disabled="add === false" @drop="drop">
         <k-collection
+          v-if="data.length"
           :layout="layout"
           :items="data"
           :pagination="pagination"
@@ -31,6 +32,10 @@
           @paginate="paginate"
           @action="action"
         />
+        <k-box v-else theme="empty">
+          <k-icon type="image" size="medium" />
+          <p>{{ $t('files.empty') }}</p>
+        </k-box>
       </k-dropzone>
 
       <k-file-rename-dialog ref="rename" @success="fetch" />

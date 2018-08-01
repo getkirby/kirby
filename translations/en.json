@@ -59,6 +59,8 @@
     "file.orientation.portrait": "Portrait",
     "file.orientation.square": "Square",
 
+    "files.empty": "No files yet",
+
     "page.create": "Create draft",
     "page.created": "The draft has been created",
     "page.delete.confirm": "Do you really want to delete <br><strong>{title}</strong>?",
@@ -87,6 +89,8 @@
     "page.template.change": "Change template",
     "page.template.changed": "The template has been changed",
     "page.sorted": "Sorted!",
+
+    "pages.empty": "No pages yet",
 
     "search.noSubpages": "No subpages",
 

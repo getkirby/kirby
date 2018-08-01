@@ -73,4 +73,25 @@ export default {
   border-left: 2px solid $color-focus-on-dark;
   padding: .5rem 1.5rem;
 }
+
+.k-box[data-theme="empty"] {
+  text-align: center;
+  border-left: 0;
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: $color-background;
+  border-radius: $border-radius;
+  color: $color-dark-grey;
+  border: 1px dashed $color-border;
+}
+.k-box[data-theme="empty"] .k-icon {
+  margin-bottom: .5rem;
+  color: $color-light-grey;
+}
+.k-box[data-theme="empty"] p {
+  color: $color-dark-grey;
+}
 </style>

@@ -4,6 +4,7 @@
     :role="alt ? 'img' : null"
     :aria-hidden="!alt"
     :data-back="back"
+    :data-size="size"
     class="k-icon"
   >
     <span v-if="emoji" class="k-icon-emoji">{{ type }}</span>
@@ -19,6 +20,7 @@ export default {
     alt: String,
     back: String,
     emoji: Boolean,
+    size: String,
     type: String,
   }
 };
@@ -50,6 +52,14 @@ export default {
 .k-icon[data-back="pattern"] {
   background: lighten($color-dark, 10%) url($pattern);
   color: $color-white;
+}
+.k-icon[data-size="medium"] svg {
+  width: 2rem;
+  height: 2rem;
+}
+.k-icon[data-size="large"] svg {
+  width: 3rem;
+  height: 3rem;
 }
 .k-icon-emoji {
   display: block;

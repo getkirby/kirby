@@ -47,6 +47,8 @@
   "file.orientation.portrait": "Hochformat",
   "file.orientation.square": "Quadrat",
 
+  "files.empty": "Noch keine Dateien",
+
   "page.create": "Entwurf erstellen",
   "page.created": "Der Entwurf wurde erstellt",
   "page.delete.confirm":
@@ -78,6 +80,8 @@
   "page.template.change": "Vorlage ändern",
   "page.template.changed": "Die Vorlage wurde geändert",
   "page.sorted": "Sortiert!",
+
+  "pages.empty": "Noch keine Seiten",
 
   "search.noSubpages": "Keine Unterseiten",
 

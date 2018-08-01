@@ -21,6 +21,7 @@
     <template v-else>
 
       <k-collection
+        v-if="data.length"
         :layout="layout"
         :items="data"
         :pagination="pagination"
@@ -29,6 +30,10 @@
         @paginate="paginate"
         @action="action"
       />
+      <k-box v-else theme="empty">
+        <k-icon type="page" size="medium" />
+        <p>{{ $t('pages.empty') }}</p>
+      </k-box>
 
       <k-page-create-dialog ref="create" />
       <k-page-rename-dialog ref="rename" @success="fetch" />
