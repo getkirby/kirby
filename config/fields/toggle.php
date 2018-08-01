@@ -4,6 +4,9 @@ use Kirby\Exception\InvalidArgumentException;
 
 return [
     'props' => [
+        'default' => function ($value = null) {
+            return $this->toBool($value);
+        },
         'text' => function ($value = null) {
 
             if (is_array($value) === true) {
@@ -23,11 +26,20 @@ return [
             return I18n::translate($value, $value);
 
         },
-        'value' => function ($value = null) {
-            return in_array($value, [true, 'true', 1, '1', 'on'], true) === true;
+    ],
+    'computed' => [
+        'value' => function () {
+            if ($this->props['value'] === null) {
+                return $this->default();
+            } else {
+                return $this->toBool($this->props['value']);
+            }
         }
     ],
     'methods' => [
+        'toBool' => function ($value) {
+            return in_array($value, [true, 'true', 1, '1', 'on'], true) === true;
+        },
         'toString' => function ($value): string {
             return $value === true ? 'true' : 'false';
         }
