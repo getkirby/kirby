@@ -30,7 +30,7 @@
         @paginate="paginate"
         @action="action"
       />
-      <k-box v-else theme="empty">
+      <k-box v-else theme="empty" @click="if (add) action(null, 'create')">
         <k-icon type="page" size="medium" />
         <p>{{ $t('pages.empty') }}</p>
       </k-box>

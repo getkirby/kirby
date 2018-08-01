@@ -32,7 +32,7 @@
           @paginate="paginate"
           @action="action"
         />
-        <k-box v-else theme="empty">
+        <k-box v-else theme="empty" @click="if (add) upload()">
           <k-icon type="image" size="medium" />
           <p>{{ $t('files.empty') }}</p>
         </k-box>
