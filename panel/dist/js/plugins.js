@@ -4,7 +4,6 @@ window.panel.plugins = {
   components: {},
   fields: {},
   routes: [],
-  translations: {},
   use: [],
   views: {},
 };
@@ -17,20 +16,12 @@ window.panel.plugin = function (plugin, parts) {
 
   // Fields
   resolve(parts, "fields", function (name, options) {
-    window.panel.plugins["fields"][`kirby-${name}-field`] = options;
+    window.panel.plugins["fields"][`k-${name}-field`] = options;
   });
 
   // Sections
   resolve(parts, "sections", function (name, options) {
-    window.panel.plugins["components"][`kirby-${name}-section`] = options;
-  });
-
-  // Translations
-  resolve(parts, "translations", function (locale, strings) {
-    window.panel.plugins["translations"][locale] = Object.assign(
-      window.panel.plugins["translations"][locale],
-      strings
-    );
+    window.panel.plugins["components"][`k-${name}-section`] = options;
   });
 
   // Vue.use
