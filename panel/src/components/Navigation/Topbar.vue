@@ -232,6 +232,10 @@ export default {
     rgba($color-dark, 1)
   );
 }
+.kirby-topbar-signals .kirby-button {
+  line-height: 1;
+}
+
 .kirby-topbar-notification {
   font-weight: $font-weight-bold;
   line-height: 1;
