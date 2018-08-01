@@ -262,4 +262,27 @@ class AppPluginsTest extends TestCase
         $this->assertEquals($file, $kirby->extension('templates', 'project'));
     }
 
+    public function testTranslation()
+    {
+
+        $kirby = new App([
+            'translations' => [
+                'en' => [
+                    'test' => 'English Test'
+                ],
+                'de' => [
+                    'test' => 'Deutscher Test'
+                ]
+            ]
+        ]);
+
+        I18n::$locale = 'en';
+
+        $this->assertEquals('English Test', I18n::translate('test'));
+
+        I18n::$locale = 'de';
+
+        $this->assertEquals('Deutscher Test', I18n::translate('test'));
+    }
+
 }
