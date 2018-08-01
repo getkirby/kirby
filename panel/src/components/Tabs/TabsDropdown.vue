@@ -1,20 +1,20 @@
 <template>
-  <kirby-dropdown class="kirby-tabs-dropdown">
-    <kirby-button
+  <k-dropdown class="k-tabs-dropdown">
+    <k-button
       :key="tab.name + '-toggle'"
       :icon="tab.icon"
-      class="kirby-tabs-dropdown-toggle"
+      class="k-tabs-dropdown-toggle"
       @click="$refs.tabs.toggle()"
-    >{{ tab.label }}</kirby-button>
-    <kirby-dropdown-content ref="tabs">
-      <kirby-dropdown-item
+    >{{ tab.label }}</k-button>
+    <k-dropdown-content ref="tabs">
+      <k-dropdown-item
         v-for="tab in tabs"
         :key="tab.name + '-dropdown-item'"
         :icon="tab.icon"
         :link="'#' + tab.name"
-      >{{ tab.label }}</kirby-dropdown-item>
-    </kirby-dropdown-content>
-  </kirby-dropdown>
+      >{{ tab.label }}</k-dropdown-item>
+    </k-dropdown-content>
+  </k-dropdown>
 </template>
 
 <script>
@@ -41,10 +41,10 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-tabs-dropdown-toggle {
+.k-tabs-dropdown-toggle {
   position: relative;
 }
-.kirby-tabs-dropdown-toggle::after {
+.k-tabs-dropdown-toggle::after {
   position: absolute;
   content: "";
   left: 0.75rem;
@@ -53,7 +53,7 @@ export default {
   height: 2px;
   background: $color-dark;
 }
-.kirby-tabs-dropdown-toggle::before {
+.k-tabs-dropdown-toggle::before {
   position: absolute;
   content: "";
   border-bottom: 4px solid $color-dark;

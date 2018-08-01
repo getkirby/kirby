@@ -1,5 +1,5 @@
 <template>
-  <div :data-align="align" class="kirby-view" >
+  <div :data-align="align" class="k-view" >
     <slot />
   </div>
 </template>
@@ -13,7 +13,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-view {
+.k-view {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   margin: 0 auto;
@@ -40,7 +40,7 @@ export default {
   }
 }
 
-.kirby-view[data-align="center"] {
+.k-view[data-align="center"] {
   height: 100vh;
   display: flex;
   align-items: center;
@@ -48,7 +48,7 @@ export default {
   padding: 0 3rem;
   overflow: auto;
 }
-.kirby-view[data-align="center"] > * {
+.k-view[data-align="center"] > * {
   flex-basis: 22.5rem;
 }
 </style>

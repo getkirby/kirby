@@ -2,7 +2,7 @@
   <div
     :data-dragging="dragging"
     :data-over="over"
-    class="kirby-dropzone"
+    class="k-dropzone"
     @dragenter="onEnter"
     @dragleave="onLeave"
     @dragover="onOver"
@@ -81,10 +81,10 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-dropzone {
+.k-dropzone {
   position: relative;
 }
-.kirby-dropzone::after {
+.k-dropzone::after {
   content: "";
   position: absolute;
   top: 0;
@@ -95,7 +95,7 @@ export default {
   pointer-events: none;
   z-index: 1;
 }
-.kirby-dropzone[data-over]::after {
+.k-dropzone[data-over]::after {
   display: block;
   outline: 1px solid $color-focus;
   box-shadow: $color-focus-outline 0 0 0 3px;

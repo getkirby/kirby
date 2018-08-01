@@ -13,7 +13,7 @@
       step,
       value
     }"
-    class="kirby-number-input"
+    class="k-number-input"
     type="number"
     v-on="listeners"
   >
@@ -99,20 +99,20 @@ export default {
 </script>
 
 <style>
-.kirby-number-input {
+.k-number-input {
   width: 100%;
   border: 0;
   background: none;
   font: inherit;
   color: inherit;
 }
-.kirby-number-input::placeholder {
+.k-number-input::placeholder {
   color: $color-light-grey;
 }
-.kirby-number-input:focus {
+.k-number-input:focus {
   outline: 0;
 }
-.kirby-number-input:invalid {
+.k-number-input:invalid {
   box-shadow: none;
   outline: 0;
 }

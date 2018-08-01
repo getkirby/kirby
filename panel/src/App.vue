@@ -3,24 +3,24 @@
     v-if="!$store.state.system.info.isBroken"
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
-    class="kirby-panel"
+    class="k-panel"
   >
-    <kirby-topbar />
-    <kirby-search v-if="$store.state.search" v-bind="$store.state.search" />
-    <kirby-license-bar />
-    <main class="kirby-panel-view">
+    <k-topbar />
+    <k-search v-if="$store.state.search" v-bind="$store.state.search" />
+    <k-license-bar />
+    <main class="k-panel-view">
       <router-view />
     </main>
-    <kirby-form-buttons />
-    <kirby-error-dialog />
-    <div v-if="offline" class="kirby-offline-warning">
+    <k-form-buttons />
+    <k-error-dialog />
+    <div v-if="offline" class="k-offline-warning">
       <p>The panel is currently offline</p>
     </div>
   </div>
 
-  <kirby-error-view v-else>
+  <k-error-view v-else>
     The panel cannot connect to the API 😭
-  </kirby-error-view>
+  </k-error-view>
 </template>
 
 <script>
@@ -30,8 +30,8 @@ import Search from "@/components/Navigation/Search.vue";
 export default {
   name: "App",
   components: {
-    "kirby-license-bar": LicenseBar,
-    "kirby-search": Search
+    "k-license-bar": LicenseBar,
+    "k-search": Search
   },
   data() {
     return {
@@ -116,28 +116,28 @@ b {
   opacity: 0;
 }
 
-.kirby-panel {
+.k-panel {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
 }
-.kirby-panel-view {
+.k-panel-view {
   position: relative;
   flex-grow: 1;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
-.kirby-panel[data-loading] {
+.k-panel[data-loading] {
   animation: Loading 0.5s;
 }
-.kirby-panel[data-loading]::after,
+.k-panel[data-loading]::after,
 
-.kirby-panel[data-dragging] {
+.k-panel[data-dragging] {
   user-select: none;
 }
 
-.kirby-offline-warning {
+.k-offline-warning {
   position: fixed;
   content: " ";
   top: 0;
@@ -146,7 +146,7 @@ b {
   left: 0;
   z-index: z-index(loader);
 }
-.kirby-offline-warning {
+.k-offline-warning {
   background: rgba($color-dark, 0.7);
   content: "offline";
   display: flex;

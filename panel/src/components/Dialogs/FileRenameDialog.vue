@@ -1,19 +1,19 @@
 <template>
-  <kirby-dialog
+  <k-dialog
     ref="dialog"
     :button="$t('rename')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
   >
-    <kirby-form
+    <k-form
       ref="form"
       :fields="fields"
       v-model="file"
       @submit="submit"
       @input="file.name = sluggify(file.name)"
     />
-  </kirby-dialog>
+  </k-dialog>
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
-  <div :data-theme="theme" class="kirby-box" v-on="$listeners">
+  <div :data-theme="theme" class="k-box" v-on="$listeners">
     <slot>
-      <kirby-text v-html="text" />
+      <k-text v-html="text" />
     </slot>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
 
 <style lang="scss">
 
-.kirby-box {
+.k-box {
   background: lighten($color-light-grey, 25%);
   border-radius: $border-radius;
   padding: .375rem .75rem;
@@ -27,7 +27,7 @@ export default {
   word-wrap: break-word;
   font-size: $font-size-small;
 }
-.kirby-box[data-theme="code"] {
+.k-box[data-theme="code"] {
   background: $color-dark;
   border: 1px solid $color-black;
   color: $color-light;
@@ -35,10 +35,10 @@ export default {
   font-size: $font-size-small;
   line-height: 1.5;
 }
-.kirby-box[data-theme="button"] {
+.k-box[data-theme="button"] {
   padding: 0;
 }
-.kirby-box[data-theme="button"] .kirby-button {
+.k-box[data-theme="button"] .k-button {
   padding: 0 .75rem;
   height: 2.25rem;
   width: 100%;
@@ -49,25 +49,25 @@ export default {
 }
 
 /** TODO: refactor this and remove the stuff above if possible **/
-.kirby-box[data-theme="positive"] {
+.k-box[data-theme="positive"] {
   background: lighten($color-positive-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-positive-on-dark;
   padding: .5rem 1.5rem;
 }
-.kirby-box[data-theme="negative"] {
+.k-box[data-theme="negative"] {
   background: lighten($color-negative-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-negative-on-dark;
   padding: .5rem 1.5rem;
 }
-.kirby-box[data-theme="notice"] {
+.k-box[data-theme="notice"] {
   background: lighten($color-notice-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-notice-on-dark;
   padding: .5rem 1.5rem;
 }
-.kirby-box[data-theme="info"] {
+.k-box[data-theme="info"] {
   background: lighten($color-focus-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-focus-on-dark;

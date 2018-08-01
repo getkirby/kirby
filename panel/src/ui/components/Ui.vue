@@ -1,6 +1,6 @@
 <template>
-  <div class="kirby-ui">
-    <kirby-icons />
+  <div class="k-ui">
+    <k-icons />
     <slot />
   </div>
 </template>
@@ -14,7 +14,7 @@ Vue.use(Ui);
 
 export default {
   components: {
-    "kirby-icons": Icons
+    "k-icons": Icons
   }
 };
 
@@ -52,15 +52,15 @@ html {
   background: $color-background;
   color: $color-dark;
 }
-.kirby-ui a {
+.k-ui a {
   color: inherit;
   text-decoration: none;
 }
-.kirby-ui li {
+.k-ui li {
   list-style: none;
 }
-.kirby-ui strong,
-.kirby-ui b {
+.k-ui strong,
+.k-ui b {
   font-weight: $font-weight-bold;
 }
 

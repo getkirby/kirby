@@ -16,7 +16,7 @@
       type,
       value
     }"
-    class="kirby-text-input"
+    class="k-text-input"
     v-on="listeners"
   >
 </template>
@@ -32,7 +32,7 @@ import {
 
 export default {
   inheritAttrs: false,
-  class: "kirby-text-input",
+  class: "k-text-input",
   props: {
     autocomplete: {
       type: [Boolean, String],
@@ -112,21 +112,21 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-text-input {
+.k-text-input {
   width: 100%;
   border: 0;
   background: none;
   font: inherit;
   color: inherit;
 }
-.kirby-text-input::placeholder {
+.k-text-input::placeholder {
   color: $color-light-grey;
 }
 
-.kirby-text-input:focus {
+.k-text-input:focus {
   outline: 0;
 }
-.kirby-text-input:invalid {
+.k-text-input:invalid {
   box-shadow: none;
   outline: 0;
 }

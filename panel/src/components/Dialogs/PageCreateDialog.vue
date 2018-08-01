@@ -1,5 +1,5 @@
 <template>
-  <kirby-dialog
+  <k-dialog
     ref="dialog"
     :button="$t('page.create')"
     :notification="notification"
@@ -7,13 +7,13 @@
     theme="positive"
     @submit="$refs.form.submit()"
   >
-    <kirby-form
+    <k-form
       ref="form"
       :fields="fields"
       v-model="page"
       @submit="submit"
     />
-  </kirby-dialog>
+  </k-dialog>
 </template>
 
 <script>

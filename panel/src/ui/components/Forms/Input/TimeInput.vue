@@ -1,6 +1,6 @@
 <template>
-  <div class="kirby-time-input">
-    <kirby-select-input
+  <div class="k-time-input">
+    <k-select-input
       ref="hour"
       :id="id"
       :autofocus="autofocus"
@@ -13,8 +13,8 @@
       @input="onInput"
       @invalid="onInvalid"
     />
-    <span class="kirby-time-input-separator">:</span>
-    <kirby-select-input
+    <span class="k-time-input-separator">:</span>
+    <k-select-input
       ref="minute"
       :options="minutes"
       :required="required"
@@ -25,7 +25,7 @@
       @input="onInput"
       @invalid="onInvalid"
     />
-    <kirby-select-input
+    <k-select-input
       v-if="notation === 12"
       ref="meridiem"
       :empty="false"
@@ -36,7 +36,7 @@
       :required="required"
       :disabled="disabled"
       v-model="meridiem"
-      class="kirby-time-input-meridiem"
+      class="k-time-input-meridiem"
       @input="onInput"
     />
   </div>
@@ -162,16 +162,16 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-time-input {
+.k-time-input {
   display: flex;
   flex-grow: 1;
   align-items: center;
   line-height: 1;
 }
-.kirby-time-input-separator {
+.k-time-input-separator {
   padding: 0 $field-input-padding / 4;
 }
-.kirby-time-input-meridiem {
+.k-time-input-meridiem {
   padding-left: $field-input-padding;
 }
 </style>

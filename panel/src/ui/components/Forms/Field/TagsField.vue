@@ -1,18 +1,18 @@
 <template>
-  <kirby-field
+  <k-field
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="kirby-tags-field"
+    class="k-tags-field"
   >
-    <kirby-input
+    <k-input
       ref="input"
       :id="_uid"
       v-bind="$props"
       theme="field"
       v-on="$listeners"
     />
-  </kirby-field>
+  </k-field>
 </template>
 
 <script>
@@ -53,10 +53,10 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-field-counter {
+.k-field-counter {
   display: none;
 }
-.kirby-text-field:focus-within .kirby-field-counter {
+.k-text-field:focus-within .k-field-counter {
   display: block;
 }
 </style>

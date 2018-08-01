@@ -1,7 +1,7 @@
 <template>
-  <div class="kirby-search" @click="close">
-    <div class="kirby-search-box" @click.stop>
-      <div class="kirby-search-input">
+  <div class="k-search" @click="close">
+    <div class="k-search-box" @click.stop>
+      <div class="k-search-input">
         <input
           ref="input"
           v-model="q"
@@ -15,8 +15,8 @@
           @keydown.meta.left.prevent="back"
           @keydown.meta.right.prevent="tab"
         >
-        <kirby-button v-show="parent.length" icon="parent" @click="back" />
-        <kirby-button icon="cancel" @click="close" />
+        <k-button v-show="parent.length" icon="parent" @click="back" />
+        <k-button icon="cancel" @click="close" />
       </div>
       <ul>
         <li
@@ -25,14 +25,14 @@
           :data-selected="selected === pageIndex"
           @mouseover="selected = pageIndex"
         >
-          <kirby-link :to="'/pages/' + page.id.replace('/', '+')" @click="click(pageIndex)">
+          <k-link :to="'/pages/' + page.id.replace('/', '+')" @click="click(pageIndex)">
             <strong>{{ page.title }}</strong>
             <small>{{ page.id }}</small>
-          </kirby-link>
-          <kirby-button v-if="page.hasChildren" icon="angle-right" @click="selected = pageIndex; tab()" />
+          </k-link>
+          <k-button v-if="page.hasChildren" icon="angle-right" @click="selected = pageIndex; tab()" />
         </li>
       </ul>
-      <div v-if="pages.length === 0" class="kirby-search-empty">
+      <div v-if="pages.length === 0" class="k-search-empty">
         {{ $t('search.noSubpages') }}
       </div>
     </div>
@@ -175,7 +175,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-search {
+.k-search {
   position: fixed;
   top: 0;
   right: 0;
@@ -186,16 +186,16 @@ export default {
   background: $color-backdrop;
   backdrop-filter: blur(2px);
 }
-.kirby-search-box {
+.k-search-box {
   max-width: 30rem;
   margin: 5rem auto;
   box-shadow: $box-shadow;
 }
-.kirby-search-input {
+.k-search-input {
   background: #efefef;
   display: flex;
 }
-.kirby-search-input input {
+.k-search-input input {
   background: none;
   flex-grow: 1;
   text-transform: lowercase;
@@ -203,43 +203,43 @@ export default {
   padding: .75rem;
   border: 0;
 }
-.kirby-search-input .kirby-button {
+.k-search-input .k-button {
   width: 2.5rem;
 }
-.kirby-search input:focus {
+.k-search input:focus {
   outline: 0;
 }
-.kirby-search ul {
+.k-search ul {
   background: #fff;
 }
-.kirby-search li {
+.k-search li {
   border-bottom: 1px solid $color-background;
   line-height: 1.125;
   display: flex;
 }
-.kirby-search li .kirby-link {
+.k-search li .k-link {
   display: block;
   padding: .5rem .75rem;
   flex-grow: 1;
 }
-.kirby-search li .kirby-button {
+.k-search li .k-button {
   width: 2.5rem;
 }
-.kirby-search li strong {
+.k-search li strong {
   display: block;
   font-size: $font-size-small;
   font-weight: 400;
 }
-.kirby-search li small {
+.k-search li small {
   font-size: $font-size-tiny;
   color: $color-dark-grey;
 }
-.kirby-search li[data-selected] {
+.k-search li[data-selected] {
   outline: 2px solid $color-focus;
   background: $color-focus-outline;
   border-bottom: 1px solid transparent;
 }
-.kirby-search-empty {
+.k-search-empty {
   padding: .825rem .75rem;
   font-size: $font-size-tiny;
   background: $color-background;

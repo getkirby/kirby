@@ -1,13 +1,13 @@
 <template>
-  <kirby-dialog
+  <k-dialog
     ref="dialog"
     :button="$t('delete')"
     theme="negative"
     icon="trash"
     @submit="submit"
   >
-    <kirby-text v-html="$t('user.delete.confirm', { email: user.email })" />
-  </kirby-dialog>
+    <k-text v-html="$t('user.delete.confirm', { email: user.email })" />
+  </k-dialog>
 </template>
 
 <script>

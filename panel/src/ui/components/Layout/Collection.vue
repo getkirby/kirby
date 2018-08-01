@@ -1,6 +1,6 @@
 <template>
-  <div :data-layout="layout" class="kirby-collection">
-    <kirby-draggable
+  <div :data-layout="layout" class="k-collection">
+    <k-draggable
       :list="items"
       :options="dragOptions"
       :element="elements.list"
@@ -11,15 +11,15 @@
       <component
         v-for="(item, index) in items"
         :is="elements.item"
-        :class="{'kirby-draggable-item': item.sortable}"
+        :class="{'k-draggable-item': item.sortable}"
         :key="index"
         v-bind="item"
         @action="$emit('action', item, $event)"
         @dragstart="onDragStart($event, item.dragText)"
       />
-    </kirby-draggable>
+    </k-draggable>
 
-    <kirby-pagination
+    <k-pagination
       v-if="pagination !== false && paginationOptions.hide !== true"
       v-bind="paginationOptions"
       @paginate="$emit('paginate', $event)"
@@ -64,19 +64,19 @@ export default {
         filter: ".disabled",
         delay: 1,
         disabled: this.sortable === false,
-        draggable: ".kirby-draggable-item",
-        handle: ".kirby-sort-handle",
+        draggable: ".k-draggable-item",
+        handle: ".k-sort-handle",
       };
     },
     elements() {
       const layouts = {
         cards: {
-          list: "kirby-cards",
-          item: "kirby-card"
+          list: "k-cards",
+          item: "k-card"
         },
         list: {
-          list: "kirby-list",
-          item: "kirby-list-item"
+          list: "k-list",
+          item: "k-list-item"
         },
       };
 
@@ -133,15 +133,15 @@ export default {
 
 <style lang="scss">
 
-.kirby-collection > *:not(:empty) {
+.k-collection > *:not(:empty) {
   min-height: 38px;
   margin-bottom: 2px;
 }
-.kirby-collection > *:empty {
+.k-collection > *:empty {
   position: relative;
 }
 
-.kirby-collection > *:empty:after {
+.k-collection > *:empty:after {
   background: lighten($color-light-grey, 27.5%);
   border-radius: $border-radius;
   padding: .375rem .75rem;
@@ -154,13 +154,13 @@ export default {
   display: block;
 }
 
-.kirby-collection .sortable-ghost {
+.k-collection .sortable-ghost {
   position: relative;
   outline: 2px solid $color-focus;
   z-index: 1;
   box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
 }
-.kirby-collection .sortable-fallback {
+.k-collection .sortable-fallback {
   opacity: .25 !important;
   overflow: hidden;
 }

@@ -3,7 +3,7 @@
     :data-align="align"
     :data-size="size"
     :data-theme="theme"
-    class="kirby-text"
+    class="k-text"
   >
     <slot />
   </div>
@@ -20,40 +20,40 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-text {
+.k-text {
   line-height: 1.5em;
 }
-.kirby-text p {
+.k-text p {
   margin-bottom: 1.5em;
 }
-.kirby-text a {
+.k-text a {
   text-decoration: underline;
 }
-.kirby-text > *:last-child {
+.k-text > *:last-child {
   margin-bottom: 0;
 }
 
-.kirby-text[data-align="center"] {
+.k-text[data-align="center"] {
   text-align: center;
 }
-.kirby-text[data-align="right"] {
+.k-text[data-align="right"] {
   text-align: center;
 }
 
-.kirby-text[data-size="tiny"] {
+.k-text[data-size="tiny"] {
   font-size: $font-size-tiny;
 }
-.kirby-text[data-size="small"] {
+.k-text[data-size="small"] {
   font-size: $font-size-small;
 }
-.kirby-text[data-size="medium"] {
+.k-text[data-size="medium"] {
   font-size: $font-size-medium;
 }
-.kirby-text[data-size="large"] {
+.k-text[data-size="large"] {
   font-size: $font-size-large;
 }
 
-.kirby-text[data-theme="help"] {
+.k-text[data-theme="help"] {
   font-size: $font-size-small;
   color: $color-dark-grey;
   line-height: 1.5rem;

@@ -1,28 +1,28 @@
 <template>
 
-  <section v-if="isLoading === false" class="kirby-files-section">
+  <section v-if="isLoading === false" class="k-files-section">
 
-    <header class="kirby-section-header">
-      <kirby-headline>
+    <header class="k-section-header">
+      <k-headline>
         {{ headline }} <abbr v-if="min" title="This section is required">*</abbr>
-      </kirby-headline>
-      <kirby-button-group v-if="add">
-        <kirby-button icon="upload" @click="upload">{{ $t("add") }}</kirby-button>
-      </kirby-button-group>
+      </k-headline>
+      <k-button-group v-if="add">
+        <k-button icon="upload" @click="upload">{{ $t("add") }}</k-button>
+      </k-button-group>
     </header>
 
     <template v-if="issue">
-      <kirby-box theme="negative">
-        <kirby-text size="small">
+      <k-box theme="negative">
+        <k-text size="small">
           <strong>{{ $t("error.blueprint.section.notLoaded", {name: name}) }}:</strong>
           {{ issue }}
-        </kirby-text>
-      </kirby-box>
+        </k-text>
+      </k-box>
     </template>
 
     <template v-else>
-      <kirby-dropzone :disabled="add === false" @drop="drop">
-        <kirby-collection
+      <k-dropzone :disabled="add === false" @drop="drop">
+        <k-collection
           :layout="layout"
           :items="data"
           :pagination="pagination"
@@ -31,11 +31,11 @@
           @paginate="paginate"
           @action="action"
         />
-      </kirby-dropzone>
+      </k-dropzone>
 
-      <kirby-file-rename-dialog ref="rename" @success="fetch" />
-      <kirby-file-remove-dialog ref="remove" @success="fetch" />
-      <kirby-upload ref="upload" @success="uploaded" @error="fetch" />
+      <k-file-rename-dialog ref="rename" @success="fetch" />
+      <k-file-remove-dialog ref="remove" @success="fetch" />
+      <k-upload ref="upload" @success="uploaded" @error="fetch" />
     </template>
 
   </section>

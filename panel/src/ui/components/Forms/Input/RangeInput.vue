@@ -1,5 +1,5 @@
 <template>
-  <label class="kirby-range-input">
+  <label class="k-range-input">
     <input
       ref="input"
       v-bind="{
@@ -15,13 +15,13 @@
       }"
       :style="`--min: ${min}; --max: ${max}; --value: ${position}`"
       type="range"
-      class="kirby-range-input-native"
+      class="k-range-input-native"
       v-on="listeners"
     >
-    <span v-if="tooltip" class="kirby-range-input-tooltip">
-      <span v-if="tooltip.before" class="kirby-range-input-tooltip-before">{{ tooltip.before }}</span>
-      <span class="kirby-range-input-tooltip-text">{{ label }}</span>
-      <span v-if="tooltip.after" class="kirby-range-input-tooltip-after">{{ tooltip.after }}</span>
+    <span v-if="tooltip" class="k-range-input-tooltip">
+      <span v-if="tooltip.before" class="k-range-input-tooltip-before">{{ tooltip.before }}</span>
+      <span class="k-range-input-tooltip-text">{{ label }}</span>
+      <span v-if="tooltip.after" class="k-range-input-tooltip-after">{{ tooltip.after }}</span>
     </span>
   </label>
 </template>
@@ -166,12 +166,12 @@ $range-track-focus-color: $color-focus;
   border: $range-thumb-focus-border;
 }
 
-.kirby-range-input {
+.k-range-input {
   display: flex;
   align-items: center;
 }
 
-.kirby-range-input-native {
+.k-range-input-native {
 
   --min: 0;
   --max: 100;
@@ -222,7 +222,7 @@ $range-track-focus-color: $color-focus;
   }
 }
 
-.kirby-range-input-native:focus {
+.k-range-input-native:focus {
   outline: none;
 
   &::-webkit-slider-runnable-track {
@@ -246,7 +246,7 @@ $range-track-focus-color: $color-focus;
   }
 }
 
-.kirby-range-input-tooltip {
+.k-range-input-tooltip {
   position: relative;
   max-width: 20%;
   display: flex;
@@ -274,7 +274,7 @@ $range-track-focus-color: $color-focus;
     content: "";
   }
 }
-.kirby-range-input-tooltip > * {
+.k-range-input-tooltip > * {
   padding: 4px;
 }
 </style>

@@ -1,23 +1,23 @@
 <template>
-  <kirby-field :input="_uid" v-bind="$props" class="kirby-email-field">
-    <kirby-input
+  <k-field :input="_uid" v-bind="$props" class="k-email-field">
+    <k-input
       ref="input"
       :id="_uid"
       v-bind="$props"
       theme="field"
       v-on="$listeners"
     >
-      <kirby-button
+      <k-button
         v-if="link"
         slot="icon"
         :icon="icon"
         :link="'mailto:' + value"
-        class="kirby-input-icon-button"
+        class="k-input-icon-button"
         tabindex="-1"
         target="_blank"
       />
-    </kirby-input>
-  </kirby-field>
+    </k-input>
+  </k-field>
 </template>
 
 <script>

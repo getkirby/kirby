@@ -1,22 +1,22 @@
 <template>
-  <div class="kirby-calendar-input">
+  <div class="k-calendar-input">
     <nav>
-      <kirby-button icon="angle-left" @click="prev" />
-      <span class="kirby-calendar-selects">
-        <kirby-select-input
+      <k-button icon="angle-left" @click="prev" />
+      <span class="k-calendar-selects">
+        <k-select-input
           :options="months"
           :disabled="disabled"
           v-model.number="month"
         />
-        <kirby-select-input
+        <k-select-input
           :options="years"
           :disabled="disabled"
           v-model.number="year"
         />
       </span>
-      <kirby-button icon="angle-right" @click="next" />
+      <k-button icon="angle-right" @click="next" />
     </nav>
-    <table class="kirby-calendar-table">
+    <table class="k-calendar-table">
       <thead>
         <tr>
           <th v-for="day in weekdays" :key="'weekday_' + day">{{ day }}</th>
@@ -29,16 +29,16 @@
             :key="'day_' + dayIndex"
             :aria-current="isToday(day) ? 'date' : false"
             :aria-selected="isCurrent(day) ? 'date' : false"
-            class="kirby-calendar-day"
+            class="k-calendar-day"
           >
-            <kirby-button v-if="day" @click="select(day)">{{ day }}</kirby-button>
+            <k-button v-if="day" @click="select(day)">{{ day }}</k-button>
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td class="kirby-calendar-today" colspan="7">
-            <kirby-button @click="go('today')">{{ "today" | t("field.calendar.today") }}</kirby-button>
+          <td class="k-calendar-today" colspan="7">
+            <k-button @click="go('today')">{{ "today" | t("field.calendar.today") }}</k-button>
           </td>
         </tr>
       </tfoot>
@@ -217,48 +217,48 @@ export default {
 <style lang="scss">
 $cell-padding: 0.25rem 0.5rem;
 
-.kirby-calendar-input {
+.k-calendar-input {
   padding: 0.5rem;
   background: $color-dark;
   color: $color-light;
   border-radius: $border-radius;
 }
-.kirby-calendar-table {
+.k-calendar-table {
   table-layout: fixed;
   width: 100%;
   min-width: 15rem;
   padding-top: .5rem;
 }
 
-.kirby-calendar-input > nav {
+.k-calendar-input > nav {
   display: flex;
 
-  .kirby-button {
+  .k-button {
     padding: 0.5rem;
   }
 }
-.kirby-calendar-selects {
+.k-calendar-selects {
   flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.kirby-calendar-selects .kirby-select-input {
+.k-calendar-selects .k-select-input {
   padding: 0 0.5rem;
   font-weight: $font-weight-normal;
   font-size: $font-size-small;
 }
-.kirby-calendar-selects .kirby-select-input:focus-within {
+.k-calendar-selects .k-select-input:focus-within {
   color: $color-focus-on-dark !important;
 }
-.kirby-calendar-input th {
+.k-calendar-input th {
   padding: 0.5rem 0;
   color: $color-light-grey;
   font-size: $font-size-tiny;
   font-weight: 400;
   text-align: center;
 }
-.kirby-calendar-day .kirby-button {
+.k-calendar-day .k-button {
   width: 2rem;
   height: 2rem;
   margin: 0 auto;
@@ -269,33 +269,33 @@ $cell-padding: 0.25rem 0.5rem;
   border-radius: 50%;
   border: 2px solid transparent;
 }
-.kirby-calendar-day .kirby-button .kirby-button-text {
+.k-calendar-day .k-button .k-button-text {
   opacity: 1;
 }
-.kirby-calendar-table .kirby-button:hover {
+.k-calendar-table .k-button:hover {
   color: $color-white;
 }
-.kirby-calendar-day:hover .kirby-button {
+.k-calendar-day:hover .k-button {
   border-color: rgba($color-white, 0.25);
 }
-.kirby-calendar-day[aria-current="date"] .kirby-button {
+.k-calendar-day[aria-current="date"] .k-button {
   color: $color-focus-on-dark;
   font-weight: 500;
 }
-.kirby-calendar-day[aria-selected="date"] .kirby-button {
+.k-calendar-day[aria-selected="date"] .k-button {
   border-color: $color-positive-on-dark;
   color: $color-positive-on-dark;
 }
-.kirby-calendar-today {
+.k-calendar-today {
   text-align: center;
   padding-top: .5rem;
 }
-.kirby-calendar-today .kirby-button {
+.k-calendar-today .k-button {
   color: $color-focus-on-dark;
   font-size: $font-size-tiny;
   padding: 1rem;
 }
-.kirby-calendar-today .kirby-button-text {
+.k-calendar-today .k-button-text {
   opacity: 1;
 }
 </style>

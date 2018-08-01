@@ -1,5 +1,5 @@
 <template>
-  <kirby-error-view class="kirby-browser-view">
+  <k-error-view class="k-browser-view">
     <template v-if="hasFetchSupport === false">
       <p>
         We are really sorry, but your browser does not support
@@ -24,7 +24,7 @@
         </strong>
       </p>
     </template>
-  </kirby-error-view>
+  </k-error-view>
 </template>
 
 <script>
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-browser-view .kirby-error-view-content {
+.k-browser-view .k-error-view-content {
   text-align: left;
 }
 </style>

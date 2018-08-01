@@ -1,28 +1,28 @@
 <template>
-  <kirby-error-view v-if="issue">
+  <k-error-view v-if="issue">
     {{ issue.message }}
-  </kirby-error-view>
-  <kirby-view v-else-if="ready" align="center" class="kirby-login-view">
-    <form :data-invalid="invalid" class="kirby-login-form" @submit.prevent="login">
-      <kirby-fieldset :fields="fields" v-model="user" />
-      <div class="kirby-login-buttons">
-        <label class="kirby-login-checkbox">
-          <kirby-checkbox-input
+  </k-error-view>
+  <k-view v-else-if="ready" align="center" class="k-login-view">
+    <form :data-invalid="invalid" class="k-login-form" @submit.prevent="login">
+      <k-fieldset :fields="fields" v-model="user" />
+      <div class="k-login-buttons">
+        <label class="k-login-checkbox">
+          <k-checkbox-input
             :value="user.remember"
             label="Keep me logged in"
             @input="user.remember = $event"
           />
         </label>
-        <kirby-button
-          class="kirby-login-button"
+        <k-button
+          class="k-login-button"
           icon="check"
           type="submit"
         >
           {{ $t("login") }}
-        </kirby-button>
+        </k-button>
       </div>
     </form>
-  </kirby-view>
+  </k-view>
 </template>
 
 <script>
@@ -92,30 +92,30 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-login-form[data-invalid] {
+.k-login-form[data-invalid] {
   animation: shake 0.5s linear;
 }
-.kirby-login-form[data-invalid] .kirby-field label {
+.k-login-form[data-invalid] .k-field label {
   animation: nope 2s linear;
 }
-.kirby-login-buttons {
+.k-login-buttons {
   display: flex;
   align-items: center;
   padding: 1.5rem 0;
 }
-.kirby-login-button {
+.k-login-button {
   padding: 0.5rem 1rem;
   margin-right: -1rem;
   font-weight: 500;
   transition: opacity 0.3s;
 }
-.kirby-login-button span {
+.k-login-button span {
   opacity: 1;
 }
-.kirby-login-button[disabled] {
+.k-login-button[disabled] {
   opacity: 0.25;
 }
-.kirby-login-checkbox {
+.k-login-checkbox {
   display: flex;
   align-items: center;
   padding: 0.5rem 0;
@@ -123,12 +123,12 @@ export default {
   font-size: $font-size-small;
   cursor: pointer;
 }
-.kirby-login-checkbox .kirby-checkbox-text {
+.k-login-checkbox .k-checkbox-text {
   opacity: 0.75;
   transition: opacity 0.3s;
 }
-.kirby-login-checkbox:hover span,
-.kirby-login-checkbox:focus span {
+.k-login-checkbox:hover span,
+.k-login-checkbox:focus span {
   opacity: 1;
 }
 

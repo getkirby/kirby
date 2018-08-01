@@ -3,13 +3,13 @@
     ref="form"
     method="POST"
     autocomplete="off"
-    class="kirby-form"
+    class="k-form"
     novalidate
     @submit.prevent="onSubmit"
   >
     <slot name="header"/>
     <slot>
-      <kirby-fieldset
+      <k-fieldset
         ref="fields"
         :disabled="disabled"
         :fields="fields"
@@ -19,7 +19,7 @@
       />
     </slot>
     <slot name="footer"/>
-    <input ref="submitter" class="kirby-form-submitter" type="submit">
+    <input ref="submitter" class="k-form-submitter" type="submit">
   </form>
 </template>
 
@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style>
-.kirby-form-submitter {
+.k-form-submitter {
   display: none;
 }
 </style>

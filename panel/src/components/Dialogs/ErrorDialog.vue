@@ -1,14 +1,14 @@
 <template>
-  <kirby-dialog
+  <k-dialog
     v-if="error"
     ref="dialog"
     :visible="true"
-    class="kirby-error-dialog"
+    class="k-error-dialog"
     @close="exit"
     @open="enter"
   >
-    <kirby-text>{{ error.message }}</kirby-text>
-    <dl v-if="error.details && Object.keys(error.details).length" class="kirby-error-details">
+    <k-text>{{ error.message }}</k-text>
+    <dl v-if="error.details && Object.keys(error.details).length" class="k-error-details">
       <template v-for="(detail, index) in error.details">
         <dt :key="'detail-label-' + index">{{ detail.label }}</dt>
         <dd :key="'detail-message-' + index">
@@ -26,15 +26,15 @@
       </template>
     </dl>
 
-    <footer slot="footer" class="kirby-dialog-footer">
-      <kirby-button-group>
-        <kirby-button icon="check" @click="close">
+    <footer slot="footer" class="k-dialog-footer">
+      <k-button-group>
+        <k-button icon="check" @click="close">
           {{ $t("confirm") }}
-        </kirby-button>
-      </kirby-button-group>
+        </k-button>
+      </k-button-group>
     </footer>
 
-  </kirby-dialog>
+  </k-dialog>
 </template>
 
 <script>
@@ -56,7 +56,7 @@ export default {
   methods: {
     enter() {
       this.$nextTick(() => {
-        this.$el.querySelector(".kirby-dialog-footer .kirby-button").focus();
+        this.$el.querySelector(".k-dialog-footer .k-button").focus();
       });
     },
     exit() {
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-error-details {
+.k-error-details {
   background: $color-white;
   display: block;
   overflow: auto;
@@ -76,17 +76,17 @@ export default {
   line-height: 1.25em;
   margin-top: 0.75rem;
 }
-.kirby-error-details dt {
+.k-error-details dt {
   color: $color-negative-on-dark;
   margin-bottom: 0.25rem;
 }
-.kirby-error-details dd {
+.k-error-details dd {
   overflow: auto;
 }
-.kirby-error-details dd:not(:last-of-type) {
+.k-error-details dd:not(:last-of-type) {
   margin-bottom: 1.5em;
 }
-.kirby-error-details li:not(:last-child) {
+.k-error-details li:not(:last-child) {
   border-bottom: 1px solid $color-background;
   padding-bottom: 0.25rem;
   margin-bottom: 0.25rem;

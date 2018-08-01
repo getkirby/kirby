@@ -1,30 +1,30 @@
 <template>
-  <header :data-editable="editable" class="kirby-header">
-    <kirby-headline tag="h1" size="huge">
-      <span v-if="editable && $listeners.edit" class="kirby-headline-editable" @click="$emit('edit')">
+  <header :data-editable="editable" class="k-header">
+    <k-headline tag="h1" size="huge">
+      <span v-if="editable && $listeners.edit" class="k-headline-editable" @click="$emit('edit')">
         <slot />
-        <kirby-icon type="edit" />
+        <k-icon type="edit" />
       </span>
       <slot v-else />
-    </kirby-headline>
-    <kirby-bar>
-      <slot slot="left" name="left" class="kirby-header-left" />
-      <slot slot="right" name="right" class="kirby-header-right" />
-    </kirby-bar>
+    </k-headline>
+    <k-bar>
+      <slot slot="left" name="left" class="k-header-left" />
+      <slot slot="right" name="right" class="k-header-right" />
+    </k-bar>
 
-    <div v-if="tabs && tabs.length > 1" :data-compact="tabs.length >= 5" class="kirby-header-tabs">
+    <div v-if="tabs && tabs.length > 1" :data-compact="tabs.length >= 5" class="k-header-tabs">
       <nav>
-        <kirby-button
+        <k-button
           v-for="(tab, tabIndex) in tabs"
           :key="tabIndex"
           :link="'#' + tab.name"
           :current="currentTab && currentTab.name === tab.name"
           :icon="tab.icon"
           :tooltip="tab.label"
-          class="kirby-tab-button"
+          class="k-tab-button"
         >
           {{ tab.label }}
-        </kirby-button>
+        </k-button>
       </nav>
     </div>
   </header>
@@ -51,46 +51,46 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-header {
+.k-header {
   border-bottom: 1px solid $color-border;
   margin-bottom: 2rem;
   padding-top: 4vh;
 }
-.kirby-header .kirby-headline {
+.k-header .k-headline {
   min-height: 1.25em;
 }
-.kirby-header .kirby-headline-editable {
+.k-header .k-headline-editable {
   cursor: pointer;
 }
-.kirby-header .kirby-headline-editable .kirby-icon {
+.k-header .k-headline-editable .k-icon {
   color: $color-light-grey;
   margin-left: .5rem;
   opacity: 0;
   transition: opacity .3s;
   display: inline-block;
 }
-.kirby-header .kirby-headline-editable:hover .kirby-icon {
+.k-header .k-headline-editable:hover .k-icon {
   opacity: 1;
 }
 
-.kirby-header-tabs {
+.k-header-tabs {
   position: relative;
   background: #e9e9e9;
   border-top: 1px solid $color-border;
   border-left: 1px solid $color-border;
   border-right: 1px solid $color-border;
 }
-.kirby-header-tabs nav {
+.k-header-tabs nav {
   display: flex;
   justify-content: center;
   margin-left: -1px;
   margin-right: -1px;
 }
-.kirby-header-tabs[data-compact] .kirby-tab-button:not([aria-current]) .kirby-button-text {
+.k-header-tabs[data-compact] .k-tab-button:not([aria-current]) .k-button-text {
   display: none;
 }
 
-.kirby-tab-button {
+.k-tab-button {
   position: relative;
   z-index: 1;
   display: inline-flex;
@@ -112,7 +112,7 @@ export default {
     max-width: 13rem;
   }
 }
-.kirby-tab-button .kirby-button-text {
+.k-tab-button .k-button-text {
   padding-top: .375rem;
   padding-left: 0 !important; // there's another rule that has a higher specificity and breaks alignment otherwise
   font-size: 10px;
@@ -128,10 +128,10 @@ export default {
   }
 
 }
-.kirby-tab-button:last-child {
+.k-tab-button:last-child {
   border-right: 1px solid transparent;
 }
-.kirby-tab-button[aria-current] {
+.k-tab-button[aria-current] {
   position: relative;
   background: $color-background;
   border-right: 1px solid $color-border;

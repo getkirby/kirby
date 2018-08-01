@@ -31,7 +31,7 @@ describe("InstallationView", () => {
       }).then(user => {
         cy.get("input[name=email]").type(user.email);
         cy.get("input[name=password]").type(user.password + "{enter}");
-        cy.get(".kirby-headline").should("contain", "Kirby Kitchensink");
+        cy.get(".k-headline").should("contain", "Kirby Kitchensink");
         cy.url().should("include", "/site");
       });
 

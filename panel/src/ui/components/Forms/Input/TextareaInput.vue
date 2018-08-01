@@ -1,5 +1,5 @@
 <template>
-  <div :data-theme="theme" :data-over="over" class="kirby-textarea-input">
+  <div :data-theme="theme" :data-over="over" class="k-textarea-input">
     <textarea
       ref="input"
       v-bind="{
@@ -15,7 +15,7 @@
         value
       }"
       :data-size="size"
-      class="kirby-textarea-input-native"
+      class="k-textarea-input-native"
       @blur="onBlur"
       @click="onClick"
       @focus="onFocus"
@@ -27,7 +27,7 @@
       @dragleave="onOut"
       @drop="onDrop"
     />
-    <kirby-toolbar
+    <k-toolbar
       v-if="!disabled && buttons !== false && toolbar"
       ref="toolbar"
       :buttons="buttons"
@@ -40,9 +40,9 @@
       @command="onCommand"
     />
 
-    <kirby-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
-    <kirby-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
-    <kirby-upload ref="upload" />
+    <k-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
+    <k-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
+    <k-upload ref="upload" />
 
   </div>
 </template>
@@ -62,9 +62,9 @@ import {
 
 export default {
   components: {
-    "kirby-toolbar": Toolbar,
-    "kirby-email-dialog": EmailDialog,
-    "kirby-link-dialog": LinkDialog
+    "k-toolbar": Toolbar,
+    "k-email-dialog": EmailDialog,
+    "k-link-dialog": LinkDialog
   },
   inheritAttrs: false,
   props: {
@@ -290,10 +290,10 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-textarea-input {
+.k-textarea-input {
   position: relative;
 }
-.kirby-textarea-input-native {
+.k-textarea-input-native {
   resize: none;
   border: 0;
   width: 100%;
@@ -302,30 +302,30 @@ export default {
   line-height: 1.5em;
   color: inherit;
 }
-.kirby-textarea-input-native::placeholder {
+.k-textarea-input-native::placeholder {
   color: $color-light-grey;
 }
-.kirby-textarea-input-native:focus {
+.k-textarea-input-native:focus {
   outline: 0;
 }
-.kirby-textarea-input-native:invalid {
+.k-textarea-input-native:invalid {
   box-shadow: none;
   outline: 0;
 }
-.kirby-textarea-input-native[data-size="small"] {
+.k-textarea-input-native[data-size="small"] {
   min-height: 7.5rem;
 }
-.kirby-textarea-input-native[data-size="medium"] {
+.k-textarea-input-native[data-size="medium"] {
   min-height: 15rem;
 }
-.kirby-textarea-input-native[data-size="large"] {
+.k-textarea-input-native[data-size="large"] {
   min-height: 30rem;
 }
-.kirby-textarea-input-native[data-size="huge"] {
+.k-textarea-input-native[data-size="huge"] {
   min-height: 45rem;
 }
 
-.kirby-toolbar {
+.k-toolbar {
   position: absolute;
   top: 0;
   left: 0;

@@ -19,7 +19,7 @@ describe("UsersView", () => {
 
     it("visits /users", () => {
       cy.url().should('include', '/users')
-      cy.get(".kirby-headline").should("contain", "Users");
+      cy.get(".k-headline").should("contain", "Users");
     });
 
   });
@@ -29,9 +29,9 @@ describe("UsersView", () => {
     before(reset);
 
     beforeEach(() => {
-      cy.contains(".kirby-dropdown", "Role: All").as("dropdown");
+      cy.contains(".k-dropdown", "Role: All").as("dropdown");
       cy.contains("Role: All").as("button");
-      cy.get(".kirby-list-item").as("rows");
+      cy.get(".k-list-item").as("rows");
     });
 
     it("shows users for admin role", () => {
@@ -54,7 +54,7 @@ describe("UsersView", () => {
     beforeEach(() => {
       cy.contains("Add a new user").as('button');
       cy.get('@button').should('be.visible').click();
-      cy.get('.kirby-dialog').first().as('dialog');
+      cy.get('.k-dialog').first().as('dialog');
     });
 
     it("cancels", () => {
@@ -65,15 +65,15 @@ describe("UsersView", () => {
         .and("contain", "Role")
         .and("contain", "Create");
       cy.get('@dialog').should("be.visible").contains("Cancel").click();
-      cy.get('.kirby-dialog').should('not.exist');
+      cy.get('.k-dialog').should('not.exist');
     });
 
     it("creates", () => {
       cy.get('@dialog').find("input[name=email]").type("peter@lustig.de");
       cy.get('@dialog').find("input[name=password]").type("password123");
       cy.get('@dialog').contains("Create").click();
-      cy.contains(".kirby-topbar-notification", "The user has been created");
-      cy.contains(".kirby-collection", "peter@lustig.de");
+      cy.contains(".k-topbar-notification", "The user has been created");
+      cy.contains(".k-collection", "peter@lustig.de");
     });
   });
 
@@ -82,10 +82,10 @@ describe("UsersView", () => {
     before(reset);
 
     beforeEach(() => {
-      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
-      cy.get("@row").find('.kirby-list-item-toggle').click();
+      cy.contains(".k-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.k-list-item-toggle').click();
       cy.get("@row").contains("Delete").click();
-      cy.contains(".kirby-dialog", "Do you really want to delete editor@getkirby.com").as("dialog");
+      cy.contains(".k-dialog", "Do you really want to delete editor@getkirby.com").as("dialog");
     });
 
     it("cancels", () => {
@@ -104,10 +104,10 @@ describe("UsersView", () => {
     before(reset);
 
     beforeEach(() => {
-      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
-      cy.get("@row").find('.kirby-list-item-toggle').click();
+      cy.contains(".k-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.k-list-item-toggle').click();
       cy.get("@row").contains("Rename").click();
-      cy.contains(".kirby-dialog", "Name").as("dialog");
+      cy.contains(".k-dialog", "Name").as("dialog");
     });
 
     it("cancels", () => {
@@ -128,10 +128,10 @@ describe("UsersView", () => {
     before(reset);
 
     beforeEach(() => {
-      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
-      cy.get("@row").find('.kirby-list-item-toggle').click();
+      cy.contains(".k-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.k-list-item-toggle').click();
       cy.get("@row").contains("Change email").click();
-      cy.contains(".kirby-dialog", "Email").as("dialog");
+      cy.contains(".k-dialog", "Email").as("dialog");
     });
 
     it("cancels", () => {
@@ -152,10 +152,10 @@ describe("UsersView", () => {
     before(reset);
 
     beforeEach(() => {
-      cy.contains(".kirby-list-item", "editor@getkirby.com").as("row");
-      cy.get("@row").find('.kirby-list-item-toggle').click();
+      cy.contains(".k-list-item", "editor@getkirby.com").as("row");
+      cy.get("@row").find('.k-list-item-toggle').click();
       cy.get("@row").contains("Change role").click();
-      cy.contains(".kirby-dialog", "Select a new role").as("dialog");
+      cy.contains(".k-dialog", "Select a new role").as("dialog");
     });
 
     it("cancels", () => {

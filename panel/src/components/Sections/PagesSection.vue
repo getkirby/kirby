@@ -1,26 +1,26 @@
 <template>
-  <section v-if="isLoading === false" :data-error="error" class="kirby-pages-section">
+  <section v-if="isLoading === false" :data-error="error" class="k-pages-section">
 
-    <header class="kirby-section-header">
-      <kirby-headline :link="link">
+    <header class="k-section-header">
+      <k-headline :link="link">
         {{ headline }} <abbr v-if="min" title="This section is required">*</abbr>
-      </kirby-headline>
-      <kirby-button-group v-if="add">
-        <kirby-button icon="add" @click="action(null, 'create')">{{ $t("add") }}</kirby-button>
-      </kirby-button-group>
+      </k-headline>
+      <k-button-group v-if="add">
+        <k-button icon="add" @click="action(null, 'create')">{{ $t("add") }}</k-button>
+      </k-button-group>
     </header>
 
     <template v-if="issue">
-      <kirby-box theme="negative">
-        <kirby-text size="small">
+      <k-box theme="negative">
+        <k-text size="small">
           <strong>{{ $t("error.blueprint.section.notLoaded", { name: name }) }}:</strong>
           {{ issue }}
-        </kirby-text>
-      </kirby-box>
+        </k-text>
+      </k-box>
     </template>
     <template v-else>
 
-      <kirby-collection
+      <k-collection
         :layout="layout"
         :items="data"
         :pagination="pagination"
@@ -30,16 +30,16 @@
         @action="action"
       />
 
-      <kirby-page-create-dialog ref="create" />
-      <kirby-page-rename-dialog ref="rename" @success="fetch" />
-      <kirby-page-url-dialog ref="url" @success="fetch" />
-      <kirby-page-status-dialog ref="status" @success="fetch" />
-      <kirby-page-template-dialog ref="template" @success="fetch" />
-      <kirby-page-remove-dialog ref="remove" @success="fetch" />
+      <k-page-create-dialog ref="create" />
+      <k-page-rename-dialog ref="rename" @success="fetch" />
+      <k-page-url-dialog ref="url" @success="fetch" />
+      <k-page-status-dialog ref="status" @success="fetch" />
+      <k-page-template-dialog ref="template" @success="fetch" />
+      <k-page-remove-dialog ref="remove" @success="fetch" />
 
     </template>
 
-    <div v-if="error" class="kirby-pages-section-error">
+    <div v-if="error" class="k-pages-section-error">
       {{ error.message }}
     </div>
 
@@ -95,7 +95,7 @@ export default {
 
             page.flag = {
               tooltip: states[page.status].label,
-              class: "kirby-status-flag kirby-status-flag-" + page.status,
+              class: "k-status-flag k-status-flag-" + page.status,
               icon: page.permissions.changeStatus === false ? "protected" : "circle",
               disabled: page.permissions.changeStatus === false,
               click: () => {

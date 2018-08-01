@@ -1,45 +1,45 @@
 <template>
-  <kirby-error-view v-if="issue">
+  <k-error-view v-if="issue">
     {{ issue.message }}
-  </kirby-error-view>
-  <kirby-view v-else class="kirby-page-view">
+  </k-error-view>
+  <k-view v-else class="k-page-view">
 
-    <kirby-header
+    <k-header
       :tabs="tabs"
       :tab="tab"
       :editable="permissions.changeTitle"
       @edit="action('rename')"
     >
       {{ page.title }}
-      <kirby-button-group slot="left">
-        <kirby-button :responsive="true" icon="open" @click="action('preview')">
+      <k-button-group slot="left">
+        <k-button :responsive="true" icon="open" @click="action('preview')">
           {{ $t('open') }}
-        </kirby-button>
-        <kirby-button
+        </k-button>
+        <k-button
           v-if="status"
-          :class="['kirby-status-flag', 'kirby-status-flag-' + page.status]"
+          :class="['k-status-flag', 'k-status-flag-' + page.status]"
           :disabled="permissions.changeStatus === false"
           :icon="permissions.changeStatus === false ? 'protected' : 'circle'"
           :responsive="true"
           @click="action('status')"
         >
           {{ status.label }}
-        </kirby-button>
-        <kirby-dropdown>
-          <kirby-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
+        </k-button>
+        <k-dropdown>
+          <k-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
             {{ $t('settings') }}
-          </kirby-button>
-          <kirby-dropdown-content ref="settings" :options="options" @action="action" />
-        </kirby-dropdown>
-      </kirby-button-group>
+          </k-button>
+          <k-dropdown-content ref="settings" :options="options" @action="action" />
+        </k-dropdown>
+      </k-button-group>
 
-      <kirby-button-group v-if="page.id" slot="right">
-        <kirby-button :disabled="!prev" v-bind="prev" icon="angle-left" />
-        <kirby-button :disabled="!next" v-bind="next" icon="angle-right" />
-      </kirby-button-group>
-    </kirby-header>
+      <k-button-group v-if="page.id" slot="right">
+        <k-button :disabled="!prev" v-bind="prev" icon="angle-left" />
+        <k-button :disabled="!next" v-bind="next" icon="angle-right" />
+      </k-button-group>
+    </k-header>
 
-    <kirby-tabs
+    <k-tabs
       v-if="page.id"
       ref="tabs"
       :key="'page-' + page.id + '-tabs-' + new Date().getTime()"
@@ -49,13 +49,13 @@
       @tab="tab = $event"
     />
 
-    <kirby-page-rename-dialog ref="rename" @success="fetch" />
-    <kirby-page-url-dialog ref="url" />
-    <kirby-page-status-dialog ref="status" @success="fetch" />
-    <kirby-page-template-dialog ref="template" @success="fetch" />
-    <kirby-page-remove-dialog ref="remove" />
+    <k-page-rename-dialog ref="rename" @success="fetch" />
+    <k-page-url-dialog ref="url" />
+    <k-page-status-dialog ref="status" @success="fetch" />
+    <k-page-template-dialog ref="template" @success="fetch" />
+    <k-page-remove-dialog ref="remove" />
 
-  </kirby-view>
+  </k-view>
 
 </template>
 
@@ -169,20 +169,20 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-status-flag svg {
+.k-status-flag svg {
   width: 14px;
   height: 14px;
 }
-.kirby-status-flag-listed .kirby-icon {
+.k-status-flag-listed .k-icon {
   color: $color-positive-on-dark;
 }
-.kirby-status-flag-unlisted .kirby-icon {
+.k-status-flag-unlisted .k-icon {
   color: $color-focus-on-dark;
 }
-.kirby-status-flag-draft .kirby-icon {
+.k-status-flag-draft .k-icon {
   color: $color-negative-on-dark;
 }
-.kirby-status-flag[disabled] {
+.k-status-flag[disabled] {
   opacity: 1;
 }
 </style>

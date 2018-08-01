@@ -1,7 +1,7 @@
 <template>
-  <fieldset class="kirby-fieldset">
-    <kirby-grid>
-      <kirby-column
+  <fieldset class="k-fieldset">
+    <k-grid>
+      <k-column
         v-for="(field, fieldName) in fields"
         v-if="field.type !== 'hidden'"
         :key="fieldName"
@@ -9,7 +9,7 @@
       >
         <component
           v-if="hasFieldType(field.type)"
-          :is="'kirby-' + field.type + '-field'"
+          :is="'k-' + field.type + '-field'"
           :name="fieldName"
           :ref="fieldName"
           :validate="validate"
@@ -21,13 +21,13 @@
           @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
           @submit="$emit('submit', $event, field, fieldName)"
         />
-        <kirby-box v-else theme="negative">
-          <kirby-text size="small" align="center">
+        <k-box v-else theme="negative">
+          <k-text size="small" align="center">
             The field type <strong>"{{ fieldName }}"</strong> does not exist
-          </kirby-text>
-        </kirby-box>
-      </kirby-column>
-    </kirby-grid>
+          </k-text>
+        </k-box>
+      </k-column>
+    </k-grid>
   </fieldset>
 </template>
 
@@ -72,7 +72,7 @@ export default {
       this.focus(key);
     },
     hasFieldType(type) {
-      return Vue.options.components["kirby-" + type + "-field"];
+      return Vue.options.components["k-" + type + "-field"];
     },
     hasField(name) {
       return this.$refs[name] && this.$refs[name][0];
@@ -86,10 +86,10 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-fieldset {
+.k-fieldset {
   border: 0;
 }
-.kirby-fieldset .kirby-grid {
+.k-fieldset .k-grid {
   grid-column-gap: 1.5rem;
   grid-row-gap: 2.25rem;
 }

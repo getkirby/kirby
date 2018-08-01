@@ -1,24 +1,24 @@
 <template>
-  <kirby-dialog
+  <k-dialog
     ref="dialog"
     :button="$t('change')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
   >
-    <kirby-form ref="form" @submit="submit">
-      <kirby-text-field v-bind="field" :value="slug" @input="sluggify($event)">
-        <kirby-button
+    <k-form ref="form" @submit="submit">
+      <k-text-field v-bind="field" :value="slug" @input="sluggify($event)">
+        <k-button
           slot="options"
           icon="wand"
           data-options
           @click="sluggify(page.title)"
         >
           {{ $t("page.rename.fromTitle") }}
-        </kirby-button>
-      </kirby-text-field>
-    </kirby-form>
-  </kirby-dialog>
+        </k-button>
+      </k-text-field>
+    </k-form>
+  </k-dialog>
 </template>
 
 <script>

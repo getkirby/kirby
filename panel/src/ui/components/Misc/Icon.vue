@@ -4,9 +4,9 @@
     :role="alt ? 'img' : null"
     :aria-hidden="!alt"
     :data-back="back"
-    class="kirby-icon"
+    class="k-icon"
   >
-    <span v-if="emoji" class="kirby-icon-emoji">{{ type }}</span>
+    <span v-if="emoji" class="k-icon-emoji">{{ type }}</span>
     <svg v-else viewBox="0 0 16 16">
       <use :xlink:href="'#icon-' + type" />
     </svg>
@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-icon {
+.k-icon {
   position: relative;
   line-height: 0;
   display: flex;
@@ -33,25 +33,25 @@ export default {
   justify-content: center;
   flex-shrink: 0;
 }
-.kirby-icon svg {
+.k-icon svg {
   width: 1rem;
   height: 1rem;
 }
-.kirby-icon svg * {
+.k-icon svg * {
   fill: currentColor;
 }
-.kirby-icon[data-back="black"] {
+.k-icon[data-back="black"] {
   background: $color-dark;
   color: $color-white;
 }
-.kirby-icon[data-back="white"] {
+.k-icon[data-back="white"] {
   background: $color-white;
 }
-.kirby-icon[data-back="pattern"] {
+.k-icon[data-back="pattern"] {
   background: lighten($color-dark, 10%) url($pattern);
   color: $color-white;
 }
-.kirby-icon-emoji {
+.k-icon-emoji {
   display: block;
   line-height: 1;
   font-style: normal;

@@ -1,9 +1,9 @@
 <template>
-  <hr class="kirby-line-field" >
+  <hr class="k-line-field" >
 </template>
 
 <style lang="scss">
-.kirby-line-field {
+.k-line-field {
   position: relative;
   border: 0;
   height: 3rem;

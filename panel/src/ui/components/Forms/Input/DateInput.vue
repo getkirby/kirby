@@ -1,6 +1,6 @@
 <template>
-  <div class="kirby-date-input">
-    <kirby-select-input
+  <div class="k-date-input">
+    <k-select-input
       ref="years"
       :options="years"
       :disabled="disabled"
@@ -11,8 +11,8 @@
       @input="setYear"
       @invalid="onInvalid"
     />
-    <span class="kirby-date-input-separator">-</span>
-    <kirby-select-input
+    <span class="k-date-input-separator">-</span>
+    <k-select-input
       ref="months"
       :options="months"
       :disabled="disabled"
@@ -23,8 +23,8 @@
       @input="setMonth"
       @invalid="onInvalid"
     />
-    <span class="kirby-date-input-separator">-</span>
-    <kirby-select-input
+    <span class="k-date-input-separator">-</span>
+    <k-select-input
       ref="days"
       :autofocus="autofocus"
       :id="id"
@@ -180,11 +180,11 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-date-input {
+.k-date-input {
   display: flex;
   align-items: center;
 }
-.kirby-date-input-separator {
+.k-date-input-separator {
   padding: 0 $field-input-padding / 4;
 }
 </style>

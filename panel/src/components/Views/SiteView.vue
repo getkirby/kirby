@@ -1,29 +1,29 @@
 <template>
-  <kirby-error-view v-if="issue">
+  <k-error-view v-if="issue">
     {{ issue.message }}
-  </kirby-error-view>
-  <kirby-view v-else key="site-view" class="kirby-site-view">
-    <kirby-header
+  </k-error-view>
+  <k-view v-else key="site-view" class="k-site-view">
+    <k-header
       :tabs="tabs"
       :tab="tab"
       :editable="permissions.changeTitle"
       @edit="action('rename')"
     >
       {{ site.title }}
-      <kirby-button-group slot="left">
-        <kirby-button icon="open" @click="action('preview')">
+      <k-button-group slot="left">
+        <k-button icon="open" @click="action('preview')">
           {{ $t("open" ) }}
-        </kirby-button>
-        <kirby-dropdown>
-          <kirby-button icon="cog" @click="$refs.settings.toggle()">
+        </k-button>
+        <k-dropdown>
+          <k-button icon="cog" @click="$refs.settings.toggle()">
             {{ $t('settings') }}
-          </kirby-button>
-          <kirby-dropdown-content ref="settings" :options="options" @action="action" />
-        </kirby-dropdown>
-      </kirby-button-group>
-    </kirby-header>
+          </k-button>
+          <k-dropdown-content ref="settings" :options="options" @action="action" />
+        </k-dropdown>
+      </k-button-group>
+    </k-header>
 
-    <kirby-tabs
+    <k-tabs
       v-if="site.url"
       ref="tabs"
       :tabs="tabs"
@@ -31,9 +31,9 @@
       @tab="tab = $event"
     />
 
-    <kirby-site-rename-dialog ref="rename" @success="fetch" />
+    <k-site-rename-dialog ref="rename" @success="fetch" />
 
-  </kirby-view>
+  </k-view>
 </template>
 
 <script>

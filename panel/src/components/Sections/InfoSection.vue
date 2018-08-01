@@ -1,9 +1,9 @@
 <template>
-  <section class="kirby-info-section">
-    <kirby-headline class="kirby-info-section-headline">{{ headline }}</kirby-headline>
-    <kirby-box :theme="theme">
-      <kirby-text v-html="text" />
-    </kirby-box>
+  <section class="k-info-section">
+    <k-headline class="k-info-section-headline">{{ headline }}</k-headline>
+    <k-box :theme="theme">
+      <k-text v-html="text" />
+    </k-box>
   </section>
 </template>
 
@@ -41,7 +41,7 @@ export default {
 </script>
 <style>
 
-.kirby-info-section-headline {
+.k-info-section-headline {
   margin-bottom: .5rem;
 }
 

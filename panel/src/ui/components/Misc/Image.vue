@@ -3,11 +3,11 @@
     :data-ratio="ratio"
     :data-back="back"
     :data-cover="cover"
-    class="kirby-image"
+    class="k-image"
     v-on="$listeners"
   >
     <span :style="'padding-bottom:' + ratioPadding">
-      <transition name="kirby-image-transition">
+      <transition name="k-image-transition">
         <img
           v-if="loaded"
           :alt="alt || ''"
@@ -15,14 +15,14 @@
           @dragstart.prevent
         >
       </transition>
-      <kirby-loader
+      <k-loader
         v-if="!loaded && !error"
         position="center"
         theme="light"
       />
-      <kirby-icon
+      <k-icon
         v-if="!loaded && error"
-        class="kirby-image-error"
+        class="k-image-error"
         type="cancel"
       />
     </span>
@@ -78,13 +78,13 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-image span {
+.k-image span {
   position: relative;
   display: block;
   line-height: 0;
   padding-bottom: 100%;
 }
-.kirby-image img {
+.k-image img {
   position: absolute;
   top: 0;
   right: 0;
@@ -94,7 +94,7 @@ export default {
   height: 100%;
   object-fit: contain;
 }
-.kirby-image-error {
+.k-image-error {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -102,30 +102,30 @@ export default {
   color: $color-white;
   font-size: 0.9em;
 }
-.kirby-image-error svg * {
+.k-image-error svg * {
   fill: rgba($color-white, 0.3);
 }
-.kirby-image-transition-enter-active,
-.kirby-image-transition-leave-active {
+.k-image-transition-enter-active,
+.k-image-transition-leave-active {
   transition: opacity 0.2s;
 }
-.kirby-image-transition-enter,
-.kirby-image-transition-leave-to {
+.k-image-transition-enter,
+.k-image-transition-leave-to {
   opacity: 0;
 }
-.kirby-image[data-cover] img {
+.k-image[data-cover] img {
   object-fit: cover;
 }
-.kirby-image[data-back="black"] span {
+.k-image[data-back="black"] span {
   background: $color-dark;
 }
-.kirby-image[data-back="white"] span {
+.k-image[data-back="white"] span {
   background: $color-white;
 }
-.kirby-image[data-back="white"] .kirby-image-error {
+.k-image[data-back="white"] .k-image-error {
   background: $color-dark;
 }
-.kirby-image[data-back="pattern"] span {
+.k-image[data-back="pattern"] span {
   background: lighten($color-dark, 10%) url($pattern);
 }
 </style>

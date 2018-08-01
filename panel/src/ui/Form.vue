@@ -1,7 +1,7 @@
 <template>
-  <kirby-ui class="kirby-ui-sandbox">
+  <k-ui class="k-ui-sandbox">
 
-    <kirby-textarea-field
+    <k-textarea-field
       ref="field"
       :required="true"
       :validate="true"
@@ -12,9 +12,9 @@
     {{ form.text }}
 
     <br>
-    <kirby-button @click="$refs.field.focus()">Focus</kirby-button>
+    <k-button @click="$refs.field.focus()">Focus</k-button>
 
-  </kirby-ui>
+  </k-ui>
 </template>
 
 <script>
@@ -22,7 +22,7 @@ import Ui from "./components/Ui.vue";
 
 export default {
   components: {
-    "kirby-ui": Ui
+    "k-ui": Ui
   },
   data() {
     return {

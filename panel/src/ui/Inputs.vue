@@ -1,64 +1,64 @@
 <template>
-  <kirby-ui class="kirby-ui-sandbox">
+  <k-ui class="k-ui-sandbox">
 
     Text
-    <kirby-text-input v-model="form.title" :minlength="10" @invalid="console.log($event)" />
+    <k-text-input v-model="form.title" :minlength="10" @invalid="console.log($event)" />
 
     Number
-    <kirby-number-input v-model="form.number" :max="2" @invalid="console.log($event)" />
+    <k-number-input v-model="form.number" :max="2" @invalid="console.log($event)" />
 
     Checkbox
-    <kirby-checkbox-input v-model="form.checkbox" :required="true" @invalid="console.log($event)" />
+    <k-checkbox-input v-model="form.checkbox" :required="true" @invalid="console.log($event)" />
 
     Select
-    <kirby-select-input 
-      v-model="form.select" 
-      :options="$options.fields.select.options" 
-      :required="true" 
+    <k-select-input
+      v-model="form.select"
+      :options="$options.fields.select.options"
+      :required="true"
       @invalid="console.log($event)"
     />
 
     Range
-    <kirby-range-input v-model="form.range" :required="true" @invalid="console.log($event)" />
+    <k-range-input v-model="form.range" :required="true" @invalid="console.log($event)" />
 
     Toggle
-    <kirby-toggle-input v-model="form.toggle" :required="true" @invalid="console.log($event)" />
+    <k-toggle-input v-model="form.toggle" :required="true" @invalid="console.log($event)" />
 
     Date
-    <kirby-date-input v-model="form.date" :required="true" @invalid="console.log($event)" />
+    <k-date-input v-model="form.date" :required="true" @invalid="console.log($event)" />
 
     Time
-    <kirby-time-input v-model="form.time" :required="true" @invalid="console.log($event)" />
+    <k-time-input v-model="form.time" :required="true" @invalid="console.log($event)" />
 
     Textarea
-    <kirby-textarea-input v-model="form.text" :required="true" @invalid="console.log($event)" />
+    <k-textarea-input v-model="form.text" :required="true" @invalid="console.log($event)" />
 
     Radio
-    <kirby-radio-input 
-      v-model="form.radio" 
-      :options="$options.fields.radio.options" 
-      :required="true" 
+    <k-radio-input
+      v-model="form.radio"
+      :options="$options.fields.radio.options"
+      :required="true"
       @invalid="console.log($event)"
     />
 
     Checkboxes
-    <kirby-checkboxes-input 
-      v-model="form.checkboxes" 
-      :options="$options.fields.checkboxes.options" 
-      :required="true" 
+    <k-checkboxes-input
+      v-model="form.checkboxes"
+      :options="$options.fields.checkboxes.options"
+      :required="true"
       @invalid="console.log($event)"
     />
 
     Checkboxes
-    <kirby-tags-input 
-      v-model="form.tags" 
-      :min="2" 
-      :autofocus="true" 
-      :required="true" 
+    <k-tags-input
+      v-model="form.tags"
+      :min="2"
+      :autofocus="true"
+      :required="true"
       @invalid="console.log($event)"
     />
 
-  </kirby-ui>
+  </k-ui>
 </template>
 
 <script>
@@ -66,7 +66,7 @@ import Ui from "./components/Ui.vue";
 
 export default {
   components: {
-    "kirby-ui": Ui
+    "k-ui": Ui
   },
   data() {
     return {

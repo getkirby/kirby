@@ -1,5 +1,5 @@
 <template>
-  <ul class="kirby-radio-input">
+  <ul class="k-radio-input">
     <li v-for="(option, index) in options" :key="index">
       <input
         :id="id + '-' + index"
@@ -7,19 +7,19 @@
         :name="id"
         :checked="value === option.value"
         type="radio"
-        class="kirby-radio-input-native"
+        class="k-radio-input-native"
         @change="onInput(option.value)"
       >
       <label :for="id + '-' + index">
         <template v-if="option.info">
-          <span class="kirby-radio-input-text">{{ option.text }}</span>
-          <span class="kirby-radio-input-info">{{ option.info }}</span>
+          <span class="k-radio-input-text">{{ option.text }}</span>
+          <span class="k-radio-input-info">{{ option.info }}</span>
         </template>
         <template v-else>
           {{ option.text }}
         </template>
       </label>
-      <kirby-icon v-if="option.icon" :type="option.icon" />
+      <k-icon v-if="option.icon" :type="option.icon" />
     </li>
   </ul>
 </template>
@@ -79,22 +79,22 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-radio-input li {
+.k-radio-input li {
   position: relative;
   line-height: 1.5rem;
   padding-left: 1.75rem;
 }
-.kirby-radio-input input {
+.k-radio-input input {
   position: absolute;
   width: 0;
   height: 0;
   appearance: none;
 }
-.kirby-radio-input label {
+.k-radio-input label {
   cursor: pointer;
   align-items: center;
 }
-.kirby-radio-input label::before {
+.k-radio-input label::before {
   position: absolute;
   top: .175em;
   left: 0;
@@ -105,18 +105,18 @@ export default {
   border: 2px solid $color-light-grey;
   box-shadow: $color-white 0 0 0 2px inset;
 }
-.kirby-radio-input input:checked + label::before {
+.k-radio-input input:checked + label::before {
   border-color: $color-dark;
   background: $color-dark;
 }
-.kirby-radio-input input:focus + label::before {
+.k-radio-input input:focus + label::before {
   border-color: $color-focus-border;
 }
-.kirby-radio-input input:focus:checked + label::before {
+.k-radio-input input:focus:checked + label::before {
   background: $color-focus;
 }
 
-.kirby-radio-input-text {
+.k-radio-input-text {
   display: block;
 }
 </style>

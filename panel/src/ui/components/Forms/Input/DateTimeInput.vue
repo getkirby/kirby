@@ -1,6 +1,6 @@
 <template>
-  <div class="kirby-datetime-input">
-    <kirby-date-input
+  <div class="k-datetime-input">
+    <k-date-input
       ref="dateInput"
       :autofocus="autofocus"
       :required="required"
@@ -9,7 +9,7 @@
       :value="dateValue"
       @input="setDate"
     />
-    <kirby-time-input
+    <k-time-input
       ref="timeInput"
       :required="required"
       :disabled="disabled"
@@ -105,10 +105,10 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-datetime-input {
+.k-datetime-input {
   display: flex;
 }
-.kirby-datetime-input .kirby-time-input {
+.k-datetime-input .k-time-input {
   padding-left: $field-input-padding;
 }
 </style>

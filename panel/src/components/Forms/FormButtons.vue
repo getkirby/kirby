@@ -1,21 +1,21 @@
 <template>
-  <nav v-if="hasChanges" class="kirby-form-buttons">
-    <kirby-view>
-      <kirby-button
+  <nav v-if="hasChanges" class="k-form-buttons">
+    <k-view>
+      <k-button
         icon="undo"
-        class="kirby-form-button"
+        class="k-form-button"
         @click="reset"
       >
         {{ $t("revert") }}
-      </kirby-button>
-      <kirby-button
+      </k-button>
+      <k-button
         icon="check"
-        class="kirby-form-button"
+        class="k-form-button"
         @click="save"
       >
         {{ $t("save") }}
-      </kirby-button>
-    </kirby-view>
+      </k-button>
+    </k-view>
   </nav>
 </template>
 
@@ -98,15 +98,15 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-form-buttons {
+.k-form-buttons {
   background: $color-focus-on-dark;
 }
-.kirby-form-buttons .kirby-view {
+.k-form-buttons .k-view {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.kirby-form-button {
+.k-form-button {
   font-weight: 500;
   white-space: nowrap;
   line-height: 1;
@@ -115,10 +115,10 @@ export default {
   padding: 0 1rem;
   align-items: center;
 }
-.kirby-form-button:first-child {
+.k-form-button:first-child {
   margin-left: -1rem;
 }
-.kirby-form-button:last-child {
+.k-form-button:last-child {
   margin-right: -1rem;
 }
 </style>

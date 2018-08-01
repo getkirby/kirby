@@ -4,28 +4,28 @@
     :data-invalid="validate && isInvalid"
     :data-theme="theme"
     :data-type="type"
-    class="kirby-input"
+    class="k-input"
   >
-    <span v-if="$slots.before || before" class="kirby-input-before" @click="focus">
+    <span v-if="$slots.before || before" class="k-input-before" @click="focus">
       <slot name="before">{{ before }}</slot>
     </span>
-    <span class="kirby-input-element" @click.stop="focus">
+    <span class="k-input-element" @click.stop="focus">
       <slot>
         <component
           ref="input"
-          :is="'kirby-' + type + '-input'"
+          :is="'k-' + type + '-input'"
           :value="value"
           v-bind="inputProps"
           v-on="listeners"
         />
       </slot>
     </span>
-    <span v-if="$slots.after || after" class="kirby-input-after" @click="focus">
+    <span v-if="$slots.after || after" class="k-input-after" @click="focus">
       <slot name="after">{{ after }}</slot>
     </span>
-    <span v-if="$slots.icon || icon" class="kirby-input-icon" @click="focus">
+    <span v-if="$slots.icon || icon" class="k-input-icon" @click="focus">
       <slot name="icon">
-        <kirby-icon :type="icon" />
+        <k-icon :type="icon" />
       </slot>
     </span>
   </div>
@@ -86,7 +86,7 @@ export default {
 
 
 /* Base Design */
-.kirby-input {
+.k-input {
   display: flex;
   align-items: center;
   line-height: 1;
@@ -94,10 +94,10 @@ export default {
   outline: 0;
   background: none;
 }
-.kirby-input-element {
+.k-input-element {
   flex-grow: 1;
 }
-.kirby-input-icon {
+.k-input-icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,11 +105,11 @@ export default {
 }
 
 /* Disabled state */
-.kirby-input[data-disabled] {
+.k-input[data-disabled] {
   pointer-events: none;
 }
 
-.kirby-input[data-theme="field"] {
+.k-input[data-theme="field"] {
   line-height: 1;
   border: $field-input-border;
   background: $field-input-background;
@@ -133,35 +133,35 @@ export default {
     box-shadow: $color-negative-outline 0 0 0 2px;
   }
 
-  .kirby-input-icon {
+  .k-input-icon {
     width: $field-input-height;
   }
-  .kirby-input-icon,
-  .kirby-input-before,
-  .kirby-input-after {
+  .k-input-icon,
+  .k-input-before,
+  .k-input-after {
     align-self: stretch;
     display: flex;
     align-items: center;
     flex-shrink: 0;
   }
-  .kirby-input-before,
-  .kirby-input-after {
+  .k-input-before,
+  .k-input-after {
     padding: 0 $field-input-padding;
   }
-  .kirby-input-before {
+  .k-input-before {
     color: $field-input-color-before;
     padding-right: 0;
   }
-  .kirby-input-after {
+  .k-input-after {
     color: $field-input-color-after;
     padding-left: 0;
   }
 
-  .kirby-input-icon > .kirby-dropdown {
+  .k-input-icon > .k-dropdown {
     width: 100%;
     height: 100%;
   }
-  .kirby-input-icon-button {
+  .k-input-icon-button {
     width: 100%;
     height: 100%;
     display: flex;
@@ -170,53 +170,53 @@ export default {
     flex-shrink: 0;
   }
 
-  .kirby-number-input,
-  .kirby-select-input,
-  .kirby-text-input {
+  .k-number-input,
+  .k-select-input,
+  .k-text-input {
     padding: $field-input-padding;
     line-height: $field-input-line-height;
   }
 
-  .kirby-date-input .kirby-select-input,
-  .kirby-time-input .kirby-select-input {
+  .k-date-input .k-select-input,
+  .k-time-input .k-select-input {
     padding-left: 0;
     padding-right: 0;
   }
-  .kirby-date-input .kirby-select-input:first-child,
-  .kirby-time-input .kirby-select-input:first-child {
+  .k-date-input .k-select-input:first-child,
+  .k-time-input .k-select-input:first-child {
     padding-left: $field-input-padding;
   }
 
-  .kirby-date-input .kirby-select-input:focus-within,
-  .kirby-time-input .kirby-select-input:focus-within {
+  .k-date-input .k-select-input:focus-within,
+  .k-time-input .k-select-input:focus-within {
     color: $color-focus;
     font-weight: $font-weight-bold;
   }
-  .kirby-time-input .kirby-time-input-meridiem {
+  .k-time-input .k-time-input-meridiem {
     padding-left: $field-input-padding;
   }
 
   /* Checkboxes */
   &[data-type="checkboxes"] {
-    .kirby-input-before {
+    .k-input-before {
       border-right: 1px solid $color-background;
     }
-    .kirby-input-element + .kirby-input-after,
-    .kirby-input-element + .kirby-input-icon {
+    .k-input-element + .k-input-after,
+    .k-input-element + .k-input-icon {
       border-left : 1px solid $color-background;
     }
-    .kirby-checkboxes-input li {
+    .k-checkboxes-input li {
       border-bottom: 1px solid $color-background;
     }
-    .kirby-checkboxes-input li:last-child {
+    .k-checkboxes-input li:last-child {
       border-bottom: 0;
     }
-    .kirby-checkboxes-input label {
+    .k-checkboxes-input label {
       display: block;
       line-height: $field-input-line-height;
       padding: $field-input-padding $field-input-padding;
     }
-    .kirby-checkbox-input-icon {
+    .k-checkbox-input-icon {
       top: ($field-input-height - $field-input-font-size) / 2;
       left: $field-input-padding;
       margin-top: -1px;
@@ -225,43 +225,43 @@ export default {
 
   /* Radio */
   &[data-type="radio"] {
-    .kirby-input-before {
+    .k-input-before {
       border-right: 1px solid $color-background;
     }
-    .kirby-input-element + .kirby-input-after,
-    .kirby-input-element + .kirby-input-icon {
+    .k-input-element + .k-input-after,
+    .k-input-element + .k-input-icon {
       border-left : 1px solid $color-background;
     }
-    .kirby-radio-input li {
+    .k-radio-input li {
       display: flex;
       flex-grow: 1;
       align-items: flex-start;
       flex-shrink: 0;
       border-bottom: 1px solid $color-background;
     }
-    .kirby-radio-input li:last-child {
+    .k-radio-input li:last-child {
       border-bottom: 0;
     }
-    .kirby-radio-input label {
+    .k-radio-input label {
       display: block;
       flex-grow: 1;
       min-height: $field-input-height;
       line-height: $field-input-line-height;
       padding: (($field-input-height - $field-input-line-height) / 2) $field-input-padding;
     }
-    .kirby-radio-input label::before {
+    .k-radio-input label::before {
       top: ($field-input-height - 1rem) / 2;
       left: $field-input-padding;
       margin-top: -1px;
     }
-    .kirby-radio-input .kirby-radio-input-info {
+    .k-radio-input .k-radio-input-info {
       display: block;
       font-size: $font-size-small;
       color: $color-dark-grey;
       line-height: $field-input-line-height;
       padding-top: $field-input-line-height / 10;
     }
-    .kirby-radio-input .kirby-icon {
+    .k-radio-input .k-icon {
       width: $field-input-height;
       height: $field-input-height;
       display: flex;
@@ -272,7 +272,7 @@ export default {
 
   /* Range */
   &[data-type="range"] {
-    .kirby-range-input {
+    .k-range-input {
       padding: $field-input-padding;
     }
   }
@@ -281,7 +281,7 @@ export default {
   &[data-type="select"] {
     position: relative;
 
-    .kirby-input-icon {
+    .k-input-icon {
       position: absolute;
       top: 0;
       right: 0;
@@ -291,30 +291,30 @@ export default {
 
   /* Tags */
   &[data-type="tags"] {
-    .kirby-tags-input {
+    .k-tags-input {
       padding: .25rem .25rem 0 .25rem;
     }
-    .kirby-tag {
+    .k-tag {
       margin-right: .25rem;
       margin-bottom: .25rem;
       height: 1.75rem;
       font-size: $font-size-small;
     }
-    .kirby-tags-input input {
+    .k-tags-input input {
       font-size: $font-size-small;
       padding: 0 .25rem;
       height: 1.75rem;
       line-height: 1;
       margin-bottom: .25rem;
     }
-    .kirby-tags-input .kirby-dropdown-content {
+    .k-tags-input .k-dropdown-content {
       top: calc(100% + .5rem + 2px);
     }
   }
 
   /* Textarea */
   &[data-type="textarea"] {
-    .kirby-textarea-input-native {
+    .k-textarea-input-native {
       padding: .25rem $field-input-padding;
       line-height: 1.5rem;
     }
@@ -322,13 +322,13 @@ export default {
 
   /* Toggle */
   &[data-type="toggle"] {
-    .kirby-input-before {
+    .k-input-before {
       padding-right: $field-input-padding / 2;
     }
-    .kirby-toggle-input {
+    .k-toggle-input {
       padding-left: $field-input-padding;
     }
-    .kirby-toggle-input-label {
+    .k-toggle-input-label {
       padding: 0 $field-input-padding 0 .75rem;
       line-height: $field-input-height;
     }

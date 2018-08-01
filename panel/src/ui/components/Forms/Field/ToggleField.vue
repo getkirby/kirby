@@ -1,13 +1,13 @@
 <template>
-  <kirby-field :input="_uid" v-bind="$props" class="kirby-toggle-field">
-    <kirby-input
+  <k-field :input="_uid" v-bind="$props" class="k-toggle-field">
+    <k-input
       ref="input"
       :id="_uid"
       v-bind="$props"
       theme="field"
       v-on="$listeners"
     />
-  </kirby-field>
+  </k-field>
 </template>
 
 <script>

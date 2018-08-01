@@ -1,9 +1,9 @@
 <template>
-  <div class="kirby-field kirby-info-field">
-    <kirby-headline>{{ label }}</kirby-headline>
-    <kirby-box :theme="theme">
-      <kirby-text v-html="text" />
-    </kirby-box>
+  <div class="k-field k-info-field">
+    <k-headline>{{ label }}</k-headline>
+    <k-box :theme="theme">
+      <k-text v-html="text" />
+    </k-box>
   </div>
 </template>
 
@@ -22,7 +22,7 @@ export default {
 
 <style lang="scss">
 
-.kirby-info-field .kirby-headline {
+.k-info-field .k-headline {
   padding-bottom: .75rem;
   line-height: 1.25rem;
 }

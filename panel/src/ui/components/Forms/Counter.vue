@@ -1,9 +1,9 @@
 <template>
-  <span :data-invalid="!valid" class="kirby-counter">
+  <span :data-invalid="!valid" class="k-counter">
     <span>{{ count }}</span>
-    <span v-if="min && max" class="kirby-counter-rules">({{ min }}–{{ max }})</span>
-    <span v-else-if="min" class="kirby-counter-rules">&gt;= {{ min }}</span>
-    <span v-else-if="max" class="kirby-counter-rules">&lt;= {{ max }}</span>
+    <span v-if="min && max" class="k-counter-rules">({{ min }}–{{ max }})</span>
+    <span v-else-if="min" class="k-counter-rules">&gt;= {{ min }}</span>
+    <span v-else-if="max" class="k-counter-rules">&lt;= {{ max }}</span>
   </span>
 </template>
 
@@ -43,15 +43,15 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-counter {
+.k-counter {
   font-size: $font-size-tiny;
   color: $color-dark;
   font-weight: $font-weight-bold;
 }
-.kirby-counter[data-invalid] {
+.k-counter[data-invalid] {
   color: $color-negative;
 }
-.kirby-counter-rules {
+.k-counter-rules {
   padding-left: .5rem;
   color: $color-dark-grey;
   font-weight: $font-weight-normal;

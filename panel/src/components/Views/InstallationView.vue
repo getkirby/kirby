@@ -1,58 +1,58 @@
 <template>
-  <kirby-view v-if="system" align="center" class="kirby-installation-view">
+  <k-view v-if="system" align="center" class="k-installation-view">
     <form v-if="system.isOk && !system.isInstalled" @submit.prevent="install">
-      <kirby-fieldset :fields="fields" v-model="user" />
-      <kirby-button type="submit" icon="check">{{ $t("install") }}</kirby-button>
+      <k-fieldset :fields="fields" v-model="user" />
+      <k-button type="submit" icon="check">{{ $t("install") }}</k-button>
     </form>
-    <kirby-text v-else-if="system.isInstalled">
-      <kirby-headline>The panel is already installed</kirby-headline>
-      <kirby-link to="/login">Login now</kirby-link>
-    </kirby-text>
+    <k-text v-else-if="system.isInstalled">
+      <k-headline>The panel is already installed</k-headline>
+      <k-link to="/login">Login now</k-link>
+    </k-text>
     <div v-else>
-      <kirby-headline>{{ $t("installation.issues.headline") }}</kirby-headline>
+      <k-headline>{{ $t("installation.issues.headline") }}</k-headline>
 
-      <ul class="kirby-installation-issues">
+      <ul class="k-installation-issues">
         <li v-if="requirements.php === false">
-          <kirby-icon type="alert" />
+          <k-icon type="alert" />
           <span v-html="$t('installation.issues.php')" />
         </li>
 
         <li v-if="requirements.server === false">
-          <kirby-icon type="alert" />
+          <k-icon type="alert" />
           <span v-html="$t('installation.issues.server')" />
         </li>
 
         <li v-if="requirements.mbstring === false">
-          <kirby-icon type="alert" />
+          <k-icon type="alert" />
           <span v-html="$t('installation.issues.mbstring')" />
         </li>
 
         <li v-if="requirements.curl === false">
-          <kirby-icon type="alert" />
+          <k-icon type="alert" />
           <span v-html="$t('installation.issues.curl')" />
         </li>
 
         <li v-if="requirements.accounts === false">
-          <kirby-icon type="alert" />
+          <k-icon type="alert" />
           <span v-html="$t('installation.issues.accounts')" />
         </li>
 
         <li v-if="requirements.content === false">
-          <kirby-icon type="alert" />
+          <k-icon type="alert" />
           <span v-html="$t('installation.issues.content')" />
         </li>
 
         <li v-if="requirements.media === false">
-          <kirby-icon type="alert" />
+          <k-icon type="alert" />
           <span v-html="$t('installation.issues.media')" />
         </li>
 
       </ul>
 
-      <kirby-button icon="refresh" @click="check"><span v-html="$t('retry')" /></kirby-button>
+      <k-button icon="refresh" @click="check"><span v-html="$t('retry')" /></k-button>
 
     </div>
-  </kirby-view>
+  </k-view>
 </template>
 
 <script>
@@ -140,38 +140,38 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-installation-view .kirby-button {
+.k-installation-view .k-button {
   display: block;
   margin-top: 1.5rem;
 }
 
-.kirby-installation-issues {
+.k-installation-issues {
   line-height: 1.5em;
   font-size: $font-size-small;
 }
-.kirby-installation-issues li {
+.k-installation-issues li {
   position: relative;
   padding: 1.5rem;
   padding-left: 3.5rem;
   background: $color-white;
 }
-.kirby-installation-issues .kirby-icon {
+.k-installation-issues .k-icon {
   position: absolute;
   top: calc(1.5rem + 2px);
   left: 1.5rem;
 }
-.kirby-installation-issues .kirby-icon svg * {
+.k-installation-issues .k-icon svg * {
   fill: $color-negative;
 }
-.kirby-installation-issues li:not(:last-child) {
+.k-installation-issues li:not(:last-child) {
   margin-bottom: 2px;
 }
-.kirby-installation-issues li code {
+.k-installation-issues li code {
   font: inherit;
   color: $color-negative;
 }
 
-.kirby-installation-view .kirby-button[type="submit"] {
+.k-installation-view .k-button[type="submit"] {
   padding: 1rem;
   margin-left: -1rem;
 }

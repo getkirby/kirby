@@ -1,5 +1,5 @@
 <template>
-  <div class="kirby-upload">
+  <div class="k-upload">
     <input
       ref="input"
       :accept="options.accept"
@@ -9,36 +9,36 @@
       @change="select"
     >
 
-    <kirby-dialog ref="dialog" size="medium">
+    <k-dialog ref="dialog" size="medium">
       <template v-if="errors.length > 0">
-        <kirby-headline>{{ "Errors" | t("upload.errors") }}</kirby-headline>
-        <ul class="kirby-upload-error-list">
+        <k-headline>{{ "Errors" | t("upload.errors") }}</k-headline>
+        <ul class="k-upload-error-list">
           <li v-for="(error, index) in errors" :key="'error-' + index">
-            <p class="kirby-upload-error-filename">{{ error.file.name }}</p>
-            <p class="kirby-upload-error-message">{{ error.message }}</p>
+            <p class="k-upload-error-filename">{{ error.file.name }}</p>
+            <p class="k-upload-error-message">{{ error.message }}</p>
           </li>
         </ul>
       </template>
       <template v-else>
-        <kirby-headline>{{ "Uploading…" | t("upload.progress") }}</kirby-headline>
-        <ul class="kirby-upload-list">
+        <k-headline>{{ "Uploading…" | t("upload.progress") }}</k-headline>
+        <ul class="k-upload-list">
           <li v-for="(file, index) in files" :key="'file-' + index">
-            <kirby-progress :ref="file.name"/>
-            <p class="kirby-upload-list-filename">{{ file.name }}</p>
+            <k-progress :ref="file.name"/>
+            <p class="k-upload-list-filename">{{ file.name }}</p>
             <p>{{ errors[file.name] }}</p>
           </li>
         </ul>
       </template>
       <template slot="footer">
-        <footer v-if="errors.length > 0" class="kirby-dialog-footer">
-          <kirby-button-group>
-            <kirby-button icon="check" @click="$refs.dialog.close()">
+        <footer v-if="errors.length > 0" class="k-dialog-footer">
+          <k-button-group>
+            <k-button icon="check" @click="$refs.dialog.close()">
               {{ "Ok" | t("confirm") }}
-            </kirby-button>
-          </kirby-button-group>
+            </k-button>
+          </k-button-group>
         </footer>
       </template>
-    </kirby-dialog>
+    </k-dialog>
 
   </div>
 </template>
@@ -147,38 +147,38 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-upload input {
+.k-upload input {
   position: absolute;
   top: 0;
   left: -3000px;
 }
 
-.kirby-upload .kirby-headline {
+.k-upload .k-headline {
   margin-bottom: .75rem;
 }
 
-.kirby-upload-list,
-.kirby-upload-error-list {
+.k-upload-list,
+.k-upload-error-list {
   line-height: 1.5em;
   font-size: $font-size-small;
 }
-.kirby-upload-list-filename {
+.k-upload-list-filename {
   color: $color-dark-grey;
 }
 
-.kirby-upload-error-list li {
+.k-upload-error-list li {
   padding: 0.75rem;
   background: $color-white;
   border-radius: $border-radius;
 }
-.kirby-upload-error-list li:not(:last-child) {
+.k-upload-error-list li:not(:last-child) {
   margin-bottom: 2px;
 }
-.kirby-upload-error-filename {
+.k-upload-error-filename {
   color: $color-negative;
   font-weight: $font-weight-bold;
 }
-.kirby-upload-error-message {
+.k-upload-error-message {
   color: $color-dark-grey;
 }
 </style>

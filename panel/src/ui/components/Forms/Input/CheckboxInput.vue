@@ -1,15 +1,15 @@
 <template>
-  <label class="kirby-checkbox-input">
+  <label class="k-checkbox-input">
     <input
       ref="input"
       :checked="value"
       :disabled="disabled"
       :id="id"
-      class="kirby-checkbox-input-native"
+      class="k-checkbox-input-native"
       type="checkbox"
       v-on="listeners"
     >
-    <span class="kirby-checkbox-input-icon" aria-hidden="true">
+    <span class="k-checkbox-input-icon" aria-hidden="true">
       <svg
         width="12"
         height="10"
@@ -24,7 +24,7 @@
         />
       </svg>
     </span>
-    <span class="kirby-checkbox-input-label" v-html="label" />
+    <span class="k-checkbox-input-label" v-html="label" />
   </label>
 </template>
 
@@ -87,47 +87,47 @@ export default {
 
 <style lang="scss">
 
-.kirby-checkbox-input {
+.k-checkbox-input {
   position: relative;
   cursor: pointer;
 }
-.kirby-checkbox-input-native {
+.k-checkbox-input-native {
   position: absolute;
   appearance: none;
   width: 0;
   height: 0;
 }
-.kirby-checkbox-input-label {
+.k-checkbox-input-label {
   display: block;
   padding-left: 1.75rem;
 }
-.kirby-checkbox-input-icon {
+.k-checkbox-input-icon {
   position: absolute;
   left: 0;
   width: 1rem;
   height: 1rem;
   border: 2px solid $color-light-grey;
 }
-.kirby-checkbox-input-icon svg {
+.k-checkbox-input-icon svg {
   position: absolute;
   width: 12px;
   height: 12px;
   display: none;
 }
-.kirby-checkbox-input-icon path {
+.k-checkbox-input-icon path {
   stroke: $color-white;
 }
-.kirby-checkbox-input-native:checked + .kirby-checkbox-input-icon {
+.k-checkbox-input-native:checked + .k-checkbox-input-icon {
   border-color: $color-dark;
   background: $color-dark;
 }
-.kirby-checkbox-input-native:checked + .kirby-checkbox-input-icon svg {
+.k-checkbox-input-native:checked + .k-checkbox-input-icon svg {
   display: block;
 }
-.kirby-checkbox-input-native:focus + .kirby-checkbox-input-icon {
+.k-checkbox-input-native:focus + .k-checkbox-input-icon {
   border-color: $color-focus-border;
 }
-.kirby-checkbox-input-native:focus:checked + .kirby-checkbox-input-icon {
+.k-checkbox-input-native:focus:checked + .k-checkbox-input-icon {
   background: $color-focus;
 }
 

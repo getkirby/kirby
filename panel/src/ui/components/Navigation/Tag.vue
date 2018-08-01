@@ -2,12 +2,12 @@
   <span
     ref="button"
     :data-size="size"
-    class="kirby-tag"
+    class="k-tag"
     tabindex="0"
     @keydown.delete.prevent="remove"
   >
-    <span class="kirby-tag-text"><slot /></span>
-    <span v-if="removable" class="kirby-tag-toggle" @click="remove">&times;</span>
+    <span class="k-tag-text"><slot /></span>
+    <span v-if="removable" class="k-tag-toggle" @click="remove">&times;</span>
   </span>
 </template>
 
@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-tag {
+.k-tag {
   position: relative;
   font-size: $font-size-small;
   line-height: 1;
@@ -42,16 +42,16 @@ export default {
   display: flex;
   align-items: center;
 }
-.kirby-tag:focus {
+.k-tag:focus {
   outline: 0;
   background-color: $color-focus;
   border-color: $color-focus;
   color: #fff;
 }
-.kirby-tag-text {
+.k-tag-text {
   padding: 0 .75rem;
 }
-.kirby-tag-toggle {
+.k-tag-toggle {
   color: rgba(255, 255, 255, 0.7);
   width: 2rem;
   height: 100%;
@@ -60,7 +60,7 @@ export default {
   justify-content: center;
   border-left: 1px solid rgba(255, 255, 255, 0.15);
 }
-.kirby-tag-toggle:hover {
+.k-tag-toggle:hover {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }

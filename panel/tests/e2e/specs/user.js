@@ -15,13 +15,13 @@ describe("UsersView", () => {
 
     it("visits /users", () => {
       cy.url().should('include', '/users')
-      cy.get(".kirby-headline").should("contain", "Users");
+      cy.get(".k-headline").should("contain", "Users");
     });
 
     it("visits /users/(:any)", () => {
       cy.url().should('match', /\/users$/)
       cy.contains("developer@getkirby.com").click();
-      cy.get(".kirby-headline").should("contain", "Name …");
+      cy.get(".k-headline").should("contain", "Name …");
       cy.url().should('match', /\/users\/([a-z0-9]*)$/);
     });
   });
@@ -30,9 +30,9 @@ describe("UsersView", () => {
     beforeEach(() => {
       cy.login("admin");
       cy.visit("/users");
-      cy.contains(".kirby-dropdown", "Role: All").as("dropdown");
+      cy.contains(".k-dropdown", "Role: All").as("dropdown");
       cy.contains("Role: All").as("button");
-      cy.get(".kirby-list-collection-item").as("rows");
+      cy.get(".k-list-collection-item").as("rows");
     });
 
     it("shows users for admin role", () => {
@@ -53,7 +53,7 @@ describe("UsersView", () => {
       cy.login("admin");
       cy.visit("/users");
       cy.contains("Add a new user").as('button');
-      cy.get('.kirby-dialog').first().as('dialog');
+      cy.get('.k-dialog').first().as('dialog');
     });
 
     it("cancels", () => {
@@ -74,8 +74,8 @@ describe("UsersView", () => {
       cy.get('@dialog').find("input[name=email]").type("peter@lustig.de");
       cy.get('@dialog').find("input[name=password]").type("password123");
       cy.get('@dialog').contains("Create").click();
-      cy.contains(".kirby-notification", "The user has been created");
-      cy.contains(".kirby-collection", "peter@lustig.de");
+      cy.contains(".k-notification", "The user has been created");
+      cy.contains(".k-collection", "peter@lustig.de");
     });
   });
 
@@ -83,10 +83,10 @@ describe("UsersView", () => {
     beforeEach(() => {
       cy.login("admin");
       cy.visit("/users");
-      cy.contains(".kirby-list-collection-item", "peter@lustig.de").as("row");
-      cy.get("@row").find('.kirby-list-collection-options').click();
+      cy.contains(".k-list-collection-item", "peter@lustig.de").as("row");
+      cy.get("@row").find('.k-list-collection-options').click();
       cy.get("@row").contains("Delete").click();
-      cy.contains(".kirby-dialog", "Do you really want to delete peter@lustig.de").as("dialog");
+      cy.contains(".k-dialog", "Do you really want to delete peter@lustig.de").as("dialog");
     });
 
     it("cancels", () => {

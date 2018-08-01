@@ -1,39 +1,39 @@
 <template>
   <!-- eslint-disable -->
-  <kirby-ui class="kirby-ui-sandbox">
-    <kirby-view>
-      <kirby-header :tabs="headerTabs" :tab="headerTabs[0]">
+  <k-ui class="k-ui-sandbox">
+    <k-view>
+      <k-header :tabs="headerTabs" :tab="headerTabs[0]">
         Kirby UI Sandbox
-        <kirby-button-group slot="left">
-          <kirby-button icon="open" target="_blank" link="https://getkirby.com">Open</kirby-button>
-          <kirby-dropdown>
-            <kirby-button icon="cog" @click="$refs.dropdown.toggle()">Settings</kirby-button>
-            <kirby-dropdown-content ref="dropdown">
-              <kirby-dropdown-item icon="settings" @click="$refs.settings.open()">Dialog Demo</kirby-dropdown-item>
-              <kirby-dropdown-item icon="url" link="https://getkirby.com" target="_blank">Link Demo</kirby-dropdown-item>
-              <kirby-dropdown-item :disabled="true" icon="cancel">Disabled Item Demo</kirby-dropdown-item>
-            </kirby-dropdown-content>
-          </kirby-dropdown>
-          <kirby-button :disabled="true" icon="trash">Remove</kirby-button>
-        </kirby-button-group>
-        <kirby-button-group slot="right">
-          <kirby-button :disabled="true" icon="angle-left"></kirby-button>
-          <kirby-button icon="angle-right"></kirby-button>
-        </kirby-button-group>
-      </kirby-header>
+        <k-button-group slot="left">
+          <k-button icon="open" target="_blank" link="https://getkirby.com">Open</k-button>
+          <k-dropdown>
+            <k-button icon="cog" @click="$refs.dropdown.toggle()">Settings</k-button>
+            <k-dropdown-content ref="dropdown">
+              <k-dropdown-item icon="settings" @click="$refs.settings.open()">Dialog Demo</k-dropdown-item>
+              <k-dropdown-item icon="url" link="https://getkirby.com" target="_blank">Link Demo</k-dropdown-item>
+              <k-dropdown-item :disabled="true" icon="cancel">Disabled Item Demo</k-dropdown-item>
+            </k-dropdown-content>
+          </k-dropdown>
+          <k-button :disabled="true" icon="trash">Remove</k-button>
+        </k-button-group>
+        <k-button-group slot="right">
+          <k-button :disabled="true" icon="angle-left"></k-button>
+          <k-button icon="angle-right"></k-button>
+        </k-button-group>
+      </k-header>
 
-      <kirby-header :tabs="headerTabsMany" :tab="headerTabsMany[0]">
+      <k-header :tabs="headerTabsMany" :tab="headerTabsMany[0]">
         Too Many Tabs
-      </kirby-header>
+      </k-header>
 
-      <kirby-dialog ref="settings">
+      <k-dialog ref="settings">
         This is a demo dialog
-      </kirby-dialog>
+      </k-dialog>
 
       <section class="demo-section">
-        <kirby-headline class="demo-headline" size="large">Forms</kirby-headline>
+        <k-headline class="demo-headline" size="large">Forms</k-headline>
 
-        <kirby-form
+        <k-form
           :fields="$options.fields"
           :validate="true"
           :disabled="false"
@@ -41,32 +41,32 @@
           @submit="$refs.formOutput.open()"
         />
 
-        <kirby-dialog ref="formOutput" size="large" @submit="$refs.formOutput.close()">
-          <kirby-headline>Form Result</kirby-headline>
-          <kirby-box theme="code">
+        <k-dialog ref="formOutput" size="large" @submit="$refs.formOutput.close()">
+          <k-headline>Form Result</k-headline>
+          <k-box theme="code">
             {{ form }}
-          </kirby-box>
-        </kirby-dialog>
+          </k-box>
+        </k-dialog>
       </section>
 
       <section class="demo-section">
-        <kirby-bar class="demo-headline">
-          <kirby-headline slot="left" size="large">Collections</kirby-headline>
-          <kirby-button-group slot="right">
-            <kirby-button icon="add" @click="addItem">Add Item</kirby-button>
-            <kirby-button icon="trash" @click="removeItem">Remove Item</kirby-button>
-            <kirby-button icon="cog" @click="$refs.itemsSettings.open()">Settings</kirby-button>
-          </kirby-button-group>
-        </kirby-bar>
+        <k-bar class="demo-headline">
+          <k-headline slot="left" size="large">Collections</k-headline>
+          <k-button-group slot="right">
+            <k-button icon="add" @click="addItem">Add Item</k-button>
+            <k-button icon="trash" @click="removeItem">Remove Item</k-button>
+            <k-button icon="cog" @click="$refs.itemsSettings.open()">Settings</k-button>
+          </k-button-group>
+        </k-bar>
 
-        <kirby-collection
+        <k-collection
           :items="collection"
           :sortable="items.sortable"
           :layout="items.layout"
         />
 
-        <kirby-dialog ref="itemsSettings" @submit="$refs.itemsSettings.close()">
-          <kirby-fieldset
+        <k-dialog ref="itemsSettings" @submit="$refs.itemsSettings.close()">
+          <k-fieldset
             :fields="{
               count: {
                 label: 'Number of cards',
@@ -93,47 +93,47 @@
             }"
             v-model="items"
           >
-          </kirby-fieldset>
-        </kirby-dialog>
+          </k-fieldset>
+        </k-dialog>
       </section>
 
       <section class="demo-section">
-        <kirby-headline class="demo-headline" size="large">Boxes</kirby-headline>
+        <k-headline class="demo-headline" size="large">Boxes</k-headline>
 
-        <kirby-grid gutter="medium" style="--columns: 3">
-          <kirby-box text="This is a regular box" />
-          <kirby-box text="This is a positive box" theme="positive" />
-          <kirby-box text="This is a negative box" theme="negative" />
-        </kirby-grid>
-
-      </section>
-
-      <section class="demo-section">
-        <kirby-headline class="demo-headline" size="large">Uploads</kirby-headline>
-        <kirby-upload ref="upload" />
-
-        <kirby-button icon="upload" @click="$refs.upload.open()">Upload</kirby-button>
+        <k-grid gutter="medium" style="--columns: 3">
+          <k-box text="This is a regular box" />
+          <k-box text="This is a positive box" theme="positive" />
+          <k-box text="This is a negative box" theme="negative" />
+        </k-grid>
 
       </section>
 
       <section class="demo-section">
-        <kirby-headline class="demo-headline" size="large">Icons</kirby-headline>
+        <k-headline class="demo-headline" size="large">Uploads</k-headline>
+        <k-upload ref="upload" />
 
-        <kirby-grid style="--columns: 8">
-          <kirby-icon class="demo-icon" type="url" />
-          <kirby-icon class="demo-icon" type="url" back="black" />
-          <kirby-icon class="demo-icon" type="url" back="white" />
-          <kirby-icon class="demo-icon" type="url" back="pattern" />
-          <kirby-icon class="demo-icon" type="💩" :emoji="true" />
-          <kirby-icon class="demo-icon" type="💩" :emoji="true" back="black" />
-          <kirby-icon class="demo-icon" type="💩" :emoji="true" back="white" />
-          <kirby-icon class="demo-icon" type="💩" :emoji="true" back="pattern" />
-        </kirby-grid>
+        <k-button icon="upload" @click="$refs.upload.open()">Upload</k-button>
 
       </section>
 
-    </kirby-view>
-  </kirby-ui>
+      <section class="demo-section">
+        <k-headline class="demo-headline" size="large">Icons</k-headline>
+
+        <k-grid style="--columns: 8">
+          <k-icon class="demo-icon" type="url" />
+          <k-icon class="demo-icon" type="url" back="black" />
+          <k-icon class="demo-icon" type="url" back="white" />
+          <k-icon class="demo-icon" type="url" back="pattern" />
+          <k-icon class="demo-icon" type="💩" :emoji="true" />
+          <k-icon class="demo-icon" type="💩" :emoji="true" back="black" />
+          <k-icon class="demo-icon" type="💩" :emoji="true" back="white" />
+          <k-icon class="demo-icon" type="💩" :emoji="true" back="pattern" />
+        </k-grid>
+
+      </section>
+
+    </k-view>
+  </k-ui>
 </template>
 
 <script>
@@ -141,7 +141,7 @@ import Ui from "./components/Ui.vue";
 
 export default {
   components: {
-    "kirby-ui": Ui
+    "k-ui": Ui
   },
   data() {
     return {

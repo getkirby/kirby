@@ -14,7 +14,7 @@ describe("Login", () => {
     it("displays errors on login", () => {
       cy.get("input[name=email]").type("homer@simpson.de");
       cy.get("input[name=password]").type("password123{enter}");
-      cy.get(".kirby-login-view form")
+      cy.get(".k-login-view form")
         .should("have.attr", "data-invalid", "true");
       cy.url().should("include", "/login");
     });
@@ -25,7 +25,7 @@ describe("Login", () => {
       }).then(user => {
         cy.get("input[name=email]").type(user.email);
         cy.get("input[name=password]").type(user.password + "{enter}");
-        cy.get(".kirby-headline").should("contain", "Kirby Kitchensink");
+        cy.get(".k-headline").should("contain", "Kirby Kitchensink");
         cy.url().should("include", "/site");
       });
     });
@@ -38,12 +38,12 @@ describe("Login", () => {
 
     it("can visit /site", () => {
       cy.visit("/site");
-      cy.get(".kirby-headline").should("contain", "Kirby Kitchensink");
+      cy.get(".k-headline").should("contain", "Kirby Kitchensink");
     });
 
     it("can visit /users", () => {
       cy.visit("/users");
-      cy.get(".kirby-headline").should("contain", "Users");
+      cy.get(".k-headline").should("contain", "Users");
     });
   });
 });

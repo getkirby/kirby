@@ -1,6 +1,6 @@
 <template>
-  <kirby-field :input="_uid" v-bind="$props" class="kirby-date-field">
-    <kirby-input
+  <k-field :input="_uid" v-bind="$props" class="k-date-field">
+    <k-input
       ref="input"
       :id="_uid"
       :type="inputType"
@@ -10,21 +10,21 @@
       v-on="listeners"
     >
       <template slot="icon">
-        <kirby-dropdown>
-          <kirby-button
+        <k-dropdown>
+          <k-button
             :icon="icon"
-            class="kirby-input-icon-button"
+            class="k-input-icon-button"
             tabindex="-1"
             @click="$refs.dropdown.toggle()"
           />
-          <kirby-dropdown-content ref="dropdown" align="right">
-            <kirby-calendar :value="date" @input="onInput($event); $refs.dropdown.close()" />
-          </kirby-dropdown-content>
-        </kirby-dropdown>
+          <k-dropdown-content ref="dropdown" align="right">
+            <k-calendar :value="date" @input="onInput($event); $refs.dropdown.close()" />
+          </k-dropdown-content>
+        </k-dropdown>
       </template>
 
-    </kirby-input>
-  </kirby-field>
+    </k-input>
+  </k-field>
 </template>
 
 <script>

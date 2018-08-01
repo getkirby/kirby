@@ -1,10 +1,10 @@
 <template>
-  <section class="kirby-fields-section">
+  <section class="k-fields-section">
     <template v-if="issue">
-      <kirby-headline class="kirby-fields-issue-headline">Error</kirby-headline>
-      <kirby-box :text="issue.message" theme="negative" />
+      <k-headline class="k-fields-issue-headline">Error</k-headline>
+      <k-box :text="issue.message" theme="negative" />
     </template>
-    <kirby-form
+    <k-form
       v-else
       :fields="fields"
       :validate="true"
@@ -77,10 +77,10 @@ export default {
 </script>
 
 <style>
-.kirby-fields-issue-headline {
+.k-fields-issue-headline {
   margin-bottom: .5rem;
 }
-.kirby-fields-section input[type="submit"] {
+.k-fields-section input[type="submit"] {
   display: none;
 }
 </style>

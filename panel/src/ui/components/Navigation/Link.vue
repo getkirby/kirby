@@ -8,7 +8,7 @@
     :tabindex="tabindex"
     :target="target"
     :title="title"
-    class="kirby-link"
+    class="k-link"
     v-on="listeners"
   >
     <slot />
@@ -16,7 +16,7 @@
   <span
     v-else
     :title="title"
-    class="kirby-link"
+    class="k-link"
   >
     <slot />
   </span>

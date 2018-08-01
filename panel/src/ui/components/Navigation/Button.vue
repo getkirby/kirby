@@ -14,22 +14,22 @@
     :title="tooltip"
     :to="link"
     :type="link ? null : type"
-    class="kirby-button"
+    class="k-button"
     v-on="$listeners"
   >
-    <figure v-if="image || icon" class="kirby-button-figure">
+    <figure v-if="image || icon" class="k-button-figure">
       <img
         v-if="image"
         :src="imageUrl"
         :alt="tooltip || ''"
       >
-      <kirby-icon
+      <k-icon
         v-else
         :type="icon"
         :alt="tooltip"
       />
     </figure>
-    <span v-if="$slots.default" class="kirby-button-text"><slot /></span>
+    <span v-if="$slots.default" class="k-button-text"><slot /></span>
   </component>
 </template>
 
@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     component() {
-      return this.link ? "kirby-link" : "button";
+      return this.link ? "k-link" : "button";
     },
     imageUrl() {
       if (!this.image) {
@@ -101,12 +101,12 @@ button::-moz-focus-inner {
   padding: 0;
   border: 0;
 }
-.kirby-button[disabled] {
+.k-button[disabled] {
   pointer-events: none;
   opacity: 0.5;
 }
 
-.kirby-button {
+.k-button {
   position: relative;
   font-size: $font-size-small;
   transition: color 0.3s;
@@ -124,7 +124,7 @@ button::-moz-focus-inner {
 }
 
 /* hide button text on small screens */
-.kirby-button[data-responsive] .kirby-button-text {
+.k-button[data-responsive] .k-button-text {
   display: none;
 
   @media screen and (min-width: $breakpoint-small) {
@@ -132,25 +132,25 @@ button::-moz-focus-inner {
   }
 }
 
-.kirby-button[data-theme="positive"] {
+.k-button[data-theme="positive"] {
   color: $color-positive;
 }
 
-.kirby-button[data-theme="negative"] {
+.k-button[data-theme="negative"] {
   color: $color-negative;
 }
 
-.kirby-button-figure {
+.k-button-figure {
   display: inline-block;
   line-height: 0;
 }
-.kirby-button-figure .kirby-icon {
+.k-button-figure .k-icon {
   position: relative;
   top: 0px;
   color: currentColor;
 }
 
-.kirby-button-figure img {
+.k-button-figure img {
   width: 16px;
   height: 16px;
   background: $color-dark;
@@ -158,20 +158,20 @@ button::-moz-focus-inner {
   border-radius: 50%;
 }
 
-.kirby-button-figure ~ .kirby-button-text {
+.k-button-figure ~ .k-button-text {
   padding-left: 0.5rem;
 }
 
-.kirby-button-text {
+.k-button-text {
   opacity: 0.75;
 }
-.kirby-button:focus .kirby-button-text,
-.kirby-button:hover .kirby-button-text {
+.k-button:focus .k-button-text,
+.k-button:hover .k-button-text {
   opacity: 1;
 }
 
-.kirby-button-text span,
-.kirby-button-text b {
+.k-button-text span,
+.k-button-text b {
   vertical-align: baseline;
 }
 </style>

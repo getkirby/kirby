@@ -1,38 +1,38 @@
 <template>
-  <kirby-error-view v-if="issue">
+  <k-error-view v-if="issue">
     {{ issue.message }}
-  </kirby-error-view>
-  <kirby-view v-else class="kirby-users-view">
-    <kirby-header>
+  </k-error-view>
+  <k-view v-else class="k-users-view">
+    <k-header>
       {{ $t('view.users') }}
-      <kirby-button-group slot="left">
-        <kirby-button :disabled="$permissions.users.create === false" icon="add" @click="$refs.create.open()">{{ $t('user.create') }}</kirby-button>
-      </kirby-button-group>
-      <kirby-button-group slot="right">
-        <kirby-dropdown>
-          <kirby-button :responsive="true" icon="funnel" @click="$refs.roles.toggle()">
+      <k-button-group slot="left">
+        <k-button :disabled="$permissions.users.create === false" icon="add" @click="$refs.create.open()">{{ $t('user.create') }}</k-button>
+      </k-button-group>
+      <k-button-group slot="right">
+        <k-dropdown>
+          <k-button :responsive="true" icon="funnel" @click="$refs.roles.toggle()">
             {{ $t("user.role") }}: {{ role ? role.text : $t("user.role.all") }}
-          </kirby-button>
-          <kirby-dropdown-content ref="roles" align="right">
-            <kirby-dropdown-item icon="bolt" @click="filter(false)">
+          </k-button>
+          <k-dropdown-content ref="roles" align="right">
+            <k-dropdown-item icon="bolt" @click="filter(false)">
               {{ $t("user.role.all") }}
-            </kirby-dropdown-item>
+            </k-dropdown-item>
             <hr>
-            <kirby-dropdown-item
+            <k-dropdown-item
               v-for="role in roles"
               :key="role.value"
               icon="bolt"
               @click="filter(role)"
             >
               {{ role.text }}
-            </kirby-dropdown-item>
-          </kirby-dropdown-content>
-        </kirby-dropdown>
-      </kirby-button-group>
-    </kirby-header>
+            </k-dropdown-item>
+          </k-dropdown-content>
+        </k-dropdown>
+      </k-button-group>
+    </k-header>
 
     <template v-if="users.length > 0">
-      <kirby-collection
+      <k-collection
         :items="users"
         :pagination="pagination"
         @paginate="paginate"
@@ -40,18 +40,18 @@
       />
     </template>
     <template v-else-if="total === 0">
-      <kirby-box :text="$t('user.none')" />
+      <k-box :text="$t('user.none')" />
     </template>
 
-    <kirby-user-create-dialog ref="create" @success="fetch" />
-    <kirby-user-email-dialog ref="email" @success="fetch" />
-    <kirby-user-language-dialog ref="language" @success="fetch" />
-    <kirby-user-password-dialog ref="password" />
-    <kirby-user-remove-dialog ref="remove" @success="fetch" />
-    <kirby-user-rename-dialog ref="rename" @success="fetch" />
-    <kirby-user-role-dialog ref="role" @success="fetch" />
+    <k-user-create-dialog ref="create" @success="fetch" />
+    <k-user-email-dialog ref="email" @success="fetch" />
+    <k-user-language-dialog ref="language" @success="fetch" />
+    <k-user-password-dialog ref="password" />
+    <k-user-remove-dialog ref="remove" @success="fetch" />
+    <k-user-rename-dialog ref="rename" @success="fetch" />
+    <k-user-role-dialog ref="role" @success="fetch" />
 
-  </kirby-view>
+  </k-view>
 
 </template>
 

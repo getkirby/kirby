@@ -3,10 +3,10 @@
     :is="tag"
     :data-theme="theme"
     :data-size="size"
-    class="kirby-headline"
+    class="k-headline"
     v-on="$listeners"
   >
-    <kirby-link v-if="link" :to="link"><slot /></kirby-link>
+    <k-link v-if="link" :to="link"><slot /></k-link>
     <slot v-else />
   </component>
 </template>
@@ -30,15 +30,15 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-headline {
+.k-headline {
   font-size: $font-size-medium;
   font-weight: $font-weight-bold;
   line-height: 1.5em;
 }
-.kirby-headline[data-size="small"] {
+.k-headline[data-size="small"] {
   font-size: $font-size-small;
 }
-.kirby-headline[data-size="large"] {
+.k-headline[data-size="large"] {
   font-size: $font-size-large;
   font-weight: $font-weight-normal;
 
@@ -46,7 +46,7 @@ export default {
     font-size: $font-size-huge;
   }
 }
-.kirby-headline[data-size="huge"] {
+.k-headline[data-size="huge"] {
   font-size: $font-size-huge;
   line-height: 1.15em;
 
@@ -54,14 +54,14 @@ export default {
     font-size: $font-size-monster;
   }
 }
-.kirby-headline[data-theme="negative"] {
+.k-headline[data-theme="negative"] {
   color: $color-negative;
 }
-.kirby-headline[data-theme="positive"] {
+.k-headline[data-theme="positive"] {
   color: $color-positive;
 }
 
-.kirby-headline abbr {
+.k-headline abbr {
   color: $color-light-grey;
   padding-left: .25rem;
   text-decoration: none;

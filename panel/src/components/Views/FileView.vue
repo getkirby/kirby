@@ -1,39 +1,39 @@
 <template>
 
-  <kirby-error-view v-if="issue">
+  <k-error-view v-if="issue">
     {{ issue.message }}
-  </kirby-error-view>
-  <div v-else class="kirby-file-view">
+  </k-error-view>
+  <div v-else class="k-file-view">
 
-    <kirby-file-preview :file="file" />
+    <k-file-preview :file="file" />
 
-    <kirby-view class="kirby-file-content">
+    <k-view class="k-file-content">
 
-      <kirby-header :editable="permissions.changeName" @edit="action('rename')">
+      <k-header :editable="permissions.changeName" @edit="action('rename')">
 
         {{ file.filename }}
 
-        <kirby-button-group slot="left">
-          <kirby-button :responsive="true" icon="open" @click="action('download')">
+        <k-button-group slot="left">
+          <k-button :responsive="true" icon="open" @click="action('download')">
             {{ $t("open") }}
-          </kirby-button>
-          <kirby-dropdown>
-            <kirby-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
+          </k-button>
+          <k-dropdown>
+            <k-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
               {{ $t('settings') }}
-            </kirby-button>
-            <kirby-dropdown-content ref="settings" :options="options" @action="action" />
-          </kirby-dropdown>
-          <kirby-tabs-dropdown v-if="tabs.length > 1" :tabs="tabs" @open="$refs.tabs.open($event)" />
-        </kirby-button-group>
+            </k-button>
+            <k-dropdown-content ref="settings" :options="options" @action="action" />
+          </k-dropdown>
+          <k-tabs-dropdown v-if="tabs.length > 1" :tabs="tabs" @open="$refs.tabs.open($event)" />
+        </k-button-group>
 
-        <kirby-button-group v-if="file.id" slot="right">
-          <kirby-button :disabled="!prev" v-bind="prev" icon="angle-left" />
-          <kirby-button :disabled="!next" v-bind="next" icon="angle-right" />
-        </kirby-button-group>
+        <k-button-group v-if="file.id" slot="right">
+          <k-button :disabled="!prev" v-bind="prev" icon="angle-left" />
+          <k-button :disabled="!next" v-bind="next" icon="angle-right" />
+        </k-button-group>
 
-      </kirby-header>
+      </k-header>
 
-      <kirby-tabs
+      <k-tabs
         v-if="file.id"
         ref="tabs"
         :key="'file-' + file.id + '-tabs-' + new Date().getTime()"
@@ -41,9 +41,9 @@
         :tabs="tabs"
       />
 
-      <kirby-file-rename-dialog ref="rename" />
-      <kirby-file-remove-dialog ref="remove" @success="$router.push('/pages/' + path)" />
-      <kirby-upload
+      <k-file-rename-dialog ref="rename" />
+      <k-file-remove-dialog ref="remove" @success="$router.push('/pages/' + path)" />
+      <k-upload
         ref="upload"
         :url="uploadApi"
         :accept="file.mime"
@@ -51,7 +51,7 @@
         @success="uploaded"
       />
 
-    </kirby-view>
+    </k-view>
   </div>
 
 </template>

@@ -20,41 +20,41 @@ import UserRemoveDialog from "@/components/Dialogs/UserRemoveDialog.vue";
 import UserRenameDialog from "@/components/Dialogs/UserRenameDialog.vue";
 import UserRoleDialog from "@/components/Dialogs/UserRoleDialog.vue";
 
-Vue.component("kirby-dialog", Dialog);
-Vue.component("kirby-error-dialog", ErrorDialog);
-Vue.component("kirby-file-rename-dialog", FileRenameDialog);
-Vue.component("kirby-file-remove-dialog", FileRemoveDialog);
-Vue.component("kirby-page-create-dialog", PageCreateDialog);
-Vue.component("kirby-page-rename-dialog", PageRenameDialog);
-Vue.component("kirby-page-remove-dialog", PageRemoveDialog);
-Vue.component("kirby-page-status-dialog", PageStatusDialog);
-Vue.component("kirby-page-template-dialog", PageTemplateDialog);
-Vue.component("kirby-page-url-dialog", PageUrlDialog);
-Vue.component("kirby-site-rename-dialog", SiteRenameDialog);
-Vue.component("kirby-user-create-dialog", UserCreateDialog);
-Vue.component("kirby-user-email-dialog", UserEmailDialog);
-Vue.component("kirby-user-language-dialog", UserLanguageDialog);
-Vue.component("kirby-user-password-dialog", UserPasswordDialog);
-Vue.component("kirby-user-remove-dialog", UserRemoveDialog);
-Vue.component("kirby-user-rename-dialog", UserRenameDialog);
-Vue.component("kirby-user-role-dialog", UserRoleDialog);
+Vue.component("k-dialog", Dialog);
+Vue.component("k-error-dialog", ErrorDialog);
+Vue.component("k-file-rename-dialog", FileRenameDialog);
+Vue.component("k-file-remove-dialog", FileRemoveDialog);
+Vue.component("k-page-create-dialog", PageCreateDialog);
+Vue.component("k-page-rename-dialog", PageRenameDialog);
+Vue.component("k-page-remove-dialog", PageRemoveDialog);
+Vue.component("k-page-status-dialog", PageStatusDialog);
+Vue.component("k-page-template-dialog", PageTemplateDialog);
+Vue.component("k-page-url-dialog", PageUrlDialog);
+Vue.component("k-site-rename-dialog", SiteRenameDialog);
+Vue.component("k-user-create-dialog", UserCreateDialog);
+Vue.component("k-user-email-dialog", UserEmailDialog);
+Vue.component("k-user-language-dialog", UserLanguageDialog);
+Vue.component("k-user-password-dialog", UserPasswordDialog);
+Vue.component("k-user-remove-dialog", UserRemoveDialog);
+Vue.component("k-user-rename-dialog", UserRenameDialog);
+Vue.component("k-user-role-dialog", UserRoleDialog);
 
 /* Forms */
 import FormButtons from "@/components/Forms/FormButtons.vue";
 
-Vue.component("kirby-form-buttons", FormButtons);
+Vue.component("k-form-buttons", FormButtons);
 
 /* Layout */
 import Dropzone from "@/components/Layout/Dropzone.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
 
-Vue.component("kirby-dropzone", Dropzone);
-Vue.component("kirby-file-preview", FilePreview);
+Vue.component("k-dropzone", Dropzone);
+Vue.component("k-file-preview", FilePreview);
 
 /* Navigation */
 import Topbar from "@/components/Navigation/Topbar.vue";
 
-Vue.component("kirby-topbar", Topbar);
+Vue.component("k-topbar", Topbar);
 
 /* Sections */
 import Sections from "@/components/Sections/Sections.vue";
@@ -63,20 +63,20 @@ import PagesSection from "@/components/Sections/PagesSection.vue";
 import FilesSection from "@/components/Sections/FilesSection.vue";
 import FieldsSection from "@/components/Sections/FieldsSection.vue";
 
-Vue.component("kirby-sections", Sections);
-Vue.component("kirby-info-section", InfoSection);
-Vue.component("kirby-pages-section", PagesSection);
-Vue.component("kirby-files-section", FilesSection);
-Vue.component("kirby-fields-section", FieldsSection);
+Vue.component("k-sections", Sections);
+Vue.component("k-info-section", InfoSection);
+Vue.component("k-pages-section", PagesSection);
+Vue.component("k-files-section", FilesSection);
+Vue.component("k-fields-section", FieldsSection);
 
 /* Tabs */
 import Tabs from "@/components/Tabs/Tabs.vue";
 import TabsDropdown from "@/components/Tabs/TabsDropdown.vue";
 
-Vue.component("kirby-tabs", Tabs);
-Vue.component("kirby-tabs-dropdown", TabsDropdown);
+Vue.component("k-tabs", Tabs);
+Vue.component("k-tabs-dropdown", TabsDropdown);
 
 /* View */
 import ErrorView from "@/components/Views/ErrorView.vue";
 
-Vue.component("kirby-error-view", ErrorView);
+Vue.component("k-error-view", ErrorView);

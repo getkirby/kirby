@@ -1,8 +1,8 @@
 <template>
-  <kirby-dropdown class="kirby-autocomplete">
+  <k-dropdown class="k-autocomplete">
     <slot />
-    <kirby-dropdown-content ref="dropdown" @close="$emit('close', $event)">
-      <kirby-dropdown-item
+    <k-dropdown-content ref="dropdown" @close="$emit('close', $event)">
+      <k-dropdown-item
         v-for="(item, index) in matches"
         :key="index"
         v-bind="item"
@@ -14,10 +14,10 @@
         @keydown.delete.prevent="close"
       >
         {{ item.text }}
-      </kirby-dropdown-item>
-    </kirby-dropdown-content>
+      </k-dropdown-item>
+    </k-dropdown-content>
     {{ query }}
-  </kirby-dropdown>
+  </k-dropdown>
 </template>
 
 <script>

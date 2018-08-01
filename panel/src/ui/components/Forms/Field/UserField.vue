@@ -1,14 +1,14 @@
 <template>
-  <kirby-field :input="_uid" v-bind="$props" class="kirby-user-field">
+  <k-field :input="_uid" v-bind="$props" class="k-user-field">
 
-    <kirby-autocomplete
+    <k-autocomplete
       v-if="!user"
       ref="autocomplete"
       :options="users"
       @close="reset"
       @select="setUser($event)"
     >
-      <kirby-input
+      <k-input
         ref="input"
         :id="_uid"
         :disabled="disabled"
@@ -20,9 +20,9 @@
         @keydown.enter.prevent
         @input="$refs.autocomplete.search($event)"
       />
-    </kirby-autocomplete>
+    </k-autocomplete>
 
-    <kirby-list-item
+    <k-list-item
       v-else
       :image="{url: user.image, cover: true}"
       :link="user.link"
@@ -30,9 +30,9 @@
       :icon="{type: 'user', back: 'black'}"
       element="div"
     >
-      <kirby-button slot="options" icon="cancel" @click="removeUser" />
-    </kirby-list-item>
-  </kirby-field>
+      <k-button slot="options" icon="cancel" @click="removeUser" />
+    </k-list-item>
+  </k-field>
 </template>
 
 <script>
@@ -85,10 +85,10 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-user-field .kirby-button-group {
+.k-user-field .k-button-group {
   margin-right: 0;
 }
-.kirby-user-field .kirby-list-item {
+.k-user-field .k-list-item {
   margin-bottom: 0;
 }
 </style>

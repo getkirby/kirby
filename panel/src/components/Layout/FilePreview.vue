@@ -1,22 +1,22 @@
 <template>
-  <div class="kirby-file-preview">
-    <kirby-view class="kirby-file-preview-layout">
-      <div class="kirby-file-preview-image">
+  <div class="k-file-preview">
+    <k-view class="k-file-preview-layout">
+      <div class="k-file-preview-image">
         <a :href="file.url" target="_blank">
-          <kirby-image
+          <k-image
             v-if="preview.image"
             :src="preview.image"
             back="none"
           />
-          <kirby-icon
+          <k-icon
             v-else
             :type="preview.icon || 'document'"
             :style="{ color: preview.color }"
-            class="kirby-file-preview-icon"
+            class="k-file-preview-icon"
           />
         </a>
       </div>
-      <div class="kirby-file-preview-details">
+      <div class="k-file-preview-details">
         <ul>
           <li>
             <h3>{{ $t("file.template") }}</h3>
@@ -48,7 +48,7 @@
           </li>
         </ul>
       </div>
-    </kirby-view>
+    </k-view>
   </div>
 </template>
 
@@ -65,10 +65,10 @@ export default {
 };
 </script>
 <style lang="scss">
-.kirby-file-preview {
+.k-file-preview {
   background: lighten($color-dark, 10%);
 }
-.kirby-file-preview-layout {
+.k-file-preview-layout {
   display: grid;
 
   @media screen and (max-width: $breakpoint-medium) {
@@ -83,10 +83,10 @@ export default {
     align-items: center;
   }
 }
-.kirby-file-preview-layout > * {
+.k-file-preview-layout > * {
   min-width: 0;
 }
-.kirby-file-preview-image {
+.k-file-preview-image {
   position: relative;
   background: url($pattern);
 
@@ -97,7 +97,7 @@ export default {
     width: 25%;
   }
 }
-.kirby-file-preview-image .kirby-image span {
+.k-file-preview-image .k-image span {
   overflow: hidden;
   padding-bottom: 66.66%;
 
@@ -114,23 +114,23 @@ export default {
     padding-bottom: 100%;
   }
 }
-.kirby-file-preview-image img {
+.k-file-preview-image img {
   padding: 3rem;
 }
-.kirby-file-preview-icon {
+.k-file-preview-icon {
   position: relative;
   display: block;
   padding-bottom: 100%;
   overflow: hidden;
   color: rgba($color-white, 0.5);
 }
-.kirby-file-preview-icon svg {
+.k-file-preview-icon svg {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(4);
 }
-.kirby-file-preview-details {
+.k-file-preview-details {
   padding: 1.5rem;
   flex-grow: 1;
 
@@ -138,7 +138,7 @@ export default {
     padding: 3rem;
   }
 }
-.kirby-file-preview-details ul {
+.k-file-preview-details ul {
   line-height: 1.5em;
   max-width: 50rem;
   display: grid;
@@ -149,19 +149,19 @@ export default {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
-.kirby-file-preview-details h3 {
+.k-file-preview-details h3 {
   font-size: $font-size-small;
   font-weight: 500;
   color: $color-light-grey;
 }
-.kirby-file-preview-details p {
+.k-file-preview-details p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: rgba($color-white, 0.75);
   font-size: $font-size-small;
 }
-.kirby-file-preview-details p a {
+.k-file-preview-details p a {
   display: block;
   width: 100%;
   overflow: hidden;

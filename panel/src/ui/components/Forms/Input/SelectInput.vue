@@ -1,5 +1,5 @@
 <template>
-  <label :data-disabled="disabled" :data-empty="value === ''" class="kirby-select-input">
+  <label :data-disabled="disabled" :data-empty="value === ''" class="k-select-input">
     <select
       ref="input"
       v-bind="{
@@ -11,7 +11,7 @@
         value
       }"
       :disabled="disabled"
-      class="kirby-select-input-native"
+      class="k-select-input-native"
       v-on="listeners"
     >
       <option v-if="empty !== false" :value="null">{{ empty }}</option>
@@ -126,13 +126,13 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-select-input {
+.k-select-input {
   position: relative;
   display: block;
   cursor: pointer;
   overflow: hidden;
 }
-.kirby-select-input-native {
+.k-select-input-native {
   position: absolute;
   top: 0;
   right: 0;
@@ -145,7 +145,7 @@ export default {
   cursor: pointer;
   appearance: none;
 }
-.kirby-select-input-native[disabled] {
+.k-select-input-native[disabled] {
   cursor: default;
 }
 </style>

@@ -1,29 +1,29 @@
 <template>
-  <transition name="kirby-dialog-transition">
-    <div v-if="isOpen" class="kirby-dialog" @click="cancel">
-      <div :data-size="size" class="kirby-dialog-box" @click.stop>
+  <transition name="k-dialog-transition">
+    <div v-if="isOpen" class="k-dialog" @click="cancel">
+      <div :data-size="size" class="k-dialog-box" @click.stop>
 
-        <div v-if="notification" :data-theme="notification.type" class="kirby-dialog-notification">
+        <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
           <p>{{ notification.message }}</p>
-          <kirby-button
+          <k-button
             icon="cancel"
             @click="notification = null"
           />
         </div>
 
-        <div class="kirby-dialog-body">
+        <div class="k-dialog-body">
           <slot/>
         </div>
         <slot name="footer">
-          <footer class="kirby-dialog-footer">
-            <kirby-button-group>
-              <kirby-button icon="cancel" @click="cancel">
+          <footer class="k-dialog-footer">
+            <k-button-group>
+              <k-button icon="cancel" @click="cancel">
                 {{ "Cancel" | t("cancel") }}
-              </kirby-button>
-              <kirby-button :icon="icon" :theme="theme" @click="submit">
+              </k-button>
+              <k-button :icon="icon" :theme="theme" @click="submit">
                 {{ button || t("confirm") }}
-              </kirby-button>
-            </kirby-button-group>
+              </k-button>
+            </k-button-group>
           </footer>
         </slot>
       </div>
@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-dialog {
+.k-dialog {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,25 +125,25 @@ export default {
   z-index: z-index(dialog);
 }
 
-.kirby-dialog-transition-enter-active,
-.kirby-dialog-transition-leave-active {
+.k-dialog-transition-enter-active,
+.k-dialog-transition-leave-active {
   transition: opacity 0.15s;
 }
-.kirby-dialog-transition-enter,
-.kirby-dialog-transition-leave-to {
+.k-dialog-transition-enter,
+.k-dialog-transition-leave-to {
   opacity: 0;
 }
 
-.kirby-dialog-transition-enter-active .kirby-dialog-box,
-.kirby-dialog-transition-leave-active .kirby-dialog-box {
+.k-dialog-transition-enter-active .k-dialog-box,
+.k-dialog-transition-leave-active .k-dialog-box {
   transition: transform 0.2s;
 }
-.kirby-dialog-transition-enter .kirby-dialog-box,
-.kirby-dialog-transition-leave-to .kirby-dialog-box {
+.k-dialog-transition-enter .k-dialog-box,
+.k-dialog-transition-leave-to .k-dialog-box {
   transform: translateY(-5%);
 }
 
-.kirby-dialog-box {
+.k-dialog-box {
   position: relative;
   background: $color-light;
   width: 22rem;
@@ -153,16 +153,16 @@ export default {
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
 }
-.kirby-dialog-box[data-size="small"] {
+.k-dialog-box[data-size="small"] {
   width: 20rem;
 }
-.kirby-dialog-box[data-size="medium"] {
+.k-dialog-box[data-size="medium"] {
   width: 30rem;
 }
-.kirby-dialog-box[data-size="large"] {
+.k-dialog-box[data-size="large"] {
   width: 40rem;
 }
-.kirby-dialog-notification {
+.k-dialog-notification {
   padding: .75rem 1.5rem;
   background: $color-dark;
   width: 100%;
@@ -171,56 +171,56 @@ export default {
   display: flex;
   align-items: center;
 }
-.kirby-dialog-notification[data-theme="error"] {
+.k-dialog-notification[data-theme="error"] {
   background: $color-negative-on-dark;
   color: $color-black;
 }
-.kirby-dialog-notification[data-theme="success"] {
+.k-dialog-notification[data-theme="success"] {
   background: $color-positive-on-dark;
   color: $color-black;
 }
-.kirby-dialog-notification p {
+.k-dialog-notification p {
   flex-grow: 1;
   word-wrap: break-word;
   overflow: hidden;
 }
-.kirby-dialog-notification .kirby-button {
+.k-dialog-notification .k-button {
   display: flex;
   margin-left: 1rem;
 }
 
 
-.kirby-dialog-body {
+.k-dialog-body {
   padding: 1.5rem;
   max-height: calc(100vh - 9rem);
   overflow-y: auto;
   overflow-x: hidden;
 }
-.kirby-dialog-body .kirby-fieldset {
+.k-dialog-body .k-fieldset {
   padding-bottom: 0.5rem;
 }
-.kirby-dialog-footer {
+.k-dialog-footer {
   border-top: 1px solid $color-border;
   padding: 0;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   line-height: 1;
 }
-.kirby-dialog-footer .kirby-button-group {
+.k-dialog-footer .k-button-group {
   display: flex;
   margin: 0;
   justify-content: space-between;
 
-  .kirby-button {
+  .k-button {
     padding: .75rem 1rem;
     line-height: 1.25rem;
   }
 
-  .kirby-button:first-child {
+  .k-button:first-child {
     text-align: left;
     padding-left: 1.5rem;
   }
-  .kirby-button:last-child {
+  .k-button:last-child {
     text-align: right;
     padding-right: 1.5rem;
   }

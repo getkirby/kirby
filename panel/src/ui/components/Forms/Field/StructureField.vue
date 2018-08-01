@@ -1,7 +1,7 @@
 <template>
-  <kirby-field v-bind="$props" class="kirby-structure-field" @click.native.stop>
+  <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
     <template slot="options">
-      <kirby-button
+      <k-button
         v-if="!disabled"
         ref="add"
         :id="_uid"
@@ -9,25 +9,25 @@
         @click="add"
       >
         {{ "Add" | t("add") }}
-      </kirby-button>
+      </k-button>
     </template>
 
     <template>
-      <kirby-box v-if="items.length === 0" theme="button">
-        <kirby-button :disabled="disabled" icon="add" @click="add">{{ "Click to add the first item …" | t("structure.add.first") }}</kirby-button>
-      </kirby-box>
-      <kirby-draggable
+      <k-box v-if="items.length === 0" theme="button">
+        <k-button :disabled="disabled" icon="add" @click="add">{{ "Click to add the first item …" | t("structure.add.first") }}</k-button>
+      </k-box>
+      <k-draggable
         v-else
         v-model="items"
         :data-disabled="disabled"
         :options="{
           disabled: disabled,
           forceFallback: true,
-          handle: '.kirby-structure-item-handle',
+          handle: '.k-structure-item-handle',
           fallbackClass: 'sortable-fallback'
         }"
         element="ul"
-        class="kirby-structure"
+        class="k-structure"
         @input="onInput"
         @choose="close"
         @end="onInput"
@@ -36,18 +36,18 @@
           v-for="(item, index) in items"
           :key="index"
           :data-active="isActive(index)"
-          class="kirby-structure-item"
+          class="k-structure-item"
           @click.stop
         >
-          <div v-if="!isActive(index)" class="kirby-structure-item-wrapper">
-            <kirby-button class="kirby-structure-item-handle" icon="sort" />
-            <div class="kirby-structure-item-content">
+          <div v-if="!isActive(index)" class="k-structure-item-wrapper">
+            <k-button class="k-structure-item-handle" icon="sort" />
+            <div class="k-structure-item-content">
               <p
                 v-for="(field, fieldName) in fields"
                 v-if="field.type !== 'hidden'"
                 :key="fieldName"
                 :title="field.label"
-                class="kirby-structure-item-text"
+                class="k-structure-item-text"
                 @click="jump(index, fieldName)"
               >
                 <template v-if="item[fieldName] !== undefined">
@@ -55,34 +55,34 @@
                 </template>
               </p>
             </div>
-            <nav v-if="!disabled" class="kirby-structure-item-options">
-              <kirby-button icon="trash" class="kirby-structure-option" @click="confirmRemove(index)" />
+            <nav v-if="!disabled" class="k-structure-item-options">
+              <k-button icon="trash" class="k-structure-option" @click="confirmRemove(index)" />
             </nav>
           </div>
-          <div v-if="!disabled && isActive(index)" class="kirby-structure-form">
-            <kirby-fieldset
+          <div v-if="!disabled && isActive(index)" class="k-structure-form">
+            <k-fieldset
               ref="form"
               :fields="fields"
               v-model="items[index]"
-              class="kirby-structure-fieldset"
+              class="k-structure-fieldset"
               @input="onInput"
               @submit="close(index)"
             />
           </div>
         </li>
-      </kirby-draggable>
-      <kirby-dialog
+      </k-draggable>
+      <k-dialog
         v-if="!disabled"
         ref="remove"
         :button="$t('delete')"
         theme="negative"
         @submit="remove"
       >
-        <kirby-text>{{ "Do you really want to delete this item?" | t("structure.delete.confirm") }}</kirby-text>
-      </kirby-dialog>
+        <k-text>{{ "Do you really want to delete this item?" | t("structure.delete.confirm") }}</k-text>
+      </k-dialog>
     </template>
 
-    <kirby-dialog
+    <k-dialog
       ref="escapeDialog"
       :button="$t('discard')"
       theme="negative"
@@ -90,9 +90,9 @@
       @submit="discard"
     >
       {{ "Do you really want to discard this item?" | t("structure.discard.confirm") }}
-    </kirby-dialog>
+    </k-dialog>
 
-  </kirby-field>
+  </k-field>
 </template>
 
 <script>
@@ -260,32 +260,32 @@ export default {
 
 $structure-item-height: 38px;
 
-.kirby-structure-field {
+.k-structure-field {
   list-style: none;
 }
 
-.kirby-structure-item {
+.k-structure-item {
   position: relative;
   margin-bottom: 2px;
   box-shadow: $box-shadow-card;
 }
-.kirby-structure-item.sortable-ghost {
+.k-structure-item.sortable-ghost {
   background: $color-inset;
   box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
   outline: 2px solid $color-focus;
   margin-bottom: 2px;
   z-index: 1;
 }
-.kirby-structure-item.sortable-fallback {
+.k-structure-item.sortable-fallback {
   opacity: .25 !important;
 }
 
-.kirby-structure-item[data-active] {
+.k-structure-item[data-active] {
   position: relative;
   z-index: 1;
   box-shadow: rgba($color-dark, .3) 0 0px 30px;
 }
-.kirby-structure-item-handle {
+.k-structure-item-handle {
   position: absolute;
   width: $structure-item-height;
   height: $structure-item-height;
@@ -295,24 +295,24 @@ $structure-item-height: 38px;
   will-change: opacity;
   transition: opacity .3s;
 }
-.kirby-structure:hover .kirby-structure-item-handle {
+.k-structure:hover .k-structure-item-handle {
   opacity: .25;
 }
-.kirby-structure-item-handle:active {
+.k-structure-item-handle:active {
   cursor: -webkit-grabbing;
 }
-.kirby-structure-item:hover .kirby-structure-item-handle {
+.k-structure-item:hover .k-structure-item-handle {
   opacity: 1;
 }
 
 
-.kirby-structure-item-wrapper {
+.k-structure-item-wrapper {
   display: flex;
 }
-.kirby-structure-item-content {
+.k-structure-item-content {
   flex-grow: 1;
 }
-.kirby-structure-item-content {
+.k-structure-item-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   background: $color-white;
@@ -320,7 +320,7 @@ $structure-item-height: 38px;
   align-items: center;
   overflow: hidden;
 }
-.kirby-structure-item-text {
+.k-structure-item-text {
   padding: 0 0.75rem;
   font-size: $font-size-small;
   white-space: nowrap;
@@ -331,10 +331,10 @@ $structure-item-height: 38px;
   border-right: 1px solid $color-background;
   cursor: pointer;
 }
-.kirby-structure-item-text:hover {
+.k-structure-item-text:hover {
   background: rgba($color-background, .5);
 }
-.kirby-structure-item-text:not(:first-child) {
+.k-structure-item-text:not(:first-child) {
   display: none;
   color: $color-dark-grey;
   font-size: $font-size-small;
@@ -343,28 +343,28 @@ $structure-item-height: 38px;
     display: block;
   }
 }
-.kirby-structure-content {
+.k-structure-content {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.kirby-structure-item-text:first-child {
+.k-structure-item-text:first-child {
   min-width: 100px;
 }
-.kirby-structure-content,
-.kirby-structure-option {
+.k-structure-content,
+.k-structure-option {
   padding: 0.5rem 0.75rem;
   line-height: 1em;
 }
-.kirby-structure-item-options {
+.k-structure-item-options {
   display: flex;
   background: #fff;
   flex-shrink: 0;
 }
-.kirby-structure-option {
+.k-structure-option {
   width: 2.5rem;
 }
-.kirby-structure-form {
+.k-structure-form {
   position: relative;
   background: $color-background;
   padding: 2rem 2rem 3rem;

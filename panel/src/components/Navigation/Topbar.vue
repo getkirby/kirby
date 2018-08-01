@@ -1,12 +1,12 @@
 <template>
-  <header v-if="isVisible" class="kirby-topbar">
-    <kirby-view>
-      <div class="kirby-topbar-wrapper">
-        <kirby-dropdown class="kirby-topbar-menu">
-          <kirby-button icon="bars" class="kirby-topbar-button kirby-topbar-menu-button" @click="$refs.menu.toggle()">
-            <kirby-icon type="angle-down" />
-          </kirby-button>
-          <kirby-dropdown-content ref="menu" class="kirby-topbar-menu">
+  <header v-if="isVisible" class="k-topbar">
+    <k-view>
+      <div class="k-topbar-wrapper">
+        <k-dropdown class="k-topbar-menu">
+          <k-button icon="bars" class="k-topbar-button k-topbar-menu-button" @click="$refs.menu.toggle()">
+            <k-icon type="angle-down" />
+          </k-button>
+          <k-dropdown-content ref="menu" class="k-topbar-menu">
             <ul>
               <li
                 v-for="(view, viewName) in views"
@@ -14,84 +14,84 @@
                 :aria-current="$route.meta.view === viewName"
                 :key="'menu-item-' + viewName"
               >
-                <kirby-dropdown-item
+                <k-dropdown-item
                   :disabled="$permissions.access[viewName] === false"
                   :icon="view.icon"
                   :link="view.link"
                 >
                   {{ $t(`view.${viewName}`, view.label) }}
-                </kirby-dropdown-item>
+                </k-dropdown-item>
               </li>
               <li><hr></li>
               <li :aria-current="$route.meta.view === 'account'">
-                <kirby-dropdown-item icon="account" link="/account">
+                <k-dropdown-item icon="account" link="/account">
                   {{ $t("view.account") }}
-                </kirby-dropdown-item>
+                </k-dropdown-item>
               </li>
               <li><hr></li>
               <li>
-                <kirby-dropdown-item icon="logout" link="/logout">
+                <k-dropdown-item icon="logout" link="/logout">
                   {{ $t("logout") }}
-                </kirby-dropdown-item>
+                </k-dropdown-item>
               </li>
             </ul>
-          </kirby-dropdown-content>
-        </kirby-dropdown>
+          </k-dropdown-content>
+        </k-dropdown>
 
-        <kirby-link
+        <k-link
           v-tab
           v-if="view"
           :to="view.link"
-          class="kirby-topbar-button kirby-topbar-view-button"
+          class="k-topbar-button k-topbar-view-button"
         >
-          <kirby-icon :type="view.icon" /> {{ $t(`view.${$store.state.view}`, view.label) }}
-        </kirby-link>
+          <k-icon :type="view.icon" /> {{ $t(`view.${$store.state.view}`, view.label) }}
+        </k-link>
 
-        <kirby-dropdown v-if="$store.state.breadcrumb.length > 1" class="kirby-topbar-breadcrumb-menu">
-          <kirby-button class="kirby-topbar-button" @click="$refs.crumb.toggle()">
+        <k-dropdown v-if="$store.state.breadcrumb.length > 1" class="k-topbar-breadcrumb-menu">
+          <k-button class="k-topbar-button" @click="$refs.crumb.toggle()">
             …
-            <kirby-icon type="angle-down" />
-          </kirby-button>
+            <k-icon type="angle-down" />
+          </k-button>
 
-          <kirby-dropdown-content ref="crumb">
-            <kirby-dropdown-item :icon="view.icon" :link="view.link">
+          <k-dropdown-content ref="crumb">
+            <k-dropdown-item :icon="view.icon" :link="view.link">
               {{ $t(`view.${$store.state.view}`, view.label) }}
-            </kirby-dropdown-item>
-            <kirby-dropdown-item
+            </k-dropdown-item>
+            <k-dropdown-item
               v-for="(crumb, index) in $store.state.breadcrumb"
               :key="'crumb-' + index + '-dropdown'"
               :icon="view.icon"
               :link="crumb.link"
             >
               {{ crumb.label }}
-            </kirby-dropdown-item>
-          </kirby-dropdown-content>
-        </kirby-dropdown>
+            </k-dropdown-item>
+          </k-dropdown-content>
+        </k-dropdown>
 
-        <nav class="kirby-topbar-crumbs">
-          <kirby-link
+        <nav class="k-topbar-crumbs">
+          <k-link
             v-tab
             v-for="(crumb, index) in $store.state.breadcrumb"
             :key="'crumb-' + index"
             :to="crumb.link"
           >
             {{ crumb.label }}
-          </kirby-link>
+          </k-link>
         </nav>
 
-        <div class="kirby-topbar-signals">
-          <kirby-button
+        <div class="k-topbar-signals">
+          <k-button
             v-if="notification"
-            class="kirby-topbar-notification"
+            class="k-topbar-notification"
             theme="positive"
             @click="$store.dispatch('notification/close')"
           >
             {{ notification.message }}
-          </kirby-button>
-          <kirby-button icon="search" @click="$store.dispatch('search', true)" />
+          </k-button>
+          <k-button icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
-    </kirby-view>
+    </k-view>
   </header>
 </template>
 
@@ -127,54 +127,54 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-topbar {
+.k-topbar {
   position: relative;
   color: $color-white;
   flex-shrink: 0;
   height: 2.5rem;
   background: $color-dark;
 }
-.kirby-topbar-wrapper {
+.k-topbar-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   margin-left: -0.75rem;
   margin-right: -0.75rem;
 }
-.kirby-topbar-menu {
+.k-topbar-menu {
   flex-shrink: 0;
 }
-.kirby-topbar-menu ul {
+.k-topbar-menu ul {
   padding: 0.5rem 0;
 }
-.kirby-topbar-menu-button {
+.k-topbar-menu-button {
   display: flex;
 }
-.kirby-topbar-menu-button .kirby-button-text {
+.k-topbar-menu-button .k-button-text {
   opacity: 1;
 }
-.kirby-topbar-signals .kirby-button,
-.kirby-topbar-button {
+.k-topbar-signals .k-button,
+.k-topbar-button {
   padding: 0.75rem;
   font-size: $font-size-small;
 }
-.kirby-topbar-button .kirby-button-text {
+.k-topbar-button .k-button-text {
   display: flex;
 }
-.kirby-topbar-view-button {
+.k-topbar-view-button {
   flex-shrink: 0;
   display: flex;
   padding-right: 0;
   @include highlight-tabbed;
 }
-.kirby-topbar-view-button .kirby-icon {
+.k-topbar-view-button .k-icon {
   margin-right: 0.5rem;
 }
-.kirby-topbar-crumbs {
+.k-topbar-crumbs {
   flex-grow: 1;
   display: flex;
 }
-.kirby-topbar-crumbs a {
+.k-topbar-crumbs a {
   position: relative;
   font-size: $font-size-small;
   white-space: nowrap;
@@ -198,28 +198,28 @@ export default {
 
   @include highlight-tabbed;
 }
-.kirby-topbar-crumbs a:not(:last-child) {
+.k-topbar-crumbs a:not(:last-child) {
   max-width: 15vw;
 }
-.kirby-topbar-breadcrumb-menu {
+.k-topbar-breadcrumb-menu {
   flex-shrink: 0;
 }
 @media screen and (min-width: $breakpoint-small) {
-  .kirby-topbar-crumbs a {
+  .k-topbar-crumbs a {
     display: block;
   }
-  .kirby-topbar-breadcrumb-menu {
+  .k-topbar-breadcrumb-menu {
     display: none;
   }
 }
-.kirby-topbar-signals {
+.k-topbar-signals {
   position: absolute;
   right: 0;
   top: 0;
   background: $color-dark;
   height: 2.5rem;
 }
-.kirby-topbar-signals::before {
+.k-topbar-signals::before {
   position: absolute;
   content: "";
   top: 0;
@@ -232,38 +232,38 @@ export default {
     rgba($color-dark, 1)
   );
 }
-.kirby-topbar-signals .kirby-button {
+.k-topbar-signals .k-button {
   line-height: 1;
 }
 
-.kirby-topbar-notification {
+.k-topbar-notification {
   font-weight: $font-weight-bold;
   line-height: 1;
 }
-.kirby-topbar .kirby-button[data-theme="positive"] {
+.k-topbar .k-button[data-theme="positive"] {
   color: $color-positive-on-dark;
 }
-.kirby-topbar .kirby-button[data-theme="negative"] {
+.k-topbar .k-button[data-theme="negative"] {
   color: $color-negative-on-dark;
 }
-.kirby-topbar .kirby-button[data-theme="negative"] .kirby-button-text {
+.k-topbar .k-button[data-theme="negative"] .k-button-text {
   display: none;
 
   @media screen and (min-width: $breakpoint-small) {
     display: inline;
   }
 }
-.kirby-topbar .kirby-button[data-theme] .kirby-button-text {
+.k-topbar .k-button[data-theme] .k-button-text {
   opacity: 1;
 }
-.kirby-topbar .kirby-dropdown-content {
+.k-topbar .k-dropdown-content {
   color: $color-dark;
   background: $color-white;
 }
-.kirby-topbar .kirby-dropdown-content hr:after {
+.k-topbar .k-dropdown-content hr:after {
   opacity: 0.1;
 }
-.kirby-topbar-menu [aria-current] .kirby-link {
+.k-topbar-menu [aria-current] .k-link {
   color: $color-focus;
   font-weight: 500;
 }

@@ -1,7 +1,7 @@
 <template>
-  <div class="kirby-list">
+  <div class="k-list">
     <slot>
-      <kirby-list-item
+      <k-list-item
         v-for="(item, index) in items"
         :key="index"
         v-bind="item"

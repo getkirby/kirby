@@ -1,17 +1,17 @@
 <template>
-  <kirby-dialog
+  <k-dialog
     ref="dialog"
     button="Insert"
     @close="cancel"
     @submit="$refs.form.submit()"
   >
-    <kirby-form
+    <k-form
       ref="form"
       :fields="fields"
       v-model="value"
       @submit="submit"
     />
-  </kirby-dialog>
+  </k-dialog>
 </template>
 
 <script>

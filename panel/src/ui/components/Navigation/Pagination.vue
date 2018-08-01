@@ -1,26 +1,26 @@
 <template>
-  <kirby-button-group v-if="show" :data-align="align" class="kirby-pagination">
-    <kirby-button
+  <k-button-group v-if="show" :data-align="align" class="k-pagination">
+    <k-button
       :disabled="!hasPrev"
       :alt="prevLabel"
       icon="angle-left"
       @click="prev"
     />
 
-    <kirby-dropdown v-if="details">
-      <kirby-button :disabled="!hasPages" @click="$refs.dropdown.toggle()">
+    <k-dropdown v-if="details">
+      <k-button :disabled="!hasPages" @click="$refs.dropdown.toggle()">
         <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
-      </kirby-button>
+      </k-button>
 
-      <kirby-dropdown-content
+      <k-dropdown-content
         ref="dropdown"
-        class="kirby-pagination-selector"
+        class="k-pagination-selector"
         @open="$nextTick(() => $refs.page.focus())"
       >
         <div>
-          <label for="kirby-pagination-input">{{ pageLabel }}</label>
+          <label for="k-pagination-input">{{ pageLabel }}</label>
           <input
-            id="kirby-pagination-input"
+            id="k-pagination-input"
             ref="page"
             :value="currentPage"
             :min="1"
@@ -30,16 +30,16 @@
             @input="goTo($event.target.value)"
           >
         </div>
-      </kirby-dropdown-content>
-    </kirby-dropdown>
+      </k-dropdown-content>
+    </k-dropdown>
 
-    <kirby-button
+    <k-button
       :disabled="!hasNext"
       :alt="nextLabel"
       icon="angle-right"
       @click="next"
     />
-  </kirby-button-group>
+  </k-button-group>
 </template>
 
 <script>
@@ -175,32 +175,32 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-pagination {
+.k-pagination {
   user-select: none;
 }
-.kirby-pagination .kirby-button {
+.k-pagination .k-button {
   padding: 1rem !important;
 }
-.kirby-pagination[data-align="center"] {
+.k-pagination[data-align="center"] {
   text-align: center;
 }
-.kirby-pagination[data-align="right"] {
+.k-pagination[data-align="right"] {
   text-align: right;
 }
 
-.kirby-pagination-selector {
+.k-pagination-selector {
   width: 100%;
   padding: 0 !important;
 }
-.kirby-pagination-selector > div {
+.k-pagination-selector > div {
   font-size: 14px;
   display: flex;
 }
-.kirby-pagination-selector > div > label {
+.k-pagination-selector > div > label {
   padding: 0.5rem 1rem;
   border-right: 1px solid rgba(#fff, 0.1);
 }
-.kirby-pagination-selector > div > input {
+.k-pagination-selector > div > input {
   flex-grow: 1;
   font: inherit;
   border: 0;
@@ -210,7 +210,7 @@ export default {
   border-top-right-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
 }
-.kirby-pagination-selector > div > input:focus {
+.k-pagination-selector > div > input:focus {
   outline: 0;
   background: $color-focus;
   color: $color-dark;

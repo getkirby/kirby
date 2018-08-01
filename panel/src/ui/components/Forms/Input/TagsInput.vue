@@ -1,12 +1,12 @@
 <template>
-  <kirby-draggable
+  <k-draggable
     ref="box"
     v-model="tags"
-    :options="{disabled: !draggable, forceFallback: true, draggable: '.kirby-tag', delay: 1}"
-    class="kirby-tags-input"
+    :options="{disabled: !draggable, forceFallback: true, draggable: '.k-tag', delay: 1}"
+    class="k-tags-input"
     @input="onInput"
   >
-    <kirby-tag
+    <k-tag
       v-for="tag in tags"
       :ref="tag.value"
       :key="tag.value"
@@ -21,9 +21,9 @@
       @remove="remove(tag)"
     >
       {{ tag.text }}
-    </kirby-tag>
-    <span slot="footer" class="kirby-tags-input-element">
-      <kirby-autocomplete
+    </k-tag>
+    <span slot="footer" class="k-tags-input-element">
+      <k-autocomplete
         ref="autocomplete"
         :options="options"
         :skip="skip"
@@ -46,9 +46,9 @@
           @keydown.tab="tab"
           @keydown.backspace="leaveInput"
         >
-      </kirby-autocomplete>
+      </k-autocomplete>
     </span>
-  </kirby-draggable>
+  </k-draggable>
 </template>
 
 <script>
@@ -314,23 +314,23 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-tags-input {
+.k-tags-input {
   display: flex;
   flex-wrap: wrap;
 }
-.kirby-tags-input .sortable-ghost {
+.k-tags-input .sortable-ghost {
   background: $color-focus;
 }
-.kirby-tags-input-element {
+.k-tags-input-element {
   flex-grow: 1;
 }
-.kirby-tags-input-element input {
+.k-tags-input-element input {
   font: inherit;
   border: 0;
   width: 100%;
   background: none;
 }
-.kirby-tags-input-element input:focus {
+.k-tags-input-element input:focus {
   outline: 0;
 }
 </style>

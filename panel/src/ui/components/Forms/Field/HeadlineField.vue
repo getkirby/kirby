@@ -1,7 +1,7 @@
 <template>
-  <kirby-headline :data-numbered="numbered" size="large" class="kirby-headline-field">
+  <k-headline :data-numbered="numbered" size="large" class="k-headline-field">
     {{ label }}
-  </kirby-headline>
+  </k-headline>
 </template>
 
 <script>
@@ -17,12 +17,12 @@ export default {
 body {
   counter-reset: headline-counter;
 }
-.kirby-headline-field {
+.k-headline-field {
   position: relative;
   padding-top: 1.5rem;
 }
 
-.kirby-headline-field[data-numbered]::before {
+.k-headline-field[data-numbered]::before {
   counter-increment: headline-counter;
   content: counter(headline-counter, decimal-leading-zero);
   color: $color-focus;
@@ -31,7 +31,7 @@ body {
 }
 
 /* don't add the top padding, if the headline is the very first form element */
-.kirby-fieldset > .kirby-grid .kirby-column:first-child .kirby-headline-field {
+.k-fieldset > .k-grid .k-column:first-child .k-headline-field {
   padding-top: 0;
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
-  <label class="kirby-toggle-input">
+  <label class="k-toggle-input">
     <input
       ref="input"
       :checked="value"
       :disabled="disabled"
       :id="id"
-      class="kirby-toggle-input-native"
+      class="k-toggle-input-native"
       type="checkbox"
       v-on="listeners"
     >
-    <span class="kirby-toggle-input-label" v-html="label" />
+    <span class="k-toggle-input-label" v-html="label" />
   </label>
 </template>
 
@@ -97,11 +97,11 @@ $toggle-active-color: $color-dark;
 $toggle-focus-color: $color-focus;
 $toggle-height: 16px;
 
-.kirby-toggle-input {
+.k-toggle-input {
   display: flex;
   align-items: center;
 }
-.kirby-toggle-input-native {
+.k-toggle-input-native {
   position: relative;
   height: $toggle-height;
   width: $toggle-height * 2;
@@ -132,7 +132,7 @@ $toggle-height: 16px;
 }
 
 
-.kirby-toggle-input-label {
+.k-toggle-input-label {
   cursor: pointer;
   flex-grow: 1;
 }

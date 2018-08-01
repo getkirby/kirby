@@ -1,12 +1,12 @@
 <template>
-  <span class="kirby-dropdown" @click.stop>
+  <span class="k-dropdown" @click.stop>
     <slot />
   </span>
 </template>
 
 
 <style lang="scss">
-.kirby-dropdown {
+.k-dropdown {
   position: relative;
 }
 </style>

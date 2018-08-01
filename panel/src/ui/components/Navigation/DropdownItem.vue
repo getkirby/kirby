@@ -1,12 +1,12 @@
 <template>
-  <kirby-button
+  <k-button
     ref="button"
     v-bind="$props"
-    class="kirby-dropdown-item"
+    class="k-dropdown-item"
     v-on="listeners"
   >
     <slot />
-  </kirby-button>
+  </k-button>
 </template>
 
 <script>
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-dropdown-item {
+.k-dropdown-item {
   white-space: nowrap;
   line-height: 1;
   display: flex;
@@ -58,7 +58,7 @@ export default {
   }
 }
 
-.kirby-dropdown-item .kirby-button-figure {
+.k-dropdown-item .k-button-figure {
   text-align: center;
   padding-right: 0.5rem;
 }

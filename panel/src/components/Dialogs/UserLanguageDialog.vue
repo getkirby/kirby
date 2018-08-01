@@ -1,18 +1,18 @@
 <template>
-  <kirby-dialog
+  <k-dialog
     ref="dialog"
     :button="$t('change')"
     theme="positive"
     icon="check"
     @submit="$refs.form.submit()"
   >
-    <kirby-form
+    <k-form
       ref="form"
       :fields="fields"
       v-model="user"
       @submit="submit"
     />
-  </kirby-dialog>
+  </k-dialog>
 </template>
 
 <script>

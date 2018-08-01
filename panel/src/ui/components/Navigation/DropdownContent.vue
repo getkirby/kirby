@@ -1,7 +1,7 @@
 <template>
-  <div v-if="isOpen" :data-align="align" class="kirby-dropdown-content">
+  <div v-if="isOpen" :data-align="align" class="k-dropdown-content">
     <slot>
-      <kirby-dropdown-item
+      <k-dropdown-item
         v-for="(option, index) in items"
         :ref="_uid + '-item-' + index"
         :key="_uid + '-item-' + index"
@@ -9,7 +9,7 @@
         @click="$emit('action', option.click)"
       >
         {{ option.text }}
-      </kirby-dropdown-item>
+      </k-dropdown-item>
     </slot>
   </div>
 </template>
@@ -108,7 +108,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-dropdown-content {
+.k-dropdown-content {
   position: absolute;
   top: 100%;
   background: $color-dark;
@@ -120,17 +120,17 @@ export default {
   text-align: left;
 }
 
-.kirby-dropdown-content[data-align="right"] {
+.k-dropdown-content[data-align="right"] {
   left: auto;
   right: 0;
 }
-.kirby-dropdown-content > .kirby-dropdown-item:first-child {
+.k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
 }
-.kirby-dropdown-content > .kirby-dropdown-item:last-child {
+.k-dropdown-content > .k-dropdown-item:last-child {
   margin-bottom: .5rem;
 }
-.kirby-dropdown-content hr {
+.k-dropdown-content hr {
   position: relative;
   padding: 0.5rem 0;
   border: 0;

@@ -1,20 +1,20 @@
 <template>
-  <kirby-view class="kirby-error-view">
-    <div class="kirby-error-view-content">
-      <kirby-text>
+  <k-view class="k-error-view">
+    <div class="k-error-view-content">
+      <k-text>
         <p>
-          <kirby-icon class="kirby-error-view-icon" type="alert" />
+          <k-icon class="k-error-view-icon" type="alert" />
         </p>
         <p>
           <slot />
         </p>
-      </kirby-text>
+      </k-text>
     </div>
-  </kirby-view>
+  </k-view>
 </template>
 
 <style lang="scss">
-.kirby-error-view {
+.k-error-view {
   position: absolute;
   top: 0;
   right: 0;
@@ -24,16 +24,16 @@
   align-items: center;
   justify-content: center;
 }
-.kirby-error-view-content {
+.k-error-view-content {
   line-height: 1.5em;
   max-width: 25rem;
   text-align: center;
 }
-.kirby-error-view-icon {
+.k-error-view-icon {
   color: $color-negative;
   display: inline-block;
 }
-.kirby-error-view-content p:not(:last-child) {
+.k-error-view-content p:not(:last-child) {
   margin-bottom: 0.75rem;
 }
 </style>

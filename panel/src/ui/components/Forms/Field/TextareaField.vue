@@ -1,11 +1,11 @@
 <template>
-  <kirby-field
+  <k-field
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="kirby-textarea-field"
+    class="k-textarea-field"
   >
-    <kirby-input
+    <k-input
       ref="input"
       :id="_uid"
       v-bind="$props"
@@ -13,7 +13,7 @@
       theme="field"
       v-on="$listeners"
     />
-  </kirby-field>
+  </k-field>
 </template>
 
 <script>

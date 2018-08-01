@@ -1,43 +1,43 @@
 <template>
-  <nav v-if="buttons" class="kirby-toolbar" @click.stop>
+  <nav v-if="buttons" class="k-toolbar" @click.stop>
 
     <template v-for="(button, buttonIndex) in layout">
 
       <!-- divider -->
       <template v-if="button.divider">
-        <span :key="buttonIndex" class="kirby-toolbar-divider" />
+        <span :key="buttonIndex" class="k-toolbar-divider" />
       </template>
 
       <!-- dropdown -->
       <template v-else-if="button.dropdown">
-        <kirby-dropdown :key="buttonIndex">
-          <kirby-button
+        <k-dropdown :key="buttonIndex">
+          <k-button
             :icon="button.icon"
             :key="buttonIndex"
             tabindex="-1"
-            class="kirby-toolbar-button"
+            class="k-toolbar-button"
             @click="$refs[buttonIndex + '-dropdown'][0].toggle()"
           />
-          <kirby-dropdown-content :ref="buttonIndex + '-dropdown'">
-            <kirby-dropdown-item
+          <k-dropdown-content :ref="buttonIndex + '-dropdown'">
+            <k-dropdown-item
               v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
               :key="dropdownItemIndex"
               :icon="dropdownItem.icon"
               @click="command(dropdownItem.command, dropdownItem.args)"
             >
               {{ dropdownItem.label }}
-            </kirby-dropdown-item>
-          </kirby-dropdown-content>
-        </kirby-dropdown>
+            </k-dropdown-item>
+          </k-dropdown-content>
+        </k-dropdown>
       </template>
 
       <!-- single button -->
       <template v-else>
-        <kirby-button
+        <k-button
           :icon="button.icon"
           :key="buttonIndex"
           tabindex="-1"
-          class="kirby-toolbar-button"
+          class="k-toolbar-button"
           @click="command(button.command, button.args)"
         />
       </template>
@@ -237,22 +237,22 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-toolbar {
+.k-toolbar {
   display: flex;
   background: $color-white;
   box-shadow: $box-shadow;
   border: 1px solid $color-border;
   border-radius: $border-radius;
 }
-.kirby-toolbar-divider {
+.k-toolbar-divider {
   width: 1px;
   background: $color-border;
 }
-.kirby-toolbar-button {
+.k-toolbar-button {
   padding: 0 .75rem;
   height: 36px;
 }
-.kirby-toolbar-button:hover {
+.k-toolbar-button:hover {
   background: rgba($color-background, .5);
 }
 </style>

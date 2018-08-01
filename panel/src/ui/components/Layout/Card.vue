@@ -1,49 +1,49 @@
 <template>
-  <figure class="kirby-card" v-on="$listeners">
-    <kirby-icon v-if="sortable" class="kirby-sort-handle" type="sort" />
+  <figure class="k-card" v-on="$listeners">
+    <k-icon v-if="sortable" class="k-sort-handle" type="sort" />
 
     <component :is="wrapper" :to="link" :target="target">
-      <kirby-image
+      <k-image
         v-if="image && image.url"
         :src="image.url"
         :ratio="image.ratio || '3/2'"
         :back="image.back || 'black'"
         :cover="image.cover"
-        class="kirby-card-image"
+        class="k-card-image"
       />
-      <span v-else :style="'padding-bottom:' + ratioPadding" class="kirby-card-icon">
-        <kirby-icon v-bind="icon" />
+      <span v-else :style="'padding-bottom:' + ratioPadding" class="k-card-icon">
+        <k-icon v-bind="icon" />
       </span>
     </component>
     <figcaption>
-      <div class="kirby-card-content">
+      <div class="k-card-content">
         <component
           :is="wrapper"
           :to="link"
           :target="target"
           tabindex="-1"
         >
-          <p class="kirby-card-text">{{ text }}</p>
-          <p v-if="info" class="kirby-card-info">{{ info }}</p>
+          <p class="k-card-text">{{ text }}</p>
+          <p v-if="info" class="k-card-info">{{ info }}</p>
         </component>
       </div>
-      <nav class="kirby-card-options">
-        <kirby-button
+      <nav class="k-card-options">
+        <k-button
           v-if="flag"
           v-bind="flag"
-          class="kirby-card-options-button"
+          class="k-card-options-button"
           @click="flag.click"
         />
         <template v-if="options">
-          <kirby-button
+          <k-button
             icon="dots"
-            class="kirby-card-options-button"
+            class="k-card-options-button"
             @click.stop="$refs.dropdown.toggle()"
           />
-          <kirby-dropdown-content
+          <k-dropdown-content
             ref="dropdown"
             :options="options"
-            class="kirby-card-options-dropdown"
+            class="k-card-options-dropdown"
             align="right"
             @action="$emit('action', $event)"
           />
@@ -79,7 +79,7 @@ export default {
   },
   computed: {
     wrapper() {
-      return this.link ? "kirby-link" : "div";
+      return this.link ? "k-link" : "div";
     },
     ratioPadding() {
       return ratioPadding(this.image.ratio);
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-card {
+.k-card {
   position: relative;
   min-width: 0;
   display: grid;
@@ -98,23 +98,23 @@ export default {
   border-radius: $border-radius;
   box-shadow: $box-shadow-card;
 }
-.kirby-sections > .kirby-column[data-width="1/4"] .kirby-card {
+.k-sections > .k-column[data-width="1/4"] .k-card {
   grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
 }
-.kirby-card a {
+.k-card a {
   display: block;
   min-width: 0;
   height: 100%;
   background: $color-white;
 }
-.kirby-card:focus-within {
+.k-card:focus-within {
   box-shadow: $color-focus 0 0 0 2px;
 }
-.kirby-card a:focus {
+.k-card a:focus {
   outline: 0;
 }
 
-.kirby-card .kirby-sort-handle {
+.k-card .k-sort-handle {
   position: absolute;
   top: .75rem;
   right: .75rem;
@@ -129,51 +129,51 @@ export default {
   will-change: opacity;
   transition: opacity .3s;
 }
-.kirby-card .kirby-sort-handle:active {
+.k-card .k-sort-handle:active {
   cursor: -webkit-grabbing;
 }
-.kirby-cards:hover .kirby-sort-handle {
+.k-cards:hover .k-sort-handle {
   opacity: .25;
 }
-.kirby-card:hover .kirby-sort-handle {
+.k-card:hover .k-sort-handle {
   opacity: 1;
 }
 
 
 
-.kirby-card-content {
+.k-card-content {
   padding: .625rem .75rem;
   line-height: 1.25rem;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   min-height: 2.25rem;
 }
-.kirby-card-image,
-.kirby-card-icon {
+.k-card-image,
+.k-card-icon {
   border-top-left-radius: $border-radius;
   border-top-right-radius: $border-radius;
   overflow: hidden;
 }
-.kirby-card-icon {
+.k-card-icon {
   position: relative;
   display: block;
 }
-.kirby-card-icon .kirby-icon {
+.k-card-icon .k-icon {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
 }
-.kirby-card-icon .kirby-icon-emoji {
+.k-card-icon .k-icon-emoji {
   font-size: 3rem;
 }
-.kirby-card-icon .kirby-icon svg {
+.k-card-icon .k-icon svg {
   width: 3rem;
   height: 3rem;
   color: rgba($color-white, 0.5);
 }
-.kirby-card-text {
+.k-card-text {
   display: block;
   font-weight: $font-weight-normal;
   white-space: nowrap;
@@ -182,7 +182,7 @@ export default {
   font-size: $font-size-small;
   overflow: hidden;
 }
-.kirby-card-info {
+.k-card-info {
   color: $color-light-grey;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -190,19 +190,19 @@ export default {
   padding-top: .25rem;
   overflow: hidden;
 }
-.kirby-card-options {
+.k-card-options {
   position: absolute;
   bottom: 0;
   right: 0;
 }
-.kirby-card-options-button {
+.k-card-options-button {
   position: relative;
   float: left;
   height: 2.25rem;
   padding: 0 .75rem;
   line-height: 1;
 }
-.kirby-card-options-dropdown {
+.k-card-options-dropdown {
   top: 2.25rem;
 }
 </style>

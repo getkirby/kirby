@@ -1,7 +1,7 @@
 <template>
-  <div class="kirby-cards">
+  <div class="k-cards">
     <slot>
-      <kirby-card
+      <k-card
         v-for="(card, index) in cards"
         :key="index"
         v-bind="card"
@@ -20,12 +20,12 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-cards {
+.k-cards {
   display: grid;
   grid-gap: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
-.kirby-sections > .kirby-column[data-width="1/4"] .kirby-cards {
+.k-sections > .k-column[data-width="1/4"] .k-cards {
   grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
 }
 </style>

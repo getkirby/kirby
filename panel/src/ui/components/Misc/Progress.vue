@@ -1,5 +1,5 @@
 <template>
-  <progress :value="state" max="100" class="kirby-progress">
+  <progress :value="state" max="100" class="k-progress">
     {{ state }}%
   </progress>
 </template>
@@ -26,21 +26,21 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-progress {
+.k-progress {
   -webkit-appearance: none;
   width: 100%;
   height: 0.5rem;
   border-radius: 5rem;
 }
 
-.kirby-progress::-webkit-progress-bar {
+.k-progress::-webkit-progress-bar {
   border: none;
   background: $color-border;
   height: 0.5rem;
   border-radius: 20px;
 }
 
-.kirby-progress::-webkit-progress-value {
+.k-progress::-webkit-progress-value {
   border-radius: 20px;
   background: $color-focus;
   transition: width 0.3s;

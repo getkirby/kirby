@@ -1,5 +1,5 @@
 <template>
-  <div :data-gutter="gutter" class="kirby-grid">
+  <div :data-gutter="gutter" class="k-grid">
     <slot />
   </div>
 </template>
@@ -13,18 +13,18 @@ export default {
 </script>
 
 <style lang="scss">
-.kirby-grid {
+.k-grid {
   --columns: 12;
   display: grid;
   grid-template-columns: 1fr;
 }
-.kirby-grid[data-gutter="small"] {
+.k-grid[data-gutter="small"] {
   grid-gap: 1rem;
 }
-.kirby-grid[data-gutter="medium"] {
+.k-grid[data-gutter="medium"] {
   grid-gap: 1.5rem;
 }
-.kirby-grid[data-gutter="large"] {
+.k-grid[data-gutter="large"] {
   grid-gap: 1.5rem;
   @media screen and (min-width: $breakpoint-medium) {
     grid-gap: 3rem;
@@ -36,7 +36,7 @@ export default {
     grid-gap: 6rem;
   }
 }
-.kirby-grid[data-gutter="huge"] {
+.k-grid[data-gutter="huge"] {
   grid-gap: 1.5rem;
   @media screen and (min-width: $breakpoint-medium) {
     grid-gap: 4.5rem;
@@ -48,13 +48,13 @@ export default {
     grid-gap: 7.5rem;
   }
 }
-.kirby-grid[data-gutter="fluid"] {
+.k-grid[data-gutter="fluid"] {
   grid-column-gap: 5vw;
   grid-row-gap: 1.5rem;
 }
 
 @media screen and (min-width: $breakpoint-medium) {
-  .kirby-grid {
+  .k-grid {
     grid-template-columns: repeat(var(--columns), 1fr);
   }
 }

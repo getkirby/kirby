@@ -1,7 +1,7 @@
 <template>
-  <ul class="kirby-checkboxes-input">
+  <ul class="k-checkboxes-input">
     <li v-for="(option, index) in options" :key="index">
-      <kirby-checkbox-input
+      <k-checkbox-input
         :id="id + '-' + index"
         :value="selected.indexOf(option.value) > -1"
         :label="option.text"
@@ -91,16 +91,16 @@ export default {
 <style lang="scss">
 
 /* Field Theme */
-.kirby-checkboxes-input .kirby-input-element {
+.k-checkboxes-input .k-input-element {
   overflow: hidden;
 }
-.kirby-checkboxes-input[data-theme="field"] ul {
+.k-checkboxes-input[data-theme="field"] ul {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: -1px;
   margin-right: -1px;
 }
-.kirby-checkboxes-input[data-theme="field"] li {
+.k-checkboxes-input[data-theme="field"] li {
   flex-grow: 1;
   flex-basis: 100%;
   flex-shrink: 0;
@@ -110,13 +110,13 @@ export default {
     flex-basis: 50%;
   }
 }
-.kirby-checkboxes-input[data-theme="field"] label {
+.k-checkboxes-input[data-theme="field"] label {
   display: block;
   min-height: $field-input-height;
   line-height: 2rem;
   padding: 0 $field-input-padding;
 }
-.kirby-checkboxes-input[data-theme="field"] .kirby-checkbox-icon {
+.k-checkboxes-input[data-theme="field"] .k-checkbox-icon {
   top: .5rem;
   left: .5rem;
 }
