@@ -243,5 +243,4 @@ class Xml
 
         return '<![CDATA[' . static::encode($value) . ']]>';
     }
-
 }
