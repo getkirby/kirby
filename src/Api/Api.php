@@ -190,6 +190,13 @@ class Api
             return $this->collection($className, $object);
         }
 
+        // now models deeply by checking for the actual type
+        foreach ($this->models as $className => $model) {
+            if (is_a($object, $model['type']) === true) {
+                return $this->model($className, $object);
+            }
+        }
+
         throw new NotFoundException(sprintf('The object "%s" cannot be resolved', $className));
     }
 

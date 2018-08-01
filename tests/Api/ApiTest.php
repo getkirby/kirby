@@ -10,6 +10,11 @@ class MockModel
 
 }
 
+class ExtendedModel extends stdClass
+{
+
+}
+
 class ApiTest extends TestCase
 {
 
@@ -33,6 +38,10 @@ class ApiTest extends TestCase
 
         // resolve class without namespace
         $result = $api->resolve(new stdClass);
+        $this->assertInstanceOf(Model::class, $result);
+
+        // resolve class extension
+        $result = $api->resolve(new ExtendedModel);
         $this->assertInstanceOf(Model::class, $result);
 
     }
