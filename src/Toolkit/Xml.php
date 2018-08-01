@@ -55,43 +55,6 @@ class Xml
     ];
 
     /**
-     * Encodes the value as cdata if necessary
-     *
-     * @param mixed $value
-     * @return mixed
-     */
-    public static function value($value)
-    {
-        if ($value === true) {
-            return 'true';
-        }
-
-        if ($value === false) {
-            return 'false';
-        }
-
-        if (is_numeric($value) === true) {
-            return $value;
-        }
-
-        if ($value === null || $value === '') {
-            return null;
-        }
-
-        if (Str::contains($value, '<![CDATA[') === true) {
-            return $value;
-        }
-
-        $encoded = htmlentities($value);
-
-        if ($encoded === $value) {
-            return $value;
-        }
-
-        return '<![CDATA[' . $value . ']]>';
-    }
-
-    /**
      * Creates an XML string from an array
      *
      * @param  string  $props   The source array
@@ -243,4 +206,42 @@ class Xml
 
         return $xml;
     }
+
+    /**
+     * Encodes the value as cdata if necessary
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    public static function value($value)
+    {
+        if ($value === true) {
+            return 'true';
+        }
+
+        if ($value === false) {
+            return 'false';
+        }
+
+        if (is_numeric($value) === true) {
+            return $value;
+        }
+
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (Str::contains($value, '<![CDATA[') === true) {
+            return $value;
+        }
+
+        $encoded = htmlentities($value);
+
+        if ($encoded === $value) {
+            return $value;
+        }
+
+        return '<![CDATA[' . static::encode($value) . ']]>';
+    }
+
 }
