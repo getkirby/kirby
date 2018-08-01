@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field as FormField;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\V;
 
 trait AppPlugins
@@ -205,6 +206,32 @@ trait AppPlugins
         }
 
         return $this->extensions[$type] ?? [];
+    }
+
+    /**
+     * Load extensions from site folders.
+     * This is only used for models for now, but
+     * could be extended later
+     */
+    protected function extensionsFromFolders()
+    {
+        $models = [];
+
+        foreach (glob($this->root('models') . '/*.php') as $model) {
+
+            $name  = F::name($model);
+            $class = $name . 'Page';
+
+            // load the model class
+            include_once $model;
+
+            if (class_exists($class) === true) {
+                $models[$name] = $name . 'Page';
+            }
+
+        }
+
+        $this->extendPageModels($models);
     }
 
     /**

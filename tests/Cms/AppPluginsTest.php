@@ -162,6 +162,22 @@ class AppPluginsTest extends TestCase
         $this->assertInstanceOf(DummyPage::class, $page);
     }
 
+    public function testPageModelFromFolder()
+    {
+        $kirby = new App([
+            'roots' => [
+                'models' => __DIR__ . '/fixtures/models'
+            ]
+        ]);
+
+        $page = Page::factory([
+            'slug' => 'test',
+            'model' => 'test'
+        ]);
+
+        $this->assertInstanceOf('TestPage', $page);
+    }
+
     public function testOption()
     {
         $kirby = new App([

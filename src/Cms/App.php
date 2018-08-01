@@ -100,8 +100,9 @@ class App
         // load all extensions
         $this->extensionsFromSystem();
         $this->extensionsFromProps($props);
-        $this->extensionsFromOptions();
         $this->extensionsFromPlugins();
+        $this->extensionsFromOptions();
+        $this->extensionsFromFolders();
 
         // handle those damn errors
         $this->handleErrors();

@@ -59,6 +59,9 @@ return [
     'emails' => function (array $roots) {
         return $roots['site'] . '/emails';
     },
+    'models' => function (array $roots) {
+        return $roots['site'] . '/models';
+    },
     'plugins' => function (array $roots) {
         return $roots['site'] . '/plugins';
     },
