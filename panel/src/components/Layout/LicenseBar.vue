@@ -2,7 +2,7 @@
   <div v-if="false">
     <div class="k-license-bar">
       <p>This is an unregistered demo of Kirby.
-        <a href="#register" @click.prevent="dropzone = true">Register</a>&nbsp;or&nbsp;<a @click.prevent="buy" target="blank" href="https://getkirby.com/buy">Buy a license</a>
+        <a href="#register" @click.prevent="dropzone = true">Register</a>&nbsp;or&nbsp;<a target="blank" href="https://getkirby.com/buy">Buy a license</a>
       </p>
     </div>
     <k-dropzone v-if="dropzone" class="k-license-dropzone" @drop="drop">
@@ -46,12 +46,6 @@ export default {
     }
   },
   methods: {
-    buy() {
-      Paddle.Checkout.open({
-        product: 499826,
-        passthrough: '{"email": "jane@paddle.com", "user_id": 1939284}'
-      });
-    },
     drop(files) {
       this.$refs.upload.drop(files, {
         url: config.api + "/system/register",
