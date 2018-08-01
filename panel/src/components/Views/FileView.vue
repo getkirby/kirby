@@ -58,7 +58,6 @@
 
 <script>
 import PrevNext from "@/mixins/prevnext.js";
-import slug from "@/ui/helpers/slug.js";
 import config from "@/config/config.js";
 
 export default {
