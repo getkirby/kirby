@@ -34,5 +34,4 @@ class DateFieldTest extends TestCase
         $this->assertEquals('', $field->toString());
     }
 
-
 }

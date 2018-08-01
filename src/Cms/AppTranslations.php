@@ -29,21 +29,6 @@ trait AppTranslations
     }
 
     /**
-     * Create your own set of translations
-     *
-     * @param array $translations
-     * @return self
-     */
-    protected function setTranslations(array $translations = null): self
-    {
-        if ($translations !== null) {
-            $this->translations = Translations::factory($translations);
-        }
-
-        return $this;
-    }
-
-    /**
      * Load a specific translation by locale
      *
      * @param string|null $locale
@@ -61,8 +46,11 @@ trait AppTranslations
             }
         }
 
+        // get injected translation data from plugins etc.
+        $inject = $this->extensions['translations'][$locale] ?? [];
+
         // load from disk instead
-        return Translation::load($locale, $this->root('translations') . '/' . $locale . '.json');
+        return Translation::load($locale, $this->root('translations') . '/' . $locale . '.json', $inject);
     }
 
     /**
@@ -76,6 +64,6 @@ trait AppTranslations
             return $this->translations;
         }
 
-        return Translations::load($this->root('translations'));
+        return Translations::load($this->root('translations'), $this->extensions['translations'] ?? []);
     }
 }

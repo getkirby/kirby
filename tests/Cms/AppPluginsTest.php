@@ -286,4 +286,30 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('Deutscher Test', I18n::translate('test'));
     }
 
+    public function testTranslationsInPlugin()
+    {
+
+        App::plugin('test/test', [
+            'translations' => [
+                'en' => [
+                    'test' => 'English Test'
+                ],
+                'de' => [
+                    'test' => 'Deutscher Test'
+                ]
+            ]
+        ]);
+
+        new App();
+
+        I18n::$locale = 'en';
+
+        $this->assertEquals('English Test', I18n::translate('test'));
+
+        I18n::$locale = 'de';
+
+        $this->assertEquals('Deutscher Test', I18n::translate('test'));
+
+    }
+
 }

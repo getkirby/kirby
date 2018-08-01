@@ -89,7 +89,6 @@ class App
             'path',
             'roles',
             'site',
-            'translations',
             'user',
             'users'
         ]);

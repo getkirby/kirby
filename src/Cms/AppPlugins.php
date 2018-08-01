@@ -34,6 +34,7 @@ trait AppPlugins
         'snippets' => [],
         'tags' => [],
         'templates' => [],
+        'translations' => [],
         'validators' => []
     ];
 
@@ -184,6 +185,11 @@ trait AppPlugins
         return $this->extensions['templates'] = array_merge($this->extensions['templates'], $templates);
     }
 
+    protected function extendTranslations(array $translations): array
+    {
+        return $this->extensions['translations'] = array_replace_recursive($this->extensions['translations'], $translations);
+    }
+
     protected function extendValidators(array $validators): array
     {
         return $this->extensions['validators'] = V::$validators = array_merge(V::$validators, $validators);
@@ -218,7 +224,6 @@ trait AppPlugins
         $models = [];
 
         foreach (glob($this->root('models') . '/*.php') as $model) {
-
             $name  = F::name($model);
             $class = $name . 'Page';
 
@@ -228,7 +233,6 @@ trait AppPlugins
             if (class_exists($class) === true) {
                 $models[$name] = $name . 'Page';
             }
-
         }
 
         $this->extendPageModels($models);

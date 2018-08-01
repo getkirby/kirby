@@ -113,12 +113,13 @@ class Translation
      *
      * @param string $code
      * @param string $root
+     * @param array $inject
      * @return self
      */
-    public static function load(string $code, string $root)
+    public static function load(string $code, string $root, array $inject = [])
     {
         try {
-            return new Translation($code, Data::read($root));
+            return new Translation($code, array_merge(Data::read($root), $inject));
         } catch (Exception $e) {
             error_log(sprintf('The translation "%s" could not be loaded', $code));
             return new Translation($code, []);
