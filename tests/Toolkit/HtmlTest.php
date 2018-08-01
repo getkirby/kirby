@@ -7,6 +7,22 @@ use PHPUnit\Framework\TestCase;
 class HtmlTest extends TestCase
 {
 
+    public function test__callStatic()
+    {
+        $html = Html::div('test');
+        $expected = '<div>test</div>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function test__callStaticWithAttributes()
+    {
+        $html = Html::div('test', ['class' => 'test']);
+        $expected = '<div class="test">test</div>';
+
+        $this->assertEquals($expected, $html);
+    }
+
     public function testA()
     {
         $html = Html::a('https://getkirby.com');
@@ -209,6 +225,105 @@ class HtmlTest extends TestCase
 
         $html = Html::rel('me', '_blank');
         $expected = 'me noopener noreferrer';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testTag()
+    {
+        $html = Html::tag('p', 'test');
+        $expected = '<p>test</p>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testTagWithAttributes()
+    {
+        $html = Html::tag('p', 'test', ['class' => 'test']);
+        $expected = '<p class="test">test</p>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testTagWithArrayContent()
+    {
+        $html = Html::tag('p', ['<i>test</i>']);
+        $expected = '<p><i>test</i></p>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function videoProvider()
+    {
+        return [
+
+            // youtube
+            ['http://www.youtube.com/watch?v=d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['http://www.youtube.com/embed/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['https://youtu.be/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube-nocookie.com/embed/d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
+
+            // vimeo
+            ['https://vimeo.com/239882943', 'https://player.vimeo.com/video/239882943'],
+            ['https://player.vimeo.com/video/239882943', 'https://player.vimeo.com/video/239882943'],
+        ];
+
+    }
+
+    /**
+     * @dataProvider videoProvider
+     */
+    public function testVideo($url, $src)
+    {
+        // plain
+        $html = Html::video($url);
+        $expected = '<iframe allowfullscreen src="' . $src . '"></iframe>';
+
+        $this->assertEquals($expected, $html);
+
+        // with attributes
+        $html = Html::video($url, null, ['class' => 'video']);
+        $expected = '<iframe allowfullscreen class="video" src="' . $src . '"></iframe>';
+
+        $this->assertEquals($expected, $html);
+
+        // with options
+        $options = [
+            'vimeo'   => ['foo' => 'bar'],
+            'youtube' => ['foo' => 'bar']
+        ];
+
+        $html = Html::video($url, $options);
+        $expected = '<iframe allowfullscreen src="' . $src . '?foo=bar"></iframe>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    /**
+     * @dataProvider videoProvider
+     */
+    public function testVideoWithAttributes($url, $src)
+    {
+        // with attributes
+        $html = Html::video($url, null, ['class' => 'video']);
+        $expected = '<iframe allowfullscreen class="video" src="' . $src . '"></iframe>';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    /**
+     * @dataProvider videoProvider
+     */
+    public function testVideoWithOptions($url, $src)
+    {
+        $options = [
+            'vimeo'   => ['foo' => 'bar'],
+            'youtube' => ['foo' => 'bar']
+        ];
+
+        $html = Html::video($url, $options);
+        $expected = '<iframe allowfullscreen src="' . $src . '?foo=bar"></iframe>';
 
         $this->assertEquals($expected, $html);
     }

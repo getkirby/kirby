@@ -374,7 +374,7 @@ class Html
      * @param array $attr
      * @return string
      */
-    public static function video(string $url, array $options = [], array $attr = []): string
+    public static function video(string $url, ?array $options = [], array $attr = []): string
     {
         // YouTube video
         if (preg_match('!youtu!i', $url) === 1) {
@@ -397,9 +397,11 @@ class Html
      * @param array $attr
      * @return string
      */
-    public static function vimeo(string $url, array $options = [], array $attr = []): string
+    public static function vimeo(string $url, ?array $options = [], array $attr = []): string
     {
         if (preg_match('!vimeo.com\/([0-9]+)!i', $url, $array) === 1) {
+            $id = $array[1];
+        } elseif (preg_match('!player.vimeo.com\/video\/([0-9]+)!i', $url, $array) === 1) {
             $id = $array[1];
         } else {
             throw new Exception('Invalid Vimeo source');
@@ -425,7 +427,7 @@ class Html
      * @param array $attr
      * @return string
      */
-    public static function youtube(string $url, array $options = [], array $attr = []): string
+    public static function youtube(string $url, ?array $options = [], array $attr = []): string
     {
         // youtube embed domain
         $domain = 'youtube.com';
