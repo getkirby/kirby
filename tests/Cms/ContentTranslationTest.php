@@ -43,9 +43,16 @@ class ContentTranslationTest extends TestCase
 
     public function testContentFile()
     {
+
+        $app = new App([
+            'roots' => [
+                'content' => '/content',
+            ]
+        ]);
+
+
         $page = new Page([
             'slug'     => 'test',
-            'root'     => '/test',
             'template' => 'project'
         ]);
 
@@ -54,7 +61,7 @@ class ContentTranslationTest extends TestCase
             'code'   => 'de',
         ]);
 
-        $this->assertEquals('/test/project.de.txt', $translation->contentFile());
+        $this->assertEquals('/content/test/project.de.txt', $translation->contentFile());
     }
 
 }

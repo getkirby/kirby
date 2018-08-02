@@ -974,18 +974,6 @@ class Page extends Model
     }
 
     /**
-     * Sets the absolute path to the page directory
-     *
-     * @param string|null $root
-     * @return self
-     */
-    protected function setRoot(string $root = null): self
-    {
-        $this->root = $root;
-        return $this;
-    }
-
-    /**
      * Sets the required Page slug
      *
      * @param string $slug
