@@ -18,7 +18,7 @@ export default {
 .k-empty {
   text-align: center;
   border-left: 0;
-  padding: 3rem 1.5rem;
+  padding: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
