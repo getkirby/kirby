@@ -3,6 +3,7 @@
     ref="box"
     v-model="tags"
     :options="{disabled: !draggable, forceFallback: true, draggable: '.k-tag', delay: 1}"
+    :data-layout="layout"
     class="k-tags-input"
     @input="onInput"
   >
@@ -79,6 +80,7 @@ export default {
       type: String,
       default: ","
     },
+    layout: String,
     options: {
       type: Array,
       default() {
@@ -332,5 +334,10 @@ export default {
 }
 .k-tags-input-element input:focus {
   outline: 0;
+}
+
+.k-tags-input[data-layout="list"] .k-tag {
+  width: 100%;
+  margin-right: 0 !important;
 }
 </style>

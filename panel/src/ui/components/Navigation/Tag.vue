@@ -41,6 +41,7 @@ export default {
   border-radius: $border-radius;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .k-tag:focus {
   outline: 0;
