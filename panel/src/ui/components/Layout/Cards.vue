@@ -23,9 +23,17 @@ export default {
 .k-cards {
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
+
 .k-sections > .k-column[data-width="1/4"] .k-cards {
-  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  grid-template-columns: 1fr;
 }
+
+@media screen and (min-width: $breakpoint-medium) {
+  .k-sections > .k-column[data-width="1/2"] .k-cards {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
 </style>

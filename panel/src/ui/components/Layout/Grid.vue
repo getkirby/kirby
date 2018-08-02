@@ -48,10 +48,6 @@ export default {
     grid-gap: 7.5rem;
   }
 }
-.k-grid[data-gutter="fluid"] {
-  grid-column-gap: 5vw;
-  grid-row-gap: 1.5rem;
-}
 
 @media screen and (min-width: $breakpoint-medium) {
   .k-grid {

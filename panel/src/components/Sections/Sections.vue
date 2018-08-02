@@ -1,5 +1,5 @@
 <template>
-  <k-grid class="k-sections" gutter="fluid">
+  <k-grid class="k-sections" gutter="large">
     <k-column v-for="(column, columnIndex) in columns" :key="parent + '-column-' + columnIndex" :width="column.width">
       <template v-for="(section, sectionIndex) in column.sections">
         <component
