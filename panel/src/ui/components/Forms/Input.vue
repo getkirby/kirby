@@ -124,8 +124,8 @@ export default {
   }
 
   &[data-invalid] {
-    border: $field-input-invalid-border;
-    box-shadow: 0;
+    border: 1px solid $color-negative-outline;
+    box-shadow: $color-negative-outline 0 0 3px 2px;
   }
 
   &[data-invalid]:focus-within {
