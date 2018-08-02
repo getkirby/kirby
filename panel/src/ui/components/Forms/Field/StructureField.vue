@@ -16,62 +16,65 @@
       <k-empty v-if="items.length === 0" icon="list-bullet" @click="add">
         {{ $t("structure.empty") }}
       </k-empty>
-      <k-draggable
-        v-else
-        v-model="items"
-        :data-disabled="disabled"
-        :options="{
-          disabled: disabled,
-          forceFallback: true,
-          handle: '.k-structure-item-handle',
-          fallbackClass: 'sortable-fallback'
-        }"
-        element="ul"
-        class="k-structure"
-        @input="onInput"
-        @choose="close"
-        @end="onInput"
-      >
-        <li
-          v-for="(item, index) in items"
-          :key="index"
-          :data-active="isActive(index)"
-          class="k-structure-item"
-          @click.stop
+
+      <template v-else>
+        <k-draggable
+          v-model="items"
+          :data-disabled="disabled"
+          :options="{
+            disabled: disabled,
+            forceFallback: true,
+            handle: '.k-structure-item-handle',
+            fallbackClass: 'sortable-fallback'
+          }"
+          element="ul"
+          class="k-structure"
+          @input="onInput"
+          @choose="close"
+          @end="onInput"
         >
-          <div v-if="!isActive(index)" class="k-structure-item-wrapper">
-            <k-button class="k-structure-item-handle" icon="sort" />
-            <div class="k-structure-item-content">
-              <p
-                v-for="(field, fieldName) in fields"
-                v-if="field.type !== 'hidden'"
-                :key="fieldName"
-                :title="field.label"
-                class="k-structure-item-text"
-                @click="jump(index, fieldName)"
-              >
-                <template v-if="item[fieldName] !== undefined">
-                  {{ displayText(field, item[fieldName]) }}
-                </template>
-              </p>
+          <li
+            v-for="(item, index) in items"
+            :key="index"
+            :data-active="isActive(index)"
+            class="k-structure-item"
+            @click.stop
+          >
+            <div v-if="!isActive(index)" class="k-structure-item-wrapper">
+              <k-button class="k-structure-item-handle" icon="sort" />
+              <div class="k-structure-item-content">
+                <p
+                  v-for="(field, fieldName) in fields"
+                  v-if="field.type !== 'hidden'"
+                  :key="fieldName"
+                  :title="field.label"
+                  class="k-structure-item-text"
+                  @click="jump(index, fieldName)"
+                >
+                  <span class="k-structure-item-label">{{ field.label }}</span>
+                  <template v-if="item[fieldName] !== undefined">
+                    {{ displayText(field, item[fieldName]) || "–" }}
+                  </template>
+                </p>
+              </div>
+              <nav v-if="!disabled" class="k-structure-item-options">
+                <k-button icon="trash" class="k-structure-option" @click="confirmRemove(index)" />
+              </nav>
             </div>
-            <nav v-if="!disabled" class="k-structure-item-options">
-              <k-button icon="trash" class="k-structure-option" @click="confirmRemove(index)" />
-            </nav>
-          </div>
-          <div v-if="!disabled && isActive(index)" class="k-structure-form">
-            <k-fieldset
-              ref="form"
-              :fields="fields"
-              :validate="true"
-              v-model="items[index]"
-              class="k-structure-fieldset"
-              @input="onInput"
-              @submit="close(index)"
-            />
-          </div>
-        </li>
-      </k-draggable>
+            <div v-if="!disabled && isActive(index)" class="k-structure-form">
+              <k-fieldset
+                ref="form"
+                :fields="fields"
+                :validate="true"
+                v-model="items[index]"
+                class="k-structure-fieldset"
+                @input="onInput"
+                @submit="close(index)"
+              />
+            </div>
+          </li>
+        </k-draggable>
+      </template>
 
       <k-dialog
         v-if="!disabled"
@@ -279,6 +282,12 @@ $structure-item-height: 38px;
   margin-bottom: 2px;
   box-shadow: $box-shadow-card;
 }
+.k-structure-item-label {
+  display: block;
+  font-size: $font-size-tiny;
+  color: $color-dark-grey;
+  margin-bottom: .25rem;
+}
 .k-structure-item.sortable-ghost {
   background: $color-inset;
   box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
@@ -298,7 +307,7 @@ $structure-item-height: 38px;
 .k-structure-item-handle {
   position: absolute;
   width: $structure-item-height;
-  height: $structure-item-height;
+  height: 100%;
   left: -$structure-item-height;
   opacity: 0;
   cursor: -webkit-grab;
@@ -315,7 +324,6 @@ $structure-item-height: 38px;
   opacity: 1;
 }
 
-
 .k-structure-item-wrapper {
   display: flex;
 }
@@ -326,17 +334,14 @@ $structure-item-height: 38px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   background: $color-white;
-  height: $structure-item-height;
   align-items: center;
   overflow: hidden;
 }
 .k-structure-item-text {
-  padding: 0 0.75rem;
+  padding: .75rem 0.75rem;
   font-size: $font-size-small;
   white-space: nowrap;
   overflow: hidden;
-  height: $structure-item-height;
-  line-height: $structure-item-height;
   text-overflow: ellipsis;
   border-right: 1px solid $color-background;
   cursor: pointer;
@@ -346,8 +351,6 @@ $structure-item-height: 38px;
 }
 .k-structure-item-text:not(:first-child) {
   display: none;
-  color: $color-dark-grey;
-  font-size: $font-size-small;
 
   @media screen and (min-width: 45rem) {
     display: block;
