@@ -93,7 +93,12 @@ export default {
   border: 0;
 }
 .k-fieldset .k-grid {
-  grid-column-gap: 1.5rem;
   grid-row-gap: 2.25rem;
+}
+
+@media screen and (min-width: $breakpoint-small) {
+  .k-fieldset .k-grid {
+    grid-column-gap: 1.5rem;
+  }
 }
 </style>

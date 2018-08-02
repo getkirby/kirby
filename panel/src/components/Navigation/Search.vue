@@ -188,8 +188,12 @@ export default {
 }
 .k-search-box {
   max-width: 30rem;
-  margin: 5rem auto;
+  margin: 0 auto;
   box-shadow: $box-shadow;
+
+  @media screen and (min-width: $breakpoint-medium) {
+    margin: 2.5rem auto;
+  }
 }
 .k-search-input {
   background: #efefef;
@@ -202,9 +206,11 @@ export default {
   font: inherit;
   padding: .75rem;
   border: 0;
+  height: 2.5rem;
 }
 .k-search-input .k-button {
   width: 2.5rem;
+  line-height: 1;
 }
 .k-search input:focus {
   outline: 0;
