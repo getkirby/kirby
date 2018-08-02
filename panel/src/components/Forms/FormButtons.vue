@@ -39,11 +39,11 @@ export default {
   created() {
     this.refresh();
     this.$events.$on("keydown.cmd.s", this.save);
-    this.$events.$on("form.changed", this.refresh);
+    this.$events.$on("form.change", this.refresh);
   },
   destroyed() {
     this.$events.$off("keydown.cmd.s", this.save);
-    this.$events.$off("form.changed", this.refresh);
+    this.$events.$off("form.change", this.refresh);
   },
   methods: {
     refresh() {
@@ -68,7 +68,8 @@ export default {
         .patch(this.id.substr(1), this.$cache.get(this.id))
         .then(() => {
           this.$cache.remove(this.id);
-          this.$events.$emit("form.saved");
+          this.$events.$emit("form.save");
+          this.$events.$emit("model.update");
           this.$store.dispatch("notification/success", this.$t("saved"));
           this.refresh();
         })

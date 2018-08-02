@@ -230,8 +230,9 @@ class Field
         $array = array_merge($this->props, $this->computed);
         ksort($array);
 
-        $array['invalid'] = $this->isInvalid();
-        $array['errors']  = $this->errors();
+        $array['invalid']   = $this->isInvalid();
+        $array['errors']    = $this->errors();
+        $array['signature'] = md5(json_encode($array));
 
         return array_filter($array, function ($item) {
             return $item !== null;

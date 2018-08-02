@@ -36,11 +36,11 @@
       </k-box>
 
       <k-page-create-dialog ref="create" />
-      <k-page-rename-dialog ref="rename" @success="fetch" />
-      <k-page-url-dialog ref="url" @success="fetch" />
-      <k-page-status-dialog ref="status" @success="fetch" />
-      <k-page-template-dialog ref="template" @success="fetch" />
-      <k-page-remove-dialog ref="remove" @success="fetch" />
+      <k-page-rename-dialog ref="rename" @success="update" />
+      <k-page-url-dialog ref="url" @success="update" />
+      <k-page-status-dialog ref="status" @success="update" />
+      <k-page-template-dialog ref="template" @success="update" />
+      <k-page-remove-dialog ref="remove" @success="update" />
 
     </template>
 
@@ -82,6 +82,40 @@ export default {
     this.$events.$off("page.changeStatus", this.fetch);
   },
   methods: {
+    action(page, action) {
+      switch (action) {
+        case "create":
+          this.$refs.create.open(
+            this.link || this.parent,
+            this.name,
+            this.blueprints.map(blueprint => {
+              return {
+                value: blueprint.name,
+                text: blueprint.title
+              };
+            })
+          );
+          break;
+        case "preview":
+          window.open(page.url);
+          break;
+        case "rename":
+          this.$refs.rename.open(page.id);
+          break;
+        case "url":
+          this.$refs.url.open(page.id);
+          break;
+        case "status":
+          this.$refs.status.open(page.id);
+          break;
+        case "template":
+          this.$refs.template.open(page.id);
+          break;
+        case "remove":
+          this.$refs.remove.open(page.id);
+          break;
+      }
+    },
     fetch() {
       this.$api
         .get(this.parent + "/sections/" + this.name, { page: this.page })
@@ -129,6 +163,10 @@ export default {
           this.issue = error.message;
         });
     },
+    paginate(pagination) {
+      this.page = pagination.page;
+      this.fetch();
+    },
     sort(event) {
       let type = null;
 
@@ -161,43 +199,9 @@ export default {
           });
       }
     },
-    action(page, action) {
-      switch (action) {
-        case "create":
-          this.$refs.create.open(
-            this.link || this.parent,
-            this.name,
-            this.blueprints.map(blueprint => {
-              return {
-                value: blueprint.name,
-                text: blueprint.title
-              };
-            })
-          );
-          break;
-        case "preview":
-          window.open(page.url);
-          break;
-        case "rename":
-          this.$refs.rename.open(page.id);
-          break;
-        case "url":
-          this.$refs.url.open(page.id);
-          break;
-        case "status":
-          this.$refs.status.open(page.id);
-          break;
-        case "template":
-          this.$refs.template.open(page.id);
-          break;
-        case "remove":
-          this.$refs.remove.open(page.id);
-          break;
-      }
-    },
-    paginate(pagination) {
-      this.page = pagination.page;
+    update() {
       this.fetch();
+      this.$events.$emit("model.update");
     }
   }
 };

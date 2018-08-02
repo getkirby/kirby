@@ -42,17 +42,17 @@
     <k-tabs
       v-if="page.id"
       ref="tabs"
-      :key="'page-' + page.id + '-tabs-' + new Date().getTime()"
+      :key="'page-' + page.id + '-tabs'"
       :parent="$api.pages.url(page.id)"
       :blueprint="blueprint"
       :tabs="tabs"
       @tab="tab = $event"
     />
 
-    <k-page-rename-dialog ref="rename" @success="fetch" />
-    <k-page-url-dialog ref="url" />
-    <k-page-status-dialog ref="status" @success="fetch" />
-    <k-page-template-dialog ref="template" @success="fetch" />
+    <k-page-rename-dialog ref="rename" @success="update" />
+    <k-page-url-dialog ref="url" @success="update" />
+    <k-page-status-dialog ref="status" @success="update" />
+    <k-page-template-dialog ref="template" @success="update" />
     <k-page-remove-dialog ref="remove" />
 
   </k-view>
@@ -163,6 +163,10 @@ export default {
           );
           break;
       }
+    },
+    update() {
+      this.fetch();
+      this.$emit("model.update");
     }
   }
 };

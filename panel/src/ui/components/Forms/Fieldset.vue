@@ -4,7 +4,7 @@
       <k-column
         v-for="(field, fieldName) in fields"
         v-if="field.type !== 'hidden'"
-        :key="fieldName"
+        :key="field.signature"
         :width="field.width"
       >
         <component

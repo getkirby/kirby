@@ -38,8 +38,8 @@
         </k-box>
       </k-dropzone>
 
-      <k-file-rename-dialog ref="rename" @success="fetch" />
-      <k-file-remove-dialog ref="remove" @success="fetch" />
+      <k-file-rename-dialog ref="rename" @success="update" />
+      <k-file-remove-dialog ref="remove" @success="update" />
       <k-upload ref="upload" @success="uploaded" @error="fetch" />
     </template>
 
@@ -82,14 +82,10 @@ export default {
   },
   created() {
     this.fetch();
-  },
-  mounted() {
-    this.$events.$on("file.create", this.fetch);
-    this.$events.$on("file.delete", this.fetch);
+    this.$events.$on("model.update", this.fetch);
   },
   destroyed() {
-    this.$events.$off("file.create", this.fetch);
-    this.$events.$off("file.delete", this.fetch);
+    this.$events.$off("model.update", this.fetch);
   },
   methods: {
     fetch() {
@@ -179,9 +175,12 @@ export default {
         multiple: false
       });
     },
+    update() {
+      this.$events.$emit("model.update");
+    },
     uploaded() {
-      this.fetch();
       this.$events.$emit("file.create");
+      this.$events.$emit("model.update");
       this.$store.dispatch("notification/success", this.$t("file.uploaded"));
     },
     paginate(pagination) {
