@@ -87,7 +87,7 @@
 
   "site.renamed": "Die Website wurde umbenannt",
 
-  "structure.add.first": "Klicke um den ersten Eintrag zu erstellen …",
+  "structure.empty": "No entries yet",
   "structure.delete.confirm": "Möchtest du diesen Eintrag wirklich löschen?",
 
   "upload.errors": "Fehler",

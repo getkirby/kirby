@@ -96,7 +96,7 @@
 
     "site.renamed": "The site has been renamed",
 
-    "structure.add.first": "Click to add the first item …",
+    "structure.empty": "No entries yet",
     "structure.delete.confirm": "Do you really want to delete this item?",
     "structure.discard.confirm": "Do you want to discard the new item?",
 

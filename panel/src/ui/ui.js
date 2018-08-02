@@ -22,6 +22,7 @@ import Dialog from "./components/Navigation/Dialog.vue";
 import Dropdown from "./components/Navigation/Dropdown.vue";
 import DropdownContent from "./components/Navigation/DropdownContent.vue";
 import DropdownItem from "./components/Navigation/DropdownItem.vue";
+import Empty from "./components/Layout/Empty.vue";
 import Grid from "./components/Layout/Grid.vue";
 import Header from "./components/Layout/Header.vue";
 import Headline from "./components/Misc/Headline.vue";
@@ -124,6 +125,7 @@ export default {
     Vue.component("k-dropdown", Dropdown);
     Vue.component("k-dropdown-content", DropdownContent);
     Vue.component("k-dropdown-item", DropdownItem);
+    Vue.component("k-empty", Empty);
     Vue.component("k-grid", Grid);
     Vue.component("k-header", Header);
     Vue.component("k-headline", Headline);

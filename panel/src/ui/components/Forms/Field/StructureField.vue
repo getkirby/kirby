@@ -13,9 +13,9 @@
     </template>
 
     <template>
-      <k-box v-if="items.length === 0" theme="button">
-        <k-button :disabled="disabled" icon="add" @click="add">{{ "Click to add the first item …" | t("structure.add.first") }}</k-button>
-      </k-box>
+      <k-empty v-if="items.length === 0" icon="list-bullet" @click="add">
+        {{ $t("structure.empty") }}
+      </k-empty>
       <k-draggable
         v-else
         v-model="items"
@@ -137,6 +137,10 @@ export default {
   },
   methods: {
     add() {
+
+      if (this.disabled === true) {
+        return false;
+      }
 
       if (this.active !== null) {
         this.escape();
