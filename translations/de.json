@@ -127,7 +127,8 @@
   "user.language.select": "Bitte wähl eine Sprache aus …",
   "user.blueprint":
     "Du kannst weitere Abschnitte und Formularfelder für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
-  "user.none": "Keine Benutzer",
+
+  "users.empty.role": "Es gibt keine Benutzer mit dieser Rolle",
 
   "error.form.incomplete": "Bitte behebe alle Fehler …",
   "error.form.converter.invalid": "Ungültiger Konverter \"{converter}\"",

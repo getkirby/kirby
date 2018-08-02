@@ -40,7 +40,7 @@
       />
     </template>
     <template v-else-if="total === 0">
-      <k-box :text="$t('user.none')" />
+      <k-empty icon="users">{{ $t('users.empty.role') }}</k-empty>
     </template>
 
     <k-user-create-dialog ref="create" @success="fetch" />

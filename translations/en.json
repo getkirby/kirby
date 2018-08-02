@@ -135,7 +135,8 @@
     "user.language.changed": "The language has been changed",
     "user.language.select": "Please select a language …",
     "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
-    "user.none": "No users",
+
+    "users.empty.role": "There are no users with this role",
 
     "error.access.login": "Invalid email or password",
     "error.access.panel": "You are not allowed to access the panel",
