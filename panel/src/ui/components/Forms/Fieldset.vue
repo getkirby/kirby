@@ -101,4 +101,15 @@ export default {
     grid-column-gap: 1.5rem;
   }
 }
+
+/* Switch off the grid in narrow sections */
+.k-sections > .k-column[data-width="1/3"] .k-fieldset .k-grid,
+.k-sections > .k-column[data-width="1/4"] .k-fieldset .k-grid {
+  grid-template-columns: repeat(1, 1fr);
+
+  .k-column {
+    grid-column-start: initial;
+  }
+}
+
 </style>
