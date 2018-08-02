@@ -63,6 +63,7 @@
             <k-fieldset
               ref="form"
               :fields="fields"
+              :validate="true"
               v-model="items[index]"
               class="k-structure-fieldset"
               @input="onInput"
@@ -71,6 +72,7 @@
           </div>
         </li>
       </k-draggable>
+
       <k-dialog
         v-if="!disabled"
         ref="remove"
