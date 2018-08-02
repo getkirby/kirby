@@ -80,6 +80,9 @@ export default {
     onInvalid($invalid, $v, field, fieldName) {
       this.errors[fieldName] = $v;
       this.$emit("invalid", this.errors);
+    },
+    hasErrors() {
+      return Object.keys(this.errors).length;
     }
   }
 };
