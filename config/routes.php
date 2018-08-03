@@ -103,6 +103,7 @@ return function ($kirby) {
         foreach ($kirby->languages() as $language) {
             $routes[] = [
                 'pattern' => trim($language->pattern() . '/(:all)', '/'),
+                'method'  => 'ALL',
                 'action'  => function ($path) use ($kirby, $language) {
                     return $kirby->resolve($path, $language);
                 }
@@ -115,6 +116,7 @@ return function ($kirby) {
     // Single-language setup
     $routes[] = [
         'pattern' => '(:all)',
+        'method'  => 'ALL',
         'action'  => function (string $path) use ($kirby) {
             return $kirby->resolve($path);
         }
