@@ -14,6 +14,7 @@ class UrlTest extends TestCase
 
     public function setUp()
     {
+        Uri::$current = null;
         Url::$current = null;
         Url::$home    = '/';
 

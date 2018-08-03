@@ -1131,10 +1131,15 @@ class Page extends Model
     /**
      * Returns the Url
      *
+     * @param array|null $options
      * @return string
      */
-    public function url(): string
+    public function url($options = null): string
     {
+        if ($options !== null) {
+            return Url::to($this->url(), $options);
+        }
+
         if (is_string($this->url) === true) {
             return $this->url;
         }

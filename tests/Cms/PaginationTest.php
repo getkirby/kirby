@@ -23,7 +23,7 @@ class PaginationTest extends TestCase
             'page' => 2
         ]);
 
-        $this->assertEquals('https://getkirby.com?page=2', $pagination->pageUrl());
+        $this->assertEquals('https://getkirby.com/page:2', $pagination->pageUrl());
     }
 
     public function testCurrentPageUrlWithFirstPage()
@@ -40,7 +40,7 @@ class PaginationTest extends TestCase
         $pagination = $this->pagination();
 
         $this->assertEquals('https://getkirby.com', $pagination->pageUrl(1));
-        $this->assertEquals('https://getkirby.com?page=12', $pagination->pageUrl(12));
+        $this->assertEquals('https://getkirby.com/page:12', $pagination->pageUrl(12));
 
         $this->assertNull($pagination->pageUrl(0));
         $this->assertNull($pagination->pageUrl(13));
@@ -55,7 +55,7 @@ class PaginationTest extends TestCase
     public function testLastPageUrl()
     {
         $pagination = $this->pagination();
-        $this->assertEquals('https://getkirby.com?page=12', $pagination->lastPageUrl());
+        $this->assertEquals('https://getkirby.com/page:12', $pagination->lastPageUrl());
     }
 
     public function testNextPageUrl()
@@ -64,7 +64,7 @@ class PaginationTest extends TestCase
             'page' => 2
         ]);
 
-        $this->assertEquals('https://getkirby.com?page=3', $pagination->nextPageUrl());
+        $this->assertEquals('https://getkirby.com/page:3', $pagination->nextPageUrl());
     }
 
     public function testNonExistingNextPage()
@@ -79,7 +79,7 @@ class PaginationTest extends TestCase
             'page' => 3
         ]);
 
-        $this->assertEquals('https://getkirby.com?page=2', $pagination->prevPageUrl());
+        $this->assertEquals('https://getkirby.com/page:2', $pagination->prevPageUrl());
     }
 
     public function testNonExistingPrevPage()

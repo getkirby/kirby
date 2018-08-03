@@ -515,12 +515,7 @@ class App
             return $this->path;
         }
 
-        // check for path detection requirements
-        if (isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME']) === false) {
-            throw new InvalidArgumentException('The current path cannot be detected');
-        }
-
-        $requestUri  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $requestUri  = '/' . $this->request()->url()->path();
         $scriptName  = $_SERVER['SCRIPT_NAME'];
         $scriptFile  = basename($scriptName);
         $scriptDir   = dirname($scriptName);

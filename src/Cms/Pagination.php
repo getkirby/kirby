@@ -113,9 +113,9 @@ class Pagination extends BasePagination
         }
 
         if ($page === 1) {
-            $url->query->$name = null;
+            $url->params->$name = null;
         } else {
-            $url->query->$name = $page;
+            $url->params->$name = $page;
         }
 
         return $url->toString();

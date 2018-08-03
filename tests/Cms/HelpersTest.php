@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Cms\App as Kirby;
 use Kirby\Http\Server;
+use Kirby\Http\Uri;
 
 class HelpersTest extends TestCase
 {
@@ -194,6 +195,24 @@ class HelpersTest extends TestCase
         $this->assertCount(2, $pages);
     }
 
+    public function testParam()
+    {
+        Uri::$current = new Uri('https://getkirby.com/projects/filter:current');
+
+        $this->assertEquals('current', param('filter'));
+
+        Uri::$current = null;
+    }
+
+    public function testParams()
+    {
+        Uri::$current = new Uri('https://getkirby.com/projects/a:value-a/b:value-b');
+
+        $this->assertEquals(['a' => 'value-a', 'b' => 'value-b'], params());
+
+        Uri::$current = null;
+    }
+
     public function testRHelper()
     {
         $this->assertEquals('a', r(1 === 1, 'a', 'b'));
@@ -219,6 +238,25 @@ class HelpersTest extends TestCase
 
         $this->assertEquals($url . '/test', url('test'));
         $this->assertEquals($url . '/test', u('test'));
+    }
+
+    public function testUrlHelperWithOptions()
+    {
+        $app = new App([
+            'urls' => [
+                'index' => $url = 'https://getkirby.com'
+            ]
+        ]);
+
+        $options = [
+            'params' => 'foo:bar',
+            'query'  => 'q=search'
+        ];
+
+        $expected = $url . '/test/foo:bar?q=search';
+
+        $this->assertEquals($expected, url('test', $options));
+        $this->assertEquals($expected, u('test', $options));
     }
 
 }

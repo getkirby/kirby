@@ -184,7 +184,7 @@ class Url
         $uri->username = null;
 
         // remove the trailing slash from the path
-        $uri->path->trailingSlash(false);
+        $uri->slash = false;
 
         $url = $base ? $uri->base() : $uri->toString();
         $url = str_replace('www.', '', $url);
@@ -211,11 +211,18 @@ class Url
      * Smart resolver for internal and external urls
      *
      * @param string $path
+     * @param array $options
      * @return string
      */
-    public static function to(string $path = null): string
+    public static function to(string $path = null, array $options = null): string
     {
-        return static::makeAbsolute($path);
+        $url = static::makeAbsolute($path);
+
+        if ($options === null) {
+            return $url;
+        }
+
+        return (new Uri($url, $options))->toString();
     }
 
     public static function toObject($url = null)

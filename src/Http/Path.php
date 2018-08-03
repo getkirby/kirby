@@ -11,9 +11,6 @@ use Kirby\Toolkit\Str;
  */
 class Path extends Stack
 {
-    protected $leadingSlash  = false;
-    protected $trailingSlash = false;
-
     public function __construct($items)
     {
         if (is_string($items) === true) {
@@ -32,29 +29,18 @@ class Path extends Stack
         return $this->toString();
     }
 
-    public function leadingSlash(bool $slash)
+    public function toString(bool $leadingSlash = false, bool $trailingSlash = false): string
     {
-        $this->leadingSlash = $slash;
-        return $this;
-    }
-
-    public function toString(bool $leadingSlash = null, bool $trailingSlash = null): string
-    {
-        $path = implode('/', $this->data);
-
-        $leadingSlash  = $leadingSlash  !== null ? $leadingSlash  : $this->leadingSlash;
-        $trailingSlash = $trailingSlash !== null ? $trailingSlash : $this->trailingSlash;
-
-        if (empty($this->data) === false) {
-            $path = ($leadingSlash ? '/' : null) . $path . ($trailingSlash ? '/' : null);
+        if (empty($this->data) === true) {
+            return '';
         }
 
-        return $path;
+        $path = implode('/', $this->data);
+
+        $leadingSlash  = $leadingSlash  === true ? '/' : null;
+        $trailingSlash = $trailingSlash === true ? '/' : null;
+
+        return $leadingSlash . $path . $trailingSlash;
     }
 
-    public function trailingSlash(bool $slash)
-    {
-        $this->trailingSlash = $slash;
-        return $this;
-    }
 }

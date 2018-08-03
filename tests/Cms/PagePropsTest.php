@@ -213,6 +213,19 @@ class PagePropsTest extends TestCase
         $this->assertEquals('https://getkirby.com/test', $page->url());
     }
 
+    public function testUrlWithOptions()
+    {
+        $page = new Page([
+            'slug'  => 'test',
+            'url' => 'https://getkirby.com/test'
+        ]);
+
+        $this->assertEquals('https://getkirby.com/test/foo:bar?q=search', $page->url([
+            'params' => 'foo:bar',
+            'query'  => 'q=search'
+        ]));
+    }
+
     public function testDefaultUrl()
     {
         $page = new Page([

@@ -21,6 +21,13 @@ class Uri
     use Properties;
 
     /**
+     * Cache for the current Uri object
+     *
+     * @var Uri|null
+     */
+    public static $current;
+
+    /**
      * The fragment after the hash
      *
      * @var string|false
@@ -40,6 +47,13 @@ class Uri
      * @var string|false
      */
     protected $password;
+
+    /**
+     * The optional list of params
+     *
+     * @var Params
+     */
+    protected $params;
 
     /**
      * The optional path
@@ -77,6 +91,11 @@ class Uri
     protected $scheme = 'http';
 
     /**
+     * @var boolean
+     */
+    protected $slash = false;
+
+    /**
      * The optional username for basic authentication
      *
      * @var string|false
@@ -103,21 +122,33 @@ class Uri
      */
     public function __clone()
     {
-        $this->path  = clone $this->path;
-        $this->query = clone $this->query;
+        $this->path   = clone $this->path;
+        $this->query  = clone $this->query;
+        $this->params = clone $this->params;
     }
 
     /**
      * Creates a new URI object
      *
-     * @param array
+     * @param array $props
+     * @param array $inject
      */
-    public function __construct($props = [])
+    public function __construct($props = [], array $inject = [])
     {
         if (is_string($props) === true) {
             $props = parse_url($props);
             $props['username'] = $props['user'] ?? null;
             $props['password'] = $props['pass'] ?? null;
+
+            $props = array_merge($props, $inject);
+        }
+
+        // parse the path and extract params
+        if (empty($props['path']) === false) {
+            $extract         = Params::extract($props['path']);
+            $props['params'] = $props['params'] ?? $extract['params'];
+            $props['path']   = $extract['path'];
+            $props['slash']  = $props['slash'] ?? $extract['slash'];
         }
 
         $this->setProperties($this->props = $props);
@@ -208,7 +239,12 @@ class Uri
      */
     public static function current(array $props = [], bool $forwarded = false): self
     {
-        $uri = parse_url(Server::get('REQUEST_URI'));
+        if (static::$current !== null) {
+            return static::$current;
+        }
+
+        $uri = parse_url('http://getkirby.com' . Server::get('REQUEST_URI'));
+
         $url = new static(array_merge([
             'scheme' => Server::https() === true ? 'https' : 'http',
             'host'   => Server::host($forwarded),
@@ -305,16 +341,12 @@ class Uri
     }
 
     /**
-     * @param  string $scheme
+     * @param  string|null $fragment
      * @return self
      */
-    public function setScheme(string $scheme = null): self
+    public function setFragment(string $fragment = null)
     {
-        if ($scheme !== null && in_array($scheme, ['http', 'https', 'ftp']) === false) {
-            throw new InvalidArgumentException('Invalid URL scheme: ' . $scheme);
-        }
-
-        $this->scheme = $scheme;
+        $this->fragment = $fragment ? ltrim($fragment, '#') : null;
         return $this;
     }
 
@@ -325,6 +357,36 @@ class Uri
     public function setHost(string $host = null): self
     {
         $this->host = $host;
+        return $this;
+    }
+
+    /**
+     * @param  Params|string|array|null $path
+     * @return self
+     */
+    public function setParams($params = null): self
+    {
+        $this->params = is_a($params, 'Kirby\Http\Params') === true ? $params : new Params($params);
+        return $this;
+    }
+
+    /**
+     * @param  string|null $password
+     * @return self
+     */
+    public function setPassword(string $password = null): self
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @param  Path|string|array|null $path
+     * @return self
+     */
+    public function setPath($path = null): self
+    {
+        $this->path = is_a($path, 'Kirby\Http\Path') === true ? $path : new Path($path);
         return $this;
     }
 
@@ -349,41 +411,6 @@ class Uri
     }
 
     /**
-     * @param  string|null $username
-     * @return self
-     */
-    public function setUsername(string $username = null): self
-    {
-        $this->username = $username;
-        return $this;
-    }
-
-    /**
-     * @param  string|null $password
-     * @return self
-     */
-    public function setPassword(string $password = null): self
-    {
-        $this->password = $password;
-        return $this;
-    }
-
-    /**
-     * @param  string|array|null $path
-     * @return self
-     */
-    public function setPath($path = null): self
-    {
-        $this->path = is_a($path, 'Kirby\Http\Path') === true ? $path : new Path($path);
-
-        if (($this->props['trailingSlash'] ?? false) === true) {
-            $this->path->trailingSlash(true);
-        }
-
-        return $this;
-    }
-
-    /**
      * @param  string|array|null $query
      * @return self
      */
@@ -394,12 +421,39 @@ class Uri
     }
 
     /**
-     * @param  string|null $fragment
+     * @param  string $scheme
      * @return self
      */
-    public function setFragment(string $fragment = null)
+    public function setScheme(string $scheme = null): self
     {
-        $this->fragment = $fragment ? ltrim($fragment, '#') : null;
+        if ($scheme !== null && in_array($scheme, ['http', 'https', 'ftp']) === false) {
+            throw new InvalidArgumentException('Invalid URL scheme: ' . $scheme);
+        }
+
+        $this->scheme = $scheme;
+        return $this;
+    }
+
+    /**
+     * Set if a trailing slash should be added to
+     * the path when the URI is being built
+     *
+     * @param bool $slash
+     * @return self
+     */
+    public function setSlash(bool $slash = false): self
+    {
+        $this->slash = $slash;
+        return $this;
+    }
+
+    /**
+     * @param  string|null $username
+     * @return self
+     */
+    public function setUsername(string $username = null): self
+    {
+        $this->username = $username;
         return $this;
     }
 
@@ -438,14 +492,20 @@ class Uri
     public function toString(): string
     {
         $url   = $this->base();
-        $trail = true;
+        $slash = true;
 
         if (empty($url) === true) {
             $url   = '/';
-            $trail = false;
+            $slash = false;
         }
 
-        $url .= $this->path->toString($trail);
+        $path = $this->path->toString($slash) . $this->params->toString($slash);
+
+        if ($this->slash && $slash === true) {
+            $path .= '/';
+        }
+
+        $url .= $path;
         $url .= $this->query->toString(true);
 
         if (empty($this->fragment) === false) {

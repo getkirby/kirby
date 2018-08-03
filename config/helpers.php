@@ -364,6 +364,28 @@ function pages(...$id)
 }
 
 /**
+ * Returns a single param from the URL
+ *
+ * @param string $key
+ * @param string $fallback
+ * @return string|null
+ */
+function param(string $key, string $fallback = null): ?string
+{
+    return App::instance()->request()->url()->params()->$key ?? $fallback;
+}
+
+/**
+ * Returns all params from the current Url
+ *
+ * @return array
+ */
+function params(): array
+{
+    return App::instance()->request()->url()->params()->toArray();
+}
+
+/**
  * Smart version of return with an if condition as first argument
  *
  * @param mixed $condition
@@ -519,22 +541,24 @@ function twitter(string $username, string $text = null, string $title = null, st
  * Shortcut for url()
  *
  * @param string $path
+ * @param array|null $options
  * @return string
  */
-function u(string $path = null): string
+function u(string $path = null, $options = null): string
 {
-    return Url::to($path);
+    return Url::to($path, $options);
 }
 
 /**
  * Builds an absolute URL for a given path
  *
  * @param string $path
+ * @param array $options
  * @return string
  */
-function url(string $path = null): string
+function url(string $path = null, $options = null): string
 {
-    return Url::to($path);
+    return Url::to($path, $options);
 }
 
 /**

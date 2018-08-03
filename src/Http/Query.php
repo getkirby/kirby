@@ -39,7 +39,11 @@ class Query extends Obj
     {
         $query = http_build_query($this);
 
-        if (empty($query) === false && $questionMark === true) {
+        if (empty($query) === true) {
+            return '';
+        }
+
+        if ($questionMark === true) {
             $query = '?' . $query;
         }
 

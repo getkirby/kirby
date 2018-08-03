@@ -11,6 +11,8 @@ class UriTest extends TestCase
 
     protected function setUp()
     {
+        Uri::$current = null;
+
         $this->example1 = 'https://getkirby.com';
         $this->example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/?q=awesome#top';
 
@@ -197,6 +199,8 @@ class UriTest extends TestCase
             'password' => 'weakpassword',
             'query'    => ['q' => 'awesome'],
             'fragment' => 'top',
+            'params'   => [],
+            'slash'    => true,
         ], $url->toArray());
     }
 
