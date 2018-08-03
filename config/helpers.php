@@ -38,6 +38,35 @@ function collection(string $name)
 }
 
 /**
+ * Checks / returns a CSRF token
+ *
+ * @param string $check Pass a token here to compare it to the one in the session
+ * @return string|boolean Either the token or a boolean check result
+ */
+function csrf(string $check = null)
+{
+    $session = App::instance()->session();
+
+    // check explicitly if there have been no arguments at all;
+    // checking for null introduces a security issue because null could come
+    // from user input or bugs in the calling code!
+    if (func_num_args() === 0) {
+        // no arguments, generate/return a token
+
+        $token = $session->get('csrf');
+        if (is_string($token) !== true) {
+            $token = bin2hex(random_bytes(32));
+            $session->set('csrf', $token);
+        }
+
+        return $token;
+    } else {
+        // argument has been passed, check the token
+        return $check === $session->get('csrf');
+    }
+}
+
+/**
  * Creates one or multiple CSS link tags
  *
  * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading

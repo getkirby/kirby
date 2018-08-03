@@ -9,9 +9,11 @@ use Kirby\Http\Uri;
 class HelpersTest extends TestCase
 {
 
+    protected $kirby;
+
     public function setUp()
     {
-        $kirby = new Kirby([
+        $this->kirby = new Kirby([
             'urls' => [
                 'index' => 'https://getkirby.com'
             ]
@@ -37,6 +39,45 @@ class HelpersTest extends TestCase
 
         $this->assertCount(1, $collection);
         $this->assertEquals('test', $collection->first()->slug());
+    }
+
+    public function testCsrfHelper()
+    {
+        $session = $this->kirby->session();
+
+        // should generate token
+        $session->remove('csrf');
+        $token = csrf();
+        $this->assertInternalType('string', $token);
+        $this->assertStringMatchesFormat('%x', $token);
+        $this->assertEquals(64, strlen($token));
+        $this->assertEquals($session->get('csrf'), $token);
+
+        // should not regenerate when a param is passed
+        $this->assertFalse(csrf(null));
+        $this->assertFalse(csrf(false));
+        $this->assertFalse(csrf(123));
+        $this->assertFalse(csrf('some invalid string'));
+        $this->assertEquals($token, $session->get('csrf'));
+
+        // should not regenerate if there is already a token
+        $token2 = csrf();
+        $this->assertEquals($token, $token2);
+
+        // should regenerate if there is an invalid token
+        $session->set('csrf', 123);
+        $token3 = csrf();
+        $this->assertNotEquals($token, $token3);
+        $this->assertEquals(64, strlen($token3));
+        $this->assertEquals($session->get('csrf'), $token3);
+
+        // should verify token
+        $this->assertTrue(csrf($token3));
+        $this->assertFalse(csrf($token2));
+        $this->assertFalse(csrf(null));
+        $this->assertFalse(csrf(false));
+        $this->assertFalse(csrf(123));
+        $this->assertFalse(csrf('some invalid string'));
     }
 
     public function testCssHelper()
