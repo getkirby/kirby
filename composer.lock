@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5638241f33417e864f130c22d98cf00f",
-    "content-hash": "9bcf32ee95a1f71420c690a559d552b1",
+    "hash": "71ba22eae4409369c69350b77985365f",
+    "content-hash": "a6832cd832ead9a21e64493a4f200215",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -1740,12 +1740,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2d53bd5ae8ec6f81bb3be9d397f1f4cfac69ff97"
+                "reference": "5744955af9c0a2de74a5eb5287c50bf025100d39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2d53bd5ae8ec6f81bb3be9d397f1f4cfac69ff97",
-                "reference": "2d53bd5ae8ec6f81bb3be9d397f1f4cfac69ff97",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5744955af9c0a2de74a5eb5287c50bf025100d39",
+                "reference": "5744955af9c0a2de74a5eb5287c50bf025100d39",
                 "shasum": ""
             },
             "require": {
@@ -1816,7 +1816,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-07-19 06:58:00"
+            "time": "2018-08-03 05:27:14"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2957,12 +2957,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "42e1ccfd64ecede16b2dbfa9cc1972445cdc2a97"
+                "reference": "ce937c3c524746b8fdb603683945f760855175da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/42e1ccfd64ecede16b2dbfa9cc1972445cdc2a97",
-                "reference": "42e1ccfd64ecede16b2dbfa9cc1972445cdc2a97",
+                "url": "https://api.github.com/repos/symfony/process/zipball/ce937c3c524746b8fdb603683945f760855175da",
+                "reference": "ce937c3c524746b8fdb603683945f760855175da",
                 "shasum": ""
             },
             "require": {
@@ -2998,7 +2998,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26 11:25:51"
+            "time": "2018-08-03 11:20:06"
         },
         {
             "name": "symfony/stopwatch",
