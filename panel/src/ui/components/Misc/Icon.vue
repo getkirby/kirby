@@ -1,5 +1,5 @@
 <template>
-  <i
+  <span
     :aria-label="alt"
     :role="alt ? 'img' : null"
     :aria-hidden="!alt"
@@ -11,7 +11,7 @@
     <svg v-else viewBox="0 0 16 16">
       <use :xlink:href="'#icon-' + type" />
     </svg>
-  </i>
+  </span>
 </template>
 
 <script>
