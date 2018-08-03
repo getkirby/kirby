@@ -42,5 +42,4 @@ class Path extends Stack
 
         return $leadingSlash . $path . $trailingSlash;
     }
-
 }

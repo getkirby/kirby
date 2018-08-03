@@ -98,7 +98,6 @@ class V
             }
 
             foreach ($fieldRules as $validatorName => $validatorOptions) {
-
                 if (is_int($validatorName)) {
                     $validatorName    = $validatorOptions;
                     $validatorOptions = [];
