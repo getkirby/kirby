@@ -3,7 +3,7 @@
 $root = dirname(__DIR__);
 
 // https://yourdomain.com/media/super/nice.jpg
-if (file_exists($root . '/' . $_SERVER['REQUEST_URI'])) {
+if (file_exists($root . '/' . $_SERVER['SCRIPT_NAME'])) {
     return false; // serve the requested resource as-is.
 }
 
