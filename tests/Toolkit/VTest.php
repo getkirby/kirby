@@ -60,6 +60,12 @@ class VTest extends TestCase
         $this->assertFalse(V::accepted('off'));
     }
 
+    public function testContains()
+    {
+        $this->assertTrue(V::contains('word', 'or'));
+        $this->assertFalse(V::contains('word', 'test'));
+    }
+
     public function testDenied()
     {
         $this->assertTrue(V::denied(false));
@@ -143,6 +149,12 @@ class VTest extends TestCase
 
         // strict
         $this->assertTrue(V::different('true', true, true));
+    }
+
+    public function testEndsWith()
+    {
+        $this->assertTrue(V::endsWith('test', 'st'));
+        $this->assertFalse(V::endsWith('test', 'te'));
     }
 
     public function testSame()
@@ -264,6 +276,18 @@ class VTest extends TestCase
         $this->assertFalse(V::minWords('This is Kirby ', 4));
     }
 
+    public function testMore()
+    {
+        $this->assertTrue(V::more(1, 0));
+        $this->assertFalse(V::more(0, 1));
+    }
+
+    public function testNotContains()
+    {
+        $this->assertFalse(V::notContains('word', 'or'));
+        $this->assertTrue(V::notContains('word', 'test'));
+    }
+
     public function testNum()
     {
         $this->assertTrue(V::num(2));
@@ -329,6 +353,11 @@ class VTest extends TestCase
         V::size(new \StdClass, 5);
     }
 
+    public function testTime()
+    {
+        $this->assertTrue(V::time('12:12:12'));
+        $this->assertFalse(V::time('24:24:24'));
+    }
 
     public function testUrl()
     {
@@ -418,4 +447,27 @@ class VTest extends TestCase
         $this->assertFalse(V::url('http://10.1.1.1'));
         $this->assertFalse(V::url('http://10.1.1.254'));
     }
+
+    public function testValue()
+    {
+        $result = V::value('test@getkirby.com', [
+            'email',
+            'maxLength' => 17,
+            'minLength' => 17
+        ]);
+
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The "same" validator failed
+     */
+    public function testValueFails()
+    {
+        $result = V::value('a', [
+            'same' => 'b'
+        ]);
+    }
+
 }
