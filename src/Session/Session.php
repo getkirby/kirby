@@ -233,7 +233,7 @@ class Session
     {
         if (is_int($duration)) {
             // verify that the duration is at least 1 second
-            if ($duration <= 0) {
+            if ($duration < 1) {
                 throw new InvalidArgumentException([
                     'data'      => ['method' => 'Session::duration', 'argument' => '$duration'],
                     'translate' => false
@@ -259,7 +259,7 @@ class Session
     {
         if (is_int($timeout) || $timeout === false) {
             // verify that the timeout is at least 1 second
-            if (is_int($timeout) && $timeout <= 0) {
+            if (is_int($timeout) && $timeout < 1) {
                 throw new InvalidArgumentException([
                     'data'      => ['method' => 'Session::timeout', 'argument' => '$timeout'],
                     'translate' => false
@@ -715,7 +715,7 @@ class Session
         $this->renewable    = $data['renewable'];
 
         // reload data into existing object to avoid breaking memory references
-        if ($this->data) {
+        if (is_a($this->data, SessionData::class)) {
             $this->data()->reload($data['data']);
         } else {
             $this->data = new SessionData($this, $data['data']);
