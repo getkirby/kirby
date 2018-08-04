@@ -66,8 +66,7 @@ export default {
   },
   computed: {
     label() {
-      const fallback = this.options[0] ? this.options[0].text : null;
-      const label    = this.text(this.value) || fallback;
+      const label = this.text(this.value);
 
       if (this.value === "" || this.value === null || label === null) {
         return this.placeholder || "—";
