@@ -215,4 +215,44 @@ class UriTest extends TestCase
         $this->assertEquals($this->example2, (string)$url);
     }
 
+    public function testBuild()
+    {
+
+        // path + params + query
+        $uri = new Uri('https://getkirby.com/search?q=something', [
+            'params' => ['page' => 2]
+        ]);
+
+        $this->assertEquals('https://getkirby.com/search/page:2?q=something', $uri->toString());
+
+        // path + slash + params + query
+        $uri = new Uri('https://getkirby.com/search/?q=something', [
+            'params' => ['page' => 2]
+        ]);
+
+        $this->assertEquals('https://getkirby.com/search/page:2/?q=something', $uri->toString());
+
+        // params replacement
+        $uri = new Uri('https://getkirby.com/search/page:2?q=something', [
+            'params' => ['page' => 3]
+        ]);
+
+        $this->assertEquals('https://getkirby.com/search/page:3?q=something', $uri->toString());
+
+        // params removal without slash
+        $uri = new Uri('https://getkirby.com/search/page:2?q=something', [
+            'params' => []
+        ]);
+
+        $this->assertEquals('https://getkirby.com/search?q=something', $uri->toString());
+
+        // params removal with slash
+        $uri = new Uri('https://getkirby.com/search/page:2/?q=something', [
+            'params' => []
+        ]);
+
+        $this->assertEquals('https://getkirby.com/search/?q=something', $uri->toString());
+
+    }
+
 }
