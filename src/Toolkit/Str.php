@@ -118,7 +118,7 @@ class Str
         if ($position === false) {
             return false;
         } else {
-          return static::substr($string, $position + static::length($needle));
+            return static::substr($string, $position + static::length($needle));
         }
     }
 
@@ -426,7 +426,6 @@ class Str
         $replacements = [];
 
         if (is_array($search) === true && is_array($replace) === true) {
-
             foreach ($search as $i => $s) {
                 // replace with an empty string if no replacement string was defined for this index;
                 // behavior is identical to the official PHP str_replace()
@@ -441,11 +440,8 @@ class Str
 
                 $replacements[] = ['search' => $s, 'replace' => $r, 'limit' => $l];
             }
-
         } elseif (is_array($search) === true && is_string($replace) === true) {
-
             foreach ($search as $i => $s) {
-
                 if (is_array($limit) === true) {
                     // don't apply a limit if no limit was defined for this index
                     $l = $limit[$i] ?? -1;
@@ -455,15 +451,10 @@ class Str
 
                 $replacements[] = ['search' => $s, 'replace' => $replace, 'limit' => $l];
             }
-
         } elseif (is_string($search) === true && is_string($replace) === true && is_int($limit) === true) {
-
             $replacements[] = compact('search', 'replace', 'limit');
-
         } else {
-
             throw new Exception('Invalid combination of $search, $replace and $limit params.');
-
         }
 
         return $replacements;
@@ -482,23 +473,18 @@ class Str
         // replace in the order of the replacements
         // behavior is identical to the official PHP str_replace()
         foreach ($replacements as $replacement) {
-
             if (is_int($replacement['limit']) === false) {
-
                 throw new Exception('Invalid limit "' . $replacement['limit'] . '".');
-
-            } elseif($replacement['limit'] === -1) {
+            } elseif ($replacement['limit'] === -1) {
 
                 // no limit, we don't need our special replacement routine
                 $string = str_replace($replacement['search'], $replacement['replace'], $string);
-
-            } elseif($replacement['limit'] > 0) {
+            } elseif ($replacement['limit'] > 0) {
 
                 // limit given, only replace for $replacement['limit'] times per replacement
                 $position = -1;
 
                 for ($i = 0; $i < $replacement['limit']; $i++) {
-
                     $position = strpos($string, $replacement['search'], $position + 1);
 
                     if (is_int($position) === true) {
@@ -509,11 +495,8 @@ class Str
                         // no more match in the string
                         break;
                     }
-
                 }
-
             }
-
         }
 
         return $string;

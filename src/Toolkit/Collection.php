@@ -711,13 +711,11 @@ class Collection extends Iterator
 
             if ($arg === SORT_ASC || $argLower === 'asc') {
                 $fields[$currentField]['direction'] = SORT_ASC;
-
             } elseif ($arg === SORT_DESC || $argLower === 'desc') {
                 $fields[$currentField]['direction'] = SORT_DESC;
 
             // other string: The field name
             } elseif (is_string($arg) === true) {
-
                 $values = [];
 
                 foreach ($array as $key => $value) {
