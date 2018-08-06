@@ -94,4 +94,15 @@ class CollectionTest extends TestCase
         ])->first()['name']);
     }
 
+    public function testToArray()
+    {
+        // associative
+        $collection = new Collection($input = ['a' => 'value A', 'b' => 'value B']);
+        $this->assertEquals($input, $collection->toArray());
+
+        // non-associative
+        $collection = new Collection($input = ['a', 'b', 'c']);
+        $this->assertEquals($input, $collection->toArray());
+    }
+
 }

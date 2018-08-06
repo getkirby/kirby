@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
+
 /**
  * A set of handy string methods
  *
@@ -348,6 +350,173 @@ class Str
     public static function query(string $query, array $data = [])
     {
         return (new Query($query, $data))->result();
+    }
+
+    /**
+     * Replaces all or some occurrences of the search string with the replacement string
+     * Extension of the str_replace() function in PHP with an additional $limit parameter
+     *
+     * @param  string|array $string  String being replaced on (haystack);
+     *                               can be an array of multiple subject strings
+     * @param  string|array $search  Value being searched for (needle)
+     * @param  string|array $replace Value to replace matches with
+     * @param  int|array    $limit   Maximum possible replacements for each search value;
+     *                               multiple limits for each search value are supported;
+     *                               defaults to no limit
+     * @return string|array          String with replaced values;
+     *                               if $string is an array, array of strings
+     */
+    public static function replace($string, $search, $replace, $limit = -1)
+    {
+        // convert Kirby collections to arrays
+        if (is_a($string, 'Kirby\Toolkit\Collection') === true) {
+            $string = $string->toArray();
+        }
+
+        if (is_a($search, 'Kirby\Toolkit\Collection') === true) {
+            $search  = $search->toArray();
+        }
+
+        if (is_a($replace, 'Kirby\Toolkit\Collection') === true) {
+            $replace = $replace->toArray();
+        }
+
+        // without a limit we might as well use the built-in function
+        if ($limit === -1) {
+            return str_replace($search, $replace, $string);
+        }
+
+        // if the limit is zero, the result will be no replacements at all
+        if ($limit === 0) {
+            return $string;
+        }
+
+        // multiple subjects are run separately through this method
+        if (is_array($string) === true) {
+            $result = [];
+            foreach ($string as $s) {
+                $result[] = static::replace($s, $search, $replace, $limit);
+            }
+            return $result;
+        }
+
+        // build an array of replacements
+        // we don't use an associative array because otherwise you couldn't
+        // replace the same string with different replacements
+        $replacements = static::replacements($search, $replace, $limit);
+
+        // run the string and the replacement array through the replacer
+        return static::replaceReplacements($string, $replacements);
+    }
+
+    /**
+     * Generates a replacement array out of dynamic input data
+     * Used for Str::replace()
+     *
+     * @param  string|array $search  Value being searched for (needle)
+     * @param  string|array $replace Value to replace matches with
+     * @param  int|array    $limit   Maximum possible replacements for each search value;
+     *                               multiple limits for each search value are supported;
+     *                               defaults to no limit
+     * @return array                 List of replacement arrays, each with a
+     *                               'search', 'replace' and 'limit' attribute
+     */
+    public static function replacements($search, $replace, $limit): array
+    {
+        $replacements = [];
+
+        if (is_array($search) === true && is_array($replace) === true) {
+
+            foreach ($search as $i => $s) {
+                // replace with an empty string if no replacement string was defined for this index;
+                // behavior is identical to the official PHP str_replace()
+                $r = $replace[$i] ?? '';
+
+                if (is_array($limit) === true) {
+                    // don't apply a limit if no limit was defined for this index
+                    $l = $limit[$i] ?? -1;
+                } else {
+                    $l = $limit;
+                }
+
+                $replacements[] = ['search' => $s, 'replace' => $r, 'limit' => $l];
+            }
+
+        } elseif (is_array($search) === true && is_string($replace) === true) {
+
+            foreach ($search as $i => $s) {
+
+                if (is_array($limit) === true) {
+                    // don't apply a limit if no limit was defined for this index
+                    $l = $limit[$i] ?? -1;
+                } else {
+                    $l = $limit;
+                }
+
+                $replacements[] = ['search' => $s, 'replace' => $replace, 'limit' => $l];
+            }
+
+        } elseif (is_string($search) === true && is_string($replace) === true && is_int($limit) === true) {
+
+            $replacements[] = compact('search', 'replace', 'limit');
+
+        } else {
+
+            throw new Exception('Invalid combination of $search, $replace and $limit params.');
+
+        }
+
+        return $replacements;
+    }
+
+    /**
+     * Takes a replacement array and processes the replacements
+     * Used for Str::replace()
+     *
+     * @param  string $string       String being replaced on (haystack)
+     * @param  array  $replacements Replacement array from Str::replacements()
+     * @return string               String with replaced values
+     */
+    public static function replaceReplacements(string $string, array $replacements): string
+    {
+        // replace in the order of the replacements
+        // behavior is identical to the official PHP str_replace()
+        foreach ($replacements as $replacement) {
+
+            if (is_int($replacement['limit']) === false) {
+
+                throw new Exception('Invalid limit "' . $replacement['limit'] . '".');
+
+            } elseif($replacement['limit'] === -1) {
+
+                // no limit, we don't need our special replacement routine
+                $string = str_replace($replacement['search'], $replacement['replace'], $string);
+
+            } elseif($replacement['limit'] > 0) {
+
+                // limit given, only replace for $replacement['limit'] times per replacement
+                $position = -1;
+
+                for ($i = 0; $i < $replacement['limit']; $i++) {
+
+                    $position = strpos($string, $replacement['search'], $position + 1);
+
+                    if (is_int($position) === true) {
+                        $string = substr_replace($string, $replacement['replace'], $position, strlen($replacement['search']));
+                        // adapt $pos to the now changed offset
+                        $position = $position + strlen($replacement['replace']) - strlen($replacement['search']);
+                    } else {
+                        // no more match in the string
+                        break;
+                    }
+
+                }
+
+            }
+
+        }
+
+        return $string;
     }
 
     /**
