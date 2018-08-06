@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "67d97abdd95acc7b7424c2319c8cae51",
-    "content-hash": "ee63c6a124aba6917621e76580cb649d",
+    "hash": "3f130553f7bd4714020b312ae8e1c351",
+    "content-hash": "6380455cdbaa3eda219c99348fcc3e6e",
     "packages": [
         {
             "name": "claviska/simpleimage",
