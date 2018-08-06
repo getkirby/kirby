@@ -225,7 +225,7 @@ class Response
      * @param integer $code
      * @return self
      */
-    public static function redirect(string $location = '/', int $code = 301)
+    public static function redirect(string $location = '/', int $code = 302)
     {
         return new static([
             'code' => $code,

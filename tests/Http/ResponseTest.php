@@ -153,7 +153,7 @@ class ResponseTest extends TestCase
         $response = Response::redirect();
 
         $this->assertEquals('', $response->body());
-        $this->assertEquals(301, $response->code());
+        $this->assertEquals(302, $response->code());
         $this->assertEquals(['Location' => '/'], $response->headers());
     }
 

@@ -171,7 +171,7 @@ function gist(string $url, string $file = null): string
  * @param integer $code
  * @return void
  */
-function go(string $url = null, int $code = 301)
+function go(string $url = null, int $code = 302)
 {
     die(Response::redirect($url, $code));
 }

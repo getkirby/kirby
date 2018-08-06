@@ -109,7 +109,7 @@ class Response extends BaseResponse
      * @param int $code
      * @return self
      */
-    public static function redirect(string $location = '/', int $code = 301)
+    public static function redirect(string $location = '/', int $code = 302)
     {
         return parent::redirect(Url::to($location), $code);
     }
