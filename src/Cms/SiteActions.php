@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentLogicException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
 trait SiteActions
