@@ -34,8 +34,9 @@
           class="k-card-options-button"
           @click="flag.click"
         />
-        <template v-if="options">
+        <slot name="options">
           <k-button
+            v-if="options"
             icon="dots"
             class="k-card-options-button"
             @click.stop="$refs.dropdown.toggle()"
@@ -47,7 +48,7 @@
             align="right"
             @action="$emit('action', $event)"
           />
-        </template>
+        </slot>
       </nav>
     </figcaption>
   </figure>
@@ -191,7 +192,7 @@ export default {
   bottom: 0;
   right: 0;
 }
-.k-card-options-button {
+.k-card-options > .k-button {
   position: relative;
   float: left;
   height: 2.25rem;
