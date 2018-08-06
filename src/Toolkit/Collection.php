@@ -688,39 +688,70 @@ class Collection extends Iterator
      */
     public function sortBy()
     {
-        $args       = func_get_args();
-        $collection = clone $this;
-        $array      = $collection->data;
-        $params     = array();
-
-        if (empty($array) === true) {
-            return $collection;
+        // there is no need to sort empty collections
+        if (empty($this->data) === true) {
+            return $this;
         }
 
-        foreach ($args as $i => $param) {
-            if (is_string($param) === true) {
-                if (strtolower($param) === 'desc') {
-                    ${"param_$i"} = SORT_DESC;
-                } elseif (strtolower($param) === 'asc') {
-                    ${"param_$i"} = SORT_ASC;
-                } else {
-                    ${"param_$i"} = [];
-                    foreach ($array as $index => $row) {
-                        ${"param_$i"}[$index] = is_array($row) ? Str::lower($row[$param]) : Str::lower($row->$param());
-                    }
+        $args       = func_get_args();
+        $array      = $this->data;
+        $collection = $this->clone();
+
+        // loop through all method arguments and find sets of fields to sort by
+        $fields = [];
+
+        foreach ($args as $arg) {
+
+            // get the index of the latest field array inside the $fields array
+            $currentField = $fields ? count($fields) - 1 : 0;
+
+            // detect the type of argument
+            // sorting direction
+            $argLower = strtolower($arg);
+
+            if ($arg === SORT_ASC || $argLower === 'asc') {
+                $fields[$currentField]['direction'] = SORT_ASC;
+
+            } elseif ($arg === SORT_DESC || $argLower === 'desc') {
+                $fields[$currentField]['direction'] = SORT_DESC;
+
+            // other string: The field name
+            } elseif (is_string($arg) === true) {
+
+                $values = [];
+
+                foreach ($array as $key => $value) {
+                    $value = $collection->getAttribute($value, $arg);
+
+                    // make sure that we return something sortable
+                    // but don't convert other scalars (especially numbers) to strings!
+                    $values[$key] = is_scalar($value) === true ? $value : (string)$value;
                 }
+
+                $fields[] = ['field' => $arg, 'values' => $values];
+
+            // flags
             } else {
-                ${"param_$i"} = $args[$i];
+                $fields[$currentField]['flags'] = $arg;
             }
-            $params[] = &${"param_$i"};
+        }
+
+        // build the multisort params in the right order
+        $params = [];
+
+        foreach ($fields as $field) {
+            $params[] = $field['values']    ?? [];
+            $params[] = $field['direction'] ?? SORT_ASC;
+            $params[] = $field['flags']     ?? SORT_REGULAR;
         }
 
         $params[] = &$array;
 
-        call_user_func_array('array_multisort', $params);
+        // array_multisort receives $params as separate params
+        array_multisort(...$params);
 
+        // $array has been overwritten by array_multisort
         $collection->data = $array;
-
         return $collection;
     }
 
