@@ -153,6 +153,19 @@ class Str
     }
 
     /**
+     * Returns everything between two strings from the first occurrence of a given string
+     *
+     * @param string $string
+     * @param string $start
+     * @param string $end
+     * @return string
+     */
+    public static function between(string $string = null, string $start, string $end): string
+    {
+        return static::before(static::after($string, $start), $end);
+    }
+
+    /**
      * Checks if a str contains another string
      *
      * @param  string  $string
