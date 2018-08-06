@@ -116,7 +116,7 @@ class Str
         if ($position === false) {
             return false;
         } else {
-            return static::substr($string, $position + 1);
+          return static::substr($string, $position + static::length($needle));
         }
     }
 

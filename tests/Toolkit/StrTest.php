@@ -20,6 +20,9 @@ class StrTest extends TestCase
         $this->assertEquals(' Wörld', Str::after($string, 'ö', true));
         $this->assertEquals(' Wörld', Str::after($string, 'Ö', true));
         $this->assertEquals(false, Str::after($string, 'x'));
+
+        // non existing chars
+        $this->assertEquals(false, Str::after('string', '.'), 'string with non-existing character should return false');
     }
 
     public function testBefore()
