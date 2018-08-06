@@ -29,6 +29,9 @@ return [
         'id' => function (File $file) {
             return $file->id();
         },
+        'link' => function (File $file) {
+            return $file->panelUrl(true);
+        },
         'mime' => function (File $file) {
             return $file->mime();
         },
@@ -84,6 +87,7 @@ return [
             'extension',
             'filename',
             'id',
+            'link',
             'mime',
             'modified',
             'name',
@@ -100,8 +104,9 @@ return [
         'compact' => [
             'filename',
             'id',
+            'link',
             'type',
-            'url'
+            'url',
         ],
         'panel' => [
             'blueprint',
@@ -109,6 +114,7 @@ return [
             'extension',
             'filename',
             'id',
+            'link',
             'mime',
             'modified',
             'name',

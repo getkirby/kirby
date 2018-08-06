@@ -26,15 +26,14 @@ export default {
   grid-template-columns: 1fr;
 }
 
-.k-sections > .k-column[data-width="3/4"] .k-cards,
-.k-sections > .k-column[data-width="1/1"] .k-cards {
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-}
-
 @media screen and (min-width: $breakpoint-medium) {
-  .k-sections > .k-column[data-width="1/2"] .k-cards {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  .k-sections > .k-column[data-width="3/4"] .k-cards,
+  .k-sections > .k-column[data-width="2/3"] .k-cards,
+  .k-sections > .k-column[data-width="1/2"] .k-cards,
+  .k-sections > .k-column[data-width="1/1"] .k-cards {
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
   }
 }
+
 
 </style>

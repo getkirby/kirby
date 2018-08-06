@@ -786,9 +786,13 @@ class Page extends Model
      *
      * @return string
      */
-    public function panelUrl(): string
+    public function panelUrl(bool $relative = false): string
     {
-        return $this->kirby()->url('panel') . '/pages/' . $this->panelId();
+        if ($relative === true) {
+            return '/pages/' . $this->panelId();
+        } else {
+            return $this->kirby()->url('panel') . '/pages/' . $this->panelId();
+        }
     }
 
     /**
