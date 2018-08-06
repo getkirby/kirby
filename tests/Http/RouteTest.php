@@ -39,22 +39,52 @@ class RouteTest extends TestCase
     public function testRegex()
     {
         $route = $this->_route();
-        $this->assertEquals('a/([0-9]+)/b', $route->regex('a/(:num)/b'));
+        $this->assertEquals('a/(-?[0-9]+)/b', $route->regex('a/(:num)/b'));
         $this->assertEquals('a/([a-zA-Z]+)/b', $route->regex('a/(:alpha)/b'));
         $this->assertEquals('a/([a-zA-Z0-9\.\-_%= \+\@]+)/b', $route->regex('a/(:any)/b'));
         $this->assertEquals('a/(.*)', $route->regex('a/(:all)'));
-        $this->assertEquals('a(?:/([0-9]+))?', $route->regex('a/(:num?)'));
+        $this->assertEquals('a(?:/(-?[0-9]+))?', $route->regex('a/(:num?)'));
         $this->assertEquals('a(?:/([a-zA-Z]+))?', $route->regex('a/(:alpha?)'));
         $this->assertEquals('a(?:/([a-zA-Z0-9\.\-_%= \+\@]+))?', $route->regex('a/(:any?)'));
         $this->assertEquals('a(?:/(.*))?', $route->regex('a/(:all?)'));
     }
 
-    public function testParse()
+    public function patternProvider()
+    {
+        return [
+            // simple strings
+            [':any', 'abc', true],
+            // @ signs
+            [':any', 'test@company.com', true],
+            // spaces
+            [':any', 'a b c', true],
+            // numbers
+            [':num', '15', true],
+            // negative numbers
+            [':num', '-15', true],
+            // invalid pattern
+            [':kirby', 'kirby', false]
+        ];
+    }
+
+    /**
+     * @dataProvider patternProvider
+     */
+    public function testParse($pattern, $input, $match)
     {
         $route = $this->_route();
-        $this->assertFalse($route->parse('a/b/c', 'a/15/c'));
-        $this->assertEquals(['15'], $route->parse('a/(:num)/c', 'a/15/c'));
-        $this->assertEquals(['15', 'c/d'], $route->parse('(:num)/(:all)', '15/c/d'));
-        $this->assertFalse($route->parse('(:kirby)', 'test'));
+
+        if ($match === true) {
+            // required
+            $this->assertEquals([$input], $route->parse('(' . $pattern . ')', $input));
+            // optional
+            $this->assertEquals([$input], $route->parse('/(' . $pattern . '?)', '/' . $input));
+        } else {
+            // required
+            $this->assertFalse($route->parse('(' . $pattern . ')', $input));
+            // optional
+            $this->assertFalse($route->parse('/(' . $pattern . '?)', '/' . $input));
+        }
     }
+
 }
