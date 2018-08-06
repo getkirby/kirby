@@ -74,6 +74,48 @@ class A
         return implode($separator, $value);
     }
 
+
+    /**
+     * Merges arrays recursively
+     *
+     * @param  array   $array1
+     * @param  array   $array2
+     * @param  boolean $append Behavior for elements with numeric keys;
+     *                         if true:  elements are appended, keys are reset;
+     *                         if false: elements are overwritten, keys are preserved
+     * @return array
+     */
+    public static function merge($array1, $array2, $append = true)
+    {
+        $merged = $array1;
+
+        foreach ($array2 as $key => $value) {
+
+            // append to the merged array, don't overwrite numeric keys
+            if (is_int($key) === true && $append === true) {
+                $merged[] = $value;
+
+            // recursively merge the two array values
+            } elseif (is_array($value) === true && isset($merged[$key]) === true && is_array($merged[$key]) === true) {
+                $merged[$key] = static::merge($merged[$key], $value, $append);
+
+            // simply overwrite with the value from the second array
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+
+        if ($append === true) {
+            // the keys don't make sense anymore, reset them
+            // array_merge() is the simplest way to renumber
+            // arrays that have both numeric and string keys;
+            // besides the keys, nothing changes here
+            $merged = array_merge($merged, []);
+        }
+
+        return $merged;
+    }
+
     /**
      * Plucks a single column from an array
      *
