@@ -11,7 +11,7 @@ use Kirby\Http\Request\Files;
 class RequestTest extends TestCase
 {
 
-    public function testCustomData()
+    public function testCustomProps()
     {
         $file = [
             'name'     => 'test.txt',
@@ -33,6 +33,41 @@ class RequestTest extends TestCase
         $this->assertEquals($file, $request->file('upload'));
     }
 
+    public function testData()
+    {
+        $request = new Request([
+            'method' => 'POST',
+            'body'   => ['a' => 'a'],
+            'query'  => ['b' => 'b'],
+        ]);
+
+        $this->assertEquals(['a' => 'a'], $request->data());
+        $this->assertEquals('a', $request->get('a'));
+        $this->assertEquals(null, $request->get('b'));
+
+        $request = new Request([
+            'method' => 'GET',
+            'body'   => ['a' => 'a'],
+            'query'  => ['b' => 'b'],
+        ]);
+
+        $this->assertEquals(['b' => 'b'], $request->data());
+        $this->assertEquals(null, $request->get('a'));
+        $this->assertEquals('b', $request->get('b'));
+    }
+
+    public function test__debuginfo()
+    {
+        $request = new Request();
+        $info    = $request->__debuginfo();
+
+        $this->assertArrayHasKey('body', $info);
+        $this->assertArrayHasKey('query', $info);
+        $this->assertArrayHasKey('files', $info);
+        $this->assertArrayHasKey('method', $info);
+        $this->assertArrayHasKey('url', $info);
+    }
+
     public function testMethod()
     {
         $request = new Request();
@@ -48,13 +83,11 @@ class RequestTest extends TestCase
         $this->assertInstanceOf('Kirby\Http\Request\Query', $request->query());
     }
 
-
     public function testBody()
     {
         $request = new Request();
         $this->assertInstanceOf('Kirby\Http\Request\Body', $request->body());
     }
-
 
     public function testFiles()
     {
