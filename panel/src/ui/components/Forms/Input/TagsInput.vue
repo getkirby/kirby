@@ -69,7 +69,7 @@ export default {
     },
     disabled: Boolean,
     icon: {
-      type: String,
+      type: [String, Boolean],
       default: "tag"
     },
     id: [Number, String],
