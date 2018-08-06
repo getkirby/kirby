@@ -70,6 +70,7 @@ import UrlInput from "./components/Forms/Input/UrlInput.vue";
 import CheckboxesField from "./components/Forms/Field/CheckboxesField.vue";
 import DateField from "./components/Forms/Field/DateField.vue";
 import EmailField from "./components/Forms/Field/EmailField.vue";
+import FilesField from "./components/Forms/Field/FilesField.vue";
 import HeadlineField from "./components/Forms/Field/HeadlineField.vue";
 import InfoField from "./components/Forms/Field/InfoField.vue";
 import LineField from "./components/Forms/Field/LineField.vue";
@@ -171,6 +172,7 @@ export default {
     Vue.component("k-checkboxes-field", CheckboxesField);
     Vue.component("k-date-field", DateField);
     Vue.component("k-email-field", EmailField);
+    Vue.component("k-files-field", FilesField);
     Vue.component("k-headline-field", HeadlineField);
     Vue.component("k-info-field", InfoField);
     Vue.component("k-line-field", LineField);

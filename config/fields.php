@@ -4,6 +4,7 @@ return [
     'checkboxes' => __DIR__ . '/fields/checkboxes.php',
     'date'       => __DIR__ . '/fields/date.php',
     'email'      => __DIR__ . '/fields/email.php',
+    'files'      => __DIR__ . '/fields/files.php',
     'headline'   => __DIR__ . '/fields/headline.php',
     'hidden'     => __DIR__ . '/fields/hidden.php',
     'info'       => __DIR__ . '/fields/info.php',
