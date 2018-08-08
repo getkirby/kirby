@@ -227,17 +227,17 @@ class Collection extends Iterator
      */
     public function filter($filter): self
     {
-        if (is_array($filter)) {
+        if (is_callable($filter) === true) {
+            $collection = clone $this;
+            $collection->data = array_filter($this->data, $filter);
+
+            return $collection;
+        } elseif (is_array($filter) === true) {
             $collection = $this;
 
             foreach ($filter as $arguments) {
                 $collection = $collection->filterBy(...$arguments);
             }
-
-            return $collection;
-        } elseif (is_a($filter, 'Closure')) {
-            $collection = clone $this;
-            $collection->data = array_filter($this->data, $filter);
 
             return $collection;
         }
