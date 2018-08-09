@@ -226,12 +226,7 @@ trait UserActions
         }
 
         return $this->commit('update', [$this, $form->values(), $form->strings()], function ($user, $values, $strings) {
-            $content = $user
-                ->content()
-                ->update($strings)
-                ->toArray();
-
-            return $user->clone(['content' => $content])->save();
+            return $user->clone(['content' => $strings])->save();
         });
     }
 }

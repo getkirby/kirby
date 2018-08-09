@@ -573,7 +573,7 @@ trait PageActions
     public function update(array $input = null, bool $validate = true): self
     {
         $form = Form::for($this, [
-            'values' => array_merge($this->content()->toArray(), $input)
+            'values' => $input
         ]);
 
         // validate the input

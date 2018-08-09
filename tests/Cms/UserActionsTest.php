@@ -111,7 +111,7 @@ class UserActionsTest extends TestCase
     public function testUpdate()
     {
         $user = $this->app->user('editor@domain.com');
-        $user->update([
+        $user = $user->update([
             'website' => $url = 'https://editor.com'
         ]);
 
