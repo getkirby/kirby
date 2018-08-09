@@ -52,6 +52,16 @@ class ContentTranslation
     }
 
     /**
+     * Improve var_dump() output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
      * Returns the language code of the
      * translation
      *
@@ -88,7 +98,7 @@ class ContentTranslation
      */
     public function contentFile(): string
     {
-        return $this->contentFile = $this->contentFile ?? preg_replace('!.txt$!', '.' . $this->code . '.txt', $this->parent->contentFile());
+        return $this->contentFile = $this->parent->contentFile($this->code);
     }
 
     /**
@@ -160,4 +170,21 @@ class ContentTranslation
     {
         return $this->slug = $this->slug ?? ($this->content()['slug'] ?? null);
     }
+
+    /**
+     * Converts the most imporant translation
+     * props to an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'code'    => $this->code(),
+            'content' => $this->content(),
+            'exists'  => $this->exists(),
+            'slug'    => $this->slug(),
+        ];
+    }
+
 }

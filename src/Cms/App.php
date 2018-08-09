@@ -47,6 +47,7 @@ class App
     public $language;
 
     protected $collections;
+    protected $languageRegex;
     protected $languages;
     protected $options;
     protected $path;
@@ -224,6 +225,26 @@ class App
     public function component($name)
     {
         return $this->extensions['components'][$name] ?? null;
+    }
+
+    /**
+     * Returns the content extension
+     *
+     * @return string
+     */
+    public function contentExtension(): string
+    {
+        return $this->options['content']['extension'] ?? 'txt';
+    }
+
+    /**
+     * Returns files that should be ignored when scanning folders
+     *
+     * @return array
+     */
+    public function contentIgnore(): array
+    {
+        return $this->options['content']['ignore'] ?? Dir::$ignore;
     }
 
     /**
@@ -407,6 +428,28 @@ class App
     }
 
     /**
+     * Creates and caches the language code regex
+     * that is used in the Dir::inventory method
+     * to remove language codes from text files
+     *
+     * @return string|null
+     */
+    public function languageRegex(): ?string
+    {
+        if ($this->languageRegex !== null) {
+            return $this->languageRegex;
+        }
+
+        if (empty($this->options['languages']) === true) {
+            return null;
+        }
+
+        $codes = array_column($this->options['languages'], 'code');
+        $codes = preg_filter('/^/', '.', $codes);
+        return $this->languageRegex = '!' . implode('|', $codes) . '$!i';
+    }
+
+    /**
      * Returns all available site languages
      *
      * @return Languages
@@ -425,6 +468,16 @@ class App
     public function markdown(string $text = null): string
     {
         return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? []);
+    }
+
+    /**
+     * Check for a multilang setup
+     *
+     * @return boolean
+     */
+    public function multilang(): bool
+    {
+        return empty($this->options['languages']) === false;
     }
 
     /**
@@ -498,7 +551,7 @@ class App
 
         $options['limit']    = $options['limit']    ?? $config['limit'] ?? 20;
         $options['variable'] = $options['variable'] ?? $config['variable'] ?? 'page';
-        $options['page']     = $options['page']     ?? $request->query()->get($options['variable'], 1);
+        $options['page']     = $options['page']     ?? $request->url()->params()->get($options['variable'], 1);
         $options['url']      = $options['url']      ?? $request->url();
 
         return new Pagination($options);

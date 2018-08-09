@@ -23,6 +23,7 @@ class Site extends Model
     use HasChildren;
     use HasContent;
     use HasFiles;
+    use HasTranslations;
 
     /**
      * The SiteBlueprint object
@@ -30,6 +31,13 @@ class Site extends Model
      * @var SiteBlueprint
      */
     protected $blueprint;
+
+    /**
+     * Cache for the content file
+     *
+     * @var string
+     */
+    protected $contentFile;
 
     /**
      * The error page object
@@ -131,11 +139,21 @@ class Site extends Model
      * Returns the absolute path to the site's
      * content text file
      *
+     * @param string $languageCode
      * @return string
      */
-    public function contentFile(): string
+    public function contentFile(string $languageCode = null): string
     {
-        return $this->root() . '/site.txt';
+        if ($languageCode !== null) {
+            return $this->root() . '/site.' . $languageCode . '.' . $this->kirby()->contentExtension();
+        }
+
+        // use the cached version
+        if ($this->contentFile !== null) {
+            return $this->contentFile;
+        }
+
+        return $this->contentFile = $this->root() . '/site.' . $this->kirby()->contentExtension();
     }
 
     /**
@@ -220,7 +238,18 @@ class Site extends Model
      */
     public function inventory(): array
     {
-        return $this->inventory ?? $this->inventory = Dir::inventory($this->root());
+        if ($this->inventory !== null) {
+            return $this->inventory;
+        }
+
+        $kirby = $this->kirby();
+
+        return $this->inventory = Dir::inventory(
+            $this->root(),
+            $kirby->contentExtension(),
+            $kirby->contentIgnore(),
+            $kirby->languageRegex()
+        );
     }
 
     /**
@@ -460,11 +489,26 @@ class Site extends Model
     /**
      * Returns the Url
      *
+     * @param string|null $language
      * @return string
      */
-    public function url()
+    public function url($language = null): string
     {
-        return $this->url ?? $this->kirby()->url();
+        if ($language !== null) {
+            return $this->urlForLanguage($language);
+        }
+
+        return $this->url ?? $this->kirby()->url('base');
+    }
+
+    /**
+     * Returns the translated url
+     *
+     * @return string
+     */
+    public function urlForLanguage(string $language = null, array $options = null): string
+    {
+        return $this->kirby()->language($language)->url();
     }
 
     /**

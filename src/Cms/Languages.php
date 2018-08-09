@@ -23,9 +23,19 @@ class Languages extends Collection
      *
      * @return Language
      */
+    public function default(): Language
+    {
+        return $this->findBy('isDefault', true) ?? $this->first();
+    }
+
+    /**
+     * Deprecated version of static::default();
+     *
+     * @return Language
+     */
     public function findDefault(): Language
     {
-        return $this->findBy('isDefault', true);
+        return $this->default();
     }
 
     /**

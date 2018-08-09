@@ -173,11 +173,16 @@ class Pages extends Collection
      */
     public function findById($id)
     {
-        $page = $this->get($id);
+        $page      = $this->get($id);
+        $multiLang = App::instance()->multilang();
+
+        if ($multiLang === true) {
+            $page = $this->findBy('slugForLanguage', $id);
+        }
 
         if (!$page) {
             $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
-            $page  = $this->findByIdRecursive($id, $start);
+            $page  = $this->findByIdRecursive($id, $start, $multiLang);
         }
 
         return $page;
@@ -190,7 +195,7 @@ class Pages extends Collection
      * @param string $startAt
      * @return mixed
      */
-    public function findByIdRecursive($id, $startAt = null)
+    public function findByIdRecursive($id, $startAt = null, bool $multiLang = false)
     {
         $path       = explode('/', $id);
         $collection = $this;
@@ -200,6 +205,10 @@ class Pages extends Collection
         foreach ($path as $key) {
             $query = ltrim($query . '/' . $key, '/');
             $item  = $collection->get($query) ?? null;
+
+            if ($item === null && $multiLang === true) {
+                $item = $collection->findBy('slugForLanguage', $query);
+            }
 
             if ($item === null) {
                 return null;

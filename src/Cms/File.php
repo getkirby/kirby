@@ -27,6 +27,7 @@ class File extends Model
     use HasMethods;
     use HasSiblings;
     use HasThumbs;
+    use HasTranslations;
 
     /**
      * The parent asset object
@@ -191,33 +192,24 @@ class File extends Model
     }
 
     /**
-     * Returns the content object
-     *
-     * @return Content
-     */
-    public function content(): Content
-    {
-        if (is_a($this->content, 'Kirby\Cms\Content') === true) {
-            return $this->content;
-        }
-
-        try {
-            $data = Data::read($this->contentFile());
-        } catch (Throwable $e) {
-            $data = [];
-        }
-
-        return $this->setContent($data)->content();
-    }
-
-    /**
      * Absolute path to the meta text file
      *
+     * @param string $languageCode
      * @return string
      */
-    public function contentFile(): string
+    public function contentFile(string $languageCode = null): string
     {
-        return $this->root() . '.txt';
+        if ($languageCode !== null) {
+            return $this->root() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
+        }
+
+        // use the cached version
+        if ($this->contentFile !== null) {
+            return $this->contentFile;
+        }
+
+        // create from template
+        return $this->contentFile = $this->root() . '.' . $this->kirby()->contentExtension();
     }
 
     /**

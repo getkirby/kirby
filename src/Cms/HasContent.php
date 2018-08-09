@@ -49,21 +49,40 @@ trait HasContent
     /**
      * Returns the content
      *
+     * @param string $languageCode
      * @return Content
      */
-    public function content(): Content
+    public function content(string $languageCode = null): Content
     {
         if (is_a($this->content, 'Kirby\Cms\Content') === true) {
             return $this->content;
         }
 
-        try {
-            $data = Data::read($this->contentFile());
-        } catch (Throwable $e) {
-            $data = [];
+        // single language support
+        if (empty($this->kirby()->option('languages')) === true) {
+            try {
+                $data = Data::read($this->contentFile());
+            } catch (Throwable $e) {
+                $data = [];
+            }
+
+            return $this->setContent($data)->content();
         }
 
-        return $this->setContent($data)->content();
+        $language    = $this->kirby()->language($languageCode);
+        $translation = $this->translations()->find($language->code());
+        $content     = $translation->content();
+
+        // inject the default translation as fallback
+        if ($language->isDefault() === false) {
+            $defaultLanguage    = $this->kirby()->languages()->default();
+            $defaultTranslation = $this->translations()->find($defaultLanguage->code());
+
+            // fill missing content with the default translation
+            $content = array_merge($defaultTranslation->content(), $content);
+        }
+
+        return $this->setContent($content)->content();
     }
 
     /**

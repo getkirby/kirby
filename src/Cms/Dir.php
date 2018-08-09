@@ -15,7 +15,7 @@ class Dir extends \Kirby\Toolkit\Dir
 {
     public static $numSeparator = '_';
 
-    public static function inventory(string $dir, string $contentExtension = 'txt'): array
+    public static function inventory(string $dir, string $contentExtension = 'txt', array $contentIgnore = null, string $languageRegex = null): array
     {
         $dir = realpath($dir);
 
@@ -29,7 +29,7 @@ class Dir extends \Kirby\Toolkit\Dir
             return $inventory;
         }
 
-        $items = Dir::read($dir);
+        $items = Dir::read($dir, $contentIgnore);
 
         // a temporary store for all content files
         $content = [];
@@ -77,6 +77,15 @@ class Dir extends \Kirby\Toolkit\Dir
             }
         }
 
+        // remove the language codes from all content filenames
+        if ($languageRegex !== null) {
+            foreach ($content as $key => $filename) {
+                $content[$key] = preg_replace($languageRegex, '', $filename);
+            }
+
+            $content = array_unique($content);
+        }
+
         $inventory = static::inventoryContent($dir, $inventory, $content);
         $inventory = static::inventoryModels($inventory, $contentExtension);
 
@@ -94,6 +103,7 @@ class Dir extends \Kirby\Toolkit\Dir
      */
     protected static function inventoryContent(string $dir, array $inventory, array $content): array
     {
+
         // filter meta files from the content file
         if (empty($content) === true) {
             $inventory['template'] = 'default';
@@ -101,6 +111,7 @@ class Dir extends \Kirby\Toolkit\Dir
         }
 
         foreach ($content as $contentName) {
+
             // could be a meta file. i.e. cover.jpg
             if (isset($inventory['files'][$contentName]) === true) {
                 continue;

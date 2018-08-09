@@ -181,10 +181,11 @@ class Page extends Model
     public function __debuginfo(): array
     {
         return array_merge($this->toArray(), [
-            'content'    => $this->content(),
-            'children'   => $this->children(),
-            'siblings'   => $this->siblings(),
-            'files'      => $this->files(),
+            'content'      => $this->content(),
+            'children'     => $this->children(),
+            'siblings'     => $this->siblings(),
+            'translations' => $this->translations(),
+            'files'        => $this->files(),
         ]);
     }
 
@@ -306,22 +307,22 @@ class Page extends Model
      * Returns the content text file
      * which is found by the inventory method
      *
-     * @return string|null
+     * @param string $languageCode
+     * @return string
      */
-    public function contentFile(): ?string
+    public function contentFile(string $languageCode = null): string
     {
+        if ($languageCode !== null) {
+            return $this->root() . '/' . $this->intendedTemplate() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
+        }
+
         // use the cached version
         if ($this->contentFile !== null) {
             return $this->contentFile;
         }
 
-        // create from template if the template is already set
-        if ($template = $this->intendedTemplate()) {
-            return $this->contentFile = $this->root() . '/' . $template . '.txt';
-        }
-
-        // detect from the inventory
-        return $this->contentFile = $this->inventory()['content'];
+        // create from template
+        return $this->contentFile = $this->root() . '/' . $this->intendedTemplate() . '.' . $this->kirby()->contentExtension();
     }
 
     /**
@@ -496,7 +497,18 @@ class Page extends Model
      */
     public function inventory(): array
     {
-        return $this->inventory = $this->inventory ?? Dir::inventory($this->root());
+        if ($this->inventory !== null) {
+            return $this->inventory;
+        }
+
+        $kirby = $this->kirby();
+
+        return $this->inventory = Dir::inventory(
+            $this->root(),
+            $kirby->contentExtension(),
+            $kirby->contentIgnore(),
+            $kirby->languageRegex()
+        );
     }
 
     /**
@@ -1031,6 +1043,21 @@ class Page extends Model
     }
 
     /**
+     * Returns the translated slug for the given language
+     *
+     * @param string|null $language
+     * @return string
+     */
+    public function slugForLanguage(string $language = null): ?string
+    {
+        if ($language === null) {
+            $language = $this->kirby()->language()->code();
+        }
+
+        return $this->translations()->find($language)->slug() ?? $this->slug();
+    }
+
+    /**
      * Returns the page status, which
      * can be `draft`, `listed` or `unlisted`
      *
@@ -1088,17 +1115,18 @@ class Page extends Model
     public function toArray(): array
     {
         return [
-            'children'  => $this->children()->keys(),
-            'content'   => $this->content()->toArray(),
-            'files'     => $this->files()->keys(),
-            'id'        => $this->id(),
-            'mediaUrl'  => $this->mediaUrl(),
-            'mediaRoot' => $this->mediaRoot(),
-            'num'       => $this->num(),
-            'parent'    => $this->parent() ? $this->parent()->id() : null,
-            'slug'      => $this->slug(),
-            'template'  => $this->template(),
-            'url'       => $this->url()
+            'children'     => $this->children()->keys(),
+            'content'      => $this->content()->toArray(),
+            'files'        => $this->files()->keys(),
+            'id'           => $this->id(),
+            'mediaUrl'     => $this->mediaUrl(),
+            'mediaRoot'    => $this->mediaRoot(),
+            'num'          => $this->num(),
+            'parent'       => $this->parent() ? $this->parent()->id(): null,
+            'slug'         => $this->slug(),
+            'template'     => $this->template(),
+            'translations' => $this->translations()->toArray(),
+            'url'          => $this->url()
         ];
     }
 
@@ -1135,11 +1163,19 @@ class Page extends Model
     /**
      * Returns the Url
      *
-     * @param array|null $options
+     * @param array|string|null $options
      * @return string
      */
     public function url($options = null): string
     {
+        if (empty($this->kirby()->option('languages')) === false) {
+            if (is_string($options) === true) {
+                return $this->urlForLanguage($options);
+            } else {
+                return $this->urlForLanguage(null, $options);
+            }
+        }
+
         if ($options !== null) {
             return Url::to($this->url(), $options);
         }
@@ -1156,6 +1192,24 @@ class Page extends Model
             return $this->url = $this->parent()->url() . '/' . $this->slug();
         }
 
-        return $this->url = $this->kirby()->url('base') . '/' . $this->slug();
+        return $this->url = $this->site()->url() . '/' . $this->slug();
     }
+
+    public function urlForLanguage($language = null, array $options = null): string
+    {
+        if ($options !== null) {
+            return Url::to($this->urlForLanguage($language), $options);
+        }
+
+        if ($this->isHomePage() === true) {
+            return $this->url = $this->site()->urlForLanguage($language);
+        }
+
+        if ($parent = $this->parent()) {
+            return $this->url = $this->parent()->urlForLanguage($language) . '/' . $this->slugForLanguage($language);
+        }
+
+        return $this->url = $this->site()->urlForLanguage($language) . '/' . $this->slugForLanguage($language);
+    }
+
 }
