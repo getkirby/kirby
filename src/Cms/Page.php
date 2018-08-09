@@ -1211,5 +1211,4 @@ class Page extends Model
 
         return $this->url = $this->site()->urlForLanguage($language) . '/' . $this->slugForLanguage($language);
     }
-
 }

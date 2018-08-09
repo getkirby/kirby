@@ -56,7 +56,6 @@ class Form
 
             $this->fields->append($name, $field);
         }
-
     }
 
     public function errors(): array

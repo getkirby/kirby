@@ -186,5 +186,4 @@ class ContentTranslation
             'slug'    => $this->slug(),
         ];
     }
-
 }
