@@ -39,8 +39,8 @@ class PHPMailer extends Email
             $mailer->addBCC($bcc);
         }
 
-        // set subject
         $mailer->Subject = $this->subject();
+        $mailer->CharSet = 'UTF-8';
 
         // set body according to html/text
         if ($this->isHtml()) {
