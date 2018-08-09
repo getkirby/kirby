@@ -573,7 +573,7 @@ trait PageActions
     public function update(array $input = null, bool $validate = true): self
     {
         $form = Form::for($this, [
-            'values' => $input
+            'values' => array_merge($this->content()->toArray(), $input)
         ]);
 
         // validate the input
@@ -587,12 +587,7 @@ trait PageActions
         }
 
         $result = $this->commit('update', [$this, $form->values(), $form->strings()], function ($page, $values, $strings) {
-            $content = $page
-                ->content()
-                ->update($strings)
-                ->toArray();
-
-            return $page->clone(['content' => $content])->save();
+            return $page->clone(['content' => $strings])->save();
         });
 
         // if num is created from page content, update num on content update

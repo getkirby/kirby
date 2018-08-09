@@ -128,7 +128,7 @@ trait SiteActions
     public function update(array $input = null, bool $validate = true): self
     {
         $form = Form::for($this, [
-            'values' => $input
+            'values' => array_merge($this->content()->toArray(), $input)
         ]);
 
         // validate the input
@@ -142,12 +142,7 @@ trait SiteActions
         }
 
         return $this->commit('update', [$this, $form->values(), $form->strings()], function ($site, $values, $strings) {
-            $content = $site
-                ->content()
-                ->update($strings)
-                ->toArray();
-
-            return $site->clone(['content' => $content])->save();
+            return $site->clone(['content' => $strings])->save();
         });
     }
 }

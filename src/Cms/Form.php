@@ -33,17 +33,6 @@ class Form extends BaseForm
             }
         }
 
-        // create generic fields for each value
-        if (empty($props['fields'])) {
-            $props['fields'] = [];
-
-            foreach ($props['values'] as $name => $value) {
-                $props['fields'][$name] = [
-                    'type' => 'hidden'
-                ];
-            }
-        }
-
         return new static($props);
     }
 }

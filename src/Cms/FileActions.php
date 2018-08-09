@@ -285,12 +285,7 @@ trait FileActions
         }
 
         return $this->commit('update', [$this, $form->values(), $form->strings()], function ($file, $values, $strings) {
-            $content = $file
-                ->content()
-                ->update($strings)
-                ->toArray();
-
-            return $file->clone(['content' => $content])->save();
+            return $file->clone(['content' => $strings])->save();
         });
     }
 }

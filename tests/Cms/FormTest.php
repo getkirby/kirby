@@ -42,4 +42,29 @@ class FormTest extends TestCase
 
     }
 
+    public function testFileFormWithoutBlueprint()
+    {
+
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $file = new File([
+            'filename' => 'test.jpg',
+            'content'  => [
+                'a' => 'A'
+            ]
+        ]);
+
+        $form = Form::for($file, [
+            'values' => ['b' => 'B']
+        ]);
+
+        $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->values());
+        $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->strings());
+
+    }
+
 }

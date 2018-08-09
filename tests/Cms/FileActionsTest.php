@@ -254,7 +254,7 @@ class FileActionsTest extends TestCase
      */
     public function testUpdate($file)
     {
-        $file->update([
+        $file = $file->update([
             'caption' => $caption = 'test'
         ]);
 
