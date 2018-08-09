@@ -57,6 +57,18 @@ class Obj extends stdClass
     }
 
     /**
+     * Property Getter
+     *
+     * @param string $property
+     * @param mixed $fallback
+     * @return mixed
+     */
+    public function get(string $property, $fallback = null)
+    {
+        return $this->$property ?? $fallback;
+    }
+
+    /**
      * Converts the object to an array
      *
      * @return array
