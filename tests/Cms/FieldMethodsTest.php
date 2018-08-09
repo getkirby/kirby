@@ -298,6 +298,14 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($expected, $this->field($text)->smartypants());
     }
 
+    public function testSlug()
+    {
+        $text     = 'Ä--Ö--Ü';
+        $expected = 'a-o-u';
+
+        $this->assertEquals($expected, $this->field($text)->slug()->value());
+    }
+
     public function testSplit()
     {
         $text = 'a, b, c';
