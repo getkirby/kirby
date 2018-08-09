@@ -46,6 +46,13 @@ class File extends Model
     protected $blueprint;
 
     /**
+     * Cache for the content file root
+     *
+     * @var string
+     */
+    protected $contentFile;
+
+    /**
      * @var string
      */
     protected $id;

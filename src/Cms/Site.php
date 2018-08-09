@@ -498,7 +498,7 @@ class Site extends Model
             return $this->urlForLanguage($language);
         }
 
-        return $this->url ?? $this->kirby()->url('base');
+        return $this->url ?? $this->kirby()->url();
     }
 
     /**

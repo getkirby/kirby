@@ -1168,7 +1168,7 @@ class Page extends Model
      */
     public function url($options = null): string
     {
-        if (empty($this->kirby()->option('languages')) === false) {
+        if ($this->kirby()->multilang() === true) {
             if (is_string($options) === true) {
                 return $this->urlForLanguage($options);
             } else {
@@ -1192,7 +1192,7 @@ class Page extends Model
             return $this->url = $this->parent()->url() . '/' . $this->slug();
         }
 
-        return $this->url = $this->site()->url() . '/' . $this->slug();
+        return $this->url = $this->kirby()->url('base') . '/' . $this->slug();
     }
 
     public function urlForLanguage($language = null, array $options = null): string
