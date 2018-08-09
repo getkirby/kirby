@@ -21,11 +21,9 @@ use Throwable;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class User extends Model
+class User extends ModelWithContent
 {
     use UserActions;
-
-    use HasContent;
     use HasSiblings;
 
     /**
@@ -74,6 +72,25 @@ class User extends Model
      * @var string
      */
     protected $role;
+
+    /**
+     * Modified getter to also return fields
+     * from the content
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments = [])
+    {
+        // public property access
+        if (isset($this->$method) === true) {
+            return $this->$method;
+        }
+
+        // return site content otherwise
+        return $this->content()->get($method, $arguments);
+    }
 
     /**
      * Creates a new User object
@@ -151,9 +168,10 @@ class User extends Model
     /**
      * Returns the content
      *
+     * @param string|null $languageCode
      * @return Content
      */
-    public function content(): Content
+    public function content(?string $languageCode = null): Content
     {
         if ($this->content !== null) {
             return $this->content;
@@ -178,6 +196,27 @@ class User extends Model
     public function contentFile(): string
     {
         return $this->root() . '/user.txt';
+    }
+
+    /**
+     * Prepares the content for the text file
+     *
+     * @return array
+     */
+    public function contentFileData(): array
+    {
+        $content = $this->content()->toArray();
+
+        // store main information in the content file
+        $content['language'] = $this->language();
+        $content['name']     = $this->name();
+        $content['password'] = $this->hashPassword($this->password());
+        $content['role']     = $this->role()->id();
+
+        // remove the email. It's already stored in the directory
+        unset($content['email']);
+
+        return $content;
     }
 
     /**
@@ -206,22 +245,6 @@ class User extends Model
     public function email(): string
     {
         return $this->email;
-    }
-
-    /**
-     * Returns all content validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
-    {
-        $errors = [];
-
-        foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, $section->errors());
-        }
-
-        return $errors;
     }
 
     /**

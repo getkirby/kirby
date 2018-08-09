@@ -14,6 +14,13 @@ class TestCase extends BaseTestCase
     public function setUp()
     {
         App::destroy();
+
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
         Blueprint::$loaded = [];
 
         I18n::$locale       = null;

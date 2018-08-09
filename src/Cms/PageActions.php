@@ -482,14 +482,19 @@ trait PageActions
     }
 
     /**
-     * Stores the file meta content on disk
+     * Delete the text file without language code
+     * before storing the actual file
      *
+     * @param string|null $languageCode
      * @return self
      */
-    public function save(): self
+    public function save(string $languageCode = null)
     {
-        Data::write($this->contentFile(), $this->content()->toArray());
-        return $this;
+        if ($this->kirby()->multilang() === true) {
+            F::remove($this->contentFile());
+        }
+
+        return parent::save($languageCode);
     }
 
     /**
@@ -567,34 +572,20 @@ trait PageActions
      * Updates the page data
      *
      * @param array $input
+     * @param string $language
      * @param boolean $validate
      * @return self
      */
-    public function update(array $input = null, bool $validate = true): self
+    public function update(array $input = null, string $language = null, bool $validate = false)
     {
-        $form = Form::for($this, [
-            'values' => $input
-        ]);
-
-        // validate the input
-        if ($validate === true) {
-            if ($form->isInvalid() === true) {
-                throw new InvalidArgumentException([
-                    'fallback' => 'Invalid form with errors',
-                    'details'  => $form->errors()
-                ]);
-            }
-        }
-
-        $result = $this->commit('update', [$this, $form->values(), $form->strings()], function ($page, $values, $strings) {
-            return $page->clone(['content' => $strings])->save();
-        });
+        $page = parent::update($input, $language, $validate);
 
         // if num is created from page content, update num on content update
-        if ($this->isListed() === true && in_array($this->blueprint()->num(), ['zero', 'default']) === false) {
-            $this->changeNum();
+        if ($page->isListed() === true && in_array($page->blueprint()->num(), ['zero', 'default']) === false) {
+            $page = $page->changeNum();
         }
 
-        return $result;
+        return $page;
     }
+
 }

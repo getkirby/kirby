@@ -8,6 +8,7 @@ use Kirby\Session\Session;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 trait AppUsers
 {

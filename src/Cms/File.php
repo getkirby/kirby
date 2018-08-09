@@ -19,15 +19,12 @@ use Throwable;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class File extends Model
+class File extends ModelWithContent
 {
     use FileActions;
-
-    use HasContent;
     use HasMethods;
     use HasSiblings;
     use HasThumbs;
-    use HasTranslations;
 
     /**
      * The parent asset object
@@ -110,6 +107,7 @@ class File extends Model
             return $this->$method;
         }
 
+        // asset method proxy
         if (method_exists($this->asset(), $method)) {
             return $this->asset()->$method(...$arguments);
         }
@@ -119,6 +117,7 @@ class File extends Model
             return $this->callMethod($method, $arguments);
         }
 
+        // content fields
         return $this->content()->get($method, $arguments);
     }
 
@@ -220,6 +219,22 @@ class File extends Model
     }
 
     /**
+     * Store the template in addition to the
+     * other content.
+     *
+     * @return array
+     */
+    public function contentFileData(): array
+    {
+        $content = $this->content()->toArray();
+
+        // store main information in the content file
+        $content['template'] = $this->template();
+
+        return $content;
+    }
+
+    /**
      * Provides a kirbytag or markdown
      * tag for the file, which will be
      * used in the panel, when the file
@@ -244,22 +259,6 @@ class File extends Model
                     return '[' . $this->filename() . '](' . $this->url() . ')';
                 }
         }
-    }
-
-    /**
-     * Returns all content validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
-    {
-        $errors = [];
-
-        foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, $section->errors());
-        }
-
-        return $errors;
     }
 
     /**

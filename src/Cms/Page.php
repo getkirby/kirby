@@ -20,16 +20,14 @@ use Throwable;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Page extends Model
+class Page extends ModelWithContent
 {
     use PageActions;
     use PageSiblings;
     use HasChildren;
-    use HasContent;
     use HasFiles;
     use HasMethods;
     use HasSiblings;
-    use HasTranslations;
 
     /**
      * All registered page methods
@@ -401,22 +399,6 @@ class Page extends Model
             case 'markdown':
                 return '[' . $this->title() . '](' . $this->url() . ')';
         }
-    }
-
-    /**
-     * Returns all content validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
-    {
-        $errors = [];
-
-        foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, $section->errors());
-        }
-
-        return $errors;
     }
 
     /**

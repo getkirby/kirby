@@ -7,7 +7,6 @@ class FormTest extends TestCase
 
     public function testPageForm()
     {
-
         $page = new Page([
             'slug' => 'test',
             'content' => [

@@ -224,27 +224,6 @@ trait FileActions
     }
 
     /**
-     * Stores the file meta content on disk
-     *
-     * @return self
-     */
-    public function save(): self
-    {
-        if ($this->exists() === false) {
-            return $this;
-        }
-
-        $content = $this->content()->toArray();
-
-        // store main information in the content file
-        $content['template'] = $this->template();
-
-        Data::write($this->contentFile(), $content);
-
-        return $this;
-    }
-
-    /**
      * Remove all public versions of this file
      *
      * @return self
@@ -261,31 +240,4 @@ trait FileActions
         return $this;
     }
 
-    /**
-     * Updates the file data
-     *
-     * @param array $input
-     * @param boolean $validate
-     * @return self
-     */
-    public function update(array $input = null, bool $validate = true): self
-    {
-        $form = Form::for($this, [
-            'values' => $input
-        ]);
-
-        // validate the input
-        if ($validate === true) {
-            if ($form->isInvalid() === true) {
-                throw new InvalidArgumentException([
-                    'fallback' => 'Invalid form with errors',
-                    'details'  => $form->errors()
-                ]);
-            }
-        }
-
-        return $this->commit('update', [$this, $form->values(), $form->strings()], function ($file, $values, $strings) {
-            return $file->clone(['content' => $strings])->save();
-        });
-    }
 }

@@ -1,9 +1,10 @@
 <?php
 
 use Kirby\Cms\Files;
-use Kirby\Cms\Translations;
+use Kirby\Cms\Languages;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Roles;
+use Kirby\Cms\Translations;
 use Kirby\Cms\Users;
 
 /**
@@ -29,12 +30,11 @@ return [
     ],
 
     /**
-     * Translations
+     * Languages
      */
-    'Translations' => [
-        'model' => 'translation',
-        'type'  => Translations::class,
-        'view'  => 'compact'
+    'languages' => [
+        'model' => 'language',
+        'type'  => Languages::class
     ],
 
     /**
@@ -52,6 +52,15 @@ return [
     'roles' => [
         'model' => 'role',
         'type'  => Roles::class,
+        'view'  => 'compact'
+    ],
+
+    /**
+     * Translations
+     */
+    'translations' => [
+        'model' => 'translation',
+        'type'  => Translations::class,
         'view'  => 'compact'
     ],
 

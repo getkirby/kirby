@@ -104,45 +104,19 @@ trait SiteActions
     }
 
     /**
-     * Stores the file meta content on disk
+     * Delete the text file without language code
+     * before storing the actual file
      *
+     * @param string|null $languageCode
      * @return self
      */
-    public function save(): self
+    public function save(string $languageCode = null)
     {
-        if ($this->exists() === false) {
-            return $this;
+        if ($this->kirby()->multilang() === true) {
+            F::remove($this->contentFile());
         }
 
-        Data::write($this->contentFile(), $this->content()->toArray());
-        return $this;
+        return parent::save($languageCode);
     }
 
-    /**
-     * Updates the model data
-     *
-     * @param array $input
-     * @param boolean $validate
-     * @return self
-     */
-    public function update(array $input = null, bool $validate = true): self
-    {
-        $form = Form::for($this, [
-            'values' => array_merge($this->content()->toArray(), $input)
-        ]);
-
-        // validate the input
-        if ($validate === true) {
-            if ($form->isInvalid() === true) {
-                throw new InvalidArgumentException([
-                    'fallback' => 'Invalid form with errors',
-                    'details'  => $form->errors()
-                ]);
-            }
-        }
-
-        return $this->commit('update', [$this, $form->values(), $form->strings()], function ($site, $values, $strings) {
-            return $site->clone(['content' => $strings])->save();
-        });
-    }
 }

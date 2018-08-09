@@ -108,7 +108,7 @@ class App
         $this->handleErrors();
 
         // set the singleton
-        static::$instance = $this;
+        Model::$kirby = static::$instance = $this;
     }
 
     /**

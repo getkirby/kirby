@@ -16,14 +16,12 @@ use Kirby\Toolkit\Str;
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
  */
-class Site extends Model
+class Site extends ModelWithContent
 {
     use SiteActions;
-
     use HasChildren;
-    use HasContent;
     use HasFiles;
-    use HasTranslations;
+    use HasMethods;
 
     /**
      * The SiteBlueprint object
@@ -96,6 +94,30 @@ class Site extends Model
      * @var string
      */
     protected $url;
+
+    /**
+     * Modified getter to also return fields
+     * from the content
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments = [])
+    {
+        // public property access
+        if (isset($this->$method) === true) {
+            return $this->$method;
+        }
+
+        // site methods
+        if ($this->hasMethod($method)) {
+            return $this->callMethod($method, $arguments);
+        }
+
+        // return site content otherwise
+        return $this->content()->get($method, $arguments);
+    }
 
     /**
      * Creates a new Site object
@@ -178,22 +200,6 @@ class Site extends Model
     public function errorPageId(): string
     {
         return $this->errorPageId ?? 'error';
-    }
-
-    /**
-     * Returns all content validation errors
-     *
-     * @return array
-     */
-    public function errors(): array
-    {
-        $errors = [];
-
-        foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, $section->errors());
-        }
-
-        return $errors;
     }
 
     /**

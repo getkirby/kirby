@@ -15,18 +15,18 @@ abstract class Model
     use Properties;
 
     /**
+     * The parent Kirby instance
+     *
+     * @var App
+     */
+    public static $kirby;
+
+    /**
      * The parent collection
      *
      * @var Collection
      */
     public $collection;
-
-    /**
-     * The parent Kirby instance
-     *
-     * @var App
-     */
-    protected $kirby;
 
     /**
      * The parent Site instance
@@ -63,7 +63,7 @@ abstract class Model
      */
     public function kirby(): App
     {
-        return $this->kirby = $this->kirby ?? App::instance();
+        return static::$kirby = static::$kirby ?? App::instance();
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class Model
      */
     protected function setKirby(App $kirby = null)
     {
-        $this->kirby = $kirby;
+        static::$kirby = $kirby;
         return $this;
     }
 

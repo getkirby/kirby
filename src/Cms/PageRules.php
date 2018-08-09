@@ -220,7 +220,12 @@ class PageRules
     public static function update(Page $page, array $content = []): bool
     {
         if ($page->permissions()->update() !== true) {
-            throw new PermissionException(['key' => 'page.update.permission']);
+            throw new PermissionException([
+                'key'  => 'page.update.permission',
+                'data' => [
+                    'slug' => $page->slug()
+                ]
+            ]);
         }
 
         return true;

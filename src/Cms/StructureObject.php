@@ -19,8 +19,14 @@ namespace Kirby\Cms;
  */
 class StructureObject extends Model
 {
-    use HasContent;
     use HasSiblings;
+
+    /**
+     * The content
+     *
+     * @var Content
+     */
+    protected $content;
 
     /**
      * @var string
@@ -31,6 +37,24 @@ class StructureObject extends Model
      * @var Page|Site|File|User
      */
     protected $parent;
+
+    /**
+     * Modified getter to also return fields
+     * from the object's content
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments = [])
+    {
+        // public property access
+        if (isset($this->$method) === true) {
+            return $this->$method;
+        }
+
+        return $this->content()->get($method, $arguments);
+    }
 
     /**
      * Creates a new StructureObject with the given props
@@ -68,6 +92,18 @@ class StructureObject extends Model
         }
 
         return $this->content = new Content($this->content, $this->parent());
+    }
+
+    /**
+     * Returns a formatted date field from the content
+     *
+     * @param string $format
+     * @param string $field
+     * @return Field
+     */
+    public function date(string $format = null, $field = 'date')
+    {
+        return $this->content()->get($field)->toDate($format);
     }
 
     /**

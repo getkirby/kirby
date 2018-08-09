@@ -13,8 +13,6 @@ class PagePropsTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        App::destroy();
-        new App();
     }
 
     public function testDepth()
@@ -249,6 +247,9 @@ class PagePropsTest extends TestCase
     public function testHomeUrl()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'site' => [
                 'children' => [
                     ['slug' => 'home']
