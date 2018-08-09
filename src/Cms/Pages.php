@@ -207,7 +207,7 @@ class Pages extends Collection
             $item  = $collection->get($query) ?? null;
 
             if ($item === null && $multiLang === true) {
-                $item = $collection->findBy('slugForLanguage', $query);
+                $item = $collection->findBy('slugForLanguage', $key);
             }
 
             if ($item === null) {

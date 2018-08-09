@@ -19,7 +19,7 @@ class DirTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
-    public function create(array $items)
+    public function create(array $items, ...$args)
     {
 
         foreach ($items as $item) {
@@ -32,7 +32,7 @@ class DirTest extends TestCase
             }
         }
 
-        return Dir::inventory($this->fixtures);
+        return Dir::inventory($this->fixtures, ...$args);
     }
 
     public function testInventory()
@@ -108,6 +108,42 @@ class DirTest extends TestCase
 
         $this->assertEquals('cover.jpg', $inventory['files']['cover.jpg']['filename']);
         $this->assertEquals('article.video', $inventory['template']);
+    }
+
+    public function testExtension()
+    {
+        $inventory = $this->create([
+            'cover.jpg',
+            'cover.jpg.md',
+            'article.md'
+        ], 'md');
+
+        $this->assertEquals('cover.jpg', $inventory['files']['cover.jpg']['filename']);
+        $this->assertEquals('article', $inventory['template']);
+    }
+
+    public function testIgnore()
+    {
+        $inventory = $this->create([
+            'cover.jpg',
+            'article.txt'
+        ], 'txt', ['cover.jpg']);
+
+        $this->assertCount(0, $inventory['files']);
+        $this->assertEquals('article', $inventory['template']);
+    }
+
+    public function testMultilang()
+    {
+        $inventory = $this->create([
+            'cover.jpg',
+            'cover.jpg.en.txt',
+            'article.en.txt',
+            'article.de.txt'
+        ], 'txt', null, '!.de|.en$!i');
+
+        $this->assertEquals('cover.jpg', $inventory['files']['cover.jpg']['filename']);
+        $this->assertEquals('article', $inventory['template']);
     }
 
 }

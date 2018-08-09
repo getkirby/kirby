@@ -494,7 +494,7 @@ class Site extends Model
      */
     public function url($language = null): string
     {
-        if ($language !== null) {
+        if ($language !== null || $this->kirby()->multilang() === true) {
             return $this->urlForLanguage($language);
         }
 
