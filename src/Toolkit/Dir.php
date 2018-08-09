@@ -11,6 +11,23 @@ class Dir
 {
 
     /**
+     * Ignore when scanning directories
+     *
+     * @var array
+     */
+    public static $ignore = [
+        '.',
+        '..',
+        '.DS_Store',
+        '.gitignore',
+        '.git',
+        '.svn',
+        '.htaccess',
+        'Thumb.db',
+        '@eaDir'
+    ];
+
+    /**
      * Copy the directory to a new destination
      *
      * @param string $dir
@@ -194,21 +211,7 @@ class Dir
             return [];
         }
 
-        if ($ignore === null) {
-            $ignore = [
-                '.',
-                '..',
-                '.DS_Store',
-                '.gitignore',
-                '.git',
-                '.svn',
-                '.htaccess',
-                'Thumb.db',
-                '@eaDir'
-            ];
-        }
-
-        return (array)array_diff(scandir($dir), $ignore);
+        return (array)array_diff(scandir($dir), $ignore ?? static::$ignore);
     }
 
     /**
