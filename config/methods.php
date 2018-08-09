@@ -152,7 +152,7 @@ return function (App $app) {
             $field->value = Str::short($field->value, $length, $appendix);
             return $field;
         },
-        'slug' => function () {
+        'slug' => function ($field) {
             $field->value = Str::slug($field->value);
             return $field;
         },
