@@ -445,7 +445,7 @@ class App
         }
 
         $codes = array_column($this->options['languages'], 'code');
-        $codes = preg_filter('/^/', '.', $codes);
+        $codes = preg_filter('/^/', '\.', $codes);
         return $this->languageRegex = '!' . implode('|', $codes) . '$!i';
     }
 

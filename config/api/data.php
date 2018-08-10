@@ -23,7 +23,13 @@ return [
 
     },
     'kirby' => function () {
-        return kirby();
+        $kirby = kirby();
+
+        if ($language = get('language')) {
+            $kirby->language = $kirby->languages()->find($language);
+        }
+
+        return $kirby;
     },
     'page' => function (string $id) {
 

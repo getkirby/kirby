@@ -54,8 +54,10 @@ Vue.component("k-dropzone", Dropzone);
 Vue.component("k-file-preview", FilePreview);
 
 /* Navigation */
+import Languages from "@/components/Navigation/Languages.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
+Vue.component("k-languages-dropdown", Languages);
 Vue.component("k-topbar", Topbar);
 
 /* Sections */

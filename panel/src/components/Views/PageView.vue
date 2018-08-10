@@ -31,6 +31,9 @@
           </k-button>
           <k-dropdown-content ref="settings" :options="options" @action="action" />
         </k-dropdown>
+
+        <k-languages-dropdown />
+
       </k-button-group>
 
       <k-button-group v-if="page.id" slot="right">
@@ -42,7 +45,7 @@
     <k-tabs
       v-if="page.id"
       ref="tabs"
-      :key="'page-' + page.id + '-tabs'"
+      :key="tabsKey"
       :parent="$api.pages.url(page.id)"
       :blueprint="blueprint"
       :tabs="tabs"
@@ -100,6 +103,9 @@ export default {
         };
       }
     },
+    language() {
+      return this.$store.state.languages.current;
+    },
     next() {
       if (this.page.next) {
         return {
@@ -112,30 +118,17 @@ export default {
       return this.page.status !== null
         ? this.$api.pages.states()[this.page.status]
         : null;
+    },
+    tabsKey() {
+      return 'page-' + this.page.id + '-tabs';
+    }
+  },
+  watch: {
+    language() {
+      this.fetch();
     }
   },
   methods: {
-    fetch() {
-      this.$api.pages
-        .get(this.path, { view: "panel" })
-        .then(page => {
-          this.page = page;
-          this.blueprint = page.blueprint.name;
-          this.permissions = page.blueprint.options;
-          this.tabs = page.blueprint.tabs;
-          this.options = ready => {
-            this.$api.pages.options(this.page.id).then(options => {
-              ready(options);
-            });
-          };
-
-          this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
-          this.$store.dispatch("title", this.page.title);
-        })
-        .catch(error => {
-          this.issue = error;
-        });
-    },
     action(action) {
       switch (action) {
         case "preview":
@@ -163,6 +156,31 @@ export default {
           );
           break;
       }
+    },
+    changeLanguage(language) {
+      this.$store.dispatch("languages/current", language);
+      this.fetch();
+    },
+    fetch() {
+      this.$api.pages
+        .get(this.path, { view: "panel" })
+        .then(page => {
+          this.page = page;
+          this.blueprint = page.blueprint.name;
+          this.permissions = page.blueprint.options;
+          this.tabs = page.blueprint.tabs;
+          this.options = ready => {
+            this.$api.pages.options(this.page.id).then(options => {
+              ready(options);
+            });
+          };
+
+          this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
+          this.$store.dispatch("title", this.page.title);
+        })
+        .catch(error => {
+          this.issue = error;
+        });
     },
     update() {
       this.fetch();

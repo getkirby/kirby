@@ -16,6 +16,9 @@ return [
         'isLocal' => function (System $system) {
             return $system->isLocal();
         },
+        'languages' => function () {
+            return $this->kirby()->languages();
+        },
         'license' => function (System $system) {
             $license = $system->license();
             return $license ? $license['type'] : null;
@@ -43,6 +46,7 @@ return [
             'isOk',
             'isInstalled',
             'isLocal',
+            'languages' => 'compact',
             'license',
             'requirements',
             'title',

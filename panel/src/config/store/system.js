@@ -32,6 +32,10 @@ export default {
             ...info
           });
 
+          context.dispatch("languages/install", info.languages, {
+            root: true
+          });
+
           context.dispatch("translation/install", info.translation, {
             root: true
           });

@@ -31,7 +31,7 @@ export default {
   .k-sections > .k-column[data-width="2/3"] .k-cards,
   .k-sections > .k-column[data-width="1/2"] .k-cards,
   .k-sections > .k-column[data-width="1/1"] .k-cards {
-    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
 

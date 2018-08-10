@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\F;
+
 /**
  * A collection of all defined site languages
  */
@@ -46,10 +48,20 @@ class Languages extends Collection
     public static function load(): self
     {
         $languages = new static;
+        $files     = glob(App::instance()->root('languages') . '/*.php');
 
-        foreach (App::instance()->option('languages', []) as $props) {
-            $language = new Language($props);
-            $languages->data[$language->code()] = $language;
+        foreach ($files as $file) {
+
+            $props = include_once $file;
+
+            // inject the language code from the filename if it does not exist
+            $props['code'] = $props['code'] ?? F::name($file);
+
+            if (is_array($props) === true) {
+                $language = new Language($props);
+                $languages->data[$language->code()] = $language;
+            }
+
         }
 
         return $languages;

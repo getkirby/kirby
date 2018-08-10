@@ -84,8 +84,15 @@ class ContentTranslation
             return $this->content;
         }
 
+        // try to fallback to the content file without language code
+        if ($this->exists() === false && $this->isDefault() === true) {
+            $file = $this->parent()->contentFile();
+        } else {
+            $file = $this->contentFile();
+        }
+
         try {
-            return $this->content = Data::read($this->contentFile());
+            return $this->content = Data::read($file);
         } catch (Exception $e) {
             return $this->content = [];
         }
@@ -109,6 +116,17 @@ class ContentTranslation
     public function exists(): bool
     {
         return file_exists($this->contentFile()) === true;
+    }
+
+    /**
+     * Checks if the this is the default translation
+     * of the model
+     *
+     * @return boolean
+     */
+    public function isDefault(): bool
+    {
+        return $this->code() === $this->parent->kirby()->languages()->default()->code();
     }
 
     /**

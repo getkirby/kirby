@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
+use Kirby\Toolkit\F;
 
 /**
  * Represents a content language
@@ -95,6 +97,25 @@ class Language extends Model
     }
 
     /**
+     * Creates a new language object
+     *
+     * @param array $props
+     * @return self
+     */
+    public static function create(array $props): self
+    {
+        $language = new static($props);
+
+        if ($language->exists() === true) {
+            throw new PermissionException('The language already exists');
+        }
+
+        $language->save();
+
+        return $language;
+    }
+
+    /**
      * Reading direction of this language
      *
      * @return string
@@ -102,6 +123,16 @@ class Language extends Model
     public function direction(): string
     {
         return $this->direction;
+    }
+
+    /**
+     * Check if the language file exists
+     *
+     * @return boolean
+     */
+    public function exists(): bool
+    {
+        return file_exists($this->root());
     }
 
     /**
@@ -144,6 +175,36 @@ class Language extends Model
     public function pattern(): string
     {
         return $this->url;
+    }
+
+    /**
+     * Returns the absolute path to the language file
+     *
+     * @return string
+     */
+    public function root(): string
+    {
+        return App::instance()->root('languages') . '/' . $this->code() . '.php';
+    }
+
+    /**
+     * Saves the language settings in the languages folder
+     *
+     * @return self
+     */
+    public function save(): self
+    {
+        $data = $this->toArray();
+
+        unset($data['url']);
+
+        $export = '<?php' . PHP_EOL . PHP_EOL . var_export($data, true);
+        $export = str_replace('array (', 'return [', $export);
+        $export = str_replace(PHP_EOL . ')', PHP_EOL . '];', $export);
+
+        F::write($this->root(), $export);
+
+        return $this;
     }
 
     /**
@@ -233,4 +294,17 @@ class Language extends Model
     {
         return Url::to($this->url);
     }
+
+    /**
+     * Update language properties and save them
+     *
+     * @param array $props
+     * @return self
+     */
+    public function update(array $props = null): self
+    {
+        $updated = $this->clone($props);
+        return $updated->save();
+    }
+
 }

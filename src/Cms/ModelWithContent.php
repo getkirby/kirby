@@ -45,24 +45,11 @@ abstract class ModelWithContent extends Model
             } catch (Throwable $e) {
                 $data = [];
             }
-
-            return $this->setContent($data)->content();
+        } else {
+            $data = $this->translationData($languageCode);
         }
 
-        $language    = $this->kirby()->language($languageCode);
-        $translation = $this->translations()->find($language->code());
-        $content     = $translation->content();
-
-        // inject the default translation as fallback
-        if ($language->isDefault() === false) {
-            $defaultLanguage    = $this->kirby()->languages()->default();
-            $defaultTranslation = $this->translations()->find($defaultLanguage->code());
-
-            // fill missing content with the default translation
-            $content = array_merge($defaultTranslation->content(), $content);
-        }
-
-        return $this->setContent($content)->content();
+        return $this->setContent($data)->content();
     }
 
     /**
@@ -172,6 +159,35 @@ abstract class ModelWithContent extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * Fetch the content translation for the current language
+     *
+     * @param array
+     * @return array
+     */
+    public function translationData(string $languageCode = null): array
+    {
+        $language = $this->kirby()->language($languageCode);
+
+        if ($language === null) {
+            throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+        }
+
+        $translation = $this->translations()->find($language->code());
+        $content     = $translation->content();
+
+        // inject the default translation as fallback
+        if ($language->isDefault() === false) {
+            $defaultLanguage    = $this->kirby()->languages()->default();
+            $defaultTranslation = $this->translations()->find($defaultLanguage->code());
+
+            // fill missing content with the default translation
+            $content = array_merge($defaultTranslation->content(), $content);
+        }
+
+        return $content;
     }
 
     public function translations()

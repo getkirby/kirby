@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
+import languages from "./store/languages.js";
 import notification from "./store/notification.js";
 import system from "./store/system.js";
 import translation from "./store/translation.js";
@@ -70,6 +71,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
+    languages: languages,
     notification: notification,
     system: system,
     translation: translation,

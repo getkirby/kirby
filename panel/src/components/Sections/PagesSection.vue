@@ -80,6 +80,16 @@ export default {
   destroyed() {
     this.$events.$off("page.changeStatus", this.fetch);
   },
+  computed: {
+    language() {
+      return this.$store.state.languages.current;
+    }
+  },
+  watch: {
+    language() {
+      this.fetch();
+    }
+  },
   methods: {
     action(page, action) {
       switch (action) {
@@ -117,7 +127,7 @@ export default {
     },
     fetch() {
       this.$api
-        .get(this.parent + "/sections/" + this.name, { page: this.page })
+        .get(this.parent + "/sections/" + this.name, { page: this.page, language: this.language.code })
         .then(response => {
 
           const states = this.$api.pages.states();

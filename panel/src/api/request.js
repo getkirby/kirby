@@ -1,4 +1,5 @@
 import api from "./api.js";
+import store from "../config/store.js";
 
 export default {
   running: 0,
@@ -42,6 +43,11 @@ export default {
   },
   get(path, query, options) {
     if (query) {
+
+      if (!query.language && store.state.languages.current) {
+        query.language = store.state.languages.current.code;
+      }
+
       path +=
         "?" +
         Object.keys(query)
