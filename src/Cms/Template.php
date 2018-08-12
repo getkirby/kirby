@@ -3,10 +3,10 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Toolkit\View;
+use Throwable;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Tpl;
-use Throwable;
+use Kirby\Toolkit\View;
 
 class Template
 {
@@ -36,15 +36,41 @@ class Template
         return 'php';
     }
 
+    public function defaultType(): string
+    {
+        return 'html';
+    }
+
+    public function store(): string
+    {
+        return 'templates';
+    }
+
     public function file(): ?string
     {
-        $type = $this->type();
-        $name = $type !== null && $type !== 'html' ? $this->name() . '.' . $type : $this->name();
+        if ($this->hasDefaultType()) {
+            try {
+                // Try the default template in the default template directory.
+                return F::realpath("{$this->root()}/{$this->name()}.{$this->extension()}", $this->root());
+            } catch (Exception $e) {
+                //
+            }
+
+            $path = App::instance()->extension($this->store(), $this->name());
+
+            if (!is_null($path)) {
+                return $path;
+            }
+        }
+
+        $name = "{$this->name()}.{$this->type()}";
 
         try {
-            return F::realpath($this->root() . '/' . $name . '.' . $this->extension(), $this->root());
+            // Try the template with type extension in the default template directory.
+            return F::realpath("{$this->root()}/{$name}.{$this->extension()}", $this->root());
         } catch (Exception $e) {
-            return App::instance()->extension('templates', $name);
+            // Finally look for the template with type extension provided by an extension.
+            return App::instance()->extension($this->store(), $name);
         }
     }
 
@@ -64,11 +90,18 @@ class Template
 
     public function root(): string
     {
-        return App::instance()->root('templates');
+        return App::instance()->root($this->store());
     }
 
     public function type(): string
     {
         return $this->type;
+    }
+
+    public function hasDefaultType(): bool
+    {
+        $type = $this->type();
+
+        return $type === null || $type === $this->defaultType();
     }
 }
