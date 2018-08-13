@@ -18,7 +18,7 @@ return [
         'pattern' => 'pages/(:any)',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
-            return $this->page($id)->update($this->requestBody(), true);
+            return $this->page($id)->update($this->requestBody(), $this->language(), true);
         }
     ],
     [

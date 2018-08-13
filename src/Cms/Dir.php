@@ -15,7 +15,7 @@ class Dir extends \Kirby\Toolkit\Dir
 {
     public static $numSeparator = '_';
 
-    public static function inventory(string $dir, string $contentExtension = 'txt', array $contentIgnore = null, string $languageRegex = null): array
+    public static function inventory(string $dir, string $contentExtension = 'txt', array $contentIgnore = null, bool $multilang = false): array
     {
         $dir = realpath($dir);
 
@@ -78,9 +78,9 @@ class Dir extends \Kirby\Toolkit\Dir
         }
 
         // remove the language codes from all content filenames
-        if ($languageRegex !== null) {
+        if ($multilang === true) {
             foreach ($content as $key => $filename) {
-                $content[$key] = preg_replace($languageRegex, '', $filename);
+                $content[$key] = pathinfo($filename, PATHINFO_FILENAME);
             }
 
             $content = array_unique($content);

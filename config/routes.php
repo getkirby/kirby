@@ -99,7 +99,7 @@ return function ($kirby) {
     ];
 
     // Multi-language setup
-    if (empty($kirby->options['languages']) === false) {
+    if ($kirby->multilang() === true) {
         foreach ($kirby->languages() as $language) {
             $routes[] = [
                 'pattern' => trim($language->pattern() . '/(:all)', '/'),

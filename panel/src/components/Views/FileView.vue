@@ -23,7 +23,7 @@
             </k-button>
             <k-dropdown-content ref="settings" :options="options" @action="action" />
           </k-dropdown>
-          <k-tabs-dropdown v-if="tabs.length > 1" :tabs="tabs" @open="$refs.tabs.open($event)" />
+          <k-languages-dropdown />
         </k-button-group>
 
         <k-button-group v-if="file.id" slot="right">

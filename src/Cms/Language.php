@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateExceptio;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\F;
@@ -104,15 +106,76 @@ class Language extends Model
      */
     public static function create(array $props): self
     {
+        $kirby     = App::instance();
+        $languages = $kirby->languages();
+        $site      = $kirby->site();
+
+        // make the first language the default language
+        if ($languages->count() === 0) {
+            $props['default'] = true;
+        }
+
         $language = new static($props);
 
         if ($language->exists() === true) {
-            throw new PermissionException('The language already exists');
+            throw new DuplicateException('The language already exists');
         }
 
         $language->save();
 
+        if ($languages->count() === 0) {
+
+            $code = $language->code();
+
+            F::move($site->contentFile(), $site->contentFile($code));
+
+            foreach ($kirby->site()->index() as $page) {
+                $files = $page->files();
+
+                foreach ($files as $file) {
+                    F::move($file->contentFile(), $file->contentFile($code));
+                }
+
+                F::move($page->contentFile(), $page->contentFile($code));
+            }
+
+        }
+
         return $language;
+    }
+
+    public function delete(): bool
+    {
+        if ($this->exists() === false) {
+            return true;
+        }
+
+        $kirby     = App::instance();
+        $languages = $kirby->languages();
+        $site      = $kirby->site();
+        $code      = $this->code();
+
+        if (F::remove($this->root()) !== true) {
+            throw new Exception('The language could not be deleted');
+        }
+
+        if ($languages->count() === 1) {
+
+            F::move($site->contentFile($code), $site->contentFile());
+
+            foreach ($kirby->site()->index() as $page) {
+                $files = $page->files();
+
+                foreach ($files as $file) {
+                    F::move($file->contentFile($code), $file->contentFile());
+                }
+
+                F::move($page->contentFile($code), $page->contentFile());
+            }
+        }
+
+        return true;
+
     }
 
     /**

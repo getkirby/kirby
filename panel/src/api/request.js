@@ -13,6 +13,10 @@ export default {
       }
     });
 
+    if (store.state.languages.current) {
+      options.headers["x-language"] = store.state.languages.current.code;
+    }
+
     api.config.onStart();
     this.running++;
 
@@ -43,11 +47,6 @@ export default {
   },
   get(path, query, options) {
     if (query) {
-
-      if (!query.language && store.state.languages.current) {
-        query.language = store.state.languages.current.code;
-      }
-
       path +=
         "?" +
         Object.keys(query)

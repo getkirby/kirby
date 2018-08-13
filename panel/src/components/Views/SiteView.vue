@@ -20,6 +20,7 @@
           </k-button>
           <k-dropdown-content ref="settings" :options="options" @action="action" />
         </k-dropdown>
+        <k-languages-dropdown />
       </k-button-group>
     </k-header>
 
@@ -31,6 +32,7 @@
       @tab="tab = $event"
     />
 
+    <k-site-languages-dialog ref="languages" @success="fetch" />
     <k-site-rename-dialog ref="rename" @success="fetch" />
 
   </k-view>
@@ -56,6 +58,16 @@ export default {
   created() {
     this.fetch();
   },
+  computed: {
+    language() {
+      return this.$store.state.languages.current;
+    }
+  },
+  watch: {
+    language() {
+      this.fetch();
+    }
+  },
   methods: {
     fetch() {
       this.$api.site
@@ -78,6 +90,9 @@ export default {
     },
     action(action) {
       switch (action) {
+        case "languages":
+          this.$refs.languages.open();
+          break;
         case "preview":
           window.open(this.site.url);
           break;

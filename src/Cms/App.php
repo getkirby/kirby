@@ -47,8 +47,8 @@ class App
     public $language;
 
     protected $collections;
-    protected $languageRegex;
     protected $languages;
+    protected $multilang;
     protected $options;
     protected $path;
     protected $roles;
@@ -76,6 +76,11 @@ class App
 
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
+
+        // switch to admin mode
+        if (($props['sudo'] ?? false) === true) {
+            $props = $this->sudo($props);
+        }
 
         // stuff from config and additional options
         $this->optionsFromConfig();
@@ -428,28 +433,6 @@ class App
     }
 
     /**
-     * Creates and caches the language code regex
-     * that is used in the Dir::inventory method
-     * to remove language codes from text files
-     *
-     * @return string|null
-     */
-    public function languageRegex(): ?string
-    {
-        if ($this->languageRegex !== null) {
-            return $this->languageRegex;
-        }
-
-        if (empty($this->options['languages']) === true) {
-            return null;
-        }
-
-        $codes = array_column($this->options['languages'], 'code');
-        $codes = preg_filter('/^/', '\.', $codes);
-        return $this->languageRegex = '!' . implode('|', $codes) . '$!i';
-    }
-
-    /**
      * Returns all available site languages
      *
      * @return Languages
@@ -477,7 +460,11 @@ class App
      */
     public function multilang(): bool
     {
-        return empty($this->options['languages']) === false;
+        if ($this->multilang !== null) {
+            return $this->multilang;
+        }
+
+        return $this->multilang = $this->languages()->count() !== 0;
     }
 
     /**
@@ -826,6 +813,20 @@ class App
     public function snippet(string $name, array $data = []): ?string
     {
         return $this->extensions['components']['snippet']($this, $name, array_merge($this->data, $data));
+    }
+
+    protected function sudo($props)
+    {
+        $props['users'] = [
+            $sudo = [
+                'email' => 'support@getkirby.com',
+                'role'  => 'admin'
+            ]
+        ];
+
+        $props['user'] = 'support@getkirby.com';
+
+        return $props;
     }
 
     /**

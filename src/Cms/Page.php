@@ -489,7 +489,7 @@ class Page extends ModelWithContent
             $this->root(),
             $kirby->contentExtension(),
             $kirby->contentIgnore(),
-            $kirby->languageRegex()
+            $kirby->multilang()
         );
     }
 

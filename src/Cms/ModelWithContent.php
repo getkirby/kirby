@@ -198,10 +198,10 @@ abstract class ModelWithContent extends Model
 
         $this->translations = new Collection;
 
-        foreach ($this->kirby()->option('languages', []) as $language) {
+        foreach ($this->kirby()->languages() as $language) {
             $translation = new ContentTranslation([
                 'parent' => $this,
-                'code'   => $language['code'],
+                'code'   => $language->code(),
             ]);
 
             $this->translations->data[$translation->code()] = $translation;

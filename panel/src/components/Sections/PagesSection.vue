@@ -127,7 +127,7 @@ export default {
     },
     fetch() {
       this.$api
-        .get(this.parent + "/sections/" + this.name, { page: this.page, language: this.language.code })
+        .get(this.parent + "/sections/" + this.name, { page: this.page })
         .then(response => {
 
           const states = this.$api.pages.states();

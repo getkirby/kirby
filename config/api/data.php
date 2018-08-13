@@ -25,11 +25,14 @@ return [
     'kirby' => function () {
         $kirby = kirby();
 
-        if ($language = get('language')) {
+        if ($language = $this->language()) {
             $kirby->language = $kirby->languages()->find($language);
         }
 
         return $kirby;
+    },
+    'language' => function () {
+        return $this->requestHeaders('x-language');
     },
     'page' => function (string $id) {
 

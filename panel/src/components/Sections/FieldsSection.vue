@@ -33,6 +33,14 @@ export default {
   computed: {
     id() {
       return this.$cache.id(this.$route, this.$store);
+    },
+    language() {
+      return this.$store.state.languages.current;
+    }
+  },
+  watch: {
+    language() {
+      this.fetch();
     }
   },
   created: function() {
