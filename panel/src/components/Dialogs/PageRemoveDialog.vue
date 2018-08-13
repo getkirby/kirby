@@ -34,6 +34,7 @@ export default {
         });
     },
     submit() {
+
       this.$api.pages
         .delete(this.page.id)
         .then(() => {
@@ -48,7 +49,7 @@ export default {
           // if in PageView, redirect
           if (
             this.$route.params.path &&
-            this.page.id === this.$route.params.path.replace("+", "/")
+            this.page.id === this.$route.params.path.replace(/\+/g, "/")
           ) {
             if (this.page.parent) {
               payload.route = "/pages/" + this.page.parent.id;
