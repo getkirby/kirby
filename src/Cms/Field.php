@@ -126,6 +126,16 @@ class Field
     }
 
     /**
+     * Checks if the field exists in the content data array
+     *
+     * @return boolean
+     */
+    public function exists(): bool
+    {
+        return $this->parent->content()->has($this->key);
+    }
+
+    /**
      * Checks if the field content is empty
      *
      * @return boolean

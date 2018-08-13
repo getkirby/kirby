@@ -35,6 +35,16 @@ class ContentTest extends TestCase
         $this->assertEquals(['title', 'text'], $content->keys());
     }
 
+    public function testHas()
+    {
+        $content = new Content([
+            'a' => 'A'
+        ]);
+
+        $this->assertTrue($content->has('a'));
+        $this->assertFalse($content->has('b'));
+    }
+
     public function testGetExistingField()
     {
         $content = $this->mockObject();

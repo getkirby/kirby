@@ -125,6 +125,17 @@ class Content
     }
 
     /**
+     * Checks if a content field is set
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public function has(string $key): bool
+    {
+        return isset($this->data[$key]);
+    }
+
+    /**
      * Returns all field keys
      *
      * @return array

@@ -17,6 +17,19 @@ class FieldTest extends TestCase
         $this->assertEquals('title', $field->key());
     }
 
+    public function testExists()
+    {
+        $parent = new Page([
+            'slug' => 'test',
+            'content' => [
+                'a' => 'Value A'
+            ]
+        ]);
+
+        $this->assertTrue($parent->a()->exists());
+        $this->assertFalse($parent->b()->exists());
+    }
+
     public function testParent()
     {
         $parent = new Page(['slug' => 'test']);
