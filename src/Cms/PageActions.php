@@ -109,12 +109,10 @@ trait PageActions
         }
 
         return $this->commit('changeSlug', [$this, $slug, $languageCode], function ($oldPage, $slug, $languageCode) {
-
             $content = $oldPage->content($languageCode)->toArray();
             $content['slug'] = $slug;
 
             return $oldPage->clone(['content' => $content])->save($languageCode);
-
         });
     }
 
@@ -634,5 +632,4 @@ trait PageActions
 
         return $page;
     }
-
 }

@@ -154,7 +154,6 @@ class Language extends Model
         $language->save();
 
         if ($languages->count() === 0) {
-
             $code = $language->code();
 
             F::move($site->contentFile(), $site->contentFile($code));
@@ -168,7 +167,6 @@ class Language extends Model
 
                 F::move($page->contentFile(), $page->contentFile($code));
             }
-
         }
 
         return $language;
@@ -196,7 +194,6 @@ class Language extends Model
         }
 
         return true;
-
     }
 
     /**
@@ -430,7 +427,6 @@ class Language extends Model
 
         // convert the current default to a non-default language
         if ($updated->isDefault() === true) {
-
             if ($oldDefault = $kirby->languages()->default()) {
                 $oldDefault->clone(['default' => false])->save();
             }
@@ -449,12 +445,10 @@ class Language extends Model
 
                 touch($page->contentFile($code));
             }
-
         } elseif ($this->isDefault() === true) {
             throw new PermissionException('Please select another language to be the primary language');
         }
 
         return $updated->save();
     }
-
 }

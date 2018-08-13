@@ -62,7 +62,6 @@ class Languages extends Collection
         $files     = glob(App::instance()->root('languages') . '/*.php');
 
         foreach ($files as $file) {
-
             $props = include_once $file;
 
             if (is_array($props) === true) {
@@ -73,7 +72,6 @@ class Languages extends Collection
                 $language = new Language($props);
                 $languages->data[$language->code()] = $language;
             }
-
         }
 
         return $languages;

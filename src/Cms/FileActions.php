@@ -239,5 +239,4 @@ trait FileActions
 
         return $this;
     }
-
 }
