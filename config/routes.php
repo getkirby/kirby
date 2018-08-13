@@ -21,6 +21,7 @@ return function ($kirby) {
     $routes = [
         [
             'pattern' => '',
+            'method'  => 'ALL',
             'action'  => function () use ($kirby) {
                 return $kirby->site()->homePage();
             }
