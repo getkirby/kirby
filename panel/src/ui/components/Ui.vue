@@ -21,24 +21,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
-
-/* @font-face {
-  font-family: "Roboto";
-  src: url("../assets/fonts/roboto-regular-webfont.woff2") format("woff2"),
-    url("../assets/fonts/roboto-regular-webfont.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Roboto";
-  src: url("../assets/fonts/roboto-medium-webfont.woff2") format("woff2"),
-    url("../assets/fonts/roboto-medium-webfont.woff") format("woff");
-  font-weight: 500;
-  font-style: normal;
-} */
-
 *,
 *::before,
 *::after {

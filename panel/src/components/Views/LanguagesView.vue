@@ -44,6 +44,7 @@ export default {
   },
   created() {
     this.fetch();
+    this.$store.dispatch("breadcrumb", []);
   },
   computed: {
     defaultLanguage() {
