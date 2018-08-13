@@ -43,6 +43,15 @@ return [
                 'values' => $values,
                 'model'  => $this->data['model'] ?? null
             ], $this->data));
+        },
+        'toString' => function () {
+            $strings = [];
+
+            foreach ($this->value() as $row) {
+                $strings[] = $this->form($row)->strings();
+            }
+
+            return Yaml::encode($strings);
         }
     ],
     'validations' => [
