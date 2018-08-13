@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "345f84c201879959bc15c8cb382af7c8",
-    "content-hash": "00cc99927d70e7a9db080207a150aacd",
+    "hash": "f13cf27ca3f9cb539051a552e8e80db8",
+    "content-hash": "8b2b7e9a608c2125049cfe5c27eb153d",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -867,12 +867,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "b38da665fb73a25cdbc8311b439b7298fb50911c"
+                "reference": "fab6cde4899dad966f26b49ac20a1c99becf3df9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/b38da665fb73a25cdbc8311b439b7298fb50911c",
-                "reference": "b38da665fb73a25cdbc8311b439b7298fb50911c",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/fab6cde4899dad966f26b49ac20a1c99becf3df9",
+                "reference": "fab6cde4899dad966f26b49ac20a1c99becf3df9",
                 "shasum": ""
             },
             "require": {
@@ -955,7 +955,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-08-01 07:09:04"
+            "time": "2018-08-10 11:20:40"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1670,12 +1670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7bab54cb366076023bbf457a2a0d513332cd40f2"
+                "reference": "fc145723725bee14f648550d2bc6002ce7bf53b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7bab54cb366076023bbf457a2a0d513332cd40f2",
-                "reference": "7bab54cb366076023bbf457a2a0d513332cd40f2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fc145723725bee14f648550d2bc6002ce7bf53b3",
+                "reference": "fc145723725bee14f648550d2bc6002ce7bf53b3",
                 "shasum": ""
             },
             "require": {
@@ -1746,7 +1746,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-08-07 07:05:35"
+            "time": "2018-08-13 14:02:29"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
