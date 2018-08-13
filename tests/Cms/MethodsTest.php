@@ -32,6 +32,11 @@ class MethodsTest extends TestCase
                     return 'files method';
                 }
             ],
+            'siteMethods' => [
+                'test' => function () {
+                    return 'site method';
+                }
+            ],
             'site' => [
                 'children' => [
                     [
@@ -69,6 +74,12 @@ class MethodsTest extends TestCase
     {
         $pages = $this->app->site()->children();
         $this->assertEquals('pages method', $pages->test());
+    }
+
+    public function testSiteMethod()
+    {
+        $site = $this->app->site();
+        $this->assertEquals('site method', $site->test());
     }
 
 }
