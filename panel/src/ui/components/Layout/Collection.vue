@@ -133,27 +133,6 @@ export default {
 
 <style lang="scss">
 
-.k-collection > *:not(:empty) {
-  min-height: 38px;
-  margin-bottom: 2px;
-}
-.k-collection > *:empty {
-  position: relative;
-}
-
-.k-collection > *:empty:after {
-  background: lighten($color-light-grey, 27.5%);
-  border-radius: $border-radius;
-  padding: .375rem .75rem;
-  line-height: 1.25rem;
-  border-left: 2px solid $color-light-grey;
-  padding: .5rem 1.5rem;
-  word-wrap: break-word;
-  font-size: $font-size-small;
-  content: "\00A0";
-  display: block;
-}
-
 .k-collection .sortable-ghost {
   position: relative;
   outline: 2px solid $color-focus;

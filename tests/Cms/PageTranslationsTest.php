@@ -12,17 +12,15 @@ class PageTranslationsTest extends TestCase
     public function app($language = null)
     {
         $app = new App([
-            'options' => [
-                'languages' => [
-                    [
-                        'code'    => 'en',
-                        'name'    => 'English',
-                        'default' => true
-                    ],
-                    [
-                        'code'    => 'de',
-                        'name'    => 'Deutsch'
-                    ]
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
                 ]
             ],
             'site' => [
@@ -128,21 +126,21 @@ class PageTranslationsTest extends TestCase
         $this->assertEquals('Untranslated', $page->untranslated()->value());
     }
 
-    public function testSlugForLanguage()
+    public function testSlug()
     {
         $app = $this->app();
 
-        $this->assertEquals('grandma', $app->page('grandma')->slugForLanguage());
-        $this->assertEquals('grandma', $app->page('grandma')->slugForLanguage('en'));
-        $this->assertEquals('oma', $app->page('grandma')->slugForLanguage('de'));
+        $this->assertEquals('grandma', $app->page('grandma')->slug());
+        $this->assertEquals('grandma', $app->page('grandma')->slug('en'));
+        $this->assertEquals('oma', $app->page('grandma')->slug('de'));
 
-        $this->assertEquals('mother', $app->page('grandma/mother')->slugForLanguage());
-        $this->assertEquals('mother', $app->page('grandma/mother')->slugForLanguage('en'));
-        $this->assertEquals('mutter', $app->page('grandma/mother')->slugForLanguage('de'));
+        $this->assertEquals('mother', $app->page('grandma/mother')->slug());
+        $this->assertEquals('mother', $app->page('grandma/mother')->slug('en'));
+        $this->assertEquals('mutter', $app->page('grandma/mother')->slug('de'));
 
-        $this->assertEquals('child', $app->page('grandma/mother/child')->slugForLanguage());
-        $this->assertEquals('child', $app->page('grandma/mother/child')->slugForLanguage('en'));
-        $this->assertEquals('kind', $app->page('grandma/mother/child')->slugForLanguage('de'));
+        $this->assertEquals('child', $app->page('grandma/mother/child')->slug());
+        $this->assertEquals('child', $app->page('grandma/mother/child')->slug('en'));
+        $this->assertEquals('kind', $app->page('grandma/mother/child')->slug('de'));
     }
 
     public function testFindInEnglish()

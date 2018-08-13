@@ -11,26 +11,24 @@ class LanguagesTest extends TestCase
     {
 
         $app = new App([
-            'options' => [
-                'languages' => [
-                    [
-                        'code'    => 'en',
-                        'name'    => 'English',
-                        'default' => true,
-                        'locale'  => 'en_US',
-                        'url'     => '/',
-                    ],
-                    [
-                        'code'    => 'de',
-                        'name'    => 'Deutsch',
-                        'locale'  => 'de_DE',
-                        'url'     => '/de',
-                    ],
-                ]
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true,
+                    'locale'  => 'en_US',
+                    'url'     => '/',
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch',
+                    'locale'  => 'de_DE',
+                    'url'     => '/de',
+                ],
             ]
         ]);
 
-        $languages = Languages::load();
+        $languages = $app->languages();
 
         $this->assertCount(2, $languages);
         $this->assertEquals(['en', 'de'], $languages->codes());

@@ -7,6 +7,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -48,20 +49,30 @@ trait PageActions
      * Changes the slug/uid of the page
      *
      * @param string $slug
+     * @param string $language
      * @return self
      */
-    public function changeSlug(string $slug): self
+    public function changeSlug(string $slug, string $languageCode = null): self
     {
+        // always sanitize the slug
+        $slug = Str::slug($slug);
+
+        // in multi-language installations the slug for the non-default
+        // languages is stored in the text file. The changeSlugForLanguage
+        // method takse care of that.
+        if ($language = $this->kirby()->language($languageCode)) {
+            if ($language->isDefault() === false) {
+                return $this->changeSlugForLanguage($slug, $languageCode);
+            }
+        }
+
         // if the slug stays exactly the same,
         // nothing needs to be done.
         if ($slug === $this->slug()) {
             return $this;
         }
 
-        // always sanitize the slug
-        $slug = Str::slug($slug);
-
-        return $this->commit('changeSlug', [$this, $slug], function ($oldPage, $slug) {
+        return $this->commit('changeSlug', [$this, $slug, $languageCode = null], function ($oldPage, $slug) {
             $newPage = $oldPage->clone(['slug' => $slug]);
 
             if ($oldPage->exists() === false) {
@@ -75,6 +86,35 @@ trait PageActions
             Dir::remove($oldPage->mediaRoot());
 
             return $newPage;
+        });
+    }
+
+    /**
+     * Change the slug for a specific language
+     *
+     * @param string $slug
+     * @param string $language
+     * @return self
+     */
+    protected function changeSlugForLanguage(string $slug, string $languageCode = null): self
+    {
+        $language = $this->kirby()->language($languageCode);
+
+        if (!$language) {
+            throw new NotFoundException('The language: "' . $languageCode . '" does not exist');
+        }
+
+        if ($language->isDefault() === true) {
+            throw new InvalidArgumentException('Use the changeSlug method to change the slug for the default language');
+        }
+
+        return $this->commit('changeSlug', [$this, $slug, $languageCode], function ($oldPage, $slug, $languageCode) {
+
+            $content = $oldPage->content($languageCode)->toArray();
+            $content['slug'] = $slug;
+
+            return $oldPage->clone(['content' => $content])->save($languageCode);
+
         });
     }
 
@@ -273,8 +313,15 @@ trait PageActions
                 throw new LogicException('The page directory for "' . $page->slug() . '" cannot be created');
             }
 
+            // always create pages in the default language
+            if ($page->kirby()->multilang() === true) {
+                $languageCode = $page->kirby()->languages()->default()->code();
+            } else {
+                $languageCode = null;
+            }
+
             // write the content file
-            return $page->clone()->save();
+            return $page->clone()->save($languageCode);
         });
     }
 

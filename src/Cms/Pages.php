@@ -177,7 +177,7 @@ class Pages extends Collection
         $multiLang = App::instance()->multilang();
 
         if ($multiLang === true) {
-            $page = $this->findBy('slugForLanguage', $id);
+            $page = $this->findBy('slug', $id);
         }
 
         if (!$page) {
@@ -207,7 +207,7 @@ class Pages extends Collection
             $item  = $collection->get($query) ?? null;
 
             if ($item === null && $multiLang === true) {
-                $item = $collection->findBy('slugForLanguage', $key);
+                $item = $collection->findBy('slug', $key);
             }
 
             if ($item === null) {

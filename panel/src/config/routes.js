@@ -5,6 +5,7 @@ import store from "./store.js";
 import BrowserView from "@/components/Views/BrowserView.vue";
 import FileView from "@/components/Views/FileView.vue";
 import InstallationView from "@/components/Views/InstallationView.vue";
+import LanguagesView from "@/components/Views/LanguagesView.vue";
 import LoginView from "@/components/Views/LoginView.vue";
 import PageView from "@/components/Views/PageView.vue";
 import SiteView from "@/components/Views/SiteView.vue";
@@ -95,6 +96,15 @@ export default [
     props: route => ({
       path: route.params.path
     })
+  },
+  {
+    path: "/languages",
+    name: "Languages",
+    meta: {
+      view: "languages"
+    },
+    component: LanguagesView,
+    beforeEnter: auth
   },
   {
     path: "/users/role/:role",

@@ -9,6 +9,11 @@ export default {
     icon: "users",
     menu: true
   },
+  languages: {
+    link: "/languages",
+    icon: "globe",
+    menu: true
+  },
   account: {
     link: "/account",
     icon: "users",

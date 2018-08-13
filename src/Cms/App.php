@@ -92,6 +92,7 @@ class App
 
         // configurable properties
         $this->setOptionalProperties($props, [
+            'languages',
             'path',
             'roles',
             'site',
@@ -723,6 +724,26 @@ class App
     {
         $this->session = $this->session ?? new Session($this->root('sessions'), $this->options['session'] ?? []);
         return $this->session->get($options);
+    }
+
+    /**
+     * Create your own set of languages
+     *
+     * @param array $languages
+     * @return self
+     */
+    protected function setLanguages(array $languages = null): self
+    {
+        if ($languages !== null) {
+            $this->languages = new Languages();
+
+            foreach ($languages as $props) {
+                $language = new Language($props);
+                $this->languages->data[$language->code()] = $language;
+            }
+        }
+
+        return $this;
     }
 
     /**

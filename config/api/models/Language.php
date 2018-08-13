@@ -10,6 +10,12 @@ return [
         'code' => function (Language $language) {
             return $language->code();
         },
+        'default' => function (Language $language) {
+            return $language->isDefault();
+        },
+        'direction' => function (Language $language) {
+            return $language->direction();
+        },
         'locale' => function (Language $language) {
             return $language->locale();
         },
@@ -24,7 +30,8 @@ return [
     'views' => [
         'compact' => [
             'code',
-            'name'
+            'default',
+            'name',
         ]
     ]
 ];

@@ -23,6 +23,10 @@ class Permissions
             'replace' => true,
             'update' => true
         ],
+        'languages' => [
+            'create' => true,
+            'delete' => true
+        ],
         'pages' => [
             'changeSlug' => true,
             'changeStatus' => true,

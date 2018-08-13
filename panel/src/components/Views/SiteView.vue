@@ -14,12 +14,6 @@
         <k-button icon="open" @click="action('preview')">
           {{ $t("open" ) }}
         </k-button>
-        <k-dropdown>
-          <k-button icon="cog" @click="$refs.settings.toggle()">
-            {{ $t('settings') }}
-          </k-button>
-          <k-dropdown-content ref="settings" :options="options" @action="action" />
-        </k-dropdown>
         <k-languages-dropdown />
       </k-button-group>
     </k-header>
@@ -32,7 +26,6 @@
       @tab="tab = $event"
     />
 
-    <k-site-languages-dialog ref="languages" @success="fetch" />
     <k-site-rename-dialog ref="rename" @success="fetch" />
 
   </k-view>

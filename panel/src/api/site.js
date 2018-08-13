@@ -22,13 +22,6 @@ export default {
         disabled: !options.changeTitle
       });
 
-      result.push({
-        click: "languages",
-        icon: "globe",
-        text: "Languages", // Vue.i18n.translate("languages"),
-        disabled: false, // !options.changeLanguage
-      });
-
       return result;
     });
   },

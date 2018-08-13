@@ -11,17 +11,15 @@ class AppLanguagesTest extends TestCase
     {
 
         $app = new App([
-            'options' => [
-                'languages' => [
-                    [
-                        'code'    => 'en',
-                        'name'    => 'English',
-                        'default' => true
-                    ],
-                    [
-                        'code'    => 'de',
-                        'name'    => 'Deutsch'
-                    ]
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
                 ]
             ]
         ]);
@@ -31,6 +29,5 @@ class AppLanguagesTest extends TestCase
         $this->assertEquals('en', $app->language()->code());
 
     }
-
 
 }

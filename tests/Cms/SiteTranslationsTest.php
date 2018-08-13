@@ -12,17 +12,15 @@ class SiteTranslationsTest extends TestCase
     public function app($language = null)
     {
         $app = new App([
-            'options' => [
-                'languages' => [
-                    [
-                        'code'    => 'en',
-                        'name'    => 'English',
-                        'default' => true
-                    ],
-                    [
-                        'code'    => 'de',
-                        'name'    => 'Deutsch'
-                    ]
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
                 ]
             ],
             'site' => [

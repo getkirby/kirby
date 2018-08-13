@@ -362,7 +362,7 @@ class Page extends ModelWithContent
      */
     public function dirname(): string
     {
-        return $this->num() !== null ? $this->num() . Dir::$numSeparator . $this->slug() : $this->slug();
+        return $this->num() !== null ? $this->num() . Dir::$numSeparator . $this->uid() : $this->uid();
     }
 
     /**
@@ -450,10 +450,10 @@ class Page extends ModelWithContent
 
         // set the id, depending on the parent
         if ($parent = $this->parent()) {
-            return $this->id = $parent->id() . '/' . $this->slug();
+            return $this->id = $parent->id() . '/' . $this->uid();
         }
 
-        return $this->id = $this->slug();
+        return $this->id = $this->uid();
     }
 
     /**
@@ -1017,26 +1017,22 @@ class Page extends ModelWithContent
     /**
      * Returns the slug of the page
      *
+     * @param string|null $languageCode
      * @return string
      */
-    public function slug(): string
+    public function slug(string $languageCode = null): string
     {
-        return $this->slug;
-    }
+        if ($this->kirby()->multilang() === true) {
 
-    /**
-     * Returns the translated slug for the given language
-     *
-     * @param string|null $language
-     * @return string
-     */
-    public function slugForLanguage(string $language = null): ?string
-    {
-        if ($language === null) {
-            $language = $this->kirby()->language()->code();
+            if ($languageCode === null) {
+                $languageCode = $this->kirby()->language()->code();
+            }
+
+            return $this->translations()->find($languageCode)->slug() ?? $this->slug;
+
+        } else {
+            return $this->slug;
         }
-
-        return $this->translations()->find($language)->slug() ?? $this->slug();
     }
 
     /**
@@ -1132,14 +1128,18 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Returns the UID of the page
+     * Returns the UID of the page.
+     * The UID is basically the same as the
+     * slug, but stays the same on
+     * multi-language sites. Whereas the slug
+     * can be translated.
      *
      * @see self::slug()
      * @return string
      */
     public function uid(): string
     {
-        return $this->slug();
+        return $this->slug;
     }
 
     /**
@@ -1171,10 +1171,10 @@ class Page extends ModelWithContent
         }
 
         if ($parent = $this->parent()) {
-            return $this->url = $this->parent()->url() . '/' . $this->slug();
+            return $this->url = $this->parent()->url() . '/' . $this->uid();
         }
 
-        return $this->url = $this->kirby()->url('base') . '/' . $this->slug();
+        return $this->url = $this->kirby()->url('base') . '/' . $this->uid();
     }
 
     public function urlForLanguage($language = null, array $options = null): string
@@ -1188,9 +1188,9 @@ class Page extends ModelWithContent
         }
 
         if ($parent = $this->parent()) {
-            return $this->url = $this->parent()->urlForLanguage($language) . '/' . $this->slugForLanguage($language);
+            return $this->url = $this->parent()->urlForLanguage($language) . '/' . $this->slug($language);
         }
 
-        return $this->url = $this->site()->urlForLanguage($language) . '/' . $this->slugForLanguage($language);
+        return $this->url = $this->site()->urlForLanguage($language) . '/' . $this->slug($language);
     }
 }

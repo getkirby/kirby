@@ -2,11 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\DuplicateExceptio;
+use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 
 /**
  * Represents a content language
@@ -99,6 +101,33 @@ class Language extends Model
     }
 
     /**
+     * When the last language is being deleted, the installation
+     * changes from multi-language to single language. In this case
+     * all language codes must be removed from the text files.
+     *
+     * @return bool
+     */
+    protected function convertToSingleLanguage($code): bool
+    {
+        $kirby = App::instance();
+        $site  = $kirby->site();
+
+        F::move($site->contentFile($code), $site->contentFile());
+
+        foreach ($kirby->site()->index() as $page) {
+            $files = $page->files();
+
+            foreach ($files as $file) {
+                F::move($file->contentFile($code), $file->contentFile());
+            }
+
+            F::move($page->contentFile($code), $page->contentFile());
+        }
+
+        return true;
+    }
+
+    /**
      * Creates a new language object
      *
      * @param array $props
@@ -106,9 +135,10 @@ class Language extends Model
      */
     public static function create(array $props): self
     {
-        $kirby     = App::instance();
-        $languages = $kirby->languages();
-        $site      = $kirby->site();
+        $props['slug'] = Str::slug($props['slug'] ?? null);
+        $kirby         = App::instance();
+        $languages     = $kirby->languages();
+        $site          = $kirby->site();
 
         // make the first language the default language
         if ($languages->count() === 0) {
@@ -160,22 +190,39 @@ class Language extends Model
         }
 
         if ($languages->count() === 1) {
-
-            F::move($site->contentFile($code), $site->contentFile());
-
-            foreach ($kirby->site()->index() as $page) {
-                $files = $page->files();
-
-                foreach ($files as $file) {
-                    F::move($file->contentFile($code), $file->contentFile());
-                }
-
-                F::move($page->contentFile($code), $page->contentFile());
-            }
+            $this->convertToSingleLanguage($code);
+        } else {
+            $this->deleteContentFiles($code);
         }
 
         return true;
 
+    }
+
+    /**
+     * When the language is deleted, all content files with
+     * the language code must be removed as well.
+     *
+     * @return bool
+     */
+    protected function deleteContentFiles($code): bool
+    {
+        $kirby = App::instance();
+        $site  = $kirby->site();
+
+        F::remove($site->contentFile($code));
+
+        foreach ($kirby->site()->index() as $page) {
+            $files = $page->files();
+
+            foreach ($files as $file) {
+                F::remove($file->contentFile($code));
+            }
+
+            F::remove($page->contentFile($code));
+        }
+
+        return true;
     }
 
     /**
@@ -207,6 +254,17 @@ class Language extends Model
     public function isDefault(): bool
     {
         return $this->default;
+    }
+
+    /**
+     * The id is required for collections
+     * to work properly. The code is used as id
+     *
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->code;
     }
 
     /**
@@ -366,7 +424,36 @@ class Language extends Model
      */
     public function update(array $props = null): self
     {
-        $updated = $this->clone($props);
+        $props['slug'] = Str::slug($props['slug'] ?? null);
+        $kirby         = App::instance();
+        $updated       = $this->clone($props);
+
+        // convert the current default to a non-default language
+        if ($updated->isDefault() === true) {
+
+            if ($oldDefault = $kirby->languages()->default()) {
+                $oldDefault->clone(['default' => false])->save();
+            }
+
+            $code = $this->code();
+            $site = $kirby->site();
+
+            touch($site->contentFile($code));
+
+            foreach ($kirby->site()->index() as $page) {
+                $files = $page->files();
+
+                foreach ($files as $file) {
+                    touch($file->contentFile($code));
+                }
+
+                touch($page->contentFile($code));
+            }
+
+        } elseif ($this->isDefault() === true) {
+            throw new PermissionException('Please select another language to be the primary language');
+        }
+
         return $updated->save();
     }
 
