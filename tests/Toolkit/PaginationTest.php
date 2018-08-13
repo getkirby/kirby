@@ -265,6 +265,57 @@ class PaginationTest extends TestCase
         $this->assertTrue($pagination->isLastPage());
     }
 
+    public function testRange()
+    {
+        // at the beginning
+        $pagination = new Pagination([
+            'page'  => 1,
+            'total' => 100,
+            'limit' => 1
+        ]);
+
+        $range = $pagination->range(10);
+        $this->assertEquals(range(1, 10), $range);
+        $this->assertEquals(1, $pagination->rangeStart(10));
+        $this->assertEquals(10, $pagination->rangeEnd(10));
+
+        // in the middle
+        $pagination = new Pagination([
+            'page'  => 50,
+            'total' => 100,
+            'limit' => 1
+        ]);
+
+        $range = $pagination->range(10);
+        $this->assertEquals(range(45, 55), $range);
+        $this->assertEquals(45, $pagination->rangeStart(10));
+        $this->assertEquals(55, $pagination->rangeEnd(10));
+
+        // at the end
+        $pagination = new Pagination([
+            'page'  => 100,
+            'total' => 100,
+            'limit' => 1
+        ]);
+
+        $range = $pagination->range(10);
+        $this->assertEquals(range(90, 100), $range);
+        $this->assertEquals(90, $pagination->rangeStart(10));
+        $this->assertEquals(100, $pagination->rangeEnd(10));
+
+        // higher range than pages
+        $pagination = new Pagination([
+            'page'  => 1,
+            'total' => 10,
+            'limit' => 1
+        ]);
+
+        $range = $pagination->range(12);
+        $this->assertEquals(range(1, 10), $range);
+        $this->assertEquals(1, $pagination->rangeStart(12));
+        $this->assertEquals(10, $pagination->rangeEnd(12));
+    }
+
     public function testToArray()
     {
         $pagination = new Pagination();

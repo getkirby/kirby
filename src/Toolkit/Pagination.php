@@ -258,6 +258,59 @@ class Pagination
     }
 
     /**
+     * Creates a range of page numbers for Google-like pagination
+     *
+     * @return array
+     */
+    public function range(int $range = 5): array
+    {
+        $page  = $this->page();
+        $pages = $this->pages();
+        $start = 1;
+        $end   = $pages;
+
+        if ($pages <= $range) {
+            return range($start, $end);
+        }
+
+        $start = $page - (int)floor($range/2);
+        $end   = $page + (int)floor($range/2);
+
+        if ($start <= 0) {
+            $end   += abs($start);
+            $start  = 1;
+        }
+
+        if ($end > $pages) {
+            $start -= $end - $pages;
+            $end    = $pages;
+        }
+
+        return range($start, $end);
+    }
+
+    /**
+     * Returns the first page of the created range
+     *
+     * @return int
+     */
+    public function rangeStart(int $range = 5): int
+    {
+        return $this->range($range)[0];
+    }
+
+    /**
+     * Returns the last page of the created range
+     *
+     * @return int
+     */
+    public function rangeEnd(int $range = 5): int
+    {
+        $range = $this->range($range);
+        return array_pop($range);
+    }
+
+    /**
      * Returns an array with all properties
      *
      * @return array
