@@ -9,18 +9,24 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 
+    protected $app;
+
     public function setUp()
     {
         // start with a fresh set of fields
         Field::$mixins = [];
         Field::$types  = [];
 
-        new App([
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ]
         ]);
     }
 
+    public function app()
+    {
+        return $this->app;
+    }
 
 }

@@ -120,7 +120,7 @@ class OptionsQuery
             $result = new Collection($result);
         }
 
-        if (is_a($result, 'Kirby\Cms\Collection') === false) {
+        if (is_a($result, 'Kirby\Toolkit\Collection') === false) {
             throw new InvalidArgumentException('Invalid query result data');
         }
 
