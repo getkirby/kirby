@@ -62,7 +62,7 @@ class Response
      * @param string  $type
      * @param integer $code
      */
-    public function __construct($body = '', string $type = null, int $code = null, array $headers = [], string $charset = 'UTF-8')
+    public function __construct($body = '', ?string $type = null, ?int $code = null, ?array $headers = null, ?string $charset = null)
     {
         // array construction
         if (is_array($body) === true) {
@@ -78,8 +78,8 @@ class Response
         $this->body    = $body;
         $this->type    = $type ?? 'text/html';
         $this->code    = $code ?? 200;
-        $this->headers = $headers;
-        $this->charset = $charset;
+        $this->headers = $headers ?? [];
+        $this->charset = $charset ?? 'UTF-8';
     }
 
     /**
@@ -203,7 +203,7 @@ class Response
      * @param boolean $pretty
      * @return self
      */
-    public static function json($body = '', int $code = 200, bool $pretty = false)
+    public static function json($body = '', ?int $code = null, ?bool $pretty = null)
     {
         if (is_array($body) === true) {
             $body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES : null);
@@ -225,12 +225,12 @@ class Response
      * @param integer $code
      * @return self
      */
-    public static function redirect(string $location = '/', int $code = 302)
+    public static function redirect(?string $location = null, ?int $code = null)
     {
         return new static([
-            'code' => $code,
+            'code' => $code ?? 302,
             'headers' => [
-                'Location' => Url::unIdn($location)
+                'Location' => Url::unIdn($location ?? '/')
             ]
         ]);
     }
