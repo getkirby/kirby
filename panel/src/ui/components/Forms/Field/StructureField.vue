@@ -62,6 +62,7 @@
               </nav>
             </div>
             <div v-if="!disabled && isActive(index)" class="k-structure-form">
+              <div class="k-structure-backdrop" @click="escape"></div>
               <k-fieldset
                 ref="form"
                 :fields="fields"
@@ -131,13 +132,11 @@ export default {
   mounted() {
     this.$events.$on('keydown.esc', this.escape);
     this.$events.$on('keydown.cmd.s', this.close);
-    this.$events.$on('click', this.escape);
     this.$events.$on("field.structure.close", this.escape);
   },
   destroyed() {
     this.$events.$off('keydown.esc', this.escape);
     this.$events.$off('keydown.cmd.s', this.close);
-    this.$events.$off('click', this.escape);
     this.$events.$off("field.structure.close", this.escape);
   },
   methods: {
@@ -177,7 +176,7 @@ export default {
       this.trash = index;
       this.$refs.remove.open();
     },
-    escape() {
+    escape(e) {
       if (this.active !== null && this.items[this.active]) {
         if (Object.keys(this.items[this.active]).length === 0) {
           this.$refs.escapeDialog.open();
@@ -302,7 +301,6 @@ $structure-item-height: 38px;
 .k-structure-item[data-active] {
   position: relative;
   z-index: 1;
-  box-shadow: rgba($color-dark, .3) 0 0px 30px;
 }
 .k-structure-item-handle {
   position: absolute;
@@ -377,18 +375,20 @@ $structure-item-height: 38px;
 .k-structure-option {
   width: 2.5rem;
 }
-.k-structure-form {
+.k-structure-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+}
+.k-structure-fieldset {
   position: relative;
   background: $color-background;
   padding: 2rem 2rem 3rem;
   border-radius: $border-radius;
-
-  &::before {
-    position: absolute;
-    content: "";
-    top: 0;
-    right: 2.5rem;
-    margin-right: -6px;
-  }
+  z-index: 1;
+  box-shadow: rgba($color-dark, .15) 0 0px 20px;
 }
 </style>

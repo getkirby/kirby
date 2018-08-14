@@ -23,7 +23,6 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: $color-background;
   border-radius: $border-radius;
   color: $color-dark-grey;
   border: 1px dashed $color-border;
