@@ -14,43 +14,36 @@
       <span v-else :style="'padding-bottom:' + ratioPadding" class="k-card-icon">
         <k-icon v-bind="icon" />
       </span>
+      <figcaption class="k-card-content">
+        <span class="k-card-text" :data-info="info">{{ text }}</span>
+        <span v-if="info" class="k-card-info">{{ info }}</span>
+      </figcaption>
     </component>
-    <figcaption>
-      <div class="k-card-content">
-        <component
-          :is="wrapper"
-          :to="link"
-          :target="target"
-          tabindex="-1"
-        >
-          <p class="k-card-text">{{ text }}</p>
-          <p v-if="info" class="k-card-info">{{ info }}</p>
-        </component>
-      </div>
-      <nav class="k-card-options">
+
+    <nav class="k-card-options">
+      <k-button
+        v-if="flag"
+        v-bind="flag"
+        class="k-card-options-button"
+        @click="flag.click"
+      />
+      <slot name="options">
         <k-button
-          v-if="flag"
-          v-bind="flag"
+          v-if="options"
+          icon="dots"
           class="k-card-options-button"
-          @click="flag.click"
+          @click.stop="$refs.dropdown.toggle()"
         />
-        <slot name="options">
-          <k-button
-            v-if="options"
-            icon="dots"
-            class="k-card-options-button"
-            @click.stop="$refs.dropdown.toggle()"
-          />
-          <k-dropdown-content
-            ref="dropdown"
-            :options="options"
-            class="k-card-options-dropdown"
-            align="right"
-            @action="$emit('action', $event)"
-          />
-        </slot>
-      </nav>
-    </figcaption>
+        <k-dropdown-content
+          ref="dropdown"
+          :options="options"
+          class="k-card-options-dropdown"
+          align="right"
+          @action="$emit('action', $event)"
+        />
+      </slot>
+    </nav>
+
   </figure>
 </template>
 
@@ -93,15 +86,12 @@ export default {
 .k-card {
   position: relative;
   min-width: 0;
-  display: grid;
   background: $color-white;
   border-radius: $border-radius;
   box-shadow: $box-shadow-card;
 }
 .k-card a {
-  display: block;
   min-width: 0;
-  height: 100%;
   background: $color-white;
 }
 .k-card:focus-within {
@@ -136,15 +126,6 @@ export default {
   opacity: 1;
 }
 
-
-
-.k-card-content {
-  padding: .625rem .75rem;
-  line-height: 1.25rem;
-  border-bottom-left-radius: $border-radius;
-  border-bottom-right-radius: $border-radius;
-  min-height: 2.25rem;
-}
 .k-card-image,
 .k-card-icon {
   border-top-left-radius: $border-radius;
@@ -170,21 +151,32 @@ export default {
   height: 3rem;
   color: rgba($color-white, 0.5);
 }
+
+.k-card-content {
+  line-height: 1.25rem;
+  border-bottom-left-radius: $border-radius;
+  border-bottom-right-radius: $border-radius;
+  min-height: 2.25rem;
+  padding: .5rem .75rem;
+}
+
 .k-card-text {
   display: block;
   font-weight: $font-weight-normal;
-  white-space: nowrap;
-  line-height: 1.25;
   text-overflow: ellipsis;
   font-size: $font-size-small;
-  overflow: hidden;
+}
+.k-card-text:not([data-info]):after {
+  content: " ";
+  height: 1em;
+  width: 5rem;
+  display: inline-block;
 }
 .k-card-info {
   color: $color-light-grey;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: $font-size-small;
-  padding-top: .25rem;
   overflow: hidden;
 }
 .k-card-options {

@@ -26,12 +26,12 @@ export default {
   grid-template-columns: 1fr;
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-small) {
   .k-sections > .k-column[data-width="3/4"] .k-cards,
   .k-sections > .k-column[data-width="2/3"] .k-cards,
   .k-sections > .k-column[data-width="1/2"] .k-cards,
   .k-sections > .k-column[data-width="1/1"] .k-cards {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
 
