@@ -73,13 +73,6 @@ export default {
       link: false
     };
   },
-  created() {
-    this.fetch();
-    this.$events.$on("page.changeStatus", this.fetch);
-  },
-  destroyed() {
-    this.$events.$off("page.changeStatus", this.fetch);
-  },
   computed: {
     language() {
       return this.$store.state.languages.current;
@@ -89,6 +82,13 @@ export default {
     language() {
       this.fetch();
     }
+  },
+  created() {
+    this.fetch();
+    this.$events.$on("page.changeStatus", this.fetch);
+  },
+  destroyed() {
+    this.$events.$off("page.changeStatus", this.fetch);
   },
   methods: {
     action(page, action) {

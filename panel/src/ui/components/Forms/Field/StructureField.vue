@@ -62,7 +62,7 @@
               </nav>
             </div>
             <div v-if="!disabled && isActive(index)" class="k-structure-form">
-              <div class="k-structure-backdrop" @click="escape"></div>
+              <div class="k-structure-backdrop" @click="escape" />
               <k-fieldset
                 ref="form"
                 :fields="fields"
@@ -176,7 +176,7 @@ export default {
       this.trash = index;
       this.$refs.remove.open();
     },
-    escape(e) {
+    escape() {
       if (this.active !== null && this.items[this.active]) {
         if (Object.keys(this.items[this.active]).length === 0) {
           this.$refs.escapeDialog.open();

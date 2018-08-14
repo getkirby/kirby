@@ -15,7 +15,7 @@
         <k-icon v-bind="icon" />
       </span>
       <figcaption class="k-card-content">
-        <span class="k-card-text" :data-info="info">{{ text }}</span>
+        <span :data-info="info" class="k-card-text">{{ text }}</span>
         <span v-if="info" class="k-card-info">{{ info }}</span>
       </figcaption>
     </component>

@@ -42,10 +42,6 @@ export default {
       issue: null
     };
   },
-  created() {
-    this.fetch();
-    this.$store.dispatch("breadcrumb", []);
-  },
   computed: {
     defaultLanguage() {
       return this.languages.filter(language => language.default);
@@ -53,6 +49,10 @@ export default {
     translations() {
       return this.languages.filter(language => language.default === false);
     }
+  },
+  created() {
+    this.fetch();
+    this.$store.dispatch("breadcrumb", []);
   },
   methods: {
     fetch() {
