@@ -140,5 +140,4 @@ class PageBlueprint extends Blueprint
         $this->status = $status;
         return $this;
     }
-
 }
