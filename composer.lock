@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f13cf27ca3f9cb539051a552e8e80db8",
-    "content-hash": "8b2b7e9a608c2125049cfe5c27eb153d",
+    "hash": "2853cfe3fcf31df5097ba373ae37e4b9",
+    "content-hash": "0270b5eeb8e6897e2cf83d385cdd2860",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -1670,12 +1670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "fc145723725bee14f648550d2bc6002ce7bf53b3"
+                "reference": "814ba320fe659956f52e02ab3c6e36df50641929"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fc145723725bee14f648550d2bc6002ce7bf53b3",
-                "reference": "fc145723725bee14f648550d2bc6002ce7bf53b3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/814ba320fe659956f52e02ab3c6e36df50641929",
+                "reference": "814ba320fe659956f52e02ab3c6e36df50641929",
                 "shasum": ""
             },
             "require": {
@@ -1746,7 +1746,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-08-13 14:02:29"
+            "time": "2018-08-14 09:46:01"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2441,12 +2441,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "316e2120250017445eef76c1b9a80ee863f90d6e"
+                "reference": "109a6decc39e5831500bb51ad27fd97ef157614b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/316e2120250017445eef76c1b9a80ee863f90d6e",
-                "reference": "316e2120250017445eef76c1b9a80ee863f90d6e",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/109a6decc39e5831500bb51ad27fd97ef157614b",
+                "reference": "109a6decc39e5831500bb51ad27fd97ef157614b",
                 "shasum": ""
             },
             "require": {
@@ -2490,7 +2490,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-07-13 17:06:58"
+            "time": "2018-07-14 08:12:57"
         },
         {
             "name": "symfony/event-dispatcher",
