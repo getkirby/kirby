@@ -77,11 +77,6 @@ class App
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
 
-        // switch to admin mode
-        if (($props['sudo'] ?? false) === true) {
-            $props = $this->sudo($props);
-        }
-
         // stuff from config and additional options
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
@@ -834,20 +829,6 @@ class App
     public function snippet(string $name, array $data = []): ?string
     {
         return $this->extensions['components']['snippet']($this, $name, array_merge($this->data, $data));
-    }
-
-    protected function sudo($props)
-    {
-        $props['users'] = [
-            $sudo = [
-                'email' => 'support@getkirby.com',
-                'role'  => 'admin'
-            ]
-        ];
-
-        $props['user'] = 'support@getkirby.com';
-
-        return $props;
     }
 
     /**

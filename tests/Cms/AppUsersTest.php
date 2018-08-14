@@ -5,18 +5,50 @@ namespace Kirby\Cms;
 class AppUsersTest extends TestCase
 {
 
-    public function testSet()
+    public function testImpersonateAsKirby()
+    {
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+        $this->assertEquals('kirby@getkirby.com', $app->user()->email());
+        $this->assertTrue($app->user()->isKirby());
+    }
+
+    public function testImpersonateAsExistingUser()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'users' => [
                 [
-                    'email' => 'user@getkirby.com'
+                    'email' => 'homer@simpsons.com',
+                    'role'  => 'admin'
                 ]
             ]
         ]);
 
-        $this->assertCount(1, $app->users());
-        $this->assertEquals('user@getkirby.com', $app->users()->first()->email());
+        $app->impersonate('homer@simpsons.com');
+        $this->assertEquals('homer@simpsons.com', $app->user()->email());
+    }
+
+    /**
+     * @expectedException Kirby\Exception\NotFoundException
+     */
+    public function testImpersonateAsMissingUser()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $app->impersonate('homer@simpsons.com');
     }
 
     public function testLoad()
@@ -24,6 +56,20 @@ class AppUsersTest extends TestCase
         $app = new App([
             'roots' => [
                 'site' => __DIR__ . '/fixtures'
+            ]
+        ]);
+
+        $this->assertCount(1, $app->users());
+        $this->assertEquals('user@getkirby.com', $app->users()->first()->email());
+    }
+
+    public function testSet()
+    {
+        $app = new App([
+            'users' => [
+                [
+                    'email' => 'user@getkirby.com'
+                ]
             ]
         ]);
 

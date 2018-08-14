@@ -8,6 +8,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentLogicException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\V;
 
@@ -119,6 +120,10 @@ trait UserActions
      */
     protected function commit(string $action, $arguments = [], Closure $callback)
     {
+        if ($this->isKirby() === true) {
+            throw new PermissionException('The Kirby user cannot be changed');
+        }
+
         $old = $this->hardcopy();
 
         $this->rules()->$action(...$arguments);

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Image\Image;
 use Kirby\Toolkit\F;
 
@@ -27,6 +28,10 @@ trait AvatarActions
      */
     protected function commit(string $action, $arguments = [], Closure $callback)
     {
+        if ($this->user()->isKirby() === true) {
+            throw new PermissionException('The Kirby user cannot be changed');
+        }
+
         $old = $this->hardcopy();
 
         $this->kirby()->trigger('avatar.' . $action . ':before', ...$arguments);

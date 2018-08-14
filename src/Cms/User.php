@@ -308,6 +308,17 @@ class User extends ModelWithContent
     }
 
     /**
+     * Checks if the current user is the virtual
+     * Kirby user
+     *
+     * @return boolean
+     */
+    public function isKirby(): bool
+    {
+        return $this->email() === 'kirby@getkirby.com';
+    }
+
+    /**
      * Checks if the current user is this user
      *
      * @return boolean

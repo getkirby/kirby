@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Dir;
@@ -67,6 +68,35 @@ trait AppUsers
         }
 
         return null;
+    }
+
+    /**
+     * Become any existing user
+     *
+     * @param string|null $who
+     * @return self
+     */
+    public function impersonate(string $who = null)
+    {
+        if ($who === null) {
+            $this->user = null;
+            return $this;
+        }
+
+        if ($who === 'kirby') {
+            $this->user = new User([
+                'email' => 'kirby@getkirby.com',
+            ]);
+
+            return $this;
+        }
+
+        if ($user = $this->users()->find($who)) {
+            $this->user = $user;
+            return $this;
+        }
+
+        throw new NotFoundException('The user "' . $who . '" cannot be found');
     }
 
     /**
