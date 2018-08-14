@@ -139,21 +139,14 @@ export default {
         .then(response => {
           let message = "";
 
-          switch (this.form.status) {
-            case "listed":
-              if (this.page.blueprint.num === "default") {
-                message = this.$t("page.status.change.result.num", {
-                  num: response.num
-                });
-              } else {
-                message = this.$t("page.status.change.result.listed");
-              }
-              break;
-            case "unlisted":
-              message = this.$t("page.status.change.result.unlisted");
-              break;
-            case "draft":
-              message = this.$t("page.status.change.result.draft");
+          if (this.form.status === "listed" && this.page.blueprint.num === "default") {
+            message = this.$t("page.status.change.result.num", {
+              num: response.num
+            });
+          } else {
+            message = this.$t("page.status.change.result", {
+              status: this.states[response.status].label
+            });
           }
 
           this.success({
