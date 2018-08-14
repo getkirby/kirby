@@ -41,7 +41,7 @@
             @click.stop
           >
             <div v-if="!isActive(index)" class="k-structure-item-wrapper">
-              <k-button class="k-structure-item-handle" icon="sort" />
+              <k-button v-if="items.length > 1" class="k-structure-item-handle" icon="sort" />
               <div class="k-structure-item-content">
                 <p
                   v-for="(field, fieldName) in fields"
