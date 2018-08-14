@@ -130,8 +130,6 @@ export default {
         .get(this.parent + "/sections/" + this.name, { page: this.page })
         .then(response => {
 
-          const states = this.$api.pages.states();
-
           this.data = response.data.map(page => {
             page.options = ready => {
               this.$api.pages
@@ -142,7 +140,7 @@ export default {
             page.sortable = page.permissions.sort && response.options.sortable;
 
             page.flag = {
-              tooltip: states[page.status].label,
+              tooltip: page.statusLabel,
               class: "k-status-flag k-status-flag-" + page.status,
               icon: page.permissions.changeStatus === false ? "protected" : "circle",
               disabled: page.permissions.changeStatus === false,

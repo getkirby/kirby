@@ -116,7 +116,7 @@ export default {
     },
     status() {
       return this.page.status !== null
-        ? this.$api.pages.states()[this.page.status]
+        ? this.page.blueprint.status[this.page.status]
         : null;
     },
     tabsKey() {

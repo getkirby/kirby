@@ -114,25 +114,6 @@ export default {
       position: position
     });
   },
-  states() {
-    return {
-      draft: {
-        icon: "draft",
-        label: Vue.i18n.translate("page.status.draft"),
-        description: Vue.i18n.translate("page.status.draft.description")
-      },
-      unlisted: {
-        icon: "toggle-off",
-        label: Vue.i18n.translate("page.status.unlisted"),
-        description: Vue.i18n.translate("page.status.unlisted.description")
-      },
-      listed: {
-        icon: "toggle-on",
-        label: Vue.i18n.translate("page.status.listed"),
-        description: Vue.i18n.translate("page.status.listed.description")
-      }
-    };
-  },
   breadcrumb(page, self = true) {
     var breadcrumb = page.parents.map(parent => ({
       label: parent.title,

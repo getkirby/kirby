@@ -144,6 +144,11 @@ class BlueprintPagesSection extends BlueprintSection
         return $item->image();
     }
 
+    protected function itemStatusLabel($item)
+    {
+        return $item->blueprint()->status()[$item->status()]['label'] ?? null;
+    }
+
     protected function itemToResult($item)
     {
         $stringTemplateData = [$this->modelType($item) => $item];
@@ -157,6 +162,7 @@ class BlueprintPagesSection extends BlueprintSection
             'link'             => '/pages/' . $item->panelId(),
             'parent'           => $item->parent() ? $item->parent()->id(): null,
             'status'           => $item->status(),
+            'statusLabel'      => $this->itemStatusLabel($item),
             'text'             => $item->toString($this->item['title'] ?? '{{ page.title }}'),
             'url'              => $item->url(),
             'permissions'      => [

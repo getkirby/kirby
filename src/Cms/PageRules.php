@@ -54,6 +54,10 @@ class PageRules
 
     public static function changeStatus(Page $page, string $status, int $position = null): bool
     {
+        if (isset($page->blueprint()->status()[$status]) === false) {
+            throw new InvalidArgumentException(['key' => 'page.status.invalid']);
+        }
+
         switch ($status) {
             case 'draft':
                 return static::changeStatusToDraft($page);

@@ -30,12 +30,12 @@ export default {
       form: {
         status: null,
         position: null
-      }
+      },
+      states: {}
     };
   },
   computed: {
     fields() {
-      const states = this.$api.pages.states();
 
       let fields = {
         status: {
@@ -43,11 +43,11 @@ export default {
           label: this.$t("page.status.select"),
           type: "radio",
           required: true,
-          options: Object.keys(states).map(key => {
+          options: Object.keys(this.states).map(key => {
             return {
               value: key,
-              text: states[key].label,
-              info: states[key].description
+              text: this.states[key].label,
+              info: this.states[key].text
             };
           })
         }
@@ -119,6 +119,7 @@ export default {
             });
           }
 
+          this.states = page.blueprint.status;
           this.page = page;
           this.form.status = page.status;
           this.form.position = page.num;

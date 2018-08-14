@@ -16,6 +16,9 @@ return [
         'options' => function (PageBlueprint $blueprint) {
             return $blueprint->options()->toArray();
         },
+        'status' => function (PageBlueprint $blueprint) {
+            return $blueprint->status();
+        },
         'tabs' => function (PageBlueprint $blueprint) {
             return $blueprint->tabs()->toArray();
         },
