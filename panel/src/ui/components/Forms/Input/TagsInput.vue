@@ -148,6 +148,14 @@ export default {
       this.$refs.input.focus();
     },
     addTagToIndex(tag) {
+      if (this.accept === "options") {
+        const option = this.options.filter(option => option.value === tag.value)[0];
+
+        if (!option) {
+          return;
+        }
+      }
+
       if (this.index(tag) === -1 && (!this.max || this.tags.length < this.max)) {
         this.tags.push(tag);
         this.onInput(this.tags);
