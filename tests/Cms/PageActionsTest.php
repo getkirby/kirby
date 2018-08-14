@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Toolkit\F;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class PageActionsTest extends TestCase
@@ -24,6 +25,11 @@ class PageActionsTest extends TestCase
                             'type' => 'text'
                         ]
                     ]
+                ],
+                'pages/article' => [
+                    'title'  => 'Article',
+                    'name'   => 'article',
+                    'status' => ['draft' => 'Draft', 'listed' => 'Published']
                 ]
             ],
             'roots' => [
@@ -33,6 +39,11 @@ class PageActionsTest extends TestCase
                 'children' => [
                     [
                         'slug'  => 'test',
+                    ],
+                    [
+                        'slug'     => 'article',
+                        'num'      => 20121212,
+                        'template' => 'article'
                     ]
                 ],
             ],
@@ -86,6 +97,20 @@ class PageActionsTest extends TestCase
 
         $draft = $page->changeStatus('draft');
         $this->assertEquals('draft', $draft->status());
+    }
+
+    public function testChangeStatusToInvalidStatus()
+    {
+        $page = $this->site()->find('article')->save();
+        $this->assertEquals('listed', $page->status());
+
+        $draft = $page->changeStatus('draft');
+        $this->assertEquals('draft', $draft->status());
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $unlisted = $page->changeStatus('unlisted');
+        $this->assertEquals('unlisted', $unlisted->status());
     }
 
     public function testChangeTemplate()
