@@ -24,6 +24,35 @@ class RouteTest extends TestCase
         $this->assertEquals('test', $route->action()->call($route));
     }
 
+    public function testName()
+    {
+        $route = new Route('a', 'GET', function () {}, [
+            'name' => 'test'
+        ]);
+
+        $this->assertEquals('test', $route->name());
+    }
+
+    public function testAttributes()
+    {
+        $route = new Route('a', 'GET', function () {}, $attributes = [
+            'a' => 'a',
+            'b' => 'b'
+        ]);
+
+        $this->assertEquals($attributes, $route->attributes());
+    }
+
+    public function testAttributesGetter()
+    {
+        $route = new Route('a', 'GET', function () {}, [
+            'a' => 'a'
+        ]);
+
+        $this->assertEquals('a', $route->a());
+        $this->assertEquals(null, $route->b());
+    }
+
     public function testPattern()
     {
         $route = $this->_route();

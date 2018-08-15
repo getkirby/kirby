@@ -73,6 +73,18 @@ class Route
     ];
 
     /**
+     * Magic getter for route attributes
+     *
+     * @param string $key
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call(string $key, array $arguments = null)
+    {
+        return $this->attributes[$key] ?? null;
+    }
+
+    /**
      * Creates a new Route object for the given
      * pattern(s), method(s) and the callback action
      *
@@ -126,6 +138,16 @@ class Route
     public function method(): string
     {
         return $this->method;
+    }
+
+    /**
+     * Returns the route name if set
+     *
+     * @return string|null
+     */
+    public function name(): ?string
+    {
+        return $this->attributes['name'] ?? null;
     }
 
     /**
