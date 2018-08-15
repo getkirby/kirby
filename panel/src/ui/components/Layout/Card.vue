@@ -174,11 +174,14 @@ export default {
 }
 .k-card-info {
   color: $color-light-grey;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  display: block;
   font-size: $font-size-small;
+  text-overflow: ellipsis;
   overflow: hidden;
+  margin-right: 4rem;
 }
+
+
 .k-card-options {
   position: absolute;
   bottom: 0;
