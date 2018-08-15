@@ -12,10 +12,10 @@
       <slot slot="right" name="right" class="k-header-right" />
     </k-bar>
 
-    <div v-if="tabs && tabs.length > 1" :data-compact="tabs.length >= 5" class="k-header-tabs">
+    <div v-if="tabs && tabs.length > 1" class="k-header-tabs">
       <nav>
         <k-button
-          v-for="(tab, tabIndex) in tabs"
+          v-for="(tab, tabIndex) in visibleTabs"
           :key="tabIndex"
           :link="'#' + tab.name"
           :current="currentTab && currentTab.name === tab.name"
@@ -25,12 +25,32 @@
         >
           {{ tab.label }}
         </k-button>
+
+        <k-button v-if="invisibleTabs.length" class="k-tab-button k-tabs-dropdown-button" icon="dots" @click.stop="$refs.more.toggle()">More</k-button>
+
       </nav>
+
+      <k-dropdown-content v-if="invisibleTabs.length" class="k-tabs-dropdown" ref="more" align="right">
+        <k-dropdown-item
+          v-for="(tab, tabIndex) in invisibleTabs"
+          :link="'#' + tab.name"
+          :key="'more-' + tab.name"
+          :current="currentTab && currentTab.name === tab.name"
+          :icon="tab.icon"
+          :tooltip="tab.label"
+        >
+          {{ tab.label }}
+        </k-dropdown-item>
+      </k-dropdown-content>
+
     </div>
+
   </header>
+
 </template>
 
 <script>
+
 export default {
   props: {
     editable: Boolean,
@@ -39,12 +59,47 @@ export default {
   },
   data() {
     return {
-      currentTab: this.tab
+      size: null,
+      currentTab: this.tab,
+      visibleTabs: this.tabs,
+      invisibleTabs: []
     }
+  },
+  created() {
+    window.addEventListener("resize", this.resize);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resize);
   },
   watch: {
     tab() {
       this.currentTab = this.tab;
+    },
+    tabs() {
+      this.resize();
+    }
+  },
+  methods: {
+    resize() {
+
+      if (window.innerWidth >= 700) {
+        if (this.size === "large") {
+          return;
+        }
+
+        this.visibleTabs = this.tabs;
+        this.invisibleTabs = [];
+        this.size = "large";
+      } else {
+        if (this.size === "small") {
+          return;
+        }
+
+        this.visibleTabs = this.tabs.slice(0, 2);
+        this.invisibleTabs = this.tabs.slice(2);
+        this.size = "small";
+      }
+
     }
   }
 }
@@ -86,9 +141,6 @@ export default {
   margin-left: -1px;
   margin-right: -1px;
 }
-.k-header-tabs[data-compact] .k-tab-button:not([aria-current]) .k-button-text {
-  display: none;
-}
 
 .k-tab-button {
   position: relative;
@@ -112,16 +164,14 @@ export default {
     max-width: 13rem;
   }
 }
-.k-tab-button .k-button-text {
+.k-tab-button > .k-button-text {
   padding-top: .375rem;
   padding-left: 0 !important; // there's another rule that has a higher specificity and breaks alignment otherwise
   font-size: 10px;
   overflow: hidden;
-  max-width: 2.5rem;
   text-overflow: ellipsis;
 
   @media screen and (min-width: $breakpoint-small) {
-    max-width: none;
     font-size: $font-size-tiny;
     padding-top: 0;
     padding-left: .5rem !important; // same as above
@@ -163,4 +213,10 @@ export default {
   }
 
 }
+
+.k-tabs-dropdown {
+  top: 100%;
+  right: 0;
+}
+
 </style>
