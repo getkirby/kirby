@@ -141,7 +141,7 @@ trait PageActions
     protected function changeStatusToDraft(): self
     {
         $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
-            $draft = $page->clone(['num' => null], 'Kirby\Cms\PageDraft');
+            $draft = $page->clone(['num' => null, 'isDraft' => true]);
 
             if ($page->exists() === false) {
                 return $draft;
@@ -300,9 +300,10 @@ trait PageActions
         // clean up the slug
         $props['slug']     = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
         $props['template'] = strtolower($props['template'] ?? 'default');
+        $props['isDraft']  = true;
 
         // create a temporary page object
-        $page = PageDraft::factory($props);
+        $page = Page::factory($props);
 
         return $page->commit('create', [$page, $props], function ($page, $props) {
 
@@ -444,7 +445,7 @@ trait PageActions
             return $this;
         }
 
-        $page = $this->clone([], 'Kirby\Cms\Page');
+        $page = $this->clone(['isDraft' => false]);
 
         if ($this->exists() === false) {
             return $page;

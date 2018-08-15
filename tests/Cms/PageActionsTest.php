@@ -133,8 +133,9 @@ class PageActionsTest extends TestCase
             'slug' => 'new-page',
         ]);
 
-        $this->assertInstanceOf(PageDraft::class, $page);
+        $this->assertInstanceOf(Page::class, $page);
         $this->assertTrue($page->exists());
+        $this->assertTrue($page->isDraft());
     }
 
     /**

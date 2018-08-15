@@ -54,7 +54,11 @@ return [
             return $page->prev();
         },
         'siblings' => function (Page $page) {
-            return $page->siblings();
+            if ($page->isDraft() === true) {
+                return $page->parentModel()->children()->not($page);
+            } else {
+                return $page->siblings();
+            }
         },
         'slug' => function (Page $page) {
             return $page->slug();
@@ -69,7 +73,7 @@ return [
             return $page->title()->value();
         },
         'url' => function (Page $page) {
-            return $page->url();
+            return $page->previewUrl();
         },
     ],
     'type' => Page::class,

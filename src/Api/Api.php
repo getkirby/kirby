@@ -191,9 +191,9 @@ class Api
         }
 
         // now models deeply by checking for the actual type
-        foreach ($this->models as $className => $model) {
+        foreach ($this->models as $modelClass => $model) {
             if (is_a($object, $model['type']) === true) {
-                return $this->model($className, $object);
+                return $this->model($modelClass, $object);
             }
         }
 

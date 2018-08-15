@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Str;
+
 trait HasChildren
 {
 
@@ -48,11 +50,34 @@ trait HasChildren
      * Searches for a child draft by id
      *
      * @param string $path
-     * @return PageDraft|null
+     * @return Page|null
      */
     public function draft(string $path)
     {
-        return PageDraft::seek($this, $path);
+        $path = str_replace('_drafts/', '', $path);
+
+        if (Str::contains($path, '/') === false) {
+            return $this->drafts()->find($path);
+        }
+
+        $parts  = explode('/', $path);
+        $parent = $this;
+
+        foreach ($parts as $slug) {
+            if ($page = $parent->find($slug)) {
+                $parent = $page;
+                continue;
+            }
+
+            if ($draft = $parent->drafts()->find($slug)) {
+                $parent = $draft;
+                continue;
+            }
+
+            return null;
+        }
+
+        return $parent;
     }
 
     /**
@@ -68,7 +93,7 @@ trait HasChildren
 
         $inventory = Dir::inventory($this->root() . '/_drafts');
 
-        return $this->drafts = Pages::factory($inventory['children'], $this, 'Kirby\Cms\PageDraft');
+        return $this->drafts = Pages::factory($inventory['children'], $this, true);
     }
 
     /**
@@ -196,7 +221,7 @@ trait HasChildren
     protected function setDrafts(array $drafts = null)
     {
         if ($drafts !== null) {
-            $this->drafts = Pages::factory($drafts, $this, 'Kirby\Cms\PageDraft');
+            $this->drafts = Pages::factory($drafts, $this, true);
         }
 
         return $this;

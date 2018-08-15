@@ -70,6 +70,13 @@ class Page extends ModelWithContent
     protected $diruri;
 
     /**
+     * Draft status flag
+     *
+     * @var bool
+     */
+    protected $isDraft;
+
+    /**
      * The Page id
      *
      * @var string
@@ -268,22 +275,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Clone the page object and
-     * optionally convert it to a draft object
-     *
-     * @param array $props
-     * @return self
-     */
-    public function clone(array $props = [], string $to = null)
-    {
-        if ($to === null || $to === static::class) {
-            return parent::clone($props);
-        }
-
-        return new $to(array_replace_recursive($this->propertyData, $props));
-    }
-
-    /**
      * Returns the default parent collection
      *
      * @return Collection
@@ -376,11 +367,17 @@ class Page extends ModelWithContent
             return $this->diruri;
         }
 
-        if ($parent = $this->parent()) {
-            return $this->diruri = $this->parent()->diruri() . '/' . $this->dirname();
+        if ($this->isDraft() === true) {
+            $dirname = '_drafts/' . $this->dirname();
+        } else {
+            $dirname = $this->dirname();
         }
 
-        return $this->diruri = $this->dirname();
+        if ($parent = $this->parent()) {
+            return $this->diruri = $this->parent()->diruri() . '/' . $dirname;
+        } else {
+            return $this->diruri = $dirname;
+        }
     }
 
     /**
@@ -571,7 +568,7 @@ class Page extends ModelWithContent
      */
     public function isDraft(): bool
     {
-        return static::class === 'Kirby\Cms\PageDraft';
+        return $this->isDraft;
     }
 
     /**
@@ -690,6 +687,26 @@ class Page extends ModelWithContent
     public function isUnlisted(): bool
     {
         return $this->num() === null;
+    }
+
+    /**
+     * Checks if the page access is verified.
+     * This is only used for drafts so far.
+     *
+     * @param string $token
+     * @return boolean
+     */
+    public function isVerified(string $token = null)
+    {
+        if ($this->isDraft() === false) {
+            return true;
+        }
+
+        if ($token === null) {
+            return false;
+        }
+
+        return $this->token() === $token;
     }
 
     /**
@@ -840,6 +857,20 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Draft preview Url
+     *
+     * @return string
+     */
+    public function previewUrl(): string
+    {
+        if ($this->isDraft() === true) {
+            return $this->url() . '?token=' . $this->token();
+        } else {
+            return $this->url();
+        }
+    }
+
+    /**
      * Renders the page with the given data.
      *
      * An optional content type can be passed to
@@ -944,6 +975,18 @@ class Page extends ModelWithContent
             $this->blueprint = new PageBlueprint($blueprint);
         }
 
+        return $this;
+    }
+
+    /**
+     * Sets the draft flag
+     *
+     * @param boolean $isDraft
+     * @return self
+     */
+    protected function setIsDraft(bool $isDraft = null): self
+    {
+        $this->isDraft = $isDraft ?? false;
         return $this;
     }
 
@@ -1104,6 +1147,17 @@ class Page extends ModelWithContent
             'translations' => $this->translations()->toArray(),
             'url'          => $this->url()
         ];
+    }
+
+    /**
+     * Returns a verification token, which
+     * is used for the draft authentication
+     *
+     * @return string
+     */
+    protected function token(): string
+    {
+        return sha1($this->id() . $this->template());
     }
 
     /**

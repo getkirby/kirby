@@ -114,10 +114,10 @@ class Pages extends Collection
      * @param array $pages
      * @param Model $parent
      * @param array $inject
-     * @param string $class
+     * @param bool $draft
      * @return Pages
      */
-    public static function factory(array $pages, Model $model = null, string $class = 'Kirby\Cms\Page')
+    public static function factory(array $pages, Model $model = null, bool $draft = false)
     {
         $model    = $model ?? App::instance()->site();
         $children = new static([], $model);
@@ -136,8 +136,9 @@ class Pages extends Collection
             $props['kirby']      = $kirby;
             $props['parent']     = $parent;
             $props['site']       = $site;
+            $props['isDraft']    = $draft;
 
-            $page = $class::factory($props);
+            $page = Page::factory($props);
 
             $children->data[$page->id()] = $page;
         }
