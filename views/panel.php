@@ -7,7 +7,6 @@
 
   <title>Kirby Panel</title>
 
-  <link rel="stylesheet" href="<?= $assetUrl ?>/css/fonts.css">
   <link rel="stylesheet" href="<?= $assetUrl ?>/css/app.css">
   <link rel="stylesheet" href="<?= $pluginCss ?>">
   <?php if (isset($config['css'])) : ?>
