@@ -55,9 +55,11 @@ Vue.component("k-form-buttons", FormButtons);
 /* Layout */
 import Dropzone from "@/components/Layout/Dropzone.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
+import Tabs from "@/components/Layout/Tabs.vue";
 
 Vue.component("k-dropzone", Dropzone);
 Vue.component("k-file-preview", FilePreview);
+Vue.component("k-tabs", Tabs);
 
 /* Navigation */
 import Languages from "@/components/Navigation/Languages.vue";
@@ -78,13 +80,6 @@ Vue.component("k-info-section", InfoSection);
 Vue.component("k-pages-section", PagesSection);
 Vue.component("k-files-section", FilesSection);
 Vue.component("k-fields-section", FieldsSection);
-
-/* Tabs */
-import Tabs from "@/components/Tabs/Tabs.vue";
-import TabsDropdown from "@/components/Tabs/TabsDropdown.vue";
-
-Vue.component("k-tabs", Tabs);
-Vue.component("k-tabs-dropdown", TabsDropdown);
 
 /* View */
 import ErrorView from "@/components/Views/ErrorView.vue";

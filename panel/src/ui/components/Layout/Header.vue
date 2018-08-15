@@ -26,15 +26,26 @@
           {{ tab.label }}
         </k-button>
 
-        <k-button v-if="invisibleTabs.length" class="k-tab-button k-tabs-dropdown-button" icon="dots" @click.stop="$refs.more.toggle()">More</k-button>
-
+        <k-button
+          v-if="invisibleTabs.length"
+          class="k-tab-button k-tabs-dropdown-button"
+          icon="dots"
+          @click.stop="$refs.more.toggle()"
+        >
+          {{ $t('more') }}
+        </k-button>
       </nav>
 
-      <k-dropdown-content v-if="invisibleTabs.length" class="k-tabs-dropdown" ref="more" align="right">
+      <k-dropdown-content
+        v-if="invisibleTabs.length"
+        ref="more"
+        align="right"
+        class="k-tabs-dropdown"
+      >
         <k-dropdown-item
           v-for="(tab, tabIndex) in invisibleTabs"
           :link="'#' + tab.name"
-          :key="'more-' + tab.name"
+          :key="'more-' + tabIndex"
           :current="currentTab && currentTab.name === tab.name"
           :icon="tab.icon"
           :tooltip="tab.label"
@@ -65,12 +76,6 @@ export default {
       invisibleTabs: []
     }
   },
-  created() {
-    window.addEventListener("resize", this.resize);
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.resize);
-  },
   watch: {
     tab() {
       this.currentTab = this.tab;
@@ -78,6 +83,12 @@ export default {
     tabs() {
       this.resize();
     }
+  },
+  created() {
+    window.addEventListener("resize", this.resize);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resize);
   },
   methods: {
     resize() {
