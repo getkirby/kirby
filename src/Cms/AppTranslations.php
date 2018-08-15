@@ -17,7 +17,14 @@ trait AppTranslations
     {
         I18n::$load = function ($locale) {
             if ($translation = $this->translation($locale)) {
-                return $translation->data();
+                $data = $translation->data();
+
+                // inject translations from the current language
+                if ($this->multilang() === true && $language = $this->languages()->find($locale)) {
+                    $data = array_merge($data, $language->translations());
+                }
+
+                return $data;
             }
 
             return $translations[$locale] ?? [];

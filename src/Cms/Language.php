@@ -43,6 +43,11 @@ class Language extends Model
     protected $name;
 
     /**
+     * @var array|null
+     */
+    protected $translations;
+
+    /**
      * @var string
      */
     protected $url;
@@ -63,7 +68,8 @@ class Language extends Model
             'direction',
             'locale',
             'name',
-            'url'
+            'translations',
+            'url',
         ]);
     }
 
@@ -316,9 +322,7 @@ class Language extends Model
 
         unset($data['url']);
 
-        $export = '<?php' . PHP_EOL . PHP_EOL . var_export($data, true);
-        $export = str_replace('array (', 'return [', $export);
-        $export = str_replace(PHP_EOL . ')', PHP_EOL . '];', $export);
+        $export = '<?php' . PHP_EOL . PHP_EOL . 'return ' . var_export($data, true) . ';';
 
         F::write($this->root(), $export);
 
@@ -376,6 +380,16 @@ class Language extends Model
     }
 
     /**
+     * @param array $translations
+     * @return self
+     */
+    protected function setTranslations(array $translations = null): self
+    {
+        $this->translations = $translations ?? [];
+        return $this;
+    }
+
+    /**
      * @param string $url
      * @return self
      */
@@ -401,6 +415,16 @@ class Language extends Model
             'name'      => $this->name(),
             'url'       => $this->url()
         ];
+    }
+
+    /**
+     * Returns the translation strings for this language
+     *
+     * @return array
+     */
+    public function translations(): array
+    {
+        return $this->translations;
     }
 
     /**

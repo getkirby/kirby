@@ -54,6 +54,31 @@ class AppTranslationsTest extends TestCase
         $this->assertEquals($i, $translations->count());
     }
 
+    public function testTranslationFromCurrentLanguage()
+    {
+
+        $app = new App([
+            'languages' => [
+                [
+                    'code'         => 'de',
+                    'default'      => true,
+                    'translations' => [
+                        'button' => 'Knopf'
+                    ]
+                ]
+            ],
+            'translations' => [
+                'de' => [
+                ]
+            ]
+        ]);
+
+        I18n::$locale = 'de';
+
+        $this->assertEquals('Knopf', t('button'));
+
+    }
+
     public function testTranslateUserLanguage()
     {
         $app = $this->app();
