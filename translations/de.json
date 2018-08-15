@@ -14,8 +14,10 @@
   "install": "Installieren",
   "login": "Einloggen",
   "logout": "Ausloggen",
+  "more": "More",
   "open": "Öffnen",
   "rename": "Umbenennen",
+  "remove": "Entfernen",
   "replace": "Ersetzen",
   "revert": "Zurücksetzen",
   "settings": "Einstellungen",
@@ -27,6 +29,8 @@
   "view.site": "Seite",
   "view.users": "Benutzer",
   "view.account": "Dein Account",
+  "view.installation": "Installation",
+  "view.languages": "Sprachen",
 
   "file.name": "Dateiname",
   "file.renamed": "Die Datei wurde umbenannt",
@@ -34,8 +38,7 @@
   "file.replaced": "Die Datei wurde ersetzt",
   "file.sorted": "Sortiert!",
   "file.deleted": "Die Datei wurde gelöscht",
-  "file.delete.confirm":
-    "Möchtest du wirklich <br><strong>{filename}</strong> löschen?",
+  "file.delete.confirm": "Möchtest du wirklich <br><strong>{filename}</strong> löschen?",
   "file.template": "Vorlage",
   "file.mime": "Typ",
   "file.url": "URL",
@@ -49,10 +52,27 @@
 
   "files.empty": "Noch keine Dateien",
 
+  "language.create": "Sprache erstellen",
+  "language.delete.confirm": "Möchtest du die Sprache <br><strong>{name}</strong> einschließlich aller Übersetzungen wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden!",
+  "language.deleted": "Die Sprache wurde gelöscht",
+  "language.name": "Name",
+  "language.code": "Code",
+  "language.direction": "Leserichtung",
+  "language.direction.ltr": "Von links nach rechts",
+  "language.direction.rtl": "Von rechts nach links",
+  "language.locale": "PHP locale string",
+  "language.makeDefault": "Als Standard definieren",
+  "language.url": "Url Pfad",
+  "language.updated": "Die Änderungen wurden gespeichert",
+
+  "languages.empty": "Kein mehrsprachiges Setup",
+  "languages.empty.secondary": "Es gibt noch keine sekundären Sprachen",
+  "languages.default": "Standardsprache",
+  "languages.secondary": "Sekundäre Sprachen",
+
   "page.create": "Entwurf erstellen",
   "page.created": "Der Entwurf wurde erstellt",
-  "page.delete.confirm":
-    "Möchtest du wirklich <br><strong>{title}</strong> löschen?",
+  "page.delete.confirm": "Möchtest du wirklich <br><strong>{title}</strong> löschen?",
   "page.deleted": "Die Seite wurde gelöscht",
   "page.rename.fromTitle": "Aus Titel erzeugen",
   "page.renamed": "Die Seite wurde umbenannt",
@@ -62,8 +82,7 @@
   "page.url.changed": "Die URL wurde geändert zu: /{url}",
   "page.url.changed.same": "Die URL ist gleich geblieben",
   "page.status.draft": "Entwurf",
-  "page.status.draft.description":
-    "Die Seite ist im Entwurfsmodus und nur für eingeloggte Editoren sichtbar",
+  "page.status.draft.description": "Die Seite ist im Entwurfsmodus und nur für eingeloggte Editoren sichtbar",
   "page.status.unlisted": "Versteckt",
   "page.status.unlisted.description": "Die Seite ist nur via URL erreichbar",
   "page.status.listed": "Öffentlich",
@@ -72,8 +91,7 @@
   "page.status.change.result.draft": "Die Seite ist nun im Entwurfsmodus",
   "page.status.change.result.unlisted": "Die Seite ist nun ungelistet",
   "page.status.change.result.listed": "Die Seite ist nun gelistet",
-  "page.status.change.result.num":
-    "Die Seite befindet sich nun an Position {num}",
+  "page.status.change.result.num": "Die Seite befindet sich nun an Position {num}",
   "page.status.select": "Bitte wähl einen Status aus …",
   "page.num.select": "Bitte wähle eine Position aus",
   "page.template": "Vorlage",
@@ -100,8 +118,7 @@
   "user.name.change": "Benutzer umbenennen",
   "user.name.changed": "Der Name wurde geändert",
   "user.delete": "Benutzer löschen",
-  "user.delete.confirm":
-    "Möchtest du wirklich <br><strong>{email}</strong> löschen?",
+  "user.delete.confirm": "Möchtest du wirklich <br><strong>{email}</strong> löschen?",
   "user.deleted": "Der Benutzer wurde gelöscht",
   "user.email": "E-Mail",
   "user.email.change": "E-Mail ändern",
@@ -125,8 +142,7 @@
   "user.language.change": "Sprache ändern",
   "user.language.changed": "Die Sprache wurde geändert",
   "user.language.select": "Bitte wähl eine Sprache aus …",
-  "user.blueprint":
-    "Du kannst weitere Abschnitte und Formularfelder für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
+  "user.blueprint": "Du kannst weitere Abschnitte und Formularfelder für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> definieren",
 
   "users.empty.role": "Es gibt keine Benutzer mit dieser Rolle",
 
