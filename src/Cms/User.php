@@ -364,9 +364,9 @@ class User extends ModelWithContent
      *
      * @param string $password
      * @param Session|array $session Session options or session object to set the user in
-     * @return void
+     * @return bool
      */
-    public function login(string $password, $session = null)
+    public function login(string $password, $session = null): bool
     {
         if ($this->role()->permissions()->for('access', 'panel') === false) {
             throw new PermissionException(['key' => 'access.panel']);
@@ -377,6 +377,8 @@ class User extends ModelWithContent
         }
 
         $this->loginPasswordless($session);
+
+        return true;
     }
 
     /**

@@ -1,5 +1,8 @@
 <?php
 
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * Authentication
  */
@@ -12,53 +15,38 @@ return [
                 return $this->resolve($user)->view('auth');
             }
 
-            throw new Exception('The user cannot be found');
+            throw new NotFoundException('The user cannot be found');
         }
     ],
     [
         'pattern' => 'auth/login',
         'method'  => 'POST',
+        'auth'    => false,
         'action'  => function () {
 
-            // assemble session options
+            // logout previous users
+            if ($user = $this->user()) {
+                $user->logout();
+            }
+
+            // session options
             $options = [
                 'createMode' => 'cookie',
                 'long'       => $this->requestBody('long') === true
             ];
 
-            // log in to the session
-            $this->user(null, $options)->loginPasswordless();
+            // validate the user and log in to the session
+            if ($user = $this->user($this->requestBody('email'))) {
+                if ($user->login($this->requestBody('password'), $options) === true) {
+                    return [
+                        'code'   => 200,
+                        'status' => 'ok',
+                        'user'   => $this->resolve($this->user())->view('auth')->toArray()
+                    ];
+                }
+            }
 
-            return [
-                'code'   => 200,
-                'status' => 'ok',
-                'user'   => $this->resolve($this->user())->view('auth')->toArray()
-            ];
-
-        }
-    ],
-    [
-        'pattern' => 'auth/token',
-        'method'  => 'POST',
-        'action'  => function () {
-
-            // assemble session options
-            $options = [
-                'createMode' => 'header',
-                'long'       => $this->requestBody('long') === true
-            ];
-
-            // log in to the session
-            $this->user(null, $options)->loginPasswordless();
-
-            return [
-                'code'   => 200,
-                'status' => 'ok',
-                // TODO: Remove the following line once the token is transmitted on the
-                //       top-level of the response anyway
-                'token'  => $this->session()->token(),
-                'user'   => $this->resolve($this->user())->view('auth')->toArray()
-            ];
+            throw new InvalidArgumentException('Invalid email or password');
 
         }
     ],
