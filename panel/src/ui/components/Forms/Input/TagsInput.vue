@@ -8,9 +8,9 @@
     @input="onInput"
   >
     <k-tag
-      v-for="tag in tags"
+      v-for="(tag, tagIndex) in tags"
       :ref="tag.value"
-      :key="tag.value"
+      :key="tagIndex"
       :removable="true"
       name="tag"
       @click.native.stop
@@ -148,6 +148,7 @@ export default {
       this.$refs.input.focus();
     },
     addTagToIndex(tag) {
+
       if (this.accept === "options") {
         const option = this.options.filter(option => option.value === tag.value)[0];
 
