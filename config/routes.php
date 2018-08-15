@@ -27,7 +27,7 @@ return function ($kirby) {
                 $home = $kirby->site()->homePage();
 
                 if ($kirby->multilang() === true && $kirby->url() !== $home->url()) {
-                    return go($kirby->site()->url());
+                    return Response::redirect($kirby->site()->url());
                 } else {
                     return $home;
                 }
