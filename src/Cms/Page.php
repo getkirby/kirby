@@ -1069,7 +1069,6 @@ class Page extends ModelWithContent
             if ($languageCode === null) {
                 $languageCode = $this->kirby()->language()->code();
             }
-
             return $this->translations()->find($languageCode)->slug() ?? $this->slug;
         } else {
             return $this->slug;
@@ -1145,6 +1144,8 @@ class Page extends ModelWithContent
             'slug'         => $this->slug(),
             'template'     => $this->template(),
             'translations' => $this->translations()->toArray(),
+            'uid'          => $this->uid(),
+            'uri'          => $this->uri(),
             'url'          => $this->url()
         ];
     }
@@ -1192,6 +1193,23 @@ class Page extends ModelWithContent
     public function uid(): string
     {
         return $this->slug;
+    }
+
+    /**
+     * The uri is the same as the id, except
+     * that it will be translated in multi-language setups
+     *
+     * @param string|null $languageCode
+     * @return string
+     */
+    public function uri(string $languageCode = null): string
+    {
+        // set the id, depending on the parent
+        if ($parent = $this->parent()) {
+            return $parent->uri($languageCode) . '/' . $this->slug($languageCode);
+        }
+
+        return $this->slug($languageCode);
     }
 
     /**

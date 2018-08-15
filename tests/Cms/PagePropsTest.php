@@ -278,4 +278,79 @@ class PagePropsTest extends TestCase
         $this->assertEquals('test', $page->uid());
     }
 
+    public function testUri()
+    {
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'grandma',
+                    'children' => [
+                        [
+                            'slug' => 'mother',
+                            'children' => [
+                                [
+                                    'slug' => 'child'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('grandma/mother/child', $site->find('grandma/mother/child')->uri());
+    }
+
+    public function testUriTranslated()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code' => 'en'
+                ],
+                [
+                    'code' => 'de'
+                ],
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'grandma',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                            ],
+                            [
+                                'code' => 'de',
+                                'slug' => 'oma'
+                            ],
+                        ],
+                        'children' => [
+                            [
+                                'slug' => 'mother',
+                                'translations' => [
+                                    [
+                                        'code' => 'en'
+                                    ],
+                                    [
+                                        'code' => 'de',
+                                        'slug' => 'mutter'
+                                    ],
+                                ],
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+
+        $this->assertEquals('grandma/mother', $app->site()->find('grandma/mother')->uri());
+        $this->assertEquals('oma/mutter', $app->site()->find('grandma/mother')->uri('de'));
+
+    }
+
 }

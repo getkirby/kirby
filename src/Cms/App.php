@@ -425,7 +425,7 @@ class App
             return $this->languages()->find($code);
         }
 
-        return $this->language = $this->language ?? $this->languages()->findDefault();
+        return $this->language = $this->language ?? $this->languages()->default();
     }
 
     /**
