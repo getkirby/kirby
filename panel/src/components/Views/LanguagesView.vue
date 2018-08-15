@@ -27,6 +27,7 @@
     </template>
 
     <k-language-create-dialog ref="create" @success="fetch" />
+    <k-language-convert-dialog ref="convert" @success="fetch" />
     <k-language-update-dialog ref="update" @success="fetch" />
     <k-language-remove-dialog ref="remove" @success="fetch" />
 
@@ -76,7 +77,7 @@ export default {
                 },
                 {
                   icon: "globe",
-                  text: this.$t("language.makeDefault"),
+                  text: this.$t("language.convert"),
                   disabled: language.default,
                   click: "primary"
                 },
@@ -101,12 +102,7 @@ export default {
           this.$refs.update.open(language.id);
           break;
         case "primary":
-          this.$api
-            .patch("languages/" + language.id, {default: true})
-            .then(() => {
-              this.fetch();
-              this.$store.dispatch("languages/load");
-            });
+          this.$refs.convert.open(language.id);
           break;
         case "remove":
           this.$refs.remove.open(language.id);

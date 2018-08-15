@@ -65,7 +65,7 @@
   "files.empty": "No files yet",
 
   "language.create": "Create language",
-  "language.delete.confirm": "Do you really want to delete the language <br><strong>{name}</strong> including all translations? This cannot be undone!",
+  "language.delete.confirm": "Do you really want to delete the language <strong>{name}</strong> including all translations? This cannot be undone!",
   "language.deleted": "The language has been deleted",
   "language.name": "Name",
   "language.code": "Code",
@@ -73,7 +73,8 @@
   "language.direction.ltr": "Left to right",
   "language.direction.rtl": "Right to left",
   "language.locale": "PHP locale string",
-  "language.makeDefault": "Make default",
+  "language.convert": "Make default",
+  "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
   "language.url": "Url Path",
   "language.updated": "The language has been updated",
 

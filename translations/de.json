@@ -11,6 +11,7 @@
   "create": "Erstellen",
   "delete": "Löschen",
   "discard": "Verwerfen",
+  "edit": "Bearbeiten",
   "install": "Installieren",
   "login": "Einloggen",
   "logout": "Ausloggen",
@@ -53,7 +54,7 @@
   "files.empty": "Noch keine Dateien",
 
   "language.create": "Sprache erstellen",
-  "language.delete.confirm": "Möchtest du die Sprache <br><strong>{name}</strong> einschließlich aller Übersetzungen wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden!",
+  "language.delete.confirm": "Möchtest du die Sprache <strong>{name}</strong> einschließlich aller Übersetzungen wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden!",
   "language.deleted": "Die Sprache wurde gelöscht",
   "language.name": "Name",
   "language.code": "Code",
@@ -61,7 +62,8 @@
   "language.direction.ltr": "Von links nach rechts",
   "language.direction.rtl": "Von rechts nach links",
   "language.locale": "PHP locale string",
-  "language.makeDefault": "Als Standard definieren",
+  "language.convert": "Als Standardsprache definieren",
+  "language.convert.confirm": "<p>Möchtest du <strong>{name}</strong> wirklich in die Standardsprache umwandeln? Dieser Schritt kann nicht rückgängig gemacht werden.</p><p>Wenn Teile der Seite in <strong>{name}</strong> nicht übersetzt sind bleiben diese nach der Umwandlung leer.</p>",
   "language.url": "Url Pfad",
   "language.updated": "Die Änderungen wurden gespeichert",
 
@@ -72,7 +74,7 @@
 
   "page.create": "Entwurf erstellen",
   "page.created": "Der Entwurf wurde erstellt",
-  "page.delete.confirm": "Möchtest du wirklich <br><strong>{title}</strong> löschen?",
+  "page.delete.confirm": "Möchtest du wirklich <strong>{title}</strong> löschen?",
   "page.deleted": "Die Seite wurde gelöscht",
   "page.rename.fromTitle": "Aus Titel erzeugen",
   "page.renamed": "Die Seite wurde umbenannt",
