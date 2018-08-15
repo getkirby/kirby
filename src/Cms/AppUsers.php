@@ -86,6 +86,7 @@ trait AppUsers
         if ($who === 'kirby') {
             $this->user = new User([
                 'email' => 'kirby@getkirby.com',
+                'role'  => 'admin'
             ]);
 
             return $this;
