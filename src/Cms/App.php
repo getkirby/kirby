@@ -589,13 +589,17 @@ class App
      * @param Language $language
      * @return mixed
      */
-    public function resolve(string $path, Language $language = null)
+    public function resolve(string $path = null, Language $language = null)
     {
         // set the current language
         $this->language = $language;
 
         // the site is needed a couple times here
         $site = $this->site();
+
+        if ($path === null) {
+            return $site->homePage();
+        }
 
         if ($page = $site->find($path)) {
             return $page;

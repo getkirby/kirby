@@ -23,7 +23,15 @@ return function ($kirby) {
             'pattern' => '',
             'method'  => 'ALL',
             'action'  => function () use ($kirby) {
-                return $kirby->site()->homePage();
+
+                $home = $kirby->site()->homePage();
+
+                if ($kirby->multilang() === true && $kirby->url() !== $home->url()) {
+                    return go($kirby->site()->url());
+                } else {
+                    return $home;
+                }
+
             }
         ],
         [
@@ -101,11 +109,12 @@ return function ($kirby) {
 
     // Multi-language setup
     if ($kirby->multilang() === true) {
+
         foreach ($kirby->languages() as $language) {
             $routes[] = [
-                'pattern' => trim($language->pattern() . '/(:all)', '/'),
+                'pattern' => trim($language->pattern() . '/(:all?)', '/'),
                 'method'  => 'ALL',
-                'action'  => function ($path) use ($kirby, $language) {
+                'action'  => function ($path = null) use ($kirby, $language) {
                     return $kirby->resolve($path, $language);
                 }
             ];
