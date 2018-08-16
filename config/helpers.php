@@ -112,17 +112,6 @@ function css($url, $options = null)
  */
 function dump($variable, bool $echo = true): string
 {
-
-    throw new Exception([
-        'key'      => 'debugger',
-        'fallback' => 'Debugger Exception',
-        'details'  => [
-            'class' => get_class($variable),
-            'dump'  => $variable->toArray()
-        ]
-    ]);
-
-
     if (Server::cli() === true) {
         $output = print_r($variable, true) . PHP_EOL;
     } else {

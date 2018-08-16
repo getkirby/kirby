@@ -183,26 +183,7 @@ class Filename
             return false;
         }
 
-        // allowed crop values
-        $allowed = [
-            'center',
-            'top',
-            'bottom',
-            'left',
-            'right',
-            'top left',
-            'top right',
-            'bottom left',
-            'bottom right'
-        ];
-
-        if (in_array($crop, $allowed) === false) {
-            $crop = 'center';
-        }
-
-        $crop = str_replace(' ', '-', $crop);
-
-        return $crop;
+        return Str::slug($crop);
     }
 
     /**

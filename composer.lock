@@ -639,16 +639,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "c919dc6c62e221fc6406f861ea13433c0aa24f08"
+                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/c919dc6c62e221fc6406f861ea13433c0aa24f08",
-                "reference": "c919dc6c62e221fc6406f861ea13433c0aa24f08",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/e1809da56ce1bd1b547a752936817341ac244d8e",
+                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e",
                 "shasum": ""
             },
             "require": {
@@ -679,7 +679,7 @@
                 "Xdebug",
                 "performance"
             ],
-            "time": "2018-04-11 15:42:36"
+            "time": "2018-08-16 10:54:23"
         },
         {
             "name": "doctrine/annotations",

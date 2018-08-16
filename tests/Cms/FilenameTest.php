@@ -138,13 +138,13 @@ class FilenameTest extends TestCase
         $this->assertFalse($filename->crop());
     }
 
-    public function testInvalidCrop()
+    public function testCustomCrop()
     {
         $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'crop' => 'something'
         ]);
 
-        $this->assertEquals('center', $filename->crop());
+        $this->assertEquals('something', $filename->crop());
     }
 
     public function testDimensions()
