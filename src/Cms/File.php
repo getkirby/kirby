@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Exception\Exception;
 use Kirby\Image\Image;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -159,6 +160,17 @@ class File extends ModelWithContent
         }
 
         return $this->url();
+    }
+
+    /**
+     * Returns the url to api endpoint
+     *
+     * @param bool $relative
+     * @return string
+     */
+    public function apiUrl(bool $relative = false): string
+    {
+        return $this->parent()->apiUrl($relative) . '/files/' . $this->filename();
     }
 
     /**
@@ -418,6 +430,28 @@ class File extends ModelWithContent
     public function permissions(): FileBlueprintOptions
     {
         return $this->blueprint()->options();
+    }
+
+    /**
+     * Creates a string query, starting from the model
+     *
+     * @param string $query
+     * @param string|null $expect
+     * @return mixed
+     */
+    public function query(string $query, string $expect = null)
+    {
+        $result = Str::query($query, [
+            'kirby' => $this->kirby(),
+            'site'  => $this->site(),
+            'file'  => $this
+        ]);
+
+        if ($expect !== null && is_a($result, $expect) !== true) {
+            throw new Exception('Unexpected query result');
+        }
+
+        return $result;
     }
 
     /**

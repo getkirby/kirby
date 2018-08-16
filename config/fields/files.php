@@ -11,8 +11,14 @@ return [
         'multiple' => function (bool $multiple = true) {
             return $multiple;
         },
-        'parent' => function () {
-            return $this->model()->panelUrl(true);
+        'parent' => function (string $parent = null) {
+
+            if ($parent === null) {
+                return $this->model()->apiUrl(true);
+            }
+
+            return $this->model()->query($parent, 'Kirby\Cms\Model')->apiUrl(true);
+
         },
         'value' => function ($value = null) {
 

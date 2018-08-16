@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
@@ -141,6 +142,21 @@ class Site extends ModelWithContent
             'children' => $this->children(),
             'files'    => $this->files(),
         ]);
+    }
+
+    /**
+     * Returns the url to the api endpoint
+     *
+     * @param bool $relative
+     * @return string
+     */
+    public function apiUrl(bool $relative = false): string
+    {
+        if ($relative === true) {
+            return 'site';
+        } else {
+            return $this->kirby()->url('api') . '/site';
+        }
     }
 
     /**
@@ -317,11 +333,16 @@ class Site extends ModelWithContent
      * Returns the url to the editing view
      * in the panel
      *
+     * @param bool $relative
      * @return string
      */
-    public function panelUrl(): string
+    public function panelUrl(bool $relative = false): string
     {
-        return $this->kirby()->url('panel') . '/pages';
+        if ($relative === true) {
+            return '/site';
+        } else {
+            return $this->kirby()->url('panel') . '/site';
+        }
     }
 
     /**
@@ -332,6 +353,27 @@ class Site extends ModelWithContent
     public function permissions(): SiteBlueprintOptions
     {
         return $this->blueprint()->options();
+    }
+
+    /**
+     * Creates a string query, starting from the model
+     *
+     * @param string $query
+     * @param string|null $expect
+     * @return mixed
+     */
+    public function query(string $query, string $expect = null)
+    {
+        $result = Str::query($query, [
+            'kirby' => $this->kirby(),
+            'site'  => $this,
+        ]);
+
+        if ($expect !== null && is_a($result, $expect) !== true) {
+            throw new Exception('Unexpected query result');
+        }
+
+        return $result;
     }
 
     /**

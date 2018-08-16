@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -192,6 +193,17 @@ class Page extends ModelWithContent
             'translations' => $this->translations(),
             'files'        => $this->files(),
         ]);
+    }
+
+    /**
+     * Returns the url to the api endpoint
+     *
+     * @param bool $relative
+     * @return string
+     */
+    public function apiUrl(bool $relative = false): string
+    {
+        return $this->site()->apiUrl($relative) . '/' . $this->panelId();
     }
 
     /**
@@ -868,6 +880,28 @@ class Page extends ModelWithContent
         } else {
             return $this->url();
         }
+    }
+
+    /**
+     * Creates a string query, starting from the model
+     *
+     * @param string $query
+     * @param string|null $expect
+     * @return mixed
+     */
+    public function query(string $query, string $expect = null)
+    {
+        $result = Str::query($query, [
+            'kirby' => $this->kirby(),
+            'site'  => $this->site(),
+            'page'  => $this
+        ]);
+
+        if ($expect !== null && is_a($result, $expect) !== true) {
+            throw new Exception('Unexpected query result');
+        }
+
+        return $result;
     }
 
     /**
