@@ -158,6 +158,8 @@ export default {
   border-bottom-right-radius: $border-radius;
   min-height: 2.25rem;
   padding: .5rem .75rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .k-card-text {
