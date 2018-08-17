@@ -12,7 +12,6 @@ use Kirby\Toolkit\Obj;
 
 class PageBlueprintFoundation
 {
-
     public static $presets = [];
     public static $loaded = [];
 
@@ -243,7 +242,6 @@ class PageBlueprintFoundation
     protected function normalizeColumns(array $columns): array
     {
         foreach ($columns as $columnKey => $columnProps) {
-
             $columnProps = $this->convertFieldsToSections($columnProps);
 
             $columns[$columnKey] = array_merge($columnProps, [
@@ -270,7 +268,6 @@ class PageBlueprintFoundation
             ]);
 
             // check for valid field types here
-
         }
 
         // store all normalized fields
@@ -296,7 +293,6 @@ class PageBlueprintFoundation
             if ($sectionProps['type'] === 'fields') {
                 $sections[$sectionName]['fields'] = $this->normalizeFields($sectionProps['fields'] ?? []);
             }
-
         }
 
         // store all normalized sections
@@ -331,7 +327,6 @@ class PageBlueprintFoundation
 
     protected function preset(array $props): array
     {
-
         if (isset($props['preset']) === false) {
             return $props;
         }
@@ -345,7 +340,6 @@ class PageBlueprintFoundation
 
     public function section(string $name)
     {
-
         $props = $this->sections[$name] ?? null;
 
         if ($props === null) {
@@ -366,7 +360,6 @@ class PageBlueprintFoundation
                 'text'     => $e->getMessage(),
             ]);
         }
-
     }
 
     public function sections(): array
@@ -393,13 +386,11 @@ class PageBlueprintFoundation
     {
         return $this->props;
     }
-
 }
 
 
 class PageBlueprint extends PageBlueprintFoundation
 {
-
     protected $options;
 
     public function __construct($props)
@@ -478,7 +469,6 @@ class PageBlueprint extends PageBlueprintFoundation
 
     protected function setStatus($props): array
     {
-
         $status   = $props['status'] ?? null;
         $defaults = [
             'draft'    => [
@@ -539,7 +529,6 @@ class PageBlueprint extends PageBlueprintFoundation
         $props['status'] = $status;
 
         return $props;
-
     }
 
     public function status(): array
@@ -554,5 +543,4 @@ class PageBlueprint extends PageBlueprintFoundation
 
         return $props;
     }
-
 }

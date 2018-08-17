@@ -3,7 +3,6 @@
 use Kirby\Cms\PageBlueprint;
 
 PageBlueprint::$presets['page'] = function ($props) {
-
     $section = function ($defaults, $props) {
         if ($props === true) {
             $props = [];
@@ -57,13 +56,10 @@ PageBlueprint::$presets['page'] = function ($props) {
     );
 
     return $props;
-
 };
 
 PageBlueprint::$presets['pages'] = function ($props) {
-
     $section = function ($headline, $status, $props) {
-
         $defaults = [
             'headline' => $headline,
             'type'     => 'pages',
@@ -82,7 +78,6 @@ PageBlueprint::$presets['pages'] = function ($props) {
         }
 
         return array_replace_recursive($defaults, $props);
-
     };
 
     $sections = [];
@@ -103,5 +98,4 @@ PageBlueprint::$presets['pages'] = function ($props) {
     unset($props['drafts'], $props['unlisted'], $props['listed']);
 
     return array_merge($props, ['sections' => $sections]);
-
 };
