@@ -325,6 +325,11 @@ trait AppPlugins
         $this->extendFields(include static::$root . '/config/fields.php');
         $this->extendFieldMethods((include static::$root . '/config/methods.php')($this));
         $this->extendTags(include static::$root . '/config/tags.php');
+
+
+        PageBlueprint::$presets['pages']   = include static::$root . '/config/presets/pages.php';
+        PageBlueprint::$presets['page']    = include static::$root . '/config/presets/page.php';
+        PageBlueprint::$presets['gallery'] = include static::$root . '/config/presets/gallery.php';
     }
 
     /**

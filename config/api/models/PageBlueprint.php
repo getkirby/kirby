@@ -20,7 +20,7 @@ return [
             return $blueprint->status();
         },
         'tabs' => function (PageBlueprint $blueprint) {
-            return $blueprint->tabs()->toArray();
+            return array_values($blueprint->tabs());
         },
         'title' => function (PageBlueprint $blueprint) {
             return $blueprint->title();
