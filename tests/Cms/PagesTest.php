@@ -117,4 +117,19 @@ class PagesTest extends TestCase
         $this->assertCount(2, $this->pages()->visible());
     }
 
+    public function testListed()
+    {
+        $this->assertCount(2, $this->pages()->listed());
+    }
+
+    public function testUnlisted()
+    {
+        $this->assertCount(1, $this->pages()->unlisted());
+    }
+
+    public function testPublished()
+    {
+        $this->assertCount(3, $this->pages()->published());
+    }
+
 }

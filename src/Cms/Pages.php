@@ -382,6 +382,16 @@ class Pages extends Collection
         return $this;
     }
 
+    /*
+     * Returns all listed and unlisted pages in the collection
+     *
+     * @return self
+     */
+    public function published(): self
+    {
+        return $this->filterBy('isDraft', '==', false);
+    }
+
     /**
      * Filter all pages by the given template
      *
