@@ -88,6 +88,22 @@ class Options
             case 'query':
                 $options = static::query($props['query'], $model);
                 break;
+            case 'children':
+            case 'grandChildren':
+            case 'siblings':
+            case 'index':
+            case 'files':
+            case 'images':
+            case 'documents':
+            case 'videos':
+            case 'audio':
+            case 'code':
+            case 'archives':
+                $options = static::query('page.' . $options, $model);
+                break;
+            case 'pages':
+                $options = static::query('site.index', $model);
+                break;
         }
 
         if (is_array($options) === false) {
