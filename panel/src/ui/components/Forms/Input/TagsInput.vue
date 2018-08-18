@@ -110,9 +110,6 @@ export default {
     draggable() {
       return this.tags.length > 1;
     },
-    hasChanged() {
-      return true;
-    },
     skip() {
       return this.tags.map(tag => tag.text);
     }
