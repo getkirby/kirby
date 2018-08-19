@@ -5,6 +5,25 @@ namespace Kirby\Toolkit;
 class CollectionTest extends TestCase
 {
 
+    public function testIsEmpty()
+    {
+        $collection = new Collection([
+            [ 'name'  => 'Bastian' ],
+            [ 'name' => 'Nico' ]
+        ]);
+
+        $this->assertTrue($collection->isNotEmpty());
+        $this->assertFalse($collection->isEmpty());
+    }
+
+    public function testIsNotEmpty()
+    {
+        $collection = new Collection([]);
+
+        $this->assertTrue($collection->isEmpty());
+        $this->assertFalse($collection->isNotEmpty());
+    }
+
     public function testQuery()
     {
         $collection = new Collection([
