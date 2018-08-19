@@ -9,14 +9,13 @@ for (var key in Vue.options.components) {
   components[key] = Vue.options.components[key]
 }
 
-
 const registerComponent = (name, component) => {
   if (!component.template && !component.render && !component.extends) {
     store.dispatch("notification/error", `Neither template or render method provided nor extending a component when loading plugin component "${name}". The component has not been registered.`);
     return;
   }
 
-  if (component.extends) {
+  if (component.extends && typeof component.extends === 'string') {
     component.extends = components[component.extends];
     if (component.template) {
       component.render = null;
@@ -24,7 +23,9 @@ const registerComponent = (name, component) => {
   }
 
   if (component.mixins) {
-    component.mixins = component.mixins.map(mixin => components[mixin]);
+    component.mixins = component.mixins.map(mixin => {
+      return typeof mixin === 'string' ? components[mixin] : mixin;
+    });
   }
 
   if (components[name]) {
