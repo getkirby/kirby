@@ -42,6 +42,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  user-select: none;
 }
 .k-tag:focus {
   outline: 0;
