@@ -3,6 +3,7 @@
     :data-disabled="disabled"
     class="k-field"
     @focusin="$emit('focus', $event)"
+    @focusout="$emit('blur', $event)"
   >
     <slot name="header">
       <header class="k-field-header">
