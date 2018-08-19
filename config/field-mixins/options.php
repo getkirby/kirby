@@ -16,7 +16,16 @@ return [
     ],
     'computed' => [
         'options' => function () {
-            return Options::factory($this->props['options'], $this->props, $this->data['model'] ?? null);
+            return $this->getOptions();
         }
     ],
+    'methods' => [
+        'getOptions' => function () {
+            return Options::factory(
+                $this->props['options'],
+                $this->props,
+                $this->data['model'] ?? null
+            );
+        }
+    ]
 ];

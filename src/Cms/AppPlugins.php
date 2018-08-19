@@ -303,6 +303,7 @@ trait AppPlugins
     {
         // Form Field Mixins
         FormField::$mixins['options'] = include static::$root . '/config/field-mixins/options.php';
+        FormField::$mixins['tags'] = include static::$root . '/config/field-mixins/tags.php';
 
         // Tag Aliases
         KirbyTag::$aliases = [

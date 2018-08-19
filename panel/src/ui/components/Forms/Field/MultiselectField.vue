@@ -3,7 +3,8 @@
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="k-text-field"
+    class="k-multiselect-field"
+    @blur="blur"
   >
     <k-input
       ref="input"
@@ -18,44 +19,44 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import TextInput from "../Input/TextInput.vue";
+import MultiselectInput from "../Input/MultiselectInput.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
-    ...TextInput.props,
+    ...MultiselectInput.props,
     counter: {
       type: Boolean,
       default: true
+    },
+    icon: {
+      type: String,
+      default: "angle-down"
     }
   },
   computed: {
+    // TODO: DRY the following - same in TagsField
     counterOptions() {
       if (this.value === null || this.disabled || this.counter === false) {
         return false;
       }
+
       return {
-        count: this.value ? String(this.value).length : 0,
-        min: this.minlength,
-        max: this.maxlength
+        count: this.value && Array.isArray(this.value) ? this.value.length : 0,
+        min: this.min,
+        max: this.max,
       };
     }
   },
   methods: {
+    blur(e) {
+      this.$refs.input.blur(e);
+    },
     focus() {
       this.$refs.input.focus();
     }
   }
 }
 </script>
-
-<style lang="scss">
-.k-field-counter {
-  display: none;
-}
-.k-text-field:focus-within .k-field-counter {
-  display: block;
-}
-</style>

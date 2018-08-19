@@ -73,14 +73,10 @@ export default {
       default: "tag"
     },
     id: [Number, String],
+    layout: String,
     max: Number,
     min: Number,
     name: [Number, String],
-    separator: {
-      type: String,
-      default: ","
-    },
-    layout: String,
     options: {
       type: Array,
       default() {
@@ -88,6 +84,10 @@ export default {
       }
     },
     required: Boolean,
+    separator: {
+      type: String,
+      default: ","
+    },
     value: {
       type: Array,
       default() {

@@ -64,11 +64,26 @@ export default {
     };
   },
   methods: {
+    blur(e) {
+      if (e.relatedTarget && this.$el.contains(e.relatedTarget) === false) {
+        // use dedicated blur method if provided
+        if (this.$refs.input.blur) {
+          this.$refs.input.blur();
+          return;
+        }
+      }
+    },
     focus(e) {
       // prevent focussing on first input element,
       // if click is already targetting another input element
       if (e && e.target && e.target.tagName === 'INPUT') {
         e.target.focus();
+        return;
+      }
+
+      // use dedicated focus method if provided
+      if (this.$refs.input.focus) {
+        this.$refs.input.focus();
         return;
       }
 
@@ -309,6 +324,29 @@ export default {
     }
     .k-tags-input .k-dropdown-content {
       top: calc(100% + .5rem + 2px);
+    }
+  }
+
+  /* Multiselect */
+  &[data-type="multiselect"] {
+    position: relative;
+
+    .k-multiselect-input {
+      padding: .25rem 2rem 0 .25rem;
+      min-height: 2.25rem;
+    }
+    .k-tag {
+      margin-right: .25rem;
+      margin-bottom: .25rem;
+      height: 1.75rem;
+      font-size: $font-size-small;
+    }
+    .k-input-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
     }
   }
 

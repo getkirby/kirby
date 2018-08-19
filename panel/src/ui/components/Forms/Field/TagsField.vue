@@ -52,11 +52,3 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.k-field-counter {
-  display: none;
-}
-.k-text-field:focus-within .k-field-counter {
-  display: block;
-}
-</style>
