@@ -55,14 +55,16 @@ export default {
     sluggify(input) {
       this.slug = slug(input);
 
-      if (this.page.parent) {
-        this.url = this.page.parent.id + "/" + this.slug;
+      if (this.page.parents) {
+        this.url = this.page.parents.map(p => p.slug).
+                                     concat([this.slug]).
+                                     join("/");
       } else {
         this.url = this.slug;
       }
     },
     open(id) {
-      this.$api.pages.get(id)
+      this.$api.pages.get(id, { view: "panel" })
         .then(page => {
           this.page = page;
           this.sluggify(this.page.slug);
@@ -91,7 +93,7 @@ export default {
         .slug(this.page.id, this.slug)
         .then(page => {
           const payload = {
-            message: this.$t("page.url.changed", { url: page.id }),
+            message: this.$t("page.url.changed", { url: page.slug }),
             event: "page.changeSlug"
           };
 
