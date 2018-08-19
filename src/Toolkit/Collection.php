@@ -381,6 +381,16 @@ class Collection extends Iterator
     }
 
     /**
+     * Checks if the collection has no items
+     *
+     * @return boolean
+     */
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
+
+    /**
      * Checks if the number of items in the collection is even
      *
      * @return boolean
@@ -388,6 +398,16 @@ class Collection extends Iterator
     public function isEven(): bool
     {
         return $this->count() % 2 === 0;
+    }
+
+    /**
+     * Checks if the collection has no items
+     *
+     * @return boolean
+     */
+    public function isNotEmpty(): bool
+    {
+        return $this->count() > 0;
     }
 
     /**
