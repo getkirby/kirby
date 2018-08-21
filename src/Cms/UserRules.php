@@ -64,18 +64,18 @@ class UserRules
 
     public static function changeRole(User $user, string $role): bool
     {
-        if ($user->permissions()->changeRole() !== true) {
-            throw new PermissionException([
-                'key'  => 'user.changeRole.permission',
-                'data' => ['name' => $user->username()]
-            ]);
-        }
-
         static::validRole($user, $role);
 
         if ($role !== 'admin' && $user->isLastAdmin() === true) {
             throw new LogicException([
                 'key'  => 'user.changeRole.lastAdmin',
+                'data' => ['name' => $user->username()]
+            ]);
+        }
+
+        if ($user->permissions()->changeRole() !== true) {
+            throw new PermissionException([
+                'key'  => 'user.changeRole.permission',
                 'data' => ['name' => $user->username()]
             ]);
         }
@@ -105,13 +105,6 @@ class UserRules
 
     public static function delete(User $user): bool
     {
-        if ($user->permissions()->delete() !== true) {
-            throw new PermissionException([
-                'key'  => 'user.delete.permission',
-                'data' => ['name' => $user->username()]
-            ]);
-        }
-
         if ($user->isLastAdmin() === true) {
             throw new LogicException(['key' => 'user.delete.lastAdmin']);
         }
@@ -119,6 +112,13 @@ class UserRules
         if ($user->isLastUser() === true) {
             throw new LogicException([
                 'key' => 'user.delete.lastUser'
+            ]);
+        }
+
+        if ($user->permissions()->delete() !== true) {
+            throw new PermissionException([
+                'key'  => 'user.delete.permission',
+                'data' => ['name' => $user->username()]
             ]);
         }
 
