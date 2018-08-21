@@ -76,12 +76,17 @@ class PageBlueprint extends Blueprint
     {
         $aliases = [
             0          => 'zero',
+            '0'        => 'zero',
             'date'     => '{{ page.date("Ymd") }}',
             'datetime' => '{{ page.date("YmdHi") }}',
             'sort'     => 'default',
         ];
 
-        return $aliases[$num] ?? 'default';
+        if (isset($aliases[$num]) === true) {
+            return $aliases[$num];
+        }
+
+        return $num;
     }
 
     /**
