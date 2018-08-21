@@ -21,16 +21,7 @@ class Form extends BaseForm
 
         // search for the blueprint
         if (method_exists($model, 'blueprint') === true && $blueprint = $model->blueprint()) {
-            $props['fields'] = $blueprint->fields()->toArray();
-
-            // add the title field for sites and pages
-            if (isset($props['fields']['title']) === false) {
-                if (is_a($model, 'Kirby\Cms\Page') === true || is_a($model, 'Kirby\Cms\Site')) {
-                    $props['fields']['title'] = [
-                        'type' => 'hidden'
-                    ];
-                }
-            }
+            $props['fields'] = $blueprint->fields();
         }
 
         return new static($props);
