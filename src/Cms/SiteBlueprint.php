@@ -8,12 +8,20 @@ namespace Kirby\Cms;
  */
 class SiteBlueprint extends Blueprint
 {
-    public function options()
-    {
-        if (is_a($this->options, 'Kirby\Cms\SiteBlueprintOptions') === true) {
-            return $this->options;
-        }
 
-        return $this->options = new SiteBlueprintOptions($this->model, $this->options);
+    public function __construct(array $props)
+    {
+        parent::__construct($props);
+
+        // normalize all available page options
+        $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
+            // defaults
+            [
+                'changeTitle' => true,
+                'update'      => true,
+            ]
+        );
+
     }
+
 }

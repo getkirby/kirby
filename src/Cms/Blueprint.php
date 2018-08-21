@@ -2,125 +2,178 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Data\Data;
-use Kirby\Form\Fields;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
-
-use Exception;
-use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\Obj;
 
 /**
- * The Blueprint class converts an array from a
- * blueprint file into an object with a Kirby-style
- * chainable API for sections and everything
- * else
- *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * The Blueprint class normalizes an array from a
+ * blueprint file and converts sections, columns, fields
+ * etc. into a correct tab layout.
  */
-class Blueprint extends BlueprintObject
+class Blueprint
 {
-
-    /**
-     * All registered blueprint extensions
-     */
+    public static $presets = [];
     public static $loaded = [];
 
+    protected $fields = [];
+    protected $model;
+    protected $props;
+    protected $sections = [];
+    protected $tabs = [];
+
     /**
-     * Cache for the fields collection
+     * Magic getter/caller for any blueprint prop
      *
-     * @var BlueprintCollection
+     * @param string $key
+     * @param array $arguments
+     * @return mixed
      */
-    protected $fields;
+    public function __call(string $key, array $arguments = null)
+    {
+        return $this->props[$key] ?? null;
+    }
 
     /**
-     * @var string
-     */
-    protected $icon;
-
-    /**
-     * The blueprint name
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * Model option settings
-     *
-     * @var array
-     */
-    protected $options;
-
-    /**
-     * Cache for the sections collection
-     *
-     * @var BlueprintCollection
-     */
-    protected $sections;
-
-    /**
-     * @var BlueprintTabs
-     */
-    protected $tabs;
-
-    /**
-     * The blueprint title
-     *
-     * @var string
-     */
-    protected $title;
-
-    /**
-     * Creates a new Blueprint and converts
-     * the input to always return a valid nested array
-     * of options.
+     * Creates a new blueprint object with the given props
      *
      * @param array $props
      */
-    public function __construct(array $props = [])
+    public function __construct(array $props)
     {
-        $props = static::extend($props);
-        $props = BlueprintConverter::convertFieldsToSection($props);
-        $props = BlueprintConverter::convertSectionsToColumns($props);
-        $props = BlueprintConverter::convertColumnsToTabs($props);
+        if (empty($props['model']) === true) {
+            throw new InvalidArgumentException('A blueprint model is required');
+        }
 
-        $this->tabs = new BlueprintTabs($this, $props['tabs'] ?? []);
+        $this->model = $props['model'];
 
-        $this->setProperties($props);
+        // the model should not be included in the props array
+        unset($props['model']);
+
+        // extend the blueprint in general
+        $props = $this->extend($props);
+
+        // apply any blueprint preset
+        $props = $this->preset($props);
+
+        // normalize the name
+        $props['name'] = $props['name'] ?? 'default';
+
+        // normalize and translate the title
+        $props['title'] = $this->i18n($props['title'] ?? ucfirst($props['name']));
+
+        // convert all shortcuts
+        $props = $this->convertFieldsToSections($props);
+        $props = $this->convertSectionsToColumns($props);
+        $props = $this->convertColumnsToTabs($props);
+
+        // normalize all tabs
+        $props['tabs'] = $this->normalizeTabs($props['tabs'] ?? []);
+
+        $this->props = $props;
     }
 
     /**
-     * Prepare the BlueprintTabs object for the
-     * Blueprint::toArray method
+     * Improved var_dump output
      *
      * @return array
      */
-    protected function convertTabsToArray(): array
+    public function __debuginfo(): array
     {
-        return $this->tabs()->toArray();
+        return $this->props;
     }
 
     /**
-     * Convert the options object to array
+     * Converts all column definitions, that
+     * are not wrapped in a tab, into a generic tab
      *
+     * @param array $props
      * @return array
      */
-    protected function convertOptionsToArray(): array
+    protected function convertColumnsToTabs(array $props): array
     {
-        return $this->options()->toArray();
+        if (isset($props['columns']) === false) {
+            return $props;
+        }
+
+        // wrap everything in a main tab
+        $props['tabs'] = [
+            'main' => [
+                'columns' => $props['columns']
+            ]
+        ];
+
+        unset($props['columns']);
+
+        return $props;
     }
 
     /**
-     * Extend blueprints props with a mixin
+     * Converts all field definitions, that are not
+     * wrapped in a fields section into a generic
+     * fields section.
+     *
+     * @param array $props
+     * @return array
+     */
+    protected function convertFieldsToSections(array $props): array
+    {
+        if (isset($props['fields']) === false) {
+            return $props;
+        }
+
+        // wrap all fields in a section
+        $props['sections'] = [
+            'content' => [
+                'type'   => 'fields',
+                'fields' => $props['fields']
+            ]
+        ];
+
+        unset($props['fields']);
+
+        return $props;
+    }
+
+    /**
+     * Converts all sections that are not wrapped in
+     * columns, into a single generic column.
+     *
+     * @param array $props
+     * @return array
+     */
+    protected function convertSectionsToColumns(array $props): array
+    {
+        if (isset($props['sections']) === false) {
+            return $props;
+        }
+
+        // wrap everything in one big column
+        $props['columns'] = [
+            [
+                'width'    => '1/1',
+                'sections' => $props['sections']
+            ]
+        ];
+
+        unset($props['sections']);
+
+        return $props;
+    }
+
+    /**
+     * Extends the props with props from a given
+     * mixin, when an extends key is set or the
+     * props is just a string
      *
      * @param array|string $props
      * @return array
      */
-    public static function extend($props): array
+    public function extend($props): array
     {
         if (is_string($props) === true) {
             $props = [
@@ -128,17 +181,19 @@ class Blueprint extends BlueprintObject
             ];
         }
 
-        if (isset($props['extends']) === false) {
+        $extends = $props['extends'] ?? null;
+
+        if ($extends === null) {
             return $props;
         }
 
-        if ($mixin = static::mixin($props['extends'])) {
-            $props = array_replace_recursive($mixin, $props);
+        try {
+            $mixin = Data::read(App::instance()->root('blueprints') . '/' . $extends . '.yml');
+        } catch (Exception $e) {
+            $mixin = [];
         }
 
-        unset($props['extends']);
-
-        return $props;
+        return array_replace_recursive($mixin, $props);
     }
 
     /**
@@ -167,53 +222,26 @@ class Blueprint extends BlueprintObject
         return new static($props);
     }
 
-
     /**
-     * Returns a specific field from the blueprint
+     * Returns a single field definition by name
      *
      * @param string $name
-     * @return BlueprintField|null
+     * @return array|null
      */
-    public function field(string $name)
+    public function field(string $name): ?array
     {
-        if ($field = $this->fields()->find($name)) {
-            return $field;
-        }
-
-        throw new NotFoundException([
-            'key'  => 'blueprint.field.notFound',
-            'data' => ['name' => $name]
-        ]);
+        return $this->fields[$name] ?? null;
     }
 
     /**
-     * Returns a collection of all Fields
-     * in the blueprint
+     * Returns all field definitions
      *
-     * @return BlueprintCollection
+     * @return array
      */
-    public function fields()
+    public function fields(): array
     {
-        if (is_a($this->fields, 'Kirby\Cms\BlueprintCollection') === true) {
-            return $this->fields;
-        }
-
-        $fields = new Fields;
-
-        foreach ($this->sections() as $section) {
-            // skip sections without fields
-            if (method_exists($section, 'fields') === false) {
-                continue;
-            }
-
-            foreach ($section->fields() as $field) {
-                $fields->set($field->name(), $field);
-            }
-        }
-
-        return $this->fields = $fields;
+        return $this->fields;
     }
-
 
     /**
      * Find a blueprint by name
@@ -242,11 +270,15 @@ class Blueprint extends BlueprintObject
     }
 
     /**
-     * @return string|null
+     * Used to translate any label, heading, etc.
+     *
+     * @param mixed $value
+     * @param mixed $fallback
+     * @return mixed
      */
-    public function icon()
+    protected function i18n($value, $fallback = null)
     {
-        return $this->icon;
+        return I18n::translate($value, $fallback ?? $value);
     }
 
     /**
@@ -257,21 +289,6 @@ class Blueprint extends BlueprintObject
     public function isDefault(): bool
     {
         return $this->name() === 'default';
-    }
-
-    /**
-     * Load a blueprint mixin from file or extension
-     *
-     * @param string $path
-     * @return array
-     */
-    public static function mixin(string $path): array
-    {
-        try {
-            return static::load($path);
-        } catch (Exception $e) {
-            throw new NotFoundException('The mixin "' . $path . '" could not be found');
-        }
     }
 
     /**
@@ -304,151 +321,252 @@ class Blueprint extends BlueprintObject
     }
 
     /**
-     * Returns the Blueprint name
+     * Returns the parent model
+     *
+     * @return Model
+     */
+    public function model()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Returns the blueprint name
      *
      * @return string
      */
     public function name(): string
     {
-        return $this->name;
+        return $this->props['name'];
     }
 
     /**
-     * Returns all model options
+     * Normalizes all required props in a column setup
+     *
+     * @param array $columns
+     * @return array
+     */
+    protected function normalizeColumns(array $columns): array
+    {
+        foreach ($columns as $columnKey => $columnProps) {
+            $columnProps = $this->convertFieldsToSections($columnProps);
+
+            $columns[$columnKey] = array_merge($columnProps, [
+                'width'    => $columnProps['width'] ?? '1/1',
+                'sections' => $this->normalizeSections($columnProps['sections'] ?? [])
+            ]);
+        }
+
+        return $columns;
+    }
+
+    /**
+     * Normalizes all fields and adds automatic labels,
+     * types and widths.
+     *
+     * @param array $fields
+     * @return array
+     */
+    protected function normalizeFields(array $fields): array
+    {
+        foreach ($fields as $fieldName => $fieldProps) {
+
+            if ($fieldProps === true) {
+                $fieldProps = [];
+            }
+
+            // inject all field extensions
+            $fieldProps = $this->extend($fieldProps);
+
+            $fields[$fieldName] = $fieldProps = array_merge($fieldProps, [
+                'label' => $fieldProps['label'] ?? ucfirst($fieldName),
+                'name'  => $fieldName,
+                'type'  => $fieldProps['type'] ?? $fieldName,
+                'width' => $fieldProps['width'] ?? '1/1',
+            ]);
+
+        }
+
+        // store all normalized fields
+        $this->fields = array_merge($this->fields, $fields);
+
+        return $fields;
+    }
+
+    /**
+     * Normalizes blueprint options. This must be used in the
+     * constructor of an extended class, if you want to make use of it.
+     *
+     * @param array|true|false|null $options
+     * @param array $defaults
+     * @param array $aliases
+     * @return array
+     */
+    protected function normalizeOptions($options, array $defaults, array $aliases = []): array
+    {
+        // return defaults when options are not defined or set to true
+        if ($options === true) {
+            return $defaults;
+        }
+
+        // set all options to false
+        if ($options === false) {
+            return array_map(function () {
+                return false;
+            }, $defaults);
+        }
+
+        foreach ($options as $key => $value) {
+            $alias = $aliases[$key] ?? null;
+
+            if ($alias !== null) {
+                $options[$alias] = $options[$alias] ?? $value;
+                unset($options[$key]);
+            }
+        }
+
+        return array_merge($defaults, $options);
+    }
+
+    /**
+     * Normalizes all required keys in sections
+     *
+     * @param array $sections
+     * @return array
+     */
+    protected function normalizeSections(array $sections): array
+    {
+        foreach ($sections as $sectionName => $sectionProps) {
+
+            // inject all section extensions
+            $sectionProps = $this->extend($sectionProps);
+
+            $sections[$sectionName] = $sectionProps = array_merge($sectionProps, [
+                'name' => $sectionName,
+                'type' => $sectionProps['type'] ?? null
+            ]);
+
+            if ($sectionProps['type'] === 'fields') {
+                $sections[$sectionName]['fields'] = $this->normalizeFields($sectionProps['fields'] ?? []);
+            }
+        }
+
+        // store all normalized sections
+        $this->sections = array_merge($this->sections, $sections);
+
+        return $sections;
+    }
+
+    /**
+     * Normalizes all required keys in tabs
+     *
+     * @param array $tabs
+     * @return array
+     */
+    protected function normalizeTabs(array $tabs): array
+    {
+        foreach ($tabs as $tabName => $tabProps) {
+
+            // inject all tab extensions
+            $tabProps = $this->extend($tabProps);
+
+            // inject a preset if available
+            $tabProps = $this->preset($tabProps);
+
+            $tabProps = $this->convertFieldsToSections($tabProps);
+            $tabProps = $this->convertSectionsToColumns($tabProps);
+
+            $tabs[$tabName] = array_merge($tabProps, [
+                'columns' => $this->normalizeColumns($tabProps['columns'] ?? []),
+                'icon'    => $tabProps['icon']  ?? null,
+                'label'   => $this->i18n($tabProps['label'] ?? $tabName),
+                'name'    => $tabName,
+            ]);
+        }
+
+        return $this->tabs = $tabs;
+    }
+
+    /**
+     * Injects a blueprint preset
+     *
+     * @param array $props
+     * @return array
+     */
+    protected function preset(array $props): array
+    {
+        if (isset($props['preset']) === false) {
+            return $props;
+        }
+
+        if (isset(static::$presets[$props['preset']]) === false) {
+            return $props;
+        }
+
+        return static::$presets[$props['preset']]($props);
+    }
+
+    /**
+     * Returns a single section by name
+     *
+     * @param string $name
+     * @return array|null
+     */
+    public function section(string $name): ?array
+    {
+        return $this->sections[$name] ?? null;
+    }
+
+    /**
+     * Returns all sections
      *
      * @return array
      */
-    public function options()
+    public function sections(): array
     {
-        return $this->options ?? new BlueprintOptions($this->model(), $this->options);
+        return $this->sections;
     }
 
     /**
-     * Returns a specific BlueprintSection object
-     * by name, if it exists
+     * Returns a single tab by name
      *
      * @param string $name
-     * @return BlueprintSection|null
+     * @return array|null
      */
-    public function section(string $name)
+    public function tab(string $name): ?array
     {
-        if ($section = $this->sections()->find($name)) {
-            return $section;
-        }
-
-        throw new NotFoundException([
-            'key'  => 'blueprint.section.notFound',
-            'data' => ['name' => $name]
-        ]);
+        return $this->tabs[$name] ?? null;
     }
 
     /**
-     * Returns a collection of all sections
+     * Returns all tabs
      *
-     * @return BlueprintCollection
+     * @return array
      */
-    public function sections(): BlueprintCollection
-    {
-        if (is_a($this->sections, 'Kirby\Cms\BlueprintCollection') === true) {
-            return $this->sections;
-        }
-
-        $sections = new BlueprintCollection;
-
-        foreach ((array)$this->sections as $name => $props) {
-            // section extensions
-            $props = Blueprint::extend($props);
-
-            // use the key as name
-            $props['name'] = $name;
-
-            // pass down the model
-            $props['model'] = $this->model();
-
-            try {
-                $section = BlueprintSection::factory($props);
-            } catch (Exception $e) {
-                $section = BlueprintSection::factory([
-                    'headline' => 'Error',
-                    'model'    => $this->model(),
-                    'name'     => $props['name'],
-                    'type'     => 'info',
-                    'theme'    => 'negative',
-                    'text'     => $e->getMessage(),
-                ]);
-            }
-
-            $sections->set($section->id(), $section);
-        }
-
-        return $this->sections = $sections;
-    }
-
-    /**
-     * @param string $icon
-     * @return self
-     */
-    protected function setIcon(string $icon = null): self
-    {
-        $this->icon = $icon;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return self
-     */
-    protected function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @param array $options
-     * @return self
-     */
-    protected function setOptions(array $options = null): self
-    {
-        $this->options = $options;
-        return $this;
-    }
-
-    /**
-     * @param array $sections
-     * @return self
-     */
-    protected function setSections(array $sections = null): self
-    {
-        $this->sections = $sections;
-        return $this;
-    }
-
-    /**
-     * @param string|array $title
-     * @return self
-     */
-    protected function setTitle($title): self
-    {
-        $this->title = I18n::translate($title, $title);
-        return $this;
-    }
-
-    /**
-     * @return BlueprintTabs
-     */
-    public function tabs(): BlueprintTabs
+    public function tabs(): array
     {
         return $this->tabs;
     }
 
     /**
-     * Returns the Blueprint title
+     * Returns the blueprint title
      *
      * @return string
      */
     public function title(): string
     {
-        return $this->title;
+        return $this->props['title'];
+    }
+
+    /**
+     * Converts the blueprint object to a plain array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->props;
     }
 }
+
+

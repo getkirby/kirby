@@ -8,27 +8,37 @@ namespace Kirby\Cms;
  */
 class FileBlueprint extends Blueprint
 {
-    protected $accept = [];
+
+    public function __construct(array $props)
+    {
+        parent::__construct($props);
+
+        // normalize all available page options
+        $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
+            // defaults
+            [
+                'changeName' => true,
+                'create'     => true,
+                'delete'     => true,
+                'replace'    => true,
+                'update'     => true,
+            ]
+        );
+
+        // normalize the accept settings
+        $this->props['accept'] = $this->normalizeAccept($props['accept'] ?? []);
+    }
 
     public function accept(): array
     {
-        return $this->accept;
+        return $this->props['accept'];
     }
 
-    public function options()
-    {
-        if (is_a($this->options, 'Kirby\Cms\FileBlueprintOptions') === true) {
-            return $this->options;
-        }
-
-        return $this->options = new FileBlueprintOptions($this->model, $this->options);
-    }
-
-    protected function setAccept(array $accept = null)
+    protected function normalizeAccept(array $accept = null)
     {
         // accept anything
         if (empty($accept) === true) {
-            return $this;
+            return [];
         }
 
         $accept = array_change_key_case($accept);
@@ -44,7 +54,6 @@ class FileBlueprint extends Blueprint
             'orientation' => null
         ];
 
-        $this->accept = array_merge($defaults, $accept);
-        return $this;
+        return array_merge($defaults, $accept);
     }
 }
