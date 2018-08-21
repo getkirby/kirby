@@ -861,11 +861,11 @@ class Page extends ModelWithContent
     /**
      * Returns the permissions object for this page
      *
-     * @return BlueprintOptions
+     * @return PagePermissions
      */
     public function permissions()
     {
-        return $this->blueprint()->options();
+        return new PagePermissions($this);
     }
 
     /**

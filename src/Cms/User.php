@@ -462,6 +462,19 @@ class User extends ModelWithContent
     }
 
     /**
+     * Create a dummy nobody
+     *
+     * @return self
+     */
+    public static function nobody(): self
+    {
+        return new static([
+            'email' => 'nobody@getkirby.com',
+            'role'  => 'nobody'
+        ]);
+    }
+
+    /**
      * Creates a string query, starting from the model
      *
      * @param string $query
@@ -522,11 +535,11 @@ class User extends ModelWithContent
     }
 
     /**
-     * @return UserBlueprintOptions
+     * @return UserPermissions
      */
-    public function permissions(): UserBlueprintOptions
+    public function permissions()
     {
-        return $this->blueprint()->options();
+        return new UserPermissions($this);
     }
 
     /**
@@ -568,6 +581,22 @@ class User extends ModelWithContent
     protected function rules()
     {
         return new UserRules();
+    }
+
+    /**
+     * Sets the Blueprint object
+     *
+     * @param array|null $blueprint
+     * @return self
+     */
+    protected function setBlueprint(array $blueprint = null): self
+    {
+        if ($blueprint !== null) {
+            $blueprint['model'] = $this;
+            $this->blueprint = new UserBlueprint($blueprint);
+        }
+
+        return $this;
     }
 
     /**

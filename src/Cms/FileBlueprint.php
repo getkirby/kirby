@@ -17,11 +17,11 @@ class FileBlueprint extends Blueprint
         $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
             // defaults
             [
-                'changeName' => true,
-                'create'     => true,
-                'delete'     => true,
-                'replace'    => true,
-                'update'     => true,
+                'changeName' => null,
+                'create'     => null,
+                'delete'     => null,
+                'replace'    => null,
+                'update'     => null,
             ]
         );
 

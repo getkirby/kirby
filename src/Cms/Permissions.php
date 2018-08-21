@@ -18,47 +18,48 @@ class Permissions
         ],
         'files' => [
             'changeName' => true,
-            'create' => true,
-            'delete' => true,
-            'replace' => true,
-            'update' => true
+            'create'     => true,
+            'delete'     => true,
+            'replace'    => true,
+            'update'     => true
         ],
         'languages' => [
             'create' => true,
             'delete' => true
         ],
         'pages' => [
-            'changeSlug' => true,
-            'changeStatus' => true,
+            'changeSlug'     => true,
+            'changeStatus'   => true,
             'changeTemplate' => true,
-            'changeTitle' => true,
-            'create' => true,
-            'delete' => true,
-            'sort'   => true,
-            'update' => true
+            'changeTitle'    => true,
+            'create'         => true,
+            'delete'         => true,
+            'preview'        => true,
+            'sort'           => true,
+            'update'         => true
         ],
         'site' => [
             'changeTitle' => true,
-            'update' => true
+            'update'      => true
         ],
         'users' => [
-            'changeEmail' => true,
+            'changeEmail'    => true,
             'changeLanguage' => true,
-            'changeName' => true,
+            'changeName'     => true,
             'changePassword' => true,
-            'changeRole' => true,
-            'create' => true,
-            'delete' => true,
-            'update' => true
+            'changeRole'     => true,
+            'create'         => true,
+            'delete'         => true,
+            'update'         => true
         ],
         'user' => [
-            'changeEmail' => true,
+            'changeEmail'    => true,
             'changeLanguage' => true,
-            'changeName' => true,
+            'changeName'     => true,
             'changePassword' => true,
-            'changeRole' => true,
-            'delete' => true,
-            'update' => true
+            'changeRole'     => true,
+            'delete'         => true,
+            'update'         => true
         ]
     ];
 

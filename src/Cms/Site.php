@@ -348,11 +348,11 @@ class Site extends ModelWithContent
     /**
      * Returns the permissions object for this site
      *
-     * @return SiteBlueprintOptions
+     * @return SitePermissions
      */
-    public function permissions(): SiteBlueprintOptions
+    public function permissions()
     {
-        return $this->blueprint()->options();
+        return new SitePermissions($this);
     }
 
     /**
@@ -401,12 +401,16 @@ class Site extends ModelWithContent
     /**
      * Sets the Blueprint object
      *
-     * @param SiteBlueprint|null $blueprint
+     * @param array|null $blueprint
      * @return self
      */
-    protected function setBlueprint(SiteBlueprint $blueprint = null): self
+    protected function setBlueprint(array $blueprint = null): self
     {
-        $this->blueprint = $blueprint;
+        if ($blueprint !== null) {
+            $blueprint['model'] = $this;
+            $this->blueprint = new SiteBlueprint($blueprint);
+        }
+
         return $this;
     }
 

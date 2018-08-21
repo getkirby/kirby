@@ -17,14 +17,14 @@ class UserBlueprint extends Blueprint
         $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
             // defaults
             [
-                'create'         => true,
-                'changeEmail'    => true,
-                'changeLanguage' => true,
-                'changeName'     => true,
-                'changePassword' => true,
-                'changeRole'     => true,
-                'delete'         => true,
-                'update'         => true,
+                'create'         => null,
+                'changeEmail'    => null,
+                'changeLanguage' => null,
+                'changeName'     => null,
+                'changePassword' => null,
+                'changeRole'     => null,
+                'delete'         => null,
+                'update'         => null,
             ]
         );
 

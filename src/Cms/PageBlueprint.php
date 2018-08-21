@@ -19,15 +19,15 @@ class PageBlueprint extends Blueprint
         $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
             // defaults
             [
-                'changeSlug'     => true,
-                'changeStatus'   => true,
-                'changeTemplate' => true,
-                'changeTitle'    => true,
-                'create'         => true,
-                'delete'         => true,
-                'preview'        => true,
-                'sort'           => true,
-                'update'         => true,
+                'changeSlug'     => null,
+                'changeStatus'   => null,
+                'changeTemplate' => null,
+                'changeTitle'    => null,
+                'create'         => null,
+                'delete'         => null,
+                'preview'        => null,
+                'sort'           => null,
+                'update'         => null,
             ],
             // aliases (from v2)
             [

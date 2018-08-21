@@ -425,11 +425,11 @@ class File extends ModelWithContent
     /**
      * Returns the permissions object for this file
      *
-     * @return FileBlueprintOptions
+     * @return FilePermissions
      */
-    public function permissions(): FileBlueprintOptions
+    public function permissions()
     {
-        return $this->blueprint()->options();
+        return new FilePermissions($this);
     }
 
     /**
@@ -473,6 +473,22 @@ class File extends ModelWithContent
     protected function rules()
     {
         return new FileRules();
+    }
+
+    /**
+     * Sets the Blueprint object
+     *
+     * @param array|null $blueprint
+     * @return self
+     */
+    protected function setBlueprint(array $blueprint = null): self
+    {
+        if ($blueprint !== null) {
+            $blueprint['model'] = $this;
+            $this->blueprint = new FileBlueprint($blueprint);
+        }
+
+        return $this;
     }
 
     /**

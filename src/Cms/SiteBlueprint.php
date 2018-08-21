@@ -17,8 +17,8 @@ class SiteBlueprint extends Blueprint
         $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
             // defaults
             [
-                'changeTitle' => true,
-                'update'      => true,
+                'changeTitle' => null,
+                'update'      => null,
             ]
         );
 
