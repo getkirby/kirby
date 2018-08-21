@@ -187,13 +187,21 @@ class Blueprint
             return $props;
         }
 
-        try {
-            $mixin = Data::read(App::instance()->root('blueprints') . '/' . $extends . '.yml');
-        } catch (Exception $e) {
-            $mixin = [];
+        $mixin = static::find($extends);
+
+        if ($mixin === null) {
+            return $props;
         }
 
-        return array_replace_recursive($mixin, $props);
+        if (is_array($mixin) === true) {
+            return array_replace_recursive($mixin, $props);
+        }
+
+        try {
+            return array_replace_recursive(Data::read($mixin), $props);
+        } catch (Exception $e) {
+            return $props;
+        }
     }
 
     /**
@@ -479,7 +487,7 @@ class Blueprint
             $tabs[$tabName] = array_merge($tabProps, [
                 'columns' => $this->normalizeColumns($tabProps['columns'] ?? []),
                 'icon'    => $tabProps['icon']  ?? null,
-                'label'   => $this->i18n($tabProps['label'] ?? $tabName),
+                'label'   => $this->i18n($tabProps['label'] ?? ucfirst($tabName)),
                 'name'    => $tabName,
             ]);
         }
