@@ -5,6 +5,23 @@ namespace Kirby\Cms;
 class FileBlueprintTest extends TestCase
 {
 
+    public function testOptions()
+    {
+        $blueprint = new FileBlueprint([
+            'model' => new File(['filename' => 'test.jpg'])
+        ]);
+
+        $expected = [
+            'changeName' => null,
+            'create'     => null,
+            'delete'     => null,
+            'replace'    => null,
+            'update'     => null,
+        ];
+
+        $this->assertEquals($expected, $blueprint->options());
+    }
+
     public function testTemplateFromContent()
     {
         $file = new File([
