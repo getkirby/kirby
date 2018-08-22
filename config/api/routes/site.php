@@ -81,6 +81,13 @@ return [
         }
     ],
     [
+        'pattern' => 'site/files/sort',
+        'method'  => 'PATCH',
+        'action'  => function () {
+            return $this->site()->files()->changeSort($this->requestBody('files'));
+        }
+    ],
+    [
         'pattern' => 'site/files/(:any)',
         'method'  => 'GET',
         'action'  => function (string $filename) {

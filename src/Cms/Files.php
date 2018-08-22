@@ -19,6 +19,27 @@ class Files extends Collection
     public static $methods = [];
 
     /**
+     * Sort all given files by the
+     * order in the array
+     *
+     * @param array $files
+     * @return self
+     */
+    public function changeSort(array $files)
+    {
+        $index = 0;
+
+        foreach ($files as $filename) {
+            if ($file = $this->get($filename)) {
+                $index++;
+                $file->changeSort($index);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Creates a files collection from an array of props
      *
      * @param array $files

@@ -131,7 +131,7 @@ export default {
       });
 
       this.$api
-        .patch(this.parent + "/sections/" + this.name + "/sort", { items })
+        .patch(this.parent + "/files/sort", { files: items })
         .then(() => {
           this.$store.dispatch("notification/success", this.$t("file.sorted"));
         })

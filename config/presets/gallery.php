@@ -7,7 +7,8 @@ return function (array $props) {
             'headline' => $props['headline'] ?? 'Gallery',
             'type'     => 'files',
             'template' => $props['template'] ?? 'image',
-            'layout'   => $props['layout']   ?? 'cards'
+            'layout'   => $props['layout']   ?? 'cards',
+            'info'     => '{{ file.dimensions }}'
         ]
     ];
 

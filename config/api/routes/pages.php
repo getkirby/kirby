@@ -84,6 +84,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/files/sort',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->page($id)->files()->changeSort($this->requestBody('files'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/files/(:any)',
         'method'  => 'GET',
         'action'  => function (string $id, string $filename) {
