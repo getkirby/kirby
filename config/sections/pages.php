@@ -39,7 +39,17 @@ return [
             return $status;
 
         },
-        'templates' => function ($templates = null) {
+        'text' => function (string $text = '{{ page.title }}') {
+            return $text;
+        }
+    ],
+    'computed' => [
+        'dragTextType' => function () {
+            return (option('panel')['kirbytext'] ?? true) ? 'kirbytext' : 'markdown';
+        },
+        'templates' => function () {
+
+            $templates = $this->templates ?? $this->template;
 
             if (is_string($templates) === true) {
                 $templates = [$templates];
@@ -55,14 +65,6 @@ return [
 
             return $templates;
 
-        },
-        'text' => function (string $text = '{{ page.title }}') {
-            return $text;
-        }
-    ],
-    'computed' => [
-        'dragTextType' => function () {
-            return (option('panel')['kirbytext'] ?? true) ? 'kirbytext' : 'markdown';
         },
         'parent' => function () {
             return $this->parent();
