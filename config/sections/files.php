@@ -109,14 +109,35 @@ return [
             $errors = [];
 
             if ($this->validateMax() === false) {
-                $errors['max'] = 'You must not add more than ' . $this->max . ' file(s) to the section "' . $this->headline . '"';
+                $errors['max'] = Str::template(
+                    I18n::translate('error.files.max.' . r($this->max === 1, 'singular', 'plural')),
+                    [
+                        'max'     => $this->max,
+                        'section' => $this->headline
+                    ]
+                );
             }
 
             if ($this->validateMin() === false) {
-                $errors['min'] = 'You must at least add ' . $this->min . ' file(s) to the section "' . $this->headline . '"';
+                $errors['min'] = Str::template(
+                    I18n::translate('error.files.min.' .  r($this->min === 1, 'singular', 'plural')),
+                    [
+                        'min'     => $this->min,
+                        'section' => $this->headline
+                    ]
+                );
             }
 
-            return $errors;
+            if (empty($errors) === true) {
+                return [];
+            }
+
+            return [
+                $this->name => [
+                    'label'   => $this->headline,
+                    'message' => $errors,
+                ]
+            ];
 
         },
         'add' => function () {

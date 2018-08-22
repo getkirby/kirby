@@ -198,6 +198,11 @@
   "error.file.changeName.permissions": "You are not allowed to change the name of \"{filename}\"",
   "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
 
+  "error.files.min.singular": "Add at least one file to the {{ section }} section",
+  "error.files.min.plural": "Add at least {{ min }} files to the {{ section }} section",
+  "error.files.max.singular": "You must not add more than one file to the {{ section }} section",
+  "error.files.max.plural": "You must not add more than {{ max }} file to the {{ section }} section",
+
   "error.form.incomplete": "Please fix all form errors …",
   "error.form.converter.invalid": "Invalid converter \"{converter}\"",
   "error.form.boolean.invalid": "Invalid boolean value",
@@ -242,6 +247,11 @@
   "error.page.sort.permissions": "The page \"{slug}\" cannot be sorted",
   "error.page.sort.section.type": "The page cannot be dragged into this section",
   "error.page.sort.section.template.invalid": "The page template is not allowed in this section",
+
+  "error.pages.min.singular": "Add at least one page to the {{ section }} section",
+  "error.pages.min.plural": "Add at least {{ min }} pages to the {{ section }} section",
+  "error.pages.max.singular": "You must not add more than one page to the {{ section }} section",
+  "error.pages.max.plural": "You must not add more than {{ max }} pages to the {{ section }} section",
 
   "error.site.changeTitle.permission": "You are not allowed to change the title of the site",
   "error.site.update.permission": "You are not allowed to update the site",

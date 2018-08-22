@@ -148,6 +148,11 @@
 
   "users.empty.role": "Es gibt keine Benutzer mit dieser Rolle",
 
+  "error.files.min.singular": "Bitte füge mindestes eine Datei zum Bereich {{ section }} hinzu",
+  "error.files.min.plural": "Bitte füge mindestens {{ min }} Dateien zum Bereich {{ section }} hinzu",
+  "error.files.max.singular": "Bitte füge nicht mehr als eine Datei zum Bereich {{ section }} hinzu",
+  "error.files.max.plural": "Bitte füge nicht mehr als {{ max }} Dateien zum Bereich {{ section }} hinzu",
+
   "error.form.incomplete": "Bitte behebe alle Fehler …",
   "error.form.converter.invalid": "Ungültiger Konverter \"{converter}\"",
   "error.form.date.invalid": "Ungültiges Datum",
@@ -161,5 +166,11 @@
   "error.form.field.required": "Das Feld ist Pflicht",
   "error.form.time": "Ungültige Zeit",
   "error.form.time.notation": "Ungültige Zeitnotation",
-  "error.form.url.invalid": "Ungültige URL"
+  "error.form.url.invalid": "Ungültige URL",
+
+  "error.pages.min.singular": "Bitte füge mindestes eine Seite zum Bereich {{ section }} hinzu",
+  "error.pages.min.plural": "Bitte füge mindestens {{ min }} Seiten zum Bereich {{ section }} hinzu",
+  "error.pages.max.singular": "Bitte füge nicht mehr als eine Seite zum Bereich {{ section }} hinzu",
+  "error.pages.max.plural": "Bitte füge nicht mehr als {{ max }} Seiten zum Bereich {{ section }} hinzu"
+
 }
