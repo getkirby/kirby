@@ -103,7 +103,7 @@ class Url
         //  //example.com/uri
         //  http://example.com/uri, https://example.com/uri, ftp://example.com/uri
         //  mailto:example@example.com
-        return preg_match('!^(//|[a-z0-9+-.]+://|mailto:)!i', $url) === 1;
+        return preg_match('!^(//|[a-z0-9+-.]+://|mailto:|tel:)!i', $url) === 1;
     }
 
     /**

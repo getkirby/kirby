@@ -105,7 +105,7 @@ return [
                 $tag->caption = $tag->caption ?? $tag->file->caption()->value();
             }
 
-            $link = function ($img) {
+            $link = function ($img) use ($tag) {
                 if (empty($tag->link) === true) {
                     return $img;
                 }

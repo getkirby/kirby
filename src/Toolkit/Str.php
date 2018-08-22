@@ -288,6 +288,17 @@ class Str
     }
 
     /**
+     * Checks if the given string is a URL
+     *
+     * @param string|null $string
+     * @return boolean
+     */
+    public static function isURL(string $string = null): bool
+    {
+        return filter_var($string, FILTER_VALIDATE_URL);
+    }
+
+    /**
      * Convert a string to kebab case.
      *
      * @param  string  $value

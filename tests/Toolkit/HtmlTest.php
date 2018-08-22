@@ -26,7 +26,7 @@ class HtmlTest extends TestCase
     public function testA()
     {
         $html = Html::a('https://getkirby.com');
-        $expected = '<a href="https://getkirby.com">https://getkirby.com</a>';
+        $expected = '<a href="https://getkirby.com">getkirby.com</a>';
 
         $this->assertEquals($expected, $html);
     }

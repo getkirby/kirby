@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Kirby\Http\Url;
 
 /**
  * Html builder for the most common elements
@@ -64,6 +65,10 @@ class Html
 
         if (empty($text) === true) {
             $text = $href;
+        }
+
+        if (is_string($text) === true && Str::isUrl($text) === true) {
+            $text = Url::short($text);
         }
 
         // add rel=noopener to target blank links to improve security
