@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\TestCase;
 
-class PagePermissionsTest extends TestCase
+class SitePermissionsTest extends TestCase
 {
 
     public function actionProvider()
