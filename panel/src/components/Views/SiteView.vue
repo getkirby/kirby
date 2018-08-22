@@ -68,7 +68,7 @@ export default {
         .then(site => {
           this.site = site;
           this.tabs = site.blueprint.tabs;
-          this.permissions = site.blueprint.options;
+          this.permissions = site.options;
           this.options = ready => {
             this.$api.site.options().then(options => {
               ready(options);

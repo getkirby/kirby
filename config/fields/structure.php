@@ -6,9 +6,7 @@ use Kirby\Cms\Blueprint;
 return [
     'props' => [
         'fields' => function (array $fields) {
-            return array_map(function ($field) {
-                return Blueprint::extend($field);
-            }, $fields);
+            return $fields;
         },
         'min' => function (int $min = null) {
             return $min;

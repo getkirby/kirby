@@ -165,4 +165,22 @@ class BlueprintTest extends TestCase
         $this->assertEquals('Extension Test', $blueprint->title());
     }
 
+    public function testFields()
+    {
+        $blueprint = new Blueprint([
+            'model' => 'test',
+            'fields' => $fields = [
+                'test' => [
+                    'type'  => 'text',
+                    'name'  => 'test',
+                    'label' => 'Test',
+                    'width' => '1/1'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals($fields, $blueprint->fields());
+        $this->assertEquals($fields['test'], $blueprint->field('test'));
+    }
+
 }

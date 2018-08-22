@@ -326,10 +326,25 @@ trait AppPlugins
         $this->extendFieldMethods((include static::$root . '/config/methods.php')($this));
         $this->extendTags(include static::$root . '/config/tags.php');
 
-
+        // blueprint presets
         PageBlueprint::$presets['pages']   = include static::$root . '/config/presets/pages.php';
         PageBlueprint::$presets['page']    = include static::$root . '/config/presets/page.php';
         PageBlueprint::$presets['gallery'] = include static::$root . '/config/presets/gallery.php';
+
+        // section mixins
+        Section::$mixins['headline']       = include static::$root . '/config/sections/mixins/headline.php';
+        Section::$mixins['layout']         = include static::$root . '/config/sections/mixins/layout.php';
+        Section::$mixins['max']            = include static::$root . '/config/sections/mixins/max.php';
+        Section::$mixins['min']            = include static::$root . '/config/sections/mixins/min.php';
+        Section::$mixins['pagination']     = include static::$root . '/config/sections/mixins/pagination.php';
+        Section::$mixins['parent']         = include static::$root . '/config/sections/mixins/parent.php';
+
+        // section types
+        Section::$types['info']            = include static::$root . '/config/sections/info.php';
+        Section::$types['pages']           = include static::$root . '/config/sections/pages.php';
+        Section::$types['files']           = include static::$root . '/config/sections/files.php';
+        Section::$types['fields']          = include static::$root . '/config/sections/fields.php';
+
     }
 
     /**

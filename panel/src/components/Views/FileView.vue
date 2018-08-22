@@ -130,10 +130,10 @@ export default {
           this.file = file;
           this.file.next = file.nextWithTemplate;
           this.file.prev = file.prevWithTemplate;
-          this.file.url = file.url + "?v=" + file.modified;
+          this.file.url = file.url;
           this.name = file.name;
           this.tabs = file.blueprint.tabs;
-          this.permissions = file.blueprint.options;
+          this.permissions = file.options;
           this.preview = this.$api.files.preview(file);
           this.options = ready => {
             this.$api.files

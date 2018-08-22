@@ -193,7 +193,7 @@ export default {
           this.user = user;
           this.tabs = user.blueprint.tabs;
           this.ready = true;
-          this.permissions = user.blueprint.options;
+          this.permissions = user.options;
           this.options = ready => {
             this.$api.users.options(this.user.id).then(options => {
               ready(options);

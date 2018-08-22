@@ -32,7 +32,7 @@ return [
         'pattern' => 'pages/(:any)/blueprints',
         'method'  => 'GET',
         'action'  => function (string $id) {
-            return $this->page($id)->blueprints();
+            return $this->page($id)->blueprints($this->requestQuery('section'));
         }
     ],
     [
@@ -117,7 +117,7 @@ return [
         'pattern' => 'pages/(:any)/files/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id, string $filename) {
-            return $this->file($id, $filename)->blueprint()->options()->toArray();
+            return $this->file($id, $filename)->permissions()->toArray();
         }
     ],
     [
@@ -128,17 +128,19 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/files/(:any)/sections/(:any)/(:all?)',
-        'method'  => 'ALL',
-        'action'  => function (string $id, string $filename, string $sectionName, string $path = '') {
-            return $this->file($id, $filename)->blueprint()->section($sectionName)->apiCall($this, $path);
+        'pattern' => 'pages/(:any)/files/(:any)/sections/(:any)',
+        'method'  => 'GET',
+        'action'  => function (string $id, string $filename, string $sectionName) {
+            if ($section = $this->file($id, $filename)->blueprint()->section($sectionName)) {
+                return $section->toResponse();
+            }
         }
     ],
     [
         'pattern' => 'pages/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
-            return $this->page($id)->blueprint()->options()->toArray();
+            return $this->page($id)->permissions()->toArray();
         }
     ],
     [
@@ -170,10 +172,12 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/sections/(:any)/(:all?)',
-        'method'  => 'ALL',
-        'action'  => function (string $id, string $sectionName, string $path = '') {
-            return $this->page($id)->blueprint()->section($sectionName)->apiCall($this, $path);
+        'pattern' => 'pages/(:any)/sections/(:any)',
+        'method'  => 'GET',
+        'action'  => function (string $id, string $sectionName) {
+            if ($section = $this->page($id)->blueprint()->section($sectionName)) {
+                return $section->toResponse();
+            }
         }
     ]
 

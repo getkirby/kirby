@@ -490,7 +490,7 @@ class User extends ModelWithContent
         ]);
 
         if ($expect !== null && is_a($result, $expect) !== true) {
-            throw new Exception('Unexpected query result');
+            return null;
         }
 
         return $result;

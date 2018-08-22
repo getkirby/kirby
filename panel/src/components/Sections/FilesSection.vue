@@ -93,7 +93,6 @@ export default {
         .then(response => {
 
           this.accept     = response.options.accept || "*";
-          this.error      = response.options.errors[0];
           this.headline   = response.options.headline || " ";
           this.add        = response.options.add && this.$permissions.files.create;
           this.min        = response.options.min;
@@ -103,7 +102,6 @@ export default {
           this.sortable   = response.options.sortable === true && response.data.length > 1;
           this.layout     = response.options.layout || "list";
           this.isLoading  = false;
-
 
           this.data = response.data.map(file => {
             file.options = ready => {

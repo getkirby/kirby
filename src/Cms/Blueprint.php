@@ -214,6 +214,7 @@ class Blueprint
      */
     public static function factory(string $name, string $fallback = null, Model $model)
     {
+
         try {
             $props = static::load($name);
         } catch (Exception $e) {
@@ -313,19 +314,30 @@ class Blueprint
             return static::$loaded[$name];
         }
 
-        $props = static::find($name);
+        $props     = static::find($name);
+        $normalize = function ($props) use ($name) {
+
+            // inject the filename as name if no name is set
+            $props['name'] = $props['name'] ?? $name;
+
+            // normalize the title
+            $title = $props['title'] ?? ucfirst($props['name']);
+
+            // translate the title
+            $props['title'] = I18n::translate($title, $title);
+
+            return $props;
+
+        };
 
         if (is_array($props) === true) {
-            return $props;
+            return $normalize($props);
         }
 
         $file  = $props;
         $props = Data::read($file);
 
-        // inject the filename as name if no name is set
-        $props['name'] = $props['name'] ?? F::name($file);
-
-        return static::$loaded[$name] = $props;
+        return static::$loaded[$name] = $normalize($props);
     }
 
     /**
@@ -385,6 +397,11 @@ class Blueprint
 
             // inject all field extensions
             $fieldProps = $this->extend($fieldProps);
+
+            // support for nested fields
+            if (isset($fieldProps['fields']) === true) {
+                $fieldProps['fields'] = $this->normalizeFields($fieldProps['fields']);
+            }
 
             $fields[$fieldName] = $fieldProps = array_merge($fieldProps, [
                 'label' => $fieldProps['label'] ?? ucfirst($fieldName),
@@ -518,11 +535,22 @@ class Blueprint
      * Returns a single section by name
      *
      * @param string $name
-     * @return array|null
+     * @return Section|null
      */
-    public function section(string $name): ?array
+    public function section(string $name): ?Section
     {
-        return $this->sections[$name] ?? null;
+        if (empty($this->sections[$name]) === true) {
+            return null;
+        }
+
+        // get all props
+        $props = $this->sections[$name];
+
+        // inject the blueprint model
+        $props['model'] = $this->model();
+
+        // create a new section object
+        return new Section($props['type'], $props);
     }
 
     /**
@@ -532,7 +560,9 @@ class Blueprint
      */
     public function sections(): array
     {
-        return $this->sections;
+        return array_map(function ($section) {
+            return $this->section($section['name']);
+        }, $this->sections);
     }
 
     /**
@@ -553,7 +583,7 @@ class Blueprint
      */
     public function tabs(): array
     {
-        return $this->tabs;
+        return array_values($this->tabs);
     }
 
     /**

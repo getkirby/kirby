@@ -223,25 +223,26 @@ class Page extends ModelWithContent
     /**
      * Returns an array with all blueprints that are available for the page
      *
+     * @params string $inSection
      * @return array
      */
-    public function blueprints(): array
+    public function blueprints(string $inSection = null): array
     {
-        if ($parent = $this->parentModel()) {
-            $blueprints = [];
+        $blueprints = [];
+        $blueprint  = $this->blueprint();
+        $sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
 
-            foreach ($parent->blueprint()->sections() as $section) {
-                if (is_a($section, 'Kirby\Cms\BlueprintPagesSection') === false) {
-                    continue;
-                }
-
-                $blueprints = array_map("unserialize", array_unique(array_map("serialize", array_merge($blueprints, $section->blueprints()))));
+        foreach ($sections as $section) {
+            if ($section === null || $section->type() !== 'pages') {
+                continue;
             }
 
-            return $blueprints;
+            foreach ($section->blueprints() as $blueprint) {
+                $blueprints[$blueprint['name']] = $blueprint;
+            }
         }
 
-        return [];
+        return array_values($blueprints);
     }
 
     /**
@@ -793,6 +794,40 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Returns the panel icon definition
+     * according to the blueprint settings
+     *
+     * @return array
+     */
+    public function panelIcon(): array
+    {
+
+        if ($icon = $this->blueprint()->icon()) {
+
+            // check for emojis
+            if (strlen($icon) !== Str::length($icon)) {
+                return [
+                    'type'  => $icon,
+                    'back'  => 'black',
+                    'emoji' => true
+                ];
+            }
+
+            return [
+                'type' => $icon,
+                'back' => 'black',
+            ];
+
+        }
+
+        return [
+            'type' => 'file',
+            'back' => 'black',
+        ];
+
+    }
+
+    /**
      * Returns the escaped Id, which is
      * used in the panel to make routing work properly
      *
@@ -801,6 +836,49 @@ class Page extends ModelWithContent
     public function panelId(): string
     {
         return str_replace('/', '+', $this->id());
+    }
+
+    /**
+     * @param string|array|false $settings
+     * @return array|null
+     */
+    public function panelImage($settings = null): ?array
+    {
+        $defaults = [
+            'ratio' => '3/2',
+            'back'  => 'pattern',
+            'cover' => false
+        ];
+
+        // switch the image off
+        if ($settings === false) {
+            return null;
+        }
+
+        if (is_string($settings) === true) {
+            $settings = [
+                'query' => $settings
+            ];
+        }
+
+        // resolve image queries
+        if (isset($settings['query']) === true) {
+            if ($image = $this->query($settings['query'], 'Kirby\Cms\File')) {
+                $settings['url'] = $image->url(true);
+            }
+
+            unset($settings['query']);
+        }
+
+        if (isset($settings['url']) === false) {
+            if ($image = $this->image()) {
+                $settings['url'] = $image->url(true);
+            } else {
+                return null;
+            }
+        }
+
+        return array_merge($defaults, $settings);
     }
 
     /**
@@ -826,6 +904,20 @@ class Page extends ModelWithContent
     public function parent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Returns the parent id, if a parent exists
+     *
+     * @return string|null
+     */
+    public function parentId(): ?string
+    {
+        if ($parent = $this->parent()) {
+            return $parent->id();
+        }
+
+        return null;
     }
 
     /**
@@ -898,7 +990,7 @@ class Page extends ModelWithContent
         ]);
 
         if ($expect !== null && is_a($result, $expect) !== true) {
-            throw new Exception('Unexpected query result');
+            return null;
         }
 
         return $result;

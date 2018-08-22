@@ -345,11 +345,18 @@ class File extends ModelWithContent
     /**
      * Returns the absolute Url to the file in the public media folder
      *
+     * @param bool $timestamp
      * @return string
      */
-    public function mediaUrl(): string
+    public function mediaUrl(bool $timestamp = false): string
     {
-        return $this->parent()->mediaUrl() . '/' . $this->filename();
+        $url = $this->parent()->mediaUrl() . '/' . $this->filename();
+
+        if ($timestamp === true) {
+            return $url . '?t=' . $this->modified();
+        }
+
+        return $url;
     }
 
     /**
@@ -387,6 +394,64 @@ class File extends ModelWithContent
     }
 
     /**
+     * Panel icon definition
+     *
+     * @return array
+     */
+    public function panelIcon(): array
+    {
+        return [
+            'type' => 'file',
+            'back' => 'black'
+        ];
+    }
+
+    /**
+     * Panel image definition
+     *
+     * @param string|array|false $settings
+     * @return array
+     */
+    public function panelImage($settings = null): ?array
+    {
+        $defaults = [
+            'ratio' => '3/2',
+            'back'  => 'pattern',
+            'cover' => false
+        ];
+
+        // switch the image off
+        if ($settings === false) {
+            return null;
+        }
+
+        if (is_string($settings) === true) {
+            $settings = [
+                'query' => $settings
+            ];
+        }
+
+        // resolve image queries
+        if (isset($settings['query']) === true) {
+            if ($image = $this->query($settings['query'], 'Kirby\Cms\File')) {
+                $settings['url'] = $image->url(true);
+            }
+
+            unset($settings['query']);
+        }
+
+        if (isset($settings['url']) === false) {
+            if ($this->type() === 'image') {
+                $settings['url'] = $this->url(true);
+            } else {
+                return null;
+            }
+        }
+
+        return array_merge($defaults, $settings);
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
@@ -406,6 +471,20 @@ class File extends ModelWithContent
     public function parent()
     {
         return $this->parent = $this->parent ?? $this->kirby()->site();
+    }
+
+    /**
+     * Returns the parent id if a parent exists
+     *
+     * @return string|null
+     */
+    public function parentId(): ?string
+    {
+        if ($parent = $this->parent()) {
+            return $parent->id();
+        }
+
+        return null;
     }
 
     /**
@@ -448,7 +527,7 @@ class File extends ModelWithContent
         ]);
 
         if ($expect !== null && is_a($result, $expect) !== true) {
-            throw new Exception('Unexpected query result');
+            return null;
         }
 
         return $result;
@@ -591,10 +670,15 @@ class File extends ModelWithContent
     /**
      * Returns the Url
      *
+     * @param bool $timestamp
      * @return string
      */
-    public function url(): string
+    public function url(bool $timestamp = false): string
     {
-        return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this);
+        if ($timestamp === true) {
+            return $this->kirby()->component('file::url')($this->kirby(), $this, [], true);
+        }
+
+        return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this, []);
     }
 }

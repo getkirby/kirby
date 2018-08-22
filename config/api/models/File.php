@@ -48,7 +48,7 @@ return [
             return $file->nextAll()->template($file->template())->first();
         },
         'options' => function (File $file) {
-            return $file->blueprint()->options()->toArray();
+            return $file->permissions()->toArray();
         },
         'prev' => function (File $file) {
             return $file->prev();
@@ -75,7 +75,7 @@ return [
             return $file->type();
         },
         'url' => function (File $file) {
-            return $file->url();
+            return $file->url(true);
         },
     ],
     'type'  => File::class,
@@ -120,6 +120,7 @@ return [
             'name',
             'nextWithTemplate' => 'compact',
             'niceSize',
+            'options',
             'parent' => 'compact',
             'parents' => ['id', 'slug', 'title'],
             'prevWithTemplate' => 'compact',

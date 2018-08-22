@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 class Component
 {
+    public static $mixins = [];
     public static $types = [];
 
     protected $component;
@@ -29,8 +30,19 @@ class Component
             throw new InvalidArgumentException('Undefined component type: ' . $type);
         }
 
+        $options = static::$types[$type];
+
+        // inject mixins
+        if (isset($options['mixins']) === true) {
+            foreach ($options['mixins'] as $mixin) {
+                if (isset(static::$mixins[$mixin]) === true) {
+                    $options = array_replace_recursive(static::$mixins[$mixin], $options);
+                }
+            }
+        }
+
         $this->attrs   = $attrs;
-        $this->options = $options = static::$types[$type];
+        $this->options = $options;
         $this->methods = $methods = $options['methods'] ?? [];
 
         foreach ($attrs as $attrName => $attrValue) {
@@ -49,6 +61,11 @@ class Component
         $this->methods = $methods;
         $this->options = $options;
         $this->type    = $type;
+    }
+
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
     }
 
     public function __get(string $attr)

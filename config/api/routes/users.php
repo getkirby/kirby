@@ -102,7 +102,7 @@ return [
         'pattern' => 'users/(:any)/options',
         'method'  => 'GET',
         'action'  => function (string $id) {
-            return $this->user($id)->blueprint()->options()->toArray();
+            return $this->user($id)->permissions()->toArray();
         }
     ],
     [
@@ -120,10 +120,12 @@ return [
         }
     ],
     [
-        'pattern' => 'users/(:any)/sections/(:any)/(:all?)',
-        'method'  => 'ALL',
-        'action'  => function (string $id, string $sectionName, string $path = '') {
-            return $this->user($id)->blueprint()->section($sectionName)->apiCall($this, $path);
+        'pattern' => 'users/(:any)/sections/(:any)',
+        'method'  => 'GET',
+        'action'  => function (string $id, string $sectionName) {
+            if ($section = $this->user($id)->blueprint()->section($sectionName)) {
+                return $section->toResponse();
+            }
         }
     ]
 

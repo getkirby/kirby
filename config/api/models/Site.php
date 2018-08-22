@@ -24,7 +24,7 @@ return [
             return $site->files();
         },
         'options' => function (Site $site) {
-            return $site->blueprint()->options()->toArray();
+            return $site->permissions()->toArray();
         },
         'title' => function (Site $site) {
             return $site->title()->value();
@@ -48,6 +48,7 @@ return [
         'panel' => [
             'title',
             'blueprint',
+            'options',
             'url'
         ]
     ]

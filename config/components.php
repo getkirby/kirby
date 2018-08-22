@@ -12,16 +12,16 @@ use Kirby\Toolkit\F;
 use Kirby\Toolkit\Tpl as Snippet;
 
 return [
-    'file::url' => function (App $kirby, Model $file, array $options = []) {
+    'file::url' => function (App $kirby, Model $file, array $options = [], bool $timestamp = false) {
 
         if (empty($options) === true) {
-            return $file->mediaUrl();
+            return $file->mediaUrl($timestamp);
         }
 
         $resizable = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
 
         if (in_array($file->extension(), $resizable) === false) {
-            return $file->mediaUrl();
+            return $file->mediaUrl($timestamp);
         }
 
         // thumb driver config
@@ -45,6 +45,10 @@ return [
             Data::write($job, array_merge($attributes, [
                 'filename' => $file->filename()
             ]));
+        }
+
+        if ($timestamp === true) {
+            $thumbName .= '?t=' . $file->modified();
         }
 
         return $parent->mediaUrl() . '/' . $thumbName;

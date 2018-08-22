@@ -42,7 +42,7 @@ return [
             return $page->num();
         },
         'options' => function (Page $page) {
-            return $page->blueprint()->options()->toArray();
+            return $page->permissions()->toArray();
         },
         'parent' => function (Page $page) {
             return $page->parent();
@@ -100,6 +100,7 @@ return [
             'id',
             'blueprint',
             'status',
+            'options',
             'next'    => ['id', 'slug', 'title'],
             'parents' => ['id', 'slug', 'title'],
             'prev'    => ['id', 'slug', 'title'],

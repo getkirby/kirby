@@ -36,11 +36,7 @@ return [
             return $user->next();
         },
         'options' => function (User $user) {
-            if ($blueprint = $user->blueprint()) {
-                return $blueprint->options()->toArray();
-            }
-
-            return null;
+            return $user->permissions()->toArray();
         },
         'permissions' => function (User $user) {
             return $user->role()->permissions()->toArray();

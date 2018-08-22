@@ -70,12 +70,30 @@ export default {
     }
   },
   methods: {
-    open(parent, section, templates) {
-      this.parent = parent;
+    open(parent, section) {
+      this.parent  = parent;
       this.section = section;
-      this.templates = templates;
-      this.page.template = templates[0].value;
-      this.$refs.dialog.open();
+
+      this.$api
+        .get(this.parent + "/blueprints", {section: section})
+        .then(response => {
+          this.templates = response.map(blueprint => {
+            return {
+              value: blueprint.name,
+              text: blueprint.title
+            };
+          });
+
+          if (this.templates[0]) {
+            this.page.template = this.templates[0].value;
+          }
+
+          this.$refs.dialog.open();
+        })
+        .catch(error => {
+          this.$store.dispatch("notification/error", error);
+        });
+
     },
     submit() {
 

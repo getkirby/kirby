@@ -11,10 +11,10 @@ return [
             return $blueprint->name();
         },
         'options' => function (SiteBlueprint $blueprint) {
-            return $blueprint->options()->toArray();
+            return $blueprint->options();
         },
         'tabs' => function (SiteBlueprint $blueprint) {
-            return $blueprint->tabs()->toArray();
+            return $blueprint->tabs();
         },
         'title' => function (SiteBlueprint $blueprint) {
             return $blueprint->title();

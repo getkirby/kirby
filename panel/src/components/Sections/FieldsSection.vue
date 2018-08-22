@@ -61,8 +61,8 @@ export default {
       this.$api
         .get(this.parent + "/sections/" + this.name)
         .then(response => {
-          this.errors = response.options.errors;
-          this.fields = response.options.fields;
+          this.errors = response.errors;
+          this.fields = response.fields;
 
           this.stored = response.data;
           this.values = Object.assign(

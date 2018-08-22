@@ -167,7 +167,7 @@ export default {
         .then(page => {
           this.page = page;
           this.blueprint = page.blueprint.name;
-          this.permissions = page.blueprint.options;
+          this.permissions = page.options;
           this.tabs = page.blueprint.tabs;
           this.options = ready => {
             this.$api.pages.options(this.page.id).then(options => {

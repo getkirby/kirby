@@ -59,7 +59,6 @@ export default {
   data() {
     return {
       add: false,
-      blueprints: [],
       data: [],
       issue: false,
       error: false,
@@ -68,7 +67,6 @@ export default {
       min: null,
       max: null,
       layout: "list",
-      status: null,
       page: 1,
       link: false
     };
@@ -96,13 +94,7 @@ export default {
         case "create":
           this.$refs.create.open(
             this.link || this.parent,
-            this.name,
-            this.blueprints.map(blueprint => {
-              return {
-                value: blueprint.name,
-                text: blueprint.title
-              };
-            })
+            this.name
           );
           break;
         case "preview":
@@ -153,16 +145,14 @@ export default {
           });
 
           this.add        = response.options.add && this.$permissions.pages.create;
-          this.blueprints = response.options.blueprints;
           this.pagination = response.pagination;
-          this.status     = response.options.status;
           this.headline   = response.options.headline || " ";
           this.sortable   = response.options.sortable;
           this.min        = response.options.min;
           this.max        = response.options.max;
           this.layout     = response.options.layout || "list";
           this.link       = response.options.link;
-          this.error      = response.options.errors[0];
+          this.error      = response.errors[0];
           this.isLoading  = false;
         })
         .catch(error => {

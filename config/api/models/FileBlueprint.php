@@ -11,10 +11,10 @@ return [
             return $blueprint->name();
         },
         'options' => function (FileBlueprint $blueprint) {
-            return $blueprint->options()->toArray();
+            return $blueprint->options();
         },
         'tabs' => function (FileBlueprint $blueprint) {
-            return $blueprint->tabs()->toArray();
+            return $blueprint->tabs();
         },
         'title' => function (FileBlueprint $blueprint) {
             return $blueprint->title();
