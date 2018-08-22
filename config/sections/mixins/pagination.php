@@ -7,8 +7,8 @@ return [
         'limit' => function (int $limit = 20) {
             return $limit;
         },
-        'page' => function (int $page = 1) {
-            return $page;
+        'page' => function (int $page = null) {
+            return $page ?? get('page', 1);
         },
     ],
     'methods' => [
