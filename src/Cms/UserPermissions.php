@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class UserPermissions extends ModelPermissions
 {
-
     protected $category = 'users';
 
     public function __construct(Model $model)
@@ -24,5 +23,4 @@ class UserPermissions extends ModelPermissions
     {
         return $this->model->isLastAdmin() !== true;
     }
-
 }

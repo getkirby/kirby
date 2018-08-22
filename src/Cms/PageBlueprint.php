@@ -16,7 +16,8 @@ class PageBlueprint extends Blueprint
         parent::__construct($props);
 
         // normalize all available page options
-        $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
+        $this->props['options'] = $this->normalizeOptions(
+            $props['options'] ?? true,
             // defaults
             [
                 'changeSlug'     => null,
@@ -170,5 +171,4 @@ class PageBlueprint extends Blueprint
     {
         return $this->props['status'];
     }
-
 }

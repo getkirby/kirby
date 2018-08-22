@@ -214,7 +214,6 @@ class Blueprint
      */
     public static function factory(string $name, string $fallback = null, Model $model)
     {
-
         try {
             $props = static::load($name);
         } catch (Exception $e) {
@@ -327,7 +326,6 @@ class Blueprint
             $props['title'] = I18n::translate($title, $title);
 
             return $props;
-
         };
 
         if (is_array($props) === true) {
@@ -390,7 +388,6 @@ class Blueprint
     protected function normalizeFields(array $fields): array
     {
         foreach ($fields as $fieldName => $fieldProps) {
-
             if ($fieldProps === true) {
                 $fieldProps = [];
             }
@@ -409,7 +406,6 @@ class Blueprint
                 'type'  => $fieldProps['type'] ?? $fieldName,
                 'width' => $fieldProps['width'] ?? '1/1',
             ]);
-
         }
 
         // store all normalized fields
@@ -606,5 +602,3 @@ class Blueprint
         return $this->props;
     }
 }
-
-

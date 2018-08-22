@@ -801,7 +801,6 @@ class Page extends ModelWithContent
      */
     public function panelIcon(): array
     {
-
         if ($icon = $this->blueprint()->icon()) {
 
             // check for emojis
@@ -817,14 +816,12 @@ class Page extends ModelWithContent
                 'type' => $icon,
                 'back' => 'black',
             ];
-
         }
 
         return [
             'type' => 'file',
             'back' => 'black',
         ];
-
     }
 
     /**
@@ -863,13 +860,11 @@ class Page extends ModelWithContent
         }
 
         if ($image = $this->query($settings['query'] ?? 'page.image', 'Kirby\Cms\File')) {
-
             $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
 
             unset($settings['query']);
 
             return array_merge($defaults, $settings);
-
         }
 
         return null;

@@ -7,7 +7,6 @@ use Kirby\Toolkit\Component;
 
 class Section extends Component
 {
-
     public function __construct(string $type, array $attrs = [])
     {
         if (isset($attrs['model']) === false) {
@@ -49,5 +48,4 @@ class Section extends Component
             'type'   => $this->type
         ], $this->toArray());
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PagePermissions extends ModelPermissions
 {
-
     protected $category = 'pages';
 
     protected function canChangeSlug(): bool
@@ -34,5 +33,4 @@ class PagePermissions extends ModelPermissions
     {
         return $this->model->isHomeOrErrorPage() !== true;
     }
-
 }

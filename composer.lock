@@ -867,17 +867,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "fab6cde4899dad966f26b49ac20a1c99becf3df9"
+                "reference": "791a415ba1a87a48f2916f918d708649e41ef375"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/fab6cde4899dad966f26b49ac20a1c99becf3df9",
-                "reference": "fab6cde4899dad966f26b49ac20a1c99becf3df9",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/791a415ba1a87a48f2916f918d708649e41ef375",
+                "reference": "791a415ba1a87a48f2916f918d708649e41ef375",
                 "shasum": ""
             },
             "require": {
                 "composer/semver": "^1.4",
-                "composer/xdebug-handler": "^1.0",
+                "composer/xdebug-handler": "^1.2",
                 "doctrine/annotations": "^1.2",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
@@ -955,7 +955,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-08-10 11:20:40"
+            "time": "2018-08-22 19:06:11"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1670,12 +1670,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "814ba320fe659956f52e02ab3c6e36df50641929"
+                "reference": "24da433d7384824d65ea93fbb462e2f31bbb494e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/814ba320fe659956f52e02ab3c6e36df50641929",
-                "reference": "814ba320fe659956f52e02ab3c6e36df50641929",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/24da433d7384824d65ea93fbb462e2f31bbb494e",
+                "reference": "24da433d7384824d65ea93fbb462e2f31bbb494e",
                 "shasum": ""
             },
             "require": {
@@ -1746,7 +1746,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-08-14 09:46:01"
+            "time": "2018-08-22 06:32:48"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2562,12 +2562,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "15754f6a1ccc88b14be99092299338004a4c8575"
+                "reference": "95744778673d225918893428a188033b0dc1b1cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/15754f6a1ccc88b14be99092299338004a4c8575",
-                "reference": "15754f6a1ccc88b14be99092299338004a4c8575",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/95744778673d225918893428a188033b0dc1b1cc",
+                "reference": "95744778673d225918893428a188033b0dc1b1cc",
                 "shasum": ""
             },
             "require": {
@@ -2604,7 +2604,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26 11:25:51"
+            "time": "2018-08-18 16:57:16"
         },
         {
             "name": "symfony/finder",

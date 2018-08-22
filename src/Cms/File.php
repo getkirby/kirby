@@ -432,13 +432,11 @@ class File extends ModelWithContent
         }
 
         if ($image) {
-
             $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
 
             unset($settings['query']);
 
             return array_merge($defaults, $settings);
-
         }
 
         return null;

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 abstract class ModelPermissions
 {
-
     protected $category;
     protected $model;
     protected $options;
@@ -59,5 +58,4 @@ abstract class ModelPermissions
 
         return $array;
     }
-
 }

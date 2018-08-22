@@ -8,13 +8,13 @@ namespace Kirby\Cms;
  */
 class FileBlueprint extends Blueprint
 {
-
     public function __construct(array $props)
     {
         parent::__construct($props);
 
         // normalize all available page options
-        $this->props['options'] = $this->normalizeOptions($props['options'] ?? true,
+        $this->props['options'] = $this->normalizeOptions(
+            $props['options'] ?? true,
             // defaults
             [
                 'changeName' => null,
