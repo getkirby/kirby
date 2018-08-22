@@ -89,6 +89,9 @@ return [
 
             return $data;
         },
+        'total' => function () {
+            return $this->files->pagination()->total();
+        },
         'errors' => function () {
 
             $errors = [];
@@ -116,9 +119,6 @@ return [
                 return $parentLink;
             }
 
-        },
-        'total' => function () {
-            return $this->files->pagination()->total();
         },
         'pagination' => function () {
             return $this->pagination();

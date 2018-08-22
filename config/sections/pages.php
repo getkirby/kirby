@@ -106,6 +106,9 @@ return [
 
             return $pages;
         },
+        'total' => function () {
+            return $this->pages->pagination()->total();
+        },
         'data' => function () {
 
             $data = [];
@@ -174,9 +177,6 @@ return [
                 return $parentLink;
             }
 
-        },
-        'total' => function () {
-            return $this->pages->pagination()->total();
         },
         'pagination' => function () {
             return $this->pagination();
