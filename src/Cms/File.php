@@ -345,18 +345,11 @@ class File extends ModelWithContent
     /**
      * Returns the absolute Url to the file in the public media folder
      *
-     * @param bool $timestamp
      * @return string
      */
-    public function mediaUrl(bool $timestamp = false): string
+    public function mediaUrl(): string
     {
-        $url = $this->parent()->mediaUrl() . '/' . $this->filename();
-
-        if ($timestamp === true) {
-            return $url . '?t=' . $this->modified();
-        }
-
-        return $url;
+        return $this->parent()->mediaUrl() . '/' . $this->filename();
     }
 
     /**
@@ -410,9 +403,10 @@ class File extends ModelWithContent
      * Panel image definition
      *
      * @param string|array|false $settings
+     * @param array $thumbSettings
      * @return array
      */
-    public function panelImage($settings = null): ?array
+    public function panelImage($settings = null, array $thumbSettings = null): ?array
     {
         $defaults = [
             'ratio' => '3/2',
@@ -431,24 +425,23 @@ class File extends ModelWithContent
             ];
         }
 
-        // resolve image queries
-        if (isset($settings['query']) === true) {
-            if ($image = $this->query($settings['query'], 'Kirby\Cms\File')) {
-                $settings['url'] = $image->url(true);
-            }
+        $image = $this->query($settings['query'] ?? null, 'Kirby\Cms\File');
+
+        if ($image === null && $this->type() === 'image') {
+            $image = $this;
+        }
+
+        if ($image) {
+
+            $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
 
             unset($settings['query']);
+
+            return array_merge($defaults, $settings);
+
         }
 
-        if (isset($settings['url']) === false) {
-            if ($this->type() === 'image') {
-                $settings['url'] = $this->url(true);
-            } else {
-                return null;
-            }
-        }
-
-        return array_merge($defaults, $settings);
+        return null;
     }
 
     /**
@@ -514,12 +507,16 @@ class File extends ModelWithContent
     /**
      * Creates a string query, starting from the model
      *
-     * @param string $query
+     * @param string|null $query
      * @param string|null $expect
      * @return mixed
      */
-    public function query(string $query, string $expect = null)
+    public function query(string $query = null, string $expect = null)
     {
+        if ($query === null) {
+            return null;
+        }
+
         $result = Str::query($query, [
             'kirby' => $this->kirby(),
             'site'  => $this->site(),
@@ -670,15 +667,10 @@ class File extends ModelWithContent
     /**
      * Returns the Url
      *
-     * @param bool $timestamp
      * @return string
      */
-    public function url(bool $timestamp = false): string
+    public function url(): string
     {
-        if ($timestamp === true) {
-            return $this->kirby()->component('file::url')($this->kirby(), $this, [], true);
-        }
-
         return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this, []);
     }
 }

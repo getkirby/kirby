@@ -113,6 +113,18 @@ return [
 
             $data = [];
 
+            if ($this->layout === 'list') {
+                $thumb = [
+                    'width'  => 100,
+                    'height' => 100
+                ];
+            } else {
+                $thumb = [
+                    'width'  => 400,
+                    'height' => 400
+                ];
+            }
+
             foreach ($this->pages as $item) {
 
                 $permissions = $item->permissions();
@@ -125,7 +137,7 @@ return [
                     'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),
                     'icon'        => $item->panelIcon(),
-                    'image'       => $item->panelImage($this->image),
+                    'image'       => $item->panelImage($this->image, $thumb),
                     'link'        => $item->panelUrl(true),
                     'url'         => $item->url(),
                     'status'      => $item->status(),

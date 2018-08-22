@@ -477,12 +477,16 @@ class User extends ModelWithContent
     /**
      * Creates a string query, starting from the model
      *
-     * @param string $query
+     * @param string|null $query
      * @param string|null $expect
      * @return mixed
      */
-    public function query(string $query, string $expect = null)
+    public function query(string $query = null, string $expect = null)
     {
+        if ($query === null) {
+            return null;
+        }
+
         $result = Str::query($query, [
             'kirby' => $kirby = $this->kirby(),
             'site'  => $kirby->site(),

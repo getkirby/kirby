@@ -111,11 +111,15 @@ trait HasThumbs
      * could potentially also be a CDN or any other
      * place.
      *
-     * @param array $options
+     * @param array|null $options
      * @return self
      */
-    public function thumb(array $options = []): self
+    public function thumb(array $options = null): self
     {
+        if (empty($options) === true) {
+            return $this;
+        }
+
         if ($this->original() !== null) {
             $original = $this->original();
             $options  = array_merge($this->modifications(), $options);

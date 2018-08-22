@@ -72,6 +72,18 @@ return [
 
             $data = [];
 
+            if ($this->layout === 'list') {
+                $thumb = [
+                    'width'  => 100,
+                    'height' => 100
+                ];
+            } else {
+                $thumb = [
+                    'width'  => 400,
+                    'height' => 400
+                ];
+            }
+
             foreach ($this->files as $file) {
                 $data[] = [
                     'dragText' => $file->dragText($this->dragTextType),
@@ -80,7 +92,7 @@ return [
                     'text'     => $file->toString($this->text),
                     'info'     => $file->toString($this->info ?? false),
                     'icon'     => $file->panelIcon(),
-                    'image'    => $file->panelImage($this->image),
+                    'image'    => $file->panelImage($this->image, $thumb),
                     'link'     => $file->panelUrl(true),
                     'parent'   => $file->parentId(),
                     'url'      => $file->url(),

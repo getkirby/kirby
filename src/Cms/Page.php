@@ -840,9 +840,10 @@ class Page extends ModelWithContent
 
     /**
      * @param string|array|false $settings
+     * @param array|null $thumbSettings
      * @return array|null
      */
-    public function panelImage($settings = null): ?array
+    public function panelImage($settings = null, array $thumbSettings = null): ?array
     {
         $defaults = [
             'ratio' => '3/2',
@@ -861,24 +862,17 @@ class Page extends ModelWithContent
             ];
         }
 
-        // resolve image queries
-        if (isset($settings['query']) === true) {
-            if ($image = $this->query($settings['query'], 'Kirby\Cms\File')) {
-                $settings['url'] = $image->url(true);
-            }
+        if ($image = $this->query($settings['query'] ?? 'page.image', 'Kirby\Cms\File')) {
+
+            $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
 
             unset($settings['query']);
+
+            return array_merge($defaults, $settings);
+
         }
 
-        if (isset($settings['url']) === false) {
-            if ($image = $this->image()) {
-                $settings['url'] = $image->url(true);
-            } else {
-                return null;
-            }
-        }
-
-        return array_merge($defaults, $settings);
+        return null;
     }
 
     /**
@@ -977,12 +971,16 @@ class Page extends ModelWithContent
     /**
      * Creates a string query, starting from the model
      *
-     * @param string $query
+     * @param string|null $query
      * @param string|null $expect
      * @return mixed
      */
-    public function query(string $query, string $expect = null)
+    public function query(string $query = null, string $expect = null)
     {
+        if ($query === null) {
+            return null;
+        }
+
         $result = Str::query($query, [
             'kirby' => $this->kirby(),
             'site'  => $this->site(),
