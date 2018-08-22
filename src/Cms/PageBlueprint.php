@@ -121,7 +121,12 @@ class PageBlueprint extends Blueprint
         foreach ($status as $key => $options) {
 
             // skip invalid status definitions
-            if (in_array($key, ['draft', 'listed', 'unlisted']) === false) {
+            if (in_array($key, ['draft', 'listed', 'unlisted']) === false || $options === false) {
+                continue;
+            }
+
+            if ($options === true) {
+                $status[$key] = $defaults[$key];
                 continue;
             }
 
