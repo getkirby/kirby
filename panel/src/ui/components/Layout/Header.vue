@@ -93,6 +93,10 @@ export default {
   methods: {
     resize() {
 
+      if (!this.tabs || this.tabs.length <= 1) {
+        return;
+      }
+
       if (window.innerWidth >= 700) {
         if (this.size === "large") {
           return;
