@@ -20,22 +20,16 @@ export default {
       theme: null
     };
   },
-  created: function() {
-    this.fetch();
-  },
-  methods: {
-    fetch() {
-      this.$api
-        .get(this.parent + "/sections/" + this.name)
-        .then(response => {
-          this.headline = response.data.headline;
-          this.text     = response.data.text;
-          this.theme    = response.data.theme || "info";
-        })
-        .catch(error => {
-          this.issue = error;
-        });
-    }
+  created() {
+    this.load()
+      .then(response => {
+        this.headline = response.options.headline;
+        this.text     = response.options.text;
+        this.theme    = response.options.theme || "info";
+      })
+      .catch (error => {
+        this.issue = error;
+      });
   }
 };
 </script>
