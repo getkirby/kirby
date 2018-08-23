@@ -51,7 +51,7 @@
           @keydown.native.space.prevent="select(option)"
         >
           <span v-html="option.display" />
-          <span class="value" v-html="option.info" />
+          <span class="k-multiselect-value" v-html="option.info" />
         </k-dropdown-item>
       </div>
     </k-dropdown-content>
@@ -241,12 +241,12 @@ export default {
 <style lang="scss">
 
 .k-multiselect-input {
-  display:       flex;
-  flex-wrap:     wrap;
-  position:      relative;
-  font-size:     0.875rem;
-  min-height:    1.75rem;
-  line-height:   1;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  font-size: $font-size-small;
+  min-height: 2.25rem;
+  line-height: 1;
 }
 .k-multiselect-input .sortable-ghost {
   background: $color-focus;
@@ -258,8 +258,9 @@ export default {
 
 .k-multiselect-search {
   margin-top: 0 !important;
-  color:      $color-black;
-  background: $color-dark-grey;
+  color: $color-white;
+  background: $color-dark;
+  border-bottom: 1px dashed rgba($color-white, .2);
 
    > .k-button-text {
     flex: 1;
@@ -267,10 +268,12 @@ export default {
 
   input {
     width:      100%;
+    color:      $color-white;
     background: none;
     border:     none;
     outline:    none;
-    font-size:  1em;
+    padding:    .25rem 0;
+    font: inherit;
   }
 }
 
@@ -279,9 +282,12 @@ export default {
   position: relative;
   max-height: 240px;
   overflow-y: scroll;
+  padding: .5rem 0;
 }
 
 .k-multiselect-option {
+  position: relative;
+
   &.selected {
     color: $color-positive-on-dark;
   }
@@ -290,18 +296,19 @@ export default {
     opacity: 0;
   }
 
-  .value {
-    font-size: .8em;
-    opacity:   .5;
-
-    &::before { content: " (" }
-    &::after  { content: ")"  }
-  }
-
-   b {
+  b {
     color: $color-focus-on-dark;
     font-weight: 700;
   }
+}
+
+.k-multiselect-value {
+  color: $color-light-grey;
+  margin-left: .25rem;
+
+  &::before { content: " (" }
+  &::after  { content: ")"  }
+
 }
 
 .k-multiselect-input[data-layout="list"] .k-tag {
