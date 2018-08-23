@@ -39,6 +39,7 @@
         :key="'file-' + file.id + '-tabs-' + new Date().getTime()"
         :parent="$api.files.url(file.parent.id, file.filename)"
         :tabs="tabs"
+        :blueprint="file.blueprint.name"
       />
 
       <k-file-rename-dialog ref="rename" />

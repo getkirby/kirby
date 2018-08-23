@@ -69,6 +69,7 @@
         ref="tabs"
         :key="'user-' + user.id + '-tabs-' + new Date().getTime()"
         :parent="'users/' + user.id"
+        :blueprint="user.blueprint.name"
         :tabs="tabs"
         @tab="tab = $event"
       />

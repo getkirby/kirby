@@ -22,6 +22,7 @@
       v-if="site.url"
       ref="tabs"
       :tabs="tabs"
+      :blueprint="site.blueprint.name"
       parent="site"
       @tab="tab = $event"
     />
