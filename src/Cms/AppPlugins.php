@@ -31,6 +31,7 @@ trait AppPlugins
         'pageModels' => [],
         'pagesMethods' => [],
         'routes' => [],
+        'sections' => [],
         'siteMethods' => [],
         'snippets' => [],
         'tags' => [],
@@ -164,6 +165,11 @@ trait AppPlugins
         }
 
         return $this->extensions['routes'] = array_merge($this->extensions['routes'], $routes);
+    }
+
+    protected function extendSections(array $sections): array
+    {
+        return $this->extensions['sections'] = Section::$types = array_merge(Section::$types, $sections);
     }
 
     protected function extendSiteMethods(array $methods): array

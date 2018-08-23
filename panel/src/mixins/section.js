@@ -4,9 +4,9 @@ export default {
     blueprint: String,
     name: String
   },
-  watch: {
-    blueprint() {
-      this.fetch();
+  methods: {
+    load() {
+      return this.$api.get(this.parent + '/sections/' + this.name);
     }
   }
 };

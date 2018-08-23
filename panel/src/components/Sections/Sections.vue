@@ -4,11 +4,12 @@
       <template v-for="(section, sectionIndex) in column.sections">
         <component
           v-if="exists(section.type)"
-          :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex"
+          :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
           :is="'k-' + section.type + '-section'"
           :name="section.name"
           :parent="parent"
           :blueprint="blueprint"
+          v-bind="section"
           class="k-section"
           @submit="$emit('submit', $event)"
         />

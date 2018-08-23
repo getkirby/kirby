@@ -1,6 +1,7 @@
 import Vue from "vue";
 import auth from "./auth.js";
 import store from "./store.js";
+import section from "../mixins/section.js";
 import { ucfirst, lcfirst } from "@/ui/helpers/stringCase.js";
 
 let components = {};
@@ -43,6 +44,14 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
 Object.entries(window.panel.plugins.fields).forEach(([name, options]) => {
   registerComponent(name, options);
 });
+
+Object.entries(window.panel.plugins.sections).forEach(([name, options]) => {
+  registerComponent(name, {
+    ...section,
+    ...options
+  });
+});
+
 
 // Views
 Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
