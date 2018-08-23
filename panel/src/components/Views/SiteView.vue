@@ -49,9 +49,6 @@ export default {
       }
     };
   },
-  created() {
-    this.fetch();
-  },
   computed: {
     language() {
       return this.$store.state.languages.current;
@@ -61,6 +58,9 @@ export default {
     language() {
       this.fetch();
     }
+  },
+  created() {
+    this.fetch();
   },
   methods: {
     fetch() {
