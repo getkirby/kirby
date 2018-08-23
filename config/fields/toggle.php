@@ -40,8 +40,8 @@ return [
         'toBool' => function ($value) {
             return in_array($value, [true, 'true', 1, '1', 'on'], true) === true;
         },
-        'toString' => function ($value): string {
-            return $value === true ? 'true' : 'false';
+        'toString' => function (): string {
+            return $this->value() === true ? 'true' : 'false';
         }
     ],
     'validations' => [
