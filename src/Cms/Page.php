@@ -203,7 +203,11 @@ class Page extends ModelWithContent
      */
     public function apiUrl(bool $relative = false): string
     {
-        return $this->site()->apiUrl($relative) . '/' . $this->panelId();
+        if ($relative === true) {
+            return 'pages/' . $this->panelId();
+        } else {
+            return $this->kirby()->url('api') . '/pages/' . $this->panelId();
+        }
     }
 
     /**
