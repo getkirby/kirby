@@ -19,6 +19,7 @@
           :key="tabIndex"
           :link="'#' + tab.name"
           :current="currentTab && currentTab.name === tab.name"
+          :theme="hasChanges[tabIndex] ? 'changes' : null"
           :icon="tab.icon"
           :tooltip="tab.label"
           class="k-tab-button"
@@ -73,7 +74,8 @@ export default {
       size: null,
       currentTab: this.tab,
       visibleTabs: this.tabs,
-      invisibleTabs: []
+      invisibleTabs: [],
+      hasChanges: []
     }
   },
   watch: {
@@ -85,12 +87,25 @@ export default {
     }
   },
   created() {
+    this.refresh();
+    this.$events.$on("form.change", this.refresh);
     window.addEventListener("resize", this.resize);
   },
   destroyed() {
+    this.$events.$off("form.change", this.refresh);
     window.removeEventListener("resize", this.resize);
   },
   methods: {
+    refresh() {
+      let route = Object.assign({}, this.$route);
+
+      this.hasChanges = this.tabs.map((tab) => {
+        route.hash = '#' + tab.name;
+        let id = this.$cache.id(route, this.$store);
+        return this.$cache.exists(id);
+      });
+      console.log(this.hasChanges);
+    },
     resize() {
 
       if (!this.tabs || this.tabs.length <= 1) {
@@ -226,7 +241,21 @@ export default {
     bottom: -1px;
     background: $color-background;
   }
+}
 
+.k-tab-button[data-theme="changes"]:not([aria-current]) {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    content: "";
+    left: -1px;
+    right: -1px;
+    height: 4px;
+    top: -1px;
+    background: $color-focus;
+    opacity: .25;
+  }
 }
 
 .k-tabs-dropdown {
