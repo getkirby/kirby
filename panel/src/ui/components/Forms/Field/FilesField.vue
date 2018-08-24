@@ -1,6 +1,13 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
-    <k-button slot="options" icon="add" v-if="more" @click="open">Select a file</k-button>
+    <k-button
+      v-if="more"
+      slot="options"
+      icon="add"
+      @click="open"
+    >
+      Select a file
+    </k-button>
     <template v-if="selected.length">
       <k-draggable
         :element="elements.list"
@@ -46,11 +53,6 @@ export default {
       selected: this.value,
     };
   },
-  watch: {
-    value(value) {
-      this.selected = value;
-    }
-  },
   computed: {
     elements() {
       const layouts = {
@@ -76,6 +78,11 @@ export default {
       }
 
       return this.max > this.selected.length;
+    }
+  },
+  watch: {
+    value(value) {
+      this.selected = value;
     }
   },
   methods: {
