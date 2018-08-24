@@ -54,7 +54,12 @@ export default {
   },
   methods: {
     input(values) {
+      let unchanged = Object.keys(values).filter((field) => {
+        return JSON.stringify(values[field]) === JSON.stringify(this.stored[field]);
+      });
+
       this.$cache.set(this.id, values);
+      this.$cache.unset(this.id, unchanged);
       this.$events.$emit("form.change");
     },
     fetch() {

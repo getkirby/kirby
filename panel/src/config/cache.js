@@ -23,7 +23,8 @@ export default {
         return Object.keys(this.all()).length === 0;
       },
       exists(id) {
-        return this.get(id) !== null;
+        let cache = this.get(id);
+        return cache !== null && Object.keys(cache).length > 0;
       },
       get(id) {
         let values = localStorage.getItem('kirby$' + id);
@@ -33,6 +34,20 @@ export default {
         values = Object.assign({}, this.get(id) || {}, values);
         localStorage.setItem('kirby$' + id, JSON.stringify(values));
         this.count++;
+      },
+      unset(id, fields) {
+        // get stored values from localStorage
+        let values = Object.assign({}, this.get(id));
+
+        // unset provided fields from values
+        Object.keys(values).forEach((field) => {
+          if(fields.indexOf(field) !== -1) {
+            delete values[field];
+          }
+        });
+
+        // set localStorage without the removed fields
+        localStorage.setItem(id, JSON.stringify(values));
       },
       field(id, field, value) {
         let values = this.get(id) || {};
