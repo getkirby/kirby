@@ -88,6 +88,24 @@
           >
             {{ notification.message }}
           </k-button>
+
+
+          <k-dropdown v-if="changes.length > 0" class="k-topbar-changes">
+            <k-button icon="bolt" @click="$refs.changes.toggle()" tooltip="Unsaved changes">
+              {{ changes.length }}
+            </k-button>
+
+            <k-dropdown-content ref="changes" align="right">
+              <k-dropdown-item
+                v-for="change in changes"
+                :key="change.link"
+                :link="change.link"
+              >
+                {{ change.label }} ({{ change.count }})
+              </k-dropdown-item>
+            </k-dropdown-content>
+          </k-dropdown>
+
           <k-button icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
@@ -99,6 +117,18 @@
 import views from "@/config/views.js";
 
 export default {
+  data() {
+    return {
+      changes: []
+    }
+  },
+  created() {
+    this.refresh();
+    this.$events.$on("form.change", this.refresh);
+  },
+  destroyed() {
+    this.$events.$off("form.change", this.refresh);
+  },
   computed: {
     view() {
       return views[this.$store.state.view];
@@ -121,6 +151,23 @@ export default {
     },
     isVisible() {
       return this.user && !this.$route.meta.outside && this.view;
+    }
+  },
+  methods: {
+    refresh() {
+      let changes = Object.keys(this.$cache.all()).map(async change => {
+        return this.$api.get(change).then(model => {
+          return {
+            label: model.title + (change.includes('#') ? ' - ' + change.split('#')[1] : ''),
+            link: change,
+            count: Object.keys(change).length
+          }
+        });
+      });
+
+      Promise.all(changes).then(changes => {
+        this.changes = changes;
+      });
     }
   }
 };

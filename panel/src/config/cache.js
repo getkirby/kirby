@@ -8,16 +8,31 @@ export default {
 
         return route.path + route.hash;
       },
+      all() {
+        let all = {...localStorage};
+        Object.keys(all).forEach((key) => {
+          if (key.startsWith('kirby$')) {
+            all[key.replace('kirby$', '')] = JSON.parse(all[key]);
+          }
+          delete all[key];
+        });
+        return all;
+      },
+      empty() {
+        console.log(this.all());
+        return Object.keys(this.all()).length === 0;
+      },
       exists(id) {
         return this.get(id) !== null;
       },
       get(id) {
-        let values = localStorage.getItem(id);
+        let values = localStorage.getItem('kirby$' + id);
         return values && JSON.parse(values);
       },
       set(id, values) {
         values = Object.assign({}, this.get(id) || {}, values);
-        localStorage.setItem(id, JSON.stringify(values));
+        localStorage.setItem('kirby$' + id, JSON.stringify(values));
+        this.count++;
       },
       field(id, field, value) {
         let values = this.get(id) || {};
@@ -25,7 +40,8 @@ export default {
         this.set(id, values);
       },
       remove(id) {
-        localStorage.removeItem(id);
+        localStorage.removeItem('kirby$' + id);
+        this.count--;
       }
     };
   }
