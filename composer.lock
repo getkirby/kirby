@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "907c360f75c91db77f8f79b848dcc0bf",
-    "content-hash": "b3c42dfb29e7af86c3c1f703ba53ced4",
+    "hash": "2ab6834931926a3a80fec8870d978135",
+    "content-hash": "4a68ec9d3654481068d11eb7d55d6c6b",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -2372,12 +2372,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "1ed8ba31403db259af03c7559f000beadd287314"
+                "reference": "8ca04d87a73d209b918f352f72f8ebba3fcb61c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/1ed8ba31403db259af03c7559f000beadd287314",
-                "reference": "1ed8ba31403db259af03c7559f000beadd287314",
+                "url": "https://api.github.com/repos/symfony/console/zipball/8ca04d87a73d209b918f352f72f8ebba3fcb61c4",
+                "reference": "8ca04d87a73d209b918f352f72f8ebba3fcb61c4",
                 "shasum": ""
             },
             "require": {
@@ -2433,7 +2433,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26 11:25:51"
+            "time": "2018-08-21 12:03:16"
         },
         {
             "name": "symfony/contracts",
