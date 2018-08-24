@@ -64,6 +64,8 @@
 
   "files.empty": "No files yet",
 
+  "form.changes.unsaved": "Unsaved changes",
+
   "language.create": "Create language",
   "language.delete.confirm": "Do you really want to delete the language <strong>{name}</strong> including all translations? This cannot be undone!",
   "language.deleted": "The language has been deleted",

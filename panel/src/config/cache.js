@@ -8,23 +8,18 @@ export default {
 
         return route.path + route.hash;
       },
-      all() {
-        let all = {...localStorage};
-        Object.keys(all).forEach((key) => {
+      items() {
+        let items = {...localStorage};
+        Object.keys(items).forEach((key) => {
           if (key.startsWith('kirby$')) {
-            all[key.replace('kirby$', '')] = JSON.parse(all[key]);
+            items[key.replace('kirby$', '')] = JSON.parse(items[key]);
           }
-          delete all[key];
+          delete items[key];
         });
-        return all;
-      },
-      empty() {
-        console.log(this.all());
-        return Object.keys(this.all()).length === 0;
+        return items;
       },
       exists(id) {
-        let cache = this.get(id);
-        return cache !== null && Object.keys(cache).length > 0;
+        return this.get(id) !== null;
       },
       get(id) {
         let values = localStorage.getItem('kirby$' + id);
@@ -33,7 +28,6 @@ export default {
       set(id, values) {
         values = Object.assign({}, this.get(id) || {}, values);
         localStorage.setItem('kirby$' + id, JSON.stringify(values));
-        this.count++;
       },
       unset(id, fields) {
         // get stored values from localStorage
@@ -47,7 +41,11 @@ export default {
         });
 
         // set localStorage without the removed fields
-        localStorage.setItem(id, JSON.stringify(values));
+        if (Object.keys(values).length > 0) {
+          localStorage.setItem('kirby$' + id, JSON.stringify(values));
+        } else {
+          this.remove(id);
+        }
       },
       field(id, field, value) {
         let values = this.get(id) || {};
@@ -56,7 +54,6 @@ export default {
       },
       remove(id) {
         localStorage.removeItem('kirby$' + id);
-        this.count--;
       }
     };
   }

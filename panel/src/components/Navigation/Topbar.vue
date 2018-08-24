@@ -90,19 +90,33 @@
           </k-button>
 
 
-          <k-dropdown v-if="changes.length > 0" class="k-topbar-changes">
-            <k-button icon="bolt" @click="$refs.changes.toggle()" tooltip="Unsaved changes">
+          <k-dropdown v-if="changes.length > 0" class="k-topbar-menu k-topbar-changes">
+            <k-button
+              icon="pin"
+              :tooltip="$t('form.changes.unsaved')"
+              @click="$refs.changes.toggle()"
+            >
               {{ changes.length }}
             </k-button>
 
             <k-dropdown-content ref="changes" align="right">
-              <k-dropdown-item
-                v-for="change in changes"
-                :key="change.link"
-                :link="change.link"
-              >
-                {{ change.label }} ({{ change.count }})
-              </k-dropdown-item>
+
+              <ul>
+                <li>
+                  <div class="k-topbar-changes-title">
+                    {{ $t('form.changes.unsaved') }}:
+                  </div>
+                </li>
+                <li><hr></li>
+                <li
+                  v-for="change in changes"
+                  :key="change.link"
+                >
+                  <k-dropdown-item :link="change.link">
+                    {{ change.text }}
+                  </k-dropdown-item>
+                </li>
+              </ul>
             </k-dropdown-content>
           </k-dropdown>
 
@@ -155,17 +169,22 @@ export default {
   },
   methods: {
     refresh() {
-      let changes = Object.keys(this.$cache.all()).map(async change => {
-        return this.$api.get(change).then(model => {
+      let cache   = this.$cache.items();
+      let changed = Object.keys(cache).map(async item => {
+        return this.$api.get(item).then(model => {
+
+          let label = `${model.title} ${item.includes('#') ? ` - Tab "${item.split('#')[1]}"` : ''}`;
+          let count = Object.keys(cache[item]).length;
+
           return {
-            label: model.title + (change.includes('#') ? ' - ' + change.split('#')[1] : ''),
-            link: change,
-            count: Object.keys(change).length
+            text: `${label} (${count})`,
+            link: item,
           }
+
         });
       });
 
-      Promise.all(changes).then(changes => {
+      Promise.all(changed).then(changes => {
         this.changes = changes;
       });
     }
@@ -313,5 +332,11 @@ export default {
 .k-topbar-menu [aria-current] .k-link {
   color: $color-focus;
   font-weight: 500;
+}
+
+.k-topbar-changes-title {
+  padding: 0.25rem 0.75rem;
+  font-size: $font-size-small;
+  font-weight: $font-weight-bold;
 }
 </style>
