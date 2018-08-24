@@ -22,6 +22,7 @@ return function ($props) {
         $sidebar['pages'] = $section([
             'headline' => 'Pages',
             'type'     => 'pages',
+            'status'   => 'all',
             'layout'   => 'list',
         ], $props['pages']);
     }

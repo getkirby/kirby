@@ -199,7 +199,7 @@ return [
                 return false;
             }
 
-            return count($this->templates) > 0;
+            return true;
 
         },
         'link' => function () {
