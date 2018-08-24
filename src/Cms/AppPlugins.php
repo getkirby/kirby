@@ -336,7 +336,7 @@ trait AppPlugins
         // blueprint presets
         PageBlueprint::$presets['pages']   = include static::$root . '/config/presets/pages.php';
         PageBlueprint::$presets['page']    = include static::$root . '/config/presets/page.php';
-        PageBlueprint::$presets['gallery'] = include static::$root . '/config/presets/gallery.php';
+        PageBlueprint::$presets['files']   = include static::$root . '/config/presets/files.php';
 
         // section mixins
         Section::$mixins['headline']       = include static::$root . '/config/sections/mixins/headline.php';

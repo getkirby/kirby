@@ -27,16 +27,21 @@ return function (array $props) {
 
     $sections = [];
 
-    if (empty($props['drafts']) === false) {
-        $sections['drafts'] = $section('Drafts', 'drafts', $props['drafts']);
+    $drafts   = $props['drafts']   ?? [];
+    $unlisted = $props['unlisted'] ?? false;
+    $listed   = $props['listed']   ?? [];
+
+
+    if ($drafts !== false) {
+        $sections['drafts'] = $section('Drafts', 'drafts', $drafts);
     }
 
-    if (empty($props['unlisted']) === false) {
-        $sections['unlisted'] = $section('Unlisted', 'unlisted', $props['unlisted']);
+    if ($unlisted !== false) {
+        $sections['unlisted'] = $section('Unlisted', 'unlisted', $unlisted);
     }
 
-    if (empty($props['listed']) === false) {
-        $sections['listed'] = $section('Published', 'listed', $props['listed']);
+    if ($listed !== false) {
+        $sections['listed'] = $section('Published', 'listed', $listed);
     }
 
     // cleaning up

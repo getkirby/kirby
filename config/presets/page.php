@@ -16,23 +16,30 @@ return function ($props) {
         return array_replace_recursive($defaults, $props);
     };
 
-    $sidebar = [];
+    if (empty($props['sidebar']) === false) {
+        $sidebar = $props['sidebar'];
+    } else {
+        $sidebar = [];
 
-    if (empty($props['pages']) === false) {
-        $sidebar['pages'] = $section([
-            'headline' => 'Pages',
-            'type'     => 'pages',
-            'status'   => 'all',
-            'layout'   => 'list',
-        ], $props['pages']);
-    }
+        $pages = $props['pages'] ?? [];
+        $files = $props['files'] ?? [];
 
-    if (empty($props['files']) === false) {
-        $sidebar['files'] = $section([
-            'headline' => 'Files',
-            'type'     => 'files',
-            'layout'   => 'list'
-        ], $props['files']);
+        if ($pages !== false) {
+            $sidebar['pages'] = $section([
+                'headline' => 'Pages',
+                'type'     => 'pages',
+                'status'   => 'all',
+                'layout'   => 'list',
+            ], $pages);
+        }
+
+        if ($files !== false) {
+            $sidebar['files'] = $section([
+                'headline' => 'Files',
+                'type'     => 'files',
+                'layout'   => 'list'
+            ], $files);
+        }
     }
 
     if (empty($sidebar) === true) {
@@ -40,13 +47,13 @@ return function ($props) {
     } else {
         $props['columns'] = [
             [
+                'width'  => '2/3',
+                'fields' => $props['fields'] ?? []
+            ],
+            [
                 'width' => '1/3',
                 'sections' => $sidebar
             ],
-            [
-                'width'  => '2/3',
-                'fields' => $props['fields'] ?? []
-            ]
         ];
 
         unset(
