@@ -88,6 +88,38 @@
           >
             {{ notification.message }}
           </k-button>
+
+
+          <k-dropdown v-if="changes.length > 0" class="k-topbar-menu k-topbar-changes">
+            <k-button
+              icon="pin"
+              :tooltip="$t('form.changes.unsaved')"
+              @click="$refs.changes.toggle()"
+            >
+              {{ changes.length }}
+            </k-button>
+
+            <k-dropdown-content ref="changes" align="right">
+
+              <ul>
+                <li>
+                  <div class="k-topbar-changes-title">
+                    {{ $t('form.changes.unsaved') }}:
+                  </div>
+                </li>
+                <li><hr></li>
+                <li
+                  v-for="change in changes"
+                  :key="change.link"
+                >
+                  <k-dropdown-item :link="change.link">
+                    {{ change.text }}
+                  </k-dropdown-item>
+                </li>
+              </ul>
+            </k-dropdown-content>
+          </k-dropdown>
+
           <k-button icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
@@ -99,6 +131,18 @@
 import views from "@/config/views.js";
 
 export default {
+  data() {
+    return {
+      changes: []
+    }
+  },
+  created() {
+    this.refresh();
+    this.$events.$on("form.change", this.refresh);
+  },
+  destroyed() {
+    this.$events.$off("form.change", this.refresh);
+  },
   computed: {
     view() {
       return views[this.$store.state.view];
@@ -121,6 +165,28 @@ export default {
     },
     isVisible() {
       return this.user && !this.$route.meta.outside && this.view;
+    }
+  },
+  methods: {
+    refresh() {
+      let cache   = this.$cache.items();
+      let changed = Object.keys(cache).map(async item => {
+        return this.$api.get(item).then(model => {
+
+          let label = `${model.title} ${item.includes('#') ? ` - Tab "${item.split('#')[1]}"` : ''}`;
+          let count = Object.keys(cache[item]).length;
+
+          return {
+            text: `${label} (${count})`,
+            link: item,
+          }
+
+        });
+      });
+
+      Promise.all(changed).then(changes => {
+        this.changes = changes;
+      });
     }
   }
 };
@@ -266,5 +332,11 @@ export default {
 .k-topbar-menu [aria-current] .k-link {
   color: $color-focus;
   font-weight: 500;
+}
+
+.k-topbar-changes-title {
+  padding: 0.25rem 0.75rem;
+  font-size: $font-size-small;
+  font-weight: $font-weight-bold;
 }
 </style>

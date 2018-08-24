@@ -53,6 +53,8 @@
 
   "files.empty": "Noch keine Dateien",
 
+  "form.changes.unsaved": "Ungespeicherte Änderungen",
+
   "language.create": "Sprache erstellen",
   "language.delete.confirm": "Möchtest du die Sprache <strong>{name}</strong> einschließlich aller Übersetzungen wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden!",
   "language.deleted": "Die Sprache wurde gelöscht",
