@@ -18,30 +18,20 @@ return function ($props) {
 
     $sidebar = [];
 
-    if (empty($props['cover']) === false) {
-        $sidebar['cover'] = $section([
-            'headline' => 'Cover',
-            'type'     => 'files',
-            'template' => 'cover',
-            'layout'   => 'cards',
-            'max'      => 1
-        ], $props['cover']);
-    }
-
-    if (empty($props['meta']) === false) {
-        $sidebar['meta'] = [
-            'type'   => 'fields',
-            'fields' => $props['meta']
-        ];
-    }
-
-    if (empty($props['images']) === false) {
-        $sidebar['images'] = $section([
-            'headline' => 'Images',
-            'type'     => 'files',
+    if (empty($props['pages']) === false) {
+        $sidebar['pages'] = $section([
+            'headline' => 'Pages',
+            'type'     => 'pages',
             'layout'   => 'list',
-            'template' => 'image'
-        ], $props['images']);
+        ], $props['pages']);
+    }
+
+    if (empty($props['files']) === false) {
+        $sidebar['files'] = $section([
+            'headline' => 'Files',
+            'type'     => 'files',
+            'layout'   => 'list'
+        ], $props['files']);
     }
 
     if (empty($sidebar) === true) {
@@ -49,20 +39,19 @@ return function ($props) {
     } else {
         $props['columns'] = [
             [
-                'width'  => '2/3',
-                'fields' => $props['fields'] ?? []
-            ],
-            [
                 'width' => '1/3',
                 'sections' => $sidebar
+            ],
+            [
+                'width'  => '2/3',
+                'fields' => $props['fields'] ?? []
             ]
         ];
 
         unset(
             $props['fields'],
-            $props['cover'],
-            $props['meta'],
-            $props['images']
+            $props['files'],
+            $props['pages']
         );
 
     }
