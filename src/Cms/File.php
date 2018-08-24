@@ -650,6 +650,16 @@ class File extends ModelWithContent
     }
 
     /**
+     * Returns siblings with the same template
+     *
+     * @return self|null
+     */
+    public function templateSiblings()
+    {
+        return $this->siblings()->filterBy('template', $this->template());
+    }
+
+    /**
      * Extended info for the array export
      * by injecting the information from
      * the asset.

@@ -88,4 +88,14 @@ trait PageSiblings
     {
         return $this->prevAll()->unlisted()->first();
     }
+
+    /**
+     * Returns siblings with the same template
+     *
+     * @return self|null
+     */
+    public function templateSiblings()
+    {
+        return $this->siblings()->filterBy('template', $this->intendedTemplate());
+    }
 }
