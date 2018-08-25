@@ -18,6 +18,7 @@ export default {
     image: [String, Object],
     link: String,
     target: String,
+    theme: String,
     upload: String,
     current: [String, Boolean]
   },
