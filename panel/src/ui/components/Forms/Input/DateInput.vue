@@ -101,7 +101,7 @@ export default {
       return date;
     },
     focus() {
-      this.$refs.day.focus();
+      this.$refs.years.focus();
     },
     onInput() {
       if (this.date.isValid() === false) {

@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     focus() {
-      this.$refs.input.focus();
+      this.$refs.dateInput.focus();
     },
     onInput() {
       if (this.dateValue === null) {
