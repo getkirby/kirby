@@ -231,6 +231,10 @@ export default {
 
       this.$nextTick(() => {
 
+        if (!this.$refs.input) {
+          return;
+        }
+
         const startCaret = caret(this.$refs.input, this.$refs.input.selectionStart);
         const endCaret   = caret(this.$refs.input, this.$refs.input.selectionEnd);
 
