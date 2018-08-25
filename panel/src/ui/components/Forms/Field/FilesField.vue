@@ -22,7 +22,7 @@
           :link="file.link"
           :image="{ url: file.url }"
         >
-          <k-button slot="options" icon="cancel" @click="remove(index)" />
+          <k-button slot="options" icon="remove" @click="remove(index)" />
         </component>
       </k-draggable>
     </template>
