@@ -5,7 +5,7 @@
   <k-view v-else class="k-page-view">
 
     <k-header
-      :tabs="tabs"
+      :tabs="tabsWithTheme"
       :tab="tab"
       :editable="permissions.changeTitle"
       @edit="action('rename')"
@@ -121,6 +121,9 @@ export default {
     },
     tabsKey() {
       return 'page-' + this.page.id + '-tabs';
+    },
+    tabsWithTheme() {
+      return this.$store.getters["form/tabs"](this.$route, this.tabs);
     }
   },
   watch: {

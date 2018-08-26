@@ -19,6 +19,7 @@
           :key="tabIndex"
           :link="'#' + tab.name"
           :current="currentTab && currentTab.name === tab.name"
+          :theme="tab.theme"
           :icon="tab.icon"
           :tooltip="tab.label"
           class="k-tab-button"
@@ -80,7 +81,8 @@ export default {
     tab() {
       this.currentTab = this.tab;
     },
-    tabs() {
+    tabs(tabs) {
+      this.tabs = tabs;
       this.resize();
     }
   },
@@ -98,23 +100,14 @@ export default {
       }
 
       if (window.innerWidth >= 700) {
-        if (this.size === "large") {
-          return;
-        }
-
         this.visibleTabs = this.tabs;
         this.invisibleTabs = [];
         this.size = "large";
       } else {
-        if (this.size === "small") {
-          return;
-        }
-
         this.visibleTabs = this.tabs.slice(0, 2);
         this.invisibleTabs = this.tabs.slice(2);
         this.size = "small";
       }
-
     }
   }
 }
@@ -226,7 +219,31 @@ export default {
     bottom: -1px;
     background: $color-background;
   }
+}
 
+.k-tab-button[data-theme="changes"]:not([aria-current]),
+.k-tab-button[data-theme="errors"]:not([aria-current]) {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: "";
+    left: -1px;
+    right: -1px;
+    height: 3px;
+    top: -1px;
+    opacity: .5;
+  }
+}
+.k-tab-button[data-theme="errors"]:not([aria-current]) {
+  &::after {
+    background: $color-negative;
+  }
+}
+.k-tab-button[data-theme="changes"]:not([aria-current]) {
+  &::after {
+    background: $color-focus;
+  }
 }
 
 .k-tabs-dropdown {
