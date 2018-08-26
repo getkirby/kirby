@@ -19,14 +19,14 @@
 
       <template v-else>
         <k-draggable
-          v-model="items"
-          :data-disabled="disabled"
+          :list="items"
           :options="{
             disabled: disabled,
             forceFallback: true,
             handle: '.k-structure-item-handle',
             fallbackClass: 'sortable-fallback'
           }"
+          :data-disabled="disabled"
           element="ul"
           class="k-structure"
           @input="onInput"
@@ -119,9 +119,9 @@ export default {
   },
   data() {
     return {
-      items: this.value,
+      items:  this.value,
       active: null,
-      trash: null
+      trash:  null
     };
   },
   watch: {
@@ -229,10 +229,6 @@ export default {
       }
 
       return value;
-    },
-    onItemInput(index, value) {
-      this.items[index] = value;
-      this.$emit("input", this.items);
     },
     onInput() {
       this.$emit("input", this.items);
