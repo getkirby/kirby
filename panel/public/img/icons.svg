@@ -343,5 +343,11 @@
     <symbol id="icon-remove" viewBox="0 0 16 16">
       <rect data-color="color-2" x="4" y="7" width="8" height="2"></rect> <path d="M8,0C3.6,0,0,3.6,0,8s3.6,8,8,8s8-3.6,8-8S12.4,0,8,0z M8,14c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6 S11.3,14,8,14z"></path>
     </symbol>
+    <symbol id="icon-pin" viewBox="0 0 16 16">
+      <path d="M15.7,5.7l-5.4-5.4c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4l0.6,0.6L2.7,6l-1-1c-0.4-0.4-1-0.4-1.4,0 s-0.4,1,0,1.4l1.5,1.5c0,0,0,0,0,0l2.4,2.4L0.6,14L2,15.4l3.7-3.7l4,4c0.5,0.5,1.2,0.2,1.4,0c0.4-0.4,0.4-1,0-1.4l-1-1l3.7-6.7 l0.6,0.6c0.6,0.6,1.2,0.2,1.4,0C16.1,6.8,16.1,6.1,15.7,5.7z M8.5,11.8L4.2,7.5l6.7-3.7l1.3,1.3L8.5,11.8z"></path>
+    </symbol>
+    <symbol id="icon-notes" viewBox="0 0 16 16">
+      <path d="M15,1h-3v2h2v11H2V3h2V1H1C0.4,1,0,1.4,0,2v13c0,0.6,0.4,1,1,1h14c0.6,0,1-0.4,1-1V2C16,1.4,15.6,1,15,1z"></path> <rect x="5"  width="6" height="4"></rect> <rect data-color="color-2" x="4" y="6" width="8" height="2"></rect> <rect data-color="color-2" x="4" y="10" width="8" height="2"></rect>
+    </symbol>
   </defs>
 </svg>

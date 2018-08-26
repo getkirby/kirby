@@ -88,6 +88,7 @@
           >
             {{ notification.message }}
           </k-button>
+          <k-form-changes />
           <k-button icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
