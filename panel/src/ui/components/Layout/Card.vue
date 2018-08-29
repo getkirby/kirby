@@ -76,7 +76,7 @@ export default {
       return this.link ? "k-link" : "div";
     },
     ratioPadding() {
-      return ratioPadding(this.image.ratio);
+      return (this.image && this.image.ratio) ? ratioPadding(this.image.ratio) : ratioPadding('3/2');
     }
   }
 };
