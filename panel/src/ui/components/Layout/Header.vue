@@ -242,7 +242,7 @@ export default {
 }
 .k-tab-button[data-theme="changes"]:not([aria-current]) {
   &::after {
-    background: $color-focus;
+    background: $color-notice;
   }
 }
 

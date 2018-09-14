@@ -179,6 +179,11 @@ export default {
 .k-form-indicator {
   display: inline-block;
 }
+
+.k-form-indicator > .k-button {
+  color: $color-notice-on-dark;
+}
+
 .k-form-indicator-title {
   padding: 0.75rem;
   font-size: $font-size-small;

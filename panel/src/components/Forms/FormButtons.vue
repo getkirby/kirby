@@ -86,7 +86,7 @@ export default {
 
 <style lang="scss">
 .k-form-buttons {
-  background: $color-focus-on-dark;
+  background: $color-notice-on-dark;
 }
 .k-form-buttons .k-view {
   display: flex;
