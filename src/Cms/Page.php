@@ -696,7 +696,7 @@ class Page extends ModelWithContent
             return false;
         }
 
-        if ($this->blueprint()->options()->sort() !== true) {
+        if ($this->permissions()->sort() !== true) {
             return false;
         }
 
