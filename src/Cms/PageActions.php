@@ -557,8 +557,8 @@ trait PageActions
         $data      = [];
         $old       = Blueprint::factory($old, 'pages/default', $this);
         $new       = Blueprint::factory($new, 'pages/default', $this);
-        $oldForm   = new Form(['fields' => $old->fields()]);
-        $newForm   = new Form(['fields' => $new->fields()]);
+        $oldForm   = new Form(['fields' => $old->fields(), 'model' => $this]);
+        $newForm   = new Form(['fields' => $new->fields(), 'model' => $this]);
         $oldFields = $oldForm->fields();
         $newFields = $newForm->fields();
 
