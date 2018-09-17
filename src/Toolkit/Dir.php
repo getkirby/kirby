@@ -174,6 +174,35 @@ class Dir
     }
 
     /**
+     * Recursively check when the dir and all
+     * subfolders have been modified for the last time.
+     *
+     * @param   string   $dir The path of the directory
+     * @param   string   $format
+     * @param   string   $handler
+     * @return  int
+     */
+    public static function modified(string $dir, string $format = null, string $handler = 'date')
+    {
+        $modified = filemtime($dir);
+        $items    = static::read($dir);
+
+        foreach ($items AS $item) {
+
+            if (is_file($dir . '/' . $item) === true) {
+                $newModified = filemtime($dir . '/' . $item);
+            } else {
+                $newModified = static::modified($dir . '/' . $item);
+            }
+
+            $modified = ($newModified > $modified) ? $newModified : $modified;
+
+        }
+
+        return $format !== null ? $handler($format, $modified) : $modified;
+    }
+
+    /**
      * Moves a directory to a new location
      *
      * @param   string  $old The current path of the directory
@@ -250,4 +279,36 @@ class Dir
 
         return rmdir($dir);
     }
+
+    /**
+     * Checks if the directory or any subdirectory has been
+     * modified after the given timestamp
+     *
+     * @param string $dir
+     * @param int $time
+     * @return boolean
+     */
+    public static function wasModifiedAfter(string $dir, int $time): boolean
+    {
+        if (filemtime($dir) > $time) {
+            return true;
+        }
+
+        $content = static::read($dir);
+
+        foreach ($content as $item) {
+            $subdir = $dir . '/' . $item;
+
+            if (filemtime($subdir) > $time) {
+                return true;
+            }
+
+            if (is_dir($subdir) === true && static::wasModifiedAfter($subdir, $time) === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

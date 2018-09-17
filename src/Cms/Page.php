@@ -7,6 +7,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -318,6 +319,12 @@ class Page extends ModelWithContent
      */
     public function contentFile(string $languageCode = null): string
     {
+        // get the current language code if no code is passed
+        if ($languageCode === null) {
+            $languageCode = $this->kirby()->languageCode();
+        }
+
+        // build a multi-lang file path
         if ($languageCode !== null) {
             return $this->root() . '/' . $this->intendedTemplate() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
         }
@@ -780,11 +787,12 @@ class Page extends ModelWithContent
      * Returns the last modification date of the page
      *
      * @param string $format
+     * @param string|null $handler
      * @return int|string
      */
-    public function modified(string $format = 'U')
+    public function modified(string $format = 'U', string $handler = null)
     {
-        return date($format, filemtime($this->contentFile()));
+        return F::modified($this->contentFile(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
     }
 
     /**
@@ -1190,7 +1198,7 @@ class Page extends ModelWithContent
     {
         if ($this->kirby()->multilang() === true) {
             if ($languageCode === null) {
-                $languageCode = $this->kirby()->language()->code();
+                $languageCode = $this->kirby()->languageCode();
             }
             return $this->translations()->find($languageCode)->slug() ?? $this->slug;
         } else {

@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\F;
+
 class PagePropsTest extends TestCase
 {
 
@@ -350,6 +352,80 @@ class PagePropsTest extends TestCase
 
         $this->assertEquals('grandma/mother', $app->site()->find('grandma/mother')->uri());
         $this->assertEquals('oma/mutter', $app->site()->find('grandma/mother')->uri('de'));
+
+    }
+
+    public function testModified()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/PagePropsTest/modified',
+                'content' => $index
+            ]
+        ]);
+
+        // create a page
+        F::write($file = $index . '/test/test.txt', 'test');
+
+        $modified = filemtime($file);
+        $page     = $app->page('test');
+
+        $this->assertEquals($modified, $page->modified());
+
+        // default date handler
+        $format = 'd.m.Y';
+        $this->assertEquals(date($format, $modified), $page->modified($format));
+
+        // custom date handler
+        $format = '%d.%m.%Y';
+        $this->assertEquals(strftime($format, $modified), $page->modified($format, 'strftime'));
+
+        Dir::remove($index);
+    }
+
+    public function testModifiedInMultilangInstallation()
+    {
+
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/PagePropsTest/modified',
+                'content' => $index
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        // create the english page
+        F::write($file = $index . '/test/test.en.txt', 'test');
+
+        $modified = filemtime($file);
+        $page     = $app->page('test');
+
+        $this->assertEquals($modified, $page->modified());
+
+        sleep(1);
+
+        // create the german page
+        F::write($file = $index . '/test/test.de.txt', 'test');
+
+        // change the language
+        $app->language = $app->language('de');
+
+        $modified = filemtime($file);
+        $page     = $app->page('test');
+
+        $this->assertEquals($modified, $page->modified());
+
+        Dir::remove($index);
 
     }
 

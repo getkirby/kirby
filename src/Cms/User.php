@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Session\Session;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Throwable;
@@ -452,6 +453,18 @@ class User extends ModelWithContent
     }
 
     /**
+     * Returns the last modification date of the user
+     *
+     * @param string $format
+     * @param string|null $handler
+     * @return int|string
+     */
+    public function modified(string $format = 'U', string $handler = null)
+    {
+        return F::modified($this->contentFile(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
+    }
+
+    /**
      * Returns the user's name
      *
      * @return string|null
@@ -472,44 +485,6 @@ class User extends ModelWithContent
             'email' => 'nobody@getkirby.com',
             'role'  => 'nobody'
         ]);
-    }
-
-    /**
-     * Creates a string query, starting from the model
-     *
-     * @param string|null $query
-     * @param string|null $expect
-     * @return mixed
-     */
-    public function query(string $query = null, string $expect = null)
-    {
-        if ($query === null) {
-            return null;
-        }
-
-        $result = Str::query($query, [
-            'kirby' => $kirby = $this->kirby(),
-            'site'  => $kirby->site(),
-            'user'  => $this
-        ]);
-
-        if ($expect !== null && is_a($result, $expect) !== true) {
-            return null;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the username
-     * which is the given name or the email
-     * as a fallback
-     *
-     * @return string
-     */
-    public function username(): string
-    {
-        return empty($this->name()) ? $this->email() : $this->name();
     }
 
     /**
@@ -544,6 +519,32 @@ class User extends ModelWithContent
     public function permissions()
     {
         return new UserPermissions($this);
+    }
+
+    /**
+     * Creates a string query, starting from the model
+     *
+     * @param string|null $query
+     * @param string|null $expect
+     * @return mixed
+     */
+    public function query(string $query = null, string $expect = null)
+    {
+        if ($query === null) {
+            return null;
+        }
+
+        $result = Str::query($query, [
+            'kirby' => $kirby = $this->kirby(),
+            'site'  => $kirby->site(),
+            'user'  => $this
+        ]);
+
+        if ($expect !== null && is_a($result, $expect) !== true) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**
@@ -664,29 +665,6 @@ class User extends ModelWithContent
     }
 
     /**
-     * Compares the given password with the stored one
-     *
-     * @param string $password
-     * @return boolean
-     */
-    public function validatePassword(string $password = null): bool
-    {
-        if (empty($this->password()) === true) {
-            throw new NotFoundException(['key' => 'user.password.undefined']);
-        }
-
-        if ($password === null) {
-            throw new InvalidArgumentException(['key' => 'user.password.invalid']);
-        }
-
-        if (password_verify($password, $this->password()) !== true) {
-            throw new InvalidArgumentException(['key' => 'user.password.invalid']);
-        }
-
-        return true;
-    }
-
-    /**
      * Converts session options into a session object
      *
      * @param Session|array $session Session options or session object to unset the user in
@@ -741,4 +719,40 @@ class User extends ModelWithContent
             'kirby' => $this->kirby()
         ]);
     }
+
+    /**
+     * Returns the username
+     * which is the given name or the email
+     * as a fallback
+     *
+     * @return string
+     */
+    public function username(): string
+    {
+        return empty($this->name()) ? $this->email() : $this->name();
+    }
+
+    /**
+     * Compares the given password with the stored one
+     *
+     * @param string $password
+     * @return boolean
+     */
+    public function validatePassword(string $password = null): bool
+    {
+        if (empty($this->password()) === true) {
+            throw new NotFoundException(['key' => 'user.password.undefined']);
+        }
+
+        if ($password === null) {
+            throw new InvalidArgumentException(['key' => 'user.password.invalid']);
+        }
+
+        if (password_verify($password, $this->password()) !== true) {
+            throw new InvalidArgumentException(['key' => 'user.password.invalid']);
+        }
+
+        return true;
+    }
+
 }

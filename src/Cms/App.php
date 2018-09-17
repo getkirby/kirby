@@ -429,6 +429,20 @@ class App
     }
 
     /**
+     * Returns the current language code
+     *
+     * @return string|null
+     */
+    public function languageCode(): ?string
+    {
+        if ($language = $this->language()) {
+            return $language->code();
+        }
+
+        return null;
+    }
+
+    /**
      * Returns all available site languages
      *
      * @return Languages

@@ -26,7 +26,7 @@ class AppLanguagesTest extends TestCase
 
         $this->assertTrue($app->multilang());
         $this->assertCount(2, $app->languages());
-        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', $app->languageCode());
 
     }
 

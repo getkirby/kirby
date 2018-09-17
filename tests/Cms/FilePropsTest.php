@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Image\Image;
+use Kirby\Toolkit\F;
 
 class FilePropsTest extends TestCase
 {
@@ -134,6 +135,34 @@ class FilePropsTest extends TestCase
     {
         $file = new File(['filename' => 'super.jpg']);
         $this->assertEquals('super.jpg', $file->toString('{{ file.filename }}'));
+    }
+
+    public function testModified()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FilePropsTest/modified',
+                'content' => $index
+            ]
+        ]);
+
+        // create a site file
+        F::write($file = $index . '/test.js', 'test');
+
+        $modified = filemtime($file);
+        $file     = $app->file('test.js');
+
+        $this->assertEquals($modified, $file->modified());
+
+        // default date handler
+        $format = 'd.m.Y';
+        $this->assertEquals(date($format, $modified), $file->modified($format));
+
+        // custom date handler
+        $format = '%d.%m.%Y';
+        $this->assertEquals(strftime($format, $modified), $file->modified($format, 'strftime'));
+
+        Dir::remove($index);
     }
 
 }

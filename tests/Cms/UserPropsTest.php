@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\F;
+
 class UserPropsTest extends TestCase
 {
 
@@ -83,6 +85,34 @@ class UserPropsTest extends TestCase
     {
         $user = new User(['email' => 'user@domain.com']);
         $this->assertEquals('user@domain.com', $user->toString('{{ user.email }}'));
+    }
+
+    public function testModified()
+    {
+        $app = new App([
+            'roots' => [
+                'index'    => $index = __DIR__ . '/fixtures/UserPropsTest/modified',
+                'accounts' => $index
+            ]
+        ]);
+
+        // create a user file
+        F::write($file = $index . '/mail@testuser.com/user.txt', 'test');
+
+        $modified = filemtime($file);
+        $user     = $app->user('mail@testuser.com');
+
+        $this->assertEquals($modified, $user->modified());
+
+        // default date handler
+        $format = 'd.m.Y';
+        $this->assertEquals(date($format, $modified), $user->modified($format));
+
+        // custom date handler
+        $format = '%d.%m.%Y';
+        $this->assertEquals(strftime($format, $modified), $user->modified($format, 'strftime'));
+
+        Dir::remove($index);
     }
 
 }

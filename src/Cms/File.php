@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Image\Image;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -217,6 +218,11 @@ class File extends ModelWithContent
      */
     public function contentFile(string $languageCode = null): string
     {
+        // get the current language code if no code is passed
+        if ($languageCode === null) {
+            $languageCode = $this->kirby()->languageCode();
+        }
+
         if ($languageCode !== null) {
             return $this->root() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
         }
@@ -374,6 +380,18 @@ class File extends ModelWithContent
     public function model()
     {
         return $this->parent();
+    }
+
+    /**
+     * Get the file's last modification time.
+     *
+     * @param  string $format
+     * @param  string|null $handler date or strftime
+     * @return mixed
+     */
+    public function modified(string $format = null, string $handler = null)
+    {
+        return F::modified($this->root(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
     }
 
     /**
