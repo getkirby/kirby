@@ -51,8 +51,10 @@ Vue.component("k-user-role-dialog", UserRoleDialog);
 
 /* Forms */
 import FormButtons from "@/components/Forms/FormButtons.vue";
+import FormChanges from "@/components/Forms/FormChanges.vue";
 
 Vue.component("k-form-buttons", FormButtons);
+Vue.component("k-form-changes", FormChanges);
 
 /* Layout */
 import Dropzone from "@/components/Layout/Dropzone.vue";

@@ -4,7 +4,7 @@
   </k-error-view>
   <k-view v-else key="site-view" class="k-site-view">
     <k-header
-      :tabs="tabs"
+      :tabs="tabsWithTheme"
       :tab="tab"
       :editable="permissions.changeTitle"
       @edit="action('rename')"
@@ -52,6 +52,9 @@ export default {
   computed: {
     language() {
       return this.$store.state.languages.current;
+    },
+    tabsWithTheme() {
+      return this.$store.getters["form/tabs"](this.$route, this.tabs);
     }
   },
   watch: {
@@ -63,25 +66,6 @@ export default {
     this.fetch();
   },
   methods: {
-    fetch() {
-      this.$api.site
-        .get({ view: "panel" })
-        .then(site => {
-          this.site = site;
-          this.tabs = site.blueprint.tabs;
-          this.permissions = site.options;
-          this.options = ready => {
-            this.$api.site.options().then(options => {
-              ready(options);
-            });
-          };
-          this.$store.dispatch("breadcrumb", []);
-          this.$store.dispatch("title", this.$t("view.site"));
-        })
-        .catch(error => {
-          this.issue = error;
-        });
-    },
     action(action) {
       switch (action) {
         case "languages":
@@ -100,6 +84,25 @@ export default {
           );
           break;
       }
+    },
+    fetch() {
+      this.$api.site
+        .get({ view: "panel" })
+        .then(site => {
+          this.site = site;
+          this.tabs = site.blueprint.tabs;
+          this.permissions = site.options;
+          this.options = ready => {
+            this.$api.site.options().then(options => {
+              ready(options);
+            });
+          };
+          this.$store.dispatch("breadcrumb", []);
+          this.$store.dispatch("title", this.$t("view.site"));
+        })
+        .catch(error => {
+          this.issue = error;
+        });
     }
   }
 };

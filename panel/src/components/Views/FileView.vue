@@ -121,6 +121,9 @@ export default {
           tooltip: this.file.next.filename
         };
       }
+    },
+    tabsWithTheme() {
+      return this.$store.getters["form/tabs"](this.$route, this.tabs);
     }
   },
   methods: {
