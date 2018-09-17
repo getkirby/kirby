@@ -269,9 +269,13 @@ class Collection extends Iterator
         $collection   = clone $this;
 
         foreach ($this->data as $key => $item) {
-            if (V::$filterMethod($this->getAttribute($item, $attribute), ...$filter) !== true) {
+
+            $value = $this->getAttribute($item, $attribute);
+
+            if (V::$filterMethod($value, ...$filter) !== true) {
                 unset($collection->data[$key]);
             }
+
         }
 
         return $collection;

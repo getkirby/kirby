@@ -135,7 +135,7 @@ class FileActionsTest extends TestCase
                 },
                 'file.create:after' => function (File $file) use (&$after, $phpunit, $parent) {
 
-                    $phpunit->assertTrue($file->siblings()->has($file));
+                    $phpunit->assertTrue($file->siblings(true)->has($file));
                     $phpunit->assertTrue($file->parent()->files()->has($file));
                     $phpunit->assertEquals('test.md', $file->filename());
 

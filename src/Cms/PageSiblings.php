@@ -92,10 +92,11 @@ trait PageSiblings
     /**
      * Returns siblings with the same template
      *
-     * @return self|null
+     * @param bool $self
+     * @return self
      */
-    public function templateSiblings()
+    public function templateSiblings(bool $self = true)
     {
-        return $this->siblings()->filterBy('template', $this->intendedTemplate());
+        return $this->siblings($self)->filterBy('intendedTemplate', $this->intendedTemplate()->name());
     }
 }

@@ -2,8 +2,19 @@
 
 namespace Kirby\Cms;
 
-class PageCollectionTest extends TestCase
+use PHPUnit\Framework\TestCase;
+
+class PageSiblingsTest extends TestCase
 {
+
+    public function setUp()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+    }
 
     protected function collection()
     {
@@ -229,10 +240,49 @@ class PageCollectionTest extends TestCase
 
         $page     = $site->children()->nth(1);
         $children = $site->children();
+        $siblings = $children->not($page);
 
         $this->assertEquals($children, $page->siblings());
-        $this->assertEquals($children, $children->first()->siblings());
-        $this->assertEquals($children, $children->last()->siblings());
+        $this->assertEquals($siblings, $page->siblings(false));
+    }
+
+    public function testTemplateSiblings()
+    {
+        $pages = Pages::factory([
+            [
+                'slug'     => 'a',
+                'template' => 'project'
+            ],
+            [
+                'slug'     => 'b',
+                'template' => 'article'
+            ],
+            [
+                'slug'     => 'c',
+                'template' => 'project'
+            ],
+            [
+                'slug'     => 'd',
+                'template' => 'project'
+            ]
+        ]);
+
+        $siblings = $pages->first()->templateSiblings();
+
+        $this->assertTrue($siblings->has('a'));
+        $this->assertTrue($siblings->has('c'));
+        $this->assertTrue($siblings->has('d'));
+
+        $this->assertFalse($siblings->has('b'));
+
+        $siblings = $pages->first()->templateSiblings(false);
+
+        $this->assertTrue($siblings->has('c'));
+        $this->assertTrue($siblings->has('d'));
+
+        $this->assertFalse($siblings->has('a'));
+        $this->assertFalse($siblings->has('b'));
+
     }
 
 }
