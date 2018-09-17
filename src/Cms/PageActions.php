@@ -557,8 +557,10 @@ trait PageActions
         $data      = [];
         $old       = Blueprint::factory($old, 'pages/default', $this);
         $new       = Blueprint::factory($new, 'pages/default', $this);
-        $oldFields = $old->fields();
-        $newFields = $new->fields();
+        $oldForm   = new Form(['fields' => $old->fields()]);
+        $newForm   = new Form(['fields' => $new->fields()]);
+        $oldFields = $oldForm->fields();
+        $newFields = $newForm->fields();
 
         // Tracking changes
         $added    = [];
@@ -583,7 +585,7 @@ trait PageActions
                 // Different field type, add with empty value
                 } else {
                     $data[$name]     = null;
-                    $replaced[$name] = $oldFields->get($name)->label();
+                    $replaced[$name] = $oldFields->get($name)->label() ?? $name;
                 }
 
                 // Field does not exist in old template,
@@ -591,7 +593,7 @@ trait PageActions
             } else {
                 $preserved    = $content->get($name);
                 $data[$name]  = $preserved ? $preserved->value(): null;
-                $added[$name] = $newField->label();
+                $added[$name] = $newField->label() ?? $name;
             }
         }
 
