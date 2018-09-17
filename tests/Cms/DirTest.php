@@ -26,7 +26,7 @@ class DirTest extends TestCase
             $root = $this->fixtures . '/' . $item;
 
             if ($extension = F::extension($item)) {
-                touch($root);
+                F::write($root, '');
             } else {
                 Dir::make($root);
             }
@@ -140,10 +140,74 @@ class DirTest extends TestCase
             'cover.jpg.en.txt',
             'article.en.txt',
             'article.de.txt'
-        ], 'txt', null, '!.de|.en$!i');
+        ], 'txt', null, true);
 
         $this->assertEquals('cover.jpg', $inventory['files']['cover.jpg']['filename']);
         $this->assertEquals('article', $inventory['template']);
+    }
+
+    public function testModels()
+    {
+
+        Page::$models = [
+            'a' => 'A',
+            'b' => 'A'
+        ];
+
+        $inventory = $this->create([
+            'child-with-model-a/a.txt',
+            'child-with-model-b/b.txt',
+            'child-without-model-c/c.txt'
+        ]);
+
+        $this->assertEquals('a', $inventory['children'][0]['model']);
+        $this->assertEquals('b', $inventory['children'][1]['model']);
+        $this->assertEquals(null, $inventory['children'][2]['model']);
+
+        Page::$models = [];
+
+    }
+
+    public function testMultilangModels()
+    {
+
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch',
+                ]
+            ]
+        ]);
+
+        Page::$models = [
+            'a' => 'A',
+            'b' => 'A'
+        ];
+
+        $inventory = $this->create([
+            'child-with-model-a/a.de.txt',
+            'child-with-model-a/a.en.txt',
+            'child-with-model-b/b.de.txt',
+            'child-with-model-b/b.en.txt',
+            'child-without-model-c/c.de.txt',
+            'child-without-model-c/c.en.txt'
+        ], 'txt', null, true);
+
+        $this->assertEquals('a', $inventory['children'][0]['model']);
+        $this->assertEquals('b', $inventory['children'][1]['model']);
+        $this->assertEquals(null, $inventory['children'][2]['model']);
+
+        Page::$models = [];
+
     }
 
 }

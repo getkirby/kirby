@@ -314,7 +314,7 @@ trait PageActions
 
             // always create pages in the default language
             if ($page->kirby()->multilang() === true) {
-                $languageCode = $page->kirby()->languages()->default()->code();
+                $languageCode = $page->kirby()->defaultLanguage()->code();
             } else {
                 $languageCode = null;
             }

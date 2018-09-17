@@ -47,6 +47,7 @@ class App
     public $language;
 
     protected $collections;
+    protected $defaultLanguage;
     protected $languages;
     protected $multilang;
     protected $options;
@@ -304,6 +305,16 @@ class App
         }
 
         return null;
+    }
+
+    /**
+     * Returns the default language object
+     *
+     * @return Language|null
+     */
+    public function defaultLanguage(): ?Language
+    {
+        return $this->defaultLanguage = $this->defaultLanguage ?? $this->languages()->default();
     }
 
     /**

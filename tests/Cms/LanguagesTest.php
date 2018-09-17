@@ -32,7 +32,7 @@ class LanguagesTest extends TestCase
 
         $this->assertCount(2, $languages);
         $this->assertEquals(['en', 'de'], $languages->codes());
-        $this->assertEquals('en', $languages->findDefault()->code());
+        $this->assertEquals('en', $languages->default()->code());
 
     }
 

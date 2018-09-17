@@ -58,9 +58,10 @@ class Dir extends \Kirby\Toolkit\Dir
                 }
 
                 $inventory['children'][] = [
-                    'root' => $root,
-                    'num'  => $num,
-                    'slug' => $slug,
+                    'model' => null,
+                    'num'   => $num,
+                    'root'  => $root,
+                    'slug'  => $slug,
                 ];
             } else {
                 $extension = pathinfo($item, PATHINFO_EXTENSION);
@@ -87,7 +88,7 @@ class Dir extends \Kirby\Toolkit\Dir
         }
 
         $inventory = static::inventoryContent($dir, $inventory, $content);
-        $inventory = static::inventoryModels($inventory, $contentExtension);
+        $inventory = static::inventoryModels($inventory, $contentExtension, $multilang);
 
         return $inventory;
     }
@@ -129,18 +130,28 @@ class Dir extends \Kirby\Toolkit\Dir
      * and inject a model for each
      *
      * @param array $inventory
+     * @param string $contentExtension
+     * @param bool $multilang
      * @return array
      */
-    protected static function inventoryModels(array $inventory, string $contentExtension): array
+    protected static function inventoryModels(array $inventory, string $contentExtension, bool $multilang = false): array
     {
         // inject models
         if (empty($inventory['children']) === false && empty(Page::$models) === false) {
-            $glob = '{' . implode(',', array_keys(Page::$models)) . '}.' . $contentExtension;
+
+            if ($multilang === true) {
+                $contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
+            }
 
             foreach ($inventory['children'] as $key => $child) {
-                $modelFile = glob($child['root'] . '/' . $glob, GLOB_BRACE)[0] ?? null;
-                $inventory['children'][$key]['model'] = $modelFile ? pathinfo($modelFile, PATHINFO_FILENAME) : null;
+                foreach (Page::$models as $modelName => $modelClass) {
+                    if (file_exists($child['root'] . '/' . $modelName . '.' . $contentExtension) === true) {
+                        $inventory['children'][$key]['model'] = $modelName;
+                        break;
+                    }
+                }
             }
+
         }
 
         return $inventory;

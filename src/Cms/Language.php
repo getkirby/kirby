@@ -451,7 +451,7 @@ class Language extends Model
 
         // convert the current default to a non-default language
         if ($updated->isDefault() === true) {
-            if ($oldDefault = $kirby->languages()->default()) {
+            if ($oldDefault = $kirby->defaultLanguage()) {
                 $oldDefault->clone(['default' => false])->save();
             }
 

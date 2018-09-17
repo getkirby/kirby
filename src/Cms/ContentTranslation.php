@@ -126,7 +126,7 @@ class ContentTranslation
      */
     public function isDefault(): bool
     {
-        return $this->code() === $this->parent->kirby()->languages()->default()->code();
+        return $this->code() === $this->parent->kirby()->defaultLanguage()->code();
     }
 
     /**

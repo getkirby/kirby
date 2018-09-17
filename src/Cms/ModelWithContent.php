@@ -180,7 +180,7 @@ abstract class ModelWithContent extends Model
 
         // inject the default translation as fallback
         if ($language->isDefault() === false) {
-            $defaultLanguage    = $this->kirby()->languages()->default();
+            $defaultLanguage    = $this->kirby()->defaultLanguage();
             $defaultTranslation = $this->translations()->find($defaultLanguage->code());
 
             // fill missing content with the default translation
