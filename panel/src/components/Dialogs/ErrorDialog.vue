@@ -26,13 +26,11 @@
       </template>
     </dl>
 
-    <footer slot="footer" class="k-dialog-footer">
-      <k-button-group>
-        <k-button icon="check" @click="close">
-          {{ $t("confirm") }}
-        </k-button>
-      </k-button-group>
-    </footer>
+    <k-button-group slot="footer">
+      <k-button icon="check" @click="close">
+        {{ $t("confirm") }}
+      </k-button>
+    </k-button-group>
 
   </k-dialog>
 </template>
