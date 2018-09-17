@@ -10,6 +10,7 @@ use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field;
 use Kirby\Http\Router;
 use Kirby\Http\Request;
@@ -647,7 +648,11 @@ class App
 
         // try to find the page for the representation
         if ($page = $site->find($path)) {
-            return Response::for($page, [], $extension);
+            try {
+                return Response::for($page, [], $extension);
+            } catch (NotFoundException $e) {
+                return null;
+            }
         }
 
         $id       = dirname($path);
