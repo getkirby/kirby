@@ -67,11 +67,18 @@ trait HasSiblings
     /**
      * Returns all sibling elements
      *
+     * @param bool $self
      * @return Collection
      */
-    public function siblings()
+    public function siblings(bool $self = true)
     {
-        return $this->collection();
+        $siblings = $this->collection();
+
+        if ($self === false) {
+            return $siblings->not($this);
+        }
+
+        return $siblings;
     }
 
     /**

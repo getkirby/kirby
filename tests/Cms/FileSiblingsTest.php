@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-class FileCollectionTest extends TestCase
+class FileSiblingsTest extends TestCase
 {
 
     protected function collection()
@@ -111,12 +111,55 @@ class FileCollectionTest extends TestCase
 
     public function testSiblings()
     {
-        $files = $this->files();
-        $file  = $files->nth(1);
+        $files    = $this->files();
+        $file     = $files->nth(1);
+        $siblings = $files->not($file);
 
         $this->assertEquals($files, $file->siblings());
-        $this->assertEquals($files, $files->first()->siblings());
-        $this->assertEquals($files, $files->last()->siblings());
+        $this->assertEquals($siblings, $file->siblings(false));
+    }
+
+    public function testTemplateSiblings()
+    {
+        $page = new Page([
+            'slug'  => 'test',
+            'files' => [
+                [
+                    'filename' => 'a.jpg',
+                    'template' => 'gallery'
+                ],
+                [
+                    'filename' => 'b.jpg',
+                    'template' => 'cover'
+                ],
+                [
+                    'filename' => 'c.jpg',
+                    'template' => 'gallery'
+                ],
+                [
+                    'filename' => 'd.jpg',
+                    'template' => 'gallery'
+                ]
+            ]
+        ]);
+
+        $files    = $page->files();
+        $siblings = $files->first()->templateSiblings();
+
+        $this->assertTrue($siblings->has('test/a.jpg'));
+        $this->assertTrue($siblings->has('test/c.jpg'));
+        $this->assertTrue($siblings->has('test/d.jpg'));
+
+        $this->assertFalse($siblings->has('test/b.jpg'));
+
+        $siblings = $files->first()->templateSiblings(false);
+
+        $this->assertTrue($siblings->has('test/c.jpg'));
+        $this->assertTrue($siblings->has('test/d.jpg'));
+
+        $this->assertFalse($siblings->has('test/a.jpg'));
+        $this->assertFalse($siblings->has('test/b.jpg'));
+
     }
 
 }
