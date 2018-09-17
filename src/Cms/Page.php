@@ -784,7 +784,14 @@ class Page extends ModelWithContent
      */
     public function modified(string $format = 'U')
     {
-        return date($format, filemtime($this->contentFile()));
+        if ($this->kirby()->multilang() === true) {
+            $languageCode = $this->kirby()->language()->code();
+            $file = $this->contentFile($languageCode);
+        } else {
+            $file = $this->contentFile();
+        }
+
+        return date($format, filemtime($file));
     }
 
     /**
@@ -792,7 +799,7 @@ class Page extends ModelWithContent
      *
      * @return integer|null
      */
-    public function num()
+    public function num(): ?int
     {
         return $this->num;
     }
