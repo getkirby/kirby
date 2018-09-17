@@ -649,5 +649,4 @@ class Site extends ModelWithContent
     {
         return Dir::wasModifiedAfter($this->root(), $time);
     }
-
 }

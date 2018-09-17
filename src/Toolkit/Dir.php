@@ -187,8 +187,7 @@ class Dir
         $modified = filemtime($dir);
         $items    = static::read($dir);
 
-        foreach ($items AS $item) {
-
+        foreach ($items as $item) {
             if (is_file($dir . '/' . $item) === true) {
                 $newModified = filemtime($dir . '/' . $item);
             } else {
@@ -196,7 +195,6 @@ class Dir
             }
 
             $modified = ($newModified > $modified) ? $newModified : $modified;
-
         }
 
         return $format !== null ? $handler($format, $modified) : $modified;
@@ -310,5 +308,4 @@ class Dir
 
         return false;
     }
-
 }

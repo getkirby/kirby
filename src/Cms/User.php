@@ -754,5 +754,4 @@ class User extends ModelWithContent
 
         return true;
     }
-
 }

@@ -138,7 +138,6 @@ class Dir extends \Kirby\Toolkit\Dir
     {
         // inject models
         if (empty($inventory['children']) === false && empty(Page::$models) === false) {
-
             if ($multilang === true) {
                 $contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
             }
@@ -151,7 +150,6 @@ class Dir extends \Kirby\Toolkit\Dir
                     }
                 }
             }
-
         }
 
         return $inventory;
