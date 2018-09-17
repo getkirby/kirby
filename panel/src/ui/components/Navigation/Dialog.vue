@@ -2,7 +2,6 @@
   <transition name="k-dialog-transition">
     <div v-if="isOpen" class="k-dialog" @click="cancel">
       <div :data-size="size" class="k-dialog-box" @click.stop>
-
         <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
           <p>{{ notification.message }}</p>
           <k-button
@@ -10,12 +9,11 @@
             @click="notification = null"
           />
         </div>
-
         <div class="k-dialog-body">
-          <slot/>
+          <slot />
         </div>
-        <slot name="footer">
-          <footer class="k-dialog-footer">
+        <footer class="k-dialog-footer">
+          <slot name="footer">
             <k-button-group>
               <k-button icon="cancel" @click="cancel">
                 {{ "Cancel" | t("cancel") }}
@@ -24,8 +22,8 @@
                 {{ button || t("confirm") }}
               </k-button>
             </k-button-group>
-          </footer>
-        </slot>
+          </slot>
+        </footer>
       </div>
     </div>
   </transition>
