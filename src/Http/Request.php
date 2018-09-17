@@ -275,8 +275,21 @@ class Request
         return $headers;
     }
 
-    public function url(): Uri
+    /**
+     * Returns the current Uri object.
+     * If you pass props you can safely modify
+     * the Url with new parameters without destroying
+     * the original object.
+     *
+     * @param array $props
+     * @return Uri
+     */
+    public function url(array $props = null): Uri
     {
+        if ($props !== null) {
+            return $this->url()->clone($props);
+        }
+
         return $this->url = $this->url ?? Uri::current();
     }
 }

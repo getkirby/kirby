@@ -106,4 +106,30 @@ class RequestTest extends TestCase
         $request = new Request();
         $this->assertTrue($request->is('GET'));
     }
+
+    public function testUrl()
+    {
+        $request = new Request();
+        $this->assertInstanceOf(Uri::class, $request->url());
+    }
+
+    public function testUrlUpdates()
+    {
+        $request = new Request();
+
+        $uriBefore = $request->url();
+
+        $clone = $request->url([
+            'host'  => 'getkirby.com',
+            'path'  => 'yay',
+            'query' => ['foo' => 'bar']
+        ]);
+
+        $uriAfter = $request->url();
+
+        $this->assertNotEquals($uriBefore, $clone);
+        $this->assertEquals($uriBefore, $uriAfter);
+        $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
+    }
+
 }

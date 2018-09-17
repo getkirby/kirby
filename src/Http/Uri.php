@@ -233,6 +233,24 @@ class Uri
     }
 
     /**
+     * Clones the Uri object and applies optional
+     * new props.
+     *
+     * @param array $props
+     * @return self
+     */
+    public function clone(array $props = []): self
+    {
+        $clone = clone $this;
+
+        foreach ($props as $key => $value) {
+            $clone->__set($key, $value);
+        }
+
+        return $clone;
+    }
+
+    /**
      * @param array $props
      * @param boolean $forwarded
      * @return self

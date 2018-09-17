@@ -24,6 +24,24 @@ class UriTest extends TestCase
         $_SERVER = $this->_SERVER;
     }
 
+    public function testClone()
+    {
+
+        $uri = new Uri([
+            'host' => 'getkirby.com',
+            'path' => 'test'
+        ]);
+
+        $clone = $uri->clone([
+            'path'  => 'yay',
+            'query' => ['foo' => 'bar']
+        ]);
+
+        $this->assertEquals('http://getkirby.com/test', $uri->toString());
+        $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
+
+    }
+
     public function testValidScheme()
     {
         $url = new Uri;
