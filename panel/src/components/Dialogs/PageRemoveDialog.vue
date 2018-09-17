@@ -6,7 +6,7 @@
     icon="trash"
     @submit="submit"
   >
-    <k-text v-html="$t('page.delete.confirm', { title: page.title })" />
+    <k-text @keydown.enter="submit" v-html="$t('page.delete.confirm', { title: page.title })" />
   </k-dialog>
 </template>
 

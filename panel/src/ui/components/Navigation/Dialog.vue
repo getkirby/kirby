@@ -15,10 +15,10 @@
         <footer class="k-dialog-footer">
           <slot name="footer">
             <k-button-group>
-              <k-button icon="cancel" @click="cancel">
+              <k-button class="k-dialog-button-cancel" icon="cancel" @click="cancel">
                 {{ "Cancel" | t("cancel") }}
               </k-button>
-              <k-button :icon="icon" :theme="theme" @click="submit">
+              <k-button class="k-dialog-button-submit" :icon="icon" :theme="theme" @click="submit">
                 {{ button || t("confirm") }}
               </k-button>
             </k-button-group>
@@ -64,12 +64,22 @@ export default {
 
       this.$nextTick(() => {
         if (this.$el && this.$el.querySelector) {
-          const autofocus = this.$el.querySelector(
-            "input, textarea, select, button:not([data-options])"
+          let autofocus = this.$el.querySelector(
+            "input, textarea, select, .k-dialog-button-submit"
           );
 
           if (autofocus) {
             autofocus.focus();
+            return;
+          }
+
+          autofocus = this.$el.querySelector(
+            ".k-dialog-button-cancel"
+          );
+
+          if (autofocus) {
+            autofocus.focus();
+            return;
           }
         }
       });
