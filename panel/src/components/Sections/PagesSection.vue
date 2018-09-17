@@ -126,7 +126,10 @@ export default {
             page.options = ready => {
               this.$api.pages
                 .options(page.id, "list")
-                .then(options => ready(options));
+                .then(options => ready(options))
+                .catch(error => {
+                  this.$store.dispatch("notification/error", error);
+                });
             };
 
             page.sortable = page.permissions.sort && response.options.sortable;

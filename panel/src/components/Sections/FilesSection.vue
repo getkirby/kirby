@@ -107,7 +107,10 @@ export default {
             file.options = ready => {
               this.$api.files
                 .options(file.parent, file.filename, "list")
-                .then(options => ready(options));
+                .then(options => ready(options))
+                .catch(error => {
+                  this.$store.dispatch("notification/error", error);
+                });
             };
 
             file.sortable = this.sortable;

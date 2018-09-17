@@ -134,7 +134,10 @@ export default {
               options: ready => {
                 this.$api.users
                   .options(user.id, "list")
-                  .then(options => ready(options));
+                  .then(options => ready(options))
+                  .catch(error => {
+                    this.$store.dispatch("notification/error", error);
+                  });
               },
               image: null
             };
