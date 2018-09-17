@@ -34,17 +34,35 @@ class Roles extends Collection
         return $collection->sortBy('name', 'asc');
     }
 
-    public static function load(string $root, array $inject = []): self
+    public static function load(string $root = null, array $inject = []): self
     {
         $roles = new static;
 
-        foreach (Dir::read($root) as $filename) {
-            if ($filename === 'default.yml') {
+        // load roles from plugins
+        foreach (App::instance()->extensions('blueprints') as $blueprintName => $blueprint) {
+            if (substr($blueprintName, 0, 6) !== 'users/') {
                 continue;
             }
 
-            $role = Role::load($root . '/' . $filename, $inject);
+            if (is_array($blueprint) === true) {
+                $role = Role::factory($blueprint, $inject);
+            } else {
+                $role = Role::load($blueprint, $inject);
+            }
+
             $roles->set($role->id(), $role);
+        }
+
+        // load roles from directory
+        if ($root !== null) {
+            foreach (Dir::read($root) as $filename) {
+                if ($filename === 'default.yml') {
+                    continue;
+                }
+
+                $role = Role::load($root . '/' . $filename, $inject);
+                $roles->set($role->id(), $role);
+            }
         }
 
         // always include the admin role
