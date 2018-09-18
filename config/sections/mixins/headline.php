@@ -4,7 +4,7 @@ use Kirby\Toolkit\I18n;
 
 return [
     'props' => [
-        'headline' => function (string $headline = null) {
+        'headline' => function ($headline = null) {
             return I18n::translate($headline, $headline);
         }
     ],
