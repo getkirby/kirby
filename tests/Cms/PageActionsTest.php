@@ -29,7 +29,13 @@ class PageActionsTest extends TestCase
                 'pages/article' => [
                     'title'  => 'Article',
                     'name'   => 'article',
-                    'status' => ['draft' => 'Draft', 'listed' => 'Published']
+                    'num'    => 'date',
+                    'status' => ['draft' => 'Draft', 'listed' => 'Published'],
+                    'fields' => [
+                        'date' => [
+                            'type' => 'date'
+                        ]
+                    ]
                 ]
             ],
             'roots' => [
@@ -216,8 +222,28 @@ class PageActionsTest extends TestCase
         $page = $this->site()->find('test')->save();
         $this->assertEquals(null, $page->headline()->value());
 
+        $oldStatus = $page->status();
+
         $modified = $page->update(['headline' => 'Test']);
         $this->assertEquals('Test', $modified->headline()->value());
+
+        // assert that the page status didn't change with the update
+        $this->assertEquals($oldStatus, $modified->status());
+    }
+
+    public function testUpdateWithDateBasedNumbering()
+    {
+
+        $page = $this->site()->find('article')->save();
+
+        $this->assertEquals(20121212, $page->num());
+
+        $modified = $page->update([
+            'date' => '2018-12-12'
+        ]);
+
+        $this->assertEquals(20181212, $modified->num());
+
     }
 
 }
