@@ -8,7 +8,11 @@ class UserMethodsTest extends TestCase
     public function setUp()
     {
         // make sure field methods are loaded
-        new App();
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
     }
 
     public function testId()

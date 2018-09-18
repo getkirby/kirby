@@ -45,10 +45,10 @@ class App
     protected static $version;
 
     public $data = [];
-    public $language;
 
     protected $collections;
     protected $defaultLanguage;
+    protected $language;
     protected $languages;
     protected $multilang;
     protected $options;
@@ -617,8 +617,8 @@ class App
      */
     public function resolve(string $path = null, Language $language = null)
     {
-        // set the current language
-        $this->language = $language;
+        // set the current locale
+        $this->localize($language);
 
         // the site is needed a couple times here
         $site = $this->site();

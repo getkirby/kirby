@@ -418,7 +418,7 @@ class PagePropsTest extends TestCase
         F::write($file = $index . '/test/test.de.txt', 'test');
 
         // change the language
-        $app->language = $app->language('de');
+        $app->localize($app->language('de'));
 
         $modified = filemtime($file);
         $page     = $app->page('test');

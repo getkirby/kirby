@@ -85,7 +85,7 @@ class SitePropsTest extends TestCase
         F::write($file = $index . '/site.de.txt', 'test');
 
         // change the language
-        $app->language = $app->language('de');
+        $app->localize($app->language('de'));
 
         $modified = filemtime($file);
         $site     = $app->site();

@@ -89,7 +89,7 @@ class PageTranslationsTest extends TestCase
         ]);
 
         if ($language !== null) {
-            $app->language = $app->languages()->find($language);
+            $app->localize($app->languages()->find($language));
         }
 
         return $app;

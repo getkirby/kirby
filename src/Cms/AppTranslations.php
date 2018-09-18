@@ -36,6 +36,24 @@ trait AppTranslations
     }
 
     /**
+     * Apply the current language
+     *
+     * @param Language $language
+     * @return void
+     */
+    public function localize(Language $language = null)
+    {
+        $this->language = $language;
+
+        if ($language !== null) {
+            I18n::$locale = $language->code();
+            setlocale(LC_ALL, $language->locale());
+        } elseif ($locale = ($this->options['locale'] ?? null)) {
+            setlocale(LC_ALL, $locale);
+        }
+    }
+
+    /**
      * Load a specific translation by locale
      *
      * @param string|null $locale
