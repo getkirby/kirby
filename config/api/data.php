@@ -26,7 +26,7 @@ return [
         $kirby = kirby();
 
         if ($language = $this->language()) {
-            $kirby->language = $kirby->languages()->find($language);
+            $kirby->localize($kirby->languages()->find($language));
         }
 
         return $kirby;
