@@ -10,6 +10,9 @@ class PaginationTest extends TestCase
     public function testDefaultPage()
     {
         $pagination = new Pagination();
+        $this->assertEquals(0, $pagination->page());
+
+        $pagination = new Pagination(['total' => 1]);
         $this->assertEquals(1, $pagination->page());
     }
 
@@ -23,7 +26,7 @@ class PaginationTest extends TestCase
     {
         $pagination = new Pagination();
         $pagination->page(12);
-        $this->assertEquals(12, $pagination->page());
+        $this->assertEquals(0, $pagination->page());
     }
 
     public function testTotalDefault()
@@ -150,6 +153,9 @@ class PaginationTest extends TestCase
         $pagination = new Pagination();
         $this->assertEquals(0, $pagination->firstPage());
 
+        $pagination = new Pagination(['total' => 1]);
+        $this->assertEquals(1, $pagination->firstPage());
+
         $pagination = new Pagination(['total' => 42]);
         $this->assertEquals(1, $pagination->firstPage());
     }
@@ -158,6 +164,9 @@ class PaginationTest extends TestCase
     {
         $pagination = new Pagination();
         $this->assertEquals(0, $pagination->lastPage());
+
+        $pagination = new Pagination(['total' => 1]);
+        $this->assertEquals(1, $pagination->lastPage());
 
         $pagination = new Pagination(['total' => 42]);
         $this->assertEquals(3, $pagination->lastPage());
@@ -213,7 +222,7 @@ class PaginationTest extends TestCase
 
     public function testPrevPage()
     {
-        $pagination = new Pagination(['page' => 2]);
+        $pagination = new Pagination(['page' => 2, 'total' => 42]);
         $this->assertEquals(1, $pagination->prevPage());
 
         $pagination = new Pagination(['page' => 1]);
@@ -244,7 +253,7 @@ class PaginationTest extends TestCase
     public function testIsFirstPage()
     {
         $pagination = new Pagination();
-        $this->assertFalse($pagination->isFirstPage());
+        $this->assertTrue($pagination->isFirstPage());
 
         $pagination = new Pagination(['total' => 42]);
         $this->assertTrue($pagination->isFirstPage());
@@ -256,7 +265,7 @@ class PaginationTest extends TestCase
     public function testIsLastPage()
     {
         $pagination = new Pagination();
-        $this->assertFalse($pagination->isLastPage());
+        $this->assertTrue($pagination->isLastPage());
 
         $pagination = new Pagination(['total' => 42]);
         $this->assertFalse($pagination->isLastPage());

@@ -54,12 +54,12 @@ class Pagination
     {
         if ($page === null) {
 
-            if ($this->page < 1) {
-                $this->page = 1;
-            }
-
             if ($this->page > $this->pages()) {
                 $this->page = $this->lastPage();
+            }
+
+            if ($this->page < 1) {
+                $this->page = $this->firstPage();
             }
 
             return $this->page;
@@ -116,7 +116,13 @@ class Pagination
      */
     public function start(): int
     {
-        return ($this->page() - 1) * $this->limit() + 1;
+        $index = $this->page() - 1;
+
+        if ($index < 0) {
+            $index = 0;
+        }
+
+        return $index * $this->limit() + 1;
     }
 
     /**
@@ -145,6 +151,7 @@ class Pagination
         if ($this->total() === 0) {
             return 0;
         }
+
         return ceil($this->total() / $this->limit());
     }
 
