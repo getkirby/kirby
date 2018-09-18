@@ -15,6 +15,7 @@ class Permissions
         'access' => [
             'panel' => true,
             'users' => true,
+            'site'  => true
         ],
         'files' => [
             'changeName' => true,
@@ -106,10 +107,6 @@ class Permissions
         // wildcard to overwrite the entire category
         if ($action === '*') {
             return $this->setCategory($category, $setting);
-        }
-
-        if ($this->hasAction($category, $action) === false) {
-            throw new InvalidArgumentException('Invalid permissions action');
         }
 
         $this->actions[$category][$action] = $setting;

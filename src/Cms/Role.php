@@ -94,14 +94,10 @@ class Role extends Model
     {
         $name = F::name($file);
 
-        try {
-            $data = Data::read($file);
-            $data['name'] = $name;
+        $data = Data::read($file);
+        $data['name'] = $name;
 
-            return static::factory($data, $inject);
-        } catch (Exception $e) {
-            throw new NotFoundException(sprintf('The role "%s" does not exist', $name));
-        }
+        return static::factory($data, $inject);
     }
 
     public function name(): string
