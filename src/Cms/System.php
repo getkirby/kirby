@@ -141,7 +141,7 @@ class System
         $servers = [
             'apache',
             'caddy',
-            'lightspeed',
+            'litespeed',
             'nginx',
             'php'
         ];
