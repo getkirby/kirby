@@ -101,7 +101,7 @@ return [
         'pattern' => 'pages/(:any)/files/(:any)',
         'method'  => 'PATCH',
         'action'  => function (string $id, string $filename) {
-            return $this->file($id, $filename)->update($this->requestBody());
+            return $this->file($id, $filename)->update($this->requestBody(), $this->language(), true);
         }
     ],
     [

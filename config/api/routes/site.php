@@ -15,7 +15,7 @@ return [
         'pattern' => 'site',
         'method'  => 'PATCH',
         'action'  => function () {
-            return $this->site()->update($this->requestBody());
+            return $this->site()->update($this->requestBody(), $this->language(), true);
         }
     ],
     [
@@ -107,7 +107,7 @@ return [
         'pattern' => 'site/files/(:any)',
         'method'  => 'PATCH',
         'action'  => function (string $filename) {
-            return $this->file(null, $filename)->update($this->requestBody());
+            return $this->file(null, $filename)->update($this->requestBody(), $this->language(), true);
         }
     ],
     [

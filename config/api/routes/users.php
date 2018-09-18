@@ -37,7 +37,7 @@ return [
         'pattern' => 'users/(:any)',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
-            return $this->user($id)->update($this->requestBody());
+            return $this->user($id)->update($this->requestBody(), $this->language(), true);
         }
     ],
     [
