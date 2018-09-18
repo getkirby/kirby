@@ -6,7 +6,6 @@
         autofocus,
         disabled,
         id,
-        maxlength,
         minlength,
         name,
         placeholder,
