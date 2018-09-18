@@ -45,7 +45,10 @@ return [
             return $file->next();
         },
         'nextWithTemplate' => function (File $file) {
-            return $file->nextAll()->template($file->template())->first();
+            $files = $file->templateSiblings()->sortBy('sort', 'asc');
+            $index = $files->indexOf($file);
+
+            return $files->nth($index + 1);
         },
         'options' => function (File $file) {
             return $file->permissions()->toArray();
@@ -54,7 +57,10 @@ return [
             return $file->prev();
         },
         'prevWithTemplate' => function (File $file) {
-            return $file->prevAll()->template($file->template())->last();
+            $files = $file->templateSiblings()->sortBy('sort', 'asc');
+            $index = $files->indexOf($file);
+
+            return $files->nth($index - 1);
         },
         'niceSize' => function (File $file) {
             return $file->niceSize();
