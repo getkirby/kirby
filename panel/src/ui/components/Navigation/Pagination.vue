@@ -87,6 +87,11 @@ export default {
       currentPage: this.page
     };
   },
+  watch: {
+    page(page) {
+      this.currentPage = page;
+    }
+  },
   computed: {
     show() {
       return this.pages > 1;
