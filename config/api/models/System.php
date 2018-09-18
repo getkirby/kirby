@@ -36,6 +36,9 @@ return [
 
             return $this->kirby()->translation();
         },
+        'kirbytext' => function () {
+            return $this->kirby()->option('panel')['kirbytext'] ?? true;
+        },
         'user' => function () {
             return $this->user();
         },
@@ -46,6 +49,7 @@ return [
             'isOk',
             'isInstalled',
             'isLocal',
+            'kirbytext',
             'languages' => 'compact',
             'license',
             'requirements',

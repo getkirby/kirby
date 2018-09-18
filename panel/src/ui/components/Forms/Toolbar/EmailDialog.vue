@@ -34,6 +34,11 @@ export default {
       }
     };
   },
+  computed: {
+    kirbytext() {
+      return this.$store.state.system.info.kirbytext;
+    }
+  },
   methods: {
     open(input, selection) {
       this.value.text = selection;
@@ -42,25 +47,29 @@ export default {
     cancel() {
       this.$emit("cancel");
     },
-    submit() {
-      let tag = "(email: " + this.value.email + ")";
-
+    createKirbytext() {
       if (this.value.text.length > 0) {
-        tag =
-          "(email: " +
-          this.value.email +
-          " text: " +
-          this.value.text +
-          ")";
+        return `(email: ${this.value.email} text: ${this.value.text})`;
+      } else {
+        return `(email: ${this.value.email})`;
       }
+    },
+    createMarkdown() {
+      if (this.value.text.length > 0) {
+        return `[${this.value.text}](mailto:${this.value.email})`;
+      } else {
+        return `<${this.value.email}>`;
+      }
+    },
+    submit() {
+      // insert the link
+      this.$emit("submit", this.kirbytext ? this.createKirbytext() : this.createMarkdown());
 
       // reset the form
       this.value = {
         email: null,
         text: null
       };
-
-      this.$emit("submit", tag);
 
       // close the modal
       this.$refs.dialog.close();
