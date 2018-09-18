@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2ab6834931926a3a80fec8870d978135",
-    "content-hash": "4a68ec9d3654481068d11eb7d55d6c6b",
+    "hash": "c040c61a05e7ea330e13b5aacf1d527b",
+    "content-hash": "e536705751e4d7d6724a356839ed8a10",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -2444,18 +2444,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "d4240ac5965db1fb41a6604410804cae05ff8b72"
+                "reference": "331569c94809047bd3c86c572e7130515fcec91e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/d4240ac5965db1fb41a6604410804cae05ff8b72",
-                "reference": "d4240ac5965db1fb41a6604410804cae05ff8b72",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/331569c94809047bd3c86c572e7130515fcec91e",
+                "reference": "331569c94809047bd3c86c572e7130515fcec91e",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1.3"
             },
             "require-dev": {
+                "psr/cache": "^1.0",
                 "psr/container": "^1.0"
             },
             "suggest": {
@@ -2500,7 +2501,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-09-04 08:20:02"
+            "time": "2018-09-17 18:09:31"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2622,12 +2623,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "faec028be9c4992e92381850ae5751dff5edea78"
+                "reference": "241d96d1f8455265195def65786f2aaec5b4d5f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/faec028be9c4992e92381850ae5751dff5edea78",
-                "reference": "faec028be9c4992e92381850ae5751dff5edea78",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/241d96d1f8455265195def65786f2aaec5b4d5f0",
+                "reference": "241d96d1f8455265195def65786f2aaec5b4d5f0",
                 "shasum": ""
             },
             "require": {
@@ -2663,7 +2664,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-05 17:51:25"
+            "time": "2018-09-09 18:06:02"
         },
         {
             "name": "symfony/options-resolver",
@@ -2671,12 +2672,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "9cebb5bed667271db522d992f34e14fcb1f777eb"
+                "reference": "353fde224412a47a8da55a7a2344760cc206d511"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/9cebb5bed667271db522d992f34e14fcb1f777eb",
-                "reference": "9cebb5bed667271db522d992f34e14fcb1f777eb",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/353fde224412a47a8da55a7a2344760cc206d511",
+                "reference": "353fde224412a47a8da55a7a2344760cc206d511",
                 "shasum": ""
             },
             "require": {
@@ -2717,7 +2718,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2018-09-08 13:42:43"
+            "time": "2018-09-18 16:38:25"
         },
         {
             "name": "symfony/polyfill-ctype",
