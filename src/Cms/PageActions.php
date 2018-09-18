@@ -630,7 +630,7 @@ trait PageActions
 
         // if num is created from page content, update num on content update
         if ($page->isListed() === true && in_array($page->blueprint()->num(), ['zero', 'default']) === false) {
-            $page = $page->changeNum();
+            $page = $page->changeNum(0);
         }
 
         return $page;
