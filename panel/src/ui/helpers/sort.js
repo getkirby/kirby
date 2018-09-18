@@ -1,3 +1,4 @@
+/* eslint-disable */
 // https://github.com/bubkoo/natsort
 export default options => {
 

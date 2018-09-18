@@ -89,22 +89,18 @@ class Header
      */
     public static function create($key, string $value = null): string
     {
-
         if (is_array($key) === true) {
-
             $headers = [];
 
-            foreach($key as $k => $v) {
+            foreach ($key as $k => $v) {
                 $headers[] = static::create($k, $v);
             }
 
             return implode("\r\n", $headers);
-
         }
 
         // prevent header injection by stripping any newline characters from single headers
         return str_replace(["\r", "\n"], '', $key . ': ' . $value);
-
     }
 
     /**
@@ -133,7 +129,6 @@ class Header
      */
     public static function status($code = null, bool $send = true)
     {
-
         $codes    = static::$codes;
         $protocol = $_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
 
@@ -154,7 +149,6 @@ class Header
 
         // try to send the header
         header($header);
-
     }
 
     /**
@@ -277,7 +271,6 @@ class Header
      */
     public static function redirect(string $url, int $code = 302, bool $send = true)
     {
-
         $status   = static::status($code, false);
         $location = 'Location:' . Url::unIdn($url);
 
@@ -288,7 +281,6 @@ class Header
         header($status);
         header($location);
         exit();
-
     }
 
     /**
@@ -298,7 +290,6 @@ class Header
      */
     public static function download(array $params = [])
     {
-
         $defaults = [
             'name'     => 'download',
             'size'     => false,
@@ -321,7 +312,5 @@ class Header
         }
 
         header('Connection: close');
-
     }
-
 }

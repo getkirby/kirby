@@ -1,9 +1,9 @@
 <template>
   <k-draggable
     v-model="state"
-    element="k-dropdown"
     :options="{disabled: !draggable, forceFallback: true, draggable: '.k-tag', delay: 1}"
     :data-layout="layout"
+    element="k-dropdown"
     class="k-multiselect-input"
     @input="onInput"
     @click.native="$refs.dropdown.toggle"
@@ -33,7 +33,7 @@
         icon="search"
         class="k-multiselect-search"
       >
-        <input ref="search" v-model="q" />
+        <input ref="search" v-model="q">
       </k-dropdown-item>
 
       <div class="k-multiselect-options">
@@ -121,7 +121,7 @@ export default {
       const regex = new RegExp(`(${this.q})`, "ig");
 
       return this.options.filter(option => {
-        return option.text.match(regex) || option.value.match(regex)
+        return option.text.match(regex) || option.value.match(regex)
       }).map(option => {
         return {
           ...option,
@@ -141,7 +141,7 @@ export default {
     }
   },
   watch: {
-    value(value) {
+    value() {
       this.state = this.value;
       this.onInvalid();
     }
@@ -172,7 +172,7 @@ export default {
       this.q = null;
       this.$el.focus();
     },
-    escape(e) {
+    escape() {
       if (this.q) {
         this.q = null;
         return;

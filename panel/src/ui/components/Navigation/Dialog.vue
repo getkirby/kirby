@@ -15,10 +15,19 @@
         <footer class="k-dialog-footer">
           <slot name="footer">
             <k-button-group>
-              <k-button class="k-dialog-button-cancel" icon="cancel" @click="cancel">
+              <k-button
+                icon="cancel"
+                class="k-dialog-button-cancel"
+                @click="cancel"
+              >
                 {{ "Cancel" | t("cancel") }}
               </k-button>
-              <k-button class="k-dialog-button-submit" :icon="icon" :theme="theme" @click="submit">
+              <k-button
+                :icon="icon"
+                :theme="theme"
+                class="k-dialog-button-submit"
+                @click="submit"
+              >
                 {{ button || t("confirm") }}
               </k-button>
             </k-button-group>

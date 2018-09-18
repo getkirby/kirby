@@ -87,11 +87,6 @@ export default {
       currentPage: this.page
     };
   },
-  watch: {
-    page(page) {
-      this.currentPage = page;
-    }
-  },
   computed: {
     show() {
       return this.pages > 1;
@@ -129,6 +124,11 @@ export default {
     },
     offset() {
       return this.start - 1;
+    }
+  },
+  watch: {
+    page(page) {
+      this.currentPage = page;
     }
   },
   created() {

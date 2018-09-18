@@ -76,7 +76,6 @@ class V
     public static function input(array $input, array $rules): bool
     {
         foreach ($rules as $fieldName => $fieldRules) {
-
             $fieldValue = $input[$fieldName] ?? null;
 
             // first check for required fields
@@ -99,7 +98,6 @@ class V
             }
 
             static::value($fieldValue, $fieldRules);
-
         }
 
         return true;

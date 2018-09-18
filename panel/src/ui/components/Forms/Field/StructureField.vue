@@ -155,25 +155,6 @@ export default {
       trash: null
     };
   },
-  watch: {
-    value(value) {
-
-      if (value != this.items) {
-        this.items = this.sort(value);
-      }
-
-    }
-  },
-  mounted() {
-    this.$events.$on('keydown.esc', this.escape);
-    this.$events.$on('keydown.cmd.s', this.close);
-    this.$events.$on("field.structure.close", this.escape);
-  },
-  destroyed() {
-    this.$events.$off('keydown.esc', this.escape);
-    this.$events.$off('keydown.cmd.s', this.close);
-    this.$events.$off("field.structure.close", this.escape);
-  },
   computed: {
     more() {
 
@@ -207,6 +188,25 @@ export default {
 
       return true;
     }
+  },
+  watch: {
+    value(value) {
+
+      if (value != this.items) {
+        this.items = this.sort(value);
+      }
+
+    }
+  },
+  mounted() {
+    this.$events.$on('keydown.esc', this.escape);
+    this.$events.$on('keydown.cmd.s', this.close);
+    this.$events.$on("field.structure.close", this.escape);
+  },
+  destroyed() {
+    this.$events.$off('keydown.esc', this.escape);
+    this.$events.$off('keydown.cmd.s', this.close);
+    this.$events.$off("field.structure.close", this.escape);
   },
   methods: {
     sort(items) {
