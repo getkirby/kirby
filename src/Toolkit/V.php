@@ -66,7 +66,7 @@ class V
 
     /**
      * Validate an input array against
-     * a set of rules, usin all registered
+     * a set of rules, using all registered
      * validators
      *
      * @param  array    $input
@@ -76,6 +76,7 @@ class V
     public static function input(array $input, array $rules): bool
     {
         foreach ($rules as $fieldName => $fieldRules) {
+
             $fieldValue = $input[$fieldName] ?? null;
 
             // first check for required fields
@@ -97,20 +98,8 @@ class V
                 throw new Exception(sprintf($e->getMessage() . ' failed for field "%s"', $fieldName));
             }
 
-            foreach ($fieldRules as $validatorName => $validatorOptions) {
-                if (is_int($validatorName)) {
-                    $validatorName    = $validatorOptions;
-                    $validatorOptions = [];
-                }
+            static::value($fieldValue, $fieldRules);
 
-                if (is_array($validatorOptions) === false) {
-                    $validatorOptions = [$validatorOptions];
-                }
-
-                if (static::$validatorName($fieldValue, ...$validatorOptions) === false) {
-                    throw new Exception(sprintf('The "%s" validator failed for field "%s"', $validatorName, $fieldName));
-                }
-            }
         }
 
         return true;

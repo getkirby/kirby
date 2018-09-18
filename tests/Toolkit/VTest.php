@@ -448,6 +448,11 @@ class VTest extends TestCase
         $this->assertFalse(V::url('http://10.1.1.254'));
     }
 
+    public function testInput()
+    {
+
+    }
+
     public function testValue()
     {
         $result = V::value('test@getkirby.com', [
