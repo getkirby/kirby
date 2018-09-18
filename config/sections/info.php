@@ -7,7 +7,7 @@ return [
         'headline'
     ],
     'props' => [
-        'text' => function (string $text = null) {
+        'text' => function ($text = null) {
             return I18n::translate($text, $text);
         },
         'theme' => function (string $theme = null) {
