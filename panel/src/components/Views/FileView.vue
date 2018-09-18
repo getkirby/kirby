@@ -36,7 +36,7 @@
       <k-tabs
         v-if="file.id"
         ref="tabs"
-        :key="'file-' + file.id + '-tabs-' + new Date().getTime()"
+        :key="'file-' + file.id + '-tabs'"
         :parent="$api.files.url(file.parent.id, file.filename)"
         :tabs="tabs"
         :blueprint="file.blueprint.name"
