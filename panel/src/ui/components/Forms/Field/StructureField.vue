@@ -2,7 +2,7 @@
   <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
     <template slot="options">
       <k-button
-        v-if="!disabled"
+        v-if="more"
         ref="add"
         :id="_uid"
         icon="add"
@@ -110,6 +110,8 @@ export default {
   props: {
     ...Field.props,
     fields: Object,
+    max: Number,
+    min: Number,
     value: {
       type: Array,
       default() {
@@ -138,6 +140,21 @@ export default {
     this.$events.$off('keydown.esc', this.escape);
     this.$events.$off('keydown.cmd.s', this.close);
     this.$events.$off("field.structure.close", this.escape);
+  },
+  computed: {
+    more() {
+
+      if (this.disabled === true) {
+        return false;
+      }
+
+      if (this.max && this.items.length >= this.max) {
+        return false;
+      }
+
+      return true;
+
+    }
   },
   methods: {
     add() {
