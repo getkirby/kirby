@@ -53,6 +53,15 @@ class Pagination
     public function page(int $page = null)
     {
         if ($page === null) {
+
+            if ($this->page < 1) {
+                $this->page = 1;
+            }
+
+            if ($this->page > $this->pages()) {
+                $this->page = $this->lastPage();
+            }
+
             return $this->page;
         }
 
