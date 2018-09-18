@@ -46,6 +46,9 @@ export default {
     parent: String,
     value: {
       type: Array,
+      default() {
+        return [];
+      }
     }
   },
   data() {
@@ -99,7 +102,7 @@ export default {
       this.onInput();
     },
     focus() {
-      this.$refs.input.focus();
+
     },
     onInput() {
       this.$emit("input", this.selected);
