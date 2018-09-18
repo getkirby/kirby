@@ -22,7 +22,7 @@
           v-model="items"
           :data-disabled="disabled"
           :options="{
-            disabled: disabled,
+            disabled: !isSortable,
             forceFallback: true,
             handle: '.k-structure-item-handle',
             fallbackClass: 'sortable-fallback'
@@ -41,7 +41,7 @@
             @click.stop
           >
             <div v-if="!isActive(index)" class="k-structure-item-wrapper">
-              <k-button v-if="items.length > 1" class="k-structure-item-handle" icon="sort" />
+              <k-button v-if="isSortable" class="k-structure-item-handle" icon="sort" />
               <div class="k-structure-item-content">
                 <p
                   v-for="(field, fieldName) in fields"
@@ -104,6 +104,30 @@
 <script>
 import Field from "../Field.vue";
 import dayjs from "dayjs";
+import sorter from "@/ui/helpers/sort.js";
+
+Array.prototype.sortBy = function(sortBy) {
+
+  const sort      = sorter();
+  const options   = sortBy.split(" ");
+  const field     = options[0];
+  const direction = options[1] || "asc";
+
+  return this.sort((a, b) => {
+
+    if (direction === "desc") {
+      return sort(b[field], a[field], {
+        insensitive: true,
+      });
+    } else {
+      return sort(a[field], b[field], {
+        insensitive: true,
+      });
+    }
+
+  });
+
+};
 
 export default {
   inheritAttrs: false,
@@ -112,6 +136,11 @@ export default {
     fields: Object,
     max: Number,
     min: Number,
+    sortable: {
+      type: Boolean,
+      default: true
+    },
+    sortBy: String,
     value: {
       type: Array,
       default() {
@@ -121,14 +150,18 @@ export default {
   },
   data() {
     return {
-      items: this.value,
+      items: this.sort(this.value),
       active: null,
       trash: null
     };
   },
   watch: {
     value(value) {
-      this.items = value;
+
+      if (value != this.items) {
+        this.items = this.sort(value);
+      }
+
     }
   },
   mounted() {
@@ -154,9 +187,35 @@ export default {
 
       return true;
 
+    },
+    isSortable() {
+      if (this.sortBy) {
+        return false;
+      }
+
+      if (this.disabled === true) {
+        return false;
+      }
+
+      if (this.items.length <= 1) {
+        return false;
+      }
+
+      if (this.sortable === false) {
+        return false;
+      }
+
+      return true;
     }
   },
   methods: {
+    sort(items) {
+      if (!this.sortBy) {
+        return items;
+      }
+
+      return items.sortBy(this.sortBy);
+    },
     add() {
 
       if (this.disabled === true) {
@@ -179,6 +238,7 @@ export default {
       });
 
       this.items.push(data);
+
       this.onInput();
 
       this.$nextTick(() => {
@@ -187,6 +247,7 @@ export default {
     },
     close() {
       this.active = null;
+      this.items = this.sort(this.items);
     },
     confirmRemove(index) {
       this.close();
