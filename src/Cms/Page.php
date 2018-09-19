@@ -1047,7 +1047,6 @@ class Page extends ModelWithContent
 
         // fetch the page regularly
         if ($result === null) {
-
             $kirby->data = $this->controller($data, $contentType);
 
             if ($contentType === 'html') {
@@ -1069,7 +1068,6 @@ class Page extends ModelWithContent
             if ($cache !== null) {
                 $cache->set($cacheId, $result);
             }
-
         }
 
         return new Response($result, $contentType);

@@ -11,13 +11,11 @@ use Kirby\Form\Form as BaseForm;
  */
 class Form extends BaseForm
 {
-
     public function __construct(array $props)
     {
         $kirby = App::instance();
 
         if ($kirby->multilang() === true) {
-
             $fields            = $props['fields'] ?? [];
             $isDefaultLanguage = $kirby->language()->isDefault();
 
@@ -29,7 +27,6 @@ class Form extends BaseForm
             }
 
             $props['fields'] = $fields;
-
         }
 
         parent::__construct($props);

@@ -87,7 +87,6 @@ class Response
         if (strpos($this->type, '/') !== false) {
             $this->type = F::extensionToMime($this->type) ?? 'text/html';
         }
-
     }
 
     /**

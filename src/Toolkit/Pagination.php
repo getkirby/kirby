@@ -105,7 +105,6 @@ class Pagination
 
         // create the pagination instance
         return new static($params);
-
     }
 
     /**
