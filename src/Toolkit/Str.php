@@ -332,6 +332,18 @@ class Str
     }
 
     /**
+     * Safe ltrim alternative
+     *
+     * @param string $string
+     * @param string $trim
+     * @return string
+     */
+    public static function ltrim(string $string, string $trim = ' '): string
+    {
+        return preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string);
+    }
+
+    /**
      * Returns the position of a needle in a string
      * if it can be found
      *
@@ -514,6 +526,18 @@ class Str
     }
 
     /**
+     * Safe rtrim alternative
+     *
+     * @param string $string
+     * @param string $trim
+     * @return string
+     */
+    public static function rtrim(string $string, string $trim = ' '): string
+    {
+        return preg_replace('!(' . preg_quote($trim) . ')+$!', '', $string);
+    }
+
+    /**
      * Shortens a string and adds an ellipsis if the string is too long
      *
      * <code>
@@ -684,6 +708,18 @@ class Str
             }
             return $data[$query] ?? $fallback;
         }, $string);
+    }
+
+    /**
+     * Safe trim alternative
+     *
+     * @param string $string
+     * @param string $trim
+     * @return string
+     */
+    public static function trim(string $string, string $trim = ' '): string
+    {
+        return static::rtrim(static::ltrim($string, $trim), $trim);
     }
 
     /**

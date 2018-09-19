@@ -171,6 +171,13 @@ class StrTest extends TestCase
         $this->assertEquals('öäü', Str::lower('Öäü'));
     }
 
+    public function testLtrim()
+    {
+        $this->assertEquals('test', Str::ltrim(' test'));
+        $this->assertEquals('test', Str::ltrim('  test'));
+        $this->assertEquals('jpg', Str::ltrim('test.jpg', 'test.'));
+    }
+
     public function testPosition()
     {
         $string = 'Hellö Wörld';
@@ -361,6 +368,13 @@ class StrTest extends TestCase
         ]);
     }
 
+    public function testRtrim()
+    {
+        $this->assertEquals('test', Str::rtrim('test '));
+        $this->assertEquals('test', Str::rtrim('test  '));
+        $this->assertEquals('test', Str::rtrim('test.jpg', '.jpg'));
+    }
+
     public function testShort()
     {
         $string = 'Super Äwesøme String';
@@ -508,6 +522,13 @@ class StrTest extends TestCase
         ]);
 
         $this->assertEquals('homer says: hi', $template);
+    }
+
+    public function testTrim()
+    {
+        $this->assertEquals('test', Str::trim(' test '));
+        $this->assertEquals('test', Str::trim('  test  '));
+        $this->assertEquals('test', Str::trim('.test.', '.'));
     }
 
     public function testUcfirst()
