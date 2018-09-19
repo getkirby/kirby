@@ -621,7 +621,9 @@ class App
 
         // try to resolve content representations if the path has an extension
         $extension = F::extension($path);
-        $path      = rtrim($path, '.' . $extension);
+
+        // remove the extension from the path
+        $path = Str::rtrim($path, '.' . $extension);
 
         // stop when there's no extension
         if (empty($extension) === true) {
