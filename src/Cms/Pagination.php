@@ -18,11 +18,11 @@ class Pagination extends BasePagination
 {
 
     /**
-     * Variable name for query strings
+     * Pagination method (param or query)
      *
      * @var string
      */
-    protected $name;
+    protected $method;
 
     /**
      * The base URL
@@ -30,6 +30,13 @@ class Pagination extends BasePagination
      * @var string
      */
     protected $url;
+
+    /**
+     * Variable name for query strings
+     *
+     * @var string
+     */
+    protected $variable;
 
     /**
      * Creates the pagination object. As a new
@@ -40,11 +47,12 @@ class Pagination extends BasePagination
      *
      * ```php
      * $pagination = new Pagination([
-     *     'page'  => 1,
-     *     'limit' => 10,
-     *     'total' => 120,
-     *     'name'  => 'p',
-     *     'url'   => new Uri('https://getkirby.com/blog')
+     *     'page'     => 1,
+     *     'limit'    => 10,
+     *     'total'    => 120,
+     *     'method'   => 'query',
+     *     'variable' => 'p',
+     *     'url'      => new Uri('https://getkirby.com/blog')
      * ]);
      * ```
      *
@@ -52,9 +60,26 @@ class Pagination extends BasePagination
      */
     public function __construct(array $params = [])
     {
+        $kirby   = App::instance();
+        $config  = $kirby->option('pagination', []);
+        $request = $kirby->request();
+
+        $params['limit']    = $params['limit']    ?? $config['limit']    ?? 20;
+        $params['method']   = $params['method']   ?? $config['method']   ?? 'param';
+        $params['variable'] = $params['variable'] ?? $config['variable'] ?? 'page';
+        $params['url']      = $params['url']      ?? $request->url();
+
+        if ($params['method'] === 'query') {
+            $params['page'] = $params['page'] ?? $request->url()->query()->get($params['variable'], 1);
+        } else {
+            $params['page'] = $params['page'] ?? $request->url()->params()->get($params['variable'], 1);
+        }
+
         parent::__construct($params);
-        $this->url  = $params['url']  ?? App::instance()->request()->url();
-        $this->name = $params['name'] ?? 'page';
+
+        $this->method   = $params['method'];
+        $this->url      = $params['url'];
+        $this->variable = $params['variable'];
     }
 
     /**
@@ -105,17 +130,19 @@ class Pagination extends BasePagination
             return $this->pageUrl($this->page());
         }
 
-        $url  = clone $this->url;
-        $name = $this->name;
+        $url      = clone $this->url;
+        $variable = $this->variable;
 
         if ($this->hasPage($page) === false) {
             return null;
         }
 
-        if ($page === 1) {
-            $url->params->$name = null;
+        $pageValue = $page === 1 ? null : $page;
+
+        if ($this->method === 'query') {
+            $url->query->$variable = $pageValue;
         } else {
-            $url->params->$name = $page;
+            $url->params->$variable = $pageValue;
         }
 
         return $url->toString();

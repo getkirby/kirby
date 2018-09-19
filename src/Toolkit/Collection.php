@@ -496,33 +496,14 @@ class Collection extends Iterator
     /**
      * Add pagination
      *
-     * @param  int        $limit  number of items per page
-     * @param  int        $page   optional page number to return
-     * @return Collection         a sliced set of data
+     * @return Collection a sliced set of data
      */
     public function paginate(...$arguments)
     {
-        if (is_array($arguments[0])) {
-            $options = $arguments[0];
-        } else {
-            $options = [
-                'limit' => $arguments[0],
-                'page'  => $arguments[1] ?? 1,
-            ];
-        }
-
-        $pagination = new Pagination([
-            'total' => $this->count(),
-            'limit' => $options['limit'] ?? 10,
-            'page'  => $options['page'] ?? 1
-        ]);
-
-        // add the pagination object before
-        // the collection gets cloned to keep it protected
-        $this->pagination = $pagination;
+        $this->pagination = Pagination::for($this, ...$arguments);
 
         // slice and clone the collection according to the pagination
-        return $this->slice($pagination->offset(), $pagination->limit());
+        return $this->slice($this->pagination->offset(), $this->pagination->limit());
     }
 
     /**

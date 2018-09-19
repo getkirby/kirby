@@ -549,24 +549,6 @@ class App
     }
 
     /**
-     * Creates a Pagination object
-     *
-     * @return Pagination
-     */
-    public function pagination(array $options = []): Pagination
-    {
-        $config  = $this->options['pagination'] ?? [];
-        $request = $this->request();
-
-        $options['limit']    = $options['limit']    ?? $config['limit'] ?? 20;
-        $options['variable'] = $options['variable'] ?? $config['variable'] ?? 'page';
-        $options['page']     = $options['page']     ?? $request->url()->params()->get($options['variable'], 1);
-        $options['url']      = $options['url']      ?? $request->url();
-
-        return new Pagination($options);
-    }
-
-    /**
      * Returns the request path
      *
      * @return void
