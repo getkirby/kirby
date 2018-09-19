@@ -57,17 +57,6 @@ class PageBlueprint extends Blueprint
     }
 
     /**
-     * Returns the options object
-     * that handles page options and permissions
-     *
-     * @return array
-     */
-    public function options(): array
-    {
-        return $this->props['options'];
-    }
-
-    /**
      * Normalizes the ordering number
      *
      * @param mixed $num
@@ -160,6 +149,36 @@ class PageBlueprint extends Blueprint
         }
 
         return $status;
+    }
+
+    /**
+     * Returns the options object
+     * that handles page options and permissions
+     *
+     * @return array
+     */
+    public function options(): array
+    {
+        return $this->props['options'];
+    }
+
+    /**
+     * Returns the preview settings
+     * The preview setting controlls the "Open"
+     * button in the panel and redirects it to a
+     * different URL if necessary.
+     *
+     * @return string|boolean
+     */
+    public function preview()
+    {
+        $preview = $this->props['options']['preview'] ?? true;
+
+        if (is_string($preview) === true) {
+            return $this->model->toString($preview);
+        }
+
+        return $preview;
     }
 
     /**

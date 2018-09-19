@@ -16,6 +16,9 @@ return [
         'options' => function (PageBlueprint $blueprint) {
             return $blueprint->options();
         },
+        'preview' => function (PageBlueprint $blueprint) {
+            return $blueprint->preview();
+        },
         'status' => function (PageBlueprint $blueprint) {
             return $blueprint->status();
         },

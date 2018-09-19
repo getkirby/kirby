@@ -12,7 +12,7 @@
     >
       {{ page.title }}
       <k-button-group slot="left">
-        <k-button :responsive="true" icon="open" @click="action('preview')">
+        <k-button v-if="preview" :responsive="true" icon="open" @click="action('preview')">
           {{ $t('open') }}
         </k-button>
         <k-button
@@ -83,6 +83,7 @@ export default {
         status: null
       },
       blueprint: null,
+      preview: true,
       permissions: {
         changeTitle: false,
         changeStatus: false
@@ -135,7 +136,16 @@ export default {
     action(action) {
       switch (action) {
         case "preview":
-          window.open(this.page.url);
+          if (this.preview === false) {
+            return false;
+          }
+
+          if (this.preview === true) {
+            window.open(this.page.url);
+            return true;
+          }
+
+          window.open(this.preview);
           break;
         case "rename":
           this.$refs.rename.open(this.page.id);
@@ -171,6 +181,7 @@ export default {
           this.page = page;
           this.blueprint = page.blueprint.name;
           this.permissions = page.options;
+          this.preview = page.blueprint.preview;
           this.tabs = page.blueprint.tabs;
           this.options = ready => {
             this.$api.pages.options(this.page.id).then(options => {
