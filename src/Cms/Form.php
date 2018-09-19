@@ -11,6 +11,30 @@ use Kirby\Form\Form as BaseForm;
  */
 class Form extends BaseForm
 {
+
+    public function __construct(array $props)
+    {
+        $kirby = App::instance();
+
+        if ($kirby->multilang() === true) {
+
+            $fields            = $props['fields'] ?? [];
+            $isDefaultLanguage = $kirby->language()->isDefault();
+
+            foreach ($fields as $fieldName => $fieldProps) {
+                // switch untranslatable fields to readonly
+                if (($fieldProps['translate'] ?? true) === false && $isDefaultLanguage === false) {
+                    $fields[$fieldName]['disabled'] = true;
+                }
+            }
+
+            $props['fields'] = $fields;
+
+        }
+
+        parent::__construct($props);
+    }
+
     public static function for(Model $model, array $props = [])
     {
         // set a few defaults
