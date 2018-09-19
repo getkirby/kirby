@@ -251,45 +251,22 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Checks if the page can be cached in the
-     * pages cache. This will also check if one
-     * of the ignore rules from the config kick in.
+     * Builds the cache id for the page
      *
-     * @return boolean
+     * @param string $contentType
+     * @return string
      */
-    protected function canBeCached(): bool
+    protected function cacheId(string $contentType): string
     {
-        $kirby   = $this->kirby();
-        $cache   = $kirby->cache('pages');
-        $request = $kirby->request();
-        $options = $cache->options();
-        $ignore  = $options['ignore'] ?? null;
+        $cacheId = [$this->id()];
 
-        // the pages cache is switched off
-        if (($options['active'] ?? false) === false) {
-            return false;
+        if ($this->kirby()->multilang() === true) {
+            $cacheId[] = $this->kirby()->language()->code();
         }
 
-        // disable the pages cache for incomin requests or special data
-        if ((string)$request->method() !== 'GET' || empty($request->data()) === false) {
-            return false;
-        }
+        $cacheId[] = $contentType;
 
-        // check for a custom ignore rule
-        if (is_a($ignore, 'Closure') === true) {
-            if ($ignore($this) === true) {
-                return false;
-            }
-        }
-
-        // ignore pages by id
-        if (is_array($ignore) === true) {
-            if (in_array($this->id(), $ignore) === true) {
-                return false;
-            }
-        }
-
-        return true;
+        return implode('.', $cacheId);
     }
 
     /**
@@ -549,6 +526,50 @@ class Page extends ModelWithContent
     public function isAncestorOf(Page $child): bool
     {
         return $child->parents()->has($this->id()) === true;
+    }
+
+    /**
+     * Checks if the page can be cached in the
+     * pages cache. This will also check if one
+     * of the ignore rules from the config kick in.
+     *
+     * @return boolean
+     */
+    public function isCacheable(): bool
+    {
+        $kirby   = $this->kirby();
+        $cache   = $kirby->cache('pages');
+        $options = $cache->options();
+        $ignore  = $options['ignore'] ?? null;
+
+        // the pages cache is switched off
+        if (($options['active'] ?? false) === false) {
+            return false;
+        }
+
+        // inspect the current request
+        $request = $kirby->request();
+
+        // disable the pages cache for any request types but GET or special data
+        if ((string)$request->method() !== 'GET' || empty($request->data()) === false) {
+            return false;
+        }
+
+        // check for a custom ignore rule
+        if (is_a($ignore, 'Closure') === true) {
+            if ($ignore($this) === true) {
+                return false;
+            }
+        }
+
+        // ignore pages by id
+        if (is_array($ignore) === true) {
+            if (in_array($this->id(), $ignore) === true) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -1018,37 +1039,37 @@ class Page extends ModelWithContent
         $cache = $cacheId = $result = null;
 
         // try to get the page from cache
-        if (empty($data) === true && $this->canBeCached() === true) {
+        if (empty($data) === true && $this->isCacheable() === true) {
             $cache   = $kirby->cache('pages');
-            $cacheId = $this->id() . '.' . $contentType;
+            $cacheId = $this->cacheId($contentType);
             $result  = $cache->get($cacheId);
+        }
 
-            if ($result !== null) {
-                return $result;
+        // fetch the page regularly
+        if ($result === null) {
+
+            $kirby->data = $this->controller($data, $contentType);
+
+            if ($contentType === 'html') {
+                $template = $this->template();
+            } else {
+                $template = $this->representation($contentType);
             }
-        }
 
-        // fetch all data for the page
-        $kirby->data = $this->controller($data, $contentType);
+            if ($template->exists() === false) {
+                throw new NotFoundException([
+                    'key' => 'template.default.notFound'
+                ]);
+            }
 
-        if ($contentType === 'html') {
-            $template = $this->template();
-        } else {
-            $template = $this->representation($contentType);
-        }
+            // render the page
+            $result = $template->render($kirby->data);
 
-        if ($template->exists() === false) {
-            throw new NotFoundException([
-                'key' => 'template.default.notFound'
-            ]);
-        }
+            // cache the result
+            if ($cache !== null) {
+                $cache->set($cacheId, $result);
+            }
 
-        // render the page
-        $result = $template->render($kirby->data);
-
-        // render the template and cache the result
-        if ($cache !== null) {
-            $cache->set($cacheId, $result);
         }
 
         return new Response($result, $contentType);

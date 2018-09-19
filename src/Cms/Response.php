@@ -91,13 +91,7 @@ class Response extends BaseResponse
     public static function page(Page $page, array $data = [], $contentType = 'html', $code = 200)
     {
         // render and optionally cache the page
-        $result = $page->render($data, $contentType);
-
-        // convert the content representation type to a usable mime type
-        $mime = F::extensionToMime($contentType) ?? 'text/html';
-
-        // create the response object for the page
-        return new static($result, $mime, $code);
+        return $page->render($data, $contentType);
     }
 
     /**

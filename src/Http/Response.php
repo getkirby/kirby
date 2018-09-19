@@ -5,6 +5,8 @@ namespace Kirby\Http;
 use Exception;
 use Throwable;
 
+use Kirby\Toolkit\F;
+
 /**
  * Representation of an Http response,
  * to simplify sending correct headers
@@ -80,6 +82,12 @@ class Response
         $this->code    = $code ?? 200;
         $this->headers = $headers ?? [];
         $this->charset = $charset ?? 'UTF-8';
+
+        // automatic mime type detection
+        if (strpos($this->type, '/') !== false) {
+            $this->type = F::extensionToMime($this->type) ?? 'text/html';
+        }
+
     }
 
     /**
