@@ -344,4 +344,71 @@ class PaginationTest extends TestCase
             $this->assertArrayHasKey($key, $pagination->toArray());
         }
     }
+
+    public function testForWithoutArguments()
+    {
+
+        $collection = new Collection(['a', 'b', 'c']);
+        $pagination = Pagination::for($collection);
+
+        $this->assertEquals(1, $pagination->page());
+        $this->assertEquals(1, $pagination->pages());
+        $this->assertEquals(20, $pagination->limit());
+        $this->assertEquals(3, $pagination->total());
+
+    }
+
+    public function testForWithLimit()
+    {
+
+        $collection = new Collection(['a', 'b', 'c']);
+        $pagination = Pagination::for($collection, 1);
+
+        $this->assertEquals(1, $pagination->page());
+        $this->assertEquals(3, $pagination->pages());
+        $this->assertEquals(1, $pagination->limit());
+
+    }
+
+    public function testForWithLimitAndPage()
+    {
+
+        $collection = new Collection(['a', 'b', 'c']);
+        $pagination = Pagination::for($collection, 1, 2);
+
+        $this->assertEquals(2, $pagination->page());
+        $this->assertEquals(3, $pagination->pages());
+        $this->assertEquals(1, $pagination->limit());
+
+    }
+
+    public function testForWithOptionsArray()
+    {
+
+        $collection = new Collection(['a', 'b', 'c']);
+        $pagination = Pagination::for($collection, [
+            'limit' => 1,
+            'page'  => 2
+        ]);
+
+        $this->assertEquals(2, $pagination->page());
+        $this->assertEquals(3, $pagination->pages());
+        $this->assertEquals(1, $pagination->limit());
+
+    }
+
+    public function testForWithLimitAndOptionsArray()
+    {
+
+        $collection = new Collection(['a', 'b', 'c']);
+        $pagination = Pagination::for($collection, 1, [
+            'page' => 2
+        ]);
+
+        $this->assertEquals(2, $pagination->page());
+        $this->assertEquals(3, $pagination->pages());
+        $this->assertEquals(1, $pagination->limit());
+
+    }
+
 }
