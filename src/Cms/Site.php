@@ -213,7 +213,7 @@ class Site extends ModelWithContent
             $languageCode = $this->kirby()->languageCode();
         }
 
-        if ($languageCode !== null) {
+        if ($languageCode !== null && $languageCode !== '') {
             return $this->root() . '/site.' . $languageCode . '.' . $this->kirby()->contentExtension();
         }
 

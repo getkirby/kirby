@@ -302,7 +302,7 @@ class Page extends ModelWithContent
         }
 
         // build a multi-lang file path
-        if ($languageCode !== null) {
+        if ($languageCode !== null && $languageCode !== '') {
             return $this->root() . '/' . $this->intendedTemplate() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
         }
 

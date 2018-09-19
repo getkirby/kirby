@@ -118,16 +118,16 @@ class Language extends Model
         $kirby = App::instance();
         $site  = $kirby->site();
 
-        F::move($site->contentFile($code), $site->contentFile());
+        F::move($site->contentFile($code), $site->contentFile(''));
 
         foreach ($kirby->site()->index() as $page) {
             $files = $page->files();
 
             foreach ($files as $file) {
-                F::move($file->contentFile($code), $file->contentFile());
+                F::move($file->contentFile($code), $file->contentFile(''));
             }
 
-            F::move($page->contentFile($code), $page->contentFile());
+            F::move($page->contentFile($code), $page->contentFile(''));
         }
 
         return true;

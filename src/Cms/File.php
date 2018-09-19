@@ -223,7 +223,7 @@ class File extends ModelWithContent
             $languageCode = $this->kirby()->languageCode();
         }
 
-        if ($languageCode !== null) {
+        if ($languageCode !== null && $languageCode !== '') {
             return $this->root() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
         }
 
