@@ -42,21 +42,24 @@
           >
             <div v-if="!isActive(index)" class="k-structure-item-wrapper">
               <k-button v-if="isSortable" class="k-structure-item-handle" icon="sort" />
+
               <div class="k-structure-item-content">
                 <p
-                  v-for="(field, fieldName) in fields"
-                  v-if="field.type !== 'hidden'"
-                  :key="fieldName"
-                  :title="field.label"
+                  v-for="(column, columnName) in columns"
+                  :key="columnName"
+                  :title="column.label"
+                  :data-width="column.width"
+                  :data-align="column.align"
                   class="k-structure-item-text"
-                  @click="jump(index, fieldName)"
+                  @click="jump(index, columnName)"
                 >
-                  <span class="k-structure-item-label">{{ field.label }}</span>
-                  <template v-if="item[fieldName] !== undefined">
-                    {{ displayText(field, item[fieldName]) || "–" }}
+                  <span class="k-structure-item-label">{{ column.label }}</span>
+                  <template v-if="item[columnName] !== undefined">
+                    {{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after}}
                   </template>
                 </p>
               </div>
+
               <nav v-if="!disabled" class="k-structure-item-options">
                 <k-button icon="trash" class="k-structure-option" @click="confirmRemove(index)" />
               </nav>
@@ -133,6 +136,7 @@ export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
+    columns: Object,
     fields: Object,
     max: Number,
     min: Number,
@@ -405,15 +409,15 @@ $structure-item-height: 38px;
 }
 .k-structure-item-content {
   flex-grow: 1;
-}
-.k-structure-item-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  display: flex;
   background: $color-white;
   align-items: center;
   overflow: hidden;
 }
 .k-structure-item-text {
+  flex-shrink: 0;
+  flex-grow: 1;
+  flex-basis: 0;
   padding: .75rem 0.75rem;
   font-size: $font-size-small;
   white-space: nowrap;
@@ -421,6 +425,32 @@ $structure-item-height: 38px;
   text-overflow: ellipsis;
   border-right: 1px solid $color-background;
   cursor: pointer;
+}
+.k-structure-item-text[data-align="center"] {
+  text-align: center;
+}
+.k-structure-item-text[data-align="right"] {
+  text-align: right;
+}
+
+.k-structure-item-text[data-width="1/2"] {
+  flex-basis: 50%;
+}
+.k-structure-item-text[data-width="1/3"] {
+  flex-basis: 33.33%;
+}
+.k-structure-item-text[data-width="1/4"] {
+  flex-basis: 25%;
+}
+.k-structure-item-text[data-width="2/3"] {
+  flex-basis: 66.66%;
+}
+.k-structure-item-text[data-width="3/4"] {
+  flex-basis: 75%;
+}
+
+.k-structure-item-text:first-child {
+  min-width: 100px;
 }
 .k-structure-item-text:hover {
   background: rgba($color-background, .5);
@@ -432,13 +462,11 @@ $structure-item-height: 38px;
     display: block;
   }
 }
+
 .k-structure-content {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.k-structure-item-text:first-child {
-  min-width: 100px;
 }
 .k-structure-content,
 .k-structure-option {

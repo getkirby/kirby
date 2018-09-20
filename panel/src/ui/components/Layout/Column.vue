@@ -1,8 +1,6 @@
 <template>
   <div :data-width="width" class="k-column">
-    <div class="k-column-content">
-      <slot />
-    </div>
+    <slot />
   </div>
 </template>
 

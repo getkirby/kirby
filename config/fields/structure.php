@@ -5,6 +5,9 @@ use Kirby\Cms\Blueprint;
 
 return [
     'props' => [
+        'columns' => function (array $columns = []) {
+            return $columns;
+        },
         'fields' => function (array $fields) {
             return $fields;
         },
@@ -24,7 +27,43 @@ return [
         },
         'fields' => function () {
             return $this->form()->fields()->toArray();
-        }
+        },
+        'columns' => function () {
+
+            $columns = [];
+
+            if (empty($this->columns)) {
+                foreach ($this->fields as $field) {
+                    $columns[$field['name']] = [
+                        'type'  => $field['type'],
+                        'label' => $field['label']
+                    ];
+                }
+            } else {
+
+                foreach ($this->columns as $columnName => $columnProps) {
+
+                    if (is_array($columnProps) === false) {
+                        $columnProps = [];
+                    }
+
+                    $field = $this->fields[$columnName] ?? null;
+
+                    if (empty($field) === true) {
+                        continue;
+                    }
+
+                    $columns[$columnName] = array_merge($columnProps, [
+                        'type'  => $field['type'],
+                        'label' => $field['label']
+                    ]);
+                }
+
+            }
+
+            return $columns;
+
+        },
     ],
     'methods' => [
         'rows' => function ($value) {
