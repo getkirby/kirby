@@ -7,7 +7,8 @@ class ComponentTest extends TestCase
 
     public function tearDown()
     {
-        Component::$types = [];
+        Component::$types  = [];
+        Component::$mixins = [];
     }
 
     public function testProp()
@@ -44,6 +45,18 @@ class ComponentTest extends TestCase
 
         $this->assertEquals('default value', $component->prop());
         $this->assertEquals('default value', $component->prop);
+    }
+
+    public function testAttrs()
+    {
+        Component::$types = [
+            'test' => []
+        ];
+
+        $component = new Component('test', ['foo' => 'bar']);
+
+        $this->assertEquals('bar', $component->foo());
+        $this->assertEquals('bar', $component->foo);
     }
 
     public function testComputed()
@@ -194,6 +207,47 @@ class ComponentTest extends TestCase
         $component = new Component('test');
 
         $this->assertEquals(['foo' => 'bar'], $component->toArray());
+    }
+
+    /**
+     * @expectedException Kirby\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Undefined component type: test
+     *
+     */
+    public function testInvalidType()
+    {
+        $component = new Component('test');
+    }
+
+    public function testMixins()
+    {
+
+        Component::$mixins = [
+            'test' => [
+                'computed' => [
+                    'message' => function () {
+                        return strtoupper($this->message);
+                    }
+                ]
+            ]
+        ];
+
+        Component::$types = [
+            'test' => [
+                'mixins' => ['test'],
+                'props' => [
+                    'message' => function ($message) {
+                        return $message;
+                    }
+                ]
+            ]
+        ];
+
+        $component = new Component('test', ['message' => 'hello world']);
+
+        $this->assertEquals('HELLO WORLD', $component->message());
+        $this->assertEquals('HELLO WORLD', $component->message);
+
     }
 
 }
