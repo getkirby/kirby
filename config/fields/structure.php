@@ -36,7 +36,7 @@ return [
                 foreach ($this->fields as $field) {
                     $columns[$field['name']] = [
                         'type'  => $field['type'],
-                        'label' => $field['label']
+                        'label' => $field['label'] ?? $field['name']
                     ];
                 }
             } else {
@@ -55,7 +55,7 @@ return [
 
                     $columns[$columnName] = array_merge($columnProps, [
                         'type'  => $field['type'],
-                        'label' => $field['label']
+                        'label' => $field['label'] ?? $field['name']
                     ]);
                 }
 
