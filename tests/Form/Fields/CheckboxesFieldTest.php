@@ -85,4 +85,32 @@ class CheckboxesFieldTest extends TestCase
 
     }
 
+    public function testMin()
+    {
+
+        $field = new Field('checkboxes', [
+            'value'   => 'a',
+            'options' => ['a', 'b', 'c'],
+            'min'     => 2
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('min', $field->errors());
+
+    }
+
+    public function testMax()
+    {
+
+        $field = new Field('checkboxes', [
+            'value'   => 'a, b',
+            'options' => ['a', 'b', 'c'],
+            'max'     => 1
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('max', $field->errors());
+
+    }
+
 }

@@ -59,4 +59,41 @@ class StructureFieldTest extends TestCase
         $this->assertEquals($expectedYaml, $field->toString());
     }
 
+    public function testMin()
+    {
+        $field = new Field('structure', [
+            'fields' => [
+                'title' => [
+                    'type' => 'text'
+                ]
+            ],
+            'value' => [
+                ['title' => 'a'],
+            ],
+            'min' => 2
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('min', $field->errors());
+    }
+
+    public function testMax()
+    {
+        $field = new Field('structure', [
+            'fields' => [
+                'title' => [
+                    'type' => 'text'
+                ]
+            ],
+            'value' => [
+                ['title' => 'a'],
+                ['title' => 'b'],
+            ],
+            'max' => 1
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('max', $field->errors());
+    }
+
 }

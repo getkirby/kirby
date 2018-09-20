@@ -38,4 +38,30 @@ class EmailFieldTest extends TestCase
 
     }
 
+    public function testMinLength()
+    {
+
+        $field = new Field('email', [
+            'value' => 'mail@test.com',
+            'minlength' => 14
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('minlength', $field->errors());
+
+    }
+
+    public function testMaxLength()
+    {
+
+        $field = new Field('email', [
+            'value'     => 'mail@test.com',
+            'maxlength' => 12
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('maxlength', $field->errors());
+
+    }
+
 }

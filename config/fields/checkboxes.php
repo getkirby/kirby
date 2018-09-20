@@ -9,6 +9,12 @@ return [
         'default' => function ($default = null) {
             return Str::split($default, ',');
         },
+        'max' => function (int $max = null) {
+            return $max;
+        },
+        'min' => function (int $min = null) {
+            return $min;
+        },
         'value' => function ($value = null) {
             return Str::split($value, ',');
         },
@@ -28,6 +34,8 @@ return [
         return A::join($value, ', ');
     },
     'validations' => [
-        'options'
+        'options',
+        'max',
+        'min'
     ]
 ];

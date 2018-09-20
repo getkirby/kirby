@@ -48,4 +48,30 @@ class NumberFieldTest extends TestCase
         $this->assertTrue($expected === $field->default());
     }
 
+    public function testMin()
+    {
+
+        $field = new Field('number', [
+            'value' => 1,
+            'min'   => 2
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('min', $field->errors());
+
+    }
+
+    public function testMax()
+    {
+
+        $field = new Field('number', [
+            'value' => 1,
+            'max'   => 0
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('max', $field->errors());
+
+    }
+
 }

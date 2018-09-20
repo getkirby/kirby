@@ -49,4 +49,30 @@ class TextFieldTest extends TestCase
         $this->assertEquals($expected, $field->default());
     }
 
+    public function testMinLength()
+    {
+
+        $field = new Field('text', [
+            'value' => 'test',
+            'minlength' => 5
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('minlength', $field->errors());
+
+    }
+
+    public function testMaxLength()
+    {
+
+        $field = new Field('text', [
+            'value'     => 'test',
+            'maxlength' => 3
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('maxlength', $field->errors());
+
+    }
+
 }

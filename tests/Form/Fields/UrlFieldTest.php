@@ -38,4 +38,30 @@ class UrlFieldTest extends TestCase
 
     }
 
+    public function testMinLength()
+    {
+
+        $field = new Field('url', [
+            'value' => 'https://test.com',
+            'minlength' => 17
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('minlength', $field->errors());
+
+    }
+
+    public function testMaxLength()
+    {
+
+        $field = new Field('url', [
+            'value'     => 'https://test.com',
+            'maxlength' => 15
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('maxlength', $field->errors());
+
+    }
+
 }

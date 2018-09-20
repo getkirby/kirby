@@ -26,4 +26,32 @@ class MultiselectFieldTest extends TestCase
         $this->assertTrue($field->save());
     }
 
+    public function testMin()
+    {
+
+        $field = new Field('multiselect', [
+            'value'   => 'a',
+            'options' => ['a', 'b', 'c'],
+            'min'     => 2
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('min', $field->errors());
+
+    }
+
+    public function testMax()
+    {
+
+        $field = new Field('multiselect', [
+            'value'   => 'a, b',
+            'options' => ['a', 'b', 'c'],
+            'max'     => 1
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('max', $field->errors());
+
+    }
+
 }

@@ -8,6 +8,9 @@ return [
         'layout' => function (string $layout = 'list') {
             return $layout;
         },
+        'min' => function (int $min = null) {
+            return $min;
+        },
         'max' => function (int $max = null) {
             return $max;
         },
@@ -59,5 +62,9 @@ return [
         }
 
         return '';
-    }
+    },
+    'validations' => [
+        'max',
+        'min'
+    ]
 ];

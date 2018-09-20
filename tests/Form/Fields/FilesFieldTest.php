@@ -79,4 +79,38 @@ class FilesFieldTest extends TestCase
         $this->assertEquals($expected, $ids);
     }
 
+    public function testMin()
+    {
+
+        $field = new Field('files', [
+            'model' => $this->model(),
+            'value' => [
+                'test/a.jpg', // exists
+                'test/b.jpg', // exists
+            ],
+            'min' => 3
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('min', $field->errors());
+
+    }
+
+    public function testMax()
+    {
+
+        $field = new Field('files', [
+            'model' => $this->model(),
+            'value' => [
+                'test/a.jpg', // exists
+                'test/b.jpg', // exists
+            ],
+            'max' => 1
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('max', $field->errors());
+
+    }
+
 }

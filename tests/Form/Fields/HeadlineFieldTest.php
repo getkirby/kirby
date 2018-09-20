@@ -19,4 +19,21 @@ class HeadlineFieldTest extends TestCase
         $this->assertTrue($field->numbered());
     }
 
+    public function testNumbered()
+    {
+
+        $field = new Field('headline', [
+            'numbered' => true
+        ]);
+
+        $this->assertTrue($field->numbered());
+
+        $field = new Field('headline', [
+            'numbered' => false
+        ]);
+
+        $this->assertFalse($field->numbered());
+
+    }
+
 }

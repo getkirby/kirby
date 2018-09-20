@@ -23,4 +23,30 @@ class TextareaFieldTest extends TestCase
         $this->assertTrue($field->save());
     }
 
+    public function testMinLength()
+    {
+
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'minlength' => 5
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('minlength', $field->errors());
+
+    }
+
+    public function testMaxLength()
+    {
+
+        $field = new Field('textarea', [
+            'value'     => 'test',
+            'maxlength' => 3
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('maxlength', $field->errors());
+
+    }
+
 }

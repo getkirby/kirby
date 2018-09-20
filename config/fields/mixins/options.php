@@ -14,11 +14,6 @@ return [
             return $query;
         },
     ],
-    'computed' => [
-        'options' => function (): array {
-            return $this->getOptions();
-        },
-    ],
     'methods' => [
         'getOptions' => function () {
             return Options::factory(
@@ -27,9 +22,13 @@ return [
                 $this->model()
             );
         },
+        'sanitizeOption' => function ($option) {
+            $allowed = array_column($this->options(), 'value');
+            return in_array($option, $allowed, true) === true ? $option : null;
+        },
         'sanitizeOptions' => function ($options) {
             $allowed = array_column($this->options(), 'value');
             return array_intersect($options, $allowed);
-        }
+        },
     ]
 ];

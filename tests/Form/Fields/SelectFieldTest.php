@@ -19,20 +19,20 @@ class SelectFieldTest extends TestCase
         $this->assertTrue($field->save());
     }
 
-    public function validationInputProvider()
+    public function valueInputProvider()
     {
         return [
-            ['a', true],
-            ['b', true],
-            ['c', true],
-            ['d', false]
+            ['a', 'a'],
+            ['b', 'b'],
+            ['c', 'c'],
+            ['d', null]
         ];
     }
 
     /**
-     * @dataProvider validationInputProvider
+     * @dataProvider valueInputProvider
      */
-    public function testValidation($input, $expected)
+    public function testValue($input, $expected)
     {
 
         $field = new Field('select', [
@@ -44,7 +44,7 @@ class SelectFieldTest extends TestCase
             'value' => $input
         ]);
 
-        $this->assertTrue($expected === $field->isValid());
+        $this->assertTrue($expected === $field->value());
 
     }
 
