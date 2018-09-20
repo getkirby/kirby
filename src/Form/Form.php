@@ -43,7 +43,6 @@ class Form
             try {
                 $field = new Field($props['type'], $props);
             } catch (Throwable $e) {
-
                 $props = array_merge($props, [
                     'name'  => $props['name'],
                     'label' => 'Error in "' . $props['name'] . '" field',
@@ -54,7 +53,6 @@ class Form
                 error_log($e);
 
                 $field = new Field('info', $props);
-
             }
 
             if ($field->save() !== false) {

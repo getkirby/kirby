@@ -166,7 +166,6 @@ class Field extends Component
         return array_filter($array, function ($item) {
             return $item !== null;
         });
-
     }
 
     public function toString(): ?string
@@ -237,5 +236,4 @@ class Field extends Component
     {
         return $this->save() ? $this->value : null;
     }
-
 }
