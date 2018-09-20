@@ -89,12 +89,10 @@ class Validations
 
     public static function required(Field $field, $value)
     {
-        if ($field->isRequired() === true) {
-            if ($field->isEmpty($value) === true) {
-                throw new InvalidArgumentException([
-                    'key' => 'form.field.required'
-                ]);
-            }
+        if ($field->isRequired() === true && $field->save() === true && $field->isEmpty($value) === true) {
+            throw new InvalidArgumentException([
+                'key' => 'form.field.required'
+            ]);
         }
     }
 

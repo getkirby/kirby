@@ -2,6 +2,9 @@
 
 return [
     'props' => [
+        'default' => function ($default = null) {
+            return $this->toDate($default);
+        },
         'icon' => function (string $icon = "calendar") {
             return $icon;
         },
@@ -16,7 +19,7 @@ return [
         },
         'value' => function ($value = null) {
             return $this->toDate($value);
-        }
+        },
     ],
     'computed' => [
         'format' => function () {
@@ -38,7 +41,6 @@ return [
         },
     ],
     'validations' => [
-        'required',
         'date'
     ]
 ];

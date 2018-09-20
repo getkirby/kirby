@@ -3,7 +3,6 @@
 return [
     'mixins' => ['options'],
     'validations' => [
-        'required',
         'option'
     ]
 ];

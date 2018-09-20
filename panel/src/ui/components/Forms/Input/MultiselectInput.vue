@@ -90,6 +90,7 @@ export default {
     sort: Boolean,
     value: {
       type: Array,
+      required: true,
       default() {
         return [];
       }

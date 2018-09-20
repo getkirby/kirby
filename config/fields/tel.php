@@ -1,6 +1,7 @@
 <?php
 
-return array_replace_recursive(require __DIR__ . '/text.php', [
+return [
+    'extends' => 'text',
     'props' => [
         'autocomplete' => function (string $autocomplete = 'tel') {
             return $autocomplete;
@@ -10,4 +11,4 @@ return array_replace_recursive(require __DIR__ . '/text.php', [
             return $icon;
         }
     ]
-]);
+];

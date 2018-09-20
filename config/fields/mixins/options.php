@@ -15,17 +15,21 @@ return [
         },
     ],
     'computed' => [
-        'options' => function () {
+        'options' => function (): array {
             return $this->getOptions();
-        }
+        },
     ],
     'methods' => [
         'getOptions' => function () {
             return Options::factory(
-                $this->props['options'],
+                $this->options(),
                 $this->props,
-                $this->data['model'] ?? null
+                $this->model()
             );
+        },
+        'sanitizeOptions' => function ($options) {
+            $allowed = array_column($this->options(), 'value');
+            return array_intersect($options, $allowed);
         }
     ]
 ];

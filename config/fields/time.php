@@ -20,7 +20,7 @@ return [
     ],
     'computed' => [
         'format' => function () {
-            return $this->notation() === 24 ? 'H:i' : 'h:i a';
+            return $this->notation === 24 ? 'H:i' : 'h:i a';
         }
     ],
     'methods' => [
@@ -28,17 +28,16 @@ return [
             if ($timestamp = strtotime($value)) {
                 return date('H:i', $timestamp);
             }
-        },
-        'toString' => function ($value): string {
-            if ($timestamp = strtotime($value)) {
-                return date($this->format(), $timestamp);
-            }
-
-            return '';
-        },
+        }
     ],
+    'toString' => function ($value): string {
+        if ($timestamp = strtotime($value)) {
+            return date($this->format, $timestamp);
+        }
+
+        return '';
+    },
     'validations' => [
-        'required',
         'time',
     ]
 ];

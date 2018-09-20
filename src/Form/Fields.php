@@ -25,7 +25,7 @@ class Fields extends Collection
         if (is_array($field)) {
             // use the array key as name if the name is not set
             $field['name'] = $field['name'] ?? $name;
-            $field = new Field($field);
+            $field = new Field($field['type'], $field);
         }
 
         if (is_a($field, 'Kirby\Form\Field') === false) {

@@ -16,8 +16,19 @@ return [
         },
     ],
     'computed' => [
+        'default' => function () {
+            return $this->rows($this->default);
+        },
         'value' => function () {
-            $rows  = Yaml::decode($this->props['value']);
+            return $this->rows($this->value);
+        },
+        'fields' => function () {
+            return $this->form()->fields()->toArray();
+        }
+    ],
+    'methods' => [
+        'rows' => function ($value) {
+            $rows  = Yaml::decode($value);
             $value = [];
 
             foreach ($rows as $index => $row) {
@@ -30,30 +41,24 @@ return [
 
             return $value;
         },
-        'fields' => function () {
-            return $this->form()->fields()->toArray();
-        }
-    ],
-    'methods' => [
         'form' => function (array $values = []) {
             return new Form(array_merge([
-                'fields' => $this->props['fields'],
+                'fields' => $this->fields,
                 'values' => $values,
-                'model'  => $this->data['model'] ?? null
-            ], $this->data));
+                'model'  => $this->model() ?? null
+            ], $this->props));
         },
-        'toString' => function () {
-            $strings = [];
-
-            foreach ($this->value() as $row) {
-                $strings[] = $this->form($row)->strings();
-            }
-
-            return Yaml::encode($strings);
-        }
     ],
+    'toString' => function () {
+        $strings = [];
+
+        foreach ($this->value() as $row) {
+            $strings[] = $this->form($row)->strings();
+        }
+
+        return Yaml::encode($strings);
+    },
     'validations' => [
-        'required',
         'min',
         'max'
     ]

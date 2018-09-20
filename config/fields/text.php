@@ -33,8 +33,11 @@ return [
         },
     ],
     'computed' => [
+        'default' => function () {
+            return $this->convert($this->default);
+        },
         'value' => function () {
-            return $this->convert($this->props['value']);
+            return $this->convert($this->value);
         }
     ],
     'methods' => [
@@ -70,7 +73,6 @@ return [
         },
     ],
     'validations' => [
-        'required',
         'minlength',
         'maxlength'
     ]

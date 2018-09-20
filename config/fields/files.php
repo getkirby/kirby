@@ -2,8 +2,11 @@
 
 return [
     'props' => [
-        'layout' => function (string $value = 'list') {
-            return $value;
+        'default' => function ($default = null) {
+            return $this->toFiles($default);
+        },
+        'layout' => function (string $layout = 'list') {
+            return $layout;
         },
         'max' => function (int $max = null) {
             return $max;
@@ -21,6 +24,11 @@ return [
 
         },
         'value' => function ($value = null) {
+            return $this->toFiles($value);
+        },
+    ],
+    'methods' => [
+        'toFiles' => function ($value = null) {
 
             $files = [];
             $kirby = kirby();
@@ -43,15 +51,13 @@ return [
 
             return $files;
 
-        },
-    ],
-    'methods' => [
-        'toString' => function ($value = null) {
-            if (is_array($value) === true) {
-                return Yaml::encode(array_column($value, 'id'));
-            }
-
-            return '';
         }
-    ]
+    ],
+    'toString' => function ($value = null) {
+        if (is_array($value) === true) {
+            return Yaml::encode(array_column($value, 'id'));
+        }
+
+        return '';
+    }
 ];

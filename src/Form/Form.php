@@ -33,21 +33,28 @@ class Form
 
         foreach ($fields as $name => $props) {
 
+            // inject stuff from the form constructor (model, etc.)
+            $props = array_merge($inject, $props);
+
             // inject the name
             $props['name']  = $name = strtolower($name);
             $props['value'] = $values[$name] ?? null;
 
             try {
-                $field = new Field($props, $inject);
+                $field = new Field($props['type'], $props);
             } catch (Throwable $e) {
-                error_log($e);
-                $field = new Field([
+
+                $props = array_merge($props, [
                     'name'  => $props['name'],
                     'label' => 'Error in "' . $props['name'] . '" field',
-                    'type'  => 'info',
                     'theme' => 'negative',
                     'text'  => $e->getMessage(),
-                ], $inject);
+                ]);
+
+                error_log($e);
+
+                $field = new Field('info', $props);
+
             }
 
             if ($field->save() !== false) {

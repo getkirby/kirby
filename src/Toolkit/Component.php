@@ -3,20 +3,88 @@
 namespace Kirby\Toolkit;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 
+/**
+ * Vue-like components
+ */
 class Component
 {
+
+    /**
+     * Registry for all component mixins
+     *
+     * @var array
+     */
     public static $mixins = [];
+
+    /**
+     * Registry for all component types
+     *
+     * @var array
+     */
     public static $types = [];
 
-    protected $component;
-    protected $attrs;
-    protected $methods;
-    protected $options;
+    /**
+     * An array of all passed attributes
+     *
+     * @var array
+     */
+    protected $attrs = [];
+
+    /**
+     * An array of all computed properties
+     *
+     * @var array
+     */
+    protected $computed = [];
+
+    /**
+     * An array of all registered methods
+     *
+     * @var array
+     */
+    protected $methods = [];
+
+    /**
+     * An array of all component options
+     * from the component definition
+     *
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * An array of all resolved props
+     *
+     * @var array
+     */
+    protected $props = [];
+
+    /**
+     * The component type
+     *
+     * @var string
+     */
     protected $type;
 
+    /**
+     * Magic caller for defined methods and properties
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
     public function __call(string $name, array $arguments = [])
     {
+        if (isset($this->computed[$name]) === true) {
+            return $this->computed[$name];
+        }
+
+        if (isset($this->props[$name]) === true) {
+            return $this->props[$name];
+        }
+
         if (isset($this->methods[$name]) === true) {
             return $this->methods[$name]->call($this, ...$arguments);
         }
@@ -24,25 +92,20 @@ class Component
         return $this->$name;
     }
 
+    /**
+     * Creates a new component for the given type
+     *
+     * @param string $type
+     * @param array $attrs
+     */
     public function __construct(string $type, array $attrs = [])
     {
         if (isset(static::$types[$type]) === false) {
             throw new InvalidArgumentException('Undefined component type: ' . $type);
         }
 
-        $options = static::$types[$type];
-
-        // inject mixins
-        if (isset($options['mixins']) === true) {
-            foreach ($options['mixins'] as $mixin) {
-                if (isset(static::$mixins[$mixin]) === true) {
-                    $options = array_replace_recursive(static::$mixins[$mixin], $options);
-                }
-            }
-        }
-
         $this->attrs   = $attrs;
-        $this->options = $options;
+        $this->options = $options = $this->setup($type);
         $this->methods = $methods = $options['methods'] ?? [];
 
         foreach ($attrs as $attrName => $attrValue) {
@@ -63,53 +126,139 @@ class Component
         $this->type    = $type;
     }
 
+    /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
     public function __debuginfo(): array
     {
         return $this->toArray();
     }
 
+    /**
+     * Fallback for missing properties to return
+     * null instead of an error
+     *
+     * @param string $attr
+     * @return null
+     */
     public function __get(string $attr)
     {
         return null;
     }
 
-    protected function applyProps(array $props)
+    /**
+     * A set of default options for each component.
+     * This can be overwritten by extended classes
+     * to define basic options that should always
+     * be applied.
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [];
+    }
+
+    /**
+     * Register all defined props and apply the
+     * passed values.
+     *
+     * @param array $props
+     * @return void
+     */
+    protected function applyProps(array $props): void
     {
         foreach ($props as $propName => $propFunction) {
             if (isset($this->attrs[$propName]) === true) {
-                $this->$propName = $propFunction($this->attrs[$propName]);
+                $this->$propName = $this->props[$propName] = $propFunction($this->attrs[$propName]);
+            } elseif (is_callable($propFunction) === true) {
+                $this->$propName = $this->props[$propName] = $propFunction();
             } else {
-                $this->$propName = $propFunction();
+                $this->$propName = $this->props[$propName] = $propFunction;
             }
         }
     }
 
-    protected function applyComputed(array $computed)
+    /**
+     * Register all computed properties and calculate their values.
+     * This must happen after all props are registered.
+     *
+     * @param array $computed
+     * @return void
+     */
+    protected function applyComputed(array $computed): void
     {
         foreach ($computed as $computedName => $computedFunction) {
-            $this->$computedName = $computedFunction->call($this);
+            $this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
         }
     }
 
-    public function toArray()
+    /**
+     * Load a component definition by type
+     *
+     * @param string $type
+     * @return array
+     */
+    protected function load(string $type): array
+    {
+        $definition = static::$types[$type];
+
+        // load definitions from string
+        if (is_array($definition) === false) {
+            static::$types[$type] = $definition = include $definition;
+        }
+
+        return $definition;
+    }
+
+    /**
+     * Loads all options from the component definition
+     * mixes in the defaults from the defaults method and
+     * then injects all additional mixins, defined in the
+     * component options.
+     *
+     * @param string $type
+     * @return array
+     */
+    protected function setup(string $type): array
+    {
+        // load component definition
+        $definition = $this->load($type);
+
+        if (isset($definition['extends']) === true) {
+            // extend other definitions
+            $options = array_replace_recursive($this->defaults(), $this->load($definition['extends']), $definition);
+        } else {
+            // inject defaults
+            $options = array_replace_recursive($this->defaults(), $definition);
+        }
+
+        // inject mixins
+        if (isset($options['mixins']) === true) {
+            foreach ($options['mixins'] as $mixin) {
+                if (isset(static::$mixins[$mixin]) === true) {
+                    $options = array_replace_recursive(static::$mixins[$mixin], $options);
+                }
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * Converts all props and computed props to an array
+     *
+     * @return array
+     */
+    public function toArray(): array
     {
         if (is_a($this->options['toArray'] ?? null, 'Closure') === true) {
             return $this->options['toArray']->call($this);
         }
 
-        $array = [];
-
-        foreach ($this->attrs ?? [] as $key => $value) {
-            $array[$key] = $this->$key;
-        }
-
-        foreach ($this->options['props'] ?? [] as $key => $value) {
-            $array[$key] = $this->$key;
-        }
-
-        foreach ($this->options['computed'] ?? [] as $key => $value) {
-            $array[$key] = $this->$key;
-        }
+        $array = array_merge($this->attrs, $this->props, $this->computed);
 
         ksort($array);
 

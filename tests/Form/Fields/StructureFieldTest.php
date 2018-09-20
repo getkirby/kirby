@@ -10,9 +10,7 @@ class StructureFieldTest extends TestCase
 
     public function testDefaultProps()
     {
-        $field = new Field([
-            'type'   => 'structure',
-            'name'   => 'structure',
+        $field = new Field('structure', [
             'fields' => []
         ]);
 
@@ -20,13 +18,12 @@ class StructureFieldTest extends TestCase
         $this->assertEquals('structure', $field->name());
         $this->assertEquals([], $field->fields());
         $this->assertEquals([], $field->value());
+        $this->assertTrue($field->save());
     }
 
     public function testTagsFieldInStructure()
     {
-        $field = new Field([
-            'type'   => 'structure',
-            'name'   => 'structure',
+        $field = new Field('structure', [
             'fields' => [
                 'tags' => [
                     'label' => 'Tags',

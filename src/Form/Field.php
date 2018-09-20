@@ -2,12 +2,10 @@
 
 namespace Kirby\Form;
 
-use ArgumentCountError;
-use Closure;
 use Exception;
-use TypeError;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -15,72 +13,51 @@ use Kirby\Toolkit\I18n;
  * array of properties and methods and converts them
  * to a usable field option array for the API.
  */
-class Field
+class Field extends Component
 {
+
+    /**
+     * Registry for all component mixins
+     *
+     * @var array
+     */
     public static $mixins = [];
+
+    /**
+     * Registry for all component types
+     *
+     * @var array
+     */
     public static $types = [];
 
-    protected $attrs;
-    protected $computed = [];
-    protected $data = [];
-    protected $definition;
+    /**
+     * An array of all found errors
+     *
+     * @var array
+     */
     protected $errors = [];
-    protected $methods;
-    protected $name;
-    protected $props;
-    protected $type;
 
-    public function __call(string $method, array $args = [])
+    public function __construct(string $type, array $attrs = [])
     {
-        if (isset($this->computed[$method])) {
-            return $this->computed[$method];
+        if (isset(static::$types[$type]) === false) {
+            throw new InvalidArgumentException('The field type "' . $type . '" does not exist');
         }
 
-        if (isset($this->props[$method])) {
-            return $this->props[$method];
+        // use the type as fallback for the name
+        $attrs['name'] = $attrs['name'] ?? $type;
+        $attrs['type'] = $type;
+
+        parent::__construct($type, $attrs);
+
+        // apply the default value if the field is empty
+        if ($this->isEmpty() === true) {
+            $this->value = $this->default;
         }
 
-        if (isset($this->methods[$method])) {
-            return $this->methods[$method]->call($this, ...$args);
-        }
-
-        if (isset($this->data[$method])) {
-            return $this->data[$method];
-        }
-    }
-
-    public function __construct(array $attrs, array $data = [])
-    {
-        if (isset($attrs['type'], $attrs['name']) === false) {
-            throw new InvalidArgumentException('You must define a name and type for the field');
-        }
-
-        $this->type  = $attrs['type'];
-        $this->name  = $attrs['name'];
-        $this->data  = $data;
-        $this->attrs = $attrs;
-
-        if (isset(static::$types[$this->type]) === false) {
-            throw new InvalidArgumentException('The field type "' . $this->type . '" does not exist');
-        }
-
-        $this->definition = $this->define($this->type);
-        $this->methods    = $this->definition['methods'] ?? [];
-        $this->props      = $this->resolveProps($this->definition['props'], $this->attrs);
-        $this->computed   = $this->resolveComputed($this->definition['computed'] ?? []);
-
-        $this->applyDefaultValue();
         $this->validate();
     }
 
-    protected function applyDefaultValue()
-    {
-        if ($this->isEmpty($this->props['value']) === true) {
-            $this->props['value'] = $this->definition['props']['value']->call($this, $this->default());
-        }
-    }
-
-    public static function defaults(): array
+    protected function defaults(): array
     {
         return [
             'props' => [
@@ -108,7 +85,7 @@ class Field
                 'label' => function ($label = null) {
                     return I18n::translate($label, $label);
                 },
-                'placeholder' => function (string $placeholder = null) {
+                'placeholder' => function ($placeholder = null) {
                     return I18n::translate($placeholder, $placeholder);
                 },
                 'required' => function (bool $required = null): bool {
@@ -124,29 +101,21 @@ class Field
         ];
     }
 
-    public function define(string $type): array
-    {
-        $definition = static::typeDefinition($type);
-
-        // resolve mixins
-        if (isset($definition['mixins']) === true) {
-            foreach ($definition['mixins'] as $mixin) {
-                $definition = array_replace_recursive(static::mixinDefinition($mixin), $definition);
-            }
-        }
-
-        return $definition;
-    }
-
     public function errors(): array
     {
         return $this->errors;
     }
 
-    public function isEmpty($value): bool
+    public function isEmpty(...$args): bool
     {
-        if (isset($this->methods['isEmpty']) === true) {
-            return $this->methods['isEmpty']->call($this, $value);
+        if (count($args) === 0) {
+            $value = $this->value();
+        } else {
+            $value = $args[0];
+        }
+
+        if (isset($this->options['isEmpty']) === true) {
+            return $this->options['isEmpty']->call($this, $value);
         }
 
         return in_array($value, [null, '', []], true);
@@ -159,7 +128,7 @@ class Field
 
     public function isRequired(): bool
     {
-        return $this->__call('required');
+        return $this->required ?? false;
     }
 
     public function isValid(): bool
@@ -167,82 +136,52 @@ class Field
         return empty($this->errors) === true;
     }
 
-    protected static function mixinDefinition(string $mixin): array
+    public function kirby()
     {
-        $definition = static::$mixins[$mixin] ?? null;
-
-        if (is_string($definition) && file_exists($definition)) {
-            $definition = static::$mixins[$mixin] = include $definition;
-        }
-
-        if (is_array($definition) === false) {
-            throw new InvalidArgumentException('The mixin definition for "' . $mixin . '" is invalid');
-        }
-
-        return $definition;
+        return $this->model->kirby();
     }
 
-    protected function resolveComputed($computed)
+    public function model()
     {
-        $result = [];
-
-        foreach ($computed as $name => $callback) {
-            $result[$name] = $callback->call($this);
-        }
-
-        return $result;
+        return $this->model;
     }
 
-    protected function resolveProps($props, $attrs)
+    public function save(): bool
     {
-        $result = [];
-
-        foreach ($props as $name => $callback) {
-            if (is_a($callback, 'Closure') === false) {
-                $result[$name] = $callback;
-                continue;
-            }
-
-            try {
-                if (isset($attrs[$name]) === true) {
-                    $result[$name] = $callback->call($this, $attrs[$name]);
-                } else {
-                    $result[$name] = $callback->call($this);
-                }
-            } catch (ArgumentCountError $e) {
-                throw new Exception('The "' . $name . '" field property is required');
-            }
-        }
-
-        // merge the other attributes
-        $result = array_merge($attrs, $result);
-
-        return $result;
-    }
-
-    public function save()
-    {
-        return $this->definition['save'] ?? true;
+        return $this->options['save'] ?? true;
     }
 
     public function toArray(): array
     {
-        $array = array_merge($this->props, $this->computed);
-        ksort($array);
+        $array = parent::toArray();
+
+        unset($array['model']);
 
         $array['invalid']   = $this->isInvalid();
         $array['errors']    = $this->errors();
         $array['signature'] = md5(json_encode($array));
 
+        ksort($array);
+
         return array_filter($array, function ($item) {
             return $item !== null;
         });
+
     }
 
-    public function toString(): string
+    public function toString(): ?string
     {
-        $value = $this->props['value'];
+        if ($this->save() === false) {
+            return null;
+        }
 
+        $value = $this->value;
+
+        if (isset($this->options['toString']) === true) {
+            return $this->options['toString']->call($this, $value);
+        }
+
+        // DEPRECATED
         if (isset($this->methods['toString']) === true) {
             return $this->methods['toString']->call($this, $value);
         }
@@ -258,26 +197,17 @@ class Field
         return (string)$value;
     }
 
-    protected static function typeDefinition(string $type): array
-    {
-        $definition = static::$types[$type] ?? null;
-
-        if (is_string($definition) && file_exists($definition)) {
-            $definition = static::$types[$type] = include $definition;
-        }
-
-        if (is_array($definition) === false) {
-            throw new InvalidArgumentException('The field definition for "' . $type . '" is invalid');
-        }
-
-        return array_replace_recursive(static::defaults(), $definition);
-    }
-
     protected function validate()
     {
-        $validations  = $this->definition['validations'] ?? [];
+        $validations  = $this->options['validations'] ?? [];
         $this->errors = [];
 
+        // validate required values
+        if ($this->isRequired() === true && $this->save() === true && $this->isEmpty() === true) {
+            $this->errors['required'] = I18n::translate('error.form.field.required', 'The field is required');
+        }
+
+        // no further validations? fine!
         if (empty($validations) === true) {
             return true;
         }
@@ -305,6 +235,7 @@ class Field
 
     public function value()
     {
-        return $this->save() ? $this->__call("value") : null;
+        return $this->save() ? $this->value : null;
     }
+
 }

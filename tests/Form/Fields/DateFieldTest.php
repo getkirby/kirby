@@ -9,10 +9,7 @@ class DateFieldTest extends TestCase
 
     public function testDefaultProps()
     {
-        $field = new Field([
-            'type' => 'date',
-            'name' => 'date'
-        ]);
+        $field = new Field('date');
 
         $this->assertEquals('date', $field->type());
         $this->assertEquals('date', $field->name());
@@ -20,13 +17,12 @@ class DateFieldTest extends TestCase
         $this->assertEquals(null, $field->min());
         $this->assertEquals(null, $field->max());
         $this->assertEquals(false, $field->time());
+        $this->assertTrue($field->save());
     }
 
     public function testEmptyDate()
     {
-        $field = new Field([
-            'type'  => 'date',
-            'name'  => 'date',
+        $field = new Field('date', [
             'value' => null
         ]);
 

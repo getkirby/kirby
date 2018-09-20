@@ -7,6 +7,22 @@ use Kirby\Toolkit\Component;
 
 class Section extends Component
 {
+
+    /**
+     * Registry for all component mixins
+     *
+     * @var array
+     */
+    public static $mixins = [];
+
+    /**
+     * Registry for all component types
+     *
+     * @var array
+     */
+    public static $types = [];
+
+
     public function __construct(string $type, array $attrs = [])
     {
         if (isset($attrs['model']) === false) {

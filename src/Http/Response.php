@@ -84,7 +84,7 @@ class Response
         $this->charset = $charset ?? 'UTF-8';
 
         // automatic mime type detection
-        if (strpos($this->type, '/') !== false) {
+        if (strpos($this->type, '/') === false) {
             $this->type = F::extensionToMime($this->type) ?? 'text/html';
         }
     }

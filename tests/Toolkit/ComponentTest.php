@@ -47,6 +47,22 @@ class ComponentTest extends TestCase
         $this->assertEquals('default value', $component->prop);
     }
 
+    public function testPropWithFixedValue()
+    {
+        Component::$types = [
+            'test' => [
+                'props' => [
+                    'prop' => 'test'
+                ]
+            ]
+        ];
+
+        $component = new Component('test');
+
+        $this->assertEquals('test', $component->prop());
+        $this->assertEquals('test', $component->prop);
+    }
+
     public function testAttrs()
     {
         Component::$types = [

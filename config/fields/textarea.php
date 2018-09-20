@@ -8,6 +8,9 @@ return [
         'counter' => function (bool $counter = true) {
             return $counter;
         },
+        'default' => function (string $default = null) {
+            return trim($default);
+        },
         'maxlength' => function (int $maxlength = null) {
             return $maxlength;
         },
@@ -22,7 +25,6 @@ return [
         }
     ],
     'validations' => [
-        'required',
         'minlength',
         'maxlength'
     ]

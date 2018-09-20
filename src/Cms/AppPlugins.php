@@ -302,8 +302,7 @@ trait AppPlugins
     protected function extensionsFromSystem()
     {
         // Form Field Mixins
-        FormField::$mixins['options'] = include static::$root . '/config/field-mixins/options.php';
-        FormField::$mixins['tags'] = include static::$root . '/config/field-mixins/tags.php';
+        FormField::$mixins['options'] = include static::$root . '/config/fields/mixins/options.php';
 
         // Tag Aliases
         KirbyTag::$aliases = [

@@ -2,6 +2,9 @@
 
 return [
     'props' => [
+        'default' => function ($default = null) {
+            return $this->toNumber($default);
+        },
         'min' => function (float $min = 0) {
             return $min;
         },
@@ -12,11 +15,15 @@ return [
             return $step;
         },
         'value' => function ($value = null) {
+            return $this->toNumber($value);
+        }
+    ],
+    'methods' => [
+        'toNumber' => function ($value) {
             return $this->isEmpty($value) === false ? floatval($value) : null;
         }
     ],
     'validations' => [
-        'required',
         'min',
         'max'
     ]

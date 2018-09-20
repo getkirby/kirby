@@ -79,8 +79,7 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
-        $field = new FormField([
-            'type'  => 'dummy',
+        $field = new FormField('dummy', [
             'name'  => 'dummy',
             'peter' => 'shaw'
         ]);

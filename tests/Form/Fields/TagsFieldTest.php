@@ -8,6 +8,24 @@ use Kirby\Toolkit\I18n;
 class TagsFieldTest extends TestCase
 {
 
+    public function testDefaultProps()
+    {
+        $field = new Field('tags');
+
+        $this->assertEquals('tags', $field->type());
+        $this->assertEquals('tags', $field->name());
+        $this->assertEquals('all', $field->accept());
+        $this->assertEquals([], $field->value());
+        $this->assertEquals([], $field->default());
+        $this->assertEquals([], $field->options());
+        $this->assertEquals(null, $field->min());
+        $this->assertEquals(null, $field->max());
+        $this->assertEquals(',', $field->separator());
+        $this->assertEquals('tag', $field->icon());
+        $this->assertEquals(null, $field->counter());
+        $this->assertTrue($field->save());
+    }
+
     public function testOptionsQuery()
     {
 
@@ -71,25 +89,18 @@ class TagsFieldTest extends TestCase
             ]
         ];
 
-        $field = new Field([
-            'name'    => 'tags',
-            'type'    => 'tags',
+        $field = new Field('tags', [
+            'model'   => $app->page('b'),
             'options' => 'query',
             'query'   => 'page.siblings.pluck("tags", ",", true)',
-        ], [
-            'model' => $app->page('b')
         ]);
 
         $this->assertEquals($expected, $field->options());
 
-
-        $field = new Field([
-            'name'    => 'tags',
-            'type'    => 'tags',
+        $field = new Field('tags', [
+            'model'   => $app->file('a/b.jpg'),
             'options' => 'query',
             'query'   => 'file.siblings.pluck("tags", ",", true)',
-        ], [
-            'model' => $app->file('a/b.jpg')
         ]);
 
         $this->assertEquals($expected, $field->options());
