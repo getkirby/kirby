@@ -12,11 +12,8 @@ import "./config/errors.js";
 import "./config/i18n.js";
 import "./config/plugins.js";
 
-import cache from "./config/cache.js";
 import router from "./config/router.js";
 import store from "./config/store.js";
-
-Vue.use(cache);
 
 window.panel.app = new Vue({
   router,
