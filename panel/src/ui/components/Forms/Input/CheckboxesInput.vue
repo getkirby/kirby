@@ -3,8 +3,8 @@
     <li v-for="(option, index) in options" :key="index">
       <k-checkbox-input
         :id="id + '-' + index"
-        :value="selected.indexOf(option.value) > -1"
         :label="option.text"
+        :value="selected.indexOf(option.value) !== -1"
         @input="onInput(option.value, $event)"
       />
     </li>
@@ -30,7 +30,7 @@ export default {
     options: Array,
     required: Boolean,
     value: {
-      type: [Array, String],
+      type: Array,
       default() {
         return [];
       }
@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      selected: Array.isArray(this.value) ? this.value : this.value.split(",")
+      selected: this.value
     }
   },
   watch: {
@@ -62,7 +62,7 @@ export default {
         this.selected.push(key);
       } else {
         const index = this.selected.indexOf(key);
-        if (index > -1) {
+        if (index !== -1) {
           this.selected.splice(index, 1);
         }
       }

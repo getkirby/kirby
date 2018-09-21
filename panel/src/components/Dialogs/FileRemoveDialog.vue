@@ -38,7 +38,7 @@ export default {
         .delete(this.parent.id, this.filename)
         .then(() => {
           // remove data from cache
-          this.$cache.remove(this.$route.path);
+          this.$store.dispatch("form/reset", this.$route.path);
 
           this.$store.dispatch("notification/success", this.$t("file.deleted"));
           this.$events.$emit("file.delete");

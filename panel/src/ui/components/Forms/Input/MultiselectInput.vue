@@ -142,8 +142,8 @@ export default {
     }
   },
   watch: {
-    value() {
-      this.state = this.value;
+    value(value) {
+      this.state = value;
       this.onInvalid();
     }
   },

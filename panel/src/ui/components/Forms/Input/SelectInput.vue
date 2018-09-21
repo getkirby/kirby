@@ -99,6 +99,9 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
+      if (value === "") {
+        value = null;
+      }
       this.$emit("input", value);
     },
     select() {

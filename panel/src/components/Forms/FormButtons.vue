@@ -21,38 +21,25 @@
 
 <script>
 export default {
-  data() {
-    return {
-      hasChanges: false
-    };
-  },
   computed: {
+    hasChanges() {
+      return this.$store.getters["form/hasChanges"](this.id);
+    },
     id() {
-      return this.$cache.id(this.$route, this.$store);
-    }
-  },
-  watch: {
-    $route() {
-      this.hasChanges = false;
+      return this.$store.getters["form/id"](this.$route);
     }
   },
   created() {
-    this.refresh();
+    this.$store.dispatch("form/restore");
     this.$events.$on("keydown.cmd.s", this.save);
-    this.$events.$on("form.change", this.refresh);
   },
   destroyed() {
     this.$events.$off("keydown.cmd.s", this.save);
-    this.$events.$off("form.change", this.refresh);
   },
   methods: {
-    refresh() {
-      this.hasChanges = this.$cache.exists(this.id);
-    },
     reset() {
-      this.$cache.remove(this.id);
+      this.$store.dispatch("form/reset", this.id);
       this.$events.$emit("form.reset");
-      this.refresh();
     },
     save(e) {
 
@@ -64,23 +51,22 @@ export default {
         e.preventDefault();
       }
 
-      this.$api
-        .patch(this.id.substr(1), this.$cache.get(this.id))
+      this.$store.dispatch("form/save", this.id)
         .then(() => {
-          this.$cache.remove(this.id);
-          this.$events.$emit("form.save");
           this.$events.$emit("model.update");
+          this.$store.dispatch("form/errors", [this.id, {}]);
           this.$store.dispatch("notification/success", this.$t("saved"));
-          this.refresh();
         })
         .catch(response => {
 
           if (response.details) {
+            this.$store.dispatch("form/errors", [this.id, response.details]);
             this.$store.dispatch("notification/error", {
               message: this.$t("error.form.incomplete"),
               details: response.details
             });
           } else {
+            this.$store.dispatch("form/errors", [this.id, response.message]);
             this.$store.dispatch("notification/error", {
               message: "The form could not be submitted",
               details: [
