@@ -39,6 +39,7 @@ export default {
           click: "preview",
           icon: "open",
           text: Vue.i18n.translate("open"),
+          disabled: options.preview === false
         });
       }
 
