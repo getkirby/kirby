@@ -34,6 +34,13 @@ return [
 
             if (empty($this->columns)) {
                 foreach ($this->fields as $field) {
+
+                    // Skip hidden fields.
+                    // They should never be included as column
+                    if ($field['type'] === 'hidden') {
+                        continue;
+                    }
+
                     $columns[$field['name']] = [
                         'type'  => $field['type'],
                         'label' => $field['label'] ?? $field['name']
