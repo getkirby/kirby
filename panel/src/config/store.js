@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
+import form from "./store/form.js";
 import languages from "./store/languages.js";
 import notification from "./store/notification.js";
 import system from "./store/system.js";
@@ -11,6 +12,7 @@ import user from "./store/user.js";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {
     breadcrumb: [],
     isLoading: false,
@@ -71,6 +73,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
+    form: form,
     languages: languages,
     notification: notification,
     system: system,
