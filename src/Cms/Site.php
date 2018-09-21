@@ -200,6 +200,25 @@ class Site extends ModelWithContent
     }
 
     /**
+     * Builds a breadcrumb collection
+     *
+     * @return Pages
+     */
+    public function breadcrumb()
+    {
+        // get all parents and flip the order
+        $crumb = $this->page()->parents()->flip();
+
+        // add the home page
+        $crumb->prepend($this->homePage()->id(), $this->homePage());
+
+        // add the active page
+        $crumb->append($this->page()->id(), $this->page());
+
+        return $crumb;
+    }
+
+    /**
      * Returns the absolute path to the site's
      * content text file
      *

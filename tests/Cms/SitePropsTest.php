@@ -22,6 +22,41 @@ class SitePropsTest extends TestCase
         $this->assertEquals('https://getkirby.com', $site->toString('{{ site.url }}'));
     }
 
+    public function testBreadcrumb()
+    {
+
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'home',
+                ],
+                [
+                    'slug' => 'grandma',
+                    'children' => [
+                        [
+                            'slug' => 'mother',
+                            'children' => [
+                                [
+                                    'slug' => 'child'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $site->visit('grandma/mother/child');
+
+        $crumb = $site->breadcrumb();
+
+        $this->assertEquals($site->find('home'), $crumb->nth(0));
+        $this->assertEquals($site->find('grandma'), $crumb->nth(1));
+        $this->assertEquals($site->find('grandma/mother'), $crumb->nth(2));
+        $this->assertEquals($site->find('grandma/mother/child'), $crumb->nth(3));
+
+    }
+
     public function testModified()
     {
         $app = new App([
