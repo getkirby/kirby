@@ -385,7 +385,7 @@ class Blueprint
      * @param array $fields
      * @return array
      */
-    protected function normalizeFields(array $fields): array
+    protected function normalizeFields(array $fields, int $level = 0): array
     {
         foreach ($fields as $fieldName => $fieldProps) {
             if ($fieldProps === true) {
@@ -397,7 +397,7 @@ class Blueprint
 
             // support for nested fields
             if (isset($fieldProps['fields']) === true) {
-                $fieldProps['fields'] = $this->normalizeFields($fieldProps['fields']);
+                $fieldProps['fields'] = $this->normalizeFields($fieldProps['fields'], $level + 1);
             }
 
             $fields[$fieldName] = $fieldProps = array_merge($fieldProps, [
@@ -408,8 +408,10 @@ class Blueprint
             ]);
         }
 
-        // store all normalized fields
-        $this->fields = array_merge($this->fields, $fields);
+        // store all normalized fields if not in nested fields
+        if ($level === 0) {
+            $this->fields = array_merge($this->fields, $fields);
+        }
 
         return $fields;
     }

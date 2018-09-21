@@ -183,4 +183,26 @@ class BlueprintTest extends TestCase
         $this->assertEquals($fields['test'], $blueprint->field('test'));
     }
 
+    public function testNestedFields()
+    {
+        $blueprint = new Blueprint([
+            'model' => 'test',
+            'fields' => $fields = [
+                'test' => [
+                    'type'   => 'structure',
+                    'fields' => [
+                        'child-field' => [
+                            'type' => 'text'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertCount(1, $blueprint->fields());
+        $this->assertArrayHasKey('test', $blueprint->fields());
+        $this->assertArrayNotHasKey('child-field', $blueprint->fields());
+
+    }
+
 }
