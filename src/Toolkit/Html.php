@@ -167,6 +167,10 @@ class Html
      */
     public static function email(string $email, string $text = null, array $attr = []): string
     {
+        if (empty($email) === true) {
+            return '';
+        }
+
         if (empty($text) === true) {
             // show only the eMail address without additional parameters (if the 'text' argument is empty)
             $text = [Str::encode(Str::split($email, '?')[0])];

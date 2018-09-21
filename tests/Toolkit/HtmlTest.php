@@ -112,6 +112,12 @@ class HtmlTest extends TestCase
         $this->assertRegExp($expected, $html);
     }
 
+    public function testEmailWithoutAddress()
+    {
+        $html = Html::email('');
+        $this->assertEquals('', $html);
+    }
+
     public function testEmailWithText()
     {
         $html = Html::email('mail@company.com', 'Email');
