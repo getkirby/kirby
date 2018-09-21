@@ -428,10 +428,6 @@ export default {
 
       return value;
     },
-    onItemInput(index, value) {
-      this.items[index] = value;
-      this.$emit("input", this.items);
-    },
     onInput() {
       this.$emit("input", this.items);
     },

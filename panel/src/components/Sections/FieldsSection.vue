@@ -8,7 +8,7 @@
       v-else
       :fields="fields"
       :validate="true"
-      v-model="values"
+      :value="values"
       @input="input"
       @submit="onSubmit"
     />
@@ -22,20 +22,20 @@ export default {
   mixins: [SectionMixin],
   data() {
     return {
-      errors: [],
       fields: {},
       isLoading: true,
-      stored: {},
-      values: {},
       issue: null
     };
   },
   computed: {
     id() {
-      return this.$cache.id(this.$route, this.$store);
+      return this.$store.getters["form/id"](this.$route);
     },
     language() {
       return this.$store.state.languages.current;
+    },
+    values() {
+      return this.$store.getters["form/values"](this.id);
     }
   },
   watch: {
@@ -44,6 +44,7 @@ export default {
     }
   },
   created: function() {
+    this.$store.dispatch("form/create", this.id);
     this.fetch();
     this.$events.$on("form.reset", this.fetch);
     this.$events.$on("model.update", this.fetch);
@@ -54,23 +55,15 @@ export default {
   },
   methods: {
     input(values) {
-      this.$cache.set(this.id, values);
-      this.$events.$emit("form.change");
+      this.$store.dispatch("form/update", [this.id, values]);
     },
     fetch() {
       this.$api
         .get(this.parent + "/sections/" + this.name)
         .then(response => {
-          this.errors = response.errors;
-          this.fields = response.fields;
-
-          this.stored = response.data;
-          this.values = Object.assign(
-            {},
-            response.data,
-            this.$cache.get(this.id) || {}
-          );
-          this.$events.$emit("form.change");
+          this.$store.dispatch("form/content", [this.id, response.data]);
+          this.$store.dispatch("form/errors", [this.id, response.errors]);
+          this.fields    = response.fields;
           this.isLoading = false;
         })
         .catch(error => {
