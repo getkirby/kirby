@@ -28,13 +28,33 @@ return [
 
         },
         'fields' => function () {
-            return $this->form->fields()->toArray();
+
+            $fields = $this->form->fields()->toArray();
+
+            if (is_a($this->model, 'Kirby\Cms\Page') === true || is_a($this->model, 'Kirby\Cms\Site') === true) {
+                // the title should never be updated directly via
+                // fields section to avoid conflicts with the rename dialog
+                unset($fields['title']);
+            }
+
+            return $fields;
+
         },
         'errors' => function () {
             return $this->form->errors();
         },
         'data' => function () {
-            return $this->form->values();
+
+            $values = $this->form->values();
+
+            if (is_a($this->model, 'Kirby\Cms\Page') === true || is_a($this->model, 'Kirby\Cms\Site') === true) {
+                // the title should never be updated directly via
+                // fields section to avoid conflicts with the rename dialog
+                unset($values['title']);
+            }
+
+            return $values;
+
         }
     ],
     'toArray' => function () {
