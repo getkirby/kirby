@@ -44,7 +44,7 @@
               <k-button v-if="isSortable" class="k-structure-item-handle" icon="sort" />
 
               <div class="k-structure-item-content">
-                <p
+                <div
                   v-for="(column, columnName) in columns"
                   :key="columnName"
                   :title="column.label"
@@ -53,11 +53,26 @@
                   class="k-structure-item-text"
                   @click="jump(index, columnName)"
                 >
-                  <span class="k-structure-item-label">{{ column.label }}</span>
-                  <template v-if="item[columnName] !== undefined">
-                    {{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after}}
+                  <template v-if="columnIsEmpty(item[columnName]) === false">
+
+                    <component
+                      v-if="previewExists(column.type)"
+                      :is="'k-' + column.type + '-field-preview'"
+                      :value="item[columnName]"
+                      :column="column"
+                    />
+
+                    <template v-else>
+                      <span class="k-structure-item-label">{{ column.label }}</span>
+                      {{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after}}
+                    </template>
+
                   </template>
-                </p>
+                  <template v-else>
+                    <span class="k-structure-item-label">{{ column.label }}</span>
+                    -
+                  </template>
+                </div>
               </div>
 
               <nav v-if="!disabled" class="k-structure-item-options">
@@ -105,9 +120,15 @@
 </template>
 
 <script>
+import Vue from "vue";
 import Field from "../Field.vue";
 import dayjs from "dayjs";
 import sorter from "@/ui/helpers/sort.js";
+
+// Field Previews
+import FilesFieldPreview from "../Previews/FilesFieldPreview.vue";
+import EmailFieldPreview from "../Previews/EmailFieldPreview.vue";
+import UrlFieldPreview from "../Previews/UrlFieldPreview.vue";
 
 Array.prototype.sortBy = function(sortBy) {
 
@@ -134,6 +155,11 @@ Array.prototype.sortBy = function(sortBy) {
 
 export default {
   inheritAttrs: false,
+  components: {
+    "k-email-field-preview": EmailFieldPreview,
+    "k-files-field-preview": FilesFieldPreview,
+    "k-url-field-preview": UrlFieldPreview
+  },
   props: {
     ...Field.props,
     columns: Object,
@@ -220,6 +246,9 @@ export default {
 
       return items.sortBy(this.sortBy);
     },
+    previewExists(type) {
+      return this.$options.components['k-' + type + '-field-preview'] !== undefined;
+    },
     add() {
 
       if (this.disabled === true) {
@@ -257,6 +286,19 @@ export default {
       this.close();
       this.trash = index;
       this.$refs.remove.open();
+    },
+    columnIsEmpty(value) {
+
+      if (value === undefined || value === null || value === "") {
+        return true;
+      }
+
+      if (value.length !== undefined && value.length === 0) {
+        return true;
+      }
+
+      return false;
+
     },
     escape() {
       if (this.active !== null && this.items[this.active]) {
@@ -418,6 +460,7 @@ $structure-item-height: 38px;
   flex-shrink: 0;
   flex-grow: 1;
   flex-basis: 0;
+  height: 100%;
   padding: .75rem 0.75rem;
   font-size: $font-size-small;
   white-space: nowrap;
@@ -497,4 +540,5 @@ $structure-item-height: 38px;
   z-index: 1;
   box-shadow: rgba($color-dark, .15) 0 0px 20px;
 }
+
 </style>
