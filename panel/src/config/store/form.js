@@ -44,29 +44,6 @@ export default {
     hasChanges: (state, getters) => (id) => {
       return Object.keys(getters.changes(id)).length > 0;
     },
-    hasFieldsInTab: (state) => (list, tab) => {
-      let flag = false;
-
-      // loop through all columns...
-      Object.keys(tab.columns).forEach(c => {
-        // ...and all their sections...
-        Object.keys(tab.columns[c].sections).forEach(s => {
-          // ...that have fields...
-          if (tab.columns[c].sections[s].type === "fields") {
-            // ...through all the field...
-            Object.keys(tab.columns[c].sections[s].fields).forEach(f => {
-              // ...and if a field is on the list,
-              // the tab has one of the fields on itself
-              if (list[f.toLowerCase()]) {
-                flag = true;
-              }
-            });
-          }
-        });
-      });
-
-      return flag;
-    },
     id: (state, getters, rootState) => (route) => {
       if (route.name === "Account") {
         return '/users/' + rootState.user.current.id;
@@ -80,21 +57,6 @@ export default {
         changes: {},
         errors: {}
       }
-    },
-    tabs: (state, getters) => (route, tabs) => {
-      let id      = getters.id(route);
-      let changes = getters.changes(id);
-      let errors  = getters.errors(id);
-
-      return tabs.map(tab => {
-        let hasChanges = getters.hasFieldsInTab(changes, tab);
-        let hasErrors  = getters.hasFieldsInTab(errors, tab);
-
-        return {
-          ...tab,
-          theme: hasErrors ? 'errors' : (hasChanges ? 'changes' : '')
-        };
-      });
     },
     values: (state, getters) => (id) => {
       return clone({
