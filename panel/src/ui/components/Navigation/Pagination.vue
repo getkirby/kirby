@@ -198,10 +198,11 @@ export default {
   padding: 0 !important;
 }
 .k-pagination-selector > div {
-  font-size: 14px;
+  font-size: $font-size-small;
   display: flex;
-}
+ }
 .k-pagination-selector > div > label {
+  flex-grow: 1;
   padding: 0.5rem 1rem;
   border-right: 1px solid rgba(#fff, 0.1);
 }
@@ -209,15 +210,13 @@ export default {
   flex-grow: 1;
   font: inherit;
   border: 0;
-  background: 0;
-  color: inherit;
+  background: $color-focus;
+  color: $color-dark;
   padding: 0.5rem 1rem;
   border-top-right-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
 }
 .k-pagination-selector > div > input:focus {
   outline: 0;
-  background: $color-focus;
-  color: $color-dark;
 }
 </style>

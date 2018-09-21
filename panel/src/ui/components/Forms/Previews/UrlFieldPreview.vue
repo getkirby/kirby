@@ -1,6 +1,5 @@
 <template>
   <p class="k-url-field-preview">
-    <span class="k-structure-item-label">{{ column.label }}</span>
     <k-link @click.native.stop :to="link" target="_blank">{{ value }}</k-link>
   </p>
 </template>
@@ -25,6 +24,12 @@ export default {
   color: $color-focus;
   text-decoration: underline;
   transition: color .3s;
+  display: inline-block;
+  padding: 0 .75rem;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+  text-overflow: ellipsis;
 }
 .k-url-field-preview a:hover {
   color: $color-black;

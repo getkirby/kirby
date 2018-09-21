@@ -21,7 +21,8 @@ export default {
 .k-files-field-preview {
   display: grid;
   grid-gap: .5rem;
-  grid-template-columns: repeat(auto-fill, 2.25rem);
+  grid-template-columns: repeat(auto-fill, 1.525rem);
+  padding: 0 .75rem;
 }
 .k-files-field-preview li {
   line-height: 0;
