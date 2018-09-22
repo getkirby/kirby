@@ -23,7 +23,7 @@
           <div class="k-structure-backdrop" @click="escape" />
           <section class="k-structure-form">
             <header class="k-structure-form-header">
-              <k-button slot="left" @click="close" icon="check">{{ $t('confirm') }}</k-button>
+              <k-button slot="left" icon="check" @click="close">{{ $t('confirm') }}</k-button>
               <k-pagination
                 slot="right"
                 :total="items.length"
@@ -58,7 +58,7 @@
                 >
                   {{ column.label }}
                 </th>
-                <th></th>
+                <th />
               </tr>
             </thead>
             <k-draggable
@@ -81,7 +81,12 @@
                 @click.stop
               >
                 <td class="k-structure-table-index">
-                  <k-button v-if="isSortable" class="k-structure-table-handle" @click="open(index)" icon="sort" />
+                  <k-button
+                    v-if="isSortable"
+                    class="k-structure-table-handle"
+                    icon="sort"
+                    @click="open(index)"
+                  />
                   <span>{{ index + 1 }}</span>
                 </td>
                 <td
@@ -101,7 +106,9 @@
                       :column="column"
                     />
                     <template v-else>
-                      <p class="k-structure-table-text">{{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after}}</p>
+                      <p class="k-structure-table-text">
+                        {{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after }}
+                      </p>
                     </template>
                   </template>
                 </td>
@@ -140,7 +147,6 @@
 </template>
 
 <script>
-import Vue from "vue";
 import Field from "../Field.vue";
 import dayjs from "dayjs";
 import sorter from "@/ui/helpers/sort.js";
@@ -159,14 +165,13 @@ Array.prototype.sortBy = function(sortBy) {
 
   return this.sort((a, b) => {
 
+    const valueA = a[field].toLowerCase();
+    const valueB = b[field].toLowerCase();
+
     if (direction === "desc") {
-      return sort(b[field], a[field], {
-        insensitive: true,
-      });
+      return sort(valueB, valueA);
     } else {
-      return sort(a[field], b[field], {
-        insensitive: true,
-      });
+      return sort(valueA, valueB);
     }
 
   });
@@ -174,12 +179,12 @@ Array.prototype.sortBy = function(sortBy) {
 };
 
 export default {
-  inheritAttrs: false,
   components: {
     "k-email-field-preview": EmailFieldPreview,
     "k-files-field-preview": FilesFieldPreview,
     "k-url-field-preview": UrlFieldPreview
   },
+  inheritAttrs: false,
   props: {
     ...Field.props,
     columns: Object,
