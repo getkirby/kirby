@@ -45,7 +45,7 @@
           </section>
         </template>
         <template v-else>
-          <table class="k-structure-table">
+          <table :data-sortable="isSortable" class="k-structure-table">
             <thead>
               <tr>
                 <th class="k-structure-table-index">#</th>
@@ -508,7 +508,6 @@ $structure-item-height: 38px;
     text-align: center;
   }
   .k-structure-table-index > span {
-    padding: 0 .75rem;
     font-size: $font-size-tiny;
     color: $color-light-grey;
     padding-top: .15rem;
@@ -518,10 +517,10 @@ $structure-item-height: 38px;
     display: none;
   }
 
-  tr:hover .k-structure-table-index > span {
+  &[data-sortable] tr:hover .k-structure-table-index > span {
     display: none;
   }
-  tr:hover .k-structure-table-handle {
+  &[data-sortable] tr:hover .k-structure-table-handle {
     display: block;
   }
 
