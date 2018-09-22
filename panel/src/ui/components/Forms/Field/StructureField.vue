@@ -572,7 +572,7 @@ $structure-item-height: 38px;
   border-radius: $border-radius;
   margin-bottom: 1px;
   z-index: 1;
-  outline: 2px solid rgba(#000, .05);
+  box-shadow: rgba($color-dark, .05) 0 0 0 3px;
   border: 1px solid $color-border;
   background: $color-background;
 }
