@@ -88,11 +88,11 @@ return [
             return $value;
         },
         'form' => function (array $values = []) {
-            return new Form(array_merge([
+            return new Form([
                 'fields' => $this->fields,
                 'values' => $values,
                 'model'  => $this->model() ?? null
-            ], $this->props));
+            ]);
         },
     ],
     'toString' => function () {
