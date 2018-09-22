@@ -24,6 +24,7 @@ import UserPasswordDialog from "@/components/Dialogs/UserPasswordDialog.vue";
 import UserRemoveDialog from "@/components/Dialogs/UserRemoveDialog.vue";
 import UserRenameDialog from "@/components/Dialogs/UserRenameDialog.vue";
 import UserRoleDialog from "@/components/Dialogs/UserRoleDialog.vue";
+import UsersDialog from "@/components/Dialogs/UsersDialog.vue";
 
 Vue.component("k-dialog", Dialog);
 Vue.component("k-error-dialog", ErrorDialog);
@@ -48,6 +49,7 @@ Vue.component("k-user-password-dialog", UserPasswordDialog);
 Vue.component("k-user-remove-dialog", UserRemoveDialog);
 Vue.component("k-user-rename-dialog", UserRenameDialog);
 Vue.component("k-user-role-dialog", UserRoleDialog);
+Vue.component("k-users-dialog", UsersDialog);
 
 /* Forms */
 import FormButtons from "@/components/Forms/FormButtons.vue";

@@ -90,6 +90,7 @@ import TimeField from "./components/Forms/Field/TimeField.vue";
 import ToggleField from "./components/Forms/Field/ToggleField.vue";
 import UrlField from "./components/Forms/Field/UrlField.vue";
 import UserField from "./components/Forms/Field/UserField.vue";
+import UsersField from "./components/Forms/Field/UsersField.vue";
 
 export default {
   install(Vue) {
@@ -194,6 +195,7 @@ export default {
     Vue.component("k-toggle-field", ToggleField);
     Vue.component("k-url-field", UrlField);
     Vue.component("k-user-field", UserField);
+    Vue.component("k-users-field", UsersField);
 
   }
 };

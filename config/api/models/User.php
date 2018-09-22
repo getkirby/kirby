@@ -63,7 +63,8 @@ return [
             'next' => 'compact',
             'options',
             'prev' => 'compact',
-            'role'
+            'role',
+            'username'
         ],
         'compact' => [
             'avatar' => 'compact',
@@ -72,6 +73,7 @@ return [
             'language',
             'name',
             'role',
+            'username'
         ],
         'auth' => [
             'avatar' => 'compact',

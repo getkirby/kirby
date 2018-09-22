@@ -1,12 +1,12 @@
 <template>
-  <k-field v-bind="$props" class="k-files-field">
+  <k-field v-bind="$props" class="k-users-field">
     <k-button
       v-if="more"
       slot="options"
       icon="add"
       @click="open"
     >
-      Select a file
+      Select a user
     </k-button>
     <template v-if="selected.length">
       <k-draggable
@@ -15,21 +15,34 @@
         @end="onInput"
       >
         <component
-          v-for="(file, index) in selected"
+          v-for="(user, index) in selected"
           :is="elements.item"
-          :key="file.filename"
-          :text="file.filename"
-          :link="file.link"
-          :image="{ url: file.url }"
+          :key="user.email"
+          :text="user.username"
+          :link="user.link"
+          :image="
+            user.avatar.exists ?
+              {
+                url: user.avatar.url,
+                back: 'pattern',
+                cover: true
+              }
+              :
+              null
+            "
+          :icon="{
+            type: 'user',
+            back: 'black'
+          }"
         >
           <k-button slot="options" icon="remove" @click="remove(index)" />
         </component>
       </k-draggable>
     </template>
-    <k-empty v-else icon="image" @click="open">
-      No files selected yet
+    <k-empty v-else icon="users" @click="open">
+      No users selected yet
     </k-empty>
-    <k-files-dialog ref="selector" @submit="select" />
+    <k-users-dialog ref="selector" @submit="select" />
   </k-field>
 </template>
 
@@ -40,10 +53,8 @@ export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
-    layout: String,
     max: Number,
     multiple: Boolean,
-    parent: String,
     value: {
       type: Array,
       default() {
@@ -53,27 +64,16 @@ export default {
   },
   data() {
     return {
+      layout: "list",
       selected: this.value,
     };
   },
   computed: {
     elements() {
-      const layouts = {
-        cards: {
-          list: "k-cards",
-          item: "k-card"
-        },
-        list: {
-          list: "k-list",
-          item: "k-list-item"
-        },
+      return {
+        list: "k-list",
+        item: "k-list-item"
       };
-
-      if (layouts[this.layout]) {
-        return layouts[this.layout];
-      }
-
-      return layouts["list"];
     },
     more() {
       if (!this.max) {
@@ -93,8 +93,7 @@ export default {
       this.$refs.selector.open({
         max: this.max,
         multiple: this.multiple,
-        parent: this.parent,
-        selected: this.selected.map(file => file.id),
+        selected: this.selected.map(user => user.email),
       });
     },
     remove(index) {
@@ -114,4 +113,3 @@ export default {
   }
 }
 </script>
-

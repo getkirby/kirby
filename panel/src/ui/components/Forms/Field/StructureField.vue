@@ -155,6 +155,7 @@ import sorter from "@/ui/helpers/sort.js";
 import FilesFieldPreview from "../Previews/FilesFieldPreview.vue";
 import EmailFieldPreview from "../Previews/EmailFieldPreview.vue";
 import UrlFieldPreview from "../Previews/UrlFieldPreview.vue";
+import UsersFieldPreview from "../Previews/UsersFieldPreview.vue";
 
 Array.prototype.sortBy = function(sortBy) {
 
@@ -182,7 +183,8 @@ export default {
   components: {
     "k-email-field-preview": EmailFieldPreview,
     "k-files-field-preview": FilesFieldPreview,
-    "k-url-field-preview": UrlFieldPreview
+    "k-url-field-preview": UrlFieldPreview,
+    "k-users-field-preview": UsersFieldPreview
   },
   inheritAttrs: false,
   props: {
