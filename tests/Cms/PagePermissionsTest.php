@@ -7,6 +7,15 @@ use PHPUnit\Framework\TestCase;
 class PagePermissionsTest extends TestCase
 {
 
+    public function setUp()
+    {
+        $this->kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+    }
+
     public function actionProvider()
     {
         return [
@@ -27,21 +36,14 @@ class PagePermissionsTest extends TestCase
      */
     public function testWithAdmin($action)
     {
-        $kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+        $this->kirby->impersonate('kirby');
 
-        $kirby->impersonate('kirby');
-
-        $page  = new Page([
+        $page = new Page([
             'slug' => 'test',
             'num'  => 1
         ]);
-        $perms = $page->permissions();
 
-        $this->assertTrue($perms->can($action));
+        $this->assertTrue($page->permissions()->can($action));
     }
 
     /**
@@ -49,15 +51,9 @@ class PagePermissionsTest extends TestCase
      */
     public function testWithAdminButDisabledOption($action)
     {
-        $kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+        $this->kirby->impersonate('kirby');
 
-        $kirby->impersonate('kirby');
-
-        $page  = new Page([
+        $page = new Page([
             'slug' => 'test',
             'num'  => 1,
             'blueprint' => [
@@ -68,9 +64,86 @@ class PagePermissionsTest extends TestCase
             ]
         ]);
 
-        $perms = $page->permissions();
-
         $this->assertFalse($page->permissions()->can($action));
+    }
+
+    public function testCanSortListedPages()
+    {
+        $this->kirby->impersonate('kirby');
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1
+        ]);
+
+        $this->assertTrue($page->permissions()->can('sort'));
+    }
+
+    public function testCannotSortUnlistedPages()
+    {
+        $this->kirby->impersonate('kirby');
+
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $this->assertFalse($page->permissions()->can('sort'));
+    }
+
+    public function testCannotSortErrorPage()
+    {
+        $this->kirby->impersonate('kirby');
+
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'error',
+                    'num'  => 1
+                ]
+            ]
+        ]);
+
+        $page = $site->find('error');
+
+        $this->assertFalse($page->permissions()->can('sort'));
+    }
+
+    public function testCannotSortPagesWithSortMode()
+    {
+        $this->kirby->impersonate('kirby');
+
+        // sort mode: zero
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 0,
+            'blueprint' => [
+                'num' => 'zero'
+            ]
+        ]);
+
+        $this->assertFalse($page->permissions()->can('sort'));
+
+        // sort mode: date
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 20161121,
+            'blueprint' => [
+                'num' => 'date'
+            ]
+        ]);
+
+        $this->assertFalse($page->permissions()->can('sort'));
+
+        // sort mode: custom
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 2012,
+            'blueprint' => [
+                'num' => '{{ page.year }}'
+            ]
+        ]);
+
+        $this->assertFalse($page->permissions()->can('sort'));
     }
 
     /**
@@ -78,12 +151,6 @@ class PagePermissionsTest extends TestCase
      */
     public function testWithNobody($action)
     {
-        $kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
-
         $page  = new Page(['slug' => 'test']);
         $perms = $page->permissions();
 
