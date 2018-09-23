@@ -85,6 +85,31 @@ class PagePropsTest extends TestCase
         $page = new Page(['slug' => null]);
     }
 
+    public function testErrorsWithoutBlueprint()
+    {
+        $page = new Page(['slug' => 'test']);
+        $this->assertEquals([], $page->errors());
+    }
+
+    public function testErrorsWithInfoSectionInBlueprint()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'name' => 'test',
+                'sections' => [
+                    'info' => [
+                        'type'     => 'info',
+                        'headline' => 'Info',
+                        'text'     => 'info'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals([], $page->errors());
+    }
+
     /**
      * @expectedException TypeError
      */

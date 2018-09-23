@@ -92,7 +92,9 @@ abstract class ModelWithContent extends Model
         $errors = [];
 
         foreach ($this->blueprint()->sections() as $section) {
-            $errors = array_merge($errors, $section->errors());
+            if (method_exists($section, 'errors') === true) {
+                $errors = array_merge($errors, $section->errors());
+            }
         }
 
         return $errors;
