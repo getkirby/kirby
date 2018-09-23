@@ -33,4 +33,21 @@ class PagePermissions extends ModelPermissions
     {
         return $this->model->isHomeOrErrorPage() !== true;
     }
+
+    protected function canSort(): bool
+    {
+        if ($this->model->isErrorPage() === true) {
+            return false;
+        }
+
+        if ($this->model->isListed() !== true) {
+            return false;
+        }
+
+        if ($this->model->blueprint()->num() !== 'default') {
+            return false;
+        }
+
+        return true;
+    }
 }

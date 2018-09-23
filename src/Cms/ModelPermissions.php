@@ -22,6 +22,16 @@ abstract class ModelPermissions
         $this->permissions = $this->user->role()->permissions();
     }
 
+    /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
+    }
+
     public function can(string $action): bool
     {
         if ($this->user->role()->id() === 'nobody') {

@@ -699,29 +699,13 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Check if a page can be sorted
+     * Checks if the page is sortable
      *
      * @return boolean
      */
     public function isSortable(): bool
     {
-        if ($this->isErrorPage() === true) {
-            return false;
-        }
-
-        if ($this->isListed() !== true) {
-            return false;
-        }
-
-        if ($this->blueprint()->num() !== 'default') {
-            return false;
-        }
-
-        if ($this->permissions()->sort() !== true) {
-            return false;
-        }
-
-        return true;
+        return $this->permissions()->can('sort');
     }
 
     /**

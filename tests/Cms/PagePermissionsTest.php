@@ -35,10 +35,42 @@ class PagePermissionsTest extends TestCase
 
         $kirby->impersonate('kirby');
 
-        $page  = new Page(['slug' => 'test']);
+        $page  = new Page([
+            'slug' => 'test',
+            'num'  => 1
+        ]);
         $perms = $page->permissions();
 
         $this->assertTrue($perms->can($action));
+    }
+
+    /**
+     * @dataProvider actionProvider
+     */
+    public function testWithAdminButDisabledOption($action)
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $kirby->impersonate('kirby');
+
+        $page  = new Page([
+            'slug' => 'test',
+            'num'  => 1,
+            'blueprint' => [
+                'name' => 'test',
+                'options' => [
+                    $action => false
+                ]
+            ]
+        ]);
+
+        $perms = $page->permissions();
+
+        $this->assertFalse($page->permissions()->can($action));
     }
 
     /**
