@@ -47,7 +47,8 @@ return [
                         'filename' => $file->filename(),
                         'link'     => $file->panelUrl(true),
                         'id'       => $file->id(),
-                        'url'      => $file->url()
+                        'url'      => $file->url(),
+                        'thumb'    => $file->isResizable() ? $file->resize(512)->url() : null
                     ];
                 }
             }
