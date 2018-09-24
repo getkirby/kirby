@@ -76,7 +76,7 @@
               @end="onInput"
             >
               <tr
-                v-for="(item, index) in items"
+                v-for="(item, index) in paginatedItems"
                 :key="index"
                 @click.stop
               >
@@ -86,7 +86,7 @@
                     class="k-structure-table-handle"
                     icon="sort"
                   />
-                  <span>{{ index + 1 }}</span>
+                  <span>{{ indexOf(index) }}</span>
                 </td>
                 <td
                   v-for="(column, columnName) in columns"
@@ -117,6 +117,7 @@
               </tr>
             </k-draggable>
           </table>
+          <k-pagination v-bind="pagination" @paginate="paginateItems" />
         </template>
 
       </template>
@@ -190,6 +191,7 @@ export default {
     ...Field.props,
     columns: Object,
     fields: Object,
+    limit: Number,
     max: Number,
     min: Number,
     sortable: {
@@ -208,7 +210,8 @@ export default {
     return {
       items: this.sort(this.value),
       active: null,
-      trash: null
+      trash: null,
+      page: 1
     };
   },
   computed: {
@@ -230,6 +233,10 @@ export default {
         return false;
       }
 
+      if (this.limit) {
+        return false;
+      }
+
       if (this.disabled === true) {
         return false;
       }
@@ -243,6 +250,26 @@ export default {
       }
 
       return true;
+    },
+    pagination() {
+      return {
+        page: this.page,
+        limit: this.limit,
+        total: this.items.length,
+        align: "center",
+        details: true
+      };
+    },
+    paginatedItems() {
+
+      if (!this.limit) {
+        return this.items;
+      }
+
+      const index  = this.page - 1;
+      const offset = index * this.limit;
+
+      return this.items.slice(offset, offset + this.limit);
     }
   },
   watch: {
@@ -265,6 +292,13 @@ export default {
     this.$events.$off("field.structure.close", this.escape);
   },
   methods: {
+    indexOf(index) {
+      if (!this.limit) {
+        return index + 1;
+      } else {
+        return (this.page - 1) * this.limit + index + 1;
+      }
+    },
     sort(items) {
       if (!this.sortBy) {
         return items;
@@ -399,6 +433,9 @@ export default {
     paginate(pagination) {
       this.open(pagination.offset);
     },
+    paginateItems(pagination) {
+      this.page = pagination.page;
+    },
     remove() {
 
       if (this.trash === null) {
@@ -409,6 +446,11 @@ export default {
       this.trash = null;
       this.$refs.remove.close();
       this.onInput();
+
+      if (this.paginatedItems.length === 0 && this.page > 1) {
+        this.page--;
+      }
+
     },
     toggle(index) {
       if (this.active === index) {
