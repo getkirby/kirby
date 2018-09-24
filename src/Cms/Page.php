@@ -230,8 +230,12 @@ class Page extends ModelWithContent
      *
      * @return array
      */
-    public function blueprints(): array
+    public function blueprints(string $inSection = null): array
     {
+        if ($inSection !== null) {
+            return $this->blueprint()->section($inSection)->blueprints();
+        }
+
         $blueprints      = [];
         $templates       = $this->blueprint()->options()['changeTemplate'] ?? false;
         $currentTemplate = $this->intendedTemplate()->name();

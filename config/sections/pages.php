@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -228,6 +230,37 @@ return [
             }
 
             return true;
+
+        }
+    ],
+    'methods' => [
+        'blueprints' => function () {
+
+            $blueprints = [];
+            $templates  = $this->templates;
+
+            if (empty($templates) === true) {
+                foreach (glob(App::instance()->root('blueprints') . '/pages/*.yml') as $blueprint) {
+                    $templates[] = F::name($blueprint);
+                }
+            }
+
+            // convert every template to a usable option array
+            // for the template select box
+            foreach ($templates as $template) {
+                try {
+                    $props = Blueprint::load('pages/' . $template);
+
+                    $blueprints[] = [
+                        'name'  => basename($props['name']),
+                        'title' => $props['title'],
+                    ];
+                } catch (Throwable $e) {
+                    // skip invalid blueprints
+                }
+            }
+
+            return $blueprints;
 
         }
     ],
