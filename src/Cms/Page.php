@@ -228,23 +228,24 @@ class Page extends ModelWithContent
     /**
      * Returns an array with all blueprints that are available for the page
      *
-     * @params string $inSection
      * @return array
      */
-    public function blueprints(string $inSection = null): array
+    public function blueprints(): array
     {
         $blueprints = [];
-        $blueprint  = $this->blueprint();
-        $sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
+        $templates  = $this->blueprint()->options()['changeTemplate'] ?? false;
 
-        foreach ($sections as $section) {
-            if ($section === null || $section->type() !== 'pages') {
-                continue;
-            }
+        if ($templates === false) {
+            return [];
+        }
 
-            foreach ($section->blueprints() as $blueprint) {
-                $blueprints[$blueprint['name']] = $blueprint;
-            }
+        foreach ($templates as $template) {
+            $props = Blueprint::load('pages/' . $template);
+
+            $blueprints[] = [
+                'name'  => basename($props['name']),
+                'title' => $props['title'],
+            ];
         }
 
         return array_values($blueprints);

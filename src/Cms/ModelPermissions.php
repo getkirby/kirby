@@ -42,12 +42,8 @@ abstract class ModelPermissions
             return false;
         }
 
-        if (array_key_exists($action, $this->options) === false || $this->options[$action] === false) {
+        if (isset($this->options[$action]) === true && $this->options[$action] === false) {
             return false;
-        }
-
-        if (is_bool($this->options[$action]) === true) {
-            return $this->options[$action];
         }
 
         return $this->permissions->for($this->category, $action);
