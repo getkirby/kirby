@@ -85,7 +85,6 @@
                     v-if="isSortable"
                     class="k-structure-table-handle"
                     icon="sort"
-                    @click="open(index)"
                   />
                   <span>{{ index + 1 }}</span>
                 </td>
