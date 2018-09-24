@@ -36,7 +36,7 @@ return [
             ];
 
             // validate the user and log in to the session
-            if ($user = $this->user($this->requestBody('email'))) {
+            if ($user = $this->kirby()->user($this->requestBody('email'))) {
                 if ($user->login($this->requestBody('password'), $options) === true) {
                     return [
                         'code'   => 200,
@@ -45,6 +45,10 @@ return [
                     ];
                 }
             }
+
+            // sleep for a random amount of milliseconds
+            // to make automated attacks harder
+            usleep(rand(1000, 2000000));
 
             throw new InvalidArgumentException('Invalid email or password');
 

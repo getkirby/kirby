@@ -18,7 +18,7 @@
           icon="check"
           type="submit"
         >
-          {{ $t("login") }}
+          {{ $t("login") }} <template v-if="isLoading">…</template>
         </k-button>
       </div>
     </form>
@@ -32,6 +32,7 @@ export default {
       ready: false,
       issue: null,
       invalid: false,
+      isLoading: false,
       user: {
         email: "",
         password: "",
@@ -77,14 +78,18 @@ export default {
   methods: {
     login() {
       this.invalid = false;
+      this.isLoading = true;
 
       this.$store
         .dispatch("user/login", this.user)
         .then(() => {
+          this.$store.dispatch('loading', false);
           this.$store.dispatch("notification/success", this.$t("welcome"));
+          this.isLoading = false;
         })
         .catch(() => {
-          this.invalid = true;
+          this.invalid   = true;
+          this.isLoading = false;
         });
     }
   }
