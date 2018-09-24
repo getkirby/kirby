@@ -4,12 +4,12 @@
       <k-fieldset :fields="fields" v-model="user" />
       <k-button type="submit" icon="check">{{ $t("install") }}</k-button>
     </form>
-    <k-text v-else-if="system.isInstalled">
+    <k-text v-else-if="system.isOk && system.isInstalled">
       <k-headline>The panel is already installed</k-headline>
       <k-link to="/login">Login now</k-link>
     </k-text>
     <div v-else>
-      <k-headline>{{ $t("installation.issues.headline") }}</k-headline>
+      <k-headline v-if="!system.isInstalled">{{ $t("installation.issues.headline") }}</k-headline>
 
       <ul class="k-installation-issues">
         <li v-if="requirements.php === false">
@@ -123,8 +123,9 @@ export default {
     },
     check() {
       this.$store.dispatch("system/load", true).then(system => {
-        if (system.isInstalled === true) {
+        if (system.isInstalled === true && system.isReady) {
           this.$router.push("/login");
+          return;
         }
 
         this.$api.translations.options().then(languages => {
