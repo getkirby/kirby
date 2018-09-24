@@ -166,8 +166,8 @@ Array.prototype.sortBy = function(sortBy) {
 
   return this.sort((a, b) => {
 
-    const valueA = a[field].toLowerCase();
-    const valueB = b[field].toLowerCase();
+    const valueA = String(a[field]).toLowerCase();
+    const valueB = String(b[field]).toLowerCase();
 
     if (direction === "desc") {
       return sort(valueB, valueA);
