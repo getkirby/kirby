@@ -40,9 +40,13 @@ return [
         if (file_exists($thumb) === false || filemtime($this->root()) > filemtime($thumb)) {
             F::remove($thumb);
 
-            Data::write($job, array_merge($attributes, [
-                'filename' => $file->filename()
-            ]));
+            try {
+                Data::write($job, array_merge($attributes, [
+                    'filename' => $file->filename()
+                ]));
+            } catch (Throwable $e) {
+                // the thumb job file cannot be created
+            }
         }
 
         return $parent->mediaUrl() . '/' . $thumbName;
