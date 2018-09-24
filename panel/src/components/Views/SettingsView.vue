@@ -1,7 +1,7 @@
 <template>
   <k-view class="k-settings-view">
     <k-header>
-      Settings
+      {{ $t('view.settings') }}
     </k-header>
 
     <section class="k-system-info">
