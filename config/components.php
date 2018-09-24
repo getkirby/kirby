@@ -18,9 +18,7 @@ return [
             return $file->mediaUrl();
         }
 
-        $resizable = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
-
-        if (in_array($file->extension(), $resizable) === false) {
+        if ($file->isResizable() === false) {
             return $file->mediaUrl();
         }
 

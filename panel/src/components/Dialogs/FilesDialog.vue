@@ -9,7 +9,11 @@
           v-for="(file, index) in files"
           :key="file.filename"
           :text="file.filename"
-          :image="{ url: file.url }"
+          :image="file.thumb ? { url: file.thumb } : null"
+          :icon="{
+            type: 'file',
+            back: 'pattern'
+          }"
           @click="toggle(index)"
         >
           <k-button v-if="file.selected" theme="positive" icon="check" slot="options" />
@@ -42,13 +46,18 @@ export default {
       this.files = [];
 
       return this.$api
-        .get(this.options.parent + "/files", {view: "compact"})
+        .get(this.options.parent + "/files", {select: "id, filename, link, type, url, thumbs"})
         .then(files => {
 
           const selected = this.options.selected || [];
 
           this.files = files.data.map(file => {
             file.selected = selected.indexOf(file.id) !== -1;
+
+            if (file.thumbs && file.thumbs.tiny) {
+              file.thumb = file.thumbs.medium;
+            }
+
             return file;
           });
 

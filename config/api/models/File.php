@@ -77,6 +77,21 @@ return [
         'size' => function (File $file) {
             return $file->size();
         },
+        'thumbs' => function ($file) {
+
+            if ($file->isResizable() === false) {
+                return null;
+            }
+
+            return [
+                'tiny'   => $file->resize(128)->url(),
+                'small'  => $file->resize(256)->url(),
+                'medium' => $file->resize(512)->url(),
+                'large'  => $file->resize(768)->url(),
+                'huge'   => $file->resize(1024)->url(),
+            ];
+
+        },
         'type' => function (File $file) {
             return $file->type();
         },

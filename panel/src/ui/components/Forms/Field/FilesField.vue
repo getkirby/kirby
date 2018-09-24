@@ -20,7 +20,8 @@
           :key="file.filename"
           :text="file.filename"
           :link="file.link"
-          :image="{ url: file.url }"
+          :image="file.thumb ? { url: file.thumb } : null"
+          :icon="{ type: 'file', back: 'pattern' }"
         >
           <k-button slot="options" icon="remove" @click="remove(index)" />
         </component>

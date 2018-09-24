@@ -339,6 +339,24 @@ class File extends ModelWithContent
     }
 
     /**
+     * Checks if the file is a resizable image
+     *
+     * @return boolean
+     */
+    public function isResizable(): bool
+    {
+        $resizable = [
+            'jpg',
+            'jpeg',
+            'gif',
+            'png',
+            'webp'
+        ];
+
+        return in_array($this->extension(), $resizable) === true;
+    }
+
+    /**
      * Returns the absolute path to the file in the public media folder
      *
      * @return string

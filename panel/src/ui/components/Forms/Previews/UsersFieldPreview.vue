@@ -2,7 +2,7 @@
   <ul class="k-users-field-preview" v-if="value">
     <li v-for="user in value" :key="user.email">
       <figure>
-        <k-link :title="user.email" @click.native.stop :to="user.link">
+        <k-link :title="user.email" @click.native.stop :to="$api.users.link(user.id)">
           <k-image v-if="user.avatar.exists" :src="user.avatar.url" class="k-users-field-preview-avatar" back="pattern" />
           <k-icon v-else type="user" back="pattern" class="k-users-field-preview-avatar" />
           <figcaption>
