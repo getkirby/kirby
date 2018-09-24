@@ -30,13 +30,13 @@
         </ul>
       </template>
       <template slot="footer">
-        <footer v-if="errors.length > 0" class="k-dialog-footer">
+        <template v-if="errors.length > 0">
           <k-button-group>
             <k-button icon="check" @click="$refs.dialog.close()">
               {{ "Ok" | t("confirm") }}
             </k-button>
           </k-button-group>
-        </footer>
+        </template>
       </template>
     </k-dialog>
 
@@ -132,13 +132,13 @@ export default {
 
         if (this.errors.length > 0) {
           this.$forceUpdate();
-          this.$emit("error");
+          this.$emit("error", this.files);
           return;
         }
 
         setTimeout(() => {
           this.$refs.dialog.close();
-          this.$emit("success");
+          this.$emit("success", this.files);
         }, 250);
       }
     }
