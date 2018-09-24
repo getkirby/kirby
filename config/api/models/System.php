@@ -16,6 +16,9 @@ return [
         'isLocal' => function (System $system) {
             return $system->isLocal();
         },
+        'multilang' => function () {
+            return $this->kirby()->option('languages', false) !== false;
+        },
         'languages' => function () {
             return $this->kirby()->languages();
         },

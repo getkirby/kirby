@@ -35,7 +35,7 @@
       </ul>
     </section>
 
-    <section class="k-languages">
+    <section class="k-languages" v-if="multilang">
 
       <template v-if="languages.length > 0">
         <section class="k-languages-section">
@@ -84,6 +84,9 @@ export default {
   computed: {
     defaultLanguage() {
       return this.languages.filter(language => language.default);
+    },
+    multilang() {
+      return this.$store.state.system.info.multilang;
     },
     license() {
       return this.$store.state.system.info.license;
