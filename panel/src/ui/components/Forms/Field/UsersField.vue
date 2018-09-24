@@ -19,7 +19,7 @@
           :is="elements.item"
           :key="user.email"
           :text="user.username"
-          :link="user.link"
+          :link="$api.users.link(user.id)"
           :image="
             user.avatar.exists ?
               {

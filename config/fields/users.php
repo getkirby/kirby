@@ -33,7 +33,7 @@ return [
                 if ($email !== null && ($user = $kirby->user($email))) {
                     $users[] = [
                         'username' => $user->username(),
-                        'link'     => $user->panelUrl(true),
+                        'id'       => $user->id(),
                         'email'    => $user->email(),
                         'avatar'   => [
                             'url'    => $user->avatar()->url(),
