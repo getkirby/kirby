@@ -27,13 +27,14 @@
   "save": "Save",
   "saved": "Saved!",
   "upload": "Upload",
+  "version": "Version",
   "welcome": "Welcome!",
 
   "view.site": "Site",
   "view.users": "Users",
   "view.account": "Your account",
   "view.installation": "Installation",
-  "view.languages": "Languages",
+  "view.settings": "Settings",
 
   "installation.issues.headline": "The panel cannot be installed",
   "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
@@ -64,7 +65,7 @@
 
   "files.empty": "No files yet",
 
-  "language.create": "Create language",
+  "language.create": "Add a new language",
   "language.delete.confirm": "Do you really want to delete the language <strong>{name}</strong> including all translations? This cannot be undone!",
   "language.deleted": "The language has been deleted",
   "language.name": "Name",
@@ -78,10 +79,16 @@
   "language.url": "Url Path",
   "language.updated": "The language has been updated",
 
-  "languages.empty": "No multi-language setup",
+  "languages": "Languages",
+  "languages.empty": "There are no languages yet",
   "languages.empty.secondary": "There are no secondary languages yet",
   "languages.default": "Default language",
   "languages.secondary": "Secondary languages",
+
+  "license": "License",
+  "license.buy": "Buy a license",
+  "license.register": "Register",
+  "license.unregistered": "This is an unregistered demo of Kirby",
 
   "page.create": "Create draft",
   "page.created": "The draft has been created",

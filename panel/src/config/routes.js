@@ -5,7 +5,7 @@ import store from "./store.js";
 import BrowserView from "@/components/Views/BrowserView.vue";
 import FileView from "@/components/Views/FileView.vue";
 import InstallationView from "@/components/Views/InstallationView.vue";
-import LanguagesView from "@/components/Views/LanguagesView.vue";
+import SettingsView from "@/components/Views/SettingsView.vue";
 import LoginView from "@/components/Views/LoginView.vue";
 import PageView from "@/components/Views/PageView.vue";
 import SiteView from "@/components/Views/SiteView.vue";
@@ -98,12 +98,12 @@ export default [
     })
   },
   {
-    path: "/languages",
-    name: "Languages",
+    path: "/settings",
+    name: "Settings",
     meta: {
-      view: "languages"
+      view: "settings"
     },
-    component: LanguagesView,
+    component: SettingsView,
     beforeEnter: auth
   },
   {

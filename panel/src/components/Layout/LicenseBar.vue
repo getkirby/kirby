@@ -1,8 +1,8 @@
 <template>
   <div v-if="false">
     <div class="k-license-bar">
-      <p>This is an unregistered demo of Kirby.
-        <a href="#register" @click.prevent="dropzone = true">Register</a>&nbsp;or&nbsp;<a target="blank" href="https://getkirby.com/buy">Buy a license</a>
+      <p>{{ $t('license.unregistered') }}
+        <a href="#register" @click.prevent="dropzone = true">{{ $t('license.register') }}</a>&nbsp;/&nbsp;<k-link target="blank" to="https://getkirby.com/buy">{{ $t('license.buy') }}</k-link>
       </p>
     </div>
     <k-dropzone v-if="dropzone" class="k-license-dropzone" @drop="drop">
@@ -10,7 +10,7 @@
         <k-icon class="k-license-dropzone-icon" type="upload" />
         <p>Drag your license file here to register your Kirby installation</p>
 
-        <k-button icon="cancel" @click="dropzone = false">Cancel</k-button>
+        <k-button icon="cancel" @click="dropzone = false">{{ $t('cancel') }}</k-button>
       </div>
     </k-dropzone>
     <k-upload ref="upload" @success="uploaded" @error="dropzone = false" />

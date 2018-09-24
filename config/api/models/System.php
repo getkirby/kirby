@@ -42,6 +42,9 @@ return [
         'user' => function () {
             return $this->user();
         },
+        'version' => function () {
+            return $this->kirby()->version();
+        }
     ],
     'type'   => System::class,
     'views'  => [
@@ -55,7 +58,8 @@ return [
             'requirements',
             'title',
             'translation',
-            'user' => 'auth'
+            'user' => 'auth',
+            'version'
         ]
     ],
 ];

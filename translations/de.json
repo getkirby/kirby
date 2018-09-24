@@ -13,6 +13,7 @@
   "discard": "Verwerfen",
   "edit": "Bearbeiten",
   "install": "Installieren",
+  "license": "Lizens",
   "login": "Einloggen",
   "logout": "Ausloggen",
   "more": "More",
@@ -25,13 +26,14 @@
   "save": "Speichern",
   "saved": "Gespeichert!",
   "upload": "Hochladen",
+  "version": "Version",
   "welcome": "Willkommen!",
 
   "view.site": "Seite",
   "view.users": "Benutzer",
   "view.account": "Dein Account",
   "view.installation": "Installation",
-  "view.languages": "Sprachen",
+  "view.settings": "Settings",
 
   "file.name": "Dateiname",
   "file.renamed": "Die Datei wurde umbenannt",
@@ -67,10 +69,16 @@
   "language.url": "Url Pfad",
   "language.updated": "Die Änderungen wurden gespeichert",
 
+  "languages": "Sprachen",
   "languages.empty": "Kein mehrsprachiges Setup",
   "languages.empty.secondary": "Es gibt noch keine sekundären Sprachen",
   "languages.default": "Standardsprache",
   "languages.secondary": "Sekundäre Sprachen",
+
+  "license": "Lizenz",
+  "license.buy": "Lizenz kaufen",
+  "license.register": "Lizenz registrieren",
+  "license.unregistered": "Dies ist eine unregistrierte Kirby demo",
 
   "page.create": "Entwurf erstellen",
   "page.created": "Der Entwurf wurde erstellt",
