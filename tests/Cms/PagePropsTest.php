@@ -17,6 +17,60 @@ class PagePropsTest extends TestCase
         parent::setUp();
     }
 
+    public function testBlueprints()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'pages/a' => [
+                    'title' => 'A'
+                ],
+                'pages/b' => [
+                    'title' => 'B'
+                ]
+            ]
+        ]);
+
+        // no blueprints
+        $page = new Page(['slug' => 'test']);
+
+        $this->assertEquals([], $page->blueprints());
+
+        // two different blueprints
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'options' => [
+                    'template' => [
+                        'a',
+                        'b'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(['A', 'B'], array_column($page->blueprints(), 'title'));
+
+        // including the same blueprint
+        $page = new Page([
+            'slug' => 'test',
+            'template' => 'a',
+            'blueprint' => [
+                'options' => [
+                    'template' => [
+                        'a',
+                        'b'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(['B'], array_column($page->blueprints(), 'title'));
+
+    }
+
     public function testDepth()
     {
 

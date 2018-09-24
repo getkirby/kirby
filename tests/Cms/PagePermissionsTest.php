@@ -157,4 +157,48 @@ class PagePermissionsTest extends TestCase
         $this->assertFalse($perms->can($action));
     }
 
+    public function testCannotChangeTemplate()
+    {
+        $this->kirby->impersonate('kirby');
+
+        $page = new Page([
+            'slug' => 'test',
+        ]);
+
+        $this->assertFalse($page->permissions()->can('changeTemplate'));
+    }
+
+    public function testCanChangeTemplate()
+    {
+        $this->kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'pages/a' => [
+                    'title' => 'A'
+                ],
+                'pages/b' => [
+                    'title' => 'B'
+                ]
+            ]
+        ]);
+
+        $this->kirby->impersonate('kirby');
+
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'options' => [
+                    'template' => [
+                        'a',
+                        'b'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertTrue($page->permissions()->can('changeTemplate'));
+    }
+
 }

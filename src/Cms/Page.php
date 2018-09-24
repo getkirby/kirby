@@ -232,20 +232,29 @@ class Page extends ModelWithContent
      */
     public function blueprints(): array
     {
-        $blueprints = [];
-        $templates  = $this->blueprint()->options()['changeTemplate'] ?? false;
+        $blueprints      = [];
+        $templates       = $this->blueprint()->options()['changeTemplate'] ?? false;
+        $currentTemplate = $this->intendedTemplate()->name();
 
         if ($templates === false) {
             return [];
         }
 
         foreach ($templates as $template) {
-            $props = Blueprint::load('pages/' . $template);
+            if ($currentTemplate === $template) {
+                continue;
+            }
 
-            $blueprints[] = [
-                'name'  => basename($props['name']),
-                'title' => $props['title'],
-            ];
+            try {
+                $props = Blueprint::load('pages/' . $template);
+
+                $blueprints[] = [
+                    'name'  => basename($props['name']),
+                    'title' => $props['title'],
+                ];
+            } catch (Page $e) {
+                // skip invalid blueprints
+            }
         }
 
         return array_values($blueprints);
