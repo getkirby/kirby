@@ -100,6 +100,9 @@ trait SiteActions
     {
         $this->children  = null;
         $this->blueprint = null;
+        $this->files     = null;
+        $this->content   = null;
+        $this->inventory = null;
 
         return $this;
     }
