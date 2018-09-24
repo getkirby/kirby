@@ -2375,12 +2375,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "c5ca5555e169317f6f13d625a9e35ee89d64b395"
+                "reference": "f7d88a181e92d64ccc1b4a48061d558aafb671d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/c5ca5555e169317f6f13d625a9e35ee89d64b395",
-                "reference": "c5ca5555e169317f6f13d625a9e35ee89d64b395",
+                "url": "https://api.github.com/repos/symfony/console/zipball/f7d88a181e92d64ccc1b4a48061d558aafb671d0",
+                "reference": "f7d88a181e92d64ccc1b4a48061d558aafb671d0",
                 "shasum": ""
             },
             "require": {
@@ -2436,7 +2436,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-16 11:51:03"
+            "time": "2018-09-24 07:37:12"
         },
         {
             "name": "symfony/contracts",
@@ -2901,12 +2901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "ab568b628728e860f70bc3b9af95496ba6d9d6b0"
+                "reference": "a54c3e0b52d77fa52ce8ada54901f047c62b70e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/ab568b628728e860f70bc3b9af95496ba6d9d6b0",
-                "reference": "ab568b628728e860f70bc3b9af95496ba6d9d6b0",
+                "url": "https://api.github.com/repos/symfony/process/zipball/a54c3e0b52d77fa52ce8ada54901f047c62b70e0",
+                "reference": "a54c3e0b52d77fa52ce8ada54901f047c62b70e0",
                 "shasum": ""
             },
             "require": {
@@ -2942,7 +2942,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-10 07:26:34"
+            "time": "2018-09-24 07:37:12"
         },
         {
             "name": "symfony/stopwatch",
