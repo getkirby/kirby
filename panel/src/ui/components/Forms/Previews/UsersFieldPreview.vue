@@ -53,6 +53,9 @@ export default {
   border: 1px solid $color-border;
   border-left: 0;
   border-radius: $border-radius;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 </style>
