@@ -91,7 +91,7 @@ class Response extends BaseResponse
     public static function page(Page $page, array $data = [], $contentType = 'html', $code = 200)
     {
         // render and optionally cache the page
-        return $page->render($data, $contentType);
+        return $page->render($data, $contentType, $code);
     }
 
     /**
