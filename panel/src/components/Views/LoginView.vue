@@ -68,6 +68,10 @@ export default {
           this.$router.push("/installation");
         }
 
+        if (system.user && system.user.id) {
+          this.$router.push("/");
+        }
+
         this.ready = true;
         this.$store.dispatch("title", this.$t("login"));
       })
@@ -83,7 +87,6 @@ export default {
       this.$store
         .dispatch("user/login", this.user)
         .then(() => {
-          this.$store.dispatch('loading', false);
           this.$store.dispatch("notification/success", this.$t("welcome"));
           this.isLoading = false;
         })
