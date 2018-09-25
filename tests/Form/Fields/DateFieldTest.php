@@ -33,8 +33,8 @@ class DateFieldTest extends TestCase
     public function valueProvider()
     {
         return [
-            ['12.12.2012', '2012-12-12T00:00:00+01:00'],
-            ['2016-11-21', '2016-11-21T00:00:00+01:00'],
+            ['12.12.2012', date(DATE_W3C, strtotime('2012-12-12'))],
+            ['2016-11-21', date(DATE_W3C, strtotime('2016-11-21'))],
             ['something', null],
         ];
     }
