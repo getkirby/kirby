@@ -77,6 +77,7 @@ import InfoField from "./components/Forms/Field/InfoField.vue";
 import LineField from "./components/Forms/Field/LineField.vue";
 import MultiselectField from "./components/Forms/Field/MultiselectField.vue";
 import NumberField from "./components/Forms/Field/NumberField.vue";
+import PagesField from "./components/Forms/Field/PagesField.vue";
 import PasswordField from "./components/Forms/Field/PasswordField.vue";
 import RadioField from "./components/Forms/Field/RadioField.vue";
 import RangeField from "./components/Forms/Field/RangeField.vue";
@@ -181,6 +182,7 @@ export default {
     Vue.component("k-line-field", LineField);
     Vue.component("k-multiselect-field", MultiselectField);
     Vue.component("k-number-field", NumberField);
+    Vue.component("k-pages-field", PagesField);
     Vue.component("k-password-field", PasswordField);
     Vue.component("k-radio-field", RadioField);
     Vue.component("k-range-field", RangeField);

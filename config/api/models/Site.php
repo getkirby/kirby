@@ -50,6 +50,14 @@ return [
             'blueprint',
             'options',
             'url'
+        ],
+        'selector' => [
+            'title',
+            'children' => [
+                'id',
+                'title',
+                'hasChildren'
+            ],
         ]
     ]
 ];

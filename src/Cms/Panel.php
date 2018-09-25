@@ -80,6 +80,7 @@ class Panel
                 'url'         => $url,
                 'site'        => $kirby->url('index'),
                 'api'         => $kirby->url('api'),
+                'csrf'        => csrf(),
                 'translation' => 'en',
                 'debug'       => true
             ]

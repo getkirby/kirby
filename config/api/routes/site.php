@@ -141,6 +141,13 @@ return [
         }
     ],
     [
+        'pattern' => 'site/find',
+        'method'  => 'POST',
+        'action'  => function () {
+            return $this->site()->find(...$this->requestBody());
+        }
+    ],
+    [
         'pattern' => 'site/options',
         'method'  => 'GET',
         'action'  => function () {

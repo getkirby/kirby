@@ -154,6 +154,7 @@ import sorter from "@/ui/helpers/sort.js";
 // Field Previews
 import FilesFieldPreview from "../Previews/FilesFieldPreview.vue";
 import EmailFieldPreview from "../Previews/EmailFieldPreview.vue";
+import PagesFieldPreview from "../Previews/PagesFieldPreview.vue";
 import UrlFieldPreview from "../Previews/UrlFieldPreview.vue";
 import UsersFieldPreview from "../Previews/UsersFieldPreview.vue";
 
@@ -183,6 +184,7 @@ export default {
   components: {
     "k-email-field-preview": EmailFieldPreview,
     "k-files-field-preview": FilesFieldPreview,
+    "k-pages-field-preview": PagesFieldPreview,
     "k-url-field-preview": UrlFieldPreview,
     "k-users-field-preview": UsersFieldPreview
   },

@@ -11,6 +11,7 @@ return [
     'line'        => __DIR__ . '/fields/line.php',
     'multiselect' => __DIR__ . '/fields/multiselect.php',
     'number'      => __DIR__ . '/fields/number.php',
+    'pages'       => __DIR__ . '/fields/pages.php',
     'radio'       => __DIR__ . '/fields/radio.php',
     'range'       => __DIR__ . '/fields/range.php',
     'select'      => __DIR__ . '/fields/select.php',

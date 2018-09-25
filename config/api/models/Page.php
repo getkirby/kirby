@@ -107,6 +107,19 @@ return [
             'slug',
             'title',
             'url'
+        ],
+        'selector' => [
+            'id',
+            'title',
+            'parent' => [
+                'id',
+                'title'
+            ],
+            'children' => [
+                'id',
+                'title',
+                'hasChildren'
+            ],
         ]
     ],
 ];
