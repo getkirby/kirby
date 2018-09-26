@@ -755,19 +755,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "8788c31191242bca77a260b1d2c2621f18c9c1c3"
+                "reference": "8f58c558d3263405c13df40489c35fe1eefd8f0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8788c31191242bca77a260b1d2c2621f18c9c1c3",
-                "reference": "8788c31191242bca77a260b1d2c2621f18c9c1c3",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8f58c558d3263405c13df40489c35fe1eefd8f0e",
+                "reference": "8f58c558d3263405c13df40489c35fe1eefd8f0e",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^4.0",
+                "doctrine/coding-standard": "^5.0",
                 "ext-pdo": "*",
                 "ext-phar": "*",
                 "phpbench/phpbench": "^0.13",
@@ -802,7 +802,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2018-09-05 19:40:54"
+            "time": "2018-09-25 21:32:24"
         },
         {
             "name": "doctrine/lexer",
@@ -2626,12 +2626,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "e4f1ce8e2f10b4f8b37d32125e1720bea6851096"
+                "reference": "0a0d27ed2c28a08dc42430f7b7157010ca0544c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/e4f1ce8e2f10b4f8b37d32125e1720bea6851096",
-                "reference": "e4f1ce8e2f10b4f8b37d32125e1720bea6851096",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/0a0d27ed2c28a08dc42430f7b7157010ca0544c1",
+                "reference": "0a0d27ed2c28a08dc42430f7b7157010ca0544c1",
                 "shasum": ""
             },
             "require": {
@@ -2667,7 +2667,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-21 12:51:02"
+            "time": "2018-09-26 05:38:44"
         },
         {
             "name": "symfony/options-resolver",
