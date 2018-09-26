@@ -10,6 +10,7 @@
       <transition name="k-image-transition">
         <img
           v-if="loaded"
+          :key="src"
           :alt="alt || ''"
           :src="src"
           @dragstart.prevent

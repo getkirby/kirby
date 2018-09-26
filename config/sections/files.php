@@ -140,9 +140,6 @@ return [
             ];
 
         },
-        'add' => function () {
-            return $this->isFull() === false;
-        },
         'link' => function () {
 
             $modelLink  = $this->model->panelUrl(true);
@@ -168,6 +165,28 @@ return [
 
             return true;
 
+        },
+        'upload' => function () {
+
+            if ($this->isFull() === true) {
+                return false;
+            }
+
+            if ($this->max && count($this->data) === $this->max - 1) {
+                $multiple = false;
+            } else {
+                $multiple = true;
+            }
+
+            return [
+                'accept'     => $this->accept,
+                'multiple'   => $multiple,
+                'api'        => $this->parent->apiUrl(true) . '/files',
+                'attributes' => [
+                    'template' => $this->template
+                ]
+            ];
+
         }
     ],
     'toArray' => function () {
@@ -176,13 +195,12 @@ return [
             'errors'  => $this->errors,
             'options' => [
                 'accept'   => $this->accept,
-                'add'      => $this->add,
                 'headline' => $this->headline,
                 'layout'   => $this->layout,
                 'link'     => $this->link,
                 'max'      => $this->max,
                 'sortable' => $this->sortable,
-                'template' => $this->template,
+                'upload'   => $this->upload
             ],
             'pagination' => $this->pagination
         ];

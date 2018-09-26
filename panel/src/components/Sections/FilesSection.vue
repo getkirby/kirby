@@ -53,30 +53,30 @@ export default {
   mixins: [Section],
   data() {
     return {
-      accept: "*",
       add: false,
       data: [],
       error: false,
       headline: null,
       isLoading: true,
       min: null,
-      max: null,
       issue: false,
       layout: "list",
       page: 1,
       pagination: {},
-      template: null,
     };
   },
   computed: {
     uploadParams() {
-      return {
-        url: config.api + "/" + this.parent + "/files",
-        accept: this.accept,
-        attributes: {
-          template: this.template
-        }
-      };
+
+      if (this.add === false) {
+        return false;
+      }
+
+      // add the upload api url
+      this.add.url = config.api + "/" + this.add.api;
+
+      return this.add;
+
     }
   },
   created() {
@@ -92,16 +92,18 @@ export default {
         .get(this.parent + "/sections/" + this.name, { page: this.page })
         .then(response => {
 
-          this.accept     = response.options.accept || "*";
           this.headline   = response.options.headline || " ";
-          this.add        = response.options.add && this.$permissions.files.create;
           this.min        = response.options.min;
-          this.max        = response.options.max;
-          this.template   = response.options.template;
           this.pagination = response.pagination;
           this.sortable   = response.options.sortable === true && response.data.length > 1;
           this.layout     = response.options.layout || "list";
           this.isLoading  = false;
+
+          if (this.$permissions.files.create && response.options.upload !== false) {
+            this.add = response.options.upload;
+          } else {
+            this.add = false;
+          }
 
           this.data = response.data.map(file => {
             file.options = ready => {
