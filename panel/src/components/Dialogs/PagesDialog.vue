@@ -23,6 +23,7 @@
         >
           <template slot="options">
             <k-button v-if="isSelected(page)" theme="positive" icon="check" />
+            <k-button v-else icon="circle-o" />
             <k-button :disabled="!page.hasChildren" icon="angle-right" @click.stop="go(page)" />
           </template>
         </k-list-item>
@@ -136,8 +137,12 @@ export default {
 .k-pages-dialog .k-list-item {
   cursor: pointer;
 }
+.k-pages-dialog .k-list-item .k-button[data-theme="disabled"],
 .k-pages-dialog .k-list-item .k-button[disabled] {
   opacity: .25;
+}
+.k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
+  opacity: 1;
 }
 .k-pages-dialog .k-empty {
   border: 0;

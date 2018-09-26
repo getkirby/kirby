@@ -17,6 +17,7 @@
           @click="toggle(index)"
         >
           <k-button v-if="file.selected" theme="positive" icon="check" slot="options" />
+          <k-button v-else icon="circle-o" slot="options" />
         </k-list-item>
       </k-list>
       <k-empty v-else icon="image">
@@ -102,16 +103,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* .k-files-dialog .k-dialog-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.k-files-dialog .k-dialog-body {
-  max-height: none;
-  flex-grow: 1;
-} */
 .k-files-dialog .k-list-item {
   cursor: pointer;
 }

@@ -26,6 +26,7 @@
           @click="toggle(index)"
         >
           <k-button v-if="user.selected" theme="positive" icon="check" slot="options" />
+          <k-button v-else icon="circle-o" slot="options" />
         </k-list-item>
       </k-list>
       <k-empty v-else icon="users">
