@@ -144,7 +144,14 @@ return [
         'pattern' => 'site/find',
         'method'  => 'POST',
         'action'  => function () {
-            return $this->site()->find(...$this->requestBody());
+            $result = $this->site()->find(...$this->requestBody());
+
+            // always wrap single pages in a collection
+            if (is_a($result, 'Kirby\Cms\Page') === true) {
+                return new Pages([$result]);
+            }
+
+            return $result;
         }
     ],
     [

@@ -74,7 +74,6 @@ export default {
       this.fetch();
     },
     submit() {
-
       this.$api.post('site/find', this.options.selected)
         .then(response => {
           this.$emit("submit", response.data);
