@@ -92,6 +92,17 @@ class F
 
     public static $units = ['B','kB','MB','GB','TB','PB', 'EB', 'ZB', 'YB'];
 
+    /**
+     * Appends new content to an existing file
+     *
+     * @param  string  $file The path for the file
+     * @param  mixed   $content Either a string or an array. Arrays will be converted to JSON.
+     * @return boolean
+     */
+    public static function append(string $file, $content): bool
+    {
+        return static::write($file, $content, true);
+    }
 
     /**
      * Returns the file content as base64 encoded string
@@ -128,6 +139,31 @@ class F
         return copy($source, $target);
     }
 
+    /**
+     * Just an alternative for dirname() to stay consistent
+     *
+     * <code>
+     *
+     * $dirname = F::dirname('/var/www/test.txt');
+     * // dirname is /var/www
+     *
+     * </code>
+     *
+     * @param  string  $file The path
+     * @return string
+     */
+    public static function dirname(string $file): string
+    {
+        return dirname($file);
+    }
+
+    /**
+     * Checks if the file exists on disk
+     *
+     * @param string $file
+     * @param string $in
+     * @return boolean
+     */
     public static function exists(string $file, string $in = null): bool
     {
         try {
@@ -197,6 +233,24 @@ class F
         }
 
         return static::$types[$type] ?? [];
+    }
+
+    /**
+     * Extracts the filename from a file path
+     *
+     * <code>
+     *
+     * $filename = F::filename('/var/www/test.txt');
+     * // filename is test.txt
+     *
+     * </code>
+     *
+     * @param  string  $name The path
+     * @return string
+     */
+    public static function filename(string $name): string
+    {
+        return pathinfo($name, PATHINFO_BASENAME);
     }
 
     /**

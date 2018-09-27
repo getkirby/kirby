@@ -5,6 +5,139 @@ namespace Kirby\Toolkit;
 class FTest extends TestCase
 {
 
+    public function setUp()
+    {
+        $this->fixtures = __DIR__ . '/fixtures/f';
+        $this->tmp      = $this->fixtures . '/test.txt';
+        $this->moved    = $this->fixtures . '/moved.txt';
+
+        Dir::remove($this->fixtures);
+        Dir::make($this->fixtures);
+    }
+
+    public function tearDown()
+    {
+        Dir::remove($this->fixtures);
+    }
+
+    public function testAppend()
+    {
+        $this->assertTrue(F::append($this->tmp, ' is awesome'));
+    }
+
+    public function testCopy()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertFalse(file_exists($this->moved));
+
+        $this->assertTrue(F::copy($this->tmp, $this->moved));
+
+        $this->assertTrue(file_exists($this->moved));
+    }
+
+    public function testDirname()
+    {
+        $this->assertEquals(dirname($this->tmp), F::dirname($this->tmp));
+    }
+
+    public function testExists()
+    {
+        touch($this->tmp);
+
+        $this->assertTrue(F::exists($this->tmp));
+    }
+
+    public function testExtension()
+    {
+        $this->assertEquals('php', F::extension(__FILE__));
+        $this->assertEquals('test.jpg', F::extension($this->tmp, 'jpg'));
+    }
+
+    public function testFilename()
+    {
+        $this->assertEquals('test.txt', F::filename($this->tmp));
+    }
+
+    public function testIs()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertTrue(F::is($this->tmp, 'txt'));
+        $this->assertTrue(F::is($this->tmp, 'text/plain'));
+    }
+
+    public function testIsReadable()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertEquals(is_readable($this->tmp), F::isReadable($this->tmp));
+    }
+
+    public function testIsWritable()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertEquals(is_writable($this->tmp), F::isWritable($this->tmp));
+    }
+
+    public function testMove()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertFalse(file_exists($this->moved));
+        $this->assertTrue(file_exists($this->tmp));
+
+        $this->assertTrue(F::move($this->tmp, $this->moved));
+
+        $this->assertTrue(file_exists($this->moved));
+        $this->assertFalse(file_exists($this->tmp));
+
+    }
+
+    public function testMime()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertEquals('text/plain', F::mime($this->tmp));
+    }
+
+    public function testModified()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertEquals(filemtime($this->tmp), F::modified($this->tmp));
+    }
+
+    public function testName()
+    {
+        $this->assertEquals('test', F::name($this->tmp));
+    }
+
+    public function testNiceSize()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertEquals('4 B', F::niceSize($this->tmp));
+        $this->assertEquals('4 B', F::niceSize(4));
+    }
+
+    public function testRead()
+    {
+        file_put_contents($this->tmp, $content = 'my content is awesome');
+
+        $this->assertEquals($content, F::read($this->tmp));
+    }
+
+    public function testRemove()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertTrue(file_exists($this->tmp));
+        $this->assertTrue(F::remove($this->tmp));
+        $this->assertFalse(file_exists($this->tmp));
+    }
+
     public function testSafeName()
     {
         // with extension
@@ -24,6 +157,44 @@ class FTest extends TestCase
 
         // with leading dot
         $this->assertEquals('super.jpg', F::safeName('.super.jpg'));
+    }
+
+    public function testSize()
+    {
+        F::write($this->tmp, 'test');
+
+        $this->assertEquals(4, F::size($this->tmp));
+    }
+
+    public function testType()
+    {
+
+        $this->assertEquals('image', F::type('jpg'));
+        $this->assertEquals('document', F::type('pdf'));
+        $this->assertEquals('archive', F::type('zip'));
+        $this->assertEquals('code', F::type('css'));
+        $this->assertEquals('code', F::type('content.php'));
+        $this->assertEquals('code', F::type('py'));
+        $this->assertEquals('code', F::type('java'));
+
+    }
+
+    public function testURI()
+    {
+
+        F::write($this->tmp, 'test');
+
+        $expected = 'dGVzdA==';
+        $this->assertEquals($expected, F::base64($this->tmp));
+
+        $expected = 'data:text/plain;base64,dGVzdA==';
+        $this->assertEquals($expected, F::uri($this->tmp));
+
+    }
+
+    public function testWrite()
+    {
+        $this->assertTrue(F::write($this->tmp, 'my content'));
     }
 
 }
