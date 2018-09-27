@@ -343,6 +343,49 @@ class Str
         return preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string);
     }
 
+
+    /**
+     * Get a character pool with various possible combinations
+     *
+     * @param  string|array $type
+     * @param  boolean $array
+     * @return string|array
+     */
+    public static function pool($type, bool $array = true)
+    {
+
+        $pool = [];
+
+        if (is_array($type) === true) {
+            foreach ($type as $t) {
+                $pool = array_merge($pool, static::pool($t));
+            }
+
+            return $pool;
+        } else {
+            switch ($type) {
+                case 'alphaLower':
+                    $pool = range('a','z');
+                    break;
+                case 'alphaUpper':
+                    $pool = range('A', 'Z');
+                    break;
+                case 'alpha':
+                    $pool = static::pool(['alphaLower', 'alphaUpper']);
+                    break;
+                case 'num':
+                    $pool = range(0, 9);
+                    break;
+                case 'alphaNum':
+                    $pool = static::pool(['alpha', 'num']);
+                    break;
+            }
+        }
+
+        return $array ? $pool : implode('', $pool);
+
+    }
+
     /**
      * Returns the position of a needle in a string
      * if it can be found
@@ -373,6 +416,41 @@ class Str
     public static function query(string $query, array $data = [])
     {
         return (new Query($query, $data))->result();
+    }
+
+    /**
+     * Generates a random string that may be used for cryptographic purposes
+     *
+     * @param int $length The length of the random string
+     * @param string $type Pool type (type of allowed characters)
+     * @return string
+     */
+    public static function random(int $length = null, string $type = 'alphaNum')
+    {
+        if ($length === null) {
+            $length = random_int(5, 10);
+        }
+
+        $pool = static::pool($type, false);
+
+        // catch invalid pools
+        if (!$pool) {
+            return false;
+        }
+
+        // regex that matches all characters *not* in the pool of allowed characters
+        $regex = '/[^' . $pool . ']/';
+
+        // collect characters until we have our required length
+        $result = '';
+
+        while (($currentLength = strlen($result)) < $length) {
+            $missing = $length - $currentLength;
+            $bytes   = random_bytes($missing);
+            $result .= substr(preg_replace($regex, '', base64_encode($bytes)), 0, $missing);
+        }
+
+        return $result;
     }
 
     /**

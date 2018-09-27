@@ -120,6 +120,28 @@ class Dir
     }
 
     /**
+     * Checks if the directory is readable
+     *
+     * @param string $dir
+     * @return boolean
+     */
+    public static function isReadable(string $dir): bool
+    {
+        return is_readable($dir);
+    }
+
+    /**
+     * Checks if the directory is writable
+     *
+     * @param string $dir
+     * @return boolean
+     */
+    public static function isWritable(string $dir): bool
+    {
+        return is_writable($dir);
+    }
+
+    /**
      * Create a (symbolic) link to a directory
      *
      * @param string $source
@@ -225,6 +247,17 @@ class Dir
     }
 
     /**
+     * Returns a nicely formatted size of all the contents of the folder
+     *
+     * @param string $dir The path of the directory
+     * @return mixed
+     */
+    public static function niceSize(string $dir)
+    {
+        return F::niceSize(static::size($dir));
+    }
+
+    /**
      * Reads all files from a directory and returns them as an array.
      * It skips unwanted invisible stuff.
      *
@@ -276,6 +309,42 @@ class Dir
         }
 
         return rmdir($dir);
+    }
+
+    /**
+     * Gets the size of the directory and all subfolders and files
+     *
+     * @param   string $dir The path of the directory
+     * @return  mixed
+     */
+    public static function size(string $dir)
+    {
+        if (is_dir($dir) === false) {
+            return false;
+        }
+
+        $size  = 0;
+        $items = static::read($dir);
+
+        foreach ($items AS $item) {
+
+            $root = $dir . '/' . $item;
+
+            if (is_dir($root) === true) {
+                $size += static::size($root);
+            } elseif (is_file($root) === true) {
+                $size += F::size($root);
+            }
+
+        }
+
+        return $size;
+
+
+
+        // It's easier to handle this with the Folder class
+        $object = new Folder($dir);
+        return $object->size();
     }
 
     /**
