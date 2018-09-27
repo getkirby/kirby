@@ -326,8 +326,7 @@ class Dir
         $size  = 0;
         $items = static::read($dir);
 
-        foreach ($items AS $item) {
-
+        foreach ($items as $item) {
             $root = $dir . '/' . $item;
 
             if (is_dir($root) === true) {
@@ -335,7 +334,6 @@ class Dir
             } elseif (is_file($root) === true) {
                 $size += F::size($root);
             }
-
         }
 
         return $size;

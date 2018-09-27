@@ -353,7 +353,6 @@ class Str
      */
     public static function pool($type, bool $array = true)
     {
-
         $pool = [];
 
         if (is_array($type) === true) {
@@ -365,7 +364,7 @@ class Str
         } else {
             switch ($type) {
                 case 'alphaLower':
-                    $pool = range('a','z');
+                    $pool = range('a', 'z');
                     break;
                 case 'alphaUpper':
                     $pool = range('A', 'Z');
@@ -383,7 +382,6 @@ class Str
         }
 
         return $array ? $pool : implode('', $pool);
-
     }
 
     /**
