@@ -28,13 +28,17 @@ class Fields extends Collection
             $field = new Field($field['type'], $field);
         }
 
-        if (is_a($field, 'Kirby\Form\Field') === false) {
-            throw new InvalidArgumentException('Invalid Field object in Fields collection');
-        }
-
         return parent::__set($field->name(), $field);
     }
 
+    /**
+     * Converts the fields collection to an
+     * array and also does that for every
+     * included field.
+     *
+     * @param Closure $map
+     * @return array
+     */
     public function toArray(Closure $map = null): array
     {
         $array = [];
@@ -46,17 +50,4 @@ class Fields extends Collection
         return $array;
     }
 
-    public function toOptions(): array
-    {
-        $array = [];
-
-        foreach ($this as $field) {
-            $options = $field->toArray();
-            unset($options['value']);
-
-            $array[$field->name()] = $options;
-        }
-
-        return $array;
-    }
 }
