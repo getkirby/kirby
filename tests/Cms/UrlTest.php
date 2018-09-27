@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
+
 class UrlTest extends TestCase
 {
 
@@ -30,18 +33,37 @@ class UrlTest extends TestCase
     public function testToTemplateAsset()
     {
 
-        $page = new Page([
-            'slug' => 'test',
-            'template' => 'test'
+        $app = new App([
+            'roots' => [
+                'index' => $fixtures = __DIR__ . '/fixtures/UrlTest'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                    ]
+                ]
+            ]
         ]);
 
-        $expected = 'https://getkirby.com/assets/css/templates/test.css';
+        $app->site()->visit('test');
 
-        $this->assertEquals($expected, Url::toTemplateAsset('css/templates', 'css'));
+        F::write($app->root('assets') . '/css/default.css', 'test');
 
-        $expected = 'https://getkirby.com/assets/js/templates/test.js';
+        $expected = 'https://getkirby.com/assets/css/default.css';
 
-        $this->assertEquals($expected, Url::toTemplateAsset('js/templates', 'js'));
+        $this->assertEquals($expected, Url::toTemplateAsset('css', 'css'));
+
+        F::write($app->root('assets') . '/js/default.js', 'test');
+
+        $expected = 'https://getkirby.com/assets/js/default.js';
+
+        $this->assertEquals($expected, Url::toTemplateAsset('js', 'js'));
+
+        Dir::remove($fixtures);
 
     }
 
