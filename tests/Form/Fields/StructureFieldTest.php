@@ -16,6 +16,7 @@ class StructureFieldTest extends TestCase
 
         $this->assertEquals('structure', $field->type());
         $this->assertEquals('structure', $field->name());
+        $this->assertEquals(100, $field->limit());
         $this->assertEquals([], $field->fields());
         $this->assertEquals([], $field->value());
         $this->assertTrue($field->save());

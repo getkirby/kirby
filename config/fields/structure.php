@@ -11,6 +11,9 @@ return [
         'fields' => function (array $fields) {
             return $fields;
         },
+        'limit' => function (int $limit = 100) {
+            return $limit;
+        },
         'min' => function (int $min = null) {
             return $min;
         },
