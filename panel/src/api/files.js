@@ -151,7 +151,7 @@ export default {
     if (self === true) {
       breadcrumb.push({
         label: file.filename,
-        link: this.link(file.parent.id, file.filename) + '?' + new Date().getTime()
+        link: this.link(file.parent.id, file.filename)
       });
     }
 

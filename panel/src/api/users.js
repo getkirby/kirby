@@ -41,7 +41,7 @@ export default {
   breadcrumb(user) {
     return [
       {
-        link: "/users/" + user.id + '?' + new Date().getTime(),
+        link: "/users/" + user.id,
         label: user.username
       }
     ];
