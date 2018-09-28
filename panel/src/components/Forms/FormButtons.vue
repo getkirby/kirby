@@ -51,6 +51,10 @@ export default {
         e.preventDefault();
       }
 
+      if (this.hasChanges === false) {
+        return true;
+      }
+
       this.$store.dispatch("form/save", this.id)
         .then(() => {
           this.$events.$emit("model.update");
