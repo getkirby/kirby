@@ -51,6 +51,19 @@ class CollectionsTest extends TestCase
         $this->assertEquals('ab', $result);
     }
 
+    public function testHas()
+    {
+        $collections = new Collections([
+            'test' => function ($b, $a) {
+                return $a . $b;
+            }
+        ]);
+
+        $this->assertTrue($collections->has('test'));
+        $this->assertFalse($collections->has('does-not-exist'));
+
+    }
+
     public function testLoad()
     {
         $app = new App([

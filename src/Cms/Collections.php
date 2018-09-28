@@ -76,12 +76,23 @@ class Collections
         }
 
         if (isset($this->collections[$name]) === false) {
-            throw new NotFoundException('The collection "' . $name . '" cannot be found');
+            return null;
         }
 
         $controller = new Controller($this->collections[$name]);
 
         return $this->cache[$name] = $controller->call(null, $data);
+    }
+
+    /**
+     * Checks if a collection exists
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function has(string $name): bool
+    {
+        return isset($this->collections[$name]) === true;
     }
 
     /**
