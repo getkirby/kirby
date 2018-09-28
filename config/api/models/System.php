@@ -58,6 +58,7 @@ return [
             'kirbytext',
             'languages' => 'compact',
             'license',
+            'multilang',
             'requirements',
             'title',
             'translation',
