@@ -15,7 +15,7 @@
         <k-icon v-bind="icon" />
       </span>
       <figcaption class="k-card-content">
-        <span :data-info="info" class="k-card-text">{{ text }}</span>
+        <span :data-noinfo="!info" class="k-card-text">{{ text }}</span>
         <span v-if="info" class="k-card-info">{{ info }}</span>
       </figcaption>
     </component>
@@ -168,7 +168,7 @@ export default {
   text-overflow: ellipsis;
   font-size: $font-size-small;
 }
-.k-card-text:not([data-info]):after {
+.k-card-text[data-noinfo]:after {
   content: " ";
   height: 1em;
   width: 5rem;
