@@ -58,10 +58,11 @@ class Dir extends \Kirby\Toolkit\Dir
                 }
 
                 $inventory['children'][] = [
-                    'model' => null,
-                    'num'   => $num,
-                    'root'  => $root,
-                    'slug'  => $slug,
+                    'dirname' => $item,
+                    'model'   => null,
+                    'num'     => $num,
+                    'root'    => $root,
+                    'slug'    => $slug,
                 ];
             } else {
                 $extension = pathinfo($item, PATHINFO_EXTENSION);

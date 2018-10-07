@@ -870,12 +870,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "7136aa4e0c5f912e8af82383775460d906168a10"
+                "reference": "a06a649aae5e777094a626897e3b044b65c3a715"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/7136aa4e0c5f912e8af82383775460d906168a10",
-                "reference": "7136aa4e0c5f912e8af82383775460d906168a10",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/a06a649aae5e777094a626897e3b044b65c3a715",
+                "reference": "a06a649aae5e777094a626897e3b044b65c3a715",
                 "shasum": ""
             },
             "require": {
@@ -958,7 +958,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-08-23 13:15:44"
+            "time": "2018-10-05 09:22:44"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2286,20 +2286,20 @@
         },
         {
             "name": "sebastian/resource-operations",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/resource-operations.git",
-                "reference": "0f9911fea026d9737c9b357ddda0916ea3beaf1d"
+                "reference": "ce990bb21759f94aeafd30209e8cfcdfa8bc3f52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/resource-operations/zipball/0f9911fea026d9737c9b357ddda0916ea3beaf1d",
-                "reference": "0f9911fea026d9737c9b357ddda0916ea3beaf1d",
+                "url": "https://api.github.com/repos/sebastianbergmann/resource-operations/zipball/ce990bb21759f94aeafd30209e8cfcdfa8bc3f52",
+                "reference": "ce990bb21759f94aeafd30209e8cfcdfa8bc3f52",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": ">=5.6.0"
             },
             "type": "library",
             "extra": {
@@ -2324,7 +2324,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2018-05-15 05:53:02"
+            "time": "2015-07-28 20:34:47"
         },
         {
             "name": "sebastian/version",
@@ -2375,12 +2375,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "f7d88a181e92d64ccc1b4a48061d558aafb671d0"
+                "reference": "e0c9878432059f2c1cce8ebddb0f41271a9ee1ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/f7d88a181e92d64ccc1b4a48061d558aafb671d0",
-                "reference": "f7d88a181e92d64ccc1b4a48061d558aafb671d0",
+                "url": "https://api.github.com/repos/symfony/console/zipball/e0c9878432059f2c1cce8ebddb0f41271a9ee1ff",
+                "reference": "e0c9878432059f2c1cce8ebddb0f41271a9ee1ff",
                 "shasum": ""
             },
             "require": {
@@ -2436,7 +2436,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-24 07:37:12"
+            "time": "2018-10-03 08:52:36"
         },
         {
             "name": "symfony/contracts",
@@ -2444,12 +2444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "070488ad1b6a60cee2a2fce3e855b97f9918306b"
+                "reference": "7e5e15779910215bb39b4288c479fb62eb42e894"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/070488ad1b6a60cee2a2fce3e855b97f9918306b",
-                "reference": "070488ad1b6a60cee2a2fce3e855b97f9918306b",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/7e5e15779910215bb39b4288c479fb62eb42e894",
+                "reference": "7e5e15779910215bb39b4288c479fb62eb42e894",
                 "shasum": ""
             },
             "require": {
@@ -2504,7 +2504,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-09-20 13:44:19"
+            "time": "2018-10-06 16:22:22"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2576,12 +2576,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "6fb505845bca93802446cbfdef60d5bb00a56d33"
+                "reference": "7bbf37363ecd0505c6fa90a1087c97df7b150255"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/6fb505845bca93802446cbfdef60d5bb00a56d33",
-                "reference": "6fb505845bca93802446cbfdef60d5bb00a56d33",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/7bbf37363ecd0505c6fa90a1087c97df7b150255",
+                "reference": "7bbf37363ecd0505c6fa90a1087c97df7b150255",
                 "shasum": ""
             },
             "require": {
@@ -2618,7 +2618,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-11 07:53:26"
+            "time": "2018-10-02 12:43:31"
         },
         {
             "name": "symfony/finder",
@@ -2626,12 +2626,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "0a0d27ed2c28a08dc42430f7b7157010ca0544c1"
+                "reference": "d4a70c32d561ce1f75202af8b39d56825bc870bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/0a0d27ed2c28a08dc42430f7b7157010ca0544c1",
-                "reference": "0a0d27ed2c28a08dc42430f7b7157010ca0544c1",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/d4a70c32d561ce1f75202af8b39d56825bc870bc",
+                "reference": "d4a70c32d561ce1f75202af8b39d56825bc870bc",
                 "shasum": ""
             },
             "require": {
@@ -2667,7 +2667,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-26 05:38:44"
+            "time": "2018-10-03 08:52:36"
         },
         {
             "name": "symfony/options-resolver",
@@ -2901,12 +2901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "a54c3e0b52d77fa52ce8ada54901f047c62b70e0"
+                "reference": "a867125524205460164c9ca95bc08199bb2da198"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/a54c3e0b52d77fa52ce8ada54901f047c62b70e0",
-                "reference": "a54c3e0b52d77fa52ce8ada54901f047c62b70e0",
+                "url": "https://api.github.com/repos/symfony/process/zipball/a867125524205460164c9ca95bc08199bb2da198",
+                "reference": "a867125524205460164c9ca95bc08199bb2da198",
                 "shasum": ""
             },
             "require": {
@@ -2942,7 +2942,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-09-24 07:37:12"
+            "time": "2018-10-02 12:43:31"
         },
         {
             "name": "symfony/stopwatch",
@@ -2950,12 +2950,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "6037c66d94119fb76907c461a4bfb3a31e74ae66"
+                "reference": "187946b203e26517babe4dcbc2c045dec8579376"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/6037c66d94119fb76907c461a4bfb3a31e74ae66",
-                "reference": "6037c66d94119fb76907c461a4bfb3a31e74ae66",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/187946b203e26517babe4dcbc2c045dec8579376",
+                "reference": "187946b203e26517babe4dcbc2c045dec8579376",
                 "shasum": ""
             },
             "require": {
@@ -2992,7 +2992,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26 11:01:15"
+            "time": "2018-10-02 12:43:31"
         },
         {
             "name": "theseer/tokenizer",

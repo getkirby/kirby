@@ -368,7 +368,15 @@ class Page extends ModelWithContent
      */
     public function dirname(): string
     {
-        return $this->num() !== null ? $this->num() . Dir::$numSeparator . $this->uid() : $this->uid();
+        if ($this->dirname !== null) {
+            return $this->dirname;
+        }
+
+        if ($this->num() !== null) {
+            return $this->dirname = $this->num() . Dir::$numSeparator . $this->uid();
+        } else {
+            return $this->dirname = $this->uid();
+        }
     }
 
     /**
@@ -1124,6 +1132,20 @@ class Page extends ModelWithContent
             $this->blueprint = new PageBlueprint($blueprint);
         }
 
+        return $this;
+    }
+
+    /**
+     * Sets the dirname manually, which works
+     * more reliable in connection with the inventory
+     * than computing the dirname afterwards
+     *
+     * @param string $dirname
+     * @return self
+     */
+    protected function setDirname(string $dirname = null): self
+    {
+        $this->dirname = $dirname;
         return $this;
     }
 

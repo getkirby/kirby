@@ -72,6 +72,24 @@ class DirTest extends TestCase
         $this->assertEquals('project-a', $inventory['children'][2]['slug']);
     }
 
+    public function testChildWithLeadingZero()
+    {
+        $inventory = $this->create([
+            '01_project-c',
+            '02_project-b',
+            '03_project-a',
+        ]);
+
+        $this->assertEquals('project-c', $inventory['children'][0]['slug']);
+        $this->assertEquals(1, $inventory['children'][0]['num']);
+
+        $this->assertEquals('project-b', $inventory['children'][1]['slug']);
+        $this->assertEquals(2, $inventory['children'][1]['num']);
+
+        $this->assertEquals('project-a', $inventory['children'][2]['slug']);
+        $this->assertEquals(3, $inventory['children'][2]['num']);
+    }
+
     public function testFileSorting()
     {
         $inventory = $this->create([
