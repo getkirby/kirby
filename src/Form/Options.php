@@ -140,7 +140,7 @@ class Options
             'file'          => '{{ file.filename }}',
             'page'          => '{{ page.title }}',
             'structureItem' => '{{ structureItem.title }}',
-            'user'          => '{{ user.email }}',
+            'user'          => '{{ user.username }}',
         ];
 
         // default value setup
@@ -149,7 +149,7 @@ class Options
             'file'          => '{{ file.id }}',
             'page'          => '{{ page.id }}',
             'structureItem' => '{{ structureItem.id }}',
-            'user'          => '{{ user.id }}',
+            'user'          => '{{ user.email }}',
         ];
 
         // resolve array query setup
