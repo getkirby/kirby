@@ -21,9 +21,10 @@
   "remove": "Entfernen",
   "replace": "Ersetzen",
   "revert": "Zurücksetzen",
-  "settings": "Einstellungen",
   "save": "Speichern",
   "saved": "Gespeichert!",
+  "search": "Suchen",
+  "settings": "Einstellungen",
   "upload": "Hochladen",
   "version": "Version",
   "welcome": "Willkommen!",
@@ -179,5 +180,4 @@
   "error.pages.min.plural": "Bitte füge mindestens {{ min }} Seiten zum Bereich {{ section }} hinzu",
   "error.pages.max.singular": "Bitte füge nicht mehr als eine Seite zum Bereich {{ section }} hinzu",
   "error.pages.max.plural": "Bitte füge nicht mehr als {{ max }} Seiten zum Bereich {{ section }} hinzu"
-
 }

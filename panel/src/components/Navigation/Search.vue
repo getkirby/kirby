@@ -2,20 +2,19 @@
   <div class="k-search" @click="close">
     <div class="k-search-box" @click.stop>
       <div class="k-search-input">
+
         <input
           ref="input"
           v-model="q"
           type="text"
+          :placeholder="$t('search') + ' …'"
           @input="search(q)"
           @keydown.down.prevent="down"
           @keydown.up.prevent="up"
           @keydown.tab.prevent="tab"
           @keydown.enter="enter"
           @keydown.esc="close"
-          @keydown.meta.left.prevent="back"
-          @keydown.meta.right.prevent="tab"
         >
-        <k-button v-show="parent.length" icon="parent" @click="back" />
         <k-button icon="cancel" @click="close" />
       </div>
       <ul>
@@ -29,12 +28,8 @@
             <strong>{{ page.title }}</strong>
             <small>{{ page.id }}</small>
           </k-link>
-          <k-button v-if="page.hasChildren" icon="angle-right" @click="selected = pageIndex; tab()" />
         </li>
       </ul>
-      <div v-if="pages.length === 0" class="k-search-empty">
-        {{ $t('search.noSubpages') }}
-      </div>
     </div>
   </div>
 </template>
@@ -44,64 +39,19 @@ export default {
   data() {
     return {
       pages: [],
-      parent: '',
-      path: '',
-      q: '',
-      query: null,
+      q: null,
       selected: -1
     }
   },
   mounted() {
-
-    if (this.$route.params.path) {
-      this.search(this.$route.params.path + '/');
-    } else {
-      this.search();
-    }
-
-    // put the query into the input
-    this.q = '/' + this.path;
-
-    const start = this.parent.lastIndexOf('/') + 2;
-    const end   = this.q.length;
-
     this.$nextTick(() => {
-      if (this.$refs.input.setSelectionRange) {
-        this.$refs.input.setSelectionRange(start, end);
-        this.$refs.input.focus();
-      } else {
-        this.$refs.input.select();
-      }
+      this.$refs.input.focus();
     });
-
   },
   methods: {
     open(event) {
       event.preventDefault();
       this.$store.dispatch("search", true);
-    },
-    parse(path) {
-      this.path   = String(path || '').replace('+', '/');
-
-      const parts = this.path.toLowerCase().replace(/^\//, '').split('/');
-
-      this.parent = '';
-      this.query  = '';
-
-      if (parts.length === 1) {
-        this.query = parts[0];
-      } else if (parts.length > 1) {
-        this.parent = parts.slice(0, -1).join('/');
-        this.query  = parts.slice(-1)[0];
-      }
-
-    },
-    back() {
-      const parent = this.q.replace(/\/$/, '').split('/').slice(0, -1).join('/');
-
-      this.q = parent + '/';
-      this.search(this.q);
-      this.$refs.input.focus();
     },
     click(index) {
       this.selected = index;
@@ -119,33 +69,16 @@ export default {
       let page = this.pages[this.selected] || this.pages[0];
 
       if (page) {
-        this.search(page.id);
         this.navigate(page);
       }
     },
     navigate(page) {
       this.$router.push("/pages/" + page.id.replace('/', '+'));
-      this.$store.dispatch("search", false);
+      this.close();
     },
-    search(path) {
+    search(query) {
 
-      this.parse(path);
-
-      let data = null;
-
-      if (this.query.length) {
-        data = {
-          filterBy: [
-            {
-              field: "uid",
-              operator: "*=",
-              value: this.query
-            },
-          ]
-        };
-      }
-
-      this.$api.pages.search(this.parent, data).then(response => {
+      this.$api.get('site/search', {q: query, limit: 10}).then(response => {
         this.pages = response.data;
         this.selected = -1;
       }).catch(() => {
@@ -157,12 +90,7 @@ export default {
       const page = this.pages[this.selected];
 
       if (page) {
-        this.q = '/' + page.id + '/';
-        this.search(this.q);
-
-        if (page.hasChildren === false) {
-          this.navigate(page);
-        }
+        this.navigate(page);
       }
     },
     up() {
@@ -202,7 +130,6 @@ export default {
 .k-search-input input {
   background: none;
   flex-grow: 1;
-  text-transform: lowercase;
   font: inherit;
   padding: .75rem;
   border: 0;
@@ -227,9 +154,6 @@ export default {
   display: block;
   padding: .5rem .75rem;
   flex-grow: 1;
-}
-.k-search li .k-button {
-  width: 2.5rem;
 }
 .k-search li strong {
   display: block;

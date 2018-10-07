@@ -169,6 +169,15 @@ return [
         }
     ],
     [
+        'pattern' => 'site/search',
+        'method'  => 'GET',
+        'action'  => function () {
+            return $this->site()->index()->search($this->requestQuery('q'), [
+                'minlength' => 0
+            ]);
+        }
+    ],
+    [
         'pattern' => 'site/sections/(:any)',
         'method'  => 'GET',
         'action'  => function (string $sectionName) {
