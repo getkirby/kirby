@@ -165,6 +165,45 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($b, $this->field('b')->toPage());
     }
 
+    public function testToPages()
+    {
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'a'],
+                    ['slug' => 'b'],
+                ]
+            ]
+        ]);
+
+        $a = $app->page('a');
+        $b = $app->page('b');
+
+        // single page
+        $pages = new Pages([$a], $app->site());
+
+        $content = Yaml::encode([
+            'a',
+        ]);
+
+        $this->assertEquals($pages, $this->field($content)->toPages());
+
+        // multiple pages
+        $pages = new Pages([$a, $b], $app->site());
+
+        $content = Yaml::encode([
+            'a',
+            'b'
+        ]);
+
+        $this->assertEquals($pages, $this->field($content)->toPages());
+
+    }
+
     public function testToStructure()
     {
         $data = [

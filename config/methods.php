@@ -82,7 +82,7 @@ return function (App $app) {
             return $app->site()->find($field->value);
         },
         'toPages' => function ($field, string $separator = 'yaml') use ($app) {
-            return $app->site()->find(...$field->toData('yaml'));
+            return $app->site()->find(true, ...$field->toData('yaml'));
         },
         'toStructure' => function ($field) {
             return new Structure(Yaml::decode($field->value), $field->parent());
