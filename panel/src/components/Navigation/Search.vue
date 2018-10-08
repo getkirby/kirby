@@ -6,8 +6,8 @@
         <input
           ref="input"
           v-model="q"
-          type="text"
           :placeholder="$t('search') + ' …'"
+          type="text"
           @input="search(q)"
           @keydown.down.prevent="down"
           @keydown.up.prevent="up"

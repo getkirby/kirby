@@ -13,7 +13,8 @@
         :editable="permissions.changeName"
         :tabs="tabs"
         :tab="tab"
-        @edit="action('rename')">
+        @edit="action('rename')"
+      >
 
         {{ file.filename }}
 
