@@ -117,7 +117,7 @@
               </tr>
             </k-draggable>
           </table>
-          <k-pagination v-bind="pagination" @paginate="paginateItems" />
+          <k-pagination v-if="limit" v-bind="pagination" @paginate="paginateItems" />
         </template>
 
       </template>
