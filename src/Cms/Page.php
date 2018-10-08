@@ -240,15 +240,16 @@ class Page extends ModelWithContent
         $templates       = $this->blueprint()->options()['changeTemplate'] ?? false;
         $currentTemplate = $this->intendedTemplate()->name();
 
-        if ($templates === false) {
-            return [];
-        }
+        // add the current template to the array
+        $templates[] = $currentTemplate;
+
+        // make sure every template is only included once
+        $templates = array_unique($templates);
+
+        // sort the templates
+        asort($templates);
 
         foreach ($templates as $template) {
-            if ($currentTemplate === $template) {
-                continue;
-            }
-
             try {
                 $props = Blueprint::load('pages/' . $template);
 

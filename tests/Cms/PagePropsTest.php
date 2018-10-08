@@ -29,18 +29,26 @@ class PagePropsTest extends TestCase
                 ],
                 'pages/b' => [
                     'title' => 'B'
+                ],
+                'pages/c' => [
+                    'title' => 'C'
                 ]
+            ],
+            'templates' => [
+                'a' => __FILE__,
+                'c' => __FILE__
             ]
         ]);
 
         // no blueprints
-        $page = new Page(['slug' => 'test']);
+        $page = new Page(['slug' => 'test', 'template' => 'a']);
 
-        $this->assertEquals([], $page->blueprints());
+        $this->assertEquals(['A'], array_column($page->blueprints(), 'title'));
 
         // two different blueprints
         $page = new Page([
             'slug' => 'test',
+            'template' => 'c',
             'blueprint' => [
                 'options' => [
                     'template' => [
@@ -51,7 +59,7 @@ class PagePropsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(['A', 'B'], array_column($page->blueprints(), 'title'));
+        $this->assertEquals(['A', 'B', 'C'], array_column($page->blueprints(), 'title'));
 
         // including the same blueprint
         $page = new Page([
@@ -67,7 +75,7 @@ class PagePropsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(['B'], array_column($page->blueprints(), 'title'));
+        $this->assertEquals(['A', 'B'], array_column($page->blueprints(), 'title'));
 
     }
 
