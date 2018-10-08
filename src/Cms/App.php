@@ -342,9 +342,10 @@ class App
      * Finds any file in the content directory
      *
      * @param string $path
+     * @param boolean $drafts
      * @return File|null
      */
-    public function file(string $path, $parent = null)
+    public function file(string $path, $parent = null, bool $drafts = true)
     {
         $parent   = $parent ?? $this->site();
         $id       = dirname($path);
@@ -354,7 +355,7 @@ class App
             return $parent->file($filename);
         }
 
-        if ($page = $parent->find($id)) {
+        if ($page = $this->page($id, $parent, $drafts)) {
             return $page->file($filename);
         }
 
@@ -541,11 +542,24 @@ class App
     /**
      * Returns any page from the content folder
      *
+     * @param string $id
+     * @param Page|null $parent
+     * @param bool $drafts
      * @return Page|null
      */
-    public function page(string $id, $parent = null)
+    public function page(string $id, $parent = null, bool $drafts = true)
     {
-        return ($parent ?? $this->site())->find($id);
+        $parent = $parent ?? $this->site();
+
+        if ($page = $parent->find($id)) {
+            return $page;
+        }
+
+        if ($drafts === true && $draft = $parent->draft($id)) {
+            return $draft;
+        }
+
+        return null;
     }
 
     /**

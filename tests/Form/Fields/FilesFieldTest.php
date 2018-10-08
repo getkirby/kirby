@@ -30,6 +30,22 @@ class FilesFieldTest extends TestCase
                                 'filename' => 'c.jpg'
                             ]
                         ]
+                    ],
+                ],
+                'drafts' => [
+                    [
+                        'slug'  => 'test-draft',
+                        'files' => [
+                            [
+                                'filename' => 'a.jpg'
+                            ],
+                            [
+                                'filename' => 'b.jpg'
+                            ],
+                            [
+                                'filename' => 'c.jpg'
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -112,5 +128,30 @@ class FilesFieldTest extends TestCase
         $this->assertArrayHasKey('max', $field->errors());
 
     }
+
+    public function testFilesInDraft()
+    {
+
+        $field = new Field('files', [
+            'model' => $this->app->page('test-draft'),
+            'value' => [
+                'test/a.jpg', // exists
+                'test/b.jpg', // exists
+                'test/e.jpg', // does not exist
+            ]
+        ]);
+
+        $value = $field->value();
+        $ids   = array_column($value, 'id');
+
+        $expected = [
+            'test/a.jpg',
+            'test/b.jpg'
+        ];
+
+        $this->assertEquals($expected, $ids);
+
+    }
+
 
 }

@@ -42,7 +42,7 @@ return [
                     $id = $id['id'] ?? null;
                 }
 
-                if ($id !== null && ($file = $kirby->file($id))) {
+                if ($id !== null && ($file = $kirby->file($id, null, true))) {
                     $files[] = [
                         'filename' => $file->filename(),
                         'link'     => $file->panelUrl(true),
