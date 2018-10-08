@@ -215,15 +215,12 @@ trait PageActions
         $newBlueprint = 'pages/' . $template;
 
         return $this->commit('changeTemplate', [$this, $template], function ($oldPage, $template) use ($oldBlueprint, $newBlueprint) {
-
             if ($this->kirby()->multilang() === true) {
-
                 $newPage = $this->clone([
                     'template' => $template
                 ]);
 
                 foreach ($this->kirby()->languages()->codes() as $code) {
-
                     if (F::remove($oldPage->contentFile($code)) !== true) {
                         throw new LogicException('The old text file could not be removed');
                     }
@@ -237,9 +234,7 @@ trait PageActions
 
                 // return a fresh copy of the object
                 return $newPage->clone();
-
             } else {
-
                 $newPage = $this->clone([
                     'content'  => $this->transferData($this->content(), $oldBlueprint, $newBlueprint)['data'],
                     'template' => $template
@@ -250,9 +245,7 @@ trait PageActions
                 }
 
                 return $newPage->save();
-
             }
-
         });
     }
 

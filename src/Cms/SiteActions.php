@@ -106,5 +106,4 @@ trait SiteActions
 
         return $this;
     }
-
 }

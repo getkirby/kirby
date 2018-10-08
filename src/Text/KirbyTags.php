@@ -12,8 +12,7 @@ use Exception;
  */
 class KirbyTags
 {
-
-    static protected $tagClass = KirbyTag::class;
+    protected static $tagClass = KirbyTag::class;
 
     public static function parse(string $text = null, array $data = [], array $options = []): string
     {

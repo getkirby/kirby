@@ -48,5 +48,4 @@ class KirbyTag extends \Kirby\Text\KirbyTag
     {
         return $this->data['parent'];
     }
-
 }
