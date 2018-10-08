@@ -9,7 +9,11 @@
 
     <k-view class="k-file-content">
 
-      <k-header :editable="permissions.changeName" @edit="action('rename')">
+      <k-header
+        :editable="permissions.changeName"
+        :tabs="tabs"
+        :tab="tab"
+        @edit="action('rename')">
 
         {{ file.filename }}
 
@@ -40,6 +44,7 @@
         :parent="$api.files.url(file.parent.id, file.filename)"
         :tabs="tabs"
         :blueprint="file.blueprint.name"
+        @tab="tab = $event"
       />
 
       <k-file-rename-dialog ref="rename" />
@@ -93,6 +98,7 @@ export default {
       },
       issue: null,
       tabs: [],
+      tab: null,
       options: null
     };
   },
