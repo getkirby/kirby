@@ -73,7 +73,7 @@ export default [
     })
   },
   {
-    path: "/pages/:path+/files/:filename",
+    path: "/pages/:path/files/:filename",
     name: "File",
     meta: {
       view: "site"
@@ -86,7 +86,7 @@ export default [
     })
   },
   {
-    path: "/pages/:path+",
+    path: "/pages/:path",
     name: "Page",
     meta: {
       view: "site"
