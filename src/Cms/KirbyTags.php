@@ -10,6 +10,21 @@ use Exception;
  */
 class KirbyTags extends \Kirby\Text\KirbyTags
 {
+
+    /**
+     * The KirbyTag rendering class
+     *
+     * @var string
+     */
+    protected static $tagClass = KirbyTag::class;
+
+    /**
+     * @param string $text
+     * @param array $data
+     * @param array $options
+     * @param array $hooks
+     * @return string
+     */
     public static function parse(string $text = null, array $data = [], array $options = [], array $hooks = []): string
     {
         $text = static::hooks($hooks['kirbytags:before'] ?? [], $text, $data, $options);
@@ -19,6 +34,16 @@ class KirbyTags extends \Kirby\Text\KirbyTags
         return $text;
     }
 
+    /**
+     * Runs the given hooks and returns the
+     * modified text
+     *
+     * @param array $hooks
+     * @param string $text
+     * @param array $data
+     * @param array $options
+     * @return void
+     */
     protected static function hooks(array $hooks, string $text = null, array $data, array $options)
     {
         foreach ($hooks as $hook) {

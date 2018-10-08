@@ -68,10 +68,15 @@ trait HasFiles
             return $this->$in()->first();
         }
 
-        if (Str::contains($filename, '/')) {
+        if (strpos($filename, '/') !== false) {
             $path     = dirname($filename);
             $filename = basename($filename);
-            return $this->find($path)->$in()->find($filename);
+
+            if ($page = $this->find($path)) {
+                return $page->$in()->find($filename);
+            }
+
+            return null;
         }
 
         return $this->$in()->find($filename);

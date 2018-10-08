@@ -46,9 +46,8 @@ return [
             'title'
         ],
         'html' => function ($tag) {
-            $file = App::instance()->file($tag->value, $tag->parent());
 
-            if ($file === null) {
+            if (!$file = $tag->file($tag->value)) {
                 return $tag->text;
             }
 
@@ -95,14 +94,14 @@ return [
             'width'
         ],
         'html' => function ($tag) {
-            $tag->src  = Url::to($tag->value);
-            $tag->file = Kirby::instance()->file($tag->value, $tag->parent());
 
-            if ($tag->file) {
+            if ($tag->file = $tag->file($tag->value)) {
                 $tag->src     = $tag->file->url();
                 $tag->alt     = $tag->alt     ?? $tag->file->alt()->or(' ')->value();
                 $tag->title   = $tag->title   ?? $tag->file->title()->value();
                 $tag->caption = $tag->caption ?? $tag->file->caption()->value();
+            } else {
+                $tag->src = Url::to($tag->value);
             }
 
             $link = function ($img) use ($tag) {
