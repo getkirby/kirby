@@ -401,7 +401,15 @@ export default {
         case "tags":
         case "checkboxes": {
           return value.map(item => {
-            return item.text;
+            let text = item;
+
+            field.options.forEach(option => {
+              if (option.value === item) {
+                text = option.text;
+              }
+            });
+
+            return text;
           }).join(", ");
         }
         case "select": {
