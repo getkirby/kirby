@@ -25,7 +25,7 @@ return [
         'action'  => function () {
 
             // logout previous users
-            if ($user = $this->user()) {
+            if ($user = $this->kirby()->user()) {
                 $user->logout();
             }
 
