@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      selected: Array.isArray(this.value) ? this.value : this.value.split(",")
+      selected: Array.isArray(this.value) ? this.value : String(this.value).split(",")
     }
   },
   watch: {
