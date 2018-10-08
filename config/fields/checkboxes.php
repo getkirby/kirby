@@ -6,6 +6,9 @@ use Kirby\Toolkit\Str;
 return [
     'mixins' => ['options'],
     'props' => [
+        'columns' => function (int $columns = 1) {
+            return $columns;
+        },
         'default' => function ($default = null) {
             return Str::split($default, ',');
         },

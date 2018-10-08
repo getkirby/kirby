@@ -2,6 +2,11 @@
 
 return [
     'mixins' => ['options'],
+    'props' => [
+        'columns' => function (int $columns = 1) {
+            return $columns;
+        },
+    ],
     'computed' => [
         'options' => function (): array {
             return $this->getOptions();

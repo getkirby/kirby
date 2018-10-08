@@ -1,5 +1,5 @@
 <template>
-  <ul class="k-checkboxes-input">
+  <ul class="k-checkboxes-input" :style="'--columns:' + columns">
     <li v-for="(option, index) in options" :key="index">
       <k-checkbox-input
         :id="id + '-' + index"
@@ -18,6 +18,7 @@ export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
+    columns: Number,
     disabled: Boolean,
     id: {
       type: [Number, String],
@@ -87,37 +88,3 @@ export default {
 }
 
 </script>
-
-<style lang="scss">
-
-/* Field Theme */
-.k-checkboxes-input .k-input-element {
-  overflow: hidden;
-}
-.k-checkboxes-input[data-theme="field"] ul {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: -1px;
-  margin-right: -1px;
-}
-.k-checkboxes-input[data-theme="field"] li {
-  flex-grow: 1;
-  flex-basis: 100%;
-  flex-shrink: 0;
-  border-right: 1px solid $color-background;
-  border-bottom: 1px solid $color-background;
-  @media screen and (min-width: $breakpoint-medium) {
-    flex-basis: 50%;
-  }
-}
-.k-checkboxes-input[data-theme="field"] label {
-  display: block;
-  min-height: $field-input-height;
-  line-height: 2rem;
-  padding: 0 $field-input-padding;
-}
-.k-checkboxes-input[data-theme="field"] .k-checkbox-icon {
-  top: .5rem;
-  left: .5rem;
-}
-</style>

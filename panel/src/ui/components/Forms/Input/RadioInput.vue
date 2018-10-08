@@ -1,5 +1,5 @@
 <template>
-  <ul class="k-radio-input">
+  <ul class="k-radio-input" :style="'--columns:' + columns">
     <li v-for="(option, index) in options" :key="index">
       <input
         :id="id + '-' + index"
@@ -31,6 +31,7 @@ export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
+    columns: Number,
     disabled: Boolean,
     id: {
       type: [Number, String],

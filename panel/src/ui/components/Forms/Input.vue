@@ -220,11 +220,23 @@ export default {
     .k-input-element + .k-input-icon {
       border-left : 1px solid $color-background;
     }
-    .k-checkboxes-input li {
-      border-bottom: 1px solid $color-background;
+    .k-input-element {
+      overflow: hidden;
     }
-    .k-checkboxes-input li:last-child {
-      border-bottom: 0;
+    .k-checkboxes-input {
+      display: grid;
+      grid-template-columns: 1fr;
+      margin-bottom: -1px;
+      margin-right: -1px;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        grid-template-columns: repeat(var(--columns), 1fr);
+      }
+
+    }
+    .k-checkboxes-input li {
+      border-right: 1px solid $color-background;
+      border-bottom: 1px solid $color-background;
     }
     .k-checkboxes-input label {
       display: block;
@@ -234,7 +246,7 @@ export default {
     .k-checkbox-input-icon {
       top: ($field-input-height - $field-input-font-size) / 2;
       left: $field-input-padding;
-      margin-top: -1px;
+      margin-top: 0px;
     }
   }
 
@@ -247,15 +259,22 @@ export default {
     .k-input-element + .k-input-icon {
       border-left : 1px solid $color-background;
     }
-    .k-radio-input li {
-      display: flex;
-      flex-grow: 1;
-      align-items: flex-start;
-      flex-shrink: 0;
-      border-bottom: 1px solid $color-background;
+    .k-input-element {
+      overflow: hidden;
     }
-    .k-radio-input li:last-child {
-      border-bottom: 0;
+    .k-radio-input {
+      display: grid;
+      grid-template-columns: 1fr;
+      margin-bottom: -1px;
+      margin-right: -1px;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        grid-template-columns: repeat(var(--columns), 1fr);
+      }
+    }
+    .k-radio-input li {
+      border-right: 1px solid $color-background;
+      border-bottom: 1px solid $color-background;
     }
     .k-radio-input label {
       display: block;
