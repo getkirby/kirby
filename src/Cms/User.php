@@ -217,9 +217,10 @@ class User extends ModelWithContent
     /**
      * Prepares the content for the text file
      *
+     * @param string $languageCode Not used so far
      * @return array
      */
-    public function contentFileData(): array
+    public function contentFileData(string $languageCode = null): array
     {
         $content = $this->content()->toArray();
 

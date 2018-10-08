@@ -240,11 +240,12 @@ class File extends ModelWithContent
      * Store the template in addition to the
      * other content.
      *
+     * @param string|null $languageCode
      * @return array
      */
-    public function contentFileData(): array
+    public function contentFileData(string $languageCode = null): array
     {
-        $content = $this->content()->toArray();
+        $content = $this->content($languageCode)->toArray();
 
         // store main information in the content file
         $content['template'] = $this->template();

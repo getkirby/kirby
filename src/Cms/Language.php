@@ -120,7 +120,7 @@ class Language extends Model
 
         F::move($site->contentFile($code), $site->contentFile(''));
 
-        foreach ($kirby->site()->index() as $page) {
+        foreach ($kirby->site()->index(true) as $page) {
             $files = $page->files();
 
             foreach ($files as $file) {
@@ -164,7 +164,7 @@ class Language extends Model
 
             F::move($site->contentFile(), $site->contentFile($code));
 
-            foreach ($kirby->site()->index() as $page) {
+            foreach ($kirby->site()->index(true) as $page) {
                 $files = $page->files();
 
                 foreach ($files as $file) {
@@ -215,7 +215,7 @@ class Language extends Model
 
         F::remove($site->contentFile($code));
 
-        foreach ($kirby->site()->index() as $page) {
+        foreach ($kirby->site()->index(true) as $page) {
             $files = $page->files();
 
             foreach ($files as $file) {
@@ -460,7 +460,7 @@ class Language extends Model
 
             touch($site->contentFile($code));
 
-            foreach ($kirby->site()->index() as $page) {
+            foreach ($kirby->site()->index(true) as $page) {
                 $files = $page->files();
 
                 foreach ($files as $file) {

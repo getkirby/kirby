@@ -63,11 +63,12 @@ abstract class ModelWithContent extends Model
      * Prepares the content that should be written
      * to the text file
      *
+     * @param string $languageCode
      * @return array
      */
-    public function contentFileData(): array
+    public function contentFileData(string $languageCode = null): array
     {
-        return $this->content()->toArray();
+        return $this->content($languageCode)->toArray();
     }
 
     /**
@@ -114,9 +115,10 @@ abstract class ModelWithContent extends Model
      * Stores the content on disk
      *
      * @param string $languageCode
+     * @param array $data
      * @return self
      */
-    public function save(string $languageCode = null)
+    public function save(string $languageCode = null, array $data = null)
     {
         if ($this->kirby()->multilang() === true) {
             if ($language = $this->kirby()->language($languageCode)) {
@@ -128,7 +130,7 @@ abstract class ModelWithContent extends Model
             $languageCode = null;
         }
 
-        Data::write($this->contentFile($languageCode), $this->contentFileData());
+        Data::write($this->contentFile($languageCode), $data ?? $this->contentFileData($languageCode));
         return $this;
     }
 

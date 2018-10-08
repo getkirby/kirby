@@ -206,32 +206,53 @@ trait PageActions
      */
     public function changeTemplate(string $template): self
     {
-        if ($template === $this->template()) {
+        if ($template === $this->template()->name()) {
             return $this;
         }
 
         // prepare data to transfer between blueprints
-        $old      = 'pages/' . $this->template();
-        $new      = 'pages/' . $template;
-        $transfer = $this->transferData($this->content(), $old, $new);
+        $oldBlueprint = 'pages/' . $this->template();
+        $newBlueprint = 'pages/' . $template;
 
-        return $this->commit('changeTemplate', [$this, $template, $transfer['data']], function ($oldPage, $template, $content) {
-            $newPage = $oldPage->clone([
-                'content'  => $content,
-                'template' => $template
-            ]);
+        return $this->commit('changeTemplate', [$this, $template], function ($oldPage, $template) use ($oldBlueprint, $newBlueprint) {
 
-            if ($oldPage->exists() === false) {
-                return $newPage;
+            if ($this->kirby()->multilang() === true) {
+
+                $newPage = $this->clone([
+                    'template' => $template
+                ]);
+
+                foreach ($this->kirby()->languages()->codes() as $code) {
+
+                    if (F::remove($oldPage->contentFile($code)) !== true) {
+                        throw new LogicException('The old text file could not be removed');
+                    }
+
+                    // convert the content to the new blueprint
+                    $content = $oldPage->transferData($oldPage->content($code), $oldBlueprint, $newBlueprint)['data'];
+
+                    // save the language file
+                    $newPage->save($code, $content);
+                }
+
+                // return a fresh copy of the object
+                return $newPage->clone();
+
+            } else {
+
+                $newPage = $this->clone([
+                    'content'  => $this->transferData($this->content(), $oldBlueprint, $newBlueprint)['data'],
+                    'template' => $template
+                ]);
+
+                if (F::remove($oldPage->contentFile()) !== true) {
+                    throw new LogicException('The old text file could not be removed');
+                }
+
+                return $newPage->save();
+
             }
 
-            $newPage->save();
-
-            if (F::remove($oldPage->contentFile()) !== true) {
-                throw new LogicException('The old text file could not be removed');
-            }
-
-            return $newPage;
         });
     }
 
@@ -525,22 +546,6 @@ trait PageActions
         }
 
         return true;
-    }
-
-    /**
-     * Delete the text file without language code
-     * before storing the actual file
-     *
-     * @param string|null $languageCode
-     * @return self
-     */
-    public function save(string $languageCode = null)
-    {
-        if ($this->kirby()->multilang() === true) {
-            F::remove($this->contentFile());
-        }
-
-        return parent::save($languageCode);
     }
 
     /**

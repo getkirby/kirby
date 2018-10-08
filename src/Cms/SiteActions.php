@@ -107,19 +107,4 @@ trait SiteActions
         return $this;
     }
 
-    /**
-     * Delete the text file without language code
-     * before storing the actual file
-     *
-     * @param string|null $languageCode
-     * @return self
-     */
-    public function save(string $languageCode = null)
-    {
-        if ($this->kirby()->multilang() === true) {
-            F::remove($this->contentFile());
-        }
-
-        return parent::save($languageCode);
-    }
 }
