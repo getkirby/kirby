@@ -277,9 +277,10 @@ class Pages extends Collection
      * Create a recursive flat index of all
      * pages and subpages, etc.
      *
+     * @param bool $drafts
      * @return Pages
      */
-    public function index(): Pages
+    public function index(bool $drafts = false): Pages
     {
         if (is_a($this->index, 'Kirby\Cms\Pages') === true) {
             return $this->index;
@@ -290,7 +291,7 @@ class Pages extends Collection
         foreach ($this->data as $pageKey => $page) {
             $this->index->data[$pageKey] = $page;
 
-            foreach ($page->index() as $childKey => $child) {
+            foreach ($page->index($drafts) as $childKey => $child) {
                 $this->index->data[$childKey] = $child;
             }
         }

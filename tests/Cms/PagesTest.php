@@ -79,7 +79,7 @@ class PagesTest extends TestCase
         $this->assertIsPage($this->pages()->find('c'), 'c');
     }
 
-    public function findByIdAndUri()
+    public function testFindByIdAndUri()
     {
         $site = new Site([
             'children' => [
@@ -99,12 +99,98 @@ class PagesTest extends TestCase
             ]
         ]);
 
-        $this->assertIsPage($site->findById('grandma'), 'grandma');
-        $this->assertIsPage($site->findByUri('grandma'), 'grandma');
-        $this->assertIsPage($site->findById('grandma/mother'), 'grandma/mother');
-        $this->assertIsPage($site->findByUri('grandma/mother'), 'grandma/mother');
-        $this->assertIsPage($site->findById('grandma/mother/child'), 'grandma/mother/child');
-        $this->assertIsPage($site->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findById('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+    }
+
+    public function testIndex()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'children' => [
+                    [
+                        'slug' => 'aa',
+                        'children' => [
+                            ['slug' => 'aaa'],
+                            ['slug' => 'aab'],
+                        ]
+                    ],
+                    ['slug' => 'ab']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'children' => [
+                    ['slug' => 'ba'],
+                    ['slug' => 'bb']
+                ]
+            ]
+        ]);
+
+        $expected = [
+            'a',
+            'a/aa',
+            'a/aa/aaa',
+            'a/aa/aab',
+            'a/ab',
+            'b',
+            'b/ba',
+            'b/bb',
+        ];
+
+        $this->assertEquals($expected, $pages->index()->keys());
+    }
+
+    public function testIndexWithDrafts()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'children' => [
+                    [
+                        'slug' => 'aa',
+                        'children' => [
+                            ['slug' => 'aaa'],
+                            ['slug' => 'aab'],
+                        ]
+                    ],
+                    [
+                        'slug' => 'ab'
+                    ]
+                ],
+                'drafts' => [
+                    [
+                        'slug' => 'ac'
+                    ]
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'children' => [
+                    ['slug' => 'ba'],
+                    ['slug' => 'bb']
+                ]
+            ]
+        ]);
+
+        $expected = [
+            'a',
+            'a/aa',
+            'a/aa/aaa',
+            'a/aa/aab',
+            'a/ab',
+            'a/ac',
+            'b',
+            'b/ba',
+            'b/bb',
+        ];
+
+        $this->assertEquals($expected, $pages->index(true)->keys());
     }
 
     public function testInvisible()

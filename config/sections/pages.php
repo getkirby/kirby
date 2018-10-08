@@ -86,7 +86,7 @@ return [
                     $pages = $this->parent->children()->unlisted();
                     break;
                 default:
-                    $pages = $this->parent->children()->merge('drafts');
+                    $pages = $this->parent->childrenAndDrafts();
             }
 
             // filter by all set templates

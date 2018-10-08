@@ -165,7 +165,7 @@ return [
         'pattern' => 'site/search',
         'method'  => 'GET',
         'action'  => function () {
-            return $this->site()->index()->search($this->requestQuery('q'), [
+            return $this->site()->index(true)->search($this->requestQuery('q'), [
                 'minlength' => 0
             ]);
         }

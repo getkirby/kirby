@@ -36,6 +36,16 @@ trait HasChildren
     }
 
     /**
+     * Returns all children and drafts at the same time
+     *
+     * @return Pages
+     */
+    public function childrenAndDrafts()
+    {
+        return $this->children()->merge($this->drafts());
+    }
+
+    /**
      * Return a list of ids for the model's
      * toArray method
      *
@@ -190,11 +200,16 @@ trait HasChildren
     /**
      * Creates a flat child index
      *
+     * @param bool $drafts
      * @return Pages
      */
-    public function index(): Pages
+    public function index(bool $drafts = false): Pages
     {
-        return $this->children()->index();
+        if ($drafts === true) {
+            return $this->childrenAndDrafts()->index($drafts);
+        } else {
+            return $this->children()->index();
+        }
     }
 
     /**
