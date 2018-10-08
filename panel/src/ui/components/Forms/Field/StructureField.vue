@@ -399,6 +399,9 @@ export default {
           return date.isValid() ? date.format("YYYY-MM-DD") : "";
         }
         case "tags":
+          return value.map(item => {
+            return item.text;
+          }).join(", ");
         case "checkboxes": {
           return value.map(item => {
             let text = item;
