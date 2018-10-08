@@ -6,7 +6,7 @@
       icon="add"
       @click="open"
     >
-      Select a user
+      {{ $t('select') }}
     </k-button>
     <template v-if="selected.length">
       <k-draggable
@@ -40,7 +40,7 @@
       </k-draggable>
     </template>
     <k-empty v-else icon="users" @click="open">
-      No users selected yet
+      {{ $t('field.users.empty') }}
     </k-empty>
     <k-users-dialog ref="selector" @submit="select" />
   </k-field>

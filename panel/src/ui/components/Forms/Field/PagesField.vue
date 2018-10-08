@@ -6,7 +6,7 @@
       icon="add"
       @click="open"
     >
-      Select a page
+      {{ $t('select') }}
     </k-button>
     <template v-if="selected.length">
       <k-draggable
@@ -30,7 +30,7 @@
       </k-draggable>
     </template>
     <k-empty v-else icon="page" @click="open">
-      No pages selected yet
+      {{ $t('field.pages.empty') }}
     </k-empty>
     <k-pages-dialog ref="selector" @submit="select" />
   </k-field>

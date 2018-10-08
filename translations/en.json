@@ -26,6 +26,7 @@
   "save": "Save",
   "saved": "Saved!",
   "search": "Search",
+  "select": "Select",
   "settings": "Settings",
   "today": "Today",
   "upload": "Upload",
@@ -309,5 +310,8 @@
 
   "error.view.notFound": "This view does not exist",
 
+  "field.files.empty": "No files selected yet",
+  "field.pages.empty": "No pages selected yet",
+  "field.users.empty": "No users selected yet",
   "field.textarea.headline": "Headline"
 }

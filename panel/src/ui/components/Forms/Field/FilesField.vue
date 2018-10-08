@@ -6,7 +6,7 @@
       icon="add"
       @click="open"
     >
-      Select a file
+      {{ $t('select') }}
     </k-button>
     <template v-if="selected.length">
       <k-draggable
@@ -28,7 +28,7 @@
       </k-draggable>
     </template>
     <k-empty v-else icon="image" @click="open">
-      No files selected yet
+      {{ $t('field.files.empty') }}
     </k-empty>
     <k-files-dialog ref="selector" @submit="select" />
   </k-field>

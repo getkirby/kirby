@@ -24,6 +24,7 @@
   "save": "Speichern",
   "saved": "Gespeichert!",
   "search": "Suchen",
+  "select": "Auswählen",
   "settings": "Einstellungen",
   "today": "Heute",
   "upload": "Hochladen",
@@ -201,5 +202,10 @@
   "error.pages.min.singular": "Bitte füge mindestes eine Seite zum Bereich {{ section }} hinzu",
   "error.pages.min.plural": "Bitte füge mindestens {{ min }} Seiten zum Bereich {{ section }} hinzu",
   "error.pages.max.singular": "Bitte füge nicht mehr als eine Seite zum Bereich {{ section }} hinzu",
-  "error.pages.max.plural": "Bitte füge nicht mehr als {{ max }} Seiten zum Bereich {{ section }} hinzu"
+  "error.pages.max.plural": "Bitte füge nicht mehr als {{ max }} Seiten zum Bereich {{ section }} hinzu",
+
+  "field.files.empty": "Keine Dateien ausgewählt",
+  "field.pages.empty": "Keine Seiten ausgewählt",
+  "field.users.empty": "Keine Benutzer ausgewählt",
+  "field.textarea.headline": "Überschrift"
 }
