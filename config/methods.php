@@ -45,12 +45,16 @@ return function (App $app) {
             $value = $field->isEmpty() ? $default : $field->value;
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
         },
-        'toDate' => function ($field, $format = null) {
-            if (empty($field->value) === false) {
-                return $format === null ? $field->toTimestamp() : date($format, $field->toTimestamp());
+        'toDate' => function ($field, $format = null) use ($app) {
+            if (empty($field->value) === true) {
+                return null;
             }
 
-            return null;
+            if ($format === null) {
+                return $field->toTimestamp();
+            }
+
+            return $app->option('date.handler', 'date')($format, $field->toTimestamp());
         },
         'toFile' => function ($field) {
             return $field->parent()->file($field->value);

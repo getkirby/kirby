@@ -97,8 +97,25 @@ class FieldMethodsTest extends TestCase
 
         $this->assertEquals($ts, $field->toDate());
         $this->assertEquals($date, $field->toDate('d.m.Y'));
+    }
 
-        $this->markTestIncomplete('test different date handler');
+    public function testToDateWithDateHandler()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'date.handler' => 'strftime'
+            ]
+        ]);
+
+        $field = $this->field('2012-12-12');
+        $ts    = strtotime('2012-12-12');
+        $date  = '12.12.2012';
+
+        $this->assertEquals($ts, $field->toDate());
+        $this->assertEquals($date, $field->toDate('%d.%m.%Y'));
     }
 
     public function testToFile()
