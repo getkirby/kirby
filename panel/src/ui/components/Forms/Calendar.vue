@@ -38,7 +38,7 @@
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="go('today')">{{ "today" | t("field.calendar.today") }}</k-button>
+            <k-button @click="go('today')">{{ $t("today") }}</k-button>
           </td>
         </tr>
       </tfoot>
@@ -81,32 +81,30 @@ export default {
       return weekday > 0 ? weekday : 7;
     },
     weekdays() {
-      //TODO: i18n
       return [
-        'Mon',
-        'Tue',
-        'Wed',
-        'Thu',
-        'Fri',
-        'Sat',
-        'Sun'
+        this.$t('days.mon'),
+        this.$t('days.tue'),
+        this.$t('days.wed'),
+        this.$t('days.thu'),
+        this.$t('days.fri'),
+        this.$t('days.sat'),
+        this.$t('days.sun'),
       ];
     },
     monthnames() {
-      //TODO: i18n
       return [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
+        this.$t('months.january'),
+        this.$t('months.february'),
+        this.$t('months.march'),
+        this.$t('months.april'),
+        this.$t('months.may'),
+        this.$t('months.june'),
+        this.$t('months.july'),
+        this.$t('months.august'),
+        this.$t('months.september'),
+        this.$t('months.october'),
+        this.$t('months.november'),
+        this.$t('months.december'),
       ];
     },
     months() {
