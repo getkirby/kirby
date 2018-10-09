@@ -77,60 +77,368 @@ class CollectionFilterTest extends TestCase
         $collection->filter('one');
     }
 
-    public function testFilterByEquals()
+    public function filterDataProvider()
     {
-        $collection = new Collection([
+        return [
+
+            // equals
             [
-                'name'  => 'Bastian',
-                'role'  => 'founder'
+                'attributes' => ['a' => 'a', 'b' => 'b', 'c' => 'a'],
+                'operator'   =>  '==',
+                'test'       => 'a',
+                'expected'   => ['a', 'c'],
+                'split'      => false
             ],
             [
-                'name' => 'Nico',
-                'role' => 'developer'
-            ]
-        ]);
+                'attributes' => ['a' => 'a, b', 'b' => 'b, c', 'c' => 'c, d'],
+                'operator'   =>  '==',
+                'test'       => 'b',
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
 
-        $result = new Collection([
+            // not equals
             [
-                'name'  => 'Bastian',
-                'role'  => 'founder'
-            ]
-        ]);
-
-        $this->assertEquals($result, $collection->filterBy('role', 'founder'));
-    }
-
-    public function testFilterByLess()
-    {
-        $collection = new Collection([
-            [
-                'name'   => 'Bastian',
-                'number' => 1
+                'attributes' => ['a' => 'a', 'b' => 'b', 'c' => 'a'],
+                'operator'   =>  '!=',
+                'test'       => 'a',
+                'expected'   => ['b'],
+                'split'      => false
             ],
             [
-                'name'   => 'Nico',
-                'number' => 5
-            ]
-        ]);
+                'attributes' => ['a' => 'a, b', 'b' => 'b, c', 'c' => 'c, d'],
+                'operator'   =>  '!=',
+                'test'       => 'b',
+                'expected'   => ['c'],
+                'split'      => ','
+            ],
 
-        $result = new Collection([
+            // in
             [
-                'name'   => 'Bastian',
-                'number' => 1
-            ]
-        ]);
+                'attributes' => ['a' => 'a', 'b' => 'b', 'c' => 'c'],
+                'operator'   =>  'in',
+                'test'       => ['a', 'c'],
+                'expected'   => ['a', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'aa, ab', 'b' => 'ab, ac', 'c' => 'ad, ae'],
+                'operator'   =>  'in',
+                'test'       => ['aa', 'ab'],
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
 
-        $this->assertEquals($result, $collection->filterBy('number', '<', 3));
+            // not in
+            [
+                'attributes' => ['a' => 'a', 'b' => 'b', 'c' => 'c'],
+                'operator'   =>  'not in',
+                'test'       => ['a', 'c'],
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'aa, ab', 'b' => 'ab, ac', 'c' => 'ad, ae'],
+                'operator'   =>  'not in',
+                'test'       => ['aa', 'ab'],
+                'expected'   => ['c'],
+                'split'      => ','
+            ],
+
+            // contains
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'def'],
+                'operator'   =>  '*=',
+                'test'       => 'b',
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'aa, ab', 'b' => 'ba, bb', 'c' => 'ca'],
+                'operator'   =>  '*=',
+                'test'       => 'b',
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
+
+            // not contains
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'def'],
+                'operator'   =>  '!*=',
+                'test'       => 'b',
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'aa, ab', 'b' => 'ba, bb', 'c' => 'ca'],
+                'operator'   =>  '!*=',
+                'test'       => 'b',
+                'expected'   => ['c'],
+                'split'      => ','
+            ],
+
+            // more
+            [
+                'attributes' => ['a' => 1, 'b' => 2],
+                'operator'   =>  '>',
+                'test'       => 1,
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '1, 2', 'b' => '3, 4', 'c' => '5, 6'],
+                'operator'   =>  '>',
+                'test'       => 2,
+                'expected'   => ['b', 'c'],
+                'split'      => ','
+            ],
+
+            // min
+            [
+                'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
+                'operator'   =>  '>=',
+                'test'       => 2,
+                'expected'   => ['b', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '1, 2', 'b' => '3, 4', 'c' => '5, 6'],
+                'operator'   =>  '>=',
+                'test'       => 3,
+                'expected'   => ['b', 'c'],
+                'split'      => ','
+            ],
+
+            // less
+            [
+                'attributes' => ['a' => 1, 'b' => 2],
+                'operator'   =>  '<',
+                'test'       => 2,
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '1, 2', 'b' => '3, 4', 'c' => '5, 6'],
+                'operator'   =>  '<',
+                'test'       => 5,
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
+
+            // max
+            [
+                'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
+                'operator'   =>  '<=',
+                'test'       => 2,
+                'expected'   => ['a', 'b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '1, 2', 'b' => '3, 4', 'c' => '5, 6'],
+                'operator'   =>  '<=',
+                'test'       => 4,
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
+
+            // starts with
+            [
+                'attributes' => ['a' => 'aa', 'b' => 'bb'],
+                'operator'   =>  '^=',
+                'test'       => 'a',
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'a foo, a bar', 'b' => 'b foo, c bar', 'c' => 'c foo, c bar'],
+                'operator'   =>  '^=',
+                'test'       => 'c',
+                'expected'   => ['b', 'c'],
+                'split'      => ','
+            ],
+
+            // not starts with
+            [
+                'attributes' => ['a' => 'aa', 'b' => 'bb'],
+                'operator'   =>  '!^=',
+                'test'       => 'a',
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'a foo, a bar', 'b' => 'b foo, c bar', 'c' => 'c foo, c bar'],
+                'operator'   =>  '!^=',
+                'test'       => 'c',
+                'expected'   => ['a'],
+                'split'      => ','
+            ],
+
+            // ends with
+            [
+                'attributes' => ['a' => 'aa', 'b' => 'bb'],
+                'operator'   =>  '$=',
+                'test'       => 'a',
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'foo a, bar a', 'b' => 'foo b, bar c', 'c' => 'foo c, bar c'],
+                'operator'   =>  '$=',
+                'test'       => 'c',
+                'expected'   => ['b', 'c'],
+                'split'      => ','
+            ],
+
+            // not ends with
+            [
+                'attributes' => ['a' => 'aa', 'b' => 'bb'],
+                'operator'   =>  '!$=',
+                'test'       => 'a',
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'foo a, bar a', 'b' => 'foo b, bar c', 'c' => 'foo c, bar c'],
+                'operator'   =>  '!$=',
+                'test'       => 'c',
+                'expected'   => ['a'],
+                'split'      => ','
+            ],
+
+            // between
+            [
+                'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
+                'operator'   =>  'between',
+                'test'       => [2, 3],
+                'expected'   => ['b', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '1, 2', 'b' => '3, 4', 'c' => '5, 6'],
+                'operator'   =>  'between',
+                'test'       => [1, 4],
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
+
+            // match
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'ABC'],
+                'operator'   =>  '*',
+                'test'       => '/[a-z]+/',
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'abc, def', 'b' => 'ABC, DEF', 'c' => 'abc, DEF'],
+                'operator'   =>  '*',
+                'test'       => '/[a-z]+/',
+                'expected'   => ['a', 'c'],
+                'split'      => ','
+            ],
+
+            // not match
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'ABC'],
+                'operator'   =>  '!*',
+                'test'       => '/[a-z]+/',
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'abc, def', 'b' => 'ABC, DEF', 'c' => 'abc, DEF'],
+                'operator'   =>  '!*',
+                'test'       => '/[a-z]+/',
+                'expected'   => ['b'],
+                'split'      => ','
+            ],
+
+            // minlength
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'defg'],
+                'operator'   =>  'minlength',
+                'test'       => 4,
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'defg', 'c' => 'hijklm'],
+                'operator'   =>  'minlength',
+                'test'       => 4,
+                'expected'   => ['b', 'c'],
+                'split'      => ','
+            ],
+
+            // maxlength
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'defg'],
+                'operator'   =>  'maxlength',
+                'test'       => 3,
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'abc', 'b' => 'defg', 'c' => 'hijklm'],
+                'operator'   =>  'maxlength',
+                'test'       => 3,
+                'expected'   => ['a'],
+                'split'      => ','
+            ],
+
+            // minwords
+            [
+                'attributes' => ['a' => 'hello world', 'b' => 'hello'],
+                'operator'   =>  'minwords',
+                'test'       => 2,
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'hello world, so great', 'b' => 'hello, great'],
+                'operator'   =>  'minwords',
+                'test'       => 2,
+                'expected'   => ['a'],
+                'split'      => ','
+            ],
+
+            // maxwords
+            [
+                'attributes' => ['a' => 'hello world', 'b' => 'hello'],
+                'operator'   =>  'maxwords',
+                'test'       => 1,
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => 'hello world, great', 'b' => 'hello, great'],
+                'operator'   =>  'maxwords',
+                'test'       => 1,
+                'expected'   => ['b'],
+                'split'      => ','
+            ],
+
+        ];
     }
 
     /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage Missing filter for operator: $%
+     * @dataProvider filterDataProvider
      */
-    public function testFilterByUnknown()
+    public function testFilterBy($attributes, $operator, $test, $expected, $split)
     {
-        $collection = new Collection(['one' => 'eins']);
-        $collection->filterBy('one', '$%', 'fail');
+
+        $data = [];
+
+        foreach ($attributes as $attributeKey => $attributeValue) {
+            $data[$attributeKey] = [
+                'attribute' => $attributeValue
+            ];
+        }
+
+        $collection = new Collection($data);
+        $result     = $collection->filterBy('attribute', $operator, $test, $split);
+
+        $this->assertEquals($expected, $result->keys(), $operator);
+
     }
 
     public function testNot()

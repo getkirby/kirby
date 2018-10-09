@@ -12,26 +12,13 @@ use Exception;
  */
 class Collection extends Iterator
 {
-    public static $filters = [
-        'between'   => 'between',
-        '*='        => 'contains',
-        '!*='       => 'notContains',
-        '$='        => 'endsWith',
-        '=='        => 'same',
-        'in'        => 'in',
-        '<'         => 'less',
-        '<='        => 'max',
-        '>'         => 'more',
-        '>='        => 'min',
-        '!='        => 'different',
-        'not in'    => 'notIn',
-        '^='        => 'startsWith',
-        'match'     => 'match',
-        'maxLength' => 'maxLength',
-        'minLength' => 'minLength',
-        'maxWords'  => 'maxWords',
-        'minWords'  => 'minWords',
-    ];
+
+    /**
+     * All registered collection filters
+     *
+     * @var array
+     */
+    public static $filters = [];
 
     /**
      * Pagination object
@@ -249,34 +236,95 @@ class Collection extends Iterator
      * Filters the collection by one of the predefined
      * filter methods.
      *
-     * @param string $attribute
-     * @param string $operator
-     * @param mixed ...$filter
+     * @param string $field
      * @return self
      */
-    public function filterBy(string $attribute, $operator, ...$filter): self
+    public function filterBy(string $field, ...$args): self
     {
-        if (count(func_get_args()) === 2) {
-            $filter   = [$operator];
-            $operator = '==';
+        $operator = '==';
+        $test     = $args[0] ?? null;
+        $split    = $args[1] ?? false;
+
+        if (is_string($test) === true && isset(static::$filters[$test]) === true) {
+            $operator = $test;
+            $test     = $args[1] ?? null;
+            $split    = $args[2] ?? false;
         }
 
-        if (!isset(static::$filters[$operator])) {
-            throw new Exception('Missing filter for operator: ' . $operator);
+        if (is_object($test) === true && method_exists($test, '__toString') === true) {
+            $test = (string)$test;
         }
 
-        $filterMethod = static::$filters[$operator];
-        $collection   = clone $this;
+        // get the filter from the filters array
+        $filter = static::$filters[$operator] ?? null;
 
-        foreach ($this->data as $key => $item) {
-            $value = $this->getAttribute($item, $attribute);
+        // return an unfiltered list if the filter does not exist
+        if ($filter === null) {
+            return $this;
+        }
 
-            if (V::$filterMethod($value, ...$filter) !== true) {
-                unset($collection->data[$key]);
+        if (is_array($filter) === true) {
+
+            $collection = clone $this;
+            $validator  = $filter['validator'];
+            $strict     = $filter['strict'] ?? true;
+            $method     = $strict ? 'filterMatchesAll' : 'filterMatchesAny';
+
+            foreach ($collection->data as $key => $item) {
+
+                $value = $collection->getAttribute($item, $field, $split);
+
+                if ($split !== false) {
+                    if ($this->$method($validator, $value, $test) === false) {
+                        unset($collection->data[$key]);
+                    }
+                } elseif ($validator($value, $test) === false) {
+                    unset($collection->data[$key]);
+                }
+
+            }
+
+            return $collection;
+
+        }
+
+        return $filter(clone $this, $field, $test, $split);
+
+    }
+
+    protected function filterMatchesAny($validator, $values, $test): bool
+    {
+        foreach ($values as $value) {
+            if ($validator($value, $test) !== false) {
+                return true;
             }
         }
 
-        return $collection;
+        return false;
+    }
+
+    protected function filterMatchesAll($validator, $values, $test): bool
+    {
+        foreach ($values as $value) {
+            if ($validator($value, $test) === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function filterMatchesNone($validator, $values, $test): bool
+    {
+        $matches = 0;
+
+        foreach ($values as $value) {
+            if ($validator($value, $test) !== false) {
+                $matches++;
+            }
+        }
+
+        return $matches === 0;
     }
 
     /**
@@ -367,19 +415,117 @@ class Collection extends Iterator
         return $this->__get($key) ?? $default;
     }
 
-    public function getAttribute($item, $attribute)
+    /**
+     * Extracts an attribute value from the given item
+     * in the collection. This is useful if items in the collection
+     * might be objects, arrays or anything else and you need to
+     * get the value independently from that. We use it for filterBy.
+     *
+     * @param array|object $item
+     * @param string $attribute
+     * @param boolean $split
+     * @return mixed
+     */
+    public function getAttribute($item, string $attribute, $split = false)
     {
-        return $this->{'getAttributeFrom' . gettype($item)}($item, $attribute);
+        $value = $this->{'getAttributeFrom' . gettype($item)}($item, $attribute);
+
+        if ($split !== false) {
+            $value = Str::split($value, $split === true ? ',' : $split);
+        }
+
+        return $value;
     }
 
+    /**
+     * @param array $array
+     * @param string $attribute
+     * @return mixed
+     */
     protected function getAttributeFromArray(array $array, string $attribute)
     {
         return $array[$attribute] ?? null;
     }
 
+    /**
+     * @param object $object
+     * @param string $attribute
+     * @return void
+     */
     protected function getAttributeFromObject($object, string $attribute)
     {
         return $object->{$attribute}();
+    }
+
+    /**
+     * Groups the collection by a given callback
+     *
+     * @param Closure $callback
+     * @return Collection A new collection with an item for each group and a subcollection in each group
+     */
+    public function group(Closure $callback): Collection
+    {
+
+        $groups = [];
+
+        foreach ($this->data as $key => $item) {
+
+            // get the value to group by
+            $value = $callback($item);
+
+            // make sure that there's always a proper value to group by
+            if (!$value) {
+                throw new Exception('Invalid grouping value for key: ' . $key);
+            }
+
+            // make sure we have a proper key for each group
+            if (is_array($value) === true) {
+                throw new Exception('You cannot group by arrays or objects');
+            } elseif (is_object($value) === true) {
+                if (method_exists($value, '__toString') === false) {
+                    throw new Exception('You cannot group by arrays or objects');
+                } else {
+                    $value = (string)$value;
+                }
+            }
+
+            if (isset($groups[$value]) === false) {
+                // create a new entry for the group if it does not exist yet
+                $groups[$value] = new static([$key => $item]);
+            } else {
+                // add the item to an existing group
+                $groups[$value]->set($key, $item);
+            }
+
+        }
+
+        return new Collection($groups);
+
+    }
+
+    /**
+     * Groups the collection by a given field
+     *
+     * @param string $field
+     * @param bool $i
+     * @return Collection A new collection with an item for each group and a subcollection in each group
+     */
+    public function groupBy(string $field, bool $i = true)
+    {
+
+        if (is_string($field) === false) {
+            throw new Exception('Cannot group by non-string values. Did you mean to call group()?');
+        }
+
+        return $this->group(function ($item) use ($field, $i) {
+
+            $value = $this->getAttribute($item, $field);
+
+            // ignore upper/lowercase for group names
+            return $i === true ? Str::lower($value) : $value;
+
+        });
+
     }
 
     /**
@@ -789,4 +935,229 @@ class Collection extends Iterator
     {
         return implode('<br />', $this->keys());
     }
+
+    /**
+     * Alias for $this->not()
+     *
+     * @param  args    any number of keys, passed as individual arguments
+     * @return Collection
+     */
+    public function without(...$keys)
+    {
+        return $this->not(...$keys);
+    }
+
 }
+
+/**
+ * Equals Filter
+ */
+Collection::$filters['=='] = function ($collection, $field, $test, $split = false) {
+
+    foreach ($collection->data as $key => $item) {
+
+        $value = $collection->getAttribute($item, $field, $split);
+
+        if ($split !== false) {
+
+            if (in_array($test, $value) === false) {
+                unset($collection->data[$key]);
+            }
+
+        } elseif ($value != $test) {
+            unset($collection->data[$key]);
+        }
+
+    }
+
+    return $collection;
+
+};
+
+/**
+ * Not Equals Filter
+ */
+Collection::$filters['!='] = function ($collection, $field, $test, $split = false) {
+
+    foreach ($collection->data as $key => $item) {
+
+        $value = $collection->getAttribute($item, $field, $split);
+
+        if ($split !== false) {
+
+            if (in_array($test, $value) === true) {
+                unset($collection->data[$key]);
+            }
+
+        } elseif ($value == $test) {
+            unset($collection->data[$key]);
+        }
+
+    }
+
+    return $collection;
+
+};
+
+/**
+ * In Filter
+ */
+Collection::$filters['in'] = [
+    'validator' => function ($value, $test) {
+        return in_array($value, $test) === true;
+    },
+    'strict' => false
+];
+
+/**
+ * Not In Filter
+ */
+Collection::$filters['not in'] = [
+    'validator' => function ($value, $test) {
+        return in_array($value, $test) === false;
+    },
+];
+
+/**
+ * Contains Filter
+ */
+Collection::$filters['*='] = [
+    'validator' => function ($value, $test) {
+        return strpos($value, $test) !== false;
+    },
+    'strict' => false
+];
+
+/**
+ * Not Contains Filter
+ */
+Collection::$filters['!*='] = [
+    'validator' => function ($value, $test) {
+        return strpos($value, $test) === false;
+    },
+];
+
+/**
+ * More Filter
+ */
+Collection::$filters['>'] = [
+    'validator' => function ($value, $test) {
+        return $value > $test;
+    }
+];
+
+/**
+ * Min Filter
+ */
+Collection::$filters['>='] = [
+    'validator' => function ($value, $test) {
+        return $value >= $test;
+    }
+];
+
+/**
+ * Less Filter
+ */
+Collection::$filters['<'] = [
+    'validator' => function ($value, $test) {
+        return $value < $test;
+    }
+];
+
+/**
+ * Max Filter
+ */
+Collection::$filters['<='] = [
+    'validator' => function ($value, $test) {
+        return $value <= $test;
+    }
+];
+
+/**
+ * Ends With Filter
+ */
+Collection::$filters['$='] = [
+    'validator' => 'V::endsWith',
+    'strict'    => false,
+];
+
+/**
+ * Not Ends With Filter
+ */
+Collection::$filters['!$='] = [
+    'validator' => function ($value, $test) {
+        return V::endsWith($value, $test) === false;
+    }
+];
+
+/**
+ * Starts With Filter
+ */
+Collection::$filters['^='] = [
+    'validator' => 'V::startsWith',
+    'strict'    => false
+];
+
+/**
+ * Not Starts With Filter
+ */
+Collection::$filters['!^='] = [
+    'validator' => function ($value, $test) {
+        return V::startsWith($value, $test) === false;
+    }
+];
+
+/**
+ * Between Filter
+ */
+Collection::$filters['between'] = [
+    'validator' => function ($value, $test) {
+        return V::between($value, ...$test) === true;
+    },
+    'strict' => false
+];
+
+/**
+ * Match Filter
+ */
+Collection::$filters['*'] = [
+    'validator' => 'V::match',
+    'strict'    => false
+];
+
+/**
+ * Not Match Filter
+ */
+Collection::$filters['!*'] = [
+    'validator' => function ($value, $test) {
+        return V::match($value, $test) === false;
+    }
+];
+
+/**
+ * Max Length Filter
+ */
+Collection::$filters['maxlength'] = [
+    'validator' => 'V::maxLength',
+];
+
+/**
+ * Min Length Filter
+ */
+Collection::$filters['minlength'] = [
+    'validator' => 'V::minLength'
+];
+
+/**
+ * Max Words Filter
+ */
+Collection::$filters['maxwords'] = [
+    'validator' => 'V::maxWords',
+];
+
+/**
+ * Min Words Filter
+ */
+Collection::$filters['minwords'] = [
+    'validator' => 'V::minWords',
+];
