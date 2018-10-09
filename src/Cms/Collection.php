@@ -76,19 +76,6 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Returns the plain prop value from a given
-     * object, to be used in filter functions.
-     *
-     * @param  object $object
-     * @param  string $prop
-     * @return mixed
-     */
-    public function getAttribute($object, $prop)
-    {
-        return (string)$object->$prop();
-    }
-
-    /**
      * Groups the items by a given field
      *
      * @param string $field
