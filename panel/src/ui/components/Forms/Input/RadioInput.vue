@@ -1,5 +1,5 @@
 <template>
-  <ul class="k-radio-input" :style="'--columns:' + columns">
+  <ul :style="'--columns:' + columns" class="k-radio-input">
     <li v-for="(option, index) in options" :key="index">
       <input
         :id="id + '-' + index"

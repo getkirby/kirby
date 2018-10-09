@@ -29,7 +29,7 @@
               }
               :
               null
-            "
+          "
           :icon="{
             type: 'user',
             back: 'black'

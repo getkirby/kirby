@@ -1,5 +1,5 @@
 <template>
-  <ul class="k-checkboxes-input" :style="'--columns:' + columns">
+  <ul :style="'--columns:' + columns" class="k-checkboxes-input">
     <li v-for="(option, index) in options" :key="index">
       <k-checkbox-input
         :id="id + '-' + index"
