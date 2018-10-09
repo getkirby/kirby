@@ -1,5 +1,9 @@
 <?php
 
+if (version_compare(phpversion(), '7.1.0', '>') === false) {
+    die(include __DIR__ . '/views/php.php');
+}
+
 if (is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
     // always prefer a site-wide Composer autoloader
     // if it exists, it means that the user has probably installed additional packages
