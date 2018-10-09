@@ -25,6 +25,14 @@ class ApiTest extends TestCase
                             [
                                 'slug' => 'ab'
                             ]
+                        ],
+                        'files' => [
+                            [
+                                'filename' => 'a-regular-file.jpg',
+                            ],
+                            [
+                                'filename' => 'a filename with spaces.jpg',
+                            ]
                         ]
                     ],
                     [
@@ -71,6 +79,23 @@ class ApiTest extends TestCase
         $this->assertEquals('a', $result['data'][0]['id']);
         $this->assertEquals('a/aa', $result['data'][1]['id']);
         $this->assertEquals('b', $result['data'][2]['id']);
+
+    }
+
+    public function testFindFile()
+    {
+
+        // regular
+        $result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
+
+        $this->assertEquals(200, $result['code']);
+        $this->assertEquals('a-regular-file.jpg', $result['data']['filename']);
+
+        // with spaces in filename
+        $result = $this->api->call('pages/a/files/a filename with spaces.jpg', 'GET');
+
+        $this->assertEquals(200, $result['code']);
+        $this->assertEquals('a filename with spaces.jpg', $result['data']['filename']);
 
     }
 
