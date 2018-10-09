@@ -264,14 +264,12 @@ class Collection extends Iterator
         }
 
         if (is_array($filter) === true) {
-
             $collection = clone $this;
             $validator  = $filter['validator'];
             $strict     = $filter['strict'] ?? true;
             $method     = $strict ? 'filterMatchesAll' : 'filterMatchesAny';
 
             foreach ($collection->data as $key => $item) {
-
                 $value = $collection->getAttribute($item, $field, $split);
 
                 if ($split !== false) {
@@ -281,15 +279,12 @@ class Collection extends Iterator
                 } elseif ($validator($value, $test) === false) {
                     unset($collection->data[$key]);
                 }
-
             }
 
             return $collection;
-
         }
 
         return $filter(clone $this, $field, $test, $split);
-
     }
 
     protected function filterMatchesAny($validator, $values, $test): bool
@@ -465,7 +460,6 @@ class Collection extends Iterator
      */
     public function group(Closure $callback): Collection
     {
-
         $groups = [];
 
         foreach ($this->data as $key => $item) {
@@ -496,11 +490,9 @@ class Collection extends Iterator
                 // add the item to an existing group
                 $groups[$value]->set($key, $item);
             }
-
         }
 
         return new Collection($groups);
-
     }
 
     /**
@@ -512,20 +504,16 @@ class Collection extends Iterator
      */
     public function groupBy(string $field, bool $i = true)
     {
-
         if (is_string($field) === false) {
             throw new Exception('Cannot group by non-string values. Did you mean to call group()?');
         }
 
         return $this->group(function ($item) use ($field, $i) {
-
             $value = $this->getAttribute($item, $field);
 
             // ignore upper/lowercase for group names
             return $i === true ? Str::lower($value) : $value;
-
         });
-
     }
 
     /**
@@ -946,57 +934,44 @@ class Collection extends Iterator
     {
         return $this->not(...$keys);
     }
-
 }
 
 /**
  * Equals Filter
  */
 Collection::$filters['=='] = function ($collection, $field, $test, $split = false) {
-
     foreach ($collection->data as $key => $item) {
-
         $value = $collection->getAttribute($item, $field, $split);
 
         if ($split !== false) {
-
             if (in_array($test, $value) === false) {
                 unset($collection->data[$key]);
             }
-
         } elseif ($value != $test) {
             unset($collection->data[$key]);
         }
-
     }
 
     return $collection;
-
 };
 
 /**
  * Not Equals Filter
  */
 Collection::$filters['!='] = function ($collection, $field, $test, $split = false) {
-
     foreach ($collection->data as $key => $item) {
-
         $value = $collection->getAttribute($item, $field, $split);
 
         if ($split !== false) {
-
             if (in_array($test, $value) === true) {
                 unset($collection->data[$key]);
             }
-
         } elseif ($value == $test) {
             unset($collection->data[$key]);
         }
-
     }
 
     return $collection;
-
 };
 
 /**
