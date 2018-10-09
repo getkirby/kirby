@@ -7,6 +7,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field as FormField;
 use Kirby\Text\KirbyTag;
+use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\V;
@@ -20,6 +21,7 @@ trait AppPlugins
         'collections' => [],
         'components' => [],
         'controllers' => [],
+        'collectionFilters' => [],
         'fieldMethods' => [],
         'fileMethods' => [],
         'filesMethods' => [],
@@ -56,6 +58,11 @@ trait AppPlugins
     protected function extendBlueprints(array $blueprints): array
     {
         return $this->extensions['blueprints'] = array_merge($this->extensions['blueprints'], $blueprints);
+    }
+
+    protected function extendCollectionFilters(array $filters): array
+    {
+        return $this->extensions['collectionFilters'] = Collection::$filters = array_merge(Collection::$filters, $filters);
     }
 
     protected function extendCollections(array $collections): array

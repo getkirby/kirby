@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
+use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 
 class DummyPage extends Page {}
@@ -39,6 +40,23 @@ class AppPluginsTest extends TestCase
         ]);
 
         $this->assertEquals($pages, $kirby->collection('test'));
+    }
+
+    public function testCollectionFilters()
+    {
+        Collection::$filters = [];
+
+        $kirby = new App([
+            'collectionFilters' => [
+                '**' => $filter = [
+                    'validator' => function ($value, $test) {
+                        return $value === 'foo';
+                    }
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(Collection::$filters['**'], $filter);
     }
 
     public function testController()
