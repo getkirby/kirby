@@ -24,6 +24,25 @@ class CollectionTest extends TestCase
         $this->assertEquals($this->data, $this->collection->toArray());
     }
 
+    public function testAppend()
+    {
+        // simple
+        $collection = new Collection;
+        $collection = $collection->append('a');
+        $collection = $collection->append('b');
+        $collection = $collection->append('c');
+
+        $this->assertEquals([0, 1, 2], $collection->keys());
+
+        // with key
+        $collection = new Collection;
+        $collection = $collection->append('a', 'A');
+        $collection = $collection->append('b', 'B');
+        $collection = $collection->append('c', 'C');
+
+        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
+    }
+
     public function testCount()
     {
         $this->assertEquals(3, $this->collection->count());
@@ -252,6 +271,23 @@ class CollectionTest extends TestCase
         $this->assertEquals(array_slice($this->data, 0, 1), $this->collection->limit(1)->toArray());
         $this->assertEquals(array_slice($this->data, 1, 1), $this->collection->offset(1)->limit(1)->toArray());
         $this->assertIsUntouched();
+    }
+
+    public function testPrepend()
+    {
+        // simple
+        $collection = new Collection(['b', 'c']);
+        $collection = $collection->prepend('a');
+
+        $this->assertEquals([0, 1, 2], $collection->keys());
+        $this->assertEquals(['a', 'b', 'c'], $collection->values());
+
+        // with key
+        $collection = new Collection(['b' => 'B', 'c' => 'C']);
+        $collection = $collection->prepend('a', 'A');
+
+        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
+        $this->assertEquals(['A', 'B', 'C'], $collection->values());
     }
 
     public function testQuery()

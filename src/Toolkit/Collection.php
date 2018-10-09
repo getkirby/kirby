@@ -112,9 +112,15 @@ class Collection extends Iterator
      * @param  mixed      $item
      * @return Collection
      */
-    public function append($key, $item): self
+    public function append(...$args): self
     {
-        return $this->set($key, $item);
+        if (count($args) === 1) {
+            $this->data[] = $args[0];
+        } elseif (count($args) === 2) {
+            $this->set($args[0], $args[1]);
+        }
+
+        return $this;
     }
 
     /**
@@ -687,13 +693,16 @@ class Collection extends Iterator
      * @param  mixed       $item
      * @return Collection
      */
-    public function prepend($key, $item): self
+    public function prepend(...$args): self
     {
-        $data = $this->data;
-
-        $this->data = [];
-        $this->set($key, $item);
-        $this->data += $data;
+        if (count($args) === 1) {
+            array_unshift($this->data, $args[0]);
+        } elseif (count($args) === 2) {
+            $data = $this->data;
+            $this->data = [];
+            $this->set($args[0], $args[1]);
+            $this->data += $data;
+        }
 
         return $this;
     }
@@ -922,6 +931,17 @@ class Collection extends Iterator
     public function toString(): string
     {
         return implode('<br />', $this->keys());
+    }
+
+    /**
+     * Returns an non-associative array
+     * with all values
+     *
+     * @return array
+     */
+    public function values(): array
+    {
+        return array_values($this->data);
     }
 
     /**

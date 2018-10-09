@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 /**
  * Extended version of PHP's iterator
  * class that builds the foundation of our
- * Collection and Stack classes.
+ * Collection class.
  */
 class Iterator implements \Iterator
 {
