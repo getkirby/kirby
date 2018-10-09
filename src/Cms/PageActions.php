@@ -19,12 +19,15 @@ trait PageActions
      * Changes the sorting number
      *
      * @param int $num
+     * @param bool $fast
      * @return self
      */
-    protected function changeNum(int $num = null): self
+    protected function changeNum(int $num = null, bool $fast = false): self
     {
-        // always make sure to have the right sorting number
-        $num = $num !== null ? $this->createNum($num) : null;
+        if ($fast === false) {
+            // always make sure to have the right sorting number
+            $num = $num !== null ? $this->createNum($num) : null;
+        }
 
         if ($num === $this->num()) {
             return $this;
@@ -41,9 +44,7 @@ trait PageActions
                 return $newPage;
             }
 
-            if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
-                throw new LogicException('The page directory cannot be moved');
-            }
+            Dir::move($oldPage->root(), $newPage->root());
 
             return $newPage;
         });
@@ -525,7 +526,7 @@ trait PageActions
             if ($id === $this->id()) {
                 continue;
             } else {
-                $siblings->findBy('id', $id)->changeNum($key + 1);
+                $siblings->findBy('id', $id)->changeNum($key + 1, true);
             }
         }
 
@@ -539,7 +540,7 @@ trait PageActions
 
         foreach ($siblings as $sibling) {
             $index++;
-            $sibling->changeNum($index);
+            $sibling->changeNum($index, true);
         }
 
         return true;
