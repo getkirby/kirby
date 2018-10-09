@@ -10,6 +10,8 @@ class Media
 {
     public static function link(Model $model, $filename)
     {
+        $filename = urldecode($filename);
+
         // TODO: this should be refactored when users get normal files
         if (is_a($model, 'Kirby\Cms\User') === true) {
             if ($filename === 'profile.jpg') {

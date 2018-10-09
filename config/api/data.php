@@ -13,7 +13,8 @@ return [
     },
     'file' => function (string $id = null, string $filename) {
 
-        $parent = $id === null ? $this->site() : $this->page($id);
+        $filename = urldecode($filename);
+        $parent   = $id === null ? $this->site(): $this->page($id);
 
         if ($file = $parent->file($filename)) {
             return $file;
