@@ -25,9 +25,9 @@ return [
         'action'  => function () {
 
             // logout previous users
-            if ($user = $this->kirby()->user()) {
-                $user->logout();
-            }
+            // if ($user = $this->kirby()->user()) {
+            //     $user->logout();
+            // }
 
             // session options
             $options = [
@@ -41,7 +41,7 @@ return [
                     return [
                         'code'   => 200,
                         'status' => 'ok',
-                        'user'   => $this->resolve($this->user())->view('auth')->toArray()
+                        'user'   => $this->resolve($user)->view('auth')->toArray()
                     ];
                 }
             }
