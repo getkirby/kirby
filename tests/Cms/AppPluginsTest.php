@@ -44,6 +44,10 @@ class AppPluginsTest extends TestCase
 
     public function testCollectionFilters()
     {
+
+        // fetch all previous filters
+        $prevFilters = Collection::$filters;
+
         Collection::$filters = [];
 
         $kirby = new App([
@@ -57,6 +61,10 @@ class AppPluginsTest extends TestCase
         ]);
 
         $this->assertEquals(Collection::$filters['**'], $filter);
+
+        // restore previous filters
+        Collection::$filters = $prevFilters;
+
     }
 
     public function testController()
