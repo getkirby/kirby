@@ -34,7 +34,6 @@ trait PageActions
         }
 
         return $this->commit('changeNum', [$this, $num], function ($oldPage, $num) {
-
             $newPage = $oldPage->clone([
                 'num'     => $num,
                 'dirname' => null
