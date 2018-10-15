@@ -90,7 +90,7 @@ return [
             }
 
             // remove hidden pages
-            $pages = $pages->filterBy('isHidden', false);
+            $pages = $pages->filterBy('isReadable', true);
 
             // filter by all set templates
             if ($this->templates) {

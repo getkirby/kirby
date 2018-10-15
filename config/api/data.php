@@ -36,15 +36,11 @@ return [
         return $this->requestHeaders('x-language');
     },
     'page' => function (string $id) {
+        $id   = str_replace('+', '/', $id);
+        $page = $this->kirby()->page($id);
 
-        $id = str_replace('+', '/', $id);
-
-        if ($page = $this->site()->find($id)) {
+        if ($page && $page->isReadable()) {
             return $page;
-        }
-
-        if ($draft = $this->site()->draft($id)) {
-            return $draft;
         }
 
         throw new Exception(sprintf('The page "%s" cannot be found', $id));

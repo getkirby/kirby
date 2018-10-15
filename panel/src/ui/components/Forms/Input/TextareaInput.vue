@@ -222,6 +222,11 @@ export default {
     },
     onSelect()
     {
+
+      if (this.disabled) {
+        return false;
+      }
+
       this.toolbar = true;
 
       if (this.buttons === false) {

@@ -36,7 +36,7 @@ return [
             return $page->isSortable();
         },
         'next' => function (Page $page) {
-            return $page->nextAll()->filterBy('isHidden', false)->first();
+            return $page->nextAll()->filterBy('isReadable', true)->first();
         },
         'num' => function (Page $page) {
             return $page->num();
@@ -51,7 +51,7 @@ return [
             return $page->parents()->flip();
         },
         'prev' => function (Page $page) {
-            return $page->prevAll()->filterBy('isHidden', false)->last();
+            return $page->prevAll()->filterBy('isReadable', true)->last();
         },
         'siblings' => function (Page $page) {
             if ($page->isDraft() === true) {

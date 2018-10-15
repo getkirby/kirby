@@ -26,6 +26,7 @@ class PageBlueprint extends Blueprint
                 'changeTitle'    => null,
                 'create'         => null,
                 'delete'         => null,
+                'read'           => null,
                 'preview'        => null,
                 'sort'           => null,
                 'update'         => null,
@@ -44,16 +45,6 @@ class PageBlueprint extends Blueprint
 
         // normalize the available status array
         $this->props['status'] = $this->normalizeStatus($props['status'] ?? null);
-    }
-
-    /**
-     * Checks if the page is hidden
-     *
-     * @return bool
-     */
-    public function hide(): bool
-    {
-        return ($this->props['hide'] ?? false) === true;
     }
 
     /**

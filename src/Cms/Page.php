@@ -654,13 +654,13 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Is hidden from the panel
+     * Check if the page can be read by the current user
      *
      * @return boolean
      */
-    public function isHidden(): bool
+    public function isReadable(): bool
     {
-        return $this->blueprint()->hide();
+        return $this->permissions()->can('read');
     }
 
     /**

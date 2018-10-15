@@ -36,6 +36,7 @@ class Permissions
             'create'         => true,
             'delete'         => true,
             'preview'        => true,
+            'read'           => true,
             'sort'           => true,
             'update'         => true
         ],
