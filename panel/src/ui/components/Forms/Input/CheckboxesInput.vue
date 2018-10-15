@@ -39,10 +39,13 @@ export default {
   },
   data() {
     return {
-      selected: Array.isArray(this.value) ? this.value : String(this.value).split(",")
+      selected: this.valueToArray(this.value)
     }
   },
   watch: {
+    value(value) {
+      this.selected = this.valueToArray(value);
+    },
     selected() {
       this.onInvalid();
     }
@@ -74,6 +77,9 @@ export default {
     },
     select() {
       this.focus();
+    },
+    valueToArray(value) {
+      return Array.isArray(value) ? value : String(value).split(",");
     },
   },
   validations() {
