@@ -359,6 +359,10 @@ class App
             return $page->file($filename);
         }
 
+        if ($page = $this->page($id, null, $drafts)) {
+            return $page->file($filename);
+        }
+
         return null;
     }
 

@@ -83,10 +83,12 @@ class PageActionsTest extends TestCase
     {
         $page = $this->site()->find('test')->save();
 
+        $this->assertTrue($page->exists());
         $this->assertEquals('test', $page->slug());
 
         $modified = $page->changeSlug('modified-test');
 
+        $this->assertTrue($modified->exists());
         $this->assertEquals('modified-test', $modified->slug());
     }
 

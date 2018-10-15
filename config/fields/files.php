@@ -39,10 +39,10 @@ return [
             foreach (Yaml::decode($value) as $id) {
 
                 if (is_array($id) === true) {
-                    $id = $id['id'] ?? null;
+                    $id = $id['filename'] ?? null;
                 }
 
-                if ($id !== null && ($file = $kirby->file($id, null, true))) {
+                if ($id !== null && ($file = $kirby->file($id, $this->model, true))) {
                     $files[] = [
                         'filename' => $file->filename(),
                         'link'     => $file->panelUrl(true),
@@ -60,7 +60,7 @@ return [
     ],
     'toString' => function ($value = null) {
         if (is_array($value) === true) {
-            return Yaml::encode(array_column($value, 'id'));
+            return Yaml::encode(array_column($value, 'filename'));
         }
 
         return '';
