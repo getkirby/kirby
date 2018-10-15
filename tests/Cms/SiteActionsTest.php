@@ -81,7 +81,7 @@ class SiteActionsTest extends TestCase
 
     public function testSave()
     {
-        $site = $this->site()->save(['copyright' => 2012]);
+        $site = $this->site()->clone(['content' => ['copyright' => 2012]])->save();
         $this->assertEquals(2012, $site->copyright()->value());
     }
 

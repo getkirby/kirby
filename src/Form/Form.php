@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Throwable;
 use Kirby\Toolkit\Collection;
+use Kirby\Data\Yaml;
 
 /**
  * The main form class, that is being
@@ -28,7 +29,7 @@ class Form
         $values = array_change_key_case($values);
         $input  = array_change_key_case($input);
 
-        unset($inject['fields'], $inject['data'], $inject['input']);
+        unset($inject['fields'], $inject['values'], $inject['input']);
 
         $this->fields = new Fields;
         $this->values = array_merge($values, $input);
@@ -42,12 +43,10 @@ class Form
             $props['name']  = $name = strtolower($name);
 
             // overwrite the field value if not set
-            if (isset($props['value']) === false) {
-                if (($props['disabled'] ?? false) === true) {
-                    $props['value'] = $values[$name] ?? null;
-                } else {
-                    $props['value'] = $input[$name] ?? $values[$name] ?? null;
-                }
+            if (($props['disabled'] ?? false) === true) {
+                $props['value'] = $values[$name] ?? null;
+            } else {
+                $props['value'] = $input[$name] ?? $values[$name] ?? null;
             }
 
             try {
@@ -59,8 +58,6 @@ class Form
                     'theme' => 'negative',
                     'text'  => $e->getMessage(),
                 ]);
-
-                error_log($e);
 
                 $field = new Field('info', $props);
             }
@@ -119,6 +116,21 @@ class Form
     public function isValid(): bool
     {
         return empty($this->errors()) === true;
+    }
+
+    public function strings(): array
+    {
+        $strings = [];
+
+        foreach ($this->data() as $key => $value) {
+            if (is_array($value) === true) {
+                $strings[$key] = Yaml::encode($value);
+            } else {
+                $strings[$key] = (string)$value;
+            }
+        }
+
+        return $strings;
     }
 
     public function toArray()

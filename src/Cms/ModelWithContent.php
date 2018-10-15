@@ -238,7 +238,7 @@ abstract class ModelWithContent extends Model
             }
         }
 
-        return $this->commit('update', [$this, $form->values(), $form->strings(), $language], function ($model, $values, $strings, $language) {
+        return $this->commit('update', [$this, $form->data(), $form->strings(), $language], function ($model, $values, $strings, $language) {
             return $model->clone(['content' => $strings])->save($language);
         });
     }
