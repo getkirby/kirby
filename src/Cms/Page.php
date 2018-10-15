@@ -660,7 +660,15 @@ class Page extends ModelWithContent
      */
     public function isReadable(): bool
     {
-        return $this->permissions()->can('read');
+        static $readable = [];
+
+        $template = $this->intendedTemplate()->name();
+
+        if (isset($readable[$template]) === true) {
+            return $readable[$template];
+        }
+
+        return $readable[$template] = $this->permissions()->can('read');
     }
 
     /**
