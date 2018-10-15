@@ -12,11 +12,11 @@
       <slot slot="right" name="right" class="k-header-right" />
     </k-bar>
 
-    <div v-if="tabs && tabs.length > 1" :key="$route.fullPath" class="k-header-tabs">
+    <div v-if="tabs && tabs.length > 1" class="k-header-tabs">
       <nav>
         <k-button
           v-for="(tab, tabIndex) in visibleTabs"
-          :key="tabIndex"
+          :key="$route.fullPath + '-tab-' + tabIndex"
           :link="'#' + tab.name"
           :current="currentTab && currentTab.name === tab.name"
           :icon="tab.icon"
