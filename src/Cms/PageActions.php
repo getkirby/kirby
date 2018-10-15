@@ -77,7 +77,10 @@ trait PageActions
         }
 
         return $this->commit('changeSlug', [$this, $slug, $languageCode = null], function ($oldPage, $slug) {
-            $newPage = $oldPage->clone(['slug' => $slug]);
+            $newPage = $oldPage->clone([
+                'slug'    => $slug,
+                'dirname' => null
+            ]);
 
             if ($oldPage->exists() === false) {
                 return $newPage;
