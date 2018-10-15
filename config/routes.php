@@ -18,23 +18,12 @@ return function ($kirby) {
     $api   = $kirby->options['api']['slug']   ?? 'api';
     $panel = $kirby->options['panel']['slug'] ?? 'panel';
 
-    $routes = [
-        [
-            'pattern' => '',
-            'method'  => 'ALL',
-            'env'     => 'site',
-            'action'  => function () use ($kirby) {
-
-                $home = $kirby->site()->homePage();
-
-                if ($kirby->multilang() === true && $kirby->url() !== $home->url()) {
-                    return Response::redirect($kirby->site()->url());
-                } else {
-                    return $home;
-                }
-
-            }
-        ],
+    /**
+     * Before routes are running before the
+     * plugin routes and cannot be overwritten by
+     * plugins.
+     */
+    $before = [
         [
             'pattern' => $api . '/(:all)',
             'method'  => 'ALL',
@@ -118,8 +107,26 @@ return function ($kirby) {
     // Multi-language setup
     if ($kirby->multilang() === true) {
 
+        // Multi-language home
+        $after[] = [
+            'pattern' => '',
+            'method'  => 'ALL',
+            'env'     => 'site',
+            'action'  => function () use ($kirby) {
+
+                $home = $kirby->site()->homePage();
+
+                if ($kirby->url() !== $home->url()) {
+                    return Response::redirect($kirby->site()->url());
+                } else {
+                    return $home;
+                }
+
+            }
+        ];
+
         foreach ($kirby->languages() as $language) {
-            $routes[] = [
+            $after[] = [
                 'pattern' => trim($language->pattern() . '/(:all?)', '/'),
                 'method'  => 'ALL',
                 'env'     => 'site',
@@ -130,7 +137,7 @@ return function ($kirby) {
         }
 
         // fallback route for unprefixed language URLs.
-        $routes[] = [
+        $after[] = [
             'pattern' => '(:all)',
             'method'  => 'ALL',
             'env'     => 'site',
@@ -154,20 +161,34 @@ return function ($kirby) {
             }
         ];
 
-        return $routes;
+    } else {
+
+        // Single-language home
+        $after[] = [
+            'pattern' => '',
+            'method'  => 'ALL',
+            'env'     => 'site',
+            'action'  => function () use ($kirby) {
+                return $kirby->site()->homePage();
+            }
+        ];
+
+        // Single-language subpages
+        $after[] = [
+            'pattern' => '(:all)',
+            'method'  => 'ALL',
+            'env'     => 'site',
+            'action'  => function (string $path) use ($kirby) {
+                return $kirby->resolve($path);
+            }
+        ];
+
     }
 
-    // Single-language setup
-    $routes[] = [
-        'pattern' => '(:all)',
-        'method'  => 'ALL',
-        'env'     => 'site',
-        'action'  => function (string $path) use ($kirby) {
-            return $kirby->resolve($path);
-        }
+    return [
+        'before' => $before,
+        'after'  => $after
     ];
-
-    return $routes;
 
 };
 

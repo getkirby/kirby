@@ -740,9 +740,9 @@ class App
         }
 
         $registry = $this->extensions('routes');
-        $main     = (include static::$root . '/config/routes.php')($this);
+        $system   = (include static::$root . '/config/routes.php')($this);
 
-        return $this->routes = array_merge($registry, $main);
+        return $this->routes = array_merge($system['before'], $registry, $system['after']);
     }
 
     /**

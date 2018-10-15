@@ -133,4 +133,48 @@ class RouterTest extends TestCase
         $this->markTestIncomplete();
     }
 
+    public function customRouteProvider()
+    {
+        return [
+            // home
+            ['/', ''],
+            ['/', '/'],
+            ['', ''],
+            ['', '/'],
+
+            // main page
+            ['(:any)', 'test'],
+            ['(:any)', '/test'],
+            ['/(:any)', 'test'],
+            ['/(:any)', '/test'],
+
+            // subpages
+            ['(:all)', 'foo/bar'],
+            ['(:all)', '/foo/bar'],
+            ['/(:all)', 'foo/bar'],
+            ['/(:all)', '/foo/bar'],
+        ];
+    }
+
+    /**
+     * @dataProvider customRouteProvider
+     */
+    public function testCustomRoute($pattern, $path)
+    {
+
+        $app = $this->app->clone([
+            'routes' => [
+                [
+                    'pattern' => $pattern,
+                    'action'  => function () {
+                        return 'test';
+                    }
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('test', $app->call($path));
+
+    }
+
 }

@@ -97,7 +97,7 @@ class Route
         $this->action     = $action;
         $this->attributes = $attributes;
         $this->method     = $method;
-        $this->pattern    = $this->regex($pattern);
+        $this->pattern    = $this->regex(ltrim($pattern, '/'));
     }
 
     /**

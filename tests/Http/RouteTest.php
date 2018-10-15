@@ -18,7 +18,7 @@ class RouteTest extends TestCase
             return 'test';
         });
 
-        $this->assertEquals('/', $route->pattern());
+        $this->assertEquals('', $route->pattern());
         $this->assertEquals('POST', $route->method());
         $this->assertEquals($func, $route->action());
         $this->assertEquals('test', $route->action()->call($route));

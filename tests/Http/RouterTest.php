@@ -20,7 +20,7 @@ class RouterTest extends TestCase
         $result = $router->find('/', 'GET');
 
         $this->assertInstanceOf(Route::class, $result);
-        $this->assertEquals('/', $result->pattern());
+        $this->assertEquals('', $result->pattern());
         $this->assertEquals('GET', $result->method());
     }
 

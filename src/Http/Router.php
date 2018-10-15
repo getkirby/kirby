@@ -64,7 +64,7 @@ class Router
 
             foreach ($methods as $method) {
                 foreach ($patterns as $pattern) {
-                    $this->routes[$method][$pattern] = new Route($pattern, $method, $props['action'], $props);
+                    $this->routes[$method][] = new Route($pattern, $method, $props['action'], $props);
                 }
             }
         }
@@ -108,22 +108,11 @@ class Router
         // remove leading and trailing slashes
         $path = trim($path, '/');
 
-        // direct access to home routes
-        if ($path === '') {
-            if (isset($this->routes[$method]['']) === true) {
-                return $this->route = $this->routes[$method][''];
-            }
+        foreach ($this->routes[$method] as $route) {
+            $arguments = $route->parse($route->pattern(), $path);
 
-            if (isset($this->routes[$method]['/']) === true) {
-                return $this->route = $this->routes[$method]['/'];
-            }
-        } else {
-            foreach ($this->routes[$method] as $pattern => $route) {
-                $arguments = $route->parse($pattern, $path);
-
-                if ($arguments !== false) {
-                    return $this->route = $route;
-                }
+            if ($arguments !== false) {
+                return $this->route = $route;
             }
         }
 
