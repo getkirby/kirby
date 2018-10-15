@@ -227,6 +227,37 @@ class PagePropsTest extends TestCase
         $this->assertEquals($parent, $page->parent());
     }
 
+    public function testParentPrevNext()
+    {
+
+        $app = new App([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'projects',
+                        'children' => [
+                            [
+                                'slug' => 'project-a',
+                            ],
+                            [
+                                'slug' => 'project-b',
+                            ]
+                        ]
+                    ],
+                    [
+                        'slug' => 'blog'
+                    ]
+                ]
+            ]
+        ]);
+
+        $child = $app->page('projects/project-a');
+        $blog  = $app->page('blog');
+
+        $this->assertEquals($blog, $child->parent()->next());
+        $this->assertEquals(null, $child->parent()->prev());
+    }
+
     /**
      * @expectedException TypeError
      */
