@@ -172,9 +172,7 @@ class Component
     protected function applyProps(array $props): void
     {
         foreach ($props as $propName => $propFunction) {
-
             if (is_callable($propFunction) === true) {
-
                 if (isset($this->attrs[$propName]) === true) {
                     $this->$propName = $this->props[$propName] = $propFunction($this->attrs[$propName]);
                 } else {
@@ -184,11 +182,9 @@ class Component
                         throw new ArgumentCountError('Please provide a value for "' . $propName . '"');
                     }
                 }
-
             } else {
                 $this->$propName = $this->props[$propName] = $propFunction;
             }
-
         }
     }
 
