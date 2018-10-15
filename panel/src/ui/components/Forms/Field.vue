@@ -1,7 +1,7 @@
 <template>
   <div
     :data-disabled="disabled"
-    class="k-field"
+    :class="'k-field k-field-name-' + name"
     @focusin="$emit('focus', $event)"
     @focusout="$emit('blur', $event)"
   >

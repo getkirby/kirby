@@ -9,8 +9,8 @@
           :name="section.name"
           :parent="parent"
           :blueprint="blueprint"
+          :class="'k-section k-section-name-' + section.name"
           v-bind="section"
-          class="k-section"
           @submit="$emit('submit', $event)"
         />
         <template v-else>
