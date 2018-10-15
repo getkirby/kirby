@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use ArgumentCountError;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 
@@ -171,13 +172,23 @@ class Component
     protected function applyProps(array $props): void
     {
         foreach ($props as $propName => $propFunction) {
-            if (isset($this->attrs[$propName]) === true) {
-                $this->$propName = $this->props[$propName] = $propFunction($this->attrs[$propName]);
-            } elseif (is_callable($propFunction) === true) {
-                $this->$propName = $this->props[$propName] = $propFunction();
+
+            if (is_callable($propFunction) === true) {
+
+                if (isset($this->attrs[$propName]) === true) {
+                    $this->$propName = $this->props[$propName] = $propFunction($this->attrs[$propName]);
+                } else {
+                    try {
+                        $this->$propName = $this->props[$propName] = $propFunction();
+                    } catch (ArgumentCountError $e) {
+                        throw new ArgumentCountError('Please provide a value for "' . $propName . '"');
+                    }
+                }
+
             } else {
                 $this->$propName = $this->props[$propName] = $propFunction;
             }
+
         }
     }
 
