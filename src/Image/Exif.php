@@ -208,6 +208,10 @@ class Exif
      */
     protected function read(): array
     {
+        if (function_exists('exif_read_data') === false) {
+            return [];
+        }
+
         $data = @exif_read_data($this->image->root());
         return is_array($data) ? $data : [];
     }
