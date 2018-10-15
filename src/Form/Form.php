@@ -21,15 +21,17 @@ class Form
     {
         $fields = $props['fields'] ?? [];
         $values = $props['values'] ?? [];
+        $input  = $props['input']  ?? [];
         $inject = $props;
 
         // lowercase all value names
         $values = array_change_key_case($values);
+        $input  = array_change_key_case($input);
 
-        unset($inject['fields'], $inject['values']);
+        unset($inject['fields'], $inject['data'], $inject['input']);
 
         $this->fields = new Fields;
-        $this->values = $values;
+        $this->values = array_merge($values, $input);
 
         foreach ($fields as $name => $props) {
 
@@ -38,7 +40,15 @@ class Form
 
             // inject the name
             $props['name']  = $name = strtolower($name);
-            $props['value'] = $values[$name] ?? null;
+
+            // overwrite the field value if not set
+            if (isset($props['value']) === false) {
+                if (($props['disabled'] ?? false) === true) {
+                    $props['value'] = $values[$name] ?? null;
+                } else {
+                    $props['value'] = $input[$name] ?? $values[$name] ?? null;
+                }
+            }
 
             try {
                 $field = new Field($props['type'], $props);
@@ -61,6 +71,19 @@ class Form
 
             $this->fields->append($name, $field);
         }
+    }
+
+    public function data(): array
+    {
+        $data = [];
+
+        foreach ($this->fields as $field) {
+            if ($field->save() !== false) {
+                $data[$field->name()] = $field->data();
+            }
+        }
+
+        return $data + $this->values;
     }
 
     public function errors(): array
@@ -105,24 +128,10 @@ class Form
             'fields' => $this->fields->toArray(function ($item) {
                 return $item->toArray();
             }),
-            'invalid' => $this->isInvalid(),
-            'values'  => $this->values,
+            'invalid' => $this->isInvalid()
         ];
 
         return $array;
-    }
-
-    public function strings(): array
-    {
-        $array = [];
-
-        foreach ($this->fields as $field) {
-            if ($field->save() !== false) {
-                $array[$field->name()] = $field->toString();
-            }
-        }
-
-        return array_merge($this->values, $array);
     }
 
     public function values(): array

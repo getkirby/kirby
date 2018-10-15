@@ -57,6 +57,21 @@ class Field extends Component
         $this->validate();
     }
 
+    public function data()
+    {
+        $save = $this->options['save'] ?? true;
+
+        if ($save === false) {
+            return null;
+        }
+
+        if (is_callable($save) === true) {
+            return $save($this->value);
+        }
+
+        return $this->value;
+    }
+
     protected function defaults(): array
     {
         return [
@@ -148,7 +163,7 @@ class Field extends Component
 
     public function save(): bool
     {
-        return $this->options['save'] ?? true;
+        return ($this->options['save'] ?? true) !== false;
     }
 
     public function toArray(): array
@@ -166,34 +181,6 @@ class Field extends Component
         return array_filter($array, function ($item) {
             return $item !== null;
         });
-    }
-
-    public function toString(): ?string
-    {
-        if ($this->save() === false) {
-            return null;
-        }
-
-        $value = $this->value;
-
-        if (isset($this->options['toString']) === true) {
-            return $this->options['toString']->call($this, $value);
-        }
-
-        // DEPRECATED
-        if (isset($this->methods['toString']) === true) {
-            return $this->methods['toString']->call($this, $value);
-        }
-
-        if (is_array($value) === true) {
-            return Yaml::encode($value);
-        }
-
-        if (is_object($value) === true) {
-            throw new Exception('The field value cannot be converted to a string');
-        }
-
-        return (string)$value;
     }
 
     protected function validate()

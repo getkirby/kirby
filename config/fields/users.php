@@ -47,12 +47,8 @@ return [
 
         }
     ],
-    'toString' => function ($value = null) {
-        if (is_array($value) === true) {
-            return Yaml::encode(array_column($value, 'email'));
-        }
-
-        return '';
+    'save' => function ($value = null) {
+        return A::pluck($value, 'email');
     },
     'validations' => [
         'max',

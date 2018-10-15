@@ -39,11 +39,11 @@ return [
     'methods' => [
         'toBool' => function ($value) {
             return in_array($value, [true, 'true', 1, '1', 'on'], true) === true;
-        },
-        'toString' => function (): string {
-            return $this->value() === true ? 'true' : 'false';
         }
     ],
+    'save' => function (): string {
+        return $this->value() === true ? 'true' : 'false';
+    },
     'validations' => [
         'boolean',
         'required' => function ($value) {

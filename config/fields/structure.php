@@ -94,18 +94,18 @@ return [
             return new Form([
                 'fields' => $this->fields,
                 'values' => $values,
-                'model'  => $this->model() ?? null
+                'model'  => $this->model
             ]);
         },
     ],
-    'toString' => function () {
-        $strings = [];
+    'save' => function () {
+        $data = [];
 
         foreach ($this->value() as $row) {
-            $strings[] = $this->form($row)->strings();
+            $data[] = $this->form($row)->data();
         }
 
-        return Yaml::encode($strings);
+        return $data;
     },
     'validations' => [
         'min',

@@ -66,7 +66,7 @@ class CheckboxesFieldTest extends TestCase
             'value' => 'a,b,c,d'
         ]);
 
-        $this->assertEquals('a, b, c', $field->toString());
+        $this->assertEquals('a, b, c', $field->data());
     }
 
     public function testIgnoreInvalidOptions()

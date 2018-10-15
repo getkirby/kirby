@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class FormTest extends TestCase
 {
 
-    public function testStringsWithoutFields()
+    public function testDataWithoutFields()
     {
         $form = new Form([
             'fields' => [],
@@ -19,7 +19,7 @@ class FormTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals($values, $form->strings());
+        $this->assertEquals($values, $form->data());
     }
 
     public function testValuesWithoutFields()
@@ -35,7 +35,7 @@ class FormTest extends TestCase
         $this->assertEquals($values, $form->values());
     }
 
-    public function testStringsFromNestedFields()
+    public function testDataFromNestedFields()
     {
 
         new App([
@@ -64,15 +64,15 @@ class FormTest extends TestCase
             ]
         ]);
 
-        $expectedYaml = [
-            'structure' => Yaml::encode([
+        $expected = [
+            'structure' => [
                 [
                     'tags' => 'a, b'
                 ]
-            ])
+            ]
         ];
 
-        $this->assertEquals($expectedYaml, $form->strings());
+        $this->assertEquals($expected, $form->data());
 
     }
 

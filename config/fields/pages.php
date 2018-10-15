@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\A;
+
 return [
     'props' => [
         'default' => function ($default = null) {
@@ -42,12 +44,8 @@ return [
 
         }
     ],
-    'toString' => function ($value = null) {
-        if (is_array($value) === true) {
-            return Yaml::encode(array_column($value, 'id'));
-        }
-
-        return '';
+    'save' => function ($value = null) {
+        return A::pluck($value, 'id');
     },
     'validations' => [
         'max',

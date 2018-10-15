@@ -51,13 +51,13 @@ class StructureFieldTest extends TestCase
 
         $this->assertEquals($expectedValue, $field->value()[0]['tags']);
 
-        $expectedYaml = Yaml::encode([
+        $expected = [
             [
                 'tags' => 'a, b'
             ]
-        ]);
+        ];
 
-        $this->assertEquals($expectedYaml, $field->toString());
+        $this->assertEquals($expected, $field->data());
     }
 
     public function testMin()

@@ -30,7 +30,7 @@ return [
             }
         }
     ],
-    'toString' => function ($value): string {
+    'save' => function ($value): string {
         if ($timestamp = strtotime($value)) {
             return date($this->format, $timestamp);
         }

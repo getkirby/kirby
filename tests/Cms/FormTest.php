@@ -52,17 +52,14 @@ class FormTest extends TestCase
 
         $file = new File([
             'filename' => 'test.jpg',
-            'content'  => [
-                'a' => 'A'
-            ]
+            'content'  => []
         ]);
 
         $form = Form::for($file, [
-            'values' => ['b' => 'B']
+            'values' => ['a' => 'A', 'b' => 'B']
         ]);
 
-        $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->values());
-        $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->strings());
+        $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->data());
 
     }
 

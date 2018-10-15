@@ -31,15 +31,15 @@ return [
             if ($value !== null && $date = strtotime($value)) {
                 return date(DATE_W3C, $date);
             }
-        },
-        'toString' => function ($value): string {
-            if ($value !== null && $date = strtotime($value)) {
-                return date($this->format(), $date);
-            }
-
-            return '';
-        },
+        }
     ],
+    'save' => function ($value) {
+        if ($value !== null && $date = strtotime($value)) {
+            return date($this->format(), $date);
+        }
+
+        return '';
+    },
     'validations' => [
         'date'
     ]

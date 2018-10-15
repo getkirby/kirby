@@ -57,14 +57,9 @@ return [
 
         }
     ],
-    'toString' => function ($value): string {
-
-        if (is_string($value) === true) {
-            return $value;
-        }
-
+    'save' => function (array $value = null): string {
         return A::join(
-            array_column($value ?? [], 'value'),
+            A::pluck($value, 'value'),
             $this->separator() . ' '
         );
     },

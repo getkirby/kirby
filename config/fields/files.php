@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\A;
+
 return [
     'props' => [
         'default' => function ($default = null) {
@@ -19,11 +21,11 @@ return [
         },
         'parent' => function (string $parent = null) {
 
-            if ($parent === null) {
-                return $this->model()->apiUrl(true);
+            if (is_string($parent) === true && $model = $this->model()->query($parent, 'Kirby\Cms\Model')) {
+                return $model->apiUrl(true);
             }
 
-            return $this->model()->query($parent, 'Kirby\Cms\Model')->apiUrl(true);
+            return $this->model()->apiUrl(true);
 
         },
         'value' => function ($value = null) {
@@ -58,12 +60,8 @@ return [
 
         }
     ],
-    'toString' => function ($value = null) {
-        if (is_array($value) === true) {
-            return Yaml::encode(array_column($value, 'filename'));
-        }
-
-        return '';
+    'save' => function ($value = null) {
+        return A::pluck($value, 'filename');
     },
     'validations' => [
         'max',

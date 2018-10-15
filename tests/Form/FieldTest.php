@@ -481,6 +481,30 @@ class FieldTest extends TestCase
         $this->assertFalse($b->save());
     }
 
+    public function testSaveHandler()
+    {
+        Field::$types = [
+            'test' => [
+                'props' => [
+                    'value' => function ($value) {
+                        return $value;
+                    }
+                ],
+                'save' => function ($value) {
+                    return implode(', ', $value);
+                }
+            ]
+        ];
+
+        $field = new Field('test', [
+            'model' => new Page(['slug' => 'test']),
+            'value' => ['a', 'b', 'c']
+        ]);
+
+        $this->assertEquals('a, b, c', $field->data());
+
+    }
+
     public function testToArray()
     {
         Field::$types = [
@@ -507,30 +531,6 @@ class FieldTest extends TestCase
 
         $this->assertArrayHasKey('signature', $array);
         $this->assertArrayNotHasKey('model', $array);
-
-    }
-
-    public function testToString()
-    {
-        Field::$types = [
-            'test' => [
-                'props' => [
-                    'value' => function ($value) {
-                        return $value;
-                    }
-                ],
-                'toString' => function ($value) {
-                    return implode(', ', $value);
-                }
-            ]
-        ];
-
-        $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
-            'value' => ['a', 'b', 'c']
-        ]);
-
-        $this->assertEquals('a, b, c', $field->toString());
 
     }
 

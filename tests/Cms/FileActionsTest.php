@@ -229,7 +229,7 @@ class FileActionsTest extends TestCase
         $this->assertFileExists($file->root());
         $this->assertFileNotExists($file->contentFile());
 
-        $file = $file->clone(['caption' => 'test'])->save();
+        $file = $file->save(['caption' => 'test']);
 
         $this->assertFileExists($file->contentFile());
     }
