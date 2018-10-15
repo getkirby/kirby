@@ -654,6 +654,16 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Is hidden from the panel
+     *
+     * @return boolean
+     */
+    public function isHidden(): bool
+    {
+        return $this->blueprint()->hide();
+    }
+
+    /**
      * Checks if the page is the home page
      *
      * @return bool

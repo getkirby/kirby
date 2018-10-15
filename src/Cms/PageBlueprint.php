@@ -47,6 +47,16 @@ class PageBlueprint extends Blueprint
     }
 
     /**
+     * Checks if the page is hidden
+     *
+     * @return bool
+     */
+    public function hide(): bool
+    {
+        return ($this->props['hide'] ?? false) === true;
+    }
+
+    /**
      * Returns the page numbering mode
      *
      * @return string

@@ -89,6 +89,9 @@ return [
                     $pages = $this->parent->childrenAndDrafts();
             }
 
+            // remove hidden pages
+            $pages = $pages->filterBy('isHidden', false);
+
             // filter by all set templates
             if ($this->templates) {
                 $pages = $pages->template($this->templates);
