@@ -91,6 +91,53 @@ class PageActionsTest extends TestCase
     public function testChangeTemplate()
     {
 
+        $app = $this->app->clone([
+            'blueprints' => [
+                'pages/video' => [
+                    'title'  => 'Video',
+                    'options' => [
+                        'template' => [
+                            'article'
+                        ]
+                    ],
+                    'fields' => [
+                        'caption' => [
+                            'type' => 'text'
+                        ],
+                        'text' => [
+                            'type' => 'textarea'
+                        ]
+                    ]
+                ],
+                'pages/article' => [
+                    'title'  => 'Article',
+                    'fields' => [
+                        'text' => [
+                            'type' => 'textarea'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug'     => 'test',
+            'template' => 'video',
+            'content'  => [
+                'title'   => 'Test',
+                'caption' => 'Caption',
+                'text'    => 'Text'
+            ]
+        ]);
+
+        $this->assertEquals('video', $page->intendedTemplate());
+
+        $modified = $page->changeTemplate('article');
+
+        $this->assertEquals('article', $modified->intendedTemplate());
+
     }
 
     public function testChangeTitle()
