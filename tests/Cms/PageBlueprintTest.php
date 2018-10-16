@@ -21,6 +21,7 @@ class PageBlueprintTest extends TestCase
             'create'         => null,
             'delete'         => null,
             'preview'        => null,
+            'read'           => null,
             'sort'           => null,
             'update'         => null,
         ];
