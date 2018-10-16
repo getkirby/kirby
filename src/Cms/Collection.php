@@ -186,6 +186,20 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Removes an object
+     *
+     * @param mixed $key the name of the key
+     */
+    public function remove($key)
+    {
+        if (is_object($key) === true) {
+            $key = $key->id();
+        }
+
+        return parent::remove($key);
+    }
+
+    /**
      * Searches the collection
      *
      * @param string $query
