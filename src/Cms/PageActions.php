@@ -317,7 +317,8 @@ trait PageActions
         // create a temporary page object
         $page = Page::factory($props);
 
-        return $page->commit('create', [$page, $props], function ($page, $props) {
+        // run the hooks and creation action
+        $page = $page->commit('create', [$page, $props], function ($page, $props) {
 
             // create the new page directory
             if (Dir::make($page->root()) !== true) {
@@ -340,6 +341,14 @@ trait PageActions
             return $page;
 
         });
+
+        // publish the new page if a number is given
+        if (isset($props['num']) === true) {
+            $page = $page->changeStatus('listed', $props['num']);
+        }
+
+        return $page;
+
     }
 
     /**

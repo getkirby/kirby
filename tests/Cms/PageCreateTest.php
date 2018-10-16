@@ -31,7 +31,7 @@ class PageCreateTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
-    public function testCreateOnDisk()
+    public function testCreateDraft()
     {
         $site = $this->app->site();
         $page = Page::create([
@@ -43,6 +43,21 @@ class PageCreateTest extends TestCase
         $this->assertTrue($page->isDraft());
         $this->assertTrue($page->parentModel()->drafts()->has($page));
         $this->assertTrue($site->drafts()->has($page));
+    }
+
+    public function testCreateListedPage()
+    {
+        $site = $this->app->site();
+        $page = Page::create([
+            'slug' => 'new-page',
+            'num'  => 1
+        ]);
+
+        $this->assertTrue($page->exists());
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertFalse($page->isDraft());
+        $this->assertTrue($page->parentModel()->children()->has($page));
+        $this->assertTrue($site->children()->has($page));
     }
 
     /**
