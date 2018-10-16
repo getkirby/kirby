@@ -112,7 +112,7 @@ class Collection extends Iterator
      * @param  mixed      $item
      * @return Collection
      */
-    public function append(...$args): self
+    public function append(...$args)
     {
         if (count($args) === 1) {
             $this->data[] = $args[0];

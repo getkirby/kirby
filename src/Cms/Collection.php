@@ -26,6 +26,14 @@ class Collection extends BaseCollection
     use HasMethods;
 
     /**
+     * Stores the parent object, which is needed
+     * in some collections to get the finder methods right.
+     *
+     * @var object
+     */
+    protected $parent;
+
+    /**
      * Magic getter function
      *
      * @param  string $key
@@ -39,14 +47,6 @@ class Collection extends BaseCollection
             return $this->callMethod($key, $arguments);
         }
     }
-
-    /**
-     * Stores the parent object, which is needed
-     * in some collections to get the finder methods right.
-     *
-     * @var object
-     */
-    protected $parent;
 
     /**
      * Creates a new Collection with the given objects
@@ -73,6 +73,28 @@ class Collection extends BaseCollection
         // inject the collection for proper navigation
         $object->collection = $this;
         $this->data[$object->id()] = $object;
+    }
+
+    /**
+     * Appends an element to the data array
+     *
+     * @param  mixed      $key
+     * @param  mixed      $item
+     * @return Collection
+     */
+    public function append(...$args)
+    {
+        if (count($args) === 1) {
+            if (is_object($args[0]) === true) {
+                $this->data[$args[0]->id()] = $args[0];
+            } else {
+                $this->data[] = $args[0];
+            }
+        } elseif (count($args) === 2) {
+            $this->set($args[0], $args[1]);
+        }
+
+        return $this;
     }
 
     /**
