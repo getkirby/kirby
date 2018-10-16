@@ -89,12 +89,21 @@ return [
                     $pages = $this->parent->childrenAndDrafts();
             }
 
-            // remove hidden pages
-            $pages = $pages->filterBy('isReadable', true);
+            // loop for the best performance
+            foreach ($pages->data as $id => $page) {
 
-            // filter by all set templates
-            if ($this->templates) {
-                $pages = $pages->template($this->templates);
+                // remove all protected pages
+                if ($page->isReadable() === false) {
+                    unset($pages->data[$id]);
+                    continue;
+                }
+
+                // filter by all set templates
+                if ($this->templates && in_array($page->intendedTemplate()->name(), $this->templates) === false) {
+                    unset($pages->data[$id]);
+                    continue;
+                }
+
             }
 
             // sort

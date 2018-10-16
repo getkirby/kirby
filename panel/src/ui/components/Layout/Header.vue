@@ -179,17 +179,23 @@ export default {
     max-width: 13rem;
   }
 }
-.k-tab-button > .k-button-text {
+
+.k-tab-button.k-button .k-icon {
+  @media screen and (min-width: $breakpoint-small) {
+    margin-right: .5rem;
+  }
+}
+
+.k-tab-button.k-button > .k-button-text {
   padding-top: .375rem;
-  padding-left: 0 !important; // there's another rule that has a higher specificity and breaks alignment otherwise
   font-size: 10px;
   overflow: hidden;
+  padding-left: 0;
   text-overflow: ellipsis;
 
   @media screen and (min-width: $breakpoint-small) {
     font-size: $font-size-tiny;
     padding-top: 0;
-    padding-left: .5rem !important; // same as above
   }
 
 }
