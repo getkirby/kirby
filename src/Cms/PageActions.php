@@ -30,7 +30,6 @@ trait PageActions
         }
 
         return $this->commit('changeNum', [$this, $num], function ($oldPage, $num) {
-
             $newPage = $oldPage->clone([
                 'num'     => $num,
                 'dirname' => null,
@@ -50,9 +49,7 @@ trait PageActions
                 ->set($newPage->id(), $newPage);
 
             return $newPage;
-
         });
-
     }
 
     /**
@@ -83,7 +80,6 @@ trait PageActions
         }
 
         return $this->commit('changeSlug', [$this, $slug, $languageCode = null], function ($oldPage, $slug) {
-
             $newPage = $oldPage->clone([
                 'slug'    => $slug,
                 'dirname' => null,
@@ -107,9 +103,7 @@ trait PageActions
             }
 
             return $newPage;
-
         });
-
     }
 
     /**
@@ -349,7 +343,6 @@ trait PageActions
             $page->parentModel()->drafts()->append($page->id(), $page);
 
             return $page;
-
         });
 
         // publish the new page if a number is given
@@ -358,7 +351,6 @@ trait PageActions
         }
 
         return $page;
-
     }
 
     /**
@@ -477,7 +469,6 @@ trait PageActions
                         Dir::remove($draftsDir);
                     }
                 }
-
             }
 
             if ($page->isDraft() === true) {
@@ -489,7 +480,6 @@ trait PageActions
             $page->resortSiblingsAfterUnlisting();
 
             return true;
-
         });
     }
 
@@ -503,7 +493,6 @@ trait PageActions
 
         // actually do it on disk
         if ($this->exists() === true) {
-
             if (Dir::move($this->root(), $page->root()) !== true) {
                 throw new LogicException('The draft folder cannot be moved');
             }
@@ -515,7 +504,6 @@ trait PageActions
             if (Dir::isEmpty($draftDir) === true) {
                 Dir::remove($draftDir);
             }
-
         }
 
         // remove the page from the parent drafts and add it to children
