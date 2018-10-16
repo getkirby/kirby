@@ -320,6 +320,20 @@ class Pages extends Collection
     }
 
     /**
+     * Removes a page
+     *
+     * @param mixed $key the name of the key
+     */
+    public function remove($key)
+    {
+        if (is_a($key, 'Kirby\Cms\Page') === true) {
+            $key = $key->id();
+        }
+
+        return parent::remove($key);
+    }
+
+    /**
      * Returns all unlisted pages in the collection
      *
      * @return self
