@@ -9,6 +9,7 @@ use Throwable;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Router;
 use Kirby\Http\Response;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 
 /**
@@ -334,8 +335,20 @@ class Api
                     throw new Exception('Upload error');
                 }
 
-                $filename = basename($upload['name']);
-                $source   = dirname($upload['tmp_name']) . '/' . uniqid() . '.' . $filename;
+                // get the extension of the uploaded file
+                $extension = F::extension($upload['name']);
+
+                // try to detect the correct mime and add the extension
+                // accordingly. This will avoid .tmp filenames
+                if (empty($extension) === true || in_array($extension, ['tmp', 'temp'])) {
+                    $mime      = F::mime($upload['tmp_name']);
+                    $extension = F::mimeToExtension($mime);
+                    $filename  = F::name($upload['name']) . '.' .$extension;
+                } else {
+                    $filename = basename($upload['name']);
+                }
+
+                $source = dirname($upload['tmp_name']) . '/' . uniqid() . '.' . $filename;
 
                 // move the file to a location including the extension,
                 // for better mime detection
