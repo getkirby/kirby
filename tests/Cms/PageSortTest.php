@@ -414,6 +414,58 @@ class PageSortTest extends TestCase
 
     }
 
+    public function testSortDateBased()
+    {
+
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'a',
+                    'num'  => 1,
+                ],
+                [
+                    'slug' => 'b',
+                    'num'  => 2,
+                ],
+                [
+                    'slug' => 'c',
+                    'num'  => 20180104,
+                    'blueprint' => [
+                        'title' => 'DateBased',
+                        'name'  => 'datebased',
+                        'num'   => 'date'
+                    ],
+                    'content' => [
+                        'date' => '2018-01-04'
+                    ]
+                ],
+                [
+                    'slug' => 'd',
+                    'num'  => 4,
+                ],
+                [
+                    'slug' => 'e',
+                    'num'  => 0,
+                    'blueprint' => [
+                        'title' => 'ZeroBased',
+                        'name'  => 'zerobased',
+                        'num'   => 'zero'
+                    ],
+                ],
+            ]
+        ]);
+
+        $page = $site->find('b');
+        $page = $page->sort(3);
+
+        $this->assertEquals(1, $site->find('a')->num());
+        $this->assertEquals(2, $site->find('d')->num());
+        $this->assertEquals(3, $site->find('b')->num());
+
+        $this->assertEquals(20180104, $site->find('c')->num());
+        $this->assertEquals(0, $site->find('e')->num());
+    }
+
     public function testMassSorting()
     {
 
