@@ -760,7 +760,7 @@ class Collection extends Iterator
      *
      * @param mixed $key the name of the key
      */
-    public function remove($key): self
+    public function remove($key)
     {
         $this->__unset($key);
         return $this;
