@@ -341,7 +341,13 @@ trait PageActions
             }
 
             // write the content file
-            return $page->clone()->save($languageCode);
+            $page = $page->clone()->save($languageCode);
+
+            // flush the parent cache to get children and drafts right
+            $page->parentModel()->drafts()->append($page->id(), $page);
+
+            return $page;
+
         });
     }
 
@@ -380,7 +386,7 @@ trait PageActions
      * @param integer $num
      * @return integer
      */
-    protected function createNum(int $num = null): int
+    public function createNum(int $num = null): int
     {
         $mode = $this->blueprint()->num();
 
@@ -388,12 +394,23 @@ trait PageActions
             case 'zero':
                 return 0;
             case 'default':
+
+                $max = $this
+                    ->parentModel()
+                    ->children()
+                    ->listed()
+                    ->merge($this)
+                    ->count();
+
+                // default positioning at the end
+                if ($num === null) {
+                    $num = $max;
+                }
+
                 // avoid zeros or negative numbers
                 if ($num < 1) {
                     return 1;
                 }
-
-                $max = $this->parentModel()->purge()->children()->listed()->merge($this)->count();
 
                 // avoid higher numbers than possible
                 if ($num > $max) {
@@ -468,21 +485,26 @@ trait PageActions
 
         $page = $this->clone(['isDraft' => false]);
 
-        if ($this->exists() === false) {
-            return $page;
+        // actually do it on disk
+        if ($this->exists() === true) {
+
+            if (Dir::move($this->root(), $page->root()) !== true) {
+                throw new LogicException('The draft folder cannot be moved');
+            }
+
+            // Get the draft folder and check if there are any other drafts
+            // left. Otherwise delete it.
+            $draftDir = dirname($this->root());
+
+            if (Dir::isEmpty($draftDir) === true) {
+                Dir::remove($draftDir);
+            }
+
         }
 
-        if (Dir::move($this->root(), $page->root()) !== true) {
-            throw new LogicException('The draft folder cannot be moved');
-        }
-
-        // Get the draft folder and check if there are any other drafts
-        // left. Otherwise delete it.
-        $draftDir = dirname($this->root());
-
-        if (Dir::isEmpty($draftDir) === true) {
-            Dir::remove($draftDir);
-        }
+        // remove the page from the parent drafts and add it to children
+        $page->parentModel()->drafts()->remove($page);
+        $page->parentModel()->children()->append($page);
 
         return $page;
     }
@@ -494,6 +516,7 @@ trait PageActions
     {
         $this->children  = null;
         $this->blueprint = null;
+        $this->drafts    = null;
         $this->files     = null;
         $this->content   = null;
         $this->inventory = null;
