@@ -36,22 +36,127 @@ class PageSortTest extends TestCase
         return $this->app->site();
     }
 
-    public function testChangeStatus()
+    public function testChangeNum()
+    {
+        $site = $this->site();
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1
+        ]);
+
+        $page = $page->save();
+
+        $this->assertEquals(1, $page->num());
+        $this->assertEquals('1_test', $page->dirname());
+        $this->assertEquals(1, $page->parentModel()->find('test')->num());
+        $this->assertEquals(1, $site->find('test')->num());
+
+        $page = $page->changeNum(2);
+
+        $this->assertEquals(2, $page->num());
+        $this->assertEquals('2_test', $page->dirname());
+        $this->assertEquals(2, $site->find('test')->num());
+    }
+
+    public function testChangeStatusFromDraftToListed()
     {
         $page = Page::create([
             'slug' => 'test',
         ]);
 
-        $this->assertEquals('draft', $page->status());
+        $this->assertTrue($page->isDraft());
 
         $listed = $page->changeStatus('listed');
+
         $this->assertEquals('listed', $listed->status());
+        $this->assertEquals(1, $listed->num());
+        $this->assertFalse($listed->parentModel()->drafts()->has($listed));
+        $this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+    }
+
+    public function testChangeStatusFromDraftToUnlisted()
+    {
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+
+        $this->assertTrue($page->isDraft());
 
         $unlisted = $page->changeStatus('unlisted');
+
         $this->assertEquals('unlisted', $unlisted->status());
+        $this->assertEquals(null, $unlisted->num());
+        $this->assertFalse($unlisted->parentModel()->drafts()->has($unlisted));
+        $this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+    }
+
+    public function testChangeStatusFromListedToUnlisted()
+    {
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+
+        $listed = $page->changeStatus('listed');
+        $this->assertTrue($listed->isListed());
+        $this->assertEquals(1, $listed->num());
+
+        $this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
+        $this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+
+        $unlisted = $listed->changeStatus('unlisted');
+
+        $this->assertTrue($unlisted->isUnlisted());
+        $this->assertEquals(null, $unlisted->num());
+
+        $this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
+        $this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+    }
+
+    public function testChangeStatusFromUnlistedToListed()
+    {
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+
+        // change to unlisted
+        $unlisted = $page->changeStatus('unlisted');
+
+        $this->assertTrue($unlisted->isUnlisted());
+        $this->assertEquals(null, $unlisted->num());
+
+        $this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
+        $this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+
+        // change to listed
+        $listed = $unlisted->changeStatus('listed');
+        $this->assertTrue($listed->isListed());
+        $this->assertEquals(1, $listed->num());
+
+        $this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
+        $this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+
+    }
+
+    public function testChangeStatusFromListedToDraft()
+    {
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+
+        $page = $page->changeStatus('listed');
+
+        $this->assertEquals('listed', $page->status());
+        $this->assertEquals(1, $page->num());
+        $this->assertFalse($page->isDraft());
 
         $draft = $page->changeStatus('draft');
+
+        $this->assertTrue($draft->isDraft());
         $this->assertEquals('draft', $draft->status());
+        $this->assertEquals(null, $draft->num());
+        $this->assertTrue($draft->parentModel()->drafts()->has($draft));
+        $this->assertFalse($draft->parentModel()->children()->listed()->has($draft));
     }
 
     public function testChangeStatusToInvalidStatus()
@@ -231,11 +336,11 @@ class PageSortTest extends TestCase
 
         $this->assertEquals('unlisted', $published->status());
 
-        $this->assertFalse($page->parentModel()->drafts()->has($published->id()));
-        $this->assertTrue($page->parentModel()->children()->has($published->id()));
+        $this->assertFalse($page->parentModel()->drafts()->has($published));
+        $this->assertTrue($page->parentModel()->children()->has($published));
 
-        $this->assertFalse($site->drafts()->has($published->id()));
-        $this->assertTrue($site->children()->has($published->id()));
+        $this->assertFalse($site->drafts()->has($published));
+        $this->assertTrue($site->children()->has($published));
 
         // child
         $child = Page::create([
@@ -266,17 +371,94 @@ class PageSortTest extends TestCase
         $this->assertEquals('unlisted', $page->publish()->status());
     }
 
+    public function sortProvider()
+    {
+        return [
+            ['a', 2, 'b,a,c,d'],
+            ['b', 4, 'a,c,d,b'],
+            ['d', 1, 'd,a,b,c'],
+        ];
+    }
+
+    /**
+     * @dataProvider sortProvider
+     */
+    public function testSort($id, $position, $expected)
+    {
+
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'a',
+                    'num'  => 1,
+                ],
+                [
+                    'slug' => 'b',
+                    'num'  => 2,
+                ],
+                [
+                    'slug' => 'c',
+                    'num'  => 3,
+                ],
+                [
+                    'slug' => 'd',
+                    'num'  => 4,
+                ]
+            ]
+        ]);
+
+        $page = $site->find($id);
+        $page = $page->sort($position);
+
+        $this->assertEquals($expected, implode(',', $site->children()->keys()));
+
+    }
+
+    public function testMassSorting()
+    {
+
+        foreach ($chars = range('a', 'd') as $slug) {
+            $page = Page::create([
+                'slug' => $slug
+            ]);
+
+            $page = $page->changeStatus('unlisted');
+
+            $this->assertTrue($page->exists());
+            $this->assertEquals(null, $page->num());
+        }
+
+        $this->assertEquals($chars, $this->site()->children()->keys());
+
+        foreach ($this->site()->children()->flip()->values() as $index => $page) {
+            $page = $page->sort($index + 1);
+        }
+
+        $this->assertEquals(array_reverse($chars), $this->site()->children()->keys());
+
+        $this->assertTrue(is_dir($this->fixtures . '/content/4_a'));
+        $this->assertTrue(is_dir($this->fixtures . '/content/3_b'));
+        $this->assertTrue(is_dir($this->fixtures . '/content/2_c'));
+        $this->assertTrue(is_dir($this->fixtures . '/content/1_d'));
+
+    }
+
     public function testUpdateWithDateBasedNumbering()
     {
         $page = Page::create([
             'slug' => 'test',
-            'num'  => 20121212,
             'blueprint' => [
                 'title' => 'Test',
                 'name'  => 'test',
                 'num'   => 'date'
             ],
+            'content' => [
+                'date' => '2012-12-12'
+            ]
         ]);
+
+        // publish the new page
+        $page = $page->changeStatus('listed');
 
         $this->assertEquals(20121212, $page->num());
 

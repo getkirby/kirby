@@ -17,36 +17,42 @@ trait PageActions
 
     /**
      * Changes the sorting number
+     * The sorting number must already be correct
+     * when the method is called
      *
      * @param int $num
-     * @param bool $fast
      * @return self
      */
-    protected function changeNum(int $num = null, bool $fast = false): self
+    public function changeNum(int $num = null): self
     {
-        if ($fast === false) {
-            // always make sure to have the right sorting number
-            $num = $num !== null ? $this->createNum($num) : null;
-        }
-
-        if ($num === $this->num()) {
-            return $this;
+        if ($this->isDraft() === true) {
+            throw new LogicException('Drafts cannot change their sorting number');
         }
 
         return $this->commit('changeNum', [$this, $num], function ($oldPage, $num) {
+
             $newPage = $oldPage->clone([
                 'num'     => $num,
-                'dirname' => null
+                'dirname' => null,
+                'root'    => null
             ]);
 
-            if ($oldPage->exists() === false) {
-                return $newPage;
+            // actually move the page on disk
+            if ($oldPage->exists() === true) {
+                error_log($newPage->root() . '->' . $newPage->root());
+                Dir::move($oldPage->root(), $newPage->root());
             }
 
-            Dir::move($oldPage->root(), $newPage->root());
+            // overwrite the child in the parent page
+            $newPage
+                ->parentModel()
+                ->children()
+                ->set($newPage->id(), $newPage);
 
             return $newPage;
+
         });
+
     }
 
     /**
@@ -63,7 +69,7 @@ trait PageActions
 
         // in multi-language installations the slug for the non-default
         // languages is stored in the text file. The changeSlugForLanguage
-        // method takse care of that.
+        // method takes care of that.
         if ($language = $this->kirby()->language($languageCode)) {
             if ($language->isDefault() === false) {
                 return $this->changeSlugForLanguage($slug, $languageCode);
@@ -148,21 +154,8 @@ trait PageActions
     protected function changeStatusToDraft(): self
     {
         $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
-            $draft = $page->clone(['num' => null, 'isDraft' => true]);
-
-            if ($page->exists() === false) {
-                return $draft;
-            }
-
-            if (Dir::move($page->root(), $draft->root()) !== true) {
-                throw new LogicException('The page directory cannot be moved');
-            }
-
-            return $draft;
+            return $page->unpublish();
         });
-
-        $page->parentModel()->purge();
-        $this->resortSiblingsAfterUnlisting();
 
         return $page;
     }
@@ -172,6 +165,7 @@ trait PageActions
         // create a sorting number for the page
         $num = $this->createNum($position);
 
+        // don't sort if not necessary
         if ($this->status() === 'listed' && $num === $this->num()) {
             return $this;
         }
@@ -179,8 +173,6 @@ trait PageActions
         $page = $this->commit('changeStatus', [$this, 'listed', $num], function ($page, $status, $position) {
             return $page->publish()->changeNum($position);
         });
-
-        $page->parentModel()->purge();
 
         if ($this->blueprint()->num() === 'default') {
             $page->resortSiblingsAfterListing($num);
@@ -199,7 +191,6 @@ trait PageActions
             return $page->publish()->changeNum(null);
         });
 
-        $page->parentModel()->purge();
         $this->resortSiblingsAfterUnlisting();
 
         return $page;
@@ -437,10 +428,7 @@ trait PageActions
      */
     public function delete(bool $force = false): bool
     {
-        $result = $this->commit('delete', [$this, $force], function ($page, $force) {
-            if ($page->exists() === false) {
-                return true;
-            }
+        return $this->commit('delete', [$this, $force], function ($page, $force) {
 
             // delete all files individually
             foreach ($page->files() as $file) {
@@ -452,29 +440,38 @@ trait PageActions
                 $child->delete(true);
             }
 
-            // delete all public media files
-            Dir::remove($page->mediaRoot());
+            // actually remove the page from disc
+            if ($page->exists() === true) {
 
-            // delete the content folder for this page
-            Dir::remove($page->root());
+                // delete all public media files
+                Dir::remove($page->mediaRoot());
 
-            // if the page is a draft and the _drafts folder
-            // is now empty. clean it up.
-            if ($page->isDraft() === true) {
-                $draftsDir = dirname($page->root());
+                // delete the content folder for this page
+                Dir::remove($page->root());
 
-                if (Dir::isEmpty($draftsDir) === true) {
-                    Dir::remove($draftsDir);
+                // if the page is a draft and the _drafts folder
+                // is now empty. clean it up.
+                if ($page->isDraft() === true) {
+                    $draftsDir = dirname($page->root());
+
+                    if (Dir::isEmpty($draftsDir) === true) {
+                        Dir::remove($draftsDir);
+                    }
                 }
+
             }
 
+            if ($page->isDraft() === true) {
+                $page->parentModel()->drafts()->remove($page);
+            } else {
+                $page->parentModel()->children()->remove($page);
+            }
+
+            $page->resortSiblingsAfterUnlisting();
+
             return true;
+
         });
-
-        $this->parentModel()->purge();
-        $this->resortSiblingsAfterUnlisting();
-
-        return $result;
     }
 
     public function publish()
@@ -504,7 +501,7 @@ trait PageActions
 
         // remove the page from the parent drafts and add it to children
         $page->parentModel()->drafts()->remove($page);
-        $page->parentModel()->children()->append($page);
+        $page->parentModel()->children()->append($page->id(), $page);
 
         return $page;
     }
@@ -524,10 +521,14 @@ trait PageActions
         return $this;
     }
 
-    protected function resortSiblingsAfterListing(int $position): bool
+    protected function resortSiblingsAfterListing(int $position = null): bool
     {
         // get all siblings including the current page
-        $siblings = $this->parentModel()->purge()->children()->listed()->merge($this);
+        $siblings = $this
+            ->parentModel()
+            ->children()
+            ->listed()
+            ->append($this);
 
         // get a non-associative array of ids
         $keys  = $siblings->keys();
@@ -551,24 +552,37 @@ trait PageActions
             if ($id === $this->id()) {
                 continue;
             } else {
-                $siblings->findBy('id', $id)->changeNum($key + 1, true);
+                if ($sibling = $siblings->get($id)) {
+                    $sibling->changeNum($key + 1);
+                }
             }
         }
+
+        $parent = $this->parentModel();
+        $parent->children = $parent->children()->sortBy('num', 'asc');
 
         return true;
     }
 
-    protected function resortSiblingsAfterUnlisting(): bool
+    public function resortSiblingsAfterUnlisting(): bool
     {
-        $siblings = $this->parentModel()->purge()->children()->listed()->not($this);
+        $siblings = $this->parentModel()->children()->listed()->not($this);
         $index    = 0;
 
         foreach ($siblings as $sibling) {
             $index++;
-            $sibling->changeNum($index, true);
+            $sibling->changeNum($index);
         }
 
+        $parent = $this->parentModel();
+        $parent->children = $parent->children()->sortBy('num', 'asc');
+
         return true;
+    }
+
+    public function sort($position = null)
+    {
+        return $this->changeStatus('listed', $position);
     }
 
     /**
@@ -645,6 +659,41 @@ trait PageActions
     }
 
     /**
+     * Convert a page from listed or
+     * unlisted to draft.
+     *
+     * @return self
+     */
+    public function unpublish()
+    {
+        if ($this->isDraft() === true) {
+            return $this;
+        }
+
+        $page = $this->clone([
+            'isDraft' => true,
+            'num'     => null,
+            'dirname' => null,
+            'root'    => null
+        ]);
+
+        // actually do it on disk
+        if ($this->exists() === true) {
+            if (Dir::move($this->root(), $page->root()) !== true) {
+                throw new LogicException('The page folder cannot be moved to drafts');
+            }
+        }
+
+        // remove the page from the parent children and add it to drafts
+        $page->parentModel()->children()->remove($page);
+        $page->parentModel()->drafts()->append($page->id(), $page);
+
+        $page->resortSiblingsAfterUnlisting();
+
+        return $page;
+    }
+
+    /**
      * Updates the page data
      *
      * @param array $input
@@ -658,7 +707,7 @@ trait PageActions
 
         // if num is created from page content, update num on content update
         if ($page->isListed() === true && in_array($page->blueprint()->num(), ['zero', 'default']) === false) {
-            $page = $page->changeNum(0);
+            $page = $page->changeNum($page->createNum());
         }
 
         return $page;

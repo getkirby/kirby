@@ -7,7 +7,7 @@ use Kirby\Toolkit\F;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class PageSortTest extends TestCase
+class PageCreateTest extends TestCase
 {
 
     protected $app;
@@ -31,24 +31,8 @@ class PageSortTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
-    public function testCreateVirtual()
-    {
-        $site = $this->app->site();
-        $page = Page::create([
-            'slug' => 'new-page',
-        ]);
-
-        $this->assertFalse($page->exists());
-        $this->assertInstanceOf(Page::class, $page);
-        $this->assertTrue($page->isDraft());
-        $this->assertTrue($page->parentModel()->drafts()->has($page));
-        $this->assertTrue($site->drafts()->has($page));
-    }
-
     public function testCreateOnDisk()
     {
-        Dir::make($this->app->root('content'));
-
         $site = $this->app->site();
         $page = Page::create([
             'slug' => 'new-page',

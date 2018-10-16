@@ -383,6 +383,16 @@ class Pages extends Collection
         return $this;
     }
 
+    /**
+     * Returns an array with all page numbers
+     *
+     * @return array
+     */
+    public function nums(): array
+    {
+        return $this->pluck('num');
+    }
+
     /*
      * Returns all listed and unlisted pages in the collection
      *

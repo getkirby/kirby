@@ -12,14 +12,14 @@ trait HasChildren
      *
      * @var Pages
      */
-    protected $children;
+    public $children;
 
     /**
      * The list of available drafts
      *
      * @var Pages
      */
-    protected $drafts;
+    public $drafts;
 
     /**
      * Returns the Pages collection
