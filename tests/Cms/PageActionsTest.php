@@ -106,58 +106,6 @@ class PageActionsTest extends TestCase
         $this->assertEquals($title, $modified->title());
     }
 
-    public function testCreate()
-    {
-        $page = Page::create([
-            'slug' => 'new-page',
-        ]);
-
-        $this->assertInstanceOf(Page::class, $page);
-        $this->assertTrue($page->exists());
-        $this->assertTrue($page->isDraft());
-    }
-
-    /**
-     * @expectedException Kirby\Exception\DuplicateException
-     */
-    public function testCreateDuplicate()
-    {
-        $page = Page::create([
-            'slug' => 'new-page',
-        ]);
-
-        $page = Page::create([
-            'slug' => 'new-page',
-        ]);
-    }
-
-    public function testCreateChild()
-    {
-        $page    = $this->site()->find('test')->save();
-        $subpage = $page->createChild([
-            'slug'     => 'subpage',
-            'template' => 'the-template'
-        ]);
-
-        $this->assertTrue($subpage->exists());
-        $this->assertEquals('the-template', $subpage->intendedTemplate()->name());
-        $this->assertEquals('subpage', $subpage->slug());
-        $this->assertEquals('test/subpage', $subpage->id());
-        $this->assertTrue($page->drafts()->has($subpage->id()));
-    }
-
-    public function testCreateFile()
-    {
-        F::write($source = $this->fixtures . '/source.md', '');
-
-        $file = $this->site()->find('test')->createFile([
-            'filename' => 'test.md',
-            'source'   => $source
-        ]);
-
-        $this->assertEquals('test.md', $file->filename());
-    }
-
     public function testDelete()
     {
         $page = $this->site()->find('test')->save();
