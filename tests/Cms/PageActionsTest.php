@@ -92,35 +92,6 @@ class PageActionsTest extends TestCase
         $this->assertEquals('modified-test', $modified->slug());
     }
 
-    public function testChangeStatus()
-    {
-        $page = $this->site()->find('test')->save();
-        $this->assertEquals('unlisted', $page->status());
-
-        $listed = $page->changeStatus('listed');
-        $this->assertEquals('listed', $listed->status());
-
-        $unlisted = $page->changeStatus('unlisted');
-        $this->assertEquals('unlisted', $unlisted->status());
-
-        $draft = $page->changeStatus('draft');
-        $this->assertEquals('draft', $draft->status());
-    }
-
-    public function testChangeStatusToInvalidStatus()
-    {
-        $page = $this->site()->find('article')->save();
-        $this->assertEquals('listed', $page->status());
-
-        $draft = $page->changeStatus('draft');
-        $this->assertEquals('draft', $draft->status());
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $unlisted = $page->changeStatus('unlisted');
-        $this->assertEquals('unlisted', $unlisted->status());
-    }
-
     public function testChangeTemplate()
     {
 
@@ -172,6 +143,7 @@ class PageActionsTest extends TestCase
         $this->assertEquals('the-template', $subpage->intendedTemplate()->name());
         $this->assertEquals('subpage', $subpage->slug());
         $this->assertEquals('test/subpage', $subpage->id());
+        $this->assertTrue($page->drafts()->has($subpage->id()));
     }
 
     public function testCreateFile()
@@ -186,11 +158,6 @@ class PageActionsTest extends TestCase
         $this->assertEquals('test.md', $file->filename());
     }
 
-    public function testCreateNum()
-    {
-
-    }
-
     public function testDelete()
     {
         $page = $this->site()->find('test')->save();
@@ -198,16 +165,7 @@ class PageActionsTest extends TestCase
 
         $page->delete();
         $this->assertFalse($page->exists());
-    }
-
-    public function testPublish()
-    {
-        $page = Page::create([
-            'slug' => 'new-page',
-        ]);
-
-        $published = $page->publish();
-        $this->assertEquals('unlisted', $published->status());
+        $this->assertFalse($page->parentModel()->children()->has($page->id()));
     }
 
     public function testSave()
@@ -231,21 +189,6 @@ class PageActionsTest extends TestCase
 
         // assert that the page status didn't change with the update
         $this->assertEquals($oldStatus, $modified->status());
-    }
-
-    public function testUpdateWithDateBasedNumbering()
-    {
-
-        $page = $this->site()->find('article')->save();
-
-        $this->assertEquals(20121212, $page->num());
-
-        $modified = $page->update([
-            'date' => '2018-12-12'
-        ]);
-
-        $this->assertEquals(20181212, $modified->num());
-
     }
 
 }
