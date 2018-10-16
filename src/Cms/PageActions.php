@@ -528,7 +528,10 @@ trait PageActions
             ->parentModel()
             ->children()
             ->listed()
-            ->append($this);
+            ->append($this)
+            ->filter(function ($page) {
+                return $page->blueprint()->num() === 'default';
+            });
 
         // get a non-associative array of ids
         $keys  = $siblings->keys();
@@ -566,8 +569,15 @@ trait PageActions
 
     public function resortSiblingsAfterUnlisting(): bool
     {
-        $siblings = $this->parentModel()->children()->listed()->not($this);
         $index    = 0;
+        $siblings = $this
+            ->parentModel()
+            ->children()
+            ->listed()
+            ->not($this)
+            ->filter(function ($page) {
+                return $page->blueprint()->num() === 'default';
+            });
 
         foreach ($siblings as $sibling) {
             $index++;
