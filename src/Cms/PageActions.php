@@ -83,23 +83,33 @@ trait PageActions
         }
 
         return $this->commit('changeSlug', [$this, $slug, $languageCode = null], function ($oldPage, $slug) {
+
             $newPage = $oldPage->clone([
                 'slug'    => $slug,
-                'dirname' => null
+                'dirname' => null,
+                'root'    => null
             ]);
 
-            if ($oldPage->exists() === false) {
-                return $newPage;
+            // actually move stuff on disk
+            if ($oldPage->exists() === true) {
+                if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
+                    throw new LogicException('The page directory cannot be moved');
+                }
+
+                Dir::remove($oldPage->mediaRoot());
             }
 
-            if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
-                throw new LogicException('The page directory cannot be moved');
+            // overwrite the new page in the parent collection
+            if ($newPage->isDraft() === true) {
+                $newPage->parentModel()->drafts()->set($newPage->id(), $newPage);
+            } else {
+                $newPage->parentModel()->children()->set($newPage->id(), $newPage);
             }
-
-            Dir::remove($oldPage->mediaRoot());
 
             return $newPage;
+
         });
+
     }
 
     /**

@@ -36,19 +36,56 @@ class PageActionsTest extends TestCase
         return $this->app->site();
     }
 
-    public function testChangeSlug()
+    public function slugProvider()
     {
-        $page = Page::create([
-            'slug' => 'test'
-        ]);
+        return [
+            ['modified-test', 'modified-test', true],
+            ['modified-test', 'modified-test', false],
+            ['mödified-tést', 'modified-test', true],
+            ['mödified-tést', 'modified-test', false]
+        ];
+    }
+
+    /**
+     * @dataProvider slugProvider
+     */
+    public function testChangeSlug($input, $expected, $draft)
+    {
+        if ($draft) {
+
+            $page = Page::create([
+                'slug' => 'test',
+            ]);
+
+            $in      = 'drafts';
+            $oldRoot = $this->fixtures . '/content/_drafts/test';
+            $newRoot = $this->fixtures . '/content/_drafts/' . $expected;
+
+        } else {
+
+            $page = Page::create([
+                'slug' => 'test',
+                'num'  => 1
+            ]);
+
+            $in      = 'children';
+            $oldRoot = $this->fixtures . '/content/1_test';
+            $newRoot = $this->fixtures . '/content/1_' . $expected;
+
+        }
 
         $this->assertTrue($page->exists());
         $this->assertEquals('test', $page->slug());
 
-        $modified = $page->changeSlug('modified-test');
+        $this->assertTrue($page->parentModel()->$in()->has('test'));
+        $this->assertEquals($oldRoot, $page->root());
+
+        $modified = $page->changeSlug($input);
 
         $this->assertTrue($modified->exists());
-        $this->assertEquals('modified-test', $modified->slug());
+        $this->assertEquals($expected, $modified->slug());
+        $this->assertTrue($modified->parentModel()->$in()->has($expected));
+        $this->assertEquals($newRoot, $modified->root());
     }
 
     public function testChangeTemplate()
