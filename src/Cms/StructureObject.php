@@ -26,7 +26,7 @@ class StructureObject extends Model
      *
      * @var Content
      */
-     protected $content;
+    protected $content;
 
     /**
      * @var string
