@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4d5f981a143a8a07c9dc995658849d34",
-    "content-hash": "01669a650b840e1d82b3c89c55d718af",
+    "hash": "7ae31ca6ee00c81fe8fb341879508b67",
+    "content-hash": "3980eea32ee65c1238f2b81451e59bd7",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -1986,7 +1986,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0"
+                "php": "^7.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6.1"
