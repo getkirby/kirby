@@ -33,13 +33,12 @@ class Structure extends Collection
     {
         if (is_array($object)) {
             $object = new StructureObject([
-                'parent'  => $this->parent,
-                'content' => $object,
-                'id'      => $object['id'] ?? $id,
+                'parent'     => $this->parent,
+                'content'    => $object,
+                'id'         => $object['id'] ?? $id,
             ]);
         }
 
-        // inject the collection for proper navigation
         $object->collection = $this;
 
         return parent::__set($object->id(), $object);

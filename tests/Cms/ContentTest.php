@@ -45,6 +45,19 @@ class ContentTest extends TestCase
         $this->assertFalse($content->has('b'));
     }
 
+    public function testHasWithDifferentCase()
+    {
+        $content = new Content([
+            'testA' => 'A',
+            'TESTb' => 'B'
+        ]);
+
+        $this->assertTrue($content->has('testA'));
+        $this->assertTrue($content->has('testa'));
+        $this->assertTrue($content->has('TESTb'));
+        $this->assertTrue($content->has('testb'));
+    }
+
     public function testGetExistingField()
     {
         $content = $this->mockObject();
@@ -52,6 +65,19 @@ class ContentTest extends TestCase
 
         $this->assertInstanceOf(Field::class, $field);
         $this->assertEquals('Test Content', $field->value());
+    }
+
+    public function testGetWithDifferentCase()
+    {
+        $content = new Content([
+            'testA' => 'A',
+            'TESTb' => 'B'
+        ]);
+
+        $this->assertEquals('A', $content->get('testA')->value());
+        $this->assertEquals('A', $content->get('testa')->value());
+        $this->assertEquals('B', $content->get('TESTb')->value());
+        $this->assertEquals('B', $content->get('testb')->value());
     }
 
     public function testGetNonExistingField()

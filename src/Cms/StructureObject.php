@@ -26,7 +26,7 @@ class StructureObject extends Model
      *
      * @var Content
      */
-    protected $content;
+     protected $content;
 
     /**
      * @var string
@@ -67,16 +67,6 @@ class StructureObject extends Model
     }
 
     /**
-     * Returns the required id
-     *
-     * @return string
-     */
-    public function id(): string
-    {
-        return $this->id;
-    }
-
-    /**
      * Returns the content
      *
      * @return Content
@@ -104,6 +94,16 @@ class StructureObject extends Model
     public function date(string $format = null, $field = 'date')
     {
         return $this->content()->get($field)->toDate($format);
+    }
+
+    /**
+     * Returns the required id
+     *
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->id;
     }
 
     /**

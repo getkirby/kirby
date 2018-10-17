@@ -63,7 +63,7 @@ class Content
      */
     public function __construct($data = [], $parent = null)
     {
-        $this->data = $data;
+        $this->data   = $data;
         $this->parent = $parent;
     }
 
@@ -121,7 +121,11 @@ class Content
             return $this->fields[$key];
         }
 
-        return $this->fields[$key] = new Field($this->parent, $key, $this->data()[$key] ?? null);
+        // fetch the value no matter the case
+        $data  = $this->data();
+        $value = $data[$key] ?? array_change_key_case($data)[$key] ?? null;
+
+        return $this->fields[$key] = new Field($this->parent, $key, $value);
     }
 
     /**
@@ -132,7 +136,10 @@ class Content
      */
     public function has(string $key): bool
     {
-        return isset($this->data[$key]);
+        $key  = strtolower($key);
+        $data = array_change_key_case($this->data);
+
+        return isset($data[$key]) === true;
     }
 
     /**
