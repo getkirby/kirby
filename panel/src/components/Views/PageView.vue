@@ -12,7 +12,12 @@
     >
       {{ page.title }}
       <k-button-group slot="left">
-        <k-button v-if="preview" :responsive="true" icon="open" @click="action('preview')">
+        <k-button
+          v-if="preview"
+          :responsive="true"
+          icon="open"
+          @click="action('preview')"
+        >
           {{ $t('open') }}
         </k-button>
         <k-button
