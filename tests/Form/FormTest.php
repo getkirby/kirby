@@ -102,4 +102,32 @@ class FormTest extends TestCase
 
     }
 
+    public function testFieldOrder()
+    {
+
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $form = new Form([
+            'fields' => [
+                'a' => [
+                    'type' => 'text'
+                ],
+                'b' => [
+                    'type' => 'text'
+                ]
+            ],
+            'values' => [
+                'b' => 'B',
+                'a' => 'A'
+            ]
+        ]);
+
+        $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->data());
+
+    }
+
 }
