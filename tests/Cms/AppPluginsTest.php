@@ -17,6 +17,25 @@ class AppPluginsTest extends TestCase
         App::destroy();
     }
 
+    public function testApi()
+    {
+
+        $kirby = new App([
+            'api' => [
+                [
+                    'pattern' => 'awesome',
+                    'action'  => function () {
+                        return 'nice';
+                    }
+                ]
+            ]
+        ]);
+
+        $kirby->impersonate('kirby');
+        $this->assertEquals('nice', $kirby->call('api/awesome'));
+
+    }
+
     public function testBlueprint()
     {
         $kirby = new App([
