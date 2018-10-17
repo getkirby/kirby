@@ -17,6 +17,7 @@ trait AppPlugins
     protected static $plugins = [];
 
     protected $extensions = [
+        'api' => [],
         'blueprints' => [],
         'collections' => [],
         'components' => [],
@@ -53,6 +54,11 @@ trait AppPlugins
         }
 
         return $this->extensions;
+    }
+
+    protected function extendApi(array $api): array
+    {
+        return $this->extensions['api'] = array_merge($this->extensions['api'], $api);
     }
 
     protected function extendBlueprints(array $blueprints): array
