@@ -78,26 +78,25 @@ trait AppUsers
      */
     public function impersonate(string $who = null)
     {
-        if ($who === null) {
-            $this->user = null;
-            return $this;
+        switch ($who) {
+            case null:
+                $this->user = null;
+                return $this;
+            case 'kirby':
+                $this->user = new User([
+                    'email' => 'kirby@getkirby.com',
+                    'role'  => 'admin'
+                ]);
+
+                return $this;
+            default:
+                if ($user = $this->users()->find($who)) {
+                    $this->user = $user;
+                    return $this;
+                }
+
+                throw new NotFoundException('The user "' . $who . '" cannot be found');
         }
-
-        if ($who === 'kirby') {
-            $this->user = new User([
-                'email' => 'kirby@getkirby.com',
-                'role'  => 'admin'
-            ]);
-
-            return $this;
-        }
-
-        if ($user = $this->users()->find($who)) {
-            $this->user = $user;
-            return $this;
-        }
-
-        throw new NotFoundException('The user "' . $who . '" cannot be found');
     }
 
     /**

@@ -19,6 +19,24 @@ class AppUsersTest extends TestCase
         $this->assertTrue($app->user()->isKirby());
     }
 
+    public function testImpersonateAsNull()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+        ]);
+
+        $app->impersonate('kirby');
+
+        $this->assertEquals('kirby@getkirby.com', $app->user()->email());
+        $this->assertTrue($app->user()->isKirby());
+
+        $app->impersonate();
+
+        $this->assertEquals(null, $app->user());
+    }
+
     public function testImpersonateAsExistingUser()
     {
         $app = new App([
