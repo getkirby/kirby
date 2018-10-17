@@ -44,6 +44,7 @@ export default {
     login(context, credentials) {
       return Api.auth.login(credentials).then(user => {
         context.commit("SET_CURRENT", user);
+        context.dispatch("translation/activate", user.language, { root: true });
         router.push(context.state.path || "/");
         return user;
       });
