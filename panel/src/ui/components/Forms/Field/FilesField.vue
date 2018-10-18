@@ -12,12 +12,15 @@
       <k-draggable
         :element="elements.list"
         :list="selected"
+        :options="dragOptions"
+        @start="onStart"
         @end="onInput"
       >
         <component
           v-for="(file, index) in selected"
           :is="elements.item"
           :key="file.filename"
+          :sortable="true"
           :text="file.filename"
           :link="file.link"
           :image="file.thumb ? { url: file.thumb } : null"
@@ -58,6 +61,13 @@ export default {
     };
   },
   computed: {
+    dragOptions() {
+      return {
+        forceFallback: true,
+        fallbackClass: "sortable-fallback",
+        handle: ".k-sort-handle",
+      };
+    },
     elements() {
       const layouts = {
         cards: {
@@ -105,7 +115,11 @@ export default {
     focus() {
 
     },
+    onStart() {
+      this.$store.dispatch("drag", {});
+    },
     onInput() {
+      this.$store.dispatch("drag", null);
       this.$emit("input", this.selected);
     },
     select(files) {

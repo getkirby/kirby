@@ -62,7 +62,6 @@ export default {
         forceFallback: true,
         fallbackClass: "sortable-fallback",
         filter: ".disabled",
-        delay: 1,
         disabled: this.sortable === false,
         draggable: ".k-draggable-item",
         handle: ".k-sort-handle",
@@ -130,18 +129,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-.k-collection .sortable-ghost {
-  position: relative;
-  outline: 2px solid $color-focus;
-  z-index: 1;
-  box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
-}
-.k-collection .sortable-fallback {
-  opacity: .25 !important;
-  overflow: hidden;
-}
-
-</style>

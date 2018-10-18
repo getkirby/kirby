@@ -110,7 +110,16 @@ $list-item-height: 38px;
 .k-list-item:hover .k-sort-handle {
   opacity: 1;
 }
-
+.k-list-item.sortable-ghost {
+  position: relative;
+  outline: 2px solid $color-focus;
+  z-index: 1;
+  box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
+}
+.k-list-item.sortable-fallback {
+  opacity: .25 !important;
+  overflow: hidden;
+}
 .k-list-item-image {
   width: $list-item-height;
   height: $list-item-height;

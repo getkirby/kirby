@@ -12,12 +12,15 @@
       <k-draggable
         :element="elements.list"
         :list="selected"
+        :options="dragOptions"
+        @start="onStart"
         @end="onInput"
       >
         <component
           v-for="(user, index) in selected"
           :is="elements.item"
           :key="user.email"
+          :sortable="true"
           :text="user.username"
           :link="$api.users.link(user.id)"
           :image="
@@ -69,6 +72,13 @@ export default {
     };
   },
   computed: {
+    dragOptions() {
+      return {
+        forceFallback: true,
+        fallbackClass: "sortable-fallback",
+        handle: ".k-sort-handle",
+      };
+    },
     elements() {
       return {
         list: "k-list",
@@ -103,7 +113,11 @@ export default {
     focus() {
 
     },
+    onStart() {
+      this.$store.dispatch("drag", {});
+    },
     onInput() {
+      this.$store.dispatch("drag", null);
       this.$emit("input", this.selected);
     },
     select(files) {
