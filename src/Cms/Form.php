@@ -11,6 +11,11 @@ use Kirby\Form\Form as BaseForm;
  */
 class Form extends BaseForm
 {
+
+    protected $errors;
+    protected $fields;
+    protected $values = [];
+
     public function __construct(array $props)
     {
         $kirby = App::instance();

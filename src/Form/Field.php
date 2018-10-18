@@ -66,7 +66,7 @@ class Field extends Component
         }
 
         if (is_callable($save) === true) {
-            return $save($this->value);
+            return $save->call($this, $this->value);
         }
 
         return $this->value;

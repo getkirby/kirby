@@ -97,4 +97,87 @@ class StructureFieldTest extends TestCase
         $this->assertArrayHasKey('max', $field->errors());
     }
 
+    public function testNestedStructures()
+    {
+
+        $field = new Field('structure', [
+            'model'  => 'test',
+            'name'   => 'mothers',
+            'fields' => [
+                'name' => [
+                    'type' => 'text',
+                ],
+                'children' => [
+                    'type' => 'structure',
+                    'fields' => [
+                        'name' => [
+                            'type' => 'text'
+                        ]
+                    ]
+                ]
+            ],
+            'value' => $value = [
+                [
+                    'name' => 'Marge',
+                    'children' => [
+                        [
+                            'name' => 'Lisa',
+                        ],
+                        [
+                            'name' => 'Maggie',
+                        ],
+                        [
+                            'name' => 'Bart',
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals($value, $field->value());
+        $this->assertEquals($value, $field->data());
+
+        // empty mother form
+        $motherForm = $field->form();
+
+        $expected = [
+            'name'     => null,
+            'children' => []
+        ];
+
+        $this->assertEquals($expected, $motherForm->data());
+
+        // filled mother form
+        $motherForm = $field->form($value[0]);
+        $expected   = $value[0];
+
+        $this->assertEquals($expected, $motherForm->data());
+
+        $childrenField = $motherForm->fields()->children();
+
+        $this->assertEquals('structure', $childrenField->type());
+        $this->assertEquals('test',      $childrenField->model());
+
+        // empty children form
+        $childrenForm = $childrenField->form();
+
+        $this->assertEquals(['name' => null], $childrenForm->data());
+
+        // filled children form
+        $childrenForm = $childrenField->form([
+            'name' => 'Test'
+        ]);
+
+        $this->assertEquals(['name' => 'Test'], $childrenForm->data());
+
+        // children name field
+        $childrenNameField = $childrenField->form()->fields()->name();
+
+        $this->assertEquals('text', $childrenNameField->type());
+        $this->assertEquals('test', $childrenNameField->model());
+        $this->assertEquals(null, $childrenNameField->data());
+
+    }
+
+
 }
