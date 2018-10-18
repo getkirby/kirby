@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Cms\App as Kirby;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
+use Kirby\Toolkit\Collection;
 
 class HelpersTest extends TestCase
 {
@@ -410,6 +411,34 @@ class HelpersTest extends TestCase
         $site = $app->site();
 
         $this->assertEquals($site, site());
+    }
+
+    public function testSize()
+    {
+        // number
+        $this->assertEquals(3, size(3));
+
+        // string
+        $this->assertEquals(3, size('abc'));
+
+        // array
+        $this->assertEquals(3, size(['a', 'b', 'c']));
+
+        // collection
+        $this->assertEquals(3, size(new Collection(['a', 'b', 'c'])));
+    }
+
+    public function testSnippet()
+    {
+        $app = new App([
+            'roots' => [
+                'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
+                'snippets'  => $index,
+            ]
+        ]);
+
+        $result = snippet('snippet', ['message' => 'world'], true);
+        $this->assertEquals('Hello world', $result);
     }
 
     public function testUrlHelper()

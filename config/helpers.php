@@ -530,8 +530,12 @@ function size($value): int
     }
 
     if (is_object($value)) {
-        if ($value instanceof Countable) {
+        if (is_a($value, 'Countable') === true) {
             return count($value);
+        }
+
+        if (is_a($value, 'Kirby\Toolkit\Collection') === true) {
+            return $value->count();
         }
     }
 }
