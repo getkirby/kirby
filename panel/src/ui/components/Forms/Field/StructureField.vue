@@ -210,7 +210,7 @@ export default {
   },
   data() {
     return {
-      items: this.sort(this.value),
+      items: this.makeItems(this.value),
       active: null,
       trash: null,
       page: 1
@@ -276,11 +276,9 @@ export default {
   },
   watch: {
     value(value) {
-
       if (value != this.items) {
-        this.items = this.sort(value);
+        this.items = this.makeItems(value);
       }
-
     }
   },
   mounted() {
@@ -294,6 +292,13 @@ export default {
     this.$events.$off("field.structure.close", this.escape);
   },
   methods: {
+    makeItems(value) {
+      if (Array.isArray(value) === false) {
+        return [];
+      }
+
+      return this.sort(value);
+    },
     indexOf(index) {
       if (!this.limit) {
         return index + 1;
