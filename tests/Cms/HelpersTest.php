@@ -105,6 +105,19 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testCssHelperWithArray()
+    {
+        $result = css([
+            'assets/css/a.css',
+            'assets/css/b.css'
+        ]);
+
+        $expected  = '<link href="https://getkirby.com/assets/css/a.css" rel="stylesheet">' . PHP_EOL;
+        $expected .= '<link href="https://getkirby.com/assets/css/b.css" rel="stylesheet">';
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function testDumpHelperOnCli()
     {
         $this->assertEquals("test\n", dump('test', false));
@@ -314,10 +327,47 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testJsHelperWithArray()
+    {
+        $result = js([
+            'assets/js/a.js',
+            'assets/js/b.js'
+        ]);
+
+        $expected  = '<script src="https://getkirby.com/assets/js/a.js"></script>' . PHP_EOL;
+        $expected .= '<script src="https://getkirby.com/assets/js/b.js"></script>';
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function testKirbyHelper()
     {
         $app = new App();
         $this->assertEquals($app, kirby());
+    }
+
+    public function testKirbyTagHelper()
+    {
+        $tag = kirbytag('link', 'https://getkirby.com', ['text' => 'Kirby']);
+        $expected = '<a href="https://getkirby.com">Kirby</a>';
+
+        $this->assertEquals($expected, $tag);
+    }
+
+    public function testKirbyTagsHelper()
+    {
+        $tag = kirbytags('(link: https://getkirby.com text: Kirby)');
+        $expected = '<a href="https://getkirby.com">Kirby</a>';
+
+        $this->assertEquals($expected, $tag);
+    }
+
+    public function testMarkdownHelper()
+    {
+        $tag = markdown('# Kirby');
+        $expected = '<h1>Kirby</h1>';
+
+        $this->assertEquals($expected, $tag);
     }
 
     public function testOptionHelper()
@@ -428,6 +478,14 @@ class HelpersTest extends TestCase
         $this->assertEquals(3, size(new Collection(['a', 'b', 'c'])));
     }
 
+    public function testSmartypants()
+    {
+        $text     = smartypants('"Test"');
+        $expected = '&#8220;Test&#8221;';
+
+        $this->assertEquals($expected, $text);
+    }
+
     public function testSnippet()
     {
         $app = new App([
@@ -439,6 +497,33 @@ class HelpersTest extends TestCase
 
         $result = snippet('snippet', ['message' => 'world'], true);
         $this->assertEquals('Hello world', $result);
+    }
+
+    public function testSvg()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => __DIR__ . '/fixtures/HelpersTest',
+            ]
+        ]);
+
+        $result = svg('test.svg');
+        $this->assertEquals('<svg>test</svg>', trim($result));
+    }
+
+    public function testTwitter()
+    {
+        // simple
+        $result   = twitter('getkirby');
+        $expected = '<a href="https://twitter.com/getkirby">@getkirby</a>';
+
+        $this->assertEquals($expected, $result);
+
+        // with attributes
+        $result   = twitter('getkirby', 'Follow us', 'Kirby on Twitter', 'twitter');
+        $expected = '<a class="twitter" href="https://twitter.com/getkirby" title="Kirby on Twitter">Follow us</a>';
+
+        $this->assertEquals($expected, $result);
     }
 
     public function testUrlHelper()
@@ -470,6 +555,14 @@ class HelpersTest extends TestCase
 
         $this->assertEquals($expected, url('test', $options));
         $this->assertEquals($expected, u('test', $options));
+    }
+
+    public function testWidont()
+    {
+        $result   = widont('This is a headline');
+        $expected = 'This is a&nbsp;headline';
+
+        $this->assertEquals($expected, $result);
     }
 
 }
