@@ -94,6 +94,16 @@ class Avatar extends Model
     }
 
     /**
+     * Renders the HTML for the avatar
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->asset()->html();
+    }
+
+    /**
      * Returns the defined Image object
      * or initializes a default.
      *
@@ -124,6 +134,21 @@ class Avatar extends Model
     public function filename(): string
     {
         return 'profile.jpg';
+    }
+
+    public function id(): string
+    {
+        return $this->root();
+    }
+
+    /**
+     * Avatars are resizable by default
+     *
+     * @return boolean
+     */
+    public function isResizable(): bool
+    {
+        return true;
     }
 
     /**
