@@ -70,10 +70,12 @@ class RouteTest extends TestCase
         $route = $this->_route();
         $this->assertEquals('a/(-?[0-9]+)/b', $route->regex('a/(:num)/b'));
         $this->assertEquals('a/([a-zA-Z]+)/b', $route->regex('a/(:alpha)/b'));
+        $this->assertEquals('a/([a-zA-Z0-9]+)/b', $route->regex('a/(:alphanum)/b'));
         $this->assertEquals('a/([a-zA-Z0-9\.\-_%= \+\@]+)/b', $route->regex('a/(:any)/b'));
         $this->assertEquals('a/(.*)', $route->regex('a/(:all)'));
         $this->assertEquals('a(?:/(-?[0-9]+))?', $route->regex('a/(:num?)'));
         $this->assertEquals('a(?:/([a-zA-Z]+))?', $route->regex('a/(:alpha?)'));
+        $this->assertEquals('a(?:/([a-zA-Z0-9]+))?', $route->regex('a/(:alphanum?)'));
         $this->assertEquals('a(?:/([a-zA-Z0-9\.\-_%= \+\@]+))?', $route->regex('a/(:any?)'));
         $this->assertEquals('a(?:/(.*))?', $route->regex('a/(:all?)'));
     }
@@ -87,10 +89,20 @@ class RouteTest extends TestCase
             [':any', 'test@company.com', true],
             // spaces
             [':any', 'a b c', true],
+            // alpha
+            [':alpha', 'abc', true],
+            // invalid alpha
+            [':alpha', '123', false],
+            // alphanum
+            [':alphanum', 'abc123', true],
+            // invalid alphanum
+            [':alphanum', 'äbc123', false],
             // numbers
             [':num', '15', true],
             // negative numbers
             [':num', '-15', true],
+            // invalid number
+            [':num', 'a', false],
             // invalid pattern
             [':kirby', 'kirby', false]
         ];
