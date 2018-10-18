@@ -70,6 +70,16 @@ class ATest extends TestCase
         $this->assertEquals(['a' => ['b', 'c', 'e', 'd']],                     a::merge(['a' => [1 => 'b', 4 => 'c']], ['a' => [1 => 'e', 3 => 'd']], true));
         $this->assertEquals(['a' => [1 => 'c', 3 => 'd', 4 => 'b', 5 => 'a']], a::merge(['a' => [1 => 'a', 4 => 'b']], ['a' => [1 => 'c', 3 => 'd', 5 => 'a']], false));
 
+        // replace feature
+        $a = [
+            'a' => ['a', 'b', 'c']
+        ];
+
+        $b = [
+            'a' => ['d', 'e', 'f']
+        ];
+
+        $this->assertEquals($b, A::merge($a, $b, A::MERGE_REPLACE));
     }
 
     public function testPluck()

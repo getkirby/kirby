@@ -74,30 +74,38 @@ class A
         return implode($separator, $value);
     }
 
+    const MERGE_OVERWRITE = 0;
+    const MERGE_APPEND    = 1;
+    const MERGE_REPLACE   = 2;
 
     /**
      * Merges arrays recursively
      *
      * @param  array   $array1
      * @param  array   $array2
-     * @param  boolean $append Behavior for elements with numeric keys;
-     *                         if true:  elements are appended, keys are reset;
-     *                         if false: elements are overwritten, keys are preserved
+     * @param  boolean $mode   Behavior for elements with numeric keys;
+     *                         A::MERGE_APPEND:    elements are appended, keys are reset;
+     *                         A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
+     *                         A::MERGE_REPLACE:   non-associative arrays are completely replaced
      * @return array
      */
-    public static function merge($array1, $array2, $append = true)
+    public static function merge($array1, $array2, $mode = A::MERGE_APPEND)
     {
         $merged = $array1;
+
+        if (static::isAssociative($array1) === false && $mode === static::MERGE_REPLACE) {
+            return $array2;
+        }
 
         foreach ($array2 as $key => $value) {
 
             // append to the merged array, don't overwrite numeric keys
-            if (is_int($key) === true && $append === true) {
+            if (is_int($key) === true && $mode == static::MERGE_APPEND) {
                 $merged[] = $value;
 
             // recursively merge the two array values
             } elseif (is_array($value) === true && isset($merged[$key]) === true && is_array($merged[$key]) === true) {
-                $merged[$key] = static::merge($merged[$key], $value, $append);
+                $merged[$key] = static::merge($merged[$key], $value, $mode);
 
             // simply overwrite with the value from the second array
             } else {
@@ -105,7 +113,7 @@ class A
             }
         }
 
-        if ($append === true) {
+        if ($mode == static::MERGE_APPEND) {
             // the keys don't make sense anymore, reset them
             // array_merge() is the simplest way to renumber
             // arrays that have both numeric and string keys;
