@@ -54,6 +54,19 @@ class FTest extends TestCase
         $this->assertEquals('test.jpg', F::extension($this->tmp, 'jpg'));
     }
 
+    public function testExtensionToType()
+    {
+        $this->assertEquals('image', F::extensionToType('jpg'));
+        $this->assertFalse(F::extensionToType('something'));
+    }
+
+    public function testExtensions()
+    {
+        $this->assertEquals(array_keys(Mime::types()), F::extensions());
+        $this->assertEquals(F::$types['image'], F::extensions('image'));
+        $this->assertEquals([], F::extensions('unknown-type'));
+    }
+
     public function testFilename()
     {
         $this->assertEquals('test.txt', F::filename($this->tmp));
@@ -65,6 +78,7 @@ class FTest extends TestCase
 
         $this->assertTrue(F::is($this->tmp, 'txt'));
         $this->assertTrue(F::is($this->tmp, 'text/plain'));
+        $this->assertFalse(F::is($this->tmp, 'something/weird'));
     }
 
     public function testIsReadable()
@@ -100,6 +114,18 @@ class FTest extends TestCase
         F::write($this->tmp, 'test');
 
         $this->assertEquals('text/plain', F::mime($this->tmp));
+    }
+
+    public function testMimeToExtension()
+    {
+        $this->assertEquals('jpg', F::mimeToExtension('image/jpeg'));
+        $this->assertEquals(false, F::mimeToExtension('image/something'));
+    }
+
+    public function testMimeToType()
+    {
+        $this->assertEquals('image', F::mimeToType('image/jpeg'));
+        $this->assertEquals(false, F::mimeToType('image/something'));
     }
 
     public function testModified()
@@ -168,7 +194,6 @@ class FTest extends TestCase
 
     public function testType()
     {
-
         $this->assertEquals('image', F::type('jpg'));
         $this->assertEquals('document', F::type('pdf'));
         $this->assertEquals('archive', F::type('zip'));
@@ -176,7 +201,6 @@ class FTest extends TestCase
         $this->assertEquals('code', F::type('content.php'));
         $this->assertEquals('code', F::type('py'));
         $this->assertEquals('code', F::type('java'));
-
     }
 
     public function testURI()
