@@ -271,7 +271,7 @@ class Dir
             return [];
         }
 
-        return (array)array_diff(scandir($dir), $ignore ?? static::$ignore);
+        return array_values((array)array_diff(scandir($dir), $ignore ?? static::$ignore));
     }
 
     /**

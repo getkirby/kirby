@@ -19,9 +19,52 @@ class DirTest extends TestCase
         Dir::remove($this->moved);
     }
 
+    public function testCopy()
+    {
+        $src    = static::FIXTURES . '/copy';
+        $target = static::FIXTURES . '/copy-target';
+
+        $result = Dir::copy($src, $target);
+
+        $this->assertTrue($result);
+
+        $this->assertTrue(file_exists($target . '/a.txt'));
+        $this->assertTrue(file_exists($target . '/subfolder/b.txt'));
+
+        // clean up
+        Dir::remove($target);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The target directory
+     */
+    public function testCopyExists()
+    {
+        $src    = static::FIXTURES . '/copy';
+        $target = static::FIXTURES . '/copy';
+
+        Dir::copy($src, $target);
+    }
+
+    public function testIsWritable()
+    {
+        Dir::make($this->tmp);
+
+        $this->assertEquals(is_writable($this->tmp), Dir::isWritable($this->tmp));
+    }
+
     public function testMake()
     {
         $this->assertTrue(Dir::make($this->tmp));
+        $this->assertFalse(Dir::make(''));
+    }
+
+    public function testModified()
+    {
+        Dir::make($this->tmp);
+
+        $this->assertTrue(is_int(Dir::modified($this->tmp)));
     }
 
     public function testMove()
@@ -52,6 +95,40 @@ class DirTest extends TestCase
         $this->assertFalse(is_dir($this->tmp));
     }
 
+    public function testReadable()
+    {
+        Dir::make($this->tmp);
+
+        $this->assertEquals(is_readable($this->tmp), Dir::isReadable($this->tmp));
+    }
+
+    public function testReadDirsAndFiles()
+    {
+
+        Dir::make($root = static::FIXTURES . '/dirs');
+        Dir::make($root . '/a');
+        Dir::make($root . '/b');
+        Dir::make($root . '/c');
+
+        touch($root . '/a.txt');
+        touch($root . '/b.jpg');
+        touch($root . '/c.doc');
+
+        $any = Dir::read($root);
+        $expected = ['a', 'a.txt', 'b', 'b.jpg', 'c', 'c.doc'];
+
+        $this->assertEquals($any, $expected);
+
+        $dirs = Dir::read($root);
+        $expected = ['a', 'b', 'c'];
+
+        $files = Dir::files($root);
+        $expected = ['a.txt', 'b.jpg', 'c.doc'];
+
+        Dir::remove($root);
+
+    }
+
     public function testSize()
     {
         Dir::make($this->tmp);
@@ -64,55 +141,6 @@ class DirTest extends TestCase
         $this->assertEquals('15 B', Dir::niceSize($this->tmp));
 
         Dir::remove($this->tmp);
-    }
-
-    public function testModified()
-    {
-        Dir::make($this->tmp);
-
-        $this->assertTrue(is_int(Dir::modified($this->tmp)));
-    }
-
-    public function testIsWritable()
-    {
-        Dir::make($this->tmp);
-
-        $this->assertEquals(is_writable($this->tmp), Dir::isWritable($this->tmp));
-    }
-
-    public function testReadable()
-    {
-        Dir::make($this->tmp);
-
-        $this->assertEquals(is_readable($this->tmp), Dir::isReadable($this->tmp));
-    }
-
-    public function testCopy()
-    {
-        $src    = static::FIXTURES . '/copy';
-        $target = static::FIXTURES . '/copy-target';
-
-        $result = Dir::copy($src, $target);
-
-        $this->assertTrue($result);
-
-        $this->assertTrue(file_exists($target . '/a.txt'));
-        $this->assertTrue(file_exists($target . '/subfolder/b.txt'));
-
-        // clean up
-        Dir::remove($target);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The target directory
-     */
-    public function testCopyExists()
-    {
-        $src    = static::FIXTURES . '/copy';
-        $target = static::FIXTURES . '/copy';
-
-        Dir::copy($src, $target);
     }
 
 }
