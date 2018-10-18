@@ -43,8 +43,16 @@ return function ($props) {
     }
 
     if (empty($sidebar) === true) {
+
         $props['fields'] = $props['fields'] ?? [];
+
+        unset(
+            $props['files'],
+            $props['pages']
+        );
+
     } else {
+
         $props['columns'] = [
             [
                 'width'  => '2/3',
@@ -59,7 +67,8 @@ return function ($props) {
         unset(
             $props['fields'],
             $props['files'],
-            $props['pages']
+            $props['pages'],
+            $props['sidebar']
         );
 
     }
