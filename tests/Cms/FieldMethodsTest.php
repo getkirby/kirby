@@ -133,6 +133,22 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('cover.jpg', $page->cover()->toFile()->filename());
     }
 
+    public function testToFiles()
+    {
+        $page = new Page([
+            'content' => [
+                'gallery' => Yaml::encode(['a.jpg', 'b.jpg'])
+            ],
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg']
+            ],
+            'slug' => 'test'
+        ]);
+
+        $this->assertEquals($page->files()->pluck('filename'), $page->gallery()->toFiles()->pluck('filename'));
+    }
+
     public function testToFloat()
     {
         $field    = $this->field('1.2');
@@ -180,6 +196,9 @@ class FieldMethodsTest extends TestCase
 
         $this->assertEquals($a, $this->field('a')->toPage());
         $this->assertEquals($b, $this->field('b')->toPage());
+
+        $this->assertEquals($a, $this->field(Yaml::encode(['a']))->toPage());
+        $this->assertEquals($b, $this->field(Yaml::encode(['b', 'a']))->toPage());
     }
 
     public function testToPages()
@@ -280,6 +299,9 @@ class FieldMethodsTest extends TestCase
 
         $this->assertEquals($a, $this->field('a@company.com')->toUser());
         $this->assertEquals($b, $this->field('b@company.com')->toUser());
+
+        $this->assertEquals($a, $this->field(Yaml::encode(['a@company.com']))->toUser());
+        $this->assertEquals($b, $this->field(Yaml::encode(['b@company.com', 'a@company.com']))->toUser());
     }
 
     public function testLength()
