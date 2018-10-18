@@ -35,7 +35,7 @@ class CollectionSorterTest extends TestCase
                 'color' => 'green'
             ],
             [
-                'name' => 'Nico',
+                'name' => 'nico',
                 'role' => 'support',
                 'color' => 'blue'
             ],
@@ -65,7 +65,7 @@ class CollectionSorterTest extends TestCase
         $this->assertEquals('blue', $sorted->nth(2)['color']);
     }
 
-    public function testSortByNatural()
+    public function testSortByFlags()
     {
         $collection = new Collection([
             ['name' => 'img12.png'],
@@ -74,7 +74,7 @@ class CollectionSorterTest extends TestCase
             ['name' => 'img1.png']
         ]);
 
-        $sorted = $collection->sortBy('name', 'asc');
+        $sorted = $collection->sortBy('name', 'asc', SORT_REGULAR);
         $this->assertEquals('img1.png', $sorted->nth(0)['name']);
         $this->assertEquals('img10.png', $sorted->nth(1)['name']);
         $this->assertEquals('img12.png', $sorted->nth(2)['name']);
@@ -91,6 +91,22 @@ class CollectionSorterTest extends TestCase
         $this->assertEquals('img10.png', $sorted->nth(1)['name']);
         $this->assertEquals('img2.png', $sorted->nth(2)['name']);
         $this->assertEquals('img1.png', $sorted->nth(3)['name']);
+    }
+
+    public function testSortCases()
+    {
+        $collection = new Collection([
+            ['name' => 'a'],
+            ['name' => 'c'],
+            ['name' => 'A'],
+            ['name' => 'b']
+        ]);
+
+        $sorted = $collection->sortBy('name', 'asc');
+        $this->assertEquals('A', $sorted->nth(0)['name']);
+        $this->assertEquals('a', $sorted->nth(1)['name']);
+        $this->assertEquals('b', $sorted->nth(2)['name']);
+        $this->assertEquals('c', $sorted->nth(3)['name']);
     }
 
     public function testSortIntegers()

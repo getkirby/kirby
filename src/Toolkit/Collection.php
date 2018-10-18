@@ -886,7 +886,7 @@ class Collection extends Iterator
         foreach ($fields as $field) {
             $params[] = $field['values']    ?? [];
             $params[] = $field['direction'] ?? SORT_ASC;
-            $params[] = $field['flags']     ?? SORT_REGULAR;
+            $params[] = $field['flags']     ?? SORT_NATURAL | SORT_FLAG_CASE;
         }
 
         $params[] = &$array;
