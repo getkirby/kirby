@@ -22,10 +22,6 @@ class Controller
 
     public function arguments(array $data = []): array
     {
-        if (empty($data) === true) {
-            return [];
-        }
-
         $info = new ReflectionFunction($this->function);
         $args = [];
 
@@ -44,11 +40,13 @@ class Controller
 
     public function call($bind = null, $data = [])
     {
+        $args = $this->arguments($data);
+
         if ($bind === null) {
-            return call_user_func($this->function, ...$this->arguments($data));
+            return call_user_func($this->function, ...$args);
         }
 
-        return $this->function->call($bind, ...$this->arguments($data));
+        return $this->function->call($bind, ...$args);
     }
 
     public static function load(string $file)
