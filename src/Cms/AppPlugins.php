@@ -7,6 +7,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field as FormField;
 use Kirby\Text\KirbyTag;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
@@ -142,7 +143,7 @@ trait AppPlugins
             $options = $prefixed;
         }
 
-        return $this->extensions['options'] = $this->options = array_replace_recursive($options, $this->options);
+        return $this->extensions['options'] = $this->options = A::merge($options, $this->options, A::MERGE_REPLACE);
     }
 
     protected function extendPageMethods(array $methods): array

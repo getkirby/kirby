@@ -225,6 +225,7 @@ class AppPluginsTest extends TestCase
 
     public function testOption()
     {
+        // simple
         $kirby = new App([
             'options' => [
                 'testOption' => 'testValue'
@@ -234,7 +235,7 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('testValue', $kirby->option('testOption'));
     }
 
-    public function testPluginOption()
+    public function testPluginOptions()
     {
         App::plugin('test/plugin', [
             'options' => [
@@ -242,6 +243,7 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
+        // simple
         $kirby = new App([
             'options' => [
                 'test.plugin.foo' => 'another-bar'
@@ -249,6 +251,47 @@ class AppPluginsTest extends TestCase
         ]);
 
         $this->assertEquals('another-bar', $kirby->option('test.plugin.foo'));
+    }
+
+    public function testPluginOptionsWithNonAssociativeArray()
+    {
+        // non-associative
+        App::plugin('test/plugin', [
+            'options' => [
+                'foo' => ['one', 'two']
+            ]
+        ]);
+
+        $kirby = new App([
+            'options' => [
+                'test.plugin.foo' => ['three']
+            ]
+        ]);
+
+        $this->assertEquals(['three'], $kirby->option('test.plugin.foo'));
+    }
+
+    public function testPluginOptionsWithAssociativeArray()
+    {
+        // non-associative
+        App::plugin('test/plugin', [
+            'options' => [
+                'foo' => [
+                    'a' => 'A',
+                    'b' => 'B'
+                ]
+            ]
+        ]);
+
+        $kirby = new App([
+            'options' => [
+                'test.plugin.foo' => [
+                    'a' => 'Custom A'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(['a' => 'Custom A', 'b' => 'B'], $kirby->option('test.plugin.foo'));
     }
 
     public function testRoutes()
