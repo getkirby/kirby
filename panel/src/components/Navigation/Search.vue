@@ -8,7 +8,6 @@
           v-model="q"
           :placeholder="$t('search') + ' …'"
           type="text"
-          @input="search(q)"
           @keydown.down.prevent="down"
           @keydown.up.prevent="up"
           @keydown.tab.prevent="tab"
@@ -24,7 +23,7 @@
           :data-selected="selected === pageIndex"
           @mouseover="selected = pageIndex"
         >
-          <k-link :to="'/pages/' + page.id.replace('/', '+')" @click="click(pageIndex)">
+          <k-link :to="$api.pages.link(page.id)" @click="click(pageIndex)">
             <strong>{{ page.title }}</strong>
             <small>{{ page.id }}</small>
           </k-link>
@@ -35,6 +34,9 @@
 </template>
 
 <script>
+
+import debounce from "@/ui/helpers/debounce.js";
+
 export default {
   data() {
     return {
@@ -42,6 +44,11 @@ export default {
       q: null,
       selected: -1
     }
+  },
+  watch: {
+    q: debounce(function (q) {
+      this.search(q);
+    }, 200)
   },
   mounted() {
     this.$nextTick(() => {
@@ -73,12 +80,11 @@ export default {
       }
     },
     navigate(page) {
-      this.$router.push("/pages/" + page.id.replace('/', '+'));
+      this.$router.push(this.$api.pages.link(page.id));
       this.close();
     },
     search(query) {
-
-      this.$api.get('site/search', {q: query, limit: 10}).then(response => {
+      this.$api.get('site/search', { q: query, limit: 10 }).then(response => {
         this.pages = response.data;
         this.selected = -1;
       }).catch(() => {
