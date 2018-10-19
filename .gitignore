@@ -3,7 +3,6 @@
 /tests/coverage
 /vendor
 /dist.zip
-/dist
 
 .php_cs.cache
 
