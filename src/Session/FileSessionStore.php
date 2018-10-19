@@ -77,8 +77,10 @@ class FileSessionStore extends SessionStore
         // very unlikely scenario!
         $contents = $this->get($expiryTime, $id);
         if ($contents !== '') {
+            // @codeCoverageIgnoreStart
             $this->unlock($expiryTime, $id);
             return $this->createId($expiryTime);
+            // @codeCoverageIgnoreEnd
         }
 
         return $id;
@@ -128,12 +130,14 @@ class FileSessionStore extends SessionStore
         if ($result === true) {
             $this->isLocked[$name] = true;
         } else {
+            // @codeCoverageIgnoreStart
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',
                 'translate' => false,
                 'httpCode'  => 500
             ]);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -167,12 +171,14 @@ class FileSessionStore extends SessionStore
         if ($result === true) {
             unset($this->isLocked[$name]);
         } else {
+            // @codeCoverageIgnoreStart
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',
                 'translate' => false,
                 'httpCode'  => 500
             ]);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -197,12 +203,14 @@ class FileSessionStore extends SessionStore
             $result = flock($handle, LOCK_SH);
 
             if ($result !== true) {
+                // @codeCoverageIgnoreStart
                 throw new Exception([
                     'key'       => 'session.filestore.unexpectedFilesystemError',
                     'fallback'  => 'Unexpected file system error',
                     'translate' => false,
                     'httpCode'  => 500
                 ]);
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -222,12 +230,14 @@ class FileSessionStore extends SessionStore
             $result = flock($handle, LOCK_UN);
 
             if ($result !== true) {
+                // @codeCoverageIgnoreStart
                 throw new Exception([
                     'key'       => 'session.filestore.unexpectedFilesystemError',
                     'fallback'  => 'Unexpected file system error',
                     'translate' => false,
                     'httpCode'  => 500
                 ]);
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -264,23 +274,27 @@ class FileSessionStore extends SessionStore
 
         // delete all file contents first
         if (rewind($handle) !== true || ftruncate($handle, 0) !== true) {
+            // @codeCoverageIgnoreStart
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',
                 'translate' => false,
                 'httpCode'  => 500
             ]);
+            // @codeCoverageIgnoreEnd
         }
 
         // write the new contents
         $result = fwrite($handle, $data);
         if (!is_int($result) || $result === 0) {
+            // @codeCoverageIgnoreStart
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',
                 'translate' => false,
                 'httpCode'  => 500
             ]);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -312,12 +326,14 @@ class FileSessionStore extends SessionStore
 
         // file still exists, delete it
         if (@unlink($path) !== true) {
+            // @codeCoverageIgnoreStart
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',
                 'translate' => false,
                 'httpCode'  => 500
             ]);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -456,12 +472,14 @@ class FileSessionStore extends SessionStore
         $result = fclose($handle);
 
         if ($result !== true) {
+            // @codeCoverageIgnoreStart
             throw new Exception([
                 'key'       => 'session.filestore.unexpectedFilesystemError',
                 'fallback'  => 'Unexpected file system error',
                 'translate' => false,
                 'httpCode'  => 500
             ]);
+            // @codeCoverageIgnoreEnd
         }
     }
 }
