@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 use Kirby\Http\Cookie;
+use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 
 require_once(__DIR__ . '/mocks.php');
@@ -745,6 +746,31 @@ class SessionTest extends TestCase
         $this->assertEquals('valid', $session->data()->get('id'));
     }
 
+    public function testInitSerializedObject()
+    {
+        $token = '9999999999.valid.' . $this->store->validKey;
+
+        $obj = new Obj([
+            'test-key' => 'test-value'
+        ]);
+
+        $session = new Session($this->sessions, $token, []);
+        $session->data()->set('name', 'test-session');
+        $session->data()->set('obj', $obj);
+        $this->assertWriteMode(true, $session);
+        $this->assertInstanceOf(Obj::class, $session->data()->get('obj'));
+        $this->assertEquals($obj, $session->data()->get('obj'));
+        $this->assertTrue($obj === $session->data()->get('obj'));
+        $session->commit();
+        $this->assertWriteMode(false, $session);
+
+        $session = new Session($this->sessions, $token, []);
+        $this->assertEquals('test-session', $session->data()->get('name'));
+        $this->assertInstanceOf(Obj::class, $session->data()->get('obj'));
+        $this->assertEquals($obj, $session->data()->get('obj'));
+        $this->assertFalse($obj === $session->data()->get('obj'));
+    }
+
     /**
      * @expectedException     Kirby\Exception\NotFoundException
      * @expectedExceptionCode error.session.notFound
@@ -769,9 +795,9 @@ class SessionTest extends TestCase
      * @expectedException     Kirby\Exception\LogicException
      * @expectedExceptionCode error.session.invalid
      */
-    public function testInitInvalidJson()
+    public function testInitInvalidSerialization()
     {
-        $token = '9999999999.invalidJson.' . $this->store->validKey;
+        $token = '9999999999.invalidSerialization.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 

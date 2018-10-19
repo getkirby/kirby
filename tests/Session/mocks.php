@@ -65,10 +65,10 @@ class TestSessionStore extends SessionStore
                 ]
             ],
 
-            // invalid JSON structure
-            '9999999999.invalidJson' => 'invalid-json',
+            // invalid data structure
+            '9999999999.invalidSerialization' => 'invalid-serialization',
 
-            // invalid hmac:json structure
+            // invalid storage structure
             '9999999999.invalidStructure' => 'invalid-structure',
 
             // valid session that has moved
@@ -223,9 +223,9 @@ class TestSessionStore extends SessionStore
             $data = $this->sessions[$name];
 
             // special cases
-            if ($data === 'invalid-json') {
+            if ($data === 'invalid-serialization') {
                 $data = 'some gibberish';
-                return hash_hmac('sha256', $data, $this->validKey) . ':' . $data;
+                return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
             } elseif ($data === 'invalid-structure') {
                 return 'some gibberish';
             }
@@ -234,12 +234,12 @@ class TestSessionStore extends SessionStore
             if (isset($this->hmacs[$name])) {
                 // created session: it has its own HMAC, prepend it again
 
-                return $this->hmacs[$name] . ':' . json_encode($data);
+                return $this->hmacs[$name] . "\n" . serialize($data);
             } else {
                 // test session, add an HMAC based on the $validKey
 
-                $data = json_encode($data);
-                return hash_hmac('sha256', $data, $this->validKey) . ':' . $data;
+                $data = serialize($data);
+                return hash_hmac('sha256', $data, $this->validKey) . "\n" . $data;
             }
         } else {
             throw new Exception('Session does not exist');
@@ -259,9 +259,9 @@ class TestSessionStore extends SessionStore
         }
 
         // decode the data
-        $hmac = Str::before($data, ':');
-        $json = trim(Str::after($data, ':'));
-        $data = json_decode($json, true);
+        $hmac = Str::before($data, "\n");
+        $data = trim(Str::after($data, "\n"));
+        $data = unserialize($data);
 
         // store the HMAC separately for the get() method above
         $this->hmacs[$name]    = $hmac;
