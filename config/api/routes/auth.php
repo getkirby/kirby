@@ -24,11 +24,6 @@ return [
         'auth'    => false,
         'action'  => function () {
 
-            // logout previous users
-            // if ($user = $this->kirby()->user()) {
-            //     $user->logout();
-            // }
-
             // session options
             $options = [
                 'createMode' => 'cookie',
@@ -48,7 +43,7 @@ return [
 
             // sleep for a random amount of milliseconds
             // to make automated attacks harder
-            usleep(rand(1000, 2000000));
+            usleep(random_int(1000, 2000000));
 
             throw new InvalidArgumentException('Invalid email or password');
 
