@@ -111,10 +111,18 @@ class AutoSession
         // always use the less strict value for compatibility with features
         // that depend on the less strict behavior
         if ($duration > $session->duration()) {
+            // the duration needs to be extended
             $session->duration($duration);
         }
-        if (($timeout === false && $session->timeout() !== false) || $timeout > $session->timeout()) {
-            $session->timeout($timeout);
+        if ($session->timeout() !== false) {
+            // a timeout exists
+            if ($timeout === false) {
+                // it needs to be completely disabled
+                $session->timeout(false);
+            } elseif (is_int($timeout) && $timeout > $session->timeout()) {
+                // it needs to be extended
+                $session->timeout($timeout);
+            }
         }
 
         // if the session has been created and was not yet initialized,

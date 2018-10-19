@@ -205,6 +205,21 @@ class AutoSessionTest extends TestCase
         $this->assertEquals('awesome session', $session->data()->get('id'));
         $this->assertEquals(7300, $session->duration());
         $this->assertEquals(false, $session->timeout());
+        Cookie::remove('kirby_session');
+
+        // timeout for the first time: shouldn't change anything
+        $autoSession = new AutoSession($this->store);
+        $session = $autoSession->get(['long' => true]);
+        $this->assertEquals(1209600, $session->duration());
+        $this->assertEquals(false, $session->timeout());
+        $session->data()->set('id', 'awesome session');
+        $session->commit();
+        Cookie::set('kirby_session', $session->token());
+        $session = $autoSession->get();
+        $this->assertEquals('awesome session', $session->data()->get('id'));
+        $this->assertEquals(1209600, $session->duration());
+        $this->assertEquals(false, $session->timeout());
+        $session->commit();
     }
 
     public function testCreateManually()
