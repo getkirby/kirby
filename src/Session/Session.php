@@ -3,7 +3,6 @@
 namespace Kirby\Session;
 
 use Throwable;
-use Kirby\Data\Json;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -367,8 +366,8 @@ class Session
         }
 
         // encode the data and attach an HMAC
-        $data = Json::encode($data);
-        $data = hash_hmac('sha256', $data, $this->tokenKey) . ':' . $data;
+        $data = serialize($data);
+        $data = hash_hmac('sha256', $data, $this->tokenKey) . "\n" . $data;
 
         // store the data
         $this->sessions->store()->set($this->tokenExpiry, $this->tokenId, $data);
@@ -637,8 +636,8 @@ class Session
 
         // verify HMAC
         // skip if we don't have the key (only the case for moved sessions)
-        $hmac = Str::before($data, ':');
-        $data = trim(Str::after($data, ':'));
+        $hmac = Str::before($data, "\n");
+        $data = trim(Str::after($data, "\n"));
         if ($this->tokenKey !== null && hash_equals(hash_hmac('sha256', $data, $this->tokenKey), $hmac) !== true) {
             throw new LogicException([
                 'key'       => 'session.invalid',
@@ -649,9 +648,9 @@ class Session
             ]);
         }
 
-        // decode the JSON data
+        // decode the serialized data
         try {
-            $data = Json::decode($data);
+            $data = unserialize($data);
         } catch (Throwable $e) {
             throw new LogicException([
                 'key'       => 'session.invalid',
