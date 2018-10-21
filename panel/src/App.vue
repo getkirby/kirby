@@ -83,14 +83,14 @@ export default {
 
 html {
   font-family: $font-family-sans;
-  background: #efefef;
-  overflow: hidden;
-  height: 100%;
+  background: $color-dark;
 }
 
 html,
 body {
   color: $color-dark;
+  overflow: hidden;
+  height: 100%;
 }
 
 a {
@@ -117,15 +117,35 @@ b {
 }
 
 .k-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: $color-background;
+}
+.k-panel .k-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: z-index(navigation);
+}
+.k-panel .k-form-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: z-index(navigation);
 }
 .k-panel-view {
-  position: relative;
-  flex-grow: 1;
+  position: absolute;
+  top: 38px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 .k-panel[data-loading] {
   animation: Loading 0.5s;
