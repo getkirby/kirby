@@ -173,6 +173,16 @@ return function ($kirby) {
             }
         ];
 
+        // redirect the home page folder to the real homepage
+        $after[] = [
+            'pattern' => $kirby->option('home', 'home'),
+            'method'  => 'ALL',
+            'env'     => 'site',
+            'action'  => function () use ($kirby) {
+                return Response::redirect($kirby->site()->url());
+            }
+        ];
+
         // Single-language subpages
         $after[] = [
             'pattern' => '(:all)',

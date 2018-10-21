@@ -48,6 +48,31 @@ class RouterTest extends TestCase
         $this->assertEquals('home', $page->id());
     }
 
+    public function testHomeFolderRoute()
+    {
+        $response = $this->app->call('home');
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertEquals(302, $response->code());
+    }
+
+    public function testHomeCustomFolderRoute()
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'home' => 'homie'
+            ],
+            'children' => [
+                [
+                    'slug' => 'homie'
+                ]
+            ]
+        ]);
+
+        $response = $app->call('homie');
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertEquals(302, $response->code());
+    }
+
     public function testPageRoute()
     {
         $page = $this->app->call('projects');
