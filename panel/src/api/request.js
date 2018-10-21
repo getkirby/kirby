@@ -68,7 +68,7 @@ export default {
   patch(path, data, options) {
     return this.post(path, data, options, "PATCH");
   },
-  delete(path) {
-    return this.request(path, { method: "DELETE" });
+  delete(path, data, options) {
+    return this.post(path, data, options, "DELETE");
   }
 };

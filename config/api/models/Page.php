@@ -20,6 +20,9 @@ return [
         'content' => function (Page $page) {
             return Form::for($page)->values();
         },
+        'drafts' => function (Page $page) {
+            return $page->drafts();
+        },
         'errors' => function (Page $page) {
             return $page->errors();
         },
@@ -28,6 +31,9 @@ return [
         },
         'hasChildren' => function (Page $page) {
             return $page->hasChildren();
+        },
+        'hasDrafts' => function (Page $page) {
+            return $page->hasDrafts();
         },
         'id' => function (Page $page) {
             return $page->id();

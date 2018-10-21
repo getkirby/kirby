@@ -105,7 +105,9 @@
 
   "page.create": "Entwurf erstellen",
   "page.created": "Der Entwurf wurde erstellt",
-  "page.delete.confirm": "Möchtest du wirklich <strong>{title}</strong> löschen?",
+  "page.delete.confirm": "Möchtest du <strong>{title}</strong> wirklich löschen?",
+  "page.delete.confirm.title": "Seitentitel zur Bestätigung eingeben",
+  "page.delete.confirm.subpages": "<strong>Diese Seite hat Unterseiten</strong>. <br>Alle Unterseiten werden ebenfalls gelöscht.",
   "page.deleted": "Die Seite wurde gelöscht",
   "page.rename.fromTitle": "Aus Titel erzeugen",
   "page.renamed": "Die Seite wurde umbenannt",

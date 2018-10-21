@@ -90,8 +90,8 @@ export default {
   files(id, query) {
     return api.post(this.url(id, "files/search"), query);
   },
-  delete(id) {
-    return api.delete(this.url(id));
+  delete(id, data) {
+    return api.delete(this.url(id), data);
   },
   slug(id, slug) {
     return api.patch(this.url(id, "slug"), { slug: slug });

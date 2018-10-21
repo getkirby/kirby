@@ -116,7 +116,9 @@
 
   "page.create": "Create draft",
   "page.created": "The draft has been created",
-  "page.delete.confirm": "Do you really want to delete <br><strong>{title}</strong>?",
+  "page.delete.confirm": "Do you really want to delete <strong>{title}</strong>?",
+  "page.delete.confirm.title": "Enter the page title to confirm",
+  "page.delete.confirm.subpages": "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
   "page.deleted": "The page has been deleted",
   "page.rename.fromTitle": "Create from title",
   "page.renamed": "The page has been renamed",
@@ -262,6 +264,7 @@
   "error.template.default.notFound": "The default template does not exist",
   "error.page.status.invalid": "Please set a valid page status",
   "error.page.delete": "The page \"{slug}\" cannot be deleted",
+  "error.page.delete.confirm": "Please enter the page title to confirm",
   "error.page.delete.permission": "You are not allowed to delete \"{slug}\"",
   "error.page.delete.hasChildren": "The page has subpages and cannot be deleted",
   "error.page.update.permission": "You are not allowed to update \"{slug}\"",

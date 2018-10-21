@@ -25,7 +25,7 @@ return [
         'pattern' => 'pages/(:any)',
         'method'  => 'DELETE',
         'action'  => function (string $id) {
-            return $this->page($id)->delete();
+            return $this->page($id)->delete($this->requestBody('force', false));
         }
     ],
     [
