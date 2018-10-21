@@ -91,6 +91,7 @@ class App
         $this->setOptionalProperties($props, [
             'languages',
             'path',
+            'request',
             'roles',
             'site',
             'user',
@@ -798,6 +799,15 @@ class App
     protected function setPath(string $path = null)
     {
         $this->path = $path !== null ? trim($path, '/') : null;
+        return $this;
+    }
+
+    protected function setRequest(array $request = null): self
+    {
+        if ($request !== null) {
+            $this->request = new Request($request);
+        }
+
         return $this;
     }
 

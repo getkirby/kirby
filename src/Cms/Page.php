@@ -573,8 +573,8 @@ class Page extends ModelWithContent
         // inspect the current request
         $request = $kirby->request();
 
-        // disable the pages cache for any request types but GET or special data
-        if ((string)$request->method() !== 'GET' || empty($request->data()) === false) {
+        // disable the pages cache for any request types but GET or HEAD or special data
+        if (in_array($request->method(), ['GET', 'HEAD']) === false || empty($request->data()) === false) {
             return false;
         }
 

@@ -36,24 +36,14 @@ class RequestTest extends TestCase
     public function testData()
     {
         $request = new Request([
-            'method' => 'POST',
             'body'   => ['a' => 'a'],
             'query'  => ['b' => 'b'],
         ]);
 
-        $this->assertEquals(['a' => 'a'], $request->data());
+        $this->assertEquals(['a' => 'a', 'b' => 'b'], $request->data());
         $this->assertEquals('a', $request->get('a'));
-        $this->assertEquals(null, $request->get('b'));
-
-        $request = new Request([
-            'method' => 'GET',
-            'body'   => ['a' => 'a'],
-            'query'  => ['b' => 'b'],
-        ]);
-
-        $this->assertEquals(['b' => 'b'], $request->data());
-        $this->assertEquals(null, $request->get('a'));
         $this->assertEquals('b', $request->get('b'));
+        $this->assertEquals(null, $request->get('c'));
     }
 
     public function test__debuginfo()

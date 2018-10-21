@@ -179,7 +179,7 @@ class Request
      */
     public function data(): array
     {
-        return $this->is('GET') ? $this->query()->toArray() : $this->body()->toArray();
+        return array_merge($this->body()->toArray(), $this->query()->toArray());
     }
 
     /**
