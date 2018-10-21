@@ -74,6 +74,13 @@ export default {
       this.fetch();
     },
     submit() {
+
+      if (this.options.selected.length === 0) {
+        this.$emit("submit", []);
+        this.$refs.dialog.close();
+        return;
+      }
+
       this.$api.post('site/find', this.options.selected)
         .then(response => {
           this.$emit("submit", response.data);
