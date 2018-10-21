@@ -216,6 +216,11 @@ class Url
      */
     public static function to(string $path = null, array $options = null): string
     {
+        // keep relative urls
+        if (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../') {
+            return $path;
+        }
+
         $url = static::makeAbsolute($path);
 
         if ($options === null) {
