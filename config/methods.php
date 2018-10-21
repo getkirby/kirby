@@ -104,7 +104,7 @@ return function (App $app) {
             return $field->toUsers()->first();
         },
         'toUsers' => function ($field) use ($app) {
-            return $app->users()->find(true, ...$field->toData('yaml'));
+            return $app->users()->find(false, false, ...$field->toData('yaml'));
         },
 
         // inspectors
