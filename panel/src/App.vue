@@ -126,8 +126,6 @@ b {
   position: relative;
   flex-grow: 1;
   overflow-y: scroll;
-  transform: translateZ(0);
-  -webkit-overflow-scrolling: touch;
 }
 .k-panel[data-loading] {
   animation: Loading 0.5s;

@@ -169,6 +169,8 @@ export default {
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 .k-dialog-box[data-size="small"] {
   width: 20rem;
@@ -186,6 +188,7 @@ export default {
   line-height: 1.25rem;
   color: $color-white;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
 }
 .k-dialog-notification[data-theme="error"] {
@@ -209,7 +212,6 @@ export default {
 
 .k-dialog-body {
   padding: 1.5rem;
-  max-height: calc(100vh - 9rem);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -222,6 +224,7 @@ export default {
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   line-height: 1;
+  flex-shrink: 0;
 }
 .k-dialog-footer .k-button-group {
   display: flex;
