@@ -70,12 +70,12 @@ export default {
     }
   },
   methods: {
-    open(parent, section) {
+    open(parent, blueprintApi, section) {
       this.parent  = parent;
       this.section = section;
 
       this.$api
-        .get(this.parent + "/blueprints", {section: section})
+        .get(blueprintApi, {section: section})
         .then(response => {
           this.templates = response.map(blueprint => {
             return {
