@@ -149,6 +149,20 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($page->files()->pluck('filename'), $page->gallery()->toFiles()->pluck('filename'));
     }
 
+    public function testToFilesWithoutResults()
+    {
+        $page = new Page([
+            'content' => [
+                'gallery' => Yaml::encode(['a.jpg', 'b.jpg'])
+            ],
+            'files' => [
+            ],
+            'slug' => 'test'
+        ]);
+
+        $this->assertInstanceOf(Files::class, $page->gallery()->toFiles());
+    }
+
     public function testToFloat()
     {
         $field    = $this->field('1.2');
@@ -238,6 +252,13 @@ class FieldMethodsTest extends TestCase
 
         $this->assertEquals($pages, $this->field($content)->toPages());
 
+        // no results
+        $content = Yaml::encode([
+            'c',
+            'd'
+        ]);
+
+        $this->assertInstanceOf(Pages::class, $this->field($content)->toPages());
     }
 
     public function testToStructure()
@@ -302,6 +323,35 @@ class FieldMethodsTest extends TestCase
 
         $this->assertEquals($a, $this->field(Yaml::encode(['a@company.com']))->toUser());
         $this->assertEquals($b, $this->field(Yaml::encode(['b@company.com', 'a@company.com']))->toUser());
+    }
+
+    public function testToUsers()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'users' => [
+                ['email' => 'a@company.com'],
+                ['email' => 'b@company.com']
+            ]
+        ]);
+
+        // two results
+        $content = Yaml::encode([
+            'a@company.com',
+            'b@company.com'
+        ]);
+
+        $this->assertEquals(['a@company.com', 'b@company.com'], $this->field($content)->toUsers()->pluck('email'));
+
+        // no results
+        $content = Yaml::encode([
+            'c@company.com',
+            'd@company.com'
+        ]);
+
+        $this->assertInstanceOf(Users::class, $this->field($content)->toUsers());
     }
 
     public function testLength()

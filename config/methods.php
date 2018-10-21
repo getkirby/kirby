@@ -60,7 +60,7 @@ return function (App $app) {
             return $field->toFiles()->first();
         },
         'toFiles' => function ($field) {
-            return $field->parent()->files()->find(false, ...$field->toData('yaml'));
+            return $field->parent()->files()->find(false, false, ...$field->toData('yaml'));
         },
         'toFloat' => function ($field, $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
@@ -89,7 +89,7 @@ return function (App $app) {
             return $field->toPages()->first();
         },
         'toPages' => function ($field, string $separator = 'yaml') use ($app) {
-            return $app->site()->find(true, ...$field->toData('yaml'));
+            return $app->site()->find(false, false, ...$field->toData('yaml'));
         },
         'toStructure' => function ($field) {
             return new Structure(Yaml::decode($field->value), $field->parent());
