@@ -181,8 +181,9 @@ class Field
             return $fallback;
         }
 
-        $this->value = $fallback;
-        return $this;
+        $field = clone $this;
+        $field->value = $fallback;
+        return $field;
     }
 
     /**
