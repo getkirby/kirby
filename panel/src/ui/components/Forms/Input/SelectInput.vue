@@ -1,5 +1,5 @@
 <template>
-  <label :data-disabled="disabled" :data-empty="value === ''" class="k-select-input">
+  <label :data-disabled="disabled" :data-empty="selected === ''" class="k-select-input">
     <select
       ref="input"
       v-bind="{
@@ -7,9 +7,9 @@
         disabled,
         id,
         name,
-        required,
-        value
+        required
       }"
+      v-model="selected"
       :disabled="disabled"
       class="k-select-input-native"
       v-on="listeners"
@@ -57,6 +57,7 @@ export default {
   },
   data() {
     return {
+      selected: this.value,
       listeners: {
         ...this.$listeners,
         click: (event) => this.onClick(event),
@@ -66,9 +67,9 @@ export default {
   },
   computed: {
     label() {
-      const label = this.text(this.value);
+      const label = this.text(this.selected);
 
-      if (this.value === "" || this.value === null || label === null) {
+      if (this.selected === "" || this.selected === null || label === null) {
         return this.placeholder || "—";
       }
 
@@ -76,7 +77,8 @@ export default {
     }
   },
   watch: {
-    value() {
+    value(value) {
+      this.selected = value;
       this.onInvalid();
     }
   },
@@ -99,7 +101,8 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
-      this.$emit("input", value);
+      this.selected = value;
+      this.$emit("input", this.selected);
     },
     select() {
       this.focus();
@@ -116,7 +119,7 @@ export default {
   },
   validations() {
     return {
-      value: {
+      selected: {
         required: this.required ? required : true,
       }
     };

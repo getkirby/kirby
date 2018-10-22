@@ -10,7 +10,7 @@
       v-model="hour"
       placeholder="––"
       empty="––"
-      @input="onInput"
+      @input="setHour"
       @invalid="onInvalid"
     />
     <span class="k-time-input-separator">:</span>
@@ -22,7 +22,7 @@
       v-model="minute"
       placeholder="––"
       empty="––"
-      @input="onInput"
+      @input="setMinute"
       @invalid="onInvalid"
     />
     <k-select-input
@@ -62,11 +62,19 @@ export default {
       default: 5
     },
     value: {
-      type: String
+      type: String,
     },
   },
   data() {
-    return this.toObject(this.value);
+
+    const date = this.toObject(this.value);
+
+    return {
+      time: this.value,
+      hour: date.hour,
+      minute: date.minute,
+      meridiem: date.meridiem
+    };
   },
   computed: {
     hours() {
@@ -81,17 +89,50 @@ export default {
   },
   watch: {
     value(value) {
-      this.select(this.toObject(value));
-    }
+      this.time = value;
+    },
+    time(time) {
+
+      const date = this.toObject(time);
+
+      this.hour     = date.hour;
+      this.minute   = date.minute;
+      this.meridiem = date.meridiem;
+
+    },
   },
   methods: {
     focus() {
       this.$refs.hour.focus();
     },
-    onInput(value) {
-      if (value === "") {
-        this.reset();
-        this.$emit("input", null);
+    setHour(hour) {
+
+      if (hour && !this.minute) {
+        this.minute = 0;
+      }
+
+      if (!hour) {
+        this.minute = null;
+      }
+
+      this.onInput();
+    },
+    setMinute(minute) {
+
+      if (minute && !this.hour) {
+        this.hour = 0;
+      }
+
+      if (!minute) {
+        this.hour = null;
+      }
+
+      this.onInput();
+    },
+    onInput() {
+
+      if (this.hour === null || this.minute === null) {
+        this.$emit("input", "");
         return;
       }
 
@@ -99,15 +140,11 @@ export default {
       const m = padZero(this.minute || 0);
       const a = this.meridiem || "AM";
 
-      const time = this.notation === 24 ? `${h}:${m}` : `${h}:${m} ${a}`;
-      const date = dayjs(new Date("2000-01-01 " + time));
-
-      if (date.isValid() === false) {
-        this.$emit("input", null);
-        return;
-      }
+      const time = this.notation === 24 ? `${h}:${m}:00` : `${h}:${m}:00 ${a}`;
+      const date = dayjs("2000-01-01 " + time);
 
       this.$emit("input", date.format("HH:mm"));
+
     },
     onInvalid($invalid, $v) {
       this.$emit("invalid", $invalid, $v);
@@ -129,17 +166,12 @@ export default {
       this.minute = null;
       this.meridiem = null;
     },
-    round(time) {
-      time.minute = Math.floor(time.minute / this.step) * this.step;
-      return time;
+    round(minute) {
+      return Math.floor(minute / this.step) * this.step;
     },
-    select(time) {
-      this.hour     = time.hour;
-      this.minute   = time.minute;
-      this.meridiem = time.meridiem;
-    },
-    toObject(value) {
-      const date = dayjs(new Date("2000-01-01 " + value));
+    toObject(time) {
+
+      const date = dayjs("2001-01-01 " + time + ":00");
 
       if (date.isValid() === false) {
         return {
@@ -149,13 +181,11 @@ export default {
         };
       }
 
-      const time = {
+      return {
         hour: date.format(this.notation === 24 ? 'H' : 'h'),
-        minute: date.format('m'),
+        minute: this.round(date.format('m')),
         meridiem: date.format('A')
       };
-
-      return this.round(time);
     }
   }
 }
