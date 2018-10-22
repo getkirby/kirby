@@ -177,6 +177,12 @@ trait FileActions
      */
     public function publish(): self
     {
+        $versions = glob($this->parent()->mediaRoot() . '/' . crc32($this->filename()) . '*', GLOB_ONLYDIR);
+
+        foreach ($versions as $garbage) {
+            Dir::remove($garbage);
+        }
+
         F::copy($this->root(), $this->mediaRoot());
         return $this;
     }

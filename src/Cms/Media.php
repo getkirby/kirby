@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 class Media
@@ -23,29 +24,5 @@ class Media
             }
         }
 
-        try {
-            $kirby     = $model->kirby();
-            $url       = $model->mediaUrl() . '/' . $filename;
-            $mediaRoot = $model->mediaRoot();
-            $thumb     = $mediaRoot . '/' . $filename;
-            $job       = $mediaRoot . '/.jobs/' . $filename . '.json';
-            $options   = Data::read($job);
-
-            if (is_a($model, 'Kirby\Cms\User') === true) {
-                $file = $model->avatar();
-            } else {
-                $file = $model->file($options['filename']);
-            }
-
-            if (!$file || empty($options) === true) {
-                return false;
-            }
-
-            $kirby->thumb($file->root(), $thumb, $options);
-            F::remove($job);
-            return $url;
-        } catch (Throwable $e) {
-            return false;
-        }
     }
 }

@@ -181,7 +181,7 @@ class File extends ModelWithContent
      */
     public function asset(): Image
     {
-        return $this->asset = $this->asset ?? new Image($this->root(), $this->url());
+        return $this->asset = $this->asset ?? new Image($this->root());
     }
 
     /**
@@ -358,13 +358,23 @@ class File extends ModelWithContent
     }
 
     /**
+     * Create a unique media hash
+     *
+     * @return string
+     */
+    public function mediaHash(): string
+    {
+        return crc32($this->filename()) . '-' . $this->modified();
+    }
+
+    /**
      * Returns the absolute path to the file in the public media folder
      *
      * @return string
      */
     public function mediaRoot(): string
     {
-        return $this->parent()->mediaRoot() . '/' . $this->filename();
+        return $this->parent()->mediaRoot() . '/' . $this->mediaHash() . '/' . $this->filename();
     }
 
     /**
@@ -374,7 +384,7 @@ class File extends ModelWithContent
      */
     public function mediaUrl(): string
     {
-        return $this->parent()->mediaUrl() . '/' . $this->filename();
+        return $this->parent()->mediaUrl() . '/' . $this->mediaHash() . '/' . $this->filename();
     }
 
     /**

@@ -31,7 +31,7 @@ return [
 
         // create url and root
         $parent    = $file->parent();
-        $mediaRoot = $parent->mediaRoot();
+        $mediaRoot = $parent->mediaRoot() . '/' . $file->mediaHash();
         $dst       = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
         $thumb     = (new Filename($file->root(), $dst, $attributes))->toString();
         $thumbName = basename($thumb);
@@ -49,7 +49,7 @@ return [
             }
         }
 
-        return $parent->mediaUrl() . '/' . $thumbName;
+        return $parent->mediaUrl() . '/' . $file->mediaHash() . '/' . $thumbName;
 
     },
     'markdown' => function (App $kirby, string $text = null, array $options = []): string {

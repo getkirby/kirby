@@ -72,10 +72,10 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/pages/(:all)/(:any)',
+            'pattern' => 'media/pages/(:all)/(:any)/(:any)',
             'env'     => 'media',
-            'action'  => function ($path, $filename) use ($kirby) {
-                $page     = $kirby->page($path) ?? $kirby->site()->draft($path);
+            'action'  => function ($path, $hash, $filename) use ($kirby) {
+                $page = $kirby->page($path);
 
                 if ($page && $url = Media::link($page, $filename)) {
                     return Response::redirect($url, 307);
