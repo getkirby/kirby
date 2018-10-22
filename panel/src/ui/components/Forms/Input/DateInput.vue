@@ -79,7 +79,10 @@ export default {
       return isNaN(this.date.year()) ? "" : this.date.year();
     },
     years() {
-      return this.options(this.minDate.year(), this.maxDate.year());
+      const start = this.date.isBefore(this.minDate) ? this.date.year() : this.minDate.year();
+      const end   = this.date.isAfter(this.maxDate)  ? this.date.year() : this.maxDate.year();
+
+      return this.options(start, end);
     }
   },
   watch: {

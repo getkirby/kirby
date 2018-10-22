@@ -18,7 +18,10 @@
             @click="$refs.dropdown.toggle()"
           />
           <k-dropdown-content ref="dropdown" align="right">
-            <k-calendar :value="date" @input="onInput($event); $refs.dropdown.close()" />
+            <k-calendar
+              :value="date"
+              @input="onInput($event); $refs.dropdown.close()"
+            />
           </k-dropdown-content>
         </k-dropdown>
       </template>

@@ -6,11 +6,15 @@
         <k-select-input
           :options="months"
           :disabled="disabled"
+          :empty="false"
+          :required="true"
           v-model.number="month"
         />
         <k-select-input
           :options="years"
           :disabled="disabled"
+          :empty="false"
+          :required="true"
           v-model.number="year"
         />
       </span>
