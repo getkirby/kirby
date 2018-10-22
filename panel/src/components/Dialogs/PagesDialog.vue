@@ -1,7 +1,13 @@
 <template>
-  <k-dialog ref="dialog" class="k-pages-dialog" size="medium" @cancel="$emit('cancel')" @submit="submit">
+  <k-dialog
+    ref="dialog"
+    class="k-pages-dialog"
+    size="medium"
+    @cancel="$emit('cancel')"
+    @submit="submit"
+  >
     <template v-if="issue">
-      <k-box theme="negative" :text="issue" />
+      <k-box :text="issue" theme="negative" />
     </template>
     <template v-else>
 
@@ -12,7 +18,7 @@
 
       <k-list v-if="pages.length">
         <k-list-item
-          v-for="(page, index) in pages"
+          v-for="page in pages"
           :key="page.id"
           :text="page.title"
           :icon="{

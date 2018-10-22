@@ -10,9 +10,14 @@
     <template v-if="page.hasChildren || page.hasDrafts">
       <k-text v-html="$t('page.delete.confirm', { title: page.title })" />
       <div class="k-page-remove-warning">
-        <k-box v-html="$t('page.delete.confirm.subpages')" theme="negative" />
+        <k-box theme="negative" v-html="$t('page.delete.confirm.subpages')" />
       </div>
-      <k-form v-if="hasSubpages" :fields="fields" v-model="model" @submit="submit" />
+      <k-form
+        v-if="hasSubpages"
+        :fields="fields"
+        v-model="model"
+        @submit="submit"
+      />
     </template>
     <template v-else>
       <k-text @keydown.enter="submit" v-html="$t('page.delete.confirm', { title: page.title })" />
