@@ -59,14 +59,12 @@ export default {
       this.$refs.dateInput.focus();
     },
     onInput() {
-      if (this.dateValue === null) {
-        this.$emit("input", null);
+      if (!this.timeValue || !this.dateValue) {
+        this.$emit("input", "");
         return;
       }
 
-      let value = this.timeValue === null ?
-          this.dateValue :
-          this.dateValue + "T" + this.timeValue;
+      let value = this.dateValue + "T" + this.timeValue + ":00";
 
       this.$emit("input", value);
     },
@@ -82,11 +80,31 @@ export default {
       return dt.isValid() ? dt.format("HH:mm") : null;
     },
     setDate(value) {
-      this.dateValue = this.parseDate(value);
+      if (value && !this.timeValue) {
+        this.timeValue = dayjs().format("HH:mm");
+      }
+
+      if (!value) {
+        this.dateValue = null;
+        this.timeValue = null;
+      } else {
+        this.dateValue = this.parseDate(value);
+      }
+
       this.onInput();
     },
     setTime(value) {
-      this.timeValue = value;
+      if (value && !this.dateValue) {
+        this.dateValue = dayjs().format("YYYY-MM-DD");
+      }
+
+      if (!value) {
+        this.dateValue = null;
+        this.timeValue = null;
+      } else {
+        this.timeValue = value;
+      }
+
       this.onInput();
     },
     setTimeOptions() {
