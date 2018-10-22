@@ -284,12 +284,10 @@ export default {
   mounted() {
     this.$events.$on('keydown.esc', this.escape);
     this.$events.$on('keydown.cmd.s', this.close);
-    this.$events.$on("field.structure.close", this.escape);
   },
   destroyed() {
     this.$events.$off('keydown.esc', this.escape);
     this.$events.$off('keydown.cmd.s', this.close);
-    this.$events.$off("field.structure.close", this.escape);
   },
   methods: {
     makeItems(value) {
@@ -390,7 +388,6 @@ export default {
       return this.active === index;
     },
     jump(index, field) {
-      this.$events.$emit("field.structure.close");
       this.open(index, field);
     },
     displayText(field, value) {
