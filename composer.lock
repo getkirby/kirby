@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "189ea1ee8d0cd1418e081f8c4dd4a476",
-    "content-hash": "002580fdfcd847cc6e3c25823a39d27d",
+    "hash": "e1c4ce5dae88aa8b1154c33a0fc2d1dd",
+    "content-hash": "8153340640265c370db4eca2a712e940",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -148,12 +148,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "e79cd403fb77fc8963a99ecc30e80ddd885b3311"
+                "reference": "a9f129b99df316f847584d482c89c14a9f796e2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/e79cd403fb77fc8963a99ecc30e80ddd885b3311",
-                "reference": "e79cd403fb77fc8963a99ecc30e80ddd885b3311",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/a9f129b99df316f847584d482c89c14a9f796e2b",
+                "reference": "a9f129b99df316f847584d482c89c14a9f796e2b",
                 "shasum": ""
             },
             "require": {
@@ -201,7 +201,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2018-06-30 13:14:06"
+            "time": "2018-10-20 09:00:00"
         },
         {
             "name": "league/color-extractor",
@@ -810,12 +810,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "32e1aa524970130eb66e2170dca01705a9ad83ec"
+                "reference": "4ab6ea7c838ccb340883fd78915af079949cc64d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/32e1aa524970130eb66e2170dca01705a9ad83ec",
-                "reference": "32e1aa524970130eb66e2170dca01705a9ad83ec",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/4ab6ea7c838ccb340883fd78915af079949cc64d",
+                "reference": "4ab6ea7c838ccb340883fd78915af079949cc64d",
                 "shasum": ""
             },
             "require": {
@@ -862,7 +862,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-10-10 09:08:56"
+            "time": "2018-10-21 19:22:05"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -870,12 +870,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "818e26c1073334bfda112ba3ef34164a3cae4217"
+                "reference": "95e2be76e93c62ed4a377113125ffc3a31c18021"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/818e26c1073334bfda112ba3ef34164a3cae4217",
-                "reference": "818e26c1073334bfda112ba3ef34164a3cae4217",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/95e2be76e93c62ed4a377113125ffc3a31c18021",
+                "reference": "95e2be76e93c62ed4a377113125ffc3a31c18021",
                 "shasum": ""
             },
             "require": {
@@ -958,7 +958,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-10-07 19:02:16"
+            "time": "2018-10-21 00:33:01"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1673,12 +1673,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "538d4cebaca0a2eb7ec756278b6b5761ee1740c0"
+                "reference": "b57f1a90c9e2359129f95ba426781609c4aa0379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/538d4cebaca0a2eb7ec756278b6b5761ee1740c0",
-                "reference": "538d4cebaca0a2eb7ec756278b6b5761ee1740c0",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b57f1a90c9e2359129f95ba426781609c4aa0379",
+                "reference": "b57f1a90c9e2359129f95ba426781609c4aa0379",
                 "shasum": ""
             },
             "require": {
@@ -1749,7 +1749,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-10-10 05:14:22"
+            "time": "2018-10-21 05:48:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
