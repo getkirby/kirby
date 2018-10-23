@@ -90,6 +90,7 @@ export default {
   width: 0;
   height: 0;
   appearance: none;
+  opacity: 0;
 }
 .k-radio-input label {
   cursor: pointer;

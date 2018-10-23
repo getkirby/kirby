@@ -96,6 +96,7 @@ export default {
   appearance: none;
   width: 0;
   height: 0;
+  opacity: 0;
 }
 .k-checkbox-input-label {
   display: block;
