@@ -1,6 +1,6 @@
 <template>
   <header class="k-topbar">
-    <k-view>
+    <k-view v-if="user && view">
       <div class="k-topbar-wrapper">
         <k-dropdown class="k-topbar-menu">
           <k-button icon="bars" class="k-topbar-button k-topbar-menu-button" @click="$refs.menu.toggle()">
