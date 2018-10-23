@@ -190,7 +190,7 @@ class Remote
                 $this->curlopt[CURLOPT_CUSTOMREQUEST] = 'PATCH';
                 $this->curlopt[CURLOPT_POSTFIELDS]    = $this->postfields($this->options['data']);
                 break;
-            case 'DELET':
+            case 'DELETE':
                 $this->curlopt[CURLOPT_CUSTOMREQUEST] = 'DELETE';
                 $this->curlopt[CURLOPT_POSTFIELDS]    = $this->postfields($this->options['data']);
                 break;
