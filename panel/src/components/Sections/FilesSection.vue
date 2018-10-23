@@ -72,10 +72,10 @@ export default {
         return false;
       }
 
-      // add the upload api url
-      this.add.url = config.api + "/" + this.add.api;
-
-      return this.add;
+      return {
+        ...this.add,
+        url: config.api + "/" + this.add.api
+      };
 
     }
   },
