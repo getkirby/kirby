@@ -181,6 +181,17 @@ class Response
     }
 
     /**
+     * Creates a response for a file and
+     * sends the file content to the browser
+     *
+     * @return self
+     */
+    public static function file(string $file)
+    {
+        return new static(F::read($file), F::mime($file));
+    }
+
+    /**
      * Getter for single headers
      *
      * @param  string      $key   Name of the header

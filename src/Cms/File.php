@@ -273,9 +273,9 @@ class File extends ModelWithContent
                 // no break
             case 'markdown':
                 if ($this->type() === 'image') {
-                    return '![' . $this->alt() . '](' . $this->url() . ')';
+                    return '![' . $this->alt() . '](./' . $this->filename() . ')';
                 } else {
-                    return '[' . $this->filename() . '](' . $this->url() . ')';
+                    return '[' . $this->filename() . '](./' . $this->filename() . ')';
                 }
         }
     }

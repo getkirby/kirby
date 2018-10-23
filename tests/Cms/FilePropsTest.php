@@ -26,7 +26,7 @@ class FilePropsTest extends TestCase
         $file = $this->file();
 
         $this->assertInstanceOf(Image::class, $file->asset());
-        $this->assertEquals($file->url(), $file->asset()->url());
+        $this->assertEquals(null, $file->asset()->url());
     }
 
     public function testCollection()
@@ -70,7 +70,7 @@ class FilePropsTest extends TestCase
         $file = $page->file('test.pdf');
 
         $this->assertEquals('(file: test.pdf)', $file->dragText());
-        $this->assertEquals('[test.pdf](/media/pages/test/test.pdf)', $file->dragText('markdown'));
+        $this->assertEquals('[test.pdf](./test.pdf)', $file->dragText('markdown'));
     }
 
     public function testDragTextForImages()
@@ -87,7 +87,7 @@ class FilePropsTest extends TestCase
         $file = $page->file('test.jpg');
 
         $this->assertEquals('(image: test.jpg)', $file->dragText());
-        $this->assertEquals('![](/media/pages/test/test.jpg)', $file->dragText('markdown'));
+        $this->assertEquals('![](./test.jpg)', $file->dragText('markdown'));
     }
 
     public function testFilename()

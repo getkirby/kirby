@@ -109,13 +109,13 @@ class RouterTest extends TestCase
 
     public function testPageMediaRoute()
     {
-        $response = $this->app->call('media/pages/projects/project-a/cover.jpg');
+        $response = $this->app->call('media/pages/projects/project-a/1234-5678/cover.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testSiteMediaRoute()
     {
-        $response = $this->app->call('media/site/background.jpg');
+        $response = $this->app->call('media/site/1234-5678/background.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 

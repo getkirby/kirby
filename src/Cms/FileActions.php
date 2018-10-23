@@ -54,9 +54,6 @@ trait FileActions
             // rename the content file
             F::move($oldFile->contentFile(), $newFile->contentFile());
 
-            // create a new public version
-            $newFile->publish();
-
             return $newFile;
         });
     }
@@ -140,9 +137,6 @@ trait FileActions
             // store the content if necessary
             $file->save();
 
-            // create a new public file
-            $file->publish();
-
             // add the file to the list of siblings
             $file->siblings()->append($file->id(), $file);
 
@@ -177,13 +171,7 @@ trait FileActions
      */
     public function publish(): self
     {
-        $versions = glob($this->parent()->mediaRoot() . '/' . crc32($this->filename()) . '*', GLOB_ONLYDIR);
-
-        foreach ($versions as $garbage) {
-            Dir::remove($garbage);
-        }
-
-        F::copy($this->root(), $this->mediaRoot());
+        Media::publish($this->root(), $this->mediaRoot());
         return $this;
     }
 
@@ -221,9 +209,6 @@ trait FileActions
                 throw new LogicException('The file could not be created');
             }
 
-            // create a new public file
-            $file->publish();
-
             // return a fresh clone
             return $file->clone();
         });
@@ -236,13 +221,7 @@ trait FileActions
      */
     public function unpublish(): self
     {
-        // delete all thumbnails
-        foreach (F::similar($this->mediaRoot(), '-*') as $similar) {
-            F::remove($similar);
-        }
-
-        F::remove($this->mediaRoot());
-
+        Media::unpublish($this->parent()->mediaRoot(), $this->filename());
         return $this;
     }
 }

@@ -75,31 +75,21 @@ return function ($kirby) {
             'pattern' => 'media/pages/(:all)/(:any)/(:any)',
             'env'     => 'media',
             'action'  => function ($path, $hash, $filename) use ($kirby) {
-                $page = $kirby->page($path);
-
-                if ($page && $url = Media::link($page, $filename)) {
-                    return Response::redirect($url, 307);
-                }
+                return Media::link($kirby->page($path), $hash, $filename);
             }
         ],
         [
-            'pattern' => 'media/site/(:any)',
+            'pattern' => 'media/site/(:any)/(:any)',
             'env'     => 'media',
-            'action'  => function ($filename) use ($kirby) {
-                if ($url = Media::link($kirby->site(), $filename)) {
-                    return Response::redirect($url, 307);
-                }
+            'action'  => function ($hash, $filename) use ($kirby) {
+                return Media::link($kirby->site(), $hash, $filename);
             }
         ],
         [
-            'pattern' => 'media/users/(:any)/(:any)',
+            'pattern' => 'media/users/(:any)/(:any)/(:any)',
             'env'     => 'media',
-            'action'  => function ($id, $filename) use ($kirby) {
-                $user = $kirby->users()->find($id);
-
-                if ($user && $url = Media::link($user, $filename)) {
-                    return Response::redirect($url, 307);
-                }
+            'action'  => function ($id, $hash, $filename) use ($kirby) {
+                return Media::link($kirby->user($id), $hash, $filename);
             }
         ]
     ];

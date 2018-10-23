@@ -140,8 +140,7 @@ class User extends ModelWithContent
     public function avatar(): Avatar
     {
         return $this->avatar = $this->avatar ?? new Avatar([
-            'url'   => $this->mediaUrl() . '/profile.jpg',
-            'user'  => $this
+            'user' => $this
         ]);
     }
 
@@ -272,6 +271,16 @@ class User extends ModelWithContent
     public function exists(): bool
     {
         return is_file($this->root() . '/user.txt') === true;
+    }
+
+    /**
+     * File finder
+     *
+     * @return Avatar
+     */
+    public function file()
+    {
+        return $this->avatar();
     }
 
     /**

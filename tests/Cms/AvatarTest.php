@@ -155,7 +155,7 @@ class AvatarTest extends TestCase
             ]
         ]);
 
-        Dir::make($dir = $this->user()->mediaRoot());
+        Dir::make($dir = $this->user()->mediaRoot() . '/' . crc32('profile.jpg') . '-456');
 
         touch($image = $dir . '/profile.jpg');
         touch($thumb = $dir . '/profile-100x100.jpg');
@@ -174,7 +174,7 @@ class AvatarTest extends TestCase
     public function testUrl()
     {
         $avatar = $this->avatar();
-        $this->assertEquals('/media/users/f5c65c12abddabd8e5029f2189dc663884b332c0/profile.jpg', $avatar->url());
+        $this->assertEquals('/media/users/f5c65c12abddabd8e5029f2189dc663884b332c0/' . $avatar->mediaHash() . '/profile.jpg', $avatar->url());
 
         $avatar = $this->avatar([
             'url' => $url = 'https://cdn.example.com/users/example.jpg'

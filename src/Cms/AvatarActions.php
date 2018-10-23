@@ -116,7 +116,7 @@ trait AvatarActions
      */
     public function publish(): self
     {
-        F::copy($this->root(), $this->mediaRoot());
+        Media::publish($this->root(), $this->mediaRoot());
         return $this;
     }
 
@@ -162,13 +162,7 @@ trait AvatarActions
      */
     public function unpublish(): self
     {
-        // delete all thumbnails
-        foreach (F::similar($this->mediaRoot(), '-*') as $similar) {
-            F::remove($similar);
-        }
-
-        F::remove($this->mediaRoot());
-
+        Media::unpublish($this->user()->mediaRoot(), $this->filename());
         return $this;
     }
 }

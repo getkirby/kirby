@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
+use Kirby\Toolkit\F;
 
 /**
  * The Avatar class handles user images.
@@ -111,7 +112,7 @@ class Avatar extends Model
      */
     public function asset(): Image
     {
-        return $this->asset = $this->asset ?? new Image($this->root(), $this->url());
+        return $this->asset = $this->asset ?? new Image($this->root());
     }
 
     /**
@@ -152,13 +153,23 @@ class Avatar extends Model
     }
 
     /**
+     * Create a unique media hash
+     *
+     * @return string
+     */
+    public function mediaHash(): string
+    {
+        return crc32($this->filename()) . '-' . $this->modified();
+    }
+
+    /**
      * Returns the absolute path to the file in the public media folder
      *
      * @return string
      */
     public function mediaRoot(): string
     {
-        return $this->user()->mediaRoot() . '/' . $this->filename();
+        return $this->user()->mediaRoot() . '/' . $this->mediaHash() . '/' . $this->filename();
     }
 
     /**
@@ -168,7 +179,19 @@ class Avatar extends Model
      */
     public function mediaUrl(): string
     {
-        return $this->user()->mediaUrl() . '/' . $this->filename();
+        return $this->user()->mediaUrl() . '/' . $this->mediaHash() . '/' . $this->filename();
+    }
+
+    /**
+     * Get the file's last modification time.
+     *
+     * @param  string $format
+     * @param  string|null $handler date or strftime
+     * @return mixed
+     */
+    public function modified(string $format = null, string $handler = null)
+    {
+        return F::modified($this->root(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
     }
 
     /**

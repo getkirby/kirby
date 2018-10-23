@@ -37,9 +37,7 @@ return [
         $thumbName = basename($thumb);
         $job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
-        if (file_exists($thumb) === false || filemtime($this->root()) > filemtime($thumb)) {
-            F::remove($thumb);
-
+        if (file_exists($thumb) === false) {
             try {
                 Data::write($job, array_merge($attributes, [
                     'filename' => $file->filename()
@@ -93,11 +91,8 @@ return [
         $options  = $darkroom->preprocess($src, $options);
         $root     = (new Filename($src, $dst, $options))->toString();
 
-        // check if the thumbnail has to be regenerated
-        if (file_exists($root) !== true || filemtime($root) < filemtime($src)) {
-            F::copy($src, $root);
-            $darkroom->process($root, $options);
-        }
+        F::copy($src, $root);
+        $darkroom->process($root, $options);
 
         return $root;
 
