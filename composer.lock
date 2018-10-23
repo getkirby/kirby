@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e1c4ce5dae88aa8b1154c33a0fc2d1dd",
-    "content-hash": "8153340640265c370db4eca2a712e940",
+    "hash": "77b7f2eb40e7f87bc63726bb4dee2ffb",
+    "content-hash": "226600f126fc7ac6d2946978a7159828",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -148,12 +148,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "a9f129b99df316f847584d482c89c14a9f796e2b"
+                "reference": "bc0fd11bc455cc20ee4b5edabc63ebbf859324c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/a9f129b99df316f847584d482c89c14a9f796e2b",
-                "reference": "a9f129b99df316f847584d482c89c14a9f796e2b",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/bc0fd11bc455cc20ee4b5edabc63ebbf859324c7",
+                "reference": "bc0fd11bc455cc20ee4b5edabc63ebbf859324c7",
                 "shasum": ""
             },
             "require": {
@@ -201,7 +201,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2018-10-20 09:00:00"
+            "time": "2018-10-23 09:00:00"
         },
         {
             "name": "league/color-extractor",
@@ -1673,12 +1673,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b57f1a90c9e2359129f95ba426781609c4aa0379"
+                "reference": "27f782132fe6af0d0950bc635a6c51c7fc3fa7f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b57f1a90c9e2359129f95ba426781609c4aa0379",
-                "reference": "b57f1a90c9e2359129f95ba426781609c4aa0379",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/27f782132fe6af0d0950bc635a6c51c7fc3fa7f4",
+                "reference": "27f782132fe6af0d0950bc635a6c51c7fc3fa7f4",
                 "shasum": ""
             },
             "require": {
@@ -1749,7 +1749,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-10-21 05:48:00"
+            "time": "2018-10-23 05:11:21"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2901,12 +2901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "5e809aa18956a375dee32a6349ebc57099207509"
+                "reference": "81bb068ddda64926bdc43faa21cdd5887e37d101"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/5e809aa18956a375dee32a6349ebc57099207509",
-                "reference": "5e809aa18956a375dee32a6349ebc57099207509",
+                "url": "https://api.github.com/repos/symfony/process/zipball/81bb068ddda64926bdc43faa21cdd5887e37d101",
+                "reference": "81bb068ddda64926bdc43faa21cdd5887e37d101",
                 "shasum": ""
             },
             "require": {
@@ -2942,7 +2942,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-14 20:50:41"
+            "time": "2018-10-23 09:03:43"
         },
         {
             "name": "symfony/stopwatch",
