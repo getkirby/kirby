@@ -1,5 +1,5 @@
 <template>
-  <header v-if="isVisible" class="k-topbar">
+  <header class="k-topbar">
     <k-view>
       <div class="k-topbar-wrapper">
         <k-dropdown class="k-topbar-menu">
@@ -118,9 +118,6 @@ export default {
       } else {
         return null;
       }
-    },
-    isVisible() {
-      return this.user && !this.$route.meta.outside && this.view;
     }
   }
 };

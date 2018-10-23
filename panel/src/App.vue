@@ -3,9 +3,10 @@
     v-if="!$store.state.system.info.isBroken"
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
+    :data-topbar="!$route.meta.outside"
     class="k-panel"
   >
-    <k-topbar />
+    <k-topbar v-if="!$route.meta.outside" />
     <k-search v-if="$store.state.search" v-bind="$store.state.search" />
     <k-license-bar />
     <main class="k-panel-view">
@@ -140,12 +141,15 @@ b {
 }
 .k-panel-view {
   position: absolute;
-  top: 38px;
+  top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+}
+.k-panel[data-topbar] .k-panel-view {
+  top: 2.5rem;
 }
 .k-panel[data-loading] {
   animation: Loading 0.5s;
