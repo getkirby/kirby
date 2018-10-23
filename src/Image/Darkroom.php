@@ -68,15 +68,9 @@ class Darkroom
 
     public function preprocess(string $file, array $options = [])
     {
-        $options = $this->options($options);
-        $image   = new Image($file);
-
-        // pre-calculate the correct image size
-        if ($options['crop'] === false) {
-            $dimensions = $image->dimensions()->resize($options['width'], $options['height']);
-        } else {
-            $dimensions = $image->dimensions()->crop($options['width'], $options['height']);
-        }
+        $options    = $this->options($options);
+        $image      = new Image($file);
+        $dimensions = $image->dimensions()->thumb($options);
 
         $options['width']  = $dimensions->width();
         $options['height'] = $dimensions->height();

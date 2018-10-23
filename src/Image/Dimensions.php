@@ -381,6 +381,26 @@ class Dimensions
     }
 
     /**
+     * Resize and crop
+     *
+     * @params array $options
+     * @return self
+     */
+    public function thumb(array $options = [])
+    {
+        $width  = $options['width']  ?? null;
+        $height = $options['height'] ?? null;
+        $crop   = $options['crop']   ?? false;
+        $method = $crop !== false ? 'crop' : 'resize';
+
+        if ($width === null && $height === null) {
+            return $this;
+        }
+
+        return $this->$method($width, $height);
+    }
+
+    /**
      * Converts the dimensions object
      * to a plain PHP array
      *
