@@ -311,6 +311,15 @@ class File extends ModelWithContent
     }
 
     /**
+     * @param  array  $attr
+     * @return string
+     */
+    public function html(array $attr = []): string
+    {
+        return Html::img($this->url(), $attr);
+    }
+
+    /**
      * Returns the id
      *
      * @return string

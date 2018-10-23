@@ -137,6 +137,15 @@ class Avatar extends Model
         return 'profile.jpg';
     }
 
+    /**
+     * @param  array  $attr
+     * @return string
+     */
+    public function html(array $attr = []): string
+    {
+        return Html::img($this->url(), $attr);
+    }
+
     public function id(): string
     {
         return $this->root();
