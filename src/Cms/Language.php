@@ -141,7 +141,7 @@ class Language extends Model
      */
     public static function create(array $props): self
     {
-        $props['slug'] = Str::slug($props['slug'] ?? null);
+        $props['code'] = Str::slug($props['code'] ?? null);
         $kirby         = App::instance();
         $languages     = $kirby->languages();
         $site          = $kirby->site();
