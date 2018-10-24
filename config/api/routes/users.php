@@ -71,13 +71,6 @@ return [
         }
     ],
     [
-        'pattern' => 'users/(:any)/blueprint',
-        'method'  => 'GET',
-        'action'  => function (string $id) {
-            return $this->user($id)->blueprint();
-        }
-    ],
-    [
         'pattern' => 'users/(:any)/email',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
