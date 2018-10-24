@@ -13,7 +13,7 @@
       {{ page.title }}
       <k-button-group slot="left">
         <k-button
-          v-if="preview"
+          v-if="permissions.preview"
           :responsive="true"
           icon="open"
           @click="action('preview')"
@@ -141,16 +141,13 @@ export default {
     action(action) {
       switch (action) {
         case "preview":
-          if (this.preview === false) {
-            return false;
-          }
-
-          if (this.preview === true) {
-            window.open(this.page.url);
-            return true;
-          }
-
-          window.open(this.preview);
+          this.$api.pages.preview(this.page.id)
+            .then(url => {
+              window.open(url);
+            })
+            .catch(error => {
+              this.$store.dispatch("notification/error", error);
+            });
           break;
         case "rename":
           this.$refs.rename.open(this.page.id);
@@ -186,7 +183,6 @@ export default {
           this.page = page;
           this.blueprint = page.blueprint.name;
           this.permissions = page.options;
-          this.preview = page.blueprint.preview;
           this.tabs = page.blueprint.tabs;
           this.options = ready => {
             this.$api.pages.options(this.page.id).then(options => {

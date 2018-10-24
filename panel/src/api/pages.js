@@ -82,6 +82,12 @@ export default {
       return result;
     });
   },
+  preview(id) {
+    return this.get(id, { select: "previewUrl" })
+      .then(page => {
+        return page.previewUrl;
+      });
+  },
   update(id, data) {
     return api.patch(this.url(id), data);
   },

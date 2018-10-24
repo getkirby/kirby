@@ -1010,15 +1010,29 @@ class Page extends ModelWithContent
     /**
      * Draft preview Url
      *
-     * @return string
+     * @return string|null
      */
-    public function previewUrl(): string
+    public function previewUrl(): ?string
     {
-        if ($this->isDraft() === true) {
-            return $this->url() . '?token=' . $this->token();
-        } else {
-            return $this->url();
+
+        $preview = $this->blueprint()->preview();
+
+        if ($preview === false) {
+            return null;
         }
+
+        if ($preview === true) {
+            $url = $this->url();
+        } else {
+            $url = $preview;
+        }
+
+        if ($this->isDraft() === true) {
+            $url .= '?token=' . $this->token();
+        }
+
+        return $url;
+
     }
 
     /**

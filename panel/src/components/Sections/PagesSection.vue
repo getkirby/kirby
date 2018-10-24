@@ -99,8 +99,15 @@ export default {
           );
           break;
         case "preview":
-          window.open(page.url);
-          break;
+          this.$api.pages.preview(page.id)
+            .then(url => {
+              window.open(url);
+            })
+            .catch(error => {
+              this.$store.dispatch("notification/error", error);
+            });
+
+            break;
         case "rename":
           this.$refs.rename.open(page.id);
           break;

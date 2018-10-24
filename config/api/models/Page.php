@@ -59,6 +59,9 @@ return [
         'prev' => function (Page $page) {
             return $page->prevAll()->filterBy('isReadable', true)->last();
         },
+        'previewUrl' => function (Page $page) {
+            return $page->previewUrl();
+        },
         'siblings' => function (Page $page) {
             if ($page->isDraft() === true) {
                 return $page->parentModel()->children()->not($page);
@@ -79,7 +82,7 @@ return [
             return $page->title()->value();
         },
         'url' => function (Page $page) {
-            return $page->previewUrl();
+            return $page->url();
         },
     ],
     'type' => Page::class,

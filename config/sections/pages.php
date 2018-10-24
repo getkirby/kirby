@@ -152,7 +152,6 @@ return [
                     'icon'        => $item->panelIcon(),
                     'image'       => $item->panelImage($this->image, $thumb),
                     'link'        => $item->panelUrl(true),
-                    'url'         => $item->url(),
                     'status'      => $item->status(),
                     'permissions' => [
                         'sort'         => $permissions->can('sort'),
