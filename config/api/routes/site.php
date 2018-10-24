@@ -118,13 +118,6 @@ return [
         }
     ],
     [
-        'pattern' => 'site/files/(:any)/options',
-        'method'  => 'GET',
-        'action'  => function (string $filename) {
-            return $this->file(null, $filename)->permissions()->toArray();
-        }
-    ],
-    [
         'pattern' => 'site/files/(:any)/name',
         'method'  => 'PATCH',
         'action'  => function (string $filename) {
@@ -145,13 +138,6 @@ return [
         'method'  => 'POST',
         'action'  => function () {
             return $this->site()->find(true, ...$this->requestBody());
-        }
-    ],
-    [
-        'pattern' => 'site/options',
-        'method'  => 'GET',
-        'action'  => function () {
-            return $this->site()->permissions()->toArray();
         }
     ],
     [

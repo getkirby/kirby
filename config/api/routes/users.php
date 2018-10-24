@@ -92,13 +92,6 @@ return [
         }
     ],
     [
-        'pattern' => 'users/(:any)/options',
-        'method'  => 'GET',
-        'action'  => function (string $id) {
-            return $this->user($id)->permissions()->toArray();
-        }
-    ],
-    [
         'pattern' => 'users/(:any)/password',
         'method'  => 'PATCH',
         'action'  => function (string $id) {

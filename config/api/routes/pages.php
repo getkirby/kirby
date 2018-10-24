@@ -121,13 +121,6 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/files/(:any)/options',
-        'method'  => 'GET',
-        'action'  => function (string $id, string $filename) {
-            return $this->file($id, $filename)->permissions()->toArray();
-        }
-    ],
-    [
         'pattern' => 'pages/(:any)/files/(:any)/name',
         'method'  => 'PATCH',
         'action'  => function (string $id, string $filename) {
@@ -141,13 +134,6 @@ return [
             if ($section = $this->file($id, $filename)->blueprint()->section($sectionName)) {
                 return $section->toResponse();
             }
-        }
-    ],
-    [
-        'pattern' => 'pages/(:any)/options',
-        'method'  => 'GET',
-        'action'  => function (string $id) {
-            return $this->page($id)->permissions()->toArray();
         }
     ],
     [

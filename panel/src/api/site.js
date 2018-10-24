@@ -12,8 +12,9 @@ export default {
     return api.patch("site/title", { title: title });
   },
   options() {
-    return api.get("site/options").then(options => {
-      let result = [];
+    return api.get("site", {select: "options"}).then(site => {
+      const options = site.options;
+      let result    = [];
 
       result.push({
         click: "rename",
