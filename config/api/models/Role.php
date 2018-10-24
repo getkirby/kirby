@@ -13,6 +13,9 @@ return [
         'name' => function (Role $role) {
             return $role->name();
         },
+        'permissions' => function (Role $role) {
+            return $role->permissions()->toArray();
+        },
         'title' => function (Role $role) {
             return $role->title();
         },
