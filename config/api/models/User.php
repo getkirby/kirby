@@ -72,7 +72,7 @@ return [
             'email',
             'language',
             'name',
-            'role',
+            'role' => 'compact',
             'username'
         ],
         'auth' => [
