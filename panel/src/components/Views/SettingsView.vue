@@ -103,6 +103,11 @@ export default {
   methods: {
     fetch() {
 
+      if (this.multilang === false) {
+        this.languages = [];
+        return;
+      }
+
       this.$api
         .get("languages")
         .then(response => {
