@@ -147,6 +147,7 @@ class App
             'authentication' => include $root . '/authentication.php',
             'collections'    => include $root . '/collections.php',
             'data'           => include $root . '/data.php',
+            'debug'          => $this->option('debug', false),
             'models'         => include $root . '/models.php',
             'routes'         => array_merge(include $root . '/routes.php', $routes),
         ];

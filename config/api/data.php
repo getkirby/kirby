@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Exception\NotFoundException;
+
 /**
  * Api Data Definitions
  */
@@ -20,7 +22,12 @@ return [
             return $file;
         }
 
-        throw new Exception(sprintf('The file "%s" cannot be found', $filename));
+        throw new NotFoundException([
+            'key'  => 'file.notFound',
+            'data' => [
+                'filename' => $filename
+            ]
+        ]);
 
     },
     'kirby' => function () {
@@ -43,7 +50,12 @@ return [
             return $page;
         }
 
-        throw new Exception(sprintf('The page "%s" cannot be found', $id));
+        throw new NotFoundException([
+            'key'  => 'page.notFound',
+            'data' => [
+                'slug' => $id
+            ]
+        ]);
     },
     'site' => function () {
         return $this->kirby()->site();
@@ -60,7 +72,12 @@ return [
             return $user;
         }
 
-        throw new Exception(sprintf('The user "%s" cannot be found', $id));
+        throw new NotFoundException([
+            'key'  => 'user.notFound',
+            'data' => [
+                'name' => $id
+            ]
+        ]);
 
     },
     'users' => function () {
