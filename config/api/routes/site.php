@@ -125,7 +125,7 @@ return [
         }
     ],
     [
-        'pattern' => 'site/files/(:any)/rename',
+        'pattern' => 'site/files/(:any)/name',
         'method'  => 'PATCH',
         'action'  => function (string $filename) {
             return $this->file(null, $filename)->changeName($this->requestBody('name'));

@@ -128,7 +128,7 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/files/(:any)/rename',
+        'pattern' => 'pages/(:any)/files/(:any)/name',
         'method'  => 'PATCH',
         'action'  => function (string $id, string $filename) {
             return $this->file($id, $filename)->changeName($this->requestBody('name'));
