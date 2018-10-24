@@ -41,8 +41,9 @@ export default {
     return api.delete(this.url(page, filename));
   },
   options(page, filename, view) {
-    return api.get(this.url(page, filename, "options")).then(options => {
-      let result = [];
+    return api.get(this.url(page, filename), {select: "options"}).then(file => {
+      const options = file.options;
+      let result    = [];
 
       if (view === "list") {
         result.push({

@@ -47,8 +47,9 @@ export default {
     ];
   },
   options(id) {
-    return api.get(this.url(id, "options")).then(options => {
-      let result = [];
+    return api.get(this.url(id), {select: "options"}).then(user => {
+      const options = user.options;
+      let result    = [];
 
       result.push({
         click: "rename",

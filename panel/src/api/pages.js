@@ -31,8 +31,9 @@ export default {
     });
   },
   options(id, view = "view") {
-    return api.get(this.url(id, "options")).then(options => {
-      let result = [];
+    return api.get(this.url(id), {select: "options"}).then(page => {
+      const options = page.options;
+      let result    = [];
 
       if (view === "list") {
         result.push({
