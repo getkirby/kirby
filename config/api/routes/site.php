@@ -40,13 +40,6 @@ return [
         }
     ],
     [
-        'pattern' => 'site/blueprint',
-        'method'  => 'GET',
-        'action'  => function () {
-            return $this->site()->blueprint();
-        }
-    ],
-    [
         'pattern' => 'site/blueprints',
         'method'  => 'GET',
         'action'  => function () {
