@@ -57,9 +57,13 @@ trait AppPlugins
         return $this->extensions;
     }
 
-    protected function extendApi(array $api): array
+    protected function extendApi($api): array
     {
-        return $this->extensions['api'] = array_merge($this->extensions['api'], $api);
+        if (is_array($api) === true) {
+            return $this->extensions['api'] = array_merge($this->extensions['api'], $api);
+        } else {
+            return $this->extensions['api'];
+        }
     }
 
     protected function extendBlueprints(array $blueprints): array
@@ -275,6 +279,7 @@ trait AppPlugins
     {
         // register routes and hooks from options
         $this->extend([
+            'api'    => $this->options['api']    ?? [],
             'routes' => $this->options['routes'] ?? [],
             'hooks'  => $this->options['hooks']  ?? []
         ]);

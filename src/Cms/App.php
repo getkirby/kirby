@@ -140,16 +140,17 @@ class App
      */
     public function api(): Api
     {
-        $root   = static::$root . '/config/api';
-        $routes = $this->extensions['api'] ?? [];
+        $root       = static::$root . '/config/api';
+        $extensions = $this->extensions['api'] ?? [];
+        $routes     = (include $root . '/routes.php')($this);
 
         $api = [
-            'authentication' => include $root . '/authentication.php',
-            'collections'    => include $root . '/collections.php',
-            'data'           => include $root . '/data.php',
             'debug'          => $this->option('debug', false),
-            'models'         => include $root . '/models.php',
-            'routes'         => array_merge(include $root . '/routes.php', $routes),
+            'authentication' => include $root . '/authentication.php',
+            'collections'    => array_merge($extensions['collections'] ?? [], include $root . '/collections.php'),
+            'data'           => array_merge($extensions['data']        ?? [], include $root . '/data.php'),
+            'models'         => array_merge($extensions['models']      ?? [], include $root . '/models.php'),
+            'routes'         => array_merge($routes, $extensions['routes'] ?? []),
         ];
 
         return $this->api = $this->api ?? new Api($api);

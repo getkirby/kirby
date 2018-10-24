@@ -1,9 +1,5 @@
 <?php
 
-if ($this->option('languages', false) === false) {
-    return [];
-}
-
 /**
  * Roles Routes
  */

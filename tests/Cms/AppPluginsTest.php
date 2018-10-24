@@ -22,11 +22,13 @@ class AppPluginsTest extends TestCase
 
         $kirby = new App([
             'api' => [
-                [
-                    'pattern' => 'awesome',
-                    'action'  => function () {
-                        return 'nice';
-                    }
+                'routes' => [
+                    [
+                        'pattern' => 'awesome',
+                        'action'  => function () {
+                            return 'nice';
+                        }
+                    ]
                 ]
             ]
         ]);
