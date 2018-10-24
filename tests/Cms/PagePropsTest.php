@@ -380,6 +380,77 @@ class PagePropsTest extends TestCase
         $this->assertEquals('/', $app->site()->find('home')->url());
     }
 
+    public function testPreviewUrl()
+    {
+
+        $app = new App([
+            'urls' => [
+                'index' => '/'
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $this->assertEquals('/test', $page->previewUrl());
+
+    }
+
+    public function previewUrlProvider()
+    {
+        return [
+            [null, '/test', false],
+            [null, '/test', true],
+            [true, '/test', false],
+            [true, '/test', true],
+            ['/something/different', '/something/different', false],
+            ['/something/different', '/something/different', true],
+            ['{{ site.url }}#{{ page.slug }}', '/#test', false],
+            ['{{ site.url }}#{{ page.slug }}', '/#test', true],
+            [false, null, false],
+            [false, null, true],
+        ];
+    }
+
+    /**
+     * @dataProvider previewUrlProvider
+     */
+    public function testCustomPreviewUrl($input, $expected, $draft)
+    {
+
+        $app = new App([
+            'urls' => [
+                'index' => '/'
+            ]
+        ]);
+
+        $options = [];
+
+        if ($input !== null) {
+            $options = [
+                'preview' => $input
+            ];
+        }
+
+        // simple
+        $page = new Page([
+            'slug' => 'test',
+            'isDraft' => $draft,
+            'blueprint' => [
+                'name'    => 'test',
+                'options' => $options
+            ]
+        ]);
+
+        if ($draft === true && $expected !== null) {
+            $expected .= '?token=' . sha1($page->id() . $page->template());
+        }
+
+        $this->assertEquals($expected, $page->previewUrl());
+
+    }
+
     public function testSlug()
     {
         $page = new Page(['slug' => 'test']);
