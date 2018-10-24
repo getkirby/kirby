@@ -94,7 +94,7 @@ export default {
         case "create":
           this.$refs.create.open(
             this.link || this.parent,
-            this.parent + '/blueprints',
+            this.parent + '/children/blueprints',
             this.name
           );
           break;
