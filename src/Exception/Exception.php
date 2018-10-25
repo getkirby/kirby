@@ -24,9 +24,9 @@ class Exception extends \Exception
     public function __construct($args = [])
     {
         // Set data and httpCode from provided arguments or defaults
-        $this->data = $args['data'] ?? static::$defaultData;
+        $this->data     = $args['data']     ?? static::$defaultData;
         $this->httpCode = $args['httpCode'] ?? static::$defaultHttpCode;
-        $this->details = $args['details'] ?? static::$defaultDetails;
+        $this->details  = $args['details']  ?? static::$defaultDetails;
 
         if (is_string($args) === true) {
             $this->isTranslated = false;

@@ -60,8 +60,9 @@ class RouterTest extends TestCase
     }
 
     /**
-     * @expectedException        Exception
+     * @expectedException        InvalidArgumentException
      * @expectedExceptionMessage Invalid routing method: KIRBY
+     * @expectedExceptionCode    400
      */
     public function testFindWithNonexistingMethod()
     {
@@ -72,6 +73,7 @@ class RouterTest extends TestCase
     /**
      * @expectedException        Exception
      * @expectedExceptionMessage No route found for path: "a" and request method: "GET"
+     * @expectedExceptionCode    404
      */
     public function testFindNonexistingRoute()
     {

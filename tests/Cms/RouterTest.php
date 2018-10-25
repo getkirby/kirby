@@ -202,4 +202,13 @@ class RouterTest extends TestCase
 
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid routing method: WURST
+     * @expectedExceptionCode 400
+     */
+    public function testBadMethodRoute()
+    {
+        $this->app->call('/', 'WURST');
+    }
 }

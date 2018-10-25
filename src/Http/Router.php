@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Exception;
+use InvalidArgumentException;
 
 /**
  * @package   Kirby Http
@@ -52,7 +53,7 @@ class Router
     {
         foreach ($routes as $props) {
             if (isset($props['pattern'], $props['action']) === false) {
-                throw new Exception('Invalid route parameters');
+                throw new InvalidArgumentException('Invalid route parameters');
             }
 
             $methods  = array_map('trim', explode('|', strtoupper($props['method'] ?? 'GET')));
@@ -102,7 +103,7 @@ class Router
     public function find(string $path, string $method)
     {
         if (isset($this->routes[$method]) === false) {
-            throw new Exception('Invalid routing method: ' . $method);
+            throw new InvalidArgumentException('Invalid routing method: ' . $method, 400);
         }
 
         // remove leading and trailing slashes
@@ -116,7 +117,7 @@ class Router
             }
         }
 
-        throw new Exception('No route found for path: "' . $path . '" and request method: "' . $method . '"');
+        throw new Exception('No route found for path: "' . $path . '" and request method: "' . $method . '"', 404);
     }
 
     /**
