@@ -3,6 +3,17 @@
 [![Build Status](https://travis-ci.com/k-next/kirby.svg?branch=master)](https://travis-ci.com/k-next/kirby)
 [![Coverage Status](https://coveralls.io/repos/github/k-next/kirby/badge.svg?branch=master)](https://coveralls.io/github/k-next/kirby?branch=master)
 
+## Feature suggestions
+
+If you want to suggest features or enhancements for Kirby, please use our Ideas repository:  
+https://github.com/k-next/ideas/issues
+
+## Bug reports
+
+Please post all bug reports in our issue tracker:   
+https://github.com/k-next/kirby/issues
+
+
 ## Installation
 
 ```
