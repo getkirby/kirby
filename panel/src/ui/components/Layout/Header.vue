@@ -80,7 +80,9 @@ export default {
     tab() {
       this.currentTab = this.tab;
     },
-    tabs() {
+    tabs(tabs) {
+      this.visibleTabs   = tabs,
+      this.invisibleTabs = [];
       this.resize();
     }
   },
