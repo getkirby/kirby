@@ -35,7 +35,7 @@
       </ul>
     </section>
 
-    <section class="k-languages" v-if="multilang">
+    <section v-if="multilang" class="k-languages">
 
       <template v-if="languages.length > 0">
         <section class="k-languages-section">
@@ -58,7 +58,7 @@
       <template v-else-if="languages.length === 0">
         <header>
           <k-headline>{{ $t('languages') }}</k-headline>
-          <k-button  icon="add" @click="$refs.create.open()">{{ $t('language.create') }}</k-button>
+          <k-button icon="add" @click="$refs.create.open()">{{ $t('language.create') }}</k-button>
         </header>
         <k-empty icon="globe" @click="$refs.create.open()">{{ $t('languages.empty') }}</k-empty>
       </template>
