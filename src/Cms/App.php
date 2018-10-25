@@ -646,7 +646,7 @@ class App
         }
 
         if ($draft = $site->draft($path)) {
-            if ($draft->isVerified(get('token'))) {
+            if ($this->user() || $draft->isVerified(get('token'))) {
                 return $draft;
             }
         }
