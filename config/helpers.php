@@ -63,7 +63,7 @@ function csrf(string $check = null)
         return $token;
     } else {
         // argument has been passed, check the token
-        return $check === $session->get('csrf');
+        return hash_equals($check, $session->get('csrf')) === true;
     }
 }
 

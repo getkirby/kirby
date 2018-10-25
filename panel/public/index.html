@@ -360,7 +360,9 @@
     <div id="app"></div>
 
     <script>
-      window.panel = {};
+      window.panel = {
+        csrf: "dev"
+      };
     </script>
     <script src="<%= webpackConfig.output.publicPath %>js/plugins.js"></script>
     <script src="<%= process.env.VUE_APP_DEV_SERVER %>/media/plugins/index.js"></script>

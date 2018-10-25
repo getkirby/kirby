@@ -17,6 +17,9 @@ export default {
       options.headers["x-language"] = store.state.languages.current.code;
     }
 
+    // add the csrf token to every request if it has been set
+    options.headers["x-csrf"] = window.panel.csrf;
+
     api.config.onStart();
     this.running++;
 
