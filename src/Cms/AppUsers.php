@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\PermissionException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field;
 use Kirby\Session\Session;
@@ -13,8 +15,21 @@ use Throwable;
 
 trait AppUsers
 {
-    protected function currentUserFromBasicAuth(string $authorization)
+    public function currentUserFromBasicAuth(string $authorization)
     {
+        if (($this->options['api']['basicAuth'] ?? false) !== true) {
+            throw new PermissionException('Basic authentication is not activated');
+        }
+
+        if (Str::startsWith($authorization, 'Basic ') !== true) {
+            throw new InvalidArgumentException('Invalid authorization header');
+        }
+
+        // only allow basic auth when https is enabled
+        if ($this->request()->url()->scheme() !== 'https') {
+            throw new PermissionException('Basic authentication is only allowed over HTTPS');
+        }
+
         $credentials = base64_decode(substr($authorization, 6));
         $id          = Str::before($credentials, ':');
         $password    = Str::after($credentials, ':');
@@ -28,7 +43,7 @@ trait AppUsers
         return null;
     }
 
-    protected function currentUserFromUsername(string $username)
+    public function currentUserFromUsername(string $username)
     {
         if ($user = $this->users()->find($username)) {
             // Init the user language
@@ -39,7 +54,7 @@ trait AppUsers
         return null;
     }
 
-    protected function currentUserFromSession($session = null)
+    public function currentUserFromSession($session = null)
     {
         // use passed session options or session object if set
         if (is_array($session)) {
@@ -90,7 +105,7 @@ trait AppUsers
 
                 return $this;
             default:
-                if ($user = $this->users()->find($who)) {
+                if ($user = $this->currentUserFromUsername($who)) {
                     $this->user = $user;
                     return $this;
                 }
@@ -155,7 +170,7 @@ trait AppUsers
             $basicAuth     = $this->options['api']['basicAuth'] ?? false;
             $authorization = $this->request()->headers()['Authorization'] ?? '';
 
-            if ($basicAuth === true && Str::startsWith($authorization, 'Basic ') === true) {
+            if ($basicAuth === true) {
                 return $this->user = $this->currentUserFromBasicAuth($authorization);
             } else {
                 return $this->user = $this->currentUserFromSession($session);

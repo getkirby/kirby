@@ -3,7 +3,8 @@
 return function () {
 
     // get all api options
-    $options   = $this->kirby()->option('api', []);
+    $kirby     = $this->kirby();
+    $options   = $kirby->option('api', []);
     $basicAuth = $options['basicAuth'] ?? false;
 
     // check for a valid csrf
@@ -17,13 +18,13 @@ return function () {
         $fromSession = $options['csrf'] ?? csrf();
 
         // compare both tokens
-        if (hash_equals($fromHeader, $fromSession) !== true) {
+        if (hash_equals((string)$fromHeader, (string)$fromSession) !== true) {
             throw new Exception('Invalid csrf token', 403);
         }
 
     }
 
-    if ($user = $this->user()) {
+    if ($user = $kirby->user()) {
         return $user;
     }
 
