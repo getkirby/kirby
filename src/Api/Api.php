@@ -271,8 +271,6 @@ class Api
         try {
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
-            error_log($e);
-
             if (is_a($e, 'Kirby\Exception\Exception') === true) {
                 $result = ['status' => 'error'] + $e->toArray();
             } else {
@@ -282,7 +280,7 @@ class Api
                     'message'   => $e->getMessage(),
                     'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
                     'line'      => $e->getLine(),
-                    'code'      => 500
+                    'code'      => empty($e->getCode()) === false ? $e->getCode() : 500
                 ];
             }
         }

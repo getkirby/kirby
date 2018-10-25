@@ -170,7 +170,7 @@ trait AppUsers
             $basicAuth     = $this->options['api']['basicAuth'] ?? false;
             $authorization = $this->request()->headers()['Authorization'] ?? '';
 
-            if ($basicAuth === true) {
+            if ($basicAuth === true && Str::startsWith($authorization, 'Basic ') === true) {
                 return $this->user = $this->currentUserFromBasicAuth($authorization);
             } else {
                 return $this->user = $this->currentUserFromSession($session);
