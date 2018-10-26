@@ -640,14 +640,14 @@ $structure-item-height: 38px;
 }
 .k-structure-form-header {
   height: $structure-item-height;
-  padding: 0 1.5rem;
+  padding: 0 .75rem;
   border-bottom: 1px dashed $color-border;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .k-structure-form-fields {
-  padding: 1.5rem 1.5rem 2rem;
+  padding: 2rem 2.5rem 2.5rem;
 }
 
 
