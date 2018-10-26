@@ -38,7 +38,6 @@ trait PageActions
 
             // actually move the page on disk
             if ($oldPage->exists() === true) {
-                error_log($newPage->root() . '->' . $newPage->root());
                 Dir::move($oldPage->root(), $newPage->root());
             }
 

@@ -121,7 +121,6 @@ class Translation
         try {
             return new Translation($code, array_merge(Data::read($root), $inject));
         } catch (Exception $e) {
-            error_log(sprintf('The translation "%s" could not be loaded', $code));
             return new Translation($code, []);
         }
     }

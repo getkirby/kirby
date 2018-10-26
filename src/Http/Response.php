@@ -111,7 +111,6 @@ class Response
         try {
             return $this->send();
         } catch (Throwable $e) {
-            error_log($e);
             return '';
         }
     }

@@ -54,7 +54,6 @@ trait AppErrors
             }
         } else {
             $handler = new CallbackHandler(function ($exception, $inspector, $run) {
-                error_log($exception);
 
                 $fatal = $this->option('fatal');
 

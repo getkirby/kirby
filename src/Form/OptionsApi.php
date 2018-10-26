@@ -55,7 +55,6 @@ class OptionsApi
         $content = @file_get_contents($this->url());
 
         if (empty($content) === true) {
-            error_log('The options could not be fetched from: ' . $this->url());
             return [];
         }
 

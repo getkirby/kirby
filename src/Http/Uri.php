@@ -188,7 +188,6 @@ class Uri
         try {
             return $this->toString();
         } catch (Throwable $e) {
-            error_log($e);
             return '';
         }
     }
