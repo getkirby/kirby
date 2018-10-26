@@ -54,7 +54,6 @@ trait AppErrors
             }
         } else {
             $handler = new CallbackHandler(function ($exception, $inspector, $run) {
-
                 $fatal = $this->option('fatal');
 
                 if (is_a($fatal, 'Closure') === true) {
