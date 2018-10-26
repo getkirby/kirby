@@ -96,8 +96,8 @@ class BlueprintTest extends TestCase
                     [
                         'width'    => '1/1',
                         'sections' => [
-                            'content' => [
-                                'name'   => 'content',
+                            'main-fields' => [
+                                'name'   => 'main-fields',
                                 'type'   => 'fields',
                                 'fields' => $fields
                             ]
