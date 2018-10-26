@@ -91,8 +91,8 @@ $list-item-height: 38px;
 }
 .k-list-item .k-sort-handle {
   position: absolute;
-  left: -$list-item-height;
-  width: $list-item-height;
+  left: -1.5rem;
+  width: 1.5rem;
   height: $list-item-height;
   color: $color-dark;
   opacity: 0;
@@ -100,6 +100,12 @@ $list-item-height: 38px;
   cursor: -webkit-grab;
   will-change: opacity, color;
   transition: opacity .3s;
+
+  @media screen and (min-width: $breakpoint-small) {
+    left: -$list-item-height;
+    width: $list-item-height;
+  }
+
 }
 .k-list-item .k-sort-handle:active {
   cursor: -webkit-grabbing;
