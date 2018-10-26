@@ -182,9 +182,9 @@ return [
                 'accept'     => $this->accept,
                 'multiple'   => $multiple,
                 'api'        => $this->parent->apiUrl(true) . '/files',
-                'attributes' => [
+                'attributes' => array_filter([
                     'template' => $this->template
-                ]
+                ])
             ];
 
         }

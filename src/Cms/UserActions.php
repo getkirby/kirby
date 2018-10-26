@@ -147,6 +147,15 @@ trait UserActions
 
         $user = new static($data);
 
+        // create a form for the user
+        $form = Form::for($user, [
+            'values' => $props['content'] ?? []
+        ]);
+
+        // inject the content
+        $user = $user->clone(['content' => $form->data()]);
+
+        // run the hook
         return $user->commit('create', [$user, $props], function ($user, $props) {
 
             // try to create the directory

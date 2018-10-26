@@ -124,6 +124,15 @@ trait FileActions
         $file   = new static($props);
         $upload = new Image($props['source']);
 
+        // create a form for the file
+        $form = Form::for($file, [
+            'values' => $props['content'] ?? []
+        ]);
+
+        // inject the content
+        $file = $file->clone(['content' => $form->data()]);
+
+        // run the hook
         return $file->commit('create', [$file, $upload], function ($file, $upload) {
 
             // delete all public versions

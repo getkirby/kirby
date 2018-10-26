@@ -122,6 +122,76 @@ class FileActionsTest extends TestCase
     /**
      * @dataProvider parentProvider
      */
+    public function testCreateWithDefaults($parent)
+    {
+        $source = $this->fixtures . '/source.md';
+
+        // create the dummy source
+        F::write($source, '# Test');
+
+        $result = File::create([
+            'filename' => 'test.md',
+            'source'   => $source,
+            'parent'   => $parent,
+            'blueprint' => [
+                'name' => 'test',
+                'fields' => [
+                    'a'  => [
+                        'type'    => 'text',
+                        'default' => 'A'
+                    ],
+                    'b' => [
+                        'type'    => 'textarea',
+                        'default' => 'B'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('A', $result->a()->value());
+        $this->assertEquals('B', $result->b()->value());
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testCreateWithDefaultsAndContent($parent)
+    {
+        $source = $this->fixtures . '/source.md';
+
+        // create the dummy source
+        F::write($source, '# Test');
+
+        $result = File::create([
+            'content' => [
+                'a' => 'Custom A'
+            ],
+            'filename' => 'test.md',
+            'source'   => $source,
+            'parent'   => $parent,
+            'blueprint' => [
+                'name' => 'test',
+                'fields' => [
+                    'a'  => [
+                        'type'    => 'text',
+                        'default' => 'A'
+                    ],
+                    'b' => [
+                        'type'    => 'textarea',
+                        'default' => 'B'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('Custom A', $result->a()->value());
+        $this->assertEquals('B', $result->b()->value());
+
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
     public function testCreateHooks($parent)
     {
         $phpunit = $this;

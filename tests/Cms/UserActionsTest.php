@@ -98,6 +98,57 @@ class UserActionsTest extends TestCase
         $this->assertEquals('editor', $user->role());
     }
 
+    public function testCreateWithDefaults()
+    {
+        $user = User::create([
+            'email' => 'new@domain.com',
+            'role'  => 'editor',
+            'blueprint' => [
+                'name' => 'editor',
+                'fields' => [
+                    'a'  => [
+                        'type'    => 'text',
+                        'default' => 'A'
+                    ],
+                    'b' => [
+                        'type'    => 'textarea',
+                        'default' => 'B'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('A', $user->a()->value());
+        $this->assertEquals('B', $user->b()->value());
+    }
+
+    public function testCreateWithDefaultsAndContent()
+    {
+        $user = User::create([
+            'email' => 'new@domain.com',
+            'role'  => 'editor',
+            'content' => [
+                'a' => 'Custom A'
+            ],
+            'blueprint' => [
+                'name' => 'editor',
+                'fields' => [
+                    'a'  => [
+                        'type'    => 'text',
+                        'default' => 'A'
+                    ],
+                    'b' => [
+                        'type'    => 'textarea',
+                        'default' => 'B'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('Custom A', $user->a()->value());
+        $this->assertEquals('B', $user->b()->value());
+    }
+
     public function testDelete()
     {
         $user = $this->app->user('editor@domain.com');
