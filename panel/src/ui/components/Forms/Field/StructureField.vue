@@ -628,7 +628,6 @@ $structure-item-height: 38px;
   left: 0;
   z-index: 2;
   height: 100vh;
-  background: red;
 }
 .k-structure-form {
   position: relative;
