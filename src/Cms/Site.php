@@ -255,7 +255,11 @@ class Site extends ModelWithContent
             return $this->errorPage;
         }
 
-        return $this->errorPage = $this->find($this->errorPageId());
+        if ($error = $this->find($this->errorPageId())) {
+            return $this->errorPage = $error;
+        }
+
+        throw new LogicException('The error page is missing');
     }
 
     /**
@@ -289,7 +293,11 @@ class Site extends ModelWithContent
             return $this->homePage;
         }
 
-        return $this->homePage ?? $this->find($this->homePageId());
+        if ($home = $this->find($this->homePageId())) {
+            return $this->homePage = $home;
+        }
+
+        throw new LogicException('The home page is missing');
     }
 
     /**
