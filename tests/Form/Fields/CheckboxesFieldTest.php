@@ -52,7 +52,7 @@ class CheckboxesFieldTest extends TestCase
         ]);
 
         $this->assertEquals(['a', 'b'], $field->default());
-        $this->assertEquals(['a', 'b'], $field->value());
+        $this->assertEquals(['a', 'b'], $field->data(true));
     }
 
     public function testStringConversion()

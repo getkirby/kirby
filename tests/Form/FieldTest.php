@@ -125,8 +125,7 @@ class FieldTest extends TestCase
 
         $this->assertEquals('test', $field->default());
         $this->assertEquals('test', $field->default);
-        $this->assertEquals('test', $field->value());
-        $this->assertEquals('test', $field->value);
+        $this->assertEquals('test', $field->data(true));
 
         // don't overwrite existing values
         $field = new Field('test', [
@@ -139,6 +138,7 @@ class FieldTest extends TestCase
         $this->assertEquals('test', $field->default);
         $this->assertEquals('something', $field->value());
         $this->assertEquals('something', $field->value);
+        $this->assertEquals('something', $field->data(true));
     }
 
     public function testDisabled()
