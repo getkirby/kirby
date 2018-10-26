@@ -410,6 +410,15 @@ class StrTest extends TestCase
 
         // with different ellipsis character
         $this->assertEquals('Super---', Str::short($string, 5, '---'));
+
+        // with null
+        $this->assertEquals('', Str::short(null, 5));
+
+        // with number
+        $this->assertEquals(12345, Str::short(12345, 5));
+
+        // with long number
+        $this->assertEquals('12345…', Str::short(123456, 5));
     }
 
     public function testSlug()
