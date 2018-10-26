@@ -45,6 +45,24 @@ class ATest extends TestCase
         ], A::get($array, ['cat', 'elephant'], 'toot'));
     }
 
+    public function testGetWithDotNotation()
+    {
+        $data = [
+            'grandma' => $grandma = [
+                'mother' => $mother = [
+                    'child' => $child = 'test'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($grandma, A::get($data, 'grandma'));
+        $this->assertEquals($mother,  A::get($data, 'grandma.mother'));
+        $this->assertEquals($child,   A::get($data, 'grandma.mother.child'));
+
+        // with default
+        $this->assertEquals('default', A::get($data, 'grandma.mother.sister', 'default'));
+    }
+
     public function testMerge()
     {
 

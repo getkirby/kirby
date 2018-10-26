@@ -19,6 +19,7 @@ use Kirby\Http\Visitor;
 use Kirby\Image\Darkroom;
 use Kirby\Session\AutoSession as Session;
 use Kirby\Text\KirbyTag;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Dir;
@@ -517,7 +518,7 @@ class App
      */
     public function option(string $key, $default = null)
     {
-        return $this->options[$key] ?? $default;
+        return A::get($this->options, $key, $default);
     }
 
     /**

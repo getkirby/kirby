@@ -18,6 +18,36 @@ class AppTest extends TestCase
         $this->assertInstanceOf(Roles::class, $app->roles());
     }
 
+    public function testOption()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'foo' => 'bar'
+            ]
+        ]);
+
+        $this->assertEquals('bar', $app->option('foo'));
+    }
+
+    public function testOptionWithDotNotation()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'mother' => [
+                    'child' => 'test'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('test', $app->option('mother.child'));
+    }
+
     public function testRolesFromFixtures()
     {
         $app = new App([

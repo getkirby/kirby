@@ -59,8 +59,31 @@ class A
             return $result;
         }
 
-        // get a single key or return the default
-        return $array[$key] ?? $default;
+        if (isset($array[$key]) === true) {
+            return $array[$key];
+        }
+
+        // support dot notation
+        if (strpos($key, '.') !== false) {
+
+            $keys = explode('.', $key);
+
+            foreach ($keys as $innerKey) {
+
+                if (isset($array[$innerKey]) === false) {
+                    return $default;
+                }
+
+                $array = $array[$innerKey];
+
+            }
+
+            return $array;
+
+        }
+
+        return $default;
+
     }
 
     /**
