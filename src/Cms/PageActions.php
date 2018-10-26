@@ -327,7 +327,7 @@ trait PageActions
         ]);
 
         // inject the content
-        $page = $page->clone(['content' => $form->data()]);
+        $page = $page->clone(['content' => $form->data(true)]);
 
         // run the hooks and creation action
         $page = $page->commit('create', [$page, $props], function ($page, $props) {

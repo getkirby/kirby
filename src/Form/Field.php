@@ -49,27 +49,26 @@ class Field extends Component
 
         parent::__construct($type, $attrs);
 
-        // apply the default value if the field is empty
-        if ($this->isEmpty() === true) {
-            $this->value = $this->default;
-        }
-
         $this->validate();
     }
 
-    public function data()
+    public function data($default = false)
     {
         $save = $this->options['save'] ?? true;
 
         if ($save === false) {
-            return null;
+            $value = null;
+        } elseif (is_callable($save) === true) {
+            $value = $save->call($this, $this->value);
+        } else {
+            $value = $this->value;
         }
 
-        if (is_callable($save) === true) {
-            return $save->call($this, $this->value);
+        if ($default === true && $this->isEmpty($value)) {
+            $value = $this->default();
         }
 
-        return $this->value;
+        return $value;
     }
 
     protected function defaults(): array

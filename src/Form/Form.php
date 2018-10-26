@@ -70,13 +70,13 @@ class Form
         }
     }
 
-    public function data(): array
+    public function data($defaults = false): array
     {
         $data = [];
 
         foreach ($this->fields as $field) {
             if ($field->save() !== false) {
-                $data[$field->name()] = $field->data();
+                $data[$field->name()] = $field->data($defaults);
             }
         }
 

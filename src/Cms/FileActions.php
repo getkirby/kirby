@@ -130,7 +130,7 @@ trait FileActions
         ]);
 
         // inject the content
-        $file = $file->clone(['content' => $form->data()]);
+        $file = $file->clone(['content' => $form->data(true)]);
 
         // run the hook
         return $file->commit('create', [$file, $upload], function ($file, $upload) {
