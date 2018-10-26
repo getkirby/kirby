@@ -65,22 +65,36 @@ class Dir
      * Get all subdirectories
      *
      * @param string $dir
+     * @param bool $absolute
      * @return array
      */
-    public static function dirs(string $dir, array $ignore = null): array
+    public static function dirs(string $dir, array $ignore = null, bool $absolute = false): array
     {
-        return array_filter(static::read($dir, $ignore), 'is_dir');
+        $result = array_values(array_filter(static::read($dir, $ignore, true), 'is_dir'));
+
+        if ($absolute !== true) {
+            $result = array_map('basename', $result);
+        }
+
+        return $result;
     }
 
     /**
      * Get all files
      *
      * @param string $dir
+     * @param bool $absolute
      * @return array
      */
-    public static function files(string $dir, array $ignore = null): array
+    public static function files(string $dir, array $ignore = null, bool $absolute = false): array
     {
-        return array_filter(static::read($dir, $ignore), 'is_file');
+        $result = array_values(array_filter(static::read($dir, $ignore, true), 'is_file'));
+
+        if ($absolute !== true) {
+            $result = array_map('basename', $result);
+        }
+
+        return $result;
     }
 
     /**
@@ -263,15 +277,31 @@ class Dir
      *
      * @param   string  $dir The path of directory
      * @param   array   $ignore Optional array with filenames, which should be ignored
+     * @param   bool    $absolute If true, the full path for each item will be returned
      * @return  array   An array of filenames
      */
-    public static function read(string $dir, array $ignore = null): array
+    public static function read(string $dir, array $ignore = null, bool $absolute = false): array
     {
         if (is_dir($dir) === false) {
             return [];
         }
 
-        return array_values((array)array_diff(scandir($dir), $ignore ?? static::$ignore));
+        // create the ignore pattern
+        $ignore = $ignore ?? static::$ignore;
+        $ignore = array_merge($ignore, ['.', '..']);
+
+        // scan for all files and dirs
+        $result = array_values((array)array_diff(scandir($dir), $ignore));
+
+        // add absolute paths
+        if ($absolute === true) {
+            $result = array_map(function ($item) use ($dir) {
+                return $dir . '/' . $item;
+            }, $result);
+        }
+
+        return $result;
+
     }
 
     /**

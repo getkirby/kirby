@@ -82,8 +82,35 @@ class DirTest extends TestCase
         touch($this->tmp . '/b.jpg');
         touch($this->tmp . '/c.jpg');
 
-        $files = Dir::read($this->tmp);
-        $this->assertEquals(3, count($files));
+        // relative
+        $files    = Dir::read($this->tmp);
+        $expected = [
+            'a.jpg',
+            'b.jpg',
+            'c.jpg'
+        ];
+
+        $this->assertEquals($expected, $files);
+
+        // absolute
+        $files    = Dir::read($this->tmp, null, true);
+        $expected = [
+            $this->tmp . '/a.jpg',
+            $this->tmp . '/b.jpg',
+            $this->tmp . '/c.jpg'
+        ];
+
+        $this->assertEquals($expected, $files);
+
+        // ignore
+        $files    = Dir::read($this->tmp, ['a.jpg']);
+        $expected = [
+            'b.jpg',
+            'c.jpg'
+        ];
+
+        $this->assertEquals($expected, $files);
+
     }
 
     public function testRemove()
@@ -104,7 +131,6 @@ class DirTest extends TestCase
 
     public function testReadDirsAndFiles()
     {
-
         Dir::make($root = static::FIXTURES . '/dirs');
         Dir::make($root . '/a');
         Dir::make($root . '/b');
@@ -119,11 +145,37 @@ class DirTest extends TestCase
 
         $this->assertEquals($any, $expected);
 
-        $dirs = Dir::read($root);
+        // relative dirs
+        $dirs = Dir::dirs($root);
         $expected = ['a', 'b', 'c'];
 
+        $this->assertEquals($expected, $dirs);
+
+        // absolute dirs
+        $dirs = Dir::dirs($root, null, true);
+        $expected = [
+            $root . '/a',
+            $root . '/b',
+            $root . '/c'
+        ];
+
+        $this->assertEquals($expected, $dirs);
+
+        // relative files
         $files = Dir::files($root);
         $expected = ['a.txt', 'b.jpg', 'c.doc'];
+
+        $this->assertEquals($expected, $files);
+
+        // absolute files
+        $files = Dir::files($root, null, true);
+        $expected = [
+            $root . '/a.txt',
+            $root . '/b.jpg',
+            $root . '/c.doc'
+        ];
+
+        $this->assertEquals($expected, $files);
 
         Dir::remove($root);
 
