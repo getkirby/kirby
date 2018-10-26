@@ -23,9 +23,8 @@
           <div class="k-structure-backdrop" @click="escape" />
           <section class="k-structure-form">
             <header class="k-structure-form-header">
-              <k-button slot="left" icon="check" @click="close">{{ $t('confirm') }}</k-button>
+              <k-button icon="check" @click="close">{{ $t('confirm') }}</k-button>
               <k-pagination
-                slot="right"
                 :total="items.length"
                 :limit="1"
                 :page="active + 1"
@@ -132,16 +131,6 @@
         <k-text>{{ "Do you really want to delete this item?" | t("structure.delete.confirm") }}</k-text>
       </k-dialog>
     </template>
-
-    <k-dialog
-      ref="escapeDialog"
-      :button="$t('discard')"
-      theme="negative"
-      icon="trash"
-      @submit="discard"
-    >
-      {{ "Do you really want to discard this item?" | t("structure.discard.confirm") }}
-    </k-dialog>
 
   </k-field>
 </template>
@@ -358,6 +347,10 @@ export default {
         return true;
       }
 
+      if (typeof value === "object" && Object.keys(value).length === 0 && value.constructor === Object) {
+        return true;
+      }
+
       if (value.length !== undefined && value.length === 0) {
         return true;
       }
@@ -367,10 +360,21 @@ export default {
     },
     escape() {
       if (this.active !== null && this.items[this.active]) {
-        if (Object.keys(this.items[this.active]).length === 0) {
-          this.$refs.escapeDialog.open();
+
+        let row     = Object.values(this.items[this.active]);
+        let isEmpty = true;
+
+        row.forEach(value => {
+          if (this.columnIsEmpty(value) === false) {
+            isEmpty = false;
+          }
+        });
+
+        if (isEmpty === true) {
+          this.discard();
           return;
         }
+
       }
 
       this.close();
@@ -379,7 +383,6 @@ export default {
       this.trash  = this.active;
       this.active = null;
       this.remove();
-      this.$refs.escapeDialog.close();
     },
     focus() {
       this.$refs.add.focus();
@@ -618,12 +621,13 @@ $structure-item-height: 38px;
 }
 
 .k-structure-backdrop {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: 0;
+  height: 100vh;
 }
 .k-structure-form {
   position: relative;
