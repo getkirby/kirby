@@ -7,19 +7,7 @@ use Exception;
 class StructureTest extends TestCase
 {
 
-    public function testObject()
-    {
-        $structure = new Structure([
-            new StructureObject([
-                'id' => 'test'
-            ])
-        ]);
-
-        $this->assertInstanceOf(StructureObject::class, $structure->first());
-        $this->assertEquals('test', $structure->first()->id());
-    }
-
-    public function testArray()
+    public function testCreate()
     {
         $structure = new Structure([
             ['test' => 'Test']

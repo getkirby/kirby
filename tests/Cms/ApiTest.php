@@ -39,11 +39,17 @@ class ApiTest extends TestCase
                         'slug' => 'b'
                     ]
                 ]
-            ]
+            ],
+            'options' => [
+                'api' => [
+                    'authentication' => function () {
+                        return true;
+                    }
+                ]
+            ],
         ]);
 
         $this->app->impersonate('kirby');
-
         $this->api = $this->app->api();
 
     }

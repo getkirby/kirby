@@ -70,8 +70,6 @@ class Collection extends BaseCollection
      */
     public function __set(string $id, $object)
     {
-        // inject the collection for proper navigation
-        $object->collection = $this;
         $this->data[$object->id()] = $object;
     }
 

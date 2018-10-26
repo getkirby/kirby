@@ -57,6 +57,49 @@ class SitePropsTest extends TestCase
 
     }
 
+    public function testBreadcrumbSideEffects()
+    {
+
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'home',
+                ],
+                [
+                    'slug' => 'grandma',
+                    'children' => [
+                        [
+                            'slug' => 'mother',
+                            'children' => [
+                                [
+                                    'slug' => 'child-a'
+                                ],
+                                [
+                                    'slug' => 'child-b'
+                                ],
+                                [
+                                    'slug' => 'child-c'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page  = $site->visit('grandma/mother/child-b');
+        $crumb = $site->breadcrumb();
+
+        $this->assertEquals($site->find('home'), $crumb->nth(0));
+        $this->assertEquals($site->find('grandma'), $crumb->nth(1));
+        $this->assertEquals($site->find('grandma/mother'), $crumb->nth(2));
+        $this->assertEquals($site->find('grandma/mother/child-b'), $crumb->nth(3));
+
+        $this->assertEquals('child-a', $page->prev()->slug());
+        $this->assertEquals('child-c', $page->next()->slug());
+
+    }
+
     public function testModified()
     {
         $app = new App([

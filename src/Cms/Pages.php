@@ -132,11 +132,10 @@ class Pages extends Collection
         }
 
         foreach ($pages as $props) {
-            $props['collection'] = $children;
-            $props['kirby']      = $kirby;
-            $props['parent']     = $parent;
-            $props['site']       = $site;
-            $props['isDraft']    = $draft;
+            $props['kirby']   = $kirby;
+            $props['parent']  = $parent;
+            $props['site']    = $site;
+            $props['isDraft'] = $draft;
 
             $page = Page::factory($props);
 

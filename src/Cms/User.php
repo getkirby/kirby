@@ -167,20 +167,6 @@ class User extends ModelWithContent
     }
 
     /**
-     * Returns the parent Users collection
-     *
-     * @return Users
-     */
-    public function collection(): Users
-    {
-        if (is_a($this->collection, 'Kirby\Cms\Users') === true) {
-            return $this->collection;
-        }
-
-        return $this->collection = $this->kirby()->users();
-    }
-
-    /**
      * Returns the content
      *
      * @param string|null $languageCode
@@ -690,6 +676,16 @@ class User extends ModelWithContent
         }
 
         return $session;
+    }
+
+    /**
+     * Returns the parent Users collection
+     *
+     * @return Users
+     */
+    protected function siblingsCollection()
+    {
+        return $this->kirby()->users();
     }
 
     /**

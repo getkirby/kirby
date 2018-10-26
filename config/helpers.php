@@ -61,10 +61,15 @@ function csrf(string $check = null)
         }
 
         return $token;
-    } else {
+    }
+
+    if (is_string($check) === true) {
         // argument has been passed, check the token
         return hash_equals($check, $session->get('csrf')) === true;
     }
+
+    return false;
+
 }
 
 /**

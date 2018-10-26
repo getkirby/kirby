@@ -35,28 +35,6 @@ class StructureObjectTest extends TestCase
         $object = new StructureObject(['foo' => 'bar']);
     }
 
-    public function testCollection()
-    {
-        $collection = new Structure();
-        $object     = new StructureObject([
-            'id'         => 'test',
-            'collection' => $collection
-        ]);
-
-        $this->assertEquals($collection, $object->collection());
-    }
-
-    /**
-     * @expectedException TypeError
-     */
-    public function testInvalidCollection()
-    {
-        $object = new StructureObject([
-            'id'         => 'test',
-            'collection' => false
-        ]);
-    }
-
     public function testContent()
     {
         $content = ['test' => 'Test'];

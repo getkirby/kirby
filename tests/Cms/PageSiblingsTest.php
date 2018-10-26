@@ -9,11 +9,22 @@ class PageSiblingsTest extends TestCase
 
     public function setUp()
     {
-        new App([
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ]
         ]);
+    }
+
+    protected function site($children = null)
+    {
+        $this->app = $this->app->clone([
+            'site' => [
+                'children' => $children ?? $this->collection(),
+            ]
+        ]);
+
+        return $this->app->site();
     }
 
     protected function collection()
@@ -25,53 +36,28 @@ class PageSiblingsTest extends TestCase
         ];
     }
 
-    public function testDefaultCollectionWithoutSite()
+    public function testDefaultSiblings()
     {
         $page = new Page(['slug' => 'test']);
-        $this->assertInstanceOf(Pages::class, $page->collection());
-    }
-
-    public function testCollection()
-    {
-        $pages = new Pages([]);
-        $page  = new Page(['slug' => 'test', 'collection' => $pages]);
-
-        $this->assertEquals($pages, $page->collection());
-    }
-
-    public function testCollectionContext()
-    {
-        $collection = Pages::factory($this->collection());
-        $page       = $collection->first();
-
-        $this->assertEquals($collection, $page->collection());
-    }
-
-    /**
-     * @expectedException TypeError
-     */
-    public function testInvalidCollection()
-    {
-        $page = new Page([
-            'slug'       => 'test',
-            'collection' => 'collection'
-        ]);
+        $this->assertInstanceOf(Pages::class, $page->siblings());
     }
 
     public function testHasNext()
     {
-        $collection = Pages::factory($this->collection());
+        $children = $this->site()->children();
 
-        $this->assertTrue($collection->first()->hasNext());
-        $this->assertFalse($collection->last()->hasNext());
+        $this->assertTrue($children->first()->hasNext());
+        $this->assertFalse($children->last()->hasNext());
     }
 
     public function testHasNextListed()
     {
-        $collection = Pages::factory([
+        $site = $this->site([
             ['slug' => 'unlisted'],
             ['slug' => 'listed', 'num' => 1],
         ]);
+
+        $collection = $site->children();
 
         $this->assertTrue($collection->first()->hasNextListed());
         $this->assertFalse($collection->last()->hasNextListed());
@@ -79,10 +65,12 @@ class PageSiblingsTest extends TestCase
 
     public function testHasNextUnlisted()
     {
-        $collection = Pages::factory([
+        $site = $this->site([
             ['slug' => 'listed', 'num' => 1],
             ['slug' => 'unlisted'],
         ]);
+
+        $collection = $site->children();
 
         $this->assertTrue($collection->first()->hasNextUnlisted());
         $this->assertFalse($collection->last()->hasNextUnlisted());
@@ -90,7 +78,7 @@ class PageSiblingsTest extends TestCase
 
     public function testHasPrev()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
 
         $this->assertTrue($collection->last()->hasPrev());
         $this->assertFalse($collection->first()->hasPrev());
@@ -98,10 +86,12 @@ class PageSiblingsTest extends TestCase
 
     public function testHasPrevListed()
     {
-        $collection = Pages::factory([
+        $site = $this->site([
             ['slug' => 'listed', 'num' => 1],
             ['slug' => 'unlisted'],
         ]);
+
+        $collection = $site->children();
 
         $this->assertFalse($collection->first()->hasPrevListed());
         $this->assertTrue($collection->last()->hasPrevListed());
@@ -109,10 +99,12 @@ class PageSiblingsTest extends TestCase
 
     public function testHasPrevUnlisted()
     {
-        $collection = Pages::factory([
+        $site = $this->site([
             ['slug' => 'unlisted'],
             ['slug' => 'listed', 'num' => 1]
         ]);
+
+        $collection = $site->children();
 
         $this->assertFalse($collection->first()->hasPrevUnlisted());
         $this->assertTrue($collection->last()->hasPrevUnlisted());
@@ -120,7 +112,7 @@ class PageSiblingsTest extends TestCase
 
     public function testIndexOf()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
 
         $this->assertEquals(0, $collection->first()->indexOf());
         $this->assertEquals(1, $collection->nth(1)->indexOf());
@@ -129,7 +121,7 @@ class PageSiblingsTest extends TestCase
 
     public function testIsFirst()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
 
         $this->assertTrue($collection->first()->isFirst());
         $this->assertFalse($collection->last()->isFirst());
@@ -137,7 +129,7 @@ class PageSiblingsTest extends TestCase
 
     public function testIsLast()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
 
         $this->assertTrue($collection->last()->isLast());
         $this->assertFalse($collection->first()->isLast());
@@ -145,7 +137,7 @@ class PageSiblingsTest extends TestCase
 
     public function testIsNth()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
 
         $this->assertTrue($collection->first()->isNth(0));
         $this->assertTrue($collection->nth(1)->isNth(1));
@@ -154,14 +146,14 @@ class PageSiblingsTest extends TestCase
 
     public function testNext()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
 
         $this->assertEquals($collection->first()->next(), $collection->nth(1));
     }
 
     public function testNextAll()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
         $first      = $collection->first();
 
         $this->assertCount(2, $first->nextAll());
@@ -172,36 +164,36 @@ class PageSiblingsTest extends TestCase
 
     public function testNextListed()
     {
-        $collection = Pages::factory([
+        $collection = $this->site([
             ['slug' => 'unlisted-a'],
             ['slug' => 'unlisted-b'],
             ['slug' => 'listed', 'num' => 1],
-        ]);
+        ])->children();
 
         $this->assertEquals('listed', $collection->first()->nextListed()->slug());
     }
 
     public function testNextUnlisted()
     {
-        $collection = Pages::factory([
+        $collection = $this->site([
             ['slug' => 'listed-a', 'num' => 1],
             ['slug' => 'listed-b', 'num' => 2],
             ['slug' => 'unlisted'],
-        ]);
+        ])->children();
 
         $this->assertEquals('unlisted', $collection->first()->nextUnlisted()->slug());
     }
 
     public function testPrev()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
 
         $this->assertEquals($collection->last()->prev(), $collection->nth(1));
     }
 
     public function testPrevAll()
     {
-        $collection = Pages::factory($this->collection());
+        $collection = $this->site()->children();
         $last       = $collection->last();
 
         $this->assertCount(2, $last->prevAll());
@@ -212,32 +204,29 @@ class PageSiblingsTest extends TestCase
 
     public function testPrevListed()
     {
-        $collection = Pages::factory([
+        $collection = $this->site([
             ['slug' => 'listed', 'num' => 1],
             ['slug' => 'unlisted-a'],
             ['slug' => 'unlisted-b'],
-        ]);
+        ])->children();
 
         $this->assertEquals('listed', $collection->last()->prevListed()->slug());
     }
 
     public function testPrevUnlisted()
     {
-        $collection = Pages::factory([
+        $collection = $this->site([
             ['slug' => 'unlisted'],
             ['slug' => 'listed-a', 'num' => 1],
             ['slug' => 'listed-b', 'num' => 2],
-        ]);
+        ])->children();
 
         $this->assertEquals('unlisted', $collection->last()->prevUnlisted()->slug());
     }
 
     public function testSiblings()
     {
-        $site = new Site([
-            'children' => $this->collection()
-        ]);
-
+        $site     = $this->site();
         $page     = $site->children()->nth(1);
         $children = $site->children();
         $siblings = $children->not($page);
@@ -248,7 +237,7 @@ class PageSiblingsTest extends TestCase
 
     public function testTemplateSiblings()
     {
-        $pages = Pages::factory([
+        $site = $this->site([
             [
                 'slug'     => 'a',
                 'template' => 'project'
@@ -267,6 +256,7 @@ class PageSiblingsTest extends TestCase
             ]
         ]);
 
+        $pages    = $site->children();
         $siblings = $pages->first()->templateSiblings();
 
         $this->assertTrue($siblings->has('a'));

@@ -22,13 +22,6 @@ abstract class Model
     public static $kirby;
 
     /**
-     * The parent collection
-     *
-     * @var Collection
-     */
-    public $collection;
-
-    /**
      * The parent Site instance
      *
      * @var Site
@@ -44,16 +37,6 @@ abstract class Model
     public function __toString()
     {
         return $this->id();
-    }
-
-    /**
-     * Returns the default parent collection
-     *
-     * @return Collection
-     */
-    public function collection()
-    {
-        return $this->collection;
     }
 
     /**
@@ -74,20 +57,6 @@ abstract class Model
     public function site()
     {
         return $this->site = $this->site ?? $this->kirby()->site();
-    }
-
-    /**
-     * Sets the parent Collection object
-     * This is used to handle traversal methods
-     * like next, prev, etc.
-     *
-     * @param Collection|null $collection
-     * @return self
-     */
-    public function setCollection(Collection $collection = null)
-    {
-        $this->collection = $collection;
-        return $this;
     }
 
     /**

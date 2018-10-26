@@ -16,28 +16,10 @@ class UserPropsTest extends TestCase
         $this->assertInstanceOf(Avatar::class, $user->avatar());
     }
 
-    public function testCollection()
-    {
-        $user = new User([
-            'email'      => 'user@domain.com',
-            'collection' => $users = new Users()
-        ]);
-
-        $this->assertEquals($users, $user->collection());
-    }
-
-    /**
-     * @expectedException TypeError
-     */
-    public function testInvalidCollection()
-    {
-        $user = new User(['email' => 'user@domain.com', 'collection' => 'something']);
-    }
-
-    public function testDefaultCollection()
+    public function testDefaultSiblings()
     {
         $user = new User(['email' => 'user@domain.com']);
-        $this->assertInstanceOf(Users::class, $user->collection());
+        $this->assertInstanceOf(Users::class, $user->siblings());
     }
 
     public function testContent()

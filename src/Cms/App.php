@@ -146,7 +146,7 @@ class App
 
         $api = [
             'debug'          => $this->option('debug', false),
-            'authentication' => include $root . '/authentication.php',
+            'authentication' => $extensions['authentication'] ?? include $root . '/authentication.php',
             'collections'    => array_merge($extensions['collections'] ?? [], include $root . '/collections.php'),
             'data'           => array_merge($extensions['data']        ?? [], include $root . '/data.php'),
             'models'         => array_merge($extensions['models']      ?? [], include $root . '/models.php'),

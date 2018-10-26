@@ -39,6 +39,13 @@ class StructureObject extends Model
     protected $parent;
 
     /**
+     * The parent Structure collection
+     *
+     * @var Structure
+     */
+    protected $structure;
+
+    /**
      * Modified getter to also return fields
      * from the object's content
      *
@@ -154,6 +161,28 @@ class StructureObject extends Model
     {
         $this->parent = $parent;
         return $this;
+    }
+
+    /**
+     * Sets the parent Structure collection
+     *
+     * @param Structure $structure
+     * @return self
+     */
+    protected function setStructure(Structure $structure = null): self
+    {
+        $this->structure = $structure;
+        return $this;
+    }
+
+    /**
+     * Returns the parent Structure collection as siblings
+     *
+     * @return Structure
+     */
+    protected function siblingsCollection()
+    {
+        return $this->structure;
     }
 
     /**

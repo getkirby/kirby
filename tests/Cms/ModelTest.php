@@ -20,16 +20,6 @@ class ModelTest extends TestCase
         $this->assertInstanceOf(Model::class, $model);
         $this->assertInstanceOf(App::class, $model->kirby());
         $this->assertInstanceOf(Site::class, $model->site());
-        $this->assertNull($model->collection());
-    }
-
-    public function testCollection()
-    {
-        $collection = new Collection();
-        $model = new MyModel([
-            'collection' => $collection
-        ]);
-        $this->assertEquals($collection, $model->collection());
     }
 
     public function testKirby()

@@ -285,24 +285,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Returns the default parent collection
-     *
-     * @return Collection
-     */
-    public function collection()
-    {
-        if (is_a($this->collection, 'Kirby\Cms\Collection')) {
-            return $this->collection;
-        }
-
-        if ($parent = $this->parentModel()) {
-            return $this->collection = $parent->children();
-        }
-
-        return $this->collection = new Pages([$this]);
-    }
-
-    /**
      * Returns the content text file
      * which is found by the inventory method
      *

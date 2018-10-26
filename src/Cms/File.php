@@ -197,20 +197,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Returns the parent Files collection
-     *
-     * @return Files
-     */
-    public function collection(): Files
-    {
-        if (is_a($this->collection, 'Kirby\Cms\Files') === true) {
-            return $this->collection;
-        }
-
-        return $this->collection = $this->parent()->files();
-    }
-
-    /**
      * Absolute path to the meta text file
      *
      * @param string $languageCode
@@ -665,6 +651,16 @@ class File extends ModelWithContent
     {
         $this->url = $url;
         return $this;
+    }
+
+    /**
+     * Returns the parent Files collection
+     *
+     * @return Files
+     */
+    protected function siblingsCollection()
+    {
+        return $this->parent()->files();
     }
 
     /**

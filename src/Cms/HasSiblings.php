@@ -21,7 +21,7 @@ trait HasSiblings
      */
     public function indexOf(): int
     {
-        return $this->collection()->indexOf($this);
+        return $this->siblingsCollection()->indexOf($this);
     }
 
     /**
@@ -31,7 +31,7 @@ trait HasSiblings
      */
     public function next()
     {
-        return $this->collection()->nth($this->indexOf() + 1);
+        return $this->siblingsCollection()->nth($this->indexOf() + 1);
     }
 
     /**
@@ -41,7 +41,7 @@ trait HasSiblings
      */
     public function nextAll()
     {
-        return $this->collection()->slice($this->indexOf() + 1);
+        return $this->siblingsCollection()->slice($this->indexOf() + 1);
     }
 
     /**
@@ -51,7 +51,7 @@ trait HasSiblings
      */
     public function prev()
     {
-        return $this->collection()->nth($this->indexOf() - 1);
+        return $this->siblingsCollection()->nth($this->indexOf() - 1);
     }
 
     /**
@@ -61,7 +61,7 @@ trait HasSiblings
      */
     public function prevAll()
     {
-        return $this->collection()->slice(0, $this->indexOf());
+        return $this->siblingsCollection()->slice(0, $this->indexOf());
     }
 
     /**
@@ -72,7 +72,7 @@ trait HasSiblings
      */
     public function siblings(bool $self = true)
     {
-        $siblings = $this->collection();
+        $siblings = $this->siblingsCollection();
 
         if ($self === false) {
             return $siblings->not($this);
@@ -108,7 +108,7 @@ trait HasSiblings
      */
     public function isFirst(): bool
     {
-        return $this->collection()->first()->is($this);
+        return $this->siblingsCollection()->first()->is($this);
     }
 
     /**
@@ -118,7 +118,7 @@ trait HasSiblings
      */
     public function isLast(): bool
     {
-        return $this->collection()->last()->is($this);
+        return $this->siblingsCollection()->last()->is($this);
     }
 
     /**

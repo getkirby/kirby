@@ -90,6 +90,16 @@ trait PageSiblings
     }
 
     /**
+     * Private siblings collector
+     *
+     * @return Collection
+     */
+    protected function siblingsCollection()
+    {
+        return $this->parentModel()->children();
+    }
+
+    /**
      * Returns siblings with the same template
      *
      * @param bool $self

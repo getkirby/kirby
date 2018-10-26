@@ -29,15 +29,6 @@ class FilePropsTest extends TestCase
         $this->assertEquals(null, $file->asset()->url());
     }
 
-    public function testCollection()
-    {
-        $file = $this->file([
-            'collection' => $files = new Files()
-        ]);
-
-        $this->assertInstanceOf(Files::class, $file->collection());
-    }
-
     public function testContent()
     {
         $file = $this->file([
