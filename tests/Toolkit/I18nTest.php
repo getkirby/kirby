@@ -108,4 +108,22 @@ class I18nTest extends TestCase
         $this->assertEquals('juhu', I18n::translate('test'));
     }
 
+    public function testLazyFallback()
+    {
+        I18n::$fallback = function () {
+            return 'de';
+        };
+
+        $this->assertEquals('de', I18n::fallback());
+    }
+
+    public function testLazyLocale()
+    {
+        I18n::$locale = function () {
+            return 'de';
+        };
+
+        $this->assertEquals('de', I18n::locale());
+    }
+
 }

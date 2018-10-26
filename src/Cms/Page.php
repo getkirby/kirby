@@ -628,11 +628,7 @@ class Page extends ModelWithContent
      */
     public function isErrorPage(): bool
     {
-        if ($errorPage = $this->site()->errorPage()) {
-            return $errorPage->is($this);
-        }
-
-        return false;
+        return $this->id() === $this->site()->errorPageId();
     }
 
     /**
@@ -660,11 +656,7 @@ class Page extends ModelWithContent
      */
     public function isHomePage(): bool
     {
-        if ($homePage = $this->site()->homePage()) {
-            return $homePage->is($this);
-        }
-
-        return false;
+        return $this->id() === $this->site()->homePageId();
     }
 
     /**

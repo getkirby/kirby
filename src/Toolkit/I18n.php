@@ -40,6 +40,42 @@ class I18n
     public static $fallback = 'en';
 
     /**
+     * Returns the fallback code
+     *
+     * @return string
+     */
+    public static function fallback(): string
+    {
+        if (is_string(static::$fallback) === true) {
+            return static::$fallback;
+        }
+
+        if (is_callable(static::$fallback) === true) {
+            return static::$fallback = (static::$fallback)();
+        }
+
+        return static::$fallback = 'en';
+    }
+
+    /**
+     * Returns the locale code
+     *
+     * @return string
+     */
+    public static function locale(): string
+    {
+        if (is_string(static::$locale) === true) {
+            return static::$locale;
+        }
+
+        if (is_callable(static::$locale) === true) {
+            return static::$locale = (static::$locale)();
+        }
+
+        return static::$locale = 'en';
+    }
+
+    /**
      * Translates a given message
      * according to the currently set locale
      *
@@ -49,7 +85,7 @@ class I18n
      */
     public static function translate($key, $fallback = null, string $locale = null)
     {
-        $locale = $locale ?? static::$locale;
+        $locale = $locale ?? static::locale();
 
         if (is_array($key) === true) {
             if (isset($key[$locale])) {
@@ -69,8 +105,8 @@ class I18n
             return $fallback;
         }
 
-        if ($locale !== static::$fallback) {
-            return static::translation(static::$fallback)[$key] ?? null;
+        if ($locale !== static::fallback()) {
+            return static::translation(static::fallback())[$key] ?? null;
         }
 
         return null;
@@ -86,7 +122,7 @@ class I18n
      */
     public static function translation(string $locale = null): array
     {
-        $locale = $locale ?? static::$locale;
+        $locale = $locale ?? static::locale();
 
         if (isset(static::$translations[$locale]) === true) {
             return static::$translations[$locale];

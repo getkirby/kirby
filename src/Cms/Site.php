@@ -259,7 +259,7 @@ class Site extends ModelWithContent
             return $this->errorPage = $error;
         }
 
-        throw new LogicException('The error page is missing');
+        return null;
     }
 
     /**
@@ -297,7 +297,7 @@ class Site extends ModelWithContent
             return $this->homePage = $home;
         }
 
-        throw new LogicException('The home page is missing');
+        return null;
     }
 
     /**
@@ -387,7 +387,11 @@ class Site extends ModelWithContent
             return $this->page;
         }
 
-        return $this->page = $this->homePage();
+        try {
+            return $this->page = $this->homePage();
+        } catch (LogicException $e) {
+            return $this->page = null;
+        }
     }
 
     /**
@@ -490,22 +494,6 @@ class Site extends ModelWithContent
     }
 
     /**
-     * Sets the error page object
-     *
-     * @param Page|null $errorPage
-     * @return self
-     */
-    public function setErrorPage(Page $errorPage = null): self
-    {
-        if (is_a($this->errorPage, 'Kirby\Cms\Page') === true) {
-            throw new LogicException('The error page has already been set');
-        }
-
-        $this->errorPage = $errorPage;
-        return $this;
-    }
-
-    /**
      * Sets the id of the error page, which
      * is used in the errorPage method
      * to get the default error page if nothing
@@ -517,22 +505,6 @@ class Site extends ModelWithContent
     protected function setErrorPageId(string $id = 'error'): self
     {
         $this->errorPageId = $id;
-        return $this;
-    }
-
-    /**
-     * Sets the home page object
-     *
-     * @param Page|null $homePage
-     * @return self
-     */
-    public function setHomePage(Page $homePage = null): self
-    {
-        if (is_a($this->homePage, 'Kirby\Cms\Page') === true) {
-            throw new LogicException('The home page has already been set');
-        }
-
-        $this->homePage = $homePage;
         return $this;
     }
 

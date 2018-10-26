@@ -62,16 +62,20 @@ class PageRulesTest extends TestCase
      */
     public function testChangeSlugWithHomepage()
     {
-        // TODO: should actually throw a different exception than above
-        $site = new Site();
-        $page = new Page([
-            'kirby' => $this->appWithAdmin(),
-            'slug'  => 'test',
-            'site'  => $site
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'home']
+                ]
+            ]
         ]);
 
-        $site->setHomepage($page);
-        PageRules::changeSlug($page, 'test-a');
+        $app->impersonate('kirby');
+
+        PageRules::changeSlug($app->page('home'), 'test-a');
     }
 
     /**
@@ -80,16 +84,20 @@ class PageRulesTest extends TestCase
      */
     public function testChangeSlugWithErrorPage()
     {
-        // TODO: should actually throw a different exception than above
-        $site = new Site();
-        $page = new Page([
-            'kirby' => $this->appWithAdmin(),
-            'slug'  => 'test',
-            'site'  => $site
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'error']
+                ]
+            ]
         ]);
 
-        $site->setErrorPage($page);
-        PageRules::changeSlug($page, 'test-a');
+        $app->impersonate('kirby');
+
+        PageRules::changeSlug($app->page('error'), 'test-a');
     }
 
     public function testChangeTemplate()
@@ -144,14 +152,20 @@ class PageRulesTest extends TestCase
      */
     public function testDeleteHomepage()
     {
-        $site = new Site();
-        $page = new Page([
-            'kirby' => $this->appWithAdmin(),
-            'slug'  => 'test',
-            'site'  => $site
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'home']
+                ]
+            ]
         ]);
-        $site->setHomepage($page);
-        PageRules::delete($page);
+
+        $app->impersonate('kirby');
+
+        PageRules::delete($app->page('home'));
     }
 
     /**
@@ -160,15 +174,20 @@ class PageRulesTest extends TestCase
      */
     public function testDeleteErrorPage()
     {
-        // TODO: is there actually a check in the backend for this?
-        $site = new Site();
-        $page = new Page([
-            'kirby' => $this->appWithAdmin(),
-            'slug'  => 'test',
-            'site'  => $site
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'error']
+                ]
+            ]
         ]);
-        $site->setErrorPage($page);
-        PageRules::delete($page);
+
+        $app->impersonate('kirby');
+
+        PageRules::delete($app->page('error'));
     }
 
     /**

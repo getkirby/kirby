@@ -30,8 +30,22 @@ trait AppTranslations
             return $translations[$locale] ?? [];
         };
 
-        I18n::$locale       = 'en';
-        I18n::$fallback     = 'en';
+        I18n::$locale = function () {
+            if ($this->multilang() === true) {
+                return $this->defaultLanguage()->code();
+            } else {
+                return 'en';
+            }
+        };
+
+        I18n::$fallback = function () {
+            if ($this->multilang() === true) {
+                return $this->defaultLanguage()->code();
+            } else {
+                return 'en';
+            }
+        };
+
         I18n::$translations = [];
     }
 

@@ -8,15 +8,6 @@ class SitePagesTest extends TestCase
     public function testErrorPage()
     {
         $site = new Site([
-            'errorPage' => $page = new Page(['slug' => 'error'])
-        ]);
-
-        $this->assertIsPage($site->errorPage(), $page);
-    }
-
-    public function testDefaultErrorPageWithChildren()
-    {
-        $site = new Site([
             'children' => [
                 ['slug' => 'error']
             ]
@@ -26,15 +17,6 @@ class SitePagesTest extends TestCase
     }
 
     public function testHomePage()
-    {
-        $site = new Site([
-            'homePage' => $page = new Page(['slug' => 'home'])
-        ]);
-
-        $this->assertIsPage($site->homePage(), $page);
-    }
-
-    public function testDefaultHomePageWithChildren()
     {
         $site = new Site([
             'children' => [
