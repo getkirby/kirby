@@ -307,6 +307,10 @@ class Api
             ];
         }
 
+        if (is_array($result) === false) {
+            return $result;
+        }
+
         // pretty print json data
         $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
 
