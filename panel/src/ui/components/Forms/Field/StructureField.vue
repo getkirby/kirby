@@ -626,14 +626,15 @@ $structure-item-height: 38px;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 0;
+  z-index: 2;
   height: 100vh;
+  background: red;
 }
 .k-structure-form {
   position: relative;
+  z-index: 3;
   border-radius: $border-radius;
   margin-bottom: 1px;
-  z-index: 1;
   box-shadow: rgba($color-dark, .05) 0 0 0 3px;
   border: 1px solid $color-border;
   background: $color-background;
