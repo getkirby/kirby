@@ -5,7 +5,7 @@ use Kirby\Toolkit\A;
 return [
     'props' => [
         'default' => function ($default = null) {
-            return $this->toFiles($default);
+            return $default;
         },
         'layout' => function (string $layout = 'list') {
             return $layout;
@@ -20,16 +20,28 @@ return [
             return $multiple;
         },
         'parent' => function (string $parent = null) {
-
-            if (is_string($parent) === true && $model = $this->model()->query($parent, 'Kirby\Cms\Model')) {
-                return $model->apiUrl(true);
-            }
-
-            return $this->model()->apiUrl(true);
-
+            return $parent;
         },
         'value' => function ($value = null) {
-            return $this->toFiles($value);
+            return $value;
+        }
+    ],
+    'computed' => [
+        'parentModel' => function () {
+            if (is_string($this->parent) === true && $model = $this->model()->query($this->parent, 'Kirby\Cms\Model')) {
+                return $model;
+            }
+
+            return $this->model();
+        },
+        'parent' => function () {
+            return $this->parentModel->apiUrl(true);
+        },
+        'default' => function () {
+            return $this->toFiles($this->default);
+        },
+        'value' => function () {
+            return $this->toFiles($this->value);
         },
     ],
     'methods' => [
@@ -44,7 +56,7 @@ return [
                     $id = $id['filename'] ?? null;
                 }
 
-                if ($id !== null && ($file = $kirby->file($id, $this->model, true))) {
+                if ($id !== null && ($file = $this->parentModel->file($id))) {
                     $files[] = [
                         'filename' => $file->filename(),
                         'link'     => $file->panelUrl(true),
