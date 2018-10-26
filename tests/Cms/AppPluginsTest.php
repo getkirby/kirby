@@ -41,6 +41,67 @@ class AppPluginsTest extends TestCase
 
     }
 
+    public function testApiRoutePlugins()
+    {
+
+        App::plugin('test/a', [
+            'api' => [
+                'routes' => [
+                    [
+                        'pattern' => 'a',
+                        'action'  => function () {
+                            return 'a';
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        App::plugin('test/b', [
+            'api' => [
+                'routes' => [
+                    [
+                        'pattern' => 'b',
+                        'action'  => function () {
+                            return 'b';
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        App::plugin('test/c', [
+            'api' => [
+                'routes' => [
+                    [
+                        'pattern' => 'c',
+                        'action'  => function () {
+                            return 'c';
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'api' => [
+                'authentication' => function () {
+                    return true;
+                }
+            ],
+        ]);
+
+        $app->impersonate('kirby');
+
+        $this->assertEquals('a', $app->api()->call('a'));
+        $this->assertEquals('b', $app->api()->call('b'));
+        $this->assertEquals('c', $app->api()->call('c'));
+
+    }
+
     public function testBlueprint()
     {
         $kirby = new App([

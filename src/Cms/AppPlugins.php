@@ -60,7 +60,7 @@ trait AppPlugins
     protected function extendApi($api): array
     {
         if (is_array($api) === true) {
-            return $this->extensions['api'] = array_merge($this->extensions['api'], $api);
+            return $this->extensions['api'] = A::merge($this->extensions['api'], $api, A::MERGE_APPEND);
         } else {
             return $this->extensions['api'];
         }
