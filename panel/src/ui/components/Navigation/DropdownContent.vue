@@ -48,6 +48,9 @@ export default {
       }
     },
     open() {
+
+      this.reset();
+
       if (OpenDropdown && OpenDropdown !== this) {
         // close the current dropdown
         OpenDropdown.close();
@@ -58,15 +61,17 @@ export default {
         this.$events.$on("click", this.close);
         this.items = items;
         this.isOpen = true;
-        this.current = -1;
         this.$emit("open");
         OpenDropdown = this;
       });
     },
-    close() {
+    reset() {
+      this.current = -1;
       this.$events.$off("keydown", this.navigate);
       this.$events.$off("click", this.close);
-
+    },
+    close() {
+      this.reset();
       this.isOpen = OpenDropdown = false;
       this.$emit("close");
     },
@@ -76,14 +81,17 @@ export default {
     focus(n) {
       n = n || 0;
       if (this.$children[n] && this.$children[n].focus) {
+        this.current = n;
         this.$children[n].focus();
       }
     },
     navigate(e) {
+
       switch (e.code) {
         case "Escape":
         case "ArrowLeft":
           this.close();
+          this.$emit("leave", e.code);
           break;
         case "ArrowUp":
           e.preventDefault();
@@ -92,14 +100,17 @@ export default {
             this.focus(this.current);
           } else {
             this.close();
+            this.$emit("leave", e.code);
           }
           break;
         case "ArrowDown":
           e.preventDefault();
+
           if (this.current < this.$children.length - 1) {
             this.current++;
             this.focus(this.current);
           }
+
           break;
       }
     }

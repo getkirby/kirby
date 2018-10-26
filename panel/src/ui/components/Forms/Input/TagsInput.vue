@@ -29,6 +29,7 @@
         :options="options"
         :skip="skip"
         @select="addTag"
+        @leave="$refs.input.focus()"
       >
         <input
           ref="input"

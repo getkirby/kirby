@@ -1,7 +1,7 @@
 <template>
   <k-dropdown class="k-autocomplete">
     <slot />
-    <k-dropdown-content ref="dropdown" @close="$emit('close', $event)">
+    <k-dropdown-content ref="dropdown" :autofocus="true" v-on="$listeners">
       <k-dropdown-item
         v-for="(item, index) in matches"
         :key="index"
@@ -48,6 +48,7 @@ export default {
       this.$emit("select", value);
     },
     search(query) {
+
       if (query.length < 1) {
         return;
       }
