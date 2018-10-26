@@ -45,6 +45,57 @@ class PageCreateTest extends TestCase
         $this->assertTrue($site->drafts()->has($page));
     }
 
+    public function testCreateDraftWithDefaults()
+    {
+        $site = $this->app->site();
+        $page = Page::create([
+            'slug' => 'new-page',
+            'blueprint' => [
+                'name'   => 'test',
+                'fields' => [
+                    'a'  => [
+                        'type'    => 'text',
+                        'default' => 'A'
+                    ],
+                    'b' => [
+                        'type'    => 'textarea',
+                        'default' => 'B'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('A', $page->a()->value());
+        $this->assertEquals('B', $page->b()->value());
+    }
+
+    public function testCreateDraftWithDefaultsAndContent()
+    {
+        $site = $this->app->site();
+        $page = Page::create([
+            'content' => [
+                'a' => 'Custom A'
+            ],
+            'slug' => 'new-page',
+            'blueprint' => [
+                'name'   => 'test',
+                'fields' => [
+                    'a'  => [
+                        'type'    => 'text',
+                        'default' => 'A'
+                    ],
+                    'b' => [
+                        'type'    => 'textarea',
+                        'default' => 'B'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('Custom A', $page->a()->value());
+        $this->assertEquals('B', $page->b()->value());
+    }
+
     public function testCreateListedPage()
     {
         $site = $this->app->site();
