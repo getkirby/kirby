@@ -996,7 +996,6 @@ class Page extends ModelWithContent
      */
     public function previewUrl(): ?string
     {
-
         $preview = $this->blueprint()->preview();
 
         if ($preview === false) {
@@ -1014,7 +1013,6 @@ class Page extends ModelWithContent
         }
 
         return $url;
-
     }
 
     /**

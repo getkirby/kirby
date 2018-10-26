@@ -301,7 +301,6 @@ class Dir
         }
 
         return $result;
-
     }
 
     /**
