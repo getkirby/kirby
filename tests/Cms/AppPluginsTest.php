@@ -26,7 +26,7 @@ class AppPluginsTest extends TestCase
                     [
                         'pattern' => 'awesome',
                         'action'  => function () {
-                            return 'nice';
+                            return ['foo' => 'bar'];
                         }
                     ]
                 ],
@@ -37,7 +37,7 @@ class AppPluginsTest extends TestCase
         ]);
 
         $kirby->impersonate('kirby');
-        $this->assertEquals('nice', $kirby->call('api/awesome'));
+        $this->assertEquals(['foo' => 'bar'], $kirby->call('api/awesome'));
 
     }
 
