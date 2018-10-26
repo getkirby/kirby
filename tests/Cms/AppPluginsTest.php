@@ -29,7 +29,10 @@ class AppPluginsTest extends TestCase
                             return 'nice';
                         }
                     ]
-                ]
+                ],
+                'authentication' => function () {
+                    return true;
+                }
             ]
         ]);
 
