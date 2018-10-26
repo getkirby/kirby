@@ -147,6 +147,32 @@ class PagePropsTest extends TestCase
         $page = new Page(['slug' => null]);
     }
 
+    public function testErrors()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'name' => 'test',
+                'fields' => [
+                    'intro' => [
+                        'required' => true,
+                        'type'     => 'text'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals([
+            'intro' => [
+                'label' => 'Intro',
+                'message' => [
+                    'required' => 'The field is required'
+                ]
+            ]
+        ], $page->errors());
+
+    }
+
     public function testErrorsWithoutBlueprint()
     {
         $page = new Page(['slug' => 'test']);
