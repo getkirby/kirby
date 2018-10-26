@@ -79,7 +79,9 @@ export default {
   margin-bottom: 0.25rem;
 }
 .k-error-details dd {
-  overflow: auto;
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
 }
 .k-error-details dd:not(:last-of-type) {
   margin-bottom: 1.5em;
