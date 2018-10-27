@@ -156,8 +156,8 @@ class EmailTest extends TestCase
         $this->markTestIncomplete();
 
         $app = new App([
-            'roots' => [
-                'emails' => __DIR__ . '/fixtures/emails'
+            'templates' => [
+                'emails/user-info' => __DIR__ . '/fixtures/emails/user-info.php'
             ]
         ]);
 
