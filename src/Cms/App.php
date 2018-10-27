@@ -1043,9 +1043,9 @@ class App
      *
      * @return Template
      */
-    public function template(string $name, string $type = 'html'): Template
+    public function template(string $name, string $type = 'html', string $defaultType = 'html'): Template
     {
-        return $this->extensions['components']['template']($this, $name, $type);
+        return $this->extensions['components']['template']($this, $name, $type, $defaultType);
     }
 
     /**

@@ -50,8 +50,8 @@ class EmailTest extends TestCase
     public function testEmailTemplate()
     {
         $app = new App([
-            'roots' => [
-                'emails' => __DIR__ . '/fixtures/emails'
+            'templates' => [
+                'emails/contact' => __DIR__ . '/fixtures/emails/contact.php'
             ]
         ]);
         $email = new Email([
@@ -66,13 +66,12 @@ class EmailTest extends TestCase
     public function testEmailTemplateHtml()
     {
         $app = new App([
-            'roots' => [
-                'emails' => __DIR__ . '/fixtures/emails'
+            'templates' => [
+                'emails/media.html' => __DIR__ . '/fixtures/emails/media.html.php',
+                'emails/media.text' => __DIR__ . '/fixtures/emails/media.text.php',
             ]
         ]);
-        $email = new Email([
-            'template' => 'media'
-        ]);
+        $email = new Email(['template' => 'media']);
         $this->assertEquals([
             'html' => '<b>Image:</b> <img src=""/>',
             'text' => 'Image: Description'

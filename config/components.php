@@ -1,9 +1,9 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\Model;
 use Kirby\Cms\Filename;
 use Kirby\Cms\FileVersion;
+use Kirby\Cms\Model;
 use Kirby\Cms\Response;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
@@ -80,8 +80,8 @@ return [
 
         return Snippet::load($file, $data);
     },
-    'template' => function (App $kirby, string $name, string $type = 'html') {
-        return new Template($name, $type);
+    'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
+        return new Template($name, $type, $defaultType);
     },
     'thumb' => function (App $kirby, string $src, string $dst, array $options) {
 
