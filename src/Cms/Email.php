@@ -72,37 +72,26 @@ class Email
             $data = $this->props['data'] ?? [];
 
             // check if html/text templates exist
-            $html = $this->templateFile($this->props['template'], 'html');
-            $text = $this->templateFile($this->props['template'], 'text');
+            $html = $this->getTemplate($this->props['template'], 'html');
+            $text = $this->getTemplate($this->props['template'], 'text');
 
-            if (file_exists($html) === true && file_exists($text)) {
+            if ($html->exists() && $text->exists()) {
                 $this->props['body'] = [
-                    'html' => Tpl::load($html, $data),
-                    'text' => Tpl::load($text, $data)
+                    'html' => $html->render($data),
+                    'text' => $text->render($data),
                 ];
-
             // fallback to single email text template
+            } elseif ($text->exists()) {
+                $this->props['body'] = $text->render($data);
             } else {
-                $template = $this->templateFile($this->props['template']);
-
-                if (file_exists($template) === false) {
-                    throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
-                }
-
-                $this->props['body'] = Tpl::load($template, $data);
+                throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
             }
         }
     }
 
-    protected function templateFile(string $name, string $type = null): string
+    protected function getTemplate(string $name, string $type = null)
     {
-        $name = basename($this->props['template']);
-
-        if ($type !== null) {
-            $name .= '.' . $type;
-        }
-
-        return App::instance()->root('emails') . '/' . $name . '.php';
+        return App::instance()->template("emails/{$name}", $type, 'text');
     }
 
     public function toArray(): array

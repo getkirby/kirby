@@ -14,11 +14,13 @@ class Template
 
     protected $name;
     protected $type;
+    protected $defaultType;
 
-    public function __construct(string $name, string $type = 'html')
+    public function __construct(string $name, string $type = 'html', string $defaultType = 'html')
     {
         $this->name = strtolower($name);
         $this->type = $type;
+        $this->defaultType = $defaultType;
     }
 
     public function __toString(): string
@@ -38,7 +40,7 @@ class Template
 
     public function defaultType(): string
     {
-        return 'html';
+        return $this->defaultType;
     }
 
     public function store(): string
@@ -56,6 +58,7 @@ class Template
                 //
             }
 
+            // Look for the default template provided by an extension.
             $path = App::instance()->extension($this->store(), $this->name());
 
             if (!is_null($path)) {
@@ -69,7 +72,8 @@ class Template
             // Try the template with type extension in the default template directory.
             return F::realpath("{$this->root()}/{$name}.{$this->extension()}", $this->root());
         } catch (Exception $e) {
-            // Finally look for the template with type extension provided by an extension.
+            // Look for the template with type extension provided by an extension.
+            // This might be null if the template does not exist.
             return App::instance()->extension($this->store(), $name);
         }
     }
