@@ -71,12 +71,12 @@ class RouteTest extends TestCase
         $this->assertEquals('a/(-?[0-9]+)/b', $route->regex('a/(:num)/b'));
         $this->assertEquals('a/([a-zA-Z]+)/b', $route->regex('a/(:alpha)/b'));
         $this->assertEquals('a/([a-zA-Z0-9]+)/b', $route->regex('a/(:alphanum)/b'));
-        $this->assertEquals('a/([a-zA-Z0-9\.\-_%= \+\@]+)/b', $route->regex('a/(:any)/b'));
+        $this->assertEquals('a/([a-zA-Z0-9\.\-_%= \+\@\(\)]+)/b', $route->regex('a/(:any)/b'));
         $this->assertEquals('a/(.*)', $route->regex('a/(:all)'));
         $this->assertEquals('a(?:/(-?[0-9]+))?', $route->regex('a/(:num?)'));
         $this->assertEquals('a(?:/([a-zA-Z]+))?', $route->regex('a/(:alpha?)'));
         $this->assertEquals('a(?:/([a-zA-Z0-9]+))?', $route->regex('a/(:alphanum?)'));
-        $this->assertEquals('a(?:/([a-zA-Z0-9\.\-_%= \+\@]+))?', $route->regex('a/(:any?)'));
+        $this->assertEquals('a(?:/([a-zA-Z0-9\.\-_%= \+\@\(\)]+))?', $route->regex('a/(:any?)'));
         $this->assertEquals('a(?:/(.*))?', $route->regex('a/(:all?)'));
     }
 
@@ -85,8 +85,12 @@ class RouteTest extends TestCase
         return [
             // simple strings
             [':any', 'abc', true],
-            // @ signs
+            // @
             [':any', 'test@company.com', true],
+            // +
+            [':any', 'projects+test', true],
+            // ( )
+            [':any', 'metallica_(band).jpg', true],
             // spaces
             [':any', 'a b c', true],
             // alpha
