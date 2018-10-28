@@ -51,6 +51,12 @@ class DimensionsTest extends TestCase
         $dimensions->fit(500);
         $this->assertEquals(500, $dimensions->width());
         $this->assertEquals(500, $dimensions->height());
+
+        // smaller than new size
+        $dimensions = new Dimensions(300, 200);
+        $dimensions->fit(500);
+        $this->assertEquals(300, $dimensions->width());
+        $this->assertEquals(200, $dimensions->height());
     }
 
     public function testFitForce()
