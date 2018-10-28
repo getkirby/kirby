@@ -18,10 +18,13 @@
       <p>The panel is currently offline</p>
     </div>
   </div>
-
-  <k-error-view v-else>
-    The panel cannot connect to the API 😭
-  </k-error-view>
+  <div v-else class="k-panel">
+    <main class="k-panel-view">
+      <k-error-view>
+        The panel cannot connect to the API 😭
+      </k-error-view>
+    </main>
+  </div>
 </template>
 
 <script>
