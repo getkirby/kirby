@@ -24,6 +24,9 @@ $aliases = [
     'json'      => 'Kirby\Data\Json',
     'yaml'      => 'Kirby\Data\Yaml',
 
+    // http classes
+    'header'     => 'Kirby\Http\Header',
+
     // image classes
     'dimensions' => 'Kirby\Image\Dimensions',
 
