@@ -49,7 +49,7 @@ abstract class ModelWithContent extends Model
             $data = $this->translationData($languageCode);
         }
 
-        return $this->setContent($data)->content();
+        return $this->setContent($data)->content;
     }
 
     /**

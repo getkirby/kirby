@@ -163,7 +163,8 @@ class SitePropsTest extends TestCase
         F::write($file = $index . '/site.de.txt', 'test');
 
         // change the language
-        $app->localize($app->language('de'));
+        $app->setCurrentLanguage('de');
+        $app->setCurrentTranslation('de');
 
         $modified = filemtime($file);
         $site     = $app->site();

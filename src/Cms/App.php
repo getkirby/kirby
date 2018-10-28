@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Closure;
 use Exception;
 use Throwable;
-use Kirby\Api\Api;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\InvalidArgumentException;
@@ -148,10 +147,11 @@ class App
         $api = [
             'debug'          => $this->option('debug', false),
             'authentication' => $extensions['authentication'] ?? include $root . '/authentication.php',
+            'data'           => $extensions['data']           ?? [],
             'collections'    => array_merge($extensions['collections'] ?? [], include $root . '/collections.php'),
-            'data'           => array_merge($extensions['data']        ?? [], include $root . '/data.php'),
             'models'         => array_merge($extensions['models']      ?? [], include $root . '/models.php'),
             'routes'         => array_merge($routes, $extensions['routes'] ?? []),
+            'kirby'          => $this,
         ];
 
         return $this->api = $this->api ?? new Api($api);
@@ -627,13 +627,16 @@ class App
      * Path resolver for the router
      *
      * @param string $path
-     * @param Language $language
+     * @param string|null $language
      * @return mixed
      */
-    public function resolve(string $path = null, Language $language = null)
+    public function resolve(string $path = null, string $language = null)
     {
+        // set the current translation
+        $this->setCurrentTranslation($language);
+
         // set the current locale
-        $this->localize($language);
+        $this->setCurrentLanguage($language);
 
         // the site is needed a couple times here
         $site = $this->site();

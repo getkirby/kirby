@@ -616,10 +616,16 @@ class Site extends ModelWithContent
      * returns the current page
      *
      * @param  string|Page $page
+     * @param  string|null $languageCode
      * @return Page
      */
-    public function visit($page): Page
+    public function visit($page, string $languageCode = null): Page
     {
+        if ($languageCode !== null) {
+            $this->kirby()->setCurrentTranslation($languageCode);
+            $this->kirby()->setCurrentLanguage($languageCode);
+        }
+
         // convert ids to a Page object
         if (is_string($page)) {
             $page = $this->find($page);

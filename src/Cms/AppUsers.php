@@ -36,7 +36,6 @@ trait AppUsers
         $user        = $this->users()->find($id);
 
         if ($user->validatePassword($password) === true) {
-            I18n::$locale = $user->language();
             return $user;
         }
 
@@ -46,8 +45,6 @@ trait AppUsers
     public function currentUserFromUsername(string $username)
     {
         if ($user = $this->users()->find($username)) {
-            // Init the user language
-            I18n::$locale = $user->language();
             return $user;
         }
 
@@ -73,12 +70,9 @@ trait AppUsers
         }
 
         if ($user = $this->users()->find($id)) {
-            I18n::$locale = $user->language();
-
             // in case the session needs to be updated, do it now
             // for better performance
             $session->commit();
-
             return $user;
         }
 
@@ -158,7 +152,6 @@ trait AppUsers
         }
 
         if (is_a($this->user, 'Kirby\Cms\User') === true) {
-            I18n::$locale = $this->user->language();
             return $this->user;
         }
 

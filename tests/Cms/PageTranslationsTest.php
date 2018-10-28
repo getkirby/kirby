@@ -89,7 +89,8 @@ class PageTranslationsTest extends TestCase
         ]);
 
         if ($language !== null) {
-            $app->localize($app->languages()->find($language));
+            $app->setCurrentLanguage('de');
+            $app->setCurrentTranslation('de');
         }
 
         return $app;

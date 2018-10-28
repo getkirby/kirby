@@ -79,16 +79,14 @@ class AppTranslationsTest extends TestCase
 
     }
 
-    public function testTranslateUserLanguage()
+    public function testSetCurrentTranslation()
     {
         $app = $this->app();
 
         $this->assertEquals('Save', t('save'));
         $this->assertEquals('Reset', t('reset'));
 
-        // the current user must be called once
-        // before their language is activated.
-        $app->user();
+        $app->setCurrentTranslation('de');
 
         $this->assertEquals('Speichern', t('save'));
         $this->assertEquals('Reset', t('reset'));
@@ -120,10 +118,10 @@ class AppTranslationsTest extends TestCase
         $this->assertEquals('This is a test error', $exception->getMessage());
     }
 
-    public function testExceptionWithUserLanguage()
+    public function testExceptionWithTranslation()
     {
         $app = $this->app();
-        $app->user();
+        $app->setCurrentTranslation('de');
 
         $exception = new Exception([
             'key' => 'test'

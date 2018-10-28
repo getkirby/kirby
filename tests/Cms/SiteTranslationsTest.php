@@ -43,7 +43,8 @@ class SiteTranslationsTest extends TestCase
         ]);
 
         if ($language !== null) {
-            $app->localize( $app->languages()->find($language) );
+            $app->setCurrentLanguage($language);
+            $app->setCurrentTranslation($language);
         }
 
         return $app;
@@ -82,5 +83,69 @@ class SiteTranslationsTest extends TestCase
         $this->assertCount(2, $site->translations());
         $this->assertEquals(['en', 'de'], $site->translations()->keys());
     }
+
+    public function visitProvider()
+    {
+        return [
+            ['en', 'Site', 'English Test'],
+            ['de', 'Seite', 'Deutsch Test']
+        ];
+    }
+
+    /**
+     * @dataProvider visitProvider
+     */
+    public function testVisit($languageCode, $siteTitle, $pageTitle)
+    {
+
+        $app = $this->app()->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                                'content' => [
+                                    'title' => 'English Test'
+                                ],
+                            ],
+                            [
+                                'code' => 'de',
+                                'content' => [
+                                    'title' => 'Deutsch Test'
+                                ],
+                            ]
+                        ]
+                    ]
+                ],
+                'translations' => [
+                    [
+                        'code' => 'en',
+                        'content' => [
+                            'title' => 'Site',
+                            'untranslated' => 'Untranslated'
+                        ]
+                    ],
+                    [
+                        'code' => 'de',
+                        'content' => [
+                            'title' => 'Seite',
+                        ]
+                    ],
+                ]
+            ]
+        ]);
+
+        $site = $app->site();
+        $page = $site->visit('test', $languageCode);
+
+        $this->assertEquals($languageCode, $app->language()->code());
+        $this->assertEquals('test', $page->slug());
+        $this->assertEquals($siteTitle, $site->title()->value());
+        $this->assertEquals($pageTitle, $page->title()->value());
+
+    }
+
 
 }

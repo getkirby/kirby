@@ -121,7 +121,7 @@ return function ($kirby) {
                 'method'  => 'ALL',
                 'env'     => 'site',
                 'action'  => function ($path = null) use ($kirby, $language) {
-                    return $kirby->resolve($path, $language);
+                    return $kirby->resolve($path, $language->code());
                 }
             ];
         }
