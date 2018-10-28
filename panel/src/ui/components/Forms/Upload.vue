@@ -110,6 +110,9 @@ export default {
         uploadFile(file, {
           url: this.options.url,
           attributes: this.options.attributes,
+          headers: {
+            "X-CSRF": window.panel.csrf
+          },
           progress: (xhr, file, progress) => {
             this.$refs[file.name][0].set(progress);
           },

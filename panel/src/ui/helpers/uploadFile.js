@@ -34,7 +34,6 @@ export default (file, params) => {
     options.progress(xhr, file, Math.ceil(percent));
   };
 
-
   xhr.addEventListener("loadstart", progress);
   xhr.addEventListener("progress", progress);
 
@@ -63,5 +62,14 @@ export default (file, params) => {
   });
 
   xhr.open("POST", options.url, true);
+
+  // add all request headers
+  if (options.headers) {
+    Object.keys(options.headers).forEach(header => {
+      const value = options.headers[header];
+      xhr.setRequestHeader(header, value);
+    });
+  }
+
   xhr.send(formData);
 };
