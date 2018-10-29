@@ -727,6 +727,10 @@ trait PageActions
      */
     public function update(array $input = null, string $language = null, bool $validate = false)
     {
+        if ($this->isDraft() === true) {
+            $validate = false;
+        }
+
         $page = parent::update($input, $language, $validate);
 
         // if num is created from page content, update num on content update
