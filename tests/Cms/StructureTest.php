@@ -45,4 +45,35 @@ class StructureTest extends TestCase
 
     }
 
+    public function testGroupBy()
+    {
+
+        $structure = new Structure([
+            [
+                'name' => 'A',
+                'category' => 'cat-a'
+            ],
+            [
+                'name' => 'B',
+                'category' => 'cat-b'
+            ],
+            [
+                'name' => 'C',
+                'category' => 'cat-a'
+            ]
+        ]);
+
+        $grouped = $structure->groupBy('category');
+
+        $this->assertCount(2, $grouped);
+        $this->assertCount(2, $grouped->first());
+        $this->assertCount(1, $grouped->last());
+
+        $this->assertEquals('A', $grouped->first()->first()->name());
+        $this->assertEquals('C', $grouped->first()->last()->name());
+
+        $this->assertEquals('B', $grouped->last()->first()->name());
+
+    }
+
 }
