@@ -29,7 +29,30 @@ class BlueprintTest extends TestCase
             'main' => [
                 'name'    => 'main',
                 'label'   => 'Main',
-                'columns' => $columns,
+                'columns' => [
+                    [
+                        'width' => '1/3',
+                        'sections' => [
+                            'main-info-0' => [
+                                'headline' => 'Column (1/3)',
+                                'type'     => 'info',
+                                'text'     => 'No sections yet',
+                                'name'     => 'main-info-0'
+                            ]
+                        ]
+                    ],
+                    [
+                        'width' => '2/3',
+                        'sections' => [
+                            'main-info-1' => [
+                                'headline' => 'Column (2/3)',
+                                'type'     => 'info',
+                                'text'     => 'No sections yet',
+                                'name'     => 'main-info-1'
+                            ]
+                        ]
+                    ]
+                ],
                 'icon'    => null
             ]
         ];

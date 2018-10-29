@@ -65,25 +65,20 @@ class A
 
         // support dot notation
         if (strpos($key, '.') !== false) {
-
             $keys = explode('.', $key);
 
             foreach ($keys as $innerKey) {
-
                 if (isset($array[$innerKey]) === false) {
                     return $default;
                 }
 
                 $array = $array[$innerKey];
-
             }
 
             return $array;
-
         }
 
         return $default;
-
     }
 
     /**

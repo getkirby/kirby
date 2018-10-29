@@ -270,7 +270,10 @@ return [
                         'title' => $props['title'],
                     ];
                 } catch (Throwable $e) {
-                    // skip invalid blueprints
+                    $blueprints[] = [
+                        'name'  => basename($template),
+                        'title' => ucfirst($template),
+                    ];
                 }
             }
 

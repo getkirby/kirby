@@ -7,7 +7,6 @@ use Kirby\Exception\NotFoundException;
 
 class Api extends BaseApi
 {
-
     protected $kirby;
 
     public function call(string $path = null, string $method = 'GET', array $requestData = [])
@@ -25,7 +24,6 @@ class Api extends BaseApi
 
     public function file(string $id = null, string $filename)
     {
-
         $filename = urldecode($filename);
         $parent   = $id === null ? $this->site(): $this->page($id);
 
@@ -39,7 +37,6 @@ class Api extends BaseApi
                 'filename' => $filename
             ]
         ]);
-
     }
 
     public function kirby()
@@ -111,5 +108,4 @@ class Api extends BaseApi
     {
         return $this->kirby->users();
     }
-
 }

@@ -2,7 +2,10 @@
 
 return function (array $props) {
 
-    $section = function ($headline, $status, $props) {
+    // load the general templates setting for all sections
+    $templates = $props['templates'] ?? null;
+
+    $section = function ($headline, $status, $props) use ($templates) {
 
         $defaults = [
             'headline' => $headline,
@@ -19,6 +22,11 @@ return function (array $props) {
             $props = [
                 'headline' => $props
             ];
+        }
+
+        // inject the global templates definition
+        if (empty($templates) === false) {
+            $props['templates'] = $props['templates'] ?? $templates;
         }
 
         return array_replace_recursive($defaults, $props);
@@ -45,7 +53,7 @@ return function (array $props) {
     }
 
     // cleaning up
-    unset($props['drafts'], $props['unlisted'], $props['listed']);
+    unset($props['drafts'], $props['unlisted'], $props['listed'], $props['templates']);
 
     return array_merge($props, ['sections' => $sections]);
 

@@ -78,9 +78,9 @@ class FilesFieldTest extends TestCase
         $field = new Field('files', [
             'model' => $this->model(),
             'value' => [
-                'test/a.jpg', // exists
-                'test/b.jpg', // exists
-                'test/e.jpg'  // does not exist
+                'a.jpg', // exists
+                'b.jpg', // exists
+                'e.jpg'  // does not exist
             ]
         ]);
 
@@ -101,8 +101,8 @@ class FilesFieldTest extends TestCase
         $field = new Field('files', [
             'model' => $this->model(),
             'value' => [
-                'test/a.jpg', // exists
-                'test/b.jpg', // exists
+                'a.jpg', // exists
+                'b.jpg', // exists
             ],
             'min' => 3
         ]);
@@ -118,8 +118,8 @@ class FilesFieldTest extends TestCase
         $field = new Field('files', [
             'model' => $this->model(),
             'value' => [
-                'test/a.jpg', // exists
-                'test/b.jpg', // exists
+                'a.jpg', // exists
+                'b.jpg', // exists
             ],
             'max' => 1
         ]);
@@ -135,9 +135,9 @@ class FilesFieldTest extends TestCase
         $field = new Field('files', [
             'model' => $this->app->page('test-draft'),
             'value' => [
-                'test/a.jpg', // exists
-                'test/b.jpg', // exists
-                'test/e.jpg', // does not exist
+                'a.jpg', // exists
+                'b.jpg', // exists
+                'e.jpg', // does not exist
             ]
         ]);
 
@@ -145,8 +145,8 @@ class FilesFieldTest extends TestCase
         $ids   = array_column($value, 'id');
 
         $expected = [
-            'test/a.jpg',
-            'test/b.jpg'
+            'test-draft/a.jpg',
+            'test-draft/b.jpg'
         ];
 
         $this->assertEquals($expected, $ids);

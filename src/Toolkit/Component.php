@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use ArgumentCountError;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use TypeError;
 
 /**
  * Vue-like components
@@ -174,7 +175,11 @@ class Component
         foreach ($props as $propName => $propFunction) {
             if (is_callable($propFunction) === true) {
                 if (isset($this->attrs[$propName]) === true) {
-                    $this->$propName = $this->props[$propName] = $propFunction($this->attrs[$propName]);
+                    try {
+                        $this->$propName = $this->props[$propName] = $propFunction($this->attrs[$propName]);
+                    } catch (TypeError $e) {
+                        throw new TypeError('Invalid value for "' . $propName . '"');
+                    }
                 } else {
                     try {
                         $this->$propName = $this->props[$propName] = $propFunction();

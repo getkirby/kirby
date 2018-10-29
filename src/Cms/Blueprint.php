@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Data\Data;
+use Kirby\Form\Field;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Obj;
@@ -373,6 +374,17 @@ class Blueprint
         foreach ($columns as $columnKey => $columnProps) {
             $columnProps = $this->convertFieldsToSections($tabName, $columnProps);
 
+            // inject getting started info, if the sections are empty
+            if (empty($columnProps['sections']) === true) {
+                $columnProps['sections'] = [
+                    $tabName . '-info-' . $columnKey => [
+                        'headline' => 'Column (' . ($columnProps['width'] ?? '1/1') . ')',
+                        'type'     => 'info',
+                        'text'     => 'No sections yet'
+                    ]
+                ];
+            }
+
             $columns[$columnKey] = array_merge($columnProps, [
                 'width'    => $columnProps['width'] ?? '1/1',
                 'sections' => $this->normalizeSections($tabName, $columnProps['sections'] ?? [])
@@ -380,6 +392,17 @@ class Blueprint
         }
 
         return $columns;
+    }
+
+    protected function helpList(array $items)
+    {
+        $md = [];
+
+        foreach ($items as $item) {
+            $md[] = '- *' . $item . '*';
+        }
+
+        return PHP_EOL . implode(PHP_EOL, $md);
     }
 
     /**
@@ -390,8 +413,23 @@ class Blueprint
      * @param array $fields
      * @return array
      */
-    protected function normalizeFields(string $tabName, array $fields, int $level = 0): array
+    protected function normalizeFields(string $tabName, $fields, int $level = 0): array
     {
+        if (is_array($fields) === false) {
+            $fields = [];
+        }
+
+        // inject guide
+        if (empty($fields) === true) {
+            $fields = [
+                $tabName . '-info' => [
+                    'label' => 'Fields',
+                    'text'  => 'No fields yet',
+                    'type'  => 'info'
+                ]
+            ];
+        }
+
         foreach ($fields as $fieldName => $fieldProps) {
             if ($fieldProps === true) {
                 $fieldProps = [];
@@ -408,9 +446,19 @@ class Blueprint
             $fields[$fieldName] = $fieldProps = array_merge($fieldProps, [
                 'label' => $fieldProps['label'] ?? ucfirst($fieldName),
                 'name'  => $fieldName,
-                'type'  => $fieldProps['type'] ?? $fieldName,
+                'type'  => $type = $fieldProps['type'] ?? $fieldName,
                 'width' => $fieldProps['width'] ?? '1/1',
             ]);
+
+            if (isset(Field::$types[$type]) === false) {
+                $fields[$fieldName] = [
+                    'name' => $fieldName,
+                    'label' => 'Invalid field type ("' . $type . '")',
+                    'type' => 'info',
+                    'theme' => 'negative',
+                    'text' => 'The following field types are available: ' . $this->helpList(array_keys(Field::$types))
+                ];
+            }
         }
 
         // store all normalized fields if not in nested fields
@@ -472,8 +520,17 @@ class Blueprint
 
             $sections[$sectionName] = $sectionProps = array_merge($sectionProps, [
                 'name' => $sectionName,
-                'type' => $sectionProps['type'] ?? null
+                'type' => $type = $sectionProps['type'] ?? null
             ]);
+
+            if (isset(Section::$types[$type]) === false) {
+                $sections[$sectionName] = [
+                    'name' => $sectionName,
+                    'headline' => 'Invalid section type ("' . $type . '")',
+                    'type' => 'info',
+                    'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
+                ];
+            }
 
             if ($sectionProps['type'] === 'fields') {
                 $sections[$sectionName]['fields'] = $this->normalizeFields($tabName, $sectionProps['fields'] ?? []);
@@ -492,8 +549,12 @@ class Blueprint
      * @param array $tabs
      * @return array
      */
-    protected function normalizeTabs(array $tabs): array
+    protected function normalizeTabs($tabs): array
     {
+        if (is_array($tabs) === false) {
+            $tabs = [];
+        }
+
         foreach ($tabs as $tabName => $tabProps) {
 
             // inject all tab extensions

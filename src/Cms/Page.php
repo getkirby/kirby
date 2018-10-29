@@ -1254,7 +1254,6 @@ class Page extends ModelWithContent
     public function slug(string $languageCode = null): string
     {
         if ($this->kirby()->multilang() === true) {
-
             if ($languageCode === null) {
                 $languageCode = $this->kirby()->languageCode();
             }
@@ -1262,7 +1261,6 @@ class Page extends ModelWithContent
             if ($translation = $this->translations()->find($languageCode)) {
                 return $translation->slug() ?? $this->slug;
             }
-
         }
 
         return $this->slug;
