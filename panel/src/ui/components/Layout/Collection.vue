@@ -4,6 +4,7 @@
       :list="items"
       :options="dragOptions"
       :element="elements.list"
+      :data-size="size"
       @start="onStart"
       @change="$emit('change', $event)"
       @end="onEnd"
@@ -42,6 +43,7 @@ export default {
       type: String,
       default: "list",
     },
+    size: String,
     sortable: Boolean,
     pagination: {
       type: [Boolean, Object],

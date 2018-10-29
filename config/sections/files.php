@@ -19,6 +19,9 @@ return [
         'info' => function (string $info = null) {
             return $info;
         },
+        'size' => function (string $size = 'auto') {
+            return $size;
+        },
         'sortable' => function (bool $sortable = true) {
             return $sortable;
         },
@@ -199,6 +202,7 @@ return [
                 'layout'   => $this->layout,
                 'link'     => $this->link,
                 'max'      => $this->max,
+                'size'     => $this->size,
                 'sortable' => $this->sortable,
                 'upload'   => $this->upload
             ],

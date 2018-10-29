@@ -21,6 +21,9 @@ return [
         'info' => function (string $info = null) {
             return $info;
         },
+        'size' => function (string $size = 'auto') {
+            return $size;
+        },
         'sortable' => function (bool $sortable = true) {
             return $sortable;
         },
@@ -284,6 +287,7 @@ return [
                 'headline' => $this->headline,
                 'layout'   => $this->layout,
                 'link'     => $this->link,
+                'size'     => $this->size,
                 'sortable' => $this->sortable
             ],
             'pagination' => $this->pagination,

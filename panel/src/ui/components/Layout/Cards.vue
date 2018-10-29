@@ -23,17 +23,29 @@ export default {
 .k-cards {
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
 }
 
 @media screen and (min-width: $breakpoint-small) {
-  .k-sections > .k-column[data-width="3/4"] .k-cards,
-  .k-sections > .k-column[data-width="2/3"] .k-cards,
-  .k-sections > .k-column[data-width="1/2"] .k-cards,
-  .k-sections > .k-column[data-width="1/1"] .k-cards {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  .k-cards[data-size="tiny"] {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
+  .k-cards[data-size="small"] {
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  }
+  .k-cards[data-size="medium"] {
+    grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+  }
+  .k-cards[data-size="large"],
+  .k-cards[data-size="huge"] {
+    grid-template-columns: 1fr;
   }
 }
 
+@media screen and (min-width: $breakpoint-medium) {
+  .k-cards[data-size="large"] {
+    grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+  }
+}
 
 </style>

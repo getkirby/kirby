@@ -26,6 +26,7 @@
         :items="data"
         :pagination="pagination"
         :sortable="sortable"
+        :size="size"
         @change="sort"
         @paginate="paginate"
         @action="action"
@@ -67,6 +68,7 @@ export default {
       min: null,
       max: null,
       layout: "list",
+      size: "auto",
       page: 1,
       link: false
     };
@@ -162,6 +164,7 @@ export default {
           this.min        = response.options.min;
           this.max        = response.options.max;
           this.layout     = response.options.layout || "list";
+          this.size       = response.options.size;
           this.link       = response.options.link;
           this.error      = response.errors[0];
           this.isLoading  = false;

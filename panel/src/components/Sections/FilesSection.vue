@@ -28,6 +28,7 @@
           :items="data"
           :pagination="pagination"
           :sortable="sortable"
+          :size="size"
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -62,6 +63,7 @@ export default {
       issue: false,
       layout: "list",
       page: 1,
+      size: "auto",
       pagination: {},
     };
   },
@@ -97,6 +99,7 @@ export default {
           this.pagination = response.pagination;
           this.sortable   = response.options.sortable === true && response.data.length > 1;
           this.layout     = response.options.layout || "list";
+          this.size       = response.options.size;
           this.isLoading  = false;
 
           if (this.$permissions.files.create && response.options.upload !== false) {
