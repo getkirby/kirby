@@ -38,8 +38,11 @@ class Form extends BaseForm
 
     public static function for(Model $model, array $props = [])
     {
+        // get the original model data
+        $original = $model->content()->toArray();
+
         // set a few defaults
-        $props['values'] = $model->content()->update($props['values'] ?? [])->toArray();
+        $props['values'] = array_merge($original, $props['values'] ?? []);
         $props['fields'] = $props['fields'] ?? [];
         $props['model']  = $model;
 
