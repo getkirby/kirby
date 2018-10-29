@@ -23,7 +23,7 @@
           :sortable="true"
           :text="file.filename"
           :link="file.link"
-          :image="file.thumb ? { url: file.thumb } : null"
+          :image="file.thumb ? { url: file.thumb, back: 'pattern' } : null"
           :icon="{ type: 'file', back: 'pattern' }"
         >
           <k-button slot="options" icon="remove" @click="remove(index)" />
