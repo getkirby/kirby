@@ -47,6 +47,11 @@ class Api extends BaseApi
         return $this->kirby;
     }
 
+    public function language()
+    {
+        return $this->requestHeaders('x-language');
+    }
+
     public function page(string $id)
     {
         $id   = str_replace('+', '/', $id);
