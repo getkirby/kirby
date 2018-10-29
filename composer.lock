@@ -2901,12 +2901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "d1647d7cac04f68db4bc08de35d62eeee3322fa2"
+                "reference": "9e53cba51e5d714aed18888f13d7fe68b073e050"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/d1647d7cac04f68db4bc08de35d62eeee3322fa2",
-                "reference": "d1647d7cac04f68db4bc08de35d62eeee3322fa2",
+                "url": "https://api.github.com/repos/symfony/process/zipball/9e53cba51e5d714aed18888f13d7fe68b073e050",
+                "reference": "9e53cba51e5d714aed18888f13d7fe68b073e050",
                 "shasum": ""
             },
             "require": {
@@ -2942,7 +2942,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-24 10:10:48"
+            "time": "2018-10-29 09:58:56"
         },
         {
             "name": "symfony/stopwatch",
