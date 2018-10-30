@@ -158,7 +158,7 @@ class Component
      *
      * @return array
      */
-    protected function defaults(): array
+    public static function defaults(): array
     {
         return [];
     }
@@ -176,13 +176,13 @@ class Component
             if (is_callable($propFunction) === true) {
                 if (isset($this->attrs[$propName]) === true) {
                     try {
-                        $this->$propName = $this->props[$propName] = $propFunction($this->attrs[$propName]);
+                        $this->$propName = $this->props[$propName] = $propFunction->call($this, $this->attrs[$propName]);
                     } catch (TypeError $e) {
                         throw new TypeError('Invalid value for "' . $propName . '"');
                     }
                 } else {
                     try {
-                        $this->$propName = $this->props[$propName] = $propFunction();
+                        $this->$propName = $this->props[$propName] = $propFunction->call($this);
                     } catch (ArgumentCountError $e) {
                         throw new ArgumentCountError('Please provide a value for "' . $propName . '"');
                     }
@@ -213,7 +213,7 @@ class Component
      * @param string $type
      * @return array
      */
-    protected function load(string $type): array
+    public static function load(string $type): array
     {
         $definition = static::$types[$type];
 
@@ -234,17 +234,17 @@ class Component
      * @param string $type
      * @return array
      */
-    protected function setup(string $type): array
+    public static function setup(string $type): array
     {
         // load component definition
-        $definition = $this->load($type);
+        $definition = static::load($type);
 
         if (isset($definition['extends']) === true) {
             // extend other definitions
-            $options = array_replace_recursive($this->defaults(), $this->load($definition['extends']), $definition);
+            $options = array_replace_recursive(static::defaults(), static::load($definition['extends']), $definition);
         } else {
             // inject defaults
-            $options = array_replace_recursive($this->defaults(), $definition);
+            $options = array_replace_recursive(static::defaults(), $definition);
         }
 
         // inject mixins
