@@ -2,6 +2,9 @@
 
 return [
     'props' => [
+        /**
+         * Sets the maximum number of allowed entries in the section
+         */
         'max' => function (int $max = null) {
             return $max;
         }
