@@ -2,15 +2,36 @@
 
 return [
     'props' => [
+        /**
+         * Unset inherited props
+         */
+        'after'       => null,
+        'autofocus'   => null,
+        'before'      => null,
+        'icon'        => null,
+        'placeholder' => null,
+
+        /**
+         * Default selected user(s) when a new Page/File/User is created
+         */
         'default' => function ($default = null) {
             return $this->toUsers($default);
         },
+        /**
+         * The minimum number of required selected users
+         */
         'min' => function (int $min = null) {
             return $min;
         },
+        /**
+         * The maximum number of allowed selected users
+         */
         'max' => function (int $max = null) {
             return $max;
         },
+        /**
+         * If false, only a single user can be selected
+         */
         'multiple' => function (bool $multiple = true) {
             return $multiple;
         },

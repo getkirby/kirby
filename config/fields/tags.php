@@ -3,18 +3,41 @@
 return [
     'mixins' => ['options'],
     'props' => [
+
+        /**
+         * Unset inherited props
+         */
+        'after'       => null,
+        'before'      => null,
+        'placeholder' => null,
+
+        /**
+         * If set to <code>all</code>, any type of input is accepted. If set to <code>options</code> only the predefined options are accepted as input.
+         */
         'accept' => function ($value = 'all') {
             return V::in($value, ['all', 'options']) ? $value : 'all';
         },
+        /**
+         * Changes the tag icon
+         */
         'icon' => function ($icon = 'tag') {
             return $icon;
         },
+        /**
+         * Minimum number of required entries/tags
+         */
         'min' => function (int $min = null) {
             return $min;
         },
+        /**
+         * Maximum number of allowed entries/tags
+         */
         'max' => function (int $max = null) {
             return $max;
         },
+        /**
+         * Custom tags separator, which will be used to store tags in the content file
+         */
         'separator' => function (string $separator = ',') {
             return $separator;
         },

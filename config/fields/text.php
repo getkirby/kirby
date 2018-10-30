@@ -6,6 +6,10 @@ use Kirby\Toolkit\Str;
 
 return [
     'props' => [
+
+        /**
+         * The field value will be converted with the selected converter before the value gets saved. Available converters: lower, upper, ucfirst, slug
+         */
         'converter' => function ($value = null) {
             if ($value !== null && in_array($value, array_keys($this->converters())) === false) {
                 throw new InvalidArgumentException([
@@ -16,18 +20,38 @@ return [
 
             return $value;
         },
+
+        /**
+         * Shows or hides the character counter in the top right corner
+         */
         'counter' => function (bool $counter = true) {
             return $counter;
         },
+
+        /**
+         * Maximum number of allowed characters
+         */
         'maxlength' => function (int $maxlength = null) {
             return $maxlength;
         },
+
+        /**
+         * Minimum number of required characters
+         */
         'minlength' => function (int $minlength = null) {
             return $minlength;
         },
+
+        /**
+         * A regular expression, which will be used to validate the input
+         */
         'pattern' => function (string $pattern = null) {
             return $pattern;
         },
+
+        /**
+         * If false, spellcheck will be switched off
+         */
         'spellcheck' => function (bool $spellcheck = false) {
             return $spellcheck;
         },

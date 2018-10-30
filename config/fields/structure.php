@@ -5,18 +5,42 @@ use Kirby\Cms\Blueprint;
 
 return [
     'props' => [
+        /**
+         * Unset inherited props
+         */
+        'after'       => null,
+        'before'      => null,
+        'autofocus'   => null,
+        'icon'        => null,
+        'placeholder' => null,
+
+        /**
+         * Optional columns definition to only show selected fields in the structure table.
+         */
         'columns' => function (array $columns = []) {
             return $columns;
         },
+        /**
+         * Fields setup for the structure form. Works just like fields in regular forms.
+         */
         'fields' => function (array $fields) {
             return $fields;
         },
+        /**
+         * The number of entries that will be displayed on a single page. Afterwards pagination kicks in.
+         */
         'limit' => function (int $limit = null) {
             return $limit;
         },
+        /**
+         * Minimum required entries in the structure
+         */
         'min' => function (int $min = null) {
             return $min;
         },
+        /**
+         * Maximum allowed entries in the structure. Afterwards the "Add" button will be switched off.
+         */
         'max' => function (int $max = null) {
             return $max;
         },

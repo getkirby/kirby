@@ -7,6 +7,14 @@ return [
     'mixins' => ['options'],
     'props' => [
         /**
+         * Unset inherited props
+         */
+        'after'       => null,
+        'before'      => null,
+        'icon'        => null,
+        'placeholder' => null,
+
+        /**
          * Arranges the checkboxes in the given number of columns
          */
         'columns' => function (int $columns = 1) {

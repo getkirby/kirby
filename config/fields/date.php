@@ -27,11 +27,18 @@ return [
             return $this->toDate($min);
         },
         /**
+         * The placeholder is not available
+         */
+        'placeholder' => null,
+        /**
          * Pass true or an array of time field options to show the time selector.
          */
         'time' => function ($time = false) {
             return $time;
         },
+        /**
+         * Must be a parseable date string
+         */
         'value' => function ($value = null) {
             return $this->toDate($value);
         },
