@@ -102,6 +102,7 @@
                       :is="'k-' + column.type + '-field-preview'"
                       :value="item[columnName]"
                       :column="column"
+                      :field="fields[columnName]"
                     />
                     <template v-else>
                       <p class="k-structure-table-text">
@@ -136,16 +137,10 @@
 </template>
 
 <script>
+import Vue from "vue";
 import Field from "../Field.vue";
 import dayjs from "dayjs";
 import sorter from "@/ui/helpers/sort.js";
-
-// Field Previews
-import FilesFieldPreview from "../Previews/FilesFieldPreview.vue";
-import EmailFieldPreview from "../Previews/EmailFieldPreview.vue";
-import PagesFieldPreview from "../Previews/PagesFieldPreview.vue";
-import UrlFieldPreview from "../Previews/UrlFieldPreview.vue";
-import UsersFieldPreview from "../Previews/UsersFieldPreview.vue";
 
 Array.prototype.sortBy = function(sortBy) {
 
@@ -170,13 +165,6 @@ Array.prototype.sortBy = function(sortBy) {
 };
 
 export default {
-  components: {
-    "k-email-field-preview": EmailFieldPreview,
-    "k-files-field-preview": FilesFieldPreview,
-    "k-pages-field-preview": PagesFieldPreview,
-    "k-url-field-preview": UrlFieldPreview,
-    "k-users-field-preview": UsersFieldPreview
-  },
   inheritAttrs: false,
   props: {
     ...Field.props,
@@ -301,7 +289,15 @@ export default {
       return items.sortBy(this.sortBy);
     },
     previewExists(type) {
-      return this.$options.components['k-' + type + '-field-preview'] !== undefined;
+      if (Vue.options.components["k-" + type + "-field-preview"] !== undefined) {
+        return true;
+      }
+
+      if (this.$options.components["k-" + type + "-field-preview"] !== undefined) {
+        return true;
+      }
+
+      return false;
     },
     add() {
 

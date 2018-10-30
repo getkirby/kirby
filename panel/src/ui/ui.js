@@ -92,6 +92,14 @@ import ToggleField from "./components/Forms/Field/ToggleField.vue";
 import UrlField from "./components/Forms/Field/UrlField.vue";
 import UsersField from "./components/Forms/Field/UsersField.vue";
 
+/* Form Field Previews */
+import FilesFieldPreview from "./components/Forms/Previews/FilesFieldPreview.vue";
+import EmailFieldPreview from "./components/Forms/Previews/EmailFieldPreview.vue";
+import PagesFieldPreview from "./components/Forms/Previews/PagesFieldPreview.vue";
+import UrlFieldPreview from "./components/Forms/Previews/UrlFieldPreview.vue";
+import UsersFieldPreview from "./components/Forms/Previews/UsersFieldPreview.vue";
+
+
 export default {
   install(Vue) {
 
@@ -196,6 +204,13 @@ export default {
     Vue.component("k-toggle-field", ToggleField);
     Vue.component("k-url-field", UrlField);
     Vue.component("k-users-field", UsersField);
+
+    /** Form field previews */
+    Vue.component("k-email-field-preview", EmailFieldPreview);
+    Vue.component("k-files-field-preview", FilesFieldPreview);
+    Vue.component("k-pages-field-preview", PagesFieldPreview);
+    Vue.component("k-url-field-preview", UrlFieldPreview);
+    Vue.component("k-users-field-preview", UsersFieldPreview);
 
   }
 };

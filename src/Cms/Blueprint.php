@@ -455,7 +455,6 @@ class Blueprint
                     'name' => $fieldName,
                     'label' => 'Invalid field type ("' . $type . '")',
                     'type' => 'info',
-                    'theme' => 'negative',
                     'text' => 'The following field types are available: ' . $this->helpList(array_keys(Field::$types))
                 ];
             }
