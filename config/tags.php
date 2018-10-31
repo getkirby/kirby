@@ -160,20 +160,11 @@ return [
             'title'
         ],
         'html' => function($tag) {
-
-            $text = $tag->text;
-            $tel  = str_replace(['/', ' ', '-'], '', $tag->value);
-
-            if (empty($text) === true) {
-                $text = $tag->value;
-            }
-
-            return Html::a('tel:' . $tel, $text, [
+            return Html::tel($tag->value, $tag->text, [
                 'class' => $tag->class,
                 'rel'   => $tag->rel,
                 'title' => $tag->title
             ]);
-
         }
     ],
 

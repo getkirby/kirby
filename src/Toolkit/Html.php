@@ -373,6 +373,26 @@ class Html
         return $html;
     }
 
+
+    /**
+     * Generates an a tag for a phone number
+     *
+     * @param string $tel The phone number
+     * @param mixed $text The optional text. If null, the number will be used as text
+     * @param array $attr Additional attributes for the tag
+     * @return string the generated html
+     */
+    public static function tel($tel = null, $text = null, array $attr = []): string
+    {
+        $number = preg_replace('![^0-9\+]+!', '', $tel);
+
+        if (empty($text) === true) {
+            $text = $tel;
+        }
+
+        return static::a('tel:' . $number, $text, $attr);
+    }
+
     /**
      * Creates a video embed via iframe for Youtube or Vimeo
      * videos. The embed Urls are automatically detected from
