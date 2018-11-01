@@ -125,6 +125,18 @@ class CollectionSorterTest extends TestCase
         $this->assertEquals(12, $sorted->nth(3)['number']);
     }
 
+    public function testSortByZeros()
+    {
+        $collection = new Collection([
+            ['number' => 0],
+            ['number' => 0],
+            ['number' => 0],
+            ['number' => 0]
+        ]);
+
+        $sorted = $collection->sortBy('number', 'asc');
+    }
+
     public function testSortByEmpty()
     {
         $collection = new Collection();

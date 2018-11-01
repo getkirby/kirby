@@ -593,15 +593,22 @@ trait PageActions
                 return $page->blueprint()->num() === 'default';
             });
 
-        foreach ($siblings as $sibling) {
-            $index++;
-            $sibling->changeNum($index);
+        if ($siblings->count() > 0) {
+
+            foreach ($siblings as $sibling) {
+                $index++;
+                $sibling->changeNum($index);
+            }
+
+            $parent = $this->parentModel();
+            $sorted = $parent->children()->sortBy('num', 'desc');
+
+            $parent->children = $sorted;
+
         }
 
-        $parent = $this->parentModel();
-        $parent->children = $parent->children()->sortBy('num', 'asc');
-
         return true;
+
     }
 
     public function sort($position = null)
