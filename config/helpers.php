@@ -65,7 +65,7 @@ function csrf(string $check = null)
 
     if (is_string($check) === true && is_string($session->get('csrf')) === true) {
         // argument has been passed, check the token
-        return hash_equals($check, $session->get('csrf')) === true;
+        return hash_equals($session->get('csrf'), $check) === true;
     }
 
     return false;
