@@ -116,7 +116,7 @@ return [
         },
         'form' => function (array $values = []) {
             return new Form([
-                'fields' => $this->fields,
+                'fields' => $this->attrs['fields'],
                 'values' => $values,
                 'model'  => $this->model
             ]);
