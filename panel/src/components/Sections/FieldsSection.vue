@@ -47,11 +47,9 @@ export default {
     this.$store.dispatch("form/create", this.id);
     this.fetch();
     this.$events.$on("form.reset", this.fetch);
-    this.$events.$on("model.update", this.fetch);
   },
   destroyed: function() {
     this.$events.$off("form.reset", this.fetch);
-    this.$events.$off("model.update", this.fetch);
   },
   methods: {
     input(values) {

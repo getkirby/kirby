@@ -39,7 +39,6 @@ export default {
   methods: {
     reset() {
       this.$store.dispatch("form/reset", this.id);
-      this.$events.$emit("form.reset");
     },
     save(e) {
 
