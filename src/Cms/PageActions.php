@@ -314,7 +314,7 @@ trait PageActions
     {
         // clean up the slug
         $props['slug']     = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
-        $props['template'] = strtolower($props['template'] ?? 'default');
+        $props['template'] = $props['model'] = strtolower($props['template'] ?? 'default');
         $props['isDraft']  = true;
 
         // create a temporary page object
