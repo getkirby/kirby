@@ -11,6 +11,9 @@ class Api extends BaseApi
 
     public function call(string $path = null, string $method = 'GET', array $requestData = [])
     {
+        $this->setRequestMethod($method);
+        $this->setRequestData($requestData);
+
         if ($languageCode = $this->requestHeaders('x-language')) {
             $this->kirby->setCurrentLanguage($languageCode);
         }
