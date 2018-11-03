@@ -584,8 +584,8 @@ trait PageActions
     public function resortSiblingsAfterUnlisting(): bool
     {
         $index    = 0;
-        $siblings = $this
-            ->parentModel()
+        $parent   = $this->parentModel();
+        $siblings = $parent
             ->children()
             ->listed()
             ->not($this)
@@ -600,10 +600,7 @@ trait PageActions
                 $sibling->changeNum($index);
             }
 
-            $parent = $this->parentModel();
-            $sorted = $parent->children()->sortBy('num', 'desc');
-
-            $parent->children = $sorted;
+            $parent->children = $siblings->sortBy('num', 'desc');
 
         }
 
