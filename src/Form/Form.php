@@ -23,6 +23,7 @@ class Form
         $fields = $props['fields'] ?? [];
         $values = $props['values'] ?? [];
         $input  = $props['input']  ?? [];
+        $strict = $props['strict'] ?? false;
         $inject = $props;
 
         // lowercase all value names
@@ -32,7 +33,12 @@ class Form
         unset($inject['fields'], $inject['values'], $inject['input']);
 
         $this->fields = new Fields;
-        $this->values = array_merge($values, $input);
+
+        if ($strict !== true) {
+            // use all given values, no matter
+            // if there's a field or not.
+            $this->values = array_merge($values, $input);
+        }
 
         foreach ($fields as $name => $props) {
 

@@ -13,6 +13,7 @@ return [
 
             $fields   = $this->fields;
             $disabled = $this->model->permissions()->update() === false;
+            $content  = $this->model->content()->toArray();
 
             if ($disabled === true) {
                 foreach ($fields as $key => $props) {
@@ -22,8 +23,9 @@ return [
 
             return new Form([
                 'fields' => $fields,
-                'values' => $this->model->content()->toArray(),
+                'values' => $content,
                 'model'  => $this->model,
+                'strict' => true
             ]);
 
         },
