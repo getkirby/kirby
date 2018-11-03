@@ -21,7 +21,9 @@ export default {
     },
     SET_CURRENT(state, language) {
       state.current = language;
-      localStorage.setItem("kirby$language", language.code);
+      if (language && language.code) {
+        localStorage.setItem("kirby$language", language.code);
+      }
     },
     SET_DEFAULT(state, language) {
       state.default = language;

@@ -87,7 +87,7 @@ export default {
 
 html {
   font-family: $font-family-sans;
-  background: $color-dark;
+  background: $color-background;
 }
 
 html,

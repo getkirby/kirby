@@ -68,7 +68,9 @@ trait AppTranslations
             $this->language = $this->defaultLanguage();
         }
 
-        setlocale(LC_ALL, $this->language->locale());
+        if ($this->language) {
+            setlocale(LC_ALL, $this->language->locale());
+        }
 
         return $this->language;
     }
