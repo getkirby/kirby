@@ -39,6 +39,10 @@ return [
                 unset($fields['title']);
             }
 
+            foreach ($fields as $index => $props) {
+                unset($fields[$index]['value']);
+            }
+
             return $fields;
 
         },
@@ -61,7 +65,6 @@ return [
     ],
     'toArray' => function () {
         return [
-            'data'   => $this->data,
             'errors' => $this->errors,
             'fields' => $this->fields,
         ];

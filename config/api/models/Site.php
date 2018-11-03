@@ -48,6 +48,7 @@ return [
         'panel' => [
             'title',
             'blueprint',
+            'content',
             'options',
             'url'
         ],

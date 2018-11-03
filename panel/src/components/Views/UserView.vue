@@ -214,6 +214,11 @@ export default {
           }
 
           this.$store.dispatch("title", this.user.name || this.user.email);
+          this.$store.dispatch("form/create", {
+            id: this.$store.getters["form/id"](this.$route),
+            content: user.content
+          });
+
         })
         .catch(error => {
           this.issue = error;

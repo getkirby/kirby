@@ -131,6 +131,7 @@ return [
         ],
         'panel' => [
             'blueprint',
+            'content',
             'dimensions',
             'extension',
             'filename',

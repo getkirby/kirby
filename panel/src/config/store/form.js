@@ -8,41 +8,11 @@ export default {
     models: {}
   },
   getters: {
-    changes: (state, getters) => (id) => {
-      return getters.data('changes', id);
-    },
-    content: (state, getters) => (id) => {
-      return getters.model(id).content;
-    },
-    data: (state, getters) => (type, id) => {
-      // data type for specific model
-      if (id) {
-        return getters.model(id)[type];
-      }
-
-      // data type from all models
-      let items = Object.assign({}, state.models);
-
-      Object.keys(items).forEach(key => {
-        items[key] = items[key][type];
-        if (Object.keys(items[key]).length === 0) {
-          delete items[key];
-        }
-      });
-
-      return items;
-    },
-    errors: (state, getters) => (id) => {
-      return getters.data('errors', id);
-    },
     exists: (state) => (id) => {
       return state.models.hasOwnProperty(id);
     },
-    hasErrors: (state, getters) => (id) => {
-      return Object.keys(getters.errors(id)).length > 0;
-    },
     hasChanges: (state, getters) => (id) => {
-      return Object.keys(getters.changes(id)).length > 0;
+      return Object.keys(getters.model(id).changes).length > 0;
     },
     id: (state, getters, rootState) => (route) => {
       if (route.name === "Account") {
@@ -53,109 +23,91 @@ export default {
     },
     model: (state, getters) => (id) => {
       return getters.exists(id) ? state.models[id] : {
-        content: {},
+        originals: {},
+        values: {},
         changes: {},
-        errors: {}
-      }
+      };
+    },
+    originals: (state, getters) => (id) => {
+      return clone(getters.model(id).originals);
     },
     values: (state, getters) => (id) => {
-      return clone({
-        ...getters.model(id).content,
-        ...getters.model(id).changes
-      });
+      return clone(getters.model(id).values);
     },
   },
   mutations: {
-    ADD_MODEL(state, [id, model]) {
-      state.models = {
-        ...state.models,
-        [id]: model
-      };
-    },
-    RESET_CHANGES(state, id) {
-      Vue.set(state.models[id], "changes", {});
-    },
-    RESET_FIELD(state, [id, field]) {
-      Vue.delete(state.models[id].changes, field);
-    },
-    SET_ERRORS(state, [id, errors]) {
-      Vue.set(state.models[id], "errors", errors);
-    },
-    SET_CHANGES(state, [id, values]) {
-      Vue.set(state.models[id], "changes", {
-        ...state.models[id].changes,
-        ...values
+    CREATE(state, model) {
+      Vue.set(state.models, model.id, {
+        originals: clone(model.content),
+        values: clone(model.content),
+        changes: {}
       });
     },
-    SET_CONTENT(state, [id, values]) {
-      Vue.set(state.models[id], "content", values);
+    DELETE_CHANGES(state, id) {
+      Vue.set(state.models[id], "changes", {});
+      localStorage.removeItem("kirby$" + id);
+    },
+    SET_ORIGINALS(state, [id, originals]) {
+      state.models[id].originals = clone(originals);
+    },
+    SET_VALUES(state, [id, values]) {
+      state.models[id].values = clone(values);
+    },
+    UPDATE(state, [id, field, value]) {
+
+      Vue.set(state.models[id].values, field, value);
+
+      const original = JSON.stringify(state.models[id].originals[field]);
+      const current  = JSON.stringify(value);
+
+      if (original === current) {
+        Vue.delete(state.models[id].changes, field);
+      } else {
+        Vue.set(state.models[id].changes, field, true);
+      }
+
+      localStorage.setItem(
+        "kirby$" + id,
+        JSON.stringify(state.models[id].values)
+      );
+
     }
   },
   actions: {
-    content(context, [id, values]) {
-      context.dispatch("create", id);
-      context.commit("SET_CONTENT", [id, values]);
-    },
-    create(context, id) {
-      context.commit("ADD_MODEL", [id, context.getters.model(id)]);
-    },
-    errors(context, [id, errors]) {
-      context.commit("SET_ERRORS", [id, errors]);
-    },
-    restore(context) {
-      Object.keys(localStorage).map(id => {
-        if (id.startsWith("kirby$")) {
-          let values = localStorage.getItem(id);
-          if (values) {
-            id = id.replace("kirby$", "");
-            context.dispatch("update", [id, JSON.parse(values)]);
-          }
-        }
-      });
-    },
-    reset(context, id) {
-      if (id) {
-        context.commit("RESET_CHANGES", id);
-        localStorage.removeItem("kirby$" + id);
-        return;
+    create(context, model) {
+      context.commit("CREATE", model);
+
+      const values = localStorage.getItem("kirby$" + model.id);
+
+      if (values) {
+        const data = JSON.parse(values);
+
+        Object.keys(data).forEach(field => {
+          const value = data[field];
+          context.commit("UPDATE", [model.id, field, value]);
+        });
+
       }
 
-      Object.keys(context.state.models).forEach(id => {
-        context.dispatch("reset", id);
-      })
+    },
+    revert(context, id) {
+      // fetch from api
+      return Api.get(id.substr(1), { select: "content" }).then(response => {
+        context.commit("SET_ORIGINALS", [id, response.content]);
+        context.commit("SET_VALUES", [id, response.content]);
+        context.commit("DELETE_CHANGES", id);
+      });
     },
     save(context, id) {
-      // Prevent short blink of old value during API call
-      // by already adding changes to store before API call
-      let store = Object.assign({}, context.getters.values(id));
-      context.dispatch("content", [id, store]);
-
-      // Send to API
-      return Api.patch(id.substr(1), context.getters.changes(id)).then(() => {
-        context.dispatch("reset", id);
+      // Send to api
+      return Api.patch(id.substr(1), context.getters.values(id)).then(response => {
+        context.commit("SET_ORIGINALS", [id, response.content]);
+        context.commit("SET_VALUES",  [id, response.content]);
+        context.commit("DELETE_CHANGES", id);
       });
     },
-    update(context, [id, values]) {
-      context.dispatch("create", id);
-
-      values = Object.assign({}, values);
-
-      // Remove unchanged values from changes store
-      Object.keys(values).forEach(key => {
-        if (
-          context.getters.content(id).hasOwnProperty(key) &&
-          JSON.stringify(context.getters.content(id)[key]) === JSON.stringify(values[key])
-        ) {
-          Vue.delete(values, key);
-          context.commit("RESET_FIELD", [id, key]);
-        }
-      });
-
-      context.commit("SET_CHANGES", [id, values]);
-      localStorage.setItem(
-        "kirby$" + id,
-        JSON.stringify(context.getters.changes(id))
-      );
+    update(context, [id, field, value]) {
+      context.commit("UPDATE", [id, field, value]);
     }
   }
 };

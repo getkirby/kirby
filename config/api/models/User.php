@@ -87,6 +87,7 @@ return [
         'panel' => [
             'avatar' => 'compact',
             'blueprint',
+            'content',
             'email',
             'id',
             'language',

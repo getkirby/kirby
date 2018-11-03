@@ -153,6 +153,11 @@ export default {
 
           this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(file));
           this.$store.dispatch("title", this.filename);
+          this.$store.dispatch("form/create", {
+            id: this.$store.getters["form/id"](this.$route),
+            content: file.content
+          });
+
         })
         .catch(error => {
           window.console.error(error);

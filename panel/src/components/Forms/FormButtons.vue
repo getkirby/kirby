@@ -30,7 +30,6 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("form/restore");
     this.$events.$on("keydown.cmd.s", this.save);
   },
   destroyed() {
@@ -38,7 +37,7 @@ export default {
   },
   methods: {
     reset() {
-      this.$store.dispatch("form/reset", this.id);
+      this.$store.dispatch("form/revert", this.id);
     },
     save(e) {
 
@@ -57,19 +56,16 @@ export default {
       this.$store.dispatch("form/save", this.id)
         .then(() => {
           this.$events.$emit("model.update");
-          this.$store.dispatch("form/errors", [this.id, {}]);
           this.$store.dispatch("notification/success", this.$t("saved"));
         })
         .catch(response => {
 
           if (response.details) {
-            this.$store.dispatch("form/errors", [this.id, response.details]);
             this.$store.dispatch("notification/error", {
               message: this.$t("error.form.incomplete"),
               details: response.details
             });
           } else {
-            this.$store.dispatch("form/errors", [this.id, response.message]);
             this.$store.dispatch("notification/error", {
               message: "The form could not be submitted",
               details: [

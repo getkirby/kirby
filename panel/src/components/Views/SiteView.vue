@@ -77,6 +77,11 @@ export default {
           };
           this.$store.dispatch("breadcrumb", []);
           this.$store.dispatch("title", this.$t("view.site"));
+          this.$store.dispatch("form/create", {
+            id: this.$store.getters["form/id"](this.$route),
+            content: site.content
+          });
+
         })
         .catch(error => {
           this.issue = error;

@@ -1,11 +1,10 @@
 <template>
-  <section class="k-fields-section">
+  <section v-if="!isLoading" class="k-fields-section">
     <template v-if="issue">
       <k-headline class="k-fields-issue-headline">Error</k-headline>
       <k-box :text="issue.message" theme="negative" />
     </template>
     <k-form
-      v-else
       :fields="fields"
       :validate="true"
       :value="values"
@@ -39,33 +38,31 @@ export default {
     }
   },
   watch: {
+    $route() {
+      this.fields    = {};
+      this.isLoading = true;
+      this.issue     = null;
+    },
     language() {
       this.fetch();
     }
   },
   created: function() {
-    this.$store.dispatch("form/create", this.id);
     this.fetch();
-    this.$events.$on("form.reset", this.fetch);
-  },
-  destroyed: function() {
-    this.$events.$off("form.reset", this.fetch);
   },
   methods: {
-    input(values) {
-      this.$store.dispatch("form/update", [this.id, values]);
+    input(values, field, fieldName) {
+      this.$store.dispatch("form/update", [this.id, fieldName, values[fieldName]]);
     },
     fetch() {
       this.$api
         .get(this.parent + "/sections/" + this.name)
         .then(response => {
-          this.$store.dispatch("form/content", [this.id, response.data]);
-          this.$store.dispatch("form/errors", [this.id, response.errors]);
           this.fields    = response.fields;
           this.isLoading = false;
         })
         .catch(error => {
-          this.issue = error;
+          this.issue     = error;
           this.isLoading = false;
         });
     },
