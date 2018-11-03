@@ -21,6 +21,7 @@ export default {
     },
     SET_CURRENT(state, language) {
       state.current = language;
+      localStorage.setItem("kirby$language", language.code);
     },
     SET_DEFAULT(state, language) {
       state.default = language;
@@ -35,7 +36,24 @@ export default {
 
       context.commit("SET_ALL", languages);
       context.commit("SET_DEFAULT", defaultLanguage);
+
+      // get the current langauge from localstorage
+      const currentLanguageCode = localStorage.getItem("kirby$language");
+
+      // search for the current language
+      if (currentLanguageCode) {
+        const currentLanguage = languages.filter(language => {
+          return language.code === currentLanguageCode
+        })[0];
+
+        if (currentLanguage) {
+          context.commit("SET_CURRENT", currentLanguage);
+          return;
+        }
+      }
+
       context.commit("SET_CURRENT", defaultLanguage || languages[0]);
+
     },
     load(context) {
       return Api.get("languages").then(response => {
