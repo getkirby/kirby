@@ -26,6 +26,7 @@ class Form extends BaseForm
             foreach ($fields as $fieldName => $fieldProps) {
                 // switch untranslatable fields to readonly
                 if (($fieldProps['translate'] ?? true) === false && $isDefaultLanguage === false) {
+                    $fields[$fieldName]['unset']    = true;
                     $fields[$fieldName]['disabled'] = true;
                 }
             }

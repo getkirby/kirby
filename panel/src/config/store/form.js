@@ -101,9 +101,11 @@ export default {
     save(context, id) {
       // Send to api
       return Api.patch(id.substr(1), context.getters.values(id)).then(response => {
-        context.commit("SET_ORIGINALS", [id, response.content]);
-        context.commit("SET_VALUES",  [id, response.content]);
-        context.commit("DELETE_CHANGES", id);
+        context.dispatch("revert", id);
+
+        // context.commit("SET_ORIGINALS", [id, response.content]);
+        // context.commit("SET_VALUES",  [id, response.content]);
+        // context.commit("DELETE_CHANGES", id);
       });
     },
     update(context, [id, field, value]) {

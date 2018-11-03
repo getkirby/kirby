@@ -46,7 +46,7 @@ class Form
             $props = array_merge($inject, $props);
 
             // inject the name
-            $props['name']  = $name = strtolower($name);
+            $props['name'] = $name = strtolower($name);
 
             // overwrite the field value if not set
             if (($props['disabled'] ?? false) === true) {
@@ -81,10 +81,10 @@ class Form
         $data = $this->values;
 
         foreach ($this->fields as $field) {
-            if ($field->save() !== false && $field->translate() !== false) {
-                $data[$field->name()] = $field->data($defaults);
-            } else {
+            if ($field->save() === false || $field->unset() === true) {
                 unset($data[$field->name()]);
+            } else {
+                $data[$field->name()] = $field->data($defaults);
             }
         }
 
