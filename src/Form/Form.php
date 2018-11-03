@@ -78,15 +78,17 @@ class Form
 
     public function data($defaults = false): array
     {
-        $data = [];
+        $data = $this->values;
 
         foreach ($this->fields as $field) {
-            if ($field->save() !== false) {
+            if ($field->save() !== false && $field->translate() !== false) {
                 $data[$field->name()] = $field->data($defaults);
+            } else {
+                unset($data[$field->name()]);
             }
         }
 
-        return $data + $this->values;
+        return $data;
     }
 
     public function errors(): array
