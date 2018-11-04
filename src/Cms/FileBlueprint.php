@@ -34,8 +34,14 @@ class FileBlueprint extends Blueprint
         return $this->props['accept'];
     }
 
-    protected function normalizeAccept(array $accept = null)
+    protected function normalizeAccept($accept = null)
     {
+        if (is_string($accept) === true) {
+            $accept = [
+                'mime' => $accept
+            ];
+        }
+
         // accept anything
         if (empty($accept) === true) {
             return [];

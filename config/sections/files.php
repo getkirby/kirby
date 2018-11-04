@@ -196,7 +196,11 @@ return [
                 return false;
             }
 
-            if ($this->max && count($this->data) === $this->max - 1) {
+            // count all uploaded files
+            $total = count($this->data);
+            $max   = $this->max ? $this->max - $total : null;
+
+            if ($this->max && $total === $this->max - 1) {
                 $multiple = false;
             } else {
                 $multiple = true;
@@ -205,6 +209,7 @@ return [
             return [
                 'accept'     => $this->accept,
                 'multiple'   => $multiple,
+                'max'        => $max,
                 'api'        => $this->parent->apiUrl(true) . '/files',
                 'attributes' => array_filter([
                     'template' => $this->template

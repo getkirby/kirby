@@ -216,11 +216,11 @@ class Image extends File
         $validations = [
             'maxsize'     => ['size',   'max', 'The file is too large'],
             'minsize'     => ['size',   'min', 'The file is too small'],
-            'maxwidth'    => ['width',  'max', 'The width of the image is too large'],
-            'minwidth'    => ['width',  'min', 'The width of the image is too small'],
-            'maxheight'   => ['height', 'max', 'The height of the image is too large'],
-            'minheight'   => ['height', 'min', 'The height of the image is too small'],
-            'orientation' => ['orientation', 'same', 'The orientation of the image is incorrect']
+            'maxwidth'    => ['width',  'max', 'The width of the image must not exceed %s pixels'],
+            'minwidth'    => ['width',  'min', 'The width of the image must be at least %s pixels'],
+            'maxheight'   => ['height', 'max', 'The height of the image must not exceed %s pixels'],
+            'minheight'   => ['height', 'min', 'The height of the image must be at least %s pixels'],
+            'orientation' => ['orientation', 'same', 'The orientation of the image must be "%s"']
         ];
 
         foreach ($validations as $key => $arguments) {
@@ -230,7 +230,7 @@ class Image extends File
                 $message   = $arguments[2];
 
                 if (V::$validator($this->$property(), $rules[$key]) === false) {
-                    throw new Exception($message);
+                    throw new Exception(sprintf($message, $rules[$key]));
                 }
             }
         }
