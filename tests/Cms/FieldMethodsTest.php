@@ -366,7 +366,14 @@ class FieldMethodsTest extends TestCase
 
     public function testExcerpt()
     {
+        // html
         $string   = 'This is a long text<br>with some html';
+        $expected = 'This is a long text with …';
+
+        $this->assertEquals($expected, $this->field($string)->excerpt(27)->value());
+
+        // markdown
+        $string   = 'This is a long text **with some** html';
         $expected = 'This is a long text with …';
 
         $this->assertEquals($expected, $this->field($string)->excerpt(27)->value());
