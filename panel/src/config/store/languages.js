@@ -1,4 +1,3 @@
-import Vue from "vue";
 import Api from "@/api/api.js";
 
 export default {

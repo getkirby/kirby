@@ -6,7 +6,9 @@
     <k-dropdown-content v-if="languages" ref="languages">
       <k-dropdown-item @click="change(defaultLanguage)">{{ defaultLanguage.name }}</k-dropdown-item>
       <hr>
-      <k-dropdown-item v-for="language in languages" @click="change(language)">{{ language.name }}</k-dropdown-item>
+      <k-dropdown-item v-for="language in languages" :key="language.code" @click="change(language)">
+        {{ language.name }}
+      </k-dropdown-item>
     </k-dropdown-content>
   </k-dropdown>
 </template>

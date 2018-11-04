@@ -12,7 +12,8 @@ import user from "./store/user.js";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  strict: process.env.NODE_ENV !== 'production',
+  // eslint-disable-next-line
+  strict: process.env.NODE_ENV !== "production",
   state: {
     breadcrumb: [],
     isLoading: false,
