@@ -594,18 +594,15 @@ trait PageActions
             });
 
         if ($siblings->count() > 0) {
-
             foreach ($siblings as $sibling) {
                 $index++;
                 $sibling->changeNum($index);
             }
 
             $parent->children = $siblings->sortBy('num', 'desc');
-
         }
 
         return true;
-
     }
 
     public function sort($position = null)

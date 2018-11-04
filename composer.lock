@@ -470,7 +470,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "dev-master",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -870,12 +870,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "95e2be76e93c62ed4a377113125ffc3a31c18021"
+                "reference": "da6e53e676c5ac9a1b4cda8f92b02b4482ca88c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/95e2be76e93c62ed4a377113125ffc3a31c18021",
-                "reference": "95e2be76e93c62ed4a377113125ffc3a31c18021",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/da6e53e676c5ac9a1b4cda8f92b02b4482ca88c8",
+                "reference": "da6e53e676c5ac9a1b4cda8f92b02b4482ca88c8",
                 "shasum": ""
             },
             "require": {
@@ -958,7 +958,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-10-21 00:33:01"
+            "time": "2018-10-31 16:50:45"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2375,12 +2375,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "38e6bda7cda1ee4ff7ae20caa2ec67f294b780c5"
+                "reference": "0a26a2eadf8d06b48074daae9ce7e208d690e151"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/38e6bda7cda1ee4ff7ae20caa2ec67f294b780c5",
-                "reference": "38e6bda7cda1ee4ff7ae20caa2ec67f294b780c5",
+                "url": "https://api.github.com/repos/symfony/console/zipball/0a26a2eadf8d06b48074daae9ce7e208d690e151",
+                "reference": "0a26a2eadf8d06b48074daae9ce7e208d690e151",
                 "shasum": ""
             },
             "require": {
@@ -2436,7 +2436,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-30 17:11:56"
+            "time": "2018-10-31 10:56:31"
         },
         {
             "name": "symfony/contracts",
@@ -2444,12 +2444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "df30ce9a7726feff039b5eaacffe5d48920d1f9f"
+                "reference": "4a33574d5771f4b04334cd4f7d43de96a92efb62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/df30ce9a7726feff039b5eaacffe5d48920d1f9f",
-                "reference": "df30ce9a7726feff039b5eaacffe5d48920d1f9f",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/4a33574d5771f4b04334cd4f7d43de96a92efb62",
+                "reference": "4a33574d5771f4b04334cd4f7d43de96a92efb62",
                 "shasum": ""
             },
             "require": {
@@ -2504,7 +2504,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-10-10 09:20:36"
+            "time": "2018-10-31 08:00:32"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2576,12 +2576,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "0fee23ff76141ad511356e6232566c40ef7d778e"
+                "reference": "f4c58b452b39c3c581e57b360a1e09a499dd80f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/0fee23ff76141ad511356e6232566c40ef7d778e",
-                "reference": "0fee23ff76141ad511356e6232566c40ef7d778e",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/f4c58b452b39c3c581e57b360a1e09a499dd80f1",
+                "reference": "f4c58b452b39c3c581e57b360a1e09a499dd80f1",
                 "shasum": ""
             },
             "require": {
@@ -2618,7 +2618,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-10 11:36:40"
+            "time": "2018-10-31 10:56:31"
         },
         {
             "name": "symfony/finder",
@@ -2725,7 +2725,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "dev-master",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -2783,7 +2783,7 @@
         },
         {
             "name": "symfony/polyfill-php70",
-            "version": "dev-master",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php70.git",
@@ -2842,7 +2842,7 @@
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "dev-master",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php72.git",
