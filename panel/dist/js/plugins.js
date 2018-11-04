@@ -31,15 +31,19 @@ window.panel.plugin = function (plugin, parts) {
   });
 
   // Views
-  resolve(parts, "views", (name, options) => {
+  resolve(parts, "views", function (name, options) {
     window.panel.plugins["views"][name] = options;
   });
 };
 
 function resolve(object, type, callback) {
   if (object[type]) {
-    Object.entries(object[type]).forEach(([name, options]) => {
-      callback(name, options);
-    });
+
+    if (Object.entries) {
+      Object.entries(object[type]).forEach(function ([name, options]) {
+        callback(name, options);
+      });
+    }
+
   }
 }
