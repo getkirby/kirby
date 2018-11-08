@@ -18,7 +18,7 @@ class KirbyTags
     {
         return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) use ($data, $options) {
             try {
-                return static::$tagClass::parse($match[0], $data, $options);
+                return static::$tagClass::parse($match[0], $data, $options)->render();
             } catch (Exception $e) {
                 return $match[0];
             }
