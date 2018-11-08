@@ -181,6 +181,29 @@ class Str
     }
 
     /**
+     * Converts a string to a different encoding
+     *
+     * @param string $string
+     * @param string $targetEncoding
+     * @param string $sourceEncoding (optional)
+     * @return string
+     */
+    public static function convert($string, $targetEncoding, $sourceEncoding = null)
+    {
+        // detect the source encoding if not passed as third argument
+        if ($sourceEncoding === null) {
+            $sourceEncoding = static::encoding($string);
+        }
+
+        // no need to convert if the target encoding is the same
+        if (strtolower($sourceEncoding) === strtolower($targetEncoding)) {
+            return $string;
+        }
+
+        return iconv($sourceEncoding, $targetEncoding, $string);
+    }
+
+    /**
      * Encode a string (used for email addresses)
      *
      * @param  string  $string

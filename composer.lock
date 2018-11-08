@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e50627969bad1ef0e75c540601d7d19a",
-    "content-hash": "0bedd945359b65c638cbd988aba57861",
+    "hash": "b45673b1d8d1d92a0b9cbc56c0f194c7",
+    "content-hash": "bd0587f79f24529fdbd0d77398b9c6c6",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -572,6 +572,51 @@
                 "punycode"
             ],
             "time": "2016-11-16 10:37:54"
+        },
+        {
+            "name": "zendframework/zend-escaper",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-escaper.git",
+                "reference": "c9e7e54dac46175e93cd08111dc5963bfb9f2f7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-escaper/zipball/c9e7e54dac46175e93cd08111dc5963bfb9f2f7e",
+                "reference": "c9e7e54dac46175e93cd08111dc5963bfb9f2f7e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.2",
+                "zendframework/zend-coding-standard": "~1.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6.x-dev",
+                    "dev-develop": "2.7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Escaper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Securely and safely escape HTML, HTML attributes, JavaScript, CSS, and URLs",
+            "keywords": [
+                "ZendFramework",
+                "escaper",
+                "zf"
+            ],
+            "time": "2018-04-25 15:50:09"
         }
     ],
     "packages-dev": [
@@ -1361,12 +1406,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06"
+                "reference": "3660b2eed90abdf92ac2e9dae9a238d2701bfa77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
-                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/3660b2eed90abdf92ac2e9dae9a238d2701bfa77",
+                "reference": "3660b2eed90abdf92ac2e9dae9a238d2701bfa77",
                 "shasum": ""
             },
             "require": {
@@ -1416,7 +1461,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-08-05 17:53:17"
+            "time": "2018-11-04 18:50:11"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1673,12 +1718,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "27f782132fe6af0d0950bc635a6c51c7fc3fa7f4"
+                "reference": "9f149b9b9a89e76be4296de81d7bcf486dedff84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/27f782132fe6af0d0950bc635a6c51c7fc3fa7f4",
-                "reference": "27f782132fe6af0d0950bc635a6c51c7fc3fa7f4",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9f149b9b9a89e76be4296de81d7bcf486dedff84",
+                "reference": "9f149b9b9a89e76be4296de81d7bcf486dedff84",
                 "shasum": ""
             },
             "require": {
@@ -1749,7 +1794,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-10-23 05:11:21"
+            "time": "2018-11-08 11:40:15"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2512,12 +2557,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "c8bbac387c9b4ba48586e2f839303274274600fe"
+                "reference": "9b9ac80fb31b5a121deb8d50b2ab064c64198605"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/c8bbac387c9b4ba48586e2f839303274274600fe",
-                "reference": "c8bbac387c9b4ba48586e2f839303274274600fe",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9b9ac80fb31b5a121deb8d50b2ab064c64198605",
+                "reference": "9b9ac80fb31b5a121deb8d50b2ab064c64198605",
                 "shasum": ""
             },
             "require": {
@@ -2568,7 +2613,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-10 13:54:27"
+            "time": "2018-11-06 17:10:56"
         },
         {
             "name": "symfony/filesystem",
