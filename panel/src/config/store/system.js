@@ -3,14 +3,22 @@ import Api from "@/api/api.js";
 export default {
   namespaced: true,
   state: {
-    info: {},
+    info: {
+      title: null
+    },
   },
   mutations: {
     SET_INFO(state, info) {
       state.info = info;
+    },
+    SET_TITLE(state, title) {
+      state.info.title = title;
     }
   },
   actions: {
+    title(context, title) {
+      context.commit("SET_TITLE", title);
+    },
     load(context, reload) {
       // reuse the cached system info
       if (

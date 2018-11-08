@@ -19,6 +19,7 @@ export default {
       this.$api.site
         .title(this.page.title)
         .then(() => {
+          this.$store.dispatch("system/title", this.page.title);
           this.success({
             message: this.$t("site.renamed"),
             event: "site.changeTitle"

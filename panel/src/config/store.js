@@ -64,9 +64,14 @@ export default new Vuex.Store({
     },
     title(context, title) {
       context.commit("SET_TITLE", title);
-      document.title = title;
+      document.title = title || "";
+
       if (context.state.system.info.title) {
-        document.title += " | " + context.state.system.info.title;
+        if (title !== null) {
+          document.title += " | " + context.state.system.info.title;
+        } else {
+          document.title += context.state.system.info.title;
+        }
       }
     },
     view(context, view) {
