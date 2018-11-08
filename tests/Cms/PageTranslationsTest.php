@@ -89,8 +89,8 @@ class PageTranslationsTest extends TestCase
         ]);
 
         if ($language !== null) {
-            $app->setCurrentLanguage('de');
-            $app->setCurrentTranslation('de');
+            $app->setCurrentLanguage($language);
+            $app->setCurrentTranslation($language);
         }
 
         return $app;
@@ -125,6 +125,32 @@ class PageTranslationsTest extends TestCase
         $page = $this->app('de')->page('grandma');
         $this->assertEquals('Oma', $page->title()->value());
         $this->assertEquals('Untranslated', $page->untranslated()->value());
+    }
+
+    public function testContent()
+    {
+        $page = $this->app('en')->page('grandma');
+
+        // without language code
+        $content = $page->content();
+        $this->assertEquals('Grandma', $content->title()->value());
+        $this->assertEquals('Untranslated', $content->untranslated()->value());
+
+        // with default language code
+        $content = $page->content('en');
+        $this->assertEquals('Grandma', $content->title()->value());
+        $this->assertEquals('Untranslated', $content->untranslated()->value());
+
+        // with different language code
+        $content = $page->content('de');
+        $this->assertEquals('Oma', $content->title()->value());
+        $this->assertEquals('Untranslated', $content->untranslated()->value());
+
+        // switch back to default
+        $content = $page->content('en');
+        $this->assertEquals('Grandma', $content->title()->value());
+        $this->assertEquals('Untranslated', $content->untranslated()->value());
+
     }
 
     public function testSlug()

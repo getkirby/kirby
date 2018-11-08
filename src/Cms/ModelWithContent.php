@@ -34,22 +34,42 @@ abstract class ModelWithContent extends Model
      */
     public function content(string $languageCode = null): Content
     {
-        if (is_a($this->content, 'Kirby\Cms\Content') === true) {
-            return $this->content;
-        }
 
         // single language support
         if ($this->kirby()->multilang() === false) {
+
+            if (is_a($this->content, 'Kirby\Cms\Content') === true) {
+                return $this->content;
+            }
+
             try {
                 $data = Data::read($this->contentFile());
             } catch (Throwable $e) {
                 $data = [];
             }
+
+            return $this->setContent($data)->content;
+
+        // multi language support
         } else {
-            $data = $this->translationData($languageCode);
+
+            // only fetch from cache for the default language
+            if ($languageCode === null && is_a($this->content, 'Kirby\Cms\Content') === true) {
+                return $this->content;
+            }
+
+            $data    = $this->translationData($languageCode);
+            $content = new Content($data, $this);
+
+            // only store the content for the default language
+            if ($languageCode === null) {
+                $this->content = $content;
+            }
+
+            return $content;
+
         }
 
-        return $this->setContent($data)->content;
     }
 
     /**
