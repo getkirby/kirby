@@ -792,6 +792,16 @@ class SessionTest extends TestCase
     }
 
     /**
+     * @expectedException        Kirby\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Invalid argument "$token" in method "Session::parseToken"
+     */
+    public function testInitMissingKey()
+    {
+        $token = '9999999999.valid';
+        new Session($this->sessions, $token, []);
+    }
+
+    /**
      * @expectedException     Kirby\Exception\LogicException
      * @expectedExceptionCode error.session.invalid
      */
