@@ -37,7 +37,6 @@ abstract class ModelWithContent extends Model
 
         // single language support
         if ($this->kirby()->multilang() === false) {
-
             if (is_a($this->content, 'Kirby\Cms\Content') === true) {
                 return $this->content;
             }
@@ -67,9 +66,7 @@ abstract class ModelWithContent extends Model
             }
 
             return $content;
-
         }
-
     }
 
     /**
