@@ -15,6 +15,13 @@ class KirbyTagTest extends TestCase
                 'html' => function () {
                     return 'test';
                 }
+            ],
+            'noHtml' => [
+                'attr' => ['a', 'b']
+            ],
+            'invalidHtml' => [
+                'attr' => ['a', 'b'],
+                'html' => 'some string'
             ]
         ];
     }
@@ -50,6 +57,46 @@ class KirbyTagTest extends TestCase
 
         $this->assertNull($tag->b);
         $this->assertEquals('fallback', $tag->attr('b', 'fallback'));
+    }
+
+    public function testRender()
+    {
+        $tag = new KirbyTag('test', 'test value', [
+            'a' => 'attrA',
+            'b' => 'attrB'
+        ]);
+        $this->assertEquals('test: test value-attrA-attrB', $tag->render());
+
+        $tag = new KirbyTag('test', '', [
+            'a' => 'attrA'
+        ]);
+        $this->assertEquals('test: -attrA-', $tag->render());
+    }
+
+    /**
+     * @expectedException        Kirby\Exception\BadMethodCallException
+     * @expectedExceptionMessage Invalid tag render function in tag: noHtml
+     */
+    public function testRenderNoHtml()
+    {
+        $tag = new KirbyTag('noHtml', 'test value', [
+            'a' => 'attrA',
+            'b' => 'attrB'
+        ]);
+        $tag->render();
+    }
+
+    /**
+     * @expectedException        Kirby\Exception\BadMethodCallException
+     * @expectedExceptionMessage Invalid tag render function in tag: invalidHtml
+     */
+    public function testRenderInvalidHtml()
+    {
+        $tag = new KirbyTag('invalidHtml', 'test value', [
+            'a' => 'attrA',
+            'b' => 'attrB'
+        ]);
+        $tag->render();
     }
 
 }
