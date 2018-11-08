@@ -33,7 +33,6 @@ class KirbyTagTest extends TestCase
 
     public function testAttr()
     {
-
         $tag = new KirbyTag('test', 'test value', [
             'a' => 'attrA',
             'b' => 'attrB'
@@ -44,13 +43,12 @@ class KirbyTagTest extends TestCase
         $this->assertEquals('attrB', $tag->b);
 
         // attr helper
-        $this->assertEquals('attrA', $tag->attr('a'));
-        $this->assertEquals('attrB', $tag->attr('b'));
+        $this->assertEquals('attrA', $tag->attr('a', 'fallback'));
+        $this->assertEquals('attrB', $tag->attr('b', 'fallback'));
     }
 
     public function testAttrFallback()
     {
-
         $tag = new KirbyTag('test', 'test value', [
             'a' => 'attrA'
         ]);
