@@ -67,7 +67,7 @@ class KirbyTag
         return (new static(...$arguments))->render();
     }
 
-    public static function parse(string $string, array $data = [], array $options = []): string
+    public static function parse(string $string, array $data = [], array $options = []): self
     {
         // remove the brackets
         $tag  = trim(rtrim(ltrim($string, '('), ')'));
@@ -95,7 +95,7 @@ class KirbyTag
 
         $value = array_shift($attributes);
 
-        return (new static($type, $value, $attributes, $data, $options))->render();
+        return new static($type, $value, $attributes, $data, $options);
     }
 
     public function option(string $key, $default = null)
