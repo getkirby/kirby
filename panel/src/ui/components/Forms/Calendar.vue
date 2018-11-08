@@ -266,7 +266,7 @@ $cell-padding: 0.25rem 0.5rem;
   height: 2rem;
   margin: 0 auto;
   color: $color-white;
-  line-height: 1;
+  line-height: 1.75rem;
   display: flex;
   justify-content: center;
   border-radius: 50%;
