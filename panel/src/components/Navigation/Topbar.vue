@@ -44,7 +44,7 @@
           :to="view.link"
           class="k-topbar-button k-topbar-view-button"
         >
-          <k-icon :type="view.icon" /> {{ $t(`view.${$store.state.view}`, view.label) }}
+          <k-icon :type="view.icon" /> {{ breadcrumbTitle }}
         </k-link>
 
         <k-dropdown v-if="$store.state.breadcrumb.length > 1" class="k-topbar-breadcrumb-menu">
@@ -100,6 +100,16 @@ import views from "@/config/views.js";
 
 export default {
   computed: {
+    breadcrumbTitle()
+    {
+      let title = this.$t(`view.${this.$store.state.view}`, this.view.label);
+
+      if (this.$store.state.view === 'site') {
+        return this.$store.state.system.info.breadcrumbTitle || title;
+      }
+
+      return title;
+    },
     view() {
       return views[this.$store.state.view];
     },

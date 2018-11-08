@@ -29,6 +29,9 @@ return [
         'requirements' => function (System $system) {
             return $system->toArray();
         },
+        'breadcrumbTitle' => function () {
+            return $this->site()->blueprint()->title();
+        },
         'title' => function () {
             return $this->site()->title()->value();
         },
@@ -52,6 +55,7 @@ return [
     'type'   => System::class,
     'views'  => [
         'panel' => [
+            'breadcrumbTitle',
             'isOk',
             'isInstalled',
             'isLocal',
