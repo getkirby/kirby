@@ -61,6 +61,9 @@ class SiteTranslationsTest extends TestCase
 
         $this->assertEquals('/en', $site->url());
         $this->assertEquals('/de', $site->url('de'));
+
+        // non-existing language
+        $this->assertEquals('/', $site->url('fr'));
     }
 
     public function testContentInEnglish()

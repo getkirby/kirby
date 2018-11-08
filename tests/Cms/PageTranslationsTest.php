@@ -83,6 +83,9 @@ class PageTranslationsTest extends TestCase
                                 ]
                             ],
                         ],
+                    ],
+                    [
+                        'slug' => 'home'
                     ]
                 ],
             ],
@@ -99,6 +102,10 @@ class PageTranslationsTest extends TestCase
     public function testUrl()
     {
         $app = $this->app();
+
+        $page = $app->page('home');
+        $this->assertEquals('/en', $page->url());
+        $this->assertEquals('/de', $page->url('de'));
 
         $page = $app->page('grandma');
         $this->assertEquals('/en/grandma', $page->url());
