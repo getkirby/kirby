@@ -12,7 +12,7 @@ return [
             return $file->blueprint();
         },
         'content' => function (File $file) {
-            return $file->content()->toArray();
+            return Form::for($file)->values();
         },
         'dimensions' => function (File $file) {
             return $file->dimensions()->toArray();
