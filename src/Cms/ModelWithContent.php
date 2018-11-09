@@ -239,7 +239,7 @@ abstract class ModelWithContent extends Model
      * @param boolean $validate
      * @return self
      */
-    public function update(array $input = null, string $language = null, bool $validate = false)
+    public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
         $form = Form::for($this, [
             'values' => $input
@@ -255,8 +255,33 @@ abstract class ModelWithContent extends Model
             }
         }
 
-        return $this->commit('update', [$this, $form->data(), $form->strings(), $language], function ($model, $values, $strings, $language) {
-            return $model->clone(['content' => $strings])->save($language);
+        return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
+
+            if ($model->kirby()->multilang() === true) {
+
+                // get the right language code
+                $languageCode = $languageCode ?? $model->kirby()->language()->code();
+
+                // create a clone to not touch the original
+                $updated = $model->clone();
+
+                // fetch the matching translation and update all the strings
+                if ($translation = $updated->translations()->get($languageCode)) {
+                    $translation->update($strings);
+                }
+
+                // reset the content object
+                $updated->content = null;
+
+                // save the current content in the right language file
+                $updated = $updated->save($languageCode);
+
+            } else {
+                $updated = $model->clone(['content' => $strings])->save();
+            }
+
+            return $updated;
+
         });
     }
 }

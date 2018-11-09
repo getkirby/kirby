@@ -212,4 +212,56 @@ class PageActionsTest extends TestCase
         $this->assertEquals($oldStatus, $modified->status());
     }
 
+    public function languageProvider()
+    {
+        return [
+            [null],
+            ['en'],
+            ['de']
+        ];
+    }
+
+    /**
+     * @dataProvider languageProvider
+     */
+    public function testUpdateMultilang($languageCode)
+    {
+
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        if ($languageCode !== null) {
+            $app->setCurrentLanguage($languageCode);
+        }
+
+        $page = Page::create([
+            'slug' => 'test'
+        ]);
+
+        $this->assertEquals(null, $page->headline()->value());
+
+        $modified = $page->update(['headline' => 'Test'], $languageCode);
+
+        // check the modified response
+        $this->assertEquals('Test', $modified->headline()->value());
+
+        // also check in a freshly found page object
+        $this->assertEquals('Test', $this->app->page('test')->headline()->value());
+
+    }
+
+
 }

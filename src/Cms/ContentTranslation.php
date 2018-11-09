@@ -119,6 +119,16 @@ class ContentTranslation
     }
 
     /**
+     * Returns the translation code as id
+     *
+     * @return void
+     */
+    public function id()
+    {
+        return $this->code();
+    }
+
+    /**
      * Checks if the this is the default translation
      * of the model
      *
@@ -187,6 +197,18 @@ class ContentTranslation
     public function slug(): ?string
     {
         return $this->slug = $this->slug ?? ($this->content()['slug'] ?? null);
+    }
+
+    /**
+     * Merge the old and new data
+     *
+     * @param array $data
+     * @return self
+     */
+    public function update(array $data = [])
+    {
+        $this->content = array_merge($this->content(), $data);
+        return $this;
     }
 
     /**
