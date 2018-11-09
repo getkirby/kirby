@@ -51,8 +51,18 @@ trait FileActions
             // rename the main file
             F::move($oldFile->root(), $newFile->root());
 
-            // rename the content file
-            F::move($oldFile->contentFile(), $newFile->contentFile());
+            if ($newFile->kirby()->multilang() === true) {
+                foreach ($newFile->translations() as $translation) {
+                    $translationCode = $translation->code();
+
+                    // rename the content file
+                    F::move($oldFile->contentFile($translationCode), $newFile->contentFile($translationCode));
+                }
+            } else {
+                // rename the content file
+                F::move($oldFile->contentFile(), $newFile->contentFile());
+            }
+
 
             return $newFile;
         });
