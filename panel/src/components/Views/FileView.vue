@@ -118,6 +118,9 @@ export default {
         };
       }
     },
+    language() {
+      return this.$store.state.languages.current;
+    },
     next() {
       if (this.file.next) {
         return {
@@ -128,6 +131,14 @@ export default {
           tooltip: this.file.next.filename
         };
       }
+    }
+  },
+  watch: {
+    language() {
+      this.fetch();
+    },
+    path() {
+      this.fetch();
     }
   },
   methods: {
