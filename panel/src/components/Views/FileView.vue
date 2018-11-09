@@ -49,7 +49,7 @@
       />
 
       <k-file-rename-dialog ref="rename" />
-      <k-file-remove-dialog ref="remove" @success="$router.push('/pages/' + path)" />
+      <k-file-remove-dialog ref="remove" @success="deleted" />
       <k-upload
         ref="upload"
         :url="uploadApi"
@@ -71,8 +71,7 @@ export default {
   mixins: [PrevNext],
   props: {
     path: {
-      type: String,
-      required: true
+      type: String
     },
     filename: {
       type: String,
@@ -196,6 +195,13 @@ export default {
         case "remove":
           this.$refs.remove.open(this.file.parent.id, this.file.filename);
           break;
+      }
+    },
+    deleted() {
+      if (this.path) {
+        this.$router.push('/pages/' + this.path);
+      } else {
+        this.$router.push('/site');
       }
     },
     uploaded() {
