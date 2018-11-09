@@ -849,7 +849,6 @@ class Page extends ModelWithContent
                     'back' => 'black',
                 ];
             }
-
         } else {
             $options = [
                 'type' => 'file',
@@ -860,7 +859,6 @@ class Page extends ModelWithContent
         $options['ratio'] = $params['ratio'] ?? null;
 
         return $options;
-
     }
 
     /**

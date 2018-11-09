@@ -256,7 +256,6 @@ abstract class ModelWithContent extends Model
         }
 
         return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
-
             if ($model->kirby()->multilang() === true) {
 
                 // get the right language code
@@ -275,13 +274,11 @@ abstract class ModelWithContent extends Model
 
                 // save the current content in the right language file
                 $updated = $updated->save($languageCode);
-
             } else {
                 $updated = $model->clone(['content' => $strings])->save();
             }
 
             return $updated;
-
         });
     }
 }
