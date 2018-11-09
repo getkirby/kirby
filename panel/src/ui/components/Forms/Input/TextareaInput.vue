@@ -235,7 +235,7 @@ export default {
 
       this.$nextTick(() => {
 
-        if (!this.$refs.input || !this.$refs.toolbar) {
+        if (!this.$refs.input || !this.$refs.toolbar || !this.$refs.toolbar.$el) {
           return;
         }
 
