@@ -46,6 +46,23 @@ class FileActionsTest extends TestCase
         ]);
     }
 
+    public function appWithLanguages()
+    {
+        return $this->app()->clone([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch'
+                ]
+            ]
+        ]);
+    }
+
     public function setUp()
     {
         $this->app = $this->app();
@@ -82,7 +99,6 @@ class FileActionsTest extends TestCase
      */
     public function testChangeName(File $file)
     {
-
         // create an empty dummy file
         F::write($file->root(), '');
         // ...and an empty content file for it
@@ -97,6 +113,45 @@ class FileActionsTest extends TestCase
         $this->assertEquals('test.js', $result->filename());
         $this->assertFileExists($result->root());
         $this->assertFileExists($result->contentFile());
+    }
+
+    public function fileProviderMultiLang()
+    {
+        $app = $this->appWithLanguages();
+
+        return [
+            [$app->site()->file()],
+            [$app->site()->children()->files()->first()]
+        ];
+    }
+
+    /**
+     * @dataProvider fileProviderMultiLang
+     */
+    public function testChangeNameMultiLang(File $file)
+    {
+        $app = $this->appWithLanguages();
+        $app->impersonate('kirby');
+
+        Dir::make($this->fixtures);
+
+        // create an empty dummy file
+        F::write($file->root(), '');
+        // ...and empty content files for it
+        F::write($file->contentFile('en'), '');
+        F::write($file->contentFile('de'), '');
+
+        $this->assertFileExists($file->root());
+        $this->assertFileExists($file->contentFile('en'));
+        $this->assertFileExists($file->contentFile('de'));
+
+        $result = $file->changeName('test');
+
+        $this->assertNotEquals($file->root(), $result->root());
+        $this->assertEquals('test.js', $result->filename());
+        $this->assertFileExists($result->root());
+        $this->assertFileExists($result->contentFile('en'));
+        $this->assertFileExists($result->contentFile('de'));
     }
 
     /**
