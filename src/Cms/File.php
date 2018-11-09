@@ -431,13 +431,15 @@ class File extends ModelWithContent
     /**
      * Panel icon definition
      *
+     * @param array $params
      * @return array
      */
-    public function panelIcon(): array
+    public function panelIcon(array $params = []): array
     {
         return [
-            'type' => 'file',
-            'back' => 'black'
+            'type'  => 'file',
+            'back'  => 'black',
+            'ratio' => $params['ratio'] ?? null
         ];
     }
 

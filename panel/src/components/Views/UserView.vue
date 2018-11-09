@@ -215,7 +215,8 @@ export default {
 
           this.$store.dispatch("title", this.user.name || this.user.email);
           this.$store.dispatch("form/create", {
-            id: this.$store.getters["form/id"](this.$route),
+            id: "users/" + user.id,
+            api: this.$api.users.link(user.id),
             content: user.content
           });
 

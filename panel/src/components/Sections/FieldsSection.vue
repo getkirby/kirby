@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     id() {
-      return this.$store.getters["form/id"](this.$route);
+      return this.$store.state.form.current;
     },
     language() {
       return this.$store.state.languages.current;

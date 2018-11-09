@@ -37,6 +37,10 @@ export default {
       this.$api.users
         .delete(this.user.id)
         .then(() => {
+
+          // remove data from cache
+          this.$store.dispatch("form/remove", "users/" + this.user.id);
+
           this.success({
             message: this.$t("user.deleted"),
             event: "user.delete"

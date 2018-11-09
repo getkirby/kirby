@@ -26,7 +26,7 @@ export default {
       return this.$store.getters["form/hasChanges"](this.id);
     },
     id() {
-      return this.$store.getters["form/id"](this.$route);
+      return this.$store.state.form.current;
     }
   },
   created() {

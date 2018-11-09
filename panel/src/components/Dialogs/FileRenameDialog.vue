@@ -69,6 +69,10 @@ export default {
       this.$api.files
         .rename(this.parent, this.file.filename, this.file.name)
         .then(file => {
+
+          // remove changes for the old file
+          this.$store.dispatch("form/remove", "files/" + this.file.id);
+
           let payload = {
             message: this.$t("file.renamed"),
             event: "file.changeName"

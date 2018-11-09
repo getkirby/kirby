@@ -78,12 +78,14 @@ export default {
           this.$store.dispatch("breadcrumb", []);
           this.$store.dispatch("title", null);
           this.$store.dispatch("form/create", {
-            id: this.$store.getters["form/id"](this.$route),
+            id: "site",
+            api: "site",
             content: site.content
           });
 
         })
         .catch(error => {
+          console.log(error);
           this.issue = error;
         });
     },

@@ -193,7 +193,8 @@ export default {
           this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
           this.$store.dispatch("title", this.page.title);
           this.$store.dispatch("form/create", {
-            id: this.$store.getters["form/id"](this.$route),
+            id: "pages/" + page.id,
+            api: this.$api.pages.link(page.id),
             content: page.content
           });
         })

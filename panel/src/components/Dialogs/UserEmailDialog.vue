@@ -56,6 +56,9 @@ export default {
         .changeEmail(this.user.id, this.user.email)
         .then(response => {
 
+          // remove changes for the old user
+          this.$store.dispatch("form/remove", "users/" + this.user.id);
+
           let payload = {
             message: this.$t("user.email.changed"),
             event: "user.changeEmail",

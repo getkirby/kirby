@@ -173,7 +173,7 @@ return [
                     'text'        => $item->toString($this->text),
                     'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),
-                    'icon'        => $item->panelIcon(),
+                    'icon'        => $item->panelIcon($this->image),
                     'image'       => $item->panelImage($this->image, $thumb),
                     'link'        => $item->panelUrl(true),
                     'status'      => $item->status(),

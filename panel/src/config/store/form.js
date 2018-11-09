@@ -5,43 +5,51 @@ import clone from "@/ui/helpers/clone.js";
 export default {
   namespaced: true,
   state: {
-    models: {}
+    models: {},
+    current: null
   },
   getters: {
-    exists: (state) => (id) => {
+    current: state => {
+      return state.current;
+    },
+    exists: state => id => {
       return state.models.hasOwnProperty(id);
     },
-    hasChanges: (state, getters) => (id) => {
+    hasChanges: (state, getters) => id => {
       return Object.keys(getters.model(id).changes).length > 0;
     },
-    id: (state, getters, rootState) => (route) => {
-      if (route.name === "Account") {
-        return '/users/' + rootState.user.current.id;
-      }
-
-      return route.path === '/' ? '/site' : route.path;
+    model: (state, getters) => id => {
+      return getters.exists(id)
+        ? state.models[id]
+        : {
+            originals: {},
+            values: {},
+            changes: {},
+            api: null
+          };
     },
-    model: (state, getters) => (id) => {
-      return getters.exists(id) ? state.models[id] : {
-        originals: {},
-        values: {},
-        changes: {},
-      };
-    },
-    originals: (state, getters) => (id) => {
+    originals: (state, getters) => id => {
       return clone(getters.model(id).originals);
     },
-    values: (state, getters) => (id) => {
+    values: (state, getters) => id => {
       return clone(getters.model(id).values);
-    },
+    }
   },
   mutations: {
     CREATE(state, model) {
       Vue.set(state.models, model.id, {
+        api: model.api,
         originals: clone(model.content),
         values: clone(model.content),
         changes: {}
       });
+    },
+    CURRENT(state, id) {
+      state.current = id;
+    },
+    REMOVE(state, id) {
+      Vue.delete(state.models, id);
+      localStorage.removeItem("kirby$" + id);
     },
     DELETE_CHANGES(state, id) {
       Vue.set(state.models[id], "changes", {});
@@ -54,11 +62,10 @@ export default {
       state.models[id].values = clone(values);
     },
     UPDATE(state, [id, field, value]) {
-
       Vue.set(state.models[id].values, field, value);
 
       const original = JSON.stringify(state.models[id].originals[field]);
-      const current  = JSON.stringify(value);
+      const current = JSON.stringify(value);
 
       if (original === current) {
         Vue.delete(state.models[id].changes, field);
@@ -70,12 +77,12 @@ export default {
         "kirby$" + id,
         JSON.stringify(state.models[id].values)
       );
-
     }
   },
   actions: {
     create(context, model) {
       context.commit("CREATE", model);
+      context.commit("CURRENT", model.id);
 
       const values = localStorage.getItem("kirby$" + model.id);
 
@@ -86,21 +93,26 @@ export default {
           const value = data[field];
           context.commit("UPDATE", [model.id, field, value]);
         });
-
       }
-
+    },
+    remove(context, id) {
+      context.commit("REMOVE", id);
     },
     revert(context, id) {
+      const model = context.getters.model(id);
+
       // fetch from api
-      return Api.get(id.substr(1), { select: "content" }).then(response => {
+      return Api.get(model.api, { select: "content" }).then(response => {
         context.commit("SET_ORIGINALS", [id, response.content]);
         context.commit("SET_VALUES", [id, response.content]);
         context.commit("DELETE_CHANGES", id);
       });
     },
     save(context, id) {
+      const model = context.getters.model(id);
+
       // Send to api
-      return Api.patch(id.substr(1), context.getters.values(id)).then(() => {
+      return Api.patch(model.api, model.values).then(() => {
         context.dispatch("revert", id);
       });
     },

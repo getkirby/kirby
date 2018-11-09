@@ -154,7 +154,8 @@ export default {
           this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(file));
           this.$store.dispatch("title", this.filename);
           this.$store.dispatch("form/create", {
-            id: this.$store.getters["form/id"](this.$route),
+            id: "files/" + file.id,
+            api: this.$api.files.link(file.parent.id, file.filename),
             content: file.content
           });
 

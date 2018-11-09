@@ -115,7 +115,7 @@ return [
                     'id'       => $file->id(),
                     'text'     => $file->toString($this->text),
                     'info'     => $file->toString($this->info ?? false),
-                    'icon'     => $file->panelIcon(),
+                    'icon'     => $file->panelIcon($this->image),
                     'image'    => $file->panelImage($this->image, $thumb),
                     'link'     => $file->panelUrl(true),
                     'parent'   => $file->parentId(),

@@ -92,6 +92,10 @@ export default {
       this.$api.pages
         .slug(this.page.id, this.slug)
         .then(page => {
+
+          // remove changes for the old page id
+          this.$store.dispatch("form/remove", "pages/" + this.page.id);
+
           const payload = {
             message: this.$t("page.url.changed", { url: page.slug }),
             event: "page.changeSlug"

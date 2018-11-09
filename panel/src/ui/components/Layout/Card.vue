@@ -59,7 +59,7 @@ export default {
       default() {
         return {
           type: "file",
-          back: "black"
+          back: "black",
         };
       }
     },
@@ -76,7 +76,7 @@ export default {
       return this.link ? "k-link" : "div";
     },
     ratioPadding() {
-      return (this.image && this.image.ratio) ? ratioPadding(this.image.ratio) : ratioPadding('3/2');
+      return (this.icon && this.icon.ratio) ? ratioPadding(this.icon.ratio) : ratioPadding('3/2');
     }
   }
 };

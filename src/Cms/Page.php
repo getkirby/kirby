@@ -829,31 +829,38 @@ class Page extends ModelWithContent
      * Returns the panel icon definition
      * according to the blueprint settings
      *
+     * @params array $params
      * @return array
      */
-    public function panelIcon(): array
+    public function panelIcon(array $params = []): array
     {
         if ($icon = $this->blueprint()->icon()) {
 
             // check for emojis
             if (strlen($icon) !== Str::length($icon)) {
-                return [
+                $options = [
                     'type'  => $icon,
                     'back'  => 'black',
                     'emoji' => true
                 ];
+            } else {
+                $options = [
+                    'type' => $icon,
+                    'back' => 'black',
+                ];
             }
 
-            return [
-                'type' => $icon,
+        } else {
+            $options = [
+                'type' => 'file',
                 'back' => 'black',
             ];
         }
 
-        return [
-            'type' => 'file',
-            'back' => 'black',
-        ];
+        $options['ratio'] = $params['ratio'] ?? null;
+
+        return $options;
+
     }
 
     /**

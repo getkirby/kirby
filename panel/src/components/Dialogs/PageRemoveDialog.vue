@@ -78,7 +78,7 @@ export default {
         .delete(this.page.id, { force: true })
         .then(() => {
           // remove data from cache
-          this.$store.dispatch("form/reset", this.$route.path);
+          this.$store.dispatch("form/remove", "pages/" + this.page.id);
 
           const payload = {
             message: this.$t("page.deleted"),

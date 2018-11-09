@@ -17,6 +17,7 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
+      id: null,
       parent: null,
       filename: null
     };
@@ -25,6 +26,7 @@ export default {
     open(parent, filename) {
       this.$api.files.get(parent, filename)
         .then(file => {
+          this.id = file.id;
           this.parent = file.parent;
           this.filename = file.filename;
           this.$refs.dialog.open();
@@ -38,7 +40,7 @@ export default {
         .delete(this.parent.id, this.filename)
         .then(() => {
           // remove data from cache
-          this.$store.dispatch("form/reset", this.$route.path);
+          this.$store.dispatch("form/remove", "files/" + this.id);
 
           this.$store.dispatch("notification/success", this.$t("file.deleted"));
           this.$events.$emit("file.delete");
