@@ -80,7 +80,7 @@ export default {
 }
 .k-error-details dd {
   overflow: hidden;
-  word-break: break-all;
+  overflow-wrap: break-word;
   text-overflow: ellipsis;
 }
 .k-error-details dd:not(:last-of-type) {

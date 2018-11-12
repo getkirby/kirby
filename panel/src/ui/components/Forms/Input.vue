@@ -211,6 +211,16 @@ export default {
     padding-left: $field-input-padding;
   }
 
+  /* Checkboxes & Radio Buttons */
+  &[data-type=checkboxes],
+  &[data-type=radio] {
+    .k-checkboxes-input li,
+    .k-radio-input li {
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+  }
+
   /* Checkboxes */
   &[data-type="checkboxes"] {
     .k-input-before {
