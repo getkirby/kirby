@@ -218,4 +218,39 @@ class PagesTest extends TestCase
         $this->assertCount(3, $this->pages()->published());
     }
 
+    public function testSearch()
+    {
+
+        $pages = Pages::factory([
+            [
+                'slug'    => 'mtb',
+                'content' => [
+                    'title' => 'Mountainbike'
+                ]
+            ],
+            [
+                'slug'    => 'mountains',
+                'content' => [
+                    'title' => 'Mountains'
+                ]
+            ],
+            [
+                'slug'    => 'lakes',
+                'content' => [
+                    'title' => 'Lakes'
+                ]
+            ]
+        ]);
+
+        $result = $pages->search('mountain');
+
+        var_dump($result->first()->searchScore());
+        var_dump($result->last()->searchScore());
+
+        $this->assertCount(2, $result);
+        $this->assertEquals('mountains', $pages->first()->id());
+        $this->assertEquals('mtb', $pages->last()->id());
+
+    }
+
 }

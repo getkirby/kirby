@@ -22,6 +22,10 @@ class Search
      */
     public static function collection(Collection $collection, string $query = null, $params = [])
     {
+        if (empty(trim($query)) === true) {
+            return $collection->limit(0);
+        }
+
         if (is_string($params) === true) {
             $params = ['fields' => Str::split($params, '|')];
         }
@@ -37,13 +41,10 @@ class Search
         $collection  = clone $collection;
         $searchwords = preg_replace('/(\s)/u', ',', $query);
         $searchwords = Str::split($searchwords, ',', $options['minlength']);
+        $lowerQuery  = strtolower($query);
 
         if (empty($options['stopwords']) === false) {
             $searchwords = array_diff($searchwords, $options['stopwords']);
-        }
-
-        if (empty($searchwords) === true) {
-            return $collection->limit(0);
         }
 
         $searchwords = array_map(function ($value) use ($options) {
@@ -51,7 +52,8 @@ class Search
         }, $searchwords);
 
         $preg    = '!(' . implode('|', $searchwords) . ')!i';
-        $results = $collection->filter(function ($item) use ($query, $searchwords, $preg, $options) {
+        $results = $collection->filter(function ($item) use ($query, $searchwords, $preg, $options, $lowerQuery) {
+
             $data = $item->content()->toArray();
             $keys = array_keys($data);
             $keys[] = 'id';
@@ -67,22 +69,36 @@ class Search
                 $score = $options['score'][$key] ?? 1;
                 $value = $key === 'id' ? $item->id() : $data[$key];
 
-                // check for a match
+                $lowerValue = strtolower($value);
+
+                // check for exact matches
+                if ($lowerQuery == $lowerValue) {
+                    $item->searchScore += 16 * $score;
+                    $item->searchHits  += 1;
+
+                // check for exact beginning matches
+                } elseif (Str::startsWith($lowerValue, $lowerQuery) === true) {
+                    $item->searchScore += 8 * $score;
+                    $item->searchHits  += 1;
+
+                // check for exact query matches
+                } elseif ($matches = preg_match_all('!' . preg_quote($query) . '!i', $value, $r)) {
+                    $item->searchScore += 2 * $score;
+                    $item->searchHits  += $matches;
+                }
+
+                // check for any match
                 if ($matches = preg_match_all($preg, $value, $r)) {
                     $item->searchHits  += $matches;
                     $item->searchScore += $matches * $score;
-
-                    // check for full matches
-                    if ($matches = preg_match_all('!' . preg_quote($query) . '!i', $value, $r)) {
-                        $item->searchScore += $matches * $score;
-                    }
                 }
             }
 
             return $item->searchHits > 0 ? true : false;
+
         });
 
-        return $results->sortBy('searchScore', SORT_DESC);
+        return $results->sortBy('searchScore', 'desc');
     }
 
     public static function pages(string $query = null, $params = [])
