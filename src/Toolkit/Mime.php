@@ -187,9 +187,21 @@ class Mime
             $mime = static::fromExtension($extension);
         }
 
-        // fix broken mime detection for svg files with style attribute
-        if (in_array($mime, ['text/html', 'text/plain']) === true && $extension === 'svg') {
-            $mime = static::fromSvg($file);
+        // fix broken detection
+        switch ($mime) {
+            // fix broken mime detection for svg files with style attribute
+            case 'text/html':
+            case 'text/plain':
+                if ($extension === 'svg') {
+                    $mime = static::fromSvg($file);
+                }
+                break;
+            // fix broken css mime type detection
+            case 'text/x-asm':
+                if ($extension === 'css') {
+                    $mime = 'text/css';
+                }
+                break;
         }
 
         // normalize image/svg file type

@@ -207,7 +207,7 @@ class Image extends File
         if (($rules['mime'] ?? null) !== null) {
             // TODO: replace with new Kirby\Toolkit\Mime::isAccepted() method
             if ((new MimeType($rules['mime']))->has($this->mime()) === false) {
-                throw new Exception('Invalid mime type');
+                throw new Exception(sprintf('Invalid mime type: %s', $this->mime()));
             }
         }
 
