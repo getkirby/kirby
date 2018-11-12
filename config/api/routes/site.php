@@ -130,7 +130,7 @@ return [
         'pattern' => 'site/find',
         'method'  => 'POST',
         'action'  => function () {
-            return $this->site()->find(true, ...$this->requestBody());
+            return $this->site()->find(false, ...$this->requestBody());
         }
     ],
     [
