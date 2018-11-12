@@ -66,11 +66,9 @@ class PageBlueprint extends Blueprint
     protected function normalizeNum($num): string
     {
         $aliases = [
-            0          => 'zero',
-            '0'        => 'zero',
-            'date'     => '{{ page.date("Ymd") }}',
-            'datetime' => '{{ page.date("YmdHi") }}',
-            'sort'     => 'default',
+            0      => 'zero',
+            '0'    => 'zero',
+            'sort' => 'default',
         ];
 
         if (isset($aliases[$num]) === true) {

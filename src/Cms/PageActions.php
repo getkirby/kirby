@@ -402,6 +402,14 @@ trait PageActions
         switch ($mode) {
             case 'zero':
                 return 0;
+            case 'date':
+            case 'datetime':
+                $format = 'date' ? 'Ymd': 'YmdHi';
+                $date   = $this->content()->get('date')->value();
+                $time   = empty($date) === true ? time(): strtotime($date);
+
+                return date($format, $time);
+                break;
             case 'default':
 
                 $max = $this

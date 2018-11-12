@@ -37,8 +37,8 @@ class PageBlueprintTest extends TestCase
             ['zero', 'zero'],
             [0, 'zero'],
             ['0', 'zero'],
-            ['date', '{{ page.date("Ymd") }}'],
-            ['datetime', '{{ page.date("YmdHi") }}'],
+            ['date', 'date'],
+            ['datetime', 'datetime'],
             ['{{ page.something }}', '{{ page.something }}'],
         ];
     }

@@ -282,7 +282,7 @@ class PageSortTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(0, $page->createNum());
+        $this->assertEquals(date('Ymd'), $page->createNum());
 
         // with date field
         $page = new Page([
