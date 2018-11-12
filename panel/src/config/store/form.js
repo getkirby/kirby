@@ -62,6 +62,8 @@ export default {
       state.models[id].values = clone(values);
     },
     UPDATE(state, [id, field, value]) {
+      value = clone(value);
+
       Vue.set(state.models[id].values, field, value);
 
       const original = JSON.stringify(state.models[id].originals[field]);
