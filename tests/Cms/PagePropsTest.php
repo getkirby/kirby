@@ -645,4 +645,56 @@ class PagePropsTest extends TestCase
 
     }
 
+    public function testPanelIconDefault()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $icon     = $page->panelIcon();
+        $expected = [
+            'type'  => 'file',
+            'back'  => 'black',
+            'ratio' => null
+        ];
+
+        $this->assertEquals($expected, $icon);
+    }
+
+    public function testPanelIconFromBlueprint()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'name' => 'test',
+                'icon' => 'test'
+            ]
+        ]);
+
+        $icon     = $page->panelIcon();
+        $expected = [
+            'type'  => 'test',
+            'back'  => 'black',
+            'ratio' => null
+        ];
+
+        $this->assertEquals($expected, $icon);
+    }
+
+    public function testPanelIconWithRatio()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $icon     = $page->panelIcon(['ratio' => '3/2']);
+        $expected = [
+            'type'  => 'file',
+            'back'  => 'black',
+            'ratio' => '3/2'
+        ];
+
+        $this->assertEquals($expected, $icon);
+    }
+
 }

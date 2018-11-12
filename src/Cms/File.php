@@ -434,7 +434,7 @@ class File extends ModelWithContent
      * @param array $params
      * @return array
      */
-    public function panelIcon(array $params = []): array
+    public function panelIcon(array $params = null): array
     {
         return [
             'type'  => 'file',

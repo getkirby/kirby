@@ -166,6 +166,7 @@ return [
 
                 $permissions = $item->permissions();
                 $blueprint   = $item->blueprint();
+                $image       = $item->panelImage($this->image, $thumb);
 
                 $data[] = [
                     'id'          => $item->id(),
@@ -173,8 +174,8 @@ return [
                     'text'        => $item->toString($this->text),
                     'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),
-                    'icon'        => $item->panelIcon($this->image),
-                    'image'       => $item->panelImage($this->image, $thumb),
+                    'icon'        => $item->panelIcon($image),
+                    'image'       => $image,
                     'link'        => $item->panelUrl(true),
                     'status'      => $item->status(),
                     'permissions' => [

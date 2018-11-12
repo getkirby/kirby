@@ -156,4 +156,36 @@ class FilePropsTest extends TestCase
         Dir::remove($index);
     }
 
+    public function testPanelIconDefault()
+    {
+        $file = new File([
+            'filename' => 'something.jpg'
+        ]);
+
+        $icon     = $file->panelIcon();
+        $expected = [
+            'type'  => 'file',
+            'back'  => 'black',
+            'ratio' => null
+        ];
+
+        $this->assertEquals($expected, $icon);
+    }
+
+    public function testPanelIconWithRatio()
+    {
+        $file = new File([
+            'filename' => 'something.jpg'
+        ]);
+
+        $icon     = $file->panelIcon(['ratio' => '3/2']);
+        $expected = [
+            'type'  => 'file',
+            'back'  => 'black',
+            'ratio' => '3/2'
+        ];
+
+        $this->assertEquals($expected, $icon);
+    }
+
 }

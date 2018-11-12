@@ -109,14 +109,17 @@ return [
             }
 
             foreach ($this->files as $file) {
+
+                $image = $file->panelImage($this->image, $thumb);
+
                 $data[] = [
                     'dragText' => $file->dragText($this->dragTextType),
                     'filename' => $file->filename(),
                     'id'       => $file->id(),
                     'text'     => $file->toString($this->text),
                     'info'     => $file->toString($this->info ?? false),
-                    'icon'     => $file->panelIcon($this->image),
-                    'image'    => $file->panelImage($this->image, $thumb),
+                    'icon'     => $file->panelIcon($image),
+                    'image'    => $image,
                     'link'     => $file->panelUrl(true),
                     'parent'   => $file->parentId(),
                     'url'      => $file->url(),
