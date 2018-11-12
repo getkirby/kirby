@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use Exception;
 use Kirby\Image\Image;
 use Kirby\Toolkit\Str;
+use ReflectionFunction;
 
 /**
 * A set of validator methods
@@ -26,6 +27,62 @@ class V
     public static $validators = [];
 
     /**
+     * Validates the given input with all passed rules
+     * and returns an array with all error messages.
+     * The array will be empty if the input is valid
+     *
+     * @param mixed $input
+     * @param array $rules
+     * @param array $messages
+     * @return array
+     */
+    public static function errors($input, array $rules, $messages = []): array
+    {
+        $errors = static::value($input, $rules, $messages, false);
+
+        return $errors === true ? [] : $errors;
+    }
+
+    /**
+     * Creates a useful error message for the given validator
+     * and the arguments. This is used mainly internally
+     * to create error messages
+     *
+     * @param string $validatorName
+     * @param mixed ...$params
+     * @return string|null
+     */
+    public static function message(string $validatorName, ...$params): ?string
+    {
+        $validatorName  = strtolower($validatorName);
+        $translationKey = 'error.validation.' . $validatorName;
+        $validators     = array_change_key_case(static::$validators);
+        $validator      = $validators[$validatorName] ?? null;
+
+        if ($validator === null) {
+            return null;
+        }
+
+        $reflection = new ReflectionFunction($validator);
+        $arguments  = [];
+
+
+        foreach ($reflection->getParameters() as $index => $parameter) {
+            $value = $params[$index] ?? null;
+
+            if (is_array($value) === true) {
+                $value = implode(', ', $value);
+            }
+
+            $arguments[$parameter->getName()] = $value;
+        }
+
+        $template = I18n::translate($translationKey, 'The "' . $validatorName . '" validation failed');
+
+        return Str::template($template, $arguments);
+    }
+
+    /**
      * Return the list of all validators
      *
      * @return array
@@ -42,10 +99,14 @@ class V
      *
      * @param  mixed    $value
      * @param  array    $rules
-     * @return boolean
+     * @param  array    $messages
+     * @param  boolean  $fail
+     * @return boolean|array
      */
-    public static function value($value, array $rules): bool
+    public static function value($value, array $rules, array $messages = [], bool $fail = true)
     {
+        $errors = [];
+
         foreach ($rules as $validatorName => $validatorOptions) {
             if (is_int($validatorName)) {
                 $validatorName    = $validatorOptions;
@@ -56,12 +117,19 @@ class V
                 $validatorOptions = [$validatorOptions];
             }
 
+            $validatorName = strtolower($validatorName);
+
             if (static::$validatorName($value, ...$validatorOptions) === false) {
-                throw new Exception(sprintf('The "%s" validator failed', $validatorName));
+                $message = $messages[$validatorName] ?? static::message($validatorName, $value, ...$validatorOptions);
+                $errors[$validatorName] = $message;
+
+                if ($fail === true) {
+                    throw new Exception($message);
+                }
             }
         }
 
-        return true;
+        return empty($errors) === true ? true : $errors;
     }
 
     /**
@@ -112,12 +180,15 @@ class V
      */
     public static function __callStatic(string $method, array $arguments): bool
     {
+        $method     = strtolower($method);
+        $validators = array_change_key_case(static::$validators);
+
         // check for missing validators
-        if (isset(static::$validators[$method]) === false) {
+        if (isset($validators[$method]) === false) {
             throw new Exception('The validator does not exist: ' . $method);
         }
 
-        return call_user_func_array(static::$validators[$method], $arguments);
+        return call_user_func_array($validators[$method], $arguments);
     }
 }
 
@@ -157,11 +228,11 @@ V::$validators = [
         }
         return $value != $other;
     },
-    'endsWith' => function (string $value, string $end): bool {
-        return Str::endsWith($value, $end);
-    },
     'email' => function ($value): bool {
         return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+    },
+    'endsWith' => function (string $value, string $end): bool {
+        return Str::endsWith($value, $end);
     },
     'filename' => function ($value): bool {
         return V::match($value, '/^[a-z0-9@._-]+$/i') === true &&
@@ -182,8 +253,8 @@ V::$validators = [
     'less' => function ($value, float $max): bool {
         return V::size($value, $max, '<') === true;
     },
-    'match' => function ($value, string $preg): bool {
-        return preg_match($preg, $value) !== 0;
+    'match' => function ($value, string $pattern): bool {
+        return preg_match($pattern, $value) !== 0;
     },
     'max' => function ($value, float $max): bool {
         return V::size($value, $max, '<=') === true;
