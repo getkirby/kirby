@@ -259,7 +259,6 @@ class Field extends Component
                 $this->errors = array_merge($this->errors, $errors);
             }
         }
-
     }
 
     public function value()

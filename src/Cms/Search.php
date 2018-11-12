@@ -53,7 +53,6 @@ class Search
 
         $preg    = '!(' . implode('|', $searchwords) . ')!i';
         $results = $collection->filter(function ($item) use ($query, $searchwords, $preg, $options, $lowerQuery) {
-
             $data = $item->content()->toArray();
             $keys = array_keys($data);
             $keys[] = 'id';
@@ -95,7 +94,6 @@ class Search
             }
 
             return $item->searchHits > 0 ? true : false;
-
         });
 
         return $results->sortBy('searchScore', 'desc');

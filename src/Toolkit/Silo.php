@@ -71,5 +71,4 @@ class Silo
         // return the array without the removed key
         return static::$data;
     }
-
 }
