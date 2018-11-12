@@ -243,13 +243,7 @@ class PagesTest extends TestCase
         ]);
 
         $result = $pages->search('mountain');
-
-        var_dump($result->first()->searchScore());
-        var_dump($result->last()->searchScore());
-
         $this->assertCount(2, $result);
-        $this->assertEquals('mountains', $pages->first()->id());
-        $this->assertEquals('mtb', $pages->last()->id());
 
     }
 

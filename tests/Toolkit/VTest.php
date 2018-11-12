@@ -466,7 +466,7 @@ class VTest extends TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The "same" validator failed
+     * @expectedExceptionMessage The "same" validation failed
      */
     public function testValueFails()
     {

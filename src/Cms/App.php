@@ -84,9 +84,6 @@ class App
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
 
-        // bake config
-        Config::$data = $this->options;
-
         // create all urls after the config, so possible
         // options can be taken into account
         $this->bakeUrls($props['urls'] ?? []);
@@ -117,6 +114,9 @@ class App
 
         // set the singleton
         Model::$kirby = static::$instance = $this;
+
+        // bake config
+        Config::$data = $this->options;
     }
 
     /**
@@ -554,6 +554,8 @@ class App
     {
         $server = $this->server();
         $root   = $this->root('config');
+
+        Config::$data = [];
 
         $main   = F::load($root . '/config.php', []);
         $host   = F::load($root . '/config.' . basename($server->host()) . '.php', []);

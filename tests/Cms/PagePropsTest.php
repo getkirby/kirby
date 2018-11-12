@@ -166,7 +166,7 @@ class PagePropsTest extends TestCase
             'intro' => [
                 'label' => 'Intro',
                 'message' => [
-                    'required' => 'The field is required'
+                    'required' => 'Please enter something'
                 ]
             ]
         ], $page->errors());

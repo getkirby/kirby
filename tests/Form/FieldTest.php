@@ -185,7 +185,7 @@ class FieldTest extends TestCase
         ]);
 
         $expected = [
-            'required' => 'The field is required',
+            'required' => 'Please enter something',
         ];
 
         $this->assertEquals($expected, $field->errors());
