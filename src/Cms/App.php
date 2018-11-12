@@ -19,6 +19,7 @@ use Kirby\Image\Darkroom;
 use Kirby\Session\AutoSession as Session;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Dir;
@@ -82,6 +83,9 @@ class App
         // stuff from config and additional options
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
+
+        // bake config
+        Config::$data = $this->options;
 
         // create all urls after the config, so possible
         // options can be taken into account
@@ -551,11 +555,13 @@ class App
         $server = $this->server();
         $root   = $this->root('config');
 
-        $main = (array)F::load($root . '/config.php', []);
-        $host = (array)F::load($root . '/config.' . basename($server->host()) . '.php', []);
-        $addr = (array)F::load($root . '/config.' . basename($server->address()) . '.php', []);
+        $main   = F::load($root . '/config.php', []);
+        $host   = F::load($root . '/config.' . basename($server->host()) . '.php', []);
+        $addr   = F::load($root . '/config.' . basename($server->address()) . '.php', []);
 
-        return $this->options = array_replace_recursive($main, $host, $addr);
+        $config = Config::$data;
+
+        return $this->options = array_replace_recursive($config, $main, $host, $addr);
     }
 
     /**

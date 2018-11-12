@@ -337,7 +337,13 @@ class F
             return $fallback;
         }
 
-        return include $file;
+        $result = include $file;
+
+        if ($fallback !== null && gettype($result) !== gettype($fallback)) {
+            return $fallback;
+        }
+
+        return $result;
     }
 
     /**
