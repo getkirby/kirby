@@ -10,7 +10,7 @@ class PagesSectionTest extends TestCase
 
     public function setUp()
     {
-        new App([
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ]
@@ -40,6 +40,49 @@ class PagesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('Pages', $section->headline());
+
+    }
+
+    public function testImageString()
+    {
+
+        $this->app->impersonate('kirby');
+
+        $model = new Page([
+            'slug' => 'test',
+            'children' => [
+                [
+                    'slug' => 'a',
+                    'files' => [
+                        ['filename' => 'cover.jpg']
+                    ]
+                ],
+                [
+                    'slug' => 'b',
+                    'files' => [
+                        ['filename' => 'cover.jpg']
+                    ]
+                ],
+                [
+                    'slug' => 'c'
+                ]
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $model,
+            'image' => 'page.image("cover.jpg")'
+        ]);
+
+        $data = $section->data();
+
+        // existing covers
+        $this->assertContains('/media/pages/test/a', $data[0]['image']['url']);
+        $this->assertContains('/media/pages/test/b', $data[1]['image']['url']);
+
+        // non-existing covers
+        $this->assertNull($data[2]['image']);
 
     }
 
