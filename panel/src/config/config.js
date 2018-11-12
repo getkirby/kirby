@@ -7,7 +7,10 @@ const defaults = {
   site: process.env.VUE_APP_DEV_SERVER,
   url: "/",
   debug: true,
-  translation: "en"
+  translation: "en",
+  search: {
+    limit: 10
+  }
 };
 
 export default { ...defaults, ...panel };

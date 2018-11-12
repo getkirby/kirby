@@ -82,7 +82,10 @@ class Panel
                 'api'         => $kirby->url('api'),
                 'csrf'        => $kirby->option('api')['csrf'] ?? csrf(),
                 'translation' => 'en',
-                'debug'       => true
+                'debug'       => true,
+                'search'      => [
+                    'limit' => $kirby->option('panel')['search']['limit'] ?? 10
+                ]
             ]
         ]);
 

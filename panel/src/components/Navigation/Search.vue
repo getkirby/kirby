@@ -36,6 +36,7 @@
 <script>
 
 import debounce from "@/ui/helpers/debounce.js";
+import config from "@/config/config.js";
 
 export default {
   data() {
@@ -84,7 +85,7 @@ export default {
       this.close();
     },
     search(query) {
-      this.$api.get('site/search', { q: query, limit: 10 }).then(response => {
+      this.$api.get('site/search', { q: query, limit: config.search.limit }).then(response => {
         this.pages = response.data;
         this.selected = -1;
       }).catch(() => {
