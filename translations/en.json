@@ -1,9 +1,9 @@
 {
   "add": "Add",
 
-  "avatar": "Picture",
-  "avatar.delete.success": "The avatar has been deleted",
-  "avatar.upload.success": "The avatar has been uploaded",
+  "avatar": "Profile picture",
+  "avatar.delete.success": "The profile picture has been deleted",
+  "avatar.upload.success": "The profile picture has been uploaded",
 
   "cancel": "Cancel",
   "change": "Change",
