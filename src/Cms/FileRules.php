@@ -19,7 +19,7 @@ class FileRules
     {
         if ($file->permissions()->changeName() !== true) {
             throw new PermissionException([
-                'key'  => 'file.changeName.permissions',
+                'key'  => 'file.changeName.permission',
                 'data' => ['filename' => $file->filename()]
             ]);
         }

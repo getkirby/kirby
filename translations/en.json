@@ -49,7 +49,7 @@
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
-  "error.file.changeName.permissions": "You are not allowed to change the name of \"{filename}\"",
+  "error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
   "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
   "error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
   "error.file.extension.missing": "The extensions for \"{filename}\" is missing",
@@ -92,7 +92,7 @@
   "error.page.notFound": "The page \"{slug}\" cannot be found",
   "error.page.num.invalid": "Please enter a valid sorting number. Numbers must not be negative.",
   "error.page.slug.invalid": "Please enter a valid URL prefix",
-  "error.page.sort.permissions": "The page \"{slug}\" cannot be sorted",
+  "error.page.sort.permission": "The page \"{slug}\" cannot be sorted",
   "error.page.sort.section.template.invalid": "The page template is not allowed in this section",
   "error.page.sort.section.type": "The page cannot be dragged into this section",
   "error.page.status.invalid": "Please set a valid page status",
