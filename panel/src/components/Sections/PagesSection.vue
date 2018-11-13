@@ -13,7 +13,7 @@
     <template v-if="issue">
       <k-box theme="negative">
         <k-text size="small">
-          <strong>{{ $t("error.blueprint.section.notLoaded", { name: name }) }}:</strong>
+          <strong>{{ $t("error.section.notLoaded", { name: name }) }}:</strong>
           {{ issue }}
         </k-text>
       </k-box>

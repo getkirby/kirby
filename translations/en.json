@@ -28,8 +28,6 @@
   "error.avatar.mime.invalid": "User profile images must be JPEG or PNG files",
 
   "error.blueprint.notFound": "The blueprint \"{name}\" could not be loaded",
-  "error.blueprint.section.notLoaded": "The section \"{name}\" could not be loaded",
-  "error.blueprint.section.type.invalid": "The section type \"{type}\" is not valid",
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
@@ -89,6 +87,9 @@
   "error.pages.max.singular": "You must not add more than one page to the \"{section}\" section",
   "error.pages.min.plural": "Add at least {min} pages to the \"{section}\" section",
   "error.pages.min.singular": "Add at least one page to the \"{section}\" section",
+
+  "error.section.notLoaded": "The section \"{name}\" could not be loaded",
+  "error.section.type.invalid": "The section type \"{type}\" is not valid",
 
   "error.site.changeTitle.permission": "You are not allowed to change the title of the site",
   "error.site.update.permission": "You are not allowed to update the site",

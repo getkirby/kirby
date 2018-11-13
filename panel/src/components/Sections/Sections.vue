@@ -14,7 +14,7 @@
           @submit="$emit('submit', $event)"
         />
         <template v-else>
-          <k-box :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex" :text="$t('error.blueprint.section.type.invalid', { type: section.type })" theme="negative" />
+          <k-box :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex" :text="$t('error.section.type.invalid', { type: section.type })" theme="negative" />
         </template>
       </template>
     </k-column>
