@@ -114,14 +114,14 @@ class FileRules
 
         if (V::in($extension, ['php', 'html', 'htm', 'exe'])) {
             throw new InvalidArgumentException([
-                'key'  => 'file.invalid.extension.forbidden',
+                'key'  => 'file.extension.forbidden',
                 'data' => ['extension' => $extension]
             ]);
         }
 
         if (Str::contains($extension, 'php')) {
             throw new InvalidArgumentException([
-                'key'  => 'file.forbidden',
+                'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'PHP']
             ]);
         }
@@ -145,7 +145,7 @@ class FileRules
         // Block htaccess files
         if (Str::startsWith($filename, '.ht')) {
             throw new InvalidArgumentException([
-                'key'  => 'file.forbidden',
+                'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'Apache config']
             ]);
         }
@@ -153,7 +153,7 @@ class FileRules
         // Block invisible files
         if (Str::startsWith($filename, '.')) {
             throw new InvalidArgumentException([
-                'key'  => 'file.forbidden',
+                'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'invisible']
             ]);
         }
@@ -175,7 +175,7 @@ class FileRules
 
         if (Str::contains($mime, 'php')) {
             throw new InvalidArgumentException([
-                'key'  => 'file.forbidden',
+                'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'PHP']
             ]);
         }
