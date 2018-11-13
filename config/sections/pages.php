@@ -194,14 +194,14 @@ return [
             $errors = [];
 
             if ($this->validateMax() === false) {
-                $errors['max'] = I18n::template('error.pages.max.' . I18n::form($this->max), [
+                $errors['max'] = I18n::template('error.section.pages.max.' . I18n::form($this->max), [
                     'max'     => $this->max,
                     'section' => $this->headline
                 ]);
             }
 
             if ($this->validateMin() === false) {
-                $errors['min'] = I18n::template('error.pages.min.' . I18n::form($this->max), [
+                $errors['min'] = I18n::template('error.section.pages.min.' . I18n::form($this->max), [
                     'min'     => $this->min,
                     'section' => $this->headline
                 ]);

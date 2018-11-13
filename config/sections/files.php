@@ -136,14 +136,14 @@ return [
             $errors = [];
 
             if ($this->validateMax() === false) {
-                $errors['max'] = I18n::template('error.files.max.' . I18n::form($this->max), [
+                $errors['max'] = I18n::template('error.section.files.max.' . I18n::form($this->max), [
                     'max'     => $this->max,
                     'section' => $this->headline
                 ]);
             }
 
             if ($this->validateMin() === false) {
-                $errors['min'] = I18n::template('error.files.min.' . I18n::form($this->min), [
+                $errors['min'] = I18n::template('error.section.files.min.' . I18n::form($this->min), [
                     'min'     => $this->min,
                     'section' => $this->headline
                 ]);

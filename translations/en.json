@@ -31,6 +31,8 @@
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
+  "error.field.converter.invalid": "Invalid converter \"{converter}\"",
+
   "error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
   "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
   "error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
@@ -43,17 +45,8 @@
   "error.file.type.forbidden": "You are not allowed to upload {type} files",
   "error.file.undefined": "The file cannot be found",
 
-  "error.files.max.plural": "You must not add more than {max} file to the \"{section}\" section",
-  "error.files.max.singular": "You must not add more than one file to the \"{section}\" section",
-  "error.files.min.plural": "Add at least {min} files to the \"{section}\" section",
-  "error.files.min.singular": "Add at least one file to the \"{section}\" section",
-
-  "error.form.converter.invalid": "Invalid converter \"{converter}\"",
-  "error.form.field.notFound": "The field type: <strong>{field.type}</strong> does not exist",
   "error.form.incomplete": "Please fix all form errors …",
-  "error.form.submit.fail": "The form could not be submitted",
-  "error.form.layout.invalid": "Invalid layout",
-  "error.form.time.notation": "Invalid time notation",
+  "error.form.notSaved": "The form could not be saved",
 
   "error.page.changeSlug.permission": "You are not allowed to change the URL appendix for \"{slug}\"",
   "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
@@ -69,24 +62,24 @@
   "error.page.delete.hasChildren": "The page has subpages and cannot be deleted",
   "error.page.delete.permission": "You are not allowed to delete \"{slug}\"",
   "error.page.draft.duplicate": "A page draft with the URL appendix \"{slug}\" already exists",
-  "error.page.draft.invalid": "The page \"{slug}\" is not a draft",
   "error.page.duplicate": "A page with the URL appendix \"{slug}\" already exists",
   "error.page.notFound": "The page \"{slug}\" cannot be found",
   "error.page.num.invalid": "Please enter a valid sorting number. Numbers must not be negative.",
   "error.page.slug.invalid": "Please enter a valid URL prefix",
   "error.page.sort.permission": "The page \"{slug}\" cannot be sorted",
-  "error.page.sort.section.template.invalid": "The page template is not allowed in this section",
-  "error.page.sort.section.type": "The page cannot be dragged into this section",
   "error.page.status.invalid": "Please set a valid page status",
-  "error.page.template.invalid": "Please select a valid template",
-  "error.page.template.missing": "Please provide a template for the page",
   "error.page.undefined": "The page cannot be found",
   "error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
-  "error.pages.max.plural": "You must not add more than {max} pages to the \"{section}\" section",
-  "error.pages.max.singular": "You must not add more than one page to the \"{section}\" section",
-  "error.pages.min.plural": "Add at least {min} pages to the \"{section}\" section",
-  "error.pages.min.singular": "Add at least one page to the \"{section}\" section",
+  "error.section.files.max.plural": "You must not add more than {max} file to the \"{section}\" section",
+  "error.section.files.max.singular": "You must not add more than one file to the \"{section}\" section",
+  "error.section.files.min.plural": "Add at least {min} files to the \"{section}\" section",
+  "error.section.files.min.singular": "Add at least one file to the \"{section}\" section",
+
+  "error.section.pages.max.plural": "You must not add more than {max} pages to the \"{section}\" section",
+  "error.section.pages.max.singular": "You must not add more than one page to the \"{section}\" section",
+  "error.section.pages.min.plural": "Add at least {min} pages to the \"{section}\" section",
+  "error.section.pages.min.singular": "Add at least one page to the \"{section}\" section",
 
   "error.section.notLoaded": "The section \"{name}\" could not be loaded",
   "error.section.type.invalid": "The section type \"{type}\" is not valid",
@@ -95,7 +88,6 @@
   "error.site.update.permission": "You are not allowed to update the site",
 
   "error.template.default.notFound": "The default template does not exist",
-  "error.template.error.notFound": "The error template does not exist",
 
   "error.user.changeEmail.permission": "You are not allowed to change the email for the user \"{name}\"",
   "error.user.changeLanguage.permission": "You are not allowed to change the language for the user \"{name}\"",
@@ -154,13 +146,10 @@
   "error.validation.time": "Please enter a valid time",
   "error.validation.url": "Please enter a valid URL",
 
-  "error.view.notFound": "This view does not exist",
-
   "field.files.empty": "No files selected yet",
   "field.pages.empty": "No pages selected yet",
   "field.structure.delete.confirm": "Do you really want to delete this item?",
   "field.structure.empty": "No entries yet",
-  "field.textarea.headline": "Headline",
   "field.users.empty": "No users selected yet",
 
   "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
@@ -289,6 +278,18 @@
   "site.renamed": "The site has been renamed",
 
   "today": "Today",
+
+  "toolbar.button.code": "Code",
+  "toolbar.button.bold": "Bold",
+  "toolbar.button.email": "Email",
+  "toolbar.button.headings": "Headings",
+  "toolbar.button.heading.1": "Heading 1",
+  "toolbar.button.heading.2": "Heading 2",
+  "toolbar.button.heading.3": "Heading 3",
+  "toolbar.button.italic": "Italic",
+  "toolbar.button.link": "Link",
+  "toolbar.button.ol": "Ordered list",
+  "toolbar.button.ul": "Bullet list",
 
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",

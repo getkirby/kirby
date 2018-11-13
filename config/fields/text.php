@@ -13,7 +13,7 @@ return [
         'converter' => function ($value = null) {
             if ($value !== null && in_array($value, array_keys($this->converters())) === false) {
                 throw new InvalidArgumentException([
-                    'key'  => 'form.converter.invalid',
+                    'key'  => 'field.converter.invalid',
                     'data' => ['converter' => $value]
                 ]);
             }

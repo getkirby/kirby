@@ -67,7 +67,7 @@ export default {
             });
           } else {
             this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.submit.fail"),
+              message: this.$t("error.form.notSaved"),
               details: [
                 {
                   label: "Exception: " + response.exception,

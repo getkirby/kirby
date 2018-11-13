@@ -14,6 +14,7 @@
           <k-button
             :icon="button.icon"
             :key="buttonIndex"
+            :tooltip="button.label"
             tabindex="-1"
             class="k-toolbar-button"
             @click="$refs[buttonIndex + '-dropdown'][0].toggle()"
@@ -36,6 +37,7 @@
         <k-button
           :icon="button.icon"
           :key="buttonIndex"
+          :tooltip="button.label"
           tabindex="-1"
           class="k-toolbar-button"
           @click="command(button.command, button.args)"
@@ -66,80 +68,6 @@ const list = function(type) {
 };
 
 export default {
-  commands: {
-    headlines: {
-      label: "Headline",
-      icon: "title",
-      dropdown: {
-        h1: {
-          label: "Headline 1",
-          icon: "title",
-          command: "prepend",
-          args: "#",
-        },
-        h2: {
-          label: "Headline 2",
-          icon: "title",
-          command: "prepend",
-          args: "##"
-        },
-        h3: {
-          label: "Headline 3",
-          icon: "title",
-          command: "prepend",
-          args: "###"
-        }
-      }
-    },
-    bold: {
-      label: "Bold",
-      icon: "bold",
-      command: "wrap",
-      args: "**",
-      shortcut: "b"
-    },
-    italic: {
-      label: "Italic",
-      icon: "italic",
-      command: "wrap",
-      args: "*",
-      shortcut: "i"
-    },
-    link: {
-      label: "Link",
-      icon: "url",
-      shortcut: "l",
-      command: "dialog",
-      args: "link"
-    },
-    email: {
-      label: "Email",
-      icon: "email",
-      shortcut: "e",
-      command: "dialog",
-      args: "email"
-    },
-    code: {
-      label: "Code",
-      icon: "code",
-      command: "wrap",
-      args: "`",
-    },
-    ul: {
-      label: "Bullet List",
-      icon: "list-bullet",
-      command() {
-        return list.apply(this, ["ul"]);
-      },
-    },
-    ol: {
-      label: "Ordered List",
-      icon: "list-numbers",
-      command() {
-        return list.apply(this, ["ol"]);
-      },
-    }
-  },
   layout: [
     "headlines",
     "bold",
@@ -163,6 +91,7 @@ export default {
     let layout    = {};
     let shortcuts = {};
     let buttons   = [];
+    let commands  = this.commands();
 
     if (this.buttons === false) {
       return layout;
@@ -179,8 +108,8 @@ export default {
     buttons.forEach((item, index) => {
       if (item === "|") {
         layout["divider-" + index] = { divider: true };
-      } else if (this.$options.commands[item]) {
-        let button = this.$options.commands[item];
+      } else if (commands[item]) {
+        let button = commands[item];
         layout[item] = button;
 
         if (button.shortcut) {
@@ -215,6 +144,82 @@ export default {
       } else {
         this.$emit("command", command, callback);
       }
+    },
+    commands() {
+      return {
+        headlines: {
+          label: this.$t("toolbar.button.headings"),
+          icon: "title",
+          dropdown: {
+            h1: {
+              label: this.$t("toolbar.button.heading.1"),
+              icon: "title",
+              command: "prepend",
+              args: "#",
+            },
+            h2: {
+              label: this.$t("toolbar.button.heading.2"),
+              icon: "title",
+              command: "prepend",
+              args: "##"
+            },
+            h3: {
+              label: this.$t("toolbar.button.heading.3"),
+              icon: "title",
+              command: "prepend",
+              args: "###"
+            }
+          }
+        },
+        bold: {
+          label: this.$t("toolbar.button.bold"),
+          icon: "bold",
+          command: "wrap",
+          args: "**",
+          shortcut: "b"
+        },
+        italic: {
+          label: this.$t("toolbar.button.italic"),
+          icon: "italic",
+          command: "wrap",
+          args: "*",
+          shortcut: "i"
+        },
+        link: {
+          label: this.$t("toolbar.button.link"),
+          icon: "url",
+          shortcut: "l",
+          command: "dialog",
+          args: "link"
+        },
+        email: {
+          label: this.$t("toolbar.button.email"),
+          icon: "email",
+          shortcut: "e",
+          command: "dialog",
+          args: "email"
+        },
+        code: {
+          label: this.$t("toolbar.button.code"),
+          icon: "code",
+          command: "wrap",
+          args: "`",
+        },
+        ul: {
+          label: this.$t("toolbar.button.ul"),
+          icon: "list-bullet",
+          command() {
+            return list.apply(this, ["ul"]);
+          },
+        },
+        ol: {
+          label: this.$t("toolbar.button.ol"),
+          icon: "list-numbers",
+          command() {
+            return list.apply(this, ["ol"]);
+          },
+        }
+      };
     },
     shortcut(shortcut, $event) {
 
