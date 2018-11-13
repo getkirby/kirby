@@ -79,7 +79,7 @@ class V
 
         $template = I18n::translate($translationKey, 'The "' . $validatorName . '" validation failed');
 
-        return Str::template($template, $arguments);
+        return Str::template($template, $arguments, '-', '{', '}');
     }
 
     /**
