@@ -33,7 +33,7 @@
         </template>
 
         <k-button-group>
-          <k-button :disabled="!permissions.changeEmail" icon="email" @click="action('email')">{{ $t('user.email') }}: {{ user.email }}</k-button>
+          <k-button :disabled="!permissions.changeEmail" icon="email" @click="action('email')">{{ $t('email') }}: {{ user.email }}</k-button>
           <k-button :disabled="!permissions.changeRole" icon="bolt" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</k-button>
           <k-button :disabled="!permissions.changeLanguage" icon="globe" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</k-button>
         </k-button-group>

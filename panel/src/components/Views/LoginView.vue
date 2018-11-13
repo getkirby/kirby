@@ -45,10 +45,9 @@ export default {
       return {
         email: {
           autofocus: true,
-          label: this.$t("user.email"),
+          label: this.$t("email"),
           type: "email",
           link: false,
-          placeholder: this.$t("user.email.placeholder")
         },
         password: {
           label: this.$t("user.password"),

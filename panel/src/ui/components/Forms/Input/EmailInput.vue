@@ -9,6 +9,12 @@ export default {
       type: String,
       default: "email"
     },
+    placeholder: {
+      type: String,
+      default() {
+        return this.$t("email.placeholder");
+      }
+    },
     type: {
       type: String,
       default: "email"

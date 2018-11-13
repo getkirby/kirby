@@ -76,10 +76,9 @@ export default {
     fields() {
       return {
         email: {
-          label: this.$t("user.email"),
+          label: this.$t("email"),
           type: "email",
           link: false,
-          placeholder: this.$t("user.email.placeholder"),
           required: true,
           autofocus: true
         },

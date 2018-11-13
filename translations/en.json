@@ -25,6 +25,9 @@
 
   "edit": "Edit",
 
+  "email": "Email",
+  "email.placeholder": "mail@example.com",
+
   "error.access.login": "Invalid email or password",
   "error.access.panel": "You are not allowed to access the panel",
 
@@ -323,8 +326,6 @@
   "user.delete": "Delete this user",
   "user.delete.confirm": "Do you really want to delete <br><strong>{email}</strong>?",
   "user.delete.success": "The user has been deleted",
-  "user.email": "Email",
-  "user.email.placeholder": "mail@example.com",
   "user.language": "Language",
   "user.name": "Name",
   "user.password": "Password",

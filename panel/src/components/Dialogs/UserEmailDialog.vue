@@ -32,7 +32,7 @@ export default {
     fields() {
       return {
         email: {
-          label: this.$t("user.email"),
+          label: this.$t("email"),
           preselect: true,
           required: true,
           type: "email",

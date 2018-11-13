@@ -27,7 +27,7 @@ return [
          * Custom placeholder text, when the field is empty.
          */
         'placeholder' => function ($value = null) {
-            return I18n::translate($value, $value) ?? 'mail@example.com';
+            return I18n::translate($value, $value) ?? I18n::translate('email.placeholder');
         }
     ],
     'validations' => [
