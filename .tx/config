@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[panel.v3]
+file_filter = translations/<lang>.json
+minimum_perc = 0
+source_file = translations/en.json
+source_lang = en
+type = KEYVALUEJSON
+
