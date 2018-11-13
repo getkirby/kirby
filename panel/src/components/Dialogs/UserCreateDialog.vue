@@ -83,7 +83,7 @@ export default {
           };
 
           this.success({
-            message: this.$t("user.created"),
+            message: this.$t("user.create.success"),
             event: "user.create"
           });
         })

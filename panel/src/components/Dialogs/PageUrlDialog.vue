@@ -14,7 +14,7 @@
           data-options
           @click="sluggify(page.title)"
         >
-          {{ $t("page.rename.fromTitle") }}
+          {{ $t("page.changeSlug.fromTitle") }}
         </k-button>
       </k-text-field>
     </k-form>
@@ -79,7 +79,7 @@ export default {
         this.$refs.dialog.close();
         this.$store.dispatch(
           "notification/success",
-          this.$t("page.url.changed.same")
+          this.$t("page.changeSlug.same")
         );
         return;
       }
@@ -97,7 +97,7 @@ export default {
           this.$store.dispatch("form/remove", "pages/" + this.page.id);
 
           const payload = {
-            message: this.$t("page.url.changed", { url: page.slug }),
+            message: this.$t("page.changeSlug.success", { url: page.slug }),
             event: "page.changeSlug"
           };
 

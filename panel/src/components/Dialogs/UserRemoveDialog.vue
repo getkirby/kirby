@@ -42,7 +42,7 @@ export default {
           this.$store.dispatch("form/remove", "users/" + this.user.id);
 
           this.success({
-            message: this.$t("user.deleted"),
+            message: this.$t("user.delete.success"),
             event: "user.delete"
           });
 

@@ -60,7 +60,7 @@ export default {
           this.$store.dispatch("form/remove", "users/" + this.user.id);
 
           let payload = {
-            message: this.$t("user.email.changed"),
+            message: this.$t("user.changeEmail.success"),
             event: "user.changeEmail",
           };
 

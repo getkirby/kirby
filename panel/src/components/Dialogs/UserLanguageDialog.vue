@@ -70,7 +70,7 @@ export default {
           }
 
           this.success({
-            message: this.$t("user.language.changed"),
+            message: this.$t("user.changeLanguage.success"),
             event: "user.changeLanguage"
           });
         })

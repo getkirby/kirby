@@ -54,35 +54,35 @@ export default {
       result.push({
         click: "rename",
         icon: "title",
-        text: Vue.i18n.translate("user.name.change"),
+        text: Vue.i18n.translate("user.changeName"),
         disabled: !options.changeName
       });
 
       result.push({
         click: "email",
         icon: "email",
-        text: Vue.i18n.translate("user.email.change"),
+        text: Vue.i18n.translate("user.changeEmail"),
         disabled: !options.changeEmail
       });
 
       result.push({
         click: "role",
         icon: "bolt",
-        text: Vue.i18n.translate("user.role.change"),
+        text: Vue.i18n.translate("user.changeRole"),
         disabled: !options.changeRole
       });
 
       result.push({
         click: "password",
         icon: "key",
-        text: Vue.i18n.translate("user.password.change"),
+        text: Vue.i18n.translate("user.changePassword"),
         disabled: !options.changePassword
       });
 
       result.push({
         click: "language",
         icon: "globe",
-        text: Vue.i18n.translate("user.language.change"),
+        text: Vue.i18n.translate("user.changeLanguage"),
         disabled: !options.changeLanguage
       });
 

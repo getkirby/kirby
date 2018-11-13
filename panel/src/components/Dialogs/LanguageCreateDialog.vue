@@ -73,11 +73,6 @@ export default {
           type: "text",
           placeholder: "en_US"
         },
-        // url: {
-        //   label: this.$t("language.url"),
-        //   type: "text",
-        //   icon: "chain"
-        // },
       };
     }
   },

@@ -40,7 +40,7 @@ export default {
       let fields = {
         status: {
           name: "status",
-          label: this.$t("page.status.select"),
+          label: this.$t("page.changeStatus.select"),
           type: "radio",
           required: true,
           options: Object.keys(this.states).map(key => {
@@ -59,7 +59,7 @@ export default {
       ) {
         fields.position = {
           name: "position",
-          label: this.$t("page.num.select"),
+          label: this.$t("page.changeStatus.position"),
           type: "select",
           empty: false,
           options: this.sortingOptions()
@@ -140,11 +140,11 @@ export default {
           let message = "";
 
           if (this.form.status === "listed" && this.page.blueprint.num === "default") {
-            message = this.$t("page.status.change.result.num", {
+            message = this.$t("page.changeStatus.success.num", {
               num: response.num
             });
           } else {
-            message = this.$t("page.status.change.result", {
+            message = this.$t("page.changeStatus.success", {
               status: this.states[response.status].label
             });
           }

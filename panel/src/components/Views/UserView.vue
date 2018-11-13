@@ -169,7 +169,7 @@ export default {
           this.$api.users.deleteAvatar(this.id).then(() => {
             this.$store.dispatch(
               "notification/success",
-              this.$t("user.avatar.deleted")
+              this.$t("avatar.delete.success")
             );
             this.avatar = null;
           });
@@ -228,7 +228,7 @@ export default {
     uploadedAvatar() {
       this.$store.dispatch(
         "notification/success",
-        this.$t("user.avatar.uploaded")
+        this.$t("avatar.upload.success")
       );
       this.fetch();
     }

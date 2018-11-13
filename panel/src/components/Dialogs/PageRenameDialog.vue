@@ -63,7 +63,7 @@ export default {
         .title(this.page.id, this.page.title)
         .then(() => {
           this.success({
-            message: this.$t("page.renamed"),
+            message: this.$t("page.changeTitle.success"),
             event: "page.changeTitle"
           });
         })

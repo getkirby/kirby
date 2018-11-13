@@ -42,7 +42,7 @@ export default {
           // remove data from cache
           this.$store.dispatch("form/remove", "files/" + this.id);
 
-          this.$store.dispatch("notification/success", this.$t("file.deleted"));
+          this.$store.dispatch("notification/success", this.$t("file.delete.success"));
           this.$events.$emit("file.delete");
           this.$emit("success");
           this.$refs.dialog.close();

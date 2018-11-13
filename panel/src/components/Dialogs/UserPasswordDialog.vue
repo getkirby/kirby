@@ -33,13 +33,13 @@ export default {
     fields() {
       return {
         password: {
-          label: this.$t("user.password.new"),
+          label: this.$t("user.changePassword.new"),
           type: "password",
           icon: "key",
           required: true
         },
         passwordConfirmation: {
-          label: this.$t("user.password.new.confirm"),
+          label: this.$t("user.changePassword.new.confirm"),
           icon: "key",
           type: "password",
           required: true
@@ -59,20 +59,13 @@ export default {
         });
     },
     submit() {
-      // TODO: redundant? already handled by backend
       if (this.values.password.length < 8) {
-        this.$store.dispatch(
-          "notification/error",
-          this.$t("error.user.password.invalid")
-        );
+        this.$refs.dialog.error(this.$t("error.user.password.invalid"));
         return false;
       }
 
       if (this.values.password !== this.values.passwordConfirmation) {
-        this.$store.dispatch(
-          "notification/error",
-          this.$t("error.user.password.notSame")
-        );
+        this.$refs.dialog.error(this.$t("error.user.password.notSame"));
         return false;
       }
 
@@ -80,7 +73,7 @@ export default {
         .changePassword(this.user.id, this.values.password)
         .then(() => {
           this.success({
-            message: this.$t("user.password.changed"),
+            message: this.$t("user.changePassword.success"),
             event: "user.changePassword"
           });
         })

@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('page.create')"
+    :button="$t('page.draft.create')"
     :notification="notification"
     size="medium"
     theme="positive"
@@ -115,7 +115,7 @@ export default {
         .then(page => {
           this.success({
             route: this.$api.pages.link(page.id),
-            message: this.$t("page.created"),
+            message: this.$t("page.draft.create.success"),
             event: "page.create"
           });
         })

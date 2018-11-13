@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('user.role.change')"
+    :button="$t('user.changeRole')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
@@ -33,7 +33,7 @@ export default {
     fields() {
       return {
         role: {
-          label: this.$t("user.role.select"),
+          label: this.$t("user.changeRole.select"),
           type: "radio",
           required: true,
           options: this.roles
@@ -63,7 +63,7 @@ export default {
         .changeRole(this.user.id, this.user.role)
         .then(() => {
           this.success({
-            message: this.$t("user.role.changed", { role: this.user.role }),
+            message: this.$t("user.changeRole.success", { role: this.user.role }),
             event: "user.changeRole"
           });
         })

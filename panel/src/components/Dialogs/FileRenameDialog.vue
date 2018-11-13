@@ -74,7 +74,7 @@ export default {
           this.$store.dispatch("form/remove", "files/" + this.file.id);
 
           let payload = {
-            message: this.$t("file.renamed"),
+            message: this.$t("file.changeName.success"),
             event: "file.changeName"
           };
 

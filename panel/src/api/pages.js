@@ -54,21 +54,21 @@ export default {
       result.push({
         click: "url",
         icon: "url",
-        text: Vue.i18n.translate("page.url.change"),
+        text: Vue.i18n.translate("page.changeSlug"),
         disabled: !options.changeSlug
       });
 
       result.push({
         click: "status",
         icon: "preview",
-        text: Vue.i18n.translate("page.status.change"),
+        text: Vue.i18n.translate("page.changeStatus"),
         disabled: !options.changeStatus
       });
 
       result.push({
         click: "template",
         icon: "template",
-        text: Vue.i18n.translate("page.template.change"),
+        text: Vue.i18n.translate("page.changeTemplate"),
         disabled: !options.changeTemplate
       });
 

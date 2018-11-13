@@ -186,7 +186,7 @@ export default {
     uploaded() {
       this.$events.$emit("file.create");
       this.$events.$emit("model.update");
-      this.$store.dispatch("notification/success", this.$t("file.uploaded"));
+      this.$store.dispatch("notification/success", this.$t("upload.success"));
     },
     paginate(pagination) {
       this.page = pagination.page;

@@ -51,7 +51,7 @@
             <k-button icon="add" @click="$refs.create.open()">{{ $t('language.create') }}</k-button>
           </header>
           <k-collection v-if="translations.length" :items="translations" @action="action" />
-          <k-empty v-else icon="globe" @click="$refs.create.open()">{{ $t('languages.empty.secondary') }}</k-empty>
+          <k-empty v-else icon="globe" @click="$refs.create.open()">{{ $t('languages.secondary.empty') }}</k-empty>
         </section>
       </template>
 
