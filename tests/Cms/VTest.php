@@ -20,13 +20,13 @@ class VTest extends TestCase
     public function messageInput()
     {
         return [
-            ['accepted', ['test'], 'The value must be true'],
+            ['accepted', ['test'], 'Please confirm'],
             ['alpha', ['test'], 'Please only enter characters between a-z'],
             ['alphanum', ['test'], 'Please only enter characters between a-z or numbers'],
             ['between', ['test', 1, 2], 'Please enter a value between "1" and "2"'],
             ['contains', ['test', 'foo'], 'Please enter a value that contains "foo"'],
             ['date', ['test'], 'Please enter a valid date'],
-            ['denied', ['test'], 'The value must be false'],
+            ['denied', ['test'], 'Please denie'],
             ['different', ['test', 'test'], 'The value must not be "test"'],
             ['email', ['test', 'test'], 'Please enter a valid email address'],
             ['endsWith', ['test', 'test'], 'The value must end with "test"'],
