@@ -194,23 +194,17 @@ return [
             $errors = [];
 
             if ($this->validateMax() === false) {
-                $errors['max'] = Str::template(
-                    I18n::translate('error.pages.max.' . r($this->max === 1, 'singular', 'plural')),
-                    [
-                        'max'     => $this->max,
-                        'section' => $this->headline
-                    ]
-                );
+                $errors['max'] = I18n::template('error.pages.max.' . I18n::form($this->max), [
+                    'max'     => $this->max,
+                    'section' => $this->headline
+                ]);
             }
 
             if ($this->validateMin() === false) {
-                $errors['min'] = Str::template(
-                    I18n::translate('error.pages.min' . r($this->min === 1, 'singular', 'plural')),
-                    [
-                        'min'     => $this->min,
-                        'section' => $this->headline
-                    ]
-                );
+                $errors['min'] = I18n::template('error.pages.min.' . I18n::form($this->max), [
+                    'min'     => $this->min,
+                    'section' => $this->headline
+                ]);
             }
 
             if (empty($errors) === true) {

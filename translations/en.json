@@ -61,10 +61,10 @@
   "error.file.notFound": "The file \"{filename}\" cannot be found",
   "error.file.undefined": "The file cannot be found",
 
-  "error.files.max.plural": "You must not add more than {{ max }} file to the {{ section }} section",
-  "error.files.max.singular": "You must not add more than one file to the {{ section }} section",
-  "error.files.min.plural": "Add at least {{ min }} files to the {{ section }} section",
-  "error.files.min.singular": "Add at least one file to the {{ section }} section",
+  "error.files.max.plural": "You must not add more than {max} file to the \"{section}\" section",
+  "error.files.max.singular": "You must not add more than one file to the \"{section}\" section",
+  "error.files.min.plural": "Add at least {min} files to the \"{section}\" section",
+  "error.files.min.singular": "Add at least one file to the \"{section}\" section",
 
   "error.form.converter.invalid": "Invalid converter \"{converter}\"",
   "error.form.field.notFound": "The field type: <strong>{field.type}</strong> does not exist",
@@ -101,10 +101,10 @@
   "error.page.undefined": "The page cannot be found",
   "error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
-  "error.pages.max.plural": "You must not add more than {{ max }} pages to the {{ section }} section",
-  "error.pages.max.singular": "You must not add more than one page to the {{ section }} section",
-  "error.pages.min.plural": "Add at least {{ min }} pages to the {{ section }} section",
-  "error.pages.min.singular": "Add at least one page to the {{ section }} section",
+  "error.pages.max.plural": "You must not add more than {max} pages to the \"{section}\" section",
+  "error.pages.max.singular": "You must not add more than one page to the \"{section}\" section",
+  "error.pages.min.plural": "Add at least {min} pages to the \"{section}\" section",
+  "error.pages.min.singular": "Add at least one page to the \"{section}\" section",
 
   "error.site.changeTitle.permission": "You are not allowed to change the title of the site",
   "error.site.update.permission": "You are not allowed to update the site",

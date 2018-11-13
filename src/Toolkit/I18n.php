@@ -58,6 +58,23 @@ class I18n
     }
 
     /**
+     * Returns singular or plural
+     * depending on the given number
+     *
+     * @param int $count
+     * @param boolean $none If true, 'none' will be returned if the count is 0
+     * @return string
+     */
+    public static function form(int $count, bool $none = false): string
+    {
+        if ($none === true && $count === 0) {
+            return 'none';
+        }
+
+        return $count === 1 ? 'singular' : 'plural';
+    }
+
+    /**
      * Returns the locale code
      *
      * @return string
@@ -81,6 +98,7 @@ class I18n
      *
      * @param string|array $key
      * @param string|array|null $fallback
+     * @param string|null $locale
      * @return string|array|null
      */
     public static function translate($key, $fallback = null, string $locale = null)
@@ -110,6 +128,28 @@ class I18n
         }
 
         return null;
+    }
+
+    /**
+     * Translate by key and then replace
+     * placeholders in the text
+     *
+     * @param string $key
+     * @param string $fallback
+     * @param array $replace
+     * @param string $locale
+     * @return string
+     */
+    public static function template(string $key, $fallback = null, array $replace = null, string $locale = null)
+    {
+        if (is_array($fallback) === true) {
+            $replace  = $fallback;
+            $fallback = null;
+            $locale   = null;
+        }
+
+        $template = static::translate($key, $fallback, $locale);
+        return Str::template($template, $replace, '-', '{', '}');
     }
 
     /**

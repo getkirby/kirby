@@ -77,9 +77,7 @@ class V
             $arguments[$parameter->getName()] = $value;
         }
 
-        $template = I18n::translate($translationKey, 'The "' . $validatorName . '" validation failed');
-
-        return Str::template($template, $arguments, '-', '{', '}');
+        return I18n::template($translationKey, 'The "' . $validatorName . '" validation failed', $arguments);
     }
 
     /**

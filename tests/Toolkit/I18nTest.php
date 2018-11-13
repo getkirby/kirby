@@ -14,6 +14,64 @@ class I18nTest extends TestCase
         I18n::$translations = [];
     }
 
+    public function testForm()
+    {
+        $this->assertEquals('singular', I18n::form(1));
+        $this->assertEquals('plural', I18n::form(2));
+
+        // simplified zero handling
+        $this->assertEquals('plural', I18n::form(0));
+
+        // correct zero handling
+        $this->assertEquals('none', I18n::form(0, true));
+    }
+
+    public function testTemplate()
+    {
+        I18n::$translations = [
+            'en' => [
+                'template' => 'This is a {test}'
+            ]
+        ];
+
+        $this->assertEquals('This is a test template', I18n::template('template', [
+            'test' => 'test template'
+        ]));
+    }
+
+    public function testTemplateWithFallback()
+    {
+        I18n::$translations = [
+            'en' => [
+                'template' => 'This is a {test}'
+            ]
+        ];
+
+        $this->assertEquals('This is a fallback', I18n::template('does-not-exist', 'This is a fallback', [
+            'test' => 'test template'
+        ]));
+
+        $this->assertEquals('This is a test fallback', I18n::template('does-not-exist', 'This is a {test}', [
+            'test' => 'test fallback'
+        ]));
+    }
+
+    public function testTemplateWithLocale()
+    {
+        I18n::$translations = [
+            'en' => [
+                'template' => 'This is a {test}'
+            ],
+            'de' => [
+                'template' => 'Das ist ein {test}'
+            ]
+        ];
+
+        $this->assertEquals('Das ist ein test template', I18n::template('template', null, [
+            'test' => 'test template'
+        ], 'de'));
+    }
+
     public function testTranslate()
     {
         I18n::$translations = [
