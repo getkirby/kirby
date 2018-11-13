@@ -73,6 +73,7 @@
   "error.form.field.notFound": "The field type: <strong>{field.type}</strong> does not exist",
   "error.form.field.required": "The field is required",
   "error.form.incomplete": "Please fix all form errors …",
+  "error.form.submit.fail": "The form could not be submitted",
   "error.form.layout.invalid": "Invalid layout",
   "error.form.max.invalid": "The value is above the accepted maximum",
   "error.form.maxLength.invalid": "The value is too long",
@@ -300,7 +301,7 @@
   "revert": "Revert",
 
   "save": "Save",
-  "saved": "Saved :)",
+  "saved": "Saved",
 
   "search": "Search",
   "search.noSubpages": "No subpages",

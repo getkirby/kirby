@@ -56,7 +56,7 @@ export default {
       this.$store.dispatch("form/save", this.id)
         .then(() => {
           this.$events.$emit("model.update");
-          this.$store.dispatch("notification/success", this.$t("saved"));
+          this.$store.dispatch("notification/success", this.$t("saved") + ' :)');
         })
         .catch(response => {
 
@@ -67,7 +67,7 @@ export default {
             });
           } else {
             this.$store.dispatch("notification/error", {
-              message: "The form could not be submitted",
+              message: this.$t("error.form.submit.fail"),
               details: [
                 {
                   label: "Exception: " + response.exception,
