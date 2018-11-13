@@ -11,7 +11,7 @@
 
     <k-dialog ref="dialog" size="medium">
       <template v-if="errors.length > 0">
-        <k-headline>{{ "Errors" | t("upload.errors") }}</k-headline>
+        <k-headline>{{ $t("upload.errors") }}</k-headline>
         <ul class="k-upload-error-list">
           <li v-for="(error, index) in errors" :key="'error-' + index">
             <p class="k-upload-error-filename">{{ error.file.name }}</p>
@@ -20,7 +20,7 @@
         </ul>
       </template>
       <template v-else>
-        <k-headline>{{ "Uploading…" | t("upload.progress") }}</k-headline>
+        <k-headline>{{ $t("upload.progress") }}</k-headline>
         <ul class="k-upload-list">
           <li v-for="(file, index) in files" :key="'file-' + index">
             <k-progress :ref="file.name"/>
@@ -33,7 +33,7 @@
         <template v-if="errors.length > 0">
           <k-button-group>
             <k-button icon="check" @click="$refs.dialog.close()">
-              {{ "Ok" | t("confirm") }}
+              {{ $t("confirm") }}
             </k-button>
           </k-button-group>
         </template>

@@ -20,7 +20,7 @@
                 class="k-dialog-button-cancel"
                 @click="cancel"
               >
-                {{ "Cancel" | t("cancel") }}
+                {{ $t("cancel") }}
               </k-button>
               <k-button
                 :icon="icon"
@@ -28,7 +28,7 @@
                 class="k-dialog-button-submit"
                 @click="submit"
               >
-                {{ button || t("confirm") }}
+                {{ button || $t("confirm") }}
               </k-button>
             </k-button-group>
           </slot>
