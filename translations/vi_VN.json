@@ -1,10 +1,10 @@
 {
-  "add": "Thêm",
+  "add": "Add",
 
   "avatar": "Profile picture",
 
-  "cancel": "Hủy",
-  "change": "Thay đổi",
+  "cancel": "Cancel",
+  "change": "Change",
   "close": "Close",
   "confirm": "Ok",
   "copy": "Copy",
@@ -18,7 +18,7 @@
   "days.tue": "Tue",
   "days.wed": "Wed",
 
-  "delete": "Xóa",
+  "delete": "Delete",
   "dimensions": "Dimensions",
   "discard": "Discard",
   "edit": "Edit",
@@ -163,7 +163,7 @@
 
   "files.empty": "No files yet",
 
-  "insert": "Chèn",
+  "insert": "Insert",
 
   "install": "Install",
 
@@ -265,7 +265,7 @@
   "role.empty": "There are no users with this role",
   "role.description.placeholder": "no description",
 
-  "save": "Lưu",
+  "save": "Save",
   "search": "Search",
   "select": "Select",
   "settings": "Settings",
@@ -316,7 +316,7 @@
   "version": "Version",
 
   "view.account": "Your account",
-  "view.installation": "Cài đặt",
+  "view.installation": "Installation",
   "view.settings": "Settings",
   "view.site": "Site",
   "view.users": "Users",
