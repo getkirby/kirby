@@ -8,13 +8,13 @@
         icon="add"
         @click="add"
       >
-        {{ "Add" | t("add") }}
+        {{ $t("add") }}
       </k-button>
     </template>
 
     <template>
       <k-empty v-if="items.length === 0" icon="list-bullet" @click="add">
-        {{ $t("structure.empty") }}
+        {{ $t("field.structure.empty") }}
       </k-empty>
 
       <template v-else>
@@ -129,7 +129,7 @@
         theme="negative"
         @submit="remove"
       >
-        <k-text>{{ "Do you really want to delete this item?" | t("structure.delete.confirm") }}</k-text>
+        <k-text>{{ $t("field.structure.delete.confirm") }}</k-text>
       </k-dialog>
     </template>
 
