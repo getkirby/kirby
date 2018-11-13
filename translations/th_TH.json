@@ -1,12 +1,12 @@
 {
-  "add": "Add",
+  "add": "เพิ่ม",
 
   "avatar": "Profile picture",
 
-  "cancel": "Cancel",
-  "change": "Change",
-  "close": "Close",
-  "confirm": "Ok",
+  "cancel": "ยกเลิก",
+  "change": "เปลี่ยน",
+  "close": "ปิด",
+  "confirm": "ตกลง",
   "copy": "Copy",
   "create": "Create",
 
@@ -18,12 +18,12 @@
   "days.tue": "Tue",
   "days.wed": "Wed",
 
-  "delete": "Delete",
+  "delete": "ลบ",
   "dimensions": "Dimensions",
   "discard": "Discard",
-  "edit": "Edit",
+  "edit": "แก้ไข",
 
-  "email": "Email",
+  "email": "อีเมล์",
   "email.placeholder": "mail@example.com",
 
   "error.access.login": "Invalid email or password",
@@ -163,7 +163,7 @@
 
   "files.empty": "No files yet",
 
-  "insert": "Insert",
+  "insert": "แทรก",
 
   "install": "Install",
 
@@ -176,7 +176,7 @@
   "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
   "installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 
-  "language": "Language",
+  "language": "ภาษา",
   "language.code": "Code",
   "language.convert": "Make default",
   "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
@@ -201,7 +201,7 @@
   "license.register": "Register",
   "license.unregistered": "This is an unregistered demo of Kirby",
 
-  "link": "Link",
+  "link": "ลิงค์",
   "link.text": "Link text",
 
   "loading": "Loading",
@@ -211,18 +211,18 @@
   "menu": "Menu",
   "mime": "Mime-Type",
 
-  "months.april": "April",
-  "months.august": "August",
-  "months.december": "December",
+  "months.april": "เมษายน",
+  "months.august": "สิงหาคม",
+  "months.december": "ธันวาคม",
   "months.february": "Feburary",
-  "months.january": "January",
-  "months.july": "July",
-  "months.june": "June",
-  "months.march": "March",
-  "months.may": "May",
-  "months.november": "November",
-  "months.october": "October",
-  "months.september": "September",
+  "months.january": "มกราคม",
+  "months.july": "กรกฎาคม",
+  "months.june": "มิถุนายน",
+  "months.march": "มีนาคม",
+  "months.may": "พฤษภาคม",
+  "months.november": "พฤศจิกายน",
+  "months.october": "ตุลาคม",
+  "months.september": "กันยายน",
 
   "more": "More",
   "name": "Name",
@@ -233,7 +233,7 @@
   "orientation.portrait": "Portrait",
   "orientation.square": "Square",
 
-  "page.changeSlug": "Change URL",
+  "page.changeSlug": "เปลี่ยน URL",
   "page.changeSlug.fromTitle": "Create from title",
   "page.changeStatus": "Change status",
   "page.changeStatus.position": "Please select a position",
@@ -252,7 +252,7 @@
 
   "pages.empty": "No pages yet",
 
-  "password": "Password",
+  "password": "รหัสผ่าน",
   "pixel": "Pixel",
   "remove": "Remove",
   "rename": "Rename",
@@ -265,26 +265,26 @@
   "role.empty": "There are no users with this role",
   "role.description.placeholder": "no description",
 
-  "save": "Save",
+  "save": "บันทึก",
   "search": "Search",
   "select": "Select",
   "settings": "Settings",
   "size": "Size",
   "slug": "URL appendix",
   "sort": "Sort",
-  "title": "Title",
+  "title": "ชื่อเรื่อง",
   "template": "Template",
   "today": "Today",
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Bold",
-  "toolbar.button.email": "Email",
+  "toolbar.button.email": "อีเมล์",
   "toolbar.button.headings": "Headings",
   "toolbar.button.heading.1": "Heading 1",
   "toolbar.button.heading.2": "Heading 2",
   "toolbar.button.heading.3": "Heading 3",
   "toolbar.button.italic": "Italic",
-  "toolbar.button.link": "Link",
+  "toolbar.button.link": "ลิงค์",
   "toolbar.button.ol": "Ordered list",
   "toolbar.button.ul": "Bullet list",
 
@@ -293,7 +293,7 @@
   "translation.name": "English",
 
   "upload": "Upload",
-  "upload.errors": "Error",
+  "upload.errors": "ข้อผิดพลาด",
   "upload.progress": "Uploading …",
 
   "url": "Url",
@@ -305,21 +305,21 @@
   "user.changeLanguage": "Change language",
   "user.changeName": "Rename this user",
   "user.changePassword": "Change password",
-  "user.changePassword.new": "New password",
+  "user.changePassword.new": "รหัสผ่านใหม่",
   "user.changePassword.new.confirm": "Confirm the new password …",
   "user.changeRole": "Change role",
   "user.changeRole.select": "Select a new role",
-  "user.create": "Add a new user",
+  "user.create": "เพิ่มผู้ใช้ใหม่",
   "user.delete": "Delete this user",
   "user.delete.confirm": "Do you really want to delete <br><strong>{email}</strong>?",
 
   "version": "Version",
 
-  "view.account": "Your account",
-  "view.installation": "Installation",
+  "view.account": "บัญชีของคุณ",
+  "view.installation": "การติดตั้ง",
   "view.settings": "Settings",
   "view.site": "Site",
-  "view.users": "Users",
+  "view.users": "ผู้ใช้",
 
   "welcome": "Welcome"
 }

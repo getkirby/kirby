@@ -56,7 +56,7 @@ export default {
         .changeName(this.user.id, this.user.name)
         .then(() => {
           this.success({
-            message: this.$t("user.changeName.success"),
+            message: ":)",
             event: "user.changeName"
           });
         })

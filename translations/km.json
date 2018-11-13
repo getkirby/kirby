@@ -1,10 +1,10 @@
 {
-  "add": "Add",
+  "add": "បន្ថែម",
 
   "avatar": "Profile picture",
 
-  "cancel": "Cancel",
-  "change": "Change",
+  "cancel": "បោះបង់",
+  "change": "ការផ្លាស់ប្តូរ",
   "close": "Close",
   "confirm": "Ok",
   "copy": "Copy",
@@ -18,7 +18,7 @@
   "days.tue": "Tue",
   "days.wed": "Wed",
 
-  "delete": "Delete",
+  "delete": "រមកមិល",
   "dimensions": "Dimensions",
   "discard": "Discard",
   "edit": "Edit",
@@ -163,7 +163,7 @@
 
   "files.empty": "No files yet",
 
-  "insert": "Insert",
+  "insert": "បន្ថែម",
 
   "install": "Install",
 
@@ -265,7 +265,7 @@
   "role.empty": "There are no users with this role",
   "role.description.placeholder": "no description",
 
-  "save": "Save",
+  "save": "រក្សាទុកការ",
   "search": "Search",
   "select": "Select",
   "settings": "Settings",

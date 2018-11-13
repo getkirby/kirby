@@ -167,10 +167,7 @@ export default {
           break;
         case "picture.delete":
           this.$api.users.deleteAvatar(this.id).then(() => {
-            this.$store.dispatch(
-              "notification/success",
-              this.$t("avatar.delete.success")
-            );
+            this.$store.dispatch("notification/success", ":)");
             this.avatar = null;
           });
           break;
@@ -226,10 +223,7 @@ export default {
         });
     },
     uploadedAvatar() {
-      this.$store.dispatch(
-        "notification/success",
-        this.$t("avatar.upload.success")
-      );
+      this.$store.dispatch("notification/success", ":)");
       this.fetch();
     }
   }

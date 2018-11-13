@@ -195,10 +195,7 @@ export default {
 
         this.$api.pages.status(element.id, "listed", position)
           .then(() => {
-            this.$store.dispatch(
-              "notification/success",
-              this.$t("sorted")
-            );
+            this.$store.dispatch("notification/success", ":)");
             this.$events.$emit("page.changeStatus");
           })
           .catch(response => {

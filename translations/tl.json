@@ -1,10 +1,10 @@
 {
-  "add": "Add",
+  "add": "Magdagdag",
 
   "avatar": "Profile picture",
 
-  "cancel": "Cancel",
-  "change": "Change",
+  "cancel": "Kanselahin",
+  "change": "Baguhin",
   "close": "Close",
   "confirm": "Ok",
   "copy": "Copy",
@@ -18,7 +18,7 @@
   "days.tue": "Tue",
   "days.wed": "Wed",
 
-  "delete": "Delete",
+  "delete": "Mag",
   "dimensions": "Dimensions",
   "discard": "Discard",
   "edit": "Edit",
@@ -265,7 +265,7 @@
   "role.empty": "There are no users with this role",
   "role.description.placeholder": "no description",
 
-  "save": "Save",
+  "save": "E-save",
   "search": "Search",
   "select": "Select",
   "settings": "Settings",

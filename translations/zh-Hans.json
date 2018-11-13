@@ -1,12 +1,12 @@
 {
-  "add": "Add",
+  "add": "添加",
 
   "avatar": "Profile picture",
 
-  "cancel": "Cancel",
-  "change": "Change",
+  "cancel": "取消",
+  "change": "更改",
   "close": "Close",
-  "confirm": "Ok",
+  "confirm": "确定",
   "copy": "Copy",
   "create": "Create",
 
@@ -18,10 +18,10 @@
   "days.tue": "Tue",
   "days.wed": "Wed",
 
-  "delete": "Delete",
+  "delete": "删除",
   "dimensions": "Dimensions",
   "discard": "Discard",
-  "edit": "Edit",
+  "edit": "编辑",
 
   "email": "Email",
   "email.placeholder": "mail@example.com",
@@ -163,7 +163,7 @@
 
   "files.empty": "No files yet",
 
-  "insert": "Insert",
+  "insert": "插入",
 
   "install": "Install",
 
@@ -176,7 +176,7 @@
   "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
   "installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 
-  "language": "Language",
+  "language": "语言",
   "language.code": "Code",
   "language.convert": "Make default",
   "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
@@ -202,11 +202,11 @@
   "license.unregistered": "This is an unregistered demo of Kirby",
 
   "link": "Link",
-  "link.text": "Link text",
+  "link.text": "连接文本",
 
   "loading": "Loading",
-  "login": "Login",
-  "logout": "Logout",
+  "login": "登录",
+  "logout": "退出",
 
   "menu": "Menu",
   "mime": "Mime-Type",
@@ -252,7 +252,7 @@
 
   "pages.empty": "No pages yet",
 
-  "password": "Password",
+  "password": "密码",
   "pixel": "Pixel",
   "remove": "Remove",
   "rename": "Rename",
@@ -265,7 +265,7 @@
   "role.empty": "There are no users with this role",
   "role.description.placeholder": "no description",
 
-  "save": "Save",
+  "save": "保存",
   "search": "Search",
   "select": "Select",
   "settings": "Settings",
@@ -293,7 +293,7 @@
   "translation.name": "English",
 
   "upload": "Upload",
-  "upload.errors": "Error",
+  "upload.errors": "错误",
   "upload.progress": "Uploading …",
 
   "url": "Url",
@@ -315,8 +315,8 @@
 
   "version": "Version",
 
-  "view.account": "Your account",
-  "view.installation": "Installation",
+  "view.account": "您的账户",
+  "view.installation": "安装",
   "view.settings": "Settings",
   "view.site": "Site",
   "view.users": "Users",

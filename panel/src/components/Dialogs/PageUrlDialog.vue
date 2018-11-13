@@ -77,10 +77,7 @@ export default {
     submit() {
       if (this.slug === this.page.slug) {
         this.$refs.dialog.close();
-        this.$store.dispatch(
-          "notification/success",
-          this.$t("page.changeSlug.same")
-        );
+        this.$store.dispatch("notification/success", ":)");
         return;
       }
 
@@ -97,7 +94,7 @@ export default {
           this.$store.dispatch("form/remove", "pages/" + this.page.id);
 
           const payload = {
-            message: this.$t("page.changeSlug.success", { url: page.slug }),
+            message: ":)",
             event: "page.changeSlug"
           };
 

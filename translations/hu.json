@@ -1,36 +1,36 @@
 {
-  "add": "Add",
+  "add": "Új",
 
-  "avatar": "Profile picture",
+  "avatar": "Profil kép",
 
-  "cancel": "Cancel",
-  "change": "Change",
-  "close": "Close",
-  "confirm": "Ok",
+  "cancel": "Mégse",
+  "change": "Módosítás",
+  "close": "Bezár",
+  "confirm": "Mentés",
   "copy": "Copy",
   "create": "Create",
 
-  "days.fri": "Fri",
-  "days.mon": "Mon",
-  "days.sat": "Sat",
-  "days.sun": "Sun",
-  "days.thu": "Thu",
-  "days.tue": "Tue",
-  "days.wed": "Wed",
+  "days.fri": "pé",
+  "days.mon": "hé",
+  "days.sat": "szo",
+  "days.sun": "va",
+  "days.thu": "csü",
+  "days.tue": "ke",
+  "days.wed": "sze",
 
-  "delete": "Delete",
+  "delete": "Törlés",
   "dimensions": "Dimensions",
-  "discard": "Discard",
-  "edit": "Edit",
+  "discard": "Visszavonás",
+  "edit": "Fájl szerkesztése",
 
   "email": "Email",
-  "email.placeholder": "mail@example.com",
+  "email.placeholder": "mail@példa.hu",
 
   "error.access.login": "Invalid email or password",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
-  "error.avatar.delete.fail": "The profile picture could not be deleted",
+  "error.avatar.delete.fail": "A profil kép nem törölhető",
   "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture below 3000 pixel",
   "error.avatar.mime.forbidden": "The profile picture must be JPEG or PNG files",
 
@@ -163,7 +163,7 @@
 
   "files.empty": "No files yet",
 
-  "insert": "Insert",
+  "insert": "Beilleszt",
 
   "install": "Install",
 
@@ -176,7 +176,7 @@
   "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
   "installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 
-  "language": "Language",
+  "language": "Nyelv",
   "language.code": "Code",
   "language.convert": "Make default",
   "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
@@ -202,27 +202,27 @@
   "license.unregistered": "This is an unregistered demo of Kirby",
 
   "link": "Link",
-  "link.text": "Link text",
+  "link.text": "Link szöveg",
 
   "loading": "Loading",
-  "login": "Login",
-  "logout": "Logout",
+  "login": "Belépés",
+  "logout": "Kijelentkezés",
 
   "menu": "Menu",
   "mime": "Mime-Type",
 
-  "months.april": "April",
-  "months.august": "August",
-  "months.december": "December",
+  "months.april": "április",
+  "months.august": "augusztus",
+  "months.december": "december",
   "months.february": "Feburary",
-  "months.january": "January",
-  "months.july": "July",
-  "months.june": "June",
-  "months.march": "March",
-  "months.may": "May",
-  "months.november": "November",
-  "months.october": "October",
-  "months.september": "September",
+  "months.january": "január",
+  "months.july": "július",
+  "months.june": "június",
+  "months.march": "március",
+  "months.may": "május",
+  "months.november": "november",
+  "months.october": "október",
+  "months.september": "szeptember",
 
   "more": "More",
   "name": "Name",
@@ -233,8 +233,8 @@
   "orientation.portrait": "Portrait",
   "orientation.square": "Square",
 
-  "page.changeSlug": "Change URL",
-  "page.changeSlug.fromTitle": "Create from title",
+  "page.changeSlug": "URL változtatása",
+  "page.changeSlug.fromTitle": "Létrehozás címből",
   "page.changeStatus": "Change status",
   "page.changeStatus.position": "Please select a position",
   "page.changeStatus.select": "Select a new status",
@@ -252,11 +252,11 @@
 
   "pages.empty": "No pages yet",
 
-  "password": "Password",
+  "password": "Jelszó",
   "pixel": "Pixel",
   "remove": "Remove",
   "rename": "Rename",
-  "replace": "Replace",
+  "replace": "Cserél",
   "retry": "Try again",
   "revert": "Revert",
 
@@ -265,15 +265,15 @@
   "role.empty": "There are no users with this role",
   "role.description.placeholder": "no description",
 
-  "save": "Save",
+  "save": "Mentés",
   "search": "Search",
   "select": "Select",
   "settings": "Settings",
   "size": "Size",
   "slug": "URL appendix",
   "sort": "Sort",
-  "title": "Title",
-  "template": "Template",
+  "title": "Cím",
+  "template": "Sablon",
   "today": "Today",
 
   "toolbar.button.code": "Code",
@@ -293,7 +293,7 @@
   "translation.name": "English",
 
   "upload": "Upload",
-  "upload.errors": "Error",
+  "upload.errors": "Hiba",
   "upload.progress": "Uploading …",
 
   "url": "Url",
@@ -305,21 +305,21 @@
   "user.changeLanguage": "Change language",
   "user.changeName": "Rename this user",
   "user.changePassword": "Change password",
-  "user.changePassword.new": "New password",
+  "user.changePassword.new": "Új jelszó",
   "user.changePassword.new.confirm": "Confirm the new password …",
   "user.changeRole": "Change role",
   "user.changeRole.select": "Select a new role",
-  "user.create": "Add a new user",
+  "user.create": "Új felhasználó",
   "user.delete": "Delete this user",
   "user.delete.confirm": "Do you really want to delete <br><strong>{email}</strong>?",
 
   "version": "Version",
 
-  "view.account": "Your account",
-  "view.installation": "Installation",
+  "view.account": "Fiókod",
+  "view.installation": "Telepítés",
   "view.settings": "Settings",
   "view.site": "Site",
-  "view.users": "Users",
+  "view.users": "Felhasználók",
 
   "welcome": "Welcome"
 }

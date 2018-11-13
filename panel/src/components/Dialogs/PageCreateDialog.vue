@@ -115,7 +115,7 @@ export default {
         .then(page => {
           this.success({
             route: this.$api.pages.link(page.id),
-            message: this.$t("page.draft.create.success"),
+            message: ":)",
             event: "page.create"
           });
         })

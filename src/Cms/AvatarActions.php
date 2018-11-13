@@ -61,7 +61,7 @@ trait AvatarActions
         // validate the uploaded mime type
         if ($upload->mime() !== 'image/jpeg') {
             throw new InvalidArgumentException([
-                'key' => 'avatar.mime.invalid',
+                'key' => 'avatar.mime.forbidden',
             ]);
         }
 
@@ -134,7 +134,7 @@ trait AvatarActions
         // validate the uploaded mime type
         if ($upload->mime() !== 'image/jpeg') {
             throw new InvalidArgumentException([
-                'key' => 'avatar.mime.invalid',
+                'key' => 'avatar.mime.forbidden',
             ]);
         }
 

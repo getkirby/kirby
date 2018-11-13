@@ -56,7 +56,7 @@ export default {
       this.$store.dispatch("form/save", this.id)
         .then(() => {
           this.$events.$emit("model.update");
-          this.$store.dispatch("notification/success", this.$t("saved") + ' :)');
+          this.$store.dispatch("notification/success", ':)');
         })
         .catch(response => {
 

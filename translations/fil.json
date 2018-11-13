@@ -1,27 +1,27 @@
 {
-  "add": "Add",
+  "add": "Idagdag",
 
   "avatar": "Profile picture",
 
-  "cancel": "Cancel",
-  "change": "Change",
+  "cancel": "Ikansela",
+  "change": "Baguhin",
   "close": "Close",
   "confirm": "Ok",
   "copy": "Copy",
   "create": "Create",
 
-  "days.fri": "Fri",
-  "days.mon": "Mon",
-  "days.sat": "Sat",
-  "days.sun": "Sun",
-  "days.thu": "Thu",
-  "days.tue": "Tue",
-  "days.wed": "Wed",
+  "days.fri": "Biy",
+  "days.mon": "Lun",
+  "days.sat": "Sab",
+  "days.sun": "Lin",
+  "days.thu": "Huw",
+  "days.tue": "Mar",
+  "days.wed": "Miy",
 
-  "delete": "Delete",
+  "delete": "Burahin",
   "dimensions": "Dimensions",
   "discard": "Discard",
-  "edit": "Edit",
+  "edit": "I-edit",
 
   "email": "Email",
   "email.placeholder": "mail@example.com",
@@ -163,7 +163,7 @@
 
   "files.empty": "No files yet",
 
-  "insert": "Insert",
+  "insert": "Magdagdag",
 
   "install": "Install",
 
@@ -176,7 +176,7 @@
   "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
   "installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 
-  "language": "Language",
+  "language": "Wika",
   "language.code": "Code",
   "language.convert": "Make default",
   "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
@@ -211,18 +211,18 @@
   "menu": "Menu",
   "mime": "Mime-Type",
 
-  "months.april": "April",
-  "months.august": "August",
-  "months.december": "December",
+  "months.april": "Abril",
+  "months.august": "Agosto",
+  "months.december": "Disyembre",
   "months.february": "Feburary",
-  "months.january": "January",
-  "months.july": "July",
-  "months.june": "June",
-  "months.march": "March",
-  "months.may": "May",
-  "months.november": "November",
-  "months.october": "October",
-  "months.september": "September",
+  "months.january": "Enero",
+  "months.july": "Hulyo",
+  "months.june": "Hunyo",
+  "months.march": "Marso",
+  "months.may": "Mayo",
+  "months.november": "Nobyembre",
+  "months.october": "Oktubre",
+  "months.september": "Setyembre",
 
   "more": "More",
   "name": "Name",
@@ -233,7 +233,7 @@
   "orientation.portrait": "Portrait",
   "orientation.square": "Square",
 
-  "page.changeSlug": "Change URL",
+  "page.changeSlug": "Baguhin ang URL",
   "page.changeSlug.fromTitle": "Create from title",
   "page.changeStatus": "Change status",
   "page.changeStatus.position": "Please select a position",
@@ -265,14 +265,14 @@
   "role.empty": "There are no users with this role",
   "role.description.placeholder": "no description",
 
-  "save": "Save",
+  "save": "I-save",
   "search": "Search",
   "select": "Select",
   "settings": "Settings",
   "size": "Size",
   "slug": "URL appendix",
   "sort": "Sort",
-  "title": "Title",
+  "title": "Titulo",
   "template": "Template",
   "today": "Today",
 
@@ -305,7 +305,7 @@
   "user.changeLanguage": "Change language",
   "user.changeName": "Rename this user",
   "user.changePassword": "Change password",
-  "user.changePassword.new": "New password",
+  "user.changePassword.new": "Bagong password",
   "user.changePassword.new.confirm": "Confirm the new password …",
   "user.changeRole": "Change role",
   "user.changeRole.select": "Select a new role",
@@ -315,8 +315,8 @@
 
   "version": "Version",
 
-  "view.account": "Your account",
-  "view.installation": "Installation",
+  "view.account": "Ang iyong account",
+  "view.installation": "Instalasyon",
   "view.settings": "Settings",
   "view.site": "Site",
   "view.users": "Users",

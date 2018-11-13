@@ -73,7 +73,7 @@ export default {
         .template(this.page.id, this.page.template)
         .then(() => {
           this.success({
-            message: this.$t("page.changeTemplate.success"),
+            message: ":)",
             event: "page.changeTemplate"
           });
         })

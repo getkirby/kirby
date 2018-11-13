@@ -206,7 +206,7 @@ export default {
     },
     uploaded() {
       this.fetch();
-      this.$store.dispatch("notification/success", this.$t("file.replace.success"));
+      this.$store.dispatch("notification/success", ":)");
     }
   }
 };

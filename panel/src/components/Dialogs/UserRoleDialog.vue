@@ -63,7 +63,7 @@ export default {
         .changeRole(this.user.id, this.user.role)
         .then(() => {
           this.success({
-            message: this.$t("user.changeRole.success", { role: this.user.role }),
+            message: ":)",
             event: "user.changeRole"
           });
         })

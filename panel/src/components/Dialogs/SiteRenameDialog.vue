@@ -21,7 +21,7 @@ export default {
         .then(() => {
           this.$store.dispatch("system/title", this.page.title);
           this.success({
-            message: this.$t("site.changeTitle.success"),
+            message: ":)",
             event: "site.changeTitle"
           });
         })

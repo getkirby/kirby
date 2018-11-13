@@ -81,7 +81,7 @@ export default {
           this.$store.dispatch("form/remove", "pages/" + this.page.id);
 
           const payload = {
-            message: this.$t("page.delete.success"),
+            message: ":)",
             event: "page.delete"
           };
 

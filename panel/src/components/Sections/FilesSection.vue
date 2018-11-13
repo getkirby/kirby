@@ -141,7 +141,7 @@ export default {
       this.$api
         .patch(this.parent + "/files/sort", { files: items })
         .then(() => {
-          this.$store.dispatch("notification/success", this.$t("sorted"));
+          this.$store.dispatch("notification/success", ":)");
         })
         .catch(response => {
           this.fetch();
@@ -186,7 +186,7 @@ export default {
     uploaded() {
       this.$events.$emit("file.create");
       this.$events.$emit("model.update");
-      this.$store.dispatch("notification/success", this.$t("upload.success"));
+      this.$store.dispatch("notification/success", ":)");
     },
     paginate(pagination) {
       this.page = pagination.page;

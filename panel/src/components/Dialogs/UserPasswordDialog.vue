@@ -73,7 +73,7 @@ export default {
         .changePassword(this.user.id, this.values.password)
         .then(() => {
           this.success({
-            message: this.$t("user.changePassword.success"),
+            message: ":)",
             event: "user.changePassword"
           });
         })

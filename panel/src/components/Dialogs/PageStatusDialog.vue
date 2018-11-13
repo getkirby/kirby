@@ -137,20 +137,8 @@ export default {
       this.$api.pages
         .status(this.page.id, this.form.status, this.form.position || 1)
         .then(response => {
-          let message = "";
-
-          if (this.form.status === "listed" && this.page.blueprint.num === "default") {
-            message = this.$t("page.changeStatus.success.num", {
-              num: response.num
-            });
-          } else {
-            message = this.$t("page.changeStatus.success", {
-              status: this.states[response.status].label
-            });
-          }
-
           this.success({
-            message: message,
+            message: ":)",
             event: "page.changeStatus"
           });
         })
