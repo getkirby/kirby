@@ -11,6 +11,12 @@ class FieldTest extends TestCase
 
     public function setUp()
     {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
         Field::$types  = [];
         Field::$mixins = [];
     }
