@@ -3,7 +3,12 @@
     <k-view v-if="user && view">
       <div class="k-topbar-wrapper">
         <k-dropdown class="k-topbar-menu">
-          <k-button :tooltip="$t('menu')" icon="bars" class="k-topbar-button k-topbar-menu-button" @click="$refs.menu.toggle()">
+          <k-button
+            :tooltip="$t('menu')"
+            icon="bars"
+            class="k-topbar-button k-topbar-menu-button"
+            @click="$refs.menu.toggle()"
+          >
             <k-icon type="angle-down" />
           </k-button>
           <k-dropdown-content ref="menu" class="k-topbar-menu">
@@ -88,7 +93,7 @@
           >
             {{ notification.message }}
           </k-button>
-          <k-button icon="search" :tooltip="$t('search')" @click="$store.dispatch('search', true)" />
+          <k-button :tooltip="$t('search')" icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
     </k-view>

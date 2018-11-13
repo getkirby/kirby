@@ -136,7 +136,7 @@ export default {
     changeStatus() {
       this.$api.pages
         .status(this.page.id, this.form.status, this.form.position || 1)
-        .then(response => {
+        .then(() => {
           this.success({
             message: ":)",
             event: "page.changeStatus"

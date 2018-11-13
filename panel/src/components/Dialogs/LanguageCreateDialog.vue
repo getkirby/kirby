@@ -32,14 +32,6 @@ export default {
       }
     };
   },
-  watch: {
-    "language.name"(name) {
-      this.language.code = slug(name).substr(0, 2);
-    },
-    "language.code"(code) {
-      this.language.code = slug(code);
-    }
-  },
   computed: {
     fields() {
       return {
@@ -76,6 +68,14 @@ export default {
       };
     }
   },
+  watch: {
+    "language.name"(name) {
+      this.language.code = slug(name).substr(0, 2);
+    },
+    "language.code"(code) {
+      this.language.code = slug(code);
+    }
+  },
   methods: {
     open() {
 
@@ -90,7 +90,7 @@ export default {
     submit() {
       this.$api
         .post("languages", this.language)
-        .then(language => {
+        .then(() => {
           this.$store.dispatch("languages/load");
           this.success({
             message: this.$t("language.created"),

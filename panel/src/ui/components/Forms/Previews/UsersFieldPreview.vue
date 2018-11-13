@@ -1,10 +1,20 @@
 <template>
-  <ul class="k-users-field-preview" v-if="value">
+  <ul v-if="value" class="k-users-field-preview">
     <li v-for="user in value" :key="user.email">
       <figure>
-        <k-link :title="user.email" @click.native.stop :to="$api.users.link(user.id)">
-          <k-image v-if="user.avatar.exists" :src="user.avatar.url" class="k-users-field-preview-avatar" back="pattern" />
-          <k-icon v-else type="user" back="pattern" class="k-users-field-preview-avatar" />
+        <k-link :title="user.email" :to="$api.users.link(user.id)" @click.native.stop>
+          <k-image
+            v-if="user.avatar.exists"
+            :src="user.avatar.url"
+            class="k-users-field-preview-avatar"
+            back="pattern"
+          />
+          <k-icon
+            v-else
+            type="user"
+            back="pattern"
+            class="k-users-field-preview-avatar"
+          />
           <figcaption>
             {{ user.username }}
           </figcaption>

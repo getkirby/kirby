@@ -1,7 +1,7 @@
 <template>
-  <ul class="k-files-field-preview" v-if="value">
+  <ul v-if="value" class="k-files-field-preview">
     <li v-for="file in value" :key="file.url">
-      <k-link :title="file.filename" @click.native.stop :to="file.link">
+      <k-link :title="file.filename" :to="file.link" @click.native.stop>
         <k-image :src="file.url" back="pattern" />
       </k-link>
     </li>

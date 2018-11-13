@@ -42,7 +42,7 @@ export default {
     submit() {
       this.$api
         .patch("languages/" + this.language.code, this.language)
-        .then(language => {
+        .then(() => {
           this.$store.dispatch("languages/load");
           this.success({
             message: this.$t("language.updated"),

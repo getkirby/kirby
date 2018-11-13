@@ -1,7 +1,13 @@
 <template>
-  <k-dialog ref="dialog" class="k-files-dialog" size="medium" @cancel="$emit('cancel')" @submit="submit">
+  <k-dialog
+    ref="dialog"
+    class="k-files-dialog"
+    size="medium"
+    @cancel="$emit('cancel')"
+    @submit="submit"
+  >
     <template v-if="issue">
-      <k-box theme="negative" :text="issue" />
+      <k-box :text="issue" theme="negative" />
     </template>
     <template v-else>
       <k-list v-if="files.length">
@@ -16,8 +22,13 @@
           }"
           @click="toggle(index)"
         >
-          <k-button v-if="file.selected" theme="positive" icon="check" slot="options" />
-          <k-button v-else icon="circle-o" slot="options" />
+          <k-button
+            v-if="file.selected"
+            slot="options"
+            theme="positive"
+            icon="check"
+          />
+          <k-button v-else slot="options" icon="circle-o" />
         </k-list-item>
       </k-list>
       <k-empty v-else icon="image">

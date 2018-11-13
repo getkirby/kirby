@@ -14,7 +14,7 @@
           @keydown.enter="enter"
           @keydown.esc="close"
         >
-        <k-button icon="cancel" :tooltip="$t('close')" @click="close" />
+        <k-button :tooltip="$t('close')" icon="cancel" @click="close" />
       </div>
       <ul>
         <li
