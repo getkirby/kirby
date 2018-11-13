@@ -7,6 +7,7 @@
 
   "cancel": "Cancel",
   "change": "Change",
+  "close": "Close",
   "confirm": "Ok",
   "copy": "Copy",
   "create": "Create",
@@ -187,6 +188,7 @@
   "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
   "installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 
+  "language": "Language",
   "language.code": "Code",
   "language.convert": "Make default",
   "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
@@ -214,6 +216,8 @@
   "loading": "Loading",
   "login": "Login",
   "logout": "Logout",
+
+  "menu": "Menu",
 
   "months.april": "April",
   "months.august": "August",
