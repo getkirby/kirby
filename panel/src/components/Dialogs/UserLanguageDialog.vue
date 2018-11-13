@@ -32,7 +32,7 @@ export default {
     fields() {
       return {
         language: {
-          label: this.$t("user.language"),
+          label: this.$t("language"),
           type: "select",
           icon: "globe",
           options: this.languages,

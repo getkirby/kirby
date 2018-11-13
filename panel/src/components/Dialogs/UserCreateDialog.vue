@@ -44,14 +44,14 @@ export default {
           required: true
         },
         password: {
-          label: this.$t("user.password"),
+          label: this.$t("password"),
           type: "password",
           icon: "key",
           id: "new-user-password",
           required: true
         },
         role: {
-          label: this.$t("user.role"),
+          label: this.$t("role"),
           type: "radio",
           required: true,
           options: this.roles

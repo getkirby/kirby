@@ -32,7 +32,7 @@ export default {
     fields() {
       return {
         title: {
-          label: this.$t("page.title"),
+          label: this.$t("title"),
           type: "text",
           required: true,
           icon: "title",

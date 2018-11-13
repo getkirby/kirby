@@ -33,9 +33,9 @@
         </template>
 
         <k-button-group>
-          <k-button :disabled="!permissions.changeEmail" icon="email" @click="action('email')">{{ $t('email') }}: {{ user.email }}</k-button>
-          <k-button :disabled="!permissions.changeRole" icon="bolt" @click="action('role')">{{ $t('user.role') }}: {{ user.role.title }}</k-button>
-          <k-button :disabled="!permissions.changeLanguage" icon="globe" @click="action('language')">{{ $t('user.language') }}: {{ user.language }}</k-button>
+          <k-button :disabled="!permissions.changeEmail" icon="email" @click="action('email')">{{ $t("email") }}: {{ user.email }}</k-button>
+          <k-button :disabled="!permissions.changeRole" icon="bolt" @click="action('role')">{{ $t("role") }}: {{ user.role.title }}</k-button>
+          <k-button :disabled="!permissions.changeLanguage" icon="globe" @click="action('language')">{{ $t("language") }}: {{ user.language }}</k-button>
         </k-button-group>
       </k-view>
     </div>
@@ -48,7 +48,7 @@
         :tab="tab"
         @edit="action('rename')"
       >
-        <span v-if="!user.name || user.name.length === 0" class="k-user-name-placeholder">{{ $t('user.name') }} …</span>
+        <span v-if="!user.name || user.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
         <template v-else>{{ user.name }}</template>
         <k-button-group slot="left">
           <k-dropdown>

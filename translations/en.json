@@ -21,8 +21,8 @@
   "days.wed": "Wed",
 
   "delete": "Delete",
+  "dimensions": "Dimensions",
   "discard": "Discard",
-
   "edit": "Edit",
 
   "email": "Email",
@@ -31,10 +31,10 @@
   "error.access.login": "Invalid email or password",
   "error.access.panel": "You are not allowed to access the panel",
 
-  "error.avatar.create.fail": "The avatar could not be created",
-  "error.avatar.delete.fail": "The avatar could not be deleted",
-  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile image below 3000 pixel",
-  "error.avatar.mime.invalid": "User profile images must be JPEG or PNG files",
+  "error.avatar.create.fail": "The profile picture could not be uploaded",
+  "error.avatar.delete.fail": "The profile picture could not be deleted",
+  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture below 3000 pixel",
+  "error.avatar.mime.invalid": "The profile picture must be JPEG or PNG files",
 
   "error.blueprint.notFound": "The blueprint \"{name}\" could not be loaded",
 
@@ -157,28 +157,18 @@
 
   "field.files.empty": "No files selected yet",
   "field.pages.empty": "No pages selected yet",
-  "field.structure.delete.confirm": "Do you really want to delete this item?",
+  "field.structure.delete.confirm": "Do you really want to delete this row?",
   "field.structure.empty": "No entries yet",
   "field.users.empty": "No users selected yet",
 
   "file.changeName.success": "The file has been renamed",
   "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
   "file.delete.success": "The file has been deleted",
-  "file.dimensions": "Dimensions",
-  "file.dimensions.pixel": "Pixel",
-  "file.mime": "Type",
-  "file.name": "Filename",
-  "file.orientation": "Orientation",
-  "file.orientation.landscape": "Landscape",
-  "file.orientation.portrait": "Portrait",
-  "file.orientation.square": "Square",
   "file.replace.success": "The file has been replaced",
-  "file.size": "Size",
-  "file.sorted": "Sorted!",
-  "file.template": "Template",
-  "file.url": "URL",
 
   "files.empty": "No files yet",
+
+  "insert": "Insert",
 
   "install": "Install",
 
@@ -216,11 +206,15 @@
   "license.register": "Register",
   "license.unregistered": "This is an unregistered demo of Kirby",
 
+  "link": "Link",
+  "link.text": "Link text",
+
   "loading": "Loading",
   "login": "Login",
   "logout": "Logout",
 
   "menu": "Menu",
+  "mime": "Mime-Type",
 
   "months.april": "April",
   "months.august": "August",
@@ -236,7 +230,13 @@
   "months.september": "September",
 
   "more": "More",
+  "name": "Name",
   "open": "Open",
+
+  "orientation": "Orientation",
+  "orientation.landscape": "Landscape",
+  "orientation.portrait": "Portrait",
+  "orientation.square": "Square",
 
   "page.changeSlug": "Change URL",
   "page.changeSlug.fromTitle": "Create from title",
@@ -256,24 +256,28 @@
   "page.delete.success": "The page has been deleted",
   "page.draft.create": "Create draft",
   "page.draft.create.success": "The draft has been created",
-  "page.slug": "URL appendix",
-  "page.sorted": "Sorted!",
   "page.status.draft": "Draft",
   "page.status.draft.description": "The page is in draft-mode and only visible for logged in editors",
   "page.status.listed": "Public",
   "page.status.listed.description": "The page is public for anyone",
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
-  "page.template": "Template",
-  "page.title": "Title",
 
   "pages.empty": "No pages yet",
 
+  "password": "Password",
+  "pixel": "Pixel",
   "remove": "Remove",
   "rename": "Rename",
   "replace": "Replace",
   "retry": "Try again",
   "revert": "Revert",
+
+  "role": "Role",
+  "role.all": "All",
+  "role.empty": "There are no users with this role",
+  "role.description.placeholder": "no description",
+
   "save": "Save",
   "saved": "Saved",
 
@@ -283,6 +287,14 @@
 
   "site.changeTitle.success": "The site has been renamed",
 
+  "size": "Size",
+  "slug": "URL appendix",
+
+  "sort": "Sort",
+  "sorted": "Sorted",
+
+  "title": "Title",
+  "template": "Template",
   "today": "Today",
 
   "toolbar.button.code": "Code",
@@ -306,6 +318,9 @@
   "upload.progress": "Uploading …",
   "upload.success": "Uploaded",
 
+  "url": "Url",
+  "url.placeholder": "https://example.com",
+
   "user": "User",
   "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Change email",
@@ -326,14 +341,6 @@
   "user.delete": "Delete this user",
   "user.delete.confirm": "Do you really want to delete <br><strong>{email}</strong>?",
   "user.delete.success": "The user has been deleted",
-  "user.language": "Language",
-  "user.name": "Name",
-  "user.password": "Password",
-  "user.role": "Role",
-  "user.role.all": "All",
-  "user.role.noDescription": "no description",
-
-  "users.empty.role": "There are no users with this role",
 
   "version": "Version",
 
@@ -343,5 +350,5 @@
   "view.site": "Site",
   "view.users": "Users",
 
-  "welcome": "Welcome!"
+  "welcome": "Welcome"
 }

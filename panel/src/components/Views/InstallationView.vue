@@ -83,13 +83,13 @@ export default {
           autofocus: true
         },
         password: {
-          label: this.$t("user.password"),
+          label: this.$t("password"),
           type: "password",
-          placeholder: this.$t("user.password") + " …",
+          placeholder: this.$t("password") + " …",
           required: true
         },
         language: {
-          label: this.$t("user.language"),
+          label: this.$t("language"),
           type: "select",
           options: this.languages,
           icon: "globe",

@@ -39,13 +39,13 @@ export default {
     fields() {
       return {
         title: {
-          label: this.$t("page.title"),
+          label: this.$t("title"),
           type: "text",
           required: true,
           icon: "title"
         },
         slug: {
-          label: this.$t("page.slug"),
+          label: this.$t("slug"),
           type: "text",
           required: true,
           counter: false,
@@ -53,7 +53,7 @@ export default {
         },
         template: {
           name: "template",
-          label: this.$t("page.template"),
+          label: this.$t("template"),
           type: "select",
           disabled: this.templates.length === 1,
           required: true,

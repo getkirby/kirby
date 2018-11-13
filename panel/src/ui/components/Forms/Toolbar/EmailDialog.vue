@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    button="Insert"
+    :button="$t('insert')"
     @close="cancel"
     @submit="$refs.form.submit()"
   >
@@ -24,11 +24,11 @@ export default {
       },
       fields: {
         email: {
-          label: 'Email',
+          label: this.$t("email"),
           type: 'email'
         },
         text: {
-          label: 'Email Link Text',
+          label: this.$t("link.text"),
           type: 'text'
         }
       }

@@ -197,7 +197,7 @@ export default {
           .then(() => {
             this.$store.dispatch(
               "notification/success",
-              this.$t("page.sorted")
+              this.$t("sorted")
             );
             this.$events.$emit("page.changeStatus");
           })

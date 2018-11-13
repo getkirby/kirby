@@ -50,7 +50,7 @@ export default {
           link: false,
         },
         password: {
-          label: this.$t("user.password"),
+          label: this.$t("password"),
           type: "password",
           minLength: 8,
           autocomplete: "current-password",

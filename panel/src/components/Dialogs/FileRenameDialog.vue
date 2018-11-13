@@ -37,7 +37,7 @@ export default {
     fields() {
       return {
         name: {
-          label: this.$t("file.name"),
+          label: this.$t("name"),
           type: "text",
           required: true,
           icon: "title",

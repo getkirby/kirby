@@ -32,7 +32,7 @@ export default {
     fields() {
       return {
         name: {
-          label: this.$t("user.name"),
+          label: this.$t("name"),
           type: "text",
           icon: "user",
           preselect: true

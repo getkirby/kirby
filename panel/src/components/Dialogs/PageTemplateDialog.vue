@@ -33,7 +33,7 @@ export default {
     fields() {
       return {
         template: {
-          label: this.$t("page.template"),
+          label: this.$t("template"),
           type: "select",
           required: true,
           empty: false,

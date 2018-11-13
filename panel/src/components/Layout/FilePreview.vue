@@ -19,31 +19,31 @@
       <div class="k-file-preview-details">
         <ul>
           <li>
-            <h3>{{ $t("file.template") }}</h3>
+            <h3>{{ $t("template") }}</h3>
             <p>{{ file.template || "—" }}</p>
           </li>
           <li>
-            <h3>{{ $t("file.mime") }}</h3>
+            <h3>{{ $t("mime") }}</h3>
             <p>{{ file.mime }}</p>
           </li>
           <li>
-            <h3>{{ $t("file.url") }}</h3>
+            <h3>{{ $t("url") }}</h3>
             <p>
               <a :href="file.url" target="__blank">/{{ file.id }}</a>
             </p>
           </li>
           <li>
-            <h3>{{ $t("file.size") }}</h3>
+            <h3>{{ $t("size") }}</h3>
             <p>{{ file.niceSize }}</p>
           </li>
           <li>
-            <h3>{{ $t("file.dimensions") }}</h3>
-            <p v-if="file.dimensions">{{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("file.dimensions.pixel") }}</p>
+            <h3>{{ $t("dimensions") }}</h3>
+            <p v-if="file.dimensions">{{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("pixel") }}</p>
             <p v-else>—</p>
           </li>
           <li>
-            <h3>{{ $t("file.orientation") }}</h3>
-            <p v-if="file.dimensions">{{ $t("file.orientation." + file.dimensions.orientation) }}</p>
+            <h3>{{ $t("orientation") }}</h3>
+            <p v-if="file.dimensions">{{ $t("orientation." + file.dimensions.orientation) }}</p>
             <p v-else>—</p>
           </li>
         </ul>

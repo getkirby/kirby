@@ -42,7 +42,7 @@ export default {
     field() {
       return {
         name: "slug",
-        label: this.$t("page.slug"),
+        label: this.$t("slug"),
         type: "text",
         required: true,
         icon: "url",

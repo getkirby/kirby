@@ -11,11 +11,11 @@
       <k-button-group slot="right">
         <k-dropdown>
           <k-button :responsive="true" icon="funnel" @click="$refs.roles.toggle()">
-            {{ $t("user.role") }}: {{ role ? role.text : $t("user.role.all") }}
+            {{ $t("role") }}: {{ role ? role.text : $t("role.all") }}
           </k-button>
           <k-dropdown-content ref="roles" align="right">
             <k-dropdown-item icon="bolt" @click="filter(false)">
-              {{ $t("user.role.all") }}
+              {{ $t("role.all") }}
             </k-dropdown-item>
             <hr>
             <k-dropdown-item
@@ -40,7 +40,7 @@
       />
     </template>
     <template v-else-if="total === 0">
-      <k-empty icon="users">{{ $t('users.empty.role') }}</k-empty>
+      <k-empty icon="users">{{ $t("role.empty") }}</k-empty>
     </template>
 
     <k-user-create-dialog ref="create" @success="fetch" />
@@ -156,7 +156,7 @@ export default {
             this.$store.dispatch("breadcrumb", [
               {
                 link: "/users/role/" + this.role.value,
-                label: this.$t("user.role") + ": " + this.role.text
+                label: this.$t("role") + ": " + this.role.text
               }
             ]);
           } else {
