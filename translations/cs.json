@@ -6,9 +6,9 @@
   "cancel": "Zru\u0161it",
   "change": "Zm\u011bnit",
   "close": "Zav\u0159it",
-  "confirm": "Uložit",
-  "copy": "Copy",
-  "create": "Create",
+  "confirm": "Ok",
+  "copy": "Kopírovat",
+  "create": "Vytvořit",
 
   "days.fri": "p\u00e1",
   "days.mon": "po",
@@ -19,7 +19,7 @@
   "days.wed": "st",
 
   "delete": "Smazat",
-  "dimensions": "Dimensions",
+  "dimensions": "Velikosti",
   "discard": "Zahodit",
   "edit": "Upravit",
 
@@ -27,27 +27,27 @@
   "email.placeholder": "mail@example.com",
 
   "error.access.login": "Chybn\u00e9 jm\u00e9no nebo heslo",
-  "error.access.panel": "You are not allowed to access the panel",
+  "error.access.panel": "Nemáte povoleno vstoupit do panelu",
 
-  "error.avatar.create.fail": "The profile picture could not be uploaded",
+  "error.avatar.create.fail": "Nebylo možné nahrát profilový obrázek",
   "error.avatar.delete.fail": "Nebylo mo\u017en\u00e9 smazat profilov\u00fd obr\u00e1zek",
-  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture below 3000 pixel",
-  "error.avatar.mime.forbidden": "Zak\u00e1zan\u00fd mime typ",
+  "error.avatar.dimensions.invalid": "Prosím udržte šířku a výšku profilového obrázku pod 3000 pixelů",
+  "error.avatar.mime.forbidden": "Profilový obrázek musí být ve formátu JPEG nebo PNG",
 
   "error.blueprint.notFound": "The blueprint \"{name}\" could not be loaded",
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
-  "error.field.converter.invalid": "Invalid converter \"{converter}\"",
+  "error.field.converter.invalid": "Neplatný konvertor \"{converter}\"",
 
-  "error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
-  "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
-  "error.file.extension.forbidden": "Zak\u00e1zan\u00e1 p\u0159\u00edpona souboru",
+  "error.file.changeName.permission": "Nemáte povoleno změnit jméno souboru \"{filename}\"",
+  "error.file.duplicate": "Soubor se jménem \"{filename}\" již existuje",
+  "error.file.extension.forbidden": "Přípona souboru \"{extension}\" není povolena",
   "error.file.extension.missing": "Nem\u016f\u017eete nahr\u00e1t soubor bez p\u0159\u00edpony",
-  "error.file.mime.differs": "The uploaded file must be of the same mime type \"{mime}\"",
-  "error.file.mime.forbidden": "Zak\u00e1zan\u00fd mime typ",
+  "error.file.mime.differs": "Nahraný soubor musí být stejného typu \"{mime}\"",
+  "error.file.mime.forbidden": "Zakázaný mime typ \"{mime}\"",
   "error.file.mime.missing": "The mime type for \"{filename}\" cannot be detected",
-  "error.file.name.missing": "The filename must not be empty",
+  "error.file.name.missing": "Název souboru nesmí být prázdný",
   "error.file.notFound": "Soubor se nepoda\u0159ilo nal\u00e9zt",
   "error.file.type.forbidden": "You are not allowed to upload {type} files",
   "error.file.undefined": "Soubor se nepoda\u0159ilo nal\u00e9zt",

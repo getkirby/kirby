@@ -6,7 +6,7 @@
   "cancel": "Abbrechen",
   "change": "\u00c4ndern",
   "close": "Schlie\u00dfen",
-  "confirm": "Ok",
+  "confirm": "OK",
   "copy": "Kopieren",
   "create": "Erstellen",
 
@@ -23,7 +23,7 @@
   "discard": "Verwerfen",
   "edit": "Bearbeiten",
 
-  "email": "Email",
+  "email": "E-Mail",
   "email.placeholder": "mail@beispiel.de",
 
   "error.access.login": "Ung\u00fcltiger Benutzername oder Passwort",
@@ -36,26 +36,26 @@
 
   "error.blueprint.notFound": "Das Blueprint \"{name}\" konnte nicht geladen werden.",
 
-  "error.email.preset.notFound": "Die Email Vorlage \"{name}\" wurde nicht gefunden",
+  "error.email.preset.notFound": "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
 
   "error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
 
-  "error.file.changeName.permission": "Du kannst den Dateinamen \"{filename}\" nicht ändern.",
+  "error.file.changeName.permission": "Du kannst den Dateinamen von \"{filename}\" nicht ändern.",
   "error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
-  "error.file.extension.forbidden": "Verbotene Dateiendung",
+  "error.file.extension.forbidden": "Verbotene Dateiendung \"{extension}\"",
   "error.file.extension.missing": "Du kannst keine Dateien ohne Dateiendung hochladen",
   "error.file.mime.differs": "Die Datei muss den MIME-Type \"{mime}\" haben.",
-  "error.file.mime.forbidden": "Verbotener MIME-Typ",
+  "error.file.mime.forbidden": "Verbotener MIME-Typ \"{mime}\"",
   "error.file.mime.missing": "Der MIME-Typ für \"{filename}\" konnte nicht erkannt werden",
   "error.file.name.missing": "Bitte gib einen Dateinamen an",
-  "error.file.notFound": "Die Datei konnte nicht gefunden werden",
+  "error.file.notFound": "Die Datei \"{filename}\" konnte nicht gefunden werden",
   "error.file.type.forbidden": "Du kannst keinen {type}-Dateien hochladen",
   "error.file.undefined": "Die Datei konnte nicht gefunden werden",
 
   "error.form.incomplete": "Bitte fülle alle Felder korrekt aus …",
   "error.form.notSaved": "Das Formular konnte nicht gespeichert werden",
 
-  "error.page.changeSlug.permission": "Du kannst die URL dieser Seite nicht \u00e4ndern",
+  "error.page.changeSlug.permission": "Du kannst die URL der Seite \"{slug}\" nicht ändern",
   "error.page.changeStatus.incomplete": "Die Seite ist nicht vollständig und kann daher nicht veröffentlicht werden",
   "error.page.changeStatus.permission": "Der Status der Seite kann nicht geändert werden",
   "error.page.changeStatus.toDraft.invalid": "Die Seite \"{slug}\" kann nicht in einen Entwurf umgewandelt werden",
@@ -65,12 +65,12 @@
   "error.page.changeTitle.permission": "Du kannst den Titel für die Seite \"{slug}\" nicht ändern",
   "error.page.create.permission": "Du kannst die Seite \"{slug}\" nicht anlegen",
   "error.page.delete": "Die Seite \"{slug}\" kann nicht gelöscht werden",
-  "error.page.delete.confirm": "Bitte gib zur Bestätigung den Seitentitel ein.",
+  "error.page.delete.confirm": "Bitte gib zur Bestätigung den Seitentitel ein",
   "error.page.delete.hasChildren": "Die Seite hat Unterseiten und kann nicht gelöscht werden",
   "error.page.delete.permission": "Du kannst die Seite \"{slug}\" nicht löschen",
   "error.page.draft.duplicate": "Ein Entwurf mit dem URL-Kürzel \"{slug}\" besteht bereits",
   "error.page.duplicate": "Eine Seite mit dem URL-Kürzel \"{slug}\" besteht bereits",
-  "error.page.notFound": "Die Seite konnte nicht gefunden werden",
+  "error.page.notFound": "Die Seite \"{slug}\" konnte nicht gefunden werden",
   "error.page.num.invalid": "Bitte gib eine gültige Sortierungszahl an. Negative Zahlen sind nicht erlaubt.",
   "error.page.slug.invalid": "Bitte gib ein gültiges URL-Kürzel an",
   "error.page.sort.permission": "Die Seite \"{slug}\" kann nicht umsortiert werden",
@@ -94,9 +94,9 @@
   "error.site.changeTitle.permission": "Du kannst den Titel der Seite nicht ändern",
   "error.site.update.permission": "Du kannst die Seite nicht editieren",
 
-  "error.template.default.notFound": "Die \"Default\" Vorlage besteht nicht",
+  "error.template.default.notFound": "Die \"Default\"-Vorlage existiert nicht",
 
-  "error.user.changeEmail.permission": "Du kannst die Email Adresse für den Benutzer \"{name}\" nicht ändern",
+  "error.user.changeEmail.permission": "Du kannst die E-Mailadresse für den Benutzer \"{name}\" nicht ändern",
   "error.user.changeLanguage.permission": "Du kannst die Sprache für den Benutzer \"{name}\" nicht ändern",
   "error.user.changeName.permission": "Du kannst den Namen für den Benutzer \"{name}\" nicht ändern",
   "error.user.changePassword.permission": "Du kannst das Passwort für den Benutzer \"{name}\" nicht ändern",
@@ -107,8 +107,8 @@
   "error.user.delete.lastAdmin": "Du kannst den letzten Admin nicht l\u00f6schen",
   "error.user.delete.lastUser": "Der letzte Benutzer kann nicht gelöscht werden",
   "error.user.delete.permission": "Du darfst diesen Benutzer nicht l\u00f6schen",
-  "error.user.duplicate": "Ein Benutzer mit der Email Adresse \"{email}\" besteht bereits",
-  "error.user.email.invalid": "Bitte gib eine gültige Email Adresse an",
+  "error.user.duplicate": "Ein Benutzer mit der E-Mailadresse \"{email}\" besteht bereits",
+  "error.user.email.invalid": "Bitte gib eine gültige E-Mailadresse an",
   "error.user.language.invalid": "Bitte gib eine gültige Sprache an",
   "error.user.notFound": "Der Benutzer wurde nicht gefunden",
   "error.user.password.invalid": "Bitte gib ein gültiges Passwort ein. Passwörter müssen mindestens 8 Zeichen lang sein.",
@@ -127,7 +127,7 @@
   "error.validation.date": "Bitte gib ein gültiges Datum ein",
   "error.validation.denied": "Bitte lehne die Eingabe ab",
   "error.validation.different": "Der Wert darf nicht \"{other}\" sein",
-  "error.validation.email": "Bitte gib eine gültige Email Adresse an",
+  "error.validation.email": "Bitte gib eine gültige E-Mailadresse an",
   "error.validation.endswith": "Der Wert muss auf \"{end}\" enden",
   "error.validation.filename": "Bitte gib einen gültigen Dateinamen ein",
   "error.validation.in": "Bitte gib einen der folgenden Werte ein: ({in})",
@@ -151,7 +151,7 @@
   "error.validation.size": "Die Größe des Wertes muss \"{size}\" sein",
   "error.validation.startswith": "Der Wert muss mit \"{start}\" beginnen",
   "error.validation.time": "Bitte gib eine gültige Uhrzeit ein",
-  "error.validation.url": "Bitte gib eine gültige Url ein",
+  "error.validation.url": "Bitte gib eine gültige URL ein",
 
   "field.files.empty": "Keine Dateien ausgewählt",
   "field.pages.empty": "Keine Seiten ausgwählt",
@@ -179,7 +179,7 @@
   "language": "Sprache",
   "language.code": "Code",
   "language.convert": "Als Standard auswählen",
-  "language.convert.confirm": "<p>Willst du <strong>{name}</strong> wirklich in die Standardsprache umwandeln? Dieser Schritt kann nicht rückgängig gemacht werden.</p><p>Wenn <strong>{name}</strong> unübersetzte Felder hat, gibt es keine gültigen Standartwerde für diese Felder und Inhalte könnten verloren gehen.</p>",
+  "language.convert.confirm": "<p>Willst du <strong>{name}</strong> wirklich in die Standardsprache umwandeln? Dieser Schritt kann nicht rückgängig gemacht werden.</p><p>Wenn <strong>{name}</strong> unübersetzte Felder hat, gibt es keine gültigen Standardwerte für diese Felder und Inhalte könnten verloren gehen.</p>",
   "language.create": "Neue Sprache anlegen",
   "language.delete.confirm": "Willst du <strong>{name}</strong> inklusive aller Übersetzungen wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden!",
   "language.deleted": "Die Sprache wurde gelöscht",
@@ -199,7 +199,7 @@
   "license": "Lizenz",
   "license.buy": "Kaufe eine Lizenz",
   "license.register": "Registrieren",
-  "license.unregistered": "Dies ist eine unregistrierte Kirby Demo",
+  "license.unregistered": "Dies ist eine unregistrierte Kirby-Demo",
 
   "link": "Link",
   "link.text": "Linktext",
@@ -209,7 +209,7 @@
   "logout": "Abmelden",
 
   "menu": "Menu",
-  "mime": "MIME-Type",
+  "mime": "MIME-Typ",
 
   "months.april": "April",
   "months.august": "August",
@@ -253,7 +253,7 @@
   "pages.empty": "Keine Seiten",
 
   "password": "Passwort",
-  "pixel": "PIxel",
+  "pixel": "Pixel",
   "remove": "Entfernen",
   "rename": "Umbenennen",
   "replace": "Ersetzen",
@@ -278,7 +278,7 @@
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Fetter Text",
-  "toolbar.button.email": "Email",
+  "toolbar.button.email": "E-Mail",
   "toolbar.button.headings": "Überschriften",
   "toolbar.button.heading.1": "Überschrift 1",
   "toolbar.button.heading.2": "Überschrift 2",
@@ -301,7 +301,7 @@
 
   "user": "Benutzer",
   "user.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> anlegen",
-  "user.changeEmail": "Email ändern",
+  "user.changeEmail": "E-Mail ändern",
   "user.changeLanguage": "Sprache ändern",
   "user.changeName": "Benutzer umbenennen",
   "user.changePassword": "Passwort ändern",
