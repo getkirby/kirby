@@ -192,7 +192,15 @@ export default {
   padding-top: .375rem;
   font-size: 10px;
   overflow: hidden;
-  padding-left: 0;
+
+  [dir="ltr"] & {
+    padding-left: 0;
+  }
+
+  [dir="rtl"] & {
+    padding-right: 0;
+  }
+
   text-overflow: ellipsis;
 
   @media screen and (min-width: $breakpoint-small) {
