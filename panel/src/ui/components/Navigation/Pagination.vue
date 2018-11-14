@@ -182,6 +182,7 @@ export default {
 <style lang="scss">
 .k-pagination {
   user-select: none;
+  direction: ltr;
 }
 .k-pagination .k-button {
   padding: 1rem !important;
@@ -196,6 +197,15 @@ export default {
 .k-pagination-selector {
   width: 100%;
   padding: 0 !important;
+
+  [dir="ltr"] & {
+    direction: ltr;
+  }
+
+  [dir="rtl"] & {
+    direction: rtl;
+  }
+
 }
 .k-pagination-selector > div {
   font-size: $font-size-small;
