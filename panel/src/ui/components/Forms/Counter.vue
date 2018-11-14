@@ -52,8 +52,16 @@ export default {
   color: $color-negative;
 }
 .k-counter-rules {
-  padding-left: .5rem;
   color: $color-dark-grey;
   font-weight: $font-weight-normal;
+
+  [dir="ltr"] & {
+    padding-left: .5rem;
+  }
+
+  [dir="rtl"] & {
+    padding-right: .5rem;
+  }
+
 }
 </style>
