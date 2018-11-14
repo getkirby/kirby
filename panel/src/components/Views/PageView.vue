@@ -41,10 +41,12 @@
 
       </k-button-group>
 
-      <k-button-group v-if="page.id" slot="right">
-        <k-button :disabled="!prev" v-bind="prev" icon="angle-left" />
-        <k-button :disabled="!next" v-bind="next" icon="angle-right" />
-      </k-button-group>
+      <k-prev-next
+        v-if="page.id"
+        slot="right"
+        :prev="prev"
+        :next="next"
+      />
     </k-header>
 
     <k-tabs

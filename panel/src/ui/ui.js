@@ -32,6 +32,7 @@ import Link from "./components/Navigation/Link.vue";
 import List from "./components/Layout/List.vue";
 import ListItem from "./components/Layout/ListItem.vue";
 import Pagination from "./components/Navigation/Pagination.vue";
+import PrevNext from "./components/Navigation/PrevNext.vue";
 import Progress from "./components/Misc/Progress.vue";
 import Tag from "./components/Navigation/Tag.vue";
 import Text from "./components/Misc/Text.vue";
@@ -147,6 +148,7 @@ export default {
     Vue.component("k-list", List);
     Vue.component("k-list-item", ListItem);
     Vue.component("k-pagination", Pagination);
+    Vue.component("k-prev-next", PrevNext);
     Vue.component("k-progress", Progress);
     Vue.component("k-tag", Tag);
     Vue.component("k-text", Text);
