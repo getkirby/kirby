@@ -246,8 +246,16 @@ export default {
   line-height: 0;
 }
 .k-user-profile .k-button-group {
-  margin-left: .75rem;
   overflow: hidden;
+
+  [dir="ltr"] & {
+    margin-left: .75rem;
+  }
+
+  [dir="rtl"] & {
+    margin-right: .75rem;
+  }
+
 }
 .k-user-profile .k-button-group .k-button {
   display: block;
