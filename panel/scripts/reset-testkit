@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "Resetting the testkit"
+
+cd ../../
+
+# remove all accounts
+rm -rf ./site
+rm -rf ./media
+rm -rf ./content
+
+cp -R ./kirby/panel/tests/e2e/fixtures/testkit/content ./content
+cp -R ./kirby/panel/tests/e2e/fixtures/testkit/site ./site
+
+mkdir ./media

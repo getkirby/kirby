@@ -1,12 +1,13 @@
 
-describe("Login", () => {
+describe("Auth", () => {
 
   before(() => {
-    cy.exec("npm run starterkit:reset");
+    cy.exec("npm run testkit:reset");
     cy.install();
+    cy.visit("/logout");
   });
 
-  context("UI interaction", () => {
+  context("Login", () => {
     beforeEach(() => {
       cy.visit("/login");
     });
@@ -25,25 +26,10 @@ describe("Login", () => {
       }).then(user => {
         cy.get("input[name=email]").type(user.email);
         cy.get("input[name=password]").type(user.password + "{enter}");
-        cy.get(".k-headline").should("contain", "Kirby Kitchensink");
+        cy.get(".k-headline").should("contain", "Testkit");
         cy.url().should("include", "/site");
       });
     });
   });
 
-  context("cy.login()", () => {
-    beforeEach(() => {
-      cy.login("admin");
-    });
-
-    it("can visit /site", () => {
-      cy.visit("/site");
-      cy.get(".k-headline").should("contain", "Kirby Kitchensink");
-    });
-
-    it("can visit /users", () => {
-      cy.visit("/users");
-      cy.get(".k-headline").should("contain", "Users");
-    });
-  });
 });

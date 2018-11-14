@@ -10,8 +10,11 @@ Cypress.Commands.add("login", (type) => {
       cy.request({
         url: "/api/auth/login",
         method: "POST",
-        auth: {
-          username: user.email,
+        headers: {
+          "x-csrf": "dev"
+        },
+        body: {
+          email: user.email,
           password: user.password
         }
       })
@@ -27,6 +30,9 @@ Cypress.Commands.add('install', () => {
     cy.request({
       url: "/api/system/install",
       method: "POST",
+      headers: {
+        "x-csrf": "dev"
+      },
       body: {
         email: user.email,
         password: user.password,
@@ -46,6 +52,9 @@ Cypress.Commands.add('createUser', (role) => {
     cy.request({
       url: "/api/users",
       method: "POST",
+      headers: {
+        "x-csrf": "dev"
+      },
       body: {
         email: user.email,
         password: user.password,
