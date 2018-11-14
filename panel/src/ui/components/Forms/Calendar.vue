@@ -235,6 +235,7 @@ $cell-padding: 0.25rem 0.5rem;
 
 .k-calendar-input > nav {
   display: flex;
+  direction: ltr;
 
   .k-button {
     padding: 0.5rem;
@@ -245,6 +246,15 @@ $cell-padding: 0.25rem 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  [dir="ltr"] & {
+    direction: ltr;
+  }
+
+  [dir="rtl"] & {
+    direction: rtl;
+  }
+
 }
 .k-calendar-selects .k-select-input {
   padding: 0 0.5rem;

@@ -199,7 +199,12 @@ export default {
   }
   .k-date-input .k-select-input:first-child,
   .k-time-input .k-select-input:first-child {
-    padding-left: $field-input-padding;
+    [dir="ltr"] & {
+      padding-left: $field-input-padding;
+    }
+    [dir="rtl"] & {
+      padding-right: $field-input-padding;
+    }
   }
 
   .k-date-input .k-select-input:focus-within,
