@@ -71,7 +71,7 @@ export default {
         .then(file => {
 
           // remove changes for the old file
-          this.$store.dispatch("form/remove", "files/" + this.file.id);
+          this.$store.dispatch("form/revert", "files/" + this.file.id);
 
           let payload = {
             message: ":)",

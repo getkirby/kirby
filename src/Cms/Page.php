@@ -313,6 +313,19 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Prepares the content for the write method
+     *
+     * @return array
+     */
+    public function contentFileData(array $data, string $languageCode = null): array
+    {
+        return A::prepend($data, [
+            'title' => $data['title'] ?? null,
+            'slug'  => $data['slug']  ?? null
+        ]);
+    }
+
+    /**
      * Call the page controller
      *
      * @param array $data

@@ -202,12 +202,12 @@ class ContentTranslation
     /**
      * Merge the old and new data
      *
-     * @param array $data
+     * @param array|null $data
      * @return self
      */
-    public function update(array $data = [])
+    public function update(array $data = null)
     {
-        $this->content = array_merge($this->content(), $data);
+        $this->content = array_merge($this->content(), (array)$data);
         return $this;
     }
 

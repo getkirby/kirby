@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Session\Session;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
@@ -200,25 +201,25 @@ class User extends ModelWithContent
     }
 
     /**
-     * Prepares the content for the text file
+     * Prepares the content for the write method
      *
+     * @param array $data
      * @param string $languageCode Not used so far
      * @return array
      */
-    public function contentFileData(string $languageCode = null): array
+    public function contentFileData(array $data, string $languageCode = null): array
     {
-        $content = $this->content()->toArray();
-
-        // store main information in the content file
-        $content['language'] = $this->language();
-        $content['name']     = $this->name();
-        $content['password'] = $this->hashPassword($this->password());
-        $content['role']     = $this->role()->id();
-
         // remove the email. It's already stored in the directory
-        unset($content['email']);
+        unset($data['email']);
 
-        return $content;
+        return A::prepend($data, [
+            'name'     => $this->name(),
+            'language' => $this->language(),
+            'role'     => $this->role()->id(),
+            'password' => $this->hashPassword($this->password()),
+        ]);
+
+        return $data;
     }
 
     /**

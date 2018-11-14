@@ -80,12 +80,13 @@ abstract class ModelWithContent extends Model
      * Prepares the content that should be written
      * to the text file
      *
+     * @param array $data
      * @param string $languageCode
      * @return array
      */
-    public function contentFileData(string $languageCode = null): array
+    public function contentFileData(array $data, string $languageCode = null): array
     {
-        return $this->content($languageCode)->toArray();
+        return $data;
     }
 
     /**
@@ -135,20 +136,68 @@ abstract class ModelWithContent extends Model
      * @param array $data
      * @return self
      */
-    public function save(string $languageCode = null, array $data = null)
+    public function save(array $data = null, string $languageCode = null)
     {
         if ($this->kirby()->multilang() === true) {
-            if ($language = $this->kirby()->language($languageCode)) {
-                $languageCode = $language->code();
-            } else {
-                throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-            }
+            return $this->saveTranslation($data, $languageCode);
         } else {
-            $languageCode = null;
+            return $this->saveContent($data);
+        }
+    }
+
+    /**
+     * Save the single language content
+     *
+     * @param array|null $data
+     * @return self
+     */
+    protected function saveContent(array $data = null)
+    {
+        // create a clone to avoid modifying the original
+        $clone = $this->clone();
+
+        // merge the new data with the existing content
+        $clone->content()->update($data);
+
+        // send the full content array to the writer
+        $clone->write($clone->content()->toArray());
+
+        return $clone;
+    }
+
+    /**
+     * Save a translation
+     *
+     * @param array|null $data
+     * @param string|null $languageCode
+     * @return self
+     */
+    protected function saveTranslation(array $data = null, string $languageCode = null)
+    {
+        // get the right language code
+        $languageCode = $languageCode ?? $this->kirby()->language()->code();
+
+        // create a clone to not touch the original
+        $clone = $this->clone();
+
+        // fetch the matching translation and update all the strings
+        $translation = $clone->translations()->get($languageCode);
+
+        if ($translation === null) {
+            throw new InvalidArgument('The translation could not be found');
         }
 
-        Data::write($this->contentFile($languageCode), $data ?? $this->contentFileData($languageCode));
-        return $this;
+        // merge the translation with the new data
+        $translation->update($data);
+
+        // send the full translation array to the writer
+        $clone->write($translation->content(), $languageCode);
+
+        // reset the content object
+        $clone->content = null;
+
+        // return the updated model
+        return $clone;
     }
 
     /**
@@ -167,6 +216,12 @@ abstract class ModelWithContent extends Model
         return $this;
     }
 
+    /**
+     * Create the translations collection from an array
+     *
+     * @param array $translations
+     * @return self
+     */
     protected function setTranslations(array $translations = null)
     {
         if ($translations !== null) {
@@ -211,6 +266,11 @@ abstract class ModelWithContent extends Model
         return $content;
     }
 
+    /**
+     * Returns the translations collection
+     *
+     * @return Collection
+     */
     public function translations()
     {
         if ($this->translations !== null) {
@@ -256,29 +316,24 @@ abstract class ModelWithContent extends Model
         }
 
         return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
-            if ($model->kirby()->multilang() === true) {
-
-                // get the right language code
-                $languageCode = $languageCode ?? $model->kirby()->language()->code();
-
-                // create a clone to not touch the original
-                $updated = $model->clone();
-
-                // fetch the matching translation and update all the strings
-                if ($translation = $updated->translations()->get($languageCode)) {
-                    $translation->update($strings);
-                }
-
-                // reset the content object
-                $updated->content = null;
-
-                // save the current content in the right language file
-                $updated = $updated->save($languageCode);
-            } else {
-                $updated = $model->clone(['content' => $strings])->save();
-            }
-
-            return $updated;
+            return $model->save($strings, $languageCode);
         });
     }
+
+    /**
+     * Low level data writer method
+     * to store the given data on disk or anywhere else
+     *
+     * @param array $data
+     * @param string $languageCode
+     * @return boolean
+     */
+    protected function write(array $data, string $languageCode = null): bool
+    {
+        return Data::write(
+            $this->contentFile($languageCode),
+            $this->contentFileData($data, $languageCode)
+        );
+    }
+
 }

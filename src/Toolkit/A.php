@@ -18,6 +18,18 @@ class A
 {
 
     /**
+     * Appends the given array
+     *
+     * @param array $array
+     * @param array $append
+     * @return array
+     */
+    public static function append(array $array, array $append): array
+    {
+        return $array + $append;
+    }
+
+    /**
      * Gets an element of an array by key
      *
      * <code>
@@ -180,6 +192,18 @@ class A
         }
 
         return $output;
+    }
+
+    /**
+     * Prepends the given array
+     *
+     * @param array $array
+     * @param array $prepend
+     * @return array
+     */
+    public static function prepend(array $array, array $prepend): array
+    {
+        return $prepend + $array;
     }
 
     /**

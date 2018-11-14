@@ -41,21 +41,13 @@ trait SiteActions
      * Change the site title
      *
      * @param string $title
+     * @param string|null $languageCode
      * @return self
      */
-    public function changeTitle(string $title): self
+    public function changeTitle(string $title, string $languageCode = null): self
     {
-        if ($title === $this->title()->value()) {
-            return $this;
-        }
-
-        return $this->commit('changeTitle', [$this, $title], function ($site, $title) {
-            $content = $site
-                ->content()
-                ->update(['title' => $title])
-                ->toArray();
-
-            return $site->clone(['content' => $content])->save();
+        return $this->commit('changeTitle', [$this, $title, $languageCode], function ($site, $title, $languageCode) {
+            return $site->save(['title' => $title], $languageCode);
         });
     }
 

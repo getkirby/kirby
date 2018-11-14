@@ -57,7 +57,7 @@ export default {
         .then(response => {
 
           // remove changes for the old user
-          this.$store.dispatch("form/remove", "users/" + this.user.id);
+          this.$store.dispatch("form/revert", "users/" + this.user.id);
 
           let payload = {
             message: ":)",

@@ -36,17 +36,21 @@ class PageRules
         $drafts   = $page->parentModel()->drafts();
 
         if ($duplicate = $siblings->find($slug)) {
-            throw new DuplicateException([
-                'key'  => 'page.duplicate',
-                'data' => ['slug' => $slug]
-            ]);
+            if ($duplicate->is($page) === false) {
+                throw new DuplicateException([
+                    'key'  => 'page.duplicate',
+                    'data' => ['slug' => $slug]
+                ]);
+            }
         }
 
         if ($duplicate = $drafts->find($slug)) {
-            throw new DuplicateException([
-                'key'  => 'page.draft.duplicate',
-                'data' => ['slug' => $slug]
-            ]);
+            if ($duplicate->is($page) === false) {
+                throw new DuplicateException([
+                    'key'  => 'page.draft.duplicate',
+                    'data' => ['slug' => $slug]
+                ]);
+            }
         }
 
         return true;

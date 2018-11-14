@@ -124,11 +124,13 @@ trait PageActions
             throw new InvalidArgumentException('Use the changeSlug method to change the slug for the default language');
         }
 
-        return $this->commit('changeSlug', [$this, $slug, $languageCode], function ($oldPage, $slug, $languageCode) {
-            $content = $oldPage->content($languageCode)->toArray();
-            $content['slug'] = $slug;
+        return $this->commit('changeSlug', [$this, $slug, $languageCode], function ($page, $slug, $languageCode) {
+            // remove the slug if it's the same as the folder name
+            if ($slug === $page->uid()) {
+                $slug = null;
+            }
 
-            return $oldPage->clone(['content' => $content])->save($languageCode);
+            return $page->save(['slug' => $slug], $languageCode);
         });
     }
 
@@ -230,7 +232,7 @@ trait PageActions
                     $content = $oldPage->transferData($oldPage->content($code), $oldBlueprint, $newBlueprint)['data'];
 
                     // save the language file
-                    $newPage->save($code, $content);
+                    $newPage->save($content, $code);
                 }
 
                 // return a fresh copy of the object
@@ -254,21 +256,13 @@ trait PageActions
      * Change the page title
      *
      * @param string $title
+     * @param string|null $languageCode
      * @return self
      */
-    public function changeTitle(string $title): self
+    public function changeTitle(string $title, string $languageCode = null): self
     {
-        if ($title === $this->title()->value()) {
-            return $this;
-        }
-
-        return $this->commit('changeTitle', [$this, $title], function ($page, $title) {
-            $content = $page
-                ->content()
-                ->update(['title' => $title])
-                ->toArray();
-
-            return $page->clone(['content' => $content])->save();
+        return $this->commit('changeTitle', [$this, $title, $languageCode], function ($page, $title, $languageCode) {
+            return $page->save(['title' => $title], $languageCode);
         });
     }
 
@@ -331,11 +325,6 @@ trait PageActions
         // run the hooks and creation action
         $page = $page->commit('create', [$page, $props], function ($page, $props) {
 
-            // create the new page directory
-            if (Dir::make($page->root()) !== true) {
-                throw new LogicException('The page directory for "' . $page->slug() . '" cannot be created');
-            }
-
             // always create pages in the default language
             if ($page->kirby()->multilang() === true) {
                 $languageCode = $page->kirby()->defaultLanguage()->code();
@@ -344,7 +333,7 @@ trait PageActions
             }
 
             // write the content file
-            $page = $page->clone()->save($languageCode);
+            $page = $page->save($page->content()->toArray(), $languageCode);
 
             // flush the parent cache to get children and drafts right
             $page->parentModel()->drafts()->append($page->id(), $page);

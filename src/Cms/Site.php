@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -242,6 +243,18 @@ class Site extends ModelWithContent
         }
 
         return $this->contentFile = $this->root() . '/site.' . $this->kirby()->contentExtension();
+    }
+
+    /**
+     * Prepares the content for the write method
+     *
+     * @return array
+     */
+    public function contentFileData(array $data, string $languageCode = null): array
+    {
+        return A::prepend($data, [
+            'title' => $data['title'] ?? null,
+        ]);
     }
 
     /**

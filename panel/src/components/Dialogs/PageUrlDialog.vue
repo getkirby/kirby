@@ -91,7 +91,7 @@ export default {
         .then(page => {
 
           // remove changes for the old page id
-          this.$store.dispatch("form/remove", "pages/" + this.page.id);
+          this.$store.dispatch("form/revert", "pages/" + this.page.id);
 
           const payload = {
             message: ":)",
