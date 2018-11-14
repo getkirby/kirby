@@ -328,8 +328,15 @@ export default {
     .k-input-icon {
       position: absolute;
       top: 0;
-      right: 0;
       bottom: 0;
+
+      [dir="ltr"] & {
+        right: 0;
+      }
+
+      [dir="rtl"] & {
+        left: 0;
+      }
     }
   }
 
