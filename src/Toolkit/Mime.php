@@ -94,6 +94,39 @@ class Mime
         'zip'   => ['application/x-zip', 'application/zip', 'application/x-zip-compressed'],
     ];
 
+    public static function fix(string $file, string $mime = null, string $extension = null)
+    {
+        // fixing map
+        $map = [
+            'text/html' => [
+                'svg' => [Mime::class, 'fromSvg'],
+            ],
+            'text/plain' => [
+                'css' => 'text/css',
+                'svg' => [Mime::class, 'fromSvg'],
+            ],
+            'text/x-asm' => [
+                'css' => 'text/css'
+            ],
+            'image/svg' => [
+                'svg' => 'image/svg+xml'
+            ]
+        ];
+
+        if ($mode = ($map[$mime][$extension] ?? null)) {
+            if (is_callable($mode) === true) {
+                return $mode($file, $mime, $extension);
+            }
+
+            if (is_string($mode) === true) {
+                return $mode;
+            }
+        }
+
+        return $mime;
+
+    }
+
     public static function fromExtension(string $extension)
     {
         $mime = static::$types[$extension] ?? null;
@@ -187,29 +220,8 @@ class Mime
             $mime = static::fromExtension($extension);
         }
 
-        // fix broken detection
-        switch ($mime) {
-            // fix broken mime detection for svg files with style attribute
-            case 'text/html':
-            case 'text/plain':
-                if ($extension === 'svg') {
-                    $mime = static::fromSvg($file);
-                }
-                break;
-            // fix broken css mime type detection
-            case 'text/x-asm':
-                if ($extension === 'css') {
-                    $mime = 'text/css';
-                }
-                break;
-        }
-
-        // normalize image/svg file type
-        if ($mime === 'image/svg') {
-            $mime = 'image/svg+xml';
-        }
-
-        return $mime;
+        // fix broken mime detection
+        return static::fix($file, $mime, $extension);
     }
 
     /**

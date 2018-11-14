@@ -7,6 +7,19 @@ class MimeTest extends TestCase
 
     const FIXTURES = __DIR__ . '/fixtures/mime';
 
+    public function testFixCss()
+    {
+        $this->assertEquals('text/css', Mime::fix('something.css', 'text/x-asm', 'css'));
+        $this->assertEquals('text/css', Mime::fix('something.css', 'text/plain', 'css'));
+    }
+
+    public function testFixSvg()
+    {
+        $this->assertEquals('image/svg+xml', Mime::fix('something.svg', 'image/svg', 'svg'));
+        $this->assertEquals('image/svg+xml', Mime::fix(static::FIXTURES . '/optimized.svg', 'text/html', 'svg'));
+        $this->assertEquals('image/svg+xml', Mime::fix(static::FIXTURES . '/unoptimized.svg', 'text/html', 'svg'));
+    }
+
     public function testFromExtension()
     {
         $mime = Mime::fromExtension('jpg');
