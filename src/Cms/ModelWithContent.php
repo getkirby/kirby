@@ -335,5 +335,4 @@ abstract class ModelWithContent extends Model
             $this->contentFileData($data, $languageCode)
         );
     }
-
 }

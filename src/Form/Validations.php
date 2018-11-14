@@ -10,7 +10,6 @@ use Kirby\Toolkit\V;
  */
 class Validations
 {
-
     public static function boolean(Field $field, $value): bool
     {
         if ($field->isEmpty($value) === false) {

@@ -124,7 +124,6 @@ class Mime
         }
 
         return $mime;
-
     }
 
     public static function fromExtension(string $extension)
