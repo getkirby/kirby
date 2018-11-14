@@ -155,7 +155,14 @@ export default {
 .k-upload input {
   position: absolute;
   top: 0;
-  left: -3000px;
+
+  [dir="ltr"] & {
+    left: -3000px;
+  }
+
+  [dir="rtl"] & {
+    right: -3000px;
+  }
 }
 
 .k-upload .k-headline {
