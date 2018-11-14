@@ -33,10 +33,7 @@ export default {
     disabled: Boolean,
     id: [Number, String],
     max: Number,
-    min: {
-      type: Number,
-      default: 0
-    },
+    min: Number,
     name: [Number, String],
     placeholder: String,
     preselect: Boolean,

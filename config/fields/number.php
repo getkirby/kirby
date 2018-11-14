@@ -11,7 +11,7 @@ return [
         /**
          * The lowest allowed number
          */
-        'min' => function (float $min = 0) {
+        'min' => function (float $min = null) {
             return $min;
         },
         /**

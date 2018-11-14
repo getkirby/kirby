@@ -22,6 +22,15 @@ Cypress.Commands.add("login", (type) => {
 
 })
 
+Cypress.Commands.add("savebar", () => {
+  return cy.get(".k-form-buttons");
+});
+
+Cypress.Commands.add("visitField", (field) => {
+  cy.login("admin");
+  cy.visit("/pages/form+" + field);
+});
+
 Cypress.Commands.add('install', () => {
 
   cy.fixture("users").then(users => {
