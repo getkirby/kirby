@@ -58,7 +58,14 @@ export default {
 }
 .k-section-header .k-button-group {
   position: absolute;
-  top: -1rem;
-  right: 0;
+  top: -.975rem;
+
+  [dir="ltr"] & {
+    right: 0;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+  }
 }
 </style>
