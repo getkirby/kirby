@@ -127,13 +127,30 @@ export default {
   z-index: z-index(dropdown);
   box-shadow: $box-shadow;
   border-radius: $border-radius;
-  left: 0;
   text-align: left;
+
+  [dir="ltr"] & {
+    left: 0;
+  }
+
+  [dir="rtl"] & {
+    right: 0;
+  }
+
 }
 
 .k-dropdown-content[data-align="right"] {
-  left: auto;
-  right: 0;
+
+  [dir="ltr"] & {
+    left: auto;
+    right: 0;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+    right: auto;
+  }
+
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
