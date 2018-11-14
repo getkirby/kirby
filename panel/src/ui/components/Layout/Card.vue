@@ -104,7 +104,6 @@ export default {
 .k-card .k-sort-handle {
   position: absolute;
   top: .75rem;
-  right: .75rem;
   width: 2rem;
   height: 2rem;
   border-radius: $border-radius;
@@ -115,6 +114,14 @@ export default {
   cursor: -webkit-grab;
   will-change: opacity;
   transition: opacity .3s;
+
+  [dir="ltr"] & {
+    right: .75rem;
+  }
+  [dir="rtl"] & {
+    left: .75rem;
+  }
+
 }
 .k-card .k-sort-handle:active {
   cursor: -webkit-grabbing;
@@ -180,14 +187,30 @@ export default {
   font-size: $font-size-small;
   text-overflow: ellipsis;
   overflow: hidden;
-  margin-right: 4rem;
+
+  [dir="ltr"] & {
+    margin-right: 4rem;
+  }
+
+  [dir="rtl"] & {
+    margin-left: 4rem;
+  }
+
 }
 
 
 .k-card-options {
   position: absolute;
   bottom: 0;
-  right: 0;
+
+  [dir="ltr"] & {
+    right: 0;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+  }
+
 }
 .k-card-options > .k-button {
   position: relative;
