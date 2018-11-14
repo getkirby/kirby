@@ -38,7 +38,7 @@ describe("Tags", () => {
 
   });
 
-  it.only("accepts multiple tags", () => {
+  it("accepts multiple tags", () => {
 
     const tags = ["design", "photography", "architecture"];
 
