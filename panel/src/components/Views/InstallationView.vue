@@ -144,7 +144,9 @@ export default {
   display: block;
   margin-top: 1.5rem;
 }
-
+.k-installation-view .k-headline {
+  margin-bottom: .75rem;
+}
 .k-installation-issues {
   line-height: 1.5em;
   font-size: $font-size-small;
@@ -152,14 +154,30 @@ export default {
 .k-installation-issues li {
   position: relative;
   padding: 1.5rem;
-  padding-left: 3.5rem;
   background: $color-white;
+
+  [dir="ltr"] & {
+    padding-left: 3.5rem;
+  }
+
+  [dir="rtl"] & {
+    padding-right: 3.5rem;
+  }
+
 }
 .k-installation-issues .k-icon {
   position: absolute;
   top: calc(1.5rem + 2px);
-  left: 1.5rem;
+
+  [dir="ltr"] & {
+    left: 1.5rem;
+  }
+
+  [dir="rtl"] & {
+    right: 1.5rem;
+  }
 }
+
 .k-installation-issues .k-icon svg * {
   fill: $color-negative;
 }
@@ -173,6 +191,13 @@ export default {
 
 .k-installation-view .k-button[type="submit"] {
   padding: 1rem;
-  margin-left: -1rem;
+
+  [dir="ltr"] & {
+    margin-left: -1rem;
+  }
+
+  [dir="rtl"] & {
+    margin-right: -1rem;
+  }
 }
 </style>
