@@ -83,6 +83,12 @@ export default {
   },
   actions: {
     create(context, model) {
+
+      // attach the language to the id
+      if (context.rootState.languages.current && context.rootState.languages.current.code) {
+        model.id = model.id + "/" + context.rootState.languages.current.code;
+      }
+
       context.commit("CREATE", model);
       context.commit("CURRENT", model.id);
 
