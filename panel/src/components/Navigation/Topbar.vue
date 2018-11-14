@@ -189,11 +189,27 @@ export default {
 .k-topbar-view-button {
   flex-shrink: 0;
   display: flex;
-  padding-right: 0;
   @include highlight-tabbed;
+
+  [dir="ltr"] & {
+    padding-right: 0;
+  }
+
+  [dir="rtl"] & {
+    padding-left: 0;
+  }
+
 }
 .k-topbar-view-button .k-icon {
-  margin-right: 0.5rem;
+
+  [dir="ltr"] & {
+    margin-right: 0.5rem;
+  }
+
+  [dir="rtl"] & {
+    margin-left: 0.5rem;
+  }
+
 }
 .k-topbar-crumbs {
   flex-grow: 1;
@@ -239,23 +255,43 @@ export default {
 }
 .k-topbar-signals {
   position: absolute;
-  right: 0;
   top: 0;
   background: $color-dark;
   height: 2.5rem;
+
+  [dir="ltr"] & {
+    right: 0;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+  }
 }
 .k-topbar-signals::before {
   position: absolute;
   content: "";
   top: 0;
-  left: -0.5rem;
   bottom: 0;
   width: 0.5rem;
-  background: -webkit-linear-gradient(
-    left,
-    rgba($color-dark, 0),
-    rgba($color-dark, 1)
-  );
+
+  [dir="ltr"] & {
+    left: -0.5rem;
+    background: -webkit-linear-gradient(
+      left,
+      rgba($color-dark, 0),
+      rgba($color-dark, 1)
+    );
+  }
+
+  [dir="rtl"] & {
+    right: -0.5rem;
+    background: -webkit-linear-gradient(
+      right,
+      rgba($color-dark, 0),
+      rgba($color-dark, 1)
+    );
+  }
+
 }
 .k-topbar-signals .k-button {
   line-height: 1;
