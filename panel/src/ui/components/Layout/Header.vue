@@ -136,10 +136,17 @@ export default {
 }
 .k-header .k-headline-editable .k-icon {
   color: $color-light-grey;
-  margin-left: .5rem;
   opacity: 0;
   transition: opacity .3s;
   display: inline-block;
+
+  [dir="ltr"] & {
+    margin-left: .5rem;
+  }
+
+  [dir="rtl"] & {
+    margin-right: .5rem;
+  }
 }
 .k-header .k-headline-editable:hover .k-icon {
   opacity: 1;

@@ -20,6 +20,12 @@
   text-align: center;
 }
 .k-bar-slot[data-position="right"] {
-  text-align: right;
+  [dir="ltr"] & {
+    text-align: right;
+  }
+
+  [dir="rtl"] & {
+    text-align: left;
+  }
 }
 </style>
