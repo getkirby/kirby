@@ -112,9 +112,17 @@ export default {
 }
 .k-login-button {
   padding: 0.5rem 1rem;
-  margin-right: -1rem;
   font-weight: 500;
   transition: opacity 0.3s;
+
+  [dir="ltr"] & {
+    margin-right: -1rem;
+  }
+
+  [dir="rtl"] & {
+    margin-left: -1rem;
+  }
+
 }
 .k-login-button span {
   opacity: 1;
