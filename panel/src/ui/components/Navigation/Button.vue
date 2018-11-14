@@ -159,7 +159,13 @@ button::-moz-focus-inner {
 }
 
 .k-button-figure ~ .k-button-text {
-  padding-left: 0.5rem;
+  [dir="ltr"] & {
+    padding-left: 0.5rem;
+  }
+
+  [dir="rtl"] & {
+    padding-right: 0.5rem;
+  }
 }
 
 .k-button-text {
