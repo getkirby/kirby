@@ -61,7 +61,7 @@ return [
             return $this->convert($this->default);
         },
         'value' => function () {
-            return $this->convert($this->value);
+            return (string)$this->convert($this->value);
         }
     ],
     'methods' => [
