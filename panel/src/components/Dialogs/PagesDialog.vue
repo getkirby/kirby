@@ -12,7 +12,12 @@
     <template v-else>
 
       <header class="k-pages-dialog-navbar">
-        <k-button :disabled="!model.id" icon="angle-left" @click="back" />
+        <k-button
+          :disabled="!model.id"
+          :tooltip="$t('back')"
+          icon="angle-left"
+          @click="back"
+        />
         <k-headline>{{ model.title }}</k-headline>
       </header>
 
@@ -28,9 +33,25 @@
           @click="toggle(page)"
         >
           <template slot="options">
-            <k-button v-if="isSelected(page)" theme="positive" icon="check" />
-            <k-button v-else icon="circle-o" />
-            <k-button :disabled="!page.hasChildren" icon="angle-right" @click.stop="go(page)" />
+            <k-button
+              v-if="isSelected(page)"
+              slot="options"
+              :tooltip="$t('remove')"
+              theme="positive"
+              icon="check"
+            />
+            <k-button
+              v-else
+              :tooltip="$t('select')"
+              slot="options"
+              icon="circle-o"
+            />
+            <k-button
+              :disabled="!page.hasChildren"
+              :tooltip="$t('open')"
+              icon="angle-right"
+              @click.stop="go(page)"
+            />
           </template>
         </k-list-item>
       </k-list>

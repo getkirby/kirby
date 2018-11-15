@@ -34,10 +34,16 @@
           <k-button
             v-if="user.selected"
             slot="options"
+            :tooltip="$t('remove')"
             theme="positive"
             icon="check"
           />
-          <k-button v-else slot="options" icon="circle-o" />
+          <k-button
+            v-else
+            :tooltip="$t('select')"
+            slot="options"
+            icon="circle-o"
+          />
         </k-list-item>
       </k-list>
       <k-empty v-else icon="users">

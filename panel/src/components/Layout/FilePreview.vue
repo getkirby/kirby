@@ -35,7 +35,7 @@
           <li>
             <h3>{{ $t("url") }}</h3>
             <p>
-              <k-link tabindex="-1" :to="file.url" target="_blank">/{{ file.id }}</k-link>
+              <k-link :to="file.url" tabindex="-1" target="_blank">/{{ file.id }}</k-link>
             </p>
           </li>
           <li>
