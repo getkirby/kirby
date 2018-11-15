@@ -73,6 +73,24 @@ class Translation
     }
 
     /**
+     * Returns the translation data and merges
+     * it with the data from the default translation
+     *
+     * @return array
+     */
+    public function dataWithFallback(): array
+    {
+        if ($this->code === 'en') {
+            return $this->data;
+        }
+
+        // get the fallback array
+        $fallback = App::instance()->translation('en')->data();
+
+        return array_merge($fallback, $this->data);
+    }
+
+    /**
      * Returns the writing direction
      * (ltr or rtl)
      *

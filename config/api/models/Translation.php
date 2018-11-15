@@ -11,7 +11,7 @@ return [
             return $translation->author();
         },
         'data' => function (Translation $translation) {
-            return $translation->data();
+            return $translation->dataWithFallback();
         },
         'direction' => function (Translation $translation) {
             return $translation->direction();
