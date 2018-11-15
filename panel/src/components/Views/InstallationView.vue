@@ -2,7 +2,7 @@
   <k-view v-if="system" align="center" class="k-installation-view">
     <form v-if="system.isOk && !system.isInstalled" @submit.prevent="install">
       <h1 class="k-offscreen">{{ $t("installation") }}</h1>
-      <k-fieldset :fields="fields" v-model="user" />
+      <k-fieldset :fields="fields" :novalidate="true" v-model="user" />
       <k-button type="submit" icon="check">{{ $t("install") }}</k-button>
     </form>
     <k-text v-else-if="system.isOk && system.isInstalled">
