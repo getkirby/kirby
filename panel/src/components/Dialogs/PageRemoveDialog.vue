@@ -2,9 +2,9 @@
   <k-dialog
     ref="dialog"
     :button="$t('delete')"
+    :size="hasSubpages ? 'medium' : 'small'"
     theme="negative"
     icon="trash"
-    :size="hasSubpages ? 'medium' : 'small'"
     @submit="submit"
   >
     <template v-if="page.hasChildren || page.hasDrafts">
