@@ -227,7 +227,6 @@ export default {
   padding-bottom: 0.75rem;
   line-height: 1;
   transition: opacity 0.3s;
-  background: $color-dark;
 
   &::before {
     content: "/";
