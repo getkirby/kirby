@@ -34,15 +34,17 @@
           <k-button
             v-if="user.selected"
             slot="options"
+            :autofocus="true"
+            :icon="checkedIcon"
             :tooltip="$t('remove')"
             theme="positive"
-            icon="check"
           />
           <k-button
             v-else
+            :autofocus="true"
             :tooltip="$t('select')"
             slot="options"
-            icon="circle-o"
+            icon="circle-outline"
           />
         </k-list-item>
       </k-list>
@@ -64,6 +66,14 @@ export default {
         multiple: true,
         selected: []
       }
+    }
+  },
+  computed: {
+    multiple() {
+      return this.options.multiple === true && this.options.max !== 1;
+    },
+    checkedIcon() {
+      return this.multiple === true ? "check" : "circle-filled";
     }
   },
   methods: {

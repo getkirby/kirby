@@ -3,6 +3,7 @@
     v-tab
     ref="button"
     :aria-current="current"
+    :autofocus="autofocus"
     :id="id"
     :is="component"
     :disabled="disabled"
@@ -38,6 +39,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    autofocus: Boolean,
     current: [String, Boolean],
     disabled: Boolean,
     icon: String,

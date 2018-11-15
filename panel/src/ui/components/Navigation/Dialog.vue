@@ -72,25 +72,20 @@ export default {
       this.$events.$on("keydown.esc", this.close);
 
       this.$nextTick(() => {
-        if (this.$el && this.$el.querySelector) {
-          let autofocus = this.$el.querySelector(
-            "input, textarea, select, .k-dialog-button-submit"
-          );
+        if (this.$el) {
 
-          if (autofocus) {
-            autofocus.focus();
-            return;
-          }
+          // focus on the first useful element
+          this.focus();
 
-          autofocus = this.$el.querySelector(
-            ".k-dialog-button-cancel"
-          );
+          // blur trap
+          document.body.addEventListener("focus", (e) => {
+            if (this.$el.contains(e.target) === false) {
+              this.focus();
+            }
+          }, true);
 
-          if (autofocus) {
-            autofocus.focus();
-            return;
-          }
         }
+
       });
     },
     close() {
@@ -102,6 +97,19 @@ export default {
     cancel() {
       this.$emit("cancel");
       this.close();
+    },
+    focus() {
+      if (this.$el && this.$el.querySelector) {
+        let autofocus = this.$el.querySelector(
+          "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit, .k-dialog-button-cancel"
+        );
+
+        if (autofocus) {
+          autofocus.focus();
+          return;
+        }
+
+      }
     },
     error(message) {
       this.notification = {

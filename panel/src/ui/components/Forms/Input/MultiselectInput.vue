@@ -40,7 +40,7 @@
         <k-dropdown-item
           v-for="option in filtered"
           :key="option.value"
-          :icon="isSelected(option) ? 'check' : 'circle-o'"
+          :icon="isSelected(option) ? 'check' : 'circle-outline'"
           :class="{
             'k-multiselect-option': true,
             'selected': isSelected(option),
