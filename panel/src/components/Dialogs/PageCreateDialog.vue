@@ -10,6 +10,7 @@
     <k-form
       ref="form"
       :fields="fields"
+      :novalidate="true"
       v-model="page"
       @submit="submit"
     />

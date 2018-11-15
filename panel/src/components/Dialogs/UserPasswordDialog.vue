@@ -36,13 +36,11 @@ export default {
           label: this.$t("user.changePassword.new"),
           type: "password",
           icon: "key",
-          required: true
         },
         passwordConfirmation: {
           label: this.$t("user.changePassword.new.confirm"),
           icon: "key",
-          type: "password",
-          required: true
+          type: "password"
         }
       };
     }
