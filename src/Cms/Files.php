@@ -33,11 +33,11 @@ class Files extends Collection
             $this->data = array_merge($this->data, $object->data);
 
         // add a file by id
-        } elseif(is_string($object) === true && $file = App::instance()->file($object)) {
+        } elseif (is_string($object) === true && $file = App::instance()->file($object)) {
             $this->__set($file->id(), $file);
 
         // add a file object
-        } elseif(is_a($object, File::class) === true) {
+        } elseif (is_a($object, File::class) === true) {
             $this->__set($object->id(), $object);
         }
 

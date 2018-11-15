@@ -2420,12 +2420,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "7b2dc3ee659453b97bf2f6e887fc036475389a49"
+                "reference": "f75de4cb9e4376c09e600a30174fefad9daa2272"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/7b2dc3ee659453b97bf2f6e887fc036475389a49",
-                "reference": "7b2dc3ee659453b97bf2f6e887fc036475389a49",
+                "url": "https://api.github.com/repos/symfony/console/zipball/f75de4cb9e4376c09e600a30174fefad9daa2272",
+                "reference": "f75de4cb9e4376c09e600a30174fefad9daa2272",
                 "shasum": ""
             },
             "require": {
@@ -2481,7 +2481,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-11 19:52:12"
+            "time": "2018-11-15 12:17:10"
         },
         {
             "name": "symfony/contracts",

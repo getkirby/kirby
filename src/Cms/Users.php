@@ -34,11 +34,11 @@ class Users extends Collection
             $this->data = array_merge($this->data, $object->data);
 
         // add a user by id
-        } elseif(is_string($object) === true && $user = App::instance()->user($object)) {
+        } elseif (is_string($object) === true && $user = App::instance()->user($object)) {
             $this->__set($user->id(), $user);
 
         // add a user object
-        } elseif(is_a($object, User::class) === true) {
+        } elseif (is_a($object, User::class) === true) {
             $this->__set($object->id(), $object);
         }
 

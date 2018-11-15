@@ -57,11 +57,11 @@ class Pages extends Collection
             $this->data = array_merge($this->data, $object->data);
 
         // add a page by id
-        } elseif(is_string($object) === true && $page = page($object)) {
+        } elseif (is_string($object) === true && $page = page($object)) {
             $this->__set($page->id(), $page);
 
         // add a page object
-        } elseif(is_a($object, Page::class) === true) {
+        } elseif (is_a($object, Page::class) === true) {
             $this->__set($object->id(), $object);
         }
 
