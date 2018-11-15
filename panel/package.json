@@ -5,6 +5,7 @@
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html",
     "e2e": "vue-cli-service test:e2e",
+    "e2e:record": "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
     "testkit:reset": "./scripts/reset-testkit",
     "lint": "vue-cli-service lint",
     "precommit": "pretty-quick --staged",
