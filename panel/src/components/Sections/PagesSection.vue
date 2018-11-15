@@ -69,11 +69,14 @@ export default {
       max: null,
       layout: "list",
       size: "auto",
-      page: 1,
+      page: null,
       link: false
     };
   },
   computed: {
+    paginationId() {
+      return "kirby$pagination$" + this.parent + "/" + this.name;
+    },
     language() {
       return this.$store.state.languages.current;
     }
@@ -128,6 +131,10 @@ export default {
       }
     },
     fetch() {
+      if (this.page === null) {
+        this.page = localStorage.getItem(this.paginationId) || 1
+      }
+
       this.$api
         .get(this.parent + "/sections/" + this.name, { page: this.page })
         .then(response => {
@@ -175,6 +182,7 @@ export default {
         });
     },
     paginate(pagination) {
+      localStorage.setItem(this.paginationId,  pagination.page);
       this.page = pagination.page;
       this.fetch();
     },

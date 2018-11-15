@@ -49,11 +49,11 @@ export default {
     },
     REMOVE(state, id) {
       Vue.delete(state.models, id);
-      localStorage.removeItem("kirby$" + id);
+      localStorage.removeItem("kirby$form$" + id);
     },
     DELETE_CHANGES(state, id) {
       Vue.set(state.models[id], "changes", {});
-      localStorage.removeItem("kirby$" + id);
+      localStorage.removeItem("kirby$form$" + id);
     },
     SET_ORIGINALS(state, [id, originals]) {
       state.models[id].originals = clone(originals);
@@ -76,7 +76,7 @@ export default {
       }
 
       localStorage.setItem(
-        "kirby$" + id,
+        "kirby$form$" + id,
         JSON.stringify(state.models[id].values)
       );
     }
@@ -92,7 +92,7 @@ export default {
       context.commit("CREATE", model);
       context.commit("CURRENT", model.id);
 
-      const values = localStorage.getItem("kirby$" + model.id);
+      const values = localStorage.getItem("kirby$form$" + model.id);
 
       if (values) {
         const data = JSON.parse(values);

@@ -62,12 +62,18 @@ export default {
       min: null,
       issue: false,
       layout: "list",
-      page: 1,
+      page: null,
       size: "auto",
       pagination: {},
     };
   },
   computed: {
+    language() {
+      return this.$store.state.languages.current;
+    },
+    paginationId() {
+      return "kirby$pagination$" + this.parent + "/" + this.name;
+    },
     uploadParams() {
 
       if (this.add === false) {
@@ -81,6 +87,11 @@ export default {
 
     }
   },
+  watch: {
+    language() {
+      this.fetch();
+    }
+  },
   created() {
     this.fetch();
     this.$events.$on("model.update", this.fetch);
@@ -90,6 +101,10 @@ export default {
   },
   methods: {
     fetch() {
+      if (this.page === null) {
+        this.page = localStorage.getItem(this.paginationId) || 1
+      }
+
       this.$api
         .get(this.parent + "/sections/" + this.name, { page: this.page })
         .then(response => {
@@ -189,6 +204,7 @@ export default {
       this.$store.dispatch("notification/success", ":)");
     },
     paginate(pagination) {
+      localStorage.setItem(this.paginationId, pagination.page);
       this.page = pagination.page;
       this.fetch();
     }
