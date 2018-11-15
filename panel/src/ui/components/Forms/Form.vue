@@ -13,7 +13,7 @@
         ref="fields"
         :disabled="disabled"
         :fields="fields"
-        :validate="validate"
+        :novalidate="novalidate"
         v-model="value"
         v-on="listeners"
       />
@@ -33,7 +33,7 @@ export default {
         return {};
       }
     },
-    validate: {
+    novalidate: {
       type: Boolean,
       default: false
     },

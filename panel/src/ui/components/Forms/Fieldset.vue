@@ -12,7 +12,7 @@
           :is="'k-' + field.type + '-field'"
           :name="fieldName"
           :ref="fieldName"
-          :validate="validate"
+          :novalidate="novalidate"
           :disabled="disabled || field.disabled"
           v-bind="field"
           v-model="value[fieldName]"
@@ -43,7 +43,7 @@ export default {
         return [];
       }
     },
-    validate: {
+    novalidate: {
       type: Boolean,
       default: false
     },

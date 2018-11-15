@@ -5,7 +5,7 @@
   <k-view v-else-if="ready" align="center" class="k-login-view">
     <form :data-invalid="invalid" class="k-login-form" @submit.prevent="login">
       <h1 class="k-offscreen">{{ $t('login') }}</h1>
-      <k-fieldset :fields="fields" v-model="user" />
+      <k-fieldset :novalidate="true" :fields="fields" v-model="user" />
       <div class="k-login-buttons">
         <span class="k-login-checkbox">
           <k-checkbox-input

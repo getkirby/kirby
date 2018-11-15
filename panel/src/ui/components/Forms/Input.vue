@@ -1,7 +1,7 @@
 <template>
   <div
     :data-disabled="disabled"
-    :data-invalid="validate && isInvalid"
+    :data-invalid="!novalidate && isInvalid"
     :data-theme="theme"
     :data-type="type"
     class="k-input"
@@ -42,7 +42,10 @@ export default {
     icon: [String, Boolean],
     invalid: Boolean,
     theme: String,
-    validate: Boolean,
+    novalidate: {
+      type: Boolean,
+      default: false,
+    },
     value: {
       type: [String, Boolean, Number, Object, Array]
     }
