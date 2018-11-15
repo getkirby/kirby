@@ -57,7 +57,10 @@ class Collection extends BaseCollection
     public function __construct($objects = [], $parent = null)
     {
         $this->parent = $parent;
-        parent::__construct($objects);
+
+        foreach ($objects as $object) {
+            $this->add($object);
+        }
     }
 
     /**
@@ -71,6 +74,24 @@ class Collection extends BaseCollection
     public function __set(string $id, $object)
     {
         $this->data[$object->id()] = $object;
+    }
+
+    /**
+     * Adds a single object or
+     * an entire second collection to the
+     * current collection
+     *
+     * @param mixed $item
+     */
+    public function add($object)
+    {
+        if (is_a($object, static::class) === true) {
+            $this->data = array_merge($this->data, $object->data);
+        } else {
+            $this->__set($object->id(), $object);
+        }
+
+        return $this;
     }
 
     /**

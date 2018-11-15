@@ -19,6 +19,32 @@ class Users extends Collection
         return User::create($data);
     }
 
+    /**
+     * Adds a single user or
+     * an entire second collection to the
+     * current collection
+     *
+     * @param mixed $item
+     * @return Users
+     */
+    public function add($object)
+    {
+        // add a page collection
+        if (is_a($object, static::class) === true) {
+            $this->data = array_merge($this->data, $object->data);
+
+        // add a user by id
+        } elseif(is_string($object) === true && $user = App::instance()->user($object)) {
+            $this->__set($user->id(), $user);
+
+        // add a user object
+        } elseif(is_a($object, User::class) === true) {
+            $this->__set($object->id(), $object);
+        }
+
+        return $this;
+    }
+
     public static function factory(array $users, array $inject = []): self
     {
         $collection = new static;

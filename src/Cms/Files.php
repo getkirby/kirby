@@ -19,6 +19,32 @@ class Files extends Collection
     public static $methods = [];
 
     /**
+     * Adds a single file or
+     * an entire second collection to the
+     * current collection
+     *
+     * @param mixed $item
+     * @return Files
+     */
+    public function add($object)
+    {
+        // add a page collection
+        if (is_a($object, static::class) === true) {
+            $this->data = array_merge($this->data, $object->data);
+
+        // add a file by id
+        } elseif(is_string($object) === true && $file = App::instance()->file($object)) {
+            $this->__set($file->id(), $file);
+
+        // add a file object
+        } elseif(is_a($object, File::class) === true) {
+            $this->__set($object->id(), $object);
+        }
+
+        return $this;
+    }
+
+    /**
      * Sort all given files by the
      * order in the array
      *

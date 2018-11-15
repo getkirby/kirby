@@ -43,6 +43,32 @@ class Pages extends Collection
     public static $methods = [];
 
     /**
+     * Adds a single page or
+     * an entire second collection to the
+     * current collection
+     *
+     * @param mixed $item
+     * @return Pages
+     */
+    public function add($object)
+    {
+        // add a page collection
+        if (is_a($object, static::class) === true) {
+            $this->data = array_merge($this->data, $object->data);
+
+        // add a page by id
+        } elseif(is_string($object) === true && $page = page($object)) {
+            $this->__set($page->id(), $page);
+
+        // add a page object
+        } elseif(is_a($object, Page::class) === true) {
+            $this->__set($object->id(), $object);
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns all audio files of all children
      *
      * @return Files

@@ -44,7 +44,7 @@ class ValidationsTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please confirm or denie
+     * @expectedExceptionMessage Please confirm or deny
      */
     public function testBooleanInvalid()
     {
@@ -139,7 +139,7 @@ class ValidationsTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a value bigger than 5
+     * @expectedExceptionMessage Please enter a value greater than 5
      */
     public function testMinInvalid()
     {

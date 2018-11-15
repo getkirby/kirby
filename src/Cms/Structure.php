@@ -21,6 +21,18 @@ class Structure extends Collection
 {
 
     /**
+     * Creates a new Collection with the given objects
+     *
+     * @param array $objects
+     * @param object $parent
+     */
+    public function __construct($objects = [], $parent = null)
+    {
+        $this->parent = $parent;
+        $this->set($objects);
+    }
+
+    /**
      * The internal setter for collection items.
      * This makes sure that nothing unexpected ends
      * up in the collection. You can pass arrays or
