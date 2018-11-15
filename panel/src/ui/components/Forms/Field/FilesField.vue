@@ -26,7 +26,12 @@
           :image="file.thumb ? { url: file.thumb, back: 'pattern' } : null"
           :icon="{ type: 'file', back: 'pattern' }"
         >
-          <k-button slot="options" icon="remove" @click="remove(index)" />
+          <k-button
+            slot="options"
+            :tooltip="$t('remove')"
+            icon="remove"
+            @click="remove(index)"
+          />
         </component>
       </k-draggable>
     </template>

@@ -30,6 +30,7 @@
       <slot name="options">
         <k-button
           v-if="options"
+          :tooltip="$t('options')"
           icon="dots"
           class="k-card-options-button"
           @click.stop="$refs.dropdown.toggle()"

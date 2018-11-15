@@ -30,6 +30,7 @@
         />
         <k-button
           v-if="options"
+          :tooltip="$t('options')"
           icon="dots"
           alt="Options"
           class="k-list-item-toggle"

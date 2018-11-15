@@ -2,7 +2,13 @@
   <div class="k-file-preview">
     <k-view class="k-file-preview-layout">
       <div class="k-file-preview-image">
-        <a :href="file.url" target="_blank">
+        <a
+          v-tab
+          :href="file.url"
+          :title="$t('open')"
+          class="k-file-preview-image-link"
+          target="_blank"
+        >
           <k-image
             v-if="preview.image"
             :src="preview.image"
@@ -29,7 +35,7 @@
           <li>
             <h3>{{ $t("url") }}</h3>
             <p>
-              <a :href="file.url" target="__blank">/{{ file.id }}</a>
+              <k-link tabindex="-1" :to="file.url" target="_blank">/{{ file.id }}</k-link>
             </p>
           </li>
           <li>
@@ -97,6 +103,7 @@ export default {
     width: 25%;
   }
 }
+
 .k-file-preview-image .k-image span {
   overflow: hidden;
   padding-bottom: 66.66%;
@@ -117,6 +124,16 @@ export default {
 .k-file-preview-image img {
   padding: 3rem;
 }
+
+.k-file-preview-image-link {
+  display: block;
+  outline: 0;
+}
+.k-file-preview-image-link[data-tabbed] {
+  outline: 2px solid $color-focus !important;
+  outline-offset: -2px;
+}
+
 .k-file-preview-icon {
   position: relative;
   display: block;

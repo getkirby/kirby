@@ -3,6 +3,7 @@
     <k-select-input
       ref="hour"
       :id="id"
+      :aria-label="$t('hour')"
       :autofocus="autofocus"
       :options="hours"
       :required="required"
@@ -16,6 +17,7 @@
     <span class="k-time-input-separator">:</span>
     <k-select-input
       ref="minute"
+      :aria-label="$t('minutes')"
       :options="minutes"
       :required="required"
       :disabled="disabled"
@@ -28,6 +30,7 @@
     <k-select-input
       v-if="notation === 12"
       ref="meridiem"
+      :aria-label="$t('meridiem')"
       :empty="false"
       :options="[
         { value: 'AM', text: 'AM' },

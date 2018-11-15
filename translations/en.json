@@ -10,6 +10,10 @@
   "copy": "Copy",
   "create": "Create",
 
+  "date": "Date",
+  "date.select": "Select a date",
+
+  "day": "Day",
   "days.fri": "Fri",
   "days.mon": "Mon",
   "days.sat": "Sat",
@@ -163,10 +167,12 @@
 
   "files.empty": "No files yet",
 
+  "hour": "Hour",
   "insert": "Insert",
-
   "install": "Install",
 
+  "installation": "Installation",
+  "installation.completed": "The panel has been installed",
   "installation.issues.accounts": "The <code>/site/accounts</code> folder does not exist or is not writable",
   "installation.issues.content": "The <code>/content</code> folder does not exist or is not writable",
   "installation.issues.curl": "The <code>CURL</code> extension is required",
@@ -209,8 +215,11 @@
   "logout": "Logout",
 
   "menu": "Menu",
+  "meridiem": "AM/PM",
   "mime": "Media Type",
+  "minutes": "Minutes",
 
+  "month": "Month",
   "months.april": "April",
   "months.august": "August",
   "months.december": "December",
@@ -226,7 +235,9 @@
 
   "more": "More",
   "name": "Name",
+  "next": "Next",
   "open": "Open",
+  "options": "Options",
 
   "orientation": "Orientation",
   "orientation.landscape": "Landscape",
@@ -243,6 +254,7 @@
   "page.delete.confirm.subpages": "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
   "page.delete.confirm.title": "Enter the page title to confirm",
   "page.draft.create": "Create draft",
+  "page.status": "Status",
   "page.status.draft": "Draft",
   "page.status.draft.description": "The page is in draft mode and only visible for logged in editors",
   "page.status.listed": "Public",
@@ -254,6 +266,7 @@
 
   "password": "Password",
   "pixel": "Pixel",
+  "prev": "Previous",
   "remove": "Remove",
   "rename": "Rename",
   "replace": "Replace",
@@ -321,5 +334,6 @@
   "view.site": "Site",
   "view.users": "Users",
 
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "year": "Year"
 }

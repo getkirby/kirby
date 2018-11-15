@@ -13,6 +13,7 @@
         <k-dropdown>
           <k-button
             :icon="icon"
+            :tooltip="$t('date.select')"
             class="k-input-icon-button"
             tabindex="-1"
             @click="$refs.dropdown.toggle()"

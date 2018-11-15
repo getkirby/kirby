@@ -1,6 +1,6 @@
 <template>
   <a
-    v-if="to"
+    v-if="to && !disabled"
     ref="link"
     :disabled="disabled"
     :href="href"
@@ -17,6 +17,7 @@
     v-else
     :title="title"
     class="k-link"
+    data-disabled
   >
     <slot />
   </span>

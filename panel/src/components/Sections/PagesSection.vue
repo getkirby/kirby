@@ -145,8 +145,8 @@ export default {
             page.sortable = page.permissions.sort && response.options.sortable;
 
             page.flag = {
-              tooltip: page.statusLabel,
               class: "k-status-flag k-status-flag-" + page.status,
+              tooltip: this.$t("page.status"),
               icon: page.permissions.changeStatus === false ? "protected" : "circle",
               disabled: page.permissions.changeStatus === false,
               click: () => {

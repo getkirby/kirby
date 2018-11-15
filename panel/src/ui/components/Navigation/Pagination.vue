@@ -2,7 +2,7 @@
   <k-button-group v-if="show" :data-align="align" class="k-pagination">
     <k-button
       :disabled="!hasPrev"
-      :alt="prevLabel"
+      :tooltip="prevLabel"
       icon="angle-left"
       @click="prev"
     />
@@ -35,7 +35,7 @@
 
     <k-button
       :disabled="!hasNext"
-      :alt="nextLabel"
+      :tooltip="nextLabel"
       icon="angle-right"
       @click="next"
     />
@@ -75,11 +75,15 @@ export default {
     },
     prevLabel: {
       type: String,
-      default: "Previous"
+      default() {
+        return this.$t("prev");
+      }
     },
     nextLabel: {
       type: String,
-      default: "Next"
+      default() {
+        return this.$t("next");
+      }
     }
   },
   data() {

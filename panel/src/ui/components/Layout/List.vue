@@ -1,5 +1,5 @@
 <template>
-  <div class="k-list">
+  <ul class="k-list">
     <slot>
       <k-list-item
         v-for="(item, index) in items"
@@ -8,7 +8,7 @@
         v-on="$listeners"
       />
     </slot>
-  </div>
+  </ul>
 </template>
 
 <script>

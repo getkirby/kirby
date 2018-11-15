@@ -1,12 +1,12 @@
 <template>
-  <div class="k-search" @click="close">
+  <div class="k-search" role="search" @click="close">
     <div class="k-search-box" @click.stop>
       <div class="k-search-input">
-
         <input
           ref="input"
           v-model="q"
           :placeholder="$t('search') + ' …'"
+          aria-label="$t('search')"
           type="text"
           @keydown.down.prevent="down"
           @keydown.up.prevent="up"

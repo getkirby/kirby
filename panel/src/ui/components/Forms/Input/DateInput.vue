@@ -2,6 +2,7 @@
   <div class="k-date-input">
     <k-select-input
       ref="years"
+      :aria-label="$t('year')"
       :options="years"
       :disabled="disabled"
       :required="required"
@@ -14,6 +15,7 @@
     <span class="k-date-input-separator">-</span>
     <k-select-input
       ref="months"
+      :aria-label="$t('month')"
       :options="months"
       :disabled="disabled"
       :required="required"
@@ -26,6 +28,7 @@
     <span class="k-date-input-separator">-</span>
     <k-select-input
       ref="days"
+      :aria-label="$t('day')"
       :autofocus="autofocus"
       :id="id"
       :options="days"

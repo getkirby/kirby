@@ -4,15 +4,16 @@
   </k-error-view>
   <k-view v-else-if="ready" align="center" class="k-login-view">
     <form :data-invalid="invalid" class="k-login-form" @submit.prevent="login">
+      <h1 class="k-offscreen">{{ $t('login') }}</h1>
       <k-fieldset :fields="fields" v-model="user" />
       <div class="k-login-buttons">
-        <label class="k-login-checkbox">
+        <span class="k-login-checkbox">
           <k-checkbox-input
             :value="user.remember"
             label="Keep me logged in"
             @input="user.remember = $event"
           />
-        </label>
+        </span>
         <k-button
           class="k-login-button"
           icon="check"

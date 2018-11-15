@@ -1,16 +1,14 @@
 <template>
-  <label :data-disabled="disabled" :data-empty="selected === ''" class="k-select-input">
+  <span :data-disabled="disabled" :data-empty="selected === ''" class="k-select-input">
     <select
       ref="input"
-      v-bind="{
-        autofocus,
-        disabled,
-        id,
-        name,
-        required
-      }"
-      v-model="selected"
+      :autofocus="autofocus"
+      :aria-label="ariaLabel"
       :disabled="disabled"
+      :id="id"
+      :name="name"
+      :required="required"
+      v-model="selected"
       class="k-select-input-native"
       v-on="listeners"
     >
@@ -25,7 +23,7 @@
       </option>
     </select>
     {{ label }}
-  </label>
+  </span>
 </template>
 
 <script>
@@ -35,6 +33,7 @@ export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
+    ariaLabel: String,
     disabled: Boolean,
     id: [Number, String],
     name: [Number, String],

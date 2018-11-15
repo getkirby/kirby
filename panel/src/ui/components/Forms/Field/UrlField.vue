@@ -12,6 +12,7 @@
         slot="icon"
         :icon="icon"
         :link="value"
+        :tooltip="$t('open')"
         class="k-input-icon-button"
         tabindex="-1"
         target="_blank"

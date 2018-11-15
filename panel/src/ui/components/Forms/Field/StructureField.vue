@@ -112,7 +112,7 @@
                   </template>
                 </td>
                 <td class="k-structure-table-option">
-                  <k-button icon="remove" @click="confirmRemove(index)" />
+                  <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
                 </td>
               </tr>
             </k-draggable>

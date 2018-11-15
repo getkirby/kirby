@@ -9,6 +9,7 @@
     :data-tabbed="tabbed"
     :data-theme="theme"
     :data-responsive="responsive"
+    :role="role"
     :tabindex="tabindex"
     :target="target"
     :title="tooltip"
@@ -44,6 +45,7 @@ export default {
     image: [String, Object],
     link: String,
     responsive: Boolean,
+    role: String,
     target: String,
     tabindex: String,
     theme: String,
@@ -101,7 +103,8 @@ button::-moz-focus-inner {
   padding: 0;
   border: 0;
 }
-.k-button[disabled] {
+.k-button[disabled],
+.k-button[data-disabled] {
   pointer-events: none;
   opacity: 0.5;
 }

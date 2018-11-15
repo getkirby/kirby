@@ -4,6 +4,7 @@
       ref="input"
       :accept="options.accept"
       :multiple="options.multiple"
+      aria-hidden="true"
       type="file"
       tabindex="-1"
       @change="select"

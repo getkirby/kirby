@@ -1,12 +1,13 @@
 <template>
   <k-view v-if="system" align="center" class="k-installation-view">
     <form v-if="system.isOk && !system.isInstalled" @submit.prevent="install">
+      <h1 class="k-offscreen">{{ $t("installation") }}</h1>
       <k-fieldset :fields="fields" v-model="user" />
       <k-button type="submit" icon="check">{{ $t("install") }}</k-button>
     </form>
     <k-text v-else-if="system.isOk && system.isInstalled">
-      <k-headline>The panel is already installed</k-headline>
-      <k-link to="/login">Login now</k-link>
+      <k-headline>{{ $t("installation.completed") }}</k-headline>
+      <k-link to="/login">{{ $t("login") }}</k-link>
     </k-text>
     <div v-else>
       <k-headline v-if="!system.isInstalled">{{ $t("installation.issues.headline") }}</k-headline>

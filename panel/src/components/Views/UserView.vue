@@ -8,7 +8,7 @@
       <k-view>
         <template v-if="avatar">
           <k-dropdown>
-            <k-button class="k-user-view-image" @click="$refs.picture.toggle()">
+            <k-button :tooltip="$t('avatar')" class="k-user-view-image" @click="$refs.picture.toggle()">
               <k-image
                 v-if="avatar"
                 :cover="true"
@@ -27,7 +27,7 @@
           </k-dropdown>
         </template>
         <template v-else>
-          <k-button class="k-user-view-image" @click="$refs.upload.open()">
+          <k-button :tooltip="$t('avatar')" class="k-user-view-image" @click="$refs.upload.open()">
             <k-icon type="user" />
           </k-button>
         </template>
