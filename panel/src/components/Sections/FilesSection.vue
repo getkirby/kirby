@@ -4,18 +4,18 @@
 
     <header class="k-section-header">
       <k-headline>
-        {{ headline }} <abbr v-if="min" title="This section is required">*</abbr>
+        {{ headline }} <abbr v-if="options.min" title="This section is required">*</abbr>
       </k-headline>
       <k-button-group v-if="add">
         <k-button icon="upload" @click="upload">{{ $t("add") }}</k-button>
       </k-button-group>
     </header>
 
-    <template v-if="issue">
+    <template v-if="error">
       <k-box theme="negative">
         <k-text size="small">
           <strong>{{ $t("error.section.notLoaded", {name: name}) }}:</strong>
-          {{ issue }}
+          {{ error }}
         </k-text>
       </k-box>
     </template>
@@ -24,11 +24,11 @@
       <k-dropzone :disabled="add === false" @drop="drop">
         <k-collection
           v-if="data.length"
-          :layout="layout"
           :items="data"
+          :layout="options.layout"
           :pagination="pagination"
-          :sortable="sortable"
-          :size="size"
+          :sortable="options.sortable"
+          :size="options.size"
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -40,7 +40,8 @@
 
       <k-file-rename-dialog ref="rename" @success="update" />
       <k-file-remove-dialog ref="remove" @success="update" />
-      <k-upload ref="upload" @success="uploaded" @error="fetch" />
+      <k-upload ref="upload" @success="uploaded" @error="reload" />
+
     </template>
 
   </section>
@@ -48,121 +49,27 @@
 
 <script>
 import config from "@/config/config.js";
-import Section from "@/mixins/section.js";
+import CollectionSectionMixin from "@/mixins/section/collection.js";
 
 export default {
-  mixins: [Section],
-  data() {
-    return {
-      add: false,
-      data: [],
-      error: false,
-      headline: null,
-      isLoading: true,
-      min: null,
-      issue: false,
-      layout: "list",
-      page: null,
-      size: "auto",
-      pagination: {},
-    };
-  },
+  mixins: [CollectionSectionMixin],
   computed: {
-    language() {
-      return this.$store.state.languages.current;
-    },
-    paginationId() {
-      return "kirby$pagination$" + this.parent + "/" + this.name;
-    },
-    uploadParams() {
-
-      if (this.add === false) {
+    add() {
+      if (this.$permissions.files.create && this.options.upload !== false) {
+        return this.options.upload;
+      } else {
         return false;
       }
-
-      return {
-        ...this.add,
-        url: config.api + "/" + this.add.api
-      };
-
-    }
-  },
-  watch: {
-    language() {
-      this.fetch();
     }
   },
   created() {
-    this.fetch();
-    this.$events.$on("model.update", this.fetch);
+    this.load();
+    this.$events.$on("model.update", this.reload);
   },
   destroyed() {
-    this.$events.$off("model.update", this.fetch);
+    this.$events.$off("model.update", this.reload);
   },
   methods: {
-    fetch() {
-      if (this.page === null) {
-        this.page = localStorage.getItem(this.paginationId) || 1
-      }
-
-      this.$api
-        .get(this.parent + "/sections/" + this.name, { page: this.page })
-        .then(response => {
-
-          this.headline   = response.options.headline || " ";
-          this.min        = response.options.min;
-          this.pagination = response.pagination;
-          this.sortable   = response.options.sortable === true && response.data.length > 1;
-          this.layout     = response.options.layout || "list";
-          this.size       = response.options.size;
-          this.isLoading  = false;
-
-          if (this.$permissions.files.create && response.options.upload !== false) {
-            this.add = response.options.upload;
-          } else {
-            this.add = false;
-          }
-
-          this.data = response.data.map(file => {
-            file.options = ready => {
-              this.$api.files
-                .options(file.parent, file.filename, "list")
-                .then(options => ready(options))
-                .catch(error => {
-                  this.$store.dispatch("notification/error", error);
-                });
-            };
-
-            file.sortable = this.sortable;
-
-            return file;
-          });
-
-        })
-        .catch(error => {
-          this.isLoading = false;
-          this.issue = error.message;
-        });
-    },
-    sort(items) {
-      if (this.sortable === false) {
-        return false;
-      }
-
-      items = items.map(item => {
-        return item.id;
-      });
-
-      this.$api
-        .patch(this.parent + "/files/sort", { files: items })
-        .then(() => {
-          this.$store.dispatch("notification/success", ":)");
-        })
-        .catch(response => {
-          this.fetch();
-          this.$store.dispatch("notification/error", response.message);
-        });
-    },
     action(file, action) {
       switch (action) {
         case "edit":
@@ -183,10 +90,35 @@ export default {
       }
     },
     drop(files) {
-      this.$refs.upload.drop(files, this.uploadParams);
+
+      if (this.add === false) {
+        return false;
+      }
+
+      this.$refs.upload.drop(files, {
+        ...this.add,
+        url: config.api + "/" + this.add.api
+      });
+
     },
-    upload() {
-      this.$refs.upload.open(this.uploadParams);
+    items(data) {
+
+      return data.map(file => {
+        file.options = ready => {
+          this.$api.files
+            .options(file.parent, file.filename, "list")
+            .then(options => ready(options))
+            .catch(error => {
+              this.$store.dispatch("notification/error", error);
+            });
+        };
+
+        file.sortable = this.options.sortable;
+
+        return file;
+
+      });
+
     },
     replace(file) {
       this.$refs.upload.open({
@@ -195,19 +127,46 @@ export default {
         multiple: false
       });
     },
+    sort(items) {
+
+      if (this.options.sortable === false) {
+        return false;
+      }
+
+      items = items.map(item => {
+        return item.id;
+      });
+
+      this.$api
+        .patch(this.parent + "/files/sort", { files: items })
+        .then(() => {
+          this.$store.dispatch("notification/success", ":)");
+        })
+        .catch(response => {
+          this.reload();
+          this.$store.dispatch("notification/error", response.message);
+        });
+    },
     update() {
       this.$events.$emit("model.update");
+    },
+    upload() {
+
+      if (this.add === false) {
+        return false;
+      }
+
+      this.$refs.upload.open({
+        ...this.add,
+        url: config.api + "/" + this.add.api
+      });
+
     },
     uploaded() {
       this.$events.$emit("file.create");
       this.$events.$emit("model.update");
       this.$store.dispatch("notification/success", ":)");
     },
-    paginate(pagination) {
-      localStorage.setItem(this.paginationId, pagination.page);
-      this.page = pagination.page;
-      this.fetch();
-    }
   }
 };
 </script>
