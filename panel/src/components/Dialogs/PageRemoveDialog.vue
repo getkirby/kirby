@@ -4,7 +4,7 @@
     :button="$t('delete')"
     theme="negative"
     icon="trash"
-    size="medium"
+    :size="hasSubpages ? 'medium' : 'small'"
     @submit="submit"
   >
     <template v-if="page.hasChildren || page.hasDrafts">
