@@ -183,7 +183,7 @@ export default {
   display: inline-block;
 }
 .k-card-info {
-  color: $color-light-grey;
+  color: $color-dark-grey;
   display: block;
   font-size: $font-size-small;
   text-overflow: ellipsis;

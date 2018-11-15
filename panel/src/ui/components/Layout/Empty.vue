@@ -33,6 +33,6 @@ export default {
 }
 .k-empty p {
   font-size: $font-size-small;
-  color: $color-light-grey;
+  color: $color-dark-grey;
 }
 </style>
