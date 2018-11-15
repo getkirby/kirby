@@ -1,8 +1,7 @@
 {
   "add": "Hinzuf\u00fcgen",
-
   "avatar": "Profilbild",
-
+  "back": "Zurück",
   "cancel": "Abbrechen",
   "change": "\u00c4ndern",
   "close": "Schlie\u00dfen",
@@ -10,6 +9,10 @@
   "copy": "Kopieren",
   "create": "Erstellen",
 
+  "date": "Datum",
+  "date.select": "Datum auswählen",
+
+  "day": "Tag",
   "days.fri": "Fr",
   "days.mon": "Mo",
   "days.sat": "Sa",
@@ -32,7 +35,7 @@
   "error.avatar.create.fail": "Das Profilbild konnte nicht hochgeladen werden",
   "error.avatar.delete.fail": "Das Profilbild konnte nicht gel\u00f6scht werden",
   "error.avatar.dimensions.invalid": "Bitte lade ein Profilbild hoch, das nicht größer als 3000 Pixel in der Breite und Höhe ist.",
-  "error.avatar.mime.forbidden": "Verbotener MIME-Typ",
+  "error.avatar.mime.forbidden": "Verbotener Medientyp",
 
   "error.blueprint.notFound": "Das Blueprint \"{name}\" konnte nicht geladen werden.",
 
@@ -40,13 +43,13 @@
 
   "error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
 
-  "error.file.changeName.permission": "Du kannst den Dateinamen von \"{filename}\" nicht ändern.",
+  "error.file.changeName.permission": "Du kannst den Dateinamen von \"{filename}\" nicht ändern",
   "error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
   "error.file.extension.forbidden": "Verbotene Dateiendung \"{extension}\"",
   "error.file.extension.missing": "Du kannst keine Dateien ohne Dateiendung hochladen",
-  "error.file.mime.differs": "Die Datei muss den MIME-Type \"{mime}\" haben.",
-  "error.file.mime.forbidden": "Der Medien Typ \"{mime}\"  ist nicht erlaubt",
-  "error.file.mime.missing": "Der Medien Typ für \"{filename}\" konnte nicht erkannt werden",
+  "error.file.mime.differs": "Die Datei muss den Medientyp \"{mime}\" haben.",
+  "error.file.mime.forbidden": "Der Medientyp \"{mime}\"  ist nicht erlaubt",
+  "error.file.mime.missing": "Der Medientyp für \"{filename}\" konnte nicht erkannt werden",
   "error.file.name.missing": "Bitte gib einen Dateinamen an",
   "error.file.notFound": "Die Datei \"{filename}\" konnte nicht gefunden werden",
   "error.file.type.forbidden": "Du kannst keinen {type}-Dateien hochladen",
@@ -163,12 +166,14 @@
 
   "files.empty": "Keine Dateien",
 
+  "hour": "Stunde",
   "insert": "Einf\u00fcgen",
-
   "install": "Installieren",
 
+  "installation": "Installation",
+  "installation.completed": "Das Panel wurde installiert",
   "installation.issues.accounts": "<code>/site/accounts</code> ist nicht beschreibbar",
-  "installation.issues.content": "<code>/content</code> und alle Inhalte müssen beschreibbar sein.",
+  "installation.issues.content": "<code>/content</code> und alle Inhalte müssen beschreibbar sein",
   "installation.issues.curl": "Die <code>CURL</code> Erweiterung wird benötigt",
   "installation.issues.headline": "Das Panel kann nicht installiert werden",
   "installation.issues.mbstring": "Die <code>MB String</code> Erweiterung wird benötigt",
@@ -209,8 +214,11 @@
   "logout": "Abmelden",
 
   "menu": "Menü",
-  "mime": "Medien Typ",
+  "meridiem": "AM/PM",
+  "mime": "Medientyp",
+  "minutes": "Minuten",
 
+  "month": "Monat",
   "months.april": "April",
   "months.august": "August",
   "months.december": "Dezember",
@@ -226,11 +234,13 @@
 
   "more": "Mehr",
   "name": "Name",
+  "next": "Nächster Eintrag",
   "open": "Öffnen",
+  "options": "Optionen",
 
   "orientation": "Ausrichtung",
-  "orientation.landscape": "Horizontal",
-  "orientation.portrait": "Vertikal",
+  "orientation.landscape": "Querformat",
+  "orientation.portrait": "Hochformat",
   "orientation.square": "Quadratisch",
 
   "page.changeSlug": "URL \u00e4ndern",
@@ -239,10 +249,11 @@
   "page.changeStatus.position": "Bitte wähle eine Position aus",
   "page.changeStatus.select": "Wähle einen neuen Status aus",
   "page.changeTemplate": "Vorlage ändern",
-  "page.delete.confirm": "Willst du diese Seite wirklich l\u00f6schen?",
-  "page.delete.confirm.subpages": "<strong>Diese Seite hat Unterseiten. <br>Alle Unterseiten werden ebenfalls gelöscht.",
+  "page.delete.confirm": "Willst du die Seite <strong>{title}</strong> wirklich löschen?",
+  "page.delete.confirm.subpages": "<strong>Diese Seite hat Unterseiten</strong>. <br>Alle Unterseiten werden ebenfalls gelöscht.",
   "page.delete.confirm.title": "Gib zur Bestätigung den Seitentitel ein",
   "page.draft.create": "Entwurf anlegen",
+  "page.status": "Status",
   "page.status.draft": "Entwurf",
   "page.status.draft.description": "Die Seite ist im Entwurfsmodus und ist nur für angemeldete Benutzer sichtbar",
   "page.status.listed": "Öffentlich",
@@ -254,6 +265,7 @@
 
   "password": "Passwort",
   "pixel": "Pixel",
+  "prev": "Vorheriger Eintrag",
   "remove": "Entfernen",
   "rename": "Umbenennen",
   "replace": "Ersetzen",
@@ -321,5 +333,6 @@
   "view.site": "Seite",
   "view.users": "Benutzer",
 
-  "welcome": "Willkommen"
+  "welcome": "Willkommen",
+  "year": "Jahr"
 }

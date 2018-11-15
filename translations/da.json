@@ -1,8 +1,7 @@
 {
   "add": "Ny",
-
   "avatar": "Profilbillede",
-
+  "back": "Tilbage",
   "cancel": "Annuller",
   "change": "\u00c6ndre",
   "close": "Luk",
@@ -10,6 +9,10 @@
   "copy": "Kopier",
   "create": "Opret",
 
+  "date": "Dato",
+  "date.select": "Select a date",
+
+  "day": "Day",
   "days.fri": "Fre",
   "days.mon": "Man",
   "days.sat": "L\u00f8r",
@@ -31,7 +34,7 @@
 
   "error.avatar.create.fail": "Profilbilledet kunne blev ikke uploadet ",
   "error.avatar.delete.fail": "Profilbilledet kunne ikke slettes",
-  "error.avatar.dimensions.invalid": "Hold venligst højden og bredden af profilbilledet under 3000 pixels",
+  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture under 3000 pixels",
   "error.avatar.mime.forbidden": "Uacceptabel fil-type",
 
   "error.blueprint.notFound": "Blueprint \"{name}\" kunne ikke indlæses",
@@ -41,18 +44,18 @@
   "error.field.converter.invalid": "Ugyldig converter \"{converter}\"",
 
   "error.file.changeName.permission": "Du har ikke tilladelse til at ændre navnet på filen \"{filename}\"",
-  "error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
+  "error.file.duplicate": "A file with the name \"{filename}\" already exists",
   "error.file.extension.forbidden": "Uacceptabel fil-endelse",
   "error.file.extension.missing": "Du kan ikke uploade filer uden fil-endelse",
   "error.file.mime.differs": "Den uploadede fil skal være af samme mime type \"{mime}\"",
-  "error.file.mime.forbidden": "Uacceptabel fil-type",
-  "error.file.mime.missing": "Mime type for \"{filename}\" kan ikke angives",
+  "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
+  "error.file.mime.missing": "The media type for \"{filename}\" cannot be detected",
   "error.file.name.missing": "Filnavn må ikke være tomt",
   "error.file.notFound": "Filen kunne ikke findes",
   "error.file.type.forbidden": "Du har ikke tilladelse til at uploade {type} filer",
   "error.file.undefined": "Filen kunne ikke findes",
 
-  "error.form.incomplete": "Fiks venligst alle fejl i formularen…",
+  "error.form.incomplete": "Please fix all form errors…",
   "error.form.notSaved": "Formularen kunne ikke gemmes",
 
   "error.page.changeSlug.permission": "Du kan ikke \u00e6ndre denne sides URL",
@@ -78,7 +81,7 @@
   "error.page.undefined": "Siden kunne ikke findes",
   "error.page.update.permission": "Du har ikke tilladelse til at opdatere \"{slug}\"",
 
-  "error.section.files.max.plural": "Du kan ikke tilføje mere end {max} filer til \"{section}\" sektionen",
+  "error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
   "error.section.files.max.singular": "Du kan ikke tilføje mere end en fil til \"{section}\" sektionen",
   "error.section.files.min.plural": "Tilføj mindst {min} filer til \"{section}\" sektionen",
   "error.section.files.min.singular": "Tilføj mindst en fil til \"{section}\" sektionen",
@@ -113,19 +116,19 @@
   "error.user.notFound": "Brugeren kunne ikke findes",
   "error.user.password.invalid": "Please enter a valid password. Passwords must be at least 8 characters long.",
   "error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
-  "error.user.password.undefined": "The user has no password",
+  "error.user.password.undefined": "The user does not have a password",
   "error.user.role.invalid": "Please enter a valid role",
   "error.user.undefined": "Brugeren kunne ikke findes",
   "error.user.update.permission": "You are not allowed to update the user \"{name}\"",
 
   "error.validation.accepted": "Please confirm",
   "error.validation.alpha": "Please only enter characters between a-z",
-  "error.validation.alphanum": "Please only enter characters between a-z or numbers",
+  "error.validation.alphanum": "Please only enter characters between a-z or numerals 0-9",
   "error.validation.between": "Please enter a value between \"{min}\" and \"{max}\"",
-  "error.validation.boolean": "Please confirm or denie",
+  "error.validation.boolean": "Please confirm or deny",
   "error.validation.contains": "Please enter a value that contains \"{needle}\"",
   "error.validation.date": "Please enter a valid date",
-  "error.validation.denied": "Please denie",
+  "error.validation.denied": "Please deny",
   "error.validation.different": "The value must not be \"{other}\"",
   "error.validation.email": "Please enter a valid email address",
   "error.validation.endswith": "The value must end with \"{end}\"",
@@ -138,10 +141,10 @@
   "error.validation.max": "Please enter a value lower than {max}",
   "error.validation.maxlength": "Please enter a shorter value. (max. {max} characters)",
   "error.validation.maxwords": "Please enter no more than {max} word(s)",
-  "error.validation.min": "Please enter a value bigger than {min}",
+  "error.validation.min": "Please enter a value greater than {min}",
   "error.validation.minlength": "Please enter a longer value. (min. {min} characters)",
   "error.validation.minwords": "Please enter at least {min} word(s)",
-  "error.validation.more": "Please enter a bigger value than {min}",
+  "error.validation.more": "Please enter a greater value than {min}",
   "error.validation.notcontains": "Please enter a value that does not contain \"{needle}\"",
   "error.validation.notin": "Please don't enter any of the following: ({notIn})",
   "error.validation.option": "Please select a valid option",
@@ -163,10 +166,12 @@
 
   "files.empty": "Ingen filer endnu",
 
+  "hour": "Hour",
   "insert": "Inds\u00e6t",
-
   "install": "Installer",
 
+  "installation": "Installation",
+  "installation.completed": "The panel has been installed",
   "installation.issues.accounts": "\/site\/accounts er ikke skrivbar",
   "installation.issues.content": "Content mappen samt alle underliggende filer og mapper skal v\u00e6re skrivbare.",
   "installation.issues.curl": "The <code>CURL</code> extension is required",
@@ -209,8 +214,11 @@
   "logout": "Log ud",
 
   "menu": "Menu",
-  "mime": "Mime-Type",
+  "meridiem": "AM/PM",
+  "mime": "Media Type",
+  "minutes": "Minutes",
 
+  "month": "Month",
   "months.april": "April",
   "months.august": "August",
   "months.december": "December",
@@ -226,7 +234,9 @@
 
   "more": "Mere",
   "name": "Navn",
+  "next": "Next",
   "open": "Åben",
+  "options": "Options",
 
   "orientation": "Orientering",
   "orientation.landscape": "Landskab",
@@ -243,8 +253,9 @@
   "page.delete.confirm.subpages": "<strong>Denne side har undersider</strong>. <br>Alle undersider vil også blive slettet.",
   "page.delete.confirm.title": "Indtast sidens titel for at bekræfte",
   "page.draft.create": "Opret kladde",
+  "page.status": "Status",
   "page.status.draft": "Kladde",
-  "page.status.draft.description": "Siden er en kladde og er kun synlig for redaktører der er logget ind",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors",
   "page.status.listed": "Offentlig",
   "page.status.listed.description": "Siden er offentlig for enhver",
   "page.status.unlisted": "Ulisted",
@@ -254,6 +265,7 @@
 
   "password": "Adgangskode",
   "pixel": "Pixel",
+  "prev": "Previous",
   "remove": "Fjern",
   "rename": "Omdøb",
   "replace": "Erstat",
@@ -263,7 +275,7 @@
   "role": "Rolle",
   "role.all": "All",
   "role.empty": "Der er ingen bruger med denne rolle",
-  "role.description.placeholder": "ingen beskrivelse",
+  "role.description.placeholder": "No description",
 
   "save": "Gem",
   "search": "Søg",
@@ -294,7 +306,7 @@
 
   "upload": "Upload",
   "upload.errors": "Fejl",
-  "upload.progress": "Uploader …",
+  "upload.progress": "Uploading…",
 
   "url": "Url",
   "url.placeholder": "https://example.com",
@@ -306,7 +318,7 @@
   "user.changeName": "Omdøb denne bruger",
   "user.changePassword": "Skift adgangskode",
   "user.changePassword.new": "Ny adgangskode",
-  "user.changePassword.new.confirm": "Bekræft den nye adgangskode",
+  "user.changePassword.new.confirm": "Confirm the new password…",
   "user.changeRole": "Skift rolle",
   "user.changeRole.select": "Vælg en ny rolle",
   "user.create": "Tilføj en ny bruger",
@@ -321,5 +333,6 @@
   "view.site": "Website",
   "view.users": "Brugere",
 
-  "welcome": "Velkommen"
+  "welcome": "Velkommen",
+  "year": "Year"
 }

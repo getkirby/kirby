@@ -1,8 +1,7 @@
 {
   "add": "Aggiungi",
-
   "avatar": "Immagine del profilo",
-
+  "back": "Indietro",
   "cancel": "Annulla",
   "change": "Cambia",
   "close": "Chiudi",
@@ -10,6 +9,10 @@
   "copy": "Copia",
   "create": "Crea",
 
+  "date": "Data",
+  "date.select": "Select a date",
+
+  "day": "Day",
   "days.fri": "Ve",
   "days.mon": "Lu",
   "days.sat": "Sa",
@@ -120,7 +123,7 @@
 
   "error.validation.accepted": "Per favore conferma",
   "error.validation.alpha": "Puoi inserire solo caratteri tra a-z",
-  "error.validation.alphanum": "Puoi inserire solo caratteri tra a-z o numeri",
+  "error.validation.alphanum": "Puoi inserire solo caratteri tra a-z e numeri 0-9",
   "error.validation.between": "Inserisci un valore tra \"{min}\" e \"{max}\"",
   "error.validation.boolean": "Per favore conferma o nega",
   "error.validation.contains": "Inserisci un valore che contiene \"{needle}\"",
@@ -163,10 +166,12 @@
 
   "files.empty": "Nessun file caricato",
 
+  "hour": "Hour",
   "insert": "Inserisci",
-
   "install": "Installa",
 
+  "installation": "Installazione",
+  "installation.completed": "The panel has been installed",
   "installation.issues.accounts": "\/site\/accounts non dispone dei permessi di scrittura",
   "installation.issues.content": "La cartella \/content e tutti i file e le cartelle in essa contenuti devono disporre dei permessi di scrittura.",
   "installation.issues.curl": "È necessaria l'estensione <code>CURL</code>",
@@ -209,8 +214,11 @@
   "logout": "Esci",
 
   "menu": "Menu",
+  "meridiem": "AM/PM",
   "mime": "MIME Type",
+  "minutes": "Minutes",
 
+  "month": "Month",
   "months.april": "Aprile",
   "months.august": "Agosto",
   "months.december": "Dicembre",
@@ -226,7 +234,9 @@
 
   "more": "Di più",
   "name": "Nome",
+  "next": "Next",
   "open": "Apri",
+  "options": "Options",
 
   "orientation": "Orientamento",
   "orientation.landscape": "Panorama",
@@ -243,6 +253,7 @@
   "page.delete.confirm.subpages": "<strong>Questa pagina ha sottopagine</strong>. <br>Anche tutte le sottopagine verranno eliminate.",
   "page.delete.confirm.title": "Inserisci il titolo della pagina per confermare",
   "page.draft.create": "Crea bozza",
+  "page.status": "Status",
   "page.status.draft": "Bozza",
   "page.status.draft.description": "La pagina è in modalità bozza ed è visibile solo per editori registrati",
   "page.status.listed": "Pubblico",
@@ -254,6 +265,7 @@
 
   "password": "Password",
   "pixel": "Pixel",
+  "prev": "Previous",
   "remove": "Rimuovi",
   "rename": "Rinomina",
   "replace": "Sostituisci",
@@ -263,7 +275,7 @@
   "role": "Ruolo",
   "role.all": "Tutti",
   "role.empty": "Non ci sono utenti con questo ruolo",
-  "role.description.placeholder": "nessuna descrizione",
+  "role.description.placeholder": "Nessuna descrizione",
 
   "save": "Salva",
   "search": "Cerca",
@@ -321,5 +333,6 @@
   "view.site": "Sito",
   "view.users": "Utenti",
 
-  "welcome": "Benvenuto"
+  "welcome": "Benvenuto",
+  "year": "Year"
 }

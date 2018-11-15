@@ -1,8 +1,7 @@
 {
   "add": "Legg til",
-
   "avatar": "Profil bilde",
-
+  "back": "Tilbake",
   "cancel": "Avbryt",
   "change": "Endre",
   "close": "Lukk",
@@ -10,6 +9,10 @@
   "copy": "Copy",
   "create": "Create",
 
+  "date": "Dato",
+  "date.select": "Select a date",
+
+  "day": "Day",
   "days.fri": "Fre",
   "days.mon": "Man",
   "days.sat": "L\u00f8r",
@@ -31,7 +34,7 @@
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
   "error.avatar.delete.fail": "Profil bildet kunne ikke bli slette",
-  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture below 3000 pixel",
+  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture under 3000 pixels",
   "error.avatar.mime.forbidden": "Ugyldig MIME-type",
 
   "error.blueprint.notFound": "The blueprint \"{name}\" could not be loaded",
@@ -41,18 +44,18 @@
   "error.field.converter.invalid": "Invalid converter \"{converter}\"",
 
   "error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
-  "error.file.duplicate": "A file with the filename \"{filename}\" already exists",
+  "error.file.duplicate": "A file with the name \"{filename}\" already exists",
   "error.file.extension.forbidden": "Ugyldig filtype",
   "error.file.extension.missing": "Du kan ikke laste opp filer uten filtype",
   "error.file.mime.differs": "The uploaded file must be of the same mime type \"{mime}\"",
-  "error.file.mime.forbidden": "Ugyldig MIME-type",
-  "error.file.mime.missing": "The mime type for \"{filename}\" cannot be detected",
+  "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
+  "error.file.mime.missing": "The media type for \"{filename}\" cannot be detected",
   "error.file.name.missing": "The filename must not be empty",
   "error.file.notFound": "Filen kunne ikke bli funnet",
   "error.file.type.forbidden": "You are not allowed to upload {type} files",
   "error.file.undefined": "Filen kunne ikke bli funnet",
 
-  "error.form.incomplete": "Please fix all form errors …",
+  "error.form.incomplete": "Please fix all form errors…",
   "error.form.notSaved": "The form could not be saved",
 
   "error.page.changeSlug.permission": "Du kan ikke endre URLen for denne siden",
@@ -78,7 +81,7 @@
   "error.page.undefined": "Siden kunne ikke bli funnet",
   "error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
-  "error.section.files.max.plural": "You must not add more than {max} file to the \"{section}\" section",
+  "error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
   "error.section.files.max.singular": "You must not add more than one file to the \"{section}\" section",
   "error.section.files.min.plural": "Add at least {min} files to the \"{section}\" section",
   "error.section.files.min.singular": "Add at least one file to the \"{section}\" section",
@@ -113,19 +116,19 @@
   "error.user.notFound": "Brukeren kunne ikke bli funnet",
   "error.user.password.invalid": "Please enter a valid password. Passwords must be at least 8 characters long.",
   "error.user.password.notSame": "Vennligst bekreft passordet",
-  "error.user.password.undefined": "The user has no password",
+  "error.user.password.undefined": "The user does not have a password",
   "error.user.role.invalid": "Please enter a valid role",
   "error.user.undefined": "Brukeren kunne ikke bli funnet",
   "error.user.update.permission": "You are not allowed to update the user \"{name}\"",
 
   "error.validation.accepted": "Please confirm",
   "error.validation.alpha": "Please only enter characters between a-z",
-  "error.validation.alphanum": "Please only enter characters between a-z or numbers",
+  "error.validation.alphanum": "Please only enter characters between a-z or numerals 0-9",
   "error.validation.between": "Please enter a value between \"{min}\" and \"{max}\"",
-  "error.validation.boolean": "Please confirm or denie",
+  "error.validation.boolean": "Please confirm or deny",
   "error.validation.contains": "Please enter a value that contains \"{needle}\"",
   "error.validation.date": "Please enter a valid date",
-  "error.validation.denied": "Please denie",
+  "error.validation.denied": "Please deny",
   "error.validation.different": "The value must not be \"{other}\"",
   "error.validation.email": "Please enter a valid email address",
   "error.validation.endswith": "The value must end with \"{end}\"",
@@ -138,10 +141,10 @@
   "error.validation.max": "Please enter a value lower than {max}",
   "error.validation.maxlength": "Please enter a shorter value. (max. {max} characters)",
   "error.validation.maxwords": "Please enter no more than {max} word(s)",
-  "error.validation.min": "Please enter a value bigger than {min}",
+  "error.validation.min": "Please enter a value greater than {min}",
   "error.validation.minlength": "Please enter a longer value. (min. {min} characters)",
   "error.validation.minwords": "Please enter at least {min} word(s)",
-  "error.validation.more": "Please enter a bigger value than {min}",
+  "error.validation.more": "Please enter a greater value than {min}",
   "error.validation.notcontains": "Please enter a value that does not contain \"{needle}\"",
   "error.validation.notin": "Please don't enter any of the following: ({notIn})",
   "error.validation.option": "Please select a valid option",
@@ -163,10 +166,12 @@
 
   "files.empty": "No files yet",
 
+  "hour": "Hour",
   "insert": "Sett Inn",
-
   "install": "Install",
 
+  "installation": "Installasjon",
+  "installation.completed": "The panel has been installed",
   "installation.issues.accounts": "\/site\/accounts er ikke skrivbar",
   "installation.issues.content": "Mappen content og alt av innhold m\u00e5 v\u00e6re skrivbar.",
   "installation.issues.curl": "The <code>CURL</code> extension is required",
@@ -209,8 +214,11 @@
   "logout": "Logg ut",
 
   "menu": "Menu",
-  "mime": "Mime-Type",
+  "meridiem": "AM/PM",
+  "mime": "Media Type",
+  "minutes": "Minutes",
 
+  "month": "Month",
   "months.april": "April",
   "months.august": "August",
   "months.december": "Desember",
@@ -226,7 +234,9 @@
 
   "more": "More",
   "name": "Name",
+  "next": "Next",
   "open": "Open",
+  "options": "Options",
 
   "orientation": "Orientation",
   "orientation.landscape": "Landscape",
@@ -243,8 +253,9 @@
   "page.delete.confirm.subpages": "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
   "page.delete.confirm.title": "Enter the page title to confirm",
   "page.draft.create": "Create draft",
+  "page.status": "Status",
   "page.status.draft": "Draft",
-  "page.status.draft.description": "The page is in draft-mode and only visible for logged in editors",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors",
   "page.status.listed": "Public",
   "page.status.listed.description": "The page is public for anyone",
   "page.status.unlisted": "Unlisted",
@@ -254,6 +265,7 @@
 
   "password": "Passord",
   "pixel": "Pixel",
+  "prev": "Previous",
   "remove": "Remove",
   "rename": "Rename",
   "replace": "Erstatt",
@@ -263,7 +275,7 @@
   "role": "Rolle",
   "role.all": "All",
   "role.empty": "There are no users with this role",
-  "role.description.placeholder": "no description",
+  "role.description.placeholder": "No description",
 
   "save": "Lagre",
   "search": "Search",
@@ -294,7 +306,7 @@
 
   "upload": "Upload",
   "upload.errors": "Feil",
-  "upload.progress": "Uploading …",
+  "upload.progress": "Uploading…",
 
   "url": "Url",
   "url.placeholder": "https://example.com",
@@ -306,7 +318,7 @@
   "user.changeName": "Rename this user",
   "user.changePassword": "Change password",
   "user.changePassword.new": "Nytt passord",
-  "user.changePassword.new.confirm": "Confirm the new password …",
+  "user.changePassword.new.confirm": "Confirm the new password…",
   "user.changeRole": "Change role",
   "user.changeRole.select": "Select a new role",
   "user.create": "Legg til en ny bruker",
@@ -321,5 +333,6 @@
   "view.site": "Site",
   "view.users": "Brukere",
 
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "year": "Year"
 }
