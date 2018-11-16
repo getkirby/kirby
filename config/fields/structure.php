@@ -126,9 +126,7 @@ return [
         $data = [];
 
         foreach ($this->value() as $row) {
-
             $data[] = $this->form($row)->data();
-
         }
 
         return $data;

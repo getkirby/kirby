@@ -254,7 +254,7 @@ export default {
   watch: {
     value(value) {
       if (value != this.items) {
-        this.items = this.makeItems(value);
+        // this.items = this.makeItems(value);
       }
     }
   },
@@ -460,6 +460,8 @@ export default {
       if (this.paginatedItems.length === 0 && this.page > 1) {
         this.page--;
       }
+
+      this.items = this.sort(this.items);
 
     },
     toggle(index) {
