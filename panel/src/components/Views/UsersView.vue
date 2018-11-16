@@ -71,7 +71,8 @@ export default {
     pagination() {
       return {
         page: this.page,
-        limit: this.limit
+        limit: this.limit,
+        total: this.total
       };
     },
     role() {
@@ -123,7 +124,6 @@ export default {
       this.$api.users
         .list(query)
         .then(response => {
-          this.total = response.pagination.total;
           this.users = response.data.map(user => {
             let item = {
               id: user.id,
@@ -162,6 +162,10 @@ export default {
           } else {
             this.$store.dispatch("breadcrumb", []);
           }
+
+          // keep the pagination updated
+          this.total = response.pagination.total;
+
         })
         .catch(error => {
           this.issue = error;
@@ -170,6 +174,7 @@ export default {
     paginate(pagination) {
       this.page = pagination.page;
       this.limit = pagination.limit;
+      this.fetch();
     },
     action(user, action) {
       switch (action) {

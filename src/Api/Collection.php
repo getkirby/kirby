@@ -85,10 +85,12 @@ class Collection
             $this->data = $this->data->query($query);
         }
 
-        $this->data = $this->data->paginate([
-            'page'  => $this->api->requestQuery('page', 1),
-            'limit' => $this->api->requestQuery('limit', 100)
-        ]);
+        if (!$this->data->pagination()) {
+            $this->data = $this->data->paginate([
+                'page'  => $this->api->requestQuery('page', 1),
+                'limit' => $this->api->requestQuery('limit', 100)
+            ]);
+        }
 
         $pagination = $this->data->pagination();
 
