@@ -2,7 +2,7 @@
   <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
     <template slot="options">
       <k-button
-        v-if="more"
+        v-if="more && currentIndex === null"
         ref="add"
         :id="_uid"
         icon="add"
@@ -19,28 +19,33 @@
 
       <template v-else>
 
-        <template v-if="active !== null">
+        <template v-if="currentIndex !== null">
           <div class="k-structure-backdrop" @click="escape" />
           <section class="k-structure-form">
-            <header class="k-structure-form-header">
-              <k-button icon="check" @click="close">{{ $t('confirm') }}</k-button>
+            <form @submit.prevent="submit">
+              <k-fieldset
+                ref="form"
+                :fields="fields"
+                :novalidate="true"
+                v-model="currentModel"
+                class="k-structure-form-fields"
+                @input="onInput"
+                @submit="submit"
+              />
+            </form>
+            <footer class="k-structure-form-buttons">
+              <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">{{ $t('cancel') }}</k-button>
               <k-pagination
+                v-if="currentIndex !== 'new'"
+                :dropdown="false"
                 :total="items.length"
                 :limit="1"
-                :page="active + 1"
+                :page="currentIndex + 1"
                 :details="true"
                 @paginate="paginate"
               />
-            </header>
-            <k-fieldset
-              ref="form"
-              :fields="fields"
-              :validate="true"
-              v-model="items[active]"
-              class="k-structure-form-fields"
-              @input="onInput"
-              @submit="close(active)"
-            />
+              <k-button class="k-structure-form-submit-button" icon="check" @click="submit">{{ $t(currentIndex !== 'new' ? 'save' : 'add') }}</k-button>
+            </footer>
           </section>
         </template>
         <template v-else>
@@ -141,6 +146,7 @@ import Vue from "vue";
 import Field from "../Field.vue";
 import dayjs from "dayjs";
 import sorter from "@/ui/helpers/sort.js";
+import clone from "@/ui/helpers/clone.js";
 
 Array.prototype.sortBy = function(sortBy) {
 
@@ -188,7 +194,8 @@ export default {
   data() {
     return {
       items: this.makeItems(this.value),
-      active: null,
+      currentIndex: null,
+      currentModel: null,
       trash: null,
       page: 1
     };
@@ -254,7 +261,7 @@ export default {
   watch: {
     value(value) {
       if (value != this.items) {
-        // this.items = this.makeItems(value);
+        this.items = this.makeItems(value);
       }
     }
   },
@@ -305,7 +312,7 @@ export default {
         return false;
       }
 
-      if (this.active !== null) {
+      if (this.currentIndex !== null) {
         this.escape();
         return false;
       }
@@ -320,17 +327,19 @@ export default {
         }
       });
 
-      this.items.push(data);
-
-      this.onInput();
+      this.currentIndex = "new";
+      this.currentModel = data;
 
       this.$nextTick(() => {
-        this.open(this.items.length - 1);
+        if (this.$refs.form) {
+          this.$refs.form.focus();
+        }
       });
+
     },
     close() {
-      this.active = null;
-      this.items = this.sort(this.items);
+      this.currentIndex = null;
+      this.currentModel = null;
     },
     confirmRemove(index) {
       this.close();
@@ -355,9 +364,9 @@ export default {
 
     },
     escape() {
-      if (this.active !== null && this.items[this.active]) {
+      if (this.currentIndex === "new") {
 
-        let row     = Object.values(this.items[this.active]);
+        let row     = Object.values(this.currentModel);
         let isEmpty = true;
 
         row.forEach(value => {
@@ -367,24 +376,25 @@ export default {
         });
 
         if (isEmpty === true) {
-          this.discard();
+          this.close();
           return;
         }
 
       }
 
-      this.close();
+      this.submit();
     },
     discard() {
-      this.trash  = this.active;
-      this.active = null;
+      this.trash        = this.currentIndex;
+      this.currentIndex = null;
+      this.currentModel = null;
       this.remove();
     },
     focus() {
       this.$refs.add.focus();
     },
     isActive(index) {
-      return this.active === index;
+      return this.currentIndex === index;
     },
     jump(index, field) {
       this.open(index, field);
@@ -432,7 +442,8 @@ export default {
       this.$emit("input", this.items);
     },
     open(index, field) {
-      this.active = index;
+      this.currentIndex = index;
+      this.currentModel = clone(this.items[index]);
 
       this.$nextTick(() => {
         if (this.$refs.form) {
@@ -441,6 +452,7 @@ export default {
       });
     },
     paginate(pagination) {
+      this.submit();
       this.open(pagination.offset);
     },
     paginateItems(pagination) {
@@ -464,13 +476,21 @@ export default {
       this.items = this.sort(this.items);
 
     },
-    toggle(index) {
-      if (this.active === index) {
-        this.close();
-      } else {
-        this.open(index);
+    submit() {
+      if (this.currentIndex !== null && this.currentIndex !== undefined) {
+
+        if (this.currentIndex === "new") {
+          this.items.push(this.currentModel);
+        } else {
+          this.items[this.currentIndex] = this.currentModel;
+        }
+
+        this.items = this.sort(this.items);
+        this.onInput();
       }
-    },
+
+      this.close();
+    }
   }
 }
 </script>
@@ -664,17 +684,34 @@ $structure-item-height: 38px;
   border: 1px solid $color-border;
   background: $color-background;
 }
-.k-structure-form-header {
-  height: $structure-item-height;
-  padding: 0 .75rem;
-  border-bottom: 1px dashed $color-border;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
 .k-structure-form-fields {
-  padding: 2rem 2.5rem 2.5rem;
+  padding: 1.5rem 1.5rem 2rem;
 }
 
+.k-structure-form-buttons {
+  border-top: 1px solid $color-border;
+  display: flex;
+  justify-content: space-between;
+}
+
+.k-structure-form-buttons .k-pagination {
+  display: none;
+  @media screen and (min-width: $breakpoint-medium) {
+    display: flex;
+  }
+}
+
+.k-structure-form-buttons .k-pagination > .k-button,
+.k-structure-form-buttons .k-pagination > span {
+  padding: .875rem 1rem !important;
+}
+
+.k-structure-form-cancel-button,
+.k-structure-form-submit-button {
+  padding: .875rem 1.5rem;
+  line-height: 1rem;
+  display: flex;
+}
 
 </style>
