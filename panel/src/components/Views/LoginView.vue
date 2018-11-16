@@ -10,7 +10,7 @@
         <span class="k-login-checkbox">
           <k-checkbox-input
             :value="user.remember"
-            label="Keep me logged in"
+            :label="$t('login.remember')"
             @input="user.remember = $event"
           />
         </span>
