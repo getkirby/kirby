@@ -44,7 +44,7 @@
                 :details="true"
                 @paginate="paginate"
               />
-              <k-button class="k-structure-form-submit-button" icon="check" @click="submit">{{ $t(currentIndex !== 'new' ? 'save' : 'add') }}</k-button>
+              <k-button class="k-structure-form-submit-button" icon="check" @click="submit">{{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}</k-button>
             </footer>
           </section>
         </template>
