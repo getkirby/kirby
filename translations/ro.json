@@ -210,7 +210,10 @@
   "link.text": "Link text",
 
   "loading": "Loading",
+
   "login": "Conectare",
+  "login.remember": "Keep me logged in",
+
   "logout": "Deconectare",
 
   "menu": "Menu",

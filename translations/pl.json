@@ -210,7 +210,10 @@
   "link.text": "Tekst linku",
 
   "loading": "Loading",
+
   "login": "Zaloguj si\u0119",
+  "login.remember": "Keep me logged in",
+
   "logout": "Wyloguj si\u0119",
 
   "menu": "Menu",

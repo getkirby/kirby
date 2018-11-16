@@ -210,7 +210,10 @@
   "link.text": "Linkin teksti",
 
   "loading": "Loading",
+
   "login": "Log in",
+  "login.remember": "Keep me logged in",
+
   "logout": "Log out",
 
   "menu": "Menu",

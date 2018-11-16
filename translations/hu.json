@@ -210,7 +210,10 @@
   "link.text": "Link sz\u00f6veg",
 
   "loading": "Loading",
+
   "login": "Log in",
+  "login.remember": "Keep me logged in",
+
   "logout": "Log out",
 
   "menu": "Menu",

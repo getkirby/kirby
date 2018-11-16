@@ -210,7 +210,10 @@
   "link.text": "Текстова връзка",
 
   "loading": "Зареждане",
+
   "login": "Вход",
+  "login.remember": "Keep me logged in",
+
   "logout": "Изход",
 
   "menu": "Меню",

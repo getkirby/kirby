@@ -210,7 +210,10 @@
   "link.text": "Link text",
 
   "loading": "Loading",
+
   "login": "Masuk",
+  "login.remember": "Keep me logged in",
+
   "logout": "Keluar",
 
   "menu": "Menu",

@@ -210,7 +210,10 @@
   "link.text": "Texte enlla\u00e7at",
 
   "loading": "Loading",
+
   "login": "Entrar",
+  "login.remember": "Keep me logged in",
+
   "logout": "Tancar sessi\u00f3",
 
   "menu": "Menu",

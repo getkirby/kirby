@@ -10,9 +10,9 @@
   "create": "Oluştur",
 
   "date": "Tarih",
-  "date.select": "Select a date",
+  "date.select": "Bir tarih seçiniz",
 
-  "day": "Day",
+  "day": "Gün",
   "days.fri": "Cum",
   "days.mon": "Pzt",
   "days.sat": "Cmt",
@@ -166,12 +166,12 @@
 
   "files.empty": "Henüz dosya yok",
 
-  "hour": "Hour",
+  "hour": "Saat",
   "insert": "Ekle",
   "install": "Kurulum",
 
   "installation": "Kurulum",
-  "installation.completed": "The panel has been installed",
+  "installation.completed": "Panel kuruldu",
   "installation.issues.accounts": "<code>/site/accounts</code> klasörü yok yada yazılabilir değil",
   "installation.issues.content": "<code>/content</code> klasörü yok yada yazılabilir değil",
   "installation.issues.curl": "<code>CURL</code> eklentisi gerekli",
@@ -210,15 +210,18 @@
   "link.text": "Ba\u011flant\u0131 yaz\u0131s\u0131",
 
   "loading": "Yükleniyor",
+
   "login": "Giri\u015f",
+  "login.remember": "Keep me logged in",
+
   "logout": "Güvenli Çıkış",
 
   "menu": "Menü",
   "meridiem": "AM/PM",
   "mime": "Medya Türü",
-  "minutes": "Minutes",
+  "minutes": "Dakika",
 
-  "month": "Month",
+  "month": "Ay",
   "months.april": "Nisan",
   "months.august": "A\u011fustos",
   "months.december": "Aral\u0131k",
@@ -234,9 +237,9 @@
 
   "more": "Daha Fazla",
   "name": "İsim",
-  "next": "Next",
+  "next": "Sonraki",
   "open": "Açık",
-  "options": "Options",
+  "options": "Seçenekler",
 
   "orientation": "Oryantasyon",
   "orientation.landscape": "Yatay",
@@ -253,7 +256,7 @@
   "page.delete.confirm.subpages": "<strong>Bu sayfada alt sayfalar var</strong>. <br>Tüm alt sayfalar da silinecek.",
   "page.delete.confirm.title": "Onaylamak için sayfa başlığını girin",
   "page.draft.create": "Taslak oluştur",
-  "page.status": "Status",
+  "page.status": "Durum",
   "page.status.draft": "Taslak",
   "page.status.draft.description": "Sayfa taslak modunda ve sadece giriş yapılan düzenleyiciler için görünür durumda",
   "page.status.listed": "Herkese Açık",
@@ -265,7 +268,7 @@
 
   "password": "\u015eifre",
   "pixel": "Piksel",
-  "prev": "Previous",
+  "prev": "Önceki",
   "remove": "Kaldır",
   "rename": "Yeniden Adlandır",
   "replace": "De\u011fi\u015ftir",
@@ -334,5 +337,5 @@
   "view.users": "Kullan\u0131c\u0131lar",
 
   "welcome": "Hoşgeldiniz",
-  "year": "Year"
+  "year": "Yıl"
 }

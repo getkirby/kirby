@@ -10,9 +10,9 @@
   "create": "Créer",
 
   "date": "Date",
-  "date.select": "Select a date",
+  "date.select": "Choisissez une date",
 
-  "day": "Day",
+  "day": "Jour",
   "days.fri": "Ven",
   "days.mon": "Lun",
   "days.sat": "Sam",
@@ -166,12 +166,12 @@
 
   "files.empty": "Pas encore de fichier",
 
-  "hour": "Hour",
+  "hour": "Heure",
   "insert": "Insérer",
   "install": "Installer",
 
   "installation": "Installation",
-  "installation.completed": "The panel has been installed",
+  "installation.completed": "Le Panel a été installé",
   "installation.issues.accounts": "Le dossier <code>/site/accounts</code> n’existe pas ou n’est pas accessible en écriture",
   "installation.issues.content": "Le dossier <code>/content</code> n’existe pas ou n’est pas accessible en écriture",
   "installation.issues.curl": "L’extension <code>CURL</code> est requise",
@@ -210,7 +210,10 @@
   "link.text": "Texte du lien",
 
   "loading": "Chargement",
+
   "login": "Se connecter",
+  "login.remember": "Keep me logged in",
+
   "logout": "Se déconnecter",
 
   "menu": "Menu",
@@ -218,7 +221,7 @@
   "mime": "Type de médias",
   "minutes": "Minutes",
 
-  "month": "Month",
+  "month": "Mois",
   "months.april": "Avril",
   "months.august": "Août",
   "months.december": "Décembre",
@@ -234,7 +237,7 @@
 
   "more": "Plus",
   "name": "Nom",
-  "next": "Next",
+  "next": "Suivant",
   "open": "Ouvrir",
   "options": "Options",
 
@@ -253,7 +256,7 @@
   "page.delete.confirm.subpages": "<strong>Cette page contient des sous-pages</strong>. <br>Toutes les sous-pages seront également supprimées.",
   "page.delete.confirm.title": "Veuillez saisir le titre de la page pour confirmer",
   "page.draft.create": "Créer un brouillon",
-  "page.status": "Status",
+  "page.status": "Statut",
   "page.status.draft": "Brouillon",
   "page.status.draft.description": "La page est en mode brouillon et n’est visible que par les éditeurs connectés",
   "page.status.listed": "Public",
@@ -265,7 +268,7 @@
 
   "password": "Mot de passe",
   "pixel": "Pixel",
-  "prev": "Previous",
+  "prev": "Précédent",
   "remove": "Supprimer",
   "rename": "Renommer",
   "replace": "Remplacer",
@@ -334,5 +337,5 @@
   "view.users": "Utilisateurs",
 
   "welcome": "Bienvenue",
-  "year": "Year"
+  "year": "Année"
 }

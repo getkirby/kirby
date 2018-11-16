@@ -210,7 +210,10 @@
   "link.text": "\ubb38\uc790",
 
   "loading": "로딩 중",
+
   "login": "\ub85c\uadf8\uc778",
+  "login.remember": "Keep me logged in",
+
   "logout": "\ub85c\uadf8\uc544\uc6c3",
 
   "menu": "메뉴",

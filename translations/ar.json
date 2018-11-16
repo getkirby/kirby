@@ -210,7 +210,10 @@
   "link.text": "\u0646\u0635 \u0627\u0644\u0648\u0635\u0644\u0629",
 
   "loading": "Loading",
+
   "login": "\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644",
+  "login.remember": "Keep me logged in",
+
   "logout": "\u062a\u0633\u062c\u064a\u0644 \u062e\u0631\u0648\u062c",
 
   "menu": "Menu",

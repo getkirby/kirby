@@ -210,7 +210,10 @@
   "link.text": "Text odkazu",
 
   "loading": "Loading",
+
   "login": "P\u0159ihl\u00e1sit se",
+  "login.remember": "Keep me logged in",
+
   "logout": "Odhl\u00e1sit se",
 
   "menu": "Menu",

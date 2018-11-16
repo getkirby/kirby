@@ -210,7 +210,10 @@
   "link.text": "Link tekst",
 
   "loading": "Indlæser",
+
   "login": "Log ind",
+  "login.remember": "Keep me logged in",
+
   "logout": "Log ud",
 
   "menu": "Menu",

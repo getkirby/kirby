@@ -210,7 +210,10 @@
   "link.text": "\u94fe\u63a5\u6587\u672c",
 
   "loading": "Loading",
+
   "login": "Log in",
+  "login.remember": "Keep me logged in",
+
   "logout": "Log out",
 
   "menu": "Menu",

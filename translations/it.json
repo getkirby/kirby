@@ -10,9 +10,9 @@
   "create": "Crea",
 
   "date": "Data",
-  "date.select": "Select a date",
+  "date.select": "Scegli una data",
 
-  "day": "Day",
+  "day": "Giorno",
   "days.fri": "Ve",
   "days.mon": "Lu",
   "days.sat": "Sa",
@@ -166,12 +166,12 @@
 
   "files.empty": "Nessun file caricato",
 
-  "hour": "Hour",
+  "hour": "Ora",
   "insert": "Inserisci",
   "install": "Installa",
 
   "installation": "Installazione",
-  "installation.completed": "The panel has been installed",
+  "installation.completed": "Il pannello è stato installato",
   "installation.issues.accounts": "\/site\/accounts non dispone dei permessi di scrittura",
   "installation.issues.content": "La cartella \/content e tutti i file e le cartelle in essa contenuti devono disporre dei permessi di scrittura.",
   "installation.issues.curl": "È necessaria l'estensione <code>CURL</code>",
@@ -210,15 +210,18 @@
   "link.text": "Testo del link",
 
   "loading": "Caricamento",
+
   "login": "Accedi",
+  "login.remember": "Keep me logged in",
+
   "logout": "Esci",
 
   "menu": "Menu",
   "meridiem": "AM/PM",
   "mime": "MIME Type",
-  "minutes": "Minutes",
+  "minutes": "Minuti",
 
-  "month": "Month",
+  "month": "Mese",
   "months.april": "Aprile",
   "months.august": "Agosto",
   "months.december": "Dicembre",
@@ -234,9 +237,9 @@
 
   "more": "Di più",
   "name": "Nome",
-  "next": "Next",
+  "next": "Prossimo",
   "open": "Apri",
-  "options": "Options",
+  "options": "Opzioni",
 
   "orientation": "Orientamento",
   "orientation.landscape": "Panorama",
@@ -253,7 +256,7 @@
   "page.delete.confirm.subpages": "<strong>Questa pagina ha sottopagine</strong>. <br>Anche tutte le sottopagine verranno eliminate.",
   "page.delete.confirm.title": "Inserisci il titolo della pagina per confermare",
   "page.draft.create": "Crea bozza",
-  "page.status": "Status",
+  "page.status": "Stato",
   "page.status.draft": "Bozza",
   "page.status.draft.description": "La pagina è in modalità bozza ed è visibile solo per editori registrati",
   "page.status.listed": "Pubblico",
@@ -265,7 +268,7 @@
 
   "password": "Password",
   "pixel": "Pixel",
-  "prev": "Previous",
+  "prev": "Precedente",
   "remove": "Rimuovi",
   "rename": "Rinomina",
   "replace": "Sostituisci",
@@ -334,5 +337,5 @@
   "view.users": "Utenti",
 
   "welcome": "Benvenuto",
-  "year": "Year"
+  "year": "Anno"
 }

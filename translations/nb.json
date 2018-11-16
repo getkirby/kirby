@@ -210,7 +210,10 @@
   "link.text": "Koblingstekst",
 
   "loading": "Loading",
+
   "login": "Logg Inn",
+  "login.remember": "Keep me logged in",
+
   "logout": "Logg ut",
 
   "menu": "Menu",
