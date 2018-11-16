@@ -317,7 +317,7 @@ class User extends ModelWithContent
      */
     public function isAdmin(): bool
     {
-        return $this->role() === 'admin';
+        return $this->role()->id() === 'admin';
     }
 
     /**
