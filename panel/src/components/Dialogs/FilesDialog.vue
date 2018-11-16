@@ -32,9 +32,9 @@
           />
           <k-button
             v-else
+            slot="options"
             :autofocus="true"
             :tooltip="$t('select')"
-            slot="options"
             icon="circle-outline"
           />
         </k-list-item>

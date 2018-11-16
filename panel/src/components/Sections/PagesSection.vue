@@ -55,17 +55,17 @@ import CollectionSectionMixin from "@/mixins/section/collection.js";
 
 export default {
   mixins: [CollectionSectionMixin],
+  computed: {
+    add() {
+      return this.options.add && this.$permissions.pages.create;
+    },
+  },
   created() {
     this.load();
     this.$events.$on("page.changeStatus", this.reload);
   },
   destroyed() {
     this.$events.$off("page.changeStatus", this.reload);
-  },
-  computed: {
-    add() {
-      return this.options.add && this.$permissions.pages.create;
-    },
   },
   methods: {
     action(page, action) {
