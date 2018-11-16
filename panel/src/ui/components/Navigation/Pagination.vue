@@ -7,31 +7,39 @@
       @click="prev"
     />
 
-    <k-dropdown v-if="details">
-      <k-button :disabled="!hasPages" @click="$refs.dropdown.toggle()">
-        <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
-      </k-button>
+    <template v-if="details">
+      <template v-if="dropdown">
+        <k-dropdown>
+          <k-button :disabled="!hasPages" @click="$refs.dropdown.toggle()">
+            <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
+          </k-button>
 
-      <k-dropdown-content
-        ref="dropdown"
-        class="k-pagination-selector"
-        @open="$nextTick(() => $refs.page.focus())"
-      >
-        <div>
-          <label for="k-pagination-input">{{ pageLabel }}</label>
-          <input
-            id="k-pagination-input"
-            ref="page"
-            :value="currentPage"
-            :min="1"
-            :max="pages"
-            type="number"
-            @focus="$event.target.select()"
-            @input="goTo($event.target.value)"
+          <k-dropdown-content
+            ref="dropdown"
+            class="k-pagination-selector"
+            @open="$nextTick(() => $refs.page.focus())"
           >
-        </div>
-      </k-dropdown-content>
-    </k-dropdown>
+            <div>
+              <label for="k-pagination-input">{{ pageLabel }}</label>
+              <input
+                id="k-pagination-input"
+                ref="page"
+                :value="currentPage"
+                :min="1"
+                :max="pages"
+                type="number"
+                @focus="$event.target.select()"
+                @input="goTo($event.target.value)"
+              >
+            </div>
+          </k-dropdown-content>
+        </k-dropdown>
+      </template>
+      <template v-else>
+        <span><template v-if="total > 1">{{ detailsText }}</template>{{ total }}</span>
+      </template>
+    </template>
+
 
     <k-button
       :disabled="!hasNext"
@@ -52,6 +60,10 @@ export default {
     details: {
       type: Boolean,
       default: false
+    },
+    dropdown: {
+      type: Boolean,
+      default: true
     },
     page: {
       type: Number,
@@ -189,7 +201,11 @@ export default {
   direction: ltr;
 }
 .k-pagination .k-button {
-  padding: 1rem !important;
+  padding: 1rem;
+}
+.k-pagination > span {
+  padding: 1rem;
+  font-size: $font-size-small;
 }
 .k-pagination[data-align="center"] {
   text-align: center;
