@@ -101,14 +101,19 @@ export default {
     focus() {
       if (this.$el && this.$el.querySelector) {
         let autofocus = this.$el.querySelector(
-          "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit, .k-dialog-button-cancel"
+          "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit"
         );
+
+        if (!autofocus) {
+          autofocus = this.$el.querySelector(
+            ".k-dialog-button-cancel"
+          );
+        }
 
         if (autofocus) {
           autofocus.focus();
           return;
         }
-
       }
     },
     error(message) {
