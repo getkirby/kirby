@@ -211,11 +211,12 @@ class Content
      * a cloned object
      *
      * @param  array $content
+     * @param  bool $overwrite
      * @return self
      */
-    public function update(array $content = null): self
+    public function update(array $content = null, bool $overwrite = false): self
     {
-        $this->data = array_merge($this->data, (array)$content);
+        $this->data = $overwrite === true ? (array)$content : array_merge($this->data, (array)$content);
         return $this;
     }
 }

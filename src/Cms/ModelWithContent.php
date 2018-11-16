@@ -134,14 +134,15 @@ abstract class ModelWithContent extends Model
      *
      * @param string $languageCode
      * @param array $data
+     * @param bool $overwrite
      * @return self
      */
-    public function save(array $data = null, string $languageCode = null)
+    public function save(array $data = null, string $languageCode = null, bool $overwrite = false)
     {
         if ($this->kirby()->multilang() === true) {
-            return $this->saveTranslation($data, $languageCode);
+            return $this->saveTranslation($data, $languageCode, $overwrite);
         } else {
-            return $this->saveContent($data);
+            return $this->saveContent($data, $overwrite);
         }
     }
 
@@ -149,15 +150,16 @@ abstract class ModelWithContent extends Model
      * Save the single language content
      *
      * @param array|null $data
+     * @param bool $overwrite
      * @return self
      */
-    protected function saveContent(array $data = null)
+    protected function saveContent(array $data = null, bool $overwrite = false)
     {
         // create a clone to avoid modifying the original
         $clone = $this->clone();
 
         // merge the new data with the existing content
-        $clone->content()->update($data);
+        $clone->content()->update($data, $overwrite);
 
         // send the full content array to the writer
         $clone->write($clone->content()->toArray());
@@ -170,9 +172,10 @@ abstract class ModelWithContent extends Model
      *
      * @param array|null $data
      * @param string|null $languageCode
+     * @param bool $overwrite
      * @return self
      */
-    protected function saveTranslation(array $data = null, string $languageCode = null)
+    protected function saveTranslation(array $data = null, string $languageCode = null, bool $overwrite = false)
     {
         // get the right language code
         $languageCode = $languageCode ?? $this->kirby()->language()->code();
@@ -188,7 +191,7 @@ abstract class ModelWithContent extends Model
         }
 
         // merge the translation with the new data
-        $translation->update($data);
+        $translation->update($data, $overwrite);
 
         // send the full translation array to the writer
         $clone->write($translation->content(), $languageCode);
@@ -302,7 +305,7 @@ abstract class ModelWithContent extends Model
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
         $form = Form::for($this, [
-            'values' => $input
+            'input' => $input
         ]);
 
         // validate the input
@@ -316,7 +319,7 @@ abstract class ModelWithContent extends Model
         }
 
         return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
-            return $model->save($strings, $languageCode);
+            return $model->save($strings, $languageCode, true);
         });
     }
 

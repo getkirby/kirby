@@ -203,11 +203,12 @@ class ContentTranslation
      * Merge the old and new data
      *
      * @param array|null $data
+     * @param bool $overwrite
      * @return self
      */
-    public function update(array $data = null)
+    public function update(array $data = null, bool $overwrite = false)
     {
-        $this->content = array_merge($this->content(), (array)$data);
+        $this->content = $overwrite === true ? (array)$data : array_merge($this->content(), (array)$data);
         return $this;
     }
 

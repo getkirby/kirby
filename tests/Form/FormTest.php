@@ -121,12 +121,50 @@ class FormTest extends TestCase
                 ]
             ],
             'values' => [
+                'c' => 'C',
                 'b' => 'B',
-                'a' => 'A'
+                'a' => 'A',
+            ],
+            'input' => [
+                'b' => 'B modified'
             ]
         ]);
 
-        $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->data());
+        $this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->values());
+        $this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->data());
+
+    }
+
+    public function testStrictMode()
+    {
+
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $form = new Form([
+            'fields' => [
+                'a' => [
+                    'type' => 'text'
+                ],
+                'b' => [
+                    'type' => 'text'
+                ]
+            ],
+            'values' => [
+                'b' => 'B',
+                'a' => 'A'
+            ],
+            'input' => [
+                'c' => 'C'
+            ],
+            'strict' => true
+        ]);
+
+        $this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->values());
+        $this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->data());
 
     }
 

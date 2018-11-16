@@ -33,12 +33,7 @@ class Form
         unset($inject['fields'], $inject['values'], $inject['input']);
 
         $this->fields = new Fields;
-
-        if ($strict !== true) {
-            // use all given values, no matter
-            // if there's a field or not.
-            $this->values = array_merge($values, $input);
-        }
+        $this->values = [];
 
         foreach ($fields as $name => $props) {
 
@@ -74,6 +69,21 @@ class Form
 
             $this->fields->append($name, $field);
         }
+
+        if ($strict !== true) {
+
+            // use all given values, no matter
+            // if there's a field or not.
+            $input = array_merge($values, $input);
+
+            foreach ($input as $key => $value) {
+                if (isset($this->values[$key]) === false) {
+                    $this->values[$key] = $value;
+                }
+            }
+
+        }
+
     }
 
     public function data($defaults = false): array

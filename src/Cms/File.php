@@ -233,10 +233,9 @@ class File extends ModelWithContent
      */
     public function contentFileData(array $data, string $languageCode = null): array
     {
-        // store the template in the content file
-        $data['template'] = $this->template();
-
-        return $data;
+        return A::append($data, [
+            'template' => $this->template(),
+        ]);
     }
 
     /**
