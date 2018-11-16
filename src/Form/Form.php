@@ -81,9 +81,7 @@ class Form
                     $this->values[$key] = $value;
                 }
             }
-
         }
-
     }
 
     public function data($defaults = false): array
