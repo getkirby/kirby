@@ -236,7 +236,7 @@ class Request
      */
     public function is(string $method): bool
     {
-        return $this->method === $method;
+        return strtoupper($this->method) === strtoupper($method);
     }
 
     /**

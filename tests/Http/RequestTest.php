@@ -97,6 +97,12 @@ class RequestTest extends TestCase
         $this->assertTrue($request->is('GET'));
     }
 
+    public function testIsWithLowerCaseInput()
+    {
+        $request = new Request();
+        $this->assertTrue($request->is('get'));
+    }
+
     public function testUrl()
     {
         $request = new Request();
