@@ -33,7 +33,7 @@ class PluginAssets
 
             if (file_exists($file) === true) {
                 $assets[]   = $file;
-                $modified[] = filemtime($file);
+                $modified[] = F::modified($file);
             }
         }
 

@@ -389,13 +389,20 @@ class F
      */
     public static function modified(string $file, string $format = null, string $handler = 'date')
     {
-        if (file_exists($file) === true) {
-            if (is_null($format) === true) {
-                return filemtime($file);
-            }
-            return $handler($format, filemtime($file));
+        if (file_exists($file) !== true) {
+            return false;
         }
-        return false;
+
+        $stat     = stat($file);
+        $mtime    = $stat['mtime'] ?? 0;
+        $ctime    = $stat['ctime'] ?? 0;
+        $modified = max([$mtime, $ctime]);
+
+        if (is_null($format) === true) {
+            return $modified;
+        }
+
+        return $handler($format, $modified);
     }
 
     /**
