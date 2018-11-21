@@ -16,7 +16,7 @@ export default {
         max: null,
         min: null,
         size: null,
-        sortable: true
+        sortable: null
       },
       pagination: {
         page: null
@@ -57,10 +57,10 @@ export default {
           page: this.pagination.page
         })
         .then(response => {
-          this.data = this.items(response.data);
-          this.isLoading = false;
-          this.options = response.options;
+          this.isLoading  = false;
+          this.options    = response.options;
           this.pagination = response.pagination;
+          this.data       = this.items(response.data);
         })
         .catch(error => {
           this.isLoading = false;
