@@ -12,7 +12,7 @@
       class="k-select-input-native"
       v-on="listeners"
     >
-      <option v-if="empty !== false" :value="null">{{ empty }}</option>
+      <option v-if="empty !== false" value="">{{ empty }}</option>
       <option
         v-for="option in options"
         :disabled="option.disabled"

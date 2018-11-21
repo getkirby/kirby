@@ -26,7 +26,7 @@ return [
             return $this->sanitizeOption($this->default);
         },
         'value' => function () {
-            return $this->sanitizeOption($this->value);
+            return $this->sanitizeOption($this->value) ?? '';
         }
     ]
 ];
