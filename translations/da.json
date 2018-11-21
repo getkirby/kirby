@@ -10,9 +10,9 @@
   "create": "Opret",
 
   "date": "Dato",
-  "date.select": "Select a date",
+  "date.select": "Vælg en dato",
 
-  "day": "Day",
+  "day": "Dag",
   "days.fri": "Fre",
   "days.mon": "Man",
   "days.sat": "L\u00f8r",
@@ -160,22 +160,22 @@
   "field.pages.empty": "No pages selected yet",
   "field.structure.delete.confirm": "\u00d8nsker du virkelig at slette denne indtastning?",
   "field.structure.empty": "Ingen indtastninger endnu.",
-  "field.users.empty": "No users selected yet",
+  "field.users.empty": "Ingen brugere er valgt",
 
   "file.delete.confirm": "\u00d8nsker du virkelig at slette denne fil?",
 
   "files.empty": "Ingen filer endnu",
 
-  "hour": "Hour",
+  "hour": "Time",
   "insert": "Inds\u00e6t",
   "install": "Installer",
 
   "installation": "Installation",
-  "installation.completed": "The panel has been installed",
+  "installation.completed": "Panelet er blevet installeret",
   "installation.issues.accounts": "\/site\/accounts er ikke skrivbar",
   "installation.issues.content": "Content mappen samt alle underliggende filer og mapper skal v\u00e6re skrivbare.",
-  "installation.issues.curl": "The <code>CURL</code> extension is required",
-  "installation.issues.headline": "The panel cannot be installed",
+  "installation.issues.curl": "<code>CURL</code> extension er påkrævet",
+  "installation.issues.headline": "Panelet kan ikke installeres",
   "installation.issues.mbstring": "<code>MB String</code> extension er påkrævet",
   "installation.issues.media": "<code>/media</code> mappen eksisterer ikke eller er ikke skrivbar",
   "installation.issues.php": "Sikre dig at der benyttes <code>PHP 7+</code>",
@@ -212,16 +212,16 @@
   "loading": "Indlæser",
 
   "login": "Log ind",
-  "login.remember": "Keep me logged in",
+  "login.remember": "Forbliv logget ind",
 
   "logout": "Log ud",
 
   "menu": "Menu",
   "meridiem": "AM/PM",
-  "mime": "Media Type",
-  "minutes": "Minutes",
+  "mime": "Medie Type",
+  "minutes": "Minutter",
 
-  "month": "Month",
+  "month": "Måned",
   "months.april": "April",
   "months.august": "August",
   "months.december": "December",
@@ -237,9 +237,9 @@
 
   "more": "Mere",
   "name": "Navn",
-  "next": "Next",
+  "next": "Næste",
   "open": "Åben",
-  "options": "Options",
+  "options": "Indstillinger",
 
   "orientation": "Orientering",
   "orientation.landscape": "Landskab",
@@ -258,7 +258,7 @@
   "page.draft.create": "Opret kladde",
   "page.status": "Status",
   "page.status.draft": "Kladde",
-  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors",
+  "page.status.draft.description": "Siden er i kladdetilstand og kun synlig for redaktører der er logget ind",
   "page.status.listed": "Offentlig",
   "page.status.listed.description": "Siden er offentlig for enhver",
   "page.status.unlisted": "Ulisted",
@@ -268,7 +268,7 @@
 
   "password": "Adgangskode",
   "pixel": "Pixel",
-  "prev": "Previous",
+  "prev": "Forrige",
   "remove": "Fjern",
   "rename": "Omdøb",
   "replace": "Erstat",
@@ -278,7 +278,7 @@
   "role": "Rolle",
   "role.all": "All",
   "role.empty": "Der er ingen bruger med denne rolle",
-  "role.description.placeholder": "No description",
+  "role.description.placeholder": "Ingen beskrivelse",
 
   "save": "Gem",
   "search": "Søg",
@@ -309,7 +309,7 @@
 
   "upload": "Upload",
   "upload.errors": "Fejl",
-  "upload.progress": "Uploading…",
+  "upload.progress": "Uploader...",
 
   "url": "Url",
   "url.placeholder": "https://example.com",
@@ -321,7 +321,7 @@
   "user.changeName": "Omdøb denne bruger",
   "user.changePassword": "Skift adgangskode",
   "user.changePassword.new": "Ny adgangskode",
-  "user.changePassword.new.confirm": "Confirm the new password…",
+  "user.changePassword.new.confirm": "Bekræft den nye adgangskode...",
   "user.changeRole": "Skift rolle",
   "user.changeRole.select": "Vælg en ny rolle",
   "user.create": "Tilføj en ny bruger",
@@ -337,5 +337,5 @@
   "view.users": "Brugere",
 
   "welcome": "Velkommen",
-  "year": "Year"
+  "year": "År"
 }

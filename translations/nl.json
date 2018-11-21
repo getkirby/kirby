@@ -10,9 +10,9 @@
   "create": "Aanmaken",
 
   "date": "Datum",
-  "date.select": "Select a date",
+  "date.select": "Selecteer een datum",
 
-  "day": "Day",
+  "day": "Dag",
   "days.fri": "Vr",
   "days.mon": "Ma",
   "days.sat": "Za",
@@ -166,12 +166,12 @@
 
   "files.empty": "Nog geen bestanden",
 
-  "hour": "Hour",
+  "hour": "Uur",
   "insert": "Toevoegen",
   "install": "Installeren",
 
   "installation": "Installatie",
-  "installation.completed": "The panel has been installed",
+  "installation.completed": "Het Panel is geïnstalleerd",
   "installation.issues.accounts": "De map <code>/site/accounts</code> heeft geen schrijfrechten",
   "installation.issues.content": "De contentmap en alle bestanden hierin moeten schrijfrechten hebben.",
   "installation.issues.curl": "De <code>CURL</code>-extensie is vereist",
@@ -212,16 +212,16 @@
   "loading": "Laden",
 
   "login": "Inloggen",
-  "login.remember": "Keep me logged in",
+  "login.remember": "Houd mij ingelogd",
 
   "logout": "Uitloggen",
 
   "menu": "Menu",
   "meridiem": "AM/PM",
   "mime": "Mime-type",
-  "minutes": "Minutes",
+  "minutes": "Minuten",
 
-  "month": "Month",
+  "month": "Maand",
   "months.april": "april",
   "months.august": "augustus",
   "months.december": "december",
@@ -237,9 +237,9 @@
 
   "more": "Meer",
   "name": "Naam",
-  "next": "Next",
+  "next": "Volgende",
   "open": "Open",
-  "options": "Options",
+  "options": "Opties",
 
   "orientation": "Oriëntatie",
   "orientation.landscape": "Liggend",
@@ -268,7 +268,7 @@
 
   "password": "Wachtwoord",
   "pixel": "Pixel",
-  "prev": "Previous",
+  "prev": "Vorige",
   "remove": "Verwijder",
   "rename": "Hernoem",
   "replace": "Vervang",
@@ -337,5 +337,5 @@
   "view.users": "Gebruikers",
 
   "welcome": "Welkom",
-  "year": "Year"
+  "year": "Jaar"
 }

@@ -138,10 +138,10 @@
   "error.validation.ip": "Ange en giltig IP-adress",
   "error.validation.less": "Ange ett värde lägre än {max}",
   "error.validation.match": "Värdet matchar inte det förväntade mönstret",
-  "error.validation.max": "Ange ett värde lägre än {max}",
+  "error.validation.max": "Ange ett värde som är lägre än eller lika med {max}",
   "error.validation.maxlength": "Ange ett kortare värde. (max {max} tecken)",
   "error.validation.maxwords": "Ange inte mer än {max} ord",
-  "error.validation.min": "Ange ett värde som är större än {min}",
+  "error.validation.min": "Ange ett värde som är större än eller lika med {min}",
   "error.validation.minlength": "Ange ett längre värde. (minst {min} tecken)",
   "error.validation.minwords": "Ange minst {min} ord",
   "error.validation.more": "Ange ett större värde än {min}",
@@ -212,7 +212,7 @@
   "loading": "Laddar",
 
   "login": "Logga in",
-  "login.remember": "Keep me logged in",
+  "login.remember": "Håll mig inloggad",
 
   "logout": "Logga ut",
 

@@ -6,13 +6,13 @@
   "change": "Canviar",
   "close": "Tancar",
   "confirm": "Ok",
-  "copy": "Copy",
-  "create": "Create",
+  "copy": "Copiar",
+  "create": "Crear",
 
   "date": "Data",
-  "date.select": "Select a date",
+  "date.select": "Selecciona una data",
 
-  "day": "Day",
+  "day": "Dia",
   "days.fri": "dv.",
   "days.mon": "dl.",
   "days.sat": "ds.",
@@ -30,21 +30,21 @@
   "email.placeholder": "mail@exemple.com",
 
   "error.access.login": "Nom d'usuari o contrasenya incorrectes",
-  "error.access.panel": "You are not allowed to access the panel",
+  "error.access.panel": "No tens permís per accedir al panell",
 
-  "error.avatar.create.fail": "The profile picture could not be uploaded",
+  "error.avatar.create.fail": "No s'ha pogut carregar la imatge del perfil",
   "error.avatar.delete.fail": "La imatge del perfil no s'ha pogut eliminar",
-  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture under 3000 pixels",
+  "error.avatar.dimensions.invalid": "Mantingueu l'amplada i l'alçada de la imatge de perfil de menys de 3000 píxels",
   "error.avatar.mime.forbidden": "Mime type de l'arxiu prohibit",
 
-  "error.blueprint.notFound": "The blueprint \"{name}\" could not be loaded",
+  "error.blueprint.notFound": "No s'ha potgut carregar el blueprint \"{name}\"",
 
-  "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
+  "error.email.preset.notFound": "No es pot trobar la configuració de correu electrònic \"{name}\"",
 
-  "error.field.converter.invalid": "Invalid converter \"{converter}\"",
+  "error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
 
-  "error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
-  "error.file.duplicate": "A file with the name \"{filename}\" already exists",
+  "error.file.changeName.permission": "No tens permís per canviar el nom de \"{filename}\"",
+  "error.file.duplicate": "Ja existeix un fitxer amb el nom \"{filename}\"",
   "error.file.extension.forbidden": "Extensi\u00f3n de l'arxiu prohibida",
   "error.file.extension.missing": "No pots carregar arxius sense extensi\u00f3",
   "error.file.mime.differs": "The uploaded file must be of the same mime type \"{mime}\"",
