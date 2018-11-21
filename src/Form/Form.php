@@ -134,11 +134,11 @@ class Form
         return empty($this->errors()) === true;
     }
 
-    public function strings(): array
+    public function strings($defaults = false): array
     {
         $strings = [];
 
-        foreach ($this->data() as $key => $value) {
+        foreach ($this->data($defaults) as $key => $value) {
             if (is_array($value) === true) {
                 $strings[$key] = Yaml::encode($value);
             } else {

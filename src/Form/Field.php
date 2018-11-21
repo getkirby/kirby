@@ -57,19 +57,19 @@ class Field extends Component
     {
         $save = $this->options['save'] ?? true;
 
-        if ($save === false) {
-            $value = null;
-        } elseif (is_callable($save) === true) {
-            $value = $save->call($this, $this->value);
+        if ($default === true && $this->isEmpty($this->value)) {
+            $value = $this->default();
         } else {
             $value = $this->value;
         }
 
-        if ($default === true && $this->isEmpty($value)) {
-            $value = $this->default();
+        if ($save === false) {
+            return null;
+        } elseif (is_callable($save) === true) {
+            return $save->call($this, $value);
+        } else {
+            return $value;
         }
-
-        return $value;
     }
 
     public static function defaults(): array

@@ -153,7 +153,7 @@ trait UserActions
         ]);
 
         // inject the content
-        $user = $user->clone(['content' => $form->data(true)]);
+        $user = $user->clone(['content' => $form->strings(true)]);
 
         // run the hook
         return $user->commit('create', [$user, $props], function ($user, $props) {
