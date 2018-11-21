@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "65975ba2b747ba3363dfd8010f614945",
-    "content-hash": "d4a53bfd47633405be0d19eaf8e17d57",
+    "hash": "f15d3732bfb589bf70c004560c9c25d9",
+    "content-hash": "bab9a80f3c696b5eba75d58248299686",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -423,7 +423,7 @@
         },
         {
             "name": "psr/log",
-            "version": "dev-master",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
