@@ -43,6 +43,37 @@ class PagesSectionTest extends TestCase
 
     }
 
+    public function testParent()
+    {
+
+        $this->app->impersonate('kirby');
+
+        $parent = new Page([
+            'slug' => 'test',
+            'children' => [
+                ['slug' => 'a']
+            ]
+        ]);
+
+        // regular parent
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $parent,
+        ]);
+
+        $this->assertEquals('test', $section->parent()->id());
+
+        // page.find
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $parent,
+            'parent' => 'page.find("a")'
+        ]);
+
+        $this->assertEquals('test/a', $section->parent()->id());
+
+    }
+
     public function testImageString()
     {
 
@@ -70,9 +101,9 @@ class PagesSectionTest extends TestCase
         ]);
 
         $section = new Section('pages', [
-            'name'  => 'test',
-            'model' => $model,
-            'image' => 'page.image("cover.jpg")'
+            'name'   => 'test',
+            'model'  => $model,
+            'image'  => 'page.image("cover.jpg")',
         ]);
 
         $data = $section->data();

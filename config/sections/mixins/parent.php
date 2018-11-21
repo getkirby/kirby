@@ -9,10 +9,7 @@ return [
             $parent = $this->parent;
 
             if (is_string($parent) === true) {
-                $parent = Str::query($parent, [
-                    'kirby' => $kirby = kirby(),
-                    'site'  => $kirby->site()
-                ]);
+                $parent = $this->model->query($parent);
             }
 
             if ($parent === null) {
