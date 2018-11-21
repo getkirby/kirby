@@ -5,6 +5,7 @@
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
+    @close="reset"
   >
     <k-form
       ref="form"
@@ -23,24 +24,23 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      user: {
-        email: "",
-        password: "",
-        language: "en",
-        // TODO: change to config default user role
-        role: "admin"
-      },
+      user: this.emptyUser(),
+      languages: [],
       roles: []
     };
   },
   computed: {
     fields() {
       return {
+        name: {
+          label: this.$t("name"),
+          type: "text",
+          icon: "user",
+        },
         email: {
           label: this.$t("email"),
           type: "email",
           icon: "email",
-          id: "new-user-email",
           link: false,
           required: true
         },
@@ -48,12 +48,18 @@ export default {
           label: this.$t("password"),
           type: "password",
           icon: "key",
-          id: "new-user-password",
-          required: true
+        },
+        language: {
+          label: this.$t("language"),
+          type: "select",
+          icon: "globe",
+          options: this.languages,
+          required: true,
+          empty: false
         },
         role: {
           label: this.$t("role"),
-          type: "radio",
+          type: this.roles.length === 1 ? "hidden" : "radio",
           required: true,
           options: this.roles
         }
@@ -61,28 +67,10 @@ export default {
     }
   },
   methods: {
-    open() {
-      this.$api.roles.options()
-        .then(roles => {
-          this.roles = roles;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
-    },
     create() {
       this.$api.users
         .create(this.user)
         .then(() => {
-          this.user = {
-            email: "",
-            password: "",
-            language: "en",
-            // TODO: change to config default user role
-            role: "admin"
-          };
-
           this.success({
             message: ":)",
             event: "user.create"
@@ -91,6 +79,37 @@ export default {
         .catch(error => {
           this.$refs.dialog.error(error.message);
         });
+    },
+    emptyUser() {
+      return {
+        name: "",
+        email: "",
+        password: "",
+        language: "en",
+        role: "admin"
+      };
+    },
+    open() {
+      this.$api.roles.options()
+        .then(roles => {
+          this.roles = roles;
+
+          // load all translations
+          this.$api.translations.options().then(languages => {
+            this.languages = languages;
+            this.$refs.dialog.open();
+          })
+          .catch (error => {
+            this.$store.dispatch('notification/error', error);
+          });
+
+        })
+        .catch(error => {
+          this.$store.dispatch('notification/error', error);
+        });
+    },
+    reset() {
+      this.user = this.emptyUser();
     }
   }
 };

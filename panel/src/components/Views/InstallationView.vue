@@ -61,6 +61,7 @@ export default {
   data() {
     return {
       user: {
+        name: "",
         email: "",
         language: "en",
         password: "",
@@ -71,17 +72,25 @@ export default {
     };
   },
   computed: {
+    translation() {
+      return this.$store.state.translation.current;
+    },
     requirements() {
       return this.system ? this.system.requirements : {};
     },
     fields() {
       return {
+        name: {
+          label: this.$t("name"),
+          type: "text",
+          icon: "user",
+          autofocus: true
+        },
         email: {
           label: this.$t("email"),
           type: "email",
           link: false,
-          required: true,
-          autofocus: true
+          required: true
         },
         password: {
           label: this.$t("password"),
@@ -101,6 +110,9 @@ export default {
     }
   },
   watch: {
+    translation(value) {
+      this.user.language = value;
+    },
     "user.language"(language) {
       this.$store.dispatch("translation/activate", language);
     }
@@ -114,7 +126,7 @@ export default {
         .install(this.user)
         .then(user => {
           this.$store.dispatch("user/current", user);
-          this.$store.dispatch("notification/success", "Welcome!");
+          this.$store.dispatch("notification/success", this.$t("welcome") + "!");
           this.$router.push("/");
         })
         .catch(error => {
