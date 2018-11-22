@@ -1,5 +1,7 @@
 <template>
   <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
+
+    <!-- Add button -->
     <template slot="options">
       <k-button
         v-if="more && currentIndex === null"
@@ -12,121 +14,118 @@
       </k-button>
     </template>
 
-    <template>
-      <k-empty v-if="items.length === 0" icon="list-bullet" @click="add">
-        {{ $t("field.structure.empty") }}
-      </k-empty>
+    <!-- Form -->
+    <template v-if="currentIndex !== null">
+      <div class="k-structure-backdrop" @click="escape" />
+      <section class="k-structure-form">
+        <form @submit.prevent="submit">
+          <k-fieldset
+            ref="form"
+            :fields="fields"
+            :novalidate="true"
+            v-model="currentModel"
+            class="k-structure-form-fields"
+            @input="onInput"
+            @submit="submit"
+          />
+        </form>
+        <footer class="k-structure-form-buttons">
+          <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">{{ $t('cancel') }}</k-button>
+          <k-pagination
+            v-if="currentIndex !== 'new'"
+            :dropdown="false"
+            :total="items.length"
+            :limit="1"
+            :page="currentIndex + 1"
+            :details="true"
+            @paginate="paginate"
+          />
+          <k-button class="k-structure-form-submit-button" icon="check" @click="submit">{{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}</k-button>
+        </footer>
+      </section>
+    </template>
 
-      <template v-else>
+    <!-- Empty State -->
+    <k-empty v-else-if="items.length === 0" icon="list-bullet" @click="add">
+      {{ $t("field.structure.empty") }}
+    </k-empty>
 
-        <template v-if="currentIndex !== null">
-          <div class="k-structure-backdrop" @click="escape" />
-          <section class="k-structure-form">
-            <form @submit.prevent="submit">
-              <k-fieldset
-                ref="form"
-                :fields="fields"
-                :novalidate="true"
-                v-model="currentModel"
-                class="k-structure-form-fields"
-                @input="onInput"
-                @submit="submit"
-              />
-            </form>
-            <footer class="k-structure-form-buttons">
-              <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">{{ $t('cancel') }}</k-button>
-              <k-pagination
-                v-if="currentIndex !== 'new'"
-                :dropdown="false"
-                :total="items.length"
-                :limit="1"
-                :page="currentIndex + 1"
-                :details="true"
-                @paginate="paginate"
-              />
-              <k-button class="k-structure-form-submit-button" icon="check" @click="submit">{{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}</k-button>
-            </footer>
-          </section>
-        </template>
-        <template v-else>
-          <table :data-sortable="isSortable" class="k-structure-table">
-            <thead>
-              <tr>
-                <th class="k-structure-table-index">#</th>
-                <th
-                  v-for="(column, columnName) in columns"
-                  :key="columnName + '-header'"
-                  :data-width="column.width"
-                  :data-align="column.align"
-                  class="k-structure-table-column"
-                >
-                  {{ column.label }}
-                </th>
-                <th />
-              </tr>
-            </thead>
-            <k-draggable
-              v-model="items"
-              :data-disabled="disabled"
-              :options="{
-                disabled: !isSortable,
-                handle: '.k-structure-table-handle',
-                forceFallback: true,
-                fallbackClass: 'sortable-fallback'
-              }"
-              element="tbody"
-              @input="onInput"
-              @choose="close"
-              @end="onInput"
+    <!-- Table -->
+    <template v-else>
+      <table :data-sortable="isSortable" class="k-structure-table">
+        <thead>
+          <tr>
+            <th class="k-structure-table-index">#</th>
+            <th
+              v-for="(column, columnName) in columns"
+              :key="columnName + '-header'"
+              :data-width="column.width"
+              :data-align="column.align"
+              class="k-structure-table-column"
             >
-              <tr
-                v-for="(item, index) in paginatedItems"
-                :key="index"
-                @click.stop
-              >
-                <td class="k-structure-table-index">
-                  <k-button
-                    v-if="isSortable"
-                    class="k-structure-table-handle"
-                    icon="sort"
-                  />
-                  <span>{{ indexOf(index) }}</span>
-                </td>
-                <td
-                  v-for="(column, columnName) in columns"
-                  :key="columnName"
-                  :title="column.label"
-                  :data-width="column.width"
-                  :data-align="column.align"
-                  class="k-structure-table-column"
-                  @click="jump(index, columnName)"
-                >
-                  <template v-if="columnIsEmpty(item[columnName]) === false">
-                    <component
-                      v-if="previewExists(column.type)"
-                      :is="'k-' + column.type + '-field-preview'"
-                      :value="item[columnName]"
-                      :column="column"
-                      :field="fields[columnName]"
-                    />
-                    <template v-else>
-                      <p class="k-structure-table-text">
-                        {{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after }}
-                      </p>
-                    </template>
-                  </template>
-                </td>
-                <td class="k-structure-table-option">
-                  <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
-                </td>
-              </tr>
-            </k-draggable>
-          </table>
-          <k-pagination v-if="limit" v-bind="pagination" @paginate="paginateItems" />
-        </template>
-
-      </template>
-
+              {{ column.label }}
+            </th>
+            <th />
+          </tr>
+        </thead>
+        <k-draggable
+          v-model="items"
+          :data-disabled="disabled"
+          :options="{
+            disabled: !isSortable,
+            handle: '.k-structure-table-handle',
+            forceFallback: true,
+            fallbackClass: 'sortable-fallback'
+          }"
+          element="tbody"
+          @input="onInput"
+          @choose="close"
+          @end="onInput"
+        >
+          <tr
+            v-for="(item, index) in paginatedItems"
+            :key="index"
+            @click.stop
+          >
+            <td class="k-structure-table-index">
+              <k-button
+                v-if="isSortable"
+                class="k-structure-table-handle"
+                icon="sort"
+              />
+              <span>{{ indexOf(index) }}</span>
+            </td>
+            <td
+              v-for="(column, columnName) in columns"
+              :key="columnName"
+              :title="column.label"
+              :data-width="column.width"
+              :data-align="column.align"
+              class="k-structure-table-column"
+              @click="jump(index, columnName)"
+            >
+              <template v-if="columnIsEmpty(item[columnName]) === false">
+                <component
+                  v-if="previewExists(column.type)"
+                  :is="'k-' + column.type + '-field-preview'"
+                  :value="item[columnName]"
+                  :column="column"
+                  :field="fields[columnName]"
+                />
+                <template v-else>
+                  <p class="k-structure-table-text">
+                    {{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after }}
+                  </p>
+                </template>
+              </template>
+            </td>
+            <td class="k-structure-table-option">
+              <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
+            </td>
+          </tr>
+        </k-draggable>
+      </table>
+      <k-pagination v-if="limit" v-bind="pagination" @paginate="paginateItems" />
       <k-dialog
         v-if="!disabled"
         ref="remove"
