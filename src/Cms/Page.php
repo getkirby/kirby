@@ -892,11 +892,9 @@ class Page extends ModelWithContent
             $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
 
             unset($settings['query']);
-
-            return array_merge($defaults, $settings);
         }
 
-        return null;
+        return array_merge($defaults, $settings);
     }
 
     /**
