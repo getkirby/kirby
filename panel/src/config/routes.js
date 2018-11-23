@@ -68,20 +68,33 @@ export default [
     component: FileView,
     beforeEnter: auth,
     props: route => ({
-      path: null,
+      path: 'site',
       filename: route.params.filename
     })
   },
   {
     path: "/pages/:path/files/:filename",
-    name: "File",
+    name: "PageFile",
     meta: {
       view: "site"
     },
     component: FileView,
     beforeEnter: auth,
     props: route => ({
-      path: route.params.path,
+      path: 'pages/' + route.params.path,
+      filename: route.params.filename
+    })
+  },
+  {
+    path: "/users/:path/files/:filename",
+    name: "UserFile",
+    meta: {
+      view: "users"
+    },
+    component: FileView,
+    beforeEnter: auth,
+    props: route => ({
+      path: 'users/' + route.params.path,
       filename: route.params.filename
     })
   },

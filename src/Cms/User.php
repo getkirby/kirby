@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
@@ -25,11 +24,12 @@ use Throwable;
  */
 class User extends ModelWithContent
 {
-    use UserActions;
+    use HasFiles;
     use HasSiblings;
+    use UserActions;
 
     /**
-     * @var Avatar
+     * @var File
      */
     protected $avatar;
 
@@ -41,7 +41,7 @@ class User extends ModelWithContent
     /**
      * @var array
      */
-    protected $data;
+    protected $credentials;
 
     /**
      * @var string
@@ -51,7 +51,17 @@ class User extends ModelWithContent
     /**
      * @var string
      */
+    protected $hash;
+
+    /**
+     * @var string
+     */
     protected $id;
+
+    /**
+     * @var array|null
+     */
+    protected $inventory;
 
     /**
      * @var string
@@ -101,6 +111,7 @@ class User extends ModelWithContent
      */
     public function __construct(array $props)
     {
+        $props['id'] = $props['id'] ?? $this->createId();
         $this->setProperties($props);
     }
 
@@ -134,15 +145,13 @@ class User extends ModelWithContent
     }
 
     /**
-     * Returns the Avatar object
+     * Returns the File object for the avatar or null
      *
-     * @return Avatar
+     * @return File|null
      */
-    public function avatar(): Avatar
+    public function avatar()
     {
-        return $this->avatar = $this->avatar ?? new Avatar([
-            'user' => $this
-        ]);
+        return $this->files()->template('avatar')->first();
     }
 
     /**
@@ -168,39 +177,6 @@ class User extends ModelWithContent
     }
 
     /**
-     * Returns the content
-     *
-     * @param string|null $languageCode
-     * @return Content
-     */
-    public function content(?string $languageCode = null): Content
-    {
-        if ($this->content !== null) {
-            return $this->content;
-        }
-
-        $data = $this->data();
-
-        // remove unwanted stuff from the content object
-        unset($data['email']);
-        unset($data['language']);
-        unset($data['password']);
-        unset($data['role']);
-
-        return $this->setContent($data)->content();
-    }
-
-    /**
-     * Returns the absolute path to the user content file
-     *
-     * @return string
-     */
-    public function contentFile(): string
-    {
-        return $this->root() . '/user.txt';
-    }
-
-    /**
      * Prepares the content for the write method
      *
      * @param array $data
@@ -209,35 +185,31 @@ class User extends ModelWithContent
      */
     public function contentFileData(array $data, string $languageCode = null): array
     {
-        // remove the email. It's already stored in the directory
-        unset($data['email']);
-
-        return A::prepend($data, [
-            'name'     => $this->name(),
-            'language' => $this->language(),
-            'role'     => $this->role()->id(),
-            'password' => $this->hashPassword($this->password()),
-        ]);
+        // remove stuff that has nothing to do in the text files
+        unset(
+            $data['email'],
+            $data['language'],
+            $data['name'],
+            $data['password'],
+            $data['role']
+        );
 
         return $data;
     }
 
     /**
-     * Reads all user data from disk
+     * Filename for the content file
      *
-     * @return array
+     * @return string
      */
-    protected function data(): array
+    public function contentFileName(): string
     {
-        if ($this->data !== null) {
-            return $this->data;
-        }
+        return 'user';
+    }
 
-        try {
-            return $this->data = Data::read($this->contentFile());
-        } catch (Throwable $e) {
-            return $this->data = [];
-        }
+    protected function credentials(): array
+    {
+        return $this->credentials = $this->credentials ?? $this->readCredentials();
     }
 
     /**
@@ -245,9 +217,9 @@ class User extends ModelWithContent
      *
      * @return string
      */
-    public function email(): string
+    public function email(): ?string
     {
-        return $this->email;
+        return $this->email = $this->email ?? $this->credentials()['email'] ?? null;
     }
 
     /**
@@ -257,17 +229,7 @@ class User extends ModelWithContent
      */
     public function exists(): bool
     {
-        return is_file($this->root() . '/user.txt') === true;
-    }
-
-    /**
-     * File finder
-     *
-     * @return Avatar
-     */
-    public function file()
-    {
-        return $this->avatar();
+        return is_file($this->contentFile('default')) === true;
     }
 
     /**
@@ -296,7 +258,29 @@ class User extends ModelWithContent
      */
     public function id(): string
     {
-        return $this->id = $this->id ?? sha1($this->email());
+        return $this->id;
+    }
+
+    /**
+     * Returns the inventory of files
+     * children and content files
+     *
+     * @return array
+     */
+    public function inventory(): array
+    {
+        if ($this->inventory !== null) {
+            return $this->inventory;
+        }
+
+        $kirby = $this->kirby();
+
+        return $this->inventory = Dir::inventory(
+            $this->root(),
+            $kirby->contentExtension(),
+            $kirby->contentIgnore(),
+            $kirby->multilang()
+        );
     }
 
     /**
@@ -369,7 +353,7 @@ class User extends ModelWithContent
      */
     public function language(): string
     {
-        return $this->language ?? $this->language = $this->data()['language'] ?? 'en';
+        return $this->language ?? $this->language = $this->credentials()['language'] ?? $this->kirby()->option('panel.language', 'en');
     }
 
     /**
@@ -458,17 +442,30 @@ class User extends ModelWithContent
      */
     public function modified(string $format = 'U', string $handler = null)
     {
-        return F::modified($this->contentFile(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
+        $modifiedContent = F::modified($this->contentFile());
+        $modifiedIndex   = F::modified($this->root() . '/index.php');
+        $modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
+        $handler         = $handler ?? $this->kirby()->option('date.handler', 'date');
+
+        return $handler($format, $modifiedTotal);
     }
 
     /**
      * Returns the user's name
      *
-     * @return string|null
+     * @return Field
      */
-    public function name(): ?string
+    public function name()
     {
-        return $this->name = $this->name ?? $this->data()['name'] ?? null;
+        if (is_string($this->name) === true) {
+            return new Field($this, 'name', $this->name);
+        }
+
+        if ($this->name !== null) {
+            return $this->name;
+        }
+
+        return $this->name = new Field($this, 'name', $this->credentials()['name'] ?? null);
     }
 
     /**
@@ -485,6 +482,16 @@ class User extends ModelWithContent
     }
 
     /**
+     * Returns the full path without leading slash
+     *
+     * @return string
+     */
+    public function panelPath(): string
+    {
+        return 'users/' . $this->id();
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
@@ -494,9 +501,9 @@ class User extends ModelWithContent
     public function panelUrl(bool $relative = false): string
     {
         if ($relative === true) {
-            return '/users/' . $this->id();
+            return '/' . $this->panelPath();
         } else {
-            return $this->kirby()->url('panel') . '/users/' . $this->id();
+            return $this->kirby()->url('panel') . '/' . $this->panelPath();
         }
     }
 
@@ -507,7 +514,11 @@ class User extends ModelWithContent
      */
     public function password(): ?string
     {
-        return $this->password = $this->password ?? $this->data()['password'] ?? null;
+        if ($this->password !== null) {
+            return $this->password;
+        }
+
+        return $this->password = $this->readPassword();
     }
 
     /**
@@ -555,7 +566,7 @@ class User extends ModelWithContent
             return $this->role;
         }
 
-        $roleName = $this->role ?? $this->data()['role'] ?? 'visitor';
+        $roleName = $this->role ?? $this->credentials()['role'] ?? 'visitor';
 
         if ($role = $this->kirby()->roles()->find($roleName)) {
             return $this->role = $role;
@@ -571,7 +582,7 @@ class User extends ModelWithContent
      */
     public function root(): string
     {
-        return $this->kirby()->root('accounts') . '/' . $this->email();
+        return $this->kirby()->root('accounts') . '/' . $this->id();
     }
 
     /**
@@ -607,9 +618,23 @@ class User extends ModelWithContent
      * @param string $email
      * @return self
      */
-    protected function setEmail(string $email): self
+    protected function setEmail(string $email = null): self
     {
-        $this->email = strtolower(trim($email));
+        if ($email !== null) {
+            $this->email = strtolower(trim($email));
+        }
+        return $this;
+    }
+
+    /**
+     * Sets the user id
+     *
+     * @param string $id
+     * @return self
+     */
+    protected function setId(string $id = null): self
+    {
+        $this->id = $id;
         return $this;
     }
 
@@ -698,7 +723,7 @@ class User extends ModelWithContent
     public function toArray(): array
     {
         return [
-            'avatar'   => $this->avatar()->toArray(),
+            'avatar'   => $this->avatar() ? $this->avatar()->toArray() : null,
             'content'  => $this->content()->toArray(),
             'email'    => $this->email(),
             'id'       => $this->id(),
@@ -734,9 +759,9 @@ class User extends ModelWithContent
      *
      * @return string
      */
-    public function username(): string
+    public function username(): ?string
     {
-        return empty($this->name()) ? $this->email() : $this->name();
+        return $this->name()->or($this->email())->value();
     }
 
     /**

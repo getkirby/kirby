@@ -11,6 +11,7 @@ return function ($kirby) {
         include __DIR__ . '/routes/roles.php',
         include __DIR__ . '/routes/site.php',
         include __DIR__ . '/routes/users.php',
+        include __DIR__ . '/routes/files.php',
         include __DIR__ . '/routes/system.php',
         include __DIR__ . '/routes/translations.php'
     );

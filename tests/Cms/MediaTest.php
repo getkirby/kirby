@@ -49,28 +49,6 @@ class MediaTest extends TestCase
         $this->assertEquals('image/svg+xml', $result->type());
     }
 
-    public function testLinkUserAvatar()
-    {
-        $app = $this->app->clone([
-            'users' => [
-                [
-                    'email' => 'test@getkirby.com'
-                ]
-            ]
-        ]);
-
-        $user = $app->user('test@getkirby.com');
-
-        F::write($this->fixtures . '/site/accounts/' . $user->id() . '/profile.jpg', ' ');
-
-        $avatar = $user->avatar();
-        $result = Media::link($user, $avatar->mediaHash(), $avatar->filename());
-
-        $this->assertInstanceOf(Response::class, $result);
-        $this->assertEquals(200, $result->code());
-        $this->assertEquals('image/jpeg', $result->type());
-    }
-
     public function testLinkWithInvalidHash()
     {
         F::write($this->fixtures . '/content/projects/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');

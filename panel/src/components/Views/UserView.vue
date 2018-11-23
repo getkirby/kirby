@@ -57,6 +57,7 @@
             </k-button>
             <k-dropdown-content ref="settings" :options="options" @action="action" />
           </k-dropdown>
+          <k-languages-dropdown />
         </k-button-group>
 
         <k-prev-next
@@ -79,7 +80,7 @@
 
       <k-box v-else-if="ready" :text="$t('user.blueprint', { role: user.role.name })" theme="info" />
 
-      <k-user-email-dialog ref="email" />
+      <k-user-email-dialog ref="email" @success="fetch" />
       <k-user-language-dialog ref="language" @success="fetch" />
       <k-user-password-dialog ref="password" />
       <k-user-remove-dialog ref="remove" />
@@ -90,7 +91,7 @@
         ref="upload"
         :url="uploadApi"
         :multiple="false"
-        accept="image/jpeg"
+        accept="image/*"
         @success="uploadedAvatar"
       />
     </k-view>
@@ -136,13 +137,8 @@ export default {
     };
   },
   computed: {
-    prev() {
-      if (this.user.prev) {
-        return {
-          link: this.$api.users.link(this.user.prev.id),
-          tooltip: this.user.prev.name
-        };
-      }
+    language() {
+      return this.$store.state.languages.current;
     },
     next() {
       if (this.user.next) {
@@ -152,9 +148,22 @@ export default {
         };
       }
     },
+    prev() {
+      if (this.user.prev) {
+        return {
+          link: this.$api.users.link(this.user.prev.id),
+          tooltip: this.user.prev.name
+        };
+      }
+    },
     uploadApi() {
       return config.api + "/users/" + this.user.id + "/avatar";
     }
+  },
+  watch: {
+    language() {
+      this.fetch();
+    },
   },
   methods: {
     action(action) {
@@ -201,8 +210,8 @@ export default {
             });
           };
 
-          if (user.avatar.exists) {
-            this.avatar = user.avatar.url + "?v=" + user.avatar.modified;
+          if (user.avatar) {
+            this.avatar = user.avatar.url;
           } else {
             this.avatar = null;
           }

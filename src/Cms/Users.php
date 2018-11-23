@@ -61,7 +61,7 @@ class Users extends Collection
     public function findByKey($key)
     {
         if (Str::contains($key, '@') === true) {
-            $key = sha1($key);
+            return parent::findBy('email', $key);
         }
 
         return parent::findByKey($key);
@@ -77,7 +77,7 @@ class Users extends Collection
             }
 
             $user = new User([
-                'email' => $userDirectory,
+                'id' => $userDirectory,
             ] + $inject);
 
             $users->set($user->id(), $user);

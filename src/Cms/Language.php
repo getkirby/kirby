@@ -107,27 +107,36 @@ class Language extends Model
     }
 
     /**
-     * When the last language is being deleted, the installation
-     * changes from multi-language to single language. In this case
-     * all language codes must be removed from the text files.
+     * Internal converter to create or remove
+     * translation files.
      *
-     * @return bool
+     * @param string $from
+     * @param string $to
+     * @return boolean
      */
-    protected function convertToSingleLanguage($code): bool
+    protected function converter(string $from, string $to): bool
     {
         $kirby = App::instance();
         $site  = $kirby->site();
 
-        F::move($site->contentFile($code), $site->contentFile(''));
+        F::move($site->contentFile($from, true), $site->contentFile($to, true));
 
+        // convert all pages
         foreach ($kirby->site()->index(true) as $page) {
-            $files = $page->files();
-
-            foreach ($files as $file) {
-                F::move($file->contentFile($code), $file->contentFile(''));
+            foreach ($page->files() as $file) {
+                F::move($file->contentFile($from, true), $file->contentFile($to, true));
             }
 
-            F::move($page->contentFile($code), $page->contentFile(''));
+            F::move($page->contentFile($from, true), $page->contentFile($to, true));
+        }
+
+        // convert all users
+        foreach ($kirby->users() as $user) {
+            foreach ($user->files() as $file) {
+                F::move($file->contentFile($from, true), $file->contentFile($to, true));
+            }
+
+            F::move($user->contentFile($from, true), $user->contentFile($to, true));
         }
 
         return true;
@@ -160,24 +169,18 @@ class Language extends Model
         $language->save();
 
         if ($languages->count() === 0) {
-            $code = $language->code();
-
-            F::move($site->contentFile(), $site->contentFile($code));
-
-            foreach ($kirby->site()->index(true) as $page) {
-                $files = $page->files();
-
-                foreach ($files as $file) {
-                    F::move($file->contentFile(), $file->contentFile($code));
-                }
-
-                F::move($page->contentFile(), $page->contentFile($code));
-            }
+            $this->converter('', $code);
         }
 
         return $language;
     }
 
+    /**
+     * Delete the current language and
+     * all its translation files
+     *
+     * @return boolean
+     */
     public function delete(): bool
     {
         if ($this->exists() === false) {
@@ -194,12 +197,10 @@ class Language extends Model
         }
 
         if ($languages->count() === 1) {
-            $this->convertToSingleLanguage($code);
+            return $this->converter($code, '');
         } else {
-            $this->deleteContentFiles($code);
+            return $this->deleteContentFiles($code);
         }
-
-        return true;
     }
 
     /**
@@ -213,16 +214,22 @@ class Language extends Model
         $kirby = App::instance();
         $site  = $kirby->site();
 
-        F::remove($site->contentFile($code));
+        F::remove($site->contentFile($code, true));
 
         foreach ($kirby->site()->index(true) as $page) {
-            $files = $page->files();
-
-            foreach ($files as $file) {
-                F::remove($file->contentFile($code));
+            foreach ($page->files() as $file) {
+                F::remove($file->contentFile($code, true));
             }
 
-            F::remove($page->contentFile($code));
+            F::remove($page->contentFile($code, true));
+        }
+
+        foreach ($kirby->users() as $user) {
+            foreach ($user->files() as $file) {
+                F::remove($file->contentFile($code, true));
+            }
+
+            F::remove($user->contentFile($code, true));
         }
 
         return true;

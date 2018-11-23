@@ -53,11 +53,6 @@ class Page extends ModelWithContent
     protected $blueprint;
 
     /**
-     * @var string
-     */
-    protected $contentFile;
-
-    /**
      * Sorting number + slug
      *
      * @var string
@@ -285,34 +280,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Returns the content text file
-     * which is found by the inventory method
-     *
-     * @param string $languageCode
-     * @return string
-     */
-    public function contentFile(string $languageCode = null): string
-    {
-        // get the current language code if no code is passed
-        if ($languageCode === null) {
-            $languageCode = $this->kirby()->languageCode();
-        }
-
-        // build a multi-lang file path
-        if ($languageCode !== null && $languageCode !== '') {
-            return $this->root() . '/' . $this->intendedTemplate() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
-        }
-
-        // use the cached version
-        if ($this->contentFile !== null) {
-            return $this->contentFile;
-        }
-
-        // create from template
-        return $this->contentFile = $this->root() . '/' . $this->intendedTemplate() . '.' . $this->kirby()->contentExtension();
-    }
-
-    /**
      * Prepares the content for the write method
      *
      * @return array
@@ -323,6 +290,18 @@ class Page extends ModelWithContent
             'title' => $data['title'] ?? null,
             'slug'  => $data['slug']  ?? null
         ]);
+    }
+
+    /**
+     * Returns the content text file
+     * which is found by the inventory method
+     *
+     * @param string $languageCode
+     * @return string
+     */
+    public function contentFileName(string $languageCode = null): string
+    {
+        return $this->intendedTemplate()->name();
     }
 
     /**
@@ -921,6 +900,16 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Returns the full path without leading slash
+     *
+     * @return string
+     */
+    public function panelPath(): string
+    {
+        return 'pages/' . $this->panelId();
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
@@ -929,9 +918,9 @@ class Page extends ModelWithContent
     public function panelUrl(bool $relative = false): string
     {
         if ($relative === true) {
-            return '/pages/' . $this->panelId();
+            return '/' . $this->panelPath();
         } else {
-            return $this->kirby()->url('panel') . '/pages/' . $this->panelId();
+            return $this->kirby()->url('panel') . '/' . $this->panelPath();
         }
     }
 

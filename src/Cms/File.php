@@ -46,13 +46,6 @@ class File extends ModelWithContent
     protected $blueprint;
 
     /**
-     * Cache for the content file root
-     *
-     * @var string
-     */
-    protected $contentFile;
-
-    /**
      * @var string
      */
     protected $id;
@@ -198,32 +191,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Absolute path to the meta text file
-     *
-     * @param string $languageCode
-     * @return string
-     */
-    public function contentFile(string $languageCode = null): string
-    {
-        // get the current language code if no code is passed
-        if ($languageCode === null) {
-            $languageCode = $this->kirby()->languageCode();
-        }
-
-        if ($languageCode !== null && $languageCode !== '') {
-            return $this->root() . '.' . $languageCode . '.' . $this->kirby()->contentExtension();
-        }
-
-        // use the cached version
-        if ($this->contentFile !== null) {
-            return $this->contentFile;
-        }
-
-        // create from template
-        return $this->contentFile = $this->root() . '.' . $this->kirby()->contentExtension();
-    }
-
-    /**
      * Store the template in addition to the
      * other content.
      *
@@ -236,6 +203,27 @@ class File extends ModelWithContent
         return A::append($data, [
             'template' => $this->template(),
         ]);
+    }
+
+    /**
+     * Returns the directory in which
+     * the content file is located
+     *
+     * @return string
+     */
+    public function contentFileDirectory(): string
+    {
+        return dirname($this->root());
+    }
+
+    /**
+     * Filename for the content file
+     *
+     * @return string
+     */
+    public function contentFileName(): string
+    {
+        return $this->filename();
     }
 
     /**
@@ -292,7 +280,7 @@ class File extends ModelWithContent
      */
     public function files(): Files
     {
-        return $this->collection();
+        return $this->siblingsCollection();
     }
 
     /**
@@ -316,6 +304,8 @@ class File extends ModelWithContent
         }
 
         if (is_a($this->parent(), 'Kirby\Cms\Page') === true) {
+            return $this->id = $this->parent()->id() . '/' . $this->filename();
+        } elseif (is_a($this->parent(), 'Kirby\Cms\User') === true) {
             return $this->id = $this->parent()->id() . '/' . $this->filename();
         }
 
@@ -486,6 +476,16 @@ class File extends ModelWithContent
     }
 
     /**
+     * Returns the full path without leading slash
+     *
+     * @return string
+     */
+    public function panelPath(): string
+    {
+        return 'files/' . $this->filename();
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
@@ -494,7 +494,7 @@ class File extends ModelWithContent
      */
     public function panelUrl(bool $relative = false): string
     {
-        return $this->parent()->panelUrl($relative) . '/files/' . $this->filename();
+        return $this->parent()->panelUrl($relative) . '/' . $this->panelPath();
     }
 
     /**

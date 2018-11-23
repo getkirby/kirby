@@ -24,7 +24,7 @@
           :text="user.username"
           :link="$api.users.link(user.id)"
           :image="
-            user.avatar.exists ?
+            user.avatar ?
               {
                 url: user.avatar.url,
                 back: 'pattern',

@@ -43,13 +43,13 @@
         v-if="file.id"
         ref="tabs"
         :key="'file-' + file.id + '-tabs'"
-        :parent="$api.files.url(file.parent.id, file.filename)"
+        :parent="$api.files.url(path, file.filename)"
         :tabs="tabs"
         :blueprint="file.blueprint.name"
         @tab="tab = $event"
       />
 
-      <k-file-rename-dialog ref="rename" />
+      <k-file-rename-dialog ref="rename" @success="renamed" />
       <k-file-remove-dialog ref="remove" @success="deleted" />
       <k-upload
         ref="upload"
@@ -105,13 +105,13 @@ export default {
   },
   computed: {
     uploadApi() {
-      return config.api + "/pages/" + this.path + "/files/" + this.filename;
+      return config.api + "/" + this.path + "/files/" + this.filename;
     },
     prev() {
       if (this.file.prev) {
         return {
           link: this.$api.files.link(
-            this.file.parent.id,
+            this.path,
             this.file.prev.filename
           ),
           tooltip: this.file.prev.filename
@@ -125,7 +125,7 @@ export default {
       if (this.file.next) {
         return {
           link: this.$api.files.link(
-            this.file.parent.id,
+            this.path,
             this.file.next.filename
           ),
           tooltip: this.file.next.filename
@@ -156,17 +156,17 @@ export default {
           this.preview = this.$api.files.preview(file);
           this.options = ready => {
             this.$api.files
-              .options(this.file.parent.id, this.file.filename)
+              .options(this.path, this.file.filename)
               .then(options => {
                 ready(options);
               });
           };
 
-          this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(file));
+          this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(this.file, this.$route.name));
           this.$store.dispatch("title", this.filename);
           this.$store.dispatch("form/create", {
             id: "files/" + file.id,
-            api: this.$api.files.link(file.parent.id, file.filename),
+            api: this.$api.files.link(this.path, this.filename),
             content: file.content
           });
 
@@ -182,28 +182,31 @@ export default {
           window.open(this.file.url);
           break;
         case "rename":
-          this.$refs.rename.open(this.file.parent.id, this.file.filename);
+          this.$refs.rename.open(this.path, this.file.filename);
           break;
         case "replace":
           this.$refs.upload.open({
             url:
               config.api +
               "/" +
-              this.$api.files.url(this.file.parent.id, this.file.filename),
+              this.$api.files.url(this.path, this.file.filename),
             accept: this.file.mime
           });
           break;
         case "remove":
-          this.$refs.remove.open(this.file.parent.id, this.file.filename);
+          this.$refs.remove.open(this.path, this.file.filename);
           break;
       }
     },
     deleted() {
       if (this.path) {
-        this.$router.push('/pages/' + this.path);
+        this.$router.push('/' + this.path);
       } else {
         this.$router.push('/site');
       }
+    },
+    renamed(file) {
+      this.$router.push(this.$api.files.link(this.path, file.filename));
     },
     uploaded() {
       this.fetch();

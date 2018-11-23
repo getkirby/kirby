@@ -33,13 +33,6 @@ class Site extends ModelWithContent
     protected $blueprint;
 
     /**
-     * Cache for the content file
-     *
-     * @var string
-     */
-    protected $contentFile;
-
-    /**
      * The error page object
      *
      * @var Page
@@ -220,32 +213,6 @@ class Site extends ModelWithContent
     }
 
     /**
-     * Returns the absolute path to the site's
-     * content text file
-     *
-     * @param string $languageCode
-     * @return string
-     */
-    public function contentFile(string $languageCode = null): string
-    {
-        // get the current language code if no code is passed
-        if ($languageCode === null) {
-            $languageCode = $this->kirby()->languageCode();
-        }
-
-        if ($languageCode !== null && $languageCode !== '') {
-            return $this->root() . '/site.' . $languageCode . '.' . $this->kirby()->contentExtension();
-        }
-
-        // use the cached version
-        if ($this->contentFile !== null) {
-            return $this->contentFile;
-        }
-
-        return $this->contentFile = $this->root() . '/site.' . $this->kirby()->contentExtension();
-    }
-
-    /**
      * Prepares the content for the write method
      *
      * @return array
@@ -255,6 +222,16 @@ class Site extends ModelWithContent
         return A::prepend($data, [
             'title' => $data['title'] ?? null,
         ]);
+    }
+
+    /**
+     * Filename for the content file
+     *
+     * @return string
+     */
+    public function contentFileName(): string
+    {
+        return 'site';
     }
 
     /**
@@ -418,6 +395,16 @@ class Site extends ModelWithContent
     }
 
     /**
+     * Returns the full path without leading slash
+     *
+     * @return string
+     */
+    public function panelPath(): string
+    {
+        return 'site';
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
@@ -427,9 +414,9 @@ class Site extends ModelWithContent
     public function panelUrl(bool $relative = false): string
     {
         if ($relative === true) {
-            return '/site';
+            return '/' . $this->panelPath();
         } else {
-            return $this->kirby()->url('panel') . '/site';
+            return $this->kirby()->url('panel') . '/' . $this->panelPath();
         }
     }
 

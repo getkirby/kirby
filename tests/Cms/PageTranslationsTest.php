@@ -131,6 +131,7 @@ class PageTranslationsTest extends TestCase
     {
         $page = $this->app('de')->page('grandma');
         $this->assertEquals('Oma', $page->title()->value());
+
         $this->assertEquals('Untranslated', $page->untranslated()->value());
     }
 

@@ -49,13 +49,13 @@ export default {
   },
   methods: {
     open(parent, filename) {
-      this.parent = parent;
       this.$api.files
         .get(parent, filename, {
           select: ["id", "filename", "name", "extension"]
         })
         .then(file => {
-          this.file = file;
+          this.file   = file;
+          this.parent = parent;
           this.$refs.dialog.open();
         })
         .catch (error => {
@@ -69,20 +69,12 @@ export default {
       this.$api.files
         .rename(this.parent, this.file.filename, this.file.name)
         .then(file => {
-
           // remove changes for the old file
           this.$store.dispatch("form/revert", "files/" + this.file.id);
-
-          let payload = {
-            message: ":)",
-            event: "file.changeName"
-          };
-
-          if (this.$route.name === "File") {
-            payload.route = this.$api.files.link(this.parent, file.filename);
-          }
-
-          this.success(payload);
+          this.$store.dispatch("notification/success", ":)");
+          this.$emit("success", file);
+          this.$events.$emit("file.changeName", file);
+          this.$refs.dialog.close();
         })
         .catch(error => {
           this.$refs.dialog.error(error.message);

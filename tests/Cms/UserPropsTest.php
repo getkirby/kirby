@@ -13,7 +13,7 @@ class UserPropsTest extends TestCase
             'email' => 'user@domain.com'
         ]);
 
-        $this->assertInstanceOf(Avatar::class, $user->avatar());
+        $this->assertNull($user->avatar());
     }
 
     public function testDefaultSiblings()
@@ -79,10 +79,10 @@ class UserPropsTest extends TestCase
         ]);
 
         // create a user file
-        F::write($file = $index . '/mail@testuser.com/user.txt', 'test');
+        F::write($file = $index . '/test/index.php', 'test');
 
         $modified = filemtime($file);
-        $user     = $app->user('mail@testuser.com');
+        $user     = $app->user('test');
 
         $this->assertEquals($modified, $user->modified());
 

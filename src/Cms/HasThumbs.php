@@ -9,7 +9,7 @@ trait HasThumbs
      * The original object
      * before manipulations
      *
-     * @var File|Avatar
+     * @var File
      */
     protected $original;
     protected $modifications = [];
@@ -62,7 +62,7 @@ trait HasThumbs
     /**
      * Returns the original object
      *
-     * @return File|Avatar
+     * @return File
      */
     public function original()
     {
@@ -93,7 +93,7 @@ trait HasThumbs
      * Sets the original object
      * before a file has been modified
      *
-     * @param File|Avatar $original
+     * @param File $original
      * @return self
      */
     protected function setOriginal(Model $original = null): self

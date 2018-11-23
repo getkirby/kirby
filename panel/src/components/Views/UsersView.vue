@@ -142,9 +142,9 @@ export default {
               image: null
             };
 
-            if (user.avatar.exists === true) {
+            if (user.avatar) {
               item.image = {
-                url: user.avatar.url + "?v=" + user.avatar.modified,
+                url: user.avatar.url,
                 cover: true
               };
             }

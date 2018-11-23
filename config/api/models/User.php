@@ -12,7 +12,7 @@ return [
     },
     'fields' => [
         'avatar' => function (User $user) {
-            return $user->avatar();
+            return $user->avatar() ? $user->avatar()->crop(512) : null;
         },
         'blueprint' => function (User $user) {
             return $user->blueprint();
@@ -30,7 +30,7 @@ return [
             return $user->language();
         },
         'name' => function (User $user) {
-            return $user->name();
+            return $user->name()->value();
         },
         'next' => function (User $user) {
             return $user->next();

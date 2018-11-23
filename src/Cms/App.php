@@ -457,6 +457,14 @@ class App
      */
     public function language(string $code = null): ?Language
     {
+        if ($this->multilang() === false) {
+            return null;
+        }
+
+        if ($code === 'default') {
+            return $this->languages()->default();
+        }
+
         if ($code !== null) {
             return $this->languages()->find($code);
         }
@@ -469,9 +477,9 @@ class App
      *
      * @return string|null
      */
-    public function languageCode(): ?string
+    public function languageCode(string $languageCode = null): ?string
     {
-        if ($language = $this->language()) {
+        if ($language = $this->language($languageCode)) {
             return $language->code();
         }
 

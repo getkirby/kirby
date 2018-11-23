@@ -91,7 +91,7 @@ class UserRulesTest extends TestCase
     public function testCreate()
     {
         $user = new User($props = [
-            'email'    => 'user@domain.com',
+            'email'    => 'new-user@domain.com',
             'password' => '12345678',
             'language' => 'en',
             'kirby'    => $this->appWithAdmin()
@@ -120,45 +120,6 @@ class UserRulesTest extends TestCase
         $user = new User(['email' => 'user@domain.com']);
         $this->assertTrue(UserRules::update($user, $input = [
             'zodiac' => 'lion'
-        ], $input));
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Use the User::changeEmail() method to change the user email
-     */
-    public function testUpdateWithEmail()
-    {
-        $app  = $this->appWithAdmin();
-        $user = new User(['email' => 'user@domain.com']);
-        $this->assertTrue(UserRules::update($user, $input = [
-            'email' => 'admin@domain.com'
-        ], $input));
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Use the User::changePassword() method to change the user password
-     */
-    public function testUpdateWithPassword()
-    {
-        $app  = $this->appWithAdmin();
-        $user = new User(['email' => 'user@domain.com']);
-        $this->assertTrue(UserRules::update($user, $input = [
-            'password' => '12345678'
-        ], $input));
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Use the User::changeRole() method to change the user role
-     */
-    public function testUpdateWithRole()
-    {
-        $app  = $this->appWithAdmin();
-        $user = new User(['email' => 'user@domain.com']);
-        $this->assertTrue(UserRules::update($user, $input = [
-            'role' => 'editor'
         ], $input));
     }
 

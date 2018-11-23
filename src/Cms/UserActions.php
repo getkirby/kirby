@@ -10,6 +10,8 @@ use Kirby\Exception\InvalidArgumentLogicException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 trait UserActions
@@ -24,31 +26,17 @@ trait UserActions
     public function changeEmail(string $email): self
     {
         return $this->commit('changeEmail', [$this, $email], function ($user, $email) {
-            if ($user->exists() === false) {
-                return $user->clone([
-                    'email' => $email
-                ]);
-            }
 
-            Dir::remove($user->mediaRoot());
-
-            $oldRoot = $user->root();
-            $newRoot = dirname($user->root()) . '/' . $email;
-
-            if (is_dir($newRoot) === true) {
-                throw new DuplicateException([
-                    'key'  => 'user.duplicate',
-                    'data' => ['email' => $email]
-                ]);
-            }
-
-            if (Dir::move($oldRoot, $newRoot) !== true) {
-                throw new LogicException('The user directory for "' . $email . '" could not be moved');
-            }
-
-            return $user->clone([
-                'email' => $email,
+            $user = $user->clone([
+                'email' => $email
             ]);
+
+            $user->updateCredentials([
+                'email' => $email
+            ]);
+
+            return $user;
+
         });
     }
 
@@ -61,7 +49,16 @@ trait UserActions
     public function changeLanguage(string $language): self
     {
         return $this->commit('changeLanguage', [$this, $language], function ($user, $language) {
-            return $user->clone(['language' => $language])->save();
+
+            $user = $user->clone([
+                'language' => $language,
+            ]);
+
+            $user->updateCredentials([
+                'language' => $language
+            ]);
+
+            return $user;
         });
     }
 
@@ -74,7 +71,16 @@ trait UserActions
     public function changeName(string $name): self
     {
         return $this->commit('changeName', [$this, $name], function ($user, $name) {
-            return $user->clone(['name' => $name])->save();
+
+            $user = $user->clone([
+                'name' => $name
+            ]);
+
+            $user->updateCredentials([
+                'name' => $name
+            ]);
+
+            return $user;
         });
     }
 
@@ -87,7 +93,15 @@ trait UserActions
     public function changePassword(string $password): self
     {
         return $this->commit('changePassword', [$this, $password], function ($user, $password) {
-            return $user->clone(['password' => $user->hashPassword($password)])->save();
+
+            $user = $user->clone([
+                'password' => $password = $user->hashPassword($password)
+            ]);
+
+            $user->writePassword($password);
+
+            return $user;
+
         });
     }
 
@@ -100,7 +114,17 @@ trait UserActions
     public function changeRole(string $role): self
     {
         return $this->commit('changeRole', [$this, $role], function ($user, $role) {
-            return $user->clone(['role' => $role])->save();
+
+            $user = $user->clone([
+                'role' => $role,
+            ]);
+
+            $user->updateCredentials([
+                'role' => $role
+            ]);
+
+            return $user;
+
         });
     }
 
@@ -158,17 +182,34 @@ trait UserActions
         // run the hook
         return $user->commit('create', [$user, $props], function ($user, $props) {
 
-            // try to create the directory
-            if (Dir::make($user->root()) !== true) {
-                throw new LogicException('The user directory for "' . $user->email() . '" could not be created');
-            }
+            $user->writeCredentials([
+                'email'    => $user->email(),
+                'language' => $user->language(),
+                'name'     => $user->name()->value(),
+                'role'     => $user->role()->id(),
+            ]);
 
-            // create an empty storage file
-            touch($user->root() . '/user.txt');
+            $user->writePassword($user->password());
 
             // write the user data
             return $user->save();
         });
+    }
+
+    /**
+     * @return string
+     */
+    public function createId(): string
+    {
+        $length = 8;
+        $id     = Str::random($length);
+
+        while ($this->kirby()->users()->has($id)) {
+            $length++;
+            $id = Str::random($length);
+        }
+
+        return $id;
     }
 
     /**
@@ -194,4 +235,66 @@ trait UserActions
             return true;
         });
     }
+
+    /**
+     * Read the account information from disk
+     *
+     * @return array
+     */
+    protected function readCredentials(): array
+    {
+        if (file_exists($this->root() . '/index.php') === true) {
+            $credentials = require $this->root() . '/index.php';
+
+            return is_array($credentials) === false ? [] : $credentials;
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * Reads the user password from disk
+     *
+     * @return string|null
+     */
+    protected function readPassword(): ?string
+    {
+        return F::read($this->root() . '/.htpasswd');
+    }
+
+    /**
+     * This always merges the existing credentials
+     * with the given input.
+     *
+     * @param array $credentials
+     * @return bool
+     */
+    protected function updateCredentials(array $credentials): bool
+    {
+        return $this->writeCredentials(array_merge($this->credentials(), $credentials));
+    }
+
+    /**
+     * Writes the account information to disk
+     *
+     * @return boolean
+     */
+    protected function writeCredentials(array $credentials): bool
+    {
+        $export = '<?php' . PHP_EOL . PHP_EOL . 'return ' . var_export($credentials, true) . ';';
+
+        return F::write($this->root() . '/index.php', $export);
+    }
+
+    /**
+     * Writes the password to disk
+     *
+     * @param string $password
+     * @return bool
+     */
+    protected function writePassword(string $password = null): bool
+    {
+        return F::write($this->root() . '/.htpasswd', $password);
+    }
+
 }

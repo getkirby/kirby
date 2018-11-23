@@ -16,7 +16,7 @@
           :key="user.email"
           :text="user.username"
           :image="
-            user.avatar.exists ?
+            user.avatar ?
               {
                 url: user.avatar.url,
                 back: 'pattern',

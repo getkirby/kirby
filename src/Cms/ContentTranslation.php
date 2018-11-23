@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Data\Data;
+use Kirby\Exception\PermissionException;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 
 /**
@@ -80,22 +82,16 @@ class ContentTranslation
      */
     public function content(): array
     {
-        if ($this->content !== null) {
-            return $this->content;
+        $parent  = $this->parent();
+        $content = $this->content ?? $parent->read($this->code());
+
+        // merge with the default content
+        if ($this->isDefault() === false && $defaultLanguage = $parent->kirby()->defaultLanguage()) {
+            $default = $parent->translation($defaultLanguage->code())->content();
+            $content = array_merge($default, $content);
         }
 
-        // try to fallback to the content file without language code
-        if ($this->exists() === false && $this->isDefault() === true) {
-            $file = $this->parent()->contentFile();
-        } else {
-            $file = $this->contentFile();
-        }
-
-        try {
-            return $this->content = Data::read($file);
-        } catch (Exception $e) {
-            return $this->content = [];
-        }
+        return $content;
     }
 
     /**
@@ -105,7 +101,7 @@ class ContentTranslation
      */
     public function contentFile(): string
     {
-        return $this->contentFile = $this->parent->contentFile($this->code);
+        return $this->contentFile = $this->parent->contentFile($this->code, true);
     }
 
     /**
@@ -136,7 +132,11 @@ class ContentTranslation
      */
     public function isDefault(): bool
     {
-        return $this->code() === $this->parent->kirby()->defaultLanguage()->code();
+        if ($defaultLanguage = $this->parent->kirby()->defaultLanguage()) {
+            return $this->code() === $defaultLanguage->code();
+        }
+
+        return false;
     }
 
     /**

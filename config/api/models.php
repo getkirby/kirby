@@ -8,7 +8,6 @@ use Kirby\Cms\Site;
  * Api Model Definitions
  */
 return [
-    'Avatar'        => include __DIR__ . '/models/Avatar.php',
     'File'          => include __DIR__ . '/models/File.php',
     'FileBlueprint' => include __DIR__ . '/models/FileBlueprint.php',
     'Language'      => include __DIR__ . '/models/Language.php',

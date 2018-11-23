@@ -25,7 +25,7 @@ class RadioFieldTest extends TestCase
             ['a', 'a'],
             ['b', 'b'],
             ['c', 'c'],
-            ['d', null]
+            ['d', '']
         ];
     }
 

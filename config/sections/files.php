@@ -121,7 +121,7 @@ return [
                     'icon'     => $file->panelIcon($image),
                     'image'    => $image,
                     'link'     => $file->panelUrl(true),
-                    'parent'   => $file->parentId(),
+                    'parent'   => $file->parent()->panelPath(),
                     'url'      => $file->url(),
                 ];
             }

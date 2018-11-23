@@ -26,9 +26,9 @@ export default {
     open(parent, filename) {
       this.$api.files.get(parent, filename)
         .then(file => {
-          this.id = file.id;
-          this.parent = file.parent;
+          this.id       = file.id;
           this.filename = file.filename;
+          this.parent   = parent;
           this.$refs.dialog.open();
         })
         .catch (error => {
@@ -37,7 +37,7 @@ export default {
     },
     submit() {
       this.$api.files
-        .delete(this.parent.id, this.filename)
+        .delete(this.parent, this.filename)
         .then(() => {
           // remove data from cache
           this.$store.dispatch("form/remove", "files/" + this.id);

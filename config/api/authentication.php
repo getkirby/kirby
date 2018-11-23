@@ -14,7 +14,7 @@ return function () {
     if ($basicAuth === false || Str::startsWith($authorization, 'Basic ') !== true) {
 
         // get the csrf from the header
-        $fromHeader = $this->requestHeaders('x-csrf');
+        $fromHeader = $this->requestHeaders('x-csrf') ?? get('csrf');
 
         // check for a predefined csrf or use the one from session
         $fromSession = $options['csrf'] ?? csrf();

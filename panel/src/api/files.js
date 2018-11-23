@@ -2,8 +2,8 @@ import Vue from "vue";
 import api from "./api.js";
 
 export default {
-  get(page, filename, query) {
-    return api.get(this.url(page, filename), query).then(file => {
+  get(parent, filename, query) {
+    return api.get(this.url(parent, filename), query).then(file => {
       if (Array.isArray(file.content) === true) {
         file.content = {};
       }
@@ -11,22 +11,16 @@ export default {
       return file;
     });
   },
-  update(page, filename, data) {
-    return api.patch(this.url(page, filename), data);
+  update(parent, filename, data) {
+    return api.patch(this.url(parent, filename), data);
   },
-  rename(page, filename, to) {
-    return api.patch(this.url(page, filename, "name"), {
+  rename(parent, filename, to) {
+    return api.patch(this.url(parent, filename, "name"), {
       name: to
     });
   },
-  url(page, filename, path) {
-    let url = "";
-
-    if (!page) {
-      url = "site/files/" + filename;
-    } else {
-      url = api.pages.url(page, "files/" + filename);
-    }
+  url(parent, filename, path) {
+    let url = parent + "/files/" + filename;
 
     if (path) {
       url += "/" + path;
@@ -34,14 +28,14 @@ export default {
 
     return url;
   },
-  link(page, filename, path) {
-    return "/" + this.url(page, filename, path);
+  link(parent, filename, path) {
+    return "/" + this.url(parent, filename, path);
   },
-  delete(page, filename) {
-    return api.delete(this.url(page, filename));
+  delete(parent, filename) {
+    return api.delete(this.url(parent, filename));
   },
-  options(page, filename, view) {
-    return api.get(this.url(page, filename), {select: "options"}).then(file => {
+  options(parent, filename, view) {
+    return api.get(this.url(parent, filename), {select: "options"}).then(file => {
       const options = file.options;
       let result    = [];
 
@@ -143,18 +137,35 @@ export default {
         return "#81a2be";
     }
   },
-  breadcrumb(file, self = true) {
-    var breadcrumb = file.parents.map(parent => ({
-      label: parent.title,
-      link: api.pages.link(parent.id)
-    }));
+  breadcrumb(file, route) {
 
-    if (self === true) {
-      breadcrumb.push({
-        label: file.filename,
-        link: this.link(file.parent.id, file.filename)
-      });
+    let parent = null;
+    let breadcrumb = [];
+
+    switch (route) {
+      case "UserFile":
+        breadcrumb.push({
+          label: file.parent.username,
+          link: api.users.link(file.parent.id)
+        });
+        parent = 'users/' + file.parent.id;
+        break;
+      case "SiteFile":
+        parent = "site";
+        break;
+      case "PageFile":
+        breadcrumb = file.parents.map(parent => ({
+          label: parent.title,
+          link: api.pages.link(parent.id)
+        }));
+        parent = "pages/" + file.parent.id;
+        break;
     }
+
+    breadcrumb.push({
+      label: file.filename,
+      link: this.link(parent, file.filename)
+    });
 
     return breadcrumb;
   }

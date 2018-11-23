@@ -17,8 +17,11 @@ class UserMethodsTest extends TestCase
 
     public function testId()
     {
-        $user = new User(['email' => $id = 'user@domain.com']);
-        $this->assertEquals(sha1($id), $user->id());
+        $user = new User([
+            'id'    => 'test',
+            'email' => 'user@domain.com'
+        ]);
+        $this->assertEquals('test', $user->id());
     }
 
     public function testLanguage()

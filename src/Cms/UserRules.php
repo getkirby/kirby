@@ -85,7 +85,8 @@ class UserRules
 
     public static function create(User $user, array $props = []): bool
     {
-        static::validEmail($user, $user->email());
+        static::validId($user, $user->id());
+        static::validEmail($user, $user->email(), true);
         static::validLanguage($user, $user->language());
 
         if (empty($props['password']) === false) {
@@ -134,22 +135,10 @@ class UserRules
             ]);
         }
 
-        if (isset($values['email']) === true) {
-            throw new \Exception('Use the User::changeEmail() method to change the user email');
-        }
-
-        if (isset($values['password']) === true) {
-            throw new \Exception('Use the User::changePassword() method to change the user password');
-        }
-
-        if (isset($values['role']) === true) {
-            throw new \Exception('Use the User::changeRole() method to change the user role');
-        }
-
         return true;
     }
 
-    public static function validEmail(User $user, string $email): bool
+    public static function validEmail(User $user, string $email, bool $strict = false): bool
     {
         if (V::email($email ?? null) === false) {
             throw new InvalidArgumentException([
@@ -157,11 +146,26 @@ class UserRules
             ]);
         }
 
-        if ($duplicate = $user->kirby()->users()->not($user)->find($email)) {
+        if ($strict === true) {
+            $duplicate = $user->kirby()->users()->find($email);
+        } else {
+            $duplicate = $user->kirby()->users()->not($user)->find($email);
+        }
+
+        if ($duplicate) {
             throw new DuplicateException([
                 'key'  => 'user.duplicate',
                 'data' => ['email' => $email]
             ]);
+        }
+
+        return true;
+    }
+
+    public static function validId(User $user, string $id): bool
+    {
+        if ($duplicate = $user->kirby()->users()->find($id)) {
+            throw new DuplicateException('A user with this id exists');
         }
 
         return true;

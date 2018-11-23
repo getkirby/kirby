@@ -13,6 +13,17 @@ use Kirby\Toolkit\F;
  */
 class Translations extends Collection
 {
+
+    public function start(string $code)
+    {
+        F::move($this->parent->contentFile('', true), $this->parent->contentFile($code, true));
+    }
+
+    public function stop(string $code)
+    {
+        F::move($this->parent->contentFile($code, true), $this->parent->contentFile('', true));
+    }
+
     public static function factory(array $translations)
     {
         $collection = new static;

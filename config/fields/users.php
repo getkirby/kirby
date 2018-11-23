@@ -45,6 +45,16 @@ return [
             $users = [];
             $kirby = kirby();
 
+            $avatar = function ($user) {
+                if ($avatar = $user->avatar()) {
+                    return [
+                        'url' => $avatar->crop(512)->url()
+                    ];
+                }
+
+                return null;
+            };
+
             foreach (Yaml::decode($value) as $email) {
 
                 if (is_array($email) === true) {
@@ -56,10 +66,7 @@ return [
                         'username' => $user->username(),
                         'id'       => $user->id(),
                         'email'    => $user->email(),
-                        'avatar'   => [
-                            'url'    => $user->avatar()->url(),
-                            'exists' => $user->avatar()->exists()
-                        ]
+                        'avatar'   => $avatar($user)
                     ];
                 }
             }

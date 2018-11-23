@@ -3,7 +3,7 @@
 use Kirby\Cms\System;
 
 /**
- * Avatar
+ * System
  */
 return [
     'fields' => [

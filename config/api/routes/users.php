@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\F;
+
 /**
  * User Routes
  */
@@ -58,8 +60,16 @@ return [
         'pattern' => 'users/(:any)/avatar',
         'method'  => 'POST',
         'action'  => function (string $id) {
+            if ($avatar = $this->user($id)->avatar()) {
+                $avatar->delete();
+            }
+
             return $this->upload(function ($source, $filename) use ($id) {
-                return $this->user($id)->avatar()->replace($source);
+                return $this->user($id)->createFile([
+                    'filename' => 'profile.' . F::extension($filename),
+                    'template' => 'avatar',
+                    'source'   => $source
+                ]);
             }, $single = true);
         }
     ],

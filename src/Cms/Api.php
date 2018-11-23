@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
 class Api extends BaseApi
@@ -25,12 +26,11 @@ class Api extends BaseApi
         return parent::call($path, $method, $requestData);
     }
 
-    public function file(string $id = null, string $filename)
+    public function file(string $path = null, string $filename)
     {
         $filename = urldecode($filename);
-        $parent   = $id === null ? $this->site(): $this->page($id);
 
-        if ($file = $parent->file($filename)) {
+        if ($file = $this->parent($path)->file($filename)) {
             return $file;
         }
 
@@ -39,6 +39,35 @@ class Api extends BaseApi
             'data' => [
                 'filename' => $filename
             ]
+        ]);
+    }
+
+    public function parent(string $path)
+    {
+        $modelType  = $path === 'site' ? 'site' : dirname($path);
+        $modelTypes = ['site' => 'site', 'users' => 'user', 'pages' => 'page'];
+        $modelName  = $modelTypes[$modelType] ?? null;
+
+        if ($modelName === null) {
+            throw new InvalidArgumentException('Invalid file model type');
+        }
+
+        if ($modelName === 'site') {
+            $modelId = null;
+        } else {
+            $modelId = basename($path);
+
+            if ($modelName === 'page') {
+                $modelId = str_replace('+', '/', $modelId);
+            }
+        }
+
+        if ($model = $this->kirby()->$modelName($modelId)) {
+            return $model;
+        }
+
+        throw new NotFoundException([
+            'key' => $modelName . '.undefined'
         ]);
     }
 

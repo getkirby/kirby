@@ -46,6 +46,22 @@ trait HasFiles
     }
 
     /**
+     * Creates a new file
+     *
+     * @param array $props
+     * @return File
+     */
+    public function createFile(array $props)
+    {
+        $props = array_merge($props, [
+            'parent' => $this,
+            'url'    => null
+        ]);
+
+        return File::create($props);
+    }
+
+    /**
      * Filters the Files collection by type documents
      *
      * @return Files

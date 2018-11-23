@@ -70,22 +70,6 @@ trait SiteActions
     }
 
     /**
-     * Creates a site file
-     *
-     * @param array $props
-     * @return File
-     */
-    public function createFile(array $props)
-    {
-        $props = array_merge($props, [
-            'parent' => $this,
-            'url'    => null
-        ]);
-
-        return File::create($props);
-    }
-
-    /**
      * Clean internal caches
      */
     public function purge(): self

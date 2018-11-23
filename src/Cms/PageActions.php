@@ -367,16 +367,6 @@ trait PageActions
         return static::create($props);
     }
 
-    public function createFile(array $props)
-    {
-        $props = array_merge($props, [
-            'parent' => $this,
-            'url'    => null
-        ]);
-
-        return File::create($props);
-    }
-
     /**
      * Create the sorting number for the page
      * depending on the blueprint settings
