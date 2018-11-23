@@ -114,7 +114,7 @@ class Language extends Model
      * @param string $to
      * @return boolean
      */
-    protected function converter(string $from, string $to): bool
+    protected static function converter(string $from, string $to): bool
     {
         $kirby = App::instance();
         $site  = $kirby->site();
@@ -169,7 +169,7 @@ class Language extends Model
         $language->save();
 
         if ($languages->count() === 0) {
-            $this->converter('', $code);
+            static::converter('', $language->code());
         }
 
         return $language;

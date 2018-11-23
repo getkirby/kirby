@@ -177,7 +177,14 @@ trait FileActions
         return $this->commit('delete', [$this], function ($file) {
             $file->unpublish();
 
-            F::remove($file->contentFile());
+            if ($file->kirby()->multilang() === true) {
+                foreach ($file->translations() as $translation) {
+                    F::remove($file->contentFile($translation->code()));
+                }
+            } else {
+                F::remove($file->contentFile());
+            }
+
             F::remove($file->root());
 
             return true;
