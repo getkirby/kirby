@@ -35,7 +35,7 @@ export default {
     },
     submit() {
       this.$api
-        .patch("languages/" + this.language.id, { default: true })
+        .patch("languages/" + this.language.code, { default: true })
         .then(() => {
           this.fetch();
           this.$store.dispatch("languages/load");
