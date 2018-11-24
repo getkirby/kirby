@@ -204,6 +204,9 @@
   "license": "License",
   "license.buy": "Buy a license",
   "license.register": "Register",
+  "license.register.help": "You received your license code after the purchase via email. Please copy and paste it to register.",
+  "license.register.label": "Please enter your license code",
+  "license.register.success": "Thank you for supporting Kirby",
   "license.unregistered": "This is an unregistered demo of Kirby",
 
   "link": "Link",

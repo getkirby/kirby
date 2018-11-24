@@ -18,10 +18,7 @@
                 {{ license }}
               </template>
               <p v-else>
-                {{ $t('license.unregistered') }}<br>
-                <k-link to="https://getkirby.com/buy" class="k-system-info-shoplink" target="_blank">
-                  <strong>{{ $t('license.buy') }}</strong>
-                </k-link>
+                <strong class="k-system-unregistered">{{ $t('license.unregistered') }}</strong>
               </p>
             </dd>
           </dl>
@@ -189,15 +186,7 @@ export default {
   color: $color-dark-grey;
   margin-bottom: .25rem;
 }
-.k-system-info-box a {
-  color: $color-focus;
-  text-decoration: underline;
-  transition: color .3s;
-}
-.k-system-info-box a:hover {
-  color: $color-dark;
-}
-a.k-system-info-shoplink {
+.k-system-unregistered {
   color: $color-negative;
 }
 

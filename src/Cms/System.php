@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 /**
@@ -15,8 +16,15 @@ use Kirby\Toolkit\Str;
  */
 class System
 {
+
+    /**
+     * @var App
+     */
     protected $app;
 
+    /**
+     * @param App $app
+     */
     public function __construct(App $app)
     {
         $this->app = $app;
@@ -25,6 +33,21 @@ class System
         $this->init();
     }
 
+    /**
+     * Improved var_dump output
+     *
+     * @return array
+     */
+    public function __debuginfo(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * Get an status array of all checks
+     *
+     * @return array
+     */
     public function status(): array
     {
         return [
@@ -38,21 +61,42 @@ class System
         ];
     }
 
+    /**
+     * Check for a writable accounts folder
+     *
+     * @return boolean
+     */
     public function accounts(): bool
     {
         return is_writable($this->app->root('accounts'));
     }
 
+    /**
+     * Check for a writable content folder
+     *
+     * @return boolean
+     */
     public function content(): bool
     {
         return is_writable($this->app->root('content'));
     }
 
+    /**
+     * Check for an existing curl extension
+     *
+     * @return boolean
+     */
     public function curl(): bool
     {
         return extension_loaded('curl');
     }
 
+    /**
+     * Create the most important folders
+     * if they don't exist yet
+     *
+     * @return void
+     */
     public function init()
     {
         Dir::make($this->app->root('accounts'));
@@ -60,11 +104,21 @@ class System
         Dir::make($this->app->root('media'));
     }
 
+    /**
+     * Check if Kirby is already installed
+     *
+     * @return boolean
+     */
     public function isInstalled(): bool
     {
         return $this->app->users()->count() > 0;
     }
 
+    /**
+     * Check if this is a local installation
+     *
+     * @return boolean
+     */
     public function isLocal(): bool
     {
         $server = $this->app->server();
@@ -93,6 +147,11 @@ class System
         return false;
     }
 
+    /**
+     * Check if all tests pass
+     *
+     * @return boolean
+     */
     public function isOk(): bool
     {
         return in_array(false, array_values($this->status()), true) === false;
@@ -106,36 +165,64 @@ class System
      */
     public function license()
     {
-        $file = $this->app->root('config') . '/license.php';
+        $file = $this->app->root('config') . '/.license';
 
         if (file_exists($file) === false) {
             return false;
         }
 
-        $license = (array)require $file;
-
-        if (isset($license['code'], $license['type'], $license['issued']) === false) {
-            return false;
-        }
-
-        return $license;
+        return F::read($file);
     }
 
+    /**
+     * Check for an existing mbstring extension
+     *
+     * @return boolean
+     */
     public function mbString(): bool
     {
         return extension_loaded('mbstring');
     }
 
+    /**
+     * Check for a writable media folder
+     *
+     * @return boolean
+     */
     public function media(): bool
     {
         return is_writable($this->app->root('media'));
     }
 
+    /**
+     * Check for a valid PHP version
+     *
+     * @return boolean
+     */
     public function php(): bool
     {
         return version_compare(phpversion(), '7.1.0', '>');
     }
 
+    /**
+     * Validates the license key
+     * and adds it to the .license file in the config
+     * folder if possible.
+     *
+     * @param string $license
+     * @return boolean
+     */
+    public function register(string $license): bool
+    {
+        $file = $this->app->root('config') . '/.license';
+        return F::write($file, $license);
+    }
+
+    /**
+     * Check for a valid server environment
+     *
+     * @return boolean
+     */
     public function server(): bool
     {
         $servers = [
@@ -172,6 +259,11 @@ class System
         }
     }
 
+    /**
+     * Return the status as array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->status();

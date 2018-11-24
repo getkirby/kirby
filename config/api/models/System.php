@@ -23,8 +23,7 @@ return [
             return $this->kirby()->languages();
         },
         'license' => function (System $system) {
-            $license = $system->license();
-            return $license ? $license['type'] : null;
+            return $system->license();
         },
         'requirements' => function (System $system) {
             return $system->toArray();

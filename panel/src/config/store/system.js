@@ -11,6 +11,9 @@ export default {
     SET_INFO(state, info) {
       state.info = info;
     },
+    SET_LICENSE(state, license) {
+      state.info.license = license;
+    },
     SET_TITLE(state, title) {
       state.info.title = title;
     }
@@ -18,6 +21,9 @@ export default {
   actions: {
     title(context, title) {
       context.commit("SET_TITLE", title);
+    },
+    register(context, license) {
+      context.commit("SET_LICENSE", license);
     },
     load(context, reload) {
       // reuse the cached system info

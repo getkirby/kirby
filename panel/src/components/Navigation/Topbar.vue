@@ -93,6 +93,11 @@
           >
             {{ notification.message }}
           </k-button>
+          <div v-else-if="unregistered" class="k-registration">
+            <p>{{ $t('license.unregistered') }}</p>
+            <k-button :responsive="true" icon="key" @click="$emit('register')">{{ $t('license.register') }}</k-button>
+            <k-button :responsive="true" link="https://getkirby.com/buy" target="_blank" icon="cart">{{ $t('license.buy') }}</k-button>
+          </div>
           <k-button :tooltip="$t('search')" icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
@@ -133,6 +138,9 @@ export default {
       } else {
         return null;
       }
+    },
+    unregistered() {
+      return !this.$store.state.system.info.license ? true : false;
     }
   },
   methods: {
@@ -259,6 +267,9 @@ export default {
   top: 0;
   background: $color-dark;
   height: 2.5rem;
+  display: flex;
+  align-items: center;
+  line-height: 1.5;
 
   [dir="ltr"] & {
     right: 0;
@@ -328,5 +339,29 @@ export default {
 .k-topbar-menu [aria-current] .k-link {
   color: $color-focus;
   font-weight: 500;
+}
+
+
+.k-registration {
+  display: inline-block;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+.k-registration p {
+  color: $color-negative-on-dark;
+  font-size: $font-size-small;
+  margin-right: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  display: none;
+
+  @media screen and (min-width: $breakpoint-large) {
+    display: block;
+  }
+}
+.k-registration .k-button {
+  color: $color-white;
+  line-height: 1.5;
 }
 </style>

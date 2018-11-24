@@ -6,9 +6,10 @@
     :data-topbar="!$route.meta.outside"
     class="k-panel"
   >
-    <k-topbar v-if="!$route.meta.outside" />
-    <k-search v-if="$store.state.search" v-bind="$store.state.search" />
-    <k-license-bar />
+    <div class="k-panel-header" v-if="!$route.meta.outside">
+      <k-topbar @register="$refs.registration.open()" />
+      <k-search v-if="$store.state.search" v-bind="$store.state.search" />
+    </div>
     <main class="k-panel-view">
       <router-view />
     </main>
@@ -17,6 +18,7 @@
     <div v-if="offline" class="k-offline-warning">
       <p>The panel is currently offline</p>
     </div>
+    <k-registration ref="registration" />
   </div>
   <div v-else class="k-panel">
     <main class="k-panel-view">
@@ -28,13 +30,13 @@
 </template>
 
 <script>
-import LicenseBar from "@/components/Layout/LicenseBar.vue";
 import Search from "@/components/Navigation/Search.vue";
+import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 
 export default {
   name: "App",
   components: {
-    "k-license-bar": LicenseBar,
+    "k-registration": Registration,
     "k-search": Search
   },
   data() {
@@ -128,7 +130,7 @@ b {
   left: 0;
   background: $color-background;
 }
-.k-panel .k-topbar {
+.k-panel-header {
   position: absolute;
   top: 0;
   left: 0;
@@ -158,11 +160,9 @@ b {
   animation: Loading 0.5s;
 }
 .k-panel[data-loading]::after,
-
 .k-panel[data-dragging] {
   user-select: none;
 }
-
 .k-offline-warning {
   position: fixed;
   content: " ";

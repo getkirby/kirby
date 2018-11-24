@@ -17,18 +17,7 @@ return [
         'pattern' => 'system/register',
         'method'  => 'POST',
         'action'  => function () {
-            return $this->upload(function ($source) {
-
-                if (F::mime($source) !== 'text/x-php') {
-                    throw new Exception('Invalid license file');
-                }
-
-                if (F::copy($source, $this->kirby()->root('config') . '/license.php') !== true) {
-                    throw new Exception('The license file could not be uploaded');
-                }
-
-                return true;
-            });
+            return $this->kirby()->system()->register($this->requestBody('license'));
         }
     ],
     [
