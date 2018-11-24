@@ -82,7 +82,6 @@ export default {
   data() {
     return {
       name: "",
-      preview: {},
       file: {
         id: null,
         parent: null,
@@ -90,6 +89,8 @@ export default {
         url: "",
         prev: null,
         next: null,
+        panelIcon: null,
+        panelImage: null,
         mime: null,
         content: {}
       },
@@ -153,7 +154,6 @@ export default {
           this.name = file.name;
           this.tabs = file.blueprint.tabs;
           this.permissions = file.options;
-          this.preview = this.$api.files.preview(file);
           this.options = ready => {
             this.$api.files
               .options(this.path, this.file.filename)

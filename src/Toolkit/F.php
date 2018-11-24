@@ -46,6 +46,7 @@ class F
             'doc',
             'docx',
             'dotx',
+            'indd',
             'md',
             'mdown',
             'pdf',

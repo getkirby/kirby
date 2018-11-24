@@ -10,14 +10,14 @@
           target="_blank"
         >
           <k-image
-            v-if="preview.image"
-            :src="preview.image"
+            v-if="file.panelImage && file.panelImage.url"
+            :src="file.panelImage.url"
             back="none"
           />
           <k-icon
-            v-else
-            :type="preview.icon || 'document'"
-            :style="{ color: preview.color }"
+            v-else-if="file.panelIcon"
+            :type="file.panelIcon.type"
+            :style="{ color: file.panelIcon.color }"
             class="k-file-preview-icon"
           />
         </a>
@@ -63,11 +63,6 @@ export default {
   props: {
     file: Object
   },
-  computed: {
-    preview() {
-      return this.$api.files.preview(this.file);
-    }
-  }
 };
 </script>
 <style lang="scss">

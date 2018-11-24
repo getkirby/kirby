@@ -425,11 +425,49 @@ class File extends ModelWithContent
      */
     public function panelIcon(array $params = null): array
     {
-        return [
-            'type'  => 'file',
-            'back'  => 'black',
-            'ratio' => $params['ratio'] ?? null
+
+        $colorBlue   = '#81a2be';
+        $colorPurple = '#b294bb';
+        $colorOrange = '#de935f';
+        $colorGreen  = '#a7bd68';
+        $colorAqua   = '#8abeb7';
+        $colorYellow = '#f0c674';
+        $colorRed    = '#d16464';
+        $colorWhite  = '#c5c9c6';
+
+        $types = [
+            'image'    => ['color' => $colorOrange, 'type' => 'file-image'],
+            'video'    => ['color' => $colorYellow, 'type' => 'file-video'],
+            'document' => ['color' => $colorRed, 'type' => 'file-document'],
+            'audio'    => ['color' => $colorAqua, 'type' => 'file-audio'],
+            'code'     => ['color' => $colorBlue, 'type' => 'file-code'],
+            'archive'  => ['color' => $colorWhite, 'type' => 'file-zip'],
         ];
+
+        $extensions = [
+            'indd'  => ['color' => $colorPurple],
+            'xls'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
+            'xlsx'  => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
+            'csv'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
+            'docx'  => ['color' => $colorBlue, 'type' => 'file-word'],
+            'doc'   => ['color' => $colorBlue, 'type' => 'file-word'],
+            'rtf'   => ['color' => $colorBlue, 'type' => 'file-word'],
+            'mdown' => ['type' => 'file-text'],
+            'md'    => ['type' => 'file-text']
+        ];
+
+        $definition = array_merge($types[$this->type()] ?? [], $extensions[$this->extension()] ?? []);
+
+        $settings = [
+            'type'  => $definition['type'] ?? 'file',
+            'back'  => 'pattern',
+            'color' => $definition['color'] ?? $colorWhite,
+            'ratio' => $params['ratio'] ?? null,
+            'definition' => $definition
+        ];
+
+        return $settings;
+
     }
 
     /**
@@ -460,19 +498,16 @@ class File extends ModelWithContent
 
         $image = $this->query($settings['query'] ?? null, 'Kirby\Cms\File');
 
-        if ($image === null && $this->type() === 'image') {
+        if ($image === null && $this->isResizable()) {
             $image = $this;
         }
 
         if ($image) {
             $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
-
             unset($settings['query']);
-
-            return array_merge($defaults, $settings);
         }
 
-        return null;
+        return array_merge($defaults, (array)$settings);
     }
 
     /**
