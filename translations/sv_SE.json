@@ -29,11 +29,11 @@
   "email": "E-post",
   "email.placeholder": "namn@exampel.se",
 
-  "error.access.login": "Fel anv\u00e4ndarnamn eller l\u00f6senord",
-  "error.access.panel": "Du saknar rättighet att nå panelen",
+  "error.access.login": "Fel e-postadress eller lösenord",
+  "error.access.panel": "Du saknar behörighet att nå panelen",
 
   "error.avatar.create.fail": "Profilbilden kunde inte laddas upp",
-  "error.avatar.delete.fail": "Profilbilden kan ej raderas",
+  "error.avatar.delete.fail": "Profilbilden kunde inte raderas",
   "error.avatar.dimensions.invalid": "Se till att profilbildens bredd och höjd är mindre än 3000 pixlar",
   "error.avatar.mime.forbidden": "Profilbilden måste vara i formatet JPEG eller PNG",
 
@@ -94,8 +94,8 @@
   "error.section.notLoaded": "Sektionen \"{name}\" kunde inte laddas",
   "error.section.type.invalid": "Sektionstypen \"{type}\" är inte giltig",
 
-  "error.site.changeTitle.permission": "Du har inte behörighet att ändra titeln på sajten",
-  "error.site.update.permission": "Du har inte behörighet att uppdatera sajten",
+  "error.site.changeTitle.permission": "Du har inte behörighet att ändra titeln på webbplatsen",
+  "error.site.update.permission": "Du har inte behörighet att uppdatera webbplatsen",
 
   "error.template.default.notFound": "Standardmallen existerar inte",
 
@@ -125,7 +125,7 @@
   "error.validation.alpha": "Ange endast tecken mellan a-z",
   "error.validation.alphanum": "Ange endast tecken mellan a-z eller siffror 0-9",
   "error.validation.between": "Ange ett värde mellan \"{min}\" och \"{max}\"",
-  "error.validation.boolean": "Vänligen bekräfta eller neka",
+  "error.validation.boolean": "Bekräfta eller neka",
   "error.validation.contains": "Ange ett värde som innehåller \"{needle}\"",
   "error.validation.date": "Ange ett giltigt datum",
   "error.validation.denied": "Vänligen neka",
@@ -333,7 +333,7 @@
   "view.account": "Ditt konto",
   "view.installation": "Installation",
   "view.settings": "Inställningar",
-  "view.site": "Sajt",
+  "view.site": "Webbplats",
   "view.users": "Anv\u00e4ndare",
 
   "welcome": "Välkommen",
