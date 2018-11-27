@@ -132,22 +132,7 @@ return function ($kirby) {
             'method'  => 'ALL',
             'env'     => 'site',
             'action'  => function (string $path) use ($kirby) {
-
-                if ($page = $kirby->page($path)) {
-
-                    $url = $kirby->request()->url([
-                        'query'    => null,
-                        'params'   => null,
-                        'fragment' => null
-                    ]);
-
-                    if ($url->toString() !== $page->url()) {
-                        go($page->url());
-                    }
-
-                    return $page;
-                }
-
+                return $kirby->resolve($path);
             }
         ];
 
