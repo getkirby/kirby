@@ -266,11 +266,11 @@ export default {
   },
   mounted() {
     this.$events.$on('keydown.esc', this.escape);
-    this.$events.$on('keydown.cmd.s', this.close);
+    this.$events.$on('keydown.cmd.s', this.submit);
   },
   destroyed() {
     this.$events.$off('keydown.esc', this.escape);
-    this.$events.$off('keydown.cmd.s', this.close);
+    this.$events.$off('keydown.cmd.s', this.submit);
   },
   methods: {
     makeItems(value) {
