@@ -734,7 +734,7 @@ class Page extends ModelWithContent
      */
     public function isVerified(string $token = null)
     {
-        if (!$draft = $this->parents()->findBy('status', 'draft')) {
+        if ($this->isDraft() === false && !$draft = $this->parents()->findBy('status', 'draft')) {
             return true;
         }
 
