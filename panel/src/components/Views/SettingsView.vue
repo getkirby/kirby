@@ -61,7 +61,6 @@
       </template>
 
       <k-language-create-dialog ref="create" @success="fetch" />
-      <k-language-convert-dialog ref="convert" @success="fetch" />
       <k-language-update-dialog ref="update" @success="fetch" />
       <k-language-remove-dialog ref="remove" @success="fetch" />
 
@@ -122,12 +121,6 @@ export default {
                   click: "update"
                 },
                 {
-                  icon: "globe",
-                  text: this.$t("language.convert"),
-                  disabled: language.default,
-                  click: "primary"
-                },
-                {
                   icon: "trash",
                   text: this.$t("delete"),
                   disabled: language.default && response.data.length !== 1,
@@ -143,9 +136,6 @@ export default {
       switch (action) {
         case "update":
           this.$refs.update.open(language.id);
-          break;
-        case "primary":
-          this.$refs.convert.open(language.id);
           break;
         case "remove":
           this.$refs.remove.open(language.id);
