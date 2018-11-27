@@ -113,7 +113,7 @@ class PagesSectionTest extends TestCase
         $this->assertContains('/media/pages/test/b', $data[1]['image']['url']);
 
         // non-existing covers
-        $this->assertNull($data[2]['image']);
+        $this->assertNull($data[2]['image']['url'] ?? null);
 
     }
 

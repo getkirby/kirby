@@ -164,8 +164,9 @@ class FilePropsTest extends TestCase
 
         $icon     = $file->panelIcon();
         $expected = [
-            'type'  => 'file',
-            'back'  => 'black',
+            'type'  => 'file-image',
+            'back'  => 'pattern',
+            'color' => '#de935f',
             'ratio' => null
         ];
 
@@ -180,8 +181,9 @@ class FilePropsTest extends TestCase
 
         $icon     = $file->panelIcon(['ratio' => '3/2']);
         $expected = [
-            'type'  => 'file',
-            'back'  => 'black',
+            'type'  => 'file-image',
+            'back'  => 'pattern',
+            'color' => '#de935f',
             'ratio' => '3/2'
         ];
 

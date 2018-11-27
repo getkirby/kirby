@@ -425,7 +425,6 @@ class File extends ModelWithContent
      */
     public function panelIcon(array $params = null): array
     {
-
         $colorBlue   = '#81a2be';
         $colorPurple = '#b294bb';
         $colorOrange = '#de935f';
@@ -463,11 +462,9 @@ class File extends ModelWithContent
             'back'  => 'pattern',
             'color' => $definition['color'] ?? $colorWhite,
             'ratio' => $params['ratio'] ?? null,
-            'definition' => $definition
         ];
 
         return $settings;
-
     }
 
     /**

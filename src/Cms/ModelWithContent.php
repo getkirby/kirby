@@ -38,12 +38,11 @@ abstract class ModelWithContent extends Model
 
         // single language support
         if ($this->kirby()->multilang() === false) {
-
             if (is_a($this->content, 'Kirby\Cms\Content') === true) {
                 return $this->content;
             }
 
-            return $this->setContent($this->read())->content;
+            return $this->setContent($this->readContent())->content;
 
         // multi language support
         } else {
@@ -66,7 +65,6 @@ abstract class ModelWithContent extends Model
             }
 
             return $content;
-
         }
     }
 
@@ -192,7 +190,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $languageCode
      * @return array
      */
-    public function read(string $languageCode = null): array
+    public function readContent(string $languageCode = null): array
     {
         try {
             return Data::read($this->contentFile($languageCode));
@@ -234,7 +232,7 @@ abstract class ModelWithContent extends Model
         $clone->content()->update($data, $overwrite);
 
         // send the full content array to the writer
-        $clone->write($clone->content()->toArray());
+        $clone->writeContent($clone->content()->toArray());
 
         return $clone;
     }
@@ -263,7 +261,7 @@ abstract class ModelWithContent extends Model
         $translation->update($data, $overwrite);
 
         // send the full translation array to the writer
-        $clone->write($translation->content(), $languageCode);
+        $clone->writeContent($translation->content(), $languageCode);
 
         // reset the content object
         $clone->content = null;
@@ -383,7 +381,7 @@ abstract class ModelWithContent extends Model
      * @param string $languageCode
      * @return boolean
      */
-    public function write(array $data, string $languageCode = null): bool
+    public function writeContent(array $data, string $languageCode = null): bool
     {
         return Data::write(
             $this->contentFile($languageCode),

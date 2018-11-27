@@ -26,7 +26,6 @@ trait UserActions
     public function changeEmail(string $email): self
     {
         return $this->commit('changeEmail', [$this, $email], function ($user, $email) {
-
             $user = $user->clone([
                 'email' => $email
             ]);
@@ -36,7 +35,6 @@ trait UserActions
             ]);
 
             return $user;
-
         });
     }
 
@@ -49,7 +47,6 @@ trait UserActions
     public function changeLanguage(string $language): self
     {
         return $this->commit('changeLanguage', [$this, $language], function ($user, $language) {
-
             $user = $user->clone([
                 'language' => $language,
             ]);
@@ -71,7 +68,6 @@ trait UserActions
     public function changeName(string $name): self
     {
         return $this->commit('changeName', [$this, $name], function ($user, $name) {
-
             $user = $user->clone([
                 'name' => $name
             ]);
@@ -93,7 +89,6 @@ trait UserActions
     public function changePassword(string $password): self
     {
         return $this->commit('changePassword', [$this, $password], function ($user, $password) {
-
             $user = $user->clone([
                 'password' => $password = $user->hashPassword($password)
             ]);
@@ -101,7 +96,6 @@ trait UserActions
             $user->writePassword($password);
 
             return $user;
-
         });
     }
 
@@ -114,7 +108,6 @@ trait UserActions
     public function changeRole(string $role): self
     {
         return $this->commit('changeRole', [$this, $role], function ($user, $role) {
-
             $user = $user->clone([
                 'role' => $role,
             ]);
@@ -124,7 +117,6 @@ trait UserActions
             ]);
 
             return $user;
-
         });
     }
 
@@ -181,7 +173,6 @@ trait UserActions
 
         // run the hook
         return $user->commit('create', [$user, $props], function ($user, $props) {
-
             $user->writeCredentials([
                 'email'    => $user->email(),
                 'language' => $user->language(),
@@ -296,5 +287,4 @@ trait UserActions
     {
         return F::write($this->root() . '/.htpasswd', $password);
     }
-
 }

@@ -39,10 +39,11 @@ $aliases = [
     'f'          => 'Kirby\Toolkit\F',
     'i18n'       => 'Kirby\Toolkit\I18n',
     'obj'        => 'Kirby\Toolkit\Obj',
+    'remote'     => 'Kirby\Toolkit\Remote',
     'str'        => 'Kirby\Toolkit\Str',
     'tpl'        => 'Kirby\Toolkit\Tpl',
     'v'          => 'Kirby\Toolkit\V',
-
+    'xml'        => 'Kirby\Toolkit\Xml'
 ];
 
 spl_autoload_register(function ($class) use ($aliases) {
