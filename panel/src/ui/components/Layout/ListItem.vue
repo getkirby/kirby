@@ -18,7 +18,7 @@
       </figure>
       <figcaption class="k-list-item-text">
         <em>{{ text }}</em>
-        <small v-if="info">{{ info }}</small>
+        <small v-if="info" v-html="info" />
       </figcaption>
     </k-link>
     <div class="k-list-item-options">
