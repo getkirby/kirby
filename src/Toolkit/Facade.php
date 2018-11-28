@@ -28,5 +28,4 @@ abstract class Facade
     {
         return static::instance()->$method(...$args);
     }
-
 }

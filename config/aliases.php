@@ -26,6 +26,10 @@ $aliases = [
     'json'      => 'Kirby\Data\Json',
     'yaml'      => 'Kirby\Data\Yaml',
 
+    // data classes
+    'database'  => 'Kirby\Database\Database',
+    'db'        => 'Kirby\Database\Db',
+
     // http classes
     'header'     => 'Kirby\Http\Header',
 
