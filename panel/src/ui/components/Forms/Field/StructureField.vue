@@ -262,14 +262,6 @@ export default {
       }
     }
   },
-  mounted() {
-    this.$events.$on('keydown.esc', this.escape);
-    this.$events.$on('keydown.cmd.s', this.submit);
-  },
-  destroyed() {
-    this.$events.$off('keydown.esc', this.escape);
-    this.$events.$off('keydown.cmd.s', this.submit);
-  },
   methods: {
     add() {
       if (this.disabled === true) {
@@ -300,6 +292,9 @@ export default {
       this.currentIndex = null;
       this.currentModel = null;
 
+      this.$events.$off('keydown.esc', this.escape);
+      this.$events.$off('keydown.cmd.s', this.submit);
+
       this.$store.dispatch("form/unlock");
     },
     columnIsEmpty(value) {
@@ -325,6 +320,8 @@ export default {
       this.$refs.remove.open();
     },
     createForm(field) {
+      this.$events.$on('keydown.esc', this.escape);
+      this.$events.$on('keydown.cmd.s', this.submit);
       this.$store.dispatch("form/lock");
 
       this.$nextTick(() => {
@@ -332,12 +329,6 @@ export default {
           this.$refs.form.focus(field);
         }
       });
-    },
-    discard() {
-      this.trash = this.currentIndex;
-      this.currentIndex = null;
-      this.currentModel = null;
-      this.remove();
     },
     displayText(field, value) {
 

@@ -134,6 +134,8 @@ export default {
     },
     save(context, id) {
 
+      id = id || context.state.current;
+
       const model = context.getters.model(id);
 
       if (context.getters.isCurrent(id)) {
