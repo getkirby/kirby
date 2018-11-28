@@ -59,9 +59,10 @@ export default {
           context.dispatch("user/current", info.user, { root: true });
 
           return context.state.info;
-        }).catch(() => {
+        }).catch((error) => {
           context.commit("SET_INFO", {
-            isBroken: true
+            isBroken: true,
+            error: error.message
           });
         });
     }

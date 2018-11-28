@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Throwable;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -99,9 +101,25 @@ class System
      */
     public function init()
     {
-        Dir::make($this->app->root('accounts'));
-        Dir::make($this->app->root('content'));
-        Dir::make($this->app->root('media'));
+        /* /site/accounts */
+        try {
+            Dir::make($this->app->root('accounts'));
+        } catch (Throwable $e) {
+            throw new PermissionException('The accounts directory could not be created');
+        }
+
+        /* /content */
+        try {
+            Dir::make($this->app->root('content'));
+        } catch (Throwable $e) {
+            throw new PermissionException('The content directory could not be created');
+        }
+
+        try {
+            Dir::make($this->app->root('media'));
+        } catch (Throwable $e) {
+            throw new PermissionException('The media directory could not be created');
+        }
     }
 
     /**

@@ -3,7 +3,7 @@
     v-if="!$store.state.system.info.isBroken"
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
-    :data-topbar="!$route.meta.outside"
+    :data-topbar="inside"
     class="k-panel"
   >
     <div class="k-panel-header" v-if="inside">
@@ -23,7 +23,8 @@
   <div v-else class="k-panel">
     <main class="k-panel-view">
       <k-error-view>
-        The panel cannot connect to the API 😭
+        <p v-if="debug">{{ $store.state.system.info.error }} 😭</p>
+        <p v-else>The panel cannot connect to the API 😭</p>
       </k-error-view>
     </main>
   </div>
@@ -32,6 +33,7 @@
 <script>
 import Search from "@/components/Navigation/Search.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
+import config from "@/config/config.js";
 
 export default {
   name: "App",
@@ -42,7 +44,8 @@ export default {
   data() {
     return {
       offline: false,
-      dragging: false
+      dragging: false,
+      debug: config.debug
     };
   },
   computed: {
