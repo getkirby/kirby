@@ -6,14 +6,14 @@
     :data-topbar="!$route.meta.outside"
     class="k-panel"
   >
-    <div class="k-panel-header" v-if="!$route.meta.outside">
+    <div class="k-panel-header" v-if="inside">
       <k-topbar @register="$refs.registration.open()" />
       <k-search v-if="$store.state.search" v-bind="$store.state.search" />
     </div>
     <main class="k-panel-view">
       <router-view />
     </main>
-    <k-form-buttons />
+    <k-form-buttons v-if="inside" />
     <k-error-dialog />
     <div v-if="offline" class="k-offline-warning">
       <p>The panel is currently offline</p>
@@ -44,6 +44,11 @@ export default {
       offline: false,
       dragging: false
     };
+  },
+  computed: {
+    inside() {
+      return !this.$route.meta.outside && this.$store.state.user.current;
+    }
   },
   created() {
     this.$events.$on("offline", this.isOffline);
