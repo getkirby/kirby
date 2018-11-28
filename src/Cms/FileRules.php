@@ -112,7 +112,7 @@ class FileRules
             ]);
         }
 
-        if (V::in($extension, ['php', 'html', 'htm', 'exe'])) {
+        if (V::in($extension, ['php', 'html', 'htm', 'exe', App::instance()->contentExtension()])) {
             throw new InvalidArgumentException([
                 'key'  => 'file.extension.forbidden',
                 'data' => ['extension' => $extension]
