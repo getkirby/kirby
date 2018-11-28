@@ -6,7 +6,8 @@ export default {
   namespaced: true,
   state: {
     models: {},
-    current: null
+    current: null,
+    isLocked: false
   },
   getters: {
     current: state => {
@@ -17,6 +18,16 @@ export default {
     },
     hasChanges: (state, getters) => id => {
       return Object.keys(getters.model(id).changes).length > 0;
+    },
+    id: (state, getters, rootState) => id => {
+      if (rootState.languages.current) {
+        return id + "/" + rootState.languages.current.code;
+      } else {
+        return id;
+      }
+    },
+    isCurrent: (state) => id => {
+      return state.current = id;
     },
     model: (state, getters) => id => {
       return getters.exists(id)
@@ -46,6 +57,9 @@ export default {
     },
     CURRENT(state, id) {
       state.current = id;
+    },
+    IS_LOCKED(state, locked) {
+      state.isLocked = locked;
     },
     REMOVE(state, id) {
       Vue.delete(state.models, id);
@@ -83,10 +97,12 @@ export default {
   },
   actions: {
     create(context, model) {
-
       // attach the language to the id
-      if (context.rootState.languages.current && context.rootState.languages.current.code) {
-        model.id = model.id + "/" + context.rootState.languages.current.code;
+      if (
+        context.rootState.languages.current &&
+        context.rootState.languages.current.code
+      ) {
+        model.id = context.getters.id(model.id);
       }
 
       context.commit("CREATE", model);
@@ -117,12 +133,25 @@ export default {
       });
     },
     save(context, id) {
+
       const model = context.getters.model(id);
+
+      if (context.getters.isCurrent(id)) {
+        if (context.state.isLocked) {
+          return false;
+        }
+      }
 
       // Send to api
       return Api.patch(model.api, model.values).then(() => {
         context.dispatch("revert", id);
       });
+    },
+    lock(context) {
+      context.commit("IS_LOCKED", true);
+    },
+    unlock(context) {
+      context.commit("IS_LOCKED", false);
     },
     update(context, [id, field, value]) {
       context.commit("UPDATE", [id, field, value]);

@@ -18,17 +18,15 @@
     <template v-if="currentIndex !== null">
       <div class="k-structure-backdrop" @click="escape" />
       <section class="k-structure-form">
-        <form @submit.prevent="submit">
-          <k-fieldset
-            ref="form"
-            :fields="fields"
-            :novalidate="true"
-            v-model="currentModel"
-            class="k-structure-form-fields"
-            @input="onInput"
-            @submit="submit"
-          />
-        </form>
+        <k-form
+          ref="form"
+          :fields="fields"
+          :novalidate="true"
+          v-model="currentModel"
+          class="k-structure-form-fields"
+          @input="onInput"
+          @submit="submit"
+        />
         <footer class="k-structure-form-buttons">
           <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">{{ $t('cancel') }}</k-button>
           <k-pagination
@@ -273,40 +271,7 @@ export default {
     this.$events.$off('keydown.cmd.s', this.submit);
   },
   methods: {
-    makeItems(value) {
-      if (Array.isArray(value) === false) {
-        return [];
-      }
-
-      return this.sort(value);
-    },
-    indexOf(index) {
-      if (!this.limit) {
-        return index + 1;
-      } else {
-        return (this.page - 1) * this.limit + index + 1;
-      }
-    },
-    sort(items) {
-      if (!this.sortBy) {
-        return items;
-      }
-
-      return items.sortBy(this.sortBy);
-    },
-    previewExists(type) {
-      if (Vue.options.components["k-" + type + "-field-preview"] !== undefined) {
-        return true;
-      }
-
-      if (this.$options.components["k-" + type + "-field-preview"] !== undefined) {
-        return true;
-      }
-
-      return false;
-    },
     add() {
-
       if (this.disabled === true) {
         return false;
       }
@@ -329,21 +294,13 @@ export default {
       this.currentIndex = "new";
       this.currentModel = data;
 
-      this.$nextTick(() => {
-        if (this.$refs.form) {
-          this.$refs.form.focus();
-        }
-      });
-
+      this.createForm();
     },
     close() {
       this.currentIndex = null;
       this.currentModel = null;
-    },
-    confirmRemove(index) {
-      this.close();
-      this.trash = index;
-      this.$refs.remove.open();
+
+      this.$store.dispatch("form/unlock");
     },
     columnIsEmpty(value) {
 
@@ -362,41 +319,25 @@ export default {
       return false;
 
     },
-    escape() {
-      if (this.currentIndex === "new") {
+    confirmRemove(index) {
+      this.close();
+      this.trash = index;
+      this.$refs.remove.open();
+    },
+    createForm(field) {
+      this.$store.dispatch("form/lock");
 
-        let row     = Object.values(this.currentModel);
-        let isEmpty = true;
-
-        row.forEach(value => {
-          if (this.columnIsEmpty(value) === false) {
-            isEmpty = false;
-          }
-        });
-
-        if (isEmpty === true) {
-          this.close();
-          return;
+      this.$nextTick(() => {
+        if (this.$refs.form) {
+          this.$refs.form.focus(field);
         }
-
-      }
-
-      this.submit();
+      });
     },
     discard() {
-      this.trash        = this.currentIndex;
+      this.trash = this.currentIndex;
       this.currentIndex = null;
       this.currentModel = null;
       this.remove();
-    },
-    focus() {
-      this.$refs.add.focus();
-    },
-    isActive(index) {
-      return this.currentIndex === index;
-    },
-    jump(index, field) {
-      this.open(index, field);
     },
     displayText(field, value) {
 
@@ -437,6 +378,50 @@ export default {
 
       return value;
     },
+    escape() {
+      if (this.currentIndex === "new") {
+
+        let row = Object.values(this.currentModel);
+        let isEmpty = true;
+
+        row.forEach(value => {
+          if (this.columnIsEmpty(value) === false) {
+            isEmpty = false;
+          }
+        });
+
+        if (isEmpty === true) {
+          this.close();
+          return;
+        }
+
+      }
+
+      this.submit();
+    },
+    focus() {
+      this.$refs.add.focus();
+    },
+    indexOf(index) {
+      if (!this.limit) {
+        return index + 1;
+      } else {
+        return (this.page - 1) * this.limit + index + 1;
+      }
+    },
+    isActive(index) {
+      return this.currentIndex === index;
+    },
+    jump(index, field) {
+      this.open(index, field);
+    },
+    makeItems(value) {
+      if (Array.isArray(value) === false) {
+        return [];
+      }
+
+      return this.sort(value);
+    },
     onInput() {
       this.$emit("input", this.items);
     },
@@ -444,11 +429,7 @@ export default {
       this.currentIndex = index;
       this.currentModel = clone(this.items[index]);
 
-      this.$nextTick(() => {
-        if (this.$refs.form) {
-          this.$refs.form.focus(field);
-        }
-      });
+      this.createForm(field);
     },
     paginate(pagination) {
       this.submit();
@@ -456,6 +437,17 @@ export default {
     },
     paginateItems(pagination) {
       this.page = pagination.page;
+    },
+    previewExists(type) {
+      if (Vue.options.components["k-" + type + "-field-preview"] !== undefined) {
+        return true;
+      }
+
+      if (this.$options.components["k-" + type + "-field-preview"] !== undefined) {
+        return true;
+      }
+
+      return false;
     },
     remove() {
 
@@ -474,6 +466,13 @@ export default {
 
       this.items = this.sort(this.items);
 
+    },
+    sort(items) {
+      if (!this.sortBy) {
+        return items;
+      }
+
+      return items.sortBy(this.sortBy);
     },
     submit() {
       if (this.currentIndex !== null && this.currentIndex !== undefined) {
