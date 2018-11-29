@@ -88,7 +88,7 @@ class Txt extends Handler
     public static function decode($string): array
     {
         // remove BOM
-        $string = str_replace('\xEF\xBB\xBF', '', $string);
+        $string = str_replace("\xEF\xBB\xBF", '', $string);
         // explode all fields by the line separator
         $fields = preg_split('!\n----\s*\n*!', $string);
         // start the data array
