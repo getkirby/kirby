@@ -95,7 +95,7 @@ class ValidationsTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a value lower than 5
+     * @expectedExceptionMessage Please enter a value equal to or lower than 5
      */
     public function testMaxInvalid()
     {
@@ -139,7 +139,7 @@ class ValidationsTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a value greater than 5
+     * @expectedExceptionMessage Please enter a value equal to or greater than 5
      */
     public function testMinInvalid()
     {
