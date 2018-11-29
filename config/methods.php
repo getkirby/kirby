@@ -2,6 +2,8 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Field;
+use Kirby\Cms\File;
+use Kirby\Cms\Files;
 use Kirby\Cms\Html;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Page;
@@ -20,18 +22,48 @@ return function (App $app) {
     return [
 
         // states
-        'isFalse' => function ($field) {
+
+        /**
+         * Converts the field value into a proper boolean and inverts it
+         *
+         * @param Field $field
+         * @return boolean
+         */
+        'isFalse' => function (Field $field): bool {
             return $field->toBool() === false;
         },
-        'isTrue' => function ($field) {
+
+        /**
+         * Converts the field value into a proper boolean
+         *
+         * @param Field $field
+         * @return boolean
+         */
+        'isTrue' => function (Field $field): bool {
             return $field->toBool() === true;
         },
-        'isValid' => function ($field, $validator, ...$arguments) {
+
+        /**
+         * Validates the field content with the given validator and parameters
+         *
+         * @param string $validator
+         * @param mixed[] ...$arguments A list of optional validator arguments
+         * @return boolean
+         */
+        'isValid' => function (Field $field, string $validator, ...$arguments): bool {
             return V::$validator($field->value, ...$arguments);
         },
 
         // converters
-        'toData' => function ($field, $method = ',') {
+
+        /**
+         * Parses the field value with the given method
+         *
+         * @param Field $field
+         * @param string $method [',', 'yaml', 'json']
+         * @return array
+         */
+        'toData' => function (Field $field, string $method = ',') {
             switch ($method) {
                 case 'yaml':
                     return Yaml::decode($field->value);
@@ -41,11 +73,27 @@ return function (App $app) {
                     return $field->split($method);
             }
         },
-        'toBool' => function ($field, $default = false) {
+
+        /**
+         * Converts the field value into a proper boolean
+         *
+         * @param Field $field
+         * @param bool $default Default value if the field is empty
+         * @return bool
+         */
+        'toBool' => function (Field $field, $default = false): bool {
             $value = $field->isEmpty() ? $default : $field->value;
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
         },
-        'toDate' => function ($field, $format = null) use ($app) {
+
+        /**
+         * Converts the field value to a timestamp or a formatted date
+         *
+         * @param Field $field
+         * @param string $format PHP date formatting string
+         * @return string|int
+         */
+        'toDate' => function (Field $field, string $format = null) use ($app) {
             if (empty($field->value) === true) {
                 return null;
             }
@@ -56,21 +104,59 @@ return function (App $app) {
 
             return $app->option('date.handler', 'date')($format, $field->toTimestamp());
         },
-        'toFile' => function ($field) {
+
+        /**
+         * Returns a file object from a filename in the field
+         *
+         * @param Field $field
+         * @return File|null
+         */
+        'toFile' => function (Field $field) {
             return $field->toFiles()->first();
         },
-        'toFiles' => function ($field) {
+
+        /**
+         * Returns a file collection from a yaml list of filenames in the field
+         *
+         * @return Files
+         */
+        'toFiles' => function (Field $field) {
             return $field->parent()->files()->find(false, false, ...$field->toData('yaml'));
         },
-        'toFloat' => function ($field, $default = 0) {
+
+        /**
+         * Converts the field value into a proper float
+         *
+         * @param Field $field
+         * @param float $default Default value if the field is empty
+         * @return float
+         */
+        'toFloat' => function (Field $field, float $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
             return floatval($value);
         },
-        'toInt' => function ($field, $default = 0) {
+
+        /**
+         * Converts the field value into a proper integer
+         *
+         * @param Field $field
+         * @param int $default Default value if the field is empty
+         * @return int
+         */
+        'toInt' => function (Field $field, int $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
             return intval($value);
         },
-        'toLink' => function ($field, $attr1 = null, $attr2 = null) {
+
+        /**
+         * Wraps a link tag around the field value. The field value is used as the link text
+         *
+         * @param Field $field
+         * @param mixed $attr1 Can be an optional Url. If no Url is set, the Url of the Page, File or Site will be used. Can also be an array of link attributes
+         * @param mixed $attr2 If `$attr1` is used to set the Url, you can use `$attr2` to pass an array of additional attributes.
+         * @return string
+         */
+        'toLink' => function (Field $field, $attr1 = null, $attr2 = null) {
             if (is_string($attr1) === true) {
                 $href = $attr1;
                 $attr = $attr2;
@@ -85,50 +171,117 @@ return function (App $app) {
 
             return Html::a($href, $field->value, $attr ?? []);
         },
-        'toPage' => function ($field) use ($app) {
+
+        /**
+         * Returns a page object from a page id in the field
+         *
+         * @param Field $field
+         * @return Page|null
+         */
+        'toPage' => function (Field $field) use ($app) {
             return $field->toPages()->first();
         },
-        'toPages' => function ($field, string $separator = 'yaml') use ($app) {
+
+        /**
+         * Returns a pages collection from a yaml list of page ids in the field
+         *
+         * @param string $separator Can be any other separator to split the field value by
+         * @return Pages
+         */
+        'toPages' => function (Field $field, string $separator = 'yaml') use ($app) {
             return $app->site()->find(false, false, ...$field->toData('yaml'));
         },
-        'toStructure' => function ($field) {
+
+        /**
+         * Converts a yaml field to a Structure object
+         */
+        'toStructure' => function (Field $field) {
             return new Structure(Yaml::decode($field->value), $field->parent());
         },
-        'toTimestamp' => function ($field) {
+
+        /**
+         * Converts the field value to a Unix timestamp
+         */
+        'toTimestamp' => function (Field $field) {
             return strtotime($field->value);
         },
-        'toUrl' => function ($field) {
+
+        /**
+         * Turns the field value into an absolute Url
+         */
+        'toUrl' => function (Field $field) {
             return Url::to($field->value);
         },
-        'toUser' => function ($field) use ($app) {
+
+        /**
+         * Converts a user email address to a user object
+         *
+         * @return User|null
+         */
+        'toUser' => function (Field $field) use ($app) {
             return $field->toUsers()->first();
         },
-        'toUsers' => function ($field) use ($app) {
+
+        /**
+         * Returns a users collection from a yaml list of user email addresses in the field
+         *
+         * @return Users
+         */
+        'toUsers' => function (Field $field) use ($app) {
             return $app->users()->find(false, false, ...$field->toData('yaml'));
         },
 
         // inspectors
-        'length' => function ($field) {
+
+        /**
+         * Returns the length of the field content
+         */
+        'length' => function (Field $field) {
             return Str::length($field->value);
         },
-        'words' => function ($field) {
+
+        /**
+         * Returns the number of words in the text
+         */
+        'words' => function (Field $field) {
             return str_word_count(strip_tags($field->value));
         },
 
         // manipulators
-        'escape' => function($field, $context = 'html') {
+
+        /**
+         * Escapes the field value to be safely used in HTML
+         * templates without the risk of XSS attacks
+         *
+         * @param Field $field
+         * @param string $context html, attr, js or css
+         */
+        'escape' => function(Field $field, string $context = 'html') {
             $field->value = esc($field->value, $context);
             return $field;
         },
-        'excerpt' => function ($field, int $chars = 0, bool $strip = true, string $rep = '…') {
+
+        /**
+         * Creates an excerpt of the field value without html
+         * or any other formatting.
+         */
+        'excerpt' => function (Field $field, int $chars = 0, bool $strip = true, string $rep = '…') {
             $field->value = Str::excerpt($field->kirbytext()->value(), $chars, $strip, $rep);
             return $field;
         },
-        'html' => function ($field) {
+
+        /**
+         * Converts the field content to valid HTML
+         */
+        'html' => function (Field $field) {
             $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
             return $field;
         },
-        'kirbytext' => function ($field) use ($app) {
+
+        /**
+         * Converts the field content from Markdown/Kirbytext to valid HTML
+         */
+        'kirbytext' => function (Field $field) use ($app) {
             $field->value = $app->kirbytext($field->value, [
                 'parent' => $field->parent(),
                 'field'  => $field
@@ -136,7 +289,11 @@ return function (App $app) {
 
             return $field;
         },
-        'kirbytags' => function ($field) use ($app) {
+
+        /**
+         * Parses all KirbyTags without also parsing Markdown
+         */
+        'kirbytags' => function (Field $field) use ($app) {
             $field->value = $app->kirbytags($field->value, [
                 'parent' => $field->parent(),
                 'field'  => $field
@@ -144,15 +301,27 @@ return function (App $app) {
 
             return $field;
         },
-        'lower' => function ($field) {
+
+        /**
+         * Converts the field content to lowercase
+         */
+        'lower' => function (Field $field) {
             $field->value = Str::lower($field->value);
             return $field;
         },
-        'markdown' => function ($field) use ($app) {
+
+        /**
+         * Converts markdown to valid HTML
+         */
+        'markdown' => function (Field $field) use ($app) {
             $field->value = $app->markdown($field->value);
             return $field;
         },
-        'xml' => function ($field) {
+
+        /**
+         * Converts the field content to valid XML
+         */
+        'xml' => function (Field $field) {
             $field->value = Xml::encode($field->value);
             return $field;
         },
@@ -160,34 +329,54 @@ return function (App $app) {
         /**
          * @param int $length The number of characters in the string
          * @param string $appendix An optional replacement for the missing rest
-         * @return Kirby\Cms\Field
+         * @return Field
          */
-        'short' => function ($field, int $length, string $appendix = '…') {
+        'short' => function (Field $field, int $length, string $appendix = '…') {
             $field->value = Str::short($field->value, $length, $appendix);
             return $field;
         },
-        'slug' => function ($field) {
+
+        /**
+         * Converts the field content to a slug
+         */
+        'slug' => function (Field $field) {
             $field->value = Str::slug($field->value);
             return $field;
         },
-        'smartypants' => function ($field) use ($app) {
+
+        /**
+         * Applies SmartyPants to the field
+         */
+        'smartypants' => function (Field $field) use ($app) {
             $field->value = $app->smartypants($field->value);
             return $field;
         },
-        'split' => function ($field, $separator = ',') {
+
+        /**
+         * Splits the field content into an array
+         */
+        'split' => function (Field $field, $separator = ',') {
             return Str::split((string)$field->value, $separator);
         },
-        'upper' => function ($field) {
+
+        /**
+         * Converts the field content to uppercase
+         */
+        'upper' => function (Field $field) {
             $field->value = Str::upper($field->value);
             return $field;
         },
-        'widont' => function ($field) {
+
+        /**
+         * Avoids typographical widows in strings by replacing the last space with &nbsp;
+         */
+        'widont' => function (Field $field) {
             $field->value = Str::widont($field->value);
             return $field;
         },
 
         // aliases
-        'yaml' => function ($field) {
+        'yaml' => function (Field $field) {
             return $field->toData('yaml');
         },
 
