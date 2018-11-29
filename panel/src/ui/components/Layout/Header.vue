@@ -83,7 +83,7 @@ export default {
     tabs(tabs) {
       this.visibleTabs   = tabs,
       this.invisibleTabs = [];
-      this.resize();
+      this.resize(true);
     }
   },
   created() {
@@ -93,14 +93,20 @@ export default {
     window.removeEventListener("resize", this.resize);
   },
   methods: {
-    resize() {
+    resize(force) {
 
       if (!this.tabs || this.tabs.length <= 1) {
         return;
       }
 
+      if (this.tabs.length <= 3) {
+        this.visibleTabs = this.tabs;
+        this.invisibleTabs = [];
+        return;
+      }
+
       if (window.innerWidth >= 700) {
-        if (this.size === "large") {
+        if (this.size === "large" && !force) {
           return;
         }
 
@@ -108,7 +114,7 @@ export default {
         this.invisibleTabs = [];
         this.size = "large";
       } else {
-        if (this.size === "small") {
+        if (this.size === "small" && !force) {
           return;
         }
 
