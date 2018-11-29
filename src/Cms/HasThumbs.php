@@ -69,11 +69,26 @@ trait HasThumbs
         return $this->original;
     }
 
+    /**
+     * Sets the JPEG compression quality
+     *
+     * @param integer $quality
+     * @return self
+     */
     public function quality(int $quality)
     {
         return $this->thumb(['quality' => $quality]);
     }
 
+    /**
+     * Resizes the file with the given width and height
+     * while keeping the aspect ratio.
+     *
+     * @param integer $width
+     * @param integer $height
+     * @param integer $quality
+     * @return self
+     */
     public function resize(int $width = null, int $height = null, int $quality = null)
     {
         return $this->thumb([

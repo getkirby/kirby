@@ -1443,6 +1443,13 @@ class Page extends ModelWithContent
         return $this->url = $this->kirby()->url('base') . '/' . $this->uid();
     }
 
+    /**
+     * Builds the Url for a specific language
+     *
+     * @param string $language
+     * @param array $options
+     * @return string
+     */
     public function urlForLanguage($language = null, array $options = null): string
     {
         if ($options !== null) {

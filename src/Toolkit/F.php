@@ -515,6 +515,8 @@ class F
     }
 
     /**
+     * Returns the absolute path to the file if the file can be found.
+     *
      * @param string $file
      * @param string $in
      * @return string|null

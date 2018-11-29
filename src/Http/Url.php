@@ -10,7 +10,19 @@ use Kirby\Toolkit\Str;
  */
 class Url
 {
+
+    /**
+     * The base Url to build absolute Urls from
+     *
+     * @var string
+     */
     public static $home    = '/';
+
+    /**
+     * The current Uri object
+     *
+     * @var Uri
+     */
     public static $current = null;
 
     /**
@@ -172,6 +184,15 @@ class Url
         return $_SERVER['HTTP_REFERER'] ?? '';
     }
 
+    /**
+     * Shortens the Url by removing all unnecessary parts
+     *
+     * @param string $url
+     * @param boolean $length
+     * @param boolean $base
+     * @param string $rep
+     * @return string
+     */
     public static function short($url = null, $length = false, bool $base = false, string $rep = '…'): string
     {
         $uri = static::toObject($url);
@@ -192,16 +213,34 @@ class Url
         return Str::short($url, $length, $rep);
     }
 
+    /**
+     * Removes the path from the Url
+     *
+     * @param string $url
+     * @return string
+     */
     public static function stripPath($url = null): string
     {
         return static::toObject($url)->setPath(null)->toString();
     }
 
+    /**
+     * Removes the query string from the Url
+     *
+     * @param string $url
+     * @return string
+     */
     public static function stripQuery($url = null): string
     {
         return static::toObject($url)->setQuery(null)->toString();
     }
 
+    /**
+     * Removes the fragment (hash) from the Url
+     *
+     * @param string $url
+     * @return string
+     */
     public static function stripFragment($url = null): string
     {
         return static::toObject($url)->setFragment(null)->toString();
@@ -230,6 +269,12 @@ class Url
         return (new Uri($url, $options))->toString();
     }
 
+    /**
+     * Converts the Url to a Uri object
+     *
+     * @param string $url
+     * @return Uri
+     */
     public static function toObject($url = null)
     {
         return $url === null ? Uri::current() : new Uri($url);

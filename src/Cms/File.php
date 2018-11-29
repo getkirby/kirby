@@ -179,6 +179,8 @@ class File extends ModelWithContent
     }
 
     /**
+     * Returns the FileBlueprint object for the file
+     *
      * @return FileBlueprint
      */
     public function blueprint(): FileBlueprint
@@ -284,12 +286,18 @@ class File extends ModelWithContent
     }
 
     /**
+     * Converts the file to html
+     *
      * @param  array  $attr
      * @return string
      */
     public function html(array $attr = []): string
     {
-        return Html::img($this->url(), $attr);
+        if ($this->type() === 'image') {
+            return Html::img($this->url(), $attr);
+        } else {
+            return Html::a($this->url, $attr);
+        }
     }
 
     /**

@@ -150,6 +150,8 @@ trait UserActions
     }
 
     /**
+     * Creates a new User from the given props and returns a new User object
+     *
      * @param array $input
      * @return self
      */
@@ -188,6 +190,8 @@ trait UserActions
     }
 
     /**
+     * Returns a random user id
+     *
      * @return string
      */
     public function createId(): string

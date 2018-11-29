@@ -25,6 +25,13 @@ class Url extends BaseUrl
         return App::instance()->url();
     }
 
+    /**
+     * Creates an absolute Url to a template asset if it exists. This is used in the `css()` and `js()` helpers
+     *
+     * @param string $assetPath
+     * @param string $extension
+     * @return string|null
+     */
     public static function toTemplateAsset(string $assetPath, string $extension)
     {
         $kirby = App::instance();

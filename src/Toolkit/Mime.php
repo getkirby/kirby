@@ -9,6 +9,11 @@ use SimpleXMLElement;
  */
 class Mime
 {
+    /**
+     * Extension to mime type map
+     *
+     * @var array
+     */
     public static $types = [
         'ai'    => 'application/postscript',
         'aif'   => 'audio/x-aiff',
@@ -94,6 +99,14 @@ class Mime
         'zip'   => ['application/x-zip', 'application/zip', 'application/x-zip-compressed'],
     ];
 
+    /**
+     * Fixes an invalid mime type guess for the given file
+     *
+     * @param string $file
+     * @param string $mime
+     * @param string $extension
+     * @return string|null
+     */
     public static function fix(string $file, string $mime = null, string $extension = null)
     {
         // fixing map
@@ -126,6 +139,12 @@ class Mime
         return $mime;
     }
 
+    /**
+     * Guesses a mime type by extension
+     *
+     * @param string $extension
+     * @return string|null
+     */
     public static function fromExtension(string $extension)
     {
         $mime = static::$types[$extension] ?? null;
@@ -165,6 +184,12 @@ class Mime
         return false;
     }
 
+    /**
+     * Tries to detect a valid SVG and returns the mime type accordingly
+     *
+     * @param string $file
+     * @return string|false
+     */
     public static function fromSvg(string $file)
     {
         if (file_exists($file) === true) {
@@ -180,6 +205,12 @@ class Mime
         return false;
     }
 
+    /**
+     * Returns the extension for a given mime type
+     *
+     * @param string|null $mime
+     * @return string|false
+     */
     public static function toExtension(string $mime = null)
     {
         foreach (static::$types as $key => $value) {
