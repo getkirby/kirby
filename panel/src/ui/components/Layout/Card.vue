@@ -16,7 +16,7 @@
       </span>
       <figcaption class="k-card-content">
         <span :data-noinfo="!info" class="k-card-text">{{ text }}</span>
-        <span v-if="info" class="k-card-info">{{ info }}</span>
+        <span v-if="info" class="k-card-info" v-html="info"></span>
       </figcaption>
     </component>
 
