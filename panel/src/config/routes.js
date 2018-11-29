@@ -3,6 +3,7 @@ import store from "./store.js";
 
 /* Views */
 import BrowserView from "@/components/Views/BrowserView.vue";
+import CustomView from "@/components/Views/CustomView.vue";
 import FileView from "@/components/Views/FileView.vue";
 import InstallationView from "@/components/Views/InstallationView.vue";
 import SettingsView from "@/components/Views/SettingsView.vue";
@@ -68,7 +69,7 @@ export default [
     component: FileView,
     beforeEnter: auth,
     props: route => ({
-      path: 'site',
+      path: "site",
       filename: route.params.filename
     })
   },
@@ -81,7 +82,7 @@ export default [
     component: FileView,
     beforeEnter: auth,
     props: route => ({
-      path: 'pages/' + route.params.path,
+      path: "pages/" + route.params.path,
       filename: route.params.filename
     })
   },
@@ -94,7 +95,7 @@ export default [
     component: FileView,
     beforeEnter: auth,
     props: route => ({
-      path: 'users/' + route.params.path,
+      path: "users/" + route.params.path,
       filename: route.params.filename
     })
   },
@@ -163,6 +164,18 @@ export default [
     props: () => ({
       id: store.state.user.current.id
     })
+  },
+  {
+    path: "/plugins/:id",
+    name: "Plugin",
+    meta: {
+      view: "plugin"
+    },
+    props: route => ({
+      plugin: route.params.id
+    }),
+    beforeEnter: auth,
+    component: CustomView
   },
   {
     path: "*",

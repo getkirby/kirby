@@ -16,7 +16,7 @@
               <li
                 v-for="(view, viewName) in views"
                 v-if="view.menu"
-                :aria-current="$route.meta.view === viewName"
+                :aria-current="$store.state.view === viewName"
                 :key="'menu-item-' + viewName"
               >
                 <k-dropdown-item

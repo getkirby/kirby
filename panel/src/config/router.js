@@ -9,7 +9,7 @@ Vue.use(Router);
 
 const router = new Router({
   mode: "history",
-  routes: routes.concat(window.panel.plugins.routes),
+  routes: routes,
   url: config.url === '/' ? '' : config.url,
 });
 

@@ -153,7 +153,6 @@ export default {
 }
 .k-settings-view .k-header {
   margin-bottom: 1.5rem;
-  padding-bottom: .5rem;
 }
 .k-settings-view header {
   margin-bottom: .5rem;

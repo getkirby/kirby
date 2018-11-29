@@ -55,6 +55,7 @@ Object.entries(window.panel.plugins.sections).forEach(([name, options]) => {
 
 // Views
 Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
+
   // Check for all required properties
   if (!options.component) {
     store.dispatch("notification/error", `No view component provided when loading view "${name}". The view has not been registered.`);
@@ -62,67 +63,27 @@ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
     return;
   }
 
-  // Fallback for link
-  if (!options.link) {
-    options.link = "/plugin/" + lcfirst(name);
-  }
+  options.link = "/plugins/" + name;
 
   // Fallback for icon
-  if (!options.icon) {
+  if (options.icon === undefined) {
     options.icon = "page";
   }
 
   // Fallback for menu
-  if (!options.menu) {
+  if (options.menu === undefined) {
     options.menu = true;
   }
-
-  // Route
-  if (!options.route) {
-    // Fallback for route
-    options.route = {
-      name: name,
-      path: options.link,
-      beforeEnter: auth
-    };
-  } else {
-    // Fallback for route name
-    if (!options.route.name) {
-      options.route.name = ucfirst(name);
-    }
-
-    // Fallback for route path
-    if (!options.route.path) {
-      options.route.name = options.link;
-    }
-
-    // Fallback for route meta.view
-    if (!options.route.meta) {
-      options.route.meta = {
-        view: name
-      };
-    } else if (!options.route.meta.view) {
-      options.route.meta.view = name;
-    }
-
-    // inject auth route guard
-    if (!options.route.beforeEnter) {
-      options.route.beforeEnter = auth;
-    }
-  }
-
-  // Register route
-  window.panel.plugins.routes.push({
-    ...options.route,
-    component: options.component
-  });
 
   // Update view
   window.panel.plugins.views[name] = {
     link: options.link,
     icon: options.icon,
-    menu: options.menu
+    menu: options.menu,
   };
+
+  Vue.component("k-" + name + "-plugin-view", options.component);
+
 });
 
 // Vue.use
