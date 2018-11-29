@@ -440,7 +440,7 @@ class Query
     * @param string $group
     * @return Kirby\Database\Query
     */
-    public function group(string $group)
+    public function group(string $group = null)
     {
         $this->group = $group;
         return $this;
@@ -472,7 +472,7 @@ class Query
      * @param string $order
      * @return Kirby\Database\Query
      */
-    public function order(string $order)
+    public function order(string $order = null)
     {
         $this->order = $order;
         return $this;
@@ -484,7 +484,7 @@ class Query
      * @param int $offset
      * @return Kirby\Database\Query
      */
-    public function offset(int $offset)
+    public function offset(int $offset = null)
     {
         $this->offset = $offset;
         return $this;
@@ -496,7 +496,7 @@ class Query
      * @param int $limit
      * @return Kirby\Database\Query
      */
-    public function limit(int $limit)
+    public function limit(int $limit = null)
     {
         $this->limit = $limit;
         return $this;
