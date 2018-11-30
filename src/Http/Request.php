@@ -143,59 +143,6 @@ class Request
     }
 
     /**
-     * Checks if the request has been made from the command line
-     *
-     * @return boolean
-     */
-    public function cli(): bool
-    {
-        return Server::cli();
-    }
-
-    /**
-     * Returns the request method
-     *
-     * @return string
-     */
-    public function method(): string
-    {
-        return $this->method;
-    }
-
-    /**
-     * Returns the Query object
-     *
-     * @return Query
-     */
-    public function query(): Query
-    {
-        return $this->query = $this->query ?? new Query();
-    }
-
-    /**
-     * Returns the request input as array
-     *
-     * @return array
-     */
-    public function data(): array
-    {
-        return array_merge($this->body()->toArray(), $this->query()->toArray());
-    }
-
-    /**
-     * Returns any data field from the request
-     * if it exists
-     *
-     * @param string $key
-     * @param mixed $fallback
-     * @return mixed
-     */
-    public function get(string $key, $fallback = null)
-    {
-        return $this->data()[$key] ?? $fallback;
-    }
-
-    /**
      * Returns the Body object
      *
      * @return Body
@@ -206,13 +153,23 @@ class Request
     }
 
     /**
-     * Returns the Files object
+     * Checks if the request has been made from the command line
      *
-     * @return Files
+     * @return boolean
      */
-    public function files(): Files
+    public function cli(): bool
     {
-        return $this->files = $this->files ?? new Files();
+        return Server::cli();
+    }
+
+    /**
+     * Returns the request input as array
+     *
+     * @return array
+     */
+    public function data(): array
+    {
+        return array_merge($this->body()->toArray(), $this->query()->toArray());
     }
 
     /**
@@ -228,15 +185,26 @@ class Request
     }
 
     /**
-     * Checks if the given method name
-     * matches the name of the request method.
+     * Returns the Files object
      *
-     * @param  string  $method
-     * @return boolean
+     * @return Files
      */
-    public function is(string $method): bool
+    public function files(): Files
     {
-        return strtoupper($this->method) === strtoupper($method);
+        return $this->files = $this->files ?? new Files();
+    }
+
+    /**
+     * Returns any data field from the request
+     * if it exists
+     *
+     * @param string $key
+     * @param mixed $fallback
+     * @return mixed
+     */
+    public function get(string $key, $fallback = null)
+    {
+        return $this->data()[$key] ?? $fallback;
     }
 
     /**
@@ -273,6 +241,46 @@ class Request
         }
 
         return $headers;
+    }
+
+    /**
+     * Checks if the given method name
+     * matches the name of the request method.
+     *
+     * @param  string  $method
+     * @return boolean
+     */
+    public function is(string $method): bool
+    {
+        return strtoupper($this->method) === strtoupper($method);
+    }
+
+    /**
+     * Returns the request method
+     *
+     * @return string
+     */
+    public function method(): string
+    {
+        return $this->method;
+    }
+
+    /**
+     * Shortcut to the Params object
+     */
+    public function params()
+    {
+        return $this->url()->params();
+    }
+
+    /**
+     * Returns the Query object
+     *
+     * @return Query
+     */
+    public function query(): Query
+    {
+        return $this->query = $this->query ?? new Query();
     }
 
     /**
