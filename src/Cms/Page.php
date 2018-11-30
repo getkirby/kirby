@@ -1130,6 +1130,18 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Search all pages within the current page
+     *
+     * @param string $query
+     * @param array $params
+     * @return Pages
+     */
+    public function search(string $query = null, $params = [])
+    {
+        return $this->index()->search($query, $params);
+    }
+
+    /**
      * Sets the Blueprint object
      *
      * @param array|null $blueprint
