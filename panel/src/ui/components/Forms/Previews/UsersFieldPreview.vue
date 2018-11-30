@@ -4,7 +4,7 @@
       <figure>
         <k-link :title="user.email" :to="$api.users.link(user.id)" @click.native.stop>
           <k-image
-            v-if="user.avatar.exists"
+            v-if="user.avatar"
             :src="user.avatar.url"
             class="k-users-field-preview-avatar"
             back="pattern"
