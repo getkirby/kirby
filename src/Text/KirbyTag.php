@@ -109,12 +109,12 @@ class KirbyTag
         return $this->options[$key] ?? $default;
     }
 
-    public function render()
+    public function render(): string
     {
         $callback = static::$types[$this->type]['html'] ?? null;
 
         if (is_a($callback, Closure::class) === true) {
-            return $callback($this);
+            return (string)$callback($this);
         }
 
         throw new BadMethodCallException('Invalid tag render function in tag: ' . $this->type);
