@@ -1,5 +1,10 @@
 <template>
-  <component :is="'k-' + plugin + '-plugin-view'" />
+  <k-error-boundary :key="plugin">
+    <component :is="'k-' + plugin + '-plugin-view'" />
+    <k-error-view slot="error" slot-scope="{ error }">
+      {{ error }}
+    </k-error-view>
+  </k-error-boundary>
 </template>
 
 <script>
@@ -9,6 +14,11 @@ export default {
   },
   created() {
     this.$store.dispatch("view", this.plugin);
+  },
+  watch: {
+    plugin() {
+      this.$store.dispatch("view", this.plugin);
+    }
   }
 };
 </script>

@@ -7,25 +7,27 @@
         :key="field.signature"
         :width="field.width"
       >
-        <component
-          v-if="hasFieldType(field.type)"
-          :is="'k-' + field.type + '-field'"
-          :name="fieldName"
-          :ref="fieldName"
-          :novalidate="novalidate"
-          :disabled="disabled || field.disabled"
-          v-bind="field"
-          v-model="value[fieldName]"
-          @input="$emit('input', value, field, fieldName)"
-          @focus="$emit('focus', $event, field, fieldName)"
-          @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
-          @submit="$emit('submit', $event, field, fieldName)"
-        />
-        <k-box v-else theme="negative">
-          <k-text size="small" align="center">
-            The field type <strong>"{{ fieldName }}"</strong> does not exist
-          </k-text>
-        </k-box>
+        <k-error-boundary>
+          <component
+            v-if="hasFieldType(field.type)"
+            :is="'k-' + field.type + '-field'"
+            :name="fieldName"
+            :ref="fieldName"
+            :novalidate="novalidate"
+            :disabled="disabled || field.disabled"
+            v-bind="field"
+            v-model="value[fieldName]"
+            @input="$emit('input', value, field, fieldName)"
+            @focus="$emit('focus', $event, field, fieldName)"
+            @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
+            @submit="$emit('submit', $event, field, fieldName)"
+          />
+          <k-box v-else theme="negative">
+            <k-text size="small">
+              The field type <strong>"{{ fieldName }}"</strong> does not exist
+            </k-text>
+          </k-box>
+        </k-error-boundary>
       </k-column>
     </k-grid>
   </fieldset>
