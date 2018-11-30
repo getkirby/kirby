@@ -478,6 +478,18 @@ class Site extends ModelWithContent
     }
 
     /**
+     * Search all pages in the site
+     *
+     * @param string $query
+     * @param array $params
+     * @return Pages
+     */
+    public function search(string $query = null, $params = [])
+    {
+        return $this->index()->search($query, $params);
+    }
+
+    /**
      * Sets the Blueprint object
      *
      * @param array|null $blueprint
