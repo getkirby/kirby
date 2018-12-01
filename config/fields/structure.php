@@ -33,17 +33,30 @@ return [
             return $limit;
         },
         /**
+         * Maximum allowed entries in the structure. Afterwards the "Add" button will be switched off.
+         */
+        'max' => function (int $max = null) {
+            return $max;
+        },
+        /**
          * Minimum required entries in the structure
          */
         'min' => function (int $min = null) {
             return $min;
         },
         /**
-         * Maximum allowed entries in the structure. Afterwards the "Add" button will be switched off.
+         * Toggles drag & drop sorting
          */
-        'max' => function (int $max = null) {
-            return $max;
+        'sortable' => function (bool $sortable = null) {
+            return $sortable;
         },
+        /**
+         * Sorts the entries by the given field and order (i.e. title desc)
+         * Drag & drop is disabled in this case
+         */
+        'sortBy' => function (string $sort = null) {
+            return $sort;
+        }
     ],
     'computed' => [
         'default' => function () {
