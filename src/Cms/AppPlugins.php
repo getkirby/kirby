@@ -15,8 +15,19 @@ use Kirby\Toolkit\V;
 
 trait AppPlugins
 {
+
+    /**
+     * A list of all registered plugins
+     *
+     * @var array
+     */
     protected static $plugins = [];
 
+    /**
+     * The extension registry
+     *
+     * @var array
+     */
     protected $extensions = [
         'api' => [],
         'blueprints' => [],
@@ -44,8 +55,21 @@ trait AppPlugins
         'validators' => []
     ];
 
+    /**
+     * Flag when plugins have been loaded
+     * to not load them again
+     *
+     * @var bool
+     */
     protected $pluginsAreLoaded = false;
 
+    /**
+     * Register all given extensions
+     *
+     * @param array $extensions
+     * @param Plugin $plugin The plugin which defined those extensions
+     * @return array
+     */
     public function extend(array $extensions, Plugin $plugin = null): array
     {
         foreach ($this->extensions as $type => $registered) {
@@ -225,6 +249,14 @@ trait AppPlugins
         return $this->extensions['validators'] = V::$validators = array_merge(V::$validators, $validators);
     }
 
+    /**
+     * Returns a given extension by type and name
+     *
+     * @param string $type i.e. `'hooks'`
+     * @param string $name i.e. `'page.delete:before'`
+     * @param mixed $fallback
+     * @return mixed
+     */
     public function extension(string $type, string $name, $fallback = null)
     {
         return $this->extensions($type)[$name] ?? $fallback;

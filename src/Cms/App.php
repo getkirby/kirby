@@ -704,11 +704,15 @@ class App
     }
 
     /**
+     * Uses the response component to return a
+     * response object for the given output.
+     *
+     * @param mixed $output
      * @return Response
      */
-    public function response($input)
+    public function response($output)
     {
-        return $this->extensions['components']['response']($this, $input);
+        return $this->extensions['components']['response']($this, $output);
     }
 
     /**
@@ -879,6 +883,8 @@ class App
     }
 
     /**
+     * Initializes and returns the Site object
+     *
      * @return Site
      */
     public function site(): Site
@@ -903,6 +909,9 @@ class App
     }
 
     /**
+     * Uses the snippet component to create
+     * and return a template snippet
+     *
      * @return Snippet
      */
     public function snippet(string $name, array $data = []): ?string
@@ -921,6 +930,9 @@ class App
     }
 
     /**
+     * Uses the template component to initialize
+     * and return the Template object
+     *
      * @return Template
      */
     public function template(string $name, string $type = 'html'): Template

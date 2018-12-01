@@ -15,6 +15,15 @@ use Throwable;
 
 trait AppUsers
 {
+
+    /**
+     * Returns the logged in user by checking
+     * for a basic authentication header with
+     * valid credentials
+     *
+     * @param string $authorization
+     * @return User|null
+     */
     public function currentUserFromBasicAuth(string $authorization)
     {
         if (($this->options['api']['basicAuth'] ?? false) !== true) {
@@ -42,15 +51,14 @@ trait AppUsers
         return null;
     }
 
-    public function currentUserFromUsername(string $username)
-    {
-        if ($user = $this->users()->find($username)) {
-            return $user;
-        }
-
-        return null;
-    }
-
+    /**
+     * Returns the logged in user by checking
+     * the current session and finding a valid
+     * valid user id in there
+     *
+     * @param Session|null $session
+     * @return User|null
+     */
     public function currentUserFromSession($session = null)
     {
         // use passed session options or session object if set
@@ -80,6 +88,22 @@ trait AppUsers
     }
 
     /**
+     * Returns a user object for the given
+     * id if such a user exists
+     *
+     * @param string $id    id or email address
+     * @return User|null
+     */
+    public function currentUserFromId(string $id)
+    {
+        if ($user = $this->users()->find($id)) {
+            return $user;
+        }
+
+        return null;
+    }
+
+    /**
      * Become any existing user
      *
      * @param string|null $who
@@ -99,7 +123,7 @@ trait AppUsers
 
                 return $this;
             default:
-                if ($user = $this->currentUserFromUsername($who)) {
+                if ($user = $this->currentUserFromId($who)) {
                     $this->user = $user;
                     return $this;
                 }
@@ -156,7 +180,7 @@ trait AppUsers
         }
 
         if (is_string($this->user) === true) {
-            return $this->user = $this->currentUserFromUsername($this->user);
+            return $this->user = $this->currentUserFromId($this->user);
         }
 
         try {
