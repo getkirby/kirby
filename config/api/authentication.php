@@ -8,7 +8,7 @@ return function () {
     $kirby         = $this->kirby();
     $options       = $kirby->option('api', []);
     $basicAuth     = $options['basicAuth'] ?? false;
-    $authorization = $this->requestHeaders('Authorization');
+    $authorization = $this->requestHeaders('Authorization') ?? '';
 
     // check for a valid csrf when basic auth is disabled or authorization header is not sent
     if ($basicAuth === false || Str::startsWith($authorization, 'Basic ') !== true) {
@@ -23,7 +23,6 @@ return function () {
         if (hash_equals((string)$fromSession, (string)$fromHeader) !== true) {
             throw new Exception('Invalid csrf token', 403);
         }
-
     }
 
     if ($user = $kirby->user()) {
@@ -31,5 +30,4 @@ return function () {
     }
 
     throw new Exception('Unauthenticated', 403);
-
 };
