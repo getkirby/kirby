@@ -327,6 +327,8 @@ return function (App $app) {
         },
 
         /**
+         * Cuts the string after the given length and adds "…" if it is longer
+         *
          * @param int $length The number of characters in the string
          * @param string $appendix An optional replacement for the missing rest
          * @return Field
@@ -376,7 +378,11 @@ return function (App $app) {
         },
 
         // aliases
-        'yaml' => function (Field $field) {
+
+        /**
+         * Parses yaml in the field content and returns an array
+         */
+        'yaml' => function (Field $field): array {
             return $field->toData('yaml');
         },
 
