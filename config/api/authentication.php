@@ -8,7 +8,7 @@ return function () {
     $kirby         = $this->kirby();
     $options       = $kirby->option('api', []);
     $basicAuth     = $options['basicAuth'] ?? false;
-    $authorization = $this->requestHeaders('Authorization');
+    $authorization = $this->requestHeaders('Authorization') ?? '';
 
     // check for a valid csrf when basic auth is disabled or authorization header is not sent
     if ($basicAuth === false || Str::startsWith($authorization, 'Basic ') !== true) {
