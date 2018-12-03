@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c6bbefb4df33c895f35b63598a3fb71",
+    "content-hash": "c96fc80a2c429d5565255894530527e4",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -1717,12 +1717,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ef10fcb8c62460661761145e7742708c2862f016"
+                "reference": "0cef4fe8dbc45c2f9f4d068940cedf4c4f52b474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ef10fcb8c62460661761145e7742708c2862f016",
-                "reference": "ef10fcb8c62460661761145e7742708c2862f016",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0cef4fe8dbc45c2f9f4d068940cedf4c4f52b474",
+                "reference": "0cef4fe8dbc45c2f9f4d068940cedf4c4f52b474",
                 "shasum": ""
             },
             "require": {
@@ -1793,7 +1793,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-11-12T10:55:12+00:00"
+            "time": "2018-12-03T09:59:14+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2488,12 +2488,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "4a33574d5771f4b04334cd4f7d43de96a92efb62"
+                "reference": "3edf0ab943d1985a356721952cba36ff31bd6e5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/4a33574d5771f4b04334cd4f7d43de96a92efb62",
-                "reference": "4a33574d5771f4b04334cd4f7d43de96a92efb62",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/3edf0ab943d1985a356721952cba36ff31bd6e5f",
+                "reference": "3edf0ab943d1985a356721952cba36ff31bd6e5f",
                 "shasum": ""
             },
             "require": {
@@ -2548,7 +2548,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-10-31T08:00:32+00:00"
+            "time": "2018-11-24T09:35:08+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2556,12 +2556,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "79dc44ea05adab232d26b9a0bb2e81015982d306"
+                "reference": "4dd5aac827109343640d66104999765faf8d0c34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/79dc44ea05adab232d26b9a0bb2e81015982d306",
-                "reference": "79dc44ea05adab232d26b9a0bb2e81015982d306",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/4dd5aac827109343640d66104999765faf8d0c34",
+                "reference": "4dd5aac827109343640d66104999765faf8d0c34",
                 "shasum": ""
             },
             "require": {
@@ -2612,7 +2612,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-26T16:19:01+00:00"
+            "time": "2018-12-01T08:53:37+00:00"
         },
         {
             "name": "symfony/filesystem",
