@@ -131,7 +131,7 @@ class FileTest extends TestCase
     {
         // existing file
         $file = $this->_file('test.js');
-        $this->assertEquals(filemtime($file->root()), $file->modified());
+        $this->assertEquals(F::modified($file->root()), $file->modified());
 
         $this->assertEquals(strftime('%d.%m.%Y', filemtime($file->root())), $file->modified('%d.%m.%Y', 'strftime'));
 
