@@ -163,7 +163,7 @@ export default {
   watch: {
     language() {
       this.fetch();
-    },
+    }
   },
   methods: {
     action(action) {
@@ -217,7 +217,10 @@ export default {
           }
 
           if (this.$route.name === "User") {
-            this.$store.dispatch("breadcrumb", this.$api.users.breadcrumb(user));
+            this.$store.dispatch(
+              "breadcrumb",
+              this.$api.users.breadcrumb(user)
+            );
           } else {
             this.$store.dispatch("breadcrumb", []);
           }
@@ -228,7 +231,6 @@ export default {
             api: this.$api.users.link(user.id),
             content: user.content
           });
-
         })
         .catch(error => {
           this.issue = error;
@@ -243,7 +245,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .k-user-profile {
   background: $color-white;
 }
@@ -258,18 +259,17 @@ export default {
   overflow: hidden;
 
   [dir="ltr"] & {
-    margin-left: .75rem;
+    margin-left: 0.75rem;
   }
 
   [dir="rtl"] & {
-    margin-right: .75rem;
+    margin-right: 0.75rem;
   }
-
 }
 .k-user-profile .k-button-group .k-button {
   display: block;
-  padding-top: .25rem;
-  padding-bottom: .25rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -278,7 +278,7 @@ export default {
 }
 
 .k-user-profile .k-dropdown-content {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -286,6 +286,9 @@ export default {
   width: 4rem;
   height: 4rem;
   line-height: 0;
+}
+.k-user-view-image .k-button-text {
+  opacity: 1;
 }
 .k-user-view-image .k-icon {
   width: 4rem;
@@ -296,11 +299,9 @@ export default {
 
 .k-user-name-placeholder {
   color: $color-light-grey;
-  transition: color .3s;
+  transition: color 0.3s;
 }
 .k-header[data-editable] .k-user-name-placeholder:hover {
   color: $color-dark;
 }
-
-
 </style>
