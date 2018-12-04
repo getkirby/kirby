@@ -367,7 +367,7 @@ class User extends ModelWithContent
     {
         try {
             $this->validatePassword($password);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             throw new PermissionException(['key' => 'access.login']);
         }
 

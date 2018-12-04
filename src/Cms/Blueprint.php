@@ -406,6 +406,33 @@ class Blueprint
     }
 
     /**
+     * Normalize field props for a single field
+     *
+     * @param string $name
+     * @param string $type
+     * @param array $props
+     * @return array
+     */
+    protected function normalizeField(string $name, string $type, array $props): array
+    {
+        if (isset(Field::$types[$type]) === false) {
+            return [
+                'name'  => $name,
+                'label' => 'Invalid field type ("' . $type . '")',
+                'type'  => 'info',
+                'text'  => 'The following field types are available: ' . $this->helpList(array_keys(Field::$types))
+            ];
+        }
+
+        return array_merge($props, [
+            'label' => $props['label'] ?? ucfirst($name),
+            'name'  => $name,
+            'type'  => $type,
+            'width' => $props['width'] ?? '1/1',
+        ]);
+    }
+
+    /**
      * Normalizes all fields and adds automatic labels,
      * types and widths.
      *
@@ -443,20 +470,21 @@ class Blueprint
                 $fieldProps['fields'] = $this->normalizeFields($tabName, $fieldProps['fields'], $level + 1);
             }
 
-            $fields[$fieldName] = $fieldProps = array_merge($fieldProps, [
-                'label' => $fieldProps['label'] ?? ucfirst($fieldName),
-                'name'  => $fieldName,
-                'type'  => $type = $fieldProps['type'] ?? $fieldName,
-                'width' => $fieldProps['width'] ?? '1/1',
-            ]);
+            // inject the name as field type if it does not exist
+            $fieldType = $fieldProps['type'] ?? $fieldName;
 
-            if (isset(Field::$types[$type]) === false) {
-                $fields[$fieldName] = [
-                    'name' => $fieldName,
-                    'label' => 'Invalid field type ("' . $type . '")',
-                    'type' => 'info',
-                    'text' => 'The following field types are available: ' . $this->helpList(array_keys(Field::$types))
-                ];
+            // resolve field groups
+            if ($fieldType === 'group') {
+
+                // remove the group
+                unset($fields[$fieldName]);
+
+                // inject each group field individually
+                foreach ($fieldProps['fields'] ?? [] as $groupFieldName => $groupFieldProps) {
+                    $fields[$groupFieldName] = $groupFieldProps;
+                }
+            } else {
+                $fields[$fieldName] = $this->normalizeField($fieldName, $fieldType, $fieldProps);
             }
         }
 
