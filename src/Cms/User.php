@@ -365,10 +365,6 @@ class User extends ModelWithContent
      */
     public function login(string $password, $session = null): bool
     {
-        if ($this->role()->permissions()->for('access', 'panel') === false) {
-            throw new PermissionException(['key' => 'access.panel']);
-        }
-
         try {
             $this->validatePassword($password);
         } catch(Exception $e) {

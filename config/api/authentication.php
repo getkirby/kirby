@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 
 return function () {
@@ -21,15 +22,20 @@ return function () {
 
         // compare both tokens
         if (hash_equals((string)$fromSession, (string)$fromHeader) !== true) {
-            throw new Exception('Invalid csrf token', 403);
+            throw new PermissionException('Invalid csrf token', 403);
         }
 
     }
 
     if ($user = $kirby->user()) {
+
+        if ($user->role()->permissions()->for('access', 'panel') === false) {
+            throw new PermissionException(['key' => 'access.panel']);
+        }
+
         return $user;
     }
 
-    throw new Exception('Unauthenticated', 403);
+    throw new PermissionException('Unauthenticated', 403);
 
 };
