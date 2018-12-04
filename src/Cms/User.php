@@ -369,7 +369,9 @@ class User extends ModelWithContent
             throw new PermissionException(['key' => 'access.panel']);
         }
 
-        if ($this->validatePassword($password) !== true) {
+        try {
+            $this->validatePassword($password);
+        } catch(Exception $e) {
             throw new PermissionException(['key' => 'access.login']);
         }
 
