@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\Image;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
@@ -831,7 +832,7 @@ class File extends ModelWithContent
      * place.
      *
      * @param array|null $options
-     * @return FileVersion
+     * @return FileVersion|File
      */
     public function thumb(array $options = null)
     {
@@ -839,7 +840,13 @@ class File extends ModelWithContent
             return $this;
         }
 
-        return $this->kirby()->component('file::version')($this->kirby(), $this, $options);
+        $result = $this->kirby()->component('file::version')($this->kirby(), $this, $options);
+
+        if (is_a($result, FileVersion::class) === false && is_a($result, File::class) === false) {
+            throw new InvalidArgumentException('The file::version component must return a File or FileVersion object');
+        }
+
+        return $result;
     }
 
     /**
