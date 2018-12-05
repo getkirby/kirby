@@ -564,4 +564,23 @@ class A
 
         return $array;
     }
+
+    /**
+     * Wraps the given value in an array
+     * if it's not an array yet.
+     *
+     * @param mixed|null $array
+     * @return array
+     */
+    public static function wrap($array = null): array
+    {
+        if ($array === null) {
+            return [];
+        } elseif (is_array($array) === false) {
+            return [$array];
+        } else {
+            return $array;
+        }
+    }
+
 }

@@ -329,4 +329,17 @@ class ATest extends TestCase
             return 'meow';
         }]));
     }
+
+    public function testWrap()
+    {
+        $result = A::wrap($expected = ['a', 'b']);
+        $this->assertEquals($expected, $result);
+
+        $result = A::wrap('a');
+        $this->assertEquals(['a'], $result);
+
+        $result = A::wrap(null);
+        $this->assertEquals([], $result);
+    }
+
 }
