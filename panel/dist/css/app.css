@@ -943,33 +943,49 @@ button::-moz-focus-inner {
   padding-right: 0.5rem;
 }
 .k-empty {
-  text-align: center;
-  border-left: 0;
-  padding: 1.5rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
   border-radius: 1px;
   color: #777;
   border: 1px dashed #ccc;
 }
-.k-empty .k-icon {
-  margin-bottom: 1rem;
-  color: #999;
-}
 .k-empty p {
   font-size: 0.875rem;
   color: #777;
+}
+.k-empty .k-icon {
+  color: #999;
+}
+.k-empty[data-layout="cards"] {
+  text-align: center;
+  padding: 1.5rem;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.k-empty[data-layout="cards"] .k-icon {
+  margin-bottom: 1rem;
+}
+.k-empty[data-layout="cards"] .k-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+.k-empty[data-layout="list"] .k-icon {
+  width: 38px;
+  height: 38px;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+.k-empty[data-layout="list"] p {
+  line-height: 1.25rem;
+  padding: 0.5rem 0.75rem;
 }
 .k-grid {
   --columns: 12;

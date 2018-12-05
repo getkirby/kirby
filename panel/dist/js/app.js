@@ -2054,16 +2054,25 @@
           n = t._self._c || e;
         return n(
           "div",
-          t._g({ staticClass: "k-empty" }, t.$listeners),
+          t._g(
+            { staticClass: "k-empty", attrs: { "data-layout": t.layout } },
+            t.$listeners
+          ),
           [
-            n("k-icon", { attrs: { type: t.icon, size: "medium" } }),
+            n("k-icon", { attrs: { type: t.icon } }),
             n("p", [t._t("default")], 2)
           ],
           1
         );
       },
       me = [],
-      ge = { props: { text: String, icon: String } },
+      ge = {
+        props: {
+          text: String,
+          icon: String,
+          layout: { type: String, default: "list" }
+        }
+      },
       ve = ge,
       be = (n("fa25"), Object(m["a"])(ve, he, me, !1, null, null, null));
     be.options.__file = "Empty.vue";
@@ -7098,7 +7107,10 @@
                 ]
               : n(
                   "k-empty",
-                  { attrs: { icon: "image" }, on: { click: t.open } },
+                  {
+                    attrs: { layout: t.layout, icon: "image" },
+                    on: { click: t.open }
+                  },
                   [t._v("\n    " + t._s(t.$t("field.files.empty")) + "\n  ")]
                 ),
             n("k-files-dialog", { ref: "selector", on: { submit: t.select } })
@@ -7414,7 +7426,10 @@
                 ]
               : n(
                   "k-empty",
-                  { attrs: { icon: "page" }, on: { click: t.open } },
+                  {
+                    attrs: { layout: t.layout, icon: "page" },
+                    on: { click: t.open }
+                  },
                   [t._v("\n    " + t._s(t.$t("field.pages.empty")) + "\n  ")]
                 ),
             n("k-pages-dialog", { ref: "selector", on: { submit: t.select } })
@@ -11674,20 +11689,21 @@
                       e.$store.dispatch("notification/success", ":)");
                   })
                   .catch(function(t) {
-                    t.details
-                      ? e.$store.dispatch("notification/error", {
-                          message: e.$t("error.form.incomplete"),
-                          details: t.details
-                        })
-                      : e.$store.dispatch("notification/error", {
-                          message: e.$t("error.form.notSaved"),
-                          details: [
-                            {
-                              label: "Exception: " + t.exception,
-                              message: t.message
-                            }
-                          ]
-                        });
+                    403 !== t.code &&
+                      (t.details
+                        ? e.$store.dispatch("notification/error", {
+                            message: e.$t("error.form.incomplete"),
+                            details: t.details
+                          })
+                        : e.$store.dispatch("notification/error", {
+                            message: e.$t("error.form.notSaved"),
+                            details: [
+                              {
+                                label: "Exception: " + t.exception,
+                                message: t.message
+                              }
+                            ]
+                          }));
                   }))
             );
           }
@@ -12625,7 +12641,7 @@
                         : n(
                             "k-empty",
                             {
-                              attrs: { icon: "page" },
+                              attrs: { layout: t.options.layout, icon: "page" },
                               on: {
                                 click: function(e) {
                                   t.add && t.action(null, "create");
@@ -12635,7 +12651,7 @@
                             [
                               t._v(
                                 "\n      " +
-                                  t._s(t.$t("pages.empty")) +
+                                  t._s(t.options.empty || t.$t("pages.empty")) +
                                   "\n    "
                               )
                             ]
@@ -12676,6 +12692,7 @@
             error: null,
             isLoading: !1,
             options: {
+              empty: null,
               headline: null,
               layout: "list",
               link: null,
@@ -12936,7 +12953,10 @@
                             : n(
                                 "k-empty",
                                 {
-                                  attrs: { icon: "image" },
+                                  attrs: {
+                                    layout: t.options.layout,
+                                    icon: "image"
+                                  },
                                   on: {
                                     click: function(e) {
                                       t.add && t.upload();
@@ -12946,7 +12966,9 @@
                                 [
                                   t._v(
                                     "\n        " +
-                                      t._s(t.$t("files.empty")) +
+                                      t._s(
+                                        t.options.empty || t.$t("files.empty")
+                                      ) +
                                       "\n      "
                                   )
                                 ]
@@ -16718,7 +16740,7 @@
         var e = Object(Td["a"])(t, 2),
           n = e[0],
           i = e[1];
-        lm(n, Object(u["a"])({}, Xf, i));
+        lm(n, Object(u["a"])({}, i, { mixins: [Xf].concat(i.mixins || []) }));
       }),
       Object.entries(window.panel.plugins.views).forEach(function(t) {
         var e = Object(Td["a"])(t, 2),
