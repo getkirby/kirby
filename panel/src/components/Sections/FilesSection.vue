@@ -33,7 +33,7 @@
           @paginate="paginate"
           @action="action"
         />
-        <k-empty v-else icon="image" @click="if (add) upload()">
+        <k-empty v-else :layout="options.layout" icon="image" @click="if (add) upload()">
           {{ $t('files.empty') }}
         </k-empty>
       </k-dropzone>
@@ -90,7 +90,6 @@ export default {
       }
     },
     drop(files) {
-
       if (this.add === false) {
         return false;
       }
@@ -99,10 +98,8 @@ export default {
         ...this.add,
         url: config.api + "/" + this.add.api
       });
-
     },
     items(data) {
-
       return data.map(file => {
         file.options = ready => {
           this.$api.files
@@ -116,9 +113,7 @@ export default {
         file.sortable = this.options.sortable;
 
         return file;
-
       });
-
     },
     replace(file) {
       this.$refs.upload.open({
@@ -128,7 +123,6 @@ export default {
       });
     },
     sort(items) {
-
       if (this.options.sortable === false) {
         return false;
       }
@@ -151,7 +145,6 @@ export default {
       this.$events.$emit("model.update");
     },
     upload() {
-
       if (this.add === false) {
         return false;
       }
@@ -160,13 +153,12 @@ export default {
         ...this.add,
         url: config.api + "/" + this.add.api
       });
-
     },
     uploaded() {
       this.$events.$emit("file.create");
       this.$events.$emit("model.update");
       this.$store.dispatch("notification/success", ":)");
-    },
+    }
   }
 };
 </script>

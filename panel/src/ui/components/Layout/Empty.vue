@@ -1,6 +1,6 @@
 <template>
-  <div class="k-empty" v-on="$listeners">
-    <k-icon :type="icon" size="medium" />
+  <div class="k-empty" v-on="$listeners" :data-layout="layout">
+    <k-icon :type="icon" />
     <p><slot /></p>
   </div>
 </template>
@@ -9,30 +9,60 @@
 export default {
   props: {
     text: String,
-    icon: String
+    icon: String,
+    layout: {
+      type: String,
+      default: "list"
+    }
   }
 };
 </script>
 
 <style lang="scss">
+/* global styles */
 .k-empty {
-  text-align: center;
-  border-left: 0;
-  padding: 1.5rem;
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: column;
   border-radius: $border-radius;
   color: $color-dark-grey;
   border: 1px dashed $color-border;
 }
-.k-empty .k-icon {
-  margin-bottom: 1rem;
-  color: $color-light-grey;
-}
 .k-empty p {
   font-size: $font-size-small;
   color: $color-dark-grey;
+}
+.k-empty .k-icon {
+  color: $color-light-grey;
+}
+
+/* layout:cards */
+.k-empty[data-layout="cards"] {
+  text-align: center;
+  padding: 1.5rem;
+  justify-content: center;
+  flex-direction: column;
+
+  .k-icon {
+    margin-bottom: 1rem;
+  }
+
+  .k-icon svg {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* layout:list */
+.k-empty[data-layout="list"] {
+  .k-icon {
+    width: 38px;
+    height: 38px;
+    border-right: 1px solid rgba(#000, 0.05);
+  }
+
+  p {
+    line-height: 1.25rem;
+    padding: 0.5rem 0.75rem;
+  }
 }
 </style>

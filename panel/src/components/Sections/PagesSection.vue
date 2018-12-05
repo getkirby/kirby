@@ -33,7 +33,7 @@
         @action="action"
       />
 
-      <k-empty v-else icon="page" @click="if (add) action(null, 'create')">
+      <k-empty v-else :layout="options.layout" icon="page" @click="if (add) action(null, 'create')">
         {{ $t('pages.empty') }}
       </k-empty>
 
@@ -58,7 +58,7 @@ export default {
   computed: {
     add() {
       return this.options.add && this.$permissions.pages.create;
-    },
+    }
   },
   created() {
     this.load();
@@ -73,12 +73,13 @@ export default {
         case "create":
           this.$refs.create.open(
             this.options.link || this.parent,
-            this.parent + '/children/blueprints',
+            this.parent + "/children/blueprints",
             this.name
           );
           break;
         case "preview":
-          this.$api.pages.preview(page.id)
+          this.$api.pages
+            .preview(page.id)
             .then(url => {
               window.open(url);
             })
@@ -86,7 +87,7 @@ export default {
               this.$store.dispatch("notification/error", error);
             });
 
-            break;
+          break;
         case "rename":
           this.$refs.rename.open(page.id);
           break;
@@ -105,13 +106,12 @@ export default {
       }
     },
     items(data) {
-
       return data.map(page => {
-
         page.flag = {
           class: "k-status-flag k-status-flag-" + page.status,
           tooltip: this.$t("page.status"),
-          icon: page.permissions.changeStatus === false ? "protected" : "circle",
+          icon:
+            page.permissions.changeStatus === false ? "protected" : "circle",
           disabled: page.permissions.changeStatus === false,
           click: () => {
             this.action(page, "status");
@@ -130,9 +130,7 @@ export default {
         page.sortable = page.permissions.sort && this.options.sortable;
 
         return page;
-
       });
-
     },
     sort(event) {
       let type = null;
@@ -146,10 +144,11 @@ export default {
       }
 
       if (type) {
-        const element  = event[type].element;
+        const element = event[type].element;
         const position = event[type].newIndex + 1 + this.pagination.offset;
 
-        this.$api.pages.status(element.id, "listed", position)
+        this.$api.pages
+          .status(element.id, "listed", position)
           .then(() => {
             this.$store.dispatch("notification/success", ":)");
           })
