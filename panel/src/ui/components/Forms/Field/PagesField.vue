@@ -32,7 +32,12 @@
         </component>
       </k-draggable>
     </template>
-    <k-empty v-else :layout="layout" icon="page" @click="open">
+    <k-empty
+      v-else
+      :layout="layout"
+      icon="page"
+      @click="open"
+    >
       {{ $t('field.pages.empty') }}
     </k-empty>
     <k-pages-dialog ref="selector" @submit="select" />

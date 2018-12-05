@@ -1,8 +1,6 @@
 import Vue from "vue";
-import auth from "./auth.js";
 import store from "./store.js";
 import section from "../mixins/section.js";
-import { ucfirst, lcfirst } from "@/ui/helpers/stringCase.js";
 
 let components = {};
 

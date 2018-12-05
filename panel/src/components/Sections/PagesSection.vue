@@ -33,7 +33,12 @@
         @action="action"
       />
 
-      <k-empty v-else :layout="options.layout" icon="page" @click="if (add) action(null, 'create')">
+      <k-empty
+        v-else
+        :layout="options.layout"
+        icon="page"
+        @click="if (add) action(null, 'create')"
+      >
         {{ options.empty || $t('pages.empty') }}
       </k-empty>
 

@@ -35,7 +35,12 @@
         </component>
       </k-draggable>
     </template>
-    <k-empty v-else :layout="layout" icon="image" @click="open">
+    <k-empty
+      v-else
+      :layout="layout"
+      icon="image"
+      @click="open"
+    >
       {{ $t('field.files.empty') }}
     </k-empty>
     <k-files-dialog ref="selector" @submit="select" />
