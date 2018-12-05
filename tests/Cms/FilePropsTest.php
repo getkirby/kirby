@@ -105,23 +105,6 @@ class FilePropsTest extends TestCase
         $this->assertEquals($this->defaults()['url'], $this->file()->url());
     }
 
-    public function testOriginal()
-    {
-        $file = $this->file([
-            'original' => $original = new File([
-                'filename' => 'test',
-                'url'      => 'test.jpg'
-            ])
-        ]);
-
-        $this->assertEquals($original, $file->original());
-    }
-
-    public function testDefaultOriginal()
-    {
-        return $this->assertNull($this->file()->original());
-    }
-
     public function testToString()
     {
         $file = new File(['filename' => 'super.jpg']);

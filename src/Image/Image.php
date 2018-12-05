@@ -268,9 +268,8 @@ class Image extends File
     public function toArray(): array
     {
         return array_merge(parent::toArray(), [
-            'dimensions'   => $this->dimensions()->toArray(),
-            'exif'         => $this->exif()->toArray(),
-            'header'       => $this->header(false),
+            'dimensions' => $this->dimensions()->toArray(),
+            'exif'       => $this->exif()->toArray(),
         ]);
     }
 

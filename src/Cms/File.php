@@ -25,9 +25,9 @@ use Throwable;
 class File extends ModelWithContent
 {
     use FileActions;
+    use FileFoundation;
     use HasMethods;
     use HasSiblings;
-    use HasThumbs;
 
     /**
      * The parent asset object
@@ -61,6 +61,14 @@ class File extends ModelWithContent
      * @var array
      */
     public static $methods = [];
+
+    /**
+     * The original object
+     * before manipulations
+     *
+     * @var File
+     */
+    protected $original;
 
     /**
      * The parent object
@@ -142,22 +150,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Converts the file object to a string
-     * In case of an image, it will create an image tag
-     * Otherwise it will return the url
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        if ($this->type() === 'image') {
-            return '<img src="' . $this->url() . '" alt="' . $this->alt() . '">';
-        }
-
-        return $this->url();
-    }
-
-    /**
      * Returns the url to api endpoint
      *
      * @param bool $relative
@@ -190,6 +182,27 @@ class File extends ModelWithContent
         }
 
         return $this->blueprint = FileBlueprint::factory('files/' . $this->template(), 'files/default', $this);
+    }
+
+    /**
+     * Blurs the image by the given amount of pixels
+     *
+     * @param boolean $pixels
+     * @return self
+     */
+    public function blur($pixels = true)
+    {
+        return $this->thumb(['blur' => $pixels]);
+    }
+
+    /**
+     * Converts the image to black and white
+     *
+     * @return self
+     */
+    public function bw()
+    {
+        return $this->thumb(['grayscale' => true]);
     }
 
     /**
@@ -226,6 +239,38 @@ class File extends ModelWithContent
     public function contentFileName(): string
     {
         return $this->filename();
+    }
+
+    /**
+     * Crops the image by the given width and height
+     *
+     * @param integer $width
+     * @param integer $height
+     * @param string|array $options
+     * @return self
+     */
+    public function crop(int $width, int $height = null, $options = null)
+    {
+        $quality = null;
+        $crop    = 'center';
+
+        if (is_int($options) === true) {
+            $quality = $options;
+        } elseif (is_string($options)) {
+            $crop = $options;
+        } elseif (is_a($options, 'Kirby\Cms\Field') === true) {
+            $crop = $options->value();
+        } elseif (is_array($options)) {
+            $quality = $options['quality'] ?? $quality;
+            $crop    = $options['crop']    ?? $crop;
+        }
+
+        return $this->thumb([
+            'width'   => $width,
+            'height'  => $height,
+            'quality' => $quality,
+            'crop'    => $crop
+        ]);
     }
 
     /**
@@ -293,10 +338,10 @@ class File extends ModelWithContent
      */
     public function html(array $attr = []): string
     {
-        if ($this->type() === 'image') {
-            return Html::img($this->url(), $attr);
+        if ($this->isResizable() === true) {
+            return Html::img($this->url(), array_merge(['alt' => $this->alt()], $attr));
         } else {
-            return Html::a($this->url, $attr);
+            return Html::a($this->url(), $attr);
         }
     }
 
@@ -586,6 +631,17 @@ class File extends ModelWithContent
     }
 
     /**
+     * Sets the JPEG compression quality
+     *
+     * @param integer $quality
+     * @return self
+     */
+    public function quality(int $quality)
+    {
+        return $this->thumb(['quality' => $quality]);
+    }
+
+    /**
      * Creates a string query, starting from the model
      *
      * @param string|null $query
@@ -609,6 +665,24 @@ class File extends ModelWithContent
         }
 
         return $result;
+    }
+
+    /**
+     * Resizes the file with the given width and height
+     * while keeping the aspect ratio.
+     *
+     * @param integer $width
+     * @param integer $height
+     * @param integer $quality
+     * @return self
+     */
+    public function resize(int $width = null, int $height = null, int $quality = null)
+    {
+        return $this->thumb([
+            'width'   => $width,
+            'height'  => $height,
+            'quality' => $quality
+        ]);
     }
 
     /**
@@ -673,6 +747,18 @@ class File extends ModelWithContent
     }
 
     /**
+     * Sets the absolute path to the file
+     *
+     * @param string $root
+     * @return self
+     */
+    protected function setRoot(string $root = null): self
+    {
+        $this->root = $root;
+        return $this;
+    }
+
+    /**
      * @param string $template
      * @return self
      */
@@ -733,6 +819,27 @@ class File extends ModelWithContent
     public function templateSiblings(bool $self = true)
     {
         return $this->siblings($self)->filterBy('template', $this->template());
+    }
+
+    /**
+     * Creates a modified version of images
+     * The media manager takes care of generating
+     * those modified versions and putting them
+     * in the right place. This is normally the
+     * /media folder of your installation, but
+     * could potentially also be a CDN or any other
+     * place.
+     *
+     * @param array|null $options
+     * @return FileVersion
+     */
+    public function thumb(array $options = null)
+    {
+        if (empty($options) === true) {
+            return $this;
+        }
+
+        return $this->kirby()->component('file::version')($this->kirby(), $this, $options);
     }
 
     /**
