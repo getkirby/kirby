@@ -87,7 +87,6 @@ class SiteActionsTest extends TestCase
 
     public function testUpdate()
     {
-        // TODO: make this work without the blueprint definition
         $site = $this->site()->update([
             'copyright' => 2018
         ]);

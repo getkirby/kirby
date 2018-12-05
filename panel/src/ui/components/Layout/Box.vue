@@ -16,14 +16,13 @@ export default {
 </script>
 
 <style lang="scss">
-
 .k-box {
   background: lighten($color-light-grey, 25%);
   border-radius: $border-radius;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   line-height: 1.25rem;
   border-left: 2px solid $color-light-grey;
-  padding: .5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   word-wrap: break-word;
   font-size: $font-size-small;
 }
@@ -39,7 +38,7 @@ export default {
   padding: 0;
 }
 .k-box[data-theme="button"] .k-button {
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
   height: 2.25rem;
   width: 100%;
   display: flex;
@@ -48,30 +47,29 @@ export default {
   text-align: left;
 }
 
-/** TODO: refactor this and remove the stuff above if possible **/
 .k-box[data-theme="positive"] {
   background: lighten($color-positive-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-positive-on-dark;
-  padding: .5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 .k-box[data-theme="negative"] {
   background: lighten($color-negative-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-negative-on-dark;
-  padding: .5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 .k-box[data-theme="notice"] {
   background: lighten($color-notice-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-notice-on-dark;
-  padding: .5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 .k-box[data-theme="info"] {
   background: lighten($color-focus-on-dark, 25%);
   border: 0;
   border-left: 2px solid $color-focus-on-dark;
-  padding: .5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 
 .k-box[data-theme="empty"] {
@@ -88,7 +86,7 @@ export default {
   border: 1px dashed $color-border;
 }
 .k-box[data-theme="empty"] .k-icon {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   color: $color-light-grey;
 }
 .k-box[data-theme="empty"] p {
