@@ -464,7 +464,6 @@ class Blueprint
 
             // resolve field groups
             if ($fieldType === 'group') {
-
                 if (empty($fieldProps['fields']) === false && is_array($fieldProps['fields']) === true) {
                     $index  = array_search($fieldName, array_keys($fields));
                     $before = array_slice($fields, 0, $index);
@@ -473,7 +472,6 @@ class Blueprint
                 } else {
                     unset($fields[$fieldName]);
                 }
-
             } else {
                 $fields[$fieldName] = $this->normalizeField($fieldName, $fieldType, $fieldProps);
             }
@@ -551,7 +549,6 @@ class Blueprint
             }
 
             if ($sectionProps['type'] === 'fields') {
-
                 $fields = $this->normalizeFields($tabName, $sectionProps['fields'] ?? []);
 
                 // inject guide fields guide
@@ -566,7 +563,6 @@ class Blueprint
                 }
 
                 $sections[$sectionName]['fields'] = $fields;
-
             }
         }
 

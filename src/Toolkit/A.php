@@ -582,5 +582,4 @@ class A
             return $array;
         }
     }
-
 }
