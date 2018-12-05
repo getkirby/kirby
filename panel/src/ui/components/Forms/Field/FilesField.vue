@@ -35,7 +35,7 @@
         </component>
       </k-draggable>
     </template>
-    <k-empty v-else icon="image" @click="open">
+    <k-empty v-else :layout="layout" icon="image" @click="open">
       {{ $t('field.files.empty') }}
     </k-empty>
     <k-files-dialog ref="selector" @submit="select" />
@@ -62,7 +62,7 @@ export default {
   },
   data() {
     return {
-      selected: this.value,
+      selected: this.value
     };
   },
   computed: {
@@ -70,7 +70,7 @@ export default {
       return {
         forceFallback: true,
         fallbackClass: "sortable-fallback",
-        handle: ".k-sort-handle",
+        handle: ".k-sort-handle"
       };
     },
     elements() {
@@ -82,7 +82,7 @@ export default {
         list: {
           list: "k-list",
           item: "k-list-item"
-        },
+        }
       };
 
       if (layouts[this.layout]) {
@@ -110,16 +110,14 @@ export default {
         max: this.max,
         multiple: this.multiple,
         parent: this.parent,
-        selected: this.selected.map(file => file.id),
+        selected: this.selected.map(file => file.id)
       });
     },
     remove(index) {
       this.selected.splice(index, 1);
       this.onInput();
     },
-    focus() {
-
-    },
+    focus() {},
     onStart() {
       this.$store.dispatch("drag", {});
     },
@@ -130,8 +128,7 @@ export default {
     select(files) {
       this.selected = files;
       this.onInput();
-    },
+    }
   }
-}
+};
 </script>
-
