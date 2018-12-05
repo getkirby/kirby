@@ -40,7 +40,6 @@ export default {
       this.$store.dispatch("form/revert", this.id);
     },
     save(e) {
-
       if (!e) {
         return false;
       }
@@ -53,12 +52,16 @@ export default {
         return true;
       }
 
-      this.$store.dispatch("form/save", this.id)
+      this.$store
+        .dispatch("form/save", this.id)
         .then(() => {
           this.$events.$emit("model.update");
-          this.$store.dispatch("notification/success", ':)');
+          this.$store.dispatch("notification/success", ":)");
         })
         .catch(response => {
+          if (response.code === 403) {
+            return;
+          }
 
           if (response.details) {
             this.$store.dispatch("notification/error", {
@@ -76,7 +79,6 @@ export default {
               ]
             });
           }
-
         });
     }
   }
