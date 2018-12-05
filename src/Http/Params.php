@@ -64,7 +64,10 @@ class Params extends Query
                     continue;
                 }
 
-                list($paramKey, $paramValue) = Str::split($p, $separator);
+                $paramParts = Str::split($p, $separator);
+                $paramKey   = $paramParts[0];
+                $paramValue = $paramParts[1] ?? null;
+
                 $params[$paramKey] = $paramValue;
                 unset($path[$index]);
             }

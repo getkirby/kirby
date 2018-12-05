@@ -26,6 +26,14 @@ class ParamsTest extends TestCase
         $this->assertEquals('value-b', $params->b);
     }
 
+    public function testConstructWithEmptyValue()
+    {
+        $params = new Params('a:/b:');
+
+        $this->assertEquals(null, $params->a);
+        $this->assertEquals(null, $params->b);
+    }
+
     public function testToString()
     {
         $params = new Params([
