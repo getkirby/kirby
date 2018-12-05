@@ -446,17 +446,6 @@ class Blueprint
             $fields = [];
         }
 
-        // inject guide
-        if (empty($fields) === true) {
-            $fields = [
-                $tabName . '-info' => [
-                    'label' => 'Fields',
-                    'text'  => 'No fields yet',
-                    'type'  => 'info'
-                ]
-            ];
-        }
-
         foreach ($fields as $fieldName => $fieldProps) {
             if ($fieldProps === true) {
                 $fieldProps = [];
@@ -476,13 +465,15 @@ class Blueprint
             // resolve field groups
             if ($fieldType === 'group') {
 
-                // remove the group
-                unset($fields[$fieldName]);
-
-                // inject each group field individually
-                foreach ($fieldProps['fields'] ?? [] as $groupFieldName => $groupFieldProps) {
-                    $fields[$groupFieldName] = $groupFieldProps;
+                if (empty($fieldProps['fields']) === false && is_array($fieldProps['fields']) === true) {
+                    $index  = array_search($fieldName, array_keys($fields));
+                    $before = array_slice($fields, 0, $index);
+                    $after  = array_slice($fields, $index + 1);
+                    $fields = array_merge($before, $fieldProps['fields'] ?? []);
+                } else {
+                    unset($fields[$fieldName]);
                 }
+
             } else {
                 $fields[$fieldName] = $this->normalizeField($fieldName, $fieldType, $fieldProps);
             }
@@ -560,7 +551,22 @@ class Blueprint
             }
 
             if ($sectionProps['type'] === 'fields') {
-                $sections[$sectionName]['fields'] = $this->normalizeFields($tabName, $sectionProps['fields'] ?? []);
+
+                $fields = $this->normalizeFields($tabName, $sectionProps['fields'] ?? []);
+
+                // inject guide fields guide
+                if (empty($fields) === true) {
+                    $fields = [
+                        $tabName . '-info' => [
+                            'label' => 'Fields',
+                            'text'  => 'No fields yet',
+                            'type'  => 'info'
+                        ]
+                    ];
+                }
+
+                $sections[$sectionName]['fields'] = $fields;
+
             }
         }
 
