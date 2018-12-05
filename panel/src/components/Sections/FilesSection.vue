@@ -34,7 +34,7 @@
           @action="action"
         />
         <k-empty v-else :layout="options.layout" icon="image" @click="if (add) upload()">
-          {{ $t('files.empty') }}
+          {{ options.empty || $t('files.empty') }}
         </k-empty>
       </k-dropzone>
 

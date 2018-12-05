@@ -5,6 +5,7 @@ use Kirby\Toolkit\Str;
 
 return [
     'mixins' => [
+        'empty',
         'headline',
         'layout',
         'min',
@@ -221,6 +222,7 @@ return [
             'errors'  => $this->errors,
             'options' => [
                 'accept'   => $this->accept,
+                'empty'    => $this->empty,
                 'headline' => $this->headline,
                 'layout'   => $this->layout,
                 'link'     => $this->link,

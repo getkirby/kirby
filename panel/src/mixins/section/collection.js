@@ -10,6 +10,7 @@ export default {
       error: null,
       isLoading: false,
       options: {
+        empty: null,
         headline: null,
         layout: "list",
         link: null,
@@ -57,10 +58,10 @@ export default {
           page: this.pagination.page
         })
         .then(response => {
-          this.isLoading  = false;
-          this.options    = response.options;
+          this.isLoading = false;
+          this.options = response.options;
           this.pagination = response.pagination;
-          this.data       = this.items(response.data);
+          this.data = this.items(response.data);
         })
         .catch(error => {
           this.isLoading = false;

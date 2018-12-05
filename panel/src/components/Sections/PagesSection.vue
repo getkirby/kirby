@@ -34,7 +34,7 @@
       />
 
       <k-empty v-else :layout="options.layout" icon="page" @click="if (add) action(null, 'create')">
-        {{ $t('pages.empty') }}
+        {{ options.empty || $t('pages.empty') }}
       </k-empty>
 
       <k-page-create-dialog ref="create" />
