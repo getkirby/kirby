@@ -20,6 +20,7 @@ $aliases = [
     'url'        => 'Kirby\Cms\Url',
     'user'       => 'Kirby\Cms\User',
     'users'      => 'Kirby\Cms\Users',
+    'visitor'    => 'Kirby\Cms\Visitor',
 
     // data handler
     'data'      => 'Kirby\Data\Data',
@@ -44,6 +45,7 @@ $aliases = [
     'escape'     => 'Kirby\Toolkit\Escape',
     'f'          => 'Kirby\Toolkit\F',
     'i18n'       => 'Kirby\Toolkit\I18n',
+    'mime'       => 'Kirby\Toolkit\Mime',
     'obj'        => 'Kirby\Toolkit\Obj',
     'remote'     => 'Kirby\Toolkit\Remote',
     'str'        => 'Kirby\Toolkit\Str',

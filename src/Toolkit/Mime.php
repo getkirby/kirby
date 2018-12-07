@@ -206,6 +206,24 @@ class Mime
     }
 
     /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public static function isAccepted(string $mime, string $pattern): bool
+    {
+        $accepted = Str::accepted($pattern);
+
+        foreach ($accepted as $m) {
+            if (fnmatch($m['value'], $mime, FNM_PATHNAME) === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the extension for a given mime type
      *
      * @param string|null $mime

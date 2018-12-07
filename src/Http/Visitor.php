@@ -4,6 +4,11 @@ namespace Kirby\Http;
 
 use Kirby\Http\Acceptance\Language;
 use Kirby\Http\Acceptance\MimeType;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Mime;
+use Kirby\Toolkit\Obj;
+use Kirby\Toolkit\Str;
 
 /**
  * The Visitor class makes it easy to inspect information
@@ -105,11 +110,41 @@ class Visitor
     public function acceptedLanguage(string $acceptedLanguage = null)
     {
         if ($acceptedLanguage === null) {
-            return $this->acceptedLanguage;
+            return $this->acceptedLanguages()->first();
         }
 
-        $this->acceptedLanguage = new Language($acceptedLanguage);
+        $this->acceptedLanguage = $acceptedLanguage;
         return $this;
+    }
+
+    /**
+     * Returns an array of all accepted languages
+     * including their quality and locale
+     *
+     * @return Collection
+     */
+    public function acceptedLanguages()
+    {
+        $accepted  = Str::accepted($this->acceptedLanguage);
+        $languages = [];
+
+        foreach ($accepted as $language) {
+            $value  = $language['value'];
+            $parts  = Str::split($value, '-');
+            $code   = isset($parts[0]) ? Str::lower($parts[0]) : null;
+            $region = isset($parts[1]) ? Str::upper($parts[1]) : null;
+            $locale = $region ? $code . '_' . $region : $code;
+
+            $languages[$locale] = new Obj([
+                'code'     => $code,
+                'locale'   => $locale,
+                'original' => $value,
+                'quality'  => $language['quality'],
+                'region'   => $region,
+            ]);
+        }
+
+        return new Collection($languages);
     }
 
     /**
@@ -123,16 +158,43 @@ class Visitor
     public function acceptedMimeType(string $acceptedMimeType = null)
     {
         if ($acceptedMimeType === null) {
-            return $this->acceptedMimeType;
+            return $this->acceptedMimeTypes()->first();
         }
 
-        $this->acceptedMimeType = new MimeType($acceptedMimeType);
+        $this->acceptedMimeType = $acceptedMimeType;
         return $this;
     }
 
-    public function acceptance($mimeType): float
+    public function acceptedMimeTypes()
     {
-        return (new MimeType($mimeType))->quality();
+        $accepted = Str::accepted($this->acceptedMimeType);
+        $mimes    = [];
+
+        foreach ($accepted as $mime) {
+            $mimes[$mime['value']] = new Obj([
+                'type'     => $mime['value'],
+                'quality'  => $mime['quality'],
+            ]);
+        }
+
+        return new Collection($mimes);
+
+    }
+
+    /**
+     * Returns the acceptance quality for the given
+     * mime type if the mime type is accepted at all.
+     *
+     * @param string $mimeType
+     * @return float
+     */
+    public function acceptance(string $mimeType): float
+    {
+        if ($mime = $this->acceptedMimeTypes()->findBy('type', $mimeType)) {
+            return $mime->quality();
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -143,6 +205,6 @@ class Visitor
      */
     public function accepts(string $mimeType): bool
     {
-        return $this->acceptedMimeType()->has($mimeType);
+        return Mime::isAccepted($mimeType, $this->acceptedMimeType);
     }
 }

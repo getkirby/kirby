@@ -104,6 +104,52 @@ class Str
     ];
 
     /**
+     * Parse accepted values and their quality from an
+     * accept string like an Accept or Accept-Language header
+     *
+     * @param string $input
+     * @return array
+     */
+    public static function accepted(string $input): array
+    {
+        $items = [];
+
+        // check each type in the Accept header
+        foreach (static::split($input, ',') as $item) {
+            $parts   = static::split($item, ';');
+            $value   = A::first($parts); // $parts now only contains params
+            $quality = 1;
+
+            // check for the q param ("quality" of the type)
+            foreach ($parts as $param) {
+                $param = static::split($param, '=');
+                if (A::get($param, 0) === 'q' && !empty($param[1])) {
+                    $quality = $param[1];
+                }
+            }
+
+            $items[$quality][] = $value;
+        }
+
+        // sort items by quality
+        krsort($items);
+
+        $result = [];
+
+        foreach ($items as $quality => $values) {
+            foreach ($values as $value) {
+                $result[] = [
+                    'quality' => $quality,
+                    'value'   => $value
+                ];
+            }
+        }
+
+        return $result;
+
+    }
+
+    /**
      * Returns the rest of the string after the given character
      *
      * @param  string   $string
