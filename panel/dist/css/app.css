@@ -148,8 +148,16 @@ strong {
   right: 0;
   bottom: 0;
   left: 0;
+  padding-bottom: 6rem;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.k-panel[data-dialog] .k-panel-view {
+  overflow: hidden;
+  -webkit-transform: none;
+  transform: none;
 }
 .k-panel[data-topbar] .k-panel-view {
   top: 2.5rem;
@@ -729,9 +737,6 @@ button::-moz-focus-inner {
   padding-right: 0.5rem;
 }
 .k-dialog {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
@@ -748,27 +753,14 @@ button::-moz-focus-inner {
   height: 100%;
   background: rgba(22, 23, 26, 0.6);
   z-index: 600;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
-.k-dialog-transition-enter-active,
-.k-dialog-transition-leave-active {
-  -webkit-transition: opacity 0.15s;
-  transition: opacity 0.15s;
-}
-.k-dialog-transition-enter,
-.k-dialog-transition-leave-to {
-  opacity: 0;
-}
-.k-dialog-transition-enter-active .k-dialog-box,
-.k-dialog-transition-leave-active .k-dialog-box {
-  -webkit-transition: -webkit-transform 0.2s;
-  transition: -webkit-transform 0.2s;
-  transition: transform 0.2s;
-  transition: transform 0.2s, -webkit-transform 0.2s;
-}
-.k-dialog-transition-enter .k-dialog-box,
-.k-dialog-transition-leave-to .k-dialog-box {
-  -webkit-transform: translateY(-5%);
-  transform: translateY(-5%);
+.k-dialog,
+.k-dialog-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 .k-dialog-box {
   position: relative;
@@ -780,9 +772,6 @@ button::-moz-focus-inner {
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
@@ -978,9 +967,12 @@ button::-moz-focus-inner {
   width: 2rem;
   height: 2rem;
 }
-.k-empty[data-layout="list"] .k-icon {
-  width: 38px;
+.k-empty[data-layout="list"] {
   height: 38px;
+}
+.k-empty[data-layout="list"] .k-icon {
+  width: 36px;
+  height: 36px;
   border-right: 1px solid rgba(0, 0, 0, 0.05);
 }
 .k-empty[data-layout="list"] p {
@@ -1291,15 +1283,6 @@ button::-moz-focus-inner {
 .k-image-error svg * {
   fill: hsla(0, 0%, 100%, 0.3);
 }
-.k-image-transition-enter-active,
-.k-image-transition-leave-active {
-  -webkit-transition: opacity 0.2s;
-  transition: opacity 0.2s;
-}
-.k-image-transition-enter,
-.k-image-transition-leave-to {
-  opacity: 0;
-}
 .k-image[data-cover] img {
   -o-object-fit: cover;
   object-fit: cover;
@@ -1317,6 +1300,9 @@ button::-moz-focus-inner {
   background: #2d2f36
     url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXR0ZXJuIGlkPSJhIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4yKSIgZD0iTTAgMGgxMHYxMEgwem0xMCAxMGgxMHYxMEgxMHoiLz48L3BhdHRlcm4+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==");
 }
+.k-list .k-list-item:not(:last-child) {
+  margin-bottom: 2px;
+}
 .k-list-item {
   position: relative;
   display: -webkit-box;
@@ -1327,7 +1313,6 @@ button::-moz-focus-inner {
   align-items: center;
   background: #fff;
   border-radius: 1px;
-  margin-bottom: 2px;
   -webkit-box-shadow: rgba(22, 23, 26, 0.05) 0 2px 5px;
   box-shadow: 0 2px 5px rgba(22, 23, 26, 0.05);
 }
@@ -2521,6 +2506,13 @@ button::-moz-focus-inner {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  min-width: 0;
+}
+.k-tags-input:focus-within .k-tags-input-element {
+  -ms-flex-preferred-size: 4rem;
+  flex-basis: 4rem;
 }
 .k-tags-input-element input {
   font: inherit;
@@ -2556,8 +2548,10 @@ button::-moz-focus-inner {
 .k-toolbar-button:hover {
   background: hsla(0, 0%, 93.7%, 0.5);
 }
-.k-textarea-input {
+.k-textarea-input-wrapper {
   position: relative;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 .k-textarea-input-native {
   resize: none;
