@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FileVersion extends Asset
 {
-
     protected $modifications;
     protected $original;
 
@@ -79,5 +78,4 @@ class FileVersion extends Asset
 
         return $array;
     }
-
 }

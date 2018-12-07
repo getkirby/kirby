@@ -8,7 +8,6 @@ use Kirby\Toolkit\Properties;
 
 trait FileFoundation
 {
-
     protected $asset;
     protected $root;
     protected $url;
@@ -143,5 +142,4 @@ trait FileFoundation
     {
         return $this->url;
     }
-
 }

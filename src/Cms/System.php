@@ -256,7 +256,6 @@ class System
      */
     public function register(string $license, string $email): bool
     {
-
         $response = Remote::get('https://licenses.getkirby.com/validate', [
             'data' => [
                 'license' => $license,
@@ -279,7 +278,6 @@ class System
 
         // save the license information
         return Json::write($file, $json);
-
     }
 
     /**
