@@ -1,5 +1,4 @@
 <template>
-  <transition name="k-dialog-transition">
     <div v-if="isOpen" class="k-dialog" @click="cancel">
       <div :data-size="size" class="k-dialog-box" @click.stop>
         <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
@@ -35,7 +34,6 @@
         </footer>
       </div>
     </div>
-  </transition>
 </template>
 
 <script>
@@ -51,12 +49,13 @@ export default {
     },
     size: String,
     theme: String,
-    visible: Boolean,
+    visible: Boolean
   },
   data() {
     return {
       notification: null,
       isOpen: this.visible,
+      scrollTop: 0
     };
   },
   mounted() {
@@ -65,7 +64,25 @@ export default {
     }
   },
   methods: {
+    storeScrollPosition() {
+      const view = document.querySelector(".k-panel-view");
+
+      if (view && view.scrollTop) {
+        this.scrollTop = view.scrollTop;
+      } else {
+        this.scrollTop = 0;
+      }
+    },
+    restoreScrollPosition() {
+      const view = document.querySelector(".k-panel-view");
+
+      if (view && view.scrollTop) {
+        view.scrollTop = this.scrollTop;
+      }
+    },
     open() {
+      this.storeScrollPosition();
+      this.$store.dispatch("dialog", true);
       this.notification = null;
       this.isOpen = true;
       this.$emit("open");
@@ -73,19 +90,20 @@ export default {
 
       this.$nextTick(() => {
         if (this.$el) {
-
           // focus on the first useful element
           this.focus();
 
           // blur trap
-          document.body.addEventListener("focus", (e) => {
-            if (this.$el.contains(e.target) === false) {
-              this.focus();
-            }
-          }, true);
-
+          document.body.addEventListener(
+            "focus",
+            e => {
+              if (this.$el.contains(e.target) === false) {
+                this.focus();
+              }
+            },
+            true
+          );
         }
-
       });
     },
     close() {
@@ -93,6 +111,8 @@ export default {
       this.isOpen = false;
       this.$emit("close");
       this.$events.$off("keydown.esc", this.close);
+      this.$store.dispatch("dialog", null);
+      this.restoreScrollPosition();
     },
     cancel() {
       this.$emit("cancel");
@@ -105,9 +125,7 @@ export default {
         );
 
         if (!autofocus) {
-          autofocus = this.$el.querySelector(
-            ".k-dialog-button-cancel"
-          );
+          autofocus = this.$el.querySelector(".k-dialog-button-cancel");
         }
 
         if (autofocus) {
@@ -119,7 +137,7 @@ export default {
     error(message) {
       this.notification = {
         message: message,
-        type: "error",
+        type: "error"
       };
     },
     submit() {
@@ -128,7 +146,7 @@ export default {
     success(message) {
       this.notification = {
         message: message,
-        type: "success",
+        type: "success"
       };
     }
   }
@@ -153,24 +171,7 @@ export default {
 
   background: $color-backdrop;
   z-index: z-index(dialog);
-}
-
-.k-dialog-transition-enter-active,
-.k-dialog-transition-leave-active {
-  transition: opacity 0.15s;
-}
-.k-dialog-transition-enter,
-.k-dialog-transition-leave-to {
-  opacity: 0;
-}
-
-.k-dialog-transition-enter-active .k-dialog-box,
-.k-dialog-transition-leave-active .k-dialog-box {
-  transition: transform 0.2s;
-}
-.k-dialog-transition-enter .k-dialog-box,
-.k-dialog-transition-leave-to .k-dialog-box {
-  transform: translateY(-5%);
+  transform: translate3d(0, 0, 0);
 }
 
 .k-dialog-box {
@@ -195,7 +196,7 @@ export default {
   width: 40rem;
 }
 .k-dialog-notification {
-  padding: .75rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   background: $color-dark;
   width: 100%;
   line-height: 1.25rem;
@@ -222,7 +223,6 @@ export default {
   margin-left: 1rem;
 }
 
-
 .k-dialog-body {
   padding: 1.5rem;
   overflow-y: auto;
@@ -245,7 +245,7 @@ export default {
   justify-content: space-between;
 
   .k-button {
-    padding: .75rem 1rem;
+    padding: 0.75rem 1rem;
     line-height: 1.25rem;
   }
 

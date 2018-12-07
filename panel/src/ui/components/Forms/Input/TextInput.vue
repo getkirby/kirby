@@ -61,9 +61,9 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
-        input: (event) => this.onInput(event.target.value)
+        input: event => this.onInput(event.target.value)
       }
-    }
+    };
   },
   watch: {
     value() {
@@ -106,8 +106,7 @@ export default {
       }
     };
   }
-}
-
+};
 </script>
 
 <style lang="scss">
@@ -121,7 +120,6 @@ export default {
 .k-text-input::placeholder {
   color: $color-light-grey;
 }
-
 .k-text-input:focus {
   outline: 0;
 }

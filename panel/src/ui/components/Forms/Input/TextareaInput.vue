@@ -1,43 +1,45 @@
 <template>
   <div :data-theme="theme" :data-over="over" class="k-textarea-input">
-    <textarea
-      ref="input"
-      v-bind="{
-        autofocus,
-        disabled,
-        id,
-        minlength,
-        name,
-        placeholder,
-        required,
-        spellcheck,
-        value
-      }"
-      :data-size="size"
-      class="k-textarea-input-native"
-      @blur="onBlur"
-      @click="onClick"
-      @focus="onFocus"
-      @input="onInput"
-      @select="onSelect"
-      @keydown.meta.enter="onSubmit"
-      @keydown.meta="onShortcut"
-      @dragover="onOver"
-      @dragleave="onOut"
-      @drop="onDrop"
-    />
-    <k-toolbar
-      v-if="!disabled && buttons !== false && toolbar"
-      ref="toolbar"
-      :buttons="buttons"
-      :style="{
-        top: caret.top + 'px',
-        left: caret.left + 'px'
-      }"
-      @blur="toolbar = false"
-      @cancel="cancel"
-      @command="onCommand"
-    />
+    <div class="k-textarea-input-wrapper">
+      <textarea
+        ref="input"
+        v-bind="{
+          autofocus,
+          disabled,
+          id,
+          minlength,
+          name,
+          placeholder,
+          required,
+          spellcheck,
+          value
+        }"
+        :data-size="size"
+        class="k-textarea-input-native"
+        @blur="onBlur"
+        @click="onClick"
+        @focus="onFocus"
+        @input="onInput"
+        @select="onSelect"
+        @keydown.meta.enter="onSubmit"
+        @keydown.meta="onShortcut"
+        @dragover="onOver"
+        @dragleave="onOut"
+        @drop="onDrop"
+      />
+      <k-toolbar
+        v-if="!disabled && buttons !== false && toolbar"
+        ref="toolbar"
+        :buttons="buttons"
+        :style="{
+          top: caret.top + 'px',
+          left: caret.left + 'px'
+        }"
+        @blur="toolbar = false"
+        @cancel="cancel"
+        @command="onCommand"
+      />
+    </div>
 
     <k-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
     <k-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
@@ -47,17 +49,12 @@
 </template>
 
 <script>
-
 import Toolbar from "../Toolbar.vue";
 import EmailDialog from "../Toolbar/EmailDialog.vue";
 import LinkDialog from "../Toolbar/LinkDialog.vue";
 import autosize from "autosize";
 import caret from "textarea-caret";
-import {
-  required,
-  minLength,
-  maxLength
-} from "vuelidate/lib/validators";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
   components: {
@@ -70,7 +67,7 @@ export default {
     autofocus: Boolean,
     buttons: {
       type: [Boolean, Array],
-      default: true,
+      default: true
     },
     disabled: Boolean,
     id: [Number, String],
@@ -86,17 +83,17 @@ export default {
       default: "off"
     },
     theme: String,
-    value: String,
+    value: String
   },
   data() {
     return {
       caret: {
         top: 0,
-        left: 0,
+        left: 0
       },
       over: false,
       toolbar: false
-    }
+    };
   },
   watch: {
     value() {
@@ -120,7 +117,6 @@ export default {
     if (this.$props.preselect) {
       this.select();
     }
-
   },
   methods: {
     cancel() {
@@ -141,8 +137,7 @@ export default {
       return caret(this.$refs.input, this.$refs.input.selectionEnd);
     },
     insert(text) {
-
-      const input    = this.$refs.input;
+      const input = this.$refs.input;
       const prevalue = input.value;
 
       input.focus();
@@ -151,7 +146,10 @@ export default {
 
       // document.execCommand did not work
       if (input.value === prevalue) {
-        const value = input.value.slice(0, input.selectionStart) + text + input.value.slice(input.selectionEnd);
+        const value =
+          input.value.slice(0, input.selectionStart) +
+          text +
+          input.value.slice(input.selectionEnd);
         input.value = value;
         this.$emit("input", value);
       }
@@ -165,7 +163,10 @@ export default {
       autosize.update(this.$refs.input);
     },
     onBlur($event) {
-      if ($event.relatedTarget && this.$el.contains($event.relatedTarget) === false) {
+      if (
+        $event.relatedTarget &&
+        this.$el.contains($event.relatedTarget) === false
+      ) {
         this.toolbar = false;
       }
     },
@@ -175,7 +176,6 @@ export default {
       }
     },
     onCommand(command, callback) {
-
       if (typeof this[command] !== "function") {
         window.console.warn(command + " is not a valid command");
         return;
@@ -220,9 +220,7 @@ export default {
         this.over = true;
       }
     },
-    onSelect()
-    {
-
+    onSelect() {
       if (this.disabled) {
         return false;
       }
@@ -234,18 +232,24 @@ export default {
       }
 
       this.$nextTick(() => {
-
-        if (!this.$refs.input || !this.$refs.toolbar || !this.$refs.toolbar.$el) {
+        if (
+          !this.$refs.input ||
+          !this.$refs.toolbar ||
+          !this.$refs.toolbar.$el
+        ) {
           return;
         }
 
-        const startCaret = caret(this.$refs.input, this.$refs.input.selectionStart);
-        const endCaret   = caret(this.$refs.input, this.$refs.input.selectionEnd);
+        const startCaret = caret(
+          this.$refs.input,
+          this.$refs.input.selectionStart
+        );
+        const endCaret = caret(this.$refs.input, this.$refs.input.selectionEnd);
 
-        const toolbarWidth  = this.$refs.toolbar.$el.offsetWidth;
+        const toolbarWidth = this.$refs.toolbar.$el.offsetWidth;
         const textareaWidth = this.$el.offsetWidth;
-        const maxLeft       = textareaWidth - toolbarWidth + 16;
-        let left            = endCaret.left - Math.round(toolbarWidth / 2);
+        const maxLeft = textareaWidth - toolbarWidth + 16;
+        let left = endCaret.left - Math.round(toolbarWidth / 2);
 
         if (left < 0) {
           left = -16;
@@ -257,14 +261,16 @@ export default {
 
         this.caret = {
           top: startCaret.top,
-          left: left,
+          left: left
         };
-
       });
-
     },
     onShortcut($event) {
-      if (this.buttons !== false && $event.key !== "Meta" && this.$refs.toolbar) {
+      if (
+        this.buttons !== false &&
+        $event.key !== "Meta" &&
+        this.$refs.toolbar
+      ) {
         this.$refs.toolbar.shortcut($event.key, $event);
       }
     },
@@ -283,23 +289,24 @@ export default {
     },
     wrap(text) {
       this.insert(text + this.selection() + text);
-    },
+    }
   },
   validations() {
     return {
       value: {
         required: this.required ? required : true,
         minLength: this.minlength ? minLength(this.minlength) : true,
-        maxLength: this.maxlength ? maxLength(this.maxlength) : true,
+        maxLength: this.maxlength ? maxLength(this.maxlength) : true
       }
     };
   }
-}
+};
 </script>
 
 <style lang="scss">
-.k-textarea-input {
+.k-textarea-input-wrapper {
   position: relative;
+  transform: translate3d(0, 0, 0);
 }
 .k-textarea-input-native {
   resize: none;
@@ -340,5 +347,4 @@ export default {
   transform: translateY(-150%);
   z-index: z-index("toolbar");
 }
-
 </style>

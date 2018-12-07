@@ -4,6 +4,7 @@
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
     :data-topbar="inside"
+    :data-dialog="$store.state.dialog"
     class="k-panel"
   >
     <div class="k-panel-header" v-if="inside">
@@ -160,6 +161,11 @@ b {
   left: 0;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  transform: translate3d(0, 0, 0);
+}
+.k-panel[data-dialog] .k-panel-view {
+  overflow: hidden;
+  transform: none;
 }
 .k-panel[data-topbar] .k-panel-view {
   top: 2.5rem;
@@ -204,5 +210,4 @@ b {
   white-space: nowrap;
   width: 1px;
 }
-
 </style>
