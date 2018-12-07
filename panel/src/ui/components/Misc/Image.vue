@@ -7,15 +7,13 @@
     v-on="$listeners"
   >
     <span :style="'padding-bottom:' + ratioPadding">
-      <transition name="k-image-transition">
-        <img
-          v-if="loaded"
-          :key="src"
-          :alt="alt || ''"
-          :src="src"
-          @dragstart.prevent
-        >
-      </transition>
+      <img
+        v-if="loaded"
+        :key="src"
+        :alt="alt || ''"
+        :src="src"
+        @dragstart.prevent
+      >
       <k-loader
         v-if="!loaded && !error"
         position="center"
@@ -74,7 +72,7 @@ export default {
     };
 
     img.src = this.src;
-  },
+  }
 };
 </script>
 
@@ -105,14 +103,6 @@ export default {
 }
 .k-image-error svg * {
   fill: rgba($color-white, 0.3);
-}
-.k-image-transition-enter-active,
-.k-image-transition-leave-active {
-  transition: opacity 0.2s;
-}
-.k-image-transition-enter,
-.k-image-transition-leave-to {
-  opacity: 0;
 }
 .k-image[data-cover] img {
   object-fit: cover;
