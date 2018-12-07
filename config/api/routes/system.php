@@ -17,7 +17,7 @@ return [
         'pattern' => 'system/register',
         'method'  => 'POST',
         'action'  => function () {
-            return $this->kirby()->system()->register($this->requestBody('license'));
+            return $this->kirby()->system()->register($this->requestBody('license'), $this->requestBody('email'));
         }
     ],
     [

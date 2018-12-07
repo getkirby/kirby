@@ -9,7 +9,7 @@ export default {
       return auth.user;
     });
   },
-  register(license) {
-    return api.post("system/register", { license: license });
+  register(info) {
+    return api.post("system/register", info);
   }
 };

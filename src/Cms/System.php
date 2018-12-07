@@ -3,7 +3,10 @@
 namespace Kirby\Cms;
 
 use Throwable;
+use Kirby\Data\Json;
+use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
+use Kirby\Http\Remote;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -179,17 +182,37 @@ class System
      * Loads the license file and returns
      * the license information if available
      *
-     * @return array|false
+     * @return string|false
      */
     public function license()
     {
-        $file = $this->app->root('config') . '/.license';
-
-        if (file_exists($file) === false) {
+        try {
+            $license = Json::read($this->app->root('config') . '/.license');
+        } catch (Throwable $e) {
             return false;
         }
 
-        return F::read($file);
+        // check for all required fields for the validation
+        if (isset($license['order'], $license['date'], $license['email'], $license['signature']) === false) {
+            return false;
+        }
+
+        // build the license verification data
+        $data = [
+            'order' => $license['order'],
+            'email' => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
+            'date'  => $license['date']
+        ];
+
+        // get the public key
+        $pubKey = F::read($this->app->root('kirby') . '/kirby.pub');
+
+        // verifiy the license signature
+        if (openssl_verify(json_encode($data), hex2bin($license['signature']), $pubKey, 'RSA-SHA256') !== 1) {
+            return false;
+        }
+
+        return $license['license'] ?? false;
     }
 
     /**
@@ -228,12 +251,35 @@ class System
      * folder if possible.
      *
      * @param string $license
+     * @param string $email
      * @return boolean
      */
-    public function register(string $license): bool
+    public function register(string $license, string $email): bool
     {
+
+        $response = Remote::get('https://licenses.getkirby.com/validate', [
+            'data' => [
+                'license' => $license,
+                'email'   => $email
+            ]
+        ]);
+
+        if ($response->code() !== 200) {
+            throw new Exception($response->content());
+        }
+
+        // decode the response
+        $json = Json::decode($response->content());
+
+        // replace the email with the plaintext version
+        $json['email'] = $email;
+
+        // where to store the license file
         $file = $this->app->root('config') . '/.license';
-        return F::write($file, $license);
+
+        // save the license information
+        return Json::write($file, $json);
+
     }
 
     /**
