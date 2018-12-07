@@ -1,5 +1,5 @@
 <template>
-  <div class="k-empty" v-on="$listeners" :data-layout="layout">
+  <div :data-layout="layout" class="k-empty" v-on="$listeners">
     <k-icon :type="icon" />
     <p><slot /></p>
   </div>

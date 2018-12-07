@@ -1,6 +1,16 @@
 <template>
-  <k-dialog ref="dialog" size="medium" :button="$t('license.register')" @submit="submit">
-    <k-form :fields="fields" :novalidate="true" v-model="registration" @submit="submit" />
+  <k-dialog
+    ref="dialog"
+    :button="$t('license.register')"
+    size="medium"
+    @submit="submit"
+  >
+    <k-form
+      :fields="fields"
+      :novalidate="true"
+      v-model="registration"
+      @submit="submit"
+    />
   </k-dialog>
 </template>
 

@@ -7,7 +7,7 @@
     :data-dialog="$store.state.dialog"
     class="k-panel"
   >
-    <div class="k-panel-header" v-if="inside">
+    <div v-if="inside" class="k-panel-header">
       <k-topbar @register="$refs.registration.open()" />
       <k-search v-if="$store.state.search" v-bind="$store.state.search" />
     </div>

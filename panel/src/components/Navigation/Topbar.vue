@@ -96,7 +96,14 @@
           <div v-else-if="unregistered" class="k-registration">
             <p>{{ $t('license.unregistered') }}</p>
             <k-button :responsive="true" icon="key" @click="$emit('register')">{{ $t('license.register') }}</k-button>
-            <k-button :responsive="true" link="https://getkirby.com/buy" target="_blank" icon="cart">{{ $t('license.buy') }}</k-button>
+            <k-button
+              :responsive="true"
+              link="https://getkirby.com/buy"
+              target="_blank"
+              icon="cart"
+            >
+              {{ $t('license.buy') }}
+            </k-button>
           </div>
           <k-button :tooltip="$t('search')" icon="search" @click="$store.dispatch('search', true)" />
         </div>
@@ -110,11 +117,10 @@ import views from "@/config/views.js";
 
 export default {
   computed: {
-    breadcrumbTitle()
-    {
+    breadcrumbTitle() {
       let title = this.$t(`view.${this.$store.state.view}`, this.view.label);
 
-      if (this.$store.state.view === 'site') {
+      if (this.$store.state.view === "site") {
         return this.$store.state.system.info.title || title;
       }
 
@@ -145,15 +151,13 @@ export default {
   },
   methods: {
     viewTitle(name, options) {
-
       let title = this.$t(`view.${name}`, options.label);
 
-      if (name === 'site') {
+      if (name === "site") {
         return this.$store.state.system.info.breadcrumbTitle || title;
       }
 
       return title;
-
     }
   }
 };
@@ -206,10 +210,8 @@ export default {
   [dir="rtl"] & {
     padding-left: 0;
   }
-
 }
 .k-topbar-view-button .k-icon {
-
   [dir="ltr"] & {
     margin-right: 0.5rem;
   }
@@ -217,7 +219,6 @@ export default {
   [dir="rtl"] & {
     margin-left: 0.5rem;
   }
-
 }
 .k-topbar-crumbs {
   flex-grow: 1;
@@ -303,7 +304,6 @@ export default {
       rgba($color-dark, 1)
     );
   }
-
 }
 .k-topbar-signals .k-button {
   line-height: 1;
@@ -340,7 +340,6 @@ export default {
   color: $color-focus;
   font-weight: 500;
 }
-
 
 .k-registration {
   display: inline-block;

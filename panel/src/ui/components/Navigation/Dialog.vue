@@ -1,39 +1,39 @@
 <template>
-    <div v-if="isOpen" class="k-dialog" @click="cancel">
-      <div :data-size="size" class="k-dialog-box" @click.stop>
-        <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
-          <p>{{ notification.message }}</p>
-          <k-button
-            icon="cancel"
-            @click="notification = null"
-          />
-        </div>
-        <div class="k-dialog-body">
-          <slot />
-        </div>
-        <footer class="k-dialog-footer">
-          <slot name="footer">
-            <k-button-group>
-              <k-button
-                icon="cancel"
-                class="k-dialog-button-cancel"
-                @click="cancel"
-              >
-                {{ $t("cancel") }}
-              </k-button>
-              <k-button
-                :icon="icon"
-                :theme="theme"
-                class="k-dialog-button-submit"
-                @click="submit"
-              >
-                {{ button || $t("confirm") }}
-              </k-button>
-            </k-button-group>
-          </slot>
-        </footer>
+  <div v-if="isOpen" class="k-dialog" @click="cancel">
+    <div :data-size="size" class="k-dialog-box" @click.stop>
+      <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
+        <p>{{ notification.message }}</p>
+        <k-button
+          icon="cancel"
+          @click="notification = null"
+        />
       </div>
+      <div class="k-dialog-body">
+        <slot />
+      </div>
+      <footer class="k-dialog-footer">
+        <slot name="footer">
+          <k-button-group>
+            <k-button
+              icon="cancel"
+              class="k-dialog-button-cancel"
+              @click="cancel"
+            >
+              {{ $t("cancel") }}
+            </k-button>
+            <k-button
+              :icon="icon"
+              :theme="theme"
+              class="k-dialog-button-submit"
+              @click="submit"
+            >
+              {{ button || $t("confirm") }}
+            </k-button>
+          </k-button-group>
+        </slot>
+      </footer>
     </div>
+  </div>
 </template>
 
 <script>
