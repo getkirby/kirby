@@ -159,6 +159,7 @@ b {
   right: 0;
   bottom: 0;
   left: 0;
+  padding-bottom: 6rem;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   transform: translate3d(0, 0, 0);
