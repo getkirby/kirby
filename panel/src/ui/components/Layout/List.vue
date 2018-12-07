@@ -16,5 +16,11 @@ export default {
   props: {
     items: Array
   }
-}
+};
 </script>
+
+<style lang="scss">
+.k-list .k-list-item:not(:last-child) {
+  margin-bottom: 2px;
+}
+</style>

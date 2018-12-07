@@ -77,9 +77,7 @@ export default {
 </script>
 
 <style lang="scss">
-
 $list-item-height: 38px;
-
 
 .k-list-item {
   position: relative;
@@ -87,7 +85,6 @@ $list-item-height: 38px;
   align-items: center;
   background: $color-white;
   border-radius: $border-radius;
-  margin-bottom: 2px;
   box-shadow: $box-shadow-card;
 }
 .k-list-item .k-sort-handle {
@@ -100,19 +97,18 @@ $list-item-height: 38px;
   z-index: 1;
   cursor: -webkit-grab;
   will-change: opacity, color;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 
   @media screen and (min-width: $breakpoint-small) {
     left: -$list-item-height;
     width: $list-item-height;
   }
-
 }
 .k-list-item .k-sort-handle:active {
   cursor: -webkit-grabbing;
 }
 .k-list:hover .k-sort-handle {
-  opacity: .25;
+  opacity: 0.25;
 }
 .k-list-item:hover .k-sort-handle {
   opacity: 1;
@@ -124,7 +120,7 @@ $list-item-height: 38px;
   box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
 }
 .k-list-item.sortable-fallback {
-  opacity: .25 !important;
+  opacity: 0.25 !important;
   overflow: hidden;
 }
 .k-list-item-image {
@@ -144,7 +140,7 @@ $list-item-height: 38px;
   height: $list-item-height;
 }
 .k-list-item-image .k-icon svg {
-  color: rgba($color-white, .5);
+  color: rgba($color-white, 0.5);
 }
 .k-list-item-content {
   display: flex;
@@ -162,7 +158,7 @@ $list-item-height: 38px;
   align-items: baseline;
   width: 100%;
   line-height: 1.25rem;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
 }
 .k-list-item-text em {
   font-style: normal;

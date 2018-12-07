@@ -54,9 +54,11 @@ export default {
 
 /* layout:list */
 .k-empty[data-layout="list"] {
+  height: 38px;
+
   .k-icon {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-right: 1px solid rgba(#000, 0.05);
   }
 
