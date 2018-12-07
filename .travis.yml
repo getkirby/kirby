@@ -3,7 +3,6 @@ os: linux
 php:
   - 7.1
   - 7.2
-  - 7.3
 
 install:
   # Install composer packages, will also trigger dump-autoload
