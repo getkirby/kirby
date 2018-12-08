@@ -12,8 +12,10 @@ class VisitorTest extends TestCase
 
         $this->assertEquals('', $visitor->ip());
         $this->assertEquals('', $visitor->userAgent());
-        $this->assertInstanceOf('Kirby\Http\Acceptance\Language', $visitor->acceptedLanguage());
-        $this->assertInstanceOf('Kirby\Http\Acceptance\MimeType', $visitor->acceptedMimeType());
+        $this->assertEquals(null, $visitor->acceptedLanguage());
+        $this->assertInstanceOf('Kirby\Toolkit\Collection', $visitor->acceptedLanguages());
+        $this->assertEquals(null, $visitor->acceptedMimeType());
+        $this->assertInstanceOf('Kirby\Toolkit\Collection', $visitor->acceptedMimeTypes());
     }
 
     public function testVisitorWithArguments()
@@ -27,10 +29,10 @@ class VisitorTest extends TestCase
 
         $this->assertEquals('192.168.1.1', $visitor->ip());
         $this->assertEquals('Kirby', $visitor->userAgent());
-        $this->assertInstanceOf('Kirby\Http\Acceptance\Language', $visitor->acceptedLanguage());
+        $this->assertInstanceOf('Kirby\Toolkit\Obj', $visitor->acceptedLanguage());
         $this->assertEquals('en_US', $visitor->acceptedLanguage()->locale());
-        $this->assertInstanceOf('Kirby\Http\Acceptance\MimeType', $visitor->acceptedMimeType());
-        $this->assertEquals('text/html', $visitor->acceptedMimeType()->value());
+        $this->assertInstanceOf('Kirby\Toolkit\Obj', $visitor->acceptedMimeType());
+        $this->assertEquals('text/html', $visitor->acceptedMimeType()->type());
     }
 
     public function testIp()
@@ -48,25 +50,13 @@ class VisitorTest extends TestCase
         $this->assertEquals('Kirby', $visitor->userAgent());
     }
 
-    public function testAcceptedLanguage()
-    {
-        $visitor = new Visitor;
-        $this->assertInstanceOf('Kirby\Http\Acceptance\Language', $visitor->acceptedLanguage());
-    }
-
-    public function testAcceptedMimeType()
-    {
-        $visitor = new Visitor;
-        $this->assertInstanceOf('Kirby\Http\Acceptance\MimeType', $visitor->acceptedMimeType());
-    }
-
     public function testAccepts()
     {
         $visitor = new Visitor;
-        $this->assertFalse($visitor->accepts('text/html'));
+        $this->assertFalse($visitor->acceptsMimeType('text/html'));
 
         $visitor = new Visitor(['acceptedMimeType' => 'text/html']);
-        $this->assertTrue($visitor->accepts('text/html'));
+        $this->assertTrue($visitor->acceptsMimeType('text/html'));
     }
 
 }

@@ -146,7 +146,6 @@ class Str
         }
 
         return $result;
-
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Http\Acceptance\Language;
-use Kirby\Http\Acceptance\MimeType;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Mime;
@@ -66,46 +64,12 @@ class Visitor
     }
 
     /**
-     * Sets the ip address if provided
-     * or returns the ip of the current
-     * visitor otherwise
-     *
-     * @param  string|null $ip
-     * @return string|Visitor|null
-     */
-    public function ip(string $ip = null)
-    {
-        if ($ip === null) {
-            return $this->ip;
-        }
-        $this->ip = $ip;
-        return $this;
-    }
-
-    /**
-     * Sets the user agent if provided
-     * or returns the user agent string of
-     * the current visitor otherwise
-     *
-     * @param  string|null $userAgent
-     * @return string|Visitor|null
-     */
-    public function userAgent(string $userAgent = null)
-    {
-        if ($userAgent === null) {
-            return $this->userAgent;
-        }
-        $this->userAgent = $userAgent;
-        return $this;
-    }
-
-    /**
      * Sets the accepted language if
      * provided or returns the user's
      * accepted language otherwise
      *
      * @param  string|null $acceptedLanguage
-     * @return Language|Visitor|null
+     * @return Obj|Visitor|null
      */
     public function acceptedLanguage(string $acceptedLanguage = null)
     {
@@ -148,12 +112,31 @@ class Visitor
     }
 
     /**
+     * Checks if the user accepts the given language
+     *
+     * @param string $code
+     * @return bool
+     */
+    public function acceptsLanguage(string $code): bool
+    {
+        $mode = Str::contains($code, '_') === true ? 'locale' : 'code';
+
+        foreach ($this->acceptedLanguages() as $language) {
+            if ($language->$mode() === $code) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Sets the accepted mime type if
      * provided or returns the user's
      * accepted mime type otherwise
      *
      * @param  string|null $acceptedMimeType
-     * @return MimeType|Visitor|null
+     * @return Obj|Visitor
      */
     public function acceptedMimeType(string $acceptedMimeType = null)
     {
@@ -165,6 +148,11 @@ class Visitor
         return $this;
     }
 
+    /**
+     * Returns a collection of all accepted mime types
+     *
+     * @return Collection
+     */
     public function acceptedMimeTypes()
     {
         $accepted = Str::accepted($this->acceptedMimeType);
@@ -178,23 +166,6 @@ class Visitor
         }
 
         return new Collection($mimes);
-
-    }
-
-    /**
-     * Returns the acceptance quality for the given
-     * mime type if the mime type is accepted at all.
-     *
-     * @param string $mimeType
-     * @return float
-     */
-    public function acceptance(string $mimeType): float
-    {
-        if ($mime = $this->acceptedMimeTypes()->findBy('type', $mimeType)) {
-            return $mime->quality();
-        } else {
-            return 0;
-        }
     }
 
     /**
@@ -203,8 +174,43 @@ class Visitor
      * @param  string $mimeType
      * @return boolean
      */
-    public function accepts(string $mimeType): bool
+    public function acceptsMimeType(string $mimeType): bool
     {
         return Mime::isAccepted($mimeType, $this->acceptedMimeType);
     }
+
+    /**
+     * Sets the ip address if provided
+     * or returns the ip of the current
+     * visitor otherwise
+     *
+     * @param  string|null $ip
+     * @return string|Visitor|null
+     */
+    public function ip(string $ip = null)
+    {
+        if ($ip === null) {
+            return $this->ip;
+        }
+        $this->ip = $ip;
+        return $this;
+    }
+
+    /**
+     * Sets the user agent if provided
+     * or returns the user agent string of
+     * the current visitor otherwise
+     *
+     * @param  string|null $userAgent
+     * @return string|Visitor|null
+     */
+    public function userAgent(string $userAgent = null)
+    {
+        if ($userAgent === null) {
+            return $this->userAgent;
+        }
+        $this->userAgent = $userAgent;
+        return $this;
+    }
+
 }

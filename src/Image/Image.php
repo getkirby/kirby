@@ -4,9 +4,9 @@ namespace Kirby\Image;
 
 use Exception;
 use Kirby\Http\Response;
-use Kirby\Http\Acceptance\MimeType;
 use Kirby\Toolkit\File;
 use Kirby\Toolkit\Html;
+use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -205,8 +205,7 @@ class Image extends File
     public function match(array $rules): bool
     {
         if (($rules['mime'] ?? null) !== null) {
-            // TODO: replace with new Kirby\Toolkit\Mime::isAccepted() method
-            if ((new MimeType($rules['mime']))->has($this->mime()) === false) {
+            if (Mime::isAccepted($this->mime(), $rules['mime']) !== true) {
                 throw new Exception(sprintf('Invalid mime type: %s', $this->mime()));
             }
         }
