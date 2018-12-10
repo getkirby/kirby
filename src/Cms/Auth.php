@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -145,6 +146,40 @@ class Auth
     }
 
     /**
+     * Returns the hashed ip of the visitor
+     * which is used to track invalid logins
+     *
+     * @return string
+     */
+    public function ipHash(): string
+    {
+        return hash('sha256', $this->kirby->visitor()->ip());
+    }
+
+    /**
+     * Check if logins are blocked for the current ip
+     *
+     * @return boolean
+     */
+    public function isBlocked(): bool
+    {
+        $ip      = $this->ipHash();
+        $log     = $this->log();
+        $trials  = 10;
+        $timeout = 3600;
+
+        if ($entry = ($log[$ip] ?? null)) {
+            if ($entry['trials'] > $trials) {
+                if ($entry['time'] > (time() - $timeout)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Login a user by email and password
      *
      * @param string $email
@@ -154,6 +189,11 @@ class Auth
      */
     public function login(string $email, string $password, bool $long = false)
     {
+        // check for blocked ips
+        if ($this->isBlocked() === true) {
+            throw new PermissionException('Rate limit exceeded', 403);
+        }
+
         // stop impersonating
         $this->impersonate = null;
 
@@ -170,11 +210,38 @@ class Auth
             }
         }
 
+        // log invalid login trial
+        $this->track();
+
         // sleep for a random amount of milliseconds
         // to make automated attacks harder
         usleep(random_int(1000, 2000000));
 
         return false;
+    }
+
+    /**
+     * Returns the absolute path to the logins log
+     *
+     * @return string
+     */
+    public function logfile(): string
+    {
+        return $this->kirby->root('accounts') . '/.logins';
+    }
+
+    /**
+     * Read all tracked logins
+     *
+     * @return array
+     */
+    public function log(): array
+    {
+        try {
+            return Data::read($this->logfile(), 'json');
+        } catch (Throwable $e) {
+            return [];
+        }
     }
 
     /**
@@ -194,6 +261,32 @@ class Auth
 
         $this->user = null;
         return true;
+    }
+
+    /**
+     * Tracks a login
+     *
+     * @return boolean
+     */
+    public function track(): bool
+    {
+        $ip   = $this->ipHash();
+        $log  = $this->log();
+        $time = time();
+
+        if (isset($log[$ip]) === true) {
+            $log[$ip] = [
+                'time'   => $time,
+                'trials' => ($log[$ip]['trials'] ?? 0) + 1
+            ];
+        } else {
+            $log[$ip] = [
+                'time'   => $time,
+                'trials' => 1
+            ];
+        }
+
+        return Data::write($this->logfile(), $log, 'json');
     }
 
     /**
