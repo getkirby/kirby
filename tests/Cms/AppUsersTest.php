@@ -2,18 +2,29 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Toolkit\Dir;
+
 class AppUsersTest extends TestCase
 {
 
-    public function testImpersonateAsKirby()
+    public function setUp()
     {
-
-        $app = new App([
+        $this->app = new App([
             'roots' => [
-                'index' => '/dev/null'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/AppUsersTest'
             ]
         ]);
+    }
 
+    public function tearDown()
+    {
+        Dir::remove($this->fixtures);
+    }
+
+    public function testImpersonateAsKirby()
+    {
+        $app = $this->app;
         $app->impersonate('kirby');
         $this->assertEquals('kirby@getkirby.com', $app->user()->email());
         $this->assertTrue($app->user()->isKirby());
@@ -21,12 +32,7 @@ class AppUsersTest extends TestCase
 
     public function testImpersonateAsNull()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-        ]);
-
+        $app = $this->app;
         $app->impersonate('kirby');
 
         $this->assertEquals('kirby@getkirby.com', $app->user()->email());
@@ -39,10 +45,7 @@ class AppUsersTest extends TestCase
 
     public function testImpersonateAsExistingUser()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'users' => [
                 [
                     'email' => 'homer@simpsons.com',
@@ -60,18 +63,12 @@ class AppUsersTest extends TestCase
      */
     public function testImpersonateAsMissingUser()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
-
-        $app->impersonate('homer@simpsons.com');
+        $this->app->impersonate('homer@simpsons.com');
     }
 
     public function testLoad()
     {
-        $app = new App([
+        $app = $this->app->clone([
             'roots' => [
                 'site' => __DIR__ . '/fixtures'
             ]
@@ -83,7 +80,7 @@ class AppUsersTest extends TestCase
 
     public function testSet()
     {
-        $app = new App([
+        $app = $this->app->clone([
             'users' => [
                 [
                     'email' => 'user@getkirby.com'
@@ -121,9 +118,9 @@ class AppUsersTest extends TestCase
     public function testUserFromBasicAuth()
     {
 
-        $app    = $this->basicAuthApp();
-        $header = 'Basic ' . base64_encode('test@getkirby.com:test');
-        $user   = $app->currentUserFromBasicAuth($header);
+        $app  = $this->basicAuthApp();
+        $auth = new BasicAuth(base64_encode('test@getkirby.com:test'));
+        $user = $app->auth()->currentUserFromBasicAuth($auth);
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('test@getkirby.com', $user->email());
@@ -144,8 +141,8 @@ class AppUsersTest extends TestCase
             ]
         ]);
 
-        $header = 'Basic ' . base64_encode('test@getkirby.com:test');
-        $user   = $app->currentUserFromBasicAuth($header);
+        $auth = new BasicAuth(base64_encode('test@getkirby.com:test'));
+        $user = $app->auth()->currentUserFromBasicAuth($auth);
     }
 
     /**
@@ -160,8 +157,8 @@ class AppUsersTest extends TestCase
             ]
         ]);
 
-        $header = 'Basic ' . base64_encode('test@getkirby.com:test');
-        $user   = $app->currentUserFromBasicAuth($header);
+        $auth = new BasicAuth(base64_encode('test@getkirby.com:test'));
+        $user = $app->auth()->currentUserFromBasicAuth($auth);
     }
 
     /**
@@ -176,8 +173,7 @@ class AppUsersTest extends TestCase
             ]
         ]);
 
-        $header = 'Bearer ' . base64_encode('test@getkirby.com:test');
-        $user   = $app->currentUserFromBasicAuth($header);
+        $user = $app->auth()->currentUserFromBasicAuth();
     }
 
 }

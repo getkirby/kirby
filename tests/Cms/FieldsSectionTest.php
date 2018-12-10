@@ -10,11 +10,18 @@ class FieldsSectionTest extends TestCase
 
     public function setUp()
     {
-        new App([
+        $this->app = new App([
             'roots' => [
-                'index' => '/dev/null'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/FieldsSectionTest'
             ]
         ]);
+
+        Dir::make($this->fixtures);
+    }
+
+    public function tearDown()
+    {
+        Dir::remove($this->fixtures);
     }
 
     public function modelProvider()

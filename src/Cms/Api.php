@@ -120,7 +120,7 @@ class Api extends BaseApi
     {
         // get the authenticated user
         if ($id === null) {
-            return $this->kirby->user();
+            return $this->kirby->auth()->user();
         }
 
         // get a specific user by id
