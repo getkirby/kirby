@@ -15,6 +15,18 @@ class Dir extends \Kirby\Toolkit\Dir
 {
     public static $numSeparator = '_';
 
+    /**
+     * Scans the directory and analyzes files,
+     * content, meta info and children. This is used
+     * in Page, Site and User objects to fetch all
+     * relevant information.
+     *
+     * @param string $dir
+     * @param string $contentExtension
+     * @param array $contentIgnore
+     * @param boolean $multilang
+     * @return array
+     */
     public static function inventory(string $dir, string $contentExtension = 'txt', array $contentIgnore = null, bool $multilang = false): array
     {
         $dir = realpath($dir);
@@ -67,15 +79,23 @@ class Dir extends \Kirby\Toolkit\Dir
             } else {
                 $extension = pathinfo($item, PATHINFO_EXTENSION);
 
-                if ($extension === $contentExtension) {
-                    $content[] = pathinfo($item, PATHINFO_FILENAME);
-                } else {
-                    $inventory['files'][$item] = [
-                        'filename'  => $item,
-                        'extension' => $extension,
-                        'root'      => $root,
-                    ];
+                switch ($extension) {
+                    case 'htm':
+                    case 'html':
+                    case 'php':
+                        // don't track those files
+                        break;
+                    case $contentExtension:
+                        $content[] = pathinfo($item, PATHINFO_FILENAME);
+                        break;
+                    default:
+                        $inventory['files'][$item] = [
+                            'filename'  => $item,
+                            'extension' => $extension,
+                            'root'      => $root,
+                        ];
                 }
+
             }
         }
 
