@@ -354,7 +354,6 @@ class App
      */
     public function detectedLanguage()
     {
-
         $languages = $this->languages();
         $visitor   = $this->visitor();
 
@@ -371,7 +370,6 @@ class App
         }
 
         return $this->defaultLanguage();
-
     }
 
     /**

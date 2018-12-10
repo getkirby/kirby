@@ -14,7 +14,6 @@ use Throwable;
  */
 class Auth
 {
-
     protected $impersonate;
     protected $kirby;
     protected $user;
@@ -330,5 +329,4 @@ class Auth
             return $this->user = null;
         }
     }
-
 }

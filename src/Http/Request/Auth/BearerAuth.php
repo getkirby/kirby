@@ -52,5 +52,4 @@ class BearerAuth
     {
         return 'bearer';
     }
-
 }

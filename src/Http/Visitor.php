@@ -212,5 +212,4 @@ class Visitor
         $this->userAgent = $userAgent;
         return $this;
     }
-
 }

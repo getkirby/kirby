@@ -76,5 +76,4 @@ class BasicAuth extends BearerAuth
     {
         return $this->username;
     }
-
 }

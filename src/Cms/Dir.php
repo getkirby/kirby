@@ -95,7 +95,6 @@ class Dir extends \Kirby\Toolkit\Dir
                             'root'      => $root,
                         ];
                 }
-
             }
         }
 

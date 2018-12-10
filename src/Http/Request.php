@@ -185,7 +185,6 @@ class Request
         }
 
         return $this->auth = false;
-
     }
 
     /**
