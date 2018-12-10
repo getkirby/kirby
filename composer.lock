@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d8268a3935e562f2349ad142943d335",
+    "content-hash": "2bf2741a8686926b80d4cbac4bf0813d",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -2419,12 +2419,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "f0ccd811fe34dd4d01502614e7361b93594994c3"
+                "reference": "d1cea0b804f5f5e76c2ea272dbe7b6d731b748a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/f0ccd811fe34dd4d01502614e7361b93594994c3",
-                "reference": "f0ccd811fe34dd4d01502614e7361b93594994c3",
+                "url": "https://api.github.com/repos/symfony/console/zipball/d1cea0b804f5f5e76c2ea272dbe7b6d731b748a2",
+                "reference": "d1cea0b804f5f5e76c2ea272dbe7b6d731b748a2",
                 "shasum": ""
             },
             "require": {
@@ -2480,7 +2480,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-27T07:40:59+00:00"
+            "time": "2018-12-10T03:47:54+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -2556,12 +2556,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "4dd5aac827109343640d66104999765faf8d0c34"
+                "reference": "07f7f377b194a3e1cc466b0f219fcbe3649573a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/4dd5aac827109343640d66104999765faf8d0c34",
-                "reference": "4dd5aac827109343640d66104999765faf8d0c34",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/07f7f377b194a3e1cc466b0f219fcbe3649573a4",
+                "reference": "07f7f377b194a3e1cc466b0f219fcbe3649573a4",
                 "shasum": ""
             },
             "require": {
@@ -2612,7 +2612,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2018-12-01T08:53:37+00:00"
+            "time": "2018-12-01T09:36:31+00:00"
         },
         {
             "name": "symfony/filesystem",
