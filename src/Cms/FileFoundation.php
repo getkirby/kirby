@@ -114,11 +114,13 @@ trait FileFoundation
     protected function setRoot(string $root = null)
     {
         $this->root = $root;
+        return $this;
     }
 
     protected function setUrl(string $url)
     {
         $this->url = $url;
+        return $this;
     }
 
     /**

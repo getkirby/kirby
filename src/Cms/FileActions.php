@@ -33,8 +33,9 @@ trait FileActions
         }
 
         return $this->commit('changeName', [$this, $name], function ($oldFile, $name) {
+
             $newFile = $oldFile->clone([
-                'filename' => $name . '.' . $oldFile->extension()
+                'filename' => $name . '.' . $oldFile->extension(),
             ]);
 
             if ($oldFile->exists() === false) {

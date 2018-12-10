@@ -64,14 +64,6 @@ class File extends ModelWithContent
     public static $methods = [];
 
     /**
-     * The original object
-     * before manipulations
-     *
-     * @var File
-     */
-    protected $original;
-
-    /**
      * The parent object
      *
      * @var Model
@@ -748,14 +740,15 @@ class File extends ModelWithContent
     }
 
     /**
-     * Sets the absolute path to the file
+     * Always set the root to null, to invoke
+     * auto root detection
      *
-     * @param string $root
+     * @param string|null $root
      * @return self
      */
-    protected function setRoot(string $root = null): self
+    protected function setRoot(string $root = null)
     {
-        $this->root = $root;
+        $this->root = null;
         return $this;
     }
 
