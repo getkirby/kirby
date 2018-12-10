@@ -108,11 +108,10 @@ return function ($kirby) {
 
                 if ($kirby->url() !== $home->url()) {
                     if ($kirby->option('languages.detect') === true) {
-
-                        die();
+                        return Response::redirect($kirby->detectedLanguage()->url());
+                    } else {
+                        return Response::redirect($kirby->site()->url());
                     }
-
-                    return Response::redirect($kirby->site()->url());
                 } else {
                     return $home;
                 }

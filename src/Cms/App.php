@@ -348,6 +348,33 @@ class App
     }
 
     /**
+     * Detect the prefered language from the visitor object
+     *
+     * @return Language
+     */
+    public function detectedLanguage()
+    {
+
+        $languages = $this->languages();
+        $visitor   = $this->visitor();
+
+        foreach ($visitor->acceptedLanguages() as $lang) {
+            if ($language = $languages->findBy('locale', $lang->locale())) {
+                return $language;
+            }
+        }
+
+        foreach ($visitor->acceptedLanguages() as $lang) {
+            if ($language = $languages->findBy('code', $lang->code())) {
+                return $language;
+            }
+        }
+
+        return $this->defaultLanguage();
+
+    }
+
+    /**
      * Returns the Email singleton
      *
      * @return Email
