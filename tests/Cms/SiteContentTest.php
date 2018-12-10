@@ -35,26 +35,4 @@ class SiteContentTest extends TestCase
         ]);
     }
 
-    public function testDateWithoutFormat()
-    {
-        $site = new Site([
-            'content' => [
-                'date' => '2012-12-12'
-            ]
-        ]);
-
-        $this->assertEquals(strtotime('2012-12-12'), $site->date());
-    }
-
-    public function testDateWithFormat()
-    {
-        $site = new Site([
-            'content' => [
-                'date' => '2012-12-12'
-            ]
-        ]);
-
-        $this->assertEquals('12.12.2012', $site->date('d.m.Y'));
-    }
-
 }

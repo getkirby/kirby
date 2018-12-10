@@ -56,28 +56,5 @@ class PageContentTest extends TestCase
         $this->assertEquals('Custom Title', $page->title()->value());
     }
 
-    public function testDateWithoutFormat()
-    {
-        $page = new Page([
-            'slug'    => 'test',
-            'content' => [
-                'date' => '2012-12-12'
-            ]
-        ]);
-
-        $this->assertEquals(strtotime('2012-12-12'), $page->date());
-    }
-
-    public function testDateWithFormat()
-    {
-        $page = new Page([
-            'slug'    => 'test',
-            'content' => [
-                'date' => '2012-12-12'
-            ]
-        ]);
-
-        $this->assertEquals('12.12.2012', $page->date('d.m.Y'));
-    }
 
 }

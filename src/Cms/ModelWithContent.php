@@ -145,18 +145,6 @@ abstract class ModelWithContent extends Model
     abstract public function contentFileName(): string;
 
     /**
-     * Returns a formatted date field from the content
-     *
-     * @param string $format
-     * @param string $field
-     * @return Field
-     */
-    public function date(string $format = null, $field = 'date')
-    {
-        return $this->content()->get($field)->toDate($format);
-    }
-
-    /**
      * Returns all content validation errors
      *
      * @return array
