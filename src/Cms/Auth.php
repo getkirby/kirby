@@ -165,8 +165,8 @@ class Auth
     {
         $ip      = $this->ipHash();
         $log     = $this->log();
-        $trials  = 10;
-        $timeout = 3600;
+        $trials  = $this->kirby->option('auth.trials', 10);
+        $timeout = $this->kirby->option('auth.timeout', 3600);
 
         if ($entry = ($log[$ip] ?? null)) {
             if ($entry['trials'] > $trials) {
