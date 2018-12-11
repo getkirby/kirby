@@ -426,6 +426,72 @@ class App
     }
 
     /**
+     * Takes almost any kind of input and
+     * tries to convert it into a valid response
+     *
+     * @param mixed $input
+     * @return Response
+     */
+    public function io($input)
+    {
+        // use the current response configuration
+        $response = $this->response();
+
+        // Empty input
+        if (empty($input) === true) {
+            throw new NotFoundException();
+        }
+
+        // Response Configuration
+        if (is_a($input, 'Kirby\Cms\Responder') === true) {
+            return $input->send();
+        }
+
+        // Responses
+        if (is_a($input, 'Kirby\Http\Response') === true) {
+            return $input;
+        }
+
+        // Pages
+        if (is_a($input, 'Kirby\Cms\Page')) {
+
+            $html = $input->render();
+
+            if ($input->isErrorPage() === true) {
+                if ($response->code() === null) {
+                    $response->code(404);
+                }
+            }
+
+            return $response->send($html);
+
+        }
+
+        // Files
+        if (is_a($input, 'Kirby\Cms\File')) {
+            return $response->redirect($input->mediaUrl(), 307)->send();
+        }
+
+        // Exceptions
+        if (is_a($input, 'Throwable')) {
+            throw $input;
+        }
+
+        // Simple HTML response
+        if (is_string($input) === true) {
+            return $response->send($input);
+        }
+
+        // array to json conversion
+        if (is_array($input) === true) {
+            return $response->json($input)->send();
+        }
+
+        throw new InvalidArgumentException('Unexpected input');
+
+    }
+
+    /**
      * Renders a single KirbyTag with the given attributes
      *
      * @param string $type
@@ -651,7 +717,36 @@ class App
      */
     public function render(string $path = null, string $method = null)
     {
-        return $this->response($this->call($path, $method));
+        // call the router action
+        $result   = $this->call($path, $method);
+        $response = $this->response();
+
+        try {
+            return $this->io($result);
+        } catch (Throwable $e) {
+
+            $code    = $e->getCode();
+            $message = $e->getMessage();
+
+            if ($code < 400 || $code > 599) {
+                $code = 500;
+            }
+
+            if ($errorPage = $this->site()->errorPage()) {
+                return $response->code($code)->send($errorPage->render([
+                    'errorCode'    => $code,
+                    'errorMessage' => $message,
+                    'errorType'    => get_class($e)
+                ]));
+            }
+
+            return $response
+                ->code($code)
+                ->type('text/html')
+                ->send($message);
+
+        }
+
     }
 
     /**
@@ -710,7 +805,10 @@ class App
         // try to find the page for the representation
         if ($page = $site->find($path)) {
             try {
-                return Response::for($page, [], $extension);
+                return $this
+                    ->response()
+                    ->body($page->render([], $extension))
+                    ->type($extension);
             } catch (NotFoundException $e) {
                 return null;
             }
@@ -729,15 +827,13 @@ class App
     }
 
     /**
-     * Uses the response component to return a
-     * response object for the given output.
+     * Response configuration
      *
-     * @param mixed $output
-     * @return Response
+     * @return Responder
      */
-    public function response($output)
+    public function response()
     {
-        return $this->extensions['components']['response']($this, $output);
+        return $this->response = $this->response ?? new Responder;
     }
 
     /**

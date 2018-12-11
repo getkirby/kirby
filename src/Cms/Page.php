@@ -1048,9 +1048,9 @@ class Page extends ModelWithContent
      * @param array $data
      * @param string $contentType
      * @param integer $code
-     * @return Response
+     * @return string
      */
-    public function render(array $data = [], $contentType = 'html', int $code = 200): Response
+    public function render(array $data = [], $contentType = 'html'): string
     {
         $kirby = $this->kirby();
         $cache = $cacheId = $result = null;
@@ -1087,7 +1087,7 @@ class Page extends ModelWithContent
             }
         }
 
-        return new Response($result, $contentType, $code);
+        return $result;
     }
 
     /**

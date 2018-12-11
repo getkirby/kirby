@@ -7,6 +7,7 @@ use Kirby\Cms\FileVersion;
 use Kirby\Cms\Response;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
+use Kirby\Exception\NotFoundException;
 use Kirby\Image\Darkroom;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\F;
@@ -62,9 +63,6 @@ return [
 
         // we need the @ here, because parsedown has some notice issues :(
         return @$markdown->text($text);
-    },
-    'response' => function (App $kirby, $input) {
-        return Response::for($input);
     },
     'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
         static $smartypants;

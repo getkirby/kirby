@@ -72,6 +72,7 @@ class Mime
         'ps'    => 'application/postscript',
         'psd'   => 'application/x-photoshop',
         'qt'    => 'video/quicktime',
+        'rss'   => 'application/rss+xml',
         'rtf'   => 'text/rtf',
         'rtx'   => 'text/richtext',
         'shtml' => 'text/html',
