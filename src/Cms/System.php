@@ -193,26 +193,27 @@ class System
         }
 
         // check for all required fields for the validation
-        if (isset($license['order'], $license['date'], $license['email'], $license['signature']) === false) {
+        if (isset($license['license'], $license['order'], $license['date'], $license['email'], $license['signature']) !== true) {
             return false;
         }
 
         // build the license verification data
         $data = [
-            'order' => $license['order'],
-            'email' => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
-            'date'  => $license['date']
+            'license' => $license['license'],
+            'order'   => $license['order'],
+            'email'   => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
+            'date'    => $license['date']
         ];
 
         // get the public key
         $pubKey = F::read($this->app->root('kirby') . '/kirby.pub');
 
-        // verifiy the license signature
+        // verify the license signature
         if (openssl_verify(json_encode($data), hex2bin($license['signature']), $pubKey, 'RSA-SHA256') !== 1) {
             return false;
         }
 
-        return $license['license'] ?? false;
+        return $license['license'];
     }
 
     /**
