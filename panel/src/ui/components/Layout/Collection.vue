@@ -30,7 +30,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     items: {
@@ -41,7 +40,7 @@ export default {
     },
     layout: {
       type: String,
-      default: "list",
+      default: "list"
     },
     size: String,
     sortable: Boolean,
@@ -55,7 +54,7 @@ export default {
   data() {
     return {
       list: this.items
-    }
+    };
   },
   computed: {
     dragOptions() {
@@ -63,10 +62,12 @@ export default {
         sort: this.sortable,
         forceFallback: true,
         fallbackClass: "sortable-fallback",
+        fallbackOnBody: true,
+        scroll: document.querySelector(".k-panel-view"),
         filter: ".disabled",
         disabled: this.sortable === false,
         draggable: ".k-draggable-item",
-        handle: ".k-sort-handle",
+        handle: ".k-sort-handle"
       };
     },
     elements() {
@@ -78,7 +79,7 @@ export default {
         list: {
           list: "k-list",
           item: "k-list-item"
-        },
+        }
       };
 
       if (layouts[this.layout]) {
@@ -88,7 +89,8 @@ export default {
       return layouts["list"];
     },
     paginationOptions() {
-      const options = (typeof this.pagination !== "object") ? {} : this.pagination;
+      const options =
+        typeof this.pagination !== "object" ? {} : this.pagination;
       return {
         limit: 10,
         align: "center",
@@ -129,5 +131,5 @@ export default {
       });
     }
   }
-}
+};
 </script>
