@@ -7,6 +7,8 @@ use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Remote;
+use Kirby\Http\Uri;
+use Kirby\Http\Url;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -179,6 +181,67 @@ class System
     }
 
     /**
+     * Returns the app's index URL for
+     * licensing purposes without scheme
+     *
+     * @return string
+     */
+    protected function licenseUrl(): string
+    {
+        $url = $this->app->url('index');
+
+        if (Url::isAbsolute($url)) {
+            $uri = Url::toObject($url);
+        } else {
+            // index URL was configured without host, use the current host
+            $uri = Uri::current([
+                'path'   => $url,
+                'query'  => null
+            ]);
+        }
+
+        return $uri->setScheme(null)->setSlash(false)->toString();
+    }
+
+    /**
+     * Normalizes the app's index URL for
+     * licensing purposes
+     *
+     * @param string|null $url Input URL, by default the app's index URL
+     * @return string Normalized URL
+     */
+    protected function licenseUrlNormalized(string $url = null): string
+    {
+        if ($url === null) {
+            $url = $this->licenseUrl();
+        }
+
+        // remove common "testing" subdomains as well as www.
+        // to ensure that installations of the same site have
+        // the same license URL; only for installations at /,
+        // subdirectory installations are difficult to normalize
+        if (Str::contains($url, '/') === false) {
+            if (Str::startsWith($url, 'www.')) {
+                return substr($url, 4);
+            }
+
+            if (Str::startsWith($url, 'dev.')) {
+                return substr($url, 4);
+            }
+
+            if (Str::startsWith($url, 'test.')) {
+                return substr($url, 5);
+            }
+
+            if (Str::startsWith($url, 'staging.')) {
+                return substr($url, 8);
+            }
+        }
+
+        return $url;
+    }
+
+    /**
      * Loads the license file and returns
      * the license information if available
      *
@@ -193,7 +256,10 @@ class System
         }
 
         // check for all required fields for the validation
-        if (isset($license['license'], $license['order'], $license['date'], $license['email'], $license['signature']) !== true) {
+        if (isset(
+            $license['license'], $license['order'], $license['date'],
+            $license['email'], $license['url'], $license['signature']
+        ) !== true) {
             return false;
         }
 
@@ -202,6 +268,7 @@ class System
             'license' => $license['license'],
             'order'   => $license['order'],
             'email'   => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
+            'url'     => $license['url'],
             'date'    => $license['date']
         ];
 
@@ -210,6 +277,11 @@ class System
 
         // verify the license signature
         if (openssl_verify(json_encode($data), hex2bin($license['signature']), $pubKey, 'RSA-SHA256') !== 1) {
+            return false;
+        }
+
+        // verify the URL
+        if ($this->licenseUrlNormalized() !== $this->licenseUrlNormalized($license['url'])) {
             return false;
         }
 
@@ -260,7 +332,8 @@ class System
         $response = Remote::get('https://licenses.getkirby.com/validate', [
             'data' => [
                 'license' => $license,
-                'email'   => hash('sha256', $email . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX')
+                'email'   => hash('sha256', $email . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
+                'url'     => $this->licenseUrl()
             ]
         ]);
 
