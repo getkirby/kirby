@@ -276,6 +276,9 @@ class Dimensions
      */
     public static function forSvg(string $root): self
     {
+        // avoid xml errors
+        libxml_use_internal_errors(true);
+
         $content = file_get_contents($root);
         $height  = 0;
         $width   = 0;
