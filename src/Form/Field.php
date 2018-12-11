@@ -53,6 +53,13 @@ class Field extends Component
         $this->validate();
     }
 
+    public function api()
+    {
+        if (isset($this->options['api']) === true && is_callable($this->options['api']) === true) {
+            return $this->options['api']->call($this);
+        }
+    }
+
     public function data($default = false)
     {
         $save = $this->options['save'] ?? true;

@@ -135,6 +135,11 @@ return [
             ]);
         },
     ],
+    'api' => function () {
+
+        dump($this->form()->errors());
+
+    },
     'save' => function () {
         $data = [];
 

@@ -92,6 +92,19 @@ return [
                 return $section->toResponse();
             }
         }
+    ],
+    [
+        'pattern' => 'pages/(:any)/fields/(:any)',
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $fieldName) {
+
+            $form = Kirby\Cms\Form::for($this->page($id));
+
+            if ($field = $form->fields()->get($fieldName)) {
+                return $field->api();
+            }
+
+        }
     ]
 
 ];
