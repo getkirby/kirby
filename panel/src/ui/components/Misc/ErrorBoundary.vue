@@ -11,7 +11,6 @@ export default {
   },
   render(h) {
     if (this.error) {
-
       if (this.$slots.error) {
         return this.$slots.error[0];
       }
@@ -22,12 +21,14 @@ export default {
         });
       }
 
-      return h("k-box", { attrs: { theme: "negative" } }, this.error);
+      return h(
+        "k-box",
+        { attrs: { theme: "negative" } },
+        this.error.message || this.error
+      );
     } else {
       return this.$slots.default[0];
     }
-
   }
 };
 </script>
-

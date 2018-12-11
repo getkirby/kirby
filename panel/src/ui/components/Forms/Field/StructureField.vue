@@ -69,12 +69,7 @@
         <k-draggable
           v-model="items"
           :data-disabled="disabled"
-          :options="{
-            disabled: !isSortable,
-            handle: '.k-structure-table-handle',
-            forceFallback: true,
-            fallbackClass: 'sortable-fallback'
-          }"
+          :options="dragOptions"
           element="tbody"
           @input="onInput"
           @choose="close"
@@ -146,14 +141,12 @@ import sorter from "@/ui/helpers/sort.js";
 import clone from "@/ui/helpers/clone.js";
 
 Array.prototype.sortBy = function(sortBy) {
-
-  const sort      = sorter();
-  const options   = sortBy.split(" ");
-  const field     = options[0];
+  const sort = sorter();
+  const options = sortBy.split(" ");
+  const field = options[0];
   const direction = options[1] || "asc";
 
   return this.sort((a, b) => {
-
     const valueA = String(a[field]).toLowerCase();
     const valueB = String(b[field]).toLowerCase();
 
@@ -162,9 +155,7 @@ Array.prototype.sortBy = function(sortBy) {
     } else {
       return sort(valueA, valueB);
     }
-
   });
-
 };
 
 export default {
@@ -198,8 +189,17 @@ export default {
     };
   },
   computed: {
+    dragOptions() {
+      return {
+        disabled: !this.isSortable,
+        handle: ".k-structure-table-handle",
+        forceFallback: true,
+        fallbackClass: "sortable-fallback",
+        fallbackOnBody: true,
+        scroll: document.querySelector(".k-panel-view")
+      };
+    },
     more() {
-
       if (this.disabled === true) {
         return false;
       }
@@ -209,7 +209,6 @@ export default {
       }
 
       return true;
-
     },
     isSortable() {
       if (this.sortBy) {
@@ -244,12 +243,11 @@ export default {
       };
     },
     paginatedItems() {
-
       if (!this.limit) {
         return this.items;
       }
 
-      const index  = this.page - 1;
+      const index = this.page - 1;
       const offset = index * this.limit;
 
       return this.items.slice(offset, offset + this.limit);
@@ -292,18 +290,21 @@ export default {
       this.currentIndex = null;
       this.currentModel = null;
 
-      this.$events.$off('keydown.esc', this.escape);
-      this.$events.$off('keydown.cmd.s', this.submit);
+      this.$events.$off("keydown.esc", this.escape);
+      this.$events.$off("keydown.cmd.s", this.submit);
 
       this.$store.dispatch("form/unlock");
     },
     columnIsEmpty(value) {
-
       if (value === undefined || value === null || value === "") {
         return true;
       }
 
-      if (typeof value === "object" && Object.keys(value).length === 0 && value.constructor === Object) {
+      if (
+        typeof value === "object" &&
+        Object.keys(value).length === 0 &&
+        value.constructor === Object
+      ) {
         return true;
       }
 
@@ -312,7 +313,6 @@ export default {
       }
 
       return false;
-
     },
     confirmRemove(index) {
       this.close();
@@ -320,8 +320,8 @@ export default {
       this.$refs.remove.open();
     },
     createForm(field) {
-      this.$events.$on('keydown.esc', this.escape);
-      this.$events.$on('keydown.cmd.s', this.submit);
+      this.$events.$on("keydown.esc", this.escape);
+      this.$events.$on("keydown.cmd.s", this.submit);
       this.$store.dispatch("form/lock");
 
       this.$nextTick(() => {
@@ -331,7 +331,6 @@ export default {
       });
     },
     displayText(field, value) {
-
       switch (field.type) {
         case "user": {
           return value.email;
@@ -341,21 +340,25 @@ export default {
           return date.isValid() ? date.format("YYYY-MM-DD") : "";
         }
         case "tags":
-          return value.map(item => {
-            return item.text;
-          }).join(", ");
+          return value
+            .map(item => {
+              return item.text;
+            })
+            .join(", ");
         case "checkboxes": {
-          return value.map(item => {
-            let text = item;
+          return value
+            .map(item => {
+              let text = item;
 
-            field.options.forEach(option => {
-              if (option.value === item) {
-                text = option.text;
-              }
-            });
+              field.options.forEach(option => {
+                if (option.value === item) {
+                  text = option.text;
+                }
+              });
 
-            return text;
-          }).join(", ");
+              return text;
+            })
+            .join(", ");
         }
         case "select": {
           const option = field.options.filter(item => item.value === value)[0];
@@ -371,7 +374,6 @@ export default {
     },
     escape() {
       if (this.currentIndex === "new") {
-
         let row = Object.values(this.currentModel);
         let isEmpty = true;
 
@@ -385,7 +387,6 @@ export default {
           this.close();
           return;
         }
-
       }
 
       this.submit();
@@ -430,18 +431,21 @@ export default {
       this.page = pagination.page;
     },
     previewExists(type) {
-      if (Vue.options.components["k-" + type + "-field-preview"] !== undefined) {
+      if (
+        Vue.options.components["k-" + type + "-field-preview"] !== undefined
+      ) {
         return true;
       }
 
-      if (this.$options.components["k-" + type + "-field-preview"] !== undefined) {
+      if (
+        this.$options.components["k-" + type + "-field-preview"] !== undefined
+      ) {
         return true;
       }
 
       return false;
     },
     remove() {
-
       if (this.trash === null) {
         return false;
       }
@@ -456,7 +460,6 @@ export default {
       }
 
       this.items = this.sort(this.items);
-
     },
     sort(items) {
       if (!this.sortBy) {
@@ -467,7 +470,6 @@ export default {
     },
     submit() {
       if (this.currentIndex !== null && this.currentIndex !== undefined) {
-
         if (this.currentIndex === "new") {
           this.items.push(this.currentModel);
         } else {
@@ -481,11 +483,10 @@ export default {
       this.close();
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
-
 $structure-item-height: 38px;
 
 .k-structure-table {
@@ -496,7 +497,8 @@ $structure-item-height: 38px;
   border-spacing: 0;
   box-shadow: $box-shadow-card;
 
-  th, td {
+  th,
+  td {
     border-bottom: 1px solid $color-background;
     line-height: 1.25em;
     overflow: hidden;
@@ -509,13 +511,12 @@ $structure-item-height: 38px;
     [dir="rtl"] & {
       border-left: 1px solid $color-background;
     }
-
   }
 
   th {
     font-weight: 400;
     color: $color-dark-grey;
-    padding: 0 .75rem;
+    padding: 0 0.75rem;
     height: $structure-item-height;
 
     [dir="ltr"] & {
@@ -525,10 +526,10 @@ $structure-item-height: 38px;
     [dir="rtl"] & {
       text-align: right;
     }
-
   }
 
-  th:last-child, td:last-child {
+  th:last-child,
+  td:last-child {
     width: $structure-item-height;
 
     [dir="ltr"] & {
@@ -538,7 +539,6 @@ $structure-item-height: 38px;
     [dir="rtl"] & {
       border-left: 0;
     }
-
   }
 
   tr:last-child td {
@@ -546,7 +546,7 @@ $structure-item-height: 38px;
   }
 
   tbody tr:hover td {
-    background: rgba($color-background, .25);
+    background: rgba($color-background, 0.25);
   }
 
   /* mobile */
@@ -571,7 +571,6 @@ $structure-item-height: 38px;
     text-align: center;
   }
   .k-structure-table-column[data-align="right"] {
-
     [dir="ltr"] & {
       text-align: right;
     }
@@ -579,7 +578,6 @@ $structure-item-height: 38px;
     [dir="rtl"] & {
       text-align: left;
     }
-
   }
 
   /* column widths */
@@ -606,7 +604,7 @@ $structure-item-height: 38px;
   .k-structure-table-index > span {
     font-size: $font-size-tiny;
     color: $color-light-grey;
-    padding-top: .15rem;
+    padding-top: 0.15rem;
   }
   .k-structure-table-handle {
     width: $structure-item-height;
@@ -630,7 +628,7 @@ $structure-item-height: 38px;
   }
 
   .k-structure-table-text {
-    padding: 0 .75rem;
+    padding: 0 0.75rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -643,7 +641,7 @@ $structure-item-height: 38px;
     margin-bottom: 2px;
   }
   .sortable-fallback {
-    opacity: .25 !important;
+    opacity: 0.25 !important;
     background: $color-white;
     display: table;
     table-layout: fixed;
@@ -652,7 +650,6 @@ $structure-item-height: 38px;
   .sortable-fallback td:first-child {
     display: table-cell;
   }
-
 }
 
 .k-structure-backdrop {
@@ -669,7 +666,7 @@ $structure-item-height: 38px;
   z-index: 3;
   border-radius: $border-radius;
   margin-bottom: 1px;
-  box-shadow: rgba($color-dark, .05) 0 0 0 3px;
+  box-shadow: rgba($color-dark, 0.05) 0 0 0 3px;
   border: 1px solid $color-border;
   background: $color-background;
 }
@@ -693,14 +690,13 @@ $structure-item-height: 38px;
 
 .k-structure-form-buttons .k-pagination > .k-button,
 .k-structure-form-buttons .k-pagination > span {
-  padding: .875rem 1rem !important;
+  padding: 0.875rem 1rem !important;
 }
 
 .k-structure-form-cancel-button,
 .k-structure-form-submit-button {
-  padding: .875rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   line-height: 1rem;
   display: flex;
 }
-
 </style>
