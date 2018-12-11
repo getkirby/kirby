@@ -329,7 +329,7 @@ class System
      */
     public function register(string $license, string $email): bool
     {
-        $response = Remote::get('https://licenses.getkirby.com/validate', [
+        $response = Remote::get('https://licenses.getkirby.com/register', [
             'data' => [
                 'license' => $license,
                 'email'   => hash('sha256', $email . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
