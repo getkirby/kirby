@@ -5,7 +5,7 @@ export default {
       error: null
     };
   },
-  errorCaptured(error, vm, info) {
+  errorCaptured(error) {
     this.error = error;
     return false;
   },

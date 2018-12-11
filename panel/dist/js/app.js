@@ -861,10 +861,10 @@
         ]);
       },
       P = [],
-      D = (n("0dac"), {}),
-      B = Object(m["a"])(D, N, P, !1, null, null, null);
-    B.options.__file = "Bar.vue";
-    var F = B.exports,
+      B = (n("0dac"), {}),
+      D = Object(m["a"])(B, N, P, !1, null, null, null);
+    D.options.__file = "Bar.vue";
+    var F = D.exports,
       R = function() {
         var t = this,
           e = t.$createElement,
@@ -1569,6 +1569,8 @@
               sort: this.sortable,
               forceFallback: !0,
               fallbackClass: "sortable-fallback",
+              fallbackOnBody: !0,
+              scroll: document.querySelector(".k-panel-view"),
               filter: ".disabled",
               disabled: !1 === this.sortable,
               draggable: ".k-draggable-item",
@@ -1643,8 +1645,8 @@
       Nt = qt,
       Pt = (n("5e3a"), Object(m["a"])(Nt, Lt, At, !1, null, null, null));
     Pt.options.__file = "Column.vue";
-    var Dt = Pt.exports,
-      Bt = function() {
+    var Bt = Pt.exports,
+      Dt = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -1689,7 +1691,7 @@
         }
       },
       Mt = Rt,
-      zt = (n("5f5b"), Object(m["a"])(Mt, Bt, Ft, !1, null, null, null));
+      zt = (n("5f5b"), Object(m["a"])(Mt, Dt, Ft, !1, null, null, null));
     zt.options.__file = "Counter.vue";
     var Ut = zt.exports,
       Vt = function() {
@@ -2102,7 +2104,7 @@
         data: function() {
           return { error: null };
         },
-        errorCaptured: function(t, e, n) {
+        errorCaptured: function(t) {
           return (this.error = t), !1;
         },
         render: function(t) {
@@ -2111,7 +2113,11 @@
               ? this.$slots.error[0]
               : this.$scopedSlots.error
                 ? this.$scopedSlots.error({ error: this.error })
-                : t("k-box", { attrs: { theme: "negative" } }, this.error)
+                : t(
+                    "k-box",
+                    { attrs: { theme: "negative" } },
+                    this.error.message || this.error
+                  )
             : this.$slots.default[0];
         }
       },
@@ -2312,8 +2318,8 @@
       Ne = qe,
       Pe = (n("b42a"), Object(m["a"])(Ne, Le, Ae, !1, null, null, null));
     Pe.options.__file = "Header.vue";
-    var De = Pe.exports,
-      Be = function() {
+    var Be = Pe.exports,
+      De = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -2345,7 +2351,7 @@
         }
       },
       Me = Re,
-      ze = (n("b83b"), Object(m["a"])(Me, Be, Fe, !1, null, null, null));
+      ze = (n("b83b"), Object(m["a"])(Me, De, Fe, !1, null, null, null));
     ze.options.__file = "Headline.vue";
     var Ue = ze.exports,
       Ve = function() {
@@ -3004,9 +3010,9 @@
         }
       },
       Pn = Nn,
-      Dn = (n("8be2"), Object(m["a"])(Pn, An, qn, !1, null, null, null));
-    Dn.options.__file = "Progress.vue";
-    var Bn = Dn.exports,
+      Bn = (n("8be2"), Object(m["a"])(Pn, An, qn, !1, null, null, null));
+    Bn.options.__file = "Progress.vue";
+    var Dn = Bn.exports,
       Fn = function() {
         var t = this,
           e = t.$createElement,
@@ -3857,7 +3863,7 @@
             }),
           o.send(s);
       }),
-      Di = {
+      Bi = {
         props: {
           url: { type: String },
           accept: { type: String, default: "*" },
@@ -3938,8 +3944,8 @@
           }
         }
       },
-      Bi = Di,
-      Fi = (n("4a37"), Object(m["a"])(Bi, Ai, qi, !1, null, null, null));
+      Di = Bi,
+      Fi = (n("4a37"), Object(m["a"])(Di, Ai, qi, !1, null, null, null));
     Fi.options.__file = "Upload.vue";
     var Ri = Fi.exports,
       Mi = function() {
@@ -5013,15 +5019,15 @@
     qs.options.__file = "NumberInput.vue";
     var Ns,
       Ps,
-      Ds = qs.exports,
-      Bs = {
+      Bs = qs.exports,
+      Ds = {
         extends: ks,
         props: Object(u["a"])({}, ks.props, {
           autocomplete: { type: String, default: "new-password" },
           type: { type: String, default: "password" }
         })
       },
-      Fs = Bs,
+      Fs = Ds,
       Rs = Object(m["a"])(Fs, Ns, Ps, !1, null, null, null);
     Rs.options.__file = "PasswordInput.vue";
     var Ms = Rs.exports,
@@ -6340,10 +6346,10 @@
           }
         }
       },
-      Do = Po,
-      Bo = Object(m["a"])(Do, qo, No, !1, null, null, null);
-    Bo.options.__file = "LinkDialog.vue";
-    var Fo = Bo.exports,
+      Bo = Po,
+      Do = Object(m["a"])(Bo, qo, No, !1, null, null, null);
+    Do.options.__file = "LinkDialog.vue";
+    var Fo = Do.exports,
       Ro = n("19e9"),
       Mo = n.n(Ro),
       zo = n("a0ec"),
@@ -7231,10 +7237,10 @@
           [t._v("\n  " + t._s(t.label) + "\n")]
         );
       },
-      Da = [],
-      Ba = { props: { label: String, numbered: Boolean } },
-      Fa = Ba,
-      Ra = (n("7027"), Object(m["a"])(Fa, Pa, Da, !1, null, null, null));
+      Ba = [],
+      Da = { props: { label: String, numbered: Boolean } },
+      Fa = Da,
+      Ra = (n("7027"), Object(m["a"])(Fa, Pa, Ba, !1, null, null, null));
     Ra.options.__file = "HeadlineField.vue";
     var Ma = Ra.exports,
       za = function() {
@@ -7380,7 +7386,7 @@
       ar = [],
       rr = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, Ds.props),
+        props: Object(u["a"])({}, $i.props, Li.props, Bs.props),
         methods: {
           focus: function() {
             this.$refs.input.focus();
@@ -7704,7 +7710,7 @@
         );
       },
       Pr = [],
-      Dr = {
+      Br = {
         inheritAttrs: !1,
         props: Object(u["a"])({}, $i.props, Li.props, oo.props, {
           icon: { type: String, default: "angle-down" }
@@ -7715,8 +7721,8 @@
           }
         }
       },
-      Br = Dr,
-      Fr = Object(m["a"])(Br, Nr, Pr, !1, null, null, null);
+      Dr = Br,
+      Fr = Object(m["a"])(Dr, Nr, Pr, !1, null, null, null);
     Fr.options.__file = "SelectField.vue";
     var Rr = Fr.exports,
       Mr = function() {
@@ -7886,12 +7892,7 @@
                           {
                             attrs: {
                               "data-disabled": t.disabled,
-                              options: {
-                                disabled: !t.isSortable,
-                                handle: ".k-structure-table-handle",
-                                forceFallback: !0,
-                                fallbackClass: "sortable-fallback"
-                              },
+                              options: t.dragOptions,
                               element: "tbody"
                             },
                             on: {
@@ -8176,6 +8177,16 @@
           };
         },
         computed: {
+          dragOptions: function() {
+            return {
+              disabled: !this.isSortable,
+              handle: ".k-structure-table-handle",
+              forceFallback: !0,
+              fallbackClass: "sortable-fallback",
+              fallbackOnBody: !0,
+              scroll: document.querySelector(".k-panel-view")
+            };
+          },
           more: function() {
             return (
               !0 !== this.disabled &&
@@ -8752,7 +8763,7 @@
       Nl = Object(m["a"])(ql, Il, Ll, !1, null, null, null);
     Nl.options.__file = "UrlField.vue";
     var Pl = Nl.exports,
-      Dl = function() {
+      Bl = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -8829,7 +8840,7 @@
           2
         );
       },
-      Bl = [],
+      Dl = [],
       Fl = {
         inheritAttrs: !1,
         props: Object(u["a"])({}, $i.props, {
@@ -8892,7 +8903,7 @@
         }
       },
       Rl = Fl,
-      Ml = Object(m["a"])(Rl, Dl, Bl, !1, null, null, null);
+      Ml = Object(m["a"])(Rl, Bl, Dl, !1, null, null, null);
     Ml.options.__file = "UsersField.vue";
     var zl = Ml.exports,
       Ul = function() {
@@ -9117,7 +9128,7 @@
           t.component("k-card", kt),
           t.component("k-cards", St),
           t.component("k-collection", It),
-          t.component("k-column", Dt),
+          t.component("k-column", Bt),
           t.component("k-counter", Ut),
           t.component("k-dialog", Wt),
           t.component("k-draggable", L.a),
@@ -9127,7 +9138,7 @@
           t.component("k-empty", _e),
           t.component("k-error-boundary", Se),
           t.component("k-grid", Ie),
-          t.component("k-header", De),
+          t.component("k-header", Be),
           t.component("k-headline", Ue),
           t.component("k-icon", We),
           t.component("k-image", en),
@@ -9136,7 +9147,7 @@
           t.component("k-list-item", $n),
           t.component("k-pagination", On),
           t.component("k-prev-next", Ln),
-          t.component("k-progress", Bn),
+          t.component("k-progress", Dn),
           t.component("k-tag", Vn),
           t.component("k-text", Jn),
           t.component("k-view", ni),
@@ -9152,7 +9163,7 @@
           t.component("k-datetime-input", ps),
           t.component("k-email-input", xs),
           t.component("k-multiselect-input", js),
-          t.component("k-number-input", Ds),
+          t.component("k-number-input", Bs),
           t.component("k-password-input", Ms),
           t.component("k-radio-input", Gs),
           t.component("k-range-input", Zs),
@@ -9376,8 +9387,8 @@
       Nu = qu,
       Pu = Object(m["a"])(Nu, Lu, Au, !1, null, null, null);
     Pu.options.__file = "FileRemoveDialog.vue";
-    var Du = Pu.exports,
-      Bu = function() {
+    var Bu = Pu.exports,
+      Du = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -9479,7 +9490,7 @@
         }
       },
       Vu = Uu,
-      Hu = Object(m["a"])(Vu, Bu, Fu, !1, null, null, null);
+      Hu = Object(m["a"])(Vu, Du, Fu, !1, null, null, null);
     Hu.options.__file = "FileRenameDialog.vue";
     var Ku = Hu.exports,
       Gu = function() {
@@ -10277,7 +10288,7 @@
         );
       },
       Pc = [],
-      Dc = {
+      Bc = {
         mixins: [$],
         data: function() {
           return {
@@ -10385,8 +10396,8 @@
           }
         }
       },
-      Bc = Dc,
-      Fc = Object(m["a"])(Bc, Nc, Pc, !1, null, null, null);
+      Dc = Bc,
+      Fc = Object(m["a"])(Dc, Nc, Pc, !1, null, null, null);
     Fc.options.__file = "PageStatusDialog.vue";
     var Rc = Fc.exports,
       Mc = function() {
@@ -11283,7 +11294,7 @@
         );
       },
       Pp = [],
-      Dp = {
+      Bp = {
         mixins: [$],
         data: function() {
           return { user: { email: null } };
@@ -11315,8 +11326,8 @@
           }
         }
       },
-      Bp = Dp,
-      Fp = Object(m["a"])(Bp, Np, Pp, !1, null, null, null);
+      Dp = Bp,
+      Fp = Object(m["a"])(Dp, Np, Pp, !1, null, null, null);
     Fp.options.__file = "UserRemoveDialog.vue";
     var Rp = Fp.exports,
       Mp = function() {
@@ -12361,8 +12372,8 @@
           1
         );
       },
-      Df = [],
-      Bf = Object(u["a"])(
+      Bf = [],
+      Df = Object(u["a"])(
         {
           site: { link: "/site", icon: "page", menu: !0 },
           users: { link: "/users", icon: "users", menu: !0 },
@@ -12385,10 +12396,10 @@
             );
           },
           view: function() {
-            return Bf[this.$store.state.view];
+            return Df[this.$store.state.view];
           },
           views: function() {
-            return Bf;
+            return Df;
           },
           user: function() {
             return this.$store.state.user.current;
@@ -12414,7 +12425,7 @@
         }
       },
       Rf = Ff,
-      Mf = (n("1e3b"), Object(m["a"])(Rf, Pf, Df, !1, null, null, null));
+      Mf = (n("1e3b"), Object(m["a"])(Rf, Pf, Bf, !1, null, null, null));
     Mf.options.__file = "Topbar.vue";
     var zf = Mf.exports,
       Uf = function() {
@@ -13210,7 +13221,7 @@
     i["a"].component("k-dialog", Su),
       i["a"].component("k-error-dialog", Iu),
       i["a"].component("k-file-rename-dialog", Ku),
-      i["a"].component("k-file-remove-dialog", Du),
+      i["a"].component("k-file-remove-dialog", Bu),
       i["a"].component("k-files-dialog", Qu),
       i["a"].component("k-language-create-dialog", sc),
       i["a"].component("k-language-remove-dialog", cc),
@@ -13792,7 +13803,7 @@
         }
       },
       Pd = n("8c4f"),
-      Dd = function(t, e, n) {
+      Bd = function(t, e, n) {
         Jh.dispatch("system/load").then(function() {
           var e = Jh.state.user.current;
           if (!e)
@@ -13810,7 +13821,7 @@
               : void n();
         });
       },
-      Bd = function() {
+      Dd = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -13891,7 +13902,7 @@
         }
       },
       zd = Md,
-      Ud = (n("d6fc"), Object(m["a"])(zd, Bd, Fd, !1, null, null, null));
+      Ud = (n("d6fc"), Object(m["a"])(zd, Dd, Fd, !1, null, null, null));
     Ud.options.__file = "BrowserView.vue";
     var Vd = Ud.exports,
       Hd = function() {
@@ -15657,10 +15668,10 @@
           }
         }
       },
-      Dh = Ph,
-      Bh = Object(m["a"])(Dh, qh, Nh, !1, null, null, null);
-    Bh.options.__file = "UsersView.vue";
-    var Fh = Bh.exports,
+      Bh = Ph,
+      Dh = Object(m["a"])(Bh, qh, Nh, !1, null, null, null);
+    Dh.options.__file = "UsersView.vue";
+    var Fh = Dh.exports,
       Rh = function() {
         var t = this,
           e = t.$createElement,
@@ -16137,14 +16148,14 @@
           name: "Site",
           meta: { view: "site" },
           component: Ah,
-          beforeEnter: Dd
+          beforeEnter: Bd
         },
         {
           path: "/site/files/:filename",
           name: "SiteFile",
           meta: { view: "site" },
           component: ih,
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           props: function(t) {
             return { path: "site", filename: t.params.filename };
           }
@@ -16154,7 +16165,7 @@
           name: "PageFile",
           meta: { view: "site" },
           component: ih,
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           props: function(t) {
             return {
               path: "pages/" + t.params.path,
@@ -16167,7 +16178,7 @@
           name: "UserFile",
           meta: { view: "users" },
           component: ih,
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           props: function(t) {
             return {
               path: "users/" + t.params.path,
@@ -16180,7 +16191,7 @@
           name: "Page",
           meta: { view: "site" },
           component: Ch,
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           props: function(t) {
             return { path: t.params.path };
           }
@@ -16190,14 +16201,14 @@
           name: "Settings",
           meta: { view: "settings" },
           component: mh,
-          beforeEnter: Dd
+          beforeEnter: Bd
         },
         {
           path: "/users/role/:role",
           name: "UsersByRole",
           meta: { view: "users" },
           component: Fh,
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           props: function(t) {
             return { role: t.params.role };
           }
@@ -16206,7 +16217,7 @@
           path: "/users",
           name: "Users",
           meta: { view: "users" },
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           component: Fh
         },
         {
@@ -16214,7 +16225,7 @@
           name: "User",
           meta: { view: "users" },
           component: Hh,
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           props: function(t) {
             return { id: t.params.id };
           }
@@ -16224,7 +16235,7 @@
           name: "Account",
           meta: { view: "account" },
           component: Hh,
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           props: function() {
             return { id: Jh.state.user.current.id };
           }
@@ -16236,7 +16247,7 @@
           props: function(t) {
             return { plugin: t.params.id };
           },
-          beforeEnter: Dd,
+          beforeEnter: Bd,
           component: Jd
         },
         {
