@@ -260,7 +260,7 @@ class System
         $response = Remote::get('https://licenses.getkirby.com/validate', [
             'data' => [
                 'license' => $license,
-                'email'   => $email
+                'email'   => hash('sha256', $email . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX')
             ]
         ]);
 
