@@ -454,7 +454,6 @@ class App
 
         // Pages
         if (is_a($input, 'Kirby\Cms\Page')) {
-
             $html = $input->render();
 
             if ($input->isErrorPage() === true) {
@@ -464,7 +463,6 @@ class App
             }
 
             return $response->send($html);
-
         }
 
         // Files
@@ -488,7 +486,6 @@ class App
         }
 
         throw new InvalidArgumentException('Unexpected input');
-
     }
 
     /**
@@ -724,7 +721,6 @@ class App
         try {
             return $this->io($result);
         } catch (Throwable $e) {
-
             $code    = $e->getCode();
             $message = $e->getMessage();
 
@@ -744,9 +740,7 @@ class App
                 ->code($code)
                 ->type('text/html')
                 ->send($message);
-
         }
-
     }
 
     /**

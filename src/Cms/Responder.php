@@ -215,5 +215,4 @@ class Responder
         $this->type = $type;
         return $this;
     }
-
 }
