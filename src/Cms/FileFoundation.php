@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 
 /**
@@ -65,7 +66,7 @@ trait FileFoundation
 
     /**
      * Returns the Asset object
-     *
+     *^
      * @return Image
      */
     public function asset(): Image
@@ -90,7 +91,7 @@ trait FileFoundation
      */
     public function extension(): string
     {
-        return $this->asset()->extension();
+        return F::extension($this->root());
     }
 
     /**
@@ -205,6 +206,16 @@ trait FileFoundation
         ksort($array);
 
         return $array;
+    }
+
+    /**
+     * Returns the file type
+     *
+     * @return string
+     */
+    public function type(): string
+    {
+        return F::type($this->root());
     }
 
     /**
