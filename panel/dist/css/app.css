@@ -1224,6 +1224,7 @@ button::-moz-focus-inner {
 .k-icon svg {
   width: 1rem;
   height: 1rem;
+  -moz-transform: scale(1);
 }
 .k-icon svg * {
   fill: currentColor;
