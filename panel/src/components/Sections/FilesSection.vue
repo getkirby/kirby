@@ -33,7 +33,12 @@
           @paginate="paginate"
           @action="action"
         />
-        <k-empty v-else :layout="options.layout" icon="image" @click="if (add) upload()">
+        <k-empty
+          v-else
+          :layout="options.layout"
+          icon="image"
+          @click="if (add) upload()"
+        >
           {{ options.empty || $t('files.empty') }}
         </k-empty>
       </k-dropzone>

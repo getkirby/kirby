@@ -12,13 +12,13 @@ export default {
   props: {
     plugin: String
   },
-  created() {
-    this.$store.dispatch("view", this.plugin);
-  },
   watch: {
     plugin() {
       this.$store.dispatch("view", this.plugin);
     }
+  },
+  created() {
+    this.$store.dispatch("view", this.plugin);
   }
 };
 </script>

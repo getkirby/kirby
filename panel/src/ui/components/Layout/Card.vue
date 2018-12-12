@@ -16,7 +16,7 @@
       </span>
       <figcaption class="k-card-content">
         <span :data-noinfo="!info" class="k-card-text">{{ text }}</span>
-        <span v-if="info" class="k-card-info" v-html="info"></span>
+        <span v-if="info" class="k-card-info" v-html="info" />
       </figcaption>
     </component>
 
@@ -60,7 +60,7 @@ export default {
       default() {
         return {
           type: "file",
-          back: "black",
+          back: "black"
         };
       }
     },
@@ -77,7 +77,9 @@ export default {
       return this.link ? "k-link" : "div";
     },
     ratioPadding() {
-      return (this.icon && this.icon.ratio) ? ratioPadding(this.icon.ratio) : ratioPadding('3/2');
+      return this.icon && this.icon.ratio
+        ? ratioPadding(this.icon.ratio)
+        : ratioPadding("3/2");
     }
   }
 };
@@ -104,7 +106,7 @@ export default {
 
 .k-card .k-sort-handle {
   position: absolute;
-  top: .75rem;
+  top: 0.75rem;
   width: 2rem;
   height: 2rem;
   border-radius: $border-radius;
@@ -114,21 +116,20 @@ export default {
   z-index: 1;
   cursor: -webkit-grab;
   will-change: opacity;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 
   [dir="ltr"] & {
-    right: .75rem;
+    right: 0.75rem;
   }
   [dir="rtl"] & {
-    left: .75rem;
+    left: 0.75rem;
   }
-
 }
 .k-card .k-sort-handle:active {
   cursor: -webkit-grabbing;
 }
 .k-cards:hover .k-sort-handle {
-  opacity: .25;
+  opacity: 0.25;
 }
 .k-card:hover .k-sort-handle {
   opacity: 1;
@@ -165,7 +166,7 @@ export default {
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
   min-height: 2.25rem;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
@@ -196,9 +197,7 @@ export default {
   [dir="rtl"] & {
     margin-left: 4rem;
   }
-
 }
-
 
 .k-card-options {
   position: absolute;
@@ -211,13 +210,12 @@ export default {
   [dir="rtl"] & {
     left: 0;
   }
-
 }
 .k-card-options > .k-button {
   position: relative;
   float: left;
   height: 2.25rem;
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
   line-height: 1;
 }
 .k-card-options-dropdown {

@@ -8,7 +8,7 @@
     class="k-icon"
   >
     <span v-if="emoji" class="k-icon-emoji">{{ type }}</span>
-    <svg :style="{ color: color }" v-else viewBox="0 0 16 16">
+    <svg v-else :style="{ color: color }" viewBox="0 0 16 16">
       <use :xlink:href="'#icon-' + type" />
     </svg>
   </span>
