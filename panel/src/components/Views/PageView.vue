@@ -13,10 +13,11 @@
       {{ page.title }}
       <k-button-group slot="left">
         <k-button
-          v-if="permissions.preview"
+          v-if="permissions.preview && page.previewUrl"
           :responsive="true"
+          :link="page.previewUrl"
+          target="_blank"
           icon="open"
-          @click="action('preview')"
         >
           {{ $t('open') }}
         </k-button>
@@ -128,7 +129,7 @@ export default {
         : null;
     },
     tabsKey() {
-      return 'page-' + this.page.id + '-tabs';
+      return "page-" + this.page.id + "-tabs";
     }
   },
   watch: {
@@ -143,7 +144,8 @@ export default {
     action(action) {
       switch (action) {
         case "preview":
-          this.$api.pages.preview(this.page.id)
+          this.$api.pages
+            .preview(this.page.id)
             .then(url => {
               window.open(url);
             })

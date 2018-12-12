@@ -115,6 +115,7 @@ return [
             'next'    => ['id', 'slug', 'title'],
             'parents' => ['id', 'slug', 'title'],
             'prev'    => ['id', 'slug', 'title'],
+            'previewUrl',
             'slug',
             'title',
             'url'

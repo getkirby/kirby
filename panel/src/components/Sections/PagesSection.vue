@@ -83,10 +83,13 @@ export default {
           );
           break;
         case "preview":
+          let preview = window.open("", "_blank");
+          preview.document.write = "...";
+
           this.$api.pages
             .preview(page.id)
             .then(url => {
-              window.open(url);
+              preview.location.href = url;
             })
             .catch(error => {
               this.$store.dispatch("notification/error", error);
