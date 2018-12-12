@@ -82,6 +82,20 @@ class Responder
     }
 
     /**
+     * Construct response from an array
+     *
+     * @param array $response
+     * @return self
+     */
+    public function fromArray(array $response)
+    {
+        $this->body($response['body'] ?? null);
+        $this->code($response['code'] ?? null);
+        $this->headers($response['headers'] ?? null);
+        $this->type($response['type'] ?? null);
+    }
+
+    /**
      * Setter and getter for a single header
      *
      * @param string $key

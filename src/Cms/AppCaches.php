@@ -67,9 +67,10 @@ trait AppCaches
         }
 
         $defaults = [
-            'active' => true,
-            'type'   => 'file',
-            'root'   => $this->root('cache') . '/' . str_replace('.', '/', $key)
+            'active'    => true,
+            'type'      => 'file',
+            'extension' => 'cache',
+            'root'      => $this->root('cache') . '/' . str_replace('.', '/', $key)
         ];
 
         if ($options === true) {

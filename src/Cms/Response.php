@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response as BaseResponse;
 
 /**
@@ -10,6 +12,7 @@ use Kirby\Http\Response as BaseResponse;
  */
 class Response extends BaseResponse
 {
+
     /**
      * Adjusted redirect creation which
      * parses locations with the Url::to method
@@ -23,4 +26,5 @@ class Response extends BaseResponse
     {
         return parent::redirect(Url::to($location ?? '/'), $code);
     }
+
 }

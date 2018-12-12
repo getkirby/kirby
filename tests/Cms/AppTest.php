@@ -100,5 +100,23 @@ class AppTest extends TestCase
 
     }
 
+    public function testIoWithString()
+    {
+        $result = kirby()->io('test');
+
+        $this->assertEquals('test', $result->body());
+        $this->assertEquals(200, $result->code());
+        $this->assertEquals('text/html', $result->type());
+    }
+
+    public function testIoWithArray()
+    {
+        $input  = ['test' => 'response'];
+        $result = kirby()->io($input);
+
+        $this->assertEquals(json_encode($input), $result->body());
+        $this->assertEquals(200, $result->code());
+        $this->assertEquals('application/json', $result->type());
+    }
 
 }

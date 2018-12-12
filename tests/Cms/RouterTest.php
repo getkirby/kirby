@@ -51,7 +51,7 @@ class RouterTest extends TestCase
     public function testHomeFolderRoute()
     {
         $response = $this->app->call('home');
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertInstanceOf(Responder::class, $response);
         $this->assertEquals(302, $response->code());
     }
 
@@ -69,7 +69,7 @@ class RouterTest extends TestCase
         ]);
 
         $response = $app->call('homie');
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertInstanceOf(Responder::class, $response);
         $this->assertEquals(302, $response->code());
     }
 

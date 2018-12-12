@@ -14,14 +14,6 @@ class AppComponentsTest extends TestCase
         $this->assertEquals($expected, $app->markdown($text));
     }
 
-    public function testResponse()
-    {
-        $app      = new App();
-        $response = $app->response('anything');
-
-        $this->assertInstanceOf(Response::class, $response);
-    }
-
     public function testSmartypants()
     {
         $app      = new App();

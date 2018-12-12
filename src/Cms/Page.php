@@ -1053,17 +1053,24 @@ class Page extends ModelWithContent
     public function render(array $data = [], $contentType = 'html'): string
     {
         $kirby = $this->kirby();
-        $cache = $cacheId = $result = null;
+        $cache = $cacheId = $html = null;
 
         // try to get the page from cache
         if (empty($data) === true && $this->isCacheable() === true) {
-            $cache   = $kirby->cache('pages');
-            $cacheId = $this->cacheId($contentType);
-            $result  = $cache->get($cacheId);
+            $cache    = $kirby->cache('pages');
+            $cacheId  = $this->cacheId($contentType);
+            $result   = $cache->get($cacheId);
+            $html     = $result['html'] ?? null;
+            $response = $result['response'] ?? [];
+
+            // reconstruct the response configuration
+            if (empty($html) === false && empty($response) === false) {
+                $kirby->response()->fromArray($response);
+            }
         }
 
         // fetch the page regularly
-        if ($result === null) {
+        if ($html === null) {
             $kirby->data = $this->controller($data, $contentType);
 
             if ($contentType === 'html') {
@@ -1079,15 +1086,21 @@ class Page extends ModelWithContent
             }
 
             // render the page
-            $result = $template->render($kirby->data);
+            $html = $template->render($kirby->data);
+
+            // convert the response configuration to an array
+            $response = $kirby->response()->toArray();
 
             // cache the result
             if ($cache !== null) {
-                $cache->set($cacheId, $result);
+                $cache->set($cacheId, [
+                    'html'     => $html,
+                    'response' => $response
+                ]);
             }
         }
 
-        return $result;
+        return $html;
     }
 
     /**
