@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="buttons" class="k-toolbar" @click.stop>
+  <nav v-if="buttons && isOpen" class="k-toolbar" @click.stop>
 
     <template v-for="(button, buttonIndex) in layout">
 
@@ -50,11 +50,8 @@
 </template>
 
 <script>
-
 const list = function(type) {
-
   this.command("insert", (input, selection) => {
-
     let html = [];
 
     selection.split("\n").forEach((line, index) => {
@@ -64,7 +61,6 @@ const list = function(type) {
 
     return html.join("\n");
   });
-
 };
 
 export default {
@@ -83,15 +79,14 @@ export default {
   props: {
     buttons: {
       type: [Boolean, Array],
-      default: true,
+      default: true
     }
   },
   data() {
-
-    let layout    = {};
+    let layout = {};
     let shortcuts = {};
-    let buttons   = [];
-    let commands  = this.commands();
+    let buttons = [];
+    let commands = this.commands();
 
     if (this.buttons === false) {
       return layout;
@@ -119,24 +114,17 @@ export default {
     });
 
     return {
+      isOpen: false,
       layout: layout,
       shortcuts: shortcuts
     };
   },
-  mounted() {
-    this.$events.$on('click', this.blur);
-    this.$events.$on('keydown.esc', this.cancel);
-  },
-  destroyed() {
-    this.$events.$off('click', this.blur);
-    this.$events.$off('keydown.esc', this.cancel);
-  },
   methods: {
-    blur() {
-      this.$emit('blur');
-    },
-    cancel() {
-      this.$emit('cancel');
+    close() {
+      this.isOpen = false;
+      this.$events.$off("click", this.close);
+      this.$events.$off("keydown.esc", this.close);
+      this.$emit("close");
     },
     command(command, callback) {
       if (typeof command === "function") {
@@ -155,7 +143,7 @@ export default {
               label: this.$t("toolbar.button.heading.1"),
               icon: "title",
               command: "prepend",
-              args: "#",
+              args: "#"
             },
             h2: {
               label: this.$t("toolbar.button.heading.2"),
@@ -203,28 +191,32 @@ export default {
           label: this.$t("toolbar.button.code"),
           icon: "code",
           command: "wrap",
-          args: "`",
+          args: "`"
         },
         ul: {
           label: this.$t("toolbar.button.ul"),
           icon: "list-bullet",
           command() {
             return list.apply(this, ["ul"]);
-          },
+          }
         },
         ol: {
           label: this.$t("toolbar.button.ol"),
           icon: "list-numbers",
           command() {
             return list.apply(this, ["ol"]);
-          },
+          }
         }
       };
     },
+    open() {
+      this.isOpen = true;
+      this.$events.$on("click", this.close);
+      this.$events.$on("keydown.esc", this.close);
+      this.$emit("open");
+    },
     shortcut(shortcut, $event) {
-
       if (this.shortcuts[shortcut]) {
-
         const button = this.layout[this.shortcuts[shortcut]];
 
         if (!button) {
@@ -234,11 +226,10 @@ export default {
         $event.preventDefault();
 
         this.command(button.command, button.args);
-
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -254,10 +245,10 @@ export default {
   background: $color-border;
 }
 .k-toolbar-button {
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
   height: 36px;
 }
 .k-toolbar-button:hover {
-  background: rgba($color-background, .5);
+  background: rgba($color-background, 0.5);
 }
 </style>

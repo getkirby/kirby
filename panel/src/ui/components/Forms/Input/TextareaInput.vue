@@ -28,15 +28,13 @@
         @drop="onDrop"
       />
       <k-toolbar
-        v-if="!disabled && buttons !== false && toolbar"
         ref="toolbar"
         :buttons="buttons"
         :style="{
           top: caret.top + 'px',
           left: caret.left + 'px'
         }"
-        @blur="toolbar = false"
-        @cancel="cancel"
+        @close="cancel"
         @command="onCommand"
       />
     </div>
@@ -91,8 +89,7 @@ export default {
         top: 0,
         left: 0
       },
-      over: false,
-      toolbar: false
+      over: false
     };
   },
   watch: {
@@ -120,8 +117,7 @@ export default {
   },
   methods: {
     cancel() {
-      this.$refs.input.focus();
-      this.toolbar = false;
+      // this.$refs.input.focus();
     },
     dialog(dialog) {
       if (this.$refs[dialog + "Dialog"]) {
@@ -225,18 +221,14 @@ export default {
         return false;
       }
 
-      this.toolbar = true;
+      this.$refs.toolbar.open();
 
       if (this.buttons === false) {
         return;
       }
 
       this.$nextTick(() => {
-        if (
-          !this.$refs.input ||
-          !this.$refs.toolbar ||
-          !this.$refs.toolbar.$el
-        ) {
+        if (!this.$refs.input || !this.$refs.toolbar.$el) {
           return;
         }
 
