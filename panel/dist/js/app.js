@@ -1,56 +1,56 @@
 (function(t) {
   function e(e) {
     for (
-      var i, o, r = e[0], l = e[1], u = e[2], p = 0, f = [];
+      var i, a, r = e[0], l = e[1], u = e[2], p = 0, f = [];
       p < r.length;
       p++
     )
-      (o = r[p]), s[o] && f.push(s[o][0]), (s[o] = 0);
+      (a = r[p]), s[a] && f.push(s[a][0]), (s[a] = 0);
     for (i in l) Object.prototype.hasOwnProperty.call(l, i) && (t[i] = l[i]);
     c && c(e);
     while (f.length) f.shift()();
-    return a.push.apply(a, u || []), n();
+    return o.push.apply(o, u || []), n();
   }
   function n() {
-    for (var t, e = 0; e < a.length; e++) {
-      for (var n = a[e], i = !0, r = 1; r < n.length; r++) {
+    for (var t, e = 0; e < o.length; e++) {
+      for (var n = o[e], i = !0, r = 1; r < n.length; r++) {
         var l = n[r];
         0 !== s[l] && (i = !1);
       }
-      i && (a.splice(e--, 1), (t = o((o.s = n[0]))));
+      i && (o.splice(e--, 1), (t = a((a.s = n[0]))));
     }
     return t;
   }
   var i = {},
     s = { app: 0 },
-    a = [];
-  function o(e) {
+    o = [];
+  function a(e) {
     if (i[e]) return i[e].exports;
     var n = (i[e] = { i: e, l: !1, exports: {} });
-    return t[e].call(n.exports, n, n.exports, o), (n.l = !0), n.exports;
+    return t[e].call(n.exports, n, n.exports, a), (n.l = !0), n.exports;
   }
-  (o.m = t),
-    (o.c = i),
-    (o.d = function(t, e, n) {
-      o.o(t, e) || Object.defineProperty(t, e, { enumerable: !0, get: n });
+  (a.m = t),
+    (a.c = i),
+    (a.d = function(t, e, n) {
+      a.o(t, e) || Object.defineProperty(t, e, { enumerable: !0, get: n });
     }),
-    (o.r = function(t) {
+    (a.r = function(t) {
       "undefined" !== typeof Symbol &&
         Symbol.toStringTag &&
         Object.defineProperty(t, Symbol.toStringTag, { value: "Module" }),
         Object.defineProperty(t, "__esModule", { value: !0 });
     }),
-    (o.t = function(t, e) {
-      if ((1 & e && (t = o(t)), 8 & e)) return t;
+    (a.t = function(t, e) {
+      if ((1 & e && (t = a(t)), 8 & e)) return t;
       if (4 & e && "object" === typeof t && t && t.__esModule) return t;
       var n = Object.create(null);
       if (
-        (o.r(n),
+        (a.r(n),
         Object.defineProperty(n, "default", { enumerable: !0, value: t }),
         2 & e && "string" != typeof t)
       )
         for (var i in t)
-          o.d(
+          a.d(
             n,
             i,
             function(e) {
@@ -59,7 +59,7 @@
           );
       return n;
     }),
-    (o.n = function(t) {
+    (a.n = function(t) {
       var e =
         t && t.__esModule
           ? function() {
@@ -68,18 +68,18 @@
           : function() {
               return t;
             };
-      return o.d(e, "a", e), e;
+      return a.d(e, "a", e), e;
     }),
-    (o.o = function(t, e) {
+    (a.o = function(t, e) {
       return Object.prototype.hasOwnProperty.call(t, e);
     }),
-    (o.p = "/");
+    (a.p = "/");
   var r = (window["webpackJsonp"] = window["webpackJsonp"] || []),
     l = r.push.bind(r);
   (r.push = e), (r = r.slice());
   for (var u = 0; u < r.length; u++) e(r[u]);
   var c = l;
-  a.push([0, "chunk-vendors"]), n();
+  o.push([0, "chunk-vendors"]), n();
 })({
   0: function(t, e, n) {
     t.exports = n("56d7");
@@ -377,8 +377,8 @@
               1
             );
       },
-      a = [],
-      o = (n("386d"),
+      o = [],
+      a = (n("386d"),
       function() {
         var t = this,
           e = t.$createElement,
@@ -595,7 +595,7 @@
       },
       h = d,
       m = (n("4cb2"), n("2877")),
-      g = Object(m["a"])(h, o, r, !1, null, null, null);
+      g = Object(m["a"])(h, a, r, !1, null, null, null);
     g.options.__file = "Search.vue";
     var v = g.exports,
       b = function() {
@@ -727,7 +727,7 @@
         }
       },
       O = S,
-      C = (n("5c0b"), Object(m["a"])(O, s, a, !1, null, null, null));
+      C = (n("5c0b"), Object(m["a"])(O, s, o, !1, null, null, null));
     C.options.__file = "App.vue";
     var E = C.exports,
       j = n("1dce"),
@@ -1141,9 +1141,9 @@
           ])
         ]);
       },
-      at = [],
-      ot = (n("ac6a"), n("5a0c")),
-      rt = n.n(ot),
+      ot = [],
+      at = (n("ac6a"), n("5a0c")),
+      rt = n.n(at),
       lt = function(t, e) {
         t = String(t);
         var n = "";
@@ -1293,7 +1293,7 @@
         }
       },
       ct = ut,
-      pt = (n("4c3f"), Object(m["a"])(ct, st, at, !1, null, null, null));
+      pt = (n("4c3f"), Object(m["a"])(ct, st, ot, !1, null, null, null));
     pt.options.__file = "Calendar.vue";
     var ft = pt.exports,
       dt = function() {
@@ -2010,10 +2010,10 @@
           }
         }
       },
-      ae = se,
-      oe = (n("f32d"), Object(m["a"])(ae, ee, ne, !1, null, null, null));
-    oe.options.__file = "DropdownContent.vue";
-    var re = oe.exports,
+      oe = se,
+      ae = (n("f32d"), Object(m["a"])(oe, ee, ne, !1, null, null, null));
+    ae.options.__file = "DropdownContent.vue";
+    var re = ae.exports,
       le = function() {
         var t = this,
           e = t.$createElement,
@@ -2525,7 +2525,7 @@
             );
       },
       sn = [],
-      an = {
+      on = {
         props: {
           disabled: Boolean,
           rel: String,
@@ -2570,8 +2570,8 @@
           }
         }
       },
-      on = an,
-      rn = Object(m["a"])(on, nn, sn, !1, null, null, null);
+      an = on,
+      rn = Object(m["a"])(an, nn, sn, !1, null, null, null);
     rn.options.__file = "Link.vue";
     var ln = rn.exports,
       un = function() {
@@ -3192,7 +3192,7 @@
         );
       },
       si = [],
-      ai = (n("4917"),
+      oi = (n("4917"),
       n("3b2b"),
       {
         props: {
@@ -3234,8 +3234,8 @@
           }
         }
       }),
-      oi = ai,
-      ri = (n("3f08"), Object(m["a"])(oi, ii, si, !1, null, null, null));
+      ai = oi,
+      ri = (n("3f08"), Object(m["a"])(ai, ii, si, !1, null, null, null));
     ri.options.__file = "Autocomplete.vue";
     var li = ri.exports,
       ui = function() {
@@ -3828,16 +3828,16 @@
             Object.keys(i.attributes).forEach(function(t) {
               s.append(t, i.attributes[t]);
             });
-        var a = new XMLHttpRequest(),
-          o = function(e) {
+        var o = new XMLHttpRequest(),
+          a = function(e) {
             if (e.lengthComputable && i.progress) {
               var n = Math.max(0, Math.min(100, e.loaded / e.total * 100));
-              i.progress(a, t, Math.ceil(n));
+              i.progress(o, t, Math.ceil(n));
             }
           };
-        a.addEventListener("loadstart", o),
-          a.addEventListener("progress", o),
-          a.addEventListener("load", function(e) {
+        o.addEventListener("loadstart", a),
+          o.addEventListener("progress", a),
+          o.addEventListener("load", function(e) {
             var n = null;
             try {
               n = JSON.parse(e.target.response);
@@ -3848,20 +3848,20 @@
               };
             }
             n.status && "error" === n.status
-              ? i.error(a, t, n)
-              : (i.success(a, t, n), i.progress(a, t, 100));
+              ? i.error(o, t, n)
+              : (i.success(o, t, n), i.progress(o, t, 100));
           }),
-          a.addEventListener("error", function(e) {
+          o.addEventListener("error", function(e) {
             var n = JSON.parse(e.target.response);
-            i.error(a, t, n), i.progress(a, t, 100);
+            i.error(o, t, n), i.progress(o, t, 100);
           }),
-          a.open("POST", i.url, !0),
+          o.open("POST", i.url, !0),
           i.headers &&
             Object.keys(i.headers).forEach(function(t) {
               var e = i.headers[t];
-              a.setRequestHeader(t, e);
+              o.setRequestHeader(t, e);
             }),
-          a.send(s);
+          o.send(s);
       }),
       Bi = {
         props: {
@@ -4339,8 +4339,8 @@
       is = ns,
       ss = (n("196d"), Object(m["a"])(is, ts, es, !1, null, null, null));
     ss.options.__file = "DateInput.vue";
-    var as = ss.exports,
-      os = function() {
+    var os = ss.exports,
+      as = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -4383,7 +4383,7 @@
       rs = [],
       ls = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, as.props, {
+        props: Object(u["a"])({}, os.props, {
           time: {
             type: [Boolean, Object],
             default: function() {
@@ -4455,7 +4455,7 @@
         }
       },
       us = ls,
-      cs = (n("988f"), Object(m["a"])(us, os, rs, !1, null, null, null));
+      cs = (n("988f"), Object(m["a"])(us, as, rs, !1, null, null, null));
     cs.options.__file = "DateTimeInput.vue";
     var ps = cs.exports,
       fs = function() {
@@ -5265,7 +5265,7 @@
       Qs = (n("3c0c"), Object(m["a"])(Xs, Ys, Ws, !1, null, null, null));
     Qs.options.__file = "RangeInput.vue";
     var Zs = Qs.exports,
-      ta = function() {
+      to = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -5339,8 +5339,8 @@
           ]
         );
       },
-      ea = [],
-      na = {
+      eo = [],
+      no = {
         inheritAttrs: !1,
         props: {
           autofocus: Boolean,
@@ -5419,11 +5419,11 @@
           return { selected: { required: !this.required || Ui["required"] } };
         }
       },
-      ia = na,
-      sa = (n("bd46"), Object(m["a"])(ia, ta, ea, !1, null, null, null));
-    sa.options.__file = "SelectInput.vue";
-    var aa = sa.exports,
-      oa = function() {
+      io = no,
+      so = (n("bd46"), Object(m["a"])(io, to, eo, !1, null, null, null));
+    so.options.__file = "SelectInput.vue";
+    var oo = so.exports,
+      ao = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -5432,15 +5432,7 @@
           {
             ref: "box",
             staticClass: "k-tags-input",
-            attrs: {
-              options: {
-                disabled: !t.draggable,
-                forceFallback: !0,
-                draggable: ".k-tag",
-                delay: 1
-              },
-              "data-layout": t.layout
-            },
+            attrs: { options: t.dragOptions, "data-layout": t.layout },
             on: { input: t.onInput },
             model: {
               value: t.tags,
@@ -5619,8 +5611,8 @@
           2
         );
       },
-      ra = [],
-      la = {
+      ro = [],
+      lo = {
         inheritAttrs: !1,
         props: {
           autofocus: Boolean,
@@ -5658,6 +5650,16 @@
           };
         },
         computed: {
+          dragOptions: function() {
+            return {
+              delay: 1,
+              disabled: !this.draggable,
+              draggable: ".k-tag",
+              fallbackOnBody: !0,
+              forceFallback: !0,
+              scroll: document.querySelector(".k-panel-view")
+            };
+          },
           draggable: function() {
             return this.tags.length > 1;
           },
@@ -5807,24 +5809,24 @@
           };
         }
       },
-      ua = la,
-      ca = (n("eabd"), Object(m["a"])(ua, oa, ra, !1, null, null, null));
-    ca.options.__file = "TagsInput.vue";
-    var pa,
-      fa,
-      da = ca.exports,
-      ha = {
+      uo = lo,
+      co = (n("eabd"), Object(m["a"])(uo, ao, ro, !1, null, null, null));
+    co.options.__file = "TagsInput.vue";
+    var po,
+      fo,
+      ho = co.exports,
+      mo = {
         extends: ks,
         props: Object(u["a"])({}, ks.props, {
           autocomplete: { type: String, default: "tel" },
           type: { type: String, default: "tel" }
         })
       },
-      ma = ha,
-      ga = Object(m["a"])(ma, pa, fa, !1, null, null, null);
-    ga.options.__file = "TelInput.vue";
-    var va = ga.exports,
-      ba = function() {
+      go = mo,
+      vo = Object(m["a"])(go, po, fo, !1, null, null, null);
+    vo.options.__file = "TelInput.vue";
+    var bo = vo.exports,
+      ko = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -5927,8 +5929,8 @@
           1
         );
       },
-      ka = [],
-      $a = function() {
+      $o = [],
+      _o = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -6025,8 +6027,8 @@
             )
           : t._e();
       },
-      _a = [],
-      ya = function(t) {
+      yo = [],
+      xo = function(t) {
         this.command("insert", function(e, n) {
           var i = [];
           return (
@@ -6038,7 +6040,7 @@
           );
         });
       },
-      xa = {
+      wo = {
         layout: [
           "headlines",
           "bold",
@@ -6064,8 +6066,8 @@
               n.forEach(function(n, s) {
                 if ("|" === n) t["divider-" + s] = { divider: !0 };
                 else if (i[n]) {
-                  var a = i[n];
-                  (t[n] = a), a.shortcut && (e[a.shortcut] = n);
+                  var o = i[n];
+                  (t[n] = o), o.shortcut && (e[o.shortcut] = n);
                 }
               }),
               { layout: t, shortcuts: e });
@@ -6154,14 +6156,14 @@
                 label: this.$t("toolbar.button.ul"),
                 icon: "list-bullet",
                 command: function() {
-                  return ya.apply(this, ["ul"]);
+                  return xo.apply(this, ["ul"]);
                 }
               },
               ol: {
                 label: this.$t("toolbar.button.ol"),
                 icon: "list-numbers",
                 command: function() {
-                  return ya.apply(this, ["ol"]);
+                  return xo.apply(this, ["ol"]);
                 }
               }
             };
@@ -6175,11 +6177,11 @@
           }
         }
       },
-      wa = xa,
-      Sa = (n("813c"), Object(m["a"])(wa, $a, _a, !1, null, null, null));
-    Sa.options.__file = "Toolbar.vue";
-    var Oa = Sa.exports,
-      Ca = function() {
+      So = wo,
+      Oo = (n("813c"), Object(m["a"])(So, _o, yo, !1, null, null, null));
+    Oo.options.__file = "Toolbar.vue";
+    var Co = Oo.exports,
+      Eo = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -6212,8 +6214,8 @@
           1
         );
       },
-      Ea = [],
-      ja = {
+      jo = [],
+      To = {
         data: function() {
           return {
             value: { email: null, text: null },
@@ -6259,11 +6261,11 @@
           }
         }
       },
-      Ta = ja,
-      Ia = Object(m["a"])(Ta, Ca, Ea, !1, null, null, null);
-    Ia.options.__file = "EmailDialog.vue";
-    var La = Ia.exports,
-      Aa = function() {
+      Io = To,
+      Lo = Object(m["a"])(Io, Eo, jo, !1, null, null, null);
+    Lo.options.__file = "EmailDialog.vue";
+    var Ao = Lo.exports,
+      qo = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -6296,8 +6298,8 @@
           1
         );
       },
-      qa = [],
-      Na = {
+      No = [],
+      Po = {
         data: function() {
           return {
             value: { url: null, text: null },
@@ -6346,19 +6348,19 @@
           }
         }
       },
-      Pa = Na,
-      Ba = Object(m["a"])(Pa, Aa, qa, !1, null, null, null);
-    Ba.options.__file = "LinkDialog.vue";
-    var Da = Ba.exports,
-      Fa = n("19e9"),
-      Ra = n.n(Fa),
-      Ma = n("a0ec"),
-      za = n.n(Ma),
-      Ua = {
+      Bo = Po,
+      Do = Object(m["a"])(Bo, qo, No, !1, null, null, null);
+    Do.options.__file = "LinkDialog.vue";
+    var Fo = Do.exports,
+      Ro = n("19e9"),
+      Mo = n.n(Ro),
+      zo = n("a0ec"),
+      Uo = n.n(zo),
+      Vo = {
         components: {
-          "k-toolbar": Oa,
-          "k-email-dialog": La,
-          "k-link-dialog": Da
+          "k-toolbar": Co,
+          "k-email-dialog": Ao,
+          "k-link-dialog": Fo
         },
         inheritAttrs: !1,
         props: {
@@ -6392,7 +6394,7 @@
         mounted: function() {
           var t = this;
           this.$nextTick(function() {
-            Ra()(t.$refs.input);
+            Mo()(t.$refs.input);
           }),
             this.onInvalid(),
             this.$props.autofocus && this.focus(),
@@ -6410,7 +6412,7 @@
             this.$refs.input.focus();
           },
           getCaret: function() {
-            return za()(this.$refs.input, this.$refs.input.selectionEnd);
+            return Uo()(this.$refs.input, this.$refs.input.selectionEnd);
           },
           insert: function(t) {
             var e = this.$refs.input,
@@ -6432,7 +6434,7 @@
             this.insert(t + " " + this.selection());
           },
           resize: function() {
-            Ra.a.update(this.$refs.input);
+            Mo.a.update(this.$refs.input);
           },
           onBlur: function(t) {
             t.relatedTarget &&
@@ -6482,15 +6484,15 @@
               !1 !== this.buttons &&
                 this.$nextTick(function() {
                   if (t.$refs.input && t.$refs.toolbar && t.$refs.toolbar.$el) {
-                    var e = za()(t.$refs.input, t.$refs.input.selectionStart),
-                      n = za()(t.$refs.input, t.$refs.input.selectionEnd),
+                    var e = Uo()(t.$refs.input, t.$refs.input.selectionStart),
+                      n = Uo()(t.$refs.input, t.$refs.input.selectionEnd),
                       i = t.$refs.toolbar.$el.offsetWidth,
                       s = t.$el.offsetWidth,
-                      a = s - i + 16,
-                      o = n.left - Math.round(i / 2);
-                    o < 0 && (o = -16),
-                      o > a && (o = a),
-                      (t.caret = { top: e.top, left: o });
+                      o = s - i + 16,
+                      a = n.left - Math.round(i / 2);
+                    a < 0 && (a = -16),
+                      a > o && (a = o),
+                      (t.caret = { top: e.top, left: a });
                   }
                 });
           },
@@ -6528,11 +6530,11 @@
           };
         }
       },
-      Va = Ua,
-      Ha = (n("f093"), Object(m["a"])(Va, ba, ka, !1, null, null, null));
-    Ha.options.__file = "TextareaInput.vue";
-    var Ka = Ha.exports,
-      Ga = function() {
+      Ho = Vo,
+      Ko = (n("f093"), Object(m["a"])(Ho, ko, $o, !1, null, null, null));
+    Ko.options.__file = "TextareaInput.vue";
+    var Go = Ko.exports,
+      Yo = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -6609,8 +6611,8 @@
           1
         );
       },
-      Ya = [],
-      Wa = {
+      Wo = [],
+      Jo = {
         inheritAttrs: !1,
         props: {
           autofocus: Boolean,
@@ -6717,11 +6719,11 @@
           }
         }
       },
-      Ja = Wa,
-      Xa = (n("35ad"), Object(m["a"])(Ja, Ga, Ya, !1, null, null, null));
-    Xa.options.__file = "TimeInput.vue";
-    var Qa = Xa.exports,
-      Za = function() {
+      Xo = Jo,
+      Qo = (n("35ad"), Object(m["a"])(Xo, Yo, Wo, !1, null, null, null));
+    Qo.options.__file = "TimeInput.vue";
+    var Zo = Qo.exports,
+      ta = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -6744,8 +6746,8 @@
           })
         ]);
       },
-      to = [],
-      eo = {
+      ea = [],
+      na = {
         inheritAttrs: !1,
         props: {
           autofocus: Boolean,
@@ -6809,24 +6811,24 @@
           return { value: { required: !this.required || Ui["required"] } };
         }
       },
-      no = eo,
-      io = (n("3a66"), Object(m["a"])(no, Za, to, !1, null, null, null));
-    io.options.__file = "ToggleInput.vue";
-    var so,
-      ao,
-      oo = io.exports,
-      ro = {
+      ia = na,
+      sa = (n("3a66"), Object(m["a"])(ia, ta, ea, !1, null, null, null));
+    sa.options.__file = "ToggleInput.vue";
+    var oa,
+      aa,
+      ra = sa.exports,
+      la = {
         extends: ks,
         props: Object(u["a"])({}, ks.props, {
           autocomplete: { type: String, default: "url" },
           type: { type: String, default: "url" }
         })
       },
-      lo = ro,
-      uo = Object(m["a"])(lo, so, ao, !1, null, null, null);
-    uo.options.__file = "UrlInput.vue";
-    var co = uo.exports,
-      po = function() {
+      ua = la,
+      ca = Object(m["a"])(ua, oa, aa, !1, null, null, null);
+    ca.options.__file = "UrlInput.vue";
+    var pa = ca.exports,
+      fa = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -6858,8 +6860,8 @@
           1
         );
       },
-      fo = [],
-      ho = {
+      da = [],
+      ha = {
         inheritAttrs: !1,
         props: Object(u["a"])({}, $i.props, Li.props, Zi.props, {
           counter: { type: Boolean, default: !0 }
@@ -6886,11 +6888,11 @@
           }
         }
       },
-      mo = ho,
-      go = Object(m["a"])(mo, po, fo, !1, null, null, null);
-    go.options.__file = "CheckboxesField.vue";
-    var vo = go.exports,
-      bo = function() {
+      ma = ha,
+      ga = Object(m["a"])(ma, fa, da, !1, null, null, null);
+    ga.options.__file = "CheckboxesField.vue";
+    var va = ga.exports,
+      ba = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -6971,8 +6973,8 @@
           1
         );
       },
-      ko = [],
-      $o = {
+      ka = [],
+      $a = {
         inheritAttrs: !1,
         props: Object(u["a"])({}, $i.props, Li.props, ps.props, {
           icon: { type: String, default: "calendar" }
@@ -7004,11 +7006,11 @@
           }
         }
       },
-      _o = $o,
-      yo = Object(m["a"])(_o, bo, ko, !1, null, null, null);
-    yo.options.__file = "DateField.vue";
-    var xo = yo.exports,
-      wo = function() {
+      _a = $a,
+      ya = Object(m["a"])(_a, ba, ka, !1, null, null, null);
+    ya.options.__file = "DateField.vue";
+    var xa = ya.exports,
+      wa = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -7054,8 +7056,8 @@
           1
         );
       },
-      So = [],
-      Oo = {
+      Sa = [],
+      Oa = {
         inheritAttrs: !1,
         props: Object(u["a"])({}, $i.props, Li.props, xs.props, {
           link: { type: Boolean, default: !0 },
@@ -7067,11 +7069,11 @@
           }
         }
       },
-      Co = Oo,
-      Eo = Object(m["a"])(Co, wo, So, !1, null, null, null);
-    Eo.options.__file = "EmailField.vue";
-    var jo = Eo.exports,
-      To = function() {
+      Ca = Oa,
+      Ea = Object(m["a"])(Ca, wa, Sa, !1, null, null, null);
+    Ea.options.__file = "EmailField.vue";
+    var ja = Ea.exports,
+      Ta = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -7152,8 +7154,8 @@
           2
         );
       },
-      Io = [],
-      Lo = {
+      Ia = [],
+      La = {
         inheritAttrs: !1,
         props: Object(u["a"])({}, $i.props, {
           layout: String,
@@ -7176,6 +7178,8 @@
             return {
               forceFallback: !0,
               fallbackClass: "sortable-fallback",
+              fallbackOnBody: !0,
+              scroll: document.querySelector(".k-panel-view"),
               handle: ".k-sort-handle"
             };
           },
@@ -7222,11 +7226,11 @@
           }
         }
       },
-      Ao = Lo,
-      qo = Object(m["a"])(Ao, To, Io, !1, null, null, null);
-    qo.options.__file = "FilesField.vue";
-    var No = qo.exports,
-      Po = function() {
+      Aa = La,
+      qa = Object(m["a"])(Aa, Ta, Ia, !1, null, null, null);
+    qa.options.__file = "FilesField.vue";
+    var Na = qa.exports,
+      Pa = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -7239,13 +7243,13 @@
           [t._v("\n  " + t._s(t.label) + "\n")]
         );
       },
-      Bo = [],
-      Do = { props: { label: String, numbered: Boolean } },
-      Fo = Do,
-      Ro = (n("7027"), Object(m["a"])(Fo, Po, Bo, !1, null, null, null));
-    Ro.options.__file = "HeadlineField.vue";
-    var Mo = Ro.exports,
-      zo = function() {
+      Ba = [],
+      Da = { props: { label: String, numbered: Boolean } },
+      Fa = Da,
+      Ra = (n("7027"), Object(m["a"])(Fa, Pa, Ba, !1, null, null, null));
+    Ra.options.__file = "HeadlineField.vue";
+    var Ma = Ra.exports,
+      za = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -7264,30 +7268,30 @@
           1
         );
       },
-      Uo = [],
-      Vo = {
+      Ua = [],
+      Va = {
         props: {
           label: String,
           text: String,
           theme: { type: String, default: "info" }
         }
       },
-      Ho = Vo,
-      Ko = (n("e104"), Object(m["a"])(Ho, zo, Uo, !1, null, null, null));
-    Ko.options.__file = "InfoField.vue";
-    var Go = Ko.exports,
-      Yo = function() {
+      Ha = Va,
+      Ka = (n("e104"), Object(m["a"])(Ha, za, Ua, !1, null, null, null));
+    Ka.options.__file = "InfoField.vue";
+    var Ga = Ka.exports,
+      Ya = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
         return n("hr", { staticClass: "k-line-field" });
       },
-      Wo = [],
-      Jo = (n("4e2b"), {}),
-      Xo = Object(m["a"])(Jo, Yo, Wo, !1, null, null, null);
-    Xo.options.__file = "LineField.vue";
-    var Qo = Xo.exports,
-      Zo = function() {
+      Wa = [],
+      Ja = (n("4e2b"), {}),
+      Xa = Object(m["a"])(Ja, Ya, Wa, !1, null, null, null);
+    Xa.options.__file = "LineField.vue";
+    var Qa = Xa.exports,
+      Za = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -7353,10 +7357,10 @@
         }
       },
       nr = er,
-      ir = Object(m["a"])(nr, Zo, tr, !1, null, null, null);
+      ir = Object(m["a"])(nr, Za, tr, !1, null, null, null);
     ir.options.__file = "MultiselectField.vue";
     var sr = ir.exports,
-      ar = function() {
+      or = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -7385,7 +7389,7 @@
           1
         );
       },
-      or = [],
+      ar = [],
       rr = {
         inheritAttrs: !1,
         props: Object(u["a"])({}, $i.props, Li.props, Bs.props),
@@ -7396,7 +7400,7 @@
         }
       },
       lr = rr,
-      ur = Object(m["a"])(lr, ar, or, !1, null, null, null);
+      ur = Object(m["a"])(lr, or, ar, !1, null, null, null);
     ur.options.__file = "NumberField.vue";
     var cr = ur.exports,
       pr = function() {
@@ -7493,6 +7497,8 @@
             return {
               forceFallback: !0,
               fallbackClass: "sortable-fallback",
+              fallbackOnBody: !0,
+              scroll: document.querySelector(".k-panel-view"),
               handle: ".k-sort-handle"
             };
           },
@@ -7714,7 +7720,7 @@
       Pr = [],
       Br = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, aa.props, {
+        props: Object(u["a"])({}, $i.props, Li.props, oo.props, {
           icon: { type: String, default: "angle-down" }
         }),
         methods: {
@@ -7937,11 +7943,11 @@
                                   ],
                                   1
                                 ),
-                                t._l(t.columns, function(s, a) {
+                                t._l(t.columns, function(s, o) {
                                   return n(
                                     "td",
                                     {
-                                      key: a,
+                                      key: o,
                                       staticClass: "k-structure-table-column",
                                       attrs: {
                                         title: s.label,
@@ -7950,12 +7956,12 @@
                                       },
                                       on: {
                                         click: function(e) {
-                                          t.jump(i, a);
+                                          t.jump(i, o);
                                         }
                                       }
                                     },
                                     [
-                                      !1 === t.columnIsEmpty(e[a])
+                                      !1 === t.columnIsEmpty(e[o])
                                         ? [
                                             t.previewExists(s.type)
                                               ? n(
@@ -7965,9 +7971,9 @@
                                                   {
                                                     tag: "component",
                                                     attrs: {
-                                                      value: e[a],
+                                                      value: e[o],
                                                       column: s,
-                                                      field: t.fields[a]
+                                                      field: t.fields[o]
                                                     }
                                                   }
                                                 )
@@ -7985,8 +7991,8 @@
                                                           " " +
                                                           t._s(
                                                             t.displayText(
-                                                              t.fields[a],
-                                                              e[a]
+                                                              t.fields[o],
+                                                              e[o]
                                                             ) || "–"
                                                           ) +
                                                           " " +
@@ -8071,17 +8077,17 @@
           n = -e,
           i = /^0/,
           s = /\s+/g,
-          a = /^\s+|\s+$/g,
-          o = /[^\x00-\x80]/,
+          o = /^\s+|\s+$/g,
+          a = /[^\x00-\x80]/,
           r = /^0x[0-9a-f]+$/i,
           l = /(0x[\da-fA-F]+|(^[\+\-]?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?(?=\D|\s|$))|\d+)/g,
           u = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/,
           c = t.insensitive
             ? function(t) {
-                return p("" + t).replace(a, "");
+                return p("" + t).replace(o, "");
               }
             : function(t) {
-                return ("" + t).replace(a, "");
+                return ("" + t).replace(o, "");
               };
         function p(t) {
           return t.toLocaleLowerCase ? t.toLocaleLowerCase() : t.toLowerCase();
@@ -8096,22 +8102,22 @@
         function d(t, e) {
           return (
             ((!t.match(i) || 1 === e) && parseFloat(t)) ||
-            t.replace(s, " ").replace(a, "") ||
+            t.replace(s, " ").replace(o, "") ||
             0
           );
         }
         return function(t, i) {
           var s = c(t),
-            a = c(i);
-          if (!s && !a) return 0;
-          if (!s && a) return n;
-          if (s && !a) return e;
+            o = c(i);
+          if (!s && !o) return 0;
+          if (!s && o) return n;
+          if (s && !o) return e;
           var l = f(s),
-            p = f(a),
+            p = f(o),
             h = parseInt(s.match(r), 16) || (1 !== l.length && Date.parse(s)),
             m =
-              parseInt(a.match(r), 16) ||
-              (h && a.match(u) && Date.parse(a)) ||
+              parseInt(o.match(r), 16) ||
+              (h && o.match(u) && Date.parse(o)) ||
               null;
           if (m) {
             if (h < m) return n;
@@ -8125,7 +8131,7 @@
             var $ = d(l[b] || "", g),
               _ = d(p[b] || "", v);
             if (isNaN($) !== isNaN(_)) return isNaN($) ? e : n;
-            if (o.test($ + _) && $.localeCompare) {
+            if (a.test($ + _) && $.localeCompare) {
               var y = $.localeCompare(_);
               if (y > 0) return e;
               if (y < 0) return n;
@@ -8147,9 +8153,9 @@
         i = n[0],
         s = n[1] || "asc";
       return this.sort(function(t, n) {
-        var a = String(t[i]).toLowerCase(),
-          o = String(n[i]).toLowerCase();
-        return "desc" === s ? e(o, a) : e(a, o);
+        var o = String(t[i]).toLowerCase(),
+          a = String(n[i]).toLowerCase();
+        return "desc" === s ? e(a, o) : e(o, a);
       });
     };
     var Hr = {
@@ -8415,7 +8421,7 @@
       Jr = [],
       Xr = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, da.props, {
+        props: Object(u["a"])({}, $i.props, Li.props, ho.props, {
           counter: { type: Boolean, default: !0 }
         }),
         computed: {
@@ -8476,7 +8482,7 @@
       nl = [],
       il = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, va.props, {
+        props: Object(u["a"])({}, $i.props, Li.props, bo.props, {
           icon: { type: String, default: "phone" }
         }),
         methods: {
@@ -8486,9 +8492,9 @@
         }
       },
       sl = il,
-      al = Object(m["a"])(sl, el, nl, !1, null, null, null);
-    al.options.__file = "TelField.vue";
-    var ol = al.exports,
+      ol = Object(m["a"])(sl, el, nl, !1, null, null, null);
+    ol.options.__file = "TelField.vue";
+    var al = ol.exports,
       rl = function() {
         var t = this,
           e = t.$createElement,
@@ -8588,7 +8594,7 @@
       hl = [],
       ml = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, Ka.props, {
+        props: Object(u["a"])({}, $i.props, Li.props, Go.props, {
           counter: { type: Boolean, default: !0 }
         }),
         computed: {
@@ -8646,7 +8652,7 @@
       $l = [],
       _l = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, Qa.props, {
+        props: Object(u["a"])({}, $i.props, Li.props, Zo.props, {
           icon: { type: String, default: "clock" }
         }),
         methods: {
@@ -8691,7 +8697,7 @@
       Ol = [],
       Cl = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, oo.props),
+        props: Object(u["a"])({}, $i.props, Li.props, ra.props),
         methods: {
           focus: function() {
             this.$refs.input.focus();
@@ -8751,7 +8757,7 @@
       Ll = [],
       Al = {
         inheritAttrs: !1,
-        props: Object(u["a"])({}, $i.props, Li.props, co.props, {
+        props: Object(u["a"])({}, $i.props, Li.props, pa.props, {
           link: { type: Boolean, default: !0 },
           icon: { type: String, default: "url" }
         }),
@@ -8863,6 +8869,8 @@
             return {
               forceFallback: !0,
               fallbackClass: "sortable-fallback",
+              fallbackOnBody: !0,
+              scroll: document.querySelector(".k-panel-view"),
               handle: ".k-sort-handle"
             };
           },
@@ -8997,9 +9005,9 @@
         }
       },
       su = iu,
-      au = Object(m["a"])(su, tu, eu, !1, null, null, null);
-    au.options.__file = "EmailFieldPreview.vue";
-    var ou = au.exports,
+      ou = Object(m["a"])(su, tu, eu, !1, null, null, null);
+    ou.options.__file = "EmailFieldPreview.vue";
+    var au = ou.exports,
       ru = function() {
         var t = this,
           e = t.$createElement,
@@ -9161,7 +9169,7 @@
           t.component("k-upload", Ri),
           t.component("k-checkbox-input", Gi),
           t.component("k-checkboxes-input", Zi),
-          t.component("k-date-input", as),
+          t.component("k-date-input", os),
           t.component("k-datetime-input", ps),
           t.component("k-email-input", xs),
           t.component("k-multiselect-input", js),
@@ -9169,21 +9177,21 @@
           t.component("k-password-input", Ms),
           t.component("k-radio-input", Gs),
           t.component("k-range-input", Zs),
-          t.component("k-select-input", aa),
-          t.component("k-tags-input", da),
-          t.component("k-tel-input", va),
+          t.component("k-select-input", oo),
+          t.component("k-tags-input", ho),
+          t.component("k-tel-input", bo),
           t.component("k-text-input", ks),
-          t.component("k-textarea-input", Ka),
-          t.component("k-time-input", Qa),
-          t.component("k-toggle-input", oo),
-          t.component("k-url-input", co),
-          t.component("k-checkboxes-field", vo),
-          t.component("k-date-field", xo),
-          t.component("k-email-field", jo),
-          t.component("k-files-field", No),
-          t.component("k-headline-field", Mo),
-          t.component("k-info-field", Go),
-          t.component("k-line-field", Qo),
+          t.component("k-textarea-input", Go),
+          t.component("k-time-input", Zo),
+          t.component("k-toggle-input", ra),
+          t.component("k-url-input", pa),
+          t.component("k-checkboxes-field", va),
+          t.component("k-date-field", xa),
+          t.component("k-email-field", ja),
+          t.component("k-files-field", Na),
+          t.component("k-headline-field", Ma),
+          t.component("k-info-field", Ga),
+          t.component("k-line-field", Qa),
           t.component("k-multiselect-field", sr),
           t.component("k-number-field", cr),
           t.component("k-pages-field", gr),
@@ -9195,12 +9203,12 @@
           t.component("k-tags-field", tl),
           t.component("k-text-field", fl),
           t.component("k-textarea-field", bl),
-          t.component("k-tel-field", ol),
+          t.component("k-tel-field", al),
           t.component("k-time-field", wl),
           t.component("k-toggle-field", Tl),
           t.component("k-url-field", Pl),
           t.component("k-users-field", zl),
-          t.component("k-email-field-preview", ou),
+          t.component("k-email-field-preview", au),
           t.component("k-files-field-preview", Yl),
           t.component("k-pages-field-preview", fu),
           t.component("k-url-field-preview", nu),
@@ -9765,7 +9773,7 @@
       ic = Object(m["a"])(nc, Zu, tc, !1, null, null, null);
     ic.options.__file = "LanguageCreateDialog.vue";
     var sc = ic.exports,
-      ac = function() {
+      oc = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -9788,7 +9796,7 @@
           1
         );
       },
-      oc = [],
+      ac = [],
       rc = {
         mixins: [$],
         data: function() {
@@ -9824,7 +9832,7 @@
         }
       },
       lc = rc,
-      uc = Object(m["a"])(lc, ac, oc, !1, null, null, null);
+      uc = Object(m["a"])(lc, oc, ac, !1, null, null, null);
     uc.options.__file = "LanguageRemoveDialog.vue";
     var cc = uc.exports,
       pc = function() {
@@ -10838,8 +10846,8 @@
       ip = (n("ac27"), Object(m["a"])(np, Zc, tp, !1, null, null, null));
     ip.options.__file = "PagesDialog.vue";
     var sp,
-      ap,
-      op = ip.exports,
+      op,
+      ap = ip.exports,
       rp = {
         extends: qc,
         methods: {
@@ -10869,7 +10877,7 @@
         }
       },
       lp = rp,
-      up = Object(m["a"])(lp, sp, ap, !1, null, null, null);
+      up = Object(m["a"])(lp, sp, op, !1, null, null, null);
     up.options.__file = "SiteRenameDialog.vue";
     var cp = up.exports,
       pp = function() {
@@ -11657,8 +11665,8 @@
       nf = ef,
       sf = (n("7568"), Object(m["a"])(nf, Zp, tf, !1, null, null, null));
     sf.options.__file = "UsersDialog.vue";
-    var af = sf.exports,
-      of = function() {
+    var of = sf.exports,
+      af = function() {
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
@@ -11750,7 +11758,7 @@
         }
       },
       uf = lf,
-      cf = (n("18dd"), Object(m["a"])(uf, of, rf, !1, null, null, null));
+      cf = (n("18dd"), Object(m["a"])(uf, af, rf, !1, null, null, null));
     cf.options.__file = "FormButtons.vue";
     var pf = cf.exports,
       ff = function() {
@@ -12759,7 +12767,7 @@
           }
         }
       },
-      ad = {
+      od = {
         mixins: [sd],
         computed: {
           add: function() {
@@ -12810,6 +12818,8 @@
               case "remove":
                 this.$refs.remove.open(t.id);
                 break;
+              default:
+                throw new Error("Invalid action");
             }
           },
           items: function(t) {
@@ -12866,8 +12876,8 @@
           }
         }
       },
-      od = ad,
-      rd = Object(m["a"])(od, nd, id, !1, null, null, null);
+      ad = od,
+      rd = Object(m["a"])(ad, nd, id, !1, null, null, null);
     rd.options.__file = "PagesSection.vue";
     var ld = rd.exports,
       ud = function() {
@@ -13236,7 +13246,7 @@
       i["a"].component("k-page-status-dialog", Rc),
       i["a"].component("k-page-template-dialog", Kc),
       i["a"].component("k-page-url-dialog", Qc),
-      i["a"].component("k-pages-dialog", op),
+      i["a"].component("k-pages-dialog", ap),
       i["a"].component("k-site-rename-dialog", cp),
       i["a"].component("k-user-create-dialog", gp),
       i["a"].component("k-user-email-dialog", yp),
@@ -13245,7 +13255,7 @@
       i["a"].component("k-user-remove-dialog", Rp),
       i["a"].component("k-user-rename-dialog", Kp),
       i["a"].component("k-user-role-dialog", Qp),
-      i["a"].component("k-users-dialog", af),
+      i["a"].component("k-users-dialog", of),
       i["a"].component("k-form-buttons", pf),
       i["a"].component("k-dropzone", vf),
       i["a"].component("k-file-preview", xf),
@@ -13566,14 +13576,14 @@
           UPDATE: function(t, e) {
             var n = Object(Td["a"])(e, 3),
               s = n[0],
-              a = n[1],
-              o = n[2];
-            (o = Vr(o)), i["a"].set(t.models[s].values, a, o);
-            var r = JSON.stringify(t.models[s].originals[a]),
-              l = JSON.stringify(o);
+              o = n[1],
+              a = n[2];
+            (a = Vr(a)), i["a"].set(t.models[s].values, o, a);
+            var r = JSON.stringify(t.models[s].originals[o]),
+              l = JSON.stringify(a);
             r === l
-              ? i["a"].delete(t.models[s].changes, a)
-              : i["a"].set(t.models[s].changes, a, !0),
+              ? i["a"].delete(t.models[s].changes, o)
+              : i["a"].set(t.models[s].changes, o, !0),
               localStorage.setItem(
                 "kirby$form$" + s,
                 JSON.stringify(t.models[s].values)
@@ -13627,8 +13637,8 @@
             var n = Object(Td["a"])(e, 3),
               i = n[0],
               s = n[1],
-              a = n[2];
-            t.commit("UPDATE", [i, s, a]);
+              o = n[2];
+            t.commit("UPDATE", [i, s, o]);
           }
         }
       },
@@ -14450,8 +14460,8 @@
             )
           : t._e();
       },
-      ah = [],
-      oh = {
+      oh = [],
+      ah = {
         data: function() {
           return {
             user: {
@@ -14545,8 +14555,8 @@
           }
         }
       },
-      rh = oh,
-      lh = (n("146c"), Object(m["a"])(rh, sh, ah, !1, null, null, null));
+      rh = ah,
+      lh = (n("146c"), Object(m["a"])(rh, sh, oh, !1, null, null, null));
     lh.options.__file = "InstallationView.vue";
     var uh = lh.exports,
       ch = function() {
@@ -16713,22 +16723,22 @@
         f.debug && window.console.error(t + ": " + e),
           Jh.dispatch("error", t + ". See the console for more information.");
       });
-    var am = n("f2f3");
-    i["a"].use(am["a"].plugin, Jh);
+    var om = n("f2f3");
+    i["a"].use(om["a"].plugin, Jh);
     n("ffc1");
-    var om = {};
+    var am = {};
     for (var rm in i["a"].options.components)
-      om[rm] = i["a"].options.components[rm];
+      am[rm] = i["a"].options.components[rm];
     var lm = function(t, e) {
       e.template || e.render || e.extends
         ? (e.extends &&
             "string" === typeof e.extends &&
-            ((e.extends = om[e.extends]), e.template && (e.render = null)),
+            ((e.extends = am[e.extends]), e.template && (e.render = null)),
           e.mixins &&
             (e.mixins = e.mixins.map(function(t) {
-              return "string" === typeof t ? om[t] : t;
+              return "string" === typeof t ? am[t] : t;
             })),
-          om[t] && window.console.warn('Plugin is replacing "'.concat(t, '"')),
+          am[t] && window.console.warn('Plugin is replacing "'.concat(t, '"')),
           i["a"].component(t, e))
         : Jh.dispatch(
             "notification/error",
