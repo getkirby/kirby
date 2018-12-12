@@ -54,6 +54,14 @@ return [
         'parent' => function (string $parent = null) {
             return $parent;
         },
+
+        /**
+         * Layout size for cards
+         */
+        'size' => function (string $size = null) {
+            return $size;
+        },
+
         'value' => function ($value = null) {
             return $value;
         }

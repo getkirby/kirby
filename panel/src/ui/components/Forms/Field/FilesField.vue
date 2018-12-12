@@ -13,6 +13,7 @@
         :element="elements.list"
         :list="selected"
         :options="dragOptions"
+        :data-size="size"
         @start="onStart"
         @end="onInput"
       >
@@ -58,6 +59,7 @@ export default {
     max: Number,
     multiple: Boolean,
     parent: String,
+    size: String,
     value: {
       type: Array,
       default() {
