@@ -22,7 +22,7 @@ export default {
     back: String,
     emoji: Boolean,
     size: String,
-    type: String,
+    type: String
   }
 };
 </script>
@@ -39,6 +39,7 @@ export default {
 .k-icon svg {
   width: 1rem;
   height: 1rem;
+  -moz-transform: scale(1);
 }
 .k-icon svg * {
   fill: currentColor;
