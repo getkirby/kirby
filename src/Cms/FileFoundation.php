@@ -6,12 +6,22 @@ use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
 use Kirby\Toolkit\Properties;
 
+/**
+ * Foundation for all file objects
+ */
 trait FileFoundation
 {
     protected $asset;
     protected $root;
     protected $url;
 
+    /**
+     * Magic caller for asset methods
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
     public function __call(string $method, array $arguments = [])
     {
         // public property access
@@ -27,6 +37,11 @@ trait FileFoundation
         throw new BadMethodCallException('The method: "' . $method . '" does not exist');
     }
 
+    /**
+     * Constructor sets all file properties
+     *
+     * @param array $props
+     */
     public function __construct(array $props)
     {
         $this->setProperties($props);
@@ -58,11 +73,21 @@ trait FileFoundation
         return $this->asset = $this->asset ?? new Image($this->root());
     }
 
+    /**
+     * Checks if the file exists on disk
+     *
+     * @return boolean
+     */
     public function exists(): bool
     {
         return file_exists($this->root()) === true;
     }
 
+    /**
+     * Returns the file extension
+     *
+     * @return string
+     */
     public function extension(): string
     {
         return $this->asset()->extension();
@@ -101,22 +126,64 @@ trait FileFoundation
         return in_array($this->extension(), $resizable) === true;
     }
 
+    /**
+     * Checks if a preview can be displayed for the file
+     * in the panel or in the frontend
+     *
+     * @return boolean
+     */
+    public function isViewable(): bool
+    {
+        $viewable = [
+            'jpg',
+            'jpeg',
+            'gif',
+            'png',
+            'svg',
+            'webp'
+        ];
+
+        return in_array($this->extension(), $viewable) === true;
+    }
+
+    /**
+     * Returns the paren app instance
+     *
+     * @return App
+     */
     public function kirby(): App
     {
         return App::instance();
     }
 
+    /**
+     * Returns the absolute path to the file root
+     *
+     * @return string|null
+     */
     public function root(): ?string
     {
         return $this->root;
     }
 
+    /**
+     * Setter for the root
+     *
+     * @param string $root
+     * @return self
+     */
     protected function setRoot(string $root = null)
     {
         $this->root = $root;
         return $this;
     }
 
+    /**
+     * Setter for the file url
+     *
+     * @param string $url
+     * @return self
+     */
     protected function setUrl(string $url)
     {
         $this->url = $url;
@@ -140,6 +207,11 @@ trait FileFoundation
         return $array;
     }
 
+    /**
+     * Returns the absolute url for the file
+     *
+     * @return string
+     */
     public function url(): string
     {
         return $this->url;

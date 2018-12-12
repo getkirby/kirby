@@ -370,24 +370,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Checks if the file is a resizable image
-     *
-     * @return boolean
-     */
-    public function isResizable(): bool
-    {
-        $resizable = [
-            'jpg',
-            'jpeg',
-            'gif',
-            'png',
-            'webp'
-        ];
-
-        return in_array($this->extension(), $resizable) === true;
-    }
-
-    /**
      * Create a unique media hash
      *
      * @return string
@@ -541,12 +523,12 @@ class File extends ModelWithContent
 
         $image = $this->query($settings['query'] ?? null, 'Kirby\Cms\File');
 
-        if ($image === null && $this->isResizable()) {
+        if ($image === null && $this->isViewable() === true) {
             $image = $this;
         }
 
         if ($image) {
-            $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
+            $settings['url'] = $image->thumb($thumbSettings)->url(true);
             unset($settings['query']);
         }
 
