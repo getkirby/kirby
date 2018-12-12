@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       layout: "list",
-      selected: this.value,
+      selected: this.value
     };
   },
   computed: {
@@ -76,7 +76,9 @@ export default {
       return {
         forceFallback: true,
         fallbackClass: "sortable-fallback",
-        handle: ".k-sort-handle",
+        fallbackOnBody: true,
+        scroll: document.querySelector(".k-panel-view"),
+        handle: ".k-sort-handle"
       };
     },
     elements() {
@@ -103,16 +105,14 @@ export default {
       this.$refs.selector.open({
         max: this.max,
         multiple: this.multiple,
-        selected: this.selected.map(user => user.email),
+        selected: this.selected.map(user => user.email)
       });
     },
     remove(index) {
       this.selected.splice(index, 1);
       this.onInput();
     },
-    focus() {
-
-    },
+    focus() {},
     onStart() {
       this.$store.dispatch("drag", {});
     },
@@ -123,7 +123,7 @@ export default {
     select(files) {
       this.selected = files;
       this.onInput();
-    },
+    }
   }
-}
+};
 </script>

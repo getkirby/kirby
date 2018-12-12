@@ -77,6 +77,8 @@ export default {
       return {
         forceFallback: true,
         fallbackClass: "sortable-fallback",
+        fallbackOnBody: true,
+        scroll: document.querySelector(".k-panel-view"),
         handle: ".k-sort-handle"
       };
     },

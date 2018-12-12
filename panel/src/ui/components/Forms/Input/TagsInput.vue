@@ -2,7 +2,7 @@
   <k-draggable
     ref="box"
     v-model="tags"
-    :options="{disabled: !draggable, forceFallback: true, draggable: '.k-tag', delay: 1}"
+    :options="dragOptions"
     :data-layout="layout"
     class="k-tags-input"
     @input="onInput"
@@ -104,6 +104,16 @@ export default {
     };
   },
   computed: {
+    dragOptions() {
+      return {
+        delay: 1,
+        disabled: !this.draggable,
+        draggable: ".k-tag",
+        fallbackOnBody: true,
+        forceFallback: true,
+        scroll: document.querySelector(".k-panel-view")
+      };
+    },
     draggable() {
       return this.tags.length > 1;
     },

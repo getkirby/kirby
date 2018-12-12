@@ -75,14 +75,15 @@ export default {
   methods: {
     action(page, action) {
       switch (action) {
-        case "create":
+        case "create": {
           this.$refs.create.open(
             this.options.link || this.parent,
             this.parent + "/children/blueprints",
             this.name
           );
           break;
-        case "preview":
+        }
+        case "preview": {
           let preview = window.open("", "_blank");
           preview.document.write = "...";
 
@@ -96,21 +97,30 @@ export default {
             });
 
           break;
-        case "rename":
+        }
+        case "rename": {
           this.$refs.rename.open(page.id);
           break;
-        case "url":
+        }
+        case "url": {
           this.$refs.url.open(page.id);
           break;
-        case "status":
+        }
+        case "status": {
           this.$refs.status.open(page.id);
           break;
-        case "template":
+        }
+        case "template": {
           this.$refs.template.open(page.id);
           break;
-        case "remove":
+        }
+        case "remove": {
           this.$refs.remove.open(page.id);
           break;
+        }
+        default: {
+          throw new Error("Invalid action");
+        }
       }
     },
     items(data) {
