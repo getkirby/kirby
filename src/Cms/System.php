@@ -257,8 +257,12 @@ class System
 
         // check for all required fields for the validation
         if (isset(
-            $license['license'], $license['order'], $license['date'],
-            $license['email'], $license['url'], $license['signature']
+            $license['license'],
+            $license['order'],
+            $license['date'],
+            $license['email'],
+            $license['url'],
+            $license['signature']
         ) !== true) {
             return false;
         }
