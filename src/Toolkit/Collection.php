@@ -827,9 +827,9 @@ class Collection extends Iterator
     /**
      * Sorts the object by any number of fields
      *
-     * @param   $field      string
-     * @param   $direction  string  asc or desc
-     * @param   $method     int     The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
+     * @param   $field      string|callable  Field name or value callback to sort by
+     * @param   $direction  string           asc or desc
+     * @param   $method     int              The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
      * @return  Collection
      */
     public function sortBy(): self
@@ -873,6 +873,20 @@ class Collection extends Iterator
                 }
 
                 $fields[] = ['field' => $arg, 'values' => $values];
+
+            // callable: custom field values
+            } elseif (is_callable($arg) === true) {
+                $values = [];
+
+                foreach ($array as $key => $value) {
+                    $value = $arg($value);
+
+                    // make sure that we return something sortable
+                    // but don't convert other scalars (especially numbers) to strings!
+                    $values[$key] = is_scalar($value) === true ? $value : (string)$value;
+                }
+
+                $fields[] = ['field' => null, 'values' => $values];
 
             // flags
             } else {
