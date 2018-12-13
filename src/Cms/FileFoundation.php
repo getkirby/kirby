@@ -211,9 +211,9 @@ trait FileFoundation
     /**
      * Returns the file type
      *
-     * @return string
+     * @return string|null
      */
-    public function type(): string
+    public function type()
     {
         return F::type($this->root());
     }
