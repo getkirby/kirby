@@ -830,9 +830,9 @@ class Collection extends Iterator
      * @param   $field      string
      * @param   $direction  string  asc or desc
      * @param   $method     int     The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
-     * @return  self
+     * @return  Collection
      */
-    public function sortBy()
+    public function sortBy(): self
     {
         // there is no need to sort empty collections
         if (empty($this->data) === true) {
@@ -853,14 +853,14 @@ class Collection extends Iterator
 
             // detect the type of argument
             // sorting direction
-            $argLower = strtolower($arg);
+            $argLower = is_string($arg) ? strtolower($arg) : null;
 
             if ($arg === SORT_ASC || $argLower === 'asc') {
                 $fields[$currentField]['direction'] = SORT_ASC;
             } elseif ($arg === SORT_DESC || $argLower === 'desc') {
                 $fields[$currentField]['direction'] = SORT_DESC;
 
-            // other string: The field name
+            // other string: the field name
             } elseif (is_string($arg) === true) {
                 $values = [];
 
