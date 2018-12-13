@@ -2842,6 +2842,12 @@
           align: { type: String, default: "left" },
           details: { type: Boolean, default: !1 },
           dropdown: { type: Boolean, default: !0 },
+          validate: {
+            type: Function,
+            default: function() {
+              return Promise.resolve();
+            }
+          },
           page: { type: Number, default: 1 },
           total: { type: Number, default: 0 },
           limit: { type: Number, default: 10 },
@@ -2909,16 +2915,21 @@
         },
         methods: {
           goTo: function(t) {
-            t < 1 && (t = 1),
-              t > this.pages && (t = this.pages),
-              (this.currentPage = t),
-              this.$emit("paginate", {
-                page: parseInt(this.currentPage),
-                start: this.start,
-                end: this.end,
-                limit: this.limit,
-                offset: this.offset
-              });
+            var e = this;
+            this.validate(t)
+              .then(function() {
+                t < 1 && (t = 1),
+                  t > e.pages && (t = e.pages),
+                  (e.currentPage = t),
+                  e.$emit("paginate", {
+                    page: parseInt(e.currentPage),
+                    start: e.start,
+                    end: e.end,
+                    limit: e.limit,
+                    offset: e.offset
+                  });
+              })
+              .catch(function(t) {});
           },
           prev: function() {
             this.goTo(this.currentPage - 1);
@@ -3293,6 +3304,7 @@
       pi = {
         props: {
           disabled: Boolean,
+          config: Object,
           fields: {
             type: [Array, Object],
             default: function() {
@@ -3425,6 +3437,7 @@
         props: {
           counter: [Boolean, Object],
           disabled: Boolean,
+          endpoints: Object,
           help: String,
           input: [String, Number],
           label: String,
@@ -3531,6 +3544,7 @@
       n("7f7f"),
       {
         props: {
+          config: Object,
           disabled: Boolean,
           fields: {
             type: [Array, Object],
@@ -7784,7 +7798,7 @@
                       n("k-form", {
                         ref: "form",
                         staticClass: "k-structure-form-fields",
-                        attrs: { fields: t.fields, novalidate: !0 },
+                        attrs: { fields: t.formFields },
                         on: { input: t.onInput, submit: t.submit },
                         model: {
                           value: t.currentModel,
@@ -7814,7 +7828,8 @@
                                   total: t.items.length,
                                   limit: 1,
                                   page: t.currentIndex + 1,
-                                  details: !0
+                                  details: !0,
+                                  validate: t.beforePaginate
                                 },
                                 on: { paginate: t.paginate }
                               })
@@ -8195,6 +8210,23 @@
               scroll: document.querySelector(".k-panel-view")
             };
           },
+          formFields: function() {
+            var t = this,
+              e = {};
+            return (
+              Object.keys(this.fields).forEach(function(n) {
+                var i = t.fields[n];
+                (i.section = t.name),
+                  (i.endpoints = {
+                    field: t.endpoints.field + "+" + n,
+                    section: t.endpoints.section,
+                    model: t.endpoints.model
+                  }),
+                  (e[n] = i);
+              }),
+              e
+            );
+          },
           more: function() {
             return (
               !0 !== this.disabled &&
@@ -8345,8 +8377,11 @@
               (this.currentModel = Vr(this.items[t])),
               this.createForm(e);
           },
+          beforePaginate: function(t) {
+            return this.save(this.currentModel);
+          },
           paginate: function(t) {
-            this.submit(), this.open(t.offset);
+            this.open(t.offset);
           },
           paginateItems: function(t) {
             this.page = t.page;
@@ -8370,15 +8405,41 @@
           sort: function(t) {
             return this.sortBy ? t.sortBy(this.sortBy) : t;
           },
+          save: function() {
+            var t = this;
+            return null !== this.currentIndex && void 0 !== this.currentIndex
+              ? this.validate(this.currentModel)
+                  .then(function() {
+                    return (
+                      "new" === t.currentIndex
+                        ? t.items.push(t.currentModel)
+                        : (t.items[t.currentIndex] = t.currentModel),
+                      (t.items = t.sort(t.items)),
+                      t.onInput(),
+                      !0
+                    );
+                  })
+                  .catch(function(e) {
+                    throw (t.$store.dispatch("notification/error", {
+                      message: t.$t("error.form.incomplete"),
+                      details: e
+                    }),
+                    e);
+                  })
+              : Promise.resolve();
+          },
           submit: function() {
-            null !== this.currentIndex &&
-              void 0 !== this.currentIndex &&
-              ("new" === this.currentIndex
-                ? this.items.push(this.currentModel)
-                : (this.items[this.currentIndex] = this.currentModel),
-              (this.items = this.sort(this.items)),
-              this.onInput()),
-              this.close();
+            this.save()
+              .then(this.close)
+              .catch(function(t) {});
+          },
+          validate: function(t) {
+            return this.$api
+              .post(this.endpoints.field + "/validate", t)
+              .then(function(t) {
+                if (t.length > 0) throw t;
+                return !0;
+              });
           }
         }
       },
@@ -13185,7 +13246,16 @@
             this.$api
               .get(this.parent + "/sections/" + this.name)
               .then(function(e) {
-                (t.fields = e.fields), (t.isLoading = !1);
+                (t.fields = e.fields),
+                  Object.keys(t.fields).forEach(function(e) {
+                    (t.fields[e].section = t.name),
+                      (t.fields[e].endpoints = {
+                        field: t.parent + "/fields/" + e,
+                        section: t.parent + "/sections/" + t.name,
+                        model: t.parent
+                      });
+                  }),
+                  (t.isLoading = !1);
               })
               .catch(function(e) {
                 (t.issue = e), (t.isLoading = !1);
