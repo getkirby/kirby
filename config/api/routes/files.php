@@ -87,5 +87,14 @@ return [
             }
         }
     ],
+    [
+        'pattern' => '(:all)/files/(:any)/fields/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $parent, string $filename, string $fieldName, string $path = null) {
+            if ($file = $this->file($parent, $filename)) {
+                return $this->fieldApi($file, $fieldName, $path);
+            }
+        }
+    ]
 
 ];

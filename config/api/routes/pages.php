@@ -94,16 +94,12 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/fields/(:any)',
+        'pattern' => 'pages/(:any)/fields/(:any)/(:all?)',
         'method'  => 'ALL',
-        'action'  => function (string $id, string $fieldName) {
-
-            $form = Kirby\Cms\Form::for($this->page($id));
-
-            if ($field = $form->fields()->get($fieldName)) {
-                return $field->api();
+        'action'  => function (string $id, string $fieldName, string $path = null) {
+            if ($page = $this->page($id)) {
+                return $this->fieldApi($page, $fieldName, $path);
             }
-
         }
     ]
 

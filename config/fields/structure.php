@@ -136,9 +136,15 @@ return [
         },
     ],
     'api' => function () {
-
-        dump($this->form()->errors());
-
+        return [
+            [
+                'pattern' => 'validate',
+                'method'  => 'ALL',
+                'action'  => function () {
+                    return array_values($this->field()->form($this->requestBody())->errors());
+                }
+            ]
+        ];
     },
     'save' => function () {
         $data = [];

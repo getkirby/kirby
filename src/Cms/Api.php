@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Api\Api as BaseApi;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\Str;
 
 class Api extends BaseApi
 {
@@ -24,6 +25,38 @@ class Api extends BaseApi
         }
 
         return parent::call($path, $method, $requestData);
+    }
+
+    public function fieldApi($model, string $name, string $path = null)
+    {
+        $form       = Form::for($model);
+        $fieldNames = Str::split($name, '+');
+        $index      = 0;
+        $count      = count($fieldNames);
+        $field      = null;
+
+        foreach ($fieldNames as $fieldName) {
+            $index++;
+
+            if ($field = $form->fields()->get($fieldName)) {
+                if ($count !== $index) {
+                    $form = $field->form();
+                }
+            } else {
+                throw new NotFoundException('The field "' . $fieldName . '" could not be found');
+            }
+        }
+
+        if ($field === null) {
+            throw new NotFoundException('The field "' . $fieldNames . '" could not be found');
+        }
+
+        $fieldApi = $this->clone([
+            'routes' => $field->api(),
+            'data'   => array_merge($this->data(), ['field' => $field])
+        ]);
+
+        return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
     }
 
     public function file(string $path = null, string $filename)

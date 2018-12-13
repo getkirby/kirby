@@ -253,12 +253,16 @@ class Request
      * Returns any data field from the request
      * if it exists
      *
-     * @param string $key
-     * @param mixed $fallback
+     * @param string|null $key
+^     * @param mixed $fallback
      * @return mixed
      */
-    public function get(string $key, $fallback = null)
+    public function get(string $key = null, $fallback = null)
     {
+        if ($key === null) {
+            return $this->data();
+        }
+
         return $this->data()[$key] ?? $fallback;
     }
 

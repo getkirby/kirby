@@ -27,6 +27,7 @@
 export default {
   props: {
     disabled: Boolean,
+    config: Object,
     fields: {
       type: [Array, Object],
       default() {
@@ -51,7 +52,7 @@ export default {
         ...this.$listeners,
         submit: this.onSubmit
       }
-    }
+    };
   },
   methods: {
     focus(name) {

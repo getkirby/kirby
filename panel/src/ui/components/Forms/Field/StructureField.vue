@@ -20,8 +20,7 @@
       <section class="k-structure-form">
         <k-form
           ref="form"
-          :fields="fields"
-          :novalidate="true"
+          :fields="formFields"
           v-model="currentModel"
           class="k-structure-form-fields"
           @input="onInput"
@@ -36,6 +35,7 @@
             :limit="1"
             :page="currentIndex + 1"
             :details="true"
+            :validate="beforePaginate"
             @paginate="paginate"
           />
           <k-button class="k-structure-form-submit-button" icon="check" @click="submit">{{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}</k-button>
@@ -198,6 +198,24 @@ export default {
         fallbackOnBody: true,
         scroll: document.querySelector(".k-panel-view")
       };
+    },
+    formFields() {
+      let fields = {};
+
+      Object.keys(this.fields).forEach(name => {
+        let field = this.fields[name];
+
+        field.section = this.name;
+        field.endpoints = {
+          field: this.endpoints.field + "+" + name,
+          section: this.endpoints.section,
+          model: this.endpoints.model
+        };
+
+        fields[name] = field;
+      });
+
+      return fields;
     },
     more() {
       if (this.disabled === true) {
@@ -423,8 +441,10 @@ export default {
 
       this.createForm(field);
     },
+    beforePaginate(e) {
+      return this.save(this.currentModel);
+    },
     paginate(pagination) {
-      this.submit();
       this.open(pagination.offset);
     },
     paginateItems(pagination) {
@@ -468,19 +488,50 @@ export default {
 
       return items.sortBy(this.sortBy);
     },
-    submit() {
+    save() {
       if (this.currentIndex !== null && this.currentIndex !== undefined) {
-        if (this.currentIndex === "new") {
-          this.items.push(this.currentModel);
-        } else {
-          this.items[this.currentIndex] = this.currentModel;
-        }
+        return this.validate(this.currentModel)
+          .then(() => {
+            if (this.currentIndex === "new") {
+              this.items.push(this.currentModel);
+            } else {
+              this.items[this.currentIndex] = this.currentModel;
+            }
 
-        this.items = this.sort(this.items);
-        this.onInput();
+            this.items = this.sort(this.items);
+            this.onInput();
+
+            return true;
+          })
+          .catch(errors => {
+            this.$store.dispatch("notification/error", {
+              message: this.$t("error.form.incomplete"),
+              details: errors
+            });
+
+            throw errors;
+          });
+      } else {
+        return Promise.resolve();
       }
-
-      this.close();
+    },
+    submit() {
+      this.save()
+        .then(this.close)
+        .catch(errors => {
+          // don't close
+        });
+    },
+    validate(model) {
+      return this.$api
+        .post(this.endpoints.field + "/validate", model)
+        .then(errors => {
+          if (errors.length > 0) {
+            throw errors;
+          } else {
+            return true;
+          }
+        });
     }
   }
 };

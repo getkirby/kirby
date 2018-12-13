@@ -83,6 +83,13 @@ return [
                 return $section->toResponse();
             }
         }
+    ],
+    [
+        'pattern' => 'site/fields/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $fieldName, string $path = null) {
+            return $this->fieldApi($this->site(), $fieldName, $path);
+        }
     ]
 
 ];

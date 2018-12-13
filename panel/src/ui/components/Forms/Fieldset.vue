@@ -38,6 +38,7 @@ import Vue from "vue";
 
 export default {
   props: {
+    config: Object,
     disabled: Boolean,
     fields: {
       type: [Array, Object],
@@ -64,7 +65,10 @@ export default {
   methods: {
     focus(name) {
       if (name) {
-        if (this.hasField(name) && typeof this.$refs[name][0].focus === "function") {
+        if (
+          this.hasField(name) &&
+          typeof this.$refs[name][0].focus === "function"
+        ) {
           this.$refs[name][0].focus();
         }
         return;
@@ -113,5 +117,4 @@ export default {
     grid-column-start: initial;
   }
 }
-
 </style>

@@ -65,6 +65,12 @@ export default {
       type: Boolean,
       default: true
     },
+    validate: {
+      type: Function,
+      default() {
+        return Promise.resolve();
+      }
+    },
     page: {
       type: Number,
       default: 1
@@ -157,23 +163,29 @@ export default {
   },
   methods: {
     goTo(page) {
-      if (page < 1) {
-        page = 1;
-      }
+      this.validate(page)
+        .then(() => {
+          if (page < 1) {
+            page = 1;
+          }
 
-      if (page > this.pages) {
-        page = this.pages;
-      }
+          if (page > this.pages) {
+            page = this.pages;
+          }
 
-      this.currentPage = page;
+          this.currentPage = page;
 
-      this.$emit("paginate", {
-        page: parseInt(this.currentPage),
-        start: this.start,
-        end: this.end,
-        limit: this.limit,
-        offset: this.offset
-      });
+          this.$emit("paginate", {
+            page: parseInt(this.currentPage),
+            start: this.start,
+            end: this.end,
+            limit: this.limit,
+            offset: this.offset
+          });
+        })
+        .catch(error => {
+          // pagination stopped
+        });
     },
     prev() {
       this.goTo(this.currentPage - 1);
@@ -191,7 +203,7 @@ export default {
           break;
       }
     }
-  },
+  }
 };
 </script>
 
@@ -225,12 +237,11 @@ export default {
   [dir="rtl"] & {
     direction: rtl;
   }
-
 }
 .k-pagination-selector > div {
   font-size: $font-size-small;
   display: flex;
- }
+}
 .k-pagination-selector > div > label {
   flex-grow: 1;
   padding: 0.5rem 1rem;

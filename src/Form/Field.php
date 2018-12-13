@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Exception;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Http\Router;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;

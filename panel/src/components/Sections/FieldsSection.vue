@@ -39,9 +39,9 @@ export default {
   },
   watch: {
     $route() {
-      this.fields    = {};
+      this.fields = {};
       this.isLoading = true;
-      this.issue     = null;
+      this.issue = null;
     },
     language() {
       this.fetch();
@@ -52,17 +52,31 @@ export default {
   },
   methods: {
     input(values, field, fieldName) {
-      this.$store.dispatch("form/update", [this.id, fieldName, values[fieldName]]);
+      this.$store.dispatch("form/update", [
+        this.id,
+        fieldName,
+        values[fieldName]
+      ]);
     },
     fetch() {
       this.$api
         .get(this.parent + "/sections/" + this.name)
         .then(response => {
-          this.fields    = response.fields;
+          this.fields = response.fields;
+
+          Object.keys(this.fields).forEach(name => {
+            this.fields[name].section = this.name;
+            this.fields[name].endpoints = {
+              field: this.parent + "/fields/" + name,
+              section: this.parent + "/sections/" + this.name,
+              model: this.parent
+            };
+          });
+
           this.isLoading = false;
         })
         .catch(error => {
-          this.issue     = error;
+          this.issue = error;
           this.isLoading = false;
         });
     },
@@ -75,7 +89,7 @@ export default {
 
 <style>
 .k-fields-issue-headline {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 .k-fields-section input[type="submit"] {
   display: none;

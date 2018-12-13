@@ -43,6 +43,7 @@ export default {
   props: {
     counter: [Boolean, Object],
     disabled: Boolean,
+    endpoints: Object,
     help: String,
     input: [String, Number],
     label: String,
@@ -55,21 +56,21 @@ export default {
       return this.label || " ";
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
 .k-field-label {
   font-weight: $font-weight-bold;
   display: block;
-  padding: 0 0 .75rem;
+  padding: 0 0 0.75rem;
   flex-grow: 1;
   line-height: 1.25rem;
 }
 .k-field-label abbr {
   text-decoration: none;
   color: $color-light-grey;
-  padding-left: .25rem;
+  padding-left: 0.25rem;
 }
 .k-field-header {
   display: flex;
@@ -88,6 +89,6 @@ export default {
   display: block;
 }
 .k-field-help {
-  padding-top: .5rem;
+  padding-top: 0.5rem;
 }
 </style>

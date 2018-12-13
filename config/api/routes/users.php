@@ -123,6 +123,15 @@ return [
                 return $section->toResponse();
             }
         }
+    ],
+    [
+        'pattern' => 'users/(:any)/fields/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $fieldName, string $path = null) {
+            if ($user = $this->user($id)) {
+                return $this->fieldApi($user, $fieldName, $path);
+            }
+        }
     ]
 
 ];

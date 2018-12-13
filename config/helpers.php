@@ -167,7 +167,7 @@ function esc($string, $context = 'html', $strict = false)
  * @param   mixed    $default Optional default value, which should be returned if no element has been found
  * @return  mixed
  */
-function get($key, $default = null)
+function get($key = null, $default = null)
 {
     return App::instance()->request()->get($key, $default);
 }
