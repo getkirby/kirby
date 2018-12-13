@@ -153,6 +153,45 @@ class CollectionSorterTest extends TestCase
         $this->assertEquals('4', $sorted->nth(3)['title']);
     }
 
+    public function testSortByCallable()
+    {
+        $collection = new Collection([
+            [
+                'title' => 'Second Article',
+                'date'  => '2019-10-01 10:04',
+                'tags'  => 'test'
+            ],
+            [
+                'title' => 'First Article',
+                'date'  => '2018-31-12 00:00',
+                'tags'  => 'test'
+            ],
+            [
+                'title' => 'Third Article',
+                'date'  => '01.10.2019 10:05',
+                'tags'  => 'test'
+            ]
+        ]);
+
+        $sorted = $collection->sortBy(function ($value) {
+            $this->assertEquals('test', $value['tags']);
+
+            return strtotime($value['date']);
+        }, 'asc');
+        $this->assertEquals('First Article', $sorted->nth(0)['title']);
+        $this->assertEquals('Second Article', $sorted->nth(1)['title']);
+        $this->assertEquals('Third Article', $sorted->nth(2)['title']);
+
+        $sorted = $collection->sortBy(function ($value) {
+            $this->assertEquals('test', $value['tags']);
+
+            return strtotime($value['date']);
+        }, 'desc');
+        $this->assertEquals('Third Article', $sorted->nth(0)['title']);
+        $this->assertEquals('Second Article', $sorted->nth(1)['title']);
+        $this->assertEquals('First Article', $sorted->nth(2)['title']);
+    }
+
     public function testSortByEmpty()
     {
         $collection = new Collection();
