@@ -73,6 +73,7 @@
           element="tbody"
           @input="onInput"
           @choose="close"
+          @sort="onSort"
           @end="onInput"
         >
           <tr
@@ -416,6 +417,9 @@ export default {
     },
     onInput() {
       this.$emit("input", this.items);
+    },
+    onSort(event) {
+      this.$emit("sort", event);
     },
     open(index, field) {
       this.currentIndex = index;
