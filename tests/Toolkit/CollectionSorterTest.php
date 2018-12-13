@@ -128,13 +128,29 @@ class CollectionSorterTest extends TestCase
     public function testSortByZeros()
     {
         $collection = new Collection([
-            ['number' => 0],
-            ['number' => 0],
-            ['number' => 0],
-            ['number' => 0]
+            [
+                'title'  => '1',
+                'number' => 0
+            ],
+            [
+                'title'  => '2',
+                'number' => 0
+            ],
+            [
+                'title'  => '3',
+                'number' => 0
+            ],
+            [
+                'title'  => '4',
+                'number' => 0
+            ]
         ]);
 
         $sorted = $collection->sortBy('number', 'asc');
+        $this->assertEquals('1', $sorted->nth(0)['title']);
+        $this->assertEquals('2', $sorted->nth(1)['title']);
+        $this->assertEquals('3', $sorted->nth(2)['title']);
+        $this->assertEquals('4', $sorted->nth(3)['title']);
     }
 
     public function testSortByEmpty()
