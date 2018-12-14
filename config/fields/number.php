@@ -23,8 +23,8 @@ return [
         /**
          * Allowed incremental steps between numbers (i.e 0.5)
          */
-        'step' => function (float $step = 1) {
-            return $step;
+        'step' => function ($step = 1) {
+            return $this->toNumber($step);
         },
         'value' => function ($value = null) {
             return $this->toNumber($value);
@@ -32,7 +32,15 @@ return [
     ],
     'methods' => [
         'toNumber' => function ($value) {
-            return $this->isEmpty($value) === false ? floatval($value) : null;
+
+            if ($this->isEmpty($value) === true) {
+                return null;
+            }
+
+            $value = str_replace(',', '.', $value);
+            $value = floatval($value);
+
+            return $value;
         }
     ],
     'validations' => [

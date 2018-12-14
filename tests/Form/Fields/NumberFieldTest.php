@@ -31,6 +31,10 @@ class NumberFieldTest extends TestCase
             [1, (float)1],
             ['1', (float)1],
             ['one', (float)0],
+            ['1.1', (float)1.1],
+            ['1.11111', (float)1.11111],
+            [1.11111, (float)1.11111],
+            ['1,1', (float)1.1],
         ];
     }
 
@@ -41,11 +45,18 @@ class NumberFieldTest extends TestCase
     {
         $field = new Field('number', [
             'value'   => $input,
-            'default' => $input
+            'default' => $input,
+            'step'    => $input
         ]);
 
         $this->assertTrue($expected === $field->value());
         $this->assertTrue($expected === $field->default());
+
+        if ($input === null) {
+            $this->assertTrue((float)1 === $field->step());
+        } else {
+            $this->assertTrue($expected === $field->step());
+        }
     }
 
     public function testMin()
