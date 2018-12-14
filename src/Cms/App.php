@@ -437,9 +437,33 @@ class App
         // use the current response configuration
         $response = $this->response();
 
+        // any direct exception will be turned into an error page
+        if (is_a($input, 'Throwable') === true) {
+
+            $code    = $input->getCode();
+            $message = $input->getMessage();
+
+            if ($code < 400 || $code > 599) {
+                $code = 500;
+            }
+
+            if ($errorPage = $this->site()->errorPage()) {
+                return $response->code($code)->send($errorPage->render([
+                    'errorCode'    => $code,
+                    'errorMessage' => $message,
+                    'errorType'    => get_class($e)
+                ]));
+            }
+
+            return $response
+                ->code($code)
+                ->type('text/html')
+                ->send($message);
+        }
+
         // Empty input
         if (empty($input) === true) {
-            throw new NotFoundException();
+            return $this->io(new NotFoundException());
         }
 
         // Response Configuration
@@ -468,11 +492,6 @@ class App
         // Files
         if (is_a($input, 'Kirby\Cms\File')) {
             return $response->redirect($input->mediaUrl(), 307)->send();
-        }
-
-        // Exceptions
-        if (is_a($input, 'Throwable')) {
-            throw $input;
         }
 
         // Simple HTML response
@@ -714,33 +733,7 @@ class App
      */
     public function render(string $path = null, string $method = null)
     {
-        // call the router action
-        $result   = $this->call($path, $method);
-        $response = $this->response();
-
-        try {
-            return $this->io($result);
-        } catch (Throwable $e) {
-            $code    = $e->getCode();
-            $message = $e->getMessage();
-
-            if ($code < 400 || $code > 599) {
-                $code = 500;
-            }
-
-            if ($errorPage = $this->site()->errorPage()) {
-                return $response->code($code)->send($errorPage->render([
-                    'errorCode'    => $code,
-                    'errorMessage' => $message,
-                    'errorType'    => get_class($e)
-                ]));
-            }
-
-            return $response
-                ->code($code)
-                ->type('text/html')
-                ->send($message);
-        }
+        return $this->io($this->call($path, $method));
     }
 
     /**
