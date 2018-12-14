@@ -33,9 +33,12 @@
   "error.access.panel": "패널에 접근할 권한이 없습니다.",
 
   "error.avatar.create.fail": "프로필 이미지를 업로드할 수 없습니다.",
-  "error.avatar.delete.fail": "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0\ub97c \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
-  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture under 3000 pixels",
-  "error.avatar.mime.forbidden": "\uc5c5\ub85c\ub4dc\ud560 \uc218 \uc5c6\ub294 MIME \ud615\uc2dd\uc785\ub2c8\ub2e4.",
+  "error.avatar.delete.fail":
+    "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0\ub97c \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+  "error.avatar.dimensions.invalid":
+    "Please keep the width and height of the profile picture under 3000 pixels",
+  "error.avatar.mime.forbidden":
+    "\uc5c5\ub85c\ub4dc\ud560 \uc218 \uc5c6\ub294 MIME \ud615\uc2dd\uc785\ub2c8\ub2e4.",
 
   "error.blueprint.notFound": "블루프린트({name})를 불러올 수 없습니다.",
 
@@ -43,33 +46,43 @@
 
   "error.field.converter.invalid": "Invalid converter \"{converter}\"",
 
-  "error.file.changeName.permission": "파일명({filename})을 변경할 권한이 없습니다.",
+  "error.file.changeName.permission":
+    "파일명({filename})을 변경할 권한이 없습니다.",
   "error.file.duplicate": "A file with the name \"{filename}\" already exists",
-  "error.file.extension.forbidden": "이 확장자({extension})는 업로드할 수 없습니다.",
+  "error.file.extension.forbidden":
+    "이 확장자({extension})는 업로드할 수 없습니다.",
   "error.file.extension.missing": "파일({filename})에 확장자가 없습니다.",
   "error.file.mime.differs": "기존 파일과 MIME 형식({mime})이 다릅니다.",
   "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
-  "error.file.mime.missing": "The media type for \"{filename}\" cannot be detected",
+  "error.file.mime.missing":
+    "The media type for \"{filename}\" cannot be detected",
   "error.file.name.missing": "파일명을 입력하세요.",
   "error.file.notFound": "파일({filename})이 없습니다.",
-  "error.file.type.forbidden": "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
+  "error.file.type.forbidden":
+    "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
   "error.file.undefined": "\ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
 
   "error.form.incomplete": "Please fix all form errors…",
   "error.form.notSaved": "항목을 저장할 수 없습니다.",
 
-  "error.page.changeSlug.permission": "고유 주소({slug})를 변경할 권한이 없습니다.",
+  "error.page.changeSlug.permission":
+    "고유 주소({slug})를 변경할 권한이 없습니다.",
   "error.page.changeStatus.incomplete": "페이지를 공개할 수 없습니다.",
   "error.page.changeStatus.permission": "페이지의 상태를 변경할 수 없습니다.",
-  "error.page.changeStatus.toDraft.invalid": "페이지({slug})의 상태를 초안으로 변경할 수 없습니다.",
-  "error.page.changeTemplate.invalid": "페이지({slug})의 템플릿을 변경할 수 없습니다.",
-  "error.page.changeTemplate.permission": "페이지({slug})의 템플릿을 변경할 권한이 없습니다.",
+  "error.page.changeStatus.toDraft.invalid":
+    "페이지({slug})의 상태를 초안으로 변경할 수 없습니다.",
+  "error.page.changeTemplate.invalid":
+    "페이지({slug})의 템플릿을 변경할 수 없습니다.",
+  "error.page.changeTemplate.permission":
+    "페이지({slug})의 템플릿을 변경할 권한이 없습니다.",
   "error.page.changeTitle.empty": "제목을 입력하세요.",
-  "error.page.changeTitle.permission": "페이지({slug})의 제목을 삭제할 권한이 없습니다.",
+  "error.page.changeTitle.permission":
+    "페이지({slug})의 제목을 삭제할 권한이 없습니다.",
   "error.page.create.permission": "페이지({slug})를 등록할 권한이 없습니다.",
   "error.page.delete": "페이지({slug})를 삭제할 수 없습니다.",
   "error.page.delete.confirm": "페이지 제목을 입력하세요.",
-  "error.page.delete.hasChildren": "하위 페이지가 있는 페이지는 삭제할 수 없습니다.",
+  "error.page.delete.hasChildren":
+    "하위 페이지가 있는 페이지는 삭제할 수 없습니다.",
   "error.page.delete.permission": "페이지({slug})를 삭제할 권한이 없습니다.",
   "error.page.draft.duplicate": "고유 주소({slug})가 같은 초안이 있습니다.",
   "error.page.duplicate": "고유 주소({slug})가 같은 페이지가 있습니다.",
@@ -81,33 +94,48 @@
   "error.page.undefined": "\ud398\uc774\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
   "error.page.update.permission": "페이지({slug})를 변경할 권한이 없습니다.",
 
-  "error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
-  "error.section.files.max.singular": "이 섹션({section})에는 파일을 하나 이상 추가할 수 없습니다.",
-  "error.section.files.min.plural": "이 섹션({section})에는 파일을 {min}개 이상 추가하세요.",
-  "error.section.files.min.singular": "이 섹션({section})에는 파일을 하나 이상 추가하세요.",
+  "error.section.files.max.plural":
+    "You must not add more than {max} files to the \"{section}\" section",
+  "error.section.files.max.singular":
+    "이 섹션({section})에는 파일을 하나 이상 추가할 수 없습니다.",
+  "error.section.files.min.plural":
+    "이 섹션({section})에는 파일을 {min}개 이상 추가하세요.",
+  "error.section.files.min.singular":
+    "이 섹션({section})에는 파일을 하나 이상 추가하세요.",
 
-  "error.section.pages.max.plural": "이 섹션({section})에는 페이지를 {max}개 이상 추가할 수 없습니다.",
-  "error.section.pages.max.singular": "이 섹션({section})에는 페이지를 하나 이상 추가할 수 없습니다.",
-  "error.section.pages.min.plural": "이 섹션({section})에는 페이지를 {min}개 이상 추가하세요.",
-  "error.section.pages.min.singular": "이 섹션({section})에는 페이지를 하나 이상 추가하세요.",
+  "error.section.pages.max.plural":
+    "이 섹션({section})에는 페이지를 {max}개 이상 추가할 수 없습니다.",
+  "error.section.pages.max.singular":
+    "이 섹션({section})에는 페이지를 하나 이상 추가할 수 없습니다.",
+  "error.section.pages.min.plural":
+    "이 섹션({section})에는 페이지를 {min}개 이상 추가하세요.",
+  "error.section.pages.min.singular":
+    "이 섹션({section})에는 페이지를 하나 이상 추가하세요.",
 
   "error.section.notLoaded": "섹션({name})을 불러올 수 없습니다.",
   "error.section.type.invalid": "섹션의 형식({type})이 올바르지 않습니다.",
 
-  "error.site.changeTitle.permission": "사이트의 제목을 변경할 권한이 없습니다.",
+  "error.site.changeTitle.permission":
+    "사이트의 제목을 변경할 권한이 없습니다.",
   "error.site.update.permission": "사이트의 정보를 변경할 권한이 없습니다.",
 
   "error.template.default.notFound": "기본 템플릿이 없습니다.",
 
-  "error.user.changeEmail.permission": "사용자({name})의 이메일 주소를 변경할 권한이 없습니다.",
-  "error.user.changeLanguage.permission": "사용자({name})의 언어를 변경할 권한이 없습니다.",
-  "error.user.changeName.permission": "사용자명({name})을 변경할 권한이 없습니다.",
-  "error.user.changePassword.permission": "사용자({name})의 암호를 변경할 권한이 없습니다.",
+  "error.user.changeEmail.permission":
+    "사용자({name})의 이메일 주소를 변경할 권한이 없습니다.",
+  "error.user.changeLanguage.permission":
+    "사용자({name})의 언어를 변경할 권한이 없습니다.",
+  "error.user.changeName.permission":
+    "사용자명({name})을 변경할 권한이 없습니다.",
+  "error.user.changePassword.permission":
+    "사용자({name})의 암호를 변경할 권한이 없습니다.",
   "error.user.changeRole.lastAdmin": "최종 관리자의 역할은 변경할 수 없습니다.",
-  "error.user.changeRole.permission": "사용자({name})의 역할을 변경할 권한이 없습니다.",
+  "error.user.changeRole.permission":
+    "사용자({name})의 역할을 변경할 권한이 없습니다.",
   "error.user.create.permission": "사용자를 등록할 권한이 없습니다.",
   "error.user.delete": "사용자({name})를 삭제할 수 없습니다.",
-  "error.user.delete.lastAdmin": "\ucd5c\uc885 \uad00\ub9ac\uc790\ub294 \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+  "error.user.delete.lastAdmin":
+    "\ucd5c\uc885 \uad00\ub9ac\uc790\ub294 \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
   "error.user.delete.lastUser": "최종 사용자는 삭제할 수 없습니다.",
   "error.user.delete.permission": "사용자({name})를 삭제할 권한이 없습니다.",
   "error.user.duplicate": "이메일 주소({email})가 같은 사용자가 있습니다.",
@@ -115,15 +143,18 @@
   "error.user.language.invalid": "올바른 언어를 입력하세요.",
   "error.user.notFound": "사용자({name})가 없습니다.",
   "error.user.password.invalid": "올바른 암호를 입력하세요.",
-  "error.user.password.notSame": "\uc554\ud638\ub97c \ud655\uc778\ud558\uc138\uc694.",
+  "error.user.password.notSame":
+    "\uc554\ud638\ub97c \ud655\uc778\ud558\uc138\uc694.",
   "error.user.password.undefined": "The user does not have a password",
   "error.user.role.invalid": "올바른 역할을 입력하세요.",
   "error.user.undefined": "\uc0ac\uc6a9\uc790\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
-  "error.user.update.permission": "사용자({name})의 정보를 변경할 권한이 없습니다.",
+  "error.user.update.permission":
+    "사용자({name})의 정보를 변경할 권한이 없습니다.",
 
   "error.validation.accepted": "확인하세요.",
   "error.validation.alpha": "알파벳만 입력할 수 있습니다.",
-  "error.validation.alphanum": "Please only enter characters between a-z or numerals 0-9",
+  "error.validation.alphanum":
+    "Please only enter characters between a-z or numerals 0-9",
   "error.validation.between": "{min}과 {max} 사이의 값을 입력하세요.",
   "error.validation.boolean": "Please confirm or deny",
   "error.validation.contains": "{needle}에 포함된 값을 입력하세요.",
@@ -138,15 +169,19 @@
   "error.validation.ip": "올바른 IP 주소를 입력하세요.",
   "error.validation.less": "{max}보다 작은 값을 입력하세요.",
   "error.validation.match": "The value does not match the expected pattern",
-  "error.validation.max": "{max}보다 작은 값을 입력하세요.",
-  "error.validation.maxlength": "Please enter a shorter value. (max. {max} characters)",
+  "error.validation.max": "Please enter a value equal to or lower than {max}",
+  "error.validation.maxlength":
+    "Please enter a shorter value. (max. {max} characters)",
   "error.validation.maxwords": "Please enter no more than {max} word(s)",
-  "error.validation.min": "Please enter a value greater than {min}",
-  "error.validation.minlength": "Please enter a longer value. (min. {min} characters)",
+  "error.validation.min": "Please enter a value equal to or greater than {min}",
+  "error.validation.minlength":
+    "Please enter a longer value. (min. {min} characters)",
   "error.validation.minwords": "Please enter at least {min} word(s)",
   "error.validation.more": "Please enter a greater value than {min}",
-  "error.validation.notcontains": "Please enter a value that does not contain \"{needle}\"",
-  "error.validation.notin": "Please don't enter any of the following: ({notIn})",
+  "error.validation.notcontains":
+    "Please enter a value that does not contain \"{needle}\"",
+  "error.validation.notin":
+    "Please don't enter any of the following: ({notIn})",
   "error.validation.option": "올바른 옵션을 선택하세요.",
   "error.validation.num": "올바른 숫자를 입력하세요.",
   "error.validation.required": "아무거나 입력하세요.",
@@ -172,21 +207,28 @@
 
   "installation": "설치",
   "installation.completed": "The panel has been installed",
-  "installation.issues.accounts": "<code>/site/accounts</code> 폴더에 쓰기 권한이 없습니다.",
-  "installation.issues.content": "<code>/content</code> 폴더에 쓰기 권한이 없습니다.",
+  "installation.issues.accounts":
+    "<code>/site/accounts</code> 폴더에 쓰기 권한이 없습니다.",
+  "installation.issues.content":
+    "<code>/content</code> 폴더에 쓰기 권한이 없습니다.",
   "installation.issues.curl": "<code>cURL</code> 확장 기능이 필요합니다.",
   "installation.issues.headline": "패널을 설치할 수 없습니다.",
-  "installation.issues.mbstring": "The <code>MB String</code> extension is required",
-  "installation.issues.media": "<code>/media</code> 폴더에 쓰기 권한이 없습니다.",
+  "installation.issues.mbstring":
+    "The <code>MB String</code> extension is required",
+  "installation.issues.media":
+    "<code>/media</code> 폴더에 쓰기 권한이 없습니다.",
   "installation.issues.php": "<code>PHP</code> 버전이 7 이상인지 확인하세요.",
-  "installation.issues.server": "<code>Apache</code>, <code>Nginx</code>, 또는 <code>Caddy</code>가 필요합니다.",
+  "installation.issues.server":
+    "<code>Apache</code>, <code>Nginx</code>, 또는 <code>Caddy</code>가 필요합니다.",
 
   "language": "\uc5b8\uc5b4",
   "language.code": "코드",
   "language.convert": "기본 언어로 설정",
-  "language.convert.confirm": "<p>이 <strong>언어({name})</strong>를 기본 언어로 설정할까요? 설정한 뒤에는 복구할 수 없습니다.</p><p>번역되지 않은 항목은 올바르게 표시되지 않습니다.</p>",
+  "language.convert.confirm":
+    "<p>이 <strong>언어({name})</strong>를 기본 언어로 설정할까요? 설정한 뒤에는 복구할 수 없습니다.</p><p>번역되지 않은 항목은 올바르게 표시되지 않습니다.</p>",
   "language.create": "새 언어 추가",
-  "language.delete.confirm": "언어({name})를 삭제할까요? 삭제한 뒤에는 복구할 수 없습니다.",
+  "language.delete.confirm":
+    "언어({name})를 삭제할까요? 삭제한 뒤에는 복구할 수 없습니다.",
   "language.deleted": "언어가 삭제되었습니다.",
   "language.direction": "읽기 방향",
   "language.direction.ltr": "왼쪽에서 오른쪽",
@@ -204,6 +246,10 @@
   "license": "라이선스",
   "license.buy": "라이선스 구매",
   "license.register": "등록",
+  "license.register.help":
+    "You received your license code after the purchase via email. Please copy and paste it to register.",
+  "license.register.label": "Please enter your license code",
+  "license.register.success": "Thank you for supporting Kirby",
   "license.unregistered": "Kirby가 등록되지 않았습니다.",
 
   "link": "\uc77c\ubc18 \ub9c1\ud06c",
@@ -247,18 +293,21 @@
   "orientation.square": "정사각형",
 
   "page.changeSlug": "고유 주소 변경",
-  "page.changeSlug.fromTitle": "\uc81c\ubaa9(\uc601\ubb38)\uc5d0\uc11c \uac00\uc838\uc624\uae30",
+  "page.changeSlug.fromTitle":
+    "\uc81c\ubaa9(\uc601\ubb38)\uc5d0\uc11c \uac00\uc838\uc624\uae30",
   "page.changeStatus": "상태 변경",
   "page.changeStatus.position": "위치를 선택하세요.",
   "page.changeStatus.select": "새 상태 선택",
   "page.changeTemplate": "템플릿 변경",
   "page.delete.confirm": "<strong>페이지({title})</strong>를 삭제할까요?",
-  "page.delete.confirm.subpages": "<strong>페이지에 하위 페이지가 있습니다.</strong> 모든 하위 페이지가 삭제됩니다.",
+  "page.delete.confirm.subpages":
+    "<strong>페이지에 하위 페이지가 있습니다.</strong> 모든 하위 페이지가 삭제됩니다.",
   "page.delete.confirm.title": "페이지 제목을 입력하세요.",
   "page.draft.create": "초안 작성",
   "page.status": "Status",
   "page.status.draft": "초안",
-  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors",
+  "page.status.draft.description":
+    "The page is in draft mode and only visible for logged in editors",
   "page.status.listed": "공개",
   "page.status.listed.description": "누구나 읽을 수 있습니다.",
   "page.status.unlisted": "비공개",
@@ -315,7 +364,8 @@
   "url.placeholder": "https://example.com",
 
   "user": "사용자",
-  "user.blueprint": "<strong>/site/blueprints/users/{role}.yml</strong> 파일에 옵션을 추가할 수 있습니다.",
+  "user.blueprint":
+    "<strong>/site/blueprints/users/{role}.yml</strong> 파일에 옵션을 추가할 수 있습니다.",
   "user.changeEmail": "이메일 주소 변경",
   "user.changeLanguage": "언어 변경",
   "user.changeName": "사용자명 변경",
