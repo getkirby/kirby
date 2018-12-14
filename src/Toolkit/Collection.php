@@ -337,7 +337,11 @@ class Collection extends Iterator
     public function find(...$keys)
     {
         if (count($keys) === 1) {
-            return $this->findByKey($keys[0]);
+            if (is_array($keys[0]) === true) {
+                $keys = $keys[0];
+            } else {
+                return $this->findByKey($keys[0]);
+            }
         }
 
         $result = [];
