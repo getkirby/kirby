@@ -1,51 +1,51 @@
 <template>
   <nav class="k-toolbar">
+    <div class="k-toolbar-buttons">
+      <template v-for="(button, buttonIndex) in layout">
 
-    <template v-for="(button, buttonIndex) in layout">
+        <!-- divider -->
+        <template v-if="button.divider">
+          <span :key="buttonIndex" class="k-toolbar-divider" />
+        </template>
 
-      <!-- divider -->
-      <template v-if="button.divider">
-        <span :key="buttonIndex" class="k-toolbar-divider" />
-      </template>
+        <!-- dropdown -->
+        <template v-else-if="button.dropdown">
+          <k-dropdown :key="buttonIndex">
+            <k-button
+              :icon="button.icon"
+              :key="buttonIndex"
+              :tooltip="button.label"
+              tabindex="-1"
+              class="k-toolbar-button"
+              @click="$refs[buttonIndex + '-dropdown'][0].toggle()"
+            />
+            <k-dropdown-content :ref="buttonIndex + '-dropdown'">
+              <k-dropdown-item
+                v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
+                :key="dropdownItemIndex"
+                :icon="dropdownItem.icon"
+                @click="command(dropdownItem.command, dropdownItem.args)"
+              >
+                {{ dropdownItem.label }}
+              </k-dropdown-item>
+            </k-dropdown-content>
+          </k-dropdown>
+        </template>
 
-      <!-- dropdown -->
-      <template v-else-if="button.dropdown">
-        <k-dropdown :key="buttonIndex">
+        <!-- single button -->
+        <template v-else>
           <k-button
             :icon="button.icon"
             :key="buttonIndex"
             :tooltip="button.label"
             tabindex="-1"
             class="k-toolbar-button"
-            @click="$refs[buttonIndex + '-dropdown'][0].toggle()"
+            @click="command(button.command, button.args)"
           />
-          <k-dropdown-content :ref="buttonIndex + '-dropdown'">
-            <k-dropdown-item
-              v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
-              :key="dropdownItemIndex"
-              :icon="dropdownItem.icon"
-              @click="command(dropdownItem.command, dropdownItem.args)"
-            >
-              {{ dropdownItem.label }}
-            </k-dropdown-item>
-          </k-dropdown-content>
-        </k-dropdown>
+        </template>
+
       </template>
-
-      <!-- single button -->
-      <template v-else>
-        <k-button
-          :icon="button.icon"
-          :key="buttonIndex"
-          :tooltip="button.label"
-          tabindex="-1"
-          class="k-toolbar-button"
-          @click="command(button.command, button.args)"
-        />
-      </template>
-
-    </template>
-
+    </div>
   </nav>
 </template>
 
@@ -221,16 +221,21 @@ export default {
 
 <style lang="scss">
 .k-toolbar {
-  display: flex;
   background: $color-white;
   border-bottom: 1px solid $color-background;
+  overflow: hidden;
+  height: 38px;
+}
+.k-toolbar-buttons {
+  display: flex;
+  flex-wrap: wrap;
 }
 .k-toolbar-divider {
   width: 1px;
   background: $color-background;
 }
 .k-toolbar-button {
-  padding: 0 0.75rem;
+  width: 36px;
   height: 36px;
 }
 .k-toolbar-button:hover {

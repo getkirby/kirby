@@ -2529,21 +2529,24 @@ button::-moz-focus-inner {
   margin-right: 0 !important;
 }
 .k-toolbar {
+  background: #fff;
+  border-bottom: 1px solid #efefef;
+  overflow: hidden;
+  height: 38px;
+}
+.k-toolbar-buttons {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background: #fff;
-  -webkit-box-shadow: rgba(22, 23, 26, 0.2) 0 2px 10px;
-  box-shadow: 0 2px 10px rgba(22, 23, 26, 0.2);
-  border: 1px solid #ccc;
-  border-radius: 1px;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 .k-toolbar-divider {
   width: 1px;
-  background: #ccc;
+  background: #efefef;
 }
 .k-toolbar-button {
-  padding: 0 0.75rem;
+  width: 36px;
   height: 36px;
 }
 .k-toolbar-button:hover {
@@ -2593,12 +2596,19 @@ button::-moz-focus-inner {
   min-height: 45rem;
 }
 .k-toolbar {
-  position: absolute;
+  margin-bottom: 0.25rem;
+  color: #aaa;
+}
+.k-textarea-input:focus-within .k-toolbar {
+  position: -webkit-sticky;
+  position: sticky;
   top: 0;
+  right: 0;
   left: 0;
-  -webkit-transform: translateY(-150%);
-  transform: translateY(-150%);
-  z-index: 400;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: #000;
 }
 .k-time-input {
   display: -webkit-box;

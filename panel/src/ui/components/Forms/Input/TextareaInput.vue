@@ -262,7 +262,7 @@ export default {
 
 .k-toolbar {
   margin-bottom: 0.25rem;
-  color: #ccc;
+  color: #aaa;
 }
 .k-textarea-input:focus-within .k-toolbar {
   position: sticky;
