@@ -1,7 +1,7 @@
 <template>
   <div :data-theme="theme" :data-over="over" class="k-textarea-input">
     <div class="k-textarea-input-wrapper">
-      <k-toolbar ref="toolbar" :buttons="buttons" @command="onCommand" />
+      <k-toolbar v-if="buttons" ref="toolbar" :buttons="buttons" @command="onCommand" />
       <textarea
         ref="input"
         v-bind="{
@@ -162,7 +162,6 @@ export default {
       this.$emit("focus", $event);
     },
     onInput($event) {
-      this.toolbar = false;
       this.$emit("input", $event.target.value);
     },
     onInvalid() {
@@ -257,11 +256,16 @@ export default {
 }
 
 .k-toolbar {
+  margin-bottom: 0.25rem;
+  color: #ccc;
+}
+.k-textarea-input:focus-within .k-toolbar {
   position: sticky;
   top: 0;
   right: 0;
   left: 0;
   box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
-  margin-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(#000, 0.1);
+  color: #000;
 }
 </style>
