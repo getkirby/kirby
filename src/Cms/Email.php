@@ -91,7 +91,7 @@ class Email
 
     protected function getTemplate(string $name, string $type = null)
     {
-        return App::instance()->template("emails/{$name}", $type, 'text');
+        return App::instance()->template('emails/' . $name, $type, 'text');
     }
 
     public function toArray(): array
