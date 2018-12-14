@@ -61,4 +61,30 @@ class KirbyTagsTest extends TestCase
         $this->assertEquals($expected, $kirby->kirbytext($kirbytext));
     }
 
+    public function testHooks()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'hooks' => [
+                'kirbytags:before' => function ($text, $data, $options) {
+                    return 'before';
+                },
+            ]
+        ]);
+
+        $this->assertEquals('before', $app->kirbytags('test'));
+
+        $app = $app->clone([
+            'hooks' => [
+                'kirbytags:after' => function ($text, $data, $options) {
+                    return 'after';
+                },
+            ]
+        ]);
+
+        $this->assertEquals('after', $app->kirbytags('test'));
+    }
+
 }
