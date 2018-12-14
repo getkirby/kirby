@@ -1,7 +1,12 @@
 <template>
   <div :data-theme="theme" :data-over="over" class="k-textarea-input">
     <div class="k-textarea-input-wrapper">
-      <k-toolbar v-if="buttons" ref="toolbar" :buttons="buttons" @command="onCommand" />
+      <k-toolbar
+        v-if="buttons"
+        ref="toolbar"
+        :buttons="buttons"
+        @command="onCommand"
+      />
       <textarea
         ref="input"
         v-bind="{
