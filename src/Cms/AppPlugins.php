@@ -287,13 +287,13 @@ trait AppPlugins
 
         foreach (glob($this->root('models') . '/*.php') as $model) {
             $name  = F::name($model);
-            $class = $name . 'Page';
+            $class = str_replace('.', '', $name) . 'Page';
 
             // load the model class
             include_once $model;
 
             if (class_exists($class) === true) {
-                $models[$name] = $name . 'Page';
+                $models[$name] = $class;
             }
         }
 
