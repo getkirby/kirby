@@ -183,7 +183,7 @@ export default {
             offset: this.offset
           });
         })
-        .catch(error => {
+        .catch(() => {
           // pagination stopped
         });
     },

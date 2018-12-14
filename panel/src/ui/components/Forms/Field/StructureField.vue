@@ -441,7 +441,7 @@ export default {
 
       this.createForm(field);
     },
-    beforePaginate(e) {
+    beforePaginate() {
       return this.save(this.currentModel);
     },
     paginate(pagination) {
@@ -518,7 +518,7 @@ export default {
     submit() {
       this.save()
         .then(this.close)
-        .catch(errors => {
+        .catch(() => {
           // don't close
         });
     },
