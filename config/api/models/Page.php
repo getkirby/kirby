@@ -42,7 +42,12 @@ return [
             return $page->isSortable();
         },
         'next' => function (Page $page) {
-            return $page->nextAll()->filterBy('isReadable', true)->first();
+            return $page
+                ->nextAll()
+                ->filterBy('intendedTemplate', $page->intendedTemplate())
+                ->filterBy('status', $page->status())
+                ->filterBy('isReadable', true)
+                ->first();
         },
         'num' => function (Page $page) {
             return $page->num();
@@ -57,7 +62,12 @@ return [
             return $page->parents()->flip();
         },
         'prev' => function (Page $page) {
-            return $page->prevAll()->filterBy('isReadable', true)->last();
+            return $page
+                ->prevAll()
+                ->filterBy('intendedTemplate', $page->intendedTemplate())
+                ->filterBy('status', $page->status())
+                ->filterBy('isReadable', true)
+                ->last();
         },
         'previewUrl' => function (Page $page) {
             return $page->previewUrl();
