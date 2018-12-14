@@ -331,7 +331,7 @@ class File extends ModelWithContent
      */
     public function html(array $attr = []): string
     {
-        if ($this->isResizable() === true) {
+        if ($this->type() === 'image') {
             return Html::img($this->url(), array_merge(['alt' => $this->alt()], $attr));
         } else {
             return Html::a($this->url(), $attr);
