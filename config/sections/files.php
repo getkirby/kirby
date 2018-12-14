@@ -228,6 +228,7 @@ return [
                 'layout'   => $this->layout,
                 'link'     => $this->link,
                 'max'      => $this->max,
+                'min'      => $this->min,
                 'size'     => $this->size,
                 'sortable' => $this->sortable,
                 'upload'   => $this->upload
