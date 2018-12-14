@@ -301,6 +301,24 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('testValue', $kirby->option('testOption'));
     }
 
+    public function testExtensionsFromFolders()
+    {
+        Page::$models = [];
+
+        $kirby = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/AppPluginsTest'
+            ]
+        ]);
+
+        $expected = [
+            'regular' => 'regularPage',
+            'with.dot' => 'withdotPage'
+        ];
+
+        $this->assertEquals($expected, Page::$models);
+    }
+
     public function testPluginOptions()
     {
         App::plugin('test/plugin', [
