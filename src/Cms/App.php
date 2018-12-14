@@ -439,7 +439,6 @@ class App
 
         // any direct exception will be turned into an error page
         if (is_a($input, 'Throwable') === true) {
-
             $code    = $input->getCode();
             $message = $input->getMessage();
 
