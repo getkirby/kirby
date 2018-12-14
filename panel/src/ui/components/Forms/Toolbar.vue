@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="buttons && isOpen" class="k-toolbar" @click.stop>
+  <nav class="k-toolbar">
 
     <template v-for="(button, buttonIndex) in layout">
 
@@ -114,18 +114,11 @@ export default {
     });
 
     return {
-      isOpen: false,
       layout: layout,
       shortcuts: shortcuts
     };
   },
   methods: {
-    close() {
-      this.isOpen = false;
-      this.$events.$off("click", this.close);
-      this.$events.$off("keydown.esc", this.close);
-      this.$emit("close");
-    },
     command(command, callback) {
       if (typeof command === "function") {
         command.apply(this);
@@ -209,12 +202,6 @@ export default {
         }
       };
     },
-    open() {
-      this.isOpen = true;
-      this.$events.$on("click", this.close);
-      this.$events.$on("keydown.esc", this.close);
-      this.$emit("open");
-    },
     shortcut(shortcut, $event) {
       if (this.shortcuts[shortcut]) {
         const button = this.layout[this.shortcuts[shortcut]];
@@ -236,13 +223,11 @@ export default {
 .k-toolbar {
   display: flex;
   background: $color-white;
-  box-shadow: $box-shadow;
-  border: 1px solid $color-border;
-  border-radius: $border-radius;
+  border-bottom: 1px solid $color-background;
 }
 .k-toolbar-divider {
   width: 1px;
-  background: $color-border;
+  background: $color-background;
 }
 .k-toolbar-button {
   padding: 0 0.75rem;
