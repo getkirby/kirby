@@ -226,7 +226,6 @@ export default {
 <style lang="scss">
 .k-textarea-input-wrapper {
   position: relative;
-  transform: translate3d(0, 0, 0);
 }
 .k-textarea-input-native {
   resize: none;
