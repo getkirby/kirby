@@ -1,6 +1,6 @@
 <template>
   <figure class="k-card" v-on="$listeners">
-    <k-icon v-if="sortable" class="k-sort-handle" type="sort" />
+    <k-sort-handle v-if="sortable" />
 
     <component :is="wrapper" :to="link" :target="target">
       <k-image
@@ -114,7 +114,6 @@ export default {
   opacity: 0;
   color: $color-dark;
   z-index: 1;
-  cursor: -webkit-grab;
   will-change: opacity;
   transition: opacity 0.3s;
 
@@ -125,14 +124,16 @@ export default {
     left: 0.75rem;
   }
 }
-.k-card .k-sort-handle:active {
-  cursor: -webkit-grabbing;
-}
 .k-cards:hover .k-sort-handle {
   opacity: 0.25;
 }
 .k-card:hover .k-sort-handle {
   opacity: 1;
+}
+
+.k-card.k-sortable-ghost {
+  outline: 2px solid $color-focus;
+  border-radius: 0;
 }
 
 .k-card-image,

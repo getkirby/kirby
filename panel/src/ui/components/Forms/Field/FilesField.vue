@@ -12,9 +12,8 @@
       <k-draggable
         :element="elements.list"
         :list="selected"
-        :options="dragOptions"
         :data-size="size"
-        @start="onStart"
+        :handle="true"
         @end="onInput"
       >
         <component
@@ -73,15 +72,6 @@ export default {
     };
   },
   computed: {
-    dragOptions() {
-      return {
-        forceFallback: true,
-        fallbackClass: "sortable-fallback",
-        fallbackOnBody: true,
-        scroll: document.querySelector(".k-panel-view"),
-        handle: ".k-sort-handle"
-      };
-    },
     elements() {
       const layouts = {
         cards: {
@@ -127,11 +117,7 @@ export default {
       this.onInput();
     },
     focus() {},
-    onStart() {
-      this.$store.dispatch("drag", {});
-    },
     onInput() {
-      this.$store.dispatch("drag", null);
       this.$emit("input", this.selected);
     },
     select(files) {

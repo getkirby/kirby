@@ -1,12 +1,12 @@
 <template>
   <k-draggable
-    v-model="state"
-    :options="{disabled: !draggable, forceFallback: true, draggable: '.k-tag', delay: 1}"
+    :list="state"
+    :options="dragOptions"
     :data-layout="layout"
     element="k-dropdown"
     class="k-multiselect-input"
-    @input="onInput"
     @click.native="$refs.dropdown.toggle"
+    @end="onInput"
   >
     <k-tag
       v-for="tag in sorted"
@@ -60,12 +60,7 @@
 </template>
 
 <script>
-
-import {
-  required,
-  minLength,
-  maxLength
-} from "vuelidate/lib/validators";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
   inheritAttrs: false,
@@ -98,8 +93,8 @@ export default {
   },
   data() {
     return {
-      state:  this.value,
-      q:      null
+      state: this.value,
+      q: null
     };
   },
   computed: {
@@ -109,9 +104,15 @@ export default {
     draggable() {
       return this.state.length > 1 && !this.sort;
     },
+    dragOptions() {
+      return {
+        disabled: !this.draggable,
+        draggable: ".k-tag",
+        delay: 1
+      };
+    },
     filtered() {
-
-      if (this.q === null ) {
+      if (this.q === null) {
         return this.options.map(option => ({
           ...option,
           display: option.text,
@@ -121,23 +122,24 @@ export default {
 
       const regex = new RegExp(`(${this.q})`, "ig");
 
-      return this.options.filter(option => {
-        return option.text.match(regex) || option.value.match(regex)
-      }).map(option => {
-        return {
-          ...option,
-          display: option.text.replace(regex, "<b>$1</b>"),
-          info:    option.value.replace(regex, "<b>$1</b>")
-        }
-      });
-
+      return this.options
+        .filter(option => {
+          return option.text.match(regex) || option.value.match(regex);
+        })
+        .map(option => {
+          return {
+            ...option,
+            display: option.text.replace(regex, "<b>$1</b>"),
+            info: option.value.replace(regex, "<b>$1</b>")
+          };
+        });
     },
     sorted() {
       if (this.sort === false) {
         return this.state;
       }
 
-      const index = (x) => this.options.findIndex(y => y.value === x.value)
+      const index = x => this.options.findIndex(y => y.value === x.value);
       return this.state.sort((a, b) => index(a) - index(b));
     }
   },
@@ -149,20 +151,20 @@ export default {
   },
   mounted() {
     this.onInvalid();
-    this.$events.$on('click', this.close);
-    this.$events.$on('keydown.cmd.s', this.close);
-    this.$events.$on('keydown.esc', this.escape);
+    this.$events.$on("click", this.close);
+    this.$events.$on("keydown.cmd.s", this.close);
+    this.$events.$on("keydown.esc", this.escape);
   },
   destroyed() {
-    this.$events.$off('click', this.close);
-    this.$events.$off('keydown.cmd.s', this.close);
-    this.$events.$off('keydown.esc', this.escape);
+    this.$events.$off("click", this.close);
+    this.$events.$off("keydown.cmd.s", this.close);
+    this.$events.$off("keydown.esc", this.escape);
   },
   methods: {
     add(option) {
       if (this.addable) {
         this.state.push(option);
-        this.onInput(this.sorted);
+        this.onInput();
       }
     },
     blur() {
@@ -206,15 +208,15 @@ export default {
           break;
       }
     },
-    onInput(value) {
-      this.$emit("input", value);
+    onInput() {
+      this.$emit("input", this.sorted);
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     remove(option) {
       this.state.splice(this.index(option), 1);
-      this.onInput(this.sorted);
+      this.onInput();
     },
     select(option) {
       option = { text: option.text, value: option.value };
@@ -235,12 +237,10 @@ export default {
       }
     };
   }
-}
-
+};
 </script>
 
 <style lang="scss">
-
 .k-multiselect-input {
   display: flex;
   flex-wrap: wrap;
@@ -249,7 +249,7 @@ export default {
   min-height: 2.25rem;
   line-height: 1;
 }
-.k-multiselect-input .sortable-ghost {
+.k-multiselect-input .k-sortable-ghost {
   background: $color-focus;
 }
 
@@ -261,29 +261,28 @@ export default {
   margin-top: 0 !important;
   color: $color-white;
   background: $color-dark;
-  border-bottom: 1px dashed rgba($color-white, .2);
+  border-bottom: 1px dashed rgba($color-white, 0.2);
 
-   > .k-button-text {
+  > .k-button-text {
     flex: 1;
   }
 
   input {
-    width:      100%;
-    color:      $color-white;
+    width: 100%;
+    color: $color-white;
     background: none;
-    border:     none;
-    outline:    none;
-    padding:    .25rem 0;
+    border: none;
+    outline: none;
+    padding: 0.25rem 0;
     font: inherit;
   }
 }
-
 
 .k-multiselect-options {
   position: relative;
   max-height: 240px;
   overflow-y: scroll;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
 }
 
 .k-multiselect-option {
@@ -305,11 +304,14 @@ export default {
 
 .k-multiselect-value {
   color: $color-light-grey;
-  margin-left: .25rem;
+  margin-left: 0.25rem;
 
-  &::before { content: " (" }
-  &::after  { content: ")"  }
-
+  &::before {
+    content: " (";
+  }
+  &::after {
+    content: ")";
+  }
 }
 
 .k-multiselect-input[data-layout="list"] .k-tag {

@@ -1,11 +1,11 @@
 <template>
   <k-draggable
     ref="box"
-    v-model="tags"
-    :options="dragOptions"
+    :list="tags"
     :data-layout="layout"
+    :options="dragOptions"
     class="k-tags-input"
-    @input="onInput"
+    @end="onInput"
   >
     <k-tag
       v-for="(tag, tagIndex) in tags"
@@ -108,10 +108,7 @@ export default {
       return {
         delay: 1,
         disabled: !this.draggable,
-        draggable: ".k-tag",
-        fallbackOnBody: true,
-        forceFallback: true,
-        scroll: document.querySelector(".k-panel-view")
+        draggable: ".k-tag"
       };
     },
     draggable() {
@@ -166,7 +163,7 @@ export default {
         (!this.max || this.tags.length < this.max)
       ) {
         this.tags.push(tag);
-        this.onInput(this.tags);
+        this.onInput();
       }
 
       this.newTag = null;
@@ -244,8 +241,8 @@ export default {
     index(tag) {
       return this.tags.findIndex(item => item.value === tag.value);
     },
-    onInput(value) {
-      this.$emit("input", value);
+    onInput() {
+      this.$emit("input", this.tags);
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
@@ -294,7 +291,7 @@ export default {
 
       // remove tag and fire input event
       this.tags.splice(this.index(tag), 1);
-      this.onInput(this.tags);
+      this.onInput();
 
       if (prev) {
         prev.ref.focus();
@@ -338,7 +335,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-.k-tags-input .sortable-ghost {
+.k-tags-input .k-sortable-ghost {
   background: $color-focus;
 }
 .k-tags-input-element {

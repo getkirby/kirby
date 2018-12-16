@@ -67,12 +67,11 @@
           </tr>
         </thead>
         <k-draggable
-          v-model="items"
+          :list="items"
           :data-disabled="disabled"
           :options="dragOptions"
+          :handle="true"
           element="tbody"
-          @input="onInput"
-          @choose="close"
           @end="onInput"
         >
           <tr
@@ -81,12 +80,8 @@
             @click.stop
           >
             <td class="k-structure-table-index">
-              <k-button
-                v-if="isSortable"
-                class="k-structure-table-handle"
-                icon="sort"
-              />
-              <span>{{ indexOf(index) }}</span>
+              <k-sort-handle v-if="isSortable" />
+              <span class="k-structure-table-index-number">{{ indexOf(index) }}</span>
             </td>
             <td
               v-for="(column, columnName) in columns"
@@ -192,11 +187,7 @@ export default {
     dragOptions() {
       return {
         disabled: !this.isSortable,
-        handle: ".k-structure-table-handle",
-        forceFallback: true,
-        fallbackClass: "sortable-fallback",
-        fallbackOnBody: true,
-        scroll: document.querySelector(".k-panel-view")
+        fallbackClass: "k-sortable-row-fallback"
       };
     },
     formFields() {
@@ -652,21 +643,23 @@ $structure-item-height: 38px;
     width: $structure-item-height;
     text-align: center;
   }
-  .k-structure-table-index > span {
+  .k-structure-table-index-number {
     font-size: $font-size-tiny;
     color: $color-light-grey;
     padding-top: 0.15rem;
   }
-  .k-structure-table-handle {
+
+  .k-sort-handle {
     width: $structure-item-height;
+    height: $structure-item-height;
     display: none;
   }
 
-  &[data-sortable] tr:hover .k-structure-table-index > span {
+  &[data-sortable] tr:hover .k-structure-table-index-number {
     display: none;
   }
-  &[data-sortable] tr:hover .k-structure-table-handle {
-    display: block;
+  &[data-sortable] tr:hover .k-sort-handle {
+    display: flex !important;
   }
 
   .k-structure-table-option {
@@ -685,22 +678,17 @@ $structure-item-height: 38px;
     white-space: nowrap;
   }
 
-  .sortable-ghost {
+  .k-sortable-ghost {
     background: $color-white;
     box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
     outline: 2px solid $color-focus;
     margin-bottom: 2px;
+    cursor: -webkit-grabbing;
   }
-  .sortable-fallback {
-    opacity: 0.25 !important;
-    background: $color-white;
-    display: table;
-    table-layout: fixed;
-    border-spacing: 0;
-  }
-  .sortable-fallback td:first-child {
-    display: table-cell;
-  }
+}
+
+.k-sortable-row-fallback {
+  opacity: 0 !important;
 }
 
 .k-structure-backdrop {

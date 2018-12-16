@@ -1,7 +1,6 @@
 /* Dependencies */
 import Vue from "vue";
 import Vuelidate from "vuelidate";
-import Draggable from "vuedraggable";
 import Events from "./plugins/events.js";
 
 Vue.use(Vuelidate);
@@ -19,6 +18,7 @@ import Collection from "./components/Layout/Collection.vue";
 import Column from "./components/Layout/Column.vue";
 import Counter from "./components/Forms/Counter.vue";
 import Dialog from "./components/Navigation/Dialog.vue";
+import Draggable from "./components/Misc/Draggable.vue";
 import Dropdown from "./components/Navigation/Dropdown.vue";
 import DropdownContent from "./components/Navigation/DropdownContent.vue";
 import DropdownItem from "./components/Navigation/DropdownItem.vue";
@@ -35,6 +35,7 @@ import ListItem from "./components/Layout/ListItem.vue";
 import Pagination from "./components/Navigation/Pagination.vue";
 import PrevNext from "./components/Navigation/PrevNext.vue";
 import Progress from "./components/Misc/Progress.vue";
+import SortHandle from "./components/Misc/SortHandle.vue";
 import Tag from "./components/Navigation/Tag.vue";
 import Text from "./components/Misc/Text.vue";
 import View from "./components/Layout/View.vue";
@@ -101,12 +102,10 @@ import PagesFieldPreview from "./components/Forms/Previews/PagesFieldPreview.vue
 import UrlFieldPreview from "./components/Forms/Previews/UrlFieldPreview.vue";
 import UsersFieldPreview from "./components/Forms/Previews/UsersFieldPreview.vue";
 
-
 export default {
   install(Vue) {
-
     // default translate filter for Ui components
-    Vue.filter("t", function (fallback) {
+    Vue.filter("t", function(fallback) {
       return fallback;
     });
 
@@ -152,11 +151,12 @@ export default {
     Vue.component("k-pagination", Pagination);
     Vue.component("k-prev-next", PrevNext);
     Vue.component("k-progress", Progress);
+    Vue.component("k-sort-handle", SortHandle);
     Vue.component("k-tag", Tag);
     Vue.component("k-text", Text);
     Vue.component("k-view", View);
 
-    /** FORMS */
+    /** Forms */
     Vue.component("k-autocomplete", Autocomplete);
     Vue.component("k-form", Form);
     Vue.component("k-field", Field);
@@ -215,6 +215,5 @@ export default {
     Vue.component("k-pages-field-preview", PagesFieldPreview);
     Vue.component("k-url-field-preview", UrlFieldPreview);
     Vue.component("k-users-field-preview", UsersFieldPreview);
-
   }
 };

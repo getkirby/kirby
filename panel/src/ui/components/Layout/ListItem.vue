@@ -1,6 +1,6 @@
 <template>
   <component :is="element" class="k-list-item" v-on="$listeners">
-    <k-icon v-if="sortable" class="k-sort-handle" type="sort" />
+    <k-sort-handle v-if="sortable" />
     <k-link
       v-tab
       :to="link"
@@ -92,20 +92,12 @@ $list-item-height: 38px;
   left: -1.5rem;
   width: 1.5rem;
   height: $list-item-height;
-  color: $color-dark;
   opacity: 0;
-  z-index: 1;
-  cursor: -webkit-grab;
-  will-change: opacity, color;
-  transition: opacity 0.3s;
 
   @media screen and (min-width: $breakpoint-small) {
     left: -$list-item-height;
     width: $list-item-height;
   }
-}
-.k-list-item .k-sort-handle:active {
-  cursor: -webkit-grabbing;
 }
 .k-list:hover .k-sort-handle {
   opacity: 0.25;
@@ -113,13 +105,13 @@ $list-item-height: 38px;
 .k-list-item:hover .k-sort-handle {
   opacity: 1;
 }
-.k-list-item.sortable-ghost {
+.k-list-item.k-sortable-ghost {
   position: relative;
   outline: 2px solid $color-focus;
   z-index: 1;
   box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
 }
-.k-list-item.sortable-fallback {
+.k-list-item.k-sortable-fallback {
   opacity: 0.25 !important;
   overflow: hidden;
 }

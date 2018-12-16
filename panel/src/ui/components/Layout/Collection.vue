@@ -5,7 +5,7 @@
       :options="dragOptions"
       :element="elements.list"
       :data-size="size"
-      @start="onStart"
+      :handle="true"
       @change="$emit('change', $event)"
       @end="onEnd"
     >
@@ -60,14 +60,8 @@ export default {
     dragOptions() {
       return {
         sort: this.sortable,
-        forceFallback: true,
-        fallbackClass: "sortable-fallback",
-        fallbackOnBody: true,
-        scroll: document.querySelector(".k-panel-view"),
-        filter: ".disabled",
         disabled: this.sortable === false,
-        draggable: ".k-draggable-item",
-        handle: ".k-sort-handle"
+        draggable: ".k-draggable-item"
       };
     },
     elements() {
@@ -117,17 +111,11 @@ export default {
         this.over.removeAttribute("data-over");
       }
       this.$emit("sort", this.items);
-      this.$store.dispatch("drag", null);
     },
     onDragStart($event, dragText) {
       this.$store.dispatch("drag", {
         type: "text",
         data: dragText
-      });
-    },
-    onStart() {
-      this.$store.dispatch("drag", {
-        type: "item"
       });
     }
   }
