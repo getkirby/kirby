@@ -169,9 +169,11 @@ export default {
       this.newTag = null;
     },
     blurInput(event) {
+      let related = event.relatedTarget || event.explicitOriginalTarget;
+
       if (
         this.$refs.autocomplete.$el &&
-        this.$refs.autocomplete.$el.contains(event.relatedTarget)
+        this.$refs.autocomplete.$el.contains(related)
       ) {
         return;
       }
