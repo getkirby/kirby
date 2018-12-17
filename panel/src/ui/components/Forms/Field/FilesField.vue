@@ -130,7 +130,7 @@ export default {
             multiple: this.multiple
           });
         })
-        .catch(error => {
+        .catch(() => {
           this.$store.dispatch(
             "notification/error",
             "The files query does not seem to be correct"

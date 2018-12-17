@@ -4,9 +4,10 @@
     :list="list"
     :options="dragOptions"
     class="k-draggable"
-    v-on="listeners">
+    v-on="listeners"
+  >
     <slot />
-    <slot name="footer" slot="footer" />
+    <slot slot="footer" name="footer" />
   </draggable>
 </template>
 
