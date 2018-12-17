@@ -51,6 +51,9 @@
     "build": "./scripts/build",
     "fix": "./vendor/bin/php-cs-fixer fix ./src/"
   },
+  "config": {
+    "optimize-autoloader": true
+  },
   "archive": {
     "exclude": [
       ".*",
