@@ -28,6 +28,13 @@ return [
         },
 
         /**
+         * Info text
+         */
+        'info' => function (string $info = null) {
+            return $info;
+        },
+
+        /**
          * Changes the layout of the selected files. Available layouts: list, cards
          */
         'layout' => function (string $layout = 'list') {
@@ -69,6 +76,13 @@ return [
             return $size;
         },
 
+        /**
+         * Main text
+         */
+        'text' => function (string $text = '{{ file.filename }}') {
+            return $text;
+        },
+
         'value' => function ($value = null) {
             return $value;
         }
@@ -93,16 +107,31 @@ return [
     ],
     'methods' => [
         'fileResponse' => function ($file) {
-            $image = $file->panelImage($this->image());
+
+            if ($this->layout === 'list') {
+                $thumb = [
+                    'width'  => 100,
+                    'height' => 100
+                ];
+            } else {
+                $thumb = [
+                    'width'  => 400,
+                    'height' => 400
+                ];
+            }
+
+            $image = $file->panelImage($this->image, $thumb);
             $model = $this->model();
             $uuid  = $file->parent() === $model ? $file->filename() : $file->id();
 
             return [
                 'filename' => $file->filename(),
+                'text'     => $file->toString($this->text),
                 'link'     => $file->panelUrl(true),
                 'id'       => $file->id(),
                 'uuid'     => $uuid,
                 'url'      => $file->url(),
+                'info'     => $file->toString($this->info ?? false),
                 'image'    => $image,
                 'icon'     => $file->panelIcon($image),
                 'type'     => $file->type(),

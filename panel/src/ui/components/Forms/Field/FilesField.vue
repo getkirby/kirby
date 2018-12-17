@@ -21,8 +21,9 @@
           :is="elements.item"
           :key="file.filename"
           :sortable="true"
-          :text="file.filename"
+          :text="file.text"
           :link="file.link"
+          :info="file.info"
           :image="file.image"
           :icon="file.icon"
         >
@@ -106,31 +107,35 @@ export default {
   },
   methods: {
     open() {
-      const query = {
-        select: "id, filename, link, type, url, thumbs"
-      };
+      return this.$api
+        .get(this.endpoints.field)
+        .then(files => {
+          const selectedIds = this.selected.map(file => file.id);
 
-      return this.$api.get(this.endpoints.field, query).then(files => {
-        const selectedIds = this.selected.map(file => file.id);
+          files = files.map(file => {
+            file.selected = selectedIds.indexOf(file.id) !== -1;
 
-        files = files.map(file => {
-          file.selected = selectedIds.indexOf(file.id) !== -1;
+            file.thumb = this.image;
+            file.thumb.url = false;
 
-          file.thumb = this.image;
-          file.thumb.url = false;
+            if (file.thumbs && file.thumbs.tiny) {
+              file.thumb.url = file.thumbs.medium;
+            }
 
-          if (file.thumbs && file.thumbs.tiny) {
-            file.thumb.url = file.thumbs.medium;
-          }
+            return file;
+          });
 
-          return file;
+          this.$refs.selector.open(files, {
+            max: this.max,
+            multiple: this.multiple
+          });
+        })
+        .catch(error => {
+          this.$store.dispatch(
+            "notification/error",
+            "The files query does not seem to be correct"
+          );
         });
-
-        this.$refs.selector.open(files, {
-          max: this.max,
-          multiple: this.multiple
-        });
-      });
     },
     remove(index) {
       this.selected.splice(index, 1);
