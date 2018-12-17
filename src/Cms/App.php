@@ -396,7 +396,13 @@ class App
         $filename = basename($path);
 
         if ($id === '.') {
-            return $parent->file($filename);
+            if ($file = $parent->file($filename)) {
+                return $file;
+            } elseif ($file = $this->site()->file($filename)) {
+                return $file;
+            } else {
+                return null;
+            }
         }
 
         if ($page = $this->page($id, $parent, $drafts)) {

@@ -74,20 +74,22 @@ export default {
       this.$refs.dialog.close();
     },
     toggle(index) {
-      if (this.options.multiple === false) {
+      if (this.multiple === false) {
         this.files = this.files.map(file => {
           file.selected = false;
           return file;
         });
-      }
 
-      if (!this.files[index].selected) {
-        if (this.options.max && this.options.max <= this.selected().length) {
-          return;
-        }
         this.files[index].selected = true;
       } else {
-        this.files[index].selected = false;
+        if (!this.files[index].selected) {
+          if (this.options.max && this.options.max <= this.selected().length) {
+            return;
+          }
+          this.files[index].selected = true;
+        } else {
+          this.files[index].selected = false;
+        }
       }
     },
     open(files, options) {
@@ -102,8 +104,5 @@ export default {
 <style lang="scss">
 .k-files-dialog .k-list-item {
   cursor: pointer;
-}
-.k-files-dialog .k-empty {
-  border: 0;
 }
 </style>

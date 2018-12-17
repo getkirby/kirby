@@ -93,11 +93,6 @@ $list-item-height: 38px;
   width: 1.5rem;
   height: $list-item-height;
   opacity: 0;
-
-  @media screen and (min-width: $breakpoint-small) {
-    left: -$list-item-height;
-    width: $list-item-height;
-  }
 }
 .k-list:hover .k-sort-handle {
   opacity: 0.25;
