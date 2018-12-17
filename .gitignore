@@ -3,6 +3,7 @@
 /tests/coverage
 /vendor
 /dist.zip
+/kirby.zip
 
 .php_cs.cache
 

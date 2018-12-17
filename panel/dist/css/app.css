@@ -556,7 +556,6 @@ button::-moz-focus-inner {
   opacity: 0;
   color: #16171a;
   z-index: 1;
-  cursor: -webkit-grab;
   will-change: opacity;
   -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
@@ -567,14 +566,15 @@ button::-moz-focus-inner {
 [dir="rtl"] .k-card .k-sort-handle {
   left: 0.75rem;
 }
-.k-card .k-sort-handle:active {
-  cursor: -webkit-grabbing;
-}
 .k-cards:hover .k-sort-handle {
   opacity: 0.25;
 }
 .k-card:hover .k-sort-handle {
   opacity: 1;
+}
+.k-card.k-sortable-ghost {
+  outline: 2px solid #4271ae;
+  border-radius: 0;
 }
 .k-card-icon,
 .k-card-image {
@@ -1322,22 +1322,7 @@ button::-moz-focus-inner {
   left: -1.5rem;
   width: 1.5rem;
   height: 38px;
-  color: #16171a;
   opacity: 0;
-  z-index: 1;
-  cursor: -webkit-grab;
-  will-change: opacity, color;
-  -webkit-transition: opacity 0.3s;
-  transition: opacity 0.3s;
-}
-@media screen and (min-width: 30em) {
-  .k-list-item .k-sort-handle {
-    left: -38px;
-    width: 38px;
-  }
-}
-.k-list-item .k-sort-handle:active {
-  cursor: -webkit-grabbing;
 }
 .k-list:hover .k-sort-handle {
   opacity: 0.25;
@@ -1345,14 +1330,14 @@ button::-moz-focus-inner {
 .k-list-item:hover .k-sort-handle {
   opacity: 1;
 }
-.k-list-item.sortable-ghost {
+.k-list-item.k-sortable-ghost {
   position: relative;
   outline: 2px solid #4271ae;
   z-index: 1;
   -webkit-box-shadow: rgba(22, 23, 26, 0.25) 0 5px 10px;
   box-shadow: 0 5px 10px rgba(22, 23, 26, 0.25);
 }
-.k-list-item.sortable-fallback {
+.k-list-item.k-sortable-fallback {
   opacity: 0.25 !important;
   overflow: hidden;
 }
@@ -1529,6 +1514,30 @@ button::-moz-focus-inner {
   background: #4271ae;
   -webkit-transition: width 0.3s;
   transition: width 0.3s;
+}
+.k-sort-handle {
+  cursor: -webkit-grab;
+  color: #16171a;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  line-height: 0;
+  width: 2rem;
+  height: 2rem;
+  will-change: opacity, color;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+.k-sort-handle .k-icon {
+  width: 100%;
+  height: 100%;
+}
+.k-sort-handle:active {
+  cursor: -webkit-grabbing;
 }
 .k-tag {
   position: relative;
@@ -2166,7 +2175,7 @@ button::-moz-focus-inner {
   min-height: 2.25rem;
   line-height: 1;
 }
-.k-multiselect-input .sortable-ghost {
+.k-multiselect-input .k-sortable-ghost {
   background: #4271ae;
 }
 .k-multiselect-input .k-dropdown-content {
@@ -2500,7 +2509,7 @@ button::-moz-focus-inner {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
-.k-tags-input .sortable-ghost {
+.k-tags-input .k-sortable-ghost {
   background: #4271ae;
 }
 .k-tags-input-element {
@@ -2531,7 +2540,6 @@ button::-moz-focus-inner {
 .k-toolbar {
   background: #fff;
   border-bottom: 1px solid #efefef;
-  overflow: hidden;
   height: 38px;
 }
 .k-toolbar-buttons {
@@ -2554,8 +2562,6 @@ button::-moz-focus-inner {
 }
 .k-textarea-input-wrapper {
   position: relative;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
 }
 .k-textarea-input-native {
   resize: none;
@@ -2605,6 +2611,7 @@ button::-moz-focus-inner {
   top: 0;
   right: 0;
   left: 0;
+  z-index: 1;
   -webkit-box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -2807,20 +2814,23 @@ body {
   width: 38px;
   text-align: center;
 }
-.k-structure-table .k-structure-table-index > span {
+.k-structure-table .k-structure-table-index-number {
   font-size: 0.75rem;
   color: #999;
   padding-top: 0.15rem;
 }
-.k-structure-table .k-structure-table-handle {
+.k-structure-table .k-sort-handle {
   width: 38px;
+  height: 38px;
   display: none;
 }
-.k-structure-table[data-sortable] tr:hover .k-structure-table-index > span {
+.k-structure-table[data-sortable] tr:hover .k-structure-table-index-number {
   display: none;
 }
-.k-structure-table[data-sortable] tr:hover .k-structure-table-handle {
-  display: block;
+.k-structure-table[data-sortable] tr:hover .k-sort-handle {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
 }
 .k-structure-table .k-structure-table-option {
   width: 38px;
@@ -2836,22 +2846,16 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.k-structure-table .sortable-ghost {
+.k-structure-table .k-sortable-ghost {
   background: #fff;
   -webkit-box-shadow: rgba(22, 23, 26, 0.25) 0 5px 10px;
   box-shadow: 0 5px 10px rgba(22, 23, 26, 0.25);
   outline: 2px solid #4271ae;
   margin-bottom: 2px;
+  cursor: -webkit-grabbing;
 }
-.k-structure-table .sortable-fallback {
-  opacity: 0.25 !important;
-  background: #fff;
-  display: table;
-  table-layout: fixed;
-  border-spacing: 0;
-}
-.k-structure-table .sortable-fallback td:first-child {
-  display: table-cell;
+.k-sortable-row-fallback {
+  opacity: 0 !important;
 }
 .k-structure-backdrop {
   position: absolute;
@@ -3045,9 +3049,6 @@ body {
 }
 .k-files-dialog .k-list-item {
   cursor: pointer;
-}
-.k-files-dialog .k-empty {
-  border: 0;
 }
 .k-page-remove-warning {
   margin: 1.5rem 0;
