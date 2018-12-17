@@ -223,7 +223,6 @@ export default {
 .k-toolbar {
   background: $color-white;
   border-bottom: 1px solid $color-background;
-  overflow: hidden;
   height: 38px;
 }
 .k-toolbar-buttons {
