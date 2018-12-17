@@ -47,6 +47,45 @@ class UsersFieldTest extends TestCase
         $this->assertTrue($field->save());
     }
 
+    public function testDefaultUser()
+    {
+        $this->app->impersonate('raphael@getkirby.com');
+
+        $field = new Field('users', [
+            'model' => new Page(['slug' => 'test'])
+        ]);
+
+        $this->assertEquals('raphael@getkirby.com', $field->default()[0]['email']);
+    }
+
+    public function testMultipleDefaultUsers()
+    {
+        $this->app->impersonate('raphael@getkirby.com');
+
+        $field = new Field('users', [
+            'model' => new Page(['slug' => 'test']),
+            'default' => [
+                'raphael@getkirby.com',
+                'donatello@getkirby.com'
+            ]
+        ]);
+
+        $this->assertEquals('raphael@getkirby.com', $field->default()[0]['email']);
+        $this->assertEquals('donatello@getkirby.com', $field->default()[1]['email']);
+    }
+
+    public function testDefaultUserDisabled()
+    {
+        $this->app->impersonate('raphael@getkirby.com');
+
+        $field = new Field('users', [
+            'model' => new Page(['slug' => 'test']),
+            'default' => false
+        ]);
+
+        $this->assertEquals([], $field->default());
+    }
+
     public function testValue()
     {
         $field = new Field('users', [
