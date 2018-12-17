@@ -450,7 +450,7 @@ class App
                 return $response->code($code)->send($errorPage->render([
                     'errorCode'    => $code,
                     'errorMessage' => $message,
-                    'errorType'    => get_class($e)
+                    'errorType'    => get_class($input)
                 ]));
             }
 
