@@ -15,11 +15,8 @@
           v-for="(file, index) in files"
           :key="file.filename"
           :text="file.filename"
-          :image="file.thumb ? { url: file.thumb } : null"
-          :icon="{
-            type: 'file',
-            back: 'pattern'
-          }"
+          :image="file.image"
+          :icon="file.icon"
           @click="toggle(index)"
         >
           <k-button
@@ -55,10 +52,10 @@ export default {
       options: {
         max: null,
         multiple: true,
-        parent: null,
+        api: null,
         selected: []
       }
-    }
+    };
   },
   computed: {
     multiple() {
@@ -69,32 +66,6 @@ export default {
     }
   },
   methods: {
-    fetch() {
-
-      this.files = [];
-
-      return this.$api
-        .get(this.options.parent + "/files", {select: "id, filename, link, type, url, thumbs"})
-        .then(files => {
-
-          const selected = this.options.selected || [];
-
-          this.files = files.data.map(file => {
-            file.selected = selected.indexOf(file.id) !== -1;
-
-            if (file.thumbs && file.thumbs.tiny) {
-              file.thumb = file.thumbs.medium;
-            }
-
-            return file;
-          });
-
-        })
-        .catch(e => {
-          this.files = [];
-          this.issue = e.message;
-        });
-    },
     selected() {
       return this.files.filter(file => file.selected);
     },
@@ -119,11 +90,10 @@ export default {
         this.files[index].selected = false;
       }
     },
-    open(options) {
+    open(files, options) {
+      this.files = files;
       this.options = options;
-      this.fetch().then(() => {
-        this.$refs.dialog.open();
-      });
+      this.$refs.dialog.open();
     }
   }
 };

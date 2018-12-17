@@ -101,6 +101,5 @@ return [
                 return $this->fieldApi($page, $fieldName, $path);
             }
         }
-    ]
-
+    ],
 ];

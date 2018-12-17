@@ -21,6 +21,13 @@ return [
         },
 
         /**
+         * Image settings for each item
+         */
+        'image' => function (array $image = null) {
+            return $image ?? [];
+        },
+
+        /**
          * Changes the layout of the selected files. Available layouts: list, cards
          */
         'layout' => function (string $layout = 'list') {
@@ -49,10 +56,10 @@ return [
         },
 
         /**
-         * Optional query for the parent page that will be used to fetch the files. (i.e site.find("media"))
+         * Query for the files to be included
          */
-        'parent' => function (string $parent = null) {
-            return $parent;
+        'query' => function (string $query = 'page.files') {
+            return $query;
         },
 
         /**
@@ -85,6 +92,19 @@ return [
         },
     ],
     'methods' => [
+        'fileResponse' => function ($file) {
+            $image = $file->panelImage($this->image());
+
+            return [
+                'filename' => $file->filename(),
+                'link'     => $file->panelUrl(true),
+                'id'       => $file->id(),
+                'url'      => $file->url(),
+                'image'    => $image,
+                'icon'     => $file->panelIcon($image),
+                'type'     => $file->type(),
+            ];
+        },
         'toFiles' => function ($value = null) {
 
             $files = [];
@@ -93,18 +113,11 @@ return [
             foreach (Yaml::decode($value) as $id) {
 
                 if (is_array($id) === true) {
-                    $id = $id['filename'] ?? null;
+                    $id = $id['id'] ?? null;
                 }
 
-                if ($id !== null && ($file = $this->parentModel->file($id))) {
-                    $files[] = [
-                        'filename' => $file->filename(),
-                        'link'     => $file->panelUrl(true),
-                        'id'       => $file->id(),
-                        'url'      => $file->url(),
-                        'thumb'    => $file->isResizable() ? $file->resize(512)->url() : null,
-                        'type'     => $file->type(),
-                    ];
+                if ($id !== null && ($file = $this->kirby()->file($id))) {
+                    $files[] = $this->fileResponse($file);
                 }
             }
 
@@ -112,8 +125,26 @@ return [
 
         }
     ],
+    'api' => function () {
+        return [
+            [
+                'pattern' => '/',
+                'action' => function () {
+                    $field = $this->field();
+                    $files = $field->model()->query($field->query(), 'Kirby\Cms\Files');
+                    $data  = [];
+
+                    foreach ($files as $index => $file) {
+                        $data[] = $field->fileResponse($file);
+                    }
+
+                    return $data;
+                }
+            ]
+        ];
+    },
     'save' => function ($value = null) {
-        return A::pluck($value, 'filename');
+        return A::pluck($value, 'id');
     },
     'validations' => [
         'max',

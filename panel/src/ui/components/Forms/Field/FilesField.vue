@@ -23,8 +23,8 @@
           :sortable="true"
           :text="file.filename"
           :link="file.link"
-          :image="file.thumb ? { url: file.thumb, back: 'pattern' } : null"
-          :icon="{ type: 'file', back: 'pattern' }"
+          :image="file.image"
+          :icon="file.icon"
         >
           <k-button
             slot="options"
@@ -54,6 +54,7 @@ export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
+    image: Object,
     layout: String,
     max: Number,
     multiple: Boolean,
@@ -105,11 +106,30 @@ export default {
   },
   methods: {
     open() {
-      this.$refs.selector.open({
-        max: this.max,
-        multiple: this.multiple,
-        parent: this.parent,
-        selected: this.selected.map(file => file.id)
+      const query = {
+        select: "id, filename, link, type, url, thumbs"
+      };
+
+      return this.$api.get(this.endpoints.field, query).then(files => {
+        const selectedIds = this.selected.map(file => file.id);
+
+        files = files.map(file => {
+          file.selected = selectedIds.indexOf(file.id) !== -1;
+
+          file.thumb = this.image;
+          file.thumb.url = false;
+
+          if (file.thumbs && file.thumbs.tiny) {
+            file.thumb.url = file.thumbs.medium;
+          }
+
+          return file;
+        });
+
+        this.$refs.selector.open(files, {
+          max: this.max,
+          multiple: this.multiple
+        });
       });
     },
     remove(index) {
