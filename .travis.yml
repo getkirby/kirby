@@ -19,7 +19,7 @@ before_script:
   - ls -al
 
 script:
-  - phpunit --coverage-clover build/logs/clover.xml
+  # - phpunit --coverage-clover build/logs/clover.xml
   - phpenv config-rm xdebug.ini
   - vendor/bin/php-cs-fixer fix src/ --verbose --diff --dry-run
 
