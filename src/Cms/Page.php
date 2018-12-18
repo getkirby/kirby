@@ -843,7 +843,7 @@ class Page extends ModelWithContent
             }
         } else {
             $options = [
-                'type' => 'file',
+                'type' => 'page',
                 'back' => 'black',
             ];
         }
