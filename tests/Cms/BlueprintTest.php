@@ -7,6 +7,15 @@ use PHPUnit\Framework\TestCase;
 class BlueprintTest extends TestCase
 {
 
+    public function setUp()
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+    }
+
     public function testConvertColumnsToTabs()
     {
         $columns = [
