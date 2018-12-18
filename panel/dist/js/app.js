@@ -10710,7 +10710,8 @@
                               key: e.id,
                               attrs: {
                                 text: e.title,
-                                icon: { type: "page", back: "pattern" }
+                                image: e.panelImage,
+                                icon: e.panelIcon
                               },
                               on: {
                                 click: function(n) {

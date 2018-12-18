@@ -271,7 +271,6 @@ class Api
         try {
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
-
             if (is_a($e, 'Kirby\Exception\Exception') === true) {
                 $result = ['status' => 'error'] + $e->toArray();
             } else {
@@ -284,7 +283,6 @@ class Api
                     'code'      => empty($e->getCode()) === false ? $e->getCode() : 500
                 ];
             }
-
         }
 
         if ($result === null) {

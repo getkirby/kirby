@@ -415,7 +415,7 @@ class Blueprint
      * @param array|string $props
      * @return array
      */
-    static public function fieldProps($props): array
+    public static function fieldProps($props): array
     {
         $props = static::extend($props);
 

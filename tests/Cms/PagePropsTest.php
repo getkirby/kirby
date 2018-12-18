@@ -653,7 +653,7 @@ class PagePropsTest extends TestCase
 
         $icon     = $page->panelIcon();
         $expected = [
-            'type'  => 'file',
+            'type'  => 'page',
             'back'  => 'black',
             'ratio' => null
         ];
@@ -689,7 +689,7 @@ class PagePropsTest extends TestCase
 
         $icon     = $page->panelIcon(['ratio' => '3/2']);
         $expected = [
-            'type'  => 'file',
+            'type'  => 'page',
             'back'  => 'black',
             'ratio' => '3/2'
         ];
