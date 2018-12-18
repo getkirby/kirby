@@ -55,6 +55,12 @@ return [
         'options' => function (Page $page) {
             return $page->permissions()->toArray();
         },
+        'panelIcon' => function (Page $page) {
+            return $page->panelIcon();
+        },
+        'panelImage' => function (Page $page) {
+            return $page->panelImage();
+        },
         'parent' => function (Page $page) {
             return $page->parent();
         },
@@ -138,9 +144,11 @@ return [
                 'title'
             ],
             'children' => [
+                'hasChildren',
                 'id',
+                'panelIcon',
+                'panelImage',
                 'title',
-                'hasChildren'
             ],
         ]
     ],

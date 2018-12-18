@@ -57,6 +57,7 @@ return [
             'children' => [
                 'id',
                 'title',
+                'panelIcon',
                 'hasChildren'
             ],
         ]

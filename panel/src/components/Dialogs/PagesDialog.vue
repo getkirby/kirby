@@ -11,7 +11,7 @@
     </template>
     <template v-else>
 
-      <header class="k-pages-dialog-navbar">
+      <header v-if="model" class="k-pages-dialog-navbar">
         <k-button
           :disabled="!model.id"
           :tooltip="$t('back')"
@@ -25,9 +25,10 @@
         <k-list-item
           v-for="page in pages"
           :key="page.id"
-          :text="page.title"
-          :image="page.panelImage"
-          :icon="page.panelIcon"
+          :text="page.text"
+          :info="page.info"
+          :image="page.image"
+          :icon="page.icon"
           @click="toggle(page)"
         >
           <template slot="options">
@@ -47,6 +48,7 @@
               icon="circle-outline"
             />
             <k-button
+              v-if="model"
               :disabled="!page.hasChildren"
               :tooltip="$t('open')"
               icon="angle-right"
@@ -73,6 +75,7 @@ export default {
       pages: [],
       issue: null,
       options: {
+        endpoint: null,
         max: null,
         multiple: true,
         parent: null,
@@ -90,15 +93,11 @@ export default {
   },
   methods: {
     fetch() {
-      const path = this.options.parent
-        ? this.$api.pages.url(this.options.parent)
-        : "site";
-
       return this.$api
-        .get(path, { view: "selector" })
-        .then(model => {
-          this.model = model;
-          this.pages = model.children;
+        .get(this.options.endpoint, { parent: this.options.parent })
+        .then(response => {
+          this.model = response.model;
+          this.pages = response.pages;
         })
         .catch(e => {
           this.pages = [];
@@ -122,14 +121,14 @@ export default {
       });
     },
     isSelected(page) {
-      return this.options.selected.includes(page.id);
+      return this.options.selected.map(page => page.id).includes(page.id);
     },
     toggle(page) {
       if (this.options.multiple === false) {
         this.options.selected = [];
       }
 
-      if (this.options.selected.includes(page.id) === false) {
+      if (this.isSelected(page) === false) {
         if (
           this.options.max &&
           this.options.max <= this.options.selected.length
@@ -137,10 +136,10 @@ export default {
           return;
         }
 
-        this.options.selected.push(page.id);
+        this.options.selected.push(page);
       } else {
         this.options.selected = this.options.selected.filter(
-          id => id !== page.id
+          p => p.id !== page.id
         );
       }
     },

@@ -20,12 +20,11 @@
           :is="elements.item"
           :key="page.id"
           :sortable="true"
-          :text="page.title"
-          :link="$api.pages.link(page.id)"
-          :icon="{
-            type: 'page',
-            back: 'black'
-          }"
+          :text="page.text"
+          :info="page.info"
+          :link="page.link"
+          :icon="page.icon"
+          :image="page.image"
         >
           <k-button slot="options" icon="remove" @click="remove(index)" />
         </component>
@@ -88,9 +87,10 @@ export default {
   methods: {
     open() {
       this.$refs.selector.open({
+        endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
-        selected: this.selected.map(page => page.id)
+        selected: this.selected
       });
     },
     remove(index) {
