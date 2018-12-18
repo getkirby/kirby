@@ -17,8 +17,8 @@ class GdLib extends Darkroom
         $image = new SimpleImage();
         $image->fromFile($file);
 
-        $image = $this->autoOrient($image, $options);
         $image = $this->resize($image, $options);
+        $image = $this->autoOrient($image, $options);
         $image = $this->blur($image, $options);
         $image = $this->grayscale($image, $options);
 
