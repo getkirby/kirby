@@ -313,7 +313,9 @@ class AppPluginsTest extends TestCase
 
         $expected = [
             'regular' => 'regularPage',
-            'with.dot' => 'withdotPage'
+            'with.dot' => 'withdotPage',
+            'with-dash' => 'withdashPage',
+            'with_underscore' => 'withunderscorePage'
         ];
 
         $this->assertEquals($expected, Page::$models);

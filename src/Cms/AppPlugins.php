@@ -287,7 +287,7 @@ trait AppPlugins
 
         foreach (glob($this->root('models') . '/*.php') as $model) {
             $name  = F::name($model);
-            $class = str_replace('.', '', $name) . 'Page';
+            $class = str_replace(['.', '-', '_'], '', $name) . 'Page';
 
             // load the model class
             include_once $model;
