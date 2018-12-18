@@ -453,7 +453,7 @@ function markdown(string $text = null): string
  *
  * @param string $key
  * @param mixed $default
- * @return void
+ * @return mixed
  */
 function option(string $key, $default = null)
 {
