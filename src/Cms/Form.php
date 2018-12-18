@@ -52,6 +52,16 @@ class Form extends BaseForm
             $props['fields'] = $blueprint->fields();
         }
 
+        $ignoreDisabled = $props['ignoreDisabled'] ?? false;
+
+        // TODO: this could be more elegant
+        if ($ignoreDisabled === true) {
+            $props['fields'] = array_map(function ($field) {
+                $field['disabled'] = false;
+                return $field;
+            }, $props['fields']);
+        }
+
         return new static($props);
     }
 }

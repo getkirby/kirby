@@ -43,8 +43,11 @@ class Form
             // inject the name
             $props['name'] = $name = strtolower($name);
 
+            // check if the field is disabled
+            $disabled = $props['disabled'] ?? false;
+
             // overwrite the field value if not set
-            if (($props['disabled'] ?? false) === true) {
+            if ($disabled === true) {
                 $props['value'] = $values[$name] ?? null;
             } else {
                 $props['value'] = $input[$name] ?? $values[$name] ?? null;
@@ -110,7 +113,7 @@ class Form
         foreach ($this->fields as $field) {
             if (empty($field->errors()) === false) {
                 $this->errors[$field->name()] = [
-                    'label' => $field->label(),
+                    'label'   => $field->label(),
                     'message' => $field->errors()
                 ];
             }
