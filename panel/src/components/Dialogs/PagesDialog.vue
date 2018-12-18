@@ -26,10 +26,8 @@
           v-for="page in pages"
           :key="page.id"
           :text="page.title"
-          :icon="{
-            type: 'page',
-            back: 'pattern'
-          }"
+          :image="page.panelImage"
+          :icon="page.panelIcon"
           @click="toggle(page)"
         >
           <template slot="options">
@@ -70,7 +68,7 @@ export default {
     return {
       model: {
         title: null,
-        parent: null,
+        parent: null
       },
       pages: [],
       issue: null,
@@ -80,7 +78,7 @@ export default {
         parent: null,
         selected: []
       }
-    }
+    };
   },
   computed: {
     multiple() {
@@ -92,11 +90,12 @@ export default {
   },
   methods: {
     fetch() {
-
-      const path = this.options.parent ? this.$api.pages.url(this.options.parent) : "site";
+      const path = this.options.parent
+        ? this.$api.pages.url(this.options.parent)
+        : "site";
 
       return this.$api
-        .get(path, {view: "selector"})
+        .get(path, { view: "selector" })
         .then(model => {
           this.model = model;
           this.pages = model.children;
@@ -111,19 +110,16 @@ export default {
       this.fetch();
     },
     submit() {
-
       if (this.options.selected.length === 0) {
         this.$emit("submit", []);
         this.$refs.dialog.close();
         return;
       }
 
-      this.$api.post('site/find', this.options.selected)
-        .then(response => {
-          this.$emit("submit", response.data);
-          this.$refs.dialog.close();
-        });
-
+      this.$api.post("site/find", this.options.selected).then(response => {
+        this.$emit("submit", response.data);
+        this.$refs.dialog.close();
+      });
     },
     isSelected(page) {
       return this.options.selected.includes(page.id);
@@ -134,15 +130,19 @@ export default {
       }
 
       if (this.options.selected.includes(page.id) === false) {
-        if (this.options.max && this.options.max <= this.options.selected.length) {
+        if (
+          this.options.max &&
+          this.options.max <= this.options.selected.length
+        ) {
           return;
         }
 
         this.options.selected.push(page.id);
       } else {
-        this.options.selected = this.options.selected.filter(id => id !== page.id);
+        this.options.selected = this.options.selected.filter(
+          id => id !== page.id
+        );
       }
-
     },
     open(options) {
       this.options = options;
@@ -163,7 +163,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   padding-right: 38px;
 }
 .k-pages-dialog-navbar .k-button {
@@ -182,7 +182,7 @@ export default {
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"],
 .k-pages-dialog .k-list-item .k-button[disabled] {
-  opacity: .25;
+  opacity: 0.25;
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
   opacity: 1;
