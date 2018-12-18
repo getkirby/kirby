@@ -894,7 +894,7 @@ class Page extends ModelWithContent
             unset($settings['query']);
         }
 
-        return array_merge($defaults, $settings);
+        return array_merge($defaults, (array)$settings);
     }
 
     /**
