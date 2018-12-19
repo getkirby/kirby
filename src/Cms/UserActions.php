@@ -146,6 +146,7 @@ trait UserActions
         $this->kirby()->trigger('user.' . $action . ':before', ...$arguments);
         $result = $callback(...$arguments);
         $this->kirby()->trigger('user.' . $action . ':after', $result, $old);
+        $this->kirby()->cache('pages')->flush();
         return $result;
     }
 

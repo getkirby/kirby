@@ -287,14 +287,7 @@ trait PageActions
         $this->kirby()->trigger('page.' . $action . ':before', ...$arguments);
         $result = $callback(...$arguments);
         $this->kirby()->trigger('page.' . $action . ':after', $result, $old);
-
-        // flush the pages cache, except the changeNum action is run
-        // flushing it there, would be triggered way too often.
-        // triggering it on sort and hide is absolutely enough
-        if ($action !== 'changeNum') {
-            $this->kirby()->cache('pages')->flush();
-        }
-
+        $this->kirby()->cache('pages')->flush();
         return $result;
     }
 
