@@ -21,6 +21,13 @@ return [
         },
 
         /**
+         * The placeholder text if no pages have been selected yet
+         */
+        'empty' => function ($empty = null) {
+            return I18n::translate($empty, $empty);
+        },
+
+        /**
          * Image settings for each item
          */
         'image' => function (array $image = null) {
