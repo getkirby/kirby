@@ -482,7 +482,6 @@ trait PageActions
 
         // actually do it on disk
         if ($this->exists() === true) {
-
             if (Dir::move($this->root(), $page->root()) !== true) {
                 throw new LogicException('The draft folder cannot be moved');
             }
