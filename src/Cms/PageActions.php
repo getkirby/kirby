@@ -462,9 +462,8 @@ trait PageActions
                 $page->parentModel()->drafts()->remove($page);
             } else {
                 $page->parentModel()->children()->remove($page);
+                $page->resortSiblingsAfterUnlisting();
             }
-
-            $page->resortSiblingsAfterUnlisting();
 
             return true;
         });
