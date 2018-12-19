@@ -20,7 +20,7 @@
           v-for="(file, index) in selected"
           :is="elements.item"
           :key="file.filename"
-          :sortable="true"
+          :sortable="selected.length > 1"
           :text="file.text"
           :link="file.link"
           :info="file.info"
@@ -42,7 +42,7 @@
       icon="image"
       @click="open"
     >
-      {{ $t('field.files.empty') }}
+      {{ empty || $t('field.files.empty') }}
     </k-empty>
     <k-files-dialog ref="selector" @submit="select" />
   </k-field>
@@ -55,6 +55,7 @@ export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
+    empty: String,
     image: Object,
     layout: String,
     max: Number,
