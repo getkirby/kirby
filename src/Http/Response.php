@@ -218,18 +218,20 @@ class Response
      * @param string|array $body
      * @param integer $code
      * @param boolean $pretty
+     * @param array $headers
      * @return self
      */
-    public static function json($body = '', ?int $code = null, ?bool $pretty = null)
+    public static function json($body = '', ?int $code = null, ?bool $pretty = null, array $headers = [])
     {
         if (is_array($body) === true) {
             $body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES : null);
         }
 
         return new static([
-            'body' => $body,
-            'code' => $code,
-            'type' => 'application/json'
+            'body'    => $body,
+            'code'    => $code,
+            'type'    => 'application/json',
+            'headers' => $headers
         ]);
     }
 
