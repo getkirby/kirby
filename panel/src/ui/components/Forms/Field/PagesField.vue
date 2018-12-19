@@ -13,13 +13,14 @@
         :element="elements.list"
         :handle="true"
         :list="selected"
+        :data-size="size"
         @end="onInput"
       >
         <component
           v-for="(page, index) in selected"
           :is="elements.item"
           :key="page.id"
-          :sortable="true"
+          :sortable="selected.length > 1"
           :text="page.text"
           :info="page.info"
           :link="page.link"
@@ -36,7 +37,7 @@
       icon="page"
       @click="open"
     >
-      {{ $t('field.pages.empty') }}
+      {{ empty || $t('field.pages.empty') }}
     </k-empty>
     <k-pages-dialog ref="selector" @submit="select" />
   </k-field>
@@ -44,13 +45,17 @@
 
 <script>
 import Field from "../Field.vue";
+import clone from "@/ui/helpers/clone.js";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
+    empty: String,
+    layout: String,
     max: Number,
     multiple: Boolean,
+    size: String,
     value: {
       type: Array,
       default() {
@@ -66,10 +71,22 @@ export default {
   },
   computed: {
     elements() {
-      return {
-        list: "k-list",
-        item: "k-list-item"
+      const layouts = {
+        cards: {
+          list: "k-cards",
+          item: "k-card"
+        },
+        list: {
+          list: "k-list",
+          item: "k-list-item"
+        }
       };
+
+      if (layouts[this.layout]) {
+        return layouts[this.layout];
+      }
+
+      return layouts["list"];
     },
     more() {
       if (!this.max) {
@@ -90,7 +107,7 @@ export default {
         endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
-        selected: this.selected
+        selected: clone(this.selected)
       });
     },
     remove(index) {

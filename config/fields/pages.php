@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
 
 return [
     'props' => [
@@ -18,6 +19,13 @@ return [
          */
         'default' => function ($default = null) {
             return $this->toPages($default);
+        },
+
+        /**
+         * The placeholder text if no pages have been selected yet
+         */
+        'empty' => function ($empty = null) {
+            return I18n::translate($empty, $empty);
         },
 
         /**
@@ -153,7 +161,10 @@ return [
                         }
 
                         $pages = $parent->children();
-                        $model = null;
+                        $model = [
+                            'id'    => $parent->id() == '' ? null : $parent->id(),
+                            'title' => $parent->title()->value()
+                        ];
                     }
 
                     $children = [];
