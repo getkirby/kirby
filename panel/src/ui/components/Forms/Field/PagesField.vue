@@ -65,7 +65,6 @@ export default {
   },
   data() {
     return {
-      layout: "list",
       selected: this.value
     };
   },
