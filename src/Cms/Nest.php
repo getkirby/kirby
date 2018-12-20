@@ -10,7 +10,7 @@ use Kirby\Toolkit\Obj;
  * can be used make any type of array compatible
  * with Kirby queries.
  *
- * TODO: move this to the toolkit
+ * REFACTOR: move this to the toolkit
  */
 class Nest
 {

@@ -37,7 +37,7 @@ export default {
     }
   },
   computed: {
-    // TODO: DRY the following - same in TagsField
+    // REFACTOR: DRY the following - same in TagsField
     counterOptions() {
       if (this.value === null || this.disabled || this.counter === false) {
         return false;
@@ -46,7 +46,7 @@ export default {
       return {
         count: this.value && Array.isArray(this.value) ? this.value.length : 0,
         min: this.min,
-        max: this.max,
+        max: this.max
       };
     }
   },
@@ -58,5 +58,5 @@ export default {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

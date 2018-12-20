@@ -242,7 +242,6 @@ class Sql
      * Creates a table with a simple scheme array for columns
      * Default version for MySQL
      *
-     * @todo  add more options per column
      * @param string $table The table name
      * @param array $columns
      * @return array

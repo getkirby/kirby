@@ -54,7 +54,7 @@ class Form extends BaseForm
 
         $ignoreDisabled = $props['ignoreDisabled'] ?? false;
 
-        // TODO: this could be more elegant
+        // REFACTOR: this could be more elegant
         if ($ignoreDisabled === true) {
             $props['fields'] = array_map(function ($field) {
                 $field['disabled'] = false;
