@@ -10,7 +10,6 @@ use Kirby\Http\Request\Files;
 
 class RequestTest extends TestCase
 {
-
     public function testCustomProps()
     {
         $file = [
@@ -127,5 +126,4 @@ class RequestTest extends TestCase
         $this->assertEquals($uriBefore, $uriAfter);
         $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
     }
-
 }

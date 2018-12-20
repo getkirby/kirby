@@ -7,7 +7,6 @@ use Kirby\Toolkit\I18n;
 
 class ToggleFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('toggle');
@@ -61,7 +60,6 @@ class ToggleFieldTest extends TestCase
 
     public function testTextToggleWithTranslation()
     {
-
         $props = [
             'text' => [
                 ['en' => 'Yes', 'de' => 'Ja'],
@@ -79,5 +77,4 @@ class ToggleFieldTest extends TestCase
         $field = new Field('toggle', $props);
         $this->assertEquals(['Ja', 'Nein'], $field->text());
     }
-
 }

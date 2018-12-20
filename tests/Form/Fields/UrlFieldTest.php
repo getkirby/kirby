@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class UrlFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('url');
@@ -23,7 +22,6 @@ class UrlFieldTest extends TestCase
 
     public function testUrlValidation()
     {
-
         $field = new Field('url', [
             'value' => 'https://getkirby.com'
         ]);
@@ -35,12 +33,10 @@ class UrlFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->isValid());
-
     }
 
     public function testMinLength()
     {
-
         $field = new Field('url', [
             'value' => 'https://test.com',
             'minlength' => 17
@@ -48,12 +44,10 @@ class UrlFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('minlength', $field->errors());
-
     }
 
     public function testMaxLength()
     {
-
         $field = new Field('url', [
             'value'     => 'https://test.com',
             'maxlength' => 15
@@ -61,7 +55,5 @@ class UrlFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('maxlength', $field->errors());
-
     }
-
 }

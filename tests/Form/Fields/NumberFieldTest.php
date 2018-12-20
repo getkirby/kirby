@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class NumberFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('number');
@@ -61,7 +60,6 @@ class NumberFieldTest extends TestCase
 
     public function testMin()
     {
-
         $field = new Field('number', [
             'value' => 1,
             'min'   => 2
@@ -69,12 +67,10 @@ class NumberFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
-
     }
 
     public function testMax()
     {
-
         $field = new Field('number', [
             'value' => 1,
             'max'   => 0
@@ -82,7 +78,5 @@ class NumberFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
-
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FieldTest extends TestCase
 {
-
     public function test__debuginfo()
     {
         $field = new Field(null, 'title', 'Title');
@@ -102,5 +101,4 @@ class FieldTest extends TestCase
         $this->assertEquals('Title', $original->value);
         $this->assertEquals('Test', $modified->value);
     }
-
 }

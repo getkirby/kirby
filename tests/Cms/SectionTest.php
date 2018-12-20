@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class SectionTest extends TestCase
 {
-
     public function setUp()
     {
         new App([
@@ -22,10 +21,10 @@ class SectionTest extends TestCase
         Section::$types = [
             'test' => [
                 'props' => [
-                    'example' => function($example = 'default') {
+                    'example' => function ($example = 'default') {
                         return $example;
                     },
-                    'buttons' => function($buttons = ['one', 'two']) {
+                    'buttons' => function ($buttons = ['one', 'two']) {
                         return $buttons;
                     },
                 ]
@@ -39,5 +38,4 @@ class SectionTest extends TestCase
         $this->assertEquals('default', $section->example());
         $this->assertEquals(['one', 'two'], $section->buttons());
     }
-
 }

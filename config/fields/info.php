@@ -10,7 +10,6 @@ return [
     ],
     'computed' => [
         'text' => function () {
-
             $text = $this->text;
 
             if ($model = $this->model()) {
@@ -18,7 +17,6 @@ return [
             }
 
             return kirbytext($text);
-
         }
     ],
     'save' => false,

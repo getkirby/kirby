@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class BodyTest extends TestCase
 {
-
     public function testContents()
     {
         // default contents

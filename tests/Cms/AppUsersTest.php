@@ -7,7 +7,6 @@ use Kirby\Toolkit\Dir;
 
 class AppUsersTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -117,14 +116,12 @@ class AppUsersTest extends TestCase
 
     public function testUserFromBasicAuth()
     {
-
         $app  = $this->basicAuthApp();
         $auth = new BasicAuth(base64_encode('test@getkirby.com:test'));
         $user = $app->auth()->currentUserFromBasicAuth($auth);
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('test@getkirby.com', $user->email());
-
     }
 
     /**
@@ -175,5 +172,4 @@ class AppUsersTest extends TestCase
 
         $user = $app->auth()->currentUserFromBasicAuth();
     }
-
 }

@@ -58,5 +58,4 @@ class VisitorTest extends TestCase
         $visitor = new Visitor(['acceptedMimeType' => 'text/html']);
         $this->assertTrue($visitor->acceptsMimeType('text/html'));
     }
-
 }

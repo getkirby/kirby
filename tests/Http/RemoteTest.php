@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class RemoteTest extends TestCase
 {
-
     public function setUp()
     {
         $this->defaults = Remote::$defaults;
@@ -18,7 +17,7 @@ class RemoteTest extends TestCase
 
     public function tearDown()
     {
-       Remote::$defaults = $this->defaults;
+        Remote::$defaults = $this->defaults;
     }
 
     public function testContent()
@@ -88,5 +87,4 @@ class RemoteTest extends TestCase
         $this->assertEquals($url, $request->url());
         $this->assertEquals('GET', $request->method());
     }
-
 }

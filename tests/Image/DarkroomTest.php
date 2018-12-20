@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class DarkroomTest extends TestCase
 {
-
     public function file()
     {
         return __DIR__ . '/fixtures/image/cat.jpg';
@@ -80,5 +79,4 @@ class DarkroomTest extends TestCase
 
         $this->assertEquals(30, $options['quality']);
     }
-
 }

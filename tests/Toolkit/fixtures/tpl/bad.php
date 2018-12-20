@@ -1,1 +1,1 @@
-<?php foo() ?>
+<?php foo();

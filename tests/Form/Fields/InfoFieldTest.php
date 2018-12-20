@@ -7,7 +7,6 @@ use Kirby\Form\Field;
 
 class InfoFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('info');
@@ -52,7 +51,5 @@ class InfoFieldTest extends TestCase
         ]);
 
         $this->assertEquals('<p>Test</p>', $field->text());
-
     }
-
 }

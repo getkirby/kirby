@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class CollectionFinderTest extends TestCase
 {
-
     public function testFindBy()
     {
         $collection = new Collection([

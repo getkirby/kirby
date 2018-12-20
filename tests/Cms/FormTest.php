@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FormTest extends TestCase
 {
-
     public function testPageForm()
     {
         $page = new Page([
@@ -38,12 +37,10 @@ class FormTest extends TestCase
 
         // empty fields should be actually empty
         $this->assertNull($values['date']);
-
     }
 
     public function testFileFormWithoutBlueprint()
     {
-
         new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -60,7 +57,5 @@ class FormTest extends TestCase
         ]);
 
         $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->data());
-
     }
-
 }

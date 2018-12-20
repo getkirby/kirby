@@ -4,7 +4,6 @@ namespace Kirby\Exception;
 
 class InvalidArgumentExceptionTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testDefaults()
     {
         $exception = new InvalidArgumentException();
@@ -24,5 +23,4 @@ class InvalidArgumentExceptionTest extends \PHPUnit\Framework\TestCase
         ]);
         $this->assertEquals('Invalid argument "key" in method "get"', $exception->getMessage());
     }
-
 }

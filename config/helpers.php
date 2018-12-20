@@ -62,14 +62,12 @@ function csrf(string $check = null)
         }
 
         return $token;
-
     } elseif (is_string($check) === true && is_string($session->get('csrf')) === true) {
         // argument has been passed, check the token
         return hash_equals($session->get('csrf'), $check) === true;
     }
 
     return false;
-
 }
 
 /**
@@ -207,7 +205,8 @@ function go(string $url = null, int $code = 302)
  * @param bool $keepTags
  * @return string
  */
-function h(string $string = null, bool $keepTags = false) {
+function h(string $string = null, bool $keepTags = false)
+{
     return Html::encode($string, $keepTags);
 }
 
@@ -218,7 +217,8 @@ function h(string $string = null, bool $keepTags = false) {
  * @param bool $keepTags
  * @return string
  */
-function html(string $string = null, bool $keepTags = false) {
+function html(string $string = null, bool $keepTags = false)
+{
     return Html::encode($string, $keepTags);
 }
 
@@ -264,22 +264,20 @@ function image(string $path = null)
  */
 function invalid(array $data = [], array $rules = [], array $messages = [])
 {
-  $errors = [];
+    $errors = [];
 
-  foreach ($rules as $field => $validations) {
+    foreach ($rules as $field => $validations) {
+        $validationIndex = -1;
 
-    $validationIndex = -1;
+        // See: http://php.net/manual/en/types.comparisons.php
+        // only false for: null, undefined variable, '', []
+        $filled  = isset($data[$field]) && $data[$field] !== '' && $data[$field] !== [];
+        $message = $messages[$field] ?? $field;
 
-    // See: http://php.net/manual/en/types.comparisons.php
-    // only false for: null, undefined variable, '', []
-    $filled  = isset($data[$field]) && $data[$field] !== '' && $data[$field] !== [];
-    $message = $messages[$field] ?? $field;
+        // True if there is an error message for each validation method.
+        $messageArray = is_array($message);
 
-    // True if there is an error message for each validation method.
-    $messageArray = is_array($message);
-
-    foreach ($validations as $method => $options) {
-
+        foreach ($validations as $method => $options) {
             if (is_numeric($method) === true) {
                 $method = $options;
             }
@@ -287,14 +285,11 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
             $validationIndex++;
 
             if ($method === 'required') {
-
                 if ($filled) {
                     // Field is required and filled.
                     continue;
                 }
-
             } elseif ($filled) {
-
                 if (is_array($options) === false) {
                     $options = [$options];
                 }
@@ -305,7 +300,6 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
                     // Field is filled and passes validation method.
                     continue;
                 }
-
             } else {
                 // If a field is not required and not filled, no validation should be done.
                 continue;
@@ -317,9 +311,7 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
             } else {
                 $errors[$field] = $message;
             }
-
         }
-
     }
 
     return $errors;
@@ -418,9 +410,9 @@ function kirbytext(string $text = null, array $data = []): string
  * @param string $base
  * @return void
  */
-function load(array $classmap, string $base = null) {
+function load(array $classmap, string $base = null)
+{
     spl_autoload_register(function ($class) use ($classmap, $base) {
-
         $class = strtolower($class);
 
         if (!isset($classmap[$class])) {
@@ -432,7 +424,6 @@ function load(array $classmap, string $base = null) {
         } else {
             include $classmap[$class];
         }
-
     });
 }
 

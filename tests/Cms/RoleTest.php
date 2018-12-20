@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class RoleTest extends TestCase
 {
-
     public function app()
     {
         return new App([
@@ -64,5 +63,4 @@ class RoleTest extends TestCase
         $this->assertEquals('nobody', $role->name());
         $this->assertEquals('Nobody', $role->title());
     }
-
 }

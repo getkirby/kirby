@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class UriTest extends TestCase
 {
-
     protected $_SERVER = null;
 
     protected function setUp()
@@ -26,7 +25,6 @@ class UriTest extends TestCase
 
     public function testClone()
     {
-
         $uri = new Uri([
             'host' => 'getkirby.com',
             'path' => 'test'
@@ -39,7 +37,6 @@ class UriTest extends TestCase
 
         $this->assertEquals('http://getkirby.com/test', $uri->toString());
         $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
-
     }
 
     public function testValidScheme()
@@ -270,7 +267,5 @@ class UriTest extends TestCase
         ]);
 
         $this->assertEquals('https://getkirby.com/search/?q=something', $uri->toString());
-
     }
-
 }

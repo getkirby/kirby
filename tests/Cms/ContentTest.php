@@ -6,7 +6,6 @@ use Exception;
 
 class ContentTest extends TestCase
 {
-
     protected function mockData(): array
     {
         return [
@@ -138,5 +137,4 @@ class ContentTest extends TestCase
     {
         return $this->assertEquals($this->mockData(), $this->mockObject()->__debuginfo());
     }
-
 }

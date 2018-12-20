@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class TxtTest extends TestCase
 {
-
     const FIXTURES = __DIR__ . '/fixtures';
 
     public function testEncodeDecode()

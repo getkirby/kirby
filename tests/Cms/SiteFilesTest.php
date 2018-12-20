@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class SiteFilesTest extends TestCase
 {
-
     public function testDefaultFiles()
     {
         $site = new Site();
@@ -29,5 +28,4 @@ class SiteFilesTest extends TestCase
 
         $this->assertInstanceOf(Files::class, $site->files());
     }
-
 }

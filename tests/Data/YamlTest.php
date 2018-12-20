@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class YamlTest extends TestCase
 {
-
     public function testEncodeDecode()
     {
         // the test is pretty simple.

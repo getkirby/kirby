@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class FilesTest extends TestCase
 {
-
     public function testMultipleUploads()
     {
         $upload = [

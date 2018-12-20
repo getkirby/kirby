@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class BlueprintFieldTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -153,5 +152,4 @@ class BlueprintFieldTest extends TestCase
 
         $this->assertEquals($expected, $props);
     }
-
 }

@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class TelFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('tel');
@@ -20,5 +19,4 @@ class TelFieldTest extends TestCase
         $this->assertEquals('tel', $field->autocomplete());
         $this->assertTrue($field->save());
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PageFilesTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -34,5 +33,4 @@ class PageFilesTest extends TestCase
         $this->assertInstanceOf(Files::class, $page->files());
         $this->assertCount(1, $page->files());
     }
-
 }

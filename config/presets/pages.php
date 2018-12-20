@@ -6,7 +6,6 @@ return function (array $props) {
     $templates = $props['templates'] ?? null;
 
     $section = function ($headline, $status, $props) use ($templates) {
-
         $defaults = [
             'headline' => $headline,
             'type'     => 'pages',
@@ -30,7 +29,6 @@ return function (array $props) {
         }
 
         return array_replace_recursive($defaults, $props);
-
     };
 
     $sections = [];
@@ -56,5 +54,4 @@ return function (array $props) {
     unset($props['drafts'], $props['unlisted'], $props['listed'], $props['templates']);
 
     return array_merge($props, ['sections' => $sections]);
-
 };

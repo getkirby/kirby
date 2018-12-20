@@ -4,7 +4,6 @@
  * Api Routes Definitions
  */
 return function ($kirby) {
-
     $routes = array_merge(
         include __DIR__ . '/routes/auth.php',
         include __DIR__ . '/routes/pages.php',
@@ -23,5 +22,4 @@ return function ($kirby) {
     }
 
     return $routes;
-
 };

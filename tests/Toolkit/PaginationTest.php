@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class PaginationTest extends TestCase
 {
-
     public function testDefaultPage()
     {
         $pagination = new Pagination();
@@ -347,7 +346,6 @@ class PaginationTest extends TestCase
 
     public function testForWithoutArguments()
     {
-
         $collection = new Collection(['a', 'b', 'c']);
         $pagination = Pagination::for($collection);
 
@@ -355,36 +353,30 @@ class PaginationTest extends TestCase
         $this->assertEquals(1, $pagination->pages());
         $this->assertEquals(20, $pagination->limit());
         $this->assertEquals(3, $pagination->total());
-
     }
 
     public function testForWithLimit()
     {
-
         $collection = new Collection(['a', 'b', 'c']);
         $pagination = Pagination::for($collection, 1);
 
         $this->assertEquals(1, $pagination->page());
         $this->assertEquals(3, $pagination->pages());
         $this->assertEquals(1, $pagination->limit());
-
     }
 
     public function testForWithLimitAndPage()
     {
-
         $collection = new Collection(['a', 'b', 'c']);
         $pagination = Pagination::for($collection, 1, 2);
 
         $this->assertEquals(2, $pagination->page());
         $this->assertEquals(3, $pagination->pages());
         $this->assertEquals(1, $pagination->limit());
-
     }
 
     public function testForWithOptionsArray()
     {
-
         $collection = new Collection(['a', 'b', 'c']);
         $pagination = Pagination::for($collection, [
             'limit' => 1,
@@ -394,12 +386,10 @@ class PaginationTest extends TestCase
         $this->assertEquals(2, $pagination->page());
         $this->assertEquals(3, $pagination->pages());
         $this->assertEquals(1, $pagination->limit());
-
     }
 
     public function testForWithLimitAndOptionsArray()
     {
-
         $collection = new Collection(['a', 'b', 'c']);
         $pagination = Pagination::for($collection, 1, [
             'page' => 2
@@ -408,7 +398,5 @@ class PaginationTest extends TestCase
         $this->assertEquals(2, $pagination->page());
         $this->assertEquals(3, $pagination->pages());
         $this->assertEquals(1, $pagination->limit());
-
     }
-
 }

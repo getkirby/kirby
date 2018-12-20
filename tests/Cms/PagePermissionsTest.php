@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class PagePermissionsTest extends TestCase
 {
-
     public function setUp()
     {
         $this->kirby = new App([
@@ -200,5 +199,4 @@ class PagePermissionsTest extends TestCase
 
         $this->assertTrue($page->permissions()->can('changeTemplate'));
     }
-
 }

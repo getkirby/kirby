@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class ContentTranslationTest extends TestCase
 {
-
     public function testParentAndCode()
     {
         $page = new Page([
@@ -43,7 +42,6 @@ class ContentTranslationTest extends TestCase
 
     public function testContentFile()
     {
-
         $app = new App([
             'roots' => [
                 'content' => '/content',
@@ -63,5 +61,4 @@ class ContentTranslationTest extends TestCase
 
         $this->assertEquals('/content/test/project.de.txt', $translation->contentFile());
     }
-
 }

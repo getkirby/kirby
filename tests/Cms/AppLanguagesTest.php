@@ -6,10 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class AppLanguagesTest extends TestCase
 {
-
     public function testLanguages()
     {
-
         $app = new App([
             'languages' => [
                 [
@@ -27,7 +25,5 @@ class AppLanguagesTest extends TestCase
         $this->assertTrue($app->multilang());
         $this->assertCount(2, $app->languages());
         $this->assertEquals('en', $app->languageCode());
-
     }
-
 }

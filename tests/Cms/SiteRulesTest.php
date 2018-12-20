@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class SiteRulesTest extends TestCase
 {
-
     public function testUpdate()
     {
         new App([
@@ -22,5 +21,4 @@ class SiteRulesTest extends TestCase
             'copyright' => '2018'
         ]));
     }
-
 }

@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class TextareaFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('textarea');
@@ -25,7 +24,6 @@ class TextareaFieldTest extends TestCase
 
     public function testMinLength()
     {
-
         $field = new Field('textarea', [
             'value' => 'test',
             'minlength' => 5
@@ -33,12 +31,10 @@ class TextareaFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('minlength', $field->errors());
-
     }
 
     public function testMaxLength()
     {
-
         $field = new Field('textarea', [
             'value'     => 'test',
             'maxlength' => 3
@@ -46,7 +42,5 @@ class TextareaFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('maxlength', $field->errors());
-
     }
-
 }

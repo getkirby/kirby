@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class PageTranslationsTest extends TestCase
 {
-
     public function app($language = null)
     {
         $app = new App([
@@ -158,7 +157,6 @@ class PageTranslationsTest extends TestCase
         $content = $page->content('en');
         $this->assertEquals('Grandma', $content->title()->value());
         $this->assertEquals('Untranslated', $content->untranslated()->value());
-
     }
 
     public function testSlug()
@@ -200,5 +198,4 @@ class PageTranslationsTest extends TestCase
         $this->assertCount(2, $page->translations());
         $this->assertEquals(['en', 'de'], $page->translations()->keys());
     }
-
 }

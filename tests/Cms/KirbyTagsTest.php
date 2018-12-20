@@ -8,12 +8,11 @@ use Kirby\Toolkit\F;
 
 class KirbyTagsTest extends TestCase
 {
-
     public function dataProvider()
     {
         $tests = [];
 
-        foreach(Dir::read($root = __DIR__ . '/fixtures/kirbytext') as $dir) {
+        foreach (Dir::read($root = __DIR__ . '/fixtures/kirbytext') as $dir) {
             $kirbytext = F::read($root . '/' . $dir . '/test.txt');
             $expected  = F::read($root . '/' . $dir . '/expected.html');
 
@@ -106,5 +105,4 @@ class KirbyTagsTest extends TestCase
 
         $this->assertEquals('after', $app->kirbytags('test'));
     }
-
 }

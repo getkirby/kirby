@@ -6,7 +6,6 @@ use Kirby\Http\Uri;
 
 class PermissionsTest extends TestCase
 {
-
     public function actions()
     {
         return [
@@ -87,7 +86,5 @@ class PermissionsTest extends TestCase
         ]);
 
         $this->assertTrue($p->for($category, $action));
-
     }
-
 }

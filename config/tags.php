@@ -46,7 +46,6 @@ return [
             'title'
         ],
         'html' => function ($tag) {
-
             if (!$file = $tag->file($tag->value)) {
                 return $tag->text;
             }
@@ -94,7 +93,6 @@ return [
             'width'
         ],
         'html' => function ($tag) {
-
             if ($tag->file = $tag->file($tag->value)) {
                 $tag->src     = $tag->file->url();
                 $tag->alt     = $tag->alt     ?? $tag->file->alt()->or(' ')->value();
@@ -163,7 +161,7 @@ return [
             'text',
             'title'
         ],
-        'html' => function($tag) {
+        'html' => function ($tag) {
             return Html::tel($tag->value, $tag->text, [
                 'class' => $tag->class,
                 'rel'   => $tag->rel,
@@ -211,7 +209,6 @@ return [
             'width'
         ],
         'html' => function ($tag) {
-
             $video = Html::video(
                 $tag->value,
                 $tag->kirby()->option('kirbytext.video.options', [])
@@ -222,7 +219,6 @@ return [
                 'height' => $tag->height ?? $tag->kirby()->option('kirbytext.video.height'),
                 'width'  => $tag->width  ?? $tag->kirby()->option('kirbytext.video.width'),
             ]);
-
         }
     ],
 

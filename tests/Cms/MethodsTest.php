@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase as TestCase;
 
 class MethodsTest extends TestCase
 {
-
     protected $app;
 
     public function setUp()
@@ -81,5 +80,4 @@ class MethodsTest extends TestCase
         $site = $this->app->site();
         $this->assertEquals('site method', $site->test());
     }
-
 }

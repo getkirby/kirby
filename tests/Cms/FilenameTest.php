@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FilenameTest extends TestCase
 {
-
     public function testAttributesToArray()
     {
         $filename = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
@@ -297,5 +296,4 @@ class FilenameTest extends TestCase
         $this->assertEquals('some-file.jpg', $filename->toString());
         $this->assertEquals('some-file.jpg', (string)$filename);
     }
-
 }

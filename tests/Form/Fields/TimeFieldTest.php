@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class TimeFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('time');
@@ -44,5 +43,4 @@ class TimeFieldTest extends TestCase
         $this->assertEquals($expected, $field->value());
         $this->assertEquals($expected, $field->default());
     }
-
 }

@@ -1,3 +1,5 @@
 <?php
 
-class WithUnderscorePage extends Page {}
+class WithUnderscorePage extends Page
+{
+}

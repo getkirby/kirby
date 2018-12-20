@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class CollectionConverterTest extends TestCase
 {
-
     public function testToArray()
     {
         $array = [
@@ -48,5 +47,4 @@ class CollectionConverterTest extends TestCase
         $this->assertEquals($string, $collection->toString());
         $this->assertEquals($string, (string)$collection);
     }
-
 }

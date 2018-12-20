@@ -4,10 +4,8 @@ namespace Kirby\Toolkit;
 
 class CollectionTest extends TestCase
 {
-
     public function setUp()
     {
-
         $this->data = [
             'first'  => 'My first element',
             'second' => 'My second element',
@@ -15,7 +13,6 @@ class CollectionTest extends TestCase
         ];
 
         $this->collection = new Collection($this->data);
-
     }
 
     public function assertIsUntouched()
@@ -76,7 +73,6 @@ class CollectionTest extends TestCase
 
     public function testGetAttributeFromArray()
     {
-
         $collection = new Collection([
             'a' => [
                 'username' => 'Homer',
@@ -94,12 +90,10 @@ class CollectionTest extends TestCase
         // split
         $this->assertEquals(['simpson', 'male'], $collection->getAttribute($collection->first(), 'tags', true));
         $this->assertEquals(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', true));
-
     }
 
     public function testGetAttributeFromObject()
     {
-
         $collection = new Collection([
             'a' => new Obj([
                 'username' => 'Homer'
@@ -111,7 +105,6 @@ class CollectionTest extends TestCase
 
         $this->assertEquals('Homer', $collection->getAttribute($collection->first(), 'username'));
         $this->assertEquals('Marge', $collection->getAttribute($collection->last(), 'username'));
-
     }
 
     public function testGetters()
@@ -131,7 +124,6 @@ class CollectionTest extends TestCase
 
     public function testGroup()
     {
-
         $collection = new Collection();
 
         $collection->user1 = [
@@ -149,7 +141,7 @@ class CollectionTest extends TestCase
             'group'    => 'client'
         ];
 
-        $groups = $collection->group(function($item) {
+        $groups = $collection->group(function ($item) {
             return $item['group'];
         });
 
@@ -158,12 +150,10 @@ class CollectionTest extends TestCase
 
         $firstAdmin = $groups->admin()->first();
         $this->assertEquals('peter', $firstAdmin['username']);
-
     }
 
     public function testGroupBy()
     {
-
         $collection = new Collection();
 
         $collection->user1 = [
@@ -404,8 +394,8 @@ class CollectionTest extends TestCase
     {
         $this->assertEquals(array_slice($this->data, 1), $this->collection->slice(1)->toArray());
         $this->assertEquals(2, $this->collection->slice(1)->count());
-        $this->assertEquals(array_slice($this->data, 0, 1), $this->collection->slice(0,1)->toArray());
-        $this->assertEquals(1, $this->collection->slice(0,1)->count());
+        $this->assertEquals(array_slice($this->data, 0, 1), $this->collection->slice(0, 1)->toArray());
+        $this->assertEquals(1, $this->collection->slice(0, 1)->count());
         $this->assertIsUntouched();
     }
 
@@ -419,5 +409,4 @@ class CollectionTest extends TestCase
         $collection = new Collection($input = ['a', 'b', 'c']);
         $this->assertEquals($input, $collection->toArray());
     }
-
 }

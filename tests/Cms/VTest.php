@@ -7,7 +7,6 @@ use Kirby\Toolkit\V;
 
 class VTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -62,5 +61,4 @@ class VTest extends TestCase
     {
         $this->assertEquals($expected, V::message($validator, ...$args));
     }
-
 }

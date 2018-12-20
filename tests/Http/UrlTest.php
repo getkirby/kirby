@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class UrlTest extends TestCase
 {
-
     protected $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
     protected $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
     protected $_docs = 'http://getkirby.com/docs/';
@@ -163,5 +162,4 @@ class UrlTest extends TestCase
 
         Server::$cli = null;
     }
-
 }

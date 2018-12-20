@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class AppComponentsTest extends TestCase
 {
-
     public function testMarkdown()
     {
         $app      = new App();
@@ -38,5 +37,4 @@ class AppComponentsTest extends TestCase
 
         $this->assertInstanceOf(Template::class, $template);
     }
-
 }

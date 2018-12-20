@@ -1,3 +1,5 @@
 <?php
 
-class WithDotPage extends Page {}
+class WithDotPage extends Page
+{
+}

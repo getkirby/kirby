@@ -7,7 +7,6 @@ use Kirby\Toolkit\F;
 
 class UrlTest extends TestCase
 {
-
     public function setUp()
     {
         new App([
@@ -32,7 +31,6 @@ class UrlTest extends TestCase
 
     public function testToTemplateAsset()
     {
-
         $app = new App([
             'roots' => [
                 'index' => $fixtures = __DIR__ . '/fixtures/UrlTest'
@@ -64,7 +62,5 @@ class UrlTest extends TestCase
         $this->assertEquals($expected, Url::toTemplateAsset('js', 'js'));
 
         Dir::remove($fixtures);
-
     }
-
 }

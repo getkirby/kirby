@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class SiteTranslationsTest extends TestCase
 {
-
     public function app($language = null)
     {
         $app = new App([
@@ -100,7 +99,6 @@ class SiteTranslationsTest extends TestCase
      */
     public function testVisit($languageCode, $siteTitle, $pageTitle)
     {
-
         $app = $this->app()->clone([
             'site' => [
                 'children' => [
@@ -147,8 +145,5 @@ class SiteTranslationsTest extends TestCase
         $this->assertEquals('test', $page->slug());
         $this->assertEquals($siteTitle, $site->title()->value());
         $this->assertEquals($pageTitle, $page->title()->value());
-
     }
-
-
 }

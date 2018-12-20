@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class RadioFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('radio');
@@ -34,7 +33,6 @@ class RadioFieldTest extends TestCase
      */
     public function testValue($input, $expected)
     {
-
         $field = new Field('radio', [
             'options' => [
                 'a',
@@ -45,7 +43,5 @@ class RadioFieldTest extends TestCase
         ]);
 
         $this->assertTrue($expected === $field->value());
-
     }
-
 }

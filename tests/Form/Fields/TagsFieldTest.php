@@ -7,7 +7,6 @@ use Kirby\Toolkit\I18n;
 
 class TagsFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('tags');
@@ -28,7 +27,6 @@ class TagsFieldTest extends TestCase
 
     public function testOptionsQuery()
     {
-
         $app = $this->app()->clone([
             'site' => [
                 'children' => [
@@ -104,12 +102,10 @@ class TagsFieldTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $field->options());
-
     }
 
     public function testMin()
     {
-
         $field = new Field('tags', [
             'value'   => 'a',
             'options' => ['a', 'b', 'c'],
@@ -118,12 +114,10 @@ class TagsFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
-
     }
 
     public function testMax()
     {
-
         $field = new Field('tags', [
             'value'   => 'a, b',
             'options' => ['a', 'b', 'c'],
@@ -132,7 +126,5 @@ class TagsFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
-
     }
-
 }

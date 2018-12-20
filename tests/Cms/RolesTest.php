@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class RolesTest extends TestCase
 {
-
     public function testFactory()
     {
         $roles = Roles::factory([
@@ -55,5 +54,4 @@ class RolesTest extends TestCase
         $this->assertEquals('admin', $roles->first()->name());
         $this->assertEquals('editor', $roles->last()->name());
     }
-
 }

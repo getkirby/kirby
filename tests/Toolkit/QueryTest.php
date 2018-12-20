@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class QueryTest extends TestCase
 {
-
     public function testWithMissingData()
     {
         // 1-level
@@ -65,7 +64,6 @@ class QueryTest extends TestCase
         ]);
 
         $this->assertEquals('@homer', $query->result());
-
     }
 
     public function test2LevelObjectQuery()
@@ -138,5 +136,4 @@ class QueryTest extends TestCase
 
         $this->assertNull($query->result());
     }
-
 }

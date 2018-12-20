@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class PageCreateTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
@@ -161,5 +160,4 @@ class PageCreateTest extends TestCase
         $this->assertEquals('test.md', $file->filename());
         $this->assertEquals('test/test.md', $file->id());
     }
-
 }

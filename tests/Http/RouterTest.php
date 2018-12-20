@@ -6,14 +6,14 @@ use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
-
     public function testRegisterSingleRoute()
     {
         $router = new Router([
             [
                 'pattern' => '/',
                 'method'  => 'GET',
-                'action'  => function () {}
+                'action'  => function () {
+                }
             ]
         ]);
 
@@ -30,12 +30,14 @@ class RouterTest extends TestCase
             [
                 'pattern' => 'a',
                 'method'  => 'GET',
-                'action'  => function () {}
+                'action'  => function () {
+                }
             ],
             [
                 'pattern' => 'b',
                 'method'  => 'POST',
-                'action'  => function () {}
+                'action'  => function () {
+                }
             ]
         ]);
 

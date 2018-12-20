@@ -10,7 +10,6 @@ return [
     ],
     'computed' => [
         'form' => function () {
-
             $fields   = $this->fields;
             $disabled = $this->model->permissions()->update() === false;
             $content  = $this->model->content()->toArray();
@@ -27,10 +26,8 @@ return [
                 'model'  => $this->model,
                 'strict' => true
             ]);
-
         },
         'fields' => function () {
-
             $fields = $this->form->fields()->toArray();
 
             if (is_a($this->model, 'Kirby\Cms\Page') === true || is_a($this->model, 'Kirby\Cms\Site') === true) {
@@ -44,13 +41,11 @@ return [
             }
 
             return $fields;
-
         },
         'errors' => function () {
             return $this->form->errors();
         },
         'data' => function () {
-
             $values = $this->form->values();
 
             if (is_a($this->model, 'Kirby\Cms\Page') === true || is_a($this->model, 'Kirby\Cms\Site') === true) {
@@ -60,7 +55,6 @@ return [
             }
 
             return $values;
-
         }
     ],
     'toArray' => function () {

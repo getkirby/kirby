@@ -9,7 +9,6 @@ use Kirby\Toolkit\Collection;
 
 class HelpersTest extends TestCase
 {
-
     protected $kirby;
 
     public function setUp()
@@ -564,5 +563,4 @@ class HelpersTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
-
 }

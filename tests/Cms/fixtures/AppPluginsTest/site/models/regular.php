@@ -1,3 +1,5 @@
 <?php
 
-class RegularPage extends Page {}
+class RegularPage extends Page
+{
+}

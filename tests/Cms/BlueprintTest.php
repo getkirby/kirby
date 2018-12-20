@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class BlueprintTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -234,7 +233,5 @@ class BlueprintTest extends TestCase
         $this->assertCount(1, $blueprint->fields());
         $this->assertArrayHasKey('test', $blueprint->fields());
         $this->assertArrayNotHasKey('child-field', $blueprint->fields());
-
     }
-
 }

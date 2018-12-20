@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class CollectionMutatorTest extends TestCase
 {
-
     public function testData()
     {
         $collection = new Collection();
@@ -26,7 +25,6 @@ class CollectionMutatorTest extends TestCase
             'one' => 'eins',
             'two' => 'zwei'
         ], $collection->data());
-
     }
 
     public function testEmpty()
@@ -188,6 +186,4 @@ class CollectionMutatorTest extends TestCase
 
         $this->assertEquals($expected, $collection->pluck('user', null, true));
     }
-
-
 }

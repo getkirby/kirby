@@ -9,11 +9,12 @@ use Kirby\Data\Txt;
 
 use PHPUnit\Framework\TestCase;
 
-class CustomHandler extends Json {}
+class CustomHandler extends Json
+{
+}
 
 class DataTest extends TestCase
 {
-
     public function testDefaultHandlers()
     {
         $this->assertInstanceOf(Yaml::class, Data::handler('yaml'));

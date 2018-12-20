@@ -6,7 +6,6 @@ use ReflectionClass;
 
 class PageTestCase extends TestCase
 {
-
     public $page = null;
 
     public function page($id = null)
@@ -84,5 +83,4 @@ class PageTestCase extends TestCase
         $this->assertNotNull($this->page());
         $this->assertTrue($this->page()->exists());
     }
-
 }

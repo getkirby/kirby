@@ -7,11 +7,10 @@ use PHPUnit\Framework\TestCase;
 
 class DbTest extends TestCase
 {
-
     public static $database = null;
 
-    public function setUp() {
-
+    public function setUp()
+    {
         self::$database = ':memory:';
 
         Db::connect([
@@ -57,7 +56,6 @@ class DbTest extends TestCase
             'email'    => 'george@test.com',
             'password' => 'beatles'
         ]);
-
     }
 
     public static function tearDownAfterClass()
@@ -78,19 +76,16 @@ class DbTest extends TestCase
 
     public function testType()
     {
-
         Db::connect([
             'database' => self::$database,
             'type'     => 'sqlite'
         ]);
 
         $this->assertEquals('sqlite', Db::type());
-
     }
 
     public function testPrefix()
     {
-
         Db::connect([
             'database' => self::$database,
             'type'     => 'sqlite',
@@ -103,12 +98,10 @@ class DbTest extends TestCase
             'database' => self::$database,
             'type'     => 'sqlite'
         ]);
-
     }
 
     public function testLastId()
     {
-
         $id = Db::insert('users', [
             'username' => 'ringo',
             'fname'    => 'Ringo',
@@ -119,7 +112,6 @@ class DbTest extends TestCase
 
         $this->assertEquals(4, $id);
         $this->assertEquals($id, Db::lastId());
-
     }
 
     public function testLastResult()
@@ -136,11 +128,9 @@ class DbTest extends TestCase
 
     public function testQuery()
     {
-
         $result = Db::query('select * from users where username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
 
         $this->assertEquals('paul', $result[0]['username']);
-
     }
 
     public function testTable()
@@ -150,7 +140,6 @@ class DbTest extends TestCase
 
     public function testSelect()
     {
-
         $result = Db::select('users');
 
         $this->assertEquals(3, $result->count());
@@ -158,7 +147,6 @@ class DbTest extends TestCase
         $result = Db::select('users', '*', ['username' => 'paul']);
 
         $this->assertEquals(1, $result->count());
-
     }
 
     public function testFirst()
@@ -215,5 +203,4 @@ class DbTest extends TestCase
         Db::delete('users');
         $this->assertEquals(3, Db::affected());
     }
-
 }

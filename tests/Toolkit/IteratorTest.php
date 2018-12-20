@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class IteratorTest extends TestCase
 {
-
     public function testKey()
     {
         $iterator = new Iterator([
@@ -164,5 +163,4 @@ class IteratorTest extends TestCase
         $iterator = new Iterator($array);
         $this->assertEquals($array, $iterator->__debuginfo());
     }
-
 }

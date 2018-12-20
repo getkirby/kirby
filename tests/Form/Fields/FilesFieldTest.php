@@ -8,7 +8,6 @@ use Kirby\Form\Field;
 
 class FilesFieldTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -97,7 +96,6 @@ class FilesFieldTest extends TestCase
 
     public function testMin()
     {
-
         $field = new Field('files', [
             'model' => $this->model(),
             'value' => [
@@ -109,12 +107,10 @@ class FilesFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
-
     }
 
     public function testMax()
     {
-
         $field = new Field('files', [
             'model' => $this->model(),
             'value' => [
@@ -126,12 +122,10 @@ class FilesFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
-
     }
 
     public function testFilesInDraft()
     {
-
         $field = new Field('files', [
             'model' => $this->app->page('test-draft'),
             'value' => [
@@ -150,8 +144,5 @@ class FilesFieldTest extends TestCase
         ];
 
         $this->assertEquals($expected, $ids);
-
     }
-
-
 }

@@ -6,7 +6,6 @@ use Kirby\Http\Uri;
 
 class PaginationTest extends TestCase
 {
-
     protected function pagination(array $options = []): Pagination
     {
         return new Pagination(array_merge([
@@ -96,5 +95,4 @@ class PaginationTest extends TestCase
 
         $this->assertEquals('https://getkirby.com', $pagination->prevPageUrl());
     }
-
 }

@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class KirbyTagTest extends TestCase
 {
-
     public function setUp()
     {
         KirbyTag::$types = [
@@ -186,5 +185,4 @@ class KirbyTagTest extends TestCase
         ]);
         $tag->render();
     }
-
 }

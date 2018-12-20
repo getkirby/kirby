@@ -6,8 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class I18nTest extends TestCase
 {
-
-    public function setUp(){
+    public function setUp()
+    {
         I18n::$locale       = 'en';
         I18n::$load         = null;
         I18n::$fallback     = 'en';
@@ -183,5 +183,4 @@ class I18nTest extends TestCase
 
         $this->assertEquals('de', I18n::locale());
     }
-
 }

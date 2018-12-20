@@ -8,12 +8,16 @@ use Kirby\Cache\FileCache;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 
-class DummyCache extends FileCache {}
-class DummyPage extends Page {}
+class DummyCache extends FileCache
+{
+}
+
+class DummyPage extends Page
+{
+}
 
 class AppPluginsTest extends TestCase
 {
-
     public function setUp()
     {
         App::destroy();
@@ -21,7 +25,6 @@ class AppPluginsTest extends TestCase
 
     public function testApi()
     {
-
         $kirby = new App([
             'api' => [
                 'routes' => [
@@ -40,12 +43,10 @@ class AppPluginsTest extends TestCase
 
         $kirby->impersonate('kirby');
         $this->assertEquals('nice', $kirby->call('api/awesome'));
-
     }
 
     public function testApiRoutePlugins()
     {
-
         App::plugin('test/a', [
             'api' => [
                 'routes' => [
@@ -101,7 +102,6 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('a', $app->api()->call('a'));
         $this->assertEquals('b', $app->api()->call('b'));
         $this->assertEquals('c', $app->api()->call('c'));
-
     }
 
     public function testBlueprint()
@@ -167,7 +167,6 @@ class AppPluginsTest extends TestCase
 
         // restore previous filters
         Collection::$filters = $prevFilters;
-
     }
 
     public function testController()
@@ -255,7 +254,6 @@ class AppPluginsTest extends TestCase
 
         $kirby->trigger('testHook', 'test');
         $this->assertEquals(2, $executed);
-
     }
 
     public function testPageMethod()
@@ -456,7 +454,6 @@ class AppPluginsTest extends TestCase
 
     public function testTranslation()
     {
-
         $kirby = new App([
             'translations' => [
                 'en' => [
@@ -479,7 +476,6 @@ class AppPluginsTest extends TestCase
 
     public function testTranslationsInPlugin()
     {
-
         App::plugin('test/test', [
             'translations' => [
                 'en' => [
@@ -500,7 +496,5 @@ class AppPluginsTest extends TestCase
         I18n::$locale = 'de';
 
         $this->assertEquals('Deutscher Test', I18n::translate('test'));
-
     }
-
 }

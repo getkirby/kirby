@@ -8,10 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class OptionsTest extends TestCase
 {
-
     public function testPages()
     {
-
         $app = new App([
             'site' => [
                 'children' => [
@@ -42,12 +40,10 @@ class OptionsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $result);
-
     }
 
     public function testUsers()
     {
-
         $app = new App([
             'users' => [
                 [
@@ -74,7 +70,5 @@ class OptionsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $result);
-
     }
-
 }

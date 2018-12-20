@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class XmlTest extends TestCase
 {
-
     protected $string;
 
     protected function setUp()
@@ -90,5 +89,4 @@ class XmlTest extends TestCase
     {
         $this->assertEquals($expected, Xml::value($input));
     }
-
 }

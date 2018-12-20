@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class ParamsTest extends TestCase
 {
-
     public function testConstructWithArray()
     {
         $params = new Params([
@@ -85,5 +84,4 @@ class ParamsTest extends TestCase
 
         $this->assertEquals('', $params->toString());
     }
-
 }

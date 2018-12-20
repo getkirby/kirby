@@ -97,7 +97,6 @@ return [
     ],
     'methods' => [
         'pageResponse' => function ($page) {
-
             if ($this->layout === 'list') {
                 $thumb = [
                     'width'  => 100,
@@ -124,12 +123,10 @@ return [
             ];
         },
         'toPages' => function ($value = null) {
-
             $pages = [];
             $kirby = kirby();
 
             foreach (Yaml::decode($value) as $id) {
-
                 if (is_array($id) === true) {
                     $id = $id['id'] ?? null;
                 }
@@ -140,7 +137,6 @@ return [
             }
 
             return $pages;
-
         }
     ],
     'api' => function () {
@@ -148,7 +144,6 @@ return [
             [
                 'pattern' => '/',
                 'action' => function () {
-
                     $field = $this->field();
                     $query = $field->query();
 

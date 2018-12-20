@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class LineFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('line');
@@ -15,5 +14,4 @@ class LineFieldTest extends TestCase
         $this->assertEquals('line', $field->name());
         $this->assertFalse($field->save());
     }
-
 }

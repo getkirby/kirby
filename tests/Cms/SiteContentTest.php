@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class SiteContentTest extends TestCase
 {
-
     public function testDefaultContent()
     {
         $site = new Site();
@@ -34,5 +33,4 @@ class SiteContentTest extends TestCase
             'content' => 'content'
         ]);
     }
-
 }

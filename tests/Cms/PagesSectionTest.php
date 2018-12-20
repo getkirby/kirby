@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class PagesSectionTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -40,12 +39,10 @@ class PagesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('Pages', $section->headline());
-
     }
 
     public function testParent()
     {
-
         $this->app->impersonate('kirby');
 
         $parent = new Page([
@@ -71,12 +68,10 @@ class PagesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('test/a', $section->parent()->id());
-
     }
 
     public function testImageString()
     {
-
         $this->app->impersonate('kirby');
 
         $model = new Page([
@@ -114,7 +109,5 @@ class PagesSectionTest extends TestCase
 
         // non-existing covers
         $this->assertNull($data[2]['image']['url'] ?? null);
-
     }
-
 }

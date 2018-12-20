@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class PageBlueprintTest extends TestCase
 {
-
     public function testOptions()
     {
         $blueprint = new PageBlueprint([
@@ -121,7 +120,6 @@ class PageBlueprintTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $blueprint->num());
-
     }
 
     public function testStatus()
@@ -247,7 +245,6 @@ class PageBlueprintTest extends TestCase
 
     public function testExtendStatus()
     {
-
         new App([
             'blueprints' => [
                 'status/default' => [
@@ -301,7 +298,6 @@ class PageBlueprintTest extends TestCase
 
     public function testExtendStatusFromString()
     {
-
         new App([
             'blueprints' => [
                 'status/default' => $expected = [
@@ -328,5 +324,4 @@ class PageBlueprintTest extends TestCase
 
         $this->assertEquals($expected, $blueprint->status());
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class AppRolesTest extends TestCase
 {
-
     public function testSet()
     {
         $app = new App([
@@ -31,5 +30,4 @@ class AppRolesTest extends TestCase
         $this->assertCount(2, $app->roles());
         $this->assertEquals('editor', $app->roles()->last()->name());
     }
-
 }

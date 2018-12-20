@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class ConfigTest extends TestCase
 {
-
     protected function setUp()
     {
         Config::set('testvar', 'testvalue');
@@ -23,7 +22,6 @@ class ConfigTest extends TestCase
 
     public function testSet()
     {
-
         Config::set('anothervar', 'anothervalue');
         Config::set('testvar', 'overwrittenvalue');
 
@@ -37,7 +35,5 @@ class ConfigTest extends TestCase
 
         $this->assertEquals('value1', Config::get('var1'));
         $this->assertEquals('value2', Config::get('var2'));
-
     }
-
 }

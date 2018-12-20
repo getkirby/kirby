@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class FieldTest extends TestCase
 {
-
     public function setUp()
     {
         new App([
@@ -432,7 +431,6 @@ class FieldTest extends TestCase
         ]);
 
         $this->assertEquals('mytest', $field->name());
-
     }
 
     public function testPlaceholder()
@@ -508,7 +506,6 @@ class FieldTest extends TestCase
         ]);
 
         $this->assertEquals('a, b, c', $field->data());
-
     }
 
     public function testToArray()
@@ -537,7 +534,6 @@ class FieldTest extends TestCase
 
         $this->assertArrayHasKey('signature', $array);
         $this->assertArrayNotHasKey('model', $array);
-
     }
 
     public function testWidth()
@@ -563,5 +559,4 @@ class FieldTest extends TestCase
         $this->assertEquals('1/2', $field->width());
         $this->assertEquals('1/2', $field->width);
     }
-
 }

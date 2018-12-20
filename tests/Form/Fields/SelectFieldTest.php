@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class SelectFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('select');
@@ -34,7 +33,6 @@ class SelectFieldTest extends TestCase
      */
     public function testValue($input, $expected)
     {
-
         $field = new Field('select', [
             'options' => [
                 'a',
@@ -45,7 +43,5 @@ class SelectFieldTest extends TestCase
         ]);
 
         $this->assertTrue($expected === $field->value());
-
     }
-
 }

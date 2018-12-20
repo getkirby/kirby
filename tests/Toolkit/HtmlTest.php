@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class HtmlTest extends TestCase
 {
-
     public function test__callStatic()
     {
         $html = Html::div('test');
@@ -57,7 +56,6 @@ class HtmlTest extends TestCase
 
     public function testAttr()
     {
-
         $tests = [
             [
                 'input'    => [],
@@ -81,11 +79,10 @@ class HtmlTest extends TestCase
             ],
         ];
 
-        foreach($tests as $test) {
+        foreach ($tests as $test) {
             $result = Html::attr($test['input']);
             $this->assertEquals($test['expected'], $result);
         }
-
     }
 
     public function testBreaks()
@@ -274,7 +271,6 @@ class HtmlTest extends TestCase
             ['https://vimeo.com/239882943', 'https://player.vimeo.com/video/239882943'],
             ['https://player.vimeo.com/video/239882943', 'https://player.vimeo.com/video/239882943'],
         ];
-
     }
 
     /**
@@ -333,5 +329,4 @@ class HtmlTest extends TestCase
 
         $this->assertEquals($expected, $html);
     }
-
 }

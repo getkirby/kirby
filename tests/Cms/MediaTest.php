@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class MediaTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -128,5 +127,4 @@ class MediaTest extends TestCase
 
         $this->assertTrue(Media::unpublish($directory, 'something.jpg'));
     }
-
 }

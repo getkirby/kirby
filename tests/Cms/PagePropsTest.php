@@ -76,12 +76,10 @@ class PagePropsTest extends TestCase
         ]);
 
         $this->assertEquals(['A', 'B'], array_column($page->blueprints(), 'title'));
-
     }
 
     public function testDepth()
     {
-
         $site = new Site([
             'children' => [
                 [
@@ -170,7 +168,6 @@ class PagePropsTest extends TestCase
                 ]
             ]
         ], $page->errors());
-
     }
 
     public function testErrorsWithoutBlueprint()
@@ -255,7 +252,6 @@ class PagePropsTest extends TestCase
 
     public function testParentPrevNext()
     {
-
         $app = new App([
             'site' => [
                 'children' => [
@@ -408,7 +404,6 @@ class PagePropsTest extends TestCase
 
     public function testPreviewUrl()
     {
-
         $app = new App([
             'urls' => [
                 'index' => '/'
@@ -420,7 +415,6 @@ class PagePropsTest extends TestCase
         ]);
 
         $this->assertEquals('/test', $page->previewUrl());
-
     }
 
     public function previewUrlProvider()
@@ -444,7 +438,6 @@ class PagePropsTest extends TestCase
      */
     public function testCustomPreviewUrl($input, $expected, $draft)
     {
-
         $app = new App([
             'urls' => [
                 'index' => '/'
@@ -474,7 +467,6 @@ class PagePropsTest extends TestCase
         }
 
         $this->assertEquals($expected, $page->previewUrl());
-
     }
 
     public function testSlug()
@@ -567,7 +559,6 @@ class PagePropsTest extends TestCase
 
         $this->assertEquals('grandma/mother', $app->site()->find('grandma/mother')->uri());
         $this->assertEquals('oma/mutter', $app->site()->find('grandma/mother')->uri('de'));
-
     }
 
     public function testModified()
@@ -600,7 +591,6 @@ class PagePropsTest extends TestCase
 
     public function testModifiedInMultilangInstallation()
     {
-
         $app = new App([
             'roots' => [
                 'index'   => $index = __DIR__ . '/fixtures/PagePropsTest/modified',
@@ -642,7 +632,6 @@ class PagePropsTest extends TestCase
         $this->assertEquals($modified, $page->modified());
 
         Dir::remove($index);
-
     }
 
     public function testPanelIconDefault()
@@ -696,5 +685,4 @@ class PagePropsTest extends TestCase
 
         $this->assertEquals($expected, $icon);
     }
-
 }

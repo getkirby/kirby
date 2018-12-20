@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PagesTest extends TestCase
 {
-
     public function pages()
     {
         return new Pages([
@@ -220,7 +219,6 @@ class PagesTest extends TestCase
 
     public function testSearch()
     {
-
         $pages = Pages::factory([
             [
                 'slug'    => 'mtb',
@@ -244,7 +242,5 @@ class PagesTest extends TestCase
 
         $result = $pages->search('mountain');
         $this->assertCount(2, $result);
-
     }
-
 }

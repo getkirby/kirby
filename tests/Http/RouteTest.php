@@ -8,7 +8,8 @@ class RouteTest extends TestCase
 {
     public function _route()
     {
-        $route = new Route('a', 'GET', function () {});
+        $route = new Route('a', 'GET', function () {
+        });
         return $route;
     }
 
@@ -26,7 +27,8 @@ class RouteTest extends TestCase
 
     public function testName()
     {
-        $route = new Route('a', 'GET', function () {}, [
+        $route = new Route('a', 'GET', function () {
+        }, [
             'name' => 'test'
         ]);
 
@@ -35,7 +37,8 @@ class RouteTest extends TestCase
 
     public function testAttributes()
     {
-        $route = new Route('a', 'GET', function () {}, $attributes = [
+        $route = new Route('a', 'GET', function () {
+        }, $attributes = [
             'a' => 'a',
             'b' => 'b'
         ]);
@@ -45,7 +48,8 @@ class RouteTest extends TestCase
 
     public function testAttributesGetter()
     {
-        $route = new Route('a', 'GET', function () {}, [
+        $route = new Route('a', 'GET', function () {
+        }, [
             'a' => 'a'
         ]);
 
@@ -131,5 +135,4 @@ class RouteTest extends TestCase
             $this->assertFalse($route->parse('/(' . $pattern . '?)', '/' . $input));
         }
     }
-
 }

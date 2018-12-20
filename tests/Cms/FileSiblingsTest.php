@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FileSiblingsTest extends TestCase
 {
-
     protected function collection()
     {
         return [
@@ -88,7 +87,7 @@ class FileSiblingsTest extends TestCase
         $this->assertCount(3, $first->nextAll());
 
         $this->assertEquals($first->nextAll()->first(), $collection->nth(1));
-        $this->assertEquals($first->nextAll()->last(),  $collection->nth(3));
+        $this->assertEquals($first->nextAll()->last(), $collection->nth(3));
     }
 
     public function testPrev()
@@ -106,7 +105,7 @@ class FileSiblingsTest extends TestCase
         $this->assertCount(3, $last->prevAll());
 
         $this->assertEquals($last->prevAll()->first(), $collection->nth(0));
-        $this->assertEquals($last->prevAll()->last(),  $collection->nth(2));
+        $this->assertEquals($last->prevAll()->last(), $collection->nth(2));
     }
 
     public function testSiblings()
@@ -159,7 +158,5 @@ class FileSiblingsTest extends TestCase
 
         $this->assertFalse($siblings->has('test/a.jpg'));
         $this->assertFalse($siblings->has('test/b.jpg'));
-
     }
-
 }

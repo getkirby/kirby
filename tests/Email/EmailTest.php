@@ -4,8 +4,8 @@ namespace Kirby\Email;
 
 class EmailTest extends TestCase
 {
-
-    protected function _email($props = [], $mailer = Email::class) {
+    protected function _email($props = [], $mailer = Email::class)
+    {
         return parent::_email($props, $mailer);
     }
 
@@ -89,7 +89,7 @@ class EmailTest extends TestCase
         $email = $this->_email([
             'body' => $body = [
                 'text' => 'Plain text, yeah!',
-		        'html' => 'HTML is even <b>better</b>'
+                'html' => 'HTML is even <b>better</b>'
             ]
         ]);
 
@@ -105,11 +105,10 @@ class EmailTest extends TestCase
         $email = $this->_email([
             'attachments' => $attachments = [
                 'file.txt',
-		        'image.png'
+                'image.png'
             ]
         ]);
 
         $this->assertEquals($attachments, $email->attachments());
     }
-
 }

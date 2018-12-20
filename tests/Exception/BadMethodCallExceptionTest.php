@@ -4,7 +4,6 @@ namespace Kirby\Exception;
 
 class BadMethodCallExceptionTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testDefaults()
     {
         $exception = new BadMethodCallException();
@@ -23,5 +22,4 @@ class BadMethodCallExceptionTest extends \PHPUnit\Framework\TestCase
         ]);
         $this->assertEquals('The method "get" does not exist', $exception->getMessage());
     }
-
 }

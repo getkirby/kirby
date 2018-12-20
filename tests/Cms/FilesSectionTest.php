@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class FilesSectionTest extends TestCase
 {
-
     public function setUp()
     {
         new App([
@@ -40,12 +39,10 @@ class FilesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('Files', $section->headline());
-
     }
 
     public function testMax()
     {
-
         $model = new Page([
             'slug'  => 'test',
             'files' => [
@@ -83,12 +80,10 @@ class FilesSectionTest extends TestCase
         ]);
 
         $this->assertTrue($section->upload()['multiple']);
-
     }
 
     public function testParent()
     {
-
         $app = new App([
             'site' => [
                 'children' => [
@@ -123,7 +118,5 @@ class FilesSectionTest extends TestCase
         $this->assertEquals('/pages/b', $section->link());
         $this->assertEquals($b, $section->parent());
         $this->assertEquals('pages/b/files', $section->upload()['api']);
-
     }
-
 }

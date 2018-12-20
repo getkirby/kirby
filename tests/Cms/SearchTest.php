@@ -7,7 +7,6 @@ use Kirby\Toolkit\Obj;
 
 class SearchTest extends TestCase
 {
-
     public function testCollection()
     {
         $collection = Pages::factory([
@@ -37,8 +36,5 @@ class SearchTest extends TestCase
 
         $search = Search::collection($collection, 'm', ['minlength' => 1]);
         $this->assertCount(3, $search);
-
     }
-
-
 }

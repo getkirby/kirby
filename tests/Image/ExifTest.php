@@ -6,7 +6,6 @@ use ReflectionClass;
 
 class ExifTest extends TestCase
 {
-
     protected function _exif($filename = 'cat.jpg')
     {
         $image = new Image(static::FIXTURES . '/image/' . $filename);

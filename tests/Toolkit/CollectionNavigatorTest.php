@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class CollectionNavigatorTest extends TestCase
 {
-
     public function testFirstLast()
     {
         $collection = new Collection([
@@ -32,5 +31,4 @@ class CollectionNavigatorTest extends TestCase
         $this->assertEquals('drei', $collection->nth(2));
         $this->assertEquals('vier', $collection->nth(3));
     }
-
 }

@@ -69,7 +69,6 @@ return [
             ];
         },
         'toUsers' => function ($value = null) {
-
             $users = [];
             $kirby = kirby();
 
@@ -84,7 +83,6 @@ return [
             }
 
             return $users;
-
         }
     ],
     'save' => function ($value = null) {

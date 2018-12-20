@@ -51,7 +51,7 @@
     "test": "./vendor/bin/phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist",
     "build": "./scripts/build",
-    "fix": "./vendor/bin/php-cs-fixer fix ./src/"
+    "fix": "./vendor/bin/php-cs-fixer fix ."
   },
   "config": {
     "optimize-autoloader": true

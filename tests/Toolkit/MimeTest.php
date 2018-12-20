@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class MimeTest extends TestCase
 {
-
     const FIXTURES = __DIR__ . '/fixtures/mime';
 
     public function testFixCss()
@@ -54,5 +53,4 @@ class MimeTest extends TestCase
     {
         $this->assertEquals(Mime::$types, Mime::types());
     }
-
 }

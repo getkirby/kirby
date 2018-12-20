@@ -6,14 +6,22 @@ use PHPUnit\Framework\TestCase;
 
 class CanBeCounted implements \Countable
 {
-    public function count() { return 7; }
+    public function count()
+    {
+        return 7;
+    }
 }
 
-class HasCount { public function count() { return 7; } }
+class HasCount
+{
+    public function count()
+    {
+        return 7;
+    }
+}
 
 class VTest extends TestCase
 {
-
     public function testValidators()
     {
         $this->assertFalse(empty(V::$validators));
@@ -522,5 +530,4 @@ class VTest extends TestCase
             'same' => 'b'
         ]);
     }
-
 }

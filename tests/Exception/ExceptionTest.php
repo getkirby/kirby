@@ -2,19 +2,18 @@
 
 namespace Kirby\Exception;
 
-class WillFail {
-
-    public function fail () {
+class WillFail
+{
+    public function fail()
+    {
         throw new Exception([
             'key' => 'key.unique',
         ]);
     }
-
 }
 
 class ExceptionTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testException()
     {
         $exception = new Exception([
@@ -53,5 +52,4 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
         $class = new WillFail();
         $class->fail();
     }
-
 }

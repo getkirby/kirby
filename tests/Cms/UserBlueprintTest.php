@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class UserBlueprintTest extends TestCase
 {
-
     public function testOptions()
     {
         $blueprint = new UserBlueprint([
@@ -26,5 +25,4 @@ class UserBlueprintTest extends TestCase
 
         $this->assertEquals($expected, $blueprint->options());
     }
-
 }

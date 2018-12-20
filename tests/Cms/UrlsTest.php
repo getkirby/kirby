@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class UrlsTest extends TestCase
 {
-
     public function defaultUrlProvider(): array
     {
         return [
@@ -76,6 +75,4 @@ class UrlsTest extends TestCase
         $urls = $app->urls();
         $this->assertEquals($url, $urls->$method());
     }
-
-
 }

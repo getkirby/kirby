@@ -95,7 +95,6 @@ return [
             return $files;
         },
         'data' => function () {
-
             $data = [];
 
             if ($this->layout === 'list') {
@@ -111,7 +110,6 @@ return [
             }
 
             foreach ($this->files as $file) {
-
                 $image = $file->panelImage($this->image, $thumb);
 
                 $data[] = [
@@ -134,7 +132,6 @@ return [
             return $this->files->pagination()->total();
         },
         'errors' => function () {
-
             $errors = [];
 
             if ($this->validateMax() === false) {
@@ -161,23 +158,19 @@ return [
                     'message' => $errors,
                 ]
             ];
-
         },
         'link' => function () {
-
             $modelLink  = $this->model->panelUrl(true);
             $parentLink = $this->parent->panelUrl(true);
 
             if ($modelLink !== $parentLink) {
                 return $parentLink;
             }
-
         },
         'pagination' => function () {
             return $this->pagination();
         },
         'sortable' => function () {
-
             if ($this->sortable === false) {
                 return false;
             }
@@ -187,10 +180,8 @@ return [
             }
 
             return true;
-
         },
         'upload' => function () {
-
             if ($this->isFull() === true) {
                 return false;
             }
@@ -214,7 +205,6 @@ return [
                     'template' => $this->template
                 ])
             ];
-
         }
     ],
     'toArray' => function () {
@@ -237,5 +227,3 @@ return [
         ];
     }
 ];
-
-

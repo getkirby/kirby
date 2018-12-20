@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-
     protected $app;
 
     public function setUp()
@@ -28,5 +27,4 @@ class TestCase extends BaseTestCase
     {
         return $this->app;
     }
-
 }

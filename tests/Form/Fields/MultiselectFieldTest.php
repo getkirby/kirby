@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class MultiselectFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('multiselect');
@@ -28,7 +27,6 @@ class MultiselectFieldTest extends TestCase
 
     public function testMin()
     {
-
         $field = new Field('multiselect', [
             'value'   => 'a',
             'options' => ['a', 'b', 'c'],
@@ -37,12 +35,10 @@ class MultiselectFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
-
     }
 
     public function testMax()
     {
-
         $field = new Field('multiselect', [
             'value'   => 'a, b',
             'options' => ['a', 'b', 'c'],
@@ -51,7 +47,5 @@ class MultiselectFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
-
     }
-
 }

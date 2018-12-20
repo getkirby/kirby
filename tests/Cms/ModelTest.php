@@ -2,18 +2,16 @@
 
 namespace Kirby\Cms;
 
-class MyModel extends Model {
-
+class MyModel extends Model
+{
     public function __construct(array $props = [])
     {
         $this->setProperties($props);
     }
-
 }
 
 class ModelTest extends TestCase
 {
-
     public function testModel()
     {
         $model = new MyModel();
@@ -39,5 +37,4 @@ class ModelTest extends TestCase
         ]);
         $this->assertEquals($site, $model->site());
     }
-
 }

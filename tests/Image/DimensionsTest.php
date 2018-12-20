@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class DimensionsTest extends TestCase
 {
-
     public function testDimensions()
     {
         $dimensions = new Dimensions(1200, 768);

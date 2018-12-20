@@ -1,3 +1,5 @@
 <?php
 
-class WithDashPage extends Page {}
+class WithDashPage extends Page
+{
+}

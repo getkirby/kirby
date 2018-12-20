@@ -6,7 +6,6 @@ use Kirby\Http\Route;
 
 class AppTest extends TestCase
 {
-
     public function testDefaultRoles()
     {
         $app = new App([
@@ -75,7 +74,6 @@ class AppTest extends TestCase
 
     public function testRoute()
     {
-
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -97,7 +95,6 @@ class AppTest extends TestCase
 
         $this->assertInstanceOf(Page::class, $response);
         $this->assertInstanceOf(Route::class, $route);
-
     }
 
     public function testIoWithString()
@@ -118,5 +115,4 @@ class AppTest extends TestCase
         $this->assertEquals(200, $result->code());
         $this->assertEquals('application/json', $result->type());
     }
-
 }

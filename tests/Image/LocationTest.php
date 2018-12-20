@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class LocationTest extends TestCase
 {
-
     protected function _exif()
     {
         return [
