@@ -361,7 +361,7 @@ class FieldMethodsTest extends TestCase
 
     public function testEscape()
     {
-        $this->markTestIncomplete();
+        $this->assertEquals('&lt;script&gt;alert(&quot;hello&quot;)&lt;/script&gt;', $this->field('<script>alert("hello")</script>')->escape());
     }
 
     public function testExcerpt()
@@ -456,7 +456,7 @@ class FieldMethodsTest extends TestCase
 
     public function testWidont()
     {
-        $this->markTestIncomplete();
+        $this->assertEquals('Test&nbsp;Headline', $this->field('Test Headline')->widont());
     }
 
     public function testWords()
