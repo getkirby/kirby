@@ -209,6 +209,7 @@
   "file.delete.confirm":
     "Do you really want to delete <br><strong>{filename}</strong>?",
 
+  "files": "Files",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -323,7 +324,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Pages",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Password",
   "pixel": "Pixel",

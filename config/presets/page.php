@@ -26,7 +26,7 @@ return function ($props) {
 
         if ($pages !== false) {
             $sidebar['pages'] = $section([
-                'headline' => 'Pages',
+                'headline' => t('pages'),
                 'type'     => 'pages',
                 'status'   => 'all',
                 'layout'   => 'list',
@@ -35,7 +35,7 @@ return function ($props) {
 
         if ($files !== false) {
             $sidebar['files'] = $section([
-                'headline' => 'Files',
+                'headline' => t('files'),
                 'type'     => 'files',
                 'layout'   => 'list'
             ], $files);

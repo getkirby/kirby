@@ -41,15 +41,15 @@ return function (array $props) {
 
 
     if ($drafts !== false) {
-        $sections['drafts'] = $section('Drafts', 'drafts', $drafts);
+        $sections['drafts'] = $section(t('pages.status.draft'), 'drafts', $drafts);
     }
 
     if ($unlisted !== false) {
-        $sections['unlisted'] = $section('Unlisted', 'unlisted', $unlisted);
+        $sections['unlisted'] = $section(t('pages.status.unlisted'), 'unlisted', $unlisted);
     }
 
     if ($listed !== false) {
-        $sections['listed'] = $section('Published', 'listed', $listed);
+        $sections['listed'] = $section(t('pages.status.listed'), 'listed', $listed);
     }
 
     // cleaning up
