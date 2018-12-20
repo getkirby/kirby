@@ -31,6 +31,7 @@ trait AppPlugins
     protected $extensions = [
         'api' => [],
         'blueprints' => [],
+        'cacheTypes' => [],
         'collections' => [],
         'components' => [],
         'controllers' => [],
@@ -93,6 +94,11 @@ trait AppPlugins
     protected function extendBlueprints(array $blueprints): array
     {
         return $this->extensions['blueprints'] = array_merge($this->extensions['blueprints'], $blueprints);
+    }
+
+    protected function extendCacheTypes(array $cacheTypes): array
+    {
+        return $this->extensions['cacheTypes'] = array_merge($this->extensions['cacheTypes'], $cacheTypes);
     }
 
     protected function extendCollectionFilters(array $filters): array
@@ -376,6 +382,13 @@ trait AppPlugins
             'v'       => 'isValid',
             'x'       => 'xml'
         ];
+
+        // default cache types
+        $this->extendCacheTypes([
+            'apcu'      => 'Kirby\Cache\ApcuCache',
+            'file'      => 'Kirby\Cache\FileCache',
+            'memcached' => 'Kirby\Cache\MemCache',
+        ]);
 
         $this->extendComponents(include static::$root . '/config/components.php');
         $this->extendBlueprints(include static::$root . '/config/blueprints.php');

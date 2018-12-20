@@ -4,9 +4,11 @@ namespace Kirby\Cms;
 
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
+use Kirby\Cache\FileCache;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 
+class DummyCache extends FileCache {}
 class DummyPage extends Page {}
 
 class AppPluginsTest extends TestCase
@@ -111,6 +113,17 @@ class AppPluginsTest extends TestCase
         ]);
 
         $this->assertEquals($file, $kirby->extension('blueprints', 'pages/test'));
+    }
+
+    public function testCacheType()
+    {
+        $kirby = new App([
+            'cacheTypes' => [
+                'file' => DummyCache::class
+            ],
+        ]);
+
+        $this->assertInstanceOf(DummyCache::class, $kirby->cache('pages'));
     }
 
     public function testCollection()
