@@ -101,7 +101,15 @@ trait HasChildren
             return $this->drafts;
         }
 
-        $inventory = Dir::inventory($this->root() . '/_drafts');
+        $kirby = $this->kirby();
+
+        // create the inventory for all drafts
+        $inventory = Dir::inventory(
+            $this->root() . '/_drafts',
+            $kirby->contentExtension(),
+            $kirby->contentIgnore(),
+            $kirby->multilang()
+        );
 
         return $this->drafts = Pages::factory($inventory['children'], $this, true);
     }
