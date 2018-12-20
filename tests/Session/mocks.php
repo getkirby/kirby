@@ -40,10 +40,10 @@ class TestSessionStore extends SessionStore
             ],
 
             // valid session that needs to be renewed
-            '3000000000.renewal' => [
+            '2000000000.renewal' => [
                 'startTime'    => 0,
-                'expiryTime'   => 3000000000,
-                'duration'     => 3000000000,
+                'expiryTime'   => 2000000000,
+                'duration'     => 2000000000,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => true,
@@ -53,10 +53,10 @@ class TestSessionStore extends SessionStore
             ],
 
             // valid session that needs to be renewed, but can't
-            '3000000000.nonRenewable' => [
+            '2000000000.nonRenewable' => [
                 'startTime'    => 0,
-                'expiryTime'   => 3000000000,
-                'duration'     => 3000000000,
+                'expiryTime'   => 2000000000,
+                'duration'     => 2000000000,
                 'timeout'      => false,
                 'lastActivity' => null,
                 'renewable'    => false,
@@ -96,7 +96,7 @@ class TestSessionStore extends SessionStore
             '9999999999.movedRenewal' => [
                 'startTime'    => 0,
                 'expiryTime'   => 9999999999,
-                'newSession'   => '3000000000.renewal'
+                'newSession'   => '2000000000.renewal'
             ],
 
             // valid session that has moved to a session that could be refreshed
@@ -297,4 +297,23 @@ class MockSession extends Session {
     {
         $this->preparedForWriting = true;
     }
+}
+
+/**
+ * Mock for the PHP time() function to ensure reliable testing
+ *
+ * @return int A fake timestamp
+ */
+function time(): int
+{
+    if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
+        throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
+    }
+
+    return MockTime::$time;
+}
+
+class MockTime
+{
+    public static $time = 1337000000;
 }

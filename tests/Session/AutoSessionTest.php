@@ -16,6 +16,8 @@ class AutoSessionTest extends TestCase
     public function setUp()
     {
         $this->store = new TestSessionStore();
+
+        MockTime::$time = 1337000000;
     }
 
     public function tearDown()
@@ -76,14 +78,12 @@ class AutoSessionTest extends TestCase
         // newly created session
         Cookie::remove('kirby_session');
         unset($_SERVER['HTTP_AUTHORIZATION']);
-        $time = time();
         $session = $autoSession->get();
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        $this->assertGreaterThanOrEqual($time, $session->startTime());
-        $this->assertLessThanOrEqual($time + 3, $session->startTime());
+        $this->assertEquals(1337000000, $session->startTime()); // timestamp is from mock
         $this->assertEquals(7200, $session->duration());
-        $this->assertEquals($session->startTime() + 7200, $session->expiryTime());
+        $this->assertEquals(1337000000 + 7200, $session->expiryTime()); // timestamp is from mock
         $this->assertEquals(1800, $session->timeout());
         $this->assertTrue($session->renewable());
 
@@ -123,14 +123,12 @@ class AutoSessionTest extends TestCase
 
         // long session defaults
         $autoSession = new AutoSession($this->store);
-        $time = time();
         $session = $autoSession->get(['long' => true]);
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        $this->assertGreaterThanOrEqual($time, $session->startTime());
-        $this->assertLessThanOrEqual($time + 3, $session->startTime());
+        $this->assertEquals(1337000000, $session->startTime()); // timestamp is from mock
         $this->assertEquals(1209600, $session->duration());
-        $this->assertEquals($session->startTime() + 1209600, $session->expiryTime());
+        $this->assertEquals(1337000000 + 1209600, $session->expiryTime()); // timestamp is from mock
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
 
@@ -154,26 +152,22 @@ class AutoSessionTest extends TestCase
             'durationLong'   => 5,
             'timeout'        => 1234
         ]);
-        $time = time();
         $session = $autoSession->get();
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        $this->assertGreaterThanOrEqual($time, $session->startTime());
-        $this->assertLessThanOrEqual($time + 3, $session->startTime());
+        $this->assertEquals(1337000000, $session->startTime()); // timestamp is from mock
         $this->assertEquals(1, $session->duration());
-        $this->assertEquals($session->startTime() + 1, $session->expiryTime());
+        $this->assertEquals(1337000000 + 1, $session->expiryTime()); // timestamp is from mock
         $this->assertEquals(1234, $session->timeout());
         $this->assertTrue($session->renewable());
 
         // custom duration and timeout (long session)
-        $time = time();
         $session = $autoSession->get(['long' => true]);
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        $this->assertGreaterThanOrEqual($time, $session->startTime());
-        $this->assertLessThanOrEqual($time + 3, $session->startTime());
+        $this->assertEquals(1337000000, $session->startTime()); // timestamp is from mock
         $this->assertEquals(5, $session->duration());
-        $this->assertEquals($session->startTime() + 5, $session->expiryTime());
+        $this->assertEquals(1337000000 + 5, $session->expiryTime()); // timestamp is from mock
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
 

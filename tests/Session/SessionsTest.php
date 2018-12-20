@@ -18,6 +18,8 @@ class SessionsTest extends TestCase
     {
         $this->store    = new TestSessionStore();
         $this->sessions = new Sessions($this->store);
+
+        MockTime::$time = 1337000000;
     }
 
     public function tearDown()
@@ -109,18 +111,15 @@ class SessionsTest extends TestCase
     public function testCreate()
     {
         $sessions = new Sessions($this->store, ['mode' => 'header']);
-        $time = time();
         $session = $sessions->create();
         $this->assertEquals('header', $session->mode());
         $this->assertNull($session->token());
-        $this->assertGreaterThanOrEqual($time, $session->startTime());
-        $this->assertLessThanOrEqual($time + 3, $session->startTime());
+        $this->assertEquals(1337000000, $session->startTime()); // timestamp is from mock
         $this->assertEquals(7200, $session->duration());
-        $this->assertEquals($session->startTime() + 7200, $session->expiryTime());
+        $this->assertEquals(1337000000 + 7200, $session->expiryTime()); // timestamp is from mock
         $this->assertEquals(1800, $session->timeout());
         $this->assertTrue($session->renewable());
 
-        $time = time();
         $session = $sessions->create([
             'mode'       => 'manual',
             'startTime'  => '+ 1 hour',
@@ -130,10 +129,9 @@ class SessionsTest extends TestCase
         ]);
         $this->assertEquals('manual', $session->mode());
         $this->assertNull($session->token());
-        $this->assertGreaterThanOrEqual($time + 3600, $session->startTime());
-        $this->assertLessThanOrEqual($time + 3600 + 3, $session->startTime());
+        $this->assertEquals(1337000000 + 3600, $session->startTime()); // timestamp is from mock
         $this->assertEquals(36000, $session->duration());
-        $this->assertEquals($session->startTime() + 36000, $session->expiryTime());
+        $this->assertEquals(1337000000 + 39600, $session->expiryTime()); // timestamp is from mock
         $this->assertEquals(false, $session->timeout());
         $this->assertFalse($session->renewable());
     }

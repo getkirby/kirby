@@ -20,6 +20,8 @@ class SessionTest extends TestCase
     {
         $this->store    = new TestSessionStore();
         $this->sessions = new Sessions($this->store);
+
+        MockTime::$time = 1337000000;
     }
 
     public function tearDown()
@@ -43,30 +45,26 @@ class SessionTest extends TestCase
         $activityProperty->setAccessible(true);
 
         // defaults
-        $time = time();
         $session = new Session($this->sessions, null, []);
-        $this->assertGreaterThanOrEqual($time, $session->startTime());
-        $this->assertLessThanOrEqual($time + 3, $session->startTime());
-        $this->assertEquals($session->startTime() + 7200, $session->expiryTime());
+        $this->assertEquals(1337000000, $session->startTime()); // timestamp is from mock
+        $this->assertEquals(1337000000 + 7200, $session->expiryTime()); // timestamp is from mock
         $this->assertEquals(7200, $session->duration());
         $this->assertEquals(1800, $session->timeout());
-        $this->assertEquals($session->startTime(), $activityProperty->getValue($session));
+        $this->assertEquals(1337000000, $activityProperty->getValue($session)); // timestamp is from mock
         $this->assertEquals(true, $session->renewable());
         $this->assertEquals([], $session->data()->get());
         $this->assertNull($session->token());
         $this->assertWriteMode(false, $session);
 
         // custom values
-        $time = time();
         $session = new Session($this->sessions, null, [
-            'startTime'  => $time + 60,
+            'startTime'  => 1337000000 + 60, // timestamp is from mock
             'expiryTime' => '+ 1 hour',
             'timeout'    => false,
             'renewable'  => false
         ]);
-        $this->assertGreaterThanOrEqual($time + 60, $session->startTime());
-        $this->assertLessThanOrEqual($time + 60 + 3, $session->startTime());
-        $this->assertEquals($session->startTime() + 3600, $session->expiryTime());
+        $this->assertEquals(1337000000 + 60, $session->startTime()); // timestamp is from mock
+        $this->assertEquals(1337000000 + 3660, $session->expiryTime()); // timestamp is from mock
         $this->assertEquals(3600, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertEquals(null, $activityProperty->getValue($session));
@@ -190,9 +188,7 @@ class SessionTest extends TestCase
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
         $originalToken = $session->token();
-        $time = time();
-        $this->assertGreaterThanOrEqual($time + 3600, $newExpiry = $session->expiryTime('+ 1 hour'));
-        $this->assertLessThanOrEqual($time + 3600 + 3, $newExpiry);
+        $this->assertEquals(1337000000 + 3600, $newExpiry = $session->expiryTime('+ 1 hour')); // timestamp is from mock
         $this->assertEquals($newExpiry, $session->expiryTime());
         $this->assertEquals(3600, $session->duration());
         $this->assertWriteMode(true, $session);
@@ -260,11 +256,9 @@ class SessionTest extends TestCase
         $this->assertEquals(7777777777, $session->expiryTime());
         $this->assertEquals(6777777777, $session->duration());
         $this->assertWriteMode(false, $session);
-        $time = time();
         $this->assertEquals(3600, $session->duration(3600));
         $this->assertEquals(3600, $session->duration());
-        $this->assertGreaterThanOrEqual($time + 3600, $session->expiryTime());
-        $this->assertLessThanOrEqual($time + 3600 + 3, $session->expiryTime());
+        $this->assertEquals(1337000000 + 3600, $session->expiryTime()); // timestamp is from mock
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
     }
@@ -353,13 +347,12 @@ class SessionTest extends TestCase
     public function testRenewable()
     {
         $session = new Session($this->sessions, null, [
-            'expiryTime' => '+ 1 second',
+            'expiryTime' => '+ 1 minute',
             'renewable'  => true
         ]);
         $session->regenerateToken();
         $session->commit();
         $originalToken = $session->token();
-        sleep(1); // make sure that the session is at least half expired
 
         $this->assertTrue($session->renewable());
         $this->assertWriteMode(false, $session);
@@ -368,12 +361,24 @@ class SessionTest extends TestCase
         $this->assertWriteMode(true, $session);
         $this->assertEquals($originalToken, $session->token());
 
+        // re-enabling and disabling shouldn't do anything at first
+        $this->assertTrue($session->renewable(true));
+        $this->assertTrue($session->renewable());
+        $this->assertWriteMode(true, $session);
+        $this->assertEquals($originalToken, $session->token());
+        $this->assertFalse($session->renewable(false));
+        $this->assertFalse($session->renewable());
+        $this->assertWriteMode(true, $session);
+        $this->assertEquals($originalToken, $session->token());
+
+        // make time pass by more than half the session duration
+        MockTime::$time = 1337000040;
+
         // verify that automatic renewing happens when re-enabling
         $this->assertTrue($session->renewable(true));
         $this->assertTrue($session->renewable());
         $this->assertWriteMode(true, $session);
-        $this->assertNotEquals($originalToken, $session->token());
-        $newToken = $session->token();
+        $this->assertNotEquals($originalToken, $newToken = $session->token());
         $this->assertTrue($session->renewable(true));
         $this->assertTrue($session->renewable());
         $this->assertWriteMode(true, $session);
@@ -433,7 +438,6 @@ class SessionTest extends TestCase
         $this->assertWriteMode(false, $session);
         $this->assertFalse(isset($this->store->isLocked['9999999999.valid']));
         $session->renewable(true);
-        $time = time();
         $session->timeout(3600);
         $session->data()->set('id', 'someOtherId');
         $session->data()->set('someKey', 'someValue');
@@ -449,7 +453,7 @@ class SessionTest extends TestCase
             'expiryTime'   => 9999999999,
             'duration'     => 9999999999,
             'timeout'      => 3600,
-            'lastActivity' => $time,
+            'lastActivity' => 1337000000, // timestamp is from mock
             'renewable'    => true,
             'data' => [
                 'id'      => 'someOtherId',
@@ -463,7 +467,7 @@ class SessionTest extends TestCase
             'expiryTime'   => 9999999999,
             'duration'     => 9999999999,
             'timeout'      => 1234,
-            'lastActivity' => $time,
+            'lastActivity' => 1337000000, // timestamp is from mock
             'renewable'    => true,
             'data' => [
                 'id'      => 'someOtherId',
@@ -489,7 +493,7 @@ class SessionTest extends TestCase
             'expiryTime'   => 9999999999,
             'duration'     => 9999999999,
             'timeout'      => 1234,
-            'lastActivity' => $time,
+            'lastActivity' => 1337000000, // timestamp is from mock
             'renewable'    => false,
             'data' => [
                 'id'      => 'someOtherId',
@@ -540,10 +544,8 @@ class SessionTest extends TestCase
 
         $this->assertEquals(9999999999, $session->expiryTime());
         $this->assertEquals(8999999999, $session->duration());
-        $time = time();
         $session->renew();
-        $this->assertGreaterThanOrEqual($time + 8999999999, $session->expiryTime());
-        $this->assertLessThanOrEqual($time + 8999999999 + 3, $session->expiryTime());
+        $this->assertEquals(1337000000 + 8999999999, $session->expiryTime()); // timestamp is from mock
         $this->assertEquals(8999999999, $session->duration());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
@@ -553,7 +555,7 @@ class SessionTest extends TestCase
         $newTokenParts = explode('.', $session->token());
         $this->assertEquals([
             'startTime'  => 1000000000,
-            'expiryTime' => $time + 30,
+            'expiryTime' => 1337000000 + 30, // timestamp is from mock
             'newSession' => $newTokenParts[0] . '.' . $newTokenParts[1]
         ], $this->store->sessions['9999999999.' . $oldTokenParts[1]]);
     }
@@ -564,7 +566,7 @@ class SessionTest extends TestCase
      */
     public function testRenewNotRenewable()
     {
-        $token = '3000000000.nonRenewable.' . $this->store->validKey;
+        $token = '2000000000.nonRenewable.' . $this->store->validKey;
 
         $session = new Session($this->sessions, $token, []);
         $session->renew();
@@ -576,7 +578,6 @@ class SessionTest extends TestCase
         $session = new Session($this->sessions, $token, []);
 
         $this->assertWriteMode(false, $session);
-        $time = time();
         $session->regenerateToken();
         $this->assertNotEquals($token, $newToken = $session->token());
         $this->assertEquals(0, $session->startTime());
@@ -591,11 +592,11 @@ class SessionTest extends TestCase
         $this->assertNotEquals($this->store->validKey, $newTokenParts[2]);
 
         // validate that the old session now references the new one
-        $this->assertCount(3, $this->store->sessions['9999999999.valid']);
-        $this->assertEquals(0, $this->store->sessions['9999999999.valid']['startTime']);
-        $this->assertEquals($newTokenParts[0] . '.' . $newTokenParts[1], $this->store->sessions['9999999999.valid']['newSession']);
-        $this->assertGreaterThanOrEqual($time + 30, $this->store->sessions['9999999999.valid']['expiryTime']);
-        $this->assertLessThanOrEqual($time + 30 + 3, $this->store->sessions['9999999999.valid']['expiryTime']);
+        $this->assertEquals([
+            'startTime'  => 0,
+            'expiryTime' => 1337000000 + 30, // timestamp is from mock
+            'newSession' => $newTokenParts[0] . '.' . $newTokenParts[1]
+        ], $this->store->sessions['9999999999.valid']);
 
         // validate that a cookie has been set
         $this->assertEquals($newToken, Cookie::get('kirby_session'));
@@ -711,7 +712,7 @@ class SessionTest extends TestCase
         $this->assertEquals(1234567890, $timeToTimestamp->invoke(null, 1234567890));
         $this->assertEquals(1234567890, $timeToTimestamp->invoke(null, 1234567890, 1357924680));
         $this->assertEquals(1514764800, $timeToTimestamp->invoke(null, '2018-01-01T00:00:00+00:00', 1357924680));
-        $this->assertEquals(strtotime('tomorrow'), $timeToTimestamp->invoke(null, 'tomorrow'));
+        $this->assertEquals(strtotime('tomorrow', 1337000000), $timeToTimestamp->invoke(null, 'tomorrow')); // timestamp is from mock
         $this->assertEquals(strtotime('tomorrow', 1357924680), $timeToTimestamp->invoke(null, 'tomorrow', 1357924680));
     }
 
@@ -869,10 +870,10 @@ class SessionTest extends TestCase
         $token = '9999999999.movedRenewal.' . $this->store->validKey;
 
         $session = new Session($this->sessions, $token, []);
-        $this->assertEquals('3000000000.renewal', $session->token());
+        $this->assertEquals('2000000000.renewal', $session->token());
         $this->assertEquals(0, $session->startTime());
-        $this->assertEquals(3000000000, $session->expiryTime());
-        $this->assertEquals(3000000000, $session->duration());
+        $this->assertEquals(2000000000, $session->expiryTime());
+        $this->assertEquals(2000000000, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
         $this->assertEquals('renewal', $session->data()->get('id'));
@@ -994,17 +995,15 @@ class SessionTest extends TestCase
     public function testInitAutoRenew()
     {
         $token = '.renewal.' . $this->store->validKey;
-        $time = time();
 
-        $session = new Session($this->sessions, '3000000000' . $token, []);
+        $session = new Session($this->sessions, '2000000000' . $token, []);
         $newToken = $session->token();
         $newTokenExpiry = (int)Str::before($newToken, '.');
 
-        $this->assertGreaterThanOrEqual($time, $newTokenExpiry);
-        $this->assertLessThanOrEqual($time + 3000000000 + 3, $newTokenExpiry);
+        $this->assertEquals(1337000000 + 2000000000, $newTokenExpiry); // timestamp is from mock
         $this->assertEquals(0, $session->startTime());
         $this->assertEquals($newTokenExpiry, $session->expiryTime());
-        $this->assertEquals(3000000000, $session->duration());
+        $this->assertEquals(2000000000, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
         $this->assertEquals('renewal', $session->data()->get('id'));
@@ -1012,13 +1011,13 @@ class SessionTest extends TestCase
 
     public function testInitNonRenewable()
     {
-        $token = '3000000000.nonRenewable.' . $this->store->validKey;
+        $token = '2000000000.nonRenewable.' . $this->store->validKey;
 
         $session = new Session($this->sessions, $token, []);
         $this->assertEquals($token, $session->token());
         $this->assertEquals(0, $session->startTime());
-        $this->assertEquals(3000000000, $session->expiryTime());
-        $this->assertEquals(3000000000, $session->duration());
+        $this->assertEquals(2000000000, $session->expiryTime());
+        $this->assertEquals(2000000000, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertFalse($session->renewable());
         $this->assertEquals('nonRenewable', $session->data()->get('id'));
