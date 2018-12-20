@@ -448,9 +448,57 @@ class VTest extends TestCase
         $this->assertFalse(V::url('http://10.1.1.254'));
     }
 
-    public function testInput()
+    public function inputProvider()
     {
+        return [
+            // everything alright
+            [
+                [
+                    'a' => 'a',
+                    'b' => 'b'
+                ],
+                [],
+                true
+            ],
+            // invalid email
+            [
+                [
+                    'email' => 'test'
+                ],
+                [
+                    'email' => [
+                        'email'
+                    ]
+                ],
+                false,
+                'The "email" validation failed for field "email"',
+            ],
+            // missing required field
+            [
+                [
+                ],
+                [
+                    'email' => [
+                        'required' => true
+                    ]
+                ],
+                false,
+                'The "email" field is missing',
+            ],
+        ];
+    }
 
+    /**
+     * @dataProvider inputProvider
+     */
+    public function testInput($input, $rules, $result, $message = null)
+    {
+        if ($result === false) {
+            $this->expectException('Exception');
+            $this->expectExceptionMessage($message);
+        }
+
+        $this->assertTrue(V::input($input, $rules));
     }
 
     public function testValue()

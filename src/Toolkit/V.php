@@ -160,7 +160,7 @@ class V
             try {
                 V::value($fieldValue, $fieldRules);
             } catch (Exception $e) {
-                throw new Exception(sprintf($e->getMessage() . ' failed for field "%s"', $fieldName));
+                throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $fieldName));
             }
 
             static::value($fieldValue, $fieldRules);

@@ -148,20 +148,21 @@ class EmailTest extends TestCase
         ], $email->toArray()['to']);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testEmailUserData()
     {
-
-        // TODO: for some reason, the template loader leaks
-        // and breaks tests afterwards :(
-        $this->markTestIncomplete();
-
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'templates' => [
                 'emails/user-info' => __DIR__ . '/fixtures/emails/user-info.php'
             ]
         ]);
 
-        $user =  new User([
+        $user = new User([
             'email' => 'ceo@company.com',
             'name' => 'Mario'
         ]);
@@ -176,7 +177,6 @@ class EmailTest extends TestCase
 
         $this->assertEquals('ceo@company.com', $email->toArray()['to']);
         $this->assertEquals('Welcome, Mario!', $email->toArray()['body']);
-
     }
 
 }

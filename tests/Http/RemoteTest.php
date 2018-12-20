@@ -63,10 +63,6 @@ class RemoteTest extends TestCase
         $this->assertEquals([], $request->info());
     }
 
-    public function testOptions()
-    {
-    }
-
     public function testPatch()
     {
         $request = Remote::patch('https://getkirby.com');
