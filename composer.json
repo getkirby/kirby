@@ -1,13 +1,14 @@
 {
-  "name": "getkirby/cms",
+  "name": "getkirby/kirby",
   "description": "Kirby CMS",
   "version": "3.0.0-RC-1.2",
   "keywords": ["kirby", "cms"],
   "homepage": "https://getkirby.com",
+  "type": "kirby-cms",
   "authors": [
     {
-      "name": "Bastian Allgeier",
-      "email": "bastian@getkirby.com",
+      "name": "Kirby Team",
+      "email": "support@getkirby.com",
       "homepage": "https://getkirby.com"
     }
   ],
@@ -20,6 +21,7 @@
   "require": {
     "php": ">=7.1.0",
     "ext-mbstring": "*",
+    "getkirby/composer-installer": "*",
     "mustangostang/spyc": "0.6.*",
     "erusev/parsedown": "1.8.0-beta-5",
     "erusev/parsedown-extra": "0.8.0-beta-1",
