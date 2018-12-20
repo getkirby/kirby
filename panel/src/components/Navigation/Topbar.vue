@@ -1,6 +1,6 @@
 <template>
-  <header class="k-topbar">
-    <k-view v-if="user && view">
+  <div class="k-topbar" v-if="user && view">
+    <k-view>
       <div class="k-topbar-wrapper">
         <k-dropdown class="k-topbar-menu">
           <k-button
@@ -109,7 +109,7 @@
         </div>
       </div>
     </k-view>
-  </header>
+  </div>
 </template>
 
 <script>

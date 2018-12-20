@@ -7,10 +7,10 @@
     :data-dialog="$store.state.dialog"
     class="k-panel"
   >
-    <div v-if="inside" class="k-panel-header">
+    <header v-if="inside" class="k-panel-header">
       <k-topbar @register="$refs.registration.open()" />
       <k-search v-if="$store.state.search" v-bind="$store.state.search" />
-    </div>
+    </header>
     <main class="k-panel-view">
       <router-view />
     </main>
@@ -19,7 +19,7 @@
     <div v-if="offline" class="k-offline-warning">
       <p>The panel is currently offline</p>
     </div>
-    <k-registration ref="registration" />
+    <k-registration v-if="inside" ref="registration" />
   </div>
   <div v-else class="k-panel">
     <main class="k-panel-view">
@@ -51,7 +51,9 @@ export default {
   },
   computed: {
     inside() {
-      return !this.$route.meta.outside && this.$store.state.user.current;
+      return !this.$route.meta.outside && this.$store.state.user.current
+        ? true
+        : false;
     }
   },
   created() {
