@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class HiddenFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('hidden');
@@ -16,5 +15,4 @@ class HiddenFieldTest extends TestCase
         $this->assertEquals(null, $field->value());
         $this->assertTrue($field->save());
     }
-
 }

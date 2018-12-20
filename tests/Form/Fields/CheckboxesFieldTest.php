@@ -7,7 +7,6 @@ use Kirby\Form\Field;
 
 class CheckboxesFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('checkboxes');
@@ -71,7 +70,6 @@ class CheckboxesFieldTest extends TestCase
 
     public function testIgnoreInvalidOptions()
     {
-
         $field = new Field('checkboxes', [
             'options' => [
                 'a',
@@ -82,12 +80,10 @@ class CheckboxesFieldTest extends TestCase
         ]);
 
         $this->assertEquals(['a', 'b'], $field->value());
-
     }
 
     public function testMin()
     {
-
         $field = new Field('checkboxes', [
             'value'   => 'a',
             'options' => ['a', 'b', 'c'],
@@ -96,12 +92,10 @@ class CheckboxesFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
-
     }
 
     public function testMax()
     {
-
         $field = new Field('checkboxes', [
             'value'   => 'a, b',
             'options' => ['a', 'b', 'c'],
@@ -110,7 +104,5 @@ class CheckboxesFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
-
     }
-
 }

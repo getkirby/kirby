@@ -7,20 +7,16 @@ use PHPUnit\Framework\TestCase;
 
 class MockModel
 {
-
 }
 
 class ExtendedModel extends stdClass
 {
-
 }
 
 class ApiTest extends TestCase
 {
-
     public function testModelResolver()
     {
-
         $api = new Api([
             'models' => [
                 'MockModel' => [
@@ -43,7 +39,6 @@ class ApiTest extends TestCase
         // resolve class extension
         $result = $api->resolve(new ExtendedModel);
         $this->assertInstanceOf(Model::class, $result);
-
     }
 
     /**
@@ -54,5 +49,4 @@ class ApiTest extends TestCase
         $api = new Api([]);
         $api->resolve(new MockModel);
     }
-
 }

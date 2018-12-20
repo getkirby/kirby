@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class MockObject extends Model
 {
-
     public function __construct(array $props = [])
     {
         $this->id    = $props['id'];
@@ -25,12 +24,10 @@ class MockObject extends Model
     {
         return ['id' => $this->id];
     }
-
 }
 
 class CollectionTest extends TestCase
 {
-
     public function testWithValidObjects()
     {
         $collection = new Collection([
@@ -66,7 +63,6 @@ class CollectionTest extends TestCase
 
     public function testGroupBy()
     {
-
         $collection = new Collection([
             $a = new MockObject(['id' => 'a', 'group' => 'a']),
             $b = new MockObject(['id' => 'b', 'group' => 'a']),
@@ -224,5 +220,4 @@ class CollectionTest extends TestCase
             'c' => 'c'
         ]);
     }
-
 }

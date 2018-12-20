@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class SiteBlueprintTest extends TestCase
 {
-
     public function testOptions()
     {
         $blueprint = new SiteBlueprint([
@@ -20,5 +19,4 @@ class SiteBlueprintTest extends TestCase
 
         $this->assertEquals($expected, $blueprint->options());
     }
-
 }

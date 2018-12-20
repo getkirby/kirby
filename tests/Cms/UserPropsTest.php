@@ -6,7 +6,6 @@ use Kirby\Toolkit\F;
 
 class UserPropsTest extends TestCase
 {
-
     public function testAvatar()
     {
         $user = new User([
@@ -96,5 +95,4 @@ class UserPropsTest extends TestCase
 
         Dir::remove($index);
     }
-
 }

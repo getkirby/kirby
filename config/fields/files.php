@@ -114,7 +114,6 @@ return [
     ],
     'methods' => [
         'fileResponse' => function ($file) {
-
             if ($this->layout === 'list') {
                 $thumb = [
                     'width'  => 100,
@@ -145,12 +144,10 @@ return [
             ];
         },
         'toFiles' => function ($value = null) {
-
             $files = [];
             $kirby = kirby();
 
             foreach (Yaml::decode($value) as $id) {
-
                 if (is_array($id) === true) {
                     $id = $id['id'] ?? null;
                 }
@@ -161,7 +158,6 @@ return [
             }
 
             return $files;
-
         }
     ],
     'api' => function () {

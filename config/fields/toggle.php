@@ -19,9 +19,7 @@ return [
          * Sets the text next to the toggle. The text can be a string or an array of two options. The first one is the negative text and the second one the positive. The text will automatically switch when the toggle is triggered.
          */
         'text' => function ($value = null) {
-
             if (is_array($value) === true) {
-
                 if (A::isAssociative($value) === true) {
                     return I18n::translate($value, $value);
                 }
@@ -31,11 +29,9 @@ return [
                 }
 
                 return $value;
-
             }
 
             return I18n::translate($value, $value);
-
         },
     ],
     'computed' => [

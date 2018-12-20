@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class CookieTest extends TestCase
 {
-
     public function testKey()
     {
         $this->assertEquals('KirbyHttpCookieKey', Cookie::$key);

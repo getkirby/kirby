@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class FieldsTest extends TestCase
 {
-
     public function setUp()
     {
         Field::$types  = [];
@@ -39,5 +38,4 @@ class FieldsTest extends TestCase
         $this->assertEquals('a', $fields->first()->name());
         $this->assertEquals('b', $fields->last()->name());
     }
-
 }

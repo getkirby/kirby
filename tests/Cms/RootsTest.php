@@ -4,10 +4,8 @@ namespace Kirby\Cms;
 
 class RootsTest extends TestCase
 {
-
     public function defaultRootProvider(): array
     {
-
         $index = realpath(__DIR__ . '/../../../');
 
         return [
@@ -38,7 +36,6 @@ class RootsTest extends TestCase
 
     public function customIndexRootProvider(): array
     {
-
         $index = '/var/www/getkirby.com';
 
         return [
@@ -74,7 +71,6 @@ class RootsTest extends TestCase
 
     public function customRootProvider(): array
     {
-
         $base    = '/var/www/getkirby.com';
         $public  = $base . '/public';
 
@@ -111,5 +107,4 @@ class RootsTest extends TestCase
 
         $this->assertEquals($root, $roots->$method());
     }
-
 }

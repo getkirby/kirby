@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class RangeFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('range');
@@ -24,7 +23,6 @@ class RangeFieldTest extends TestCase
 
     public function testMin()
     {
-
         $field = new Field('range', [
             'value' => 1,
             'min'   => 2
@@ -32,12 +30,10 @@ class RangeFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
-
     }
 
     public function testMax()
     {
-
         $field = new Field('range', [
             'value' => 1,
             'max'   => 0
@@ -45,7 +41,5 @@ class RangeFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
-
     }
-
 }

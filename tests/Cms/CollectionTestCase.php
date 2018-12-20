@@ -6,7 +6,6 @@ use ReflectionClass;
 
 class CollectionTestCase extends TestCase
 {
-
     public $collection = null;
     public $collectionType = null;
 
@@ -60,5 +59,4 @@ class CollectionTestCase extends TestCase
 
         $this->assertInstanceOf($this->collectionType, $this->collection());
     }
-
 }

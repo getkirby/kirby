@@ -83,4 +83,3 @@ return [
         return $roots['blueprints'] . '/users';
     },
 ];
-

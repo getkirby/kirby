@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class ComponentTest extends TestCase
 {
-
     public function tearDown()
     {
         Component::$types  = [];
@@ -237,7 +236,6 @@ class ComponentTest extends TestCase
 
     public function testMixins()
     {
-
         Component::$mixins = [
             'test' => [
                 'computed' => [
@@ -263,7 +261,5 @@ class ComponentTest extends TestCase
 
         $this->assertEquals('HELLO WORLD', $component->message());
         $this->assertEquals('HELLO WORLD', $component->message);
-
     }
-
 }

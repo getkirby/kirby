@@ -24,7 +24,7 @@ class TestCache extends Cache
     }
     public function retrieve(string $key)
     {
-            return $this->store[$key] ?? null;
+        return $this->store[$key] ?? null;
     }
     public function remove(string $key): bool
     {
@@ -40,7 +40,6 @@ class TestCache extends Cache
 
 class CacheTest extends TestCase
 {
-
     public function testConstruct()
     {
         $driver = new TestCache();

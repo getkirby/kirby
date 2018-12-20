@@ -55,11 +55,9 @@ $aliases = [
 ];
 
 spl_autoload_register(function ($class) use ($aliases) {
-
     $class = strtolower($class);
 
     if (isset($aliases[$class]) === true) {
         class_alias($aliases[$class], $class);
     }
-
 });

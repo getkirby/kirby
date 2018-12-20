@@ -6,7 +6,6 @@ use Exception;
 
 class StructureObjectTest extends TestCase
 {
-
     public function testId()
     {
         $object = new StructureObject([
@@ -130,5 +129,4 @@ class StructureObjectTest extends TestCase
 
         $this->assertEquals($expected, $object->toArray());
     }
-
 }

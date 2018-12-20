@@ -84,7 +84,6 @@ return [
             return $file->size();
         },
         'thumbs' => function ($file) {
-
             if ($file->isResizable() === false) {
                 return null;
             }
@@ -96,7 +95,6 @@ return [
                 'large'  => $file->resize(768)->url(),
                 'huge'   => $file->resize(1024)->url(),
             ];
-
         },
         'type' => function (File $file) {
             return $file->type();

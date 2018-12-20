@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class EmailFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('email');
@@ -23,7 +22,6 @@ class EmailFieldTest extends TestCase
 
     public function testEmailValidation()
     {
-
         $field = new Field('email', [
             'value' => 'mail@getkirby.com'
         ]);
@@ -35,12 +33,10 @@ class EmailFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->isValid());
-
     }
 
     public function testMinLength()
     {
-
         $field = new Field('email', [
             'value' => 'mail@test.com',
             'minlength' => 14
@@ -48,12 +44,10 @@ class EmailFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('minlength', $field->errors());
-
     }
 
     public function testMaxLength()
     {
-
         $field = new Field('email', [
             'value'     => 'mail@test.com',
             'maxlength' => 12
@@ -61,7 +55,5 @@ class EmailFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('maxlength', $field->errors());
-
     }
-
 }

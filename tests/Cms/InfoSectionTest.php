@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class InfoSectionTest extends TestCase
 {
-
     public function setUp()
     {
         new App([
@@ -40,7 +39,6 @@ class InfoSectionTest extends TestCase
         ]);
 
         $this->assertEquals('Informations', $section->headline());
-
     }
 
     public function testText()
@@ -66,7 +64,5 @@ class InfoSectionTest extends TestCase
         ]);
 
         $this->assertEquals('<p>Informations</p>', $section->text());
-
     }
-
 }

@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase as TestCase;
 
 class PageTemplateTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -49,5 +48,4 @@ class PageTemplateTest extends TestCase
         $this->assertInstanceOf(Template::class, $page->template());
         $this->assertEquals('default', $page->template()->name());
     }
-
 }

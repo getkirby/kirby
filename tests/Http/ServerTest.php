@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class ServerTest extends TestCase
 {
-
     protected $_SERVER = null;
 
     public function setUp()
@@ -84,5 +83,4 @@ class ServerTest extends TestCase
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
         $this->assertEquals('kirby', Server::host(true));
     }
-
 }

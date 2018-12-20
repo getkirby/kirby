@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class PageCacheTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
@@ -33,7 +32,6 @@ class PageCacheTest extends TestCase
         ]);
 
         Dir::make($this->fixtures);
-
     }
 
     public function tearDown()
@@ -84,7 +82,6 @@ class PageCacheTest extends TestCase
 
     public function testIgnoreId()
     {
-
         $app = $this->app->clone([
             'options' => [
                 'cache.pages' => [
@@ -97,12 +94,10 @@ class PageCacheTest extends TestCase
 
         $this->assertTrue($app->page('a')->isCacheable());
         $this->assertFalse($app->page('b')->isCacheable());
-
     }
 
     public function testIgnoreCallback()
     {
-
         $app = $this->app->clone([
             'options' => [
                 'cache.pages' => [
@@ -115,7 +110,6 @@ class PageCacheTest extends TestCase
 
         $this->assertFalse($app->page('a')->isCacheable());
         $this->assertTrue($app->page('b')->isCacheable());
-
     }
 
     public function testDisabledCache()
@@ -140,5 +134,4 @@ class PageCacheTest extends TestCase
 
         $this->assertFalse($app->page('a')->isCacheable());
     }
-
 }

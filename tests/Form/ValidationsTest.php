@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class ValidationsTest extends TestCase
 {
-
     public function setUp()
     {
         new App([
@@ -249,5 +248,4 @@ class ValidationsTest extends TestCase
 
         Validations::options($field, ['a', 'c']);
     }
-
 }

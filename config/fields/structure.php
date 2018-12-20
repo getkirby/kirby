@@ -69,7 +69,6 @@ return [
             return $this->form()->fields()->toArray();
         },
         'columns' => function () {
-
             $columns = [];
 
             if (empty($this->columns)) {
@@ -87,9 +86,7 @@ return [
                     ];
                 }
             } else {
-
                 foreach ($this->columns as $columnName => $columnProps) {
-
                     if (is_array($columnProps) === false) {
                         $columnProps = [];
                     }
@@ -105,11 +102,9 @@ return [
                         'label' => $field['label'] ?? $field['name']
                     ]);
                 }
-
             }
 
             return $columns;
-
         },
     ],
     'methods' => [

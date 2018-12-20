@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class TranslationsTest extends TestCase
 {
-
     public function testFactory()
     {
         $translations = Translations::factory([
@@ -29,5 +28,4 @@ class TranslationsTest extends TestCase
         $this->assertTrue($translations->has('de'));
         $this->assertTrue($translations->has('en'));
     }
-
 }

@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class FilePermissionsTest extends TestCase
 {
-
     public function actionProvider()
     {
         return [
@@ -53,5 +52,4 @@ class FilePermissionsTest extends TestCase
 
         $this->assertFalse($perms->can($action));
     }
-
 }

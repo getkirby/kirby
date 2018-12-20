@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class HeadlineFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('headline');
@@ -21,7 +20,6 @@ class HeadlineFieldTest extends TestCase
 
     public function testNumbered()
     {
-
         $field = new Field('headline', [
             'numbered' => true
         ]);
@@ -33,7 +31,5 @@ class HeadlineFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->numbered());
-
     }
-
 }

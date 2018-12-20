@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class JsonTest extends TestCase
 {
-
     public function testEncodeDecode()
     {
         $array = [

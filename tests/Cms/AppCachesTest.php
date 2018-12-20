@@ -7,7 +7,6 @@ use Kirby\Cache\FileCache;
 
 class AppCachesTest extends TestCase
 {
-
     public function app(array $props = [])
     {
         return new App(array_merge([
@@ -69,5 +68,4 @@ class AppCachesTest extends TestCase
 
         $this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin.api'));
     }
-
 }

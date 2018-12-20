@@ -57,7 +57,6 @@ return [
          * Filters pages by their status. Available status settings: draft, unlisted, listed, published, all.
          */
         'status' => function (string $status = '') {
-
             if ($status === 'drafts') {
                 $status = 'draft';
             }
@@ -67,7 +66,6 @@ return [
             }
 
             return $status;
-
         },
         /**
          * Setup for the main text in the list or cards. By default this will display the page title.
@@ -87,7 +85,6 @@ return [
             return $this->parent();
         },
         'pages' => function () {
-
             switch ($this->status) {
                 case 'draft':
                     $pages = $this->parent->drafts();
@@ -119,7 +116,6 @@ return [
                     unset($pages->data[$id]);
                     continue;
                 }
-
             }
 
             // sort
@@ -139,7 +135,6 @@ return [
             return $this->pages->pagination()->total();
         },
         'data' => function () {
-
             $data = [];
 
             if ($this->layout === 'list') {
@@ -155,7 +150,6 @@ return [
             }
 
             foreach ($this->pages as $item) {
-
                 $permissions = $item->permissions();
                 $blueprint   = $item->blueprint();
                 $image       = $item->panelImage($this->image, $thumb);
@@ -175,14 +169,11 @@ return [
                         'changeStatus' => $permissions->can('changeStatus')
                     ]
                 ];
-
             }
 
             return $data;
-
         },
         'errors' => function () {
-
             $errors = [];
 
             if ($this->validateMax() === false) {
@@ -209,10 +200,8 @@ return [
                     'message' => $errors,
                 ]
             ];
-
         },
         'add' => function () {
-
             if (in_array($this->status, ['draft', 'all']) === false) {
                 return false;
             }
@@ -222,23 +211,19 @@ return [
             }
 
             return true;
-
         },
         'link' => function () {
-
             $modelLink  = $this->model->panelUrl(true);
             $parentLink = $this->parent->panelUrl(true);
 
             if ($modelLink !== $parentLink) {
                 return $parentLink;
             }
-
         },
         'pagination' => function () {
             return $this->pagination();
         },
         'sortable' => function () {
-
             if ($this->status !== 'listed' && $this->status !== 'all') {
                 return false;
             }
@@ -252,12 +237,10 @@ return [
             }
 
             return true;
-
         }
     ],
     'methods' => [
         'blueprints' => function () {
-
             $blueprints = [];
             $templates  = empty($this->create) === false ? $this->create : $this->templates;
 
@@ -286,7 +269,6 @@ return [
             }
 
             return $blueprints;
-
         }
     ],
     'toArray' => function () {
@@ -306,5 +288,3 @@ return [
         ];
     }
 ];
-
-

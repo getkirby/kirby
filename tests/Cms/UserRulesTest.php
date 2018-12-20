@@ -6,7 +6,6 @@ use Exception;
 
 class UserRulesTest extends TestCase
 {
-
     public function appWithAdmin()
     {
         return new App([
@@ -150,5 +149,4 @@ class UserRulesTest extends TestCase
         UserRules::delete($kirby->user('user@domain.com'));
         UserRules::delete($kirby->user('admin@domain.com'));
     }
-
 }

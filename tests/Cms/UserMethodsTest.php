@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class UserMethodsTest extends TestCase
 {
-
     public function setUp()
     {
         // make sure field methods are loaded
@@ -68,5 +67,4 @@ class UserMethodsTest extends TestCase
 
         $this->assertEquals('nobody', $user->role()->name());
     }
-
 }

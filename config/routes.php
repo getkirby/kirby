@@ -14,7 +14,6 @@ use Kirby\Toolkit\Str;
 use Kirby\Toolkit\View;
 
 return function ($kirby) {
-
     $api   = $kirby->option('api.slug', 'api');
     $panel = $kirby->option('panel.slug', 'panel');
 
@@ -107,7 +106,6 @@ return function ($kirby) {
             'method'  => 'ALL',
             'env'     => 'site',
             'action'  => function () use ($kirby) {
-
                 $home = $kirby->site()->homePage();
 
                 if ($kirby->url() !== $home->url()) {
@@ -123,7 +121,6 @@ return function ($kirby) {
                 } else {
                     return $home;
                 }
-
             }
         ];
 
@@ -144,9 +141,7 @@ return function ($kirby) {
             'method'  => 'ALL',
             'env'     => 'site',
             'action'  => function (string $path) use ($kirby) {
-
                 if ($page = $kirby->page($path)) {
-
                     $url = $kirby->request()->url([
                         'query'    => null,
                         'params'   => null,
@@ -160,12 +155,9 @@ return function ($kirby) {
                     }
 
                     return $kirby->resolve($path, $kirby->defaultLanguage()->code());
-
                 }
-
             }
         ];
-
     } else {
 
         // Single-language home
@@ -199,13 +191,10 @@ return function ($kirby) {
                 return $kirby->resolve($path);
             }
         ];
-
     }
 
     return [
         'before' => $before,
         'after'  => $after
     ];
-
 };
-

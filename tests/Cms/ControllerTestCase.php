@@ -6,7 +6,6 @@ use ReflectionClass;
 
 class ControllerTestCase extends TestCase
 {
-
     public $controller = null;
 
     public function controller(Page $page = null)
@@ -40,5 +39,4 @@ class ControllerTestCase extends TestCase
     {
         $this->assertFileExists($this->controllerRoot());
     }
-
 }

@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class PageSiblingsTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -167,7 +166,7 @@ class PageSiblingsTest extends TestCase
         $this->assertCount(2, $first->nextAll());
 
         $this->assertEquals($first->nextAll()->first(), $collection->nth(1));
-        $this->assertEquals($first->nextAll()->last(),  $collection->nth(2));
+        $this->assertEquals($first->nextAll()->last(), $collection->nth(2));
     }
 
     public function testNextListed()
@@ -209,7 +208,7 @@ class PageSiblingsTest extends TestCase
         $this->assertCount(2, $last->prevAll());
 
         $this->assertEquals($last->prevAll()->first(), $collection->nth(0));
-        $this->assertEquals($last->prevAll()->last(),  $collection->nth(1));
+        $this->assertEquals($last->prevAll()->last(), $collection->nth(1));
     }
 
     public function testPrevListed()
@@ -284,7 +283,5 @@ class PageSiblingsTest extends TestCase
 
         $this->assertFalse($siblings->has('a'));
         $this->assertFalse($siblings->has('b'));
-
     }
-
 }

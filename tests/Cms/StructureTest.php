@@ -6,7 +6,6 @@ use Exception;
 
 class StructureTest extends TestCase
 {
-
     public function testCreate()
     {
         $structure = new Structure([
@@ -42,12 +41,10 @@ class StructureTest extends TestCase
         $structure = new Structure($data);
 
         $this->assertEquals($expected, $structure->toArray());
-
     }
 
     public function testGroupBy()
     {
-
         $structure = new Structure([
             [
                 'name' => 'A',
@@ -73,7 +70,5 @@ class StructureTest extends TestCase
         $this->assertEquals('C', $grouped->first()->last()->name());
 
         $this->assertEquals('B', $grouped->last()->first()->name());
-
     }
-
 }

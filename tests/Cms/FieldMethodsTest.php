@@ -7,7 +7,6 @@ use Kirby\Data\Yaml;
 
 class FieldMethodsTest extends TestCase
 {
-
     public function setUp()
     {
         parent::setUp();
@@ -217,7 +216,6 @@ class FieldMethodsTest extends TestCase
 
     public function testToPages()
     {
-
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -481,5 +479,4 @@ class FieldMethodsTest extends TestCase
         $yaml = Yaml::encode($data);
         $this->assertEquals($data, $this->field($yaml)->yaml());
     }
-
 }

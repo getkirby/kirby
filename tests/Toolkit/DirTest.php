@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class DirTest extends TestCase
 {
-
     const FIXTURES = __DIR__ . '/fixtures/dir';
 
     protected $tmp;
@@ -110,7 +109,6 @@ class DirTest extends TestCase
         ];
 
         $this->assertEquals($expected, $files);
-
     }
 
     public function testRemove()
@@ -178,7 +176,6 @@ class DirTest extends TestCase
         $this->assertEquals($expected, $files);
 
         Dir::remove($root);
-
     }
 
     public function testSize()
@@ -194,5 +191,4 @@ class DirTest extends TestCase
 
         Dir::remove($this->tmp);
     }
-
 }

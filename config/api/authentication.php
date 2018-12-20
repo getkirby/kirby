@@ -5,7 +5,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 
 return function () {
-
     $auth = $this->kirby()->auth();
 
     // csrf token check
@@ -23,5 +22,4 @@ return function () {
     }
 
     throw new PermissionException('Unauthenticated', 403);
-
 };

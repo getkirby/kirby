@@ -4,7 +4,6 @@ namespace Kirby\Exception;
 
 class NotFoundExceptionTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testDefaults()
     {
         $exception = new NotFoundException();
@@ -12,5 +11,4 @@ class NotFoundExceptionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Not found', $exception->getMessage());
         $this->assertEquals(404, $exception->getHttpCode());
     }
-
 }

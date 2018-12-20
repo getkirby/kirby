@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class StrTest extends TestCase
 {
-
     public function testAfter()
     {
         $string = 'Hellö Wörld';
@@ -218,32 +217,32 @@ class StrTest extends TestCase
     public function testReplace()
     {
         // simple strings with limits
-        $this->assertEquals('ths s a strng',         Str::replace('this is a string', 'i', ''));
-        $this->assertEquals('this is a string',      Str::replace('this is a string', 'i', '', 0));
-        $this->assertEquals('ths is a string',       Str::replace('this is a string', 'i', '', 1));
-        $this->assertEquals('ths s a string',        Str::replace('this is a string', 'i', '', 2));
-        $this->assertEquals('ths s a strng',         Str::replace('this is a string', 'i', '', 3));
-        $this->assertEquals('ths s a strng',         Str::replace('this is a string', 'i', '', 1000));
-        $this->assertEquals('th!s !s a string',      Str::replace('this is a string', 'i', '!', 2));
-        $this->assertEquals('th?!s ?!s a string',    Str::replace('this is a string', 'i', '?!', 2));
+        $this->assertEquals('ths s a strng', Str::replace('this is a string', 'i', ''));
+        $this->assertEquals('this is a string', Str::replace('this is a string', 'i', '', 0));
+        $this->assertEquals('ths is a string', Str::replace('this is a string', 'i', '', 1));
+        $this->assertEquals('ths s a string', Str::replace('this is a string', 'i', '', 2));
+        $this->assertEquals('ths s a strng', Str::replace('this is a string', 'i', '', 3));
+        $this->assertEquals('ths s a strng', Str::replace('this is a string', 'i', '', 1000));
+        $this->assertEquals('th!s !s a string', Str::replace('this is a string', 'i', '!', 2));
+        $this->assertEquals('th?!s ?!s a string', Str::replace('this is a string', 'i', '?!', 2));
         $this->assertEquals('that also is a string', Str::replace('this is a string', 'this', 'that also', 1));
-        $this->assertEquals('this is aeä string',    Str::replace('this is ää string', 'ä', 'ae', 1));
-        $this->assertEquals('this is aeae string',   Str::replace('this is ää string', 'ä', 'ae', 2));
-        $this->assertEquals('this is äa string',     Str::replace('this is aa string', 'a', 'ä', 1));
-        $this->assertEquals('this is ää string',     Str::replace('this is aa string', 'a', 'ä', 2));
+        $this->assertEquals('this is aeä string', Str::replace('this is ää string', 'ä', 'ae', 1));
+        $this->assertEquals('this is aeae string', Str::replace('this is ää string', 'ä', 'ae', 2));
+        $this->assertEquals('this is äa string', Str::replace('this is aa string', 'a', 'ä', 1));
+        $this->assertEquals('this is ää string', Str::replace('this is aa string', 'a', 'ä', 2));
 
         // $subject as array
-        $this->assertEquals(['ths', 's', 'a', 'strng'],     Str::replace(['this', 'is', 'a', 'string'], 'i', ''));
-        $this->assertEquals(['this', 'is', 'a', 'string'],  Str::replace(['this', 'is', 'a', 'string'], 'i', '', 0));
-        $this->assertEquals(['ths', 's', 'a', 'strng'],     Str::replace(['this', 'is', 'a', 'string'], 'i', '', 1));
-        $this->assertEquals(['ths', 's', 'a', 'strng'],     Str::replace(['this', 'is', 'a', 'striing'], 'i', ''));
+        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'string'], 'i', ''));
+        $this->assertEquals(['this', 'is', 'a', 'string'], Str::replace(['this', 'is', 'a', 'string'], 'i', '', 0));
+        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'string'], 'i', '', 1));
+        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'striing'], 'i', ''));
         $this->assertEquals(['this', 'is', 'a', 'striing'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 0));
-        $this->assertEquals(['ths', 's', 'a', 'string'],    Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 1));
-        $this->assertEquals(['ths', 's', 'a', 'strng'],     Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 2));
+        $this->assertEquals(['ths', 's', 'a', 'string'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 1));
+        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 2));
 
         // $subject as Collection
         $subjects = new Collection(['this', 'is', 'a', 'striing']);
-        $this->assertEquals(['ths', 's', 'a', 'strng'],  Str::replace($subjects, 'i', ''));
+        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace($subjects, 'i', ''));
         $this->assertEquals(['ths', 's', 'a', 'string'], Str::replace($subjects, 'i', '', 1));
 
         // $search as array/Collection
@@ -254,20 +253,20 @@ class StrTest extends TestCase
 
         // $search and $replace as array/Collection
         $this->assertEquals('th!? !? a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], 2));
-        $this->assertEquals('th! ! a string',   Str::replace('this is a string', ['i', 's'], ['!'], 2));
+        $this->assertEquals('th! ! a string', Str::replace('this is a string', ['i', 's'], ['!'], 2));
         $this->assertEquals('th!? !? a string', Str::replace('this is a string', new Collection(['i', 's']), new Collection(['!', '?']), 2));
         $this->assertEquals('th!? !? a string', Str::replace('this is a string', new Collection(['i', 's']), ['!', '?'], 2));
         $this->assertEquals('th!? !? a string', Str::replace('this is a string', ['i', 's'], new Collection(['!', '?']), 2));
         $this->assertEquals('th!? !s a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2, 1]));
         $this->assertEquals('th!s !s a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2, 0]));
         $this->assertEquals('th!? !? a ?tring', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2]));
-        $this->assertEquals('th! ! a tring',    Str::replace('this is a string', ['i', 's'], ['!'], [2]));
-        $this->assertEquals('th! !s a string',  Str::replace('this is a string', ['i', 's'], ['!'], [2, 1]));
+        $this->assertEquals('th! ! a tring', Str::replace('this is a string', ['i', 's'], ['!'], [2]));
+        $this->assertEquals('th! !s a string', Str::replace('this is a string', ['i', 's'], ['!'], [2, 1]));
 
         // replacement order
-        $this->assertEquals('F',                Str::replace('A', ['A', 'B', 'C', 'D', 'E'], ['B', 'C', 'D', 'E', 'F'], 1));
-        $this->assertEquals('apearple p',       Str::replace('a p', ['a', 'p'], ['apple', 'pear'], 1));
-        $this->assertEquals('apearpearle p',    Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 2]));
+        $this->assertEquals('F', Str::replace('A', ['A', 'B', 'C', 'D', 'E'], ['B', 'C', 'D', 'E', 'F'], 1));
+        $this->assertEquals('apearple p', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], 1));
+        $this->assertEquals('apearpearle p', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 2]));
         $this->assertEquals('apearpearle pear', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 3]));
     }
 
@@ -346,7 +345,8 @@ class StrTest extends TestCase
 
     public function testReplaceReplacements()
     {
-        $this->assertEquals('other other string',
+        $this->assertEquals(
+            'other other string',
             Str::replaceReplacements('some some string', [
                 [
                 'search'  => 'some',
@@ -356,7 +356,8 @@ class StrTest extends TestCase
             ])
         );
 
-        $this->assertEquals('other interesting string',
+        $this->assertEquals(
+            'other interesting string',
             Str::replaceReplacements('some some string', [
                 [
                 'search'  => 'some',
@@ -593,5 +594,4 @@ class StrTest extends TestCase
         $this->assertEquals('ÖÄÜ', Str::upper('öäü'));
         $this->assertEquals('ÖÄÜ', Str::upper('Öäü'));
     }
-
 }

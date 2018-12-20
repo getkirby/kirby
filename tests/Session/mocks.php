@@ -7,7 +7,6 @@ use Kirby\Toolkit\Str;
 
 class InvalidSessionStore
 {
-
 }
 
 class TestSessionStore extends SessionStore
@@ -279,7 +278,8 @@ class TestSessionStore extends SessionStore
     }
 }
 
-class MockSession extends Session {
+class MockSession extends Session
+{
     public $ensuredToken       = false;
     public $preparedForWriting = false;
 

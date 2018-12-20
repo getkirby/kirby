@@ -55,7 +55,6 @@ return [
     ],
     'methods' => [
         'toTags' => function ($value) {
-
             $options = $this->options();
 
             // transform into value-text objects
@@ -77,7 +76,6 @@ return [
                     'text'  => $option,
                 ];
             }, Str::split($value));
-
         }
     ],
     'save' => function (array $value = null): string {

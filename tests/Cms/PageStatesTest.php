@@ -85,5 +85,4 @@ class PageStatesTest extends TestCase
         $this->assertTrue($mother->isDescendantOfActive());
         $this->assertTrue($child->isDescendantOfActive());
     }
-
 }

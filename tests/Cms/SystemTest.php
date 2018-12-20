@@ -7,7 +7,6 @@ use ReflectionClass;
 
 class SystemTest extends TestCase
 {
-
     protected $_SERVER = null;
 
     public function setUp()
@@ -164,5 +163,4 @@ class SystemTest extends TestCase
         ]));
         $this->assertEquals($expected, $licenseUrlNormalized->invoke($system, $url));
     }
-
 }

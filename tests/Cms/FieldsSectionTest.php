@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class FieldsSectionTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -51,7 +50,6 @@ class FieldsSectionTest extends TestCase
      */
     public function testSkipTitle($model, $skip)
     {
-
         $fields = [
             'text' => [
                 'type' => 'textarea'
@@ -82,7 +80,5 @@ class FieldsSectionTest extends TestCase
             $this->assertArrayHasKey('text', $section->fields());
             $this->assertArrayHasKey('title', $section->fields());
         }
-
     }
-
 }

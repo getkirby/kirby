@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PageRulesTest extends TestCase
 {
-
     public function appWithAdmin()
     {
         return new App([
@@ -244,5 +243,4 @@ class PageRulesTest extends TestCase
 
         $this->assertTrue(PageRules::delete($page, true));
     }
-
 }

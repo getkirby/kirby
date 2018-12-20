@@ -4,8 +4,8 @@ namespace Kirby\Email;
 
 class PHPMailerTest extends TestCase
 {
-
-    protected function _email($props = [], $mailer = PHPMailer::class) {
+    protected function _email($props = [], $mailer = PHPMailer::class)
+    {
         return parent::_email($props, $mailer);
     }
 
@@ -18,5 +18,4 @@ class PHPMailerTest extends TestCase
         $email->send(true);
         $this->assertTrue($email->isSent());
     }
-
 }

@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class CollectionGetterTest extends TestCase
 {
-
     public function testGetMagic()
     {
         $collection = new Collection([

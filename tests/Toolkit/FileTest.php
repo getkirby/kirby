@@ -32,7 +32,6 @@ function unlink($file)
 
 class FileTest extends TestCase
 {
-
     const FIXTURES = __DIR__ . '/fixtures/files';
 
     public static $block = [];

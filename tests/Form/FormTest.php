@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class FormTest extends TestCase
 {
-
     public function testDataWithoutFields()
     {
         $form = new Form([
@@ -37,7 +36,6 @@ class FormTest extends TestCase
 
     public function testDataFromNestedFields()
     {
-
         new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -73,12 +71,10 @@ class FormTest extends TestCase
         ];
 
         $this->assertEquals($expected, $form->data());
-
     }
 
     public function testInvalidFieldType()
     {
-
         new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -99,12 +95,10 @@ class FormTest extends TestCase
         $this->assertEquals('negative', $field->theme());
         $this->assertEquals('Error in "test" field', $field->label());
         $this->assertEquals('<p>The field type "does-not-exist" does not exist</p>', $field->text());
-
     }
 
     public function testFieldOrder()
     {
-
         new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -132,12 +126,10 @@ class FormTest extends TestCase
 
         $this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->values());
         $this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->data());
-
     }
 
     public function testStrictMode()
     {
-
         new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -165,7 +157,5 @@ class FormTest extends TestCase
 
         $this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->values());
         $this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->data());
-
     }
-
 }

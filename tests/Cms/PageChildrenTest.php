@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PageChildrenTest extends TestCase
 {
-
     public function testDefaultChildren()
     {
         $page = new Page(['slug' => 'test']);
@@ -34,5 +33,4 @@ class PageChildrenTest extends TestCase
 
         $this->assertFalse($page->hasChildren());
     }
-
 }

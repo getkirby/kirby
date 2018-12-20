@@ -6,7 +6,6 @@ use Kirby\Http\Response;
 
 class ImageTest extends TestCase
 {
-
     protected function _image($filename = 'cat.jpg', $url = 'http://getkirby.com/cat.jpg')
     {
         return new Image(static::FIXTURES . '/image/' . $filename, $url);

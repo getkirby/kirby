@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class FileBlueprintTest extends TestCase
 {
-
     public function testOptions()
     {
         $blueprint = new FileBlueprint([
@@ -77,5 +76,4 @@ class FileBlueprintTest extends TestCase
         $this->assertInstanceOf(FileBlueprint::class, $blueprint);
         $this->assertEquals('Gallery', $blueprint->title());
     }
-
 }

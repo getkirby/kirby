@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class BlueprintFieldsTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -105,7 +104,6 @@ class BlueprintFieldsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $fields);
-
     }
 
     public function testMultipleFieldGroups()
@@ -163,7 +161,6 @@ class BlueprintFieldsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $fields);
-
     }
 
     public function testFieldError()
@@ -186,5 +183,4 @@ class BlueprintFieldsTest extends TestCase
 
         $this->assertEquals($expected, $props);
     }
-
 }

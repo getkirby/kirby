@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PageContentTest extends TestCase
 {
-
     public function testDefaultContent()
     {
         $page = new Page(['slug' =>  'test']);
@@ -13,7 +12,6 @@ class PageContentTest extends TestCase
 
     public function testContent()
     {
-
         $page = new Page([
             'slug'    => 'test',
             'content' => $content = ['text' => 'lorem ipsum']
@@ -55,6 +53,4 @@ class PageContentTest extends TestCase
 
         $this->assertEquals('Custom Title', $page->title()->value());
     }
-
-
 }

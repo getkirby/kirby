@@ -7,7 +7,6 @@ use Kirby\Form\Field;
 
 class StructureFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('structure', [
@@ -99,7 +98,6 @@ class StructureFieldTest extends TestCase
 
     public function testNestedStructures()
     {
-
         $field = new Field('structure', [
             'model'  => 'test',
             'name'   => 'mothers',
@@ -156,7 +154,7 @@ class StructureFieldTest extends TestCase
         $childrenField = $motherForm->fields()->children();
 
         $this->assertEquals('structure', $childrenField->type());
-        $this->assertEquals('test',      $childrenField->model());
+        $this->assertEquals('test', $childrenField->model());
 
         // empty children form
         $childrenForm = $childrenField->form();
@@ -176,8 +174,5 @@ class StructureFieldTest extends TestCase
         $this->assertEquals('text', $childrenNameField->type());
         $this->assertEquals('test', $childrenNameField->model());
         $this->assertEquals(null, $childrenNameField->data());
-
     }
-
-
 }

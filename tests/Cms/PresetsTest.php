@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PresetsTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -24,7 +23,6 @@ class PresetsTest extends TestCase
      */
     public function testPagePresetDefault()
     {
-
         $preset = $this->load('page');
 
         // default setup
@@ -56,12 +54,10 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
 
     public function testPagePresetNoFiles()
     {
-
         $preset = $this->load('page');
 
         // default setup
@@ -90,12 +86,10 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
 
     public function testPagePresetNoPages()
     {
-
         $preset = $this->load('page');
 
         // default setup
@@ -123,12 +117,10 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
 
     public function testPagePresetNoSidebar()
     {
-
         $preset = $this->load('page');
 
         // default setup
@@ -142,12 +134,10 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
 
     public function testPagePresetCustomSidebar()
     {
-
         $preset = $this->load('page');
 
         // default setup
@@ -179,7 +169,6 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
 
     /**
@@ -187,7 +176,6 @@ class PresetsTest extends TestCase
      */
     public function testPagesPresetDefault()
     {
-
         $preset = $this->load('pages');
 
         // default setup
@@ -211,12 +199,10 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
 
     public function testPagesPresetWithUnlisted()
     {
-
         $preset = $this->load('pages');
 
         // default setup
@@ -248,7 +234,6 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
 
     /**
@@ -256,7 +241,6 @@ class PresetsTest extends TestCase
      */
     public function testFilesPresetDefault()
     {
-
         $preset = $this->load('files');
 
         // default setup
@@ -274,7 +258,5 @@ class PresetsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $props);
-
     }
-
 }

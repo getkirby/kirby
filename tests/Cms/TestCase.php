@@ -8,7 +8,6 @@ use Kirby\Toolkit\I18n;
 
 class TestCase extends BaseTestCase
 {
-
     public $page = null;
 
     public function setUp()
@@ -122,5 +121,4 @@ class TestCase extends BaseTestCase
         $action->call($this, $app);
         $this->assertEquals(count($hooks), $triggered);
     }
-
 }

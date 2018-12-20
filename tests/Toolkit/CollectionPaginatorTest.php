@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class CollectionPaginatorTest extends TestCase
 {
-
     public function testSlice()
     {
         $collection = new Collection([
@@ -99,5 +98,4 @@ class CollectionPaginatorTest extends TestCase
         $this->assertEquals('eins', $collection->chunk(2)->first()->first());
         $this->assertEquals('fünf', $collection->chunk(2)->last()->first());
     }
-
 }

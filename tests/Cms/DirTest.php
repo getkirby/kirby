@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class DirTest extends TestCase
 {
-
     public function setUp()
     {
         Dir::remove($this->fixtures = __DIR__ . '/fixtures/DirTest');
@@ -21,7 +20,6 @@ class DirTest extends TestCase
 
     public function create(array $items, ...$args)
     {
-
         foreach ($items as $item) {
             $root = $this->fixtures . '/' . $item;
 
@@ -37,7 +35,6 @@ class DirTest extends TestCase
 
     public function testInventory()
     {
-
         $inventory = $this->create([
             '1_project-a',
             '2_project-b',
@@ -56,7 +53,6 @@ class DirTest extends TestCase
         $this->assertEquals('jpg', $inventory['files']['cover.jpg']['extension']);
 
         $this->assertEquals('projects', $inventory['template']);
-
     }
 
     public function testChildSorting()
@@ -166,7 +162,6 @@ class DirTest extends TestCase
 
     public function testModels()
     {
-
         Page::$models = [
             'a' => 'A',
             'b' => 'A'
@@ -183,12 +178,10 @@ class DirTest extends TestCase
         $this->assertEquals(null, $inventory['children'][2]['model']);
 
         Page::$models = [];
-
     }
 
     public function testMultilangModels()
     {
-
         new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -225,7 +218,5 @@ class DirTest extends TestCase
         $this->assertEquals(null, $inventory['children'][2]['model']);
 
         Page::$models = [];
-
     }
-
 }

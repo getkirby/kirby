@@ -2,25 +2,19 @@
 
 namespace Kirby\Toolkit;
 
-
-
 class ControllerTest extends TestCase
 {
-
     public function testCall()
     {
-
         $controller = new Controller(function () {
             return 'test';
         });
 
         $this->assertEquals('test', $controller->call());
-
     }
 
     public function testArguments()
     {
-
         $controller = new Controller(function ($a, $b) {
             return $a . $b;
         });
@@ -29,12 +23,10 @@ class ControllerTest extends TestCase
             'a' => 'A',
             'b' => 'B'
         ]));
-
     }
 
     public function testBind()
     {
-
         $model = new Obj(['foo' => 'bar']);
 
         $controller = new Controller(function () {
@@ -42,7 +34,6 @@ class ControllerTest extends TestCase
         });
 
         $this->assertEquals($model, $controller->call($model));
-
     }
 
     /**
@@ -71,6 +62,4 @@ class ControllerTest extends TestCase
         $controller = Controller::load(__DIR__ . '/fixtures/controller/does-not-exist.php');
         $this->assertEquals(null, $controller);
     }
-
-
 }

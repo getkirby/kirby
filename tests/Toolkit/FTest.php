@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class FTest extends TestCase
 {
-
     public function setUp()
     {
         $this->fixtures = __DIR__ . '/fixtures/f';
@@ -106,7 +105,6 @@ class FTest extends TestCase
 
         $this->assertTrue(file_exists($this->moved));
         $this->assertFalse(file_exists($this->tmp));
-
     }
 
     public function testMime()
@@ -205,7 +203,6 @@ class FTest extends TestCase
 
     public function testURI()
     {
-
         F::write($this->tmp, 'test');
 
         $expected = 'dGVzdA==';
@@ -213,12 +210,10 @@ class FTest extends TestCase
 
         $expected = 'data:text/plain;base64,dGVzdA==';
         $this->assertEquals($expected, F::uri($this->tmp));
-
     }
 
     public function testWrite()
     {
         $this->assertTrue(F::write($this->tmp, 'my content'));
     }
-
 }

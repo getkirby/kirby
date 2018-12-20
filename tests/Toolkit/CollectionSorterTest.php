@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class MockObject
 {
-
     protected $value;
 
     public function __construct(string $value)
@@ -12,15 +11,14 @@ class MockObject
         $this->value = $value;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return (string)$this->value;
     }
-
 }
 
 class CollectionSorterTest extends TestCase
 {
-
     public function testSortBy()
     {
         $collection = new Collection([
@@ -246,5 +244,4 @@ class CollectionSorterTest extends TestCase
         $shuffled = $collection->shuffle();
         $this->assertEquals(3, $shuffled->count());
     }
-
 }

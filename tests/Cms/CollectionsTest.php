@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class CollectionsTest extends TestCase
 {
-
     public function testGet()
     {
         $collection  = new Collection();
@@ -61,7 +60,6 @@ class CollectionsTest extends TestCase
 
         $this->assertTrue($collections->has('test'));
         $this->assertFalse($collections->has('does-not-exist'));
-
     }
 
     public function testLoad()
@@ -77,5 +75,4 @@ class CollectionsTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $result);
     }
-
 }

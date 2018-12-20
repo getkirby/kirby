@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class DateFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('date');
@@ -50,5 +49,4 @@ class DateFieldTest extends TestCase
 
         $this->assertEquals($expected, $field->value());
     }
-
 }

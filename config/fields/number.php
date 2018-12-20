@@ -32,7 +32,6 @@ return [
     ],
     'methods' => [
         'toNumber' => function ($value) {
-
             if ($this->isEmpty($value) === true) {
                 return null;
             }

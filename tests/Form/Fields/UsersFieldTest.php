@@ -8,7 +8,6 @@ use Kirby\Form\Field;
 
 class UsersFieldTest extends TestCase
 {
-
     public function setUp()
     {
         $this->app = new App([
@@ -110,7 +109,6 @@ class UsersFieldTest extends TestCase
 
     public function testMin()
     {
-
         $field = new Field('users', [
             'model' => new Page(['slug' => 'test']),
             'value' => [
@@ -122,12 +120,10 @@ class UsersFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
-
     }
 
     public function testMax()
     {
-
         $field = new Field('users', [
             'model' => new Page(['slug' => 'test']),
             'value' => [
@@ -139,7 +135,5 @@ class UsersFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
-
     }
-
 }

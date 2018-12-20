@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class SiteChildrenTest extends TestCase
 {
-
     public function testDefaultChildren()
     {
         $site = new Site();
@@ -29,5 +28,4 @@ class SiteChildrenTest extends TestCase
 
         $this->assertInstanceOf(Pages::class, $site->children());
     }
-
 }

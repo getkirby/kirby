@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class PageActionsTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
@@ -52,7 +51,6 @@ class PageActionsTest extends TestCase
     public function testChangeSlug($input, $expected, $draft)
     {
         if ($draft) {
-
             $page = Page::create([
                 'slug' => 'test',
             ]);
@@ -60,9 +58,7 @@ class PageActionsTest extends TestCase
             $in      = 'drafts';
             $oldRoot = $this->fixtures . '/content/_drafts/test';
             $newRoot = $this->fixtures . '/content/_drafts/' . $expected;
-
         } else {
-
             $page = Page::create([
                 'slug' => 'test',
                 'num'  => 1
@@ -71,7 +67,6 @@ class PageActionsTest extends TestCase
             $in      = 'children';
             $oldRoot = $this->fixtures . '/content/1_test';
             $newRoot = $this->fixtures . '/content/1_' . $expected;
-
         }
 
         $this->assertTrue($page->exists());
@@ -90,7 +85,6 @@ class PageActionsTest extends TestCase
 
     public function testChangeTemplate()
     {
-
         $app = $this->app->clone([
             'blueprints' => [
                 'pages/video' => [
@@ -137,7 +131,6 @@ class PageActionsTest extends TestCase
         $modified = $page->changeTemplate('article');
 
         $this->assertEquals('article', $modified->intendedTemplate());
-
     }
 
     public function testChangeTitle()
@@ -226,7 +219,6 @@ class PageActionsTest extends TestCase
      */
     public function testUpdateMultilang($languageCode)
     {
-
         $app = $this->app->clone([
             'languages' => [
                 [
@@ -260,8 +252,5 @@ class PageActionsTest extends TestCase
 
         // also check in a freshly found page object
         $this->assertEquals('Test', $this->app->page('test')->headline()->value());
-
     }
-
-
 }

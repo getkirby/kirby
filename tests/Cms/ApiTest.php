@@ -6,10 +6,8 @@ use Kirby\Toolkit\Dir;
 
 class ApiTest extends TestCase
 {
-
     public function setUp()
     {
-
         $this->app = new App([
             'roots' => [
                 'index' => $this->fixtures = __DIR__ . '/fixtures/ApiTest'
@@ -51,7 +49,6 @@ class ApiTest extends TestCase
 
         $this->app->impersonate('kirby');
         $this->api = $this->app->api();
-
     }
 
     public function tearDown()
@@ -85,7 +82,6 @@ class ApiTest extends TestCase
         $this->assertEquals('a', $result['data'][0]['id']);
         $this->assertEquals('a/aa', $result['data'][1]['id']);
         $this->assertEquals('b', $result['data'][2]['id']);
-
     }
 
     public function testFindFile()
@@ -102,7 +98,5 @@ class ApiTest extends TestCase
 
         $this->assertEquals(200, $result['code']);
         $this->assertEquals('a filename with spaces.jpg', $result['data']['filename']);
-
     }
-
 }

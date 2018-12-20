@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class ResponseTest extends TestCase
 {
-
     public function testBody()
     {
         $response = new Response;
@@ -239,5 +238,4 @@ class ResponseTest extends TestCase
 
         $this->assertEquals($expected, $response->toArray());
     }
-
 }

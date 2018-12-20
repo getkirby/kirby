@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class PageSortTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
@@ -135,7 +134,6 @@ class PageSortTest extends TestCase
 
         $this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
         $this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
-
     }
 
     public function testChangeStatusFromListedToDraft()
@@ -385,7 +383,6 @@ class PageSortTest extends TestCase
      */
     public function testSort($id, $position, $expected)
     {
-
         $site = new Site([
             'children' => [
                 [
@@ -411,12 +408,10 @@ class PageSortTest extends TestCase
         $page = $page->sort($position);
 
         $this->assertEquals($expected, implode(',', $site->children()->keys()));
-
     }
 
     public function testSortDateBased()
     {
-
         $site = new Site([
             'children' => [
                 [
@@ -468,7 +463,6 @@ class PageSortTest extends TestCase
 
     public function testMassSorting()
     {
-
         foreach ($chars = range('a', 'd') as $slug) {
             $page = Page::create([
                 'slug' => $slug
@@ -492,7 +486,6 @@ class PageSortTest extends TestCase
         $this->assertTrue(is_dir($this->fixtures . '/content/3_b'));
         $this->assertTrue(is_dir($this->fixtures . '/content/2_c'));
         $this->assertTrue(is_dir($this->fixtures . '/content/1_d'));
-
     }
 
     public function testUpdateWithDateBasedNumbering()
@@ -520,5 +513,4 @@ class PageSortTest extends TestCase
 
         $this->assertEquals(20161121, $modified->num());
     }
-
 }

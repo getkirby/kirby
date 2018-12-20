@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PluginTest extends TestCase
 {
-
     public function testProps()
     {
         $plugin = new Plugin('getkirby/test-plugin', [
@@ -102,5 +101,4 @@ class PluginTest extends TestCase
 
         App::destroy();
     }
-
 }

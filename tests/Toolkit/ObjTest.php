@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class ObjTest extends TestCase
 {
-
     public function test__call()
     {
         $obj = new Obj([
@@ -63,5 +62,4 @@ class ObjTest extends TestCase
 
         $this->assertEquals($expected, $obj->__debuginfo());
     }
-
 }

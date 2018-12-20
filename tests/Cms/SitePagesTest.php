@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class SitePagesTest extends TestCase
 {
-
     public function testErrorPage()
     {
         $site = new Site([
@@ -80,5 +79,4 @@ class SitePagesTest extends TestCase
         $this->assertIsPage($site->page(), 'test');
         $this->assertIsPage($site->page(), $page);
     }
-
 }

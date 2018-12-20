@@ -12,7 +12,6 @@ class ArticlePage extends Page
 
 class PageModelTest extends TestCase
 {
-
     public function setUp()
     {
         parent::setUp();
@@ -43,5 +42,4 @@ class PageModelTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertFalse(method_exists($page, 'test'));
     }
-
 }

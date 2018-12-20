@@ -23,7 +23,6 @@ return [
         'method'  => 'POST',
         'auth'    => false,
         'action'  => function () {
-
             $email    = $this->requestBody('email');
             $long     = $this->requestBody('long');
             $password = $this->requestBody('password');
@@ -37,7 +36,6 @@ return [
             }
 
             throw new InvalidArgumentException('Invalid email or password');
-
         }
     ],
     [

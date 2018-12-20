@@ -9,7 +9,6 @@ use Kirby\Toolkit\Dir;
 
 class FileActionsTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
@@ -241,7 +240,6 @@ class FileActionsTest extends TestCase
 
         $this->assertEquals('Custom A', $result->a()->value());
         $this->assertEquals('B', $result->b()->value());
-
     }
 
     /**
@@ -259,7 +257,6 @@ class FileActionsTest extends TestCase
                     $before = true;
                 },
                 'file.create:after' => function (File $file) use (&$after, $phpunit, $parent) {
-
                     $phpunit->assertTrue($file->siblings(true)->has($file));
                     $phpunit->assertTrue($file->parent()->files()->has($file));
                     $phpunit->assertEquals('test.md', $file->filename());
@@ -385,5 +382,4 @@ class FileActionsTest extends TestCase
 
         $this->assertEquals($caption, $file->caption()->value());
     }
-
 }

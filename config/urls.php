@@ -22,4 +22,3 @@ return [
         return $urls['base'] . '/' . ($this->options['panel']['slug'] ?? 'panel');
     }
 ];
-

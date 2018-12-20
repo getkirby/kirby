@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class SmartyPantsTest extends TestCase
 {
-
     public function testParse()
     {
         $parser   = new SmartyPants();

@@ -6,7 +6,6 @@ use Kirby\Form\Field;
 
 class TextFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = new Field('text');
@@ -51,7 +50,6 @@ class TextFieldTest extends TestCase
 
     public function testMinLength()
     {
-
         $field = new Field('text', [
             'value' => 'test',
             'minlength' => 5
@@ -59,12 +57,10 @@ class TextFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('minlength', $field->errors());
-
     }
 
     public function testMaxLength()
     {
-
         $field = new Field('text', [
             'value'     => 'test',
             'maxlength' => 3
@@ -72,7 +68,5 @@ class TextFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('maxlength', $field->errors());
-
     }
-
 }

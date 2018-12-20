@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class QueryTestUser
 {
-
     public function username()
     {
         return 'homer';
@@ -36,5 +35,4 @@ class QueryTestUser
     {
         return $dump;
     }
-
 }

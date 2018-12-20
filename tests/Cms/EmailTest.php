@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class EmailTest extends TestCase
 {
-
     public function testToArray()
     {
         $props = [
@@ -43,7 +42,6 @@ class EmailTest extends TestCase
      */
     public function testEmailInvalidPreset()
     {
-
         $email = new Email('not-a-preset', []);
     }
 
@@ -178,5 +176,4 @@ class EmailTest extends TestCase
         $this->assertEquals('ceo@company.com', $email->toArray()['to']);
         $this->assertEquals('Welcome, Mario!', trim($email->toArray()['body']));
     }
-
 }

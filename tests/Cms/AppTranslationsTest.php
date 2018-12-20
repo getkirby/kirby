@@ -7,7 +7,6 @@ use Kirby\Toolkit\I18n;
 
 class AppTranslationsTest extends TestCase
 {
-
     public function app()
     {
         return new App([
@@ -56,7 +55,6 @@ class AppTranslationsTest extends TestCase
 
     public function testTranslationFromCurrentLanguage()
     {
-
         $app = new App([
             'languages' => [
                 [
@@ -76,7 +74,6 @@ class AppTranslationsTest extends TestCase
         I18n::$locale = 'de';
 
         $this->assertEquals('Knopf', t('button'));
-
     }
 
     public function testSetCurrentTranslation()
@@ -90,7 +87,6 @@ class AppTranslationsTest extends TestCase
 
         $this->assertEquals('Speichern', t('save'));
         $this->assertEquals('Reset', t('reset'));
-
     }
 
     public function testExceptionWithoutLanguage()
@@ -156,5 +152,4 @@ class AppTranslationsTest extends TestCase
         $this->assertEquals('error.no-real-key', $exception->getKey());
         $this->assertEquals('This would be the fallback error', $exception->getMessage());
     }
-
 }

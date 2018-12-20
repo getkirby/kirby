@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 class CollectionFilterTest extends TestCase
 {
-
     public function testFilterArray()
     {
         $collection = new Collection([
@@ -425,7 +424,6 @@ class CollectionFilterTest extends TestCase
      */
     public function testFilterBy($attributes, $operator, $test, $expected, $split)
     {
-
         $data = [];
 
         foreach ($attributes as $attributeKey => $attributeValue) {
@@ -438,7 +436,6 @@ class CollectionFilterTest extends TestCase
         $result     = $collection->filterBy('attribute', $operator, $test, $split);
 
         $this->assertEquals($expected, $result->keys(), $operator);
-
     }
 
     public function testNot()
@@ -455,5 +452,4 @@ class CollectionFilterTest extends TestCase
 
         $this->assertEquals($result, $collection->not('one', 'three'));
     }
-
 }

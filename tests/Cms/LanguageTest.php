@@ -144,5 +144,4 @@ class LanguageTest extends TestCase
 
         $this->assertEquals('/en', $language->url());
     }
-
 }

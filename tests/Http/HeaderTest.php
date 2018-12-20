@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class HeaderTest extends TestCase
 {
-
     protected $statusHeaders;
 
     protected function setUp()
@@ -50,37 +49,45 @@ class HeaderTest extends TestCase
 
         // code only
         $this->assertEquals(
-            $h[200], Header::status(200, false),
+            $h[200],
+            Header::status(200, false),
             'Accepts integer status code'
         );
         $this->assertEquals(
-            $h[200], Header::status('200', false),
+            $h[200],
+            Header::status('200', false),
             'Accepts string status code'
         );
         $this->assertEquals(
-            $h[451], Header::status('451', false),
+            $h[451],
+            Header::status('451', false),
             'Can send HTTP 451 code (RFC 7725)'
         );
         $this->assertEquals(
-            $h[500], Header::status(null, false),
+            $h[500],
+            Header::status(null, false),
             'Null code results in 500'
         );
         $this->assertEquals(
-            Header::status(500, false), Header::status(999, false),
+            Header::status(500, false),
+            Header::status(999, false),
             'Unknown code results in 500'
         );
 
         // with reason in code parameter
         $this->assertEquals(
-            $h[200], Header::status('200 OK', false),
+            $h[200],
+            Header::status('200 OK', false),
             'Can send "200 OK"'
         );
         $this->assertEquals(
-            'HTTP/1.1 999 Custom Header', Header::status('999 Custom Header', false),
+            'HTTP/1.1 999 Custom Header',
+            Header::status('999 Custom Header', false),
             'Can send a well-formed custom status code and reason'
         );
         $this->assertEquals(
-            $h[500], Header::status("999 This is\nNOT OKAY", false),
+            $h[500],
+            Header::status("999 This is\nNOT OKAY", false),
             'Newlines inside of reason results in a 500 code'
         );
     }
@@ -89,11 +96,13 @@ class HeaderTest extends TestCase
     {
         $h = $this->statusHeaders;
         $this->assertEquals(
-            $h[301] . "\r\nLocation:/x", Header::redirect('/x', 301, false),
+            $h[301] . "\r\nLocation:/x",
+            Header::redirect('/x', 301, false),
             'Can send a 301 redirect'
         );
         $this->assertEquals(
-            $h[302] . "\r\nLocation:/x", Header::redirect('/x', 302, false),
+            $h[302] . "\r\nLocation:/x",
+            Header::redirect('/x', 302, false),
             'Can send a 302 redirect'
         );
     }
@@ -111,5 +120,4 @@ class HeaderTest extends TestCase
             'Can send Content-type header with custom charset'
         );
     }
-
 }

@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class ValueTest extends TestCase
 {
-
     public function testSetup()
     {
         $value = new Value('foo');

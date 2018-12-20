@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class TranslationTest extends TestCase
 {
-
     public function testProps()
     {
         $translation = new Translation('de', [
@@ -27,5 +26,4 @@ class TranslationTest extends TestCase
         $this->assertEquals('de', $translation->code());
         $this->assertEquals('Deutsch', $translation->name());
     }
-
 }

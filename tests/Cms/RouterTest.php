@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class RouterTest extends TestCase
 {
-
     protected $app;
 
     public function setUp()
@@ -188,7 +187,6 @@ class RouterTest extends TestCase
      */
     public function testCustomRoute($pattern, $path)
     {
-
         $app = $this->app->clone([
             'routes' => [
                 [
@@ -201,7 +199,6 @@ class RouterTest extends TestCase
         ]);
 
         $this->assertEquals('test', $app->call($path));
-
     }
 
     /**

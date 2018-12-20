@@ -15,7 +15,6 @@ use Kirby\Toolkit\Tpl as Snippet;
 
 return [
     'file::version' => function (App $kirby, Model $file, array $options = []) {
-
         if ($file->isResizable() === false) {
             return $file;
         }
@@ -84,7 +83,6 @@ return [
         return new Template($name, $type, $defaultType);
     },
     'thumb' => function (App $kirby, string $src, string $dst, array $options) {
-
         $darkroom = Darkroom::factory(option('thumbs.driver', 'gd'), option('thumbs', []));
         $options  = $darkroom->preprocess($src, $options);
         $root     = (new Filename($src, $dst, $options))->toString();
@@ -93,6 +91,5 @@ return [
         $darkroom->process($root, $options);
 
         return $root;
-
     },
 ];

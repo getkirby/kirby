@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class SiteActionsTest extends TestCase
 {
-
     protected $app;
     protected $fixtures = __DIR__ . '/fixtures/SiteActionsTest';
 
@@ -93,5 +92,4 @@ class SiteActionsTest extends TestCase
 
         $this->assertEquals(2018, $site->copyright()->value());
     }
-
 }

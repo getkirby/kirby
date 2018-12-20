@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class ATest extends TestCase
 {
-
     protected function _array()
     {
         return [
@@ -56,8 +55,8 @@ class ATest extends TestCase
         ];
 
         $this->assertEquals($grandma, A::get($data, 'grandma'));
-        $this->assertEquals($mother,  A::get($data, 'grandma.mother'));
-        $this->assertEquals($child,   A::get($data, 'grandma.mother.child'));
+        $this->assertEquals($mother, A::get($data, 'grandma.mother'));
+        $this->assertEquals($child, A::get($data, 'grandma.mother.child'));
 
         // with default
         $this->assertEquals('default', A::get($data, 'grandma.mother.sister', 'default'));
@@ -67,25 +66,25 @@ class ATest extends TestCase
     {
 
         // simple non-associative arrays
-        $this->assertEquals(['a', 'b', 'c', 'd'],      a::merge(['a', 'b'], ['c', 'd']));
+        $this->assertEquals(['a', 'b', 'c', 'd'], a::merge(['a', 'b'], ['c', 'd']));
         $this->assertEquals(['a', 'b', 'c', 'd', 'a'], a::merge(['a', 'b'], ['c', 'd', 'a']));
 
         // simple associative arrays
         $this->assertEquals(['a' => 'b', 'c' => 'd'], a::merge(['a' => 'b'], ['c' => 'd']));
-        $this->assertEquals(['a' => 'c'],             a::merge(['a' => 'b'], ['a' => 'c']));
-        $this->assertEquals(['a' => 'd'],             a::merge(['a' => 'b'], ['a' => 'c', 'a' => 'd']));
+        $this->assertEquals(['a' => 'c'], a::merge(['a' => 'b'], ['a' => 'c']));
+        $this->assertEquals(['a' => 'd'], a::merge(['a' => 'b'], ['a' => 'c', 'a' => 'd']));
 
         // recursive merging
-        $this->assertEquals(['a' => ['b', 'c', 'b', 'd']],     a::merge(['a' => ['b', 'c']], ['a' => ['b', 'd']]));
+        $this->assertEquals(['a' => ['b', 'c', 'b', 'd']], a::merge(['a' => ['b', 'c']], ['a' => ['b', 'd']]));
         $this->assertEquals(['a' => ['b' => 'd', 'd' => 'e']], a::merge(['a' => ['b' => 'c', 'd' => 'e']], ['a' => ['b' => 'd']]));
-        $this->assertEquals(['a' => ['b', 'c']],               a::merge(['a' => 'b'], ['a' => ['b', 'c']]));
-        $this->assertEquals(['a' => 'b'],                      a::merge(['a' => ['b', 'c']], ['a' => 'b']));
+        $this->assertEquals(['a' => ['b', 'c']], a::merge(['a' => 'b'], ['a' => ['b', 'c']]));
+        $this->assertEquals(['a' => 'b'], a::merge(['a' => ['b', 'c']], ['a' => 'b']));
 
         // append feature
-        $this->assertEquals(['a', 'b', 'c', 'd', 'a'],                         a::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a']));
-        $this->assertEquals(['a', 'b', 'c', 'd', 'a'],                         a::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], true));
-        $this->assertEquals([1 => 'c', 3 => 'd', 4 => 'b', 5 => 'a'],          a::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], false));
-        $this->assertEquals(['a' => ['b', 'c', 'e', 'd']],                     a::merge(['a' => [1 => 'b', 4 => 'c']], ['a' => [1 => 'e', 3 => 'd']], true));
+        $this->assertEquals(['a', 'b', 'c', 'd', 'a'], a::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a']));
+        $this->assertEquals(['a', 'b', 'c', 'd', 'a'], a::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], true));
+        $this->assertEquals([1 => 'c', 3 => 'd', 4 => 'b', 5 => 'a'], a::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], false));
+        $this->assertEquals(['a' => ['b', 'c', 'e', 'd']], a::merge(['a' => [1 => 'b', 4 => 'c']], ['a' => [1 => 'e', 3 => 'd']], true));
         $this->assertEquals(['a' => [1 => 'c', 3 => 'd', 4 => 'b', 5 => 'a']], a::merge(['a' => [1 => 'a', 4 => 'b']], ['a' => [1 => 'c', 3 => 'd', 5 => 'a']], false));
 
         // replace feature
@@ -341,5 +340,4 @@ class ATest extends TestCase
         $result = A::wrap(null);
         $this->assertEquals([], $result);
     }
-
 }

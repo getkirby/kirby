@@ -6,7 +6,6 @@ use Kirby\Toolkit\F;
 
 class SitePropsTest extends TestCase
 {
-
     public function testUrl()
     {
         $site = new Site([
@@ -24,7 +23,6 @@ class SitePropsTest extends TestCase
 
     public function testBreadcrumb()
     {
-
         $site = new Site([
             'children' => [
                 [
@@ -54,12 +52,10 @@ class SitePropsTest extends TestCase
         $this->assertEquals($site->find('grandma'), $crumb->nth(1));
         $this->assertEquals($site->find('grandma/mother'), $crumb->nth(2));
         $this->assertEquals($site->find('grandma/mother/child'), $crumb->nth(3));
-
     }
 
     public function testBreadcrumbSideEffects()
     {
-
         $site = new Site([
             'children' => [
                 [
@@ -97,7 +93,6 @@ class SitePropsTest extends TestCase
 
         $this->assertEquals('child-a', $page->prev()->slug());
         $this->assertEquals('child-c', $page->next()->slug());
-
     }
 
     public function testModified()
@@ -130,7 +125,6 @@ class SitePropsTest extends TestCase
 
     public function testModifiedInMultilangInstallation()
     {
-
         $app = new App([
             'roots' => [
                 'index'   => $index = __DIR__ . '/fixtures/SitePropsTest/modified',
@@ -172,7 +166,5 @@ class SitePropsTest extends TestCase
         $this->assertEquals($modified, $site->modified());
 
         Dir::remove($index);
-
     }
-
 }

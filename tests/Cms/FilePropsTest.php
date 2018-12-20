@@ -7,7 +7,6 @@ use Kirby\Toolkit\F;
 
 class FilePropsTest extends TestCase
 {
-
     protected function defaults(): array
     {
         return [
@@ -172,5 +171,4 @@ class FilePropsTest extends TestCase
 
         $this->assertEquals($expected, $icon);
     }
-
 }

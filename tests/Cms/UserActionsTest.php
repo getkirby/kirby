@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class UserActionsTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
@@ -37,7 +36,6 @@ class UserActionsTest extends TestCase
         ]);
 
         Dir::remove($this->fixtures);
-
     }
 
     public function tearDown()
@@ -168,5 +166,4 @@ class UserActionsTest extends TestCase
 
         $this->assertEquals($url, $user->website()->value());
     }
-
 }
