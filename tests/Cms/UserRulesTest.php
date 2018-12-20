@@ -142,13 +142,10 @@ class UserRulesTest extends TestCase
 
     /**
      * @expectedException Kirby\Exception\LogicException
-     * @expectedExceptionCode error.user.delete.lastUser
+     * @expectedExceptionCode error.user.delete.lastAdmin
      */
     public function testDeleteLastUser()
     {
-        $this->markTestIncomplete();
-        // TODO: this will always trigger error.user.delete.lastAdmin
-
         $kirby = $this->appWithAdmin();
         UserRules::delete($kirby->user('user@domain.com'));
         UserRules::delete($kirby->user('admin@domain.com'));
