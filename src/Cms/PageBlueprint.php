@@ -111,6 +111,7 @@ class PageBlueprint extends Blueprint
 
             // skip invalid status definitions
             if (in_array($key, ['draft', 'listed', 'unlisted']) === false || $options === false) {
+                unset($status[$key]);
                 continue;
             }
 

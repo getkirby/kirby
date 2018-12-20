@@ -151,5 +151,33 @@ class PageBlueprintTest extends TestCase
         $this->assertEquals($expected, $blueprint->status());
     }
 
+    public function testInvalidStatus()
+    {
+        $input = [
+            'draft'    => 'Draft',
+            'unlisted' => 'Unlisted',
+            'foo'      => 'Bar'
+        ];
+
+        $expected = [
+            'draft' => [
+                'label' => 'Draft',
+                'text'  => null
+            ],
+            'unlisted' => [
+                'label' => 'Unlisted',
+                'text'  => null
+            ],
+        ];
+
+        $blueprint = new PageBlueprint([
+            'model'  => new Page(['slug' => 'test']),
+            'status' => $input,
+        ]);
+
+        $this->assertEquals($expected, $blueprint->status());
+    }
+
+
 
 }
