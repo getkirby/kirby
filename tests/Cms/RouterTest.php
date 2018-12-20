@@ -38,6 +38,17 @@ class RouterTest extends TestCase
                     ]
                 ]
             ],
+            'users' => [
+                [
+                    'id'    => 'test',
+                    'email' => 'admin@getkirby.com',
+                    'files' => [
+                        [
+                            'filename' => 'test.jpg'
+                        ]
+                    ]
+                ]
+            ]
         ]);
     }
 
@@ -121,7 +132,8 @@ class RouterTest extends TestCase
 
     public function testUserMediaRoute()
     {
-        $this->markTestIncomplete();
+        $response = $this->app->call('media/users/test/1234-5678/test.jpg');
+        $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testDisabledApi()
@@ -146,16 +158,6 @@ class RouterTest extends TestCase
 
         $this->assertNull($app->call('panel'));
         $this->assertNull($app->call('panel/something'));
-    }
-
-    public function testPluginAssets()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function testPluginIndexJsAndCss()
-    {
-        $this->markTestIncomplete();
     }
 
     public function customRouteProvider()
