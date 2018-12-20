@@ -121,6 +121,11 @@ class AppPluginsTest extends TestCase
             'cacheTypes' => [
                 'file' => DummyCache::class
             ],
+            'options' => [
+                'cache' => [
+                    'pages' => true
+                ]
+            ]
         ]);
 
         $this->assertInstanceOf(DummyCache::class, $kirby->cache('pages'));
