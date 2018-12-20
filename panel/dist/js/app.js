@@ -339,7 +339,7 @@
               [
                 t.inside
                   ? n(
-                      "div",
+                      "header",
                       { staticClass: "k-panel-header" },
                       [
                         n("k-topbar", {
@@ -372,7 +372,7 @@
                       n("p", [t._v("The panel is currently offline")])
                     ])
                   : t._e(),
-                n("k-registration", { ref: "registration" })
+                t.inside ? n("k-registration", { ref: "registration" }) : t._e()
               ],
               1
             );
@@ -700,7 +700,9 @@
         },
         computed: {
           inside: function() {
-            return !this.$route.meta.outside && this.$store.state.user.current;
+            return !(
+              this.$route.meta.outside || !this.$store.state.user.current
+            );
           }
         },
         created: function() {
@@ -4924,13 +4926,14 @@
           sorted: function() {
             var t = this;
             if (!1 === this.sort) return this.state;
-            var e = function(e) {
-              return t.options.findIndex(function(t) {
-                return t.value === e.value;
-              });
-            };
-            return this.state.sort(function(t, n) {
-              return e(t) - e(n);
+            var e = this.state,
+              n = function(e) {
+                return t.options.findIndex(function(t) {
+                  return t.value === e.value;
+                });
+              };
+            return e.sort(function(t, e) {
+              return n(t) - n(e);
             });
           }
         },
@@ -5993,8 +5996,7 @@
                   t.insert(e);
                 }
               }
-            }),
-            n("k-upload", { ref: "upload" })
+            })
           ],
           1
         );
@@ -6455,20 +6457,23 @@
             this.$refs.input.focus();
           },
           insert: function(t) {
-            var e = this.$refs.input,
-              n = e.value;
-            if (
-              (e.focus(),
-              document.execCommand("insertText", !1, t),
-              e.value === n)
-            ) {
-              var i =
-                e.value.slice(0, e.selectionStart) +
-                t +
-                e.value.slice(e.selectionEnd);
-              (e.value = i), this.$emit("input", i);
-            }
-            this.resize();
+            var e = this,
+              n = this.$refs.input,
+              i = n.value;
+            setTimeout(function() {
+              if (
+                (n.focus(),
+                document.execCommand("insertText", !1, t),
+                n.value === i)
+              ) {
+                var s =
+                  n.value.slice(0, n.selectionStart) +
+                  t +
+                  n.value.slice(n.selectionEnd);
+                (n.value = s), e.$emit("input", s);
+              }
+            }),
+              this.resize();
           },
           prepend: function(t) {
             this.insert(t + " " + this.selection());
@@ -7176,7 +7181,6 @@
         inheritAttrs: !1,
         props: Object(u["a"])({}, Ii.props, {
           empty: String,
-          image: Object,
           layout: String,
           max: Number,
           multiple: Boolean,
@@ -12135,12 +12139,12 @@
         var t = this,
           e = t.$createElement,
           n = t._self._c || e;
-        return n(
-          "header",
-          { staticClass: "k-topbar" },
-          [
-            t.user && t.view
-              ? n("k-view", [
+        return t.user && t.view
+          ? n(
+              "div",
+              { staticClass: "k-topbar" },
+              [
+                n("k-view", [
                   n(
                     "div",
                     { staticClass: "k-topbar-wrapper" },
@@ -12418,10 +12422,10 @@
                     1
                   )
                 ])
-              : t._e()
-          ],
-          1
-        );
+              ],
+              1
+            )
+          : t._e();
       },
       Vd = [],
       Kd = Object(u["a"])(
