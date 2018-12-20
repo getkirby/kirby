@@ -245,6 +245,88 @@ class PageBlueprintTest extends TestCase
         $this->assertEquals($expected, $blueprint->status());
     }
 
+    public function testExtendStatus()
+    {
 
+        new App([
+            'blueprints' => [
+                'status/default' => [
+                    'draft'    => [
+                        'label' => 'Draft Label',
+                        'text'  => null,
+                    ],
+                    'unlisted' => [
+                        'label' => 'Unlisted Label',
+                        'text'  => null,
+                    ],
+                    'listed' => [
+                        'label' => 'Listed Label',
+                        'text'  => null
+                    ]
+                ],
+            ]
+        ]);
+
+        $input = [
+            'extends'  => 'status/default',
+            'draft'    => [
+                'label' => 'Draft',
+                'text'  => null,
+            ],
+            'unlisted' => false,
+            'listed' => [
+                'label' => 'Published',
+                'text'  => null
+            ]
+        ];
+
+        $expected = [
+            'draft' => [
+                'label' => 'Draft',
+                'text'  => null
+            ],
+            'listed' => [
+                'label' => 'Published',
+                'text'  => null
+            ],
+        ];
+
+        $blueprint = new PageBlueprint([
+            'model' => new Page(['slug' => 'test']),
+            'status' => $input
+        ]);
+
+        $this->assertEquals($expected, $blueprint->status());
+    }
+
+    public function testExtendStatusFromString()
+    {
+
+        new App([
+            'blueprints' => [
+                'status/default' => $expected = [
+                    'draft'    => [
+                        'label' => 'Draft Label',
+                        'text'  => null,
+                    ],
+                    'unlisted' => [
+                        'label' => 'Unlisted Label',
+                        'text'  => null,
+                    ],
+                    'listed' => [
+                        'label' => 'Listed Label',
+                        'text'  => null
+                    ]
+                ],
+            ]
+        ]);
+
+        $blueprint = new PageBlueprint([
+            'model' => new Page(['slug' => 'test']),
+            'status' => 'status/default'
+        ]);
+
+        $this->assertEquals($expected, $blueprint->status());
+    }
 
 }

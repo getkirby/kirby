@@ -102,9 +102,12 @@ class PageBlueprint extends Blueprint
         ];
 
         // use the defaults, when the status is not defined
-        if (is_array($status) === false) {
+        if (empty($status) === true) {
             $status = $defaults;
         }
+
+        // extend the status definition
+        $status = $this->extend($status);
 
         // clean up and translate each status
         foreach ($status as $key => $options) {
