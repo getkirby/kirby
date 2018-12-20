@@ -102,16 +102,38 @@ class PageRulesTest extends TestCase
 
     public function testChangeTemplate()
     {
-        // TODO: this currently fails, since there is only 1 template
-        // which is why the template cannot be changed
-        $this->markTestIncomplete();
-
-        $page = new Page([
-            'kirby' => $this->appWithAdmin(),
-            'slug'  => 'test',
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'templates' => [
+                'a' => __FILE__,
+                'b' => __FILE__
+            ],
+            'blueprints' => [
+                'pages/a' => ['title' => 'a'],
+                'pages/b' => ['title' => 'b'],
+            ]
         ]);
 
-        $this->assertTrue(PageRules::changeTemplate($page, 'project'));
+        $app->impersonate('kirby');
+
+        $page = new Page([
+            'kirby' => $app,
+            'slug'  => 'test',
+            'template' => 'a',
+            'blueprint' => [
+                'name' => 'a',
+                'options' => [
+                    'template' => [
+                        'a',
+                        'b'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertTrue(PageRules::changeTemplate($page, 'b'));
     }
 
     public function testUpdate()
