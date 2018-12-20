@@ -139,8 +139,10 @@ export default {
         return this.state;
       }
 
+      let items = this.state;
+
       const index = x => this.options.findIndex(y => y.value === x.value);
-      return this.state.sort((a, b) => index(a) - index(b));
+      return items.sort((a, b) => index(a) - index(b));
     }
   },
   watch: {

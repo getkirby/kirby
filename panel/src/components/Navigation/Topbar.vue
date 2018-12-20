@@ -1,5 +1,5 @@
 <template>
-  <div class="k-topbar" v-if="user && view">
+  <div v-if="user && view" class="k-topbar">
     <k-view>
       <div class="k-topbar-wrapper">
         <k-dropdown class="k-topbar-menu">
