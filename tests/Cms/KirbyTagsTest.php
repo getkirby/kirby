@@ -61,6 +61,26 @@ class KirbyTagsTest extends TestCase
         $this->assertEquals($expected, $kirby->kirbytext($kirbytext));
     }
 
+    public function testImageWithoutFigure()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'kirbytext' => [
+                    'image' => [
+                        'figure' => false
+                    ]
+                ]
+            ]
+        ]);
+
+        $expected = '<img alt="" src="https://test.com/something.jpg">';
+
+        $this->assertEquals($expected, $kirby->kirbytext('(image: https://test.com/something.jpg)'));
+    }
+
     public function testHooks()
     {
         $app = new App([

@@ -124,6 +124,10 @@ return [
                 'alt'    => $tag->alt ?? ' '
             ]);
 
+            if ($tag->kirby()->option('kirbytext.image.figure', true) === false) {
+                return $link($image);
+            }
+
             return Html::figure([ $link($image) ], $tag->caption, [
                 'class' => $tag->class
             ]);
@@ -210,13 +214,13 @@ return [
 
             $video = Html::video(
                 $tag->value,
-                $tag->option('kirbytext.video.options', [])
+                $tag->kirby()->option('kirbytext.video.options', [])
             );
 
             return Html::figure([$video], $tag->caption, [
-                'class'  => $tag->class  ?? $tag->option('kirbytext.video.class', 'video'),
-                'height' => $tag->height ?? $tag->option('kirbytext.video.height'),
-                'width'  => $tag->width  ?? $tag->option('kirbytext.video.width'),
+                'class'  => $tag->class  ?? $tag->kirby()->option('kirbytext.video.class', 'video'),
+                'height' => $tag->height ?? $tag->kirby()->option('kirbytext.video.height'),
+                'width'  => $tag->width  ?? $tag->kirby()->option('kirbytext.video.width'),
             ]);
 
         }
