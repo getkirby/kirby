@@ -531,7 +531,7 @@ class Blueprint
      * Normalizes blueprint options. This must be used in the
      * constructor of an extended class, if you want to make use of it.
      *
-     * @param array|true|false|null $options
+     * @param array|true|false|null|string $options
      * @param array $defaults
      * @param array $aliases
      * @return array
@@ -549,6 +549,9 @@ class Blueprint
                 return false;
             }, $defaults);
         }
+
+        // extend options if possible
+        $options = $this->extend($options);
 
         foreach ($options as $key => $value) {
             $alias = $aliases[$key] ?? null;

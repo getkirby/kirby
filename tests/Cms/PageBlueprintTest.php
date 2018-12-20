@@ -29,6 +29,73 @@ class PageBlueprintTest extends TestCase
         $this->assertEquals($expected, $blueprint->options());
     }
 
+    public function testExtendedOptionsFromString()
+    {
+        new App([
+            'blueprints' => [
+                'options/default' => [
+                    'changeSlug' => true,
+                    'changeTemplate' => false,
+                ]
+            ]
+        ]);
+
+        $blueprint = new PageBlueprint([
+            'model'   => new Page(['slug' => 'test']),
+            'options' => 'options/default'
+        ]);
+
+        $expected = [
+            'changeSlug'     => true,
+            'changeStatus'   => null,
+            'changeTemplate' => false,
+            'changeTitle'    => null,
+            'create'         => null,
+            'delete'         => null,
+            'preview'        => null,
+            'read'           => null,
+            'sort'           => null,
+            'update'         => null,
+        ];
+
+        $this->assertEquals($expected, $blueprint->options());
+    }
+
+    public function testExtendedOptions()
+    {
+        new App([
+            'blueprints' => [
+                'options/default' => [
+                    'changeSlug' => true,
+                    'changeTemplate' => false,
+                ]
+            ]
+        ]);
+
+        $blueprint = new PageBlueprint([
+            'model'   => new Page(['slug' => 'test']),
+            'options' => [
+                'extends' => 'options/default',
+                'create'  => false
+            ]
+        ]);
+
+        $expected = [
+            'changeSlug'     => true,
+            'changeStatus'   => null,
+            'changeTemplate' => false,
+            'changeTitle'    => null,
+            'create'         => false,
+            'delete'         => null,
+            'preview'        => null,
+            'read'           => null,
+            'sort'           => null,
+            'update'         => null,
+        ];
+
+        $this->assertEquals($expected, $blueprint->options());
+    }
+
     public function numProvider()
     {
         return [
