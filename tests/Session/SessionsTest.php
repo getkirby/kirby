@@ -113,8 +113,10 @@ class SessionsTest extends TestCase
         $session = $sessions->create();
         $this->assertEquals('header', $session->mode());
         $this->assertNull($session->token());
-        $this->assertEquals($time, $session->startTime());
-        $this->assertEquals($time + 7200, $session->expiryTime());
+        $this->assertGreaterThanOrEqual($time, $session->startTime());
+        $this->assertLessThanOrEqual($time + 3, $session->startTime());
+        $this->assertEquals(7200, $session->duration());
+        $this->assertEquals($session->startTime() + 7200, $session->expiryTime());
         $this->assertEquals(1800, $session->timeout());
         $this->assertTrue($session->renewable());
 
@@ -128,8 +130,10 @@ class SessionsTest extends TestCase
         ]);
         $this->assertEquals('manual', $session->mode());
         $this->assertNull($session->token());
-        $this->assertEquals($time + 3600, $session->startTime());
-        $this->assertEquals($time + 39600, $session->expiryTime());
+        $this->assertGreaterThanOrEqual($time + 3600, $session->startTime());
+        $this->assertLessThanOrEqual($time + 3600 + 3, $session->startTime());
+        $this->assertEquals(36000, $session->duration());
+        $this->assertEquals($session->startTime() + 36000, $session->expiryTime());
         $this->assertEquals(false, $session->timeout());
         $this->assertFalse($session->renewable());
     }

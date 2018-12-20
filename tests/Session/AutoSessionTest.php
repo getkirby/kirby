@@ -80,9 +80,10 @@ class AutoSessionTest extends TestCase
         $session = $autoSession->get();
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        $this->assertEquals($time, $session->startTime());
+        $this->assertGreaterThanOrEqual($time, $session->startTime());
+        $this->assertLessThanOrEqual($time + 3, $session->startTime());
         $this->assertEquals(7200, $session->duration());
-        $this->assertEquals($time + 7200, $session->expiryTime());
+        $this->assertEquals($session->startTime() + 7200, $session->expiryTime());
         $this->assertEquals(1800, $session->timeout());
         $this->assertTrue($session->renewable());
 
@@ -126,10 +127,10 @@ class AutoSessionTest extends TestCase
         $session = $autoSession->get(['long' => true]);
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        // TODO: not reliable. Can be different.
-        // $this->assertEquals($time, $session->startTime());
+        $this->assertGreaterThanOrEqual($time, $session->startTime());
+        $this->assertLessThanOrEqual($time + 3, $session->startTime());
         $this->assertEquals(1209600, $session->duration());
-        $this->assertEquals($time + 1209600, $session->expiryTime());
+        $this->assertEquals($session->startTime() + 1209600, $session->expiryTime());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
 
@@ -157,9 +158,10 @@ class AutoSessionTest extends TestCase
         $session = $autoSession->get();
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        $this->assertEquals($time, $session->startTime());
+        $this->assertGreaterThanOrEqual($time, $session->startTime());
+        $this->assertLessThanOrEqual($time + 3, $session->startTime());
         $this->assertEquals(1, $session->duration());
-        $this->assertEquals($time + 1, $session->expiryTime());
+        $this->assertEquals($session->startTime() + 1, $session->expiryTime());
         $this->assertEquals(1234, $session->timeout());
         $this->assertTrue($session->renewable());
 
@@ -168,9 +170,10 @@ class AutoSessionTest extends TestCase
         $session = $autoSession->get(['long' => true]);
         $this->assertNull($session->token());
         $this->assertEquals('cookie', $session->mode());
-        $this->assertEquals($time, $session->startTime());
+        $this->assertGreaterThanOrEqual($time, $session->startTime());
+        $this->assertLessThanOrEqual($time + 3, $session->startTime());
         $this->assertEquals(5, $session->duration());
-        $this->assertEquals($time + 5, $session->expiryTime());
+        $this->assertEquals($session->startTime() + 5, $session->expiryTime());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
 

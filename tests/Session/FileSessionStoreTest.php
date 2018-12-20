@@ -236,8 +236,7 @@ class FileSessionStoreTest extends TestCase
         $this->store->collectGarbage();
 
         $this->assertFileExists($this->root . '/.gitignore');
-        // TODO: Fix the following line
-        // $this->assertFileNotExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+        $this->assertFileNotExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
         $this->assertFileNotExists($this->root . '/1357913579.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/7777777777.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/9999999999.abcdefghijabcdefghij.sess');

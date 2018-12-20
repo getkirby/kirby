@@ -38,32 +38,35 @@ class SessionTest extends TestCase
 
     public function testCreate()
     {
-        $time = time();
         $reflector = new ReflectionClass(Session::class);
         $activityProperty = $reflector->getProperty('lastActivity');
         $activityProperty->setAccessible(true);
 
         // defaults
+        $time = time();
         $session = new Session($this->sessions, null, []);
-        $this->assertEquals($time, $session->startTime());
-        $this->assertEquals($time + 7200, $session->expiryTime());
+        $this->assertGreaterThanOrEqual($time, $session->startTime());
+        $this->assertLessThanOrEqual($time + 3, $session->startTime());
+        $this->assertEquals($session->startTime() + 7200, $session->expiryTime());
         $this->assertEquals(7200, $session->duration());
         $this->assertEquals(1800, $session->timeout());
-        $this->assertEquals($time, $activityProperty->getValue($session));
+        $this->assertEquals($session->startTime(), $activityProperty->getValue($session));
         $this->assertEquals(true, $session->renewable());
         $this->assertEquals([], $session->data()->get());
         $this->assertNull($session->token());
         $this->assertWriteMode(false, $session);
 
         // custom values
+        $time = time();
         $session = new Session($this->sessions, null, [
             'startTime'  => $time + 60,
             'expiryTime' => '+ 1 hour',
             'timeout'    => false,
             'renewable'  => false
         ]);
-        $this->assertEquals($time + 60, $session->startTime());
-        $this->assertEquals($time + 3660, $session->expiryTime());
+        $this->assertGreaterThanOrEqual($time + 60, $session->startTime());
+        $this->assertLessThanOrEqual($time + 60 + 3, $session->startTime());
+        $this->assertEquals($session->startTime() + 3600, $session->expiryTime());
         $this->assertEquals(3600, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertEquals(null, $activityProperty->getValue($session));
@@ -183,12 +186,14 @@ class SessionTest extends TestCase
         $this->assertEquals(6777777777, $session->duration());
         $this->assertWriteMode(false, $session);
         $this->assertEquals(9999999999, $session->expiryTime(9999999999));
+        $this->assertEquals(9999999999, $session->expiryTime());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
         $originalToken = $session->token();
-        $this->assertEquals(9999999999, $session->expiryTime());
-        $this->assertEquals(time() + 3600, $session->expiryTime('+ 1 hour'));
-        $this->assertEquals(time() + 3600, $session->expiryTime());
+        $time = time();
+        $this->assertGreaterThanOrEqual($time + 3600, $newExpiry = $session->expiryTime('+ 1 hour'));
+        $this->assertLessThanOrEqual($time + 3600 + 3, $newExpiry);
+        $this->assertEquals($newExpiry, $session->expiryTime());
         $this->assertEquals(3600, $session->duration());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
@@ -255,9 +260,11 @@ class SessionTest extends TestCase
         $this->assertEquals(7777777777, $session->expiryTime());
         $this->assertEquals(6777777777, $session->duration());
         $this->assertWriteMode(false, $session);
+        $time = time();
         $this->assertEquals(3600, $session->duration(3600));
         $this->assertEquals(3600, $session->duration());
-        $this->assertEquals(time() + 3600, $session->expiryTime());
+        $this->assertGreaterThanOrEqual($time + 3600, $session->expiryTime());
+        $this->assertLessThanOrEqual($time + 3600 + 3, $session->expiryTime());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
     }
@@ -535,7 +542,8 @@ class SessionTest extends TestCase
         $this->assertEquals(8999999999, $session->duration());
         $time = time();
         $session->renew();
-        $this->assertEquals($time + 8999999999, $session->expiryTime());
+        $this->assertGreaterThanOrEqual($time + 8999999999, $session->expiryTime());
+        $this->assertLessThanOrEqual($time + 8999999999 + 3, $session->expiryTime());
         $this->assertEquals(8999999999, $session->duration());
         $this->assertWriteMode(true, $session);
         $this->assertNotEquals($originalToken, $session->token());
@@ -583,11 +591,11 @@ class SessionTest extends TestCase
         $this->assertNotEquals($this->store->validKey, $newTokenParts[2]);
 
         // validate that the old session now references the new one
-        $this->assertEquals([
-            'startTime'  => 0,
-            'expiryTime' => $time + 30,
-            'newSession' => $newTokenParts[0] . '.' . $newTokenParts[1]
-        ], $this->store->sessions['9999999999.valid']);
+        $this->assertCount(3, $this->store->sessions['9999999999.valid']);
+        $this->assertEquals(0, $this->store->sessions['9999999999.valid']['startTime']);
+        $this->assertEquals($newTokenParts[0] . '.' . $newTokenParts[1], $this->store->sessions['9999999999.valid']['newSession']);
+        $this->assertGreaterThanOrEqual($time + 30, $this->store->sessions['9999999999.valid']['expiryTime']);
+        $this->assertLessThanOrEqual($time + 30 + 3, $this->store->sessions['9999999999.valid']['expiryTime']);
 
         // validate that a cookie has been set
         $this->assertEquals($newToken, Cookie::get('kirby_session'));
@@ -702,8 +710,7 @@ class SessionTest extends TestCase
 
         $this->assertEquals(1234567890, $timeToTimestamp->invoke(null, 1234567890));
         $this->assertEquals(1234567890, $timeToTimestamp->invoke(null, 1234567890, 1357924680));
-        // TODO: does not work reliably
-        // $this->assertEquals(1514764800, $timeToTimestamp->invoke(null, '2018-01-01', 1357924680));
+        $this->assertEquals(1514764800, $timeToTimestamp->invoke(null, '2018-01-01T00:00:00+00:00', 1357924680));
         $this->assertEquals(strtotime('tomorrow'), $timeToTimestamp->invoke(null, 'tomorrow'));
         $this->assertEquals(strtotime('tomorrow', 1357924680), $timeToTimestamp->invoke(null, 'tomorrow', 1357924680));
     }
@@ -993,11 +1000,10 @@ class SessionTest extends TestCase
         $newToken = $session->token();
         $newTokenExpiry = (int)Str::before($newToken, '.');
 
-        $this->assertGreaterThan($time + 2999999995, $newTokenExpiry);
-        $this->assertLessThan($time + 3000000005, $newTokenExpiry);
+        $this->assertGreaterThanOrEqual($time, $newTokenExpiry);
+        $this->assertLessThanOrEqual($time + 3000000000 + 3, $newTokenExpiry);
         $this->assertEquals(0, $session->startTime());
-        $this->assertGreaterThan($time + 2999999995, $session->expiryTime());
-        $this->assertLessThan($time + 3000000005, $session->expiryTime());
+        $this->assertEquals($newTokenExpiry, $session->expiryTime());
         $this->assertEquals(3000000000, $session->duration());
         $this->assertFalse($session->timeout());
         $this->assertTrue($session->renewable());
