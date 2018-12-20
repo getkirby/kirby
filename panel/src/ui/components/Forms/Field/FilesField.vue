@@ -56,7 +56,6 @@ export default {
   props: {
     ...Field.props,
     empty: String,
-    image: Object,
     layout: String,
     max: Number,
     multiple: Boolean,
