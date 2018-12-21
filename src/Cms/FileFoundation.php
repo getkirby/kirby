@@ -57,7 +57,7 @@ trait FileFoundation
      */
     public function __toString(): string
     {
-        if ($this->isResizable() === true) {
+        if ($this->type() === 'image') {
             return $this->html();
         }
 
