@@ -59,6 +59,12 @@ return [
     ],
     'type'   => System::class,
     'views'  => [
+        'login' => [
+            'isOk',
+            'isInstalled',
+            'title',
+            'translation'
+        ],
         'panel' => [
             'breadcrumbTitle',
             'isOk',
@@ -72,7 +78,7 @@ return [
             'title',
             'translation',
             'user' => 'auth',
-            'version'
+                'version'
         ]
     ],
 ];

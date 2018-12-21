@@ -5,7 +5,7 @@ export default {
   state: {
     info: {
       title: null
-    },
+    }
   },
   mutations: {
     SET_INFO(state, info) {
@@ -46,9 +46,11 @@ export default {
             ...info
           });
 
-          context.dispatch("languages/install", info.languages, {
-            root: true
-          });
+          if (info.languages) {
+            context.dispatch("languages/install", info.languages, {
+              root: true
+            });
+          }
 
           context.dispatch("translation/install", info.translation, {
             root: true
@@ -56,10 +58,14 @@ export default {
           context.dispatch("translation/activate", info.translation.id, {
             root: true
           });
-          context.dispatch("user/current", info.user, { root: true });
+
+          if (info.user) {
+            context.dispatch("user/current", info.user, { root: true });
+          }
 
           return context.state.info;
-        }).catch((error) => {
+        })
+        .catch(error => {
           context.commit("SET_INFO", {
             isBroken: true,
             error: error.message

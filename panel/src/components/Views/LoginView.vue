@@ -48,7 +48,7 @@ export default {
           autofocus: true,
           label: this.$t("email"),
           type: "email",
-          link: false,
+          link: false
         },
         password: {
           label: this.$t("password"),
@@ -87,11 +87,13 @@ export default {
       this.$store
         .dispatch("user/login", this.user)
         .then(() => {
-          this.$store.dispatch("notification/success", this.$t("welcome"));
-          this.isLoading = false;
+          this.$store.dispatch("system/load", true).then(() => {
+            this.$store.dispatch("notification/success", this.$t("welcome"));
+            this.isLoading = false;
+          });
         })
         .catch(() => {
-          this.invalid   = true;
+          this.invalid = true;
           this.isLoading = false;
         });
     }
@@ -123,7 +125,6 @@ export default {
   [dir="rtl"] & {
     margin-left: -1rem;
   }
-
 }
 .k-login-button span {
   opacity: 1;

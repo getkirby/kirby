@@ -10,7 +10,17 @@ return [
         'method'  => 'GET',
         'auth'    => false,
         'action'  => function () {
-            return $this->kirby()->system();
+            $system = $this->kirby()->system();
+
+            if ($this->kirby()->user()) {
+                return $system;
+            } else {
+                return [
+                    'status' => 'ok',
+                    'data'   => $this->resolve($system)->view('login')->toArray(),
+                    'type'   => 'model'
+                ];
+            }
         }
     ],
     [
