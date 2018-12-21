@@ -7225,7 +7225,7 @@
                 (e = e.map(function(e) {
                   return (
                     (e.selected = -1 !== n.indexOf(e.id)),
-                    (e.thumb = t.image),
+                    (e.thumb = t.image || {}),
                     (e.thumb.url = !1),
                     e.thumbs &&
                       e.thumbs.tiny &&
@@ -13821,16 +13821,18 @@
                         "SET_INFO",
                         Object(u["a"])({ isReady: e.isInstalled && e.isOk }, e)
                       ),
-                      t.dispatch("languages/install", e.languages, {
-                        root: !0
-                      }),
+                      e.languages &&
+                        t.dispatch("languages/install", e.languages, {
+                          root: !0
+                        }),
                       t.dispatch("translation/install", e.translation, {
                         root: !0
                       }),
                       t.dispatch("translation/activate", e.translation.id, {
                         root: !0
                       }),
-                      t.dispatch("user/current", e.user, { root: !0 }),
+                      e.user &&
+                        t.dispatch("user/current", e.user, { root: !0 }),
                       t.state.info
                     );
                   })
@@ -14998,8 +15000,10 @@
               this.$store
                 .dispatch("user/login", this.user)
                 .then(function() {
-                  t.$store.dispatch("notification/success", t.$t("welcome")),
-                    (t.isLoading = !1);
+                  t.$store.dispatch("system/load", !0).then(function() {
+                    t.$store.dispatch("notification/success", t.$t("welcome")),
+                      (t.isLoading = !1);
+                  });
                 })
                 .catch(function() {
                   (t.invalid = !0), (t.isLoading = !1);
