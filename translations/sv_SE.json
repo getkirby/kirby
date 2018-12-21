@@ -29,7 +29,7 @@
   "email": "E-post",
   "email.placeholder": "namn@exampel.se",
 
-  "error.access.login": "Fel e-postadress eller lösenord",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Du saknar behörighet att nå panelen",
 
   "error.avatar.create.fail": "Profilbilden kunde inte laddas upp",
@@ -208,6 +208,7 @@
   "file.delete.confirm":
     "Vill du verkligen radera <br><strong>{filename}</strong>?",
 
+  "files": "Filer",
   "files.empty": "Inga filer än",
 
   "hour": "Timme",
@@ -320,7 +321,11 @@
   "page.status.unlisted": "Olistade",
   "page.status.unlisted.description": "Sidan är endast åtkomlig via URL",
 
+  "pages": "Sidor",
   "pages.empty": "Inga sidor än",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Olistade",
 
   "password": "L\u00f6senord",
   "pixel": "Pixel",

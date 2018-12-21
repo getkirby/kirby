@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@ejemplo.com",
 
-  "error.access.login": "Nombre de usuario o contrase\u00f1a incorrecto",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -207,6 +207,7 @@
 
   "file.delete.confirm": "\u00bfRealmente quieres eliminar este archivo?",
 
+  "files": "Archivos",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -320,7 +321,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Páginas",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Contrase\u00f1a",
   "pixel": "Pixel",

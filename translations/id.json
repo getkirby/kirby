@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "email@contohemail.com",
 
-  "error.access.login": "Kata sandi atau nama pengguna anda salah",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -205,6 +205,7 @@
 
   "file.delete.confirm": "Apakah anda benar-benar mau menghapus file ini?",
 
+  "files": "Berkas",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -317,7 +318,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Halaman",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Kata sandi",
   "pixel": "Pixel",

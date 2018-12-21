@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@exemplo.com",
 
-  "error.access.login": "Utilizador ou Palavra-passe inv\u00e1lida",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -207,6 +207,7 @@
 
   "file.delete.confirm": "Queres mesmo apagar este ficheiro?",
 
+  "files": "Ficheiros",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -320,7 +321,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Páginas",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Palavra-passe",
   "pixel": "Pixel",

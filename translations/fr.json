@@ -29,7 +29,7 @@
   "email": "Courriel",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login": "Courriel ou mot de passe invalide",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Vous n’êtes pas autorisé à accéder au Panel",
 
   "error.avatar.create.fail": "L’image du profil n’a pas pu être transférée",
@@ -237,6 +237,7 @@
   "file.delete.confirm":
     "Voulez-vous vraiment supprimer <br><strong>{filename}</strong>&nbsp;?",
 
+  "files": "Fichiers",
   "files.empty": "Pas encore de fichier",
 
   "hour": "Heure",
@@ -353,7 +354,11 @@
   "page.status.unlisted.description":
     "La page est uniquement accessible par son URL",
 
+  "pages": "Pages",
   "pages.empty": "Pas encore de pages",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Non listé",
 
   "password": "Mot de passe",
   "pixel": "Pixel",

@@ -29,8 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login":
-    "\u30e6\u30fc\u30b6\u30fcID \u307e\u305f\u306f \u30d1\u30b9\u30ef\u30fc\u30c9 \u304c\u6b63\u3057\u304f\u3042\u308a\u307e\u305b\u3093",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -216,6 +215,7 @@
   "file.delete.confirm":
     "\u3053\u306e\u30d5\u30a1\u30a4\u30eb\u3092\u524a\u9664\u3057\u3066\u3082\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f",
 
+  "files": "ファイル",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -331,7 +331,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "ページ",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "\u30d1\u30b9\u30ef\u30fc\u30c9",
   "pixel": "Pixel",

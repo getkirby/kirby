@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login": "Chybn\u00e9 jm\u00e9no nebo heslo",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Nemáte povoleno vstoupit do panelu",
 
   "error.avatar.create.fail": "Nebylo možné nahrát profilový obrázek",
@@ -209,6 +209,7 @@
 
   "file.delete.confirm": "Opravdu chcete smazat tento soubor?",
 
+  "files": "Soubory",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -321,7 +322,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Stránky",
   "pages.empty": "Zatím žádné stránky",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Heslo",
   "pixel": "Pixel",

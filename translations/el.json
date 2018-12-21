@@ -30,8 +30,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login":
-    "\u039c\u03b7 \u03ad\u03b3\u03ba\u03c5\u03c1\u03bf \u038c\u03bd\u03bf\u03bc\u03b1 \u03a7\u03c1\u03ae\u03c3\u03c4\u03b7 \u03ae \u039a\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2 \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -223,6 +222,7 @@
   "file.delete.confirm":
     "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc \u03c4\u03bf \u03b1\u03c1\u03c7\u03b5\u03af\u03bf;",
 
+  "files": "Αρχεία",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -344,7 +344,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Σελίδες",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password":
     "\u039a\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2 \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",

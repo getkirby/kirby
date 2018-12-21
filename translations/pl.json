@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login": "Niepoprawna nazwa u\u017cytkownika lub has\u0142o",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -210,6 +210,7 @@
 
   "file.delete.confirm": "Czy na pewno chcesz usun\u0105\u0107 ten plik?",
 
+  "files": "Pliki",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -323,7 +324,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Strony",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Has\u0142o",
   "pixel": "Pixel",

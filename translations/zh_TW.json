@@ -29,8 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login":
-    "\u5e33\u865f\u8207\u5bc6\u78bc\u4e0d\u6b63\u78ba\uff01",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -211,6 +210,7 @@
 
   "file.delete.confirm": "\u78ba\u8a8d\u522a\u9664\u6a94\u6848\uff1f",
 
+  "files": "附加檔案",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -324,7 +324,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "頁面",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "\u5bc6\u78bc",
   "pixel": "Pixel",

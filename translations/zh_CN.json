@@ -29,8 +29,7 @@
   "email": "\u90ae\u7bb1",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login":
-    "\u65e0\u6548\u7684\u7528\u6237\u540d\u6216\u5bc6\u7801",
+  "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
@@ -212,6 +211,7 @@
   "file.delete.confirm":
     "\u60a8\u786e\u5b9a\u5220\u9664\u8fd9\u4e2a\u6587\u4ef6\uff1f",
 
+  "files": "文件",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -324,7 +324,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "页面",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "\u5bc6\u7801",
   "pixel": "Pixel",

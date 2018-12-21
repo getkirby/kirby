@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@eksempel.dk",
 
-  "error.access.login": "Ugyldigt brugernavn eller adgangskode",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Du har ikke adgang til panelet",
 
   "error.avatar.create.fail": "Profilbilledet kunne blev ikke uploadet ",
@@ -212,6 +212,7 @@
 
   "file.delete.confirm": "\u00d8nsker du virkelig at slette denne fil?",
 
+  "files": "Filer",
   "files.empty": "Ingen filer endnu",
 
   "hour": "Time",
@@ -324,7 +325,11 @@
   "page.status.unlisted": "Ulisted",
   "page.status.unlisted.description": "Siden er kun tilgængelig via URL",
 
+  "pages": "Sider",
   "pages.empty": "Ingen sider endnu",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Ulisted",
 
   "password": "Adgangskode",
   "pixel": "Pixel",

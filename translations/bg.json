@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "error.access.login": "Невалиден имейл или парола",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Нямате права за достъп до панела",
 
   "error.avatar.create.fail": "Профилната снимка не може да се качи",
@@ -216,6 +216,7 @@
   "file.delete.confirm":
     "Сигурни ли сте, че искате да изтриете <br><strong>{filename}</strong>?",
 
+  "files": "Файлове",
   "files.empty": "Няма файлове",
 
   "hour": "Hour",
@@ -332,7 +333,11 @@
   "page.status.unlisted": "Скрит",
   "page.status.unlisted.description": "Страницата е достъпна само чрез URL",
 
+  "pages": "Страници",
   "pages.empty": "Все още няма страници",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Скрит",
 
   "password": "\u041f\u0430\u0440\u043e\u043b\u0430",
   "pixel": "Пиксел",

@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@exemple.com",
 
-  "error.access.login": "Nom d'usuari o contrasenya incorrectes",
+  "error.access.login": "Invalid login",
   "error.access.panel": "No tens permís per accedir al panell",
 
   "error.avatar.create.fail": "No s'ha pogut carregar la imatge del perfil",
@@ -207,6 +207,7 @@
 
   "file.delete.confirm": "Est\u00e0s segur d'eliminar aquest arxiu?",
 
+  "files": "Arxius",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -320,7 +321,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Pàgines",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Contrasenya",
   "pixel": "Pixel",

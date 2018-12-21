@@ -29,7 +29,7 @@
   "email": "E-mailadres",
   "email.placeholder": "mail@voorbeeld.nl",
 
-  "error.access.login": "Ongeldige gebruikersnaam of wachtwoord",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Je hebt geen toegang tot het Panel",
 
   "error.avatar.create.fail": "De avatar kon niet worden geupload",
@@ -211,6 +211,7 @@
 
   "file.delete.confirm": "Wil je dit bestand verwijderen?",
 
+  "files": "Bestanden",
   "files.empty": "Nog geen bestanden",
 
   "hour": "Uur",
@@ -326,7 +327,11 @@
   "page.status.unlisted.description":
     "Deze pagina is alleen bereikbaar via URL",
 
+  "pages": "Pagina’s",
   "pages.empty": "Nog geen pagina's",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Niet gepubliceerd",
 
   "password": "Wachtwoord",
   "pixel": "Pixel",

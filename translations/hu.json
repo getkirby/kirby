@@ -29,8 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@p\u00e1lda.hu",
 
-  "error.access.login":
-    "\u00c9rv\u00e9nytelen felhaszn\u00e1l\u00f3n\u00e9v vagy jelsz\u00f3",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Nincs jogosultságod megnyitni a panelt",
 
   "error.avatar.create.fail": "A profilkép feltöltése nem sikerült",
@@ -211,6 +210,7 @@
 
   "file.delete.confirm": "Biztos t\u00f6r\u00f6lni akarod ezt a f\u00e1jlt?",
 
+  "files": "Fájlok",
   "files.empty": "No files yet",
 
   "hour": "Hour",
@@ -323,7 +323,11 @@
   "page.status.unlisted": "Unlisted",
   "page.status.unlisted.description": "The page is only accessible via URL",
 
+  "pages": "Aloldalak",
   "pages.empty": "No pages yet",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Unlisted",
 
   "password": "Jelsz\u00f3",
   "pixel": "Pixel",

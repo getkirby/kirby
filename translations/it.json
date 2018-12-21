@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@esempio.com",
 
-  "error.access.login": "Username o password non validi",
+  "error.access.login": "Invalid login",
   "error.access.panel": "Non ti è permesso accedere al pannello",
 
   "error.avatar.create.fail":
@@ -212,6 +212,7 @@
 
   "file.delete.confirm": "Sei sicuro di voler eliminare questo file?",
 
+  "files": "Files",
   "files.empty": "Nessun file caricato",
 
   "hour": "Ora",
@@ -327,7 +328,11 @@
   "page.status.unlisted.description":
     "La pagina è accessibile soltanto tramite URL",
 
+  "pages": "Pagine",
   "pages.empty": "Nessuna pagina",
+  "pages.status.draft": "Drafts",
+  "pages.status.listed": "Published",
+  "pages.status.unlisted": "Non in elenco",
 
   "password": "Password",
   "pixel": "Pixel",
