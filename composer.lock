@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "023148d622b916f9fe8eead4a1022df7",
+    "content-hash": "22e2ddd740b48850ebbab71ba6d3de9e",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -3160,7 +3160,20 @@
             "time": "2018-01-29T19:49:41+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "1.8.0",
+            "alias_normalized": "1.8.0.0",
+            "version": "1.8.0.0-beta5",
+            "package": "erusev/parsedown"
+        },
+        {
+            "alias": "0.8.0",
+            "alias_normalized": "0.8.0.0",
+            "version": "0.8.0.0-beta1",
+            "package": "erusev/parsedown-extra"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "erusev/parsedown": 10,
