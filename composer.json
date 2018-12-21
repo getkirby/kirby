@@ -23,8 +23,6 @@
     "ext-mbstring": "*",
     "getkirby/composer-installer": "*",
     "mustangostang/spyc": "0.6.*",
-    "erusev/parsedown": "1.8.0-beta-5@beta",
-    "erusev/parsedown-extra": "0.8.0-beta-1@beta",
     "michelf/php-smartypants": "1.8.*",
     "claviska/simpleimage": "3.3.*",
     "phpmailer/phpmailer": "6.0.*",
@@ -38,6 +36,9 @@
   },
   "autoload": {
     "files": ["config/helpers.php", "config/aliases.php"],
+    "psr-0": {
+      "Parsedown": "dependencies/"
+    },
     "psr-4": {
       "Kirby\\": "src/"
     }
