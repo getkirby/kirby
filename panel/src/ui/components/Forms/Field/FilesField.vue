@@ -115,7 +115,7 @@ export default {
           files = files.map(file => {
             file.selected = selectedIds.indexOf(file.id) !== -1;
 
-            file.thumb = this.image;
+            file.thumb = this.image || {};
             file.thumb.url = false;
 
             if (file.thumbs && file.thumbs.tiny) {
@@ -130,7 +130,7 @@ export default {
             multiple: this.multiple
           });
         })
-        .catch(() => {
+        .catch(e => {
           this.$store.dispatch(
             "notification/error",
             "The files query does not seem to be correct"
