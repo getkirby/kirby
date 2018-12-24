@@ -254,7 +254,7 @@ class Request
      * if it exists
      *
      * @param string|null $key
-^     * @param mixed $fallback
+     * @param mixed $fallback
      * @return mixed
      */
     public function get(string $key = null, $fallback = null)
