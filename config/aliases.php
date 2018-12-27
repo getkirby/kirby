@@ -3,6 +3,7 @@
 $aliases = [
 
     // cms classes
+    'collection' => 'Kirby\Cms\Collection',
     'dir'        => 'Kirby\Cms\Dir',
     'field'      => 'Kirby\Cms\Field',
     'file'       => 'Kirby\Cms\File',
@@ -42,7 +43,6 @@ $aliases = [
     'a'          => 'Kirby\Toolkit\A',
     'c'          => 'Kirby\Toolkit\Config',
     'config'     => 'Kirby\Toolkit\Config',
-    'collection' => 'Kirby\Toolkit\Collection',
     'escape'     => 'Kirby\Toolkit\Escape',
     'f'          => 'Kirby\Toolkit\F',
     'i18n'       => 'Kirby\Toolkit\I18n',

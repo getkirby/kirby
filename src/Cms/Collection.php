@@ -195,7 +195,9 @@ class Collection extends BaseCollection
     {
         $collection = $this->clone();
         foreach ($keys as $key) {
-            if (is_object($key) === true) {
+            if (is_a($key, 'Kirby\Toolkit\Collection') === true) {
+                $collection = $collection->not(...$key->keys());
+            } elseif (is_object($key) === true) {
                 $key = $key->id();
             }
             unset($collection->$key);
