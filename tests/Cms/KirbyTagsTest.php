@@ -80,6 +80,39 @@ class KirbyTagsTest extends TestCase
         $this->assertEquals($expected, $kirby->kirbytext('(image: https://test.com/something.jpg)'));
     }
 
+    public function testFileWithinFile()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a',
+                        'files' => [
+                            [
+                                'filename' => 'a.jpg',
+                                'content' => [
+                                    'caption' => '(file: b.jpg)'
+                                ]
+                            ],
+                            [
+                                'filename' => 'b.jpg'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $a = $kirby->file('a/a.jpg');
+        $b = $kirby->file('a/b.jpg');
+        $expected = '<p><a download href="' . $b->url() . '">b.jpg</a></p>';
+
+        $this->assertEquals($expected, (string)$a->caption()->kt());
+    }
+
     public function testHooks()
     {
         $app = new App([

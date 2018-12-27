@@ -26,6 +26,10 @@ class KirbyTag extends \Kirby\Text\KirbyTag
             return $file;
         }
 
+        if (is_a($parent, File::class) === true && $file = $parent->page()->file($path)) {
+           return $file;
+        }
+
         return $this->kirby()->file($path, null, true);
     }
 
