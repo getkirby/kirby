@@ -386,7 +386,7 @@ class CollectionTest extends TestCase
 
     public function testShuffle()
     {
-        $this->assertInstanceOf('Collection', $this->collection->shuffle());
+        $this->assertInstanceOf('Kirby\Toolkit\Collection', $this->collection->shuffle());
         $this->assertIsUntouched();
     }
 
