@@ -36,9 +36,7 @@
   },
   "autoload": {
     "files": ["config/helpers.php", "config/aliases.php"],
-    "psr-0": {
-      "Parsedown": "dependencies/"
-    },
+    "classmap": ["dependencies/"],
     "psr-4": {
       "Kirby\\": "src/"
     }
