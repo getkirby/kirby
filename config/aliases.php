@@ -32,6 +32,7 @@ $aliases = [
     'db'        => 'Kirby\Database\Db',
 
     // http classes
+    'cookie'     => 'Kirby\Http\Cookie',
     'header'     => 'Kirby\Http\Header',
 
     // image classes
