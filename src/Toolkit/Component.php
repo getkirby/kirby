@@ -79,15 +79,15 @@ class Component
      */
     public function __call(string $name, array $arguments = [])
     {
-        if (isset($this->computed[$name]) === true) {
+        if (array_key_exists($name, $this->computed) === true) {
             return $this->computed[$name];
         }
 
-        if (isset($this->props[$name]) === true) {
+        if (array_key_exists($name, $this->props) === true) {
             return $this->props[$name];
         }
 
-        if (isset($this->methods[$name]) === true) {
+        if (array_key_exists($name, $this->methods) === true) {
             return $this->methods[$name]->call($this, ...$arguments);
         }
 

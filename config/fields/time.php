@@ -10,8 +10,8 @@ return [
         /**
          * Sets the default time when a new Page/File/User is created
          */
-        'default' => function (string $default = null) {
-            return $this->toTime($default);
+        'default' => function ($default = null) {
+            return $default;
         },
         /**
          * Changes the clock icon
@@ -32,19 +32,27 @@ return [
             return $step;
         },
         'value' => function ($value = null) {
-            return $this->toTime($value);
+            return $value;
         }
     ],
     'computed' => [
+        'default' => function () {
+            return $this->toTime($this->default);
+        },
         'format' => function () {
             return $this->notation === 24 ? 'H:i' : 'h:i a';
+        },
+        'value' => function () {
+            return $this->toTime($this->value);
         }
     ],
     'methods' => [
         'toTime' => function ($value) {
-            if ($timestamp = strtotime($value)) {
+            if ($timestamp = timestamp($value, $this->step)) {
                 return date('H:i', $timestamp);
             }
+
+            return null;
         }
     ],
     'save' => function ($value): string {

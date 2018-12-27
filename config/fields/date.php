@@ -6,7 +6,7 @@ return [
          * Default date when a new Page/File/User gets created
          */
         'default' => function ($default = null) {
-            return $this->toDate($default);
+            return $default;
         },
         /**
          * Changes the calendar icon to something custom
@@ -40,19 +40,27 @@ return [
          * Must be a parseable date string
          */
         'value' => function ($value = null) {
-            return $this->toDate($value);
+            return $value;
         },
     ],
     'computed' => [
+        'default' => function () {
+            return $this->toDate($this->default);
+        },
         'format' => function () {
             return $this->props['format'] ?? ($this->time() === false ? 'Y-m-d' : 'Y-m-d H:i');
-        }
+        },
+        'value' => function () {
+            return $this->toDate($this->value);
+        },
     ],
     'methods' => [
         'toDate' => function ($value) {
-            if ($value !== null && $date = strtotime($value)) {
-                return date(DATE_W3C, $date);
+            if ($timestamp = timestamp($value, $this->time['step'] ?? 5)) {
+                return date(DATE_W3C, $timestamp);
             }
+
+            return null;
         }
     ],
     'save' => function ($value) {

@@ -34,6 +34,7 @@ class DateFieldTest extends TestCase
         return [
             ['12.12.2012', date(DATE_W3C, strtotime('2012-12-12'))],
             ['2016-11-21', date(DATE_W3C, strtotime('2016-11-21'))],
+            ['2016-11-21 12:12:12', date(DATE_W3C, strtotime('2016-11-21 12:10:00')), 5],
             ['something', null],
         ];
     }
@@ -41,10 +42,11 @@ class DateFieldTest extends TestCase
     /**
      * @dataProvider valueProvider
      */
-    public function testValue($input, $expected)
+    public function testValue($input, $expected, $step = null)
     {
         $field = new Field('date', [
-            'value' => $input
+            'value' => $input,
+            'time'  => ['step' => $step]
         ]);
 
         $this->assertEquals($expected, $field->value());

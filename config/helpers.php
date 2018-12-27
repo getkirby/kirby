@@ -514,6 +514,35 @@ function r($condition, $value, $alternative = null)
 }
 
 /**
+ * Rounds the minutes of the given date
+ * by the defined step
+ *
+ * @param string $date
+ * @param integer $step
+ * @return string|null
+ */
+function timestamp(string $date = null, int $step = null): ?string
+{
+    if (V::date($date) === false) {
+        return null;
+    }
+
+    $date = strtotime($date);
+
+    if ($step === null) {
+        return $date;
+    }
+
+    $hours   = date('H', $date);
+    $minutes = date('i', $date);
+    $minutes = floor($minutes / $step) * $step;
+    $minutes = str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    $date    = date('Y-m-d', $date) . ' ' . $hours . ':' . $minutes;
+
+    return strtotime($date);
+}
+
+/**
  * Returns the currrent site object
  *
  * @return Site
