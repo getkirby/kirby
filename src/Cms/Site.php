@@ -181,11 +181,11 @@ class Site extends ModelWithContent
         $sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
 
         foreach ($sections as $section) {
-            if ($section === null || $section->type() !== 'pages') {
+            if ($section === null) {
                 continue;
             }
 
-            foreach ($section->blueprints() as $blueprint) {
+            foreach ((array)$section->blueprints() as $blueprint) {
                 $blueprints[$blueprint['name']] = $blueprint;
             }
         }
