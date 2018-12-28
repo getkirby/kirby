@@ -29,7 +29,7 @@
   "email": "E-mailadres",
   "email.placeholder": "mail@voorbeeld.nl",
 
-  "error.access.login": "Invalid login",
+  "error.access.login": "Ongeldige login",
   "error.access.panel": "Je hebt geen toegang tot het Panel",
 
   "error.avatar.create.fail": "De avatar kon niet worden geupload",
@@ -178,16 +178,18 @@
   "error.validation.email": "Gelieve een geldig emailadres in te voeren",
   "error.validation.endswith": "De invoer moet eindigen met \"{end}\"",
   "error.validation.filename": "Vul een geldige bestandsnaam in",
-  "error.validation.in": "Vul één van de volgende dingen in: {{in}}",
+  "error.validation.in": "Vul één van de volgende dingen in: ({in})",
   "error.validation.integer": "Vul een geldig geheel getal in",
   "error.validation.ip": "Vul een geldig IP-adres in",
   "error.validation.less": "Vul een waarde in lager dan {max}",
   "error.validation.match": "De invoer klopt niet met het verwachte patroon",
-  "error.validation.max": "Please enter a value equal to or lower than {max}",
+  "error.validation.max":
+    "Vul een waarde in die gelijk is aan of lager dan {max}",
   "error.validation.maxlength":
     "Gebruik minder karakters (maximaal {max} karakters)",
   "error.validation.maxwords": "Vul minder dan {max} woorden in",
-  "error.validation.min": "Please enter a value equal to or greater than {min}",
+  "error.validation.min":
+    "Vul een waarde in die gelijk is aan of groter dan {min}",
   "error.validation.minlength":
     "Gebruik meer karakters (minimaal {min} karakters)",
   "error.validation.minwords": "Vul minimaal {min} woorden in",
@@ -260,9 +262,9 @@
   "license.buy": "Koop een licentie",
   "license.register": "Registreren",
   "license.register.help":
-    "You received your license code after the purchase via email. Please copy and paste it to register.",
-  "license.register.label": "Please enter your license code",
-  "license.register.success": "Thank you for supporting Kirby",
+    "Je hebt de licentie via e-mail gekregen nadat je de aankoop hebt gedaan. Kopieer en plak de licentie om te registreren. ",
+  "license.register.label": "Vul je licentie in",
+  "license.register.success": "Bedankt dat je Kirby ondersteunt",
   "license.unregistered": "Dit is een niet geregistreerde demo van Kirby",
 
   "link": "Link",
@@ -329,8 +331,8 @@
 
   "pages": "Pagina’s",
   "pages.empty": "Nog geen pagina's",
-  "pages.status.draft": "Drafts",
-  "pages.status.listed": "Published",
+  "pages.status.draft": "Concepten",
+  "pages.status.listed": "Gepubliceerd",
   "pages.status.unlisted": "Niet gepubliceerd",
 
   "password": "Wachtwoord",

@@ -29,7 +29,7 @@
   "email": "Email",
   "email.placeholder": "mail@esempio.com",
 
-  "error.access.login": "Invalid login",
+  "error.access.login": "Login Invalido",
   "error.access.panel": "Non ti è permesso accedere al pannello",
 
   "error.avatar.create.fail":
@@ -263,7 +263,7 @@
   "license.register.help":
     "Hai ricevuto il codice di licenza tramite email dopo l'acquisto. Per favore inseriscilo per registrare Kirby.",
   "license.register.label": "Inserisci il codice di licenza",
-  "license.register.success": "Thank you for supporting Kirby",
+  "license.register.success": "Ti ringraziamo per aver supportato Kirby",
   "license.unregistered": "Questa è una versione demo di Kirby non registrata",
 
   "link": "Link",
@@ -330,8 +330,8 @@
 
   "pages": "Pagine",
   "pages.empty": "Nessuna pagina",
-  "pages.status.draft": "Drafts",
-  "pages.status.listed": "Published",
+  "pages.status.draft": "Bozza",
+  "pages.status.listed": "Pubblicato",
   "pages.status.unlisted": "Non in elenco",
 
   "password": "Password",

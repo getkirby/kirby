@@ -29,7 +29,7 @@
   "email": "E-post",
   "email.placeholder": "namn@exampel.se",
 
-  "error.access.login": "Invalid login",
+  "error.access.login": "Ogiltig inloggning",
   "error.access.panel": "Du saknar behörighet att nå panelen",
 
   "error.avatar.create.fail": "Profilbilden kunde inte laddas upp",
@@ -180,10 +180,11 @@
   "error.validation.ip": "Ange en giltig IP-adress",
   "error.validation.less": "Ange ett värde lägre än {max}",
   "error.validation.match": "Värdet matchar inte det förväntade mönstret",
-  "error.validation.max": "Please enter a value equal to or lower than {max}",
+  "error.validation.max": "Ange ett värde som är lika med eller lägre än {max}",
   "error.validation.maxlength": "Ange ett kortare värde. (max {max} tecken)",
   "error.validation.maxwords": "Ange inte mer än {max} ord",
-  "error.validation.min": "Please enter a value equal to or greater than {min}",
+  "error.validation.min":
+    "Ange ett värde som är lika med eller större än {min}",
   "error.validation.minlength": "Ange ett längre värde. (minst {min} tecken)",
   "error.validation.minwords": "Ange minst {min} ord",
   "error.validation.more": "Ange ett större värde än {min}",
@@ -256,9 +257,9 @@
   "license.buy": "Köp en licens",
   "license.register": "Registrera",
   "license.register.help":
-    "You received your license code after the purchase via email. Please copy and paste it to register.",
-  "license.register.label": "Please enter your license code",
-  "license.register.success": "Thank you for supporting Kirby",
+    "Du fick din licenskod via e-post efter inköpet. Kopiera och klistra in den för att registrera licensen.",
+  "license.register.label": "Ange din licenskod",
+  "license.register.success": "Tack för att du stödjer Kirby",
   "license.unregistered": "Detta är en oregistrerad demo av Kirby",
 
   "link": "L\u00e4nk",
@@ -323,8 +324,8 @@
 
   "pages": "Sidor",
   "pages.empty": "Inga sidor än",
-  "pages.status.draft": "Drafts",
-  "pages.status.listed": "Published",
+  "pages.status.draft": "Utkast",
+  "pages.status.listed": "Publicerat",
   "pages.status.unlisted": "Olistade",
 
   "password": "L\u00f6senord",

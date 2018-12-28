@@ -6,13 +6,13 @@
   "change": "Change",
   "close": "Sulje",
   "confirm": "Tallenna",
-  "copy": "Copy",
+  "copy": "Kopioi",
   "create": "Create",
 
   "date": "Päivämäärä",
-  "date.select": "Select a date",
+  "date.select": "Valitse päivämäärä",
 
-  "day": "Day",
+  "day": "Päivä",
   "days.fri": "Pe",
   "days.mon": "Ma",
   "days.sat": "La",
@@ -136,8 +136,8 @@
     "You are not allowed to change the role for the user \"{name}\"",
   "error.user.create.permission": "You are not allowed to create this user",
   "error.user.delete": "K\u00e4ytt\u00e4j\u00e4\u00e4 ei voitu poistaa",
-  "error.user.delete.lastAdmin": "You cannot delete the last admin",
-  "error.user.delete.lastUser": "The last user cannot be deleted",
+  "error.user.delete.lastAdmin": "Viimeistä ylläpitäjää ei voi poistaa",
+  "error.user.delete.lastUser": "Viimeistä käyttäjää ei voi poistaa",
   "error.user.delete.permission": "You are not allowed to delete this user",
   "error.user.duplicate":
     "A user with the email address \"{email}\" already exists",
@@ -146,8 +146,8 @@
   "error.user.notFound": "K\u00e4ytt\u00e4j\u00e4\u00e4 ei l\u00f6ytynyt",
   "error.user.password.invalid":
     "Please enter a valid password. Passwords must be at least 8 characters long.",
-  "error.user.password.notSame": "Varmista salasana",
-  "error.user.password.undefined": "The user does not have a password",
+  "error.user.password.notSame": "Salasanat eivät täsmää",
+  "error.user.password.undefined": "Käyttäjällä ei ole salasanaa",
   "error.user.role.invalid": "Please enter a valid role",
   "error.user.undefined": "K\u00e4ytt\u00e4j\u00e4\u00e4 ei l\u00f6ytynyt",
   "error.user.update.permission":
@@ -231,25 +231,25 @@
   "language.convert": "Make default",
   "language.convert.confirm":
     "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
-  "language.create": "Add a new language",
+  "language.create": "Lisää uusi kieli",
   "language.delete.confirm":
     "Do you really want to delete the language <strong>{name}</strong> including all translations? This cannot be undone!",
   "language.deleted": "The language has been deleted",
   "language.direction": "Reading direction",
-  "language.direction.ltr": "Left to right",
-  "language.direction.rtl": "Right to left",
+  "language.direction.ltr": "Vasemmalta oikealle",
+  "language.direction.rtl": "Oikealta vasemmalle",
   "language.locale": "PHP locale string",
   "language.name": "Name",
   "language.updated": "The language has been updated",
 
-  "languages": "Languages",
-  "languages.default": "Default language",
+  "languages": "Kielet",
+  "languages.default": "Oletuskieli",
   "languages.empty": "There are no languages yet",
   "languages.secondary": "Secondary languages",
   "languages.secondary.empty": "There are no secondary languages yet",
 
   "license": "Kirby license",
-  "license.buy": "Buy a license",
+  "license.buy": "Osta lisenssi",
   "license.register": "Register",
   "license.register.help":
     "You received your license code after the purchase via email. Please copy and paste it to register.",
@@ -340,7 +340,7 @@
   "save": "Tallenna",
   "search": "Search",
   "select": "Select",
-  "settings": "Settings",
+  "settings": "Asetukset",
   "size": "Size",
   "slug": "URL-osoite",
   "sort": "Sort",
@@ -360,40 +360,40 @@
   "toolbar.button.ol": "Ordered list",
   "toolbar.button.ul": "Bullet list",
 
-  "translation.author": "Kirby Team",
+  "translation.author": "Kirby-tiimi",
   "translation.direction": "ltr",
-  "translation.name": "Suomi",
+  "translation.name": "Englanti",
 
   "upload": "Upload",
   "upload.errors": "Virhe",
   "upload.progress": "Uploading…",
 
   "url": "Url",
-  "url.placeholder": "https://example.com",
+  "url.placeholder": "https://esimerkki.com",
 
   "user": "User",
   "user.blueprint":
     "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Change email",
-  "user.changeLanguage": "Change language",
+  "user.changeLanguage": "Vaihda kieli",
   "user.changeName": "Rename this user",
-  "user.changePassword": "Change password",
+  "user.changePassword": "Muuta salasana",
   "user.changePassword.new": "Uusi salasana",
-  "user.changePassword.new.confirm": "Confirm the new password…",
-  "user.changeRole": "Change role",
-  "user.changeRole.select": "Select a new role",
+  "user.changePassword.new.confirm": "Vahvista uusi salasana...",
+  "user.changeRole": "Muuta käyttäjätasoa",
+  "user.changeRole.select": "Valitse uusi käyttäjätaso",
   "user.create": "Lisää uusi käyttäjä",
-  "user.delete": "Delete this user",
+  "user.delete": "Poista tämä käyttäjä",
   "user.delete.confirm": "Haluatko varmsti poistaa k\u00e4ytt\u00e4j\u00e4n?",
 
   "version": "Kirby version",
 
   "view.account": "K\u00e4ytt\u00e4j\u00e4tilisi",
   "view.installation": "Asennus",
-  "view.settings": "Settings",
-  "view.site": "Site",
+  "view.settings": "Asetukset",
+  "view.site": "Sivusto",
   "view.users": "K\u00e4ytt\u00e4j\u00e4t",
 
-  "welcome": "Welcome",
-  "year": "Year"
+  "welcome": "Tervetuloa",
+  "year": "Vuosi"
 }

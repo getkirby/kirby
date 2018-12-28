@@ -29,7 +29,7 @@
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
 
-  "error.access.login": "Invalid login",
+  "error.access.login": "Geçersiz giriş",
   "error.access.panel": "Panele erişim izniniz yok",
 
   "error.avatar.create.fail": "Profil resmi yüklenemedi",
@@ -319,10 +319,10 @@
   "page.status.unlisted.description":
     "Bu sayfa sadece bağlantı adresi ile erişilebilir",
 
-  "pages": "Alt Sayfalar",
+  "pages": "Sayfalar",
   "pages.empty": "Henüz sayfa yok",
-  "pages.status.draft": "Drafts",
-  "pages.status.listed": "Published",
+  "pages.status.draft": "Taslaklar",
+  "pages.status.listed": "Yayınlandı",
   "pages.status.unlisted": "Liste Dışı",
 
   "password": "\u015eifre",
