@@ -52,7 +52,7 @@ class Search
         }, $searchwords);
 
         $preg    = '!(' . implode('|', $searchwords) . ')!i';
-        $results = $collection->filter(function ($item) use ($query, $searchwords, $preg, $options, $lowerQuery) {
+        $results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery) {
             $data = $item->content()->toArray();
             $keys = array_keys($data);
             $keys[] = 'id';

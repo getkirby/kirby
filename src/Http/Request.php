@@ -61,18 +61,7 @@ class Request
     protected $files;
 
     /**
-     * The Method object is a tiny
-     * wrapper around the request method
-     * name, which will validate and sanitize
-     * the given name and always return
-     * its uppercase version.
-     *
-     * Examples:
-     *
-     * `$request->method()->name()`
-     * `$request->method()->is('post')`
-     *
-     * @var Method
+     * @var string
      */
     protected $method;
 

@@ -191,7 +191,7 @@ class Filename
      * with width and height values
      * if available
      *
-     * @return void
+     * @return array
      */
     public function dimensions()
     {

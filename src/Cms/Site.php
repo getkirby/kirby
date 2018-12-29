@@ -666,9 +666,9 @@ class Site extends ModelWithContent
      * modified after the given unix timestamp
      * This is mainly used to auto-update the cache
      *
-     * @return boolean
+     * @return bool
      */
-    public function wasModifiedAfter($time): boolean
+    public function wasModifiedAfter($time): bool
     {
         return Dir::wasModifiedAfter($this->root(), $time);
     }

@@ -51,6 +51,16 @@ class Remote
     public $curlopt = [];
 
     /**
+     * @var int
+     */
+    public $errorCode;
+
+    /**
+     * @var string
+     */
+    public $errorMessage;
+
+    /**
      * @var array
      */
     public $headers = [];

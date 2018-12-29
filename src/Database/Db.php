@@ -2,13 +2,13 @@
 
 namespace Kirby\Database;
 
-use Kirby\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Kirby\Toolkit\Config;
 
 /**
  * Database shortcuts
  */
-class DB
+class Db
 {
     const ERROR_UNKNOWN_METHOD = 0;
 
@@ -22,7 +22,7 @@ class DB
     /**
      * The singleton Database object
      *
-     * @var Kirby\Database\Database
+     * @var Database
      */
     public static $connection = null;
 
@@ -30,7 +30,7 @@ class DB
      * (Re)connect the database
      *
      * @param array $params Pass [] to use the default params from the config
-     * @return Kirby\Database\Database
+     * @return Database
      */
     public static function connect(array $params = null)
     {
@@ -55,7 +55,7 @@ class DB
     /**
      * Returns the current database connection
      *
-     * @return Kirby\Database\Database
+     * @return Database
      */
     public static function connection()
     {
@@ -66,7 +66,7 @@ class DB
      * Sets the current table, which should be queried
      *
      * @param string $table
-     * @return Kirby\Database\Query Returns a Query object, which can be used to build a full query for that table
+     * @return Query Returns a Query object, which can be used to build a full query for that table
      */
     public static function table($table)
     {

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Request;
 use Kirby\Toolkit\Facade;
 
 /**
@@ -10,7 +11,7 @@ use Kirby\Toolkit\Facade;
 class R extends Facade
 {
     /**
-     * @return Kirby\Http\Request
+     * @return Request
      */
     protected static function instance()
     {

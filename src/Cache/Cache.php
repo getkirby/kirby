@@ -27,10 +27,11 @@ class Cache
     /**
      * Set all parameters which are needed to connect to the cache storage
      *
-     * @param array $params
+     * @param array $options
      */
-    public function __construct(array $params = [])
+    public function __construct(array $options = [])
     {
+        $this->options = $options;
     }
 
     /**

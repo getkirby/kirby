@@ -4,6 +4,7 @@ namespace Kirby\Session;
 
 use Throwable;
 use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -676,7 +677,8 @@ class Session
         // follow to the new session if there is one
         if (isset($data['newSession'])) {
             $this->parseToken($data['newSession'], true);
-            return $this->init();
+            $this->init();
+            return;
         }
 
         // verify timeout

@@ -11,6 +11,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field;
+use Kirby\Http\Route;
 use Kirby\Http\Router;
 use Kirby\Http\Request;
 use Kirby\Http\Server;
@@ -47,6 +48,7 @@ class App
 
     public $data = [];
 
+    protected $api;
     protected $collections;
     protected $defaultLanguage;
     protected $language;
@@ -54,6 +56,8 @@ class App
     protected $multilang;
     protected $options;
     protected $path;
+    protected $request;
+    protected $response;
     protected $roles;
     protected $roots;
     protected $routes;
@@ -712,7 +716,7 @@ class App
     /**
      * Returns the request path
      *
-     * @return void
+     * @return string
      */
     public function path()
     {
@@ -899,8 +903,8 @@ class App
     /**
      * Returns the current session object
      *
-     * @param  array   $options Additional options, see the session component
-     * @return Session|AutoSession
+     * @param array $options Additional options, see the session component
+     * @return Session
      */
     public function session(array $options = [])
     {

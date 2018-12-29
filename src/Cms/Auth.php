@@ -7,6 +7,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Session\Session;
 use Throwable;
 
 /**

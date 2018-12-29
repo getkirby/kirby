@@ -28,6 +28,23 @@ abstract class ModelWithContent extends Model
     public $translations;
 
     /**
+     * Returns the blueprint of the model
+     *
+     * @return Blueprint
+     */
+    abstract public function blueprint();
+
+    /**
+     * Executes any given model action
+     *
+     * @param string $action
+     * @param array $arguments
+     * @param Closure $callback
+     * @return mixed
+     */
+    abstract protected function commit(string $action, array $arguments, Closure $callback);
+
+    /**
      * Returns the content
      *
      * @param string $languageCode
@@ -120,9 +137,9 @@ abstract class ModelWithContent extends Model
      * folder in which the content file is
      * located
      *
-     * @return string
+     * @return string|null
      */
-    public function contentFileDirectory(): string
+    public function contentFileDirectory(): ?string
     {
         return $this->root();
     }
@@ -188,6 +205,13 @@ abstract class ModelWithContent extends Model
     }
 
     /**
+     * Returns the absolute path to the model
+     *
+     * @return string
+     */
+    abstract public function root(): ?string;
+
+    /**
      * Stores the content on disk
      *
      * @param string $languageCode
@@ -242,7 +266,7 @@ abstract class ModelWithContent extends Model
         $translation = $clone->translation($languageCode);
 
         if ($translation === null) {
-            throw new InvalidArgument('Invalid language: ' . $languageCode);
+            throw new InvalidArgumentException('Invalid language: ' . $languageCode);
         }
 
         // merge the translation with the new data

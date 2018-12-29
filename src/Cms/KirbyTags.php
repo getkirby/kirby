@@ -42,7 +42,7 @@ class KirbyTags extends \Kirby\Text\KirbyTags
      * @param string $text
      * @param array $data
      * @param array $options
-     * @return void
+     * @return string
      */
     protected static function hooks(array $hooks, string $text = null, array $data, array $options)
     {

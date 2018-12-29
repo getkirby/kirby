@@ -15,7 +15,7 @@ trait Properties
      * initial properties.
      *
      * @param array $props
-     * @return void
+     * @return self
      */
     public function clone(array $props = [])
     {

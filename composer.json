@@ -33,7 +33,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^6.0",
-    "friendsofphp/php-cs-fixer": "^2.11.1"
+    "friendsofphp/php-cs-fixer": "^2.11.1",
+    "phpstan/phpstan": "^0.10.7"
   },
   "autoload": {
     "files": ["config/helpers.php", "config/aliases.php"],

@@ -23,14 +23,14 @@ class Sql
     /**
      * The parent database connection
      *
-     * @var Kirby\Database\Database
+     * @var Database
      */
     public $database;
 
     /**
      * Constructor
      *
-     * @param Kirby\Database\Database $database
+     * @param Database $database
      */
     public function __construct($database)
     {
@@ -179,7 +179,7 @@ class Sql
     {
         // column type
         if (isset($column['type']) === false) {
-            throw new InvalidArgumentException('No column type given for column ' . $name);
+            throw new InvalidArgumentException('No column type given for column ' . $column);
         }
 
         // column name

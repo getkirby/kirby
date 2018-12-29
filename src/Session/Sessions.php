@@ -3,6 +3,7 @@
 namespace Kirby\Session;
 
 use Throwable;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Http\Cookie;

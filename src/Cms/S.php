@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Session\Session;
 use Kirby\Toolkit\Facade;
 
 /**
@@ -10,7 +11,7 @@ use Kirby\Toolkit\Facade;
 class S extends Facade
 {
     /**
-     * @return Kirby\Session\Session
+     * @return Session
      */
     protected static function instance()
     {

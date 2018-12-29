@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Cache\Cache;
-
 use Kirby\Exception\InvalidArgumentException;
 
 trait AppCaches
@@ -14,7 +13,7 @@ trait AppCaches
      * Returns a cache instance by key
      *
      * @param string $key
-     * @return Kirby\Cache\Cache
+     * @return Cache
      */
     public function cache(string $key)
     {

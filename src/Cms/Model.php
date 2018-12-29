@@ -40,6 +40,16 @@ abstract class Model
     }
 
     /**
+     * Each model must return a unique id
+     *
+     * @return string|int
+     */
+    public function id()
+    {
+        return null;
+    }
+
+    /**
      * Returns the parent Kirby instance
      *
      * @return App|null

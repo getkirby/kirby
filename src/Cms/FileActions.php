@@ -91,7 +91,8 @@ trait FileActions
      * 5. returns the result
      *
      * @param string $action
-     * @param mixed ...$arguments
+     * @param array $arguments
+     * @param Closure $callback
      * @return mixed
      */
     protected function commit(string $action, array $arguments, Closure $callback)

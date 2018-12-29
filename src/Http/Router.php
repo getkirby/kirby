@@ -98,7 +98,7 @@ class Router
      *
      * @param  string $path
      * @param  string $method
-     * @return Result|null
+     * @return Route|null
      */
     public function find(string $path, string $method)
     {

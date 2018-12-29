@@ -34,7 +34,8 @@ class MemCached extends Cache
             'prefix'  => null,
         ];
 
-        $this->options    = array_merge($defaults, $params);
+        parent::__construct(array_merge($defaults, $params));
+
         $this->connection = new \Memcached();
         $this->connection->addServer($this->options['host'], $this->options['port']);
     }

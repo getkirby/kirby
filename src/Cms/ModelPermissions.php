@@ -7,6 +7,7 @@ abstract class ModelPermissions
     protected $category;
     protected $model;
     protected $options;
+    protected $permissions;
     protected $user;
 
     public function __call(string $method, array $arguments = [])
@@ -51,7 +52,7 @@ abstract class ModelPermissions
 
     public function cannot(string $action): bool
     {
-        return $this->can() === false;
+        return $this->can($action) === false;
     }
 
     public function toArray(): array

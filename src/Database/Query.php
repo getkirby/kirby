@@ -2,7 +2,7 @@
 
 namespace Kirby\Database;
 
-use Kirby\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\Str;
@@ -18,7 +18,7 @@ class Query
     /**
      * Parent Database object
      *
-     * @var Kirby\Database\Database
+     * @var Database
      */
     protected $database = null;
 
@@ -179,7 +179,7 @@ class Query
      * the query instead of actually executing the query and returning results
      *
      * @param boolean $debug
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function debug(bool $debug = true)
     {
@@ -191,7 +191,7 @@ class Query
      * Enables distinct select clauses.
      *
      * @param boolean $distinct
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function distinct(bool $distinct = true)
     {
@@ -204,7 +204,7 @@ class Query
      * If enabled queries will no longer fail silently but throw an exception
      *
      * @param boolean $fail
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function fail(bool $fail = true)
     {
@@ -217,7 +217,7 @@ class Query
      * Set this to array to get a simple array instead of an object
      *
      * @param string $fetch
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function fetch(string $fetch)
     {
@@ -230,7 +230,7 @@ class Query
      * Set this to array to get a simple array instead of an iterator object
      *
      * @param string $iterator
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function iterator(string $iterator)
     {
@@ -242,7 +242,7 @@ class Query
     * Sets the name of the table, which should be queried
     *
     * @param string $table
-    * @return Kirby\Database\Query
+    * @return Query
     */
     public function table(string $table)
     {
@@ -258,7 +258,7 @@ class Query
      * Sets the name of the primary key column
      *
      * @param string $primaryKeyName
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function primaryKeyName(string $primaryKeyName)
     {
@@ -271,7 +271,7 @@ class Query
      * By default all columns will be selected
      *
      * @param mixed $select Pass either a string of columns or an array
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function select($select)
     {
@@ -304,7 +304,7 @@ class Query
      *
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function leftJoin(string $table, string $on)
     {
@@ -316,7 +316,7 @@ class Query
      *
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function rightJoin(string $table, string $on)
     {
@@ -328,7 +328,7 @@ class Query
      *
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function innerJoin($table, $on)
     {
@@ -339,7 +339,7 @@ class Query
      * Sets the values which should be used for the update or insert clause
      *
      * @param mixed $values Can either be a string or an array of values
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function values($values = [])
     {
@@ -354,7 +354,7 @@ class Query
      * Also can be used as getter for all attached bindings by not passing an argument.
      *
      * @param mixed $bindings Array of bindings or null to use this method as getter
-     * @return array|Kirby\Database\Query
+     * @return array|Query
      */
     public function bindings(array $bindings = null)
     {
@@ -378,7 +378,7 @@ class Query
      * ->where('username', 'like', 'myuser');                    (args: 3)
      *
      * @param list
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function where(...$args)
     {
@@ -391,7 +391,7 @@ class Query
      * Check out the where() method docs for additional info.
      *
      * @param list
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function orWhere(...$args)
     {
@@ -415,7 +415,7 @@ class Query
      * Check out the where() method docs for additional info.
      *
      * @param list
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function andWhere(...$args)
     {
@@ -438,7 +438,7 @@ class Query
     * Attaches a group by clause
     *
     * @param string $group
-    * @return Kirby\Database\Query
+    * @return Query
     */
     public function group(string $group = null)
     {
@@ -458,7 +458,7 @@ class Query
      * ->having('username', 'like', 'myuser');                       (args: 3)
      *
      * @param list
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function having(...$args)
     {
@@ -470,7 +470,7 @@ class Query
      * Attaches an order clause
      *
      * @param string $order
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function order(string $order = null)
     {
@@ -482,7 +482,7 @@ class Query
      * Sets the offset for select clauses
      *
      * @param int $offset
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function offset(int $offset = null)
     {
@@ -494,7 +494,7 @@ class Query
      * Sets the limit for select clauses
      *
      * @param int $limit
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function limit(int $limit = null)
     {
@@ -553,7 +553,7 @@ class Query
     /**
      * Builds a count query
      *
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function count()
     {
@@ -564,7 +564,7 @@ class Query
      * Builds a max query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function max(string $column)
     {
@@ -575,7 +575,7 @@ class Query
      * Builds a min query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function min(string $column)
     {
@@ -586,7 +586,7 @@ class Query
      * Builds a sum query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function sum(string $column)
     {
@@ -597,7 +597,7 @@ class Query
      * Builds an average query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return Query
      */
     public function avg(string $column)
     {
@@ -747,17 +747,10 @@ class Query
      *
      * @param int $page
      * @param int $limit The number of rows, which should be returned for each page
-     * @param array $params Optional params for the pagination object
      * @return object Collection iterator with attached pagination object
      */
-    public function page(int $page, int $limit, array $params = [])
+    public function page(int $page, int $limit)
     {
-        $defaults = [
-            'page' => $page
-        ];
-
-        $options = array_merge($defaults, $params);
-
         // clone this to create a counter query
         $counter = clone $this;
 
@@ -765,7 +758,11 @@ class Query
         $count = $counter->debug(false)->count();
 
         // pagination
-        $pagination = new Pagination($count, $limit, $options);
+        $pagination = new Pagination([
+            'limit' => $limit,
+            'page'  => $page,
+            'total' => $count,
+        ]);
 
         // apply it to the dataset and retrieve all rows. make sure to use Collection as the iterator to be able to attach the pagination object
         $iterator   = $this->iterator;

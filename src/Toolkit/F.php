@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use Exception;
 use Throwable;
 use Kirby\Http\Header;
+use ZipArchive;
 
 /**
  * Low level file handling utilities

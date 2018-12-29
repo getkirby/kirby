@@ -53,6 +53,13 @@ class Page extends ModelWithContent
     protected $blueprint;
 
     /**
+     * Nesting level
+     *
+     * @var int
+     */
+    protected $depth;
+
+    /**
      * Sorting number + slug
      *
      * @var string

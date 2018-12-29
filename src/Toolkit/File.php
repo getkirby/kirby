@@ -294,7 +294,6 @@ class File
     {
         return [
             'root'         => $this->root(),
-            'url'          => $this->url(),
             'hash'         => $this->hash(),
             'filename'     => $this->filename(),
             'name'         => $this->name(),

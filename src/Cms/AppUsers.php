@@ -67,7 +67,7 @@ trait AppUsers
      * or the current user if no id is given
      *
      * @param  string        $id
-     * @param  Session|array $session Session options or session object for getting the current user
+     * @param  \Kirby\Session\Session|array $session Session options or session object for getting the current user
      * @return User|null
      */
     public function user(string $id = null, $session = null)

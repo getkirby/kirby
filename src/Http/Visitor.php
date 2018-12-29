@@ -36,13 +36,13 @@ class Visitor
 
     /**
      * accepted language
-     * @var Language|null
+     * @var string|null
      */
     protected $acceptedLanguage;
 
     /**
      * accepted mime type
-     * @var MimeType|null
+     * @var string|null
      */
     protected $acceptedMimeType;
 

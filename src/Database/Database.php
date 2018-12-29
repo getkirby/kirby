@@ -2,11 +2,13 @@
 
 namespace Kirby\Database;
 
-use Throwable;
-use Kirby\Database\Query;
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 use PDO;
+use PDOStatement;
+use Throwable;
 
 /**
  * A simple database class
@@ -15,63 +17,11 @@ class Database
 {
 
     /**
-     * @var array
-     */
-    public static $types = [];
-
-    /**
-     * A global array of started connections
+     * The number of affected rows for the last query
      *
-     * @var array
+     * @var int|null
      */
-    public static $connections = [];
-
-    /**
-     * The established connection
-     *
-     * @var PDO|null
-     */
-    protected $connection;
-
-    /**
-     * @var string
-     */
-    protected $dsn;
-
-    /**
-     * The database type (mysql, sqlite)
-     *
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * The connection id
-     *
-     * @var string
-     */
-    protected $id;
-
-    /**
-     * Optional prefix for table names
-     *
-     * @var string
-     */
-    protected $prefix;
-
-    /**
-     * The PDO query statement
-     *
-     * @var PDOStatement|null
-     */
-    protected $statement;
-
-    /**
-     * Whitelists for table names
-     *
-     * @var array|null
-     */
-    protected $tableWhitelist;
+    protected $affected;
 
     /**
      * Whitelist for column names
@@ -81,11 +31,51 @@ class Database
     protected $columnWhitelist = [];
 
     /**
-     * The number of affected rows for the last query
+     * The established connection
      *
-     * @var int|null
+     * @var PDO|null
      */
-    protected $affected;
+    protected $connection;
+
+    /**
+     * A global array of started connections
+     *
+     * @var array
+     */
+    public static $connections = [];
+
+    /**
+     * Database name
+     *
+     * @var string
+     */
+    protected $database;
+
+    /**
+     * @var string
+     */
+    protected $dsn;
+
+    /**
+     * Set to true to throw exceptions on failed queries
+     *
+     * @var boolean
+     */
+    protected $fail = false;
+
+    /**
+     * The connection id
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
+     * The last error
+     *
+     * @var Exception|null
+     */
+    protected $lastError;
 
     /**
      * The last insert id
@@ -109,18 +99,25 @@ class Database
     protected $lastResult;
 
     /**
-     * The last error
+     * Optional prefix for table names
      *
-     * @var Exception|null
+     * @var string
      */
-    protected $lastError;
+    protected $prefix;
 
     /**
-     * Set to true to throw exceptions on failed queries
+     * The PDO query statement
      *
-     * @var boolean
+     * @var PDOStatement|null
      */
-    protected $fail = false;
+    protected $statement;
+
+    /**
+     * Whitelists for table names
+     *
+     * @var array|null
+     */
+    protected $tableWhitelist;
 
     /**
      * An array with all queries which are being made
@@ -128,6 +125,18 @@ class Database
      * @var array
      */
     protected $trace = [];
+
+    /**
+     * The database type (mysql, sqlite)
+     *
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * @var array
+     */
+    public static $types = [];
 
     /**
      * Creates a new Database instance
@@ -144,7 +153,7 @@ class Database
      * Returns one of the started instance
      *
      * @param string $id
-     * @return Kirby\Database\Database
+     * @return Database
      */
     public static function instance(string $id = null): self
     {
@@ -165,7 +174,7 @@ class Database
      * Connects to a database
      *
      * @param array|null $params This can either be a config key or an array of parameters for the connection
-     * @return Kirby\Database\Database
+     * @return Database
      */
     public function connect(array $params = null)
     {
@@ -208,7 +217,7 @@ class Database
     /**
      * Returns the currently active connection
      *
-     * @return Kirby\Database\Database|null
+     * @return Database|null
      */
     public function connection()
     {
@@ -219,7 +228,7 @@ class Database
      * Sets the exception mode for the next query
      *
      * @param boolean $fail
-     * @return Kirby\Database\Database
+     * @return Database
      */
     public function fail(bool $fail = true)
     {
@@ -442,11 +451,11 @@ class Database
      * Returns the correct Sql generator instance
      * for the type of database
      *
-     * @return Kirby\Database\Sql
+     * @return Sql
      */
     public function sql()
     {
-        $className = static::$types[$this->type]['sql'] ?? 'Kirby\Database\Sql';
+        $className = static::$types[$this->type]['sql'] ?? 'Sql';
         return new $className($this);
     }
 
@@ -454,7 +463,7 @@ class Database
      * Sets the current table, which should be queried
      *
      * @param string $table
-     * @return Kirby\Database\Query Returns a Query object, which can be used to build a full query for that table
+     * @return Query Returns a Query object, which can be used to build a full query for that table
      */
     public function table(string $table)
     {

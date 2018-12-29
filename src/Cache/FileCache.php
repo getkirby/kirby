@@ -31,7 +31,7 @@ class FileCache extends Cache
             'extension' => null
         ];
 
-        $this->options = array_merge($defaults, $params);
+        parent::__construct(array_merge($defaults, $params));
 
         // try to create the directory
         Dir::make($this->options['root'], true);

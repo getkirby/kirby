@@ -435,7 +435,7 @@ class A
      * @param   array   $array The source array
      * @param   string  $field The name of the column
      * @param   string  $direction desc (descending) or asc (ascending)
-     * @param   const   $method A PHP sort method flag or 'natural' for
+     * @param   int     $method A PHP sort method flag or 'natural' for
      *                          natural sorting, which is not supported in
      *                          PHP by sort flags
      * @return  array   The sorted array

@@ -366,12 +366,6 @@ class Dir
         }
 
         return $size;
-
-
-
-        // It's easier to handle this with the Folder class
-        $object = new Folder($dir);
-        return $object->size();
     }
 
     /**
@@ -380,9 +374,9 @@ class Dir
      *
      * @param string $dir
      * @param int $time
-     * @return boolean
+     * @return bool
      */
-    public static function wasModifiedAfter(string $dir, int $time): boolean
+    public static function wasModifiedAfter(string $dir, int $time): bool
     {
         if (filemtime($dir) > $time) {
             return true;
