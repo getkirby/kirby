@@ -21,6 +21,7 @@
   "require": {
     "php": ">=7.1.0",
     "ext-mbstring": "*",
+    "ext-ctype": "*",
     "getkirby/composer-installer": "*",
     "mustangostang/spyc": "0.6.*",
     "michelf/php-smartypants": "1.8.*",
