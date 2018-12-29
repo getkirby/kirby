@@ -49,6 +49,7 @@
     }
   },
   "scripts": {
+    "analyze": "./vendor/bin/phpstan analyse src",
     "test": "./vendor/bin/phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist",
     "build": "./scripts/build",
