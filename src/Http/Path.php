@@ -14,10 +14,6 @@ class Path extends Collection
     public function __construct($items)
     {
         if (is_string($items) === true) {
-            if (substr($items, -1) === '/') {
-                $this->trailingSlash = true;
-            }
-
             $items = Str::split($items, '/');
         }
 

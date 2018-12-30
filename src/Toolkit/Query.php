@@ -55,6 +55,7 @@ class Query
 
         $parts = $this->parts($this->query);
         $data  = $this->data;
+        $value = null;
 
         while (count($parts)) {
             $part   = array_shift($parts);
