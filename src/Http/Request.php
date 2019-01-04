@@ -8,6 +8,7 @@ use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Method;
 use Kirby\Http\Request\Query;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -61,7 +62,18 @@ class Request
     protected $files;
 
     /**
-     * @var string
+     * The Method object is a tiny
+     * wrapper around the request method
+     * name, which will validate and sanitize
+     * the given name and always return
+     * its uppercase version.
+     *
+     * Examples:
+     *
+     * `$request->method()->name()`
+     * `$request->method()->is('post')`
+     *
+     * @var Method
      */
     protected $method;
 
@@ -242,17 +254,13 @@ class Request
      * Returns any data field from the request
      * if it exists
      *
-     * @param string|null $key
+     * @param string|null|array $key
      * @param mixed $fallback
      * @return mixed
      */
-    public function get(string $key = null, $fallback = null)
+    public function get($key = null, $fallback = null)
     {
-        if ($key === null) {
-            return $this->data();
-        }
-
-        return $this->data()[$key] ?? $fallback;
+        return A::get($this->data(), $key, $fallback);
     }
 
     /**
