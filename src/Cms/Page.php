@@ -498,11 +498,19 @@ class Page extends ModelWithContent
     /**
      * Compares the current object with the given page object
      *
-     * @param Page $page
+     * @param Page|string $page
      * @return bool
      */
-    public function is(Page $page): bool
+    public function is($page): bool
     {
+        if (is_a($page, Page::class) === false) {
+            $page = $this->kirby()->page($page);
+        }
+
+        if (is_a($page, Page::class) === false) {
+            return false;
+        }
+
         return $this->id() === $page->id();
     }
 
@@ -579,9 +587,10 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is a child of the given page
      *
+     * @param string|Page $parent
      * @return boolean
      */
-    public function isChildOf(Page $parent): bool
+    public function isChildOf($parent): bool
     {
         return $this->parent()->is($parent);
     }
