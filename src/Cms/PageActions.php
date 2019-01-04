@@ -276,8 +276,7 @@ trait PageActions
      * 5. returns the result
      *
      * @param string $action
-     * @param array $arguments
-     * @param Closure $callback
+     * @param mixed ...$arguments
      * @return mixed
      */
     protected function commit(string $action, array $arguments, Closure $callback)
@@ -303,7 +302,7 @@ trait PageActions
         // clean up the slug
         $props['slug']     = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
         $props['template'] = $props['model'] = strtolower($props['template'] ?? 'default');
-        $props['isDraft']  = true;
+        $props['isDraft']  = ($props['draft'] ?? true);
 
         // create a temporary page object
         $page = Page::factory($props);
