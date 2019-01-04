@@ -269,6 +269,16 @@ class Pages extends Collection
     }
 
     /**
+     * Finds the currently open page
+     *
+     * @return Page|null
+     */
+    public function findOpen()
+    {
+        return $this->findBy('isOpen', true);
+    }
+
+    /**
      * Custom getter that is able to find
      * extension pages
      *
