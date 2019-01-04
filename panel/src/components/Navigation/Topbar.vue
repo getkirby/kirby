@@ -93,7 +93,7 @@
           >
             {{ notification.message }}
           </k-button>
-          <div v-else-if="false" class="k-registration">
+          <div v-else-if="unregistered" class="k-registration">
             <p>{{ $t('license.unregistered') }}</p>
             <k-button :responsive="true" icon="key" @click="$emit('register')">{{ $t('license.register') }}</k-button>
             <k-button
