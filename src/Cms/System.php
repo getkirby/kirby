@@ -261,7 +261,7 @@ class System
             $license['order'],
             $license['date'],
             $license['email'],
-            $license['url'],
+            $license['domain'],
             $license['signature']
         ) !== true) {
             return false;
@@ -272,9 +272,10 @@ class System
             'license' => $license['license'],
             'order'   => $license['order'],
             'email'   => hash('sha256', $license['email'] . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
-            'url'     => $license['url'],
+            'domain'  => $license['domain'],
             'date'    => $license['date']
         ];
+
 
         // get the public key
         $pubKey = F::read($this->app->root('kirby') . '/kirby.pub');
@@ -285,7 +286,7 @@ class System
         }
 
         // verify the URL
-        if ($this->licenseUrlNormalized() !== $this->licenseUrlNormalized($license['url'])) {
+        if ($this->licenseUrlNormalized() !== $this->licenseUrlNormalized($license['domain'])) {
             return false;
         }
 
@@ -336,8 +337,8 @@ class System
         $response = Remote::get('https://licenses.getkirby.com/register', [
             'data' => [
                 'license' => $license,
-                'email'   => hash('sha256', $email . 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX'),
-                'url'     => $this->licenseUrl()
+                'email'   => $email,
+                'domain'  => $this->licenseUrl()
             ]
         ]);
 
@@ -355,7 +356,14 @@ class System
         $file = $this->app->root('config') . '/.license';
 
         // save the license information
-        return Json::write($file, $json);
+        Json::write($file, $json);
+
+        if ($this->license() === false) {
+            throw new Exception('The license could not be verified');
+        }
+
+        return true;
+
     }
 
     /**
