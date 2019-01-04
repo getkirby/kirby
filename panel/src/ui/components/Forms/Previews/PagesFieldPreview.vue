@@ -5,7 +5,7 @@
         <k-link :title="page.id" :to="$api.pages.link(page.id)" @click.native.stop>
           <k-icon type="page" back="pattern" class="k-pages-field-preview-image" />
           <figcaption>
-            {{ page.title }}
+            {{ page.text }}
           </figcaption>
         </k-link>
       </figure>
@@ -16,20 +16,19 @@
 <script>
 export default {
   props: {
-    value: Array,
+    value: Array
   }
-}
+};
 </script>
 
 <style lang="scss">
-
 .k-pages-field-preview {
-  padding: 0 .25rem 0 .75rem;
+  padding: 0 0.25rem 0 0.75rem;
   display: flex;
 }
 .k-pages-field-preview li {
   line-height: 0;
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 .k-pages-field-preview .k-link {
   display: flex;
@@ -45,7 +44,7 @@ export default {
 .k-pages-field-preview figcaption {
   flex-grow: 1;
   line-height: 1.5em;
-  padding: 0 .5rem;
+  padding: 0 0.5rem;
   border: 1px solid $color-border;
   border-left: 0;
   border-radius: $border-radius;
@@ -53,5 +52,4 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 </style>
