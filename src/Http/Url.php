@@ -154,11 +154,11 @@ class Url
      * Returns the path for the given url
      *
      * @param string|array|null $url
-     * @param bool|null $leadingSlash
-     * @param bool|null $trailingSlash
+     * @param bool $leadingSlash
+     * @param bool $trailingSlash
      * @return mixed
      */
-    public static function path($url = null, bool $leadingSlash = null, bool $trailingSlash = null): string
+    public static function path($url = null, bool $leadingSlash = false, bool $trailingSlash = false): string
     {
         return Url::toObject($url)->path()->toString($leadingSlash, $trailingSlash);
     }
