@@ -4,6 +4,14 @@ use Kirby\Toolkit\Str;
 
 return [
     'methods' => [
+        'props' => [
+            /**
+             * Sets the query to a parent to find items for the list
+             */
+            'parent' => function (string $parent = null) {
+                return $parent;
+            }
+        ],
         'parent' => function () {
             $parent = $this->parent;
 
