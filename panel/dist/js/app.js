@@ -5931,7 +5931,12 @@
                   ? n("k-toolbar", {
                       ref: "toolbar",
                       attrs: { buttons: t.buttons },
-                      on: { command: t.onCommand }
+                      on: { command: t.onCommand },
+                      nativeOn: {
+                        mousedown: function(t) {
+                          t.preventDefault();
+                        }
+                      }
                     })
                   : t._e(),
                 n(
@@ -9096,7 +9101,7 @@
                             attrs: { type: "page", back: "pattern" }
                           }),
                           n("figcaption", [
-                            t._v("\n          " + t._s(e.title) + "\n        ")
+                            t._v("\n          " + t._s(e.text) + "\n        ")
                           ])
                         ],
                         1
@@ -12406,7 +12411,48 @@
                                   )
                                 ]
                               )
-                            : t._e(),
+                            : t.unregistered
+                              ? n(
+                                  "div",
+                                  { staticClass: "k-registration" },
+                                  [
+                                    n("p", [
+                                      t._v(t._s(t.$t("license.unregistered")))
+                                    ]),
+                                    n(
+                                      "k-button",
+                                      {
+                                        attrs: { responsive: !0, icon: "key" },
+                                        on: {
+                                          click: function(e) {
+                                            t.$emit("register");
+                                          }
+                                        }
+                                      },
+                                      [t._v(t._s(t.$t("license.register")))]
+                                    ),
+                                    n(
+                                      "k-button",
+                                      {
+                                        attrs: {
+                                          responsive: !0,
+                                          link: "https://getkirby.com/buy",
+                                          target: "_blank",
+                                          icon: "cart"
+                                        }
+                                      },
+                                      [
+                                        t._v(
+                                          "\n            " +
+                                            t._s(t.$t("license.buy")) +
+                                            "\n          "
+                                        )
+                                      ]
+                                    )
+                                  ],
+                                  1
+                                )
+                              : t._e(),
                           n("k-button", {
                             attrs: { tooltip: t.$t("search"), icon: "search" },
                             on: {
