@@ -16,18 +16,19 @@ trait AppTranslations
     protected function i18n()
     {
         I18n::$load = function ($locale) {
+
+            $data = [];
+
             if ($translation = $this->translation($locale)) {
                 $data = $translation->data();
-
-                // inject translations from the current language
-                if ($this->multilang() === true && $language = $this->languages()->find($locale)) {
-                    $data = array_merge($data, $language->translations());
-                }
-
-                return $data;
             }
 
-            return $translations[$locale] ?? [];
+            // inject translations from the current language
+            if ($this->multilang() === true && $language = $this->languages()->find($locale)) {
+                $data = array_merge($data, $language->translations());
+            }
+
+            return $data;
         };
 
         I18n::$locale = function () {
