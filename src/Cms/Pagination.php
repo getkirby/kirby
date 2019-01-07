@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Uri;
 use Kirby\Toolkit\Pagination as BasePagination;
 
 /**
@@ -67,12 +68,19 @@ class Pagination extends BasePagination
         $params['limit']    = $params['limit']    ?? $config['limit']    ?? 20;
         $params['method']   = $params['method']   ?? $config['method']   ?? 'param';
         $params['variable'] = $params['variable'] ?? $config['variable'] ?? 'page';
-        $params['url']      = $params['url']      ?? $request->url();
+
+        if (empty($params['url']) === true) {
+            $params['url'] = new Uri($kirby->url('index'), [
+                'path'   => $kirby->path(),
+                'params' => $request->params(),
+                'query'  => $request->query()->toArray(),
+            ]);
+        }
 
         if ($params['method'] === 'query') {
-            $params['page'] = $params['page'] ?? $request->url()->query()->get($params['variable'], 1);
+            $params['page'] = $params['page'] ?? $params['url']->query()->get($params['variable'], 1);
         } else {
-            $params['page'] = $params['page'] ?? $request->url()->params()->get($params['variable'], 1);
+            $params['page'] = $params['page'] ?? $params['url']->params()->get($params['variable'], 1);
         }
 
         parent::__construct($params);

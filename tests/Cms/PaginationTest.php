@@ -16,6 +16,26 @@ class PaginationTest extends TestCase
         ], $options));
     }
 
+    public function testCustomAppUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ]
+        ]);
+
+        $pagination = new Pagination([
+            'page'  => 1,
+            'limit' => 10,
+            'total' => 120,
+        ]);
+
+        $this->assertEquals('https://getkirby.com/page:2', $pagination->nextPageUrl());
+    }
+
     public function testCurrentPageUrl()
     {
         $pagination = $this->pagination([
