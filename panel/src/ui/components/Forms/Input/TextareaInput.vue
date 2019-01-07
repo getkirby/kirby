@@ -5,6 +5,7 @@
         v-if="buttons"
         ref="toolbar"
         :buttons="buttons"
+        @mousedown.native.prevent
         @command="onCommand"
       />
       <textarea
