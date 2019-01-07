@@ -35,6 +35,7 @@ $aliases = [
     // http classes
     'cookie'     => 'Kirby\Http\Cookie',
     'header'     => 'Kirby\Http\Header',
+    'remote'     => 'Kirby\Http\Remote',
 
     // image classes
     'dimensions' => 'Kirby\Image\Dimensions',
@@ -48,7 +49,6 @@ $aliases = [
     'i18n'       => 'Kirby\Toolkit\I18n',
     'mime'       => 'Kirby\Toolkit\Mime',
     'obj'        => 'Kirby\Toolkit\Obj',
-    'remote'     => 'Kirby\Toolkit\Remote',
     'str'        => 'Kirby\Toolkit\Str',
     'tpl'        => 'Kirby\Toolkit\Tpl',
     'v'          => 'Kirby\Toolkit\V',
