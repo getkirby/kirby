@@ -329,7 +329,11 @@ trait PageActions
             $page = $page->save($page->content()->toArray(), $languageCode);
 
             // flush the parent cache to get children and drafts right
-            $page->parentModel()->drafts()->append($page->id(), $page);
+            if ($page->isDraft() === true) {
+                $page->parentModel()->drafts()->append($page->id(), $page);
+            } else {
+                $page->parentModel()->children()->append($page->id(), $page);
+            }
 
             return $page;
         });
