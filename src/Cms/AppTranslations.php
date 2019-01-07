@@ -16,7 +16,6 @@ trait AppTranslations
     protected function i18n()
     {
         I18n::$load = function ($locale) {
-
             $data = [];
 
             if ($translation = $this->translation($locale)) {
