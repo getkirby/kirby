@@ -75,7 +75,7 @@ return [
             return (option('panel')['kirbytext'] ?? true) ? 'kirbytext' : 'markdown';
         },
         'parent' => function () {
-            return $this->parent();
+            return $this->parentModel();
         },
         'files' => function () {
             $files = $this->parent->files()->template($this->template);

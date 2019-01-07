@@ -82,7 +82,7 @@ return [
             return A::wrap($this->templates ?? $this->template);
         },
         'parent' => function () {
-            return $this->parent();
+            return $this->parentModel();
         },
         'pages' => function () {
             switch ($this->status) {

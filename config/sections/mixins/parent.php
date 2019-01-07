@@ -3,8 +3,16 @@
 use Kirby\Toolkit\Str;
 
 return [
+    'props' => [
+        /**
+         * Sets the query to a parent to find items for the list
+         */
+        'parent' => function (string $parent = null) {
+            return $parent;
+        }
+    ],
     'methods' => [
-        'parent' => function () {
+        'parentModel' => function () {
             $parent = $this->parent;
 
             if (is_string($parent) === true) {
