@@ -189,7 +189,7 @@ return function (App $app) {
          * @return Pages
          */
         'toPages' => function (Field $field, string $separator = 'yaml') use ($app) {
-            return $app->site()->find(false, false, ...$field->toData('yaml'));
+            return $app->site()->find(false, false, ...$field->toData($separator));
         },
 
         /**
