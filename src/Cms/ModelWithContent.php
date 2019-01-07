@@ -162,6 +162,25 @@ abstract class ModelWithContent extends Model
     abstract public function contentFileName(): string;
 
     /**
+     * Decrement a given field value
+     *
+     * @param string $field
+     * @param integer $by
+     * @param integer $min
+     * @return self
+     */
+    public function decrement(string $field, int $by = 1, int $min = 0)
+    {
+        $value = (int)$this->content()->get($field)->value() - $by;
+
+        if ($value < $min) {
+            $value = $min;
+        }
+
+        return $this->update([$field => $value]);
+    }
+
+    /**
      * Returns all content validation errors
      *
      * @return array
@@ -177,6 +196,25 @@ abstract class ModelWithContent extends Model
         }
 
         return $errors;
+    }
+
+    /**
+     * Increment a given field value
+     *
+     * @param string $field
+     * @param integer $by
+     * @param integer $max
+     * @return self
+     */
+    public function increment(string $field, int $by = 1, int $max = null)
+    {
+        $value = (int)$this->content()->get($field)->value() + $by;
+
+        if ($max && $value > $max) {
+            $value = $max;
+        }
+
+        return $this->update([$field => $value]);
     }
 
     /**
