@@ -282,6 +282,17 @@ class Remote
     }
 
     /**
+     * Decode the response content
+     *
+     * @param bool $array decode as array or object
+     * @return array|stdClass
+     */
+    public function json(bool $array = true)
+    {
+        return json_decode($this->content(), $array);
+    }
+
+    /**
      * Returns the request method
      *
      * @return string
