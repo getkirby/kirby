@@ -16,6 +16,7 @@ install:
   - php php-coveralls.phar --version
 
 before_script:
+  - composer require friendsofphp/php-cs-fixer
   - mkdir -p build/logs
   - ls -al
 
