@@ -47,5 +47,10 @@
   },
   "config": {
     "optimize-autoloader": true
+  },
+  "extra": {
+    "hooks": {
+      "pre-commit": ["composer run-script fix ."]
+    }
   }
 }
