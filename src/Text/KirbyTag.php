@@ -79,14 +79,14 @@ class KirbyTag
         array_unshift($attr, $type);
 
         // extract all attributes
-        $regex = sprintf('/\s*(%s):\s*/i', implode('|', $attr));
+        $regex = sprintf('/(%s):/i', implode('|', $attr));
         $search = preg_split($regex, $tag, false, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         // $search is now an array with alternating keys and values
         // convert it to arrays of keys and values
         $chunks = array_chunk($search, 2);
         $keys   = array_column($chunks, 0);
-        $values = array_column($chunks, 1);
+        $values = array_map('trim', array_column($chunks, 1));
 
         // ensure that there is a value for each key
         // otherwise combining won't work
