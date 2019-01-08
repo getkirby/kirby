@@ -15,7 +15,6 @@ return [
             if ($this->kirby()->user()) {
                 return $system;
             } else {
-
                 if ($system->isOk() === true) {
                     $info = $this->resolve($system)->view('login')->toArray();
                 } else {

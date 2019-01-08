@@ -136,5 +136,4 @@ class Value
     {
         return $this->value;
     }
-
 }
