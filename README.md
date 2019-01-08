@@ -3,11 +3,14 @@
 [![Build Status](https://travis-ci.com/k-next/kirby.svg?branch=master)](https://travis-ci.com/k-next/kirby)
 [![Coverage Status](https://coveralls.io/repos/github/k-next/kirby/badge.svg?branch=master)](https://coveralls.io/github/k-next/kirby?branch=master)
 
-This is Kirby's core application folder. If you are looking for a full working installation you should be heading over to the [Starterkit](https://github.com/getkirby/starterkit) or to the [Plainkit](https://github.com/getkirby/plainkit).
+This is Kirby's core application folder. Get started with one of the following repositories instead: 
+
+- [Starterkit](https://github.com/getkirby/starterkit) 
+- [Plainkit](https://github.com/getkirby/plainkit)
 
 ## Bug reports
 
-Please post all bug reports in our issue tracker:
+Please post all bug reports in our issue tracker:  
 https://github.com/getkirby/kirby/issues
 
 ## Feature suggestions
