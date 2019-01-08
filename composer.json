@@ -1,8 +1,9 @@
 {
   "name": "getkirby/cms",
-  "description": "Kirby CMS",
-  "version": "3.0.0-RC-4.0",
-  "keywords": ["kirby", "cms"],
+  "description": "The Kirby 3 core",
+  "version": "3.0.0-RC-4.1",
+  "license": "proprietary",
+  "keywords": ["kirby", "cms", "core"],
   "homepage": "https://getkirby.com",
   "type": "kirby-cms",
   "authors": [
