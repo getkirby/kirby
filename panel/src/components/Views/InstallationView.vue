@@ -76,7 +76,7 @@ export default {
       return this.$store.state.translation.current;
     },
     requirements() {
-      return this.system ? this.system.requirements : {};
+      return this.system && this.system.requirements ? this.system.requirements : {};
     },
     fields() {
       return {

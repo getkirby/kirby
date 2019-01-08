@@ -15,9 +15,16 @@ return [
             if ($this->kirby()->user()) {
                 return $system;
             } else {
+
+                if ($system->isOk() === true) {
+                    $info = $this->resolve($system)->view('login')->toArray();
+                } else {
+                    $info = $this->resolve($system)->view('troubleshooting')->toArray();
+                }
+
                 return [
                     'status' => 'ok',
-                    'data'   => $this->resolve($system)->view('login')->toArray(),
+                    'data'   => $info,
                     'type'   => 'model'
                 ];
             }

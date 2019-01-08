@@ -65,6 +65,13 @@ return [
             'title',
             'translation'
         ],
+        'troubleshooting' => [
+            'isOk',
+            'isInstalled',
+            'title',
+            'translation',
+            'requirements'
+        ],
         'panel' => [
             'breadcrumbTitle',
             'isOk',
