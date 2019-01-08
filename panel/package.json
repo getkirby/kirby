@@ -3,14 +3,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "build":
-      "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html",
+    "build": "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html",
     "e2e": "vue-cli-service test:e2e",
-    "e2e:record":
-      "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
+    "e2e:record": "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
     "testkit:reset": "./scripts/reset-testkit",
     "lint": "vue-cli-service lint",
-    "precommit": "pretty-quick --staged",
+    "pre-commit": "pretty-quick --staged",
     "sandbox": "vue serve ./src/ui/main.js"
   },
   "dependencies": {
@@ -31,7 +29,6 @@
     "@vue/cli-plugin-eslint": "^3.2.1",
     "@vue/cli-service": "^3.2.0",
     "babel-plugin-wildcard": "^4.0.0",
-    "husky": "^0.14.3",
     "node-sass": "^4.11.0",
     "prettier": "1.12.0",
     "pretty-quick": "^1.8.0",
@@ -39,12 +36,19 @@
     "vue-template-compiler": "^2.5.21"
   },
   "babel": {
-    "presets": ["@vue/app"],
-    "plugins": ["wildcard"]
+    "presets": [
+      "@vue/app"
+    ],
+    "plugins": [
+      "wildcard"
+    ]
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["plugin:vue/recommended", "eslint:recommended"],
+    "extends": [
+      "plugin:vue/recommended",
+      "eslint:recommended"
+    ],
     "rules": {
       "vue/require-default-prop": "off",
       "vue/attributes-order": "error",
@@ -73,5 +77,9 @@
       "autoprefixer": {}
     }
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
