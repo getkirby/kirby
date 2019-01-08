@@ -55,7 +55,7 @@ class MemCached extends Cache
      */
     public function set(string $key, $value, int $minutes = 0)
     {
-        return $this->connection->set($this->key($key), $this->value($value, $minutes), $this->expiration($minutes));
+        return $this->connection->set($this->key($key), $this->value($value, $minutes)->toJson(), $this->expiration($minutes));
     }
 
     /**
@@ -78,7 +78,7 @@ class MemCached extends Cache
      */
     public function retrieve(string $key)
     {
-        return $this->connection->get($this->key($key));
+        return Value::fromJson($this->connection->get($this->key($key)));
     }
 
     /**

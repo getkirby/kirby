@@ -29,7 +29,7 @@ class ApcuCache extends Cache
      */
     public function set(string $key, $value, int $minutes = 0)
     {
-        return apcu_store($key, $this->value($value, $minutes), $this->expiration($minutes));
+        return apcu_store($key, $this->value($value, $minutes)->toJson(), $this->expiration($minutes));
     }
 
     /**
@@ -40,7 +40,7 @@ class ApcuCache extends Cache
      */
     public function retrieve(string $key)
     {
-        return apcu_fetch($key);
+        return Value::fromJson(apcu_fetch($key));
     }
 
     /**

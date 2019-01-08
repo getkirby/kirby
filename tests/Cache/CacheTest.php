@@ -9,17 +9,9 @@ class TestCache extends Cache
 {
     protected $store = [];
 
-    public function set(string $key, $value, int $minutes = 0, bool $expired = false)
+    public function set(string $key, $value, int $minutes = 0, int $created = null)
     {
-        $value = new Value($value, $minutes);
-
-        if ($expired === true) {
-            $ref = new ReflectionClass($value);
-            $expires = $ref->getProperty('expires');
-            $expires->setAccessible(true);
-            $expires->setValue($value, 100);
-        }
-
+        $value = new Value($value, $minutes, $created);
         $this->store[$key] = $value;
     }
     public function retrieve(string $key)
@@ -62,7 +54,7 @@ class CacheTest extends TestCase
     public function testGetExpired()
     {
         $driver = new TestCache();
-        $driver->set('foo', 'foo', 60, true);
+        $driver->set('foo', 'foo', 60, 0);
         $this->assertEquals('none', $driver->get('foo', 'none'));
         $this->assertFalse($driver->exists('foo'));
     }
