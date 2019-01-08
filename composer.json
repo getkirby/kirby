@@ -32,15 +32,10 @@
     "zendframework/zend-escaper": "2.6.*"
   },
   "autoload": {
-    "files": ["config/helpers.php", "config/aliases.php"],
+    "files": ["config/helpers.php", "config/aliases.php", "config/tests.php"],
     "classmap": ["dependencies/"],
     "psr-4": {
       "Kirby\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Kirby\\": "tests/"
     }
   },
   "scripts": {

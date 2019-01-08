@@ -13,6 +13,6 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Kirby\\ComposerInstaller\\' => array($vendorDir . '/getkirby/composer-installer/src'),
-    'Kirby\\' => array($baseDir . '/src', $baseDir . '/tests'),
+    'Kirby\\' => array($baseDir . '/src'),
     '' => array($vendorDir . '/league/color-extractor/src'),
 );
