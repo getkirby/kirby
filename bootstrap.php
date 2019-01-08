@@ -16,14 +16,12 @@ if (is_file($autoloader = dirname(__DIR__) . '/vendor/autoload.php')) {
      * installed additional packages
      */
     include $autoloader;
-
 } elseif (is_file($autoloader = __DIR__ . '/vendor/autoload.php')) {
 
     /**
      * Fall back to the local autoloader if that exists
      */
     include $autoloader;
-
 } else {
 
     /**
@@ -31,7 +29,6 @@ if (is_file($autoloader = dirname(__DIR__) . '/vendor/autoload.php')) {
      * it's a custom directory setup and the users need to
      * load the autoloader themselves
      */
-
 }
 
 define('DS', '/');
