@@ -18,5 +18,5 @@ https://github.com/getkirby/ideas/issues
 ## License
 
 Kirby is not free software. In order to run Kirby on a public server you must purchase a valid license.
-https://getkirby.com/buy
-https://getkirby.com/license
+- https://getkirby.com/buy
+- https://getkirby.com/license
