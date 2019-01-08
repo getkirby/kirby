@@ -47,35 +47,5 @@
   },
   "config": {
     "optimize-autoloader": true
-  },
-  "archive": {
-    "exclude": [
-      ".*",
-      "/*.dist",
-      "/*.md",
-      "test.php",
-      "/scripts",
-      "/panel/*",
-      "!/panel/dist/*",
-      "/panel/dist/index.html",
-      "/tests/*",
-      "!/vendor/*",
-      "/vendor/*/*/.*",
-      "/vendor/*/*/*.json",
-      "/vendor/*/*/*.txt",
-      "/vendor/*/*/*.md",
-      "/vendor/*/*/*.yml",
-      "/vendor/*/*/*.yaml",
-      "/vendor/*/*/*.xml",
-      "/vendor/*/*/*.dist",
-      "/vendor/*/*/LICENSE",
-      "/vendor/*/*/COPYING",
-      "/vendor/*/*/docs/*",
-      "/vendor/*/*/example/*",
-      "/vendor/*/*/examples/*",
-      "/vendor/*/*/test/*",
-      "/vendor/*/*/tests/*",
-      "/vendor/*/*/php4/*"
-    ]
   }
 }
