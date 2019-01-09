@@ -45,7 +45,7 @@ return [
         'pattern' => '(:all)/files/(:any)',
         'method'  => 'GET',
         'action'  => function (string $path, string $filename) {
-            return $this->parent($path)->file($filename);
+            return $this->file($path, $filename);
         }
     ],
     [
