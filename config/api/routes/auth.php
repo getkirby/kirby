@@ -24,7 +24,6 @@ return [
         'method'  => 'POST',
         'auth'    => false,
         'action'  => function () {
-
             $auth = $this->kirby()->auth();
 
             // csrf token check
