@@ -92,7 +92,7 @@ export default {
           label: parent.title,
           link: api.pages.link(parent.id)
         }));
-        parent = "pages/" + file.parent.id;
+        parent = api.pages.url(file.parent.id);
         break;
     }
 
