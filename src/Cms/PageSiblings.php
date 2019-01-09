@@ -168,7 +168,11 @@ trait PageSiblings
      */
     protected function siblingsCollection()
     {
-        return $this->parentModel()->children();
+        if ($this->isDraft() === true) {
+            return $this->parentModel()->drafts();
+        } else {
+            return $this->parentModel()->children();
+        }
     }
 
     /**
