@@ -48,6 +48,11 @@
           <span v-html="$t('installation.issues.media')" />
         </li>
 
+        <li v-if="requirements.sessions === false">
+          <k-icon type="alert" />
+          <span v-html="$t('installation.issues.sessions')" />
+        </li>
+
       </ul>
 
       <k-button icon="refresh" @click="check"><span v-html="$t('retry')" /></k-button>

@@ -61,6 +61,7 @@ class System
             'accounts'  => $this->accounts(),
             'content'   => $this->content(),
             'curl'      => $this->curl(),
+            'sessions'  => $this->sessions(),
             'mbstring'  => $this->mbstring(),
             'media'     => $this->media(),
             'php'       => $this->php(),
@@ -386,6 +387,26 @@ class System
     }
 
     /**
+     * Check for a writable sessions folder
+     *
+     * @return boolean
+     */
+    public function sessions(): bool
+    {
+        return is_writable($this->app->root('sessions'));
+    }
+
+    /**
+     * Return the status as array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->status();
+    }
+
+    /**
      * Upgrade to the new folder separator
      *
      * @param string $root
@@ -406,13 +427,4 @@ class System
         }
     }
 
-    /**
-     * Return the status as array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return $this->status();
-    }
 }
