@@ -88,6 +88,9 @@ class App
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
 
+        // set the path to make it available for the url bakery
+        $this->setPath($props['path'] ?? null);
+
         // create all urls after the config, so possible
         // options can be taken into account
         $this->bakeUrls($props['urls'] ?? []);
@@ -95,7 +98,6 @@ class App
         // configurable properties
         $this->setOptionalProperties($props, [
             'languages',
-            'path',
             'request',
             'roles',
             'site',

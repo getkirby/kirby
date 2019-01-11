@@ -433,6 +433,8 @@ class HelpersTest extends TestCase
     {
         Uri::$current = new Uri('https://getkirby.com/projects/filter:current');
 
+        new App();
+
         $this->assertEquals('current', param('filter'));
 
         Uri::$current = null;
@@ -441,6 +443,8 @@ class HelpersTest extends TestCase
     public function testParams()
     {
         Uri::$current = new Uri('https://getkirby.com/projects/a:value-a/b:value-b');
+
+        new App();
 
         $this->assertEquals(['a' => 'value-a', 'b' => 'value-b'], params());
 

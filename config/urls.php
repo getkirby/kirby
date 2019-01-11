@@ -9,6 +9,15 @@ return [
     'base' => function (array $urls) {
         return rtrim($urls['index'], '/');
     },
+    'current' => function (array $urls) {
+        $path = trim($this->path(), '/');
+
+        if (empty($path) === true) {
+            return $urls['index'];
+        } else {
+            return $urls['base'] . '/' . $path;
+        }
+    },
     'assets' => function (array $urls) {
         return $urls['base'] . '/assets';
     },

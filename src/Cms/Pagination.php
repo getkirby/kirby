@@ -70,8 +70,7 @@ class Pagination extends BasePagination
         $params['variable'] = $params['variable'] ?? $config['variable'] ?? 'page';
 
         if (empty($params['url']) === true) {
-            $params['url'] = new Uri($kirby->url('index'), [
-                'path'   => $kirby->path(),
+            $params['url'] = new Uri($kirby->url('current'), [
                 'params' => $request->params(),
                 'query'  => $request->query()->toArray(),
             ]);
