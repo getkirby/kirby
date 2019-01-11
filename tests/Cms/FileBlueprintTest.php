@@ -76,4 +76,32 @@ class FileBlueprintTest extends TestCase
         $this->assertInstanceOf(FileBlueprint::class, $blueprint);
         $this->assertEquals('Gallery', $blueprint->title());
     }
+
+    public function testExtendAccept()
+    {
+        new App([
+            'blueprints' => [
+                'files/base' => [
+                    'name'  => 'base',
+                    'title' => 'Base',
+                    'accept' => [
+                        'mime' => 'image/jpeg'
+                    ]
+                ],
+                'files/image' => [
+                    'name'    => 'image',
+                    'title'   => 'Image',
+                    'extends' => 'files/base'
+                ]
+            ]
+        ]);
+
+        $file = new File([
+            'filename' => 'test.jpg',
+            'template' => 'image',
+        ]);
+
+        $blueprint = $file->blueprint();
+        $this->assertEquals('image/jpeg', $blueprint->accept()['mime']);
+    }
 }

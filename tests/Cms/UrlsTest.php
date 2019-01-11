@@ -118,7 +118,6 @@ class UrlsTest extends TestCase
         $_SERVER = $server;
         Server::$cli = true;
         Uri::$current = null;
-
     }
 
     public function testCurrentWithCustomIndex()
@@ -152,5 +151,4 @@ class UrlsTest extends TestCase
 
         $this->assertEquals('http://getkirby.com/test/path', $app->url('current'));
     }
-
 }

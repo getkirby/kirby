@@ -14,7 +14,7 @@ class FileBlueprint extends Blueprint
 
         // normalize all available page options
         $this->props['options'] = $this->normalizeOptions(
-            $props['options'] ?? true,
+            $this->props['options'] ?? true,
             // defaults
             [
                 'changeName' => null,
@@ -26,7 +26,7 @@ class FileBlueprint extends Blueprint
         );
 
         // normalize the accept settings
-        $this->props['accept'] = $this->normalizeAccept($props['accept'] ?? []);
+        $this->props['accept'] = $this->normalizeAccept($this->props['accept'] ?? []);
     }
 
     public function accept(): array

@@ -208,7 +208,6 @@ class Blueprint
 
         // remove the extends flag
         unset($props['extends']);
-
         return $props;
     }
 

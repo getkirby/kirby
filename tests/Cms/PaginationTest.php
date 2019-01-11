@@ -69,7 +69,6 @@ class PaginationTest extends TestCase
         $_SERVER = $server;
         Server::$cli = true;
         Uri::$current = null;
-
     }
 
     public function testCurrentPageUrl()
