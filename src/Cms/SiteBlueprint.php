@@ -19,6 +19,10 @@ class SiteBlueprint extends Blueprint
             [
                 'changeTitle' => null,
                 'update'      => null,
+            ],
+            // aliases
+            [
+                'title' => 'changeTitle',
             ]
         );
     }
