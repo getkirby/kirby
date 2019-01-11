@@ -59,6 +59,22 @@ class StructureFieldTest extends TestCase
         $this->assertEquals($expected, $field->data());
     }
 
+    public function testLowerCaseColumnsNames()
+    {
+        $field = new Field('structure', [
+            'columns' => [
+                'camelCase' => true
+            ],
+            'fields' => [
+                'camelCase' => [
+                    'type' => 'text'
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['camelcase'], array_keys($field->columns()));
+    }
+
     public function testMin()
     {
         $field = new Field('structure', [
