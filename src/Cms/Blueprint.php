@@ -606,7 +606,18 @@ class Blueprint
                         ]
                     ];
                 } else {
-                    $this->fields = array_merge($this->fields, $fields);
+                    foreach ($fields as $fieldName => $fieldProps) {
+                        if (isset($this->fields[$fieldName]) === true) {
+                            $this->fields[$fieldName] = $fields[$fieldName] = [
+                                'type'  => 'info',
+                                'label' => $fieldProps['label'] ?? 'Error',
+                                'text'  => 'The field name <strong>"' . $fieldName . '"</strong> already exists in your blueprint.',
+                                'theme' => 'negative'
+                            ];
+                        } else {
+                            $this->fields[$fieldName] = $fieldProps;
+                        }
+                    }
                 }
 
                 $sections[$sectionName]['fields'] = $fields;
