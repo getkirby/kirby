@@ -54,7 +54,7 @@ export default {
       context.commit("SET_CURRENT", null);
 
       if (force) {
-        window.location.href = "/login";
+        window.location.href = (window.panel.url || "") + "/login";
         return;
       }
 
