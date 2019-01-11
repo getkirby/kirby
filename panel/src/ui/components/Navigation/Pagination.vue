@@ -10,7 +10,7 @@
     <template v-if="details">
       <template v-if="dropdown">
         <k-dropdown>
-          <k-button :disabled="!hasPages" @click="$refs.dropdown.toggle()">
+          <k-button :disabled="!hasPages" class="k-pagination-details" @click="$refs.dropdown.toggle()">
             <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
           </k-button>
 
@@ -36,7 +36,9 @@
         </k-dropdown>
       </template>
       <template v-else>
-        <span><template v-if="total > 1">{{ detailsText }}</template>{{ total }}</span>
+        <span class="k-pagination-details">
+          <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
+        </span>
       </template>
     </template>
 
@@ -214,6 +216,9 @@ export default {
 }
 .k-pagination .k-button {
   padding: 1rem;
+}
+.k-pagination-details {
+  white-space: nowrap;
 }
 .k-pagination > span {
   padding: 1rem;
