@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class KirbyTextTest extends TestCase
 {
-
     public function testBeforeHook()
     {
         $app = new App([
@@ -38,5 +37,4 @@ class KirbyTextTest extends TestCase
 
         $this->assertEquals('Test', $app->kirbytext('Test'));
     }
-
 }

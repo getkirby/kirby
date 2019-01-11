@@ -99,11 +99,17 @@ class PagesTest extends TestCase
         ]);
 
         $this->assertIsPage($site->children()->findById('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findById('grandma/'), 'grandma');
         $this->assertIsPage($site->children()->findByUri('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('grandma/'), 'grandma');
         $this->assertIsPage($site->children()->findById('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mother/'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/'), 'grandma/mother');
         $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma/mother/child/'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/child/'), 'grandma/mother/child');
     }
 
     public function testIndex()

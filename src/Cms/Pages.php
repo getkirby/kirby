@@ -199,6 +199,7 @@ class Pages extends Collection
      */
     public function findById($id)
     {
+        $id        = trim($id, '/');
         $page      = $this->get($id);
         $multiLang = App::instance()->multilang();
 
