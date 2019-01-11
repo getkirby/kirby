@@ -119,7 +119,6 @@ export default {
   z-index: 1000;
   overflow: auto;
   background: $color-backdrop;
-  backdrop-filter: blur(2px);
 }
 .k-search-box {
   max-width: 30rem;

@@ -169,6 +169,7 @@ export default {
   color: $color-white;
   flex-shrink: 0;
   height: 2.5rem;
+  line-height: 1;
   background: $color-dark;
 }
 .k-topbar-wrapper {
@@ -186,6 +187,7 @@ export default {
 }
 .k-topbar-menu-button {
   display: flex;
+  align-items: center;
 }
 .k-topbar-menu-button .k-button-text {
   opacity: 1;
@@ -193,14 +195,20 @@ export default {
 .k-topbar-signals .k-button,
 .k-topbar-button {
   padding: 0.75rem;
+  line-height: 1;
   font-size: $font-size-small;
+}
+.k-topbar-signals .k-button .k-button-text {
+  opacity: 1;
 }
 .k-topbar-button .k-button-text {
   display: flex;
+  opacity: 1;
 }
 .k-topbar-view-button {
   flex-shrink: 0;
   display: flex;
+  align-items: center;
   @include highlight-tabbed;
 
   [dir="ltr"] & {
@@ -231,7 +239,6 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   display: none;
-  opacity: 0.75;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   line-height: 1;
@@ -270,7 +277,6 @@ export default {
   height: 2.5rem;
   display: flex;
   align-items: center;
-  line-height: 1.5;
 
   [dir="ltr"] & {
     right: 0;
@@ -312,6 +318,7 @@ export default {
 .k-topbar-notification {
   font-weight: $font-weight-bold;
   line-height: 1;
+  display: flex;
 }
 .k-topbar .k-button[data-theme="positive"] {
   color: $color-positive-on-dark;
@@ -352,7 +359,6 @@ export default {
   font-size: $font-size-small;
   margin-right: 1rem;
   font-weight: 600;
-  line-height: 1.5;
   display: none;
 
   @media screen and (min-width: $breakpoint-large) {
@@ -361,6 +367,5 @@ export default {
 }
 .k-registration .k-button {
   color: $color-white;
-  line-height: 1.5;
 }
 </style>

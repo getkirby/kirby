@@ -11,8 +11,13 @@
     >
       {{ site.title }}
       <k-button-group slot="left">
-        <k-button icon="open" @click="action('preview')">
-          {{ $t("open" ) }}
+        <k-button
+          :responsive="true"
+          :link="site.url"
+          target="_blank"
+          icon="open"
+        >
+          {{ $t('open') }}
         </k-button>
         <k-languages-dropdown />
       </k-button-group>
@@ -92,9 +97,6 @@ export default {
       switch (action) {
         case "languages":
           this.$refs.languages.open();
-          break;
-        case "preview":
-          window.open(this.site.url);
           break;
         case "rename":
           this.$refs.rename.open();

@@ -112,6 +112,7 @@ button::-moz-focus-inner {
 }
 
 .k-button {
+  display: inline-block;
   position: relative;
   font-size: $font-size-small;
   transition: color 0.3s;

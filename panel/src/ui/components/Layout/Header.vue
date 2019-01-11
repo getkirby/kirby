@@ -7,7 +7,7 @@
       </span>
       <slot v-else />
     </k-headline>
-    <k-bar v-if="$slots.left || $slots.right">
+    <k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
       <slot slot="left" name="left" class="k-header-left" />
       <slot slot="right" name="right" class="k-header-right" />
     </k-bar>
@@ -138,8 +138,9 @@ export default {
   min-height: 1.25em;
   margin-bottom: .5rem;
 }
-.k-header > .k-bar {
+.k-header .k-header-buttons {
   margin-top: -.5rem;
+  height: 3.25rem;
 }
 .k-header .k-headline-editable {
   cursor: pointer;
