@@ -129,6 +129,19 @@ class System
     }
 
     /**
+     * Check if the panel is installable.
+     * On a public server the panel.install
+     * option must be explicitly set to true
+     * to get the installer up and running.
+     *
+     * @return boolean
+     */
+    public function isInstallable(): bool
+    {
+        return $this->isLocal() === true || $this->app->option('panel.install', false) === true;
+    }
+
+    /**
      * Check if Kirby is already installed
      *
      * @return boolean
@@ -178,6 +191,10 @@ class System
      */
     public function isOk(): bool
     {
+        if ($this->isInstallable() === false) {
+            return false;
+        }
+
         return in_array(false, array_values($this->status()), true) === false;
     }
 

@@ -218,6 +218,7 @@
 
   "installation": "Kurulum",
   "installation.completed": "Panel kuruldu",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "<code>/site/accounts</code> klasörü yok yada yazılabilir değil",
   "installation.issues.content":
@@ -231,7 +232,7 @@
   "installation.issues.php": "<code>PHP 7+</code> kullandığınızdan emin olun. ",
   "installation.issues.server":
     "Kirby <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code> gerektirir",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "<code>/site/sessions</code> klasörü mevcut değil veya yazılabilir değil",
 
   "language": "Dil",
   "language.code": "Kod",

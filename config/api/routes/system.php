@@ -41,7 +41,14 @@ return [
         'method'  => 'POST',
         'auth'    => false,
         'action'  => function () {
+
             $system = $this->kirby()->system();
+            $auth   = $this->kirby()->auth();
+
+            // csrf token check
+            if ($auth->type() === 'session' && $auth->csrf() === false) {
+                throw new InvalidArgumentException('Invalid CSRF token');
+            }
 
             if ($system->isOk() === false) {
                 throw new Exception('The server is not setup correctly');

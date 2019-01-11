@@ -218,6 +218,7 @@
 
   "installation": "Installation",
   "installation.completed": "Le Panel a été installé",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "Le dossier <code>/site/accounts</code> n’existe pas ou n’est pas accessible en écriture",
   "installation.issues.content":
@@ -231,7 +232,7 @@
   "installation.issues.php": "Veuillez utiliser <code>PHP 7+</code>",
   "installation.issues.server":
     "Kirby requiert <code>Apache</code>, <code>Nginx</code> ou <code>Caddy</code>",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "Le dossier <code>/site/sessions</code> n’existe pas ou n’est pas accessible en écriture",
 
   "language": "Langue",
   "language.code": "Code",

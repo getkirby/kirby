@@ -13,6 +13,11 @@
       <k-headline v-if="!system.isInstalled">{{ $t("installation.issues.headline") }}</k-headline>
 
       <ul class="k-installation-issues">
+        <li v-if="system.isInstallable === false">
+          <k-icon type="alert" />
+          <span v-html="$t('installation.disabled')" />
+        </li>
+
         <li v-if="requirements.php === false">
           <k-icon type="alert" />
           <span v-html="$t('installation.issues.php')" />

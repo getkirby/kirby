@@ -218,6 +218,7 @@
 
   "installation": "설치",
   "installation.completed": "패널을 설치했습니다.",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "<code>/site/accounts</code> 폴더에 쓰기 권한이 없습니다.",
   "installation.issues.content":

@@ -218,6 +218,7 @@
 
   "installation": "Telepítés",
   "installation.completed": "A panel sikeresen telepítve",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "A <code>/site/accounts</code> mappa nem létezik, vagy nem írható",
   "installation.issues.content":

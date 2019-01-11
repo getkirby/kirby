@@ -218,6 +218,7 @@
 
   "installation": "Installatie",
   "installation.completed": "Het Panel is geïnstalleerd",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "De map <code>/site/accounts</code> heeft geen schrijfrechten",
   "installation.issues.content":
@@ -231,7 +232,7 @@
   "installation.issues.php": "Gebruik <code>PHP7+</code>",
   "installation.issues.server":
     "Kirby vereist <code>Apache</code>, <code>Nginx</code>of <code>Caddy</code>",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "De map <code>/site/sessions</code> bestaat niet of heeft geen schrijfrechten",
 
   "language": "Taal",
   "language.code": "Code",

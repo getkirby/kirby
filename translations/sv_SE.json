@@ -218,6 +218,7 @@
 
   "installation": "Installation",
   "installation.completed": "Panelen har installerats",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "Mappen <code>/site/accounts</code> finns inte eller är inte skrivbar",
   "installation.issues.content":

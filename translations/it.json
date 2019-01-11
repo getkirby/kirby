@@ -218,6 +218,7 @@
 
   "installation": "Installazione",
   "installation.completed": "Il pannello è stato installato",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "\/site\/accounts non dispone dei permessi di scrittura",
   "installation.issues.content":

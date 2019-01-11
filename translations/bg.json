@@ -218,6 +218,7 @@
 
   "installation": "Инсталация",
   "installation.completed": "The panel has been installed",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "Папката <code>/site/accounts</code> не съществува или не позволява запис",
   "installation.issues.content":

@@ -218,6 +218,7 @@
 
   "installation": "Installation",
   "installation.completed": "Das Panel wurde installiert",
+  "installation.disabled": "Die Panel Installation ist auf öffentlichen Servern automatisch deaktiviert. Bitte installiere das Panel auf einem lokalen Server oder aktiviere die Installation gezielt mit der <code>panel.install</code> Option. ",
   "installation.issues.accounts":
     "<code>/site/accounts</code> ist nicht beschreibbar",
   "installation.issues.content":

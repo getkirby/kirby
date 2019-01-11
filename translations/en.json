@@ -218,6 +218,7 @@
 
   "installation": "Installation",
   "installation.completed": "The panel has been installed",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "The <code>/site/accounts</code> folder does not exist or is not writable",
   "installation.issues.content":

@@ -28,10 +28,7 @@ return [
 
             // csrf token check
             if ($auth->type() === 'session' && $auth->csrf() === false) {
-                throw new PermissionException([
-                    'fallback' => 'Invalid CSRF token',
-                    'httpCode' => 403
-                ]);
+                throw new InvalidArgumentException('Invalid CSRF token');
             }
 
             $email    = $this->requestBody('email');
