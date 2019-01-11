@@ -55,6 +55,7 @@ export default {
   line-height: 1.25rem;
   padding-bottom: 0.75rem;
   flex-grow: 1;
+  min-height: 2rem;
 }
 .k-section-header .k-button-group {
   position: absolute;
