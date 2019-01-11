@@ -166,6 +166,34 @@ class App
     }
 
     /**
+     *  Apply a hook to the given value
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return mixed
+     */
+    public function apply(string $name, $value)
+    {
+        if ($functions = $this->extension('hooks', $name)) {
+            static $applied = [];
+
+            foreach ($functions as $function) {
+                if (in_array($function, $applied[$name] ?? []) === true) {
+                    continue;
+                }
+
+                // mark the hook as triggered, to avoid endless loops
+                $applied[$name][] = $function;
+
+                // bind the App object to the hook
+                $value = $function->call($this, $value);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Sets the directory structure
      *
      * @param array $roots
@@ -564,8 +592,10 @@ class App
      */
     public function kirbytext(string $text = null, array $data = []): string
     {
+        $text = $this->apply('kirbytext:before', $text);
         $text = $this->kirbytags($text, $data);
         $text = $this->markdown($text);
+        $text = $this->apply('kirbytext:after', $text);
 
         return $text;
     }
