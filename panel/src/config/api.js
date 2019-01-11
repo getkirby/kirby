@@ -19,8 +19,8 @@ Api.config.onError = error => {
   }
 
   // handle requests that return no auth
-  if (error.message === "Unauthenticated") {
-    store.dispatch("user/logout");
+  if (error.code === 403) {
+    store.dispatch("user/logout", true);
   }
 };
 

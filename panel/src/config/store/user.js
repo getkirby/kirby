@@ -49,15 +49,21 @@ export default {
         return user;
       });
     },
-    logout(context) {
+    logout(context, force) {
+
+      context.commit("SET_CURRENT", null);
+
+      if (force) {
+        window.location.href = "/login";
+        return;
+      }
+
       Api.auth
         .logout()
         .then(() => {
-          context.commit("SET_CURRENT", null);
           router.push("/login");
         })
         .catch(() => {
-          context.commit("SET_CURRENT", null);
           router.push("/login");
         });
     },
