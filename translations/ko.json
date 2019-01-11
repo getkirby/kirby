@@ -231,6 +231,7 @@
   "installation.issues.php": "<code>PHP</code> 버전이 7 이상인지 확인하세요.",
   "installation.issues.server":
     "<code>Apache</code>, <code>Nginx</code>, 또는 <code>Caddy</code>가 필요합니다.",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
   "language": "\uc5b8\uc5b4",
   "language.code": "코드",

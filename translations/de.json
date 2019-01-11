@@ -33,34 +33,32 @@
   "error.access.panel": "Du hast keinen Zugang zum Panel",
 
   "error.avatar.create.fail": "Das Profilbild konnte nicht hochgeladen werden",
-  "error.avatar.delete.fail":
-    "Das Profilbild konnte nicht gel\u00f6scht werden",
+  "error.avatar.delete.fail": "Das Profilbild konnte nicht gel\u00f6scht werden",
   "error.avatar.dimensions.invalid":
     "Bitte lade ein Profilbild hoch, das nicht größer als 3000 Pixel in der Breite und Höhe ist.",
-  "error.avatar.mime.forbidden": "Verbotener Medientyp",
+  "error.avatar.mime.forbidden":
+    "Verbotener Medientyp",
 
-  "error.blueprint.notFound":
-    "Das Blueprint \"{name}\" konnte nicht geladen werden.",
+  "error.blueprint.notFound": "Das Blueprint \"{name}\" konnte nicht geladen werden.",
 
-  "error.email.preset.notFound":
-    "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
+  "error.email.preset.notFound": "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
 
   "error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
 
   "error.file.changeName.permission":
     "Du kannst den Dateinamen von \"{filename}\" nicht ändern",
-  "error.file.duplicate":
-    "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
-  "error.file.extension.forbidden": "Verbotene Dateiendung \"{extension}\"",
+  "error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
+  "error.file.extension.forbidden":
+    "Verbotene Dateiendung \"{extension}\"",
   "error.file.extension.missing":
     "Du kannst keine Dateien ohne Dateiendung hochladen",
-  "error.file.mime.differs": "Die Datei muss den Medientyp \"{mime}\" haben.",
+  "error.file.mime.differs":
+    "Die Datei muss den Medientyp \"{mime}\" haben.",
   "error.file.mime.forbidden": "Der Medientyp \"{mime}\"  ist nicht erlaubt",
   "error.file.mime.missing":
     "Der Medientyp für \"{filename}\" konnte nicht erkannt werden",
   "error.file.name.missing": "Bitte gib einen Dateinamen an",
-  "error.file.notFound":
-    "Die Datei \"{filename}\" konnte nicht gefunden werden",
+  "error.file.notFound": "Die Datei \"{filename}\" konnte nicht gefunden werden",
   "error.file.type.forbidden": "Du kannst keinen {type}-Dateien hochladen",
   "error.file.undefined": "Die Datei konnte nicht gefunden werden",
 
@@ -82,14 +80,12 @@
   "error.page.changeTitle.empty": "Bitte gib einen Titel an",
   "error.page.changeTitle.permission":
     "Du kannst den Titel für die Seite \"{slug}\" nicht ändern",
-  "error.page.create.permission":
-    "Du kannst die Seite \"{slug}\" nicht anlegen",
+  "error.page.create.permission": "Du kannst die Seite \"{slug}\" nicht anlegen",
   "error.page.delete": "Die Seite \"{slug}\" kann nicht gelöscht werden",
   "error.page.delete.confirm": "Bitte gib zur Bestätigung den Seitentitel ein",
   "error.page.delete.hasChildren":
     "Die Seite hat Unterseiten und kann nicht gelöscht werden",
-  "error.page.delete.permission":
-    "Du kannst die Seite \"{slug}\" nicht löschen",
+  "error.page.delete.permission": "Du kannst die Seite \"{slug}\" nicht löschen",
   "error.page.draft.duplicate":
     "Ein Entwurf mit dem URL-Kürzel \"{slug}\" besteht bereits",
   "error.page.duplicate":
@@ -98,12 +94,10 @@
   "error.page.num.invalid":
     "Bitte gib eine gültige Sortierungszahl an. Negative Zahlen sind nicht erlaubt.",
   "error.page.slug.invalid": "Bitte gib ein gültiges URL-Kürzel an",
-  "error.page.sort.permission":
-    "Die Seite \"{slug}\" kann nicht umsortiert werden",
+  "error.page.sort.permission": "Die Seite \"{slug}\" kann nicht umsortiert werden",
   "error.page.status.invalid": "Bitte gib einen gültigen Seitenstatus an",
   "error.page.undefined": "Die Seite konnte nicht gefunden werden",
-  "error.page.update.permission":
-    "Du kannst die Seite \"{slug}\" nicht editieren",
+  "error.page.update.permission": "Du kannst die Seite \"{slug}\" nicht editieren",
 
   "error.section.files.max.plural":
     "Bitte füge nicht mehr als {max} Dateien zum Bereich \"{section}\" hinzu",
@@ -123,8 +117,7 @@
   "error.section.pages.min.singular":
     "Bitte füge mindestens eine Seite zum Bereich \"{section}\" hinzu",
 
-  "error.section.notLoaded":
-    "Der Bereich \"{name}\" konnte nicht geladen werden",
+  "error.section.notLoaded": "Der Bereich \"{name}\" konnte nicht geladen werden",
   "error.section.type.invalid": "Der Bereichstyp \"{type}\" ist nicht gültig",
 
   "error.site.changeTitle.permission":
@@ -147,10 +140,8 @@
     "Du kannst die Rolle für den Benutzer \"{name}\" nicht ändern",
   "error.user.create.permission": "Du kannst diesen Benutzer nicht anlegen",
   "error.user.delete": "Der Benutzer \"{name}\" konnte nicht gelöscht werden",
-  "error.user.delete.lastAdmin":
-    "Du kannst den letzten Admin nicht l\u00f6schen",
-  "error.user.delete.lastUser":
-    "Der letzte Benutzer kann nicht gelöscht werden",
+  "error.user.delete.lastAdmin": "Du kannst den letzten Admin nicht l\u00f6schen",
+  "error.user.delete.lastUser": "Der letzte Benutzer kann nicht gelöscht werden",
   "error.user.delete.permission":
     "Du darfst den Benutzer \"{name}\" nicht löschen",
   "error.user.duplicate":
@@ -187,13 +178,11 @@
   "error.validation.ip": "Bitte gib eine gültige IP Adresse ein",
   "error.validation.less": "Bitte gib einen Wert kleiner als {max} ein",
   "error.validation.match": "Der Wert entspricht nicht dem erwarteten Muster",
-  "error.validation.max":
-    "Bitte gib einen Wert ein, der nicht größer als {max} ist",
+  "error.validation.max": "Bitte gib einen Wert ein, der nicht größer als {max} ist",
   "error.validation.maxlength":
     "Bitte gib einen kürzeren Text ein (max. {max} Zeichen)",
   "error.validation.maxwords": "Bitte nutze nicht mehr als {max} Wort(e)",
-  "error.validation.min":
-    "Bitte gib einen Wert ein, der nicht kleiner als {min} ist",
+  "error.validation.min": "Bitte gib einen Wert ein, der nicht kleiner als {min} ist",
   "error.validation.minlength":
     "Bitte gib einen längeren Text ein. (min. {min} Zeichen)",
   "error.validation.minwords": "Bitte nutze mindestens {min} Wort(e)",
@@ -213,8 +202,7 @@
 
   "field.files.empty": "Keine Dateien ausgewählt",
   "field.pages.empty": "Keine Seiten ausgwählt",
-  "field.structure.delete.confirm":
-    "Willst du diesen Eintrag wirklich l\u00f6schen?",
+  "field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",
   "field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
   "field.users.empty": "Keine Benutzer ausgewählt",
 
@@ -243,6 +231,7 @@
   "installation.issues.php": "Bitte verwende <code>PHP 7+</code>",
   "installation.issues.server":
     "Kirby benötigt <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
+  "installation.issues.sessions": "Der <code>/site/sessions</code> Ordner ist nicht beschreibbar",
 
   "language": "Sprache",
   "language.code": "Code",
@@ -332,11 +321,9 @@
   "page.status.draft.description":
     "Die Seite ist im Entwurfsmodus und ist nur für angemeldete Benutzer sichtbar",
   "page.status.listed": "Öffentlich",
-  "page.status.listed.description":
-    "Die Seite ist öffentlich für alle Besucher",
+  "page.status.listed.description": "Die Seite ist öffentlich für alle Besucher",
   "page.status.unlisted": "Ungelistet",
-  "page.status.unlisted.description":
-    "Die Seite kann nur über die URL aufgerufen werden",
+  "page.status.unlisted.description": "Die Seite kann nur über die URL aufgerufen werden",
 
   "pages": "Seiten",
   "pages.empty": "Keine Seiten",

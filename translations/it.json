@@ -32,20 +32,16 @@
   "error.access.login": "Login Invalido",
   "error.access.panel": "Non ti è permesso accedere al pannello",
 
-  "error.avatar.create.fail":
-    "Non è stato possibile caricare l'immagine del profilo",
-  "error.avatar.delete.fail":
-    "Non è stato possibile eliminare l'immagine del profilo",
+  "error.avatar.create.fail": "Non è stato possibile caricare l'immagine del profilo",
+  "error.avatar.delete.fail": "Non è stato possibile eliminare l'immagine del profilo",
   "error.avatar.dimensions.invalid":
     "Per favore mantieni l'altezza e la larghezza dell'immagine del profilo inferiore ai 3000 pixel",
   "error.avatar.mime.forbidden":
     "L'immagine del profilo dev'essere un file JPEG o PNG",
 
-  "error.blueprint.notFound":
-    "Non è stato possibile caricare il blueprint \"{name}\"",
+  "error.blueprint.notFound": "Non è stato possibile caricare il blueprint \"{name}\"",
 
-  "error.email.preset.notFound":
-    "Non è stato possibile trovare il preset email \"{name}\"",
+  "error.email.preset.notFound": "Non è stato possibile trovare il preset email \"{name}\"",
 
   "error.field.converter.invalid": "Convertitore \"{converter}\" non valido",
 
@@ -54,7 +50,8 @@
   "error.file.duplicate": "Un file con il nome \"{filename}\" esiste già",
   "error.file.extension.forbidden":
     "L'estensione \"{extension}\" non è consentita",
-  "error.file.extension.missing": "Il file \"{filename}\" non ha estensione",
+  "error.file.extension.missing":
+    "Il file \"{filename}\" non ha estensione",
   "error.file.mime.differs":
     "Il file caricato dev'essere dello stesso MIME type \"{mime}\"",
   "error.file.mime.forbidden": "Il MIME type \"{mime}\" non è consentito",
@@ -85,14 +82,14 @@
     "Non ti è permesso modificare il titolo di \"{slug}\"",
   "error.page.create.permission": "Non ti è permesso creare \"{slug}\"",
   "error.page.delete": "La pagina \"{slug}\" non può essere eliminata",
-  "error.page.delete.confirm":
-    "Inserisci il titolo della pagina per confermare",
+  "error.page.delete.confirm": "Inserisci il titolo della pagina per confermare",
   "error.page.delete.hasChildren":
     "La pagina ha sottopagine e non può essere eliminata",
   "error.page.delete.permission": "Non ti è permesso eliminare \"{slug}\"",
   "error.page.draft.duplicate":
     "Una bozza di pagina con l'URL \"{slug}\" esiste già",
-  "error.page.duplicate": "Una pagina con l'URL \"{slug}\" esiste già",
+  "error.page.duplicate":
+    "Una pagina con l'URL \"{slug}\" esiste già",
   "error.page.notFound": "La pagina \"{slug}\" non è stata trovata",
   "error.page.num.invalid":
     "Inserisci un numero di ordinamento valido. I numeri non devono essere negativi",
@@ -120,14 +117,12 @@
   "error.section.pages.min.singular":
     "Aggiungi almeno una pagina alla sezione \"{section}\"",
 
-  "error.section.notLoaded":
-    "Non è stato possibile caricare la sezione \"{name}\"",
+  "error.section.notLoaded": "Non è stato possibile caricare la sezione \"{name}\"",
   "error.section.type.invalid": "Il tipo di sezione \"{type}\" non è valido",
 
   "error.site.changeTitle.permission":
     "Non ti è permesso modificare il titolo del sito",
-  "error.site.update.permission":
-    "Non ti è permesso modificare i contenuti globali del sito",
+  "error.site.update.permission": "Non ti è permesso modificare i contenuti globali del sito",
 
   "error.template.default.notFound": "Il template \"default\" non esiste",
 
@@ -145,8 +140,7 @@
     "Non ti è permesso modificare il ruolo dell'utente \"{name}\"",
   "error.user.create.permission": "Non ti è permesso creare questo utente",
   "error.user.delete": "L'utente non pu\u00f2 essere eliminato",
-  "error.user.delete.lastAdmin":
-    "L'ultimo amministratore non può essere eliminato",
+  "error.user.delete.lastAdmin": "L'ultimo amministratore non può essere eliminato",
   "error.user.delete.lastUser": "L'ultimo utente non può essere eliminato",
   "error.user.delete.permission":
     "Non ti \u00e8 permesso eliminare questo utente ",
@@ -168,9 +162,11 @@
   "error.validation.alpha": "Puoi inserire solo caratteri tra a-z",
   "error.validation.alphanum":
     "Puoi inserire solo caratteri tra a-z e numeri 0-9",
-  "error.validation.between": "Inserisci un valore tra \"{min}\" e \"{max}\"",
+  "error.validation.between":
+    "Inserisci un valore tra \"{min}\" e \"{max}\"",
   "error.validation.boolean": "Per favore conferma o nega",
-  "error.validation.contains": "Inserisci un valore che contiene \"{needle}\"",
+  "error.validation.contains":
+    "Inserisci un valore che contiene \"{needle}\"",
   "error.validation.date": "Inserisci una data valida",
   "error.validation.denied": "Per favore nega",
   "error.validation.different": "Il valore non dev'essere \"{other}\"",
@@ -210,7 +206,8 @@
   "field.structure.empty": "Non ci sono ancora elementi.",
   "field.users.empty": "Nessun utente selezionato",
 
-  "file.delete.confirm": "Sei sicuro di voler eliminare questo file?",
+  "file.delete.confirm":
+    "Sei sicuro di voler eliminare questo file?",
 
   "files": "Files",
   "files.empty": "Nessun file caricato",
@@ -222,9 +219,9 @@
   "installation": "Installazione",
   "installation.completed": "Il pannello è stato installato",
   "installation.issues.accounts":
-    "/site/accounts non dispone dei permessi di scrittura",
+    "\/site\/accounts non dispone dei permessi di scrittura",
   "installation.issues.content":
-    "La cartella /content e tutti i file e le cartelle in essa contenuti devono disporre dei permessi di scrittura.",
+    "La cartella \/content e tutti i file e le cartelle in essa contenuti devono disporre dei permessi di scrittura.",
   "installation.issues.curl": "È necessaria l'estensione <code>CURL</code>",
   "installation.issues.headline": "Il pannello non può esser installato",
   "installation.issues.mbstring":
@@ -234,6 +231,7 @@
   "installation.issues.php": "Assicurati di utilizzare <code>PHP 7.1+</code>",
   "installation.issues.server":
     "Kirby necessita di <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
   "language": "Lingua",
   "language.code": "Codice",
@@ -312,11 +310,11 @@
   "page.changeStatus.position": "Scegli una posizione",
   "page.changeStatus.select": "Seleziona un nuovo stato",
   "page.changeTemplate": "Cambia template",
-  "page.delete.confirm": "Sei sicuro di voler eliminare questa pagina?",
+  "page.delete.confirm":
+    "Sei sicuro di voler eliminare questa pagina?",
   "page.delete.confirm.subpages":
     "<strong>Questa pagina ha sottopagine</strong>. <br>Anche tutte le sottopagine verranno eliminate.",
-  "page.delete.confirm.title":
-    "Inserisci il titolo della pagina per confermare",
+  "page.delete.confirm.title": "Inserisci il titolo della pagina per confermare",
   "page.draft.create": "Crea bozza",
   "page.status": "Stato",
   "page.status.draft": "Bozza",
@@ -325,8 +323,7 @@
   "page.status.listed": "Pubblico",
   "page.status.listed.description": "La pagina è pubblicata per tutti",
   "page.status.unlisted": "Non in elenco",
-  "page.status.unlisted.description":
-    "La pagina è accessibile soltanto tramite URL",
+  "page.status.unlisted.description": "La pagina è accessibile soltanto tramite URL",
 
   "pages": "Pagine",
   "pages.empty": "Nessuna pagina",
@@ -395,7 +392,8 @@
   "user.changeRole.select": "Seleziona un nuovo ruolo",
   "user.create": "Aggiungi nuovo utente",
   "user.delete": "Elimina questo utente",
-  "user.delete.confirm": "Sei sicuro di voler eliminare questo utente?",
+  "user.delete.confirm":
+    "Sei sicuro di voler eliminare questo utente?",
 
   "version": "Versione di Kirby",
 

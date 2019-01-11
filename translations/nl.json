@@ -36,19 +36,18 @@
   "error.avatar.delete.fail": "De avatar kan niet worden verwijderd",
   "error.avatar.dimensions.invalid":
     "Houd de breedte en hoogte van de avatar onder 3000 pixels",
-  "error.avatar.mime.forbidden": "De avatar moet een JPEG of PNG bestand zijn",
+  "error.avatar.mime.forbidden":
+    "De avatar moet een JPEG of PNG bestand zijn",
 
   "error.blueprint.notFound": "De blueprint \"{name}\" kon niet geladen worden",
 
-  "error.email.preset.notFound":
-    "De e-mailvoorinstelling \"{name}\" kan niet worden gevonden",
+  "error.email.preset.notFound": "De e-mailvoorinstelling \"{name}\" kan niet worden gevonden",
 
   "error.field.converter.invalid": "Ongeldige converter \"{converter}\"",
 
   "error.file.changeName.permission":
     "Je hebt geen rechten om de naam te wijzigen van \"{filename}\"",
-  "error.file.duplicate":
-    "Er bestaat al een bestand met de naam \"{filename}\"",
+  "error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
   "error.file.extension.forbidden":
     "Bestandsextensie \"{extension}\" is niet toegestaan",
   "error.file.extension.missing":
@@ -60,8 +59,7 @@
     "Het mediatype voor \"{filename}\" kan niet worden gedecteerd",
   "error.file.name.missing": "De bestandsnaam mag niet leeg zijn",
   "error.file.notFound": "Het bestand kan niet worden gevonden",
-  "error.file.type.forbidden":
-    "Je hebt geen rechten om {type} bestanden up te loaden",
+  "error.file.type.forbidden": "Je hebt geen rechten om {type} bestanden up te loaden",
   "error.file.undefined": "Het bestand kan niet worden gevonden",
 
   "error.form.incomplete": "Verbeter alle fouten in het formulier",
@@ -82,14 +80,12 @@
   "error.page.changeTitle.empty": "De titel mag niet leeg zijn",
   "error.page.changeTitle.permission":
     "Je hebt geen rechten om de titel te wijzigen van \"{slug}\"",
-  "error.page.create.permission":
-    "Je hebt geen rechten om \"{slug}\" aan te maken",
+  "error.page.create.permission": "Je hebt geen rechten om \"{slug}\" aan te maken",
   "error.page.delete": "De pagina \"{slug}\" kan niet worden verwijderd",
   "error.page.delete.confirm": "Voer de paginatitel in om te bevestigen",
   "error.page.delete.hasChildren":
     "Deze pagina heeft subpagina's en kan niet worden verwijderd",
-  "error.page.delete.permission":
-    "Je hebt geen rechten om \"{slug}\" te verwijderen",
+  "error.page.delete.permission": "Je hebt geen rechten om \"{slug}\" te verwijderen",
   "error.page.draft.duplicate":
     "Er bestaat al een conceptpagina met de URL-appendix \"{slug}\"",
   "error.page.duplicate":
@@ -98,12 +94,10 @@
   "error.page.num.invalid":
     "Vul een geldig sorteer-cijfer in. Het cijfer mag niet negatief zijn",
   "error.page.slug.invalid": "Vul een geldige URL-prefix in",
-  "error.page.sort.permission":
-    "De pagina \"{slug}\" kan niet worden gesorteerd",
+  "error.page.sort.permission": "De pagina \"{slug}\" kan niet worden gesorteerd",
   "error.page.status.invalid": "Zorg voor een geldige paginastatus",
   "error.page.undefined": "De pagina kan niet worden gevonden",
-  "error.page.update.permission":
-    "Je hebt geen rechten om \"{slug}\" te updaten",
+  "error.page.update.permission": "Je hebt geen rechten om \"{slug}\" te updaten",
 
   "error.section.files.max.plural":
     "Voeg niet meer dan {max} bestanden toe aan de zone \"{section}\"",
@@ -144,12 +138,10 @@
     "De rol van de laatste beheerder kan niet worden gewijzigd",
   "error.user.changeRole.permission":
     "Je hebt geen rechten om de rol van gebruiker \"{name}\" te wijzigen",
-  "error.user.create.permission":
-    "Je hebt geen rechten om deze gebruiker aan te maken",
+  "error.user.create.permission": "Je hebt geen rechten om deze gebruiker aan te maken",
   "error.user.delete": "De gebruiker \"{name}\" kan niet worden verwijderd",
   "error.user.delete.lastAdmin": "Je kan de laatste admin niet verwijderen",
-  "error.user.delete.lastUser":
-    "De laatste gebruiker kan niet worden verwijderd",
+  "error.user.delete.lastUser": "De laatste gebruiker kan niet worden verwijderd",
   "error.user.delete.permission":
     "Je hebt geen rechten om gebruiker \"{name}\" te verwijderen",
   "error.user.duplicate":
@@ -168,10 +160,13 @@
 
   "error.validation.accepted": "Gelieve te bevestigen",
   "error.validation.alpha": "Vul alleen a-z karakters in",
-  "error.validation.alphanum": "Vul alleen a-z karakters of cijfers (0-9) in",
-  "error.validation.between": "Vul een waarde tussen \"{min}\" en \"{max}\"",
+  "error.validation.alphanum":
+    "Vul alleen a-z karakters of cijfers (0-9) in",
+  "error.validation.between":
+    "Vul een waarde tussen \"{min}\" en \"{max}\"",
   "error.validation.boolean": "Ga akkoord of weiger",
-  "error.validation.contains": "Vul een waarde in die \"{needle}\" bevat",
+  "error.validation.contains":
+    "Vul een waarde in die \"{needle}\" bevat",
   "error.validation.date": "Vul een geldige datum in",
   "error.validation.denied": "Weiger",
   "error.validation.different": "De invoer mag niet \"{other}\" zijn",
@@ -183,19 +178,19 @@
   "error.validation.ip": "Vul een geldig IP-adres in",
   "error.validation.less": "Vul een waarde in lager dan {max}",
   "error.validation.match": "De invoer klopt niet met het verwachte patroon",
-  "error.validation.max":
-    "Vul een waarde in die gelijk is aan of lager dan {max}",
+  "error.validation.max": "Vul een waarde in die gelijk is aan of lager dan {max}",
   "error.validation.maxlength":
     "Gebruik minder karakters (maximaal {max} karakters)",
   "error.validation.maxwords": "Vul minder dan {max} woorden in",
-  "error.validation.min":
-    "Vul een waarde in die gelijk is aan of groter dan {min}",
+  "error.validation.min": "Vul een waarde in die gelijk is aan of groter dan {min}",
   "error.validation.minlength":
     "Gebruik meer karakters (minimaal {min} karakters)",
   "error.validation.minwords": "Vul minimaal {min} woorden in",
   "error.validation.more": "Vul een grotere waarde in dan {min}",
-  "error.validation.notcontains": "Zorg dat de invoer niet \"{needle}\" bevat",
-  "error.validation.notin": "Vul de volgende dingen niet in: {{notIn}}",
+  "error.validation.notcontains":
+    "Zorg dat de invoer niet \"{needle}\" bevat",
+  "error.validation.notin":
+    "Vul de volgende dingen niet in: {{notIn}}",
   "error.validation.option": "Selecteer een geldige optie",
   "error.validation.num": "Vul een geldig cijfer in",
   "error.validation.required": "Vul iets in",
@@ -211,7 +206,8 @@
   "field.structure.empty": "Nog geen items.",
   "field.users.empty": "Nog geen gebruikers geselecteerd",
 
-  "file.delete.confirm": "Wil je dit bestand verwijderen?",
+  "file.delete.confirm":
+    "Wil je dit bestand verwijderen?",
 
   "files": "Bestanden",
   "files.empty": "Nog geen bestanden",
@@ -235,6 +231,7 @@
   "installation.issues.php": "Gebruik <code>PHP7+</code>",
   "installation.issues.server":
     "Kirby vereist <code>Apache</code>, <code>Nginx</code>of <code>Caddy</code>",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
   "language": "Taal",
   "language.code": "Code",
@@ -326,8 +323,7 @@
   "page.status.listed": "Openbaar",
   "page.status.listed.description": "Deze pagina is toegankelijk voor iedereen",
   "page.status.unlisted": "Niet gepubliceerd",
-  "page.status.unlisted.description":
-    "Deze pagina is alleen bereikbaar via URL",
+  "page.status.unlisted.description": "Deze pagina is alleen bereikbaar via URL",
 
   "pages": "Pagina’s",
   "pages.empty": "Nog geen pagina's",

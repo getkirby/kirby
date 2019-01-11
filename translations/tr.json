@@ -45,15 +45,18 @@
 
   "error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
 
-  "error.file.changeName.permission": "\"{filename}\" adını değiştiremezsiniz",
+  "error.file.changeName.permission":
+    "\"{filename}\" adını değiştiremezsiniz",
   "error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
   "error.file.extension.forbidden":
     "\"{extension}\" dosya uzantısına izin verilmiyor",
-  "error.file.extension.missing": "\"{filename}\" dosyasının uzantısı yok",
+  "error.file.extension.missing":
+    "\"{filename}\" dosyasının uzantısı yok",
   "error.file.mime.differs":
     "Yüklenen dosya aynı dosya türü \"{mime}\" olmalıdır",
   "error.file.mime.forbidden": "\"{mime}\" medya türüne izin verilmiyor",
-  "error.file.mime.missing": "\"{filename}\" için medya türü tespit edilemiyor",
+  "error.file.mime.missing":
+    "\"{filename}\" için medya türü tespit edilemiyor",
   "error.file.name.missing": "Dosya adı boş bırakılamaz",
   "error.file.notFound": "\"{filename}\" dosyası bulunamadı",
   "error.file.type.forbidden": "{type} dosya yükleme izni yok",
@@ -64,8 +67,10 @@
 
   "error.page.changeSlug.permission":
     "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
-  "error.page.changeStatus.incomplete": "Sayfada hatalar var ve yayınlanamadı",
-  "error.page.changeStatus.permission": "Bu sayfanın durumu değiştirilemez",
+  "error.page.changeStatus.incomplete":
+    "Sayfada hatalar var ve yayınlanamadı",
+  "error.page.changeStatus.permission":
+    "Bu sayfanın durumu değiştirilemez",
   "error.page.changeStatus.toDraft.invalid":
     "\"{slug}\" sayfası bir taslak haline dönüştürülemiyor",
   "error.page.changeTemplate.invalid":
@@ -78,12 +83,13 @@
   "error.page.create.permission": "\"{slug}\" oluşturmanıza izin verilmiyor",
   "error.page.delete": "\"{slug}\" sayfası silinemedi",
   "error.page.delete.confirm": "Onaylamak için sayfa başlığını girin",
-  "error.page.delete.hasChildren": "Sayfada alt sayfalar var ve silinemiyor",
-  "error.page.delete.permission":
-    "\"{slug}\" öğesini silmenize izin verilmiyor",
+  "error.page.delete.hasChildren":
+    "Sayfada alt sayfalar var ve silinemiyor",
+  "error.page.delete.permission": "\"{slug}\" öğesini silmenize izin verilmiyor",
   "error.page.draft.duplicate":
     "\"{slug}\" adres eki olan bir sayfa taslağı zaten mevcut",
-  "error.page.duplicate": "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
+  "error.page.duplicate":
+    "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
   "error.page.notFound": "\"{slug}\" uzantısındaki sayfa bulunamadı",
   "error.page.num.invalid":
     "Lütfen geçerli bir sıralama numarası girin. Sayılar negatif olmamalıdır.",
@@ -114,7 +120,8 @@
   "error.section.notLoaded": "\"{name}\" bölümü yüklenemedi",
   "error.section.type.invalid": "\"{type}\" tipi geçerli değil",
 
-  "error.site.changeTitle.permission": "Sitenin başlığını değiştiremezsin",
+  "error.site.changeTitle.permission":
+    "Sitenin başlığını değiştiremezsin",
   "error.site.update.permission": "Siteyi güncellemenize izin verilmiyor",
 
   "error.template.default.notFound": "Varsayılan şablon yok",
@@ -127,16 +134,16 @@
     "\"{name}\" kullanıcısının adını değiştiremezsiniz",
   "error.user.changePassword.permission":
     "\"{name}\" kullanıcısının şifresini değiştiremezsiniz",
-  "error.user.changeRole.lastAdmin": "Son yöneticinin rolü değiştirilemez",
+  "error.user.changeRole.lastAdmin":
+    "Son yöneticinin rolü değiştirilemez",
   "error.user.changeRole.permission":
     "\"{name}\" kullanıcısının rolünü değiştiremezsin",
-  "error.user.create.permission":
-    "Bu kullanıcıyı oluşturmanıza izin verilmiyor",
+  "error.user.create.permission": "Bu kullanıcıyı oluşturmanıza izin verilmiyor",
   "error.user.delete": "\"{name}\" kullanıcısı silinemedi",
-  "error.user.delete.lastAdmin":
-    "Son y\u00f6netici kullan\u0131c\u0131y\u0131 silemezsiniz",
+  "error.user.delete.lastAdmin": "Son y\u00f6netici kullan\u0131c\u0131y\u0131 silemezsiniz",
   "error.user.delete.lastUser": "Son kullanıcı silinemez",
-  "error.user.delete.permission": "\"{name}\" kullanıcısını silme yetkiniz yok",
+  "error.user.delete.permission":
+    "\"{name}\" kullanıcısını silme yetkiniz yok",
   "error.user.duplicate":
     "\"{email}\" e-posta adresine sahip bir kullanıcı zaten var",
   "error.user.email.invalid": "Lütfen geçerli bir e-posta adresi girin",
@@ -144,8 +151,7 @@
   "error.user.notFound": "\"{name}\" kullanıcısı bulunamadı",
   "error.user.password.invalid":
     "Lütfen geçerli bir şifre giriniz. Şifreler en az 8 karakter uzunluğunda olmalıdır.",
-  "error.user.password.notSame":
-    "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
+  "error.user.password.notSame": "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
   "error.user.password.undefined": "Bu kullanıcının şifresi yok",
   "error.user.role.invalid": "Lütfen geçerli bir rol girin",
   "error.user.undefined": "Kullan\u0131c\u0131 bulunamad\u0131",
@@ -159,7 +165,8 @@
   "error.validation.between":
     "Lütfen \"{min}\" ile \"{max}\" arasında bir değer girin",
   "error.validation.boolean": "Lütfen onaylayın veya reddedin",
-  "error.validation.contains": "Lütfen \"{needle}\" içeren bir değer girin",
+  "error.validation.contains":
+    "Lütfen \"{needle}\" içeren bir değer girin",
   "error.validation.date": "Lütfen geçerli bir tarih girin",
   "error.validation.denied": "Lütfen reddedin",
   "error.validation.different": "Değer \"{other}\" olmamalıdır",
@@ -171,13 +178,11 @@
   "error.validation.ip": "Lütfen geçerli bir ip adresi girin",
   "error.validation.less": "Lütfen {max} 'dan daha düşük bir değer girin",
   "error.validation.match": "Değer beklenen modelle eşleşmiyor",
-  "error.validation.max":
-    "Lütfen {max} 'a eşit veya daha küçük bir değer girin",
+  "error.validation.max": "Lütfen {max} 'a eşit veya daha küçük bir değer girin",
   "error.validation.maxlength":
     "Lütfen daha kısa bir değer girin. (maks. {max} karakter)",
   "error.validation.maxwords": "Lütfen en fazla {max} kelime(ler) girin",
-  "error.validation.min":
-    "Lütfen {min} ile eşit veya daha büyük bir değer girin",
+  "error.validation.min": "Lütfen {min} ile eşit veya daha büyük bir değer girin",
   "error.validation.minlength":
     "Lütfen daha uzun bir değer girin. (min. {min} karakter)",
   "error.validation.minwords": "Lütfen en az {min} kelime(ler) girin",
@@ -197,8 +202,7 @@
 
   "field.files.empty": "Henüz dosya seçilmedi",
   "field.pages.empty": "Henüz sayfa seçilmedi",
-  "field.structure.delete.confirm":
-    "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
+  "field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
   "field.structure.empty": "Hen\u00fcz bir girdi yok",
   "field.users.empty": "Henüz kullanıcı seçilmedi",
 
@@ -220,11 +224,14 @@
     "<code>/content</code> klasörü yok yada yazılabilir değil",
   "installation.issues.curl": "<code>CURL</code> eklentisi gerekli",
   "installation.issues.headline": "Panel kurulamadı",
-  "installation.issues.mbstring": "<code>MB String</code> eklentisi gerekli",
-  "installation.issues.media": "<code>/media</code> klasörü yok yada yazılamaz",
+  "installation.issues.mbstring":
+    "<code>MB String</code> eklentisi gerekli",
+  "installation.issues.media":
+    "<code>/media</code> klasörü yok yada yazılamaz",
   "installation.issues.php": "<code>PHP 7+</code> kullandığınızdan emin olun. ",
   "installation.issues.server":
     "Kirby <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code> gerektirir",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
   "language": "Dil",
   "language.code": "Kod",
@@ -316,8 +323,7 @@
   "page.status.listed": "Herkese Açık",
   "page.status.listed.description": "Bu sayfa herkese açık",
   "page.status.unlisted": "Liste Dışı",
-  "page.status.unlisted.description":
-    "Bu sayfa sadece bağlantı adresi ile erişilebilir",
+  "page.status.unlisted.description": "Bu sayfa sadece bağlantı adresi ile erişilebilir",
 
   "pages": "Sayfalar",
   "pages.empty": "Henüz sayfa yok",

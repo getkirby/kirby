@@ -231,6 +231,7 @@
   "installation.issues.php": "Bizonyosodj meg róla, hogy az általad használt PHP-verzió <code>PHP 7+</code>",
   "installation.issues.server":
     "A Kirby az alábbi szervereken futtatható: <code>Apache</code>, <code>Nginx</code> vagy <code>Caddy</code>",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
   "language": "Nyelv",
   "language.code": "Kód",
