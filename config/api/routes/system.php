@@ -41,7 +41,6 @@ return [
         'method'  => 'POST',
         'auth'    => false,
         'action'  => function () {
-
             $system = $this->kirby()->system();
             $auth   = $this->kirby()->auth();
 
