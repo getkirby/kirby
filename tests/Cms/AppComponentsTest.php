@@ -66,5 +66,4 @@ class AppComponentsTest extends TestCase
         $expected = '<script src="/test.js"></script>';
         $this->assertEquals($expected, js('something.js'));
     }
-
 }

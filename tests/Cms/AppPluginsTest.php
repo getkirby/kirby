@@ -497,5 +497,4 @@ class AppPluginsTest extends TestCase
 
         $this->assertEquals('Deutscher Test', I18n::translate('test'));
     }
-
 }
