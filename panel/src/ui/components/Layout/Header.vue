@@ -234,6 +234,7 @@ export default {
   position: relative;
   background: $color-background;
   border-right: 1px solid $color-border;
+  pointer-events: none;
 
   &:first-child {
     border-left: 1px solid $color-border;

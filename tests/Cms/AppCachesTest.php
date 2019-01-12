@@ -82,5 +82,4 @@ class AppCachesTest extends TestCase
             $this->assertTrue(class_exists($className));
         }
     }
-
 }
