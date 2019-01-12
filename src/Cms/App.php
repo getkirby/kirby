@@ -177,16 +177,7 @@ class App
     public function apply(string $name, $value)
     {
         if ($functions = $this->extension('hooks', $name)) {
-            static $applied = [];
-
             foreach ($functions as $function) {
-                if (in_array($function, $applied[$name] ?? []) === true) {
-                    continue;
-                }
-
-                // mark the hook as triggered, to avoid endless loops
-                $applied[$name][] = $function;
-
                 // bind the App object to the hook
                 $value = $function->call($this, $value);
             }
