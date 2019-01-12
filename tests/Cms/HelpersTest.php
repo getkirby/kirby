@@ -6,6 +6,7 @@ use Kirby\Cms\App as Kirby;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Dir;
 
 class HelpersTest extends TestCase
 {
@@ -14,15 +15,25 @@ class HelpersTest extends TestCase
     public function setUp()
     {
         $this->kirby = new Kirby([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/HelpersTest'
+            ],
             'urls' => [
                 'index' => 'https://getkirby.com'
             ]
         ]);
+
+        Dir::make($this->fixtures . '/site');
+    }
+
+    public function tearDown()
+    {
+        Dir::remove($this->fixtures . '/site');
     }
 
     public function testCollectionHelper()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'site' => [
                 'children' => [
                     ['slug' => 'test']
@@ -78,6 +89,8 @@ class HelpersTest extends TestCase
         $this->assertFalse(csrf(false));
         $this->assertFalse(csrf(123));
         $this->assertFalse(csrf('some invalid string'));
+
+        $session->destroy();
     }
 
     public function testCssHelper()
@@ -131,7 +144,7 @@ class HelpersTest extends TestCase
 
     public function testImageHelper()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'site' => [
                 'files' => [
                     ['filename' => 'sitefile.jpg']
@@ -341,8 +354,7 @@ class HelpersTest extends TestCase
 
     public function testKirbyHelper()
     {
-        $app = new App();
-        $this->assertEquals($app, kirby());
+        $this->assertEquals($this->kirby, kirby());
     }
 
     public function testKirbyTagHelper()
@@ -371,7 +383,7 @@ class HelpersTest extends TestCase
 
     public function testOptionHelper()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'options' => [
                 'foo' => 'bar'
             ]
@@ -383,7 +395,7 @@ class HelpersTest extends TestCase
 
     public function testPageHelper()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'site' => [
                 'children' => [
                     [
@@ -412,7 +424,7 @@ class HelpersTest extends TestCase
 
     public function testPagesHelper()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'site' => [
                 'children' => [
                     [
@@ -433,7 +445,7 @@ class HelpersTest extends TestCase
     {
         Uri::$current = new Uri('https://getkirby.com/projects/filter:current');
 
-        new App();
+        $app = $this->kirby->clone();
 
         $this->assertEquals('current', param('filter'));
 
@@ -444,7 +456,7 @@ class HelpersTest extends TestCase
     {
         Uri::$current = new Uri('https://getkirby.com/projects/a:value-a/b:value-b');
 
-        new App();
+        $app = $this->kirby->clone();
 
         $this->assertEquals(['a' => 'value-a', 'b' => 'value-b'], params());
 
@@ -460,10 +472,7 @@ class HelpersTest extends TestCase
 
     public function testSiteHelper()
     {
-        $app  = new App();
-        $site = $app->site();
-
-        $this->assertEquals($site, site());
+        $this->assertEquals($this->kirby->site(), site());
     }
 
     public function testSize()
@@ -491,7 +500,7 @@ class HelpersTest extends TestCase
 
     public function testSnippet()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'roots' => [
                 'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
                 'snippets'  => $index,
@@ -504,12 +513,6 @@ class HelpersTest extends TestCase
 
     public function testSvg()
     {
-        $app = new App([
-            'roots' => [
-                'index' => __DIR__ . '/fixtures/HelpersTest',
-            ]
-        ]);
-
         $result = svg('test.svg');
         $this->assertEquals('<svg>test</svg>', trim($result));
     }
@@ -531,7 +534,7 @@ class HelpersTest extends TestCase
 
     public function testUrlHelper()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'urls' => [
                 'index' => $url = 'https://getkirby.com'
             ]
@@ -543,7 +546,7 @@ class HelpersTest extends TestCase
 
     public function testUrlHelperWithOptions()
     {
-        $app = new App([
+        $app = $this->kirby->clone([
             'urls' => [
                 'index' => $url = 'https://getkirby.com'
             ]

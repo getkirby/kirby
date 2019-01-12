@@ -46,6 +46,9 @@ class UrlsTest extends TestCase
     public function testWithCustomBaseUrl($url, $method)
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'urls' => [
                 'index' => 'https://getkirby.com'
             ]
@@ -69,6 +72,9 @@ class UrlsTest extends TestCase
     public function testWithCustomUrl($url, $method)
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'urls' => [
                 'index' => 'https://getkirby.com',
                 'media' => 'https://cdn.getkirby.com',
@@ -81,7 +87,12 @@ class UrlsTest extends TestCase
 
     public function testCurrent()
     {
-        $app = new App();
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+        ]);
+
         $this->assertEquals('/', $app->url('current'));
     }
 
@@ -100,7 +111,11 @@ class UrlsTest extends TestCase
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SCRIPT_NAME'] = '/starterkit/index.php';
 
-        $app = new App();
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+        ]);
 
         $this->assertEquals('http://localhost/starterkit', $app->url('index'));
         $this->assertEquals('http://localhost/starterkit', $app->url('current'));
@@ -110,7 +125,11 @@ class UrlsTest extends TestCase
         $_SERVER['REQUEST_URI'] = '/starterkit/sub/folder';
         $_SERVER['SCRIPT_NAME'] = '/starterkit/index.php';
 
-        $app = new App();
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+        ]);
 
         $this->assertEquals('http://localhost/starterkit', $app->url('index'));
         $this->assertEquals('http://localhost/starterkit/sub/folder', $app->url('current'));
@@ -123,6 +142,9 @@ class UrlsTest extends TestCase
     public function testCurrentWithCustomIndex()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'urls' => [
                 'index' => 'http://getkirby.com'
             ]
@@ -134,6 +156,9 @@ class UrlsTest extends TestCase
     public function testCurrentWithCustomPath()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'path' => 'test/path'
         ]);
 
@@ -143,6 +168,9 @@ class UrlsTest extends TestCase
     public function testCurrentWithCustomPathAndCustomIndex()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'urls' => [
                 'index' => 'http://getkirby.com',
             ],

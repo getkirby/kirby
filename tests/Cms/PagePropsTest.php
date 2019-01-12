@@ -405,6 +405,9 @@ class PagePropsTest extends TestCase
     public function testPreviewUrl()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'urls' => [
                 'index' => '/'
             ]
@@ -439,6 +442,9 @@ class PagePropsTest extends TestCase
     public function testCustomPreviewUrl($input, $expected, $draft)
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'urls' => [
                 'index' => '/'
             ]

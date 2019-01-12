@@ -80,6 +80,9 @@ class FileBlueprintTest extends TestCase
     public function testExtendAccept()
     {
         new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'blueprints' => [
                 'files/base' => [
                     'name'  => 'base',

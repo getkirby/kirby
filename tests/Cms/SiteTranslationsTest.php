@@ -11,6 +11,9 @@ class SiteTranslationsTest extends TestCase
     public function app($language = null)
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'languages' => [
                 [
                     'code'    => 'en',
