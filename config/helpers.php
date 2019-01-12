@@ -87,20 +87,21 @@ function css($url, $options = null)
         return implode(PHP_EOL, $links);
     }
 
-    $href = $url === '@auto' ? Url::toTemplateAsset('css/templates', 'css') : Url::to($url);
-
-    $attr = [
-        'href' => $href,
-        'rel'  => 'stylesheet'
-    ];
-
     if (is_string($options) === true) {
-        $attr['media'] = $options;
+        $options = ['media' => $options];
     }
 
-    if (is_array($options) === true) {
-        $attr = array_merge($options, $attr);
+    $kirby = App::instance();
+
+    if ($component = $kirby->component('css')) {
+        $url = $component($kirby, $url, $options);
     }
+
+    $url  = $url === '@auto' ? Url::toTemplateAsset('css/templates', 'css') : Url::to($url);
+    $attr = array_merge((array)$options, [
+        'href' => $url,
+        'rel'  => 'stylesheet'
+    ]);
 
     return '<link ' . attr($attr) . '>';
 }
@@ -334,18 +335,18 @@ function js($url, $options = null)
         return implode(PHP_EOL, $scripts);
     }
 
-    $src  = $url === '@auto' ? Url::toTemplateAsset('js/templates', 'js') : Url::to($url);
-    $attr = [
-        'src' => $src,
-    ];
-
     if (is_bool($options) === true) {
-        $attr['async'] = $options;
+        $options = ['async' => $options];
     }
 
-    if (is_array($options) === true) {
-        $attr = array_merge($options, $attr);
+    $kirby = App::instance();
+
+    if ($component = $kirby->component('js')) {
+        $url = $component($kirby, $url, $options);
     }
+
+    $url  = $url === '@auto' ? Url::toTemplateAsset('js/templates', 'js') : Url::to($url);
+    $attr = array_merge((array)$options, ['src' => $url]);
 
     return '<script ' . attr($attr) . '></script>';
 }
