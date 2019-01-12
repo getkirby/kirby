@@ -387,7 +387,7 @@ trait AppPlugins
         $this->extendCacheTypes([
             'apcu'      => 'Kirby\Cache\ApcuCache',
             'file'      => 'Kirby\Cache\FileCache',
-            'memcached' => 'Kirby\Cache\MemCache',
+            'memcached' => 'Kirby\Cache\MemCached',
         ]);
 
         $this->extendComponents(include static::$root . '/config/components.php');

@@ -16,7 +16,6 @@ class AppCachesTest extends TestCase
         ], $props));
     }
 
-
     public function testDisabledCache()
     {
         $this->assertEquals(Cache::class, get_class($this->app()->cache('pages')));
@@ -68,4 +67,20 @@ class AppCachesTest extends TestCase
 
         $this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin.api'));
     }
+
+    public function testDefaultCacheTypeClasses()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $types = $app->extensions('cacheTypes');
+
+        foreach ($types as $className) {
+            $this->assertTrue(class_exists($className));
+        }
+    }
+
 }
