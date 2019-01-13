@@ -218,7 +218,7 @@
 
   "installation": "Kurulum",
   "installation.completed": "Panel kuruldu",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "Panel yükleyici, herkese açık sunucularda varsayılan olarak devre dışıdır. Lütfen yükleyiciyi yerel bir makinede çalıştırın veya <code>panel.install</code> seçeneğiyle etkinleştirin.",
   "installation.issues.accounts":
     "<code>/site/accounts</code> klasörü yok yada yazılabilir değil",
   "installation.issues.content":

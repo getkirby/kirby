@@ -218,7 +218,7 @@
 
   "installation": "Installation",
   "installation.completed": "Le Panel a été installé",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "L'installation du Panel est désactivée par défaut sur les serveurs publics. Veuillez lancer l'installation sur un serveur local, ou activez-la avec l'option <code>panel.install</code>.",
   "installation.issues.accounts":
     "Le dossier <code>/site/accounts</code> n’existe pas ou n’est pas accessible en écriture",
   "installation.issues.content":
