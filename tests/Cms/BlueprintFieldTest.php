@@ -107,6 +107,43 @@ class BlueprintFieldTest extends TestCase
         $this->assertEquals('text', $props['type']);
     }
 
+    public function testExtendFieldWithNonAssociativeOptions()
+    {
+        $this->app = $this->app->clone([
+            'blueprints' => [
+                'fields/test' => [
+                    'name'  => 'test',
+                    'label' => 'Test',
+                    'type'  => 'textarea',
+                    'buttons' => [
+                        'bold',
+                        'italic'
+                    ]
+                ]
+            ]
+        ]);
+
+
+        $props = Blueprint::fieldProps([
+            'extends' => 'fields/test',
+            'buttons' => [
+                'li'
+            ]
+        ]);
+
+        $expected = [
+            'buttons' => [
+                'li'
+            ],
+            'label' => 'Test',
+            'name'  => 'test',
+            'type'  => 'textarea',
+            'width' => '1/1'
+        ];
+
+        $this->assertEquals($expected, $props);
+    }
+
     public function testNestedFields()
     {
         $props = Blueprint::fieldProps([

@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Data\Data;
 use Kirby\Form\Field;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Obj;
@@ -197,10 +198,10 @@ class Blueprint
         if ($mixin === null) {
             $props = $props;
         } elseif (is_array($mixin) === true) {
-            $props = array_replace_recursive($mixin, $props);
+            $props = A::merge($mixin, $props, A::MERGE_REPLACE);
         } else {
             try {
-                $props = array_replace_recursive(Data::read($mixin), $props);
+                $props = A::merge(Data::read($mixin), $props, A::MERGE_REPLACE);
             } catch (Exception $e) {
                 $props = $props;
             }
