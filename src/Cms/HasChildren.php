@@ -91,7 +91,7 @@ trait HasChildren
     }
 
     /**
-     * Return all drafts for the site
+     * Return all drafts of the model
      *
      * @return Pages
      */
