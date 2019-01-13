@@ -338,6 +338,16 @@ class Database
     }
 
     /**
+     * Returns the name of the database
+     *
+     * @return string|null
+     */
+    public function name(): ?string
+    {
+        return $this->database;
+    }
+
+    /**
      * Private method to execute database queries.
      * This is used by the query() and execute() methods
      *

@@ -72,7 +72,7 @@ class Sql
         return [
             'query'    => $query,
             'bindings' => [
-                $databaseBinding => $this->database->database,
+                $databaseBinding => $this->database->name(),
                 $tableBinding    => $table,
             ]
         ];
