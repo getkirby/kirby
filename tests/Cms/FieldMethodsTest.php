@@ -148,6 +148,38 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($page->files()->pluck('filename'), $page->gallery()->toFiles()->pluck('filename'));
     }
 
+    public function testToFilesFromDifferentPage()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a',
+                        'content' => [
+                            'gallery' => Yaml::encode(['b/b.jpg', 'a/a.jpg'])
+                        ],
+                        'files' => [
+                            ['filename' => 'a.jpg']
+                        ]
+                    ],
+                    [
+                        'slug' => 'b',
+                        'files' => [
+                            ['filename' => 'b.jpg']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('a');
+
+        $this->assertEquals(['b.jpg', 'a.jpg'], $page->gallery()->toFiles()->pluck('filename'));
+    }
+
     public function testToFilesWithoutResults()
     {
         $page = new Page([

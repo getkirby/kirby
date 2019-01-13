@@ -120,7 +120,16 @@ return function (App $app) {
          * @return Files
          */
         'toFiles' => function (Field $field) {
-            return $field->parent()->files()->find(false, false, ...$field->toData('yaml'));
+            $parent = $field->parent();
+            $files  = new Files([]);
+
+            foreach ($field->toData('yaml') as $id) {
+                if ($file = $parent->kirby()->file($id, $parent)) {
+                    $files->add($file);
+                }
+            }
+
+            return $files;
         },
 
         /**
