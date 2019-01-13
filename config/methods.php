@@ -119,11 +119,11 @@ return function (App $app) {
          *
          * @return Files
          */
-        'toFiles' => function (Field $field) {
+        'toFiles' => function (Field $field, string $separator = 'yaml') {
             $parent = $field->parent();
             $files  = new Files([]);
 
-            foreach ($field->toData('yaml') as $id) {
+            foreach ($field->toData($separator) as $id) {
                 if ($file = $parent->kirby()->file($id, $parent)) {
                     $files->add($file);
                 }
@@ -235,8 +235,8 @@ return function (App $app) {
          *
          * @return Users
          */
-        'toUsers' => function (Field $field) use ($app) {
-            return $app->users()->find(false, false, ...$field->toData('yaml'));
+        'toUsers' => function (Field $field, string $separator = 'yaml') use ($app) {
+            return $app->users()->find(false, false, ...$field->toData($separator));
         },
 
         // inspectors
