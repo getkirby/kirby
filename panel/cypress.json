@@ -1,0 +1,7 @@
+{
+  "supportFile": "tests/e2e/config/support.js",
+  "pluginsFile": "tests/e2e/config/plugins.js",
+  "fixturesFolder": "tests/e2e/fixtures",
+  "integrationFolder": "tests/e2e/specs",
+  "projectId": "k9a41h"
+}

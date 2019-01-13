@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit
+    bootstrap="tests/bootstrap.php"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnFailure="true"
+    stderr="true"
+    colors="true"
+    verbose="true">
+
+    <filter>
+        <whitelist>
+            <directory>./config</directory>
+            <directory>./src</directory>
+        </whitelist>
+    </filter>
+
+    <testsuites>
+        <testsuite name="Classes">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -1,0 +1,409 @@
+{
+  "add": "\ucd94\uac00",
+  "avatar": "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0",
+  "back": "돌아가기",
+  "cancel": "\ucde8\uc18c",
+  "change": "\ubcc0\uacbd",
+  "close": "\ub2eb\uae30",
+  "confirm": "확인",
+  "copy": "복사",
+  "create": "등록",
+
+  "date": "날짜",
+  "date.select": "날짜 선택",
+
+  "day": "일",
+  "days.fri": "\uae08",
+  "days.mon": "\uc6d4",
+  "days.sat": "\ud1a0",
+  "days.sun": "\uc77c",
+  "days.thu": "\ubaa9",
+  "days.tue": "\ud654",
+  "days.wed": "\uc218",
+
+  "delete": "\uc0ad\uc81c",
+  "dimensions": "크기",
+  "discard": "무시",
+  "edit": "\ud3b8\uc9d1",
+
+  "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
+  "email.placeholder": "mail@example.com",
+
+  "error.access.login": "로그인할 수 없습니다.",
+  "error.access.panel": "패널에 접근할 권한이 없습니다.",
+
+  "error.avatar.create.fail": "프로필 이미지를 업로드할 수 없습니다.",
+  "error.avatar.delete.fail": "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0\ub97c \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+  "error.avatar.dimensions.invalid":
+    "프로필 이미지의 크기를 가로세로 3,000픽셀 이하로 설정하세요.",
+  "error.avatar.mime.forbidden":
+    "\uc5c5\ub85c\ub4dc\ud560 \uc218 \uc5c6\ub294 MIME \ud615\uc2dd\uc785\ub2c8\ub2e4.",
+
+  "error.blueprint.notFound": "블루프린트({name})를 불러올 수 없습니다.",
+
+  "error.email.preset.notFound": "기본 이메일 주소({name})가 없습니다.",
+
+  "error.field.converter.invalid": "컨버터({converter})가 잘못되었습니다.",
+
+  "error.file.changeName.permission":
+    "파일명({filename})을 변경할 권한이 없습니다.",
+  "error.file.duplicate": "이름이 같은 파일({filename})이 있습니다.",
+  "error.file.extension.forbidden":
+    "이 확장자({extension})는 업로드할 수 없습니다.",
+  "error.file.extension.missing":
+    "파일({filename})에 확장자가 없습니다.",
+  "error.file.mime.differs":
+    "기존 파일과 MIME 형식({mime})이 다릅니다.",
+  "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
+  "error.file.mime.missing":
+    "The media type for \"{filename}\" cannot be detected",
+  "error.file.name.missing": "파일명을 입력하세요.",
+  "error.file.notFound": "파일({filename})이 없습니다.",
+  "error.file.type.forbidden": "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
+  "error.file.undefined": "\ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
+
+  "error.form.incomplete": "항목에 오류가 있습니다.",
+  "error.form.notSaved": "항목을 저장할 수 없습니다.",
+
+  "error.page.changeSlug.permission":
+    "고유 주소({slug})를 변경할 권한이 없습니다.",
+  "error.page.changeStatus.incomplete":
+    "페이지를 공개할 수 없습니다.",
+  "error.page.changeStatus.permission":
+    "페이지의 상태를 변경할 수 없습니다.",
+  "error.page.changeStatus.toDraft.invalid":
+    "페이지({slug})의 상태를 초안으로 변경할 수 없습니다.",
+  "error.page.changeTemplate.invalid":
+    "페이지({slug})의 템플릿을 변경할 수 없습니다.",
+  "error.page.changeTemplate.permission":
+    "페이지({slug})의 템플릿을 변경할 권한이 없습니다.",
+  "error.page.changeTitle.empty": "제목을 입력하세요.",
+  "error.page.changeTitle.permission":
+    "페이지({slug})의 제목을 삭제할 권한이 없습니다.",
+  "error.page.create.permission": "페이지({slug})를 등록할 권한이 없습니다.",
+  "error.page.delete": "페이지({slug})를 삭제할 수 없습니다.",
+  "error.page.delete.confirm": "페이지 제목을 입력하세요.",
+  "error.page.delete.hasChildren":
+    "하위 페이지가 있는 페이지는 삭제할 수 없습니다.",
+  "error.page.delete.permission": "페이지({slug})를 삭제할 권한이 없습니다.",
+  "error.page.draft.duplicate":
+    "고유 주소({slug})가 같은 초안이 있습니다.",
+  "error.page.duplicate":
+    "고유 주소({slug})가 같은 페이지가 있습니다.",
+  "error.page.notFound": "페이지({slug})가 없습니다.",
+  "error.page.num.invalid":
+    "정수를 입력하세요.",
+  "error.page.slug.invalid": "올바른 접두사를 입력하세요.",
+  "error.page.sort.permission": "페이지({slug})를 정렬할 수 없습니다.",
+  "error.page.status.invalid": "올바른 상태를 설정하세요.",
+  "error.page.undefined": "\ud398\uc774\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
+  "error.page.update.permission": "페이지({slug})를 변경할 권한이 없습니다.",
+
+  "error.section.files.max.plural":
+    "이 섹션({section})에 파일을 {max}개 이상 추가할 수 없습니다.",
+  "error.section.files.max.singular":
+    "이 섹션({section})에는 파일을 하나 이상 추가할 수 없습니다.",
+  "error.section.files.min.plural":
+    "이 섹션({section})에는 파일을 {min}개 이상 추가하세요.",
+  "error.section.files.min.singular":
+    "이 섹션({section})에는 파일을 하나 이상 추가하세요.",
+
+  "error.section.pages.max.plural":
+    "이 섹션({section})에는 페이지를 {max}개 이상 추가할 수 없습니다.",
+  "error.section.pages.max.singular":
+    "이 섹션({section})에는 페이지를 하나 이상 추가할 수 없습니다.",
+  "error.section.pages.min.plural":
+    "이 섹션({section})에는 페이지를 {min}개 이상 추가하세요.",
+  "error.section.pages.min.singular":
+    "이 섹션({section})에는 페이지를 하나 이상 추가하세요.",
+
+  "error.section.notLoaded": "섹션({name})을 불러올 수 없습니다.",
+  "error.section.type.invalid": "섹션의 형식({type})이 올바르지 않습니다.",
+
+  "error.site.changeTitle.permission":
+    "사이트의 제목을 변경할 권한이 없습니다.",
+  "error.site.update.permission": "사이트의 정보를 변경할 권한이 없습니다.",
+
+  "error.template.default.notFound": "기본 템플릿이 없습니다.",
+
+  "error.user.changeEmail.permission":
+    "사용자({name})의 이메일 주소를 변경할 권한이 없습니다.",
+  "error.user.changeLanguage.permission":
+    "사용자({name})의 언어를 변경할 권한이 없습니다.",
+  "error.user.changeName.permission":
+    "사용자명({name})을 변경할 권한이 없습니다.",
+  "error.user.changePassword.permission":
+    "사용자({name})의 암호를 변경할 권한이 없습니다.",
+  "error.user.changeRole.lastAdmin":
+    "최종 관리자의 역할은 변경할 수 없습니다.",
+  "error.user.changeRole.permission":
+    "사용자({name})의 역할을 변경할 권한이 없습니다.",
+  "error.user.create.permission": "사용자를 등록할 권한이 없습니다.",
+  "error.user.delete": "사용자({name})를 삭제할 수 없습니다.",
+  "error.user.delete.lastAdmin": "\ucd5c\uc885 \uad00\ub9ac\uc790\ub294 \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+  "error.user.delete.lastUser": "최종 사용자는 삭제할 수 없습니다.",
+  "error.user.delete.permission":
+    "사용자({name})를 삭제할 권한이 없습니다.",
+  "error.user.duplicate":
+    "이메일 주소({email})가 같은 사용자가 있습니다.",
+  "error.user.email.invalid": "올바른 이메일 주소를 입력하세요.",
+  "error.user.language.invalid": "올바른 언어를 입력하세요.",
+  "error.user.notFound": "사용자({name})가 없습니다.",
+  "error.user.password.invalid":
+    "올바른 암호를 입력하세요.",
+  "error.user.password.notSame": "\uc554\ud638\ub97c \ud655\uc778\ud558\uc138\uc694.",
+  "error.user.password.undefined": "암호가 설정되지 않았습니다.",
+  "error.user.role.invalid": "올바른 역할을 입력하세요.",
+  "error.user.undefined": "\uc0ac\uc6a9\uc790\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
+  "error.user.update.permission":
+    "사용자({name})의 정보를 변경할 권한이 없습니다.",
+
+  "error.validation.accepted": "확인하세요.",
+  "error.validation.alpha": "알파벳만 입력할 수 있습니다.",
+  "error.validation.alphanum":
+    "알파벳 또는 숫자만 입력할 수 있습니다.",
+  "error.validation.between":
+    "{min}과 {max} 사이의 값을 입력하세요.",
+  "error.validation.boolean": "Please confirm or deny",
+  "error.validation.contains":
+    "{needle}에 포함된 값을 입력하세요.",
+  "error.validation.date": "올바른 날짜를 입력하세요.",
+  "error.validation.denied": "Please deny",
+  "error.validation.different": "The value must not be \"{other}\"",
+  "error.validation.email": "올바른 이메일 주소를 입력하세요.",
+  "error.validation.endswith": "The value must end with \"{end}\"",
+  "error.validation.filename": "올바른 파일명을 입력하세요.",
+  "error.validation.in": "Please enter one of the following: ({in})",
+  "error.validation.integer": "올바른 정수를 입력하세요.",
+  "error.validation.ip": "올바른 IP 주소를 입력하세요.",
+  "error.validation.less": "{max}보다 작은 값을 입력하세요.",
+  "error.validation.match": "The value does not match the expected pattern",
+  "error.validation.max": "Please enter a value equal to or lower than {max}",
+  "error.validation.maxlength":
+    "Please enter a shorter value. (max. {max} characters)",
+  "error.validation.maxwords": "Please enter no more than {max} word(s)",
+  "error.validation.min": "Please enter a value equal to or greater than {min}",
+  "error.validation.minlength":
+    "Please enter a longer value. (min. {min} characters)",
+  "error.validation.minwords": "Please enter at least {min} word(s)",
+  "error.validation.more": "Please enter a greater value than {min}",
+  "error.validation.notcontains":
+    "Please enter a value that does not contain \"{needle}\"",
+  "error.validation.notin":
+    "Please don't enter any of the following: ({notIn})",
+  "error.validation.option": "올바른 옵션을 선택하세요.",
+  "error.validation.num": "올바른 숫자를 입력하세요.",
+  "error.validation.required": "아무거나 입력하세요.",
+  "error.validation.same": "다음을 입력하세요. {other}",
+  "error.validation.size": "The size of the value must be \"{size}\"",
+  "error.validation.startswith": "‘{start}’으(로) 시작해야 합니다.",
+  "error.validation.time": "올바른 시간을 입력하세요.",
+  "error.validation.url": "올바른 URL을 입력하세요.",
+
+  "field.files.empty": "선택된 파일이 없습니다.",
+  "field.pages.empty": "선택된 페이지가 없습니다.",
+  "field.structure.delete.confirm": "이 행을 삭제할까요?",
+  "field.structure.empty": "항목이 없습니다.",
+  "field.users.empty": "선택된 사용자가 없습니다.",
+
+  "file.delete.confirm":
+    "파일({filename})을 삭제할까요?",
+
+  "files": "파일",
+  "files.empty": "파일이 없습니다.",
+
+  "hour": "시간",
+  "insert": "\uc0bd\uc785",
+  "install": "설치",
+
+  "installation": "설치",
+  "installation.completed": "패널을 설치했습니다.",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.issues.accounts":
+    "<code>/site/accounts</code> 폴더에 쓰기 권한이 없습니다.",
+  "installation.issues.content":
+    "<code>/content</code> 폴더에 쓰기 권한이 없습니다.",
+  "installation.issues.curl": "<code>cURL</code> 확장 기능이 필요합니다.",
+  "installation.issues.headline": "패널을 설치할 수 없습니다.",
+  "installation.issues.mbstring":
+    "<code>MB String</code> 확장 기능이 필요합니다.",
+  "installation.issues.media":
+    "<code>/media</code> 폴더에 쓰기 권한이 없습니다.",
+  "installation.issues.php": "<code>PHP</code> 버전이 7 이상인지 확인하세요.",
+  "installation.issues.server":
+    "<code>Apache</code>, <code>Nginx</code>, 또는 <code>Caddy</code>가 필요합니다.",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+
+  "language": "\uc5b8\uc5b4",
+  "language.code": "코드",
+  "language.convert": "기본 언어로 설정",
+  "language.convert.confirm":
+    "<p>이 <strong>언어({name})</strong>를 기본 언어로 설정할까요? 설정한 뒤에는 복구할 수 없습니다.</p><p>번역되지 않은 항목은 올바르게 표시되지 않습니다.</p>",
+  "language.create": "새 언어 추가",
+  "language.delete.confirm":
+    "언어({name})를 삭제할까요? 삭제한 뒤에는 복구할 수 없습니다.",
+  "language.deleted": "언어가 삭제되었습니다.",
+  "language.direction": "읽기 방향",
+  "language.direction.ltr": "왼쪽에서 오른쪽",
+  "language.direction.rtl": "오른쪽에서 왼쪽",
+  "language.locale": "PHP 로캘 문자열",
+  "language.name": "이름",
+  "language.updated": "언어가 변경되었습니다.",
+
+  "languages": "언어",
+  "languages.default": "기본 언어",
+  "languages.empty": "언어가 없습니다.",
+  "languages.secondary": "보조 언어",
+  "languages.secondary.empty": "보조 언어가 없습니다.",
+
+  "license": "라이선스",
+  "license.buy": "라이선스 구매",
+  "license.register": "등록",
+  "license.register.help":
+    "입력하신 이메일 주소로 라이선스 코드를 전송했습니다. 라이선스 코드를 입력해 등록하세요.",
+  "license.register.label": "라이선스 코드를 입력하세요.",
+  "license.register.success": "Kirby를 구입해주셔서 감사합니다.",
+  "license.unregistered": "Kirby가 등록되지 않았습니다.",
+
+  "link": "\uc77c\ubc18 \ub9c1\ud06c",
+  "link.text": "\ubb38\uc790",
+
+  "loading": "로딩 중",
+
+  "login": "\ub85c\uadf8\uc778",
+  "login.remember": "로그인 유지",
+
+  "logout": "\ub85c\uadf8\uc544\uc6c3",
+
+  "menu": "메뉴",
+  "meridiem": "오전/오후",
+  "mime": "형식",
+  "minutes": "분",
+
+  "month": "월",
+  "months.april": "4\uc6d4",
+  "months.august": "8\uc6d4",
+  "months.december": "12\uc6d4",
+  "months.february": "2\uc6d4",
+  "months.january": "1\uc6d4",
+  "months.july": "7\uc6d4",
+  "months.june": "6\uc6d4",
+  "months.march": "3\uc6d4",
+  "months.may": "5\uc6d4",
+  "months.november": "11\uc6d4",
+  "months.october": "10\uc6d4",
+  "months.september": "9\uc6d4",
+
+  "more": "더 보기",
+  "name": "이름",
+  "next": "다음",
+  "open": "열기",
+  "options": "옵션",
+
+  "orientation": "형태",
+  "orientation.landscape": "직사각형(가로)",
+  "orientation.portrait": "직사각형(세로)",
+  "orientation.square": "정사각형",
+
+  "page.changeSlug": "고유 주소 변경",
+  "page.changeSlug.fromTitle": "\uc81c\ubaa9(\uc601\ubb38)\uc5d0\uc11c \uac00\uc838\uc624\uae30",
+  "page.changeStatus": "상태 변경",
+  "page.changeStatus.position": "위치를 선택하세요.",
+  "page.changeStatus.select": "새 상태 선택",
+  "page.changeTemplate": "템플릿 변경",
+  "page.delete.confirm":
+    "<strong>페이지({title})</strong>를 삭제할까요?",
+  "page.delete.confirm.subpages":
+    "<strong>페이지에 하위 페이지가 있습니다.</strong> 모든 하위 페이지가 삭제됩니다.",
+  "page.delete.confirm.title": "페이지 제목을 입력하세요.",
+  "page.draft.create": "초안 작성",
+  "page.status": "상태",
+  "page.status.draft": "초안",
+  "page.status.draft.description":
+    "로그인한 사용자만 읽을 수 있습니다.",
+  "page.status.listed": "공개",
+  "page.status.listed.description": "누구나 읽을 수 있습니다.",
+  "page.status.unlisted": "비공개",
+  "page.status.unlisted.description": "URL을 통해서만 접근할 수 있습니다.",
+
+  "pages": "하위 페이지",
+  "pages.empty": "페이지가 없습니다.",
+  "pages.status.draft": "초안",
+  "pages.status.listed": "발행",
+  "pages.status.unlisted": "비공개",
+
+  "password": "\uc554\ud638",
+  "pixel": "픽셀",
+  "prev": "이전",
+  "remove": "삭제",
+  "rename": "이름 변경",
+  "replace": "\uad50\uccb4",
+  "retry": "\ub2e4\uc2dc \uc2dc\ub3c4",
+  "revert": "복원",
+
+  "role": "역할",
+  "role.all": "전체 보기",
+  "role.empty": "이 역할을 하는 사용자가 없습니다.",
+  "role.description.placeholder": "설명이 없습니다.",
+
+  "save": "\uc800\uc7a5",
+  "search": "검색",
+  "select": "선택",
+  "settings": "설정",
+  "size": "크기",
+  "slug": "고유 주소",
+  "sort": "정렬",
+  "title": "제목",
+  "template": "\ud15c\ud50c\ub9bf",
+  "today": "오늘",
+
+  "toolbar.button.code": "코드",
+  "toolbar.button.bold": "강조 1",
+  "toolbar.button.email": "이메일 주소",
+  "toolbar.button.headings": "제목",
+  "toolbar.button.heading.1": "제목 1",
+  "toolbar.button.heading.2": "제목 2",
+  "toolbar.button.heading.3": "제목 3",
+  "toolbar.button.italic": "강조 2",
+  "toolbar.button.link": "링크",
+  "toolbar.button.ol": "숫자 목록",
+  "toolbar.button.ul": "기호 목록",
+
+  "translation.author": "Kirby 팀",
+  "translation.direction": "LTR",
+  "translation.name": "영어",
+
+  "upload": "업로드",
+  "upload.errors": "오류",
+  "upload.progress": "업로드 중…",
+
+  "url": "URL",
+  "url.placeholder": "https://example.com",
+
+  "user": "사용자",
+  "user.blueprint":
+    "<strong>/site/blueprints/users/{role}.yml</strong> 파일에 옵션을 추가할 수 있습니다.",
+  "user.changeEmail": "이메일 주소 변경",
+  "user.changeLanguage": "언어 변경",
+  "user.changeName": "사용자명 변경",
+  "user.changePassword": "암호 변경",
+  "user.changePassword.new": "새 암호",
+  "user.changePassword.new.confirm": "새 암호 확인",
+  "user.changeRole": "역할 변경",
+  "user.changeRole.select": "새 역할 선택",
+  "user.create": "사용자 추가",
+  "user.delete": "사용자 삭제",
+  "user.delete.confirm":
+    "<strong>이메일({email})</strong>을 삭제할까요?",
+
+  "version": "버전",
+
+  "view.account": "계정",
+  "view.installation": "\uc124\uce58",
+  "view.settings": "설정",
+  "view.site": "사이트",
+  "view.users": "\uc0ac\uc6a9\uc790",
+
+  "welcome": "환영합니다.",
+  "year": "년"
+}

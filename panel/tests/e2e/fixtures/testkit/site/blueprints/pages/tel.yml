@@ -1,0 +1,6 @@
+title: Tel
+
+fields:
+  tel:
+    label: Tel
+    type: tel

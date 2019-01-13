@@ -1,0 +1,24 @@
+# git
+.gitattributes export-ignore
+.github export-ignore
+.gitignore export-ignore
+
+# scripts
+.tx export-ignore
+scripts/ export-ignore
+
+# tests
+.coveralls.yml export-ignore
+.travis.yml export-ignore
+phpunit.xml.dist export-ignore
+tests/ export-ignore
+
+# panel
+panel/.env.example export-ignore
+panel/cypress.json export-ignore
+panel/package-lock.json export-ignore
+panel/package.json export-ignore
+panel/public export-ignore
+panel/README.md export-ignore
+panel/src export-ignore
+panel/vue.config.js export-ignore

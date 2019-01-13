@@ -1,0 +1,6 @@
+title: Text
+
+fields:
+  text:
+    label: Text
+    type: text

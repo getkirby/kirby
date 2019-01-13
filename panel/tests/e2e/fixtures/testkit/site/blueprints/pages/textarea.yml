@@ -1,0 +1,6 @@
+title: Textarea
+
+fields:
+  textarea:
+    label: Textarea
+    type: textarea

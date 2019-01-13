@@ -1,0 +1,10 @@
+title: Structure
+
+fields:
+  structure:
+    label: Structure
+    type: structure
+    fields:
+      text:
+        label: Text
+        type: text

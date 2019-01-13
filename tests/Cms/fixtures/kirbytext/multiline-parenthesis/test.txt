@@ -1,0 +1,4 @@
+(
+multi line parenthesis
+should be rendered correctly
+)

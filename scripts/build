@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "Building Kirby"
+
+cd panel
+npm i
+npm run build
+
+cd ../
+
+composer run-script fix
+composer update --no-dev
+composer dump-autoload -o
+
+git add -A
+git commit -am "Add latest dist files"
+git archive -o kirby.zip HEAD

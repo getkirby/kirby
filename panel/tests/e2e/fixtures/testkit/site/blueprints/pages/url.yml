@@ -1,0 +1,6 @@
+title: Url
+
+fields:
+  url:
+    label: Url
+    type: url

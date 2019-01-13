@@ -1,0 +1,409 @@
+{
+  "add": "Afegir",
+  "avatar": "Imatge del perfil",
+  "back": "Tornar",
+  "cancel": "Cancel\u00b7lar",
+  "change": "Canviar",
+  "close": "Tancar",
+  "confirm": "Ok",
+  "copy": "Copiar",
+  "create": "Crear",
+
+  "date": "Data",
+  "date.select": "Selecciona una data",
+
+  "day": "Dia",
+  "days.fri": "dv.",
+  "days.mon": "dl.",
+  "days.sat": "ds.",
+  "days.sun": "dg.",
+  "days.thu": "dj.",
+  "days.tue": "dt.",
+  "days.wed": "dc.",
+
+  "delete": "Eliminar",
+  "dimensions": "Dimensions",
+  "discard": "Descartar",
+  "edit": "Editar",
+
+  "email": "Email",
+  "email.placeholder": "mail@exemple.com",
+
+  "error.access.login": "Inici de sessió no vàlid",
+  "error.access.panel": "No tens permís per accedir al panell",
+
+  "error.avatar.create.fail": "No s'ha pogut carregar la imatge del perfil",
+  "error.avatar.delete.fail": "La imatge del perfil no s'ha pogut eliminar",
+  "error.avatar.dimensions.invalid":
+    "Mantingueu l'amplada i l'alçada de la imatge de perfil de menys de 3000 píxels",
+  "error.avatar.mime.forbidden":
+    "La imatge del perfil ha de ser fitxers JPEG o PNG",
+
+  "error.blueprint.notFound": "No s'ha potgut carregar el blueprint \"{name}\"",
+
+  "error.email.preset.notFound": "No es pot trobar la configuració de correu electrònic \"{name}\"",
+
+  "error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
+
+  "error.file.changeName.permission":
+    "No tens permís per canviar el nom de \"{filename}\"",
+  "error.file.duplicate": "Ja existeix un fitxer amb el nom \"{filename}\"",
+  "error.file.extension.forbidden":
+    "L'extensió de l'arxiu \"{extension}\" no està permesa",
+  "error.file.extension.missing":
+    "Falta l'extensió de l'arxiu \"{filename}\"",
+  "error.file.mime.differs":
+    "L'arxiu carregat ha ha de ser del mateix tipus de mime \"{mime}\"",
+  "error.file.mime.forbidden": "El tipus de mitjà \"{mime}\" no està permès",
+  "error.file.mime.missing":
+    "El tipus de suport per a \"{filename}\" no es pot detectar",
+  "error.file.name.missing": "El nom del fitxer no pot estar buit",
+  "error.file.notFound": "L'arxiu \"{filename}\" no s'ha trobat",
+  "error.file.type.forbidden": "No tens permís per penjar fitxers {type}",
+  "error.file.undefined": "L'arxiu no s'ha trobat",
+
+  "error.form.incomplete": "Si us plau, corregeix els errors del formulari ...",
+  "error.form.notSaved": "No s'ha pogut desar el formulari",
+
+  "error.page.changeSlug.permission":
+    "No pots canviar la URL d'aquest p\u00e0gina",
+  "error.page.changeStatus.incomplete":
+    "La pàgina té errors i no es pot publicar",
+  "error.page.changeStatus.permission":
+    "No es pot canviar l'estat d'aquesta pàgina",
+  "error.page.changeStatus.toDraft.invalid":
+    "La pàgina \"{slug}\" no es pot convertir en un esborrany",
+  "error.page.changeTemplate.invalid":
+    "La plantilla per a la pàgina \"{slug}\" no es pot canviar",
+  "error.page.changeTemplate.permission":
+    "No tens permís per canviar la plantilla per \"{slug}\"",
+  "error.page.changeTitle.empty": "El títol no pot estar buit",
+  "error.page.changeTitle.permission":
+    "No tens permís per canviar el títol de \"{slug}\"",
+  "error.page.create.permission": "No tens permís per crear \"{slug}\"",
+  "error.page.delete": "La pàgina \"{slug}\" no es pot esborrar",
+  "error.page.delete.confirm": "Si us plau, introdueix el títol de la pàgina per confirmar",
+  "error.page.delete.hasChildren":
+    "La pàgina té subpàgines i no es pot esborrar",
+  "error.page.delete.permission": "No tens permís per esborrar \"{slug}\"",
+  "error.page.draft.duplicate":
+    "Ja existeix un esborrany de pàgina amb l'apèndix d'URL \"{slug}\"",
+  "error.page.duplicate":
+    "Ja existeix una pàgina amb l'apèndix d'URL \"{slug}\"",
+  "error.page.notFound": "La p\u00e0gina no s'ha trobat",
+  "error.page.num.invalid":
+    "Si us plau, introdueix un número d 'ordenació vàlid. Els números no poden ser negatius.",
+  "error.page.slug.invalid": "Introduïu un prefix d'URL vàlid",
+  "error.page.sort.permission": "La pàgina \"{slug}\" no es pot ordenar",
+  "error.page.status.invalid": "Si us plau, estableix un estat de pàgina vàlid",
+  "error.page.undefined": "La p\u00e0gina no s'ha trobat",
+  "error.page.update.permission": "No tens permís per actualitzar \"{slug}\"",
+
+  "error.section.files.max.plural":
+    "No has d'afegir més de {max} fitxers a la secció \"{section}\"",
+  "error.section.files.max.singular":
+    "No podeu afegir més d'un fitxer a la secció \"{section}\"",
+  "error.section.files.min.plural":
+    "Afegeix com a mínim {min} fitxers a la secció \"{section}\"",
+  "error.section.files.min.singular":
+    "Afegeix com a mínim un fitxer a la secció \"{section}\"",
+
+  "error.section.pages.max.plural":
+    "No heu d'afegir més de {max} pàgines a la secció \"{section}\"",
+  "error.section.pages.max.singular":
+    "No podeu afegir més d'una pàgina a la secció \"{section}\"",
+  "error.section.pages.min.plural":
+    "Afegiu com a mínim {min} pàgines a la secció \"{section}\"",
+  "error.section.pages.min.singular":
+    "Afegeix com a mínim una pàgina a la secció \"{section}\"",
+
+  "error.section.notLoaded": "No s'ha pogut carregar la secció \"{name}\"",
+  "error.section.type.invalid": "La secció tipus \"{type}\" no és vàlida",
+
+  "error.site.changeTitle.permission":
+    "No tens permís per canviar el títol del lloc web",
+  "error.site.update.permission": "No tens permís per actualitzar el lloc web",
+
+  "error.template.default.notFound": "La plantilla predeterminada no existeix",
+
+  "error.user.changeEmail.permission":
+    "No tens permís per canviar el correu electrònic per a l'usuari \"{name}\"",
+  "error.user.changeLanguage.permission":
+    "No tens permís per canviar l'idioma de l'usuari \"{name}\"",
+  "error.user.changeName.permission":
+    "No tens permís per canviar el nom de l'usuari \"{name}\"",
+  "error.user.changePassword.permission":
+    "No tens permís per canviar la contrasenya de l'usuari \"{name}\"",
+  "error.user.changeRole.lastAdmin":
+    "El rol del darrer administrador no es pot canviar",
+  "error.user.changeRole.permission":
+    "No tens permís per canviar el rol de l'usuari \"{name}\"",
+  "error.user.create.permission": "No tens permís per crear aquest usuari",
+  "error.user.delete": "L'usuari \"{name}\" no es pot eliminar",
+  "error.user.delete.lastAdmin": "No es pot eliminar l'\u00faltim administrador",
+  "error.user.delete.lastUser": "El darrer usuari no es pot eliminar",
+  "error.user.delete.permission":
+    "No pots eliminar l'usuari \"{name}\"",
+  "error.user.duplicate":
+    "Ja existeix un usuari amb l'adreça electrònica \"{email}\"",
+  "error.user.email.invalid": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+  "error.user.language.invalid": "Introduïu un idioma vàlid",
+  "error.user.notFound": "L'usuari \"{name}\" no s'ha trobat",
+  "error.user.password.invalid":
+    "Introduïu una contrasenya vàlida. Les contrasenyes han de tenir com a mínim 8 caràcters.",
+  "error.user.password.notSame": "Les contrasenyes no coincideixen",
+  "error.user.password.undefined": "L'usuari no té una contrasenya",
+  "error.user.role.invalid": "Si us plau, introdueix un rol vàlid",
+  "error.user.undefined": "L'usuari no s'ha trobat",
+  "error.user.update.permission":
+    "No tens permís per actualitzar l'usuari \"{name}\"",
+
+  "error.validation.accepted": "Si us plau confirma",
+  "error.validation.alpha": "Si us plau, introdueix únicament caràcters entre a-z",
+  "error.validation.alphanum":
+    "Si us plau, introdueix únicament caràcters entre a-z o números de 0-9",
+  "error.validation.between":
+    "Introdueix un valor entre \"{min}\" i \"{max}\"",
+  "error.validation.boolean": "Si us plau confirma o denega",
+  "error.validation.contains":
+    "Si us plau, introduïu un valor que contingui  \"{needle}\"",
+  "error.validation.date": "Si us plau, introdueix una data vàlida",
+  "error.validation.denied": "Si us plau, denegui",
+  "error.validation.different": "El valor no ha de ser \"{other}\"",
+  "error.validation.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+  "error.validation.endswith": "El valor ha de finalitzar amb \"{end}\"",
+  "error.validation.filename": "Si us plau, introdueix un nom de fitxer vàlid",
+  "error.validation.in": "Si us plau, introduïu una de les opcions següents: ({in})",
+  "error.validation.integer": "Si us plau, introduïu un nombre enter vàlid",
+  "error.validation.ip": "Si us plau, introduïu una adreça IP vàlida",
+  "error.validation.less": "Si us plau, introduïu un valor inferior a {max}",
+  "error.validation.match": "El valor no coincideix amb el patró esperat",
+  "error.validation.max": "Si us plau, introduïu un valor igual o inferior a {max}",
+  "error.validation.maxlength":
+    "Si us plau, introduïu un valor més curt. (màxim {max} caràcters)",
+  "error.validation.maxwords": "Si us plau, introduïu no més de {max} paraula(es)",
+  "error.validation.min": "Si us plau, introduïu un valor igual o superior a {min}",
+  "error.validation.minlength":
+    "Si us plau, introduïu un valor més llarg. (min. {min} caràcters)",
+  "error.validation.minwords": "Si us plau, introduïu almenys {min} paraula(es)",
+  "error.validation.more": "Si us plau, introduïu un valor més gran que {min}",
+  "error.validation.notcontains":
+    "Introduïu un valor que no contingui \"{needle}\"",
+  "error.validation.notin":
+    "Si us plau, no introduïu cap d'aquests elements: ({notIn})",
+  "error.validation.option": "Si us plau, seleccioneu una opció vàlida",
+  "error.validation.num": "Si us plau, introduïu un número vàlid",
+  "error.validation.required": "Si us plau, introduïu alguna cosa",
+  "error.validation.same": "Si us plau, introduïu \"{other}\"",
+  "error.validation.size": "La mida del valor ha de ser \"{size}\"",
+  "error.validation.startswith": "El valor ha de començar amb \"{start}\"",
+  "error.validation.time": "Si us plau, introduïu una hora vàlida",
+  "error.validation.url": "Si us plau, introduïu una URL vàlida",
+
+  "field.files.empty": "Encara no hi ha cap fitxer seleccionat",
+  "field.pages.empty": "Encara no s'ha seleccionat cap pàgina",
+  "field.structure.delete.confirm": "Est\u00e0s segur d'eliminar aquesta entrada?",
+  "field.structure.empty": "Encara no hi ha entrades.",
+  "field.users.empty": "Encara no s'ha seleccionat cap usuari",
+
+  "file.delete.confirm":
+    "Est\u00e0s segur d'eliminar aquest arxiu?",
+
+  "files": "Arxius",
+  "files.empty": "Encara no hi ha fitxers",
+
+  "hour": "Hora",
+  "insert": "Insertar",
+  "install": "Instal·lar",
+
+  "installation": "Isntal·lació",
+  "installation.completed": "S'ha instal·lat el panell",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.issues.accounts":
+    "\/site\/accounts no t\u00e9 perm\u00eds d'escriptura",
+  "installation.issues.content":
+    "El directori de contingut i tots els seus arxius i subdirectoris han de tenir perm\u00eds d'escriptura.",
+  "installation.issues.curl": "Es requereix l'extensió <code>CURL</code>",
+  "installation.issues.headline": "El panell no es pot instal·lar",
+  "installation.issues.mbstring":
+    "Es requereix l'extensió de <code>MB String</code>",
+  "installation.issues.media":
+    "La carpeta <code>/media</code> no existeix o no es pot escriure",
+  "installation.issues.php": "Assegureu-vos d'utilitzar <code>PHP 7+</code>",
+  "installation.issues.server":
+    "Kirby requereix <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+
+  "language": "Idioma",
+  "language.code": "Codi",
+  "language.convert": "Fer per defecte",
+  "language.convert.confirm":
+    "<p>Segur que voleu convertir <strong>{name}</strong> a l'idioma predeterminat? Això no es pot desfer.</p> <p> Si <strong>{name}</strong> té contingut no traduït, ja no podreu tornar enrere i algunes parts del vostre lloc poden quedar buides.</p>",
+  "language.create": "Afegir un nou idioma",
+  "language.delete.confirm":
+    "Segur que voleu eliminar l'idioma <strong>{name}</strong> incloent totes les traduccions? Això no es pot desfer!",
+  "language.deleted": "S'ha suprimit l'idioma",
+  "language.direction": "Direcció de lectura",
+  "language.direction.ltr": "Esquerra a dreta",
+  "language.direction.rtl": "De dreta a esquerra",
+  "language.locale": "Cadena local de PHP",
+  "language.name": "Nom",
+  "language.updated": "S'ha actualitzat l'idioma",
+
+  "languages": "Idiomes",
+  "languages.default": "Idioma per defecte",
+  "languages.empty": "Encara no hi ha cap idioma",
+  "languages.secondary": "Idiomes secundaris",
+  "languages.secondary.empty": "Encara no hi ha idiomes secundaris",
+
+  "license": "Llic\u00e8ncia Kirby",
+  "license.buy": "Comprar una llicència",
+  "license.register": "Registrar",
+  "license.register.help":
+    "Heu rebut el codi de la vostra llicència després de la compra, per correu electrònic. Copieu-lo i enganxeu-lo per registrar-vos.",
+  "license.register.label": "Si us plau, introdueixi el seu codi de llicència",
+  "license.register.success": "Gràcies per donar suport a Kirby",
+  "license.unregistered": "Aquesta és una demo no registrada de Kirby",
+
+  "link": "Enlla\u00e7",
+  "link.text": "Texte enlla\u00e7at",
+
+  "loading": "Carregant",
+
+  "login": "Entrar",
+  "login.remember": "Manten-me connectat",
+
+  "logout": "Tancar sessi\u00f3",
+
+  "menu": "Menú",
+  "meridiem": "AM/PM",
+  "mime": "Tipus de mitjà",
+  "minutes": "Minuts",
+
+  "month": "Mes",
+  "months.april": "Abril",
+  "months.august": "Agost",
+  "months.december": "Desembre",
+  "months.february": "Febrer",
+  "months.january": "Gener",
+  "months.july": "Juliol",
+  "months.june": "Juny",
+  "months.march": "Mar\u00e7",
+  "months.may": "Maig",
+  "months.november": "Novembre",
+  "months.october": "Octubre",
+  "months.september": "Setembre",
+
+  "more": "Més",
+  "name": "Nom",
+  "next": "Següent",
+  "open": "Obrir",
+  "options": "Opcions",
+
+  "orientation": "Orientació",
+  "orientation.landscape": "Horitzontal",
+  "orientation.portrait": "Vertical",
+  "orientation.square": "Quadrat",
+
+  "page.changeSlug": "Canviar URL",
+  "page.changeSlug.fromTitle": "Crear a partir del t\u00edtol",
+  "page.changeStatus": "Canviar l'estat",
+  "page.changeStatus.position": "Si us plau, seleccioneu una posició",
+  "page.changeStatus.select": "Seleccioneu un nou estat",
+  "page.changeTemplate": "Canviar la plantilla",
+  "page.delete.confirm":
+    "Est\u00e0s segur d'eliminar aquesta p\u00e0gina?",
+  "page.delete.confirm.subpages":
+    "<strong>Aquesta pàgina té subpàgines</strong>. <br>Totes les subpàgines també s'eliminaran.",
+  "page.delete.confirm.title": "Introduïu el títol de la pàgina per confirmar",
+  "page.draft.create": "Crear un esborrany",
+  "page.status": "Estat",
+  "page.status.draft": "Esborrany",
+  "page.status.draft.description":
+    "La pàgina està en mode d'esborrany i només és visible per als editors registrats",
+  "page.status.listed": "Públic",
+  "page.status.listed.description": "La pàgina és pública per a tothom",
+  "page.status.unlisted": "Sense classificar",
+  "page.status.unlisted.description": "La pàgina només es pot accedir a través de l'URL",
+
+  "pages": "Pàgines",
+  "pages.empty": "Encara no hi ha pàgines",
+  "pages.status.draft": "Esborranys",
+  "pages.status.listed": "Publicat",
+  "pages.status.unlisted": "Sense classificar",
+
+  "password": "Contrasenya",
+  "pixel": "Pixel",
+  "prev": "Anterior",
+  "remove": "Eliminar",
+  "rename": "Canviar el nom",
+  "replace": "Reempla\u00e7ar",
+  "retry": "Reintentar",
+  "revert": "Descartar",
+
+  "role": "Rol",
+  "role.all": "Tots",
+  "role.empty": "No hi ha usuaris amb aquest rol",
+  "role.description.placeholder": "Sense descripció",
+
+  "save": "Desar",
+  "search": "Cercar",
+  "select": "Seleccionar",
+  "settings": "Configuració",
+  "size": "Tamany",
+  "slug": "URL-ap\u00e8ndix",
+  "sort": "Ordenar",
+  "title": "Títol",
+  "template": "Plantilla",
+  "today": "Avui",
+
+  "toolbar.button.code": "Codi",
+  "toolbar.button.bold": "Texte negreta",
+  "toolbar.button.email": "Email",
+  "toolbar.button.headings": "Encapçalaments",
+  "toolbar.button.heading.1": "Encapçalament 1",
+  "toolbar.button.heading.2": "Encapçalament 2",
+  "toolbar.button.heading.3": "Encapçalament 3",
+  "toolbar.button.italic": "Texte cursiva",
+  "toolbar.button.link": "Enlla\u00e7",
+  "toolbar.button.ol": "Llista ordenada",
+  "toolbar.button.ul": "Llista de vinyetes",
+
+  "translation.author": "Equip Kirby",
+  "translation.direction": "ltr",
+  "translation.name": "Catalan",
+
+  "upload": "Carregar",
+  "upload.errors": "Error",
+  "upload.progress": "Carregant...",
+
+  "url": "Url",
+  "url.placeholder": "https://example.com",
+
+  "user": "Usuari",
+  "user.blueprint":
+    "Podeu definir seccions addicionals i camps de formulari per a aquest rol d'usuari a <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.changeEmail": "Canviar e-mail",
+  "user.changeLanguage": "Canviar idioma",
+  "user.changeName": "Canviar el nom d'aquest usuari",
+  "user.changePassword": "Canviar contrasenya",
+  "user.changePassword.new": "Nova contrasenya",
+  "user.changePassword.new.confirm": "Confirma la nova contrasenya ...",
+  "user.changeRole": "Canviar el rol",
+  "user.changeRole.select": "Seleccionar un nou rol",
+  "user.create": "Afegir un nou usuari",
+  "user.delete": "Eliminar aquest usuari",
+  "user.delete.confirm":
+    "Est\u00e0s segur d'eliminar aquest usuari?",
+
+  "version": "Versi\u00f3 de Kirby",
+
+  "view.account": "La teva compta",
+  "view.installation": "Isntal\u00b7laci\u00f3",
+  "view.settings": "Configuració",
+  "view.site": "Lloc web",
+  "view.users": "Usuaris",
+
+  "welcome": "Benvinguda",
+  "year": "Any"
+}

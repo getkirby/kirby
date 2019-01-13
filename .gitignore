@@ -1,0 +1,38 @@
+# os
+.DS_Store
+
+# build files
+/dist.zip
+/kirby.zip
+
+# cs fixer
+.php_cs.cache
+
+# editors
+*.sublime-project
+*.sublime-workspace
+/.vscode
+
+# tests
+/panel/cypress
+/tests/coverage
+
+# ignore all the vendor cruft
+/vendor/**/.*
+/vendor/**/*.json
+/vendor/**/*.txt
+/vendor/**/*.md
+/vendor/**/*.yml
+/vendor/**/*.yaml
+/vendor/**/*.xml
+/vendor/**/*.dist
+/vendor/**/readme.php
+/vendor/**/LICENSE
+/vendor/**/COPYING
+/vendor/**/VERSION
+/vendor/**/docs/*
+/vendor/**/example/*
+/vendor/**/examples/*
+/vendor/**/test/*
+/vendor/**/tests/*
+/vendor/**/php4/*

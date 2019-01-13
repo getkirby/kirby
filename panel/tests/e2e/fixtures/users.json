@@ -1,0 +1,10 @@
+{
+  "admin": {
+    "email": "developer@getkirby.com",
+    "password": "developer2018"
+  },
+  "editor": {
+    "email": "editor@getkirby.com",
+    "password": "editor2018"
+  }
+}

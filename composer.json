@@ -1,0 +1,52 @@
+{
+  "name": "getkirby/cms",
+  "description": "The Kirby 3 core",
+  "version": "3.0.0-RC-6.0",
+  "license": "proprietary",
+  "keywords": ["kirby", "cms", "core"],
+  "homepage": "https://getkirby.com",
+  "type": "kirby-cms",
+  "authors": [
+    {
+      "name": "Kirby Team",
+      "email": "support@getkirby.com",
+      "homepage": "https://getkirby.com"
+    }
+  ],
+  "support": {
+    "email": "support@getkirby.com",
+    "issues": "https://github.com/getkirby/kirby/issues",
+    "forum": "https://forum.getkirby.com",
+    "source": "https://github.com/getkirby/kirby"
+  },
+  "require": {
+    "php": ">=7.1.0",
+    "ext-mbstring": "*",
+    "ext-ctype": "*",
+    "getkirby/composer-installer": "*",
+    "mustangostang/spyc": "0.6.*",
+    "michelf/php-smartypants": "1.8.*",
+    "claviska/simpleimage": "3.3.*",
+    "phpmailer/phpmailer": "6.0.*",
+    "filp/whoops": "2.3.*",
+    "true/punycode": "2.1.*",
+    "zendframework/zend-escaper": "2.6.*"
+  },
+  "autoload": {
+    "files": ["config/helpers.php", "config/aliases.php", "config/tests.php"],
+    "classmap": ["dependencies/"],
+    "psr-4": {
+      "Kirby\\": "src/"
+    }
+  },
+  "scripts": {
+    "analyze": "phpstan analyse src",
+    "test": "phpunit --stderr --coverage-html=tests/coverage",
+    "zip": "composer archive --format=zip --file=dist",
+    "build": "./scripts/build",
+    "fix": "php-cs-fixer fix ."
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}

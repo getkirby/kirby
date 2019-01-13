@@ -1,0 +1,11 @@
+title: Test
+
+fields:
+    type: fields
+    fields:
+        title:
+            label: Title
+            type: text
+        text:
+            label: Textarea
+            type: textarea

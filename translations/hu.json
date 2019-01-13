@@ -1,0 +1,409 @@
+{
+  "add": "Hozz\u00e1ad",
+  "avatar": "Profilkép",
+  "back": "Vissza",
+  "cancel": "M\u00e9gsem",
+  "change": "M\u00f3dos\u00edt\u00e1s",
+  "close": "Bez\u00e1r",
+  "confirm": "Mentés",
+  "copy": "Másol",
+  "create": "Létrehoz",
+
+  "date": "Dátum",
+  "date.select": "Dátum kiválasztása",
+
+  "day": "Nap",
+  "days.fri": "p\u00e9",
+  "days.mon": "h\u00e9",
+  "days.sat": "szo",
+  "days.sun": "va",
+  "days.thu": "cs\u00fc",
+  "days.tue": "ke",
+  "days.wed": "sze",
+
+  "delete": "T\u00f6rl\u00e9s",
+  "dimensions": "Méretek",
+  "discard": "Visszavon\u00e1s",
+  "edit": "Aloldal szerkeszt\u00e9se",
+
+  "email": "Email",
+  "email.placeholder": "mail@pelda.hu",
+
+  "error.access.login": "Érvénytelen bejelentkezés",
+  "error.access.panel": "Nincs jogosultságod megnyitni a panelt",
+
+  "error.avatar.create.fail": "A profilkép feltöltése nem sikerült",
+  "error.avatar.delete.fail": "A profilkép nem törölhető",
+  "error.avatar.dimensions.invalid":
+    "A profilkép maximális szélessége és magassága 3000 pixel lehet",
+  "error.avatar.mime.forbidden":
+    "A profilkép formátuma csak JPEG vagy PNG lehet",
+
+  "error.blueprint.notFound": "A \"{name}\" oldalsablon nem tölthető be",
+
+  "error.email.preset.notFound": "A \"{name}\" email-beállítás nem található",
+
+  "error.field.converter.invalid": "Érvénytelen konverter: \"{converter}\"",
+
+  "error.file.changeName.permission":
+    "Nincs jogosultságod megváltoztatni a \"{filename}\" fájl nevét",
+  "error.file.duplicate": "Már létezik \"{filename}\" nevű fájl",
+  "error.file.extension.forbidden":
+    "Tiltott kiterjeszt\u00e9s\u0171 f\u00e1jl",
+  "error.file.extension.missing":
+    "Kiterjeszt\u00e9s n\u00e9lk\u00fcli f\u00e1jl nem t\u00f6lthet\u0151 fel",
+  "error.file.mime.differs":
+    "A feltöltött fájlnak azonos \"{mime}\" típusúnak kell lennie",
+  "error.file.mime.forbidden": "A \"{mime}\" típusú médiafájlok nem engedélyezettek",
+  "error.file.mime.missing":
+    "A \"{filename}\" fájl típusa nem állapítható meg",
+  "error.file.name.missing": "A fálj neve nem lehet üres",
+  "error.file.notFound": "A \"{filename}\" fájl nem található",
+  "error.file.type.forbidden": "Nem tölthetsz fel \"{type}\" típusú fájlokat",
+  "error.file.undefined": "A f\u00e1jl nem tal\u00e1lhat\u00f3",
+
+  "error.form.incomplete": "Kérlek javítsd ki az összes hibát az űrlapon",
+  "error.form.notSaved": "Az űrlap nem menthető",
+
+  "error.page.changeSlug.permission":
+    "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
+  "error.page.changeStatus.incomplete":
+    "Az oldal hibákat tartalmaz és nem publikálható",
+  "error.page.changeStatus.permission":
+    "Az oldal státusza nem változtatható meg",
+  "error.page.changeStatus.toDraft.invalid":
+    "A(z) \"{slug}\" oldalt nem lehet piszkozattá alakítani",
+  "error.page.changeTemplate.invalid":
+    "A \"{slug}\" oldal sablonját nem lehet megváltoztatni",
+  "error.page.changeTemplate.permission":
+    "Nincs jogosultságod megváltoztatni a sablont ehhez: \"{slug}\"",
+  "error.page.changeTitle.empty": "A cím nem lehet üres",
+  "error.page.changeTitle.permission":
+    "Nincs jogosultságod megváltoztatni a címet: \"{slug}\"",
+  "error.page.create.permission": "Nincs jogosultságod az oldal létrehozásához: \"{slug}\"",
+  "error.page.delete": "A(z) \"{slug}\" oldal nem törölhető",
+  "error.page.delete.confirm": "Megerősítéshez add meg az oldal címét",
+  "error.page.delete.hasChildren":
+    "Az oldalnak vannak aloldalai és nem törölhető",
+  "error.page.delete.permission": "Nincs jogosultságod a(z) \"{slug}\" oldal törléséhez",
+  "error.page.draft.duplicate":
+    "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
+  "error.page.duplicate":
+    "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
+  "error.page.notFound": "Az oldal nem tal\u00e1lhat\u00f3",
+  "error.page.num.invalid":
+    "Kérlek megfelelő oldalszámozást adj meg. Negatív szám itt nem használható.",
+  "error.page.slug.invalid": "Kérlek megfelelő URL-előtagot adj meg",
+  "error.page.sort.permission": "A(z) \"{slug}\" oldal nem illeszthető a sorrendbe",
+  "error.page.status.invalid": "Kérlek add meg a megfelelő oldalstátuszt",
+  "error.page.undefined": "Az oldal nem tal\u00e1lhat\u00f3",
+  "error.page.update.permission": "Nincs jogosultságod a(z) \"{slug}\" oldal frissítéséhez",
+
+  "error.section.files.max.plural":
+    "Maximum {max} fájlt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
+  "error.section.files.max.singular":
+    "Nem adhatsz hozzá egynél több fájlt a(z) \"{section}\" szekcióhoz",
+  "error.section.files.min.plural":
+    "Adj hozzá legalább {min} fájlt a(z) \"{section}\" szekcióhoz",
+  "error.section.files.min.singular":
+    "Adj hozzá legalább egy fájlt a(z) \"{section}\" szekcióhoz",
+
+  "error.section.pages.max.plural":
+    "Maximum {max} oldalt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
+  "error.section.pages.max.singular":
+    "Nem adhatsz hozzá egynél több oldalt a(z) \"{section}\" szekcióhoz",
+  "error.section.pages.min.plural":
+    "Adj hozzá legalább {min} oldalt a(z) \"{section}\" szekcióhoz",
+  "error.section.pages.min.singular":
+    "Adj hozzá legalább egy oldalt a(z) \"{section}\" szekcióhoz",
+
+  "error.section.notLoaded": "A(z) \"{name}\" szekció nem tölthető be",
+  "error.section.type.invalid": "A szekció típusa (\"{type}\") nem megfelelő",
+
+  "error.site.changeTitle.permission":
+    "Nincs jogosultságod megváltoztatni az honlap címét",
+  "error.site.update.permission": "Nincs jogosultságod frissíteni a honlapot",
+
+  "error.template.default.notFound": "Az alapértelmezett sablon nem létezik",
+
+  "error.user.changeEmail.permission":
+    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó email-címét",
+  "error.user.changeLanguage.permission":
+    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nyelvi beállításait",
+  "error.user.changeName.permission":
+    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nevét",
+  "error.user.changePassword.permission":
+    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó jelszavát",
+  "error.user.changeRole.lastAdmin":
+    "Az egyedüli adminisztrátor szerepkörét nem lehet megváltoztatni",
+  "error.user.changeRole.permission":
+    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó szerepkörét",
+  "error.user.create.permission": "Nincs jogosultságod létrehozni ezt a felhasználót",
+  "error.user.delete": "A felhaszn\u00e1l\u00f3 nem t\u00f6r\u00f6lhet\u0151",
+  "error.user.delete.lastAdmin": "Nem t\u00f6r\u00f6lheted az egyetlen adminisztr\u00e1tort",
+  "error.user.delete.lastUser": "Nem törölheted az egyetlen felhasználót",
+  "error.user.delete.permission":
+    "Nincs jogosults\u00e1god t\u00f6r\u00f6lni ezt a felhaszn\u00e1l\u00f3t",
+  "error.user.duplicate":
+    "Már létezik felhasználó \"{email}\" email-címmel",
+  "error.user.email.invalid": "Kérlek adj meg egy valós email-címet",
+  "error.user.language.invalid": "Kérlek add meg a megfelelő nyelvi beállítást",
+  "error.user.notFound": "A felhaszn\u00e1l\u00f3 nem tal\u00e1lhat\u00f3",
+  "error.user.password.invalid":
+    "Kérlek adj meg egy megfelelő jelszót. A jelszónak legalább 8 karakter hosszúságúnak kell lennie.",
+  "error.user.password.notSame": "K\u00e9rlek er\u0151s\u00edtsd meg a jelsz\u00f3t",
+  "error.user.password.undefined": "A felhasználónak nincs jelszó megadva",
+  "error.user.role.invalid": "Kérlek adj meg egy megfelelő szerepkört",
+  "error.user.undefined": "A felhaszn\u00e1l\u00f3 nem tal\u00e1lhat\u00f3",
+  "error.user.update.permission":
+    "Nincs jogosultságod frissíteni \"{name}\" felhasználó adatait",
+
+  "error.validation.accepted": "Kérlek erősítsd meg",
+  "error.validation.alpha": "Kérlek csak kis betűket használj (a-z)",
+  "error.validation.alphanum":
+    "Kérlek csak kis betűket és számjegyeket használj (a-z, 0-9)",
+  "error.validation.between":
+    "Kérlek egy \"{min}\" és \"{max}\" közötti értéket adj meg",
+  "error.validation.boolean": "Kérlek erősítsd meg vagy vesd el",
+  "error.validation.contains":
+    "Kérlek olyan értéket adj meg, amely tartalmazza ezt: \"{needle}\"",
+  "error.validation.date": "Kérlek megfelelő dátumot adj meg",
+  "error.validation.denied": "Kérlek vesd el",
+  "error.validation.different": "Az érték nem lehet \"{other}\"",
+  "error.validation.email": "Kérlek adj meg egy valós email-címet",
+  "error.validation.endswith": "Az értéknek erre kell végződnie: \"{end}\"",
+  "error.validation.filename": "Kérlek megfelelő fájlnevet adj meg",
+  "error.validation.in": "Kérlek adj meg egyet az alábbiak közül: ({in})",
+  "error.validation.integer": "Kérlek valós számot adj meg",
+  "error.validation.ip": "Kérlek megfelelő IP-címet adj meg",
+  "error.validation.less": "A megadott érték kevesebb legyen, mint {max}",
+  "error.validation.match": "A megadott érték nem felel meg az elvárt struktúrának",
+  "error.validation.max": "A megadott érték egyenlő vagy kevesebb legyen, mint {max}",
+  "error.validation.maxlength":
+    "Kérlek rövidebb értéket adj meg (legfeljebb {max} karakter)",
+  "error.validation.maxwords": "Kérlek ide legfeljebb {max} szót írj",
+  "error.validation.min": "A megadott érték egyenlő vagy nagyobb legyen, mint {min}",
+  "error.validation.minlength":
+    "Kérlek hosszabb értéket adj meg (legalább {min} karakter)",
+  "error.validation.minwords": "Kérlek ide legalább {min} szót írj",
+  "error.validation.more": "A megadott érték legyen nagyobb, mint {min} ",
+  "error.validation.notcontains":
+    "Kérlek olyan értéket adj meg, amely nem tartalmazza ezt: \"{needle}\" ",
+  "error.validation.notin":
+    "Kérlek egyiket se használd az alábbiak közül: ({notIn})",
+  "error.validation.option": "Kérlek válassz egy megfelelő opciót",
+  "error.validation.num": "Kérlek adj meg egy megfelelő számot",
+  "error.validation.required": "Kérlek írj be valamit",
+  "error.validation.same": "Kérlek írd be: \"{other}\"",
+  "error.validation.size": "Az értéknek az alábbi méretűnek kell lennie: \"{size}\"",
+  "error.validation.startswith": "Az értéknek ezzel kell kezdődnie: \"{start}\"",
+  "error.validation.time": "Kérlek megfelelő időt adj meg",
+  "error.validation.url": "Kérlek megfelelő URL-t adj meg",
+
+  "field.files.empty": "Nincs fálj kiválasztva",
+  "field.pages.empty": "Nincs oldal kiválasztva",
+  "field.structure.delete.confirm": "Biztos t\u00f6r\u00f6lni szeretn\u00e9d ezt a bejegyz\u00e9st?",
+  "field.structure.empty": "Nincs m\u00e9g bejegyz\u00e9s",
+  "field.users.empty": "Nincs felhasználó kiválasztva",
+
+  "file.delete.confirm":
+    "Biztos törölni akarod ezt a fájlt: <br><strong>{filename}</strong>?",
+
+  "files": "Fájlok",
+  "files.empty": "Még nincsenek fájlok",
+
+  "hour": "Óra",
+  "insert": "Beilleszt",
+  "install": "Telepítés",
+
+  "installation": "Telepítés",
+  "installation.completed": "A panel sikeresen telepítve",
+  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.issues.accounts":
+    "A <code>/site/accounts</code> mappa nem létezik, vagy nem írható",
+  "installation.issues.content":
+    "A <code>/content</code> mappa nem létezik vagy nem írható",
+  "installation.issues.curl": "A <code>CURL</code> bővítmény engedélyezése szükséges",
+  "installation.issues.headline": "A panel telepítése sikertelen",
+  "installation.issues.mbstring":
+    "Az <code>MB String</code> bővítmény engedélyezése szükséges",
+  "installation.issues.media":
+    "A <code>/media</code> mappa nem létezik vagy nem írható",
+  "installation.issues.php": "Bizonyosodj meg róla, hogy az általad használt PHP-verzió <code>PHP 7+</code>",
+  "installation.issues.server":
+    "A Kirby az alábbi szervereken futtatható: <code>Apache</code>, <code>Nginx</code> vagy <code>Caddy</code>",
+  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+
+  "language": "Nyelv",
+  "language.code": "Kód",
+  "language.convert": "Alapértelmezettnek jelölés",
+  "language.convert.confirm":
+    "<p>Tényleg az alaőértelmezett nyelvre szeretnéd konvertálni ezt: <strong>{name}</strong>? Ez a művelet nem vonható vissza.</p><p>Ha<strong>{name}</strong> olyat is tartalmaz, amelynek nincs megfelelő fordítása, a honlapod egyes részei az új alapértelmezett nyelv hiányosságai miatt üresek maradhatnak.</p>",
+  "language.create": "Új nyelv hozzáadása",
+  "language.delete.confirm":
+    "Tényleg törölni szeretnéd a(z) <strong>{name}</strong> nyelvet, annak minden fordításával együtt? Ez a művelet nem vonható vissza!",
+  "language.deleted": "A nyelv törölve lett",
+  "language.direction": "Olvasási irány",
+  "language.direction.ltr": "Balról jobbra",
+  "language.direction.rtl": "Jobbról balra",
+  "language.locale": "PHP locale sztring",
+  "language.name": "Név",
+  "language.updated": "A nyelv frissítve lett",
+
+  "languages": "Nyelvek",
+  "languages.default": "Alapértelmezett nyelv",
+  "languages.empty": "Nincsnek még nyelvek",
+  "languages.secondary": "Másodlagos nyelvek",
+  "languages.secondary.empty": "Nincsnek még másodlagos nyelvek",
+
+  "license": "Kirby licenc",
+  "license.buy": "Licenc vásárlása",
+  "license.register": "Regisztráció",
+  "license.register.help":
+    "A vásárlás után emailben küldjük el a licenc-kódot. Regisztrációhoz másold ide a kapott kódot.",
+  "license.register.label": "Kérlek írd be a licenc-kódot",
+  "license.register.success": "Köszönjük, hogy támogatod a Kirby-t",
+  "license.unregistered": "Jelenleg a Kirby nem regisztrált próbaverzióját használod",
+
+  "link": "Link",
+  "link.text": "Link szövege",
+
+  "loading": "Betöltés",
+
+  "login": "Bejelentkezés",
+  "login.remember": "Maradjak bejelentkezve",
+
+  "logout": "Kijelentkezés",
+
+  "menu": "Menü",
+  "meridiem": "DE/DU",
+  "mime": "Média-típus",
+  "minutes": "Perc",
+
+  "month": "Hónap",
+  "months.april": "\u00e1prilis",
+  "months.august": "augusztus",
+  "months.december": "december",
+  "months.february": "febru\u00e1r",
+  "months.january": "janu\u00e1r",
+  "months.july": "j\u00falius",
+  "months.june": "j\u00fanius",
+  "months.march": "m\u00e1rcius",
+  "months.may": "m\u00e1jus",
+  "months.november": "november",
+  "months.october": "okt\u00f3ber",
+  "months.september": "szeptember",
+
+  "more": "Több",
+  "name": "Név",
+  "next": "Következő",
+  "open": "Megnyitás",
+  "options": "Beállítások",
+
+  "orientation": "Tájolás",
+  "orientation.landscape": "Fekvő",
+  "orientation.portrait": "Álló",
+  "orientation.square": "Négyzetes",
+
+  "page.changeSlug": "URL v\u00e1ltoztat\u00e1sa",
+  "page.changeSlug.fromTitle": "L\u00e9trehoz\u00e1s c\u00edmb\u0151l",
+  "page.changeStatus": "Állapot módosítása",
+  "page.changeStatus.position": "Kérlek válaszd ki a pozíciót",
+  "page.changeStatus.select": "Új állapot kiválasztása",
+  "page.changeTemplate": "Sablon módosítása",
+  "page.delete.confirm":
+    "Biztos vagy benne, hogy törlöd az alábbi oldalt: <strong>{title}</strong>?",
+  "page.delete.confirm.subpages":
+    "<strong>Ehhez az oldalhoz aloldalak tartoznak</strong>. <br>Az oldal törlésekor a hozzá tartozó aloldalak is törlődnek.",
+  "page.delete.confirm.title": "Megerősítéshez add meg az oldal címét",
+  "page.draft.create": "Piszkozat létrehozása",
+  "page.status": "Állapot",
+  "page.status.draft": "Piszkozat",
+  "page.status.draft.description":
+    "Az oldal jelenleg piszkozat státuszban van és csak bejelentkezett szerkesztők számára látható",
+  "page.status.listed": "Publikus",
+  "page.status.listed.description": "Az oldal mindenki számára elérhető",
+  "page.status.unlisted": "Nem listázott",
+  "page.status.unlisted.description": "Az oldal csak URL-en keresztül érhető el",
+
+  "pages": "Oldalak",
+  "pages.empty": "Nincs még bejegyzés",
+  "pages.status.draft": "Piszkozatok",
+  "pages.status.listed": "Publikálva",
+  "pages.status.unlisted": "Nem listázott",
+
+  "password": "Jelsz\u00f3",
+  "pixel": "Pixel",
+  "prev": "Előző",
+  "remove": "Eltávolítás",
+  "rename": "Átnevezés",
+  "replace": "Cser\u00e9l",
+  "retry": "Próbáld újra",
+  "revert": "Visszavon\u00e1s",
+
+  "role": "Szerepkör",
+  "role.all": "Összes",
+  "role.empty": "Nincsenek felhasználók ilyen szerepkörrel",
+  "role.description.placeholder": "Nincs leírás",
+
+  "save": "Ment\u00e9s",
+  "search": "Keresés",
+  "select": "Kiválasztás",
+  "settings": "Beállítások",
+  "size": "Méret",
+  "slug": "URL n\u00e9v",
+  "sort": "Rendezés",
+  "title": "Cím",
+  "template": "Sablon",
+  "today": "Ma",
+
+  "toolbar.button.code": "Kód",
+  "toolbar.button.bold": "F\u00e9lk\u00f6v\u00e9r sz\u00f6veg",
+  "toolbar.button.email": "Email",
+  "toolbar.button.headings": "Cím",
+  "toolbar.button.heading.1": "Cím 1",
+  "toolbar.button.heading.2": "Cím 2",
+  "toolbar.button.heading.3": "Cím 3",
+  "toolbar.button.italic": "Dőlt szöveg",
+  "toolbar.button.link": "Link",
+  "toolbar.button.ol": "Rendezett lista",
+  "toolbar.button.ul": "Rendezetlen lista",
+
+  "translation.author": "A Kirby csapata",
+  "translation.direction": "ltr",
+  "translation.name": "Magyar",
+
+  "upload": "Feltöltés",
+  "upload.errors": "Hiba",
+  "upload.progress": "Feltöltés...",
+
+  "url": "Url",
+  "url.placeholder": "https://pelda.hu",
+
+  "user": "Felhasználó",
+  "user.blueprint":
+    "Ehhez a szerepkörhöz további szekciókat és mezőket vehetsz fel a <strong>/site/blueprints/users/{role}.yml</strong> fájlban",
+  "user.changeEmail": "Email módosítása",
+  "user.changeLanguage": "Nyelv módosítása",
+  "user.changeName": "Felhasználó átnevezése",
+  "user.changePassword": "Jelszó módosítása",
+  "user.changePassword.new": "Új jelszó",
+  "user.changePassword.new.confirm": "Az új jelszó megerősítése",
+  "user.changeRole": "Szerepkör módosítása",
+  "user.changeRole.select": "Új szerepkör kiválasztása",
+  "user.create": "Új felhasználó hozzáadása",
+  "user.delete": "Felhasználó törlése",
+  "user.delete.confirm":
+    "Biztos törlöd ezt a felhasználót: <br><strong>{email}</strong>?",
+
+  "version": "Kirby verzi\u00f3",
+
+  "view.account": "Fi\u00f3kod",
+  "view.installation": "Telep\u00edt\u00e9s",
+  "view.settings": "Beállítások",
+  "view.site": "Weboldal",
+  "view.users": "Felhaszn\u00e1l\u00f3k",
+
+  "welcome": "Üdvözlünk",
+  "year": "Év"
+}

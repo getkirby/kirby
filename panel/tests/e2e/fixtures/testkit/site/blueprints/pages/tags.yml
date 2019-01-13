@@ -1,0 +1,6 @@
+title: Tags
+
+fields:
+  tags:
+    label: Tags
+    type: tags
