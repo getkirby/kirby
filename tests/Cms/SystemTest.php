@@ -180,7 +180,6 @@ class SystemTest extends TestCase
         $system = new System($this->app);
 
         $this->assertTrue($system->isInstallable());
-
     }
 
     public function testIsInstallableOnPublicServer()
@@ -208,5 +207,4 @@ class SystemTest extends TestCase
 
         $this->assertTrue($system->isInstallable());
     }
-
 }
