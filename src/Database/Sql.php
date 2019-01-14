@@ -696,7 +696,7 @@ class Sql
         return [
             'query'    => 'SELECT TABLE_NAME AS name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ' . $binding,
             'bindings' => [
-                $binding => $this->database->database
+                $binding => $this->database->name()
             ]
         ];
     }
