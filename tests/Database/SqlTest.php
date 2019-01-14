@@ -31,5 +31,4 @@ class SqlTest extends TestCase
 
         $this->assertEquals(':memory:', A::first($result['bindings']));
     }
-
 }

@@ -218,7 +218,7 @@
 
   "installation": "Installation",
   "installation.completed": "Panelen har installerats",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "Installeraren för panelen är som standard inaktiverad på offentliga servrar. Kör installeraren på en lokal maskin eller aktivera den med alternativet <code>panel.install</code>.",
   "installation.issues.accounts":
     "Mappen <code>/site/accounts</code> finns inte eller är inte skrivbar",
   "installation.issues.content":
@@ -232,7 +232,7 @@
   "installation.issues.php": "Se till att du använder <code>PHP 7+</code>",
   "installation.issues.server":
     "Kirby kräver <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "Mappen <code>/site/sessions</code> finns inte eller är inte skrivbar",
 
   "language": "Spr\u00e5k",
   "language.code": "Kod",
