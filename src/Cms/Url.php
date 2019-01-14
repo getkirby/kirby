@@ -42,4 +42,24 @@ class Url extends BaseUrl
 
         return file_exists($file) === true ? $url : null;
     }
+
+    /**
+     * Smart resolver for internal and external urls
+     *
+     * @param string $path
+     * @param array $options
+     * @return string
+     */
+    public static function to(string $path = null, array $options = null): string
+    {
+        $kirby = App::instance();
+
+        if ($handler = $kirby->component('url')) {
+            return $handler($kirby, $path, $options, function (string $path = null, array $options = null) {
+                return parent::to($path, $options);
+            });
+        }
+
+        return parent::to($path, $options);
+    }
 }

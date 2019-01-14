@@ -66,4 +66,17 @@ class AppComponentsTest extends TestCase
         $expected = '<script src="/test.js"></script>';
         $this->assertEquals($expected, js('something.js'));
     }
+
+    public function testUrlPlugin()
+    {
+        $this->kirby->clone([
+            'components' => [
+                'url' => function ($kirby, $path, $options, $original) {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $this->assertEquals('test', url('anything'));
+    }
 }

@@ -97,7 +97,13 @@ function css($url, $options = null)
         $url = $component($kirby, $url, $options);
     }
 
-    $url  = $url === '@auto' ? Url::toTemplateAsset('css/templates', 'css') : Url::to($url);
+    if ($url === '@auto') {
+        if (!$url = Url::toTemplateAsset('css/templates', 'css')) {
+            return null;
+        }
+    }
+
+    $url  = Url::to($url);
     $attr = array_merge((array)$options, [
         'href' => $url,
         'rel'  => 'stylesheet'
@@ -345,7 +351,13 @@ function js($url, $options = null)
         $url = $component($kirby, $url, $options);
     }
 
-    $url  = $url === '@auto' ? Url::toTemplateAsset('js/templates', 'js') : Url::to($url);
+    if ($url === '@auto') {
+        if (!$url = Url::toTemplateAsset('js/templates', 'js')) {
+            return null;
+        }
+    }
+
+    $url  = Url::to($url);
     $attr = array_merge((array)$options, ['src' => $url]);
 
     return '<script ' . attr($attr) . '></script>';
