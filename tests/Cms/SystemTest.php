@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use ReflectionClass;
+use Kirby\Toolkit\Dir;
 
 class SystemTest extends TestCase
 {
@@ -11,12 +12,20 @@ class SystemTest extends TestCase
 
     public function setUp()
     {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/SystemTest'
+            ]
+        ]);
+
         $this->_SERVER = $_SERVER;
     }
 
     public function tearDown()
     {
         $_SERVER = $this->_SERVER;
+
+        Dir::remove($this->fixtures);
     }
 
     public function serverProvider()
@@ -40,7 +49,7 @@ class SystemTest extends TestCase
     {
         $_SERVER['SERVER_SOFTWARE'] = $software;
 
-        $system = new System(new App);
+        $system = new System($this->app);
         $server = $system->server();
 
         $this->assertEquals($expected, $server);
@@ -64,7 +73,7 @@ class SystemTest extends TestCase
     {
         $_SERVER['SERVER_NAME'] = $name;
 
-        $system = new System(new App);
+        $system = new System($this->app);
         $this->assertEquals($expected, $system->isLocal());
 
         // reset SERVER_NAME
@@ -88,7 +97,7 @@ class SystemTest extends TestCase
     {
         $_SERVER['SERVER_ADDR'] = $address;
 
-        $system = new System(new App);
+        $system = new System($this->app);
         $this->assertEquals($expected, $system->isLocal());
 
         // reset SERVER_ADDR
@@ -118,7 +127,7 @@ class SystemTest extends TestCase
 
         $_SERVER['SERVER_ADDR'] = 'example.com';
 
-        $system = new System(new App([
+        $system = new System($this->app->clone([
             'options' => [
                 'url' => $indexUrl
             ]
@@ -156,11 +165,48 @@ class SystemTest extends TestCase
         $licenseUrlNormalized = $reflector->getMethod('licenseUrlNormalized');
         $licenseUrlNormalized->setAccessible(true);
 
-        $system = new System(new App([
+        $system = new System($this->app->clone([
             'options' => [
                 'url' => 'https://getkirby.com'
             ]
         ]));
         $this->assertEquals($expected, $licenseUrlNormalized->invoke($system, $url));
     }
+
+    public function testIsInstallableOnLocalhost()
+    {
+        $_SERVER['SERVER_NAME'] = 'localhost';
+
+        $system = new System($this->app);
+
+        $this->assertTrue($system->isInstallable());
+
+    }
+
+    public function testIsInstallableOnPublicServer()
+    {
+        $_SERVER['SERVER_NAME'] = 'getkirby.com';
+
+        $system = new System($this->app);
+
+        $this->assertFalse($system->isInstallable());
+    }
+
+    public function testIsInstallableOnPublicServerWithOverride()
+    {
+        $_SERVER['SERVER_NAME'] = 'getkirby.com';
+
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'install' => true
+                ]
+            ]
+        ]);
+
+        $system = new System($app);
+
+        $this->assertTrue($system->isInstallable());
+    }
+
 }

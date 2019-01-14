@@ -64,6 +64,7 @@ return [
     'views'  => [
         'login' => [
             'isOk',
+            'isInstallable',
             'isInstalled',
             'title',
             'translation'

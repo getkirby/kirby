@@ -53,6 +53,10 @@ return [
                 throw new Exception('The server is not setup correctly');
             }
 
+            if ($system->isInstallable() === false) {
+                throw new Exception('The panel cannot be installed');
+            }
+
             if ($system->isInstalled() === true) {
                 throw new Exception('The panel is already installed');
             }

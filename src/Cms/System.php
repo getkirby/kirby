@@ -191,10 +191,6 @@ class System
      */
     public function isOk(): bool
     {
-        if ($this->isInstallable() === false) {
-            return false;
-        }
-
         return in_array(false, array_values($this->status()), true) === false;
     }
 
