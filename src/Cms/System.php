@@ -7,6 +7,7 @@ use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Remote;
+use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Dir;
@@ -154,12 +155,12 @@ class System
     /**
      * Check if this is a local installation
      *
+     * @param Server $server
      * @return boolean
      */
-    public function isLocal(): bool
+    public static function isLocalEnv(Server $server): bool
     {
-        $server = $this->app->server();
-        $host   = $server->host();
+        $host = $server->host();
 
         if ($host === 'localhost') {
             return true;
@@ -182,6 +183,15 @@ class System
         }
 
         return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isLocal(): bool
+    {
+        $server = $this->app->server();
+        return static::isLocalEnv($server);
     }
 
     /**
