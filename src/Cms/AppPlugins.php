@@ -402,6 +402,7 @@ trait AppPlugins
         PageBlueprint::$presets['files']   = include static::$root . '/config/presets/files.php';
 
         // section mixins
+        Section::$mixins['empty']          = include static::$root . '/config/sections/mixins/empty.php';
         Section::$mixins['headline']       = include static::$root . '/config/sections/mixins/headline.php';
         Section::$mixins['layout']         = include static::$root . '/config/sections/mixins/layout.php';
         Section::$mixins['max']            = include static::$root . '/config/sections/mixins/max.php';
