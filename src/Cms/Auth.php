@@ -69,8 +69,8 @@ class Auth
             throw new InvalidArgumentException('Invalid authorization header');
         }
 
-        // only allow basic auth when https is enabled
-        if ($request->ssl() === false) {
+        // only allow basic auth when https is enabled or when in local environment
+        if (!$this->kirby->system()->isLocal() && $request->ssl() === false) {
             throw new PermissionException('Basic authentication is only allowed over HTTPS');
         }
 
