@@ -84,6 +84,7 @@ abstract class Model
     /**
      * Setter for the parent Site object
      *
+     * @internal
      * @param Site|null $site
      * @return self
      */

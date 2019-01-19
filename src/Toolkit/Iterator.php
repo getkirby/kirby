@@ -28,7 +28,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Returns the current key from the array
+     * Returns the current key
      *
      * @return string
      */
@@ -38,7 +38,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Returns an array of all keys in the Iterator
+     * Returns an array of all keys
      *
      * @return array
      */
@@ -48,7 +48,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Returns the current element of the array
+     * Returns the current element
      *
      * @return mixed
      */
@@ -58,7 +58,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Moves the cursor to the previous element in the array
+     * Moves the cursor to the previous element
      * and returns it
      *
      * @return mixed
@@ -69,7 +69,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Moves the cursor to the next element in the array
+     * Moves the cursor to the next element
      * and returns it
      *
      * @return mixed
@@ -80,7 +80,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Moves the cusor to the first element of the array
+     * Moves the cusor to the first element
      */
     public function rewind()
     {
@@ -98,7 +98,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Counts all elements in the array
+     * Counts all elements
      *
      * @return int
      */
@@ -130,7 +130,7 @@ class Iterator implements \Iterator
     }
 
     /**
-     * Checks if an element is in the collection by key.
+     * Checks by key if an element is included
      *
      * @param  mixed  $key
      * @return boolean

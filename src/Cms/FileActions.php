@@ -206,6 +206,7 @@ trait FileActions
 
     /**
      * Alias for changeName
+     * @deprecated
      *
      * @param string $name
      * @param bool $sanitize

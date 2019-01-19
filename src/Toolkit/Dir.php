@@ -5,7 +5,16 @@ namespace Kirby\Toolkit;
 use Exception;
 
 /**
- * Low level directory handling utilities
+ * The `Dir` class provides methods
+ * for dealing with directories on the
+ * file system level, like creating,
+ * listing, moving, copying or
+ * evaluating directories etc.
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
  */
 class Dir
 {

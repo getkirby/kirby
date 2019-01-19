@@ -15,6 +15,7 @@ trait AppUsers
     /**
      * Returns the Authentication layer class
      *
+     * @internal
      * @return Auth
      */
     public function auth()

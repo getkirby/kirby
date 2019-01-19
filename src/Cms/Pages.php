@@ -5,22 +5,14 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\F;
 
 /**
- * The Pages collection contains
- * any number and mixture of page objects
- * They don't necessarily have to belong
- * to the same parent unless it is passed
- * as second argument in the constructor.
- *
- * Pages collection can be constructed very
- * easily:
- *
- * ```php
- * $collection = new Pages([
- *   new Page(['id' => 'project-a']),
- *   new Page(['id' => 'project-b']),
- *   new Page(['id' => 'project-c']),
- * ]);
- * ```
+ * The `$pages` object refers to a
+ * collection of pages. The pages in this
+ * collection can have the same or different
+ * parents, they can actually exist as
+ * subfolders in the content folder or be
+ * virtual pages created from a database,
+ * an Excel sheet, any API or any other
+ * source.
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
