@@ -65,6 +65,7 @@ class Ingredients
      * Resolves all ingredient callbacks
      * and creates a plain array
      *
+     * @internal
      * @param array $ingredients
      * @return self
      */

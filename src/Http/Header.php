@@ -5,13 +5,13 @@ namespace Kirby\Http;
 use Kirby\Toolkit\F;
 
 /**
- * Makes sending HTTP headers a breeze
+ * The Header class provides methods
+ * for sending HTTP headers.
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      http://getkirby.com
  * @copyright Bastian Allgeier
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 class Header
 {

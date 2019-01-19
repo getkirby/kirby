@@ -67,6 +67,7 @@ trait AppPlugins
     /**
      * Register all given extensions
      *
+     * @internal
      * @param array $extensions
      * @param Plugin $plugin The plugin which defined those extensions
      * @return array
@@ -258,6 +259,7 @@ trait AppPlugins
     /**
      * Returns a given extension by type and name
      *
+     * @internal
      * @param string $type i.e. `'hooks'`
      * @param string $name i.e. `'page.delete:before'`
      * @param mixed $fallback
@@ -270,7 +272,9 @@ trait AppPlugins
 
     /**
      * Returns the extensions registry
-     *
+
+     * @internal
+     * @param string|null $type
      * @return array
      */
     public function extensions(string $type = null)
@@ -448,6 +452,7 @@ trait AppPlugins
      * Loads and returns all plugins in the site/plugins directory
      * Loading only happens on the first call.
      *
+     * @internal
      * @param array $plugins Can be used to overwrite the plugins registry
      * @return array
      */

@@ -6,6 +6,10 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 
 /**
+ * The session object can be used to
+ * store visitor preferences for your
+ * site throughout various requests.
+ *
  * @package   Kirby Session
  * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      http://getkirby.com

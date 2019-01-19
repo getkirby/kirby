@@ -12,7 +12,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
- * The Request class provides
+ * The `Request` class provides
  * a simple API to inspect incoming
  * requests.
  *
