@@ -233,6 +233,22 @@ class UriTest extends TestCase
     public function testBuild()
     {
 
+        // relative path + adding params
+        $uri = new Uri('/search', [
+            'params' => ['page' => 2],
+            'query'  => ['q' => 'something']
+        ]);
+
+        $this->assertEquals('/search/page:2?q=something', $uri->toString());
+
+        // path + adding params + query
+        $uri = new Uri('https://getkirby.com/search', [
+            'params' => ['page' => 2],
+            'query'  => ['q' => 'something']
+        ]);
+
+        $this->assertEquals('https://getkirby.com/search/page:2?q=something', $uri->toString());
+
         // path + params + query
         $uri = new Uri('https://getkirby.com/search?q=something', [
             'params' => ['page' => 2]
