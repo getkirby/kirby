@@ -2,6 +2,7 @@
   <draggable
     :element="element"
     :list="list"
+    :move="move"
     :options="dragOptions"
     class="k-draggable"
     v-on="listeners"
@@ -22,24 +23,25 @@ export default {
     element: String,
     handle: [String, Boolean],
     list: [Array, Object],
+    move: Function,
     options: Object
   },
   data() {
     return {
       listeners: {
         ...this.$listeners,
-        start: () => {
+        start: (event) => {
           this.$store.dispatch("drag", {});
 
           if (this.$listeners.start) {
-            this.$listeners.start();
+            this.$listeners.start(event);
           }
         },
-        end: () => {
+        end: (event) => {
           this.$store.dispatch("drag", null);
 
           if (this.$listeners.end) {
-            this.$listeners.end();
+            this.$listeners.end(event);
           }
         }
       }
