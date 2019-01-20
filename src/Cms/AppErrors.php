@@ -99,7 +99,7 @@ trait AppErrors
                     'status'  => 'error',
                     'code'    => $code,
                     'details' => $details,
-                    'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/options/debug',
+                    'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug',
                 ], $httpCode);
             }
 
