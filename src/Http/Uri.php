@@ -516,7 +516,7 @@ class Uri
             $slash = false;
         }
 
-        $path = $this->path->toString($slash) . $this->params->toString($slash);
+        $path = $this->path->toString($slash) . $this->params->toString(true);
 
         if ($this->slash && $slash === true) {
             $path .= '/';
