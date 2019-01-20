@@ -5,7 +5,7 @@
   </p>
   <p class="admin-advice">
     Advice for developers and administrators:<br>
-    Enable <a href="https://getkirby.com/docs/reference/options/debug">debug mode</a> to get further information about the error.
+    Enable <a href="https://getkirby.com/docs/reference/system/options/debug">debug mode</a> to get further information about the error.
   </p>
 
 <?php include __DIR__ . '/snippets/footer.php' ?>
