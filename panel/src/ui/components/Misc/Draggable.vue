@@ -2,6 +2,7 @@
   <draggable
     :element="element"
     :list="list"
+    :move="move"
     :options="dragOptions"
     class="k-draggable"
     v-on="listeners"
@@ -22,6 +23,7 @@ export default {
     element: String,
     handle: [String, Boolean],
     list: [Array, Object],
+    move: Function,
     options: Object
   },
   data() {
