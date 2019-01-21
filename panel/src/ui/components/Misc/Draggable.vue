@@ -28,18 +28,18 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
-        start: () => {
+        start: (event) => {
           this.$store.dispatch("drag", {});
 
           if (this.$listeners.start) {
-            this.$listeners.start();
+            this.$listeners.start(event);
           }
         },
-        end: () => {
+        end: (event) => {
           this.$store.dispatch("drag", null);
 
           if (this.$listeners.end) {
-            this.$listeners.end();
+            this.$listeners.end(event);
           }
         }
       }
