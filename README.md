@@ -1,6 +1,6 @@
 # Kirby
 
-[![Build Status](https://travis-ci.com/k-next/kirby.svg?branch=master)](https://travis-ci.com/k-next/kirby)
+[![Build Status](https://travis-ci.com/getkirby/kirby.svg?branch=master)](https://travis-ci.com/k-next/kirby)
 
 This is Kirby's core application folder. Get started with one of the following repositories instead:
 
