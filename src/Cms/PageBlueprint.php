@@ -151,6 +151,11 @@ class PageBlueprint extends Blueprint
             $status = ['draft' => $defaults['draft']] + $status;
         }
 
+        // remove the draft status for the home and error pages
+        if ($this->model->isHomeOrErrorPage() === true) {
+            unset($status['draft']);
+        }
+
         return $status;
     }
 
