@@ -145,4 +145,14 @@ class FilesFieldTest extends TestCase
 
         $this->assertEquals($expected, $ids);
     }
+
+    public function testQueryWithPageParent()
+    {
+        $field = new Field('files', [
+            'model' => new Page(['slug' => 'test']),
+        ]);
+
+        $this->assertEquals('page.files', $field->query());
+    }
+
 }
