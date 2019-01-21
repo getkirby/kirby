@@ -154,5 +154,4 @@ class FilesFieldTest extends TestCase
 
         $this->assertEquals('page.files', $field->query());
     }
-
 }
