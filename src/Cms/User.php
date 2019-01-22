@@ -24,6 +24,9 @@ use Throwable;
  */
 class User extends ModelWithContent
 {
+
+    const CLASS_ALIAS = 'user';
+
     use HasFiles;
     use HasSiblings;
     use UserActions;

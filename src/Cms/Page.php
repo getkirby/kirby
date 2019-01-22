@@ -24,6 +24,9 @@ use Throwable;
  */
 class Page extends ModelWithContent
 {
+
+    const CLASS_ALIAS = 'page';
+
     use PageActions;
     use PageSiblings;
     use HasChildren;
