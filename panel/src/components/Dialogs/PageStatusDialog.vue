@@ -122,7 +122,7 @@ export default {
           this.states = page.blueprint.status;
           this.page = page;
           this.form.status = page.status;
-          this.form.position = page.num;
+          this.form.position = page.num || (page.siblings.length + 1);
           this.$refs.dialog.open();
         })
         .catch(error => {
