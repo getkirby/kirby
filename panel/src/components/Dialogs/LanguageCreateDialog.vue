@@ -71,13 +71,16 @@ export default {
   },
   watch: {
     "language.name"(name) {
-      this.language.code = slug(name).substr(0, 2);
+      this.onNameChanges(name);
     },
     "language.code"(code) {
       this.language.code = slug(code);
     }
   },
   methods: {
+    onNameChanges(name) {
+      this.language.code = slug(name).substr(0, 2);
+    },
     open() {
 
       this.language = {
