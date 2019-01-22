@@ -175,5 +175,4 @@ class FilesFieldTest extends TestCase
 
         $this->assertEquals('user.files', $field->query());
     }
-
 }
