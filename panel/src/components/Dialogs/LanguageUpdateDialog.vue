@@ -28,6 +28,9 @@ export default {
     }
   },
   methods: {
+    onNameChanges() {
+      return false;
+    },
     open(code) {
       this.$api
         .get("languages/" + code)
