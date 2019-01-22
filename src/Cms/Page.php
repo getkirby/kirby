@@ -179,6 +179,10 @@ class Page extends ModelWithContent
      */
     public function __construct(array $props)
     {
+        // set the slug as the first property
+        $this->slug = $props['slug'] ?? null;
+
+        // add all other properties
         $this->setProperties($props);
     }
 
