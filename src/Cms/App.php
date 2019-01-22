@@ -35,7 +35,6 @@ use Kirby\Toolkit\Url;
  */
 class App
 {
-
     const CLASS_ALIAS = 'kirby';
 
     use AppCaches;
