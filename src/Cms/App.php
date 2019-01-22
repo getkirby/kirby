@@ -35,6 +35,9 @@ use Kirby\Toolkit\Url;
  */
 class App
 {
+
+    const CLASS_ALIAS = 'kirby';
+
     use AppCaches;
     use AppErrors;
     use AppPlugins;

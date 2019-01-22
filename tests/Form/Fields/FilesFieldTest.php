@@ -4,6 +4,9 @@ namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\File;
+use Kirby\Cms\User;
 use Kirby\Form\Field;
 
 class FilesFieldTest extends TestCase
@@ -154,4 +157,23 @@ class FilesFieldTest extends TestCase
 
         $this->assertEquals('page.files', $field->query());
     }
+
+    public function testQueryWithSiteParent()
+    {
+        $field = new Field('files', [
+            'model' => new Site(),
+        ]);
+
+        $this->assertEquals('site.files', $field->query());
+    }
+
+    public function testQueryWithUserParent()
+    {
+        $field = new Field('files', [
+            'model' => new User(['email' => 'test@getkirby.com']),
+        ]);
+
+        $this->assertEquals('user.files', $field->query());
+    }
+
 }
