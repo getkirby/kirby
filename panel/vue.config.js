@@ -8,7 +8,7 @@ module.exports = {
     loaderOptions: {
       sass: {
         data: fs.readFileSync(
-          "./src/ui/main.scss",
+          "./src/main.scss",
           "utf-8"
         )
       }

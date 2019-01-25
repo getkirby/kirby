@@ -23,7 +23,7 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import slug from "@/ui/helpers/slug.js";
+import slug from "@/helpers/slug.js";
 
 export default {
   mixins: [DialogMixin],

@@ -1,5 +1,5 @@
 import Vue from "vue";
-import store from "./store.js";
+import store from "@/store/store.js";
 import config from "./config.js";
 
 Vue.config.errorHandler = error => {

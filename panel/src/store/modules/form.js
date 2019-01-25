@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Api from "@/api/api.js";
-import clone from "@/ui/helpers/clone.js";
+import clone from "@/helpers/clone.js";
 
 export default {
   namespaced: true,

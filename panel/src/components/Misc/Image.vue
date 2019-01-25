@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import ratioPadding from "../../helpers/ratioPadding.js";
+import ratioPadding from "@/helpers/ratioPadding.js";
 
 export default {
   props: {
