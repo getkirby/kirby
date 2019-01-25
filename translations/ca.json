@@ -66,7 +66,7 @@
   "error.form.notSaved": "No s'ha pogut desar el formulari",
 
   "error.page.changeSlug.permission":
-    "No pots canviar la URL d'aquest p\u00e0gina",
+    "No teniu permís per canviar l'apèndix d'URL per a \"{slug}\"",
   "error.page.changeStatus.incomplete":
     "La pàgina té errors i no es pot publicar",
   "error.page.changeStatus.permission":
@@ -90,7 +90,7 @@
     "Ja existeix un esborrany de pàgina amb l'apèndix d'URL \"{slug}\"",
   "error.page.duplicate":
     "Ja existeix una pàgina amb l'apèndix d'URL \"{slug}\"",
-  "error.page.notFound": "La p\u00e0gina no s'ha trobat",
+  "error.page.notFound": "La pàgina \"{slug}\" no s'ha trobat",
   "error.page.num.invalid":
     "Si us plau, introdueix un número d 'ordenació vàlid. Els números no poden ser negatius.",
   "error.page.slug.invalid": "Introduïu un prefix d'URL vàlid",
@@ -202,12 +202,12 @@
 
   "field.files.empty": "Encara no hi ha cap fitxer seleccionat",
   "field.pages.empty": "Encara no s'ha seleccionat cap pàgina",
-  "field.structure.delete.confirm": "Est\u00e0s segur d'eliminar aquesta entrada?",
+  "field.structure.delete.confirm": "Segur que voleu eliminar aquesta fila?",
   "field.structure.empty": "Encara no hi ha entrades.",
   "field.users.empty": "Encara no s'ha seleccionat cap usuari",
 
   "file.delete.confirm":
-    "Est\u00e0s segur d'eliminar aquest arxiu?",
+    "Esteu segurs d'eliminar <br><strong>{filename}</strong>?",
 
   "files": "Arxius",
   "files.empty": "Encara no hi ha fitxers",
@@ -216,13 +216,13 @@
   "insert": "Insertar",
   "install": "Instal·lar",
 
-  "installation": "Isntal·lació",
+  "installation": "Instal·lació",
   "installation.completed": "S'ha instal·lat el panell",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "L'instal·lador del panell està desactivat per defecte als servidors públics. Si us plau, executeu l'instal·lador en una màquina local o habiliteu-lo amb l'opció <code>panel.install</code>",
   "installation.issues.accounts":
-    "\/site\/accounts no t\u00e9 perm\u00eds d'escriptura",
+    "La carpeta <code>/site/accounts</code> no existeix o no es pot escriure",
   "installation.issues.content":
-    "El directori de contingut i tots els seus arxius i subdirectoris han de tenir perm\u00eds d'escriptura.",
+    "La carpeta <code>/content no existeix o no es pot escriure",
   "installation.issues.curl": "Es requereix l'extensió <code>CURL</code>",
   "installation.issues.headline": "El panell no es pot instal·lar",
   "installation.issues.mbstring":
@@ -232,7 +232,7 @@
   "installation.issues.php": "Assegureu-vos d'utilitzar <code>PHP 7+</code>",
   "installation.issues.server":
     "Kirby requereix <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "La carpeta <code>/site/sessions</code> no existeix o no es pot escriure",
 
   "language": "Idioma",
   "language.code": "Codi",
@@ -266,7 +266,7 @@
   "license.unregistered": "Aquesta és una demo no registrada de Kirby",
 
   "link": "Enlla\u00e7",
-  "link.text": "Texte enlla\u00e7at",
+  "link.text": "Enllaç de text",
 
   "loading": "Carregant",
 
@@ -312,7 +312,7 @@
   "page.changeStatus.select": "Seleccioneu un nou estat",
   "page.changeTemplate": "Canviar la plantilla",
   "page.delete.confirm":
-    "Est\u00e0s segur d'eliminar aquesta p\u00e0gina?",
+    "Segur que voleu eliminar <strong>{title}</strong>?",
   "page.delete.confirm.subpages":
     "<strong>Aquesta pàgina té subpàgines</strong>. <br>Totes les subpàgines també s'eliminaran.",
   "page.delete.confirm.title": "Introduïu el títol de la pàgina per confirmar",
@@ -339,7 +339,7 @@
   "rename": "Canviar el nom",
   "replace": "Reempla\u00e7ar",
   "retry": "Reintentar",
-  "revert": "Descartar",
+  "revert": "Revertir",
 
   "role": "Rol",
   "role.all": "Tots",
@@ -358,13 +358,13 @@
   "today": "Avui",
 
   "toolbar.button.code": "Codi",
-  "toolbar.button.bold": "Texte negreta",
+  "toolbar.button.bold": "Negreta",
   "toolbar.button.email": "Email",
   "toolbar.button.headings": "Encapçalaments",
   "toolbar.button.heading.1": "Encapçalament 1",
   "toolbar.button.heading.2": "Encapçalament 2",
   "toolbar.button.heading.3": "Encapçalament 3",
-  "toolbar.button.italic": "Texte cursiva",
+  "toolbar.button.italic": "Cursiva",
   "toolbar.button.link": "Enlla\u00e7",
   "toolbar.button.ol": "Llista ordenada",
   "toolbar.button.ul": "Llista de vinyetes",
@@ -394,12 +394,12 @@
   "user.create": "Afegir un nou usuari",
   "user.delete": "Eliminar aquest usuari",
   "user.delete.confirm":
-    "Est\u00e0s segur d'eliminar aquest usuari?",
+    "Segur que voleu eliminar <br> <strong>{email}</strong>?",
 
   "version": "Versi\u00f3 de Kirby",
 
   "view.account": "La teva compta",
-  "view.installation": "Isntal\u00b7laci\u00f3",
+  "view.installation": "Instal·lació",
   "view.settings": "Configuració",
   "view.site": "Lloc web",
   "view.users": "Usuaris",

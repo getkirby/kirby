@@ -260,7 +260,7 @@
   "license.buy": "Comprar uma licença",
   "license.register": "Registrar",
   "license.register.help":
-    "Você recebeu o código da sua licença por email após a compra. Por favor, copie e cole-o para completar o registro.",
+    "Você recebeu o código da sua licença por email após a compra. Por favor, copie e cole-a para completar o registro.",
   "license.register.label": "Por favor, digite o código da sua licença",
   "license.register.success": "Obrigado por apoiar o Kirby",
   "license.unregistered": "Esta é uma demonstração não registrada do Kirby",
@@ -320,9 +320,9 @@
   "page.status": "Estado",
   "page.status.draft": "Rascunho",
   "page.status.draft.description":
-    "A página está em modo de rascunho e é visível somente para editores",
+    "A página em modo de rascunho é visível somente para editores",
   "page.status.listed": "Pública",
-  "page.status.listed.description": "A página é pública para todos",
+  "page.status.listed.description": "A página pública é visível para todos",
   "page.status.unlisted": "Não listadas",
   "page.status.unlisted.description": "Esta página é acessível somente através da URL",
 
