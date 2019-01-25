@@ -260,7 +260,7 @@
   "license.buy": "라이선스 구매",
   "license.register": "등록",
   "license.register.help":
-    "입력하신 이메일 주소로 라이선스 코드를 전송했습니다. 라이선스 코드를 입력해 등록하세요.",
+    "입력하신 이메일 주소로 라이선스 코드를 전송합니다. 라이선스 코드를 입력해 등록하세요.",
   "license.register.label": "라이선스 코드를 입력하세요.",
   "license.register.success": "Kirby를 구입해주셔서 감사합니다.",
   "license.unregistered": "Kirby가 등록되지 않았습니다.",
@@ -343,7 +343,7 @@
 
   "role": "역할",
   "role.all": "전체 보기",
-  "role.empty": "이 역할을 하는 사용자가 없습니다.",
+  "role.empty": "이 역할에 해당하는 사용자가 없습니다.",
   "role.description.placeholder": "설명이 없습니다.",
 
   "save": "\uc800\uc7a5",
@@ -371,7 +371,7 @@
 
   "translation.author": "Kirby 팀",
   "translation.direction": "LTR",
-  "translation.name": "영어",
+  "translation.name": "한국어",
 
   "upload": "업로드",
   "upload.errors": "오류",

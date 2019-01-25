@@ -218,7 +218,7 @@
 
   "installation": "Installation",
   "installation.completed": "Panelet er blevet installeret",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "Panel installationen er deaktiveret på offentlige servere som standard. Kør venligst installationen på en lokal maskine eller aktiver det med panel.install <code>panel.install</code> muligheden.",
   "installation.issues.accounts":
     "\/site\/accounts er ikke skrivbar",
   "installation.issues.content":
@@ -323,14 +323,14 @@
     "Siden er i kladdetilstand og kun synlig for redaktører der er logget ind",
   "page.status.listed": "Offentlig",
   "page.status.listed.description": "Siden er offentlig for enhver",
-  "page.status.unlisted": "Ulisted",
+  "page.status.unlisted": "Ulistede",
   "page.status.unlisted.description": "Siden er kun tilgængelig via URL",
 
   "pages": "Sider",
   "pages.empty": "Ingen sider endnu",
   "pages.status.draft": "Kladder",
   "pages.status.listed": "Udgivede",
-  "pages.status.unlisted": "Ulisted",
+  "pages.status.unlisted": "Ulistede",
 
   "password": "Adgangskode",
   "pixel": "Pixel",
