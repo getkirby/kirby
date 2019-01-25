@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-Please keep PRs for bug fixes focused on a single bug. Don't mix multiple bug fixes in a single PR. This will make it easier for us to review the fix and merge it. 
+Please keep bug fix PRs focused on a single bug. Don't mix multiple bug fixes in a single PR. This will make it easier for us to review the fix and merge it. 
 
 Always send bug fix PRs to the develop branch––not master! Add a helpful description of what the PR does if it is not 100% self-explanatory. Every bug fix should also be combined with a unit test to avoid future regressions. Let us know if you need help with that. 
 
@@ -22,7 +22,7 @@ Please have a look at the ideas repository https://github.com/getkirby/ideas/iss
 2. Fix code style issues before you submit the PR with CS fixer and `composer fix`
 3. Add a helpful description
 4. Focus on a single feature per PR. Don't mix features!
-5. Make sure you use a feature branch and you send the PR to develop–not master!
+5. Make sure you use a feature branch and you send the PR to develop––not master!
 6. Write human-readable commit messages. We might use them for the changelog. 
 
 Please understand that we cannot merge all feature ideas or that it might take a while. Features will also have to wait at least until the next feature release. Check out the roadmap to see upcoming releases: https://roadmap.getkirby.com
