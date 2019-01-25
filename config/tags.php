@@ -136,6 +136,7 @@ return [
     'link' => [
         'attr' => [
             'class',
+            'lang',
             'rel',
             'role',
             'target',
@@ -143,6 +144,10 @@ return [
             'text',
         ],
         'html' => function ($tag) {
+            if (empty($tag->lang) === false) {
+                $tag->value = Url::to($tag->value, $tag->lang);
+            }
+
             return Html::a($tag->value, $tag->text, [
                 'rel'    => $tag->rel,
                 'class'  => $tag->class,
