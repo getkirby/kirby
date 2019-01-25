@@ -702,7 +702,7 @@ function twitter(string $username, string $text = null, string $title = null, st
  * Shortcut for url()
  *
  * @param string $path
- * @param array|null $options
+ * @param array|string|null $options
  * @return string
  */
 function u(string $path = null, $options = null): string
@@ -714,7 +714,7 @@ function u(string $path = null, $options = null): string
  * Builds an absolute URL for a given path
  *
  * @param string $path
- * @param array $options
+ * @param array|string|null $options
  * @return string
  */
 function url(string $path = null, $options = null): string

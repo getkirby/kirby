@@ -9,7 +9,7 @@ class UrlTest extends TestCase
 {
     public function setUp()
     {
-        new App([
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -27,6 +27,32 @@ class UrlTest extends TestCase
     public function testTo()
     {
         $this->assertEquals('https://getkirby.com/projects', Url::to('projects'));
+    }
+
+    public function testToWithLanguage()
+    {
+        $this->app->clone([
+            'languages' => [
+                'en' => [
+                    'code' => 'en'
+                ],
+                'de' => [
+                    'code' => 'de'
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'a'],
+                    ['slug' => 'b']
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('https://getkirby.com/en/a', Url::to('a', 'en'));
+        $this->assertEquals('https://getkirby.com/de/a', Url::to('a', 'de'));
+
+        $this->assertEquals('https://getkirby.com/en/a', Url::to('a', ['language' => 'en']));
+        $this->assertEquals('https://getkirby.com/de/a', Url::to('a', ['language' => 'de']));
     }
 
     public function testToTemplateAsset()
