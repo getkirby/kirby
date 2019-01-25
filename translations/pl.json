@@ -1,0 +1,409 @@
+{
+  "add": "Dodaj",
+  "avatar": "Zdj\u0119cie profilowe",
+  "back": "Wróć",
+  "cancel": "Anuluj",
+  "change": "Zmie\u0144",
+  "close": "Zamknij",
+  "confirm": "Ok",
+  "copy": "Kopiuj",
+  "create": "Utwórz",
+
+  "date": "Data",
+  "date.select": "Wybierz datę",
+
+  "day": "Dzień",
+  "days.fri": "Pt",
+  "days.mon": "Pn",
+  "days.sat": "Sb",
+  "days.sun": "Nd",
+  "days.thu": "Czw",
+  "days.tue": "Wt",
+  "days.wed": "\u015ar",
+
+  "delete": "Usu\u0144",
+  "dimensions": "Wymiary",
+  "discard": "Odrzu\u0107",
+  "edit": "Edytuj",
+
+  "email": "Email",
+  "email.placeholder": "mail@example.com",
+
+  "error.access.login": "Nieprawidłowy login",
+  "error.access.panel": "Nie masz uprawnień by dostać się do panelu",
+
+  "error.avatar.create.fail": "Nie udało się załadować zdjęcia profilowego",
+  "error.avatar.delete.fail": "Nie udało się usunąć zdjęcia profilowego",
+  "error.avatar.dimensions.invalid":
+    "Proszę zachować szerokość i wysokość zdjęcia profilowego poniżej 3000 pikseli",
+  "error.avatar.mime.forbidden":
+    "Zdjęcie profilowe musi być plikiem JPEG lub PNG",
+
+  "error.blueprint.notFound": "Nie udało się załadować wzorca \"{name}\"",
+
+  "error.email.preset.notFound": "Nie udało się załadować wzorca wiadomości e-mail \"{name}\"",
+
+  "error.field.converter.invalid": "Nieprawidłowy konwerter \"{converter}\"",
+
+  "error.file.changeName.permission":
+    "Nie masz uprawnień, by zmienić nazwę \"{filename}\"",
+  "error.file.duplicate": "Istnieje już plik o nazwie \"{filename}\"",
+  "error.file.extension.forbidden":
+    "Rozszerzenie \"{extension}\" jest niedozwolone",
+  "error.file.extension.missing":
+    "Brak rozszerzenia pliku \"{filename}\"",
+  "error.file.mime.differs":
+    "Przesłany plik musi być tego samego typu mime \"{mime}\"",
+  "error.file.mime.forbidden": "Typ multimediów \"{mime}\" jest niedozwolony",
+  "error.file.mime.missing":
+    "Nie można wykryć typu multimediów dla \"{filename}\"",
+  "error.file.name.missing": "Nazwa pliku nie może być pusta",
+  "error.file.notFound": "Nie można znaleźć pliku \"{filename}\"",
+  "error.file.type.forbidden": "Nie możesz przesyłać plików {type}",
+  "error.file.undefined": "Nie można znaleźć pliku",
+
+  "error.form.incomplete": "Popraw wszystkie błędy w formularzu…",
+  "error.form.notSaved": "Nie udało się zapisać formularza",
+
+  "error.page.changeSlug.permission":
+    "Nie możesz zmienić końcówki adresu URL w \"{slug}\"",
+  "error.page.changeStatus.incomplete":
+    "Strona zawiera błędy i nie można jej opublikować",
+  "error.page.changeStatus.permission":
+    "Status tej strony nie może zostać zmieniony",
+  "error.page.changeStatus.toDraft.invalid":
+    "Strony \"{slug}\" nie można przekonwertować na szkic",
+  "error.page.changeTemplate.invalid":
+    "Nie można zmienić szablonu strony \"{slug}\"",
+  "error.page.changeTemplate.permission":
+    "Nie masz uprawnień, by zmienić szablon dla \"{slug}\"",
+  "error.page.changeTitle.empty": "Tytuł nie może być pusty",
+  "error.page.changeTitle.permission":
+    "Nie masz uprawnień, by zmienić tytuł dla \"{slug}\"",
+  "error.page.create.permission": "Nie masz uprawnień, by utworzyć \"{slug}\"",
+  "error.page.delete": "Strony \"{slug}\" nie można usunąć",
+  "error.page.delete.confirm": "Wprowadź tytuł strony, aby potwierdzić",
+  "error.page.delete.hasChildren":
+    "Strona zawiera podstrony i nie można jej usunąć",
+  "error.page.delete.permission": "Nie masz uprawnień, by usunąć \"{slug}\"",
+  "error.page.draft.duplicate":
+    "Istnieje już szkic z końcówką URL \"{slug}\"",
+  "error.page.duplicate":
+    "Istnieje już strona z końcówką URL \"{slug}\"",
+  "error.page.notFound": "Nie można znaleźć strony \"{slug}\"",
+  "error.page.num.invalid":
+    "Wprowadź poprawny numer sortujący. Liczby nie mogą być ujemne.",
+  "error.page.slug.invalid": "Wprowadź poprawną końcówkę adresu URL",
+  "error.page.sort.permission": "Nie można sortować strony \"{slug}\"",
+  "error.page.status.invalid": "Ustaw prawidłowy status strony",
+  "error.page.undefined": "Nie udało się znaleźć strony",
+  "error.page.update.permission": "Nie masz uprawnień, by zaktualizować \"{slug}\"",
+
+  "error.section.files.max.plural":
+    "Do sekcji \"{section}\" można dodać nie więcej niż {max} plików",
+  "error.section.files.max.singular":
+    "Do sekcji \"{section}\" można dodać tylko jeden plik",
+  "error.section.files.min.plural":
+    "Dodaj co najmniej {min} pliki do sekcji \"{section}\"",
+  "error.section.files.min.singular":
+    "Dodaj co najmniej jeden plik do sekcji \"{section}\"",
+
+  "error.section.pages.max.plural":
+    "Do sekcji \"{section}\" można dodać nie więcej niż {max} stron",
+  "error.section.pages.max.singular":
+    "Do sekcji \"{section}\" można dodać tylko jedną stronę",
+  "error.section.pages.min.plural":
+    "Dodaj co najmniej {min} stron/-y do sekcji \"{section}\"",
+  "error.section.pages.min.singular":
+    "Dodaj co najmniej jedną stronę do sekcji \"{section}\"",
+
+  "error.section.notLoaded": "Nie udało się załadować sekcji \"{name}\"",
+  "error.section.type.invalid": "Typ sekcji \"{type}\" jest nieprawidłowy",
+
+  "error.site.changeTitle.permission":
+    "Nie masz uprawnień, by zmienić tytuł strony",
+  "error.site.update.permission": "Nie masz uprawnień, by zaktualizować stronę",
+
+  "error.template.default.notFound": "Domyślny szablon nie istnieje",
+
+  "error.user.changeEmail.permission":
+    "Nie masz uprawnień, by zmienić adres e-mail użytkownika \"{name}\"",
+  "error.user.changeLanguage.permission":
+    "Nie masz uprawnień, by zmienić język użytkownika \"{name}\"",
+  "error.user.changeName.permission":
+    "Nie masz uprawnień, by zmienić nazwę użytkownika \"{name}\"",
+  "error.user.changePassword.permission":
+    "Nie masz uprawnień, by zmienić hasło użytkownika \"{name}\"",
+  "error.user.changeRole.lastAdmin":
+    "Nie można zmienić roli ostatniego administratora",
+  "error.user.changeRole.permission":
+    "Nie masz uprawnień, by zmienić rolę użytkownika \"{name}\"",
+  "error.user.create.permission": "Nie masz uprawnień, by utworzyć tego użytkownika",
+  "error.user.delete": "Nie można usunąć użytkownika \"{name}\"",
+  "error.user.delete.lastAdmin": "Nie można usunąć ostatniego administratora",
+  "error.user.delete.lastUser": "Nie można usunąć ostatniego użytkownika",
+  "error.user.delete.permission":
+    "Nie masz uprawnień, by usunąć użytkownika \"{name}\"",
+  "error.user.duplicate":
+    "Istnieje już użytkownik z adresem email \"{email}\"",
+  "error.user.email.invalid": "Wprowadź poprawny adres email",
+  "error.user.language.invalid": "Proszę podać poprawny język",
+  "error.user.notFound": "Nie można znaleźć użytkownika \"{name}\"",
+  "error.user.password.invalid":
+    "Wprowadź prawidłowe hasło. Hasła muszą mieć co najmniej 8 znaków.",
+  "error.user.password.notSame": "Hasła nie są takie same",
+  "error.user.password.undefined": "Użytkownik nie ma hasła",
+  "error.user.role.invalid": "Wprowadź poprawną rolę",
+  "error.user.undefined": "Nie można znaleźć użytkownika",
+  "error.user.update.permission":
+    "Nie masz uprawnień, by zaktualizować użytkownika \"{name}\"",
+
+  "error.validation.accepted": "Proszę potwierdzić",
+  "error.validation.alpha": "Wprowadź tylko znaki między a-z",
+  "error.validation.alphanum":
+    "Wprowadź tylko znaki między a-z lub cyfry 0-9",
+  "error.validation.between":
+    "Wprowadź wartość między \"{min}\" i \"{max}\"",
+  "error.validation.boolean": "Potwierdź lub odmów",
+  "error.validation.contains":
+    "Wprowadź wartość, która zawiera \"{needle}\"",
+  "error.validation.date": "Wprowadź poprawną datę",
+  "error.validation.denied": "Proszę odmówić",
+  "error.validation.different": "Wartością nie może być \"{other}\"",
+  "error.validation.email": "Wprowadź poprawny adres email",
+  "error.validation.endswith": "Wartość musi kończyć się na \"{end}\"",
+  "error.validation.filename": "Wprowadź poprawną nazwę pliku",
+  "error.validation.in": "Wprowadź jedno z następujących: ({in})",
+  "error.validation.integer": "Wprowadź poprawną liczbę całkowitą",
+  "error.validation.ip": "Wprowadź poprawny adres IP",
+  "error.validation.less": "Wprowadź wartość mniejszą niż {max}",
+  "error.validation.match": "Wartość nie jest zgodna z oczekiwanym wzorcem",
+  "error.validation.max": "Wprowadź wartość równą lub mniejszą niż {max}",
+  "error.validation.maxlength":
+    "Wprowadź krótszą wartość. (maks. {max} znaków)",
+  "error.validation.maxwords": "Wprowadź nie więcej niż {max} słowa/słów",
+  "error.validation.min": "Wprowadź wartość równą lub większą niż {min}",
+  "error.validation.minlength":
+    "Wprowadź dłuższą wartość. (min. {min} znaków)",
+  "error.validation.minwords": "Wprowadź co najmniej {min} słowa/słów",
+  "error.validation.more": "Wprowadź wartość większą niż {min}",
+  "error.validation.notcontains":
+    "Wprowadź wartość, która nie zawiera \"{needle}\"",
+  "error.validation.notin":
+    "Nie wprowadzaj żadnego z następujących ({notIn})",
+  "error.validation.option": "Wybierz poprawną opcję",
+  "error.validation.num": "Wprowadź poprawny numer",
+  "error.validation.required": "Wpisz coś",
+  "error.validation.same": "Wprowadź \"{other}\"",
+  "error.validation.size": "Rozmiar wartości musi wynosić \"{size}\"",
+  "error.validation.startswith": "Wartość musi zaczynać się od \"{start}\"",
+  "error.validation.time": "Wprowadź poprawny czas",
+  "error.validation.url": "Wprowadź poprawny adres URL",
+
+  "field.files.empty": "Nie wybrano jeszcze żadnych plików",
+  "field.pages.empty": "Nie wybrano jeszcze żadnych stron",
+  "field.structure.delete.confirm": "Czy na pewno chcesz usunąć ten wiersz?",
+  "field.structure.empty": "Nie ma jeszcze \u017cadnych wpis\u00f3w.",
+  "field.users.empty": "Nie wybrano jeszcze żadnych użytkowników",
+
+  "file.delete.confirm":
+    "Czy na pewno chcesz usunąć <br><strong>{filename}</strong>?",
+
+  "files": "Pliki",
+  "files.empty": "Nie ma jeszcze żadnych plików",
+
+  "hour": "Godzina",
+  "insert": "Wstaw",
+  "install": "Zainstaluj",
+
+  "installation": "Instalacja",
+  "installation.completed": "Panel został zainstalowany",
+  "installation.disabled": "Instalator panelu jest domyślnie wyłączony na serwerach publicznych. Uruchom instalator na komputerze lokalnym lub włącz go za pomocą opcji <code>panel.install</code>.",
+  "installation.issues.accounts":
+    "Folder <code>/site/accounts</code> nie istnieje lub nie ma uprawnień do zapisu",
+  "installation.issues.content":
+    "Folder <code>/content</code> nie istnieje lub nie ma uprawnień do zapisu",
+  "installation.issues.curl": "Wymagane jest rozszerzenie <code>CURL</code>",
+  "installation.issues.headline": "Nie można zainstalować panelu",
+  "installation.issues.mbstring":
+    "Wymagane jest rozszerzenie <code>MB String</code>",
+  "installation.issues.media":
+    "Folder <code>/media</code> nie istnieje lub nie ma uprawnień do zapisu",
+  "installation.issues.php": "Upewnij się, że używasz <code>PHP 7+</code>",
+  "installation.issues.server":
+    "Kirby wymaga <code>Apache</code>, <code>Nginx</code> lub <code>Caddy</code>",
+  "installation.issues.sessions": "Folder <code>/site/sessions</code> nie istnieje lub nie ma uprawnień do zapisu",
+
+  "language": "J\u0119zyk",
+  "language.code": "Kod",
+  "language.convert": "Ustaw jako domyślny",
+  "language.convert.confirm":
+    "<p>Czy na pewno chcesz zmienić domyślny język na <strong>{name}</strong>? Nie można tego cofnąć.</p><p>Jeżeli brakuje tłumaczenia jakichś treści na <strong>{name}</strong>, nie będzie ich czym zastąpić i części witryny mogą być puste.</p>",
+  "language.create": "Dodaj nowy język",
+  "language.delete.confirm":
+    "Czy na pewno chcesz usunąć język <strong>{name}</strong> i wszystkie tłumaczenia? Tego nie da się cofnąć!",
+  "language.deleted": "Język został usunięty",
+  "language.direction": "Kierunek czytania",
+  "language.direction.ltr": "Od lewej do prawej",
+  "language.direction.rtl": "Od prawej do lewej",
+  "language.locale": "PHP locale string",
+  "language.name": "Nazwa",
+  "language.updated": "Język został zaktualizowany",
+
+  "languages": "Języki",
+  "languages.default": "Domyślny język",
+  "languages.empty": "Nie ma jeszcze żadnych języków",
+  "languages.secondary": "Dodatkowe języki",
+  "languages.secondary.empty": "Nie ma jeszcze dodatkowych języków",
+
+  "license": "Licencja",
+  "license.buy": "Kup licencję",
+  "license.register": "Zarejestruj",
+  "license.register.help":
+    "Po zakupieniu licencji otrzymałaś/-eś mailem klucz. Skopiuj go i wklej tutaj, aby dokonać rejestracji.",
+  "license.register.label": "Wprowadź swój kod licencji",
+  "license.register.success": "Dziękujemy za wspieranie Kirby",
+  "license.unregistered": "To jest niezarejestrowana wersja demonstracyjna Kirby",
+
+  "link": "Link",
+  "link.text": "Tekst linku",
+
+  "loading": "Ładuję",
+
+  "login": "Zaloguj",
+  "login.remember": "Nie wylogowuj mnie",
+
+  "logout": "Wyloguj",
+
+  "menu": "Menu",
+  "meridiem": "AM/PM",
+  "mime": "Typ multimediów",
+  "minutes": "Minuty",
+
+  "month": "Miesiąc",
+  "months.april": "Kwiecie\u0144",
+  "months.august": "Sierpie\u0144",
+  "months.december": "Grudzie\u0144",
+  "months.february": "Luty",
+  "months.january": "Stycze\u0144",
+  "months.july": "Lipiec",
+  "months.june": "Czerwiec",
+  "months.march": "Marzec",
+  "months.may": "Maj",
+  "months.november": "Listopad",
+  "months.october": "Pa\u017adziernik",
+  "months.september": "Wrzesie\u0144",
+
+  "more": "Więcej",
+  "name": "Nazwa",
+  "next": "Następne",
+  "open": "Otwórz",
+  "options": "Opcje",
+
+  "orientation": "Orientacja",
+  "orientation.landscape": "Pozioma",
+  "orientation.portrait": "Pionowa",
+  "orientation.square": "Kwadrat",
+
+  "page.changeSlug": "Zmie\u0144 URL",
+  "page.changeSlug.fromTitle": "Utw\u00f3rz na podstawie tytu\u0142u",
+  "page.changeStatus": "Zmień status",
+  "page.changeStatus.position": "Wybierz pozycję",
+  "page.changeStatus.select": "Wybierz nowy status",
+  "page.changeTemplate": "Zmień szablon",
+  "page.delete.confirm":
+    "Czy na pewno chcesz usunąć <strong>{title}</strong>?",
+  "page.delete.confirm.subpages":
+    "<strong>Ta strona zawiera podstrony</strong>. <br>Wszystkie podstrony również zostaną usunięte.",
+  "page.delete.confirm.title": "Wprowadź tytuł strony, aby potwierdzić",
+  "page.draft.create": "Utwórz szkic",
+  "page.status": "Status",
+  "page.status.draft": "Szkic",
+  "page.status.draft.description":
+    "Strona jest w trybie roboczym i widoczna tylko dla zalogowanych redaktorów",
+  "page.status.listed": "Opublikowana",
+  "page.status.listed.description": "Strona jest opublikowana i widoczna dla każdego",
+  "page.status.unlisted": "Nie katalogowana",
+  "page.status.unlisted.description": "Strona jest dostępna tylko za pośrednictwem adresu URL",
+
+  "pages": "Strony",
+  "pages.empty": "Nie ma jeszcze żadnych stron",
+  "pages.status.draft": "Szkice",
+  "pages.status.listed": "Opublikowane",
+  "pages.status.unlisted": "Nie katalogowana",
+
+  "password": "Has\u0142o",
+  "pixel": "Piksel",
+  "prev": "Poprzednie",
+  "remove": "Usuń",
+  "rename": "Zmień nazwę",
+  "replace": "Zamie\u0144",
+  "retry": "Pon\u00f3w pr\u00f3b\u0119",
+  "revert": "Odrzu\u0107",
+
+  "role": "Rola",
+  "role.all": "Wszystkie",
+  "role.empty": "Nie ma użytkowników z tą rolą",
+  "role.description.placeholder": "Brak opisu",
+
+  "save": "Zapisz",
+  "search": "Szukaj",
+  "select": "Wybierz",
+  "settings": "Ustawienia",
+  "size": "Rozmiar",
+  "slug": "Końcówka URL",
+  "sort": "Sortuj",
+  "title": "Tytuł",
+  "template": "Szablon",
+  "today": "Dzisiaj",
+
+  "toolbar.button.code": "Kod",
+  "toolbar.button.bold": "Pogrubienie",
+  "toolbar.button.email": "Email",
+  "toolbar.button.headings": "Nagłówki",
+  "toolbar.button.heading.1": "Nagłówek 1",
+  "toolbar.button.heading.2": "Nagłówek 2",
+  "toolbar.button.heading.3": "Nagłówek 3",
+  "toolbar.button.italic": "Kursywa",
+  "toolbar.button.link": "Link",
+  "toolbar.button.ol": "Lista numerowana",
+  "toolbar.button.ul": "Lista wypunktowana",
+
+  "translation.author": "Zespół Kirby",
+  "translation.direction": "ltr",
+  "translation.name": "Polski",
+
+  "upload": "Prześlij",
+  "upload.errors": "Błąd",
+  "upload.progress": "Przesyłanie…",
+
+  "url": "Url",
+  "url.placeholder": "https://example.com",
+
+  "user": "Użytkownik",
+  "user.blueprint":
+    "Możesz zdefiniować dodatkowe sekcje i pola formularza dla tej roli użytkownika w <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.changeEmail": "Zmień email",
+  "user.changeLanguage": "Zmień język",
+  "user.changeName": "Zmień nazwę tego użytkownika",
+  "user.changePassword": "Zmień hasło",
+  "user.changePassword.new": "Nowe hasło",
+  "user.changePassword.new.confirm": "Potwierdź nowe hasło…",
+  "user.changeRole": "Zmień rolę",
+  "user.changeRole.select": "Wybierz nową rolę",
+  "user.create": "Dodaj nowego użytkownika",
+  "user.delete": "Usuń tego użytkownika",
+  "user.delete.confirm":
+    "Czy na pewno chcesz usunąć <br><strong>{email}</strong>?",
+
+  "version": "Wersja",
+
+  "view.account": "Twoje konto",
+  "view.installation": "Instalacja",
+  "view.settings": "Ustawienia",
+  "view.site": "Strona",
+  "view.users": "U\u017cytkownicy",
+
+  "welcome": "Witaj",
+  "year": "Rok"
+}
