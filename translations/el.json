@@ -1,0 +1,409 @@
+{
+  "add": "\u03a0\u03c1\u03bf\u03c3\u03b8\u03ae\u03ba\u03b7",
+  "avatar": "\u0395\u03b9\u03ba\u03cc\u03bd\u03b1 \u03c0\u03c1\u03bf\u03c6\u03af\u03bb",
+  "back": "Πίσω",
+  "cancel": "\u0391\u03ba\u03cd\u03c1\u03c9\u03c3\u03b7",
+  "change": "\u0391\u03bb\u03bb\u03b1\u03b3\u03ae",
+  "close": "\u039a\u03bb\u03b5\u03af\u03c3\u03b9\u03bc\u03bf",
+  "confirm": "Εντάξει",
+  "copy": "Αντιγραφή",
+  "create": "Δημιουργία",
+
+  "date": "Ημερομηνία",
+  "date.select": "Επιλογή ημερομηνίας",
+
+  "day": "Ημέρα",
+  "days.fri": "\u03a0\u03b1\u03c1",
+  "days.mon": "\u0394\u03b5\u03c5",
+  "days.sat": "\u03a3\u03ac\u03b2",
+  "days.sun": "\u039a\u03c5\u03c1",
+  "days.thu": "\u03a0\u03ad\u03bc",
+  "days.tue": "\u03a4\u03c1\u03af",
+  "days.wed": "\u03a4\u03b5\u03c4",
+
+  "delete": "\u0394\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03ae",
+  "dimensions": "Διαστάσεις",
+  "discard": "Απόρριψη",
+  "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
+
+  "email": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
+  "email.placeholder": "mail@example.com",
+
+  "error.access.login": "Mη έγκυρη σύνδεση",
+  "error.access.panel": "Δεν επιτρέπεται η πρόσβαση στον πίνακα ελέγχου",
+
+  "error.avatar.create.fail": "Δεν ήταν δυνατή η μεταφόρτωση της εικόνας προφίλ",
+  "error.avatar.delete.fail": "Δεν ήταν δυνατή η διαγραφή της εικόνας προφίλ",
+  "error.avatar.dimensions.invalid":
+    "Διατηρήστε το πλάτος και το ύψος της εικόνας προφίλ κάτω από 3000 εικονοστοιχεία",
+  "error.avatar.mime.forbidden":
+    "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03cc\u03c2 \u03c4\u03cd\u03c0\u03bf\u03c2 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
+
+  "error.blueprint.notFound": "Δεν ήταν δυνατή η φόρτωση του προσχεδίου \"{name}\"",
+
+  "error.email.preset.notFound": "Δεν είναι δυνατή η εύρεση της προεπιλογής διεύθινσης ηλεκτρονικού ταχυδρομείου \"{name}\"",
+
+  "error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",
+
+  "error.file.changeName.permission":
+    "Δεν επιτρέπεται να αλλάξετε το όνομα του \"{filename}\"",
+  "error.file.duplicate": "Ένα αρχείο με το όνομα \"{filename}\" υπάρχει ήδη",
+  "error.file.extension.forbidden":
+    "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03ae \u03b5\u03c0\u03ad\u03ba\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
+  "error.file.extension.missing":
+    "Λείπει η επέκταση για το \"{filename}\"",
+  "error.file.mime.differs":
+    "Το αρχείο πρέπει να είναι του ίδιου τύπου mime \"{mime}\"",
+  "error.file.mime.forbidden": "Ο τύπος μέσου \"{mime}\" δεν επιτρέπεται",
+  "error.file.mime.missing":
+    "Δεν είναι δυνατό να εντοπιστεί ο τύπος μέσου για το \"{filename}\"",
+  "error.file.name.missing": "Το όνομα αρχείου δεν μπορεί να είναι άδειο",
+  "error.file.notFound": "Δεν είναι δυνατό να βρεθεί το αρχείο \"{filename}\"",
+  "error.file.type.forbidden": "Δεν επιτρέπεται η μεταφόρτωση αρχείων {type}",
+  "error.file.undefined": "Δεν ήταν δυνατή η εύρεση του αρχείου",
+
+  "error.form.incomplete": "Επιδιορθώστε όλα τα σφάλματα της φόρμας ...",
+  "error.form.notSaved": "Δεν ήταν δυνατή η αποθήκευση της φόρμας",
+
+  "error.page.changeSlug.permission":
+    "Δεν επιτρέπεται να αλλάξετε το URL της σελίδας \"{slug}\"",
+  "error.page.changeStatus.incomplete":
+    "Δεν ήταν δυνατή η δημοσίευση της σελίδας καθώς περιέχει σφάλματα",
+  "error.page.changeStatus.permission":
+    "Δεν είναι δυνατή η αλλαγή κατάστασης για αυτή τη σελίδα",
+  "error.page.changeStatus.toDraft.invalid":
+    "Δεν είναι δυνατή η μετατροπή της σελίδας \"{slug}\" σε προσχέδιο",
+  "error.page.changeTemplate.invalid":
+    "Δεν είναι δυνατή η αλλαγή προτύπου για τη σελίδα \"{slug}\"",
+  "error.page.changeTemplate.permission":
+    "Δεν επιτρέπεται να αλλάξετε το πρότυπο για τη σελίδα \"{slug}\"",
+  "error.page.changeTitle.empty": "Ο τίτλος δεν μπορεί να είναι κενός",
+  "error.page.changeTitle.permission":
+    "Δεν επιτρέπεται να αλλάξετε τον τίτλο για τη σελίδα \"{slug}\"",
+  "error.page.create.permission": "Δεν επιτρέπεται να δημιουργήσετε τη σελίδα \"{slug}\"",
+  "error.page.delete": "Δεν είναι δυνατή η διαγραφή της σελίδας \"{slug}\"",
+  "error.page.delete.confirm": "Παρακαλώ εισάγετε τον τίτλο της σελίδας για επιβεβαίωση",
+  "error.page.delete.hasChildren":
+    "Δεν είναι δυνατή η διαγραφή της σελίδας καθώς περιέχει υποσελίδες",
+  "error.page.delete.permission": "Δεν επιτρέπεται η διαγραφή της σελίδας \"{slug}\"",
+  "error.page.draft.duplicate":
+    "Υπάρχει ήδη ένα προσχέδιο σελίδας με την διεύθυνση URL \"{slug}\"",
+  "error.page.duplicate":
+    "Υπάρχει ήδη μια σελίδα με την διεύθυνση URL \"{slug}\"",
+  "error.page.notFound": "Δεν ήταν δυνατή η εύρεση της σελίδας \"{slug}\"",
+  "error.page.num.invalid":
+    "Παρακαλώ εισάγετε έναν έγκυρο αριθμό ταξινόμησης. Οι αριθμοί δεν μπορεί να είναι αρνητικοί.",
+  "error.page.slug.invalid": "Παρακαλώ εισάγετε ένα έγκυρο πρόθεμα διεύθυνσης URL",
+  "error.page.sort.permission": "Δεν είναι δυνατή η ταξινόμηση της σελίδας \"{slug}\"",
+  "error.page.status.invalid": "Ορίστε μια έγκυρη κατάσταση σελίδας",
+  "error.page.undefined": "Δεν ήταν δυνατή η εύρεση της σελίδας",
+  "error.page.update.permission": "Δεν επιτρέπεται η ενημέρωση της σελίδας \"{slug}\"",
+
+  "error.section.files.max.plural":
+    "Δεν πρέπει να προσθέσετε περισσότερα από {max} αρχεία στην ενότητα \"{section}\"",
+  "error.section.files.max.singular":
+    "Δεν πρέπει να προσθέσετε περισσότερα από ένα αρχεία στην ενότητα \"{section}\"",
+  "error.section.files.min.plural":
+    "Προσθέστε τουλάχιστον {min} αρχεία στην ενότητα \"{section}\"",
+  "error.section.files.min.singular":
+    "Προσθέστε τουλάχιστον ένα αρχείο στην ενότητα \"{section}\"",
+
+  "error.section.pages.max.plural":
+    "Δεν μπορείτε να προσθέσετε περισσότερες από {max} σελίδες στην ενότητα \"{section}\"",
+  "error.section.pages.max.singular":
+    "Δεν μπορείτε να προσθέσετε περισσότερες από μία σελίδες στην ενότητα \"{section}\"",
+  "error.section.pages.min.plural":
+    "Προσθέστε τουλάχιστον {min} σελίδες στην ενότητα \"{section}\"",
+  "error.section.pages.min.singular":
+    "Προσθέστε τουλάχιστον μία σελίδα στην ενότητα \"{section}\"",
+
+  "error.section.notLoaded": "Δεν ήταν δυνατή η φόρτωση της ενότητας \"{name}\"",
+  "error.section.type.invalid": "Ο τύπος ενότητας \"{type}\" δεν είναι έγκυρος",
+
+  "error.site.changeTitle.permission":
+    "Δεν επιτρέπεται να αλλάξετε τον τίτλο του ιστότοπου",
+  "error.site.update.permission": "Δεν επιτρέπεται η ενημέρωση του ιστότοπου",
+
+  "error.template.default.notFound": "Το προεπιλεγμένο πρότυπο δεν υπάρχει",
+
+  "error.user.changeEmail.permission":
+    "Δεν επιτρέπεται να αλλάξετε τη διεύθινση ηλεκτρονικού ταχυδρομείου για τον χρήστη \"{name}\"",
+  "error.user.changeLanguage.permission":
+    "Δεν επιτρέπεται να αλλάξετε τη γλώσσα για τον χρήστη \"{name}\"",
+  "error.user.changeName.permission":
+    "Δεν επιτρέπεται να αλλάξετε το όνομα του χρήστη \"{name}",
+  "error.user.changePassword.permission":
+    "Δεν επιτρέπεται να αλλάξετε τον κωδικό πρόσβασης για τον χρήστη \"{name}\"",
+  "error.user.changeRole.lastAdmin":
+    "Ο ρόλος του τελευταίου διαχειριστή δεν μπορεί να αλλάξει",
+  "error.user.changeRole.permission":
+    "Δεν επιτρέπεται να αλλάξετε το ρόλο του χρήστη \"{name}\"",
+  "error.user.create.permission": "Δεν επιτρέπεται η δημιουργία αυτού του χρήστη",
+  "error.user.delete": "\u039f \u03c7\u03c1\u03ae\u03c3\u03c4\u03b7\u03c2 \u03b4\u03b5\u03bd \u03bc\u03c0\u03bf\u03c1\u03bf\u03cd\u03c3\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03b5\u03af",
+  "error.user.delete.lastAdmin": "Δεν είναι δυνατή η διαγραφή του τελευταίου διαχειριστή",
+  "error.user.delete.lastUser": "Δεν είναι δυνατή η διαγραφή του τελευταίου χρήστη",
+  "error.user.delete.permission":
+    "Δεν επιτρέπεται να διαγράψετ τον χρήστη \"{name}\"",
+  "error.user.duplicate":
+    "Ένας χρήστης με τη διεύθυνση ηλεκτρονικού ταχυδρομείου \"{email}\" υπάρχει ήδη",
+  "error.user.email.invalid": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
+  "error.user.language.invalid": "Παρακαλώ εισαγάγετε μια έγκυρη γλώσσα",
+  "error.user.notFound": "Δεν είναι δυνατή η εύρεση του χρήστη \"{name}\"",
+  "error.user.password.invalid":
+    "Παρακαλώ εισάγετε έναν έγκυρο κωδικό πρόσβασης. Οι κωδικοί πρόσβασης πρέπει να έχουν μήκος τουλάχιστον 8 χαρακτήρων.",
+  "error.user.password.notSame": "\u03a0\u03b1\u03c1\u03b1\u03ba\u03b1\u03bb\u03bf\u03cd\u03bc\u03b5 \u03b5\u03c0\u03b9\u03b2\u03b5\u03b2\u03b1\u03b9\u03ce\u03c3\u03c4\u03b5 \u03c4\u03bf\u03bd \u039a\u03c9\u03b4\u03b9\u03ba\u03cc \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
+  "error.user.password.undefined": "Ο χρήστης δεν έχει κωδικό πρόσβασης",
+  "error.user.role.invalid": "Παρακαλώ εισαγάγετε έναν έγκυρο ρόλο",
+  "error.user.undefined": "Δεν είναι δυνατή η εύρεση του χρήστη",
+  "error.user.update.permission":
+    "Δεν επιτρέπεται η ενημέρωση του χρήστη \"{name}\"",
+
+  "error.validation.accepted": "Παρακαλώ επιβεβαιώστε",
+  "error.validation.alpha": "Παρακαλώ εισάγετε μόνο χαρακτήρες μεταξύ των a-z",
+  "error.validation.alphanum":
+    "Παρακαλώ εισάγετε μόνο χαρακτήρες μεταξύ των a-z ή αριθμούς απο το 0 έως το 9",
+  "error.validation.between":
+    "Παρακαλώ εισάγετε μια τιμή μεταξύ \"{min}\" και \"{max}\"",
+  "error.validation.boolean": "Παρακαλώ επιβεβαιώστε ή αρνηθείτε",
+  "error.validation.contains":
+    "Παρακαλώ καταχωρίστε μια τιμή που περιέχει \"{needle}\"",
+  "error.validation.date": "Παρακαλώ εισάγετε μία έγκυρη ημερομηνία",
+  "error.validation.denied": "Παρακαλώ αρνηθείτε",
+  "error.validation.different": "Η τιμή δεν μπορεί να είναι \"{other}\"",
+  "error.validation.email": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
+  "error.validation.endswith": "Η τιμή πρέπει να τελειώνει με \"{end}\"",
+  "error.validation.filename": "Παρακαλώ εισάγετε ένα έγκυρο όνομα αρχείου",
+  "error.validation.in": "Παρακαλώ εισάγετε ένα από τα παρακάτω: ({in})",
+  "error.validation.integer": "Παρακαλώ εισάγετε έναν έγκυρο ακέραιο αριθμό",
+  "error.validation.ip": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση IP",
+  "error.validation.less": "Παρακαλώ εισάγετε μια τιμή μικρότερη από {max}",
+  "error.validation.match": "Η τιμή δεν ταιριάζει με το αναμενόμενο πρότυπο",
+  "error.validation.max": "Παρακαλώ εισάγετε μια τιμή ίση ή μικρότερη από {max}",
+  "error.validation.maxlength":
+    "Παρακαλώ εισάγετε μια μικρότερη τιμή. (max. {max} χαρακτήρες)",
+  "error.validation.maxwords": "Παρακαλώ εισάγετε το πολύ {max} λέξεις",
+  "error.validation.min": "Παρακαλώ εισάγετε μια τιμή ίση ή μεγαλύτερη από {min}",
+  "error.validation.minlength":
+    "Παρακαλώ εισάγετε μεγαλύτερη τιμή. (τουλάχιστον {min} χαρακτήρες)",
+  "error.validation.minwords": "Παρακαλώ εισάγετε τουλάχιστον {min} λέξεις",
+  "error.validation.more": "Παρακαλώ εισάγετε τουλάχιστον {min} λέξεις",
+  "error.validation.notcontains":
+    "Παρακαλώ εισάγετε μια τιμή που δεν περιέχει \"{needle}\"",
+  "error.validation.notin":
+    "Παρακαλώ μην εισάγετε κανένα από τα παρακάτω: ({notIn})",
+  "error.validation.option": "Παρακαλώ κάντε μια έγκυρη επιλογή",
+  "error.validation.num": "Παρακαλώ εισάγετε έναν έγκυρο αριθμό",
+  "error.validation.required": "Παρακαλώ εισάγετε κάτι",
+  "error.validation.same": "Παρακαλώ εισάγετε \"{other}\"",
+  "error.validation.size": "Το μέγεθος της τιμής πρέπει να είναι \"{size}\"",
+  "error.validation.startswith": "Η τιμή πρέπει να αρχίζει με \"{start}\"",
+  "error.validation.time": "Παρακαλώ εισάγετε μια έγκυρη ώρα",
+  "error.validation.url": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση URL",
+
+  "field.files.empty": "Δεν έχουν επιλεγεί αρχεία ακόμα",
+  "field.pages.empty": "Δεν έχουν επιλεγεί ακόμη σελίδες",
+  "field.structure.delete.confirm": "\u0395\u03af\u03c3\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03bf\u03c2 \u03cc\u03c4\u03b9 \u03b8\u03ad\u03bb\u03b5\u03c4\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7\u03bd \u03ba\u03b1\u03c4\u03b1\u03c7\u03ce\u03c1\u03b9\u03c3\u03b7;",
+  "field.structure.empty": "\u0394\u03b5\u03bd \u03c5\u03c0\u03ac\u03c1\u03c7\u03bf\u03c5\u03bd \u03b1\u03ba\u03cc\u03bc\u03b7 \u03ba\u03b1\u03c4\u03b1\u03c7\u03c9\u03c1\u03af\u03c3\u03b5\u03b9\u03c2.",
+  "field.users.empty": "Δεν έχουν επιλεγεί ακόμη χρήστες",
+
+  "file.delete.confirm":
+    "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc \u03c4\u03bf \u03b1\u03c1\u03c7\u03b5\u03af\u03bf;",
+
+  "files": "Αρχεία",
+  "files.empty": "Δεν υπάρχουν ακόμα αρχεία",
+
+  "hour": "Ώρα",
+  "insert": "\u0395\u03b9\u03c3\u03b1\u03b3\u03c9\u03b3\u03ae",
+  "install": "Εγκατάσταση",
+
+  "installation": "Εγκατάσταση",
+  "installation.completed": "Ο πίνακας ελέγχου έχει εγκατασταθεί",
+  "installation.disabled": "Η εγκατάσταση του πίνακα ελέγχου είναι απενεργοποιημένη για δημόσιους διακομιστές από προεπιλογή. Εκτελέστε την εγκατάσταση σε ένα τοπικό μηχάνημα ή ενεργοποιήστε την με την επιλογή panel.install.",
+  "installation.issues.accounts":
+    "\u039f \u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2 \/site\/accounts \u03b4\u03b5\u03bd \u03b5\u03af\u03bd\u03b1\u03b9 \u03b5\u03b3\u03b3\u03c1\u03ac\u03c8\u03b9\u03bc\u03bf\u03c2",
+  "installation.issues.content":
+    "\u039f \u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2 content \u03ba\u03b1\u03b9 \u03cc\u03bb\u03bf\u03b9 \u03bf\u03b9 \u03c5\u03c0\u03bf\u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03b9 \u03c0\u03c1\u03ad\u03c0\u03b5\u03b9 \u03bd\u03b1 \u03b5\u03af\u03bd\u03b1\u03b9 \u03b5\u03b3\u03b3\u03c1\u03ac\u03c8\u03b9\u03bc\u03bf\u03b9.",
+  "installation.issues.curl": "Απαιτείται η επέκταση <code>CURL</code>",
+  "installation.issues.headline": "Ο πίνακας ελέγχου δεν μπορεί να εγκατασταθεί",
+  "installation.issues.mbstring":
+    "Απαιτείται η επέκταση <code>MB String</code> ",
+  "installation.issues.media":
+    "Ο φάκελος <code>/media</code>  δεν υπάρχει ή δεν είναι εγγράψιμος",
+  "installation.issues.php": "Βεβαιωθείτε ότι χρησιμοποιήτε <code>PHP 7+</code>",
+  "installation.issues.server":
+    "To Kirby απαιτεί <code>Apache</code>, <code>Nginx</code> ή <code>Caddy</code>",
+  "installation.issues.sessions": "Ο φάκελος <code>/site/sessions</code> δεν υπάρχει ή δεν είναι εγγράψιμος",
+
+  "language": "\u0393\u03bb\u03ce\u03c3\u03c3\u03b1",
+  "language.code": "Κώδικας",
+  "language.convert": "Χρήση ως προεπιλογή",
+  "language.convert.confirm":
+    "<p>Θέλετε πραγματικά να μετατρέψετε τη <strong>{name}</strong> στην προεπιλεγμένη γλώσσα; Αυτό δεν μπορεί να ανακληθεί.</p><p>Αν το <strong>{name}</strong> χει μη μεταφρασμένο περιεχόμενο, δεν θα υπάρχει πλέον έγκυρη εναλλακτική λύση και τμήματα του ιστότοπού σας ενδέχεται να είναι κενά.</p>",
+  "language.create": "Προσθέστε μια νέα γλώσσα",
+  "language.delete.confirm":
+    "Θέλετε πραγματικά να διαγράψετε τη γλώσσα {name} συμπεριλαμβανομένων όλων των μεταφράσεων; Αυτό δεν μπορεί να αναιρεθεί!",
+  "language.deleted": "Η γλώσσα έχει διαγραφεί",
+  "language.direction": "Κατεύθυνση ανάγνωσης",
+  "language.direction.ltr": "Αριστερά προς τα δεξιά",
+  "language.direction.rtl": "Δεξιά προς τα αριστερά",
+  "language.locale": "Συμβολοσειρά τοπικής γλώσσας PHP",
+  "language.name": "Ονομασία",
+  "language.updated": "Η γλώσσα έχει ενημερωθεί",
+
+  "languages": "Γλώσσες",
+  "languages.default": "Προεπιλεγμένη γλώσσα",
+  "languages.empty": "Δεν υπάρχουν ακόμη γλώσσες",
+  "languages.secondary": "Δευτερεύουσες γλώσσες",
+  "languages.secondary.empty": "Δεν υπάρχουν ακόμα δευτερεύουσες γλώσσες",
+
+  "license": "\u0386\u03b4\u03b5\u03b9\u03b1 \u03a7\u03c1\u03ae\u03c3\u03b7\u03c2 \u03c4\u03bf\u03c5 Kirby",
+  "license.buy": "Αγοράστε μια άδεια",
+  "license.register": "Εγγραφή",
+  "license.register.help":
+    "Έχετε λάβει τον κωδικό άδειας χρήσης μετά την αγορά μέσω ηλεκτρονικού ταχυδρομείου. Παρακαλώ αντιγράψτε και επικολλήστε τον για να εγγραφείτε.",
+  "license.register.label": "Παρακαλώ εισαγάγετε τον κωδικό άδειας χρήσης",
+  "license.register.success": "Σας ευχαριστούμε για την υποστήριξη του Kirby",
+  "license.unregistered": "Αυτό είναι ένα μη καταχωρημένο demo του Kirby",
+
+  "link": "\u03a3\u03cd\u03bd\u03b4\u03b5\u03c3\u03bc\u03bf\u03c2",
+  "link.text": "\u039a\u03b5\u03af\u03bc\u03b5\u03bd\u03bf \u03c3\u03c5\u03bd\u03b4\u03ad\u03c3\u03bc\u03bf\u03c5",
+
+  "loading": "Φόρτωση",
+
+  "login": "\u03a3\u03cd\u03bd\u03b4\u03b5\u03c3\u03b7",
+  "login.remember": "Κρατήστε με συνδεδεμένο",
+
+  "logout": "\u0391\u03c0\u03bf\u03c3\u03cd\u03bd\u03b4\u03b5\u03c3\u03b7",
+
+  "menu": "Μενού",
+  "meridiem": "Π.Μ./Μ.Μ",
+  "mime": "Τύπος πολυμέσων",
+  "minutes": "Λεπτά",
+
+  "month": "Μήνας",
+  "months.april": "\u0391\u03c0\u03c1\u03af\u03bb\u03b9\u03bf\u03c2",
+  "months.august": "\u0391\u03cd\u03b3\u03bf\u03c5\u03c3\u03c4\u03bf\u03c2",
+  "months.december": "\u0394\u03b5\u03ba\u03ad\u03bc\u03b2\u03c1\u03b9\u03bf\u03c2",
+  "months.february": "\u03a6\u03b5\u03b2\u03c1\u03bf\u03c5\u03ac\u03c1\u03b9\u03bf\u03c2",
+  "months.january": "\u0399\u03b1\u03bd\u03bf\u03c5\u03ac\u03c1\u03b9\u03bf\u03c2",
+  "months.july": "\u0399\u03bf\u03cd\u03bb\u03b9\u03bf\u03c2",
+  "months.june": "\u0399\u03bf\u03cd\u03bd\u03b9\u03bf\u03c2",
+  "months.march": "\u039c\u03ac\u03c1\u03c4\u03b9\u03bf\u03c2",
+  "months.may": "\u039c\u03ac\u03b9\u03bf\u03c2",
+  "months.november": "\u039d\u03bf\u03ad\u03bc\u03b2\u03c1\u03b9\u03bf\u03c2",
+  "months.october": "\u039f\u03ba\u03c4\u03ce\u03b2\u03c1\u03b9\u03bf\u03c2",
+  "months.september": "\u03a3\u03b5\u03c0\u03c4\u03ad\u03bc\u03b2\u03c1\u03b9\u03bf\u03c2",
+
+  "more": "Περισσότερα",
+  "name": "Ονομασία",
+  "next": "Επόμενο",
+  "open": "Άνοιγμα",
+  "options": "Eπιλογές",
+
+  "orientation": "Προσανατολισμός",
+  "orientation.landscape": "Οριζόντιος",
+  "orientation.portrait": "Κάθετος",
+  "orientation.square": "Τετράγωνος",
+
+  "page.changeSlug": "\u0391\u03bb\u03bb\u03b1\u03b3\u03ae URL",
+  "page.changeSlug.fromTitle": "\u0394\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03b1\u03c0\u03cc \u03c4\u03bf\u03bd \u03c4\u03af\u03c4\u03bb\u03bf",
+  "page.changeStatus": "Αλλαγή κατάστασης",
+  "page.changeStatus.position": "Επιλέξτε μια θέση",
+  "page.changeStatus.select": "Επιλέξτε μια νέα κατάσταση",
+  "page.changeTemplate": "Αλλαγή προτύπου",
+  "page.delete.confirm":
+    "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7 \u03c3\u03b5\u03bb\u03af\u03b4\u03b1;",
+  "page.delete.confirm.subpages":
+    "<strong>Αυτή η σελίδα έχει υποσελίδες</strong>. <br>Όλες οι υποσελίδες θα διαγραφούν επίσης.",
+  "page.delete.confirm.title": "Εισάγετε τον τίτλο της σελίδας για επιβεβαίωση",
+  "page.draft.create": "Δημιουργία προσχεδίου",
+  "page.status": "Kατάσταση",
+  "page.status.draft": "Προσχέδιο",
+  "page.status.draft.description":
+    "Η σελίδα είναι σε κατάσταση προσχεδίου και είναι ορατή μόνο για συνδεδεμένους συντάκτες",
+  "page.status.listed": "Δημοσιευμένο",
+  "page.status.listed.description": "Αυτή η σελίδα είναι δημοσιευμένη για οποιονδήποτε",
+  "page.status.unlisted": "Μη καταχωρημένο",
+  "page.status.unlisted.description": "Η σελίδα είναι προσβάσιμη μόνο μέσω της διεύθυνσης URL",
+
+  "pages": "Σελίδες",
+  "pages.empty": "Δεν υπάρχουν ακόμα σελίδες",
+  "pages.status.draft": "Προσχέδια",
+  "pages.status.listed": "Δημοσιευμένο",
+  "pages.status.unlisted": "Μη καταχωρημένο",
+
+  "password": "\u039a\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2 \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
+  "pixel": "Εικονοστοιχέιο",
+  "prev": "Προηγούμενο",
+  "remove": "Αφαίρεση",
+  "rename": "Μετονομασία",
+  "replace": "\u0391\u03bd\u03c4\u03b9\u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7",
+  "retry": "\u0395\u03c0\u03b1\u03bd\u03ac\u03bb\u03b7\u03c8\u03b7",
+  "revert": "\u0391\u03b3\u03bd\u03cc\u03b7\u03c3\u03b7",
+
+  "role": "\u03a1\u03cc\u03bb\u03bf\u03c2",
+  "role.all": "Όλα",
+  "role.empty": "Δεν υπάρχουν χρήστες με αυτόν τον ρόλο",
+  "role.description.placeholder": "Χωρίς περιγραφή",
+
+  "save": "\u0391\u03c0\u03bf\u03b8\u03ae\u03ba\u03b5\u03c5\u03c3\u03b7",
+  "search": "Αναζήτηση",
+  "select": "Επιλογή",
+  "settings": "Ρυθμίσεις",
+  "size": "Μέγεθος",
+  "slug": "\u0395\u03c0\u03af\u03b8\u03b5\u03bc\u03b1 URL",
+  "sort": "Ταξινόμηση",
+  "title": "Τίτλος",
+  "template": "\u03a0\u03c1\u03cc\u03c4\u03c5\u03c0\u03bf",
+  "today": "Σήμερα",
+
+  "toolbar.button.code": "Κώδικας",
+  "toolbar.button.bold": "\u0388\u03bd\u03c4\u03bf\u03bd\u03b7 \u03b3\u03c1\u03b1\u03c6\u03ae",
+  "toolbar.button.email": "Email",
+  "toolbar.button.headings": "Επικεφαλίδες",
+  "toolbar.button.heading.1": "Επικεφαλίδα 1",
+  "toolbar.button.heading.2": "Επικεφαλίδα 2",
+  "toolbar.button.heading.3": "Επικεφαλίδα 3",
+  "toolbar.button.italic": "\u03a0\u03bb\u03ac\u03b3\u03b9\u03b1 \u03b3\u03c1\u03b1\u03c6\u03ae",
+  "toolbar.button.link": "\u03a3\u03cd\u03bd\u03b4\u03b5\u03c3\u03bc\u03bf\u03c2",
+  "toolbar.button.ol": "Ταξινομημένη λίστα",
+  "toolbar.button.ul": "Λίστα κουκκίδων",
+
+  "translation.author": "Ομάδα Kirby",
+  "translation.direction": "ltr",
+  "translation.name": "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac",
+
+  "upload": "Μεταφόρτωση",
+  "upload.errors": "Σφάλμα",
+  "upload.progress": "Μεταφόρτωση...",
+
+  "url": "Διεύθινση url",
+  "url.placeholder": "https://example.com",
+
+  "user": "Χρήστης",
+  "user.blueprint":
+    "Μπορείτε να ορίσετε επιπλέον τμήματα και πεδία φόρμας για αυτόν τον ρόλο χρήστη στο <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.changeEmail": "Αλλαγή διεύθινσης ηλεκτρονικού ταχυδρομείου",
+  "user.changeLanguage": "Αλλαγή γλώσσας",
+  "user.changeName": "Μετονομασία χρήστη",
+  "user.changePassword": "Αλλαγή κωδικού πρόσβασης",
+  "user.changePassword.new": "Νέος Κωδικός Πρόσβασης",
+  "user.changePassword.new.confirm": "Επαληθεύση κωδικού πρόσβασης",
+  "user.changeRole": "Αλλαγή ρόλου",
+  "user.changeRole.select": "Επιλογή νέου ρόλου",
+  "user.create": "Προσθήκη νέου χρήστη",
+  "user.delete": "Διαγραφή χρήστη",
+  "user.delete.confirm":
+    "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc\u03bd \u03c4\u03bf\u03bd \u03c7\u03c1\u03ae\u03c3\u03c4\u03b7;",
+
+  "version": "\u0388\u03ba\u03b4\u03bf\u03c3\u03b7 Kirby",
+
+  "view.account": "\u039f \u03bb\u03bf\u03b3\u03b1\u03c1\u03b9\u03b1\u03c3\u03bc\u03cc\u03c2 \u03c3\u03b1\u03c2",
+  "view.installation": "\u0395\u03b3\u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7",
+  "view.settings": "Ρυθμίσεις",
+  "view.site": "Iστοσελίδα",
+  "view.users": "\u03a7\u03c1\u03ae\u03c3\u03c4\u03b5\u03c2",
+
+  "welcome": "Καλώς ήρθατε",
+  "year": "Έτος"
+}
