@@ -1,4 +1,4 @@
-import { lcfirst } from "../helpers/stringCase.js";
+import { lcfirst } from "@/helpers/stringCase.js";
 
 export default {
   install(Vue) {

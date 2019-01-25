@@ -1,6 +1,6 @@
 import Vue from "vue";
 import config from "./config.js";
-import store from "./store.js";
+import store from "@/store/store.js";
 
 export default function(to, from, next) {
   // load the system, the user and the translation

@@ -132,8 +132,8 @@
 import Vue from "vue";
 import Field from "../Field.vue";
 import dayjs from "dayjs";
-import sorter from "@/ui/helpers/sort.js";
-import clone from "@/ui/helpers/clone.js";
+import sorter from "@/helpers/sort.js";
+import clone from "@/helpers/clone.js";
 
 Array.prototype.sortBy = function(sortBy) {
   const sort = sorter();

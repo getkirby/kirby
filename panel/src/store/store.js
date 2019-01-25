@@ -2,12 +2,12 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
-import form from "./store/form.js";
-import languages from "./store/languages.js";
-import notification from "./store/notification.js";
-import system from "./store/system.js";
-import translation from "./store/translation.js";
-import user from "./store/user.js";
+import form from "./modules/form.js";
+import languages from "./modules/languages.js";
+import notification from "./modules/notification.js";
+import system from "./modules/system.js";
+import translation from "./modules/translation.js";
+import user from "./modules/user.js";
 
 Vue.use(Vuex);
 

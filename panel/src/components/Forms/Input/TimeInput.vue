@@ -47,7 +47,7 @@
 
 <script>
 import dayjs from "dayjs";
-import padZero from "../../../helpers/padZero.js";
+import padZero from "@/helpers/padZero.js";
 
 export default {
   inheritAttrs: false,

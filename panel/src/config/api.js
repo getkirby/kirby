@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Api from "../api/api.js";
 import config from "./config.js";
-import store from "./store.js";
+import store from "@/store/store.js";
 
 Api.config.endpoint = config.api;
 
