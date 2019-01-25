@@ -1,6 +1,8 @@
 <template>
   <p class="k-url-field-preview">
+    {{ column.before }}
     <k-link :to="link" target="_blank" @click.native.stop>{{ value }}</k-link>
+    {{ column.after }}
   </p>
 </template>
 
@@ -20,12 +22,13 @@ export default {
 
 <style lang="scss">
 
+.k-url-field-preview {
+  padding: 0 .75rem;
+}
 .k-url-field-preview a {
   color: $color-focus;
   text-decoration: underline;
   transition: color .3s;
-  display: inline-block;
-  padding: 0 .75rem;
   overflow: hidden;
   white-space: nowrap;
   max-width: 100%;
