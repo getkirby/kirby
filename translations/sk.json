@@ -1,0 +1,409 @@
+{
+  "add": "Pridať",
+  "avatar": "Profilový obrázok",
+  "back": "Späť",
+  "cancel": "Zrušiť",
+  "change": "Zmeniť",
+  "close": "Zavrieť",
+  "confirm": "Ok",
+  "copy": "Kopírovať",
+  "create": "Vytvoriť",
+
+  "date": "Dátum",
+  "date.select": "Zvoliť dátum",
+
+  "day": "Deň",
+  "days.fri": "Pia",
+  "days.mon": "Pon",
+  "days.sat": "Sob",
+  "days.sun": "Ned",
+  "days.thu": "Štv",
+  "days.tue": "Uto",
+  "days.wed": "Str",
+
+  "delete": "Zmazať",
+  "dimensions": "Rozmery",
+  "discard": "Zahodiť",
+  "edit": "Upraviť",
+
+  "email": "E-mail",
+  "email.placeholder": "mail@example.com",
+
+  "error.access.login": "Neplatné prihlásenie",
+  "error.access.panel": "Nemáte povolenie na prístup do Panel-u",
+
+  "error.avatar.create.fail": "Profilový obrázok sa nepodarilo nahrať",
+  "error.avatar.delete.fail": "Profilový obrázok sa nepodarilo zmazať",
+  "error.avatar.dimensions.invalid":
+    "Prosím, dodržte, aby šírka a výška profilového obrázka bola menšia ako 3000 pixelov.",
+  "error.avatar.mime.forbidden":
+    "Profilový obrázok musí byť súbor JPEG alebo PNG.",
+
+  "error.blueprint.notFound": "Blueprint \"{name}\" sa nepodarilo načítať",
+
+  "error.email.preset.notFound": "E-mailovú predvoľbu \"{name}\" nie je možné nájsť",
+
+  "error.field.converter.invalid": "Neplatný converter \"{converter}\"",
+
+  "error.file.changeName.permission":
+    "Nemáte povolenie na zmenu názvu pre \"{filename}\"",
+  "error.file.duplicate": "Súbor s názvom \"{filename}\" už existuje",
+  "error.file.extension.forbidden":
+    "Prípona \"{extension}\" nie je povolená",
+  "error.file.extension.missing":
+    "Prípona pre \"{filename}\" chýba",
+  "error.file.mime.differs":
+    "MIME typ nahratého súboru msa musí zhodovať s \"{mime}\"",
+  "error.file.mime.forbidden": "Typ média \"{mime}\" nie je povolený",
+  "error.file.mime.missing":
+    "Typ média pre \"{filename}\" sa nepodarilo zistiť",
+  "error.file.name.missing": "Názov súboru nemôže byť prázdny",
+  "error.file.notFound": "Súbor \"{filename}\" sa nepodarilo nájsť",
+  "error.file.type.forbidden": "Nemáte povolenie na nahrávanie súborov s typom {type}",
+  "error.file.undefined": "Súbor nie je možné nájsť",
+
+  "error.form.incomplete": "Prosím, opravte všetky chyby v rámci formuláru...",
+  "error.form.notSaved": "Formulár sa nepodarilo uložiť",
+
+  "error.page.changeSlug.permission":
+    "Nemáte povolenie na zmenu URL príponu pre \"{slug}\"",
+  "error.page.changeStatus.incomplete":
+    "Stránka obsahuje chyby a nemôže byť zverejnená",
+  "error.page.changeStatus.permission":
+    "Status tejto stránky nemôže byť zmenený",
+  "error.page.changeStatus.toDraft.invalid":
+    "Stránka \"{slug}\" nemôže byť zmenená na koncept.",
+  "error.page.changeTemplate.invalid":
+    "Šablónu pre stránku \"{slug}\" nie je možné zmeniť",
+  "error.page.changeTemplate.permission":
+    "Nemáte povolenie na zmenu šablóny pre \"{slug}\"",
+  "error.page.changeTitle.empty": "Titulok nemôže byť prázdny",
+  "error.page.changeTitle.permission":
+    "Nemáte povolenie na zmenu titulku pre \"{slug}\"",
+  "error.page.create.permission": "Nemáte povolenie na vytvorenie \"{slug}\"",
+  "error.page.delete": "Stránku \"{slug}\" nie je možné vymazať",
+  "error.page.delete.confirm": "Prosím, zadajte titulok stránky pre potvrdenie",
+  "error.page.delete.hasChildren":
+    "Táto stránka obsahuje podstránky a nemôže byť zmazaná",
+  "error.page.delete.permission": "Nemáte povolenie na zmazanie stránky \"{slug}\"",
+  "error.page.draft.duplicate":
+    "Koncept stránky s URL appendix-om \"{slug}\" už existuje",
+  "error.page.duplicate":
+    "Stránka s URL appendix-om \"{slug}\" už existuje",
+  "error.page.notFound": "Stránku \"{slug}\" nie je možné nájsť",
+  "error.page.num.invalid":
+    "Prosím, zadajte platné číslo pre radenie. Čísla nemôžu byť záporné.",
+  "error.page.slug.invalid": "Prosím, zadajte platný URL prefix.",
+  "error.page.sort.permission": "Stránku \"{slug}\" nie je možné preradiť.",
+  "error.page.status.invalid": "Prosím, nastavte platnú status pre stránku",
+  "error.page.undefined": "Stránku nie je možné nájsť",
+  "error.page.update.permission": "Nemáte povolenie na aktualizáciu \"{slug}\"",
+
+  "error.section.files.max.plural":
+    "Nemôžete pridať viac ako {max} súbory/ov do sekcie \"{section}\"",
+  "error.section.files.max.singular":
+    "Nemôžete pridať viac ako 1 súbor do sekcie \"{section}\"",
+  "error.section.files.min.plural":
+    "Pridajte aspoň {min} súbory/ov do sekcie \"{section}\"",
+  "error.section.files.min.singular":
+    "Pridajte aspoň 1 súbor do sekcie \"{section}\"",
+
+  "error.section.pages.max.plural":
+    "Nemôžete pridať viac ako {max} stránky/ok do sekcie \"{section}\"",
+  "error.section.pages.max.singular":
+    "Nemôžete pridať viac ako 1 stránku do sekcie \"{section}\"",
+  "error.section.pages.min.plural":
+    "Pridajte aspoň {min} stránky/ok do sekcie \"{section}\"",
+  "error.section.pages.min.singular":
+    "Pridajte aspoň 1 stránku do sekcie \"{section}\"",
+
+  "error.section.notLoaded": "Sekciu \"{name}\" sa nepodarilo nahrať",
+  "error.section.type.invalid": "Typ sekcie \"{type}\" nie je platný",
+
+  "error.site.changeTitle.permission":
+    "Nemáte povolenie na zmenu titulku pre portál",
+  "error.site.update.permission": "Nemáte povolenie na aktualizovanie portálu",
+
+  "error.template.default.notFound": "Predvolená šablóna neexistuje",
+
+  "error.user.changeEmail.permission":
+    "Nemáte povolenie na zmenu e-mailu pre užívateľa \"{name}\"",
+  "error.user.changeLanguage.permission":
+    "Nemáte povolenie na zmenu jazyka pre užívateľa \"{name}\"",
+  "error.user.changeName.permission":
+    "Nemáte povolenie na zmenu mena pre užívateľa \"{name}\"",
+  "error.user.changePassword.permission":
+    "Nemáte povolenie na zmenu hesla pre užívateľa \"{name}\"",
+  "error.user.changeRole.lastAdmin":
+    "Rolu pre posledného administrátora nie je možné zmeniť",
+  "error.user.changeRole.permission":
+    "Nemáte povolenie na zmenu role pre užívateľa \"{name}\"",
+  "error.user.create.permission": "Nemáte povolenie na vytvorenie tohto užívateľa",
+  "error.user.delete": "Užívateľa \"{name}\" nie je možné zmazať",
+  "error.user.delete.lastAdmin": "Posledného administrátora nie je možné zmazať",
+  "error.user.delete.lastUser": "Posledného užívateľa nie je možné zmazať",
+  "error.user.delete.permission":
+    "Nemáte povolenie na zmazanie užívateľa \"{name}\"",
+  "error.user.duplicate":
+    "Užívateľ s e-mailovou adresou \"{email}\" už existuje",
+  "error.user.email.invalid": "Prosím, zadajte platnú e-mailovú adresu",
+  "error.user.language.invalid": "Prosím, zadajte platný jazyk",
+  "error.user.notFound": "Užívateľa \"{name}\" nie je možné nájsť",
+  "error.user.password.invalid":
+    "Prosím, zadajte platné heslo. Dĺžka hesla musí byť aspoň 8 znakov.",
+  "error.user.password.notSame": "Heslá nie sú rovnaké",
+  "error.user.password.undefined": "Užívateľ nemá heslo",
+  "error.user.role.invalid": "Prosím, zadajte platnú rolu",
+  "error.user.undefined": "Užívateľa sa nepodarilo nájsť",
+  "error.user.update.permission":
+    "Nemáte povolenie na aktualizáciu užívateľa \"{name}\"",
+
+  "error.validation.accepted": "Prosím, potvrďte",
+  "error.validation.alpha": "Prosím, zadajte len znaky z hlások a-z",
+  "error.validation.alphanum":
+    "Prosím, zadajte len znaky z hlások a-z a čísloviek 0-9",
+  "error.validation.between":
+    "Prosím, zadajte hodnotu od \"{min}\" do \"{max}\"",
+  "error.validation.boolean": "Prosím, potvrďte alebo odmietnite",
+  "error.validation.contains":
+    "Prosím, zadajte hodnotu, ktorá obsahuje \"{needle}\"",
+  "error.validation.date": "Prosím, zadajte platný dátum",
+  "error.validation.denied": "Prosím, odmietnite",
+  "error.validation.different": "Hodnota nemôže byť \"{other}\"",
+  "error.validation.email": "Prosím, zadajte platnú e-mailovú adresu",
+  "error.validation.endswith": "Hodnota musí končiť na \"{end}\"",
+  "error.validation.filename": "Prosím, zadajte platný názov súboru",
+  "error.validation.in": "Prosím, zadajte jedno z nasledujúcich: ({in})",
+  "error.validation.integer": "Prosím, zadajte platné celé číslo",
+  "error.validation.ip": "Prosím, zadajte platnú e-mailovú adresu",
+  "error.validation.less": "Prosím, zadajte hodnotu menšiu ako {max}",
+  "error.validation.match": "Hodnota nezodpovedá očakávanému vzoru",
+  "error.validation.max": "Prosím, zadajte hodnotu rovnú alebo menšiu ako {max}",
+  "error.validation.maxlength":
+    "Prosím, zadajte kratšiu hodnotu. (max. {max} charaktery/ov)",
+  "error.validation.maxwords": "Prosím, nezadávajte viac ako {max} slovo/á/ov",
+  "error.validation.min": "Prosím, zadajte hodnotu rovnú alebo väčšiu ako {min}",
+  "error.validation.minlength":
+    "Prosím, zadajte dlhšiu hodnotu. (min. {min} charaktery/ov)",
+  "error.validation.minwords": "Prosím, zadajte aspoň {min} slovo/á/ov",
+  "error.validation.more": "Prosím zadajte hodnotu väčšiu ako {min}",
+  "error.validation.notcontains":
+    "Prosím, zadajte hodnotu, ktorá neobsahuje \"{needle}\"",
+  "error.validation.notin":
+    "Prosím, nezadávajte ani jedno z nasledujúcich: ({notIn})",
+  "error.validation.option": "Prosím, zadajte platnú voľbu",
+  "error.validation.num": "Prosím, zadajte platné číslo",
+  "error.validation.required": "Prosím, zadajte niečo",
+  "error.validation.same": "Prosím, zadajte \"{other}\"",
+  "error.validation.size": "Veľkosť hodnoty musí byť \"{size}\"",
+  "error.validation.startswith": "Hodnota musí začínať s \"{start}\"",
+  "error.validation.time": "Prosím, zadajte platný čas",
+  "error.validation.url": "Prosím, zadajte platnú URL",
+
+  "field.files.empty": "Žiadne súbory zatiaľ neboli zvolené",
+  "field.pages.empty": "Žiadne stránky zatiaľ neboli zvolené",
+  "field.structure.delete.confirm": "Ste si istý, že chcete zmazať tento riadok?",
+  "field.structure.empty": "Zatiaľ žiadne údaje",
+  "field.users.empty": "Žiadni užívatelia zatiaľ neboli zvolení",
+
+  "file.delete.confirm":
+    "Ste si istý, že chcete zmazať <br><strong>{filename}</strong>?",
+
+  "files": "Súbory",
+  "files.empty": "Zatiaľ žiadne súbory",
+
+  "hour": "Hodina",
+  "insert": "Vložiť",
+  "install": "Inštalovať",
+
+  "installation": "Inštalácia",
+  "installation.completed": "Panel bol nainštalovaný",
+  "installation.disabled": "Inštalácia Panelu na verejných serveroch je štandardne zablokovaná. Prosím, spustite inštaláciu na lokálnom serveri alebo aktivujte voľbu <code>panel.install</code>.",
+  "installation.issues.accounts":
+    "Priečinok <code>/site/accounts</code> neexistuje alebo nie je nastavený ako zapisovateľný",
+  "installation.issues.content":
+    "Priečinok <code>/content</code> neexistuje alebo nie je nastavený ako zapisovateľný",
+  "installation.issues.curl": "<code>CURL</code> rozšírenie je povinné",
+  "installation.issues.headline": "Panel nie je možné naištalovať",
+  "installation.issues.mbstring":
+    "<code>MB String</code> rozšírenie je povinné",
+  "installation.issues.media":
+    "Priečinok <code>/media</code> neexistuje alebo nie je nastavený ako zapisovateľný",
+  "installation.issues.php": "Uistite sa, že používate <code>PHP 7+</code>",
+  "installation.issues.server":
+    "Kirby vyžaduje <code>Apache</code>, <code>Nginx</code> alebo <code>Caddy</code>",
+  "installation.issues.sessions": "Priečinok <code>/site/sessions</code> neexistuje alebo nie je nastavený ako zapisovateľný",
+
+  "language": "Jazyk",
+  "language.code": "Kód",
+  "language.convert": "Nastaviť ako predvolené",
+  "language.convert.confirm":
+    "<p>Ste si istý, že chcete nastaviť <strong>{name}</strong> ako predvolený jazyk? Túto akciu nie je možné zvrátiť.</p><p>Ak <strong>{name}</strong> obsahuje nepreložený obsah, tak pre tento obsah nebude fungovať platné volanie a niektoré časti vašich stránok zostanú prázdne.</p>",
+  "language.create": "Pridať nový jazyk",
+  "language.delete.confirm":
+    "Ste si istý, že chcete zmazať jazyk <strong>{name}</strong> vrátane všetkých prekladov? Túto akciu nie je možné zvrátiť.",
+  "language.deleted": "Jazyk bol zmazaný",
+  "language.direction": "Smer čítania",
+  "language.direction.ltr": "Zľava doprava",
+  "language.direction.rtl": "Zprava doľava",
+  "language.locale": "PHP locale string",
+  "language.name": "Názov",
+  "language.updated": "Jazyk bol aktualizovaný",
+
+  "languages": "Jazyky",
+  "languages.default": "Predvolený jazyk",
+  "languages.empty": "Zatiaľ žiadne jazyky",
+  "languages.secondary": "Sekundárne jazyky",
+  "languages.secondary.empty": "Zatiaľ žiadne sekundárne jazyky",
+
+  "license": "Licencia",
+  "license.buy": "Zakúpiť licenciu",
+  "license.register": "Registrovať",
+  "license.register.help":
+    "Licenčný kód vám bol doručený e-mailom po úspešnom nákupe. Prosím, skopírujte a prilepte ho na uskutočnenie registrácie.",
+  "license.register.label": "Prosím, zadajte váš licenčný kód",
+  "license.register.success": "Ďakujeme za vašu podporu Kirby",
+  "license.unregistered": "Toto je neregistrované demo Kirby",
+
+  "link": "Odkaz",
+  "link.text": "Text odkazu",
+
+  "loading": "Načítavanie",
+
+  "login": "Prihlásenie",
+  "login.remember": "Ponechať ma prihláseného",
+
+  "logout": "Odhlásenie",
+
+  "menu": "Menu",
+  "meridiem": "AM/PM",
+  "mime": "Typ média",
+  "minutes": "Minúty",
+
+  "month": "Mesiac",
+  "months.april": "Apríl",
+  "months.august": "August",
+  "months.december": "December",
+  "months.february": "Február",
+  "months.january": "Január",
+  "months.july": "Júl",
+  "months.june": "Jún",
+  "months.march": "Marec",
+  "months.may": "Máj",
+  "months.november": "November",
+  "months.october": "Október",
+  "months.september": "September",
+
+  "more": "Viac",
+  "name": "Meno",
+  "next": "Ďalej",
+  "open": "Otvoriť",
+  "options": "Nastavenia",
+
+  "orientation": "Orientácia",
+  "orientation.landscape": "Širokouhlá",
+  "orientation.portrait": "Portrét",
+  "orientation.square": "Štvorec",
+
+  "page.changeSlug": "Zmeniť URL",
+  "page.changeSlug.fromTitle": "Vytvoriť z titulku",
+  "page.changeStatus": "Zmeniť status",
+  "page.changeStatus.position": "Prosím, zmeňte pozíciu",
+  "page.changeStatus.select": "Zvoľte nový status",
+  "page.changeTemplate": "Zmeniť šablónu",
+  "page.delete.confirm":
+    "Ste si istý, že chcete zmazať <strong>{title}</strong>?",
+  "page.delete.confirm.subpages":
+    "<strong>Táto stránka obsahuje podstránky</strong>. <br>Všetky podstránky budú taktiež zmazané.",
+  "page.delete.confirm.title": "Pre potvrdenie zadajte titulok stránky",
+  "page.draft.create": "Vytvoriť koncept",
+  "page.status": "Status",
+  "page.status.draft": "Koncept",
+  "page.status.draft.description":
+    "Stránka je koncept móde a je viditeľná len pre prihlásených užívateľov",
+  "page.status.listed": "Verejné",
+  "page.status.listed.description": "Stránka je prístupná pre všetkých",
+  "page.status.unlisted": "Skryté",
+  "page.status.unlisted.description": "Stránka je prístupná len prostredníctvom priamej URL",
+
+  "pages": "Stránky",
+  "pages.empty": "Zatiaľ žiadne stránky",
+  "pages.status.draft": "Koncepty",
+  "pages.status.listed": "Zverejnené",
+  "pages.status.unlisted": "Skryté",
+
+  "password": "Heslo",
+  "pixel": "Pixel",
+  "prev": "Predchádzajúci",
+  "remove": "Odstrániť",
+  "rename": "Premenovať",
+  "replace": "Nahradiť",
+  "retry": "Skúsiť ešte raz",
+  "revert": "Vrátiť späť",
+
+  "role": "Rola",
+  "role.all": "Všetko",
+  "role.empty": "S touto rolou neexistujú žiadni užívatelia",
+  "role.description.placeholder": "Žiadny popis",
+
+  "save": "Uložiť",
+  "search": "Hľadať",
+  "select": "Zvoliť",
+  "settings": "Nastavenia",
+  "size": "Veľkosť",
+  "slug": "URL appendix",
+  "sort": "Zoradiť",
+  "title": "Titulok",
+  "template": "Šablóna",
+  "today": "Dnes",
+
+  "toolbar.button.code": "Kód",
+  "toolbar.button.bold": "Tučný",
+  "toolbar.button.email": "E-mail",
+  "toolbar.button.headings": "Nadpisy",
+  "toolbar.button.heading.1": "Nadpis 1",
+  "toolbar.button.heading.2": "Nadpis 2",
+  "toolbar.button.heading.3": "Nadpis 3",
+  "toolbar.button.italic": "Kurzíva",
+  "toolbar.button.link": "Odkaz",
+  "toolbar.button.ol": "Číslovaný zoznam",
+  "toolbar.button.ul": "Odrážkový zoznam",
+
+  "translation.author": "Tím Kirby",
+  "translation.direction": "ltr",
+  "translation.name": "Slovensky",
+
+  "upload": "Nahrať",
+  "upload.errors": "Chyba",
+  "upload.progress": "Nahrávanie...",
+
+  "url": "URL",
+  "url.placeholder": "https://example.com",
+
+  "user": "Užívateľ",
+  "user.blueprint":
+    "Ďalšie sekcie a formulárové polia pre túto užívateľskú rolu môžete definovať v rámci <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.changeEmail": "Zmeniť e-mail",
+  "user.changeLanguage": "Zmeniť jazyk",
+  "user.changeName": "Premenovať tohto užívateľa",
+  "user.changePassword": "Zmeniť heslo",
+  "user.changePassword.new": "Nové heslo",
+  "user.changePassword.new.confirm": "Potvrdiť nové heslo...",
+  "user.changeRole": "Zmeniť rolu",
+  "user.changeRole.select": "Zvoliť novú rolu",
+  "user.create": "Pridať nového užívateľa",
+  "user.delete": "Zmazať tohto užívateľa",
+  "user.delete.confirm":
+    "Ste si istý, že chcete zmazať <br><strong>{email}</strong>?",
+
+  "version": "Verzia",
+
+  "view.account": "Váš účet",
+  "view.installation": "Inštalácia",
+  "view.settings": "Nastavenia",
+  "view.site": "Portál",
+  "view.users": "Užívatelia",
+
+  "welcome": "Vitajte",
+  "year": "Rok"
+}
