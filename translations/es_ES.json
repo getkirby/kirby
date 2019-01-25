@@ -1,0 +1,409 @@
+{
+  "add": "Add",
+  "avatar": "Foto de perfil",
+  "back": "Atrás",
+  "cancel": "Cancelar",
+  "change": "Cambiar",
+  "close": "Cerrar",
+  "confirm": "Confirmar",
+  "copy": "Copiar",
+  "create": "Crear",
+
+  "date": "Fecha",
+  "date.select": "Selecciona una fecha",
+
+  "day": "Dáa",
+  "days.fri": "Vi",
+  "days.mon": "Lu",
+  "days.sat": "Sá",
+  "days.sun": "Do",
+  "days.thu": "Ju",
+  "days.tue": "Ma",
+  "days.wed": "Mi",
+
+  "delete": "Borrar",
+  "dimensions": "Dimensiones",
+  "discard": "Descartar",
+  "edit": "Editar",
+
+  "email": "Correo electrónico",
+  "email.placeholder": "correo@ejemplo.com",
+
+  "error.access.login": "Ingreso inválido",
+  "error.access.panel": "No estás autorizado para acceder al panel",
+
+  "error.avatar.create.fail": "No se pudo subir la foto de perfil.",
+  "error.avatar.delete.fail": "Nose pudo borrar la foto de perfil",
+  "error.avatar.dimensions.invalid":
+    "Por favor, mantenga el ancho y la altura de la imagen de perfil debajo de 3000 píxeles",
+  "error.avatar.mime.forbidden":
+    "La imagen del perfil debe ser JPEG o PNG.",
+
+  "error.blueprint.notFound": "El blueprint \"{name}\" no pudo ser cargado",
+
+  "error.email.preset.notFound": "El preset del correo \"{name}\" no pudo ser encontrado",
+
+  "error.field.converter.invalid": "Convertidor \"{converter}\" inválido",
+
+  "error.file.changeName.permission":
+    "No tienes permitido cambiar el nombre de \"{filename}\"",
+  "error.file.duplicate": "Ya existe un archivo con el nombre \"{filename}\"",
+  "error.file.extension.forbidden":
+    "La extensión \"{extension}\" no está permitida",
+  "error.file.extension.missing":
+    "Falta la extensión para \"{filename}\"",
+  "error.file.mime.differs":
+    "El archivo cargado debe ser del mismo tipo mime \"{mime}\"",
+  "error.file.mime.forbidden": "Los medios tipo \"{mime}\" no están permitidos",
+  "error.file.mime.missing":
+    "El tipo de medio para \"{filename}\" no pudo ser detectado",
+  "error.file.name.missing": "El nombre de archivo no debe estar vacío",
+  "error.file.notFound": "El archivo \"{filename}\" no pudo ser encontrado",
+  "error.file.type.forbidden": "No está permitido subir archivos {type}",
+  "error.file.undefined": "El archivo no pudo ser encontrado",
+
+  "error.form.incomplete": "Por favor, corrija todo los errores del formulario…",
+  "error.form.notSaved": "El formulario no pudo ser guardado",
+
+  "error.page.changeSlug.permission":
+    "No está permitido cambiar el apéndice de URL para \"{slug}\"",
+  "error.page.changeStatus.incomplete":
+    "La página tiene errores y no puede ser publicada.",
+  "error.page.changeStatus.permission":
+    "El estado de esta página no se puede cambiar",
+  "error.page.changeStatus.toDraft.invalid":
+    "La página \"{slug}\" no se puede convertir a borrador",
+  "error.page.changeTemplate.invalid":
+    "La plantilla para la página \"{slug}\" no se puede cambiar",
+  "error.page.changeTemplate.permission":
+    "No tienes permitido cambiar la plantilla para \"{slug}\"",
+  "error.page.changeTitle.empty": "El título no debe estar vacío.",
+  "error.page.changeTitle.permission":
+    "No tienes permitido cambiar el título por \"{slug}\"",
+  "error.page.create.permission": "No tienes permitido crear \"{slug}\"",
+  "error.page.delete": "La página \"{slug}\" no puede ser eliminada",
+  "error.page.delete.confirm": "Por favor, introduzca el título de la página para confirmar",
+  "error.page.delete.hasChildren":
+    "La página tiene subpáginas y no se puede eliminar",
+  "error.page.delete.permission": "No tienes permiso de eliminar \"{slug}\"",
+  "error.page.draft.duplicate":
+    "Un borrador de página con el apéndice de URL \"{slug}\" ya existe",
+  "error.page.duplicate":
+    "Una página con el apéndice de URL. \"{slug}\" ya existe",
+  "error.page.notFound": "La página \"{slug}\" no puede ser encontrada",
+  "error.page.num.invalid":
+    "Por favor, introduzca un número válido. Estos no deben ser negativos.",
+  "error.page.slug.invalid": "Por favor ingrese un prefijo de URL válido",
+  "error.page.sort.permission": "La página \"{slug}\" no se puede ordenar",
+  "error.page.status.invalid": "Por favor, establezca un estado de página válido",
+  "error.page.undefined": "La página no se puede encontrar",
+  "error.page.update.permission": "No tienes permitido actualizar \"{slug}\"",
+
+  "error.section.files.max.plural":
+    "No debes agregar más de {max} archivos a la sección \"{section}\"",
+  "error.section.files.max.singular":
+    "No debes agregar más de 1 archivo a la sección \"{section}\"",
+  "error.section.files.min.plural":
+    "Agregue al menos {min} archivos a la sección \"{section}\"",
+  "error.section.files.min.singular":
+    "Agregue al menos un archivo a la sección \"{section}\"",
+
+  "error.section.pages.max.plural":
+    "No debe agregar más de {max} páginas a la sección \"{section}\"",
+  "error.section.pages.max.singular":
+    "No debe agregar más de una página a la sección \"{section}\"",
+  "error.section.pages.min.plural":
+    "Agregue al menos {min} páginas a la sección \"{section}\"",
+  "error.section.pages.min.singular":
+    "Añadir al menos una página a la sección \"{section}\"",
+
+  "error.section.notLoaded": "La sección \"{name}\" no pudo ser cargada",
+  "error.section.type.invalid": "El sección tipo \"{tipo}\" no es válido",
+
+  "error.site.changeTitle.permission":
+    "No está permitido cambiar el título del sitio",
+  "error.site.update.permission": "No tienes permitido actualizar el sitio",
+
+  "error.template.default.notFound": "La plantilla por defecto no existe",
+
+  "error.user.changeEmail.permission":
+    "No tienes permitido cambiar el correo electrónico para el usuario \"{name}\"",
+  "error.user.changeLanguage.permission":
+    "No tienes permitido cambiar el idioma para el usuario \"{name}\"",
+  "error.user.changeName.permission":
+    "No tienes permitido cambiar el nombre del usuario \"{name}\"",
+  "error.user.changePassword.permission":
+    "No tienes permitido cambiar la contraseña del usuario \"{name}\"",
+  "error.user.changeRole.lastAdmin":
+    "El rol para el último administrador no puede ser cambiado",
+  "error.user.changeRole.permission":
+    "No tienes permitido cambiar el rol del usuario \"{name}\"",
+  "error.user.create.permission": "No tienes permiso para crear este usuario",
+  "error.user.delete": "El usuario \"{name}\" no puede ser eliminado",
+  "error.user.delete.lastAdmin": "El último administrador no puede ser eliminado",
+  "error.user.delete.lastUser": "El último usuario no puede ser eliminado",
+  "error.user.delete.permission":
+    "No tienes permitido eliminar el usuario \"{name}\"",
+  "error.user.duplicate":
+    "Un usuario con la dirección de correo electrónico \"{email}\" ya existe",
+  "error.user.email.invalid": "Por favor, introduce una dirección de correo electrónico válida",
+  "error.user.language.invalid": "Por favor ingrese un idioma válido",
+  "error.user.notFound": "El usuario \"{name}\" no pudo ser encontrado",
+  "error.user.password.invalid":
+    "Por favor introduce una contraseña válida. Las contraseñas deben tener al menos 8 caracteres de largo.",
+  "error.user.password.notSame": "las contraseñas no coinciden",
+  "error.user.password.undefined": "El usuario no tiene contraseña",
+  "error.user.role.invalid": "Por favor ingrese un rol válido",
+  "error.user.undefined": "El usuario no puede ser encontrado",
+  "error.user.update.permission":
+    "No tienes permitido actualizar al usuario \"{name}\"",
+
+  "error.validation.accepted": "Por favor, confirma",
+  "error.validation.alpha": "Por favor solo ingresa caracteres entre a-z",
+  "error.validation.alphanum":
+    "Por favor solo ingrese caracteres entre a-z o numerales 0-9",
+  "error.validation.between":
+    "Por favor, introduzca un valor entre \"{min}\" y \"{max}\"",
+  "error.validation.boolean": "Por favor confirme o rechace",
+  "error.validation.contains":
+    "Por favor ingrese un valor que contenga \"{needle}\"",
+  "error.validation.date": "Por favor introduzca una fecha valida",
+  "error.validation.denied": "Por favor, rechace",
+  "error.validation.different": "El valor no debe ser \"{other}\"",
+  "error.validation.email": "Por favor, introduce un correo electrónico válido",
+  "error.validation.endswith": "El valor debe terminar con \"{end}\"",
+  "error.validation.filename": "Por favor ingrese un nombre de archivo válido",
+  "error.validation.in": "Por favor ingrese uno de los siguientes: ({in})",
+  "error.validation.integer": "Por favor, introduce un numero integro válido",
+  "error.validation.ip": "Por favor ingrese una dirección IP válida",
+  "error.validation.less": "Por favor, introduzca un valor inferior a {max}",
+  "error.validation.match": "El valor no coincide con el patrón esperado",
+  "error.validation.max": "Por favor, introduzca un valor igual o inferior a {max}",
+  "error.validation.maxlength":
+    "Por favor, introduzca un valor más corto. (max. {max} caracteres)",
+  "error.validation.maxwords": "Por favor ingrese no más de {max} palabra(s)",
+  "error.validation.min": "Por favor, introduzca un valor igual o mayor a {min}",
+  "error.validation.minlength":
+    "Por favor, introduzca un valor más largo. (min. {min} caracteres)",
+  "error.validation.minwords": "Por favor ingrese al menos {min} palabra(s)",
+  "error.validation.more": "Por favor, introduzca un valor mayor a {min}",
+  "error.validation.notcontains":
+    "Por favor ingrese un valor que no contenga \"{needle}\"",
+  "error.validation.notin":
+    "Por favor, no ingrese ninguno de los siguientes: ({notIn})",
+  "error.validation.option": "Por favor seleccione una opción válida",
+  "error.validation.num": "Por favor ingrese un número valido",
+  "error.validation.required": "Por favor ingrese algo",
+  "error.validation.same": "Por favor escribe \"{other}\"",
+  "error.validation.size": "El tamaño del valor debe ser \"{size}\"",
+  "error.validation.startswith": "El valor debe comenzar con \"{start}\"",
+  "error.validation.time": "Por favor ingrese una hora válida",
+  "error.validation.url": "Por favor introduzca un URL válido",
+
+  "field.files.empty": "Aún no hay archivos seleccionados",
+  "field.pages.empty": "Aún no hay páginas seleccionadas",
+  "field.structure.delete.confirm": "¿Realmente quieres eliminar esta fila?",
+  "field.structure.empty": "Aún no hay entradas",
+  "field.users.empty": "Aún no hay usuarios seleccionados",
+
+  "file.delete.confirm":
+    "¿Realmente quieres eliminar <br><strong>{filename}</strong>?",
+
+  "files": "Archivos",
+  "files.empty": "Aún no hay archivos",
+
+  "hour": "Hora",
+  "insert": "Insertar",
+  "install": "Instalar",
+
+  "installation": "Instalación",
+  "installation.completed": "El panel ha sido instalado",
+  "installation.disabled": "El instalador del panel está deshabilitado en servidores públicos por defecto. Ejecute el instalador en una máquina local o habilítelo con la opción <code>panel.install</code>.",
+  "installation.issues.accounts":
+    "La carpeta <code>/site/accounts</code> no existe o no se puede escribir",
+  "installation.issues.content":
+    "La carpeta <code>/content</code> no existe o no se puede escribir",
+  "installation.issues.curl": "La extensión <code>CURL</code> es requerida",
+  "installation.issues.headline": "No se pudo instalar el panel",
+  "installation.issues.mbstring":
+    "La extension <code>MB String</code> es requerida",
+  "installation.issues.media":
+    "La carpeta <code>/media</code> no existe o no se puede escribir",
+  "installation.issues.php": "Asegúrate de usar <code>PHP 7+</code>",
+  "installation.issues.server":
+    "Kirby requiere <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
+  "installation.issues.sessions": "La carpeta <code>/site/sessions</code> no existe o no se puede escribir",
+
+  "language": "Idioma",
+  "language.code": "Código",
+  "language.convert": "Hacer por defecto",
+  "language.convert.confirm":
+    "<p¿Realmente quieres convertir <strong>{name}</strong> al idioma por defecto? Esto no se puede deshacer.</p><p>Si <strong>{name}</strong> tiene contenido sin traducir, ya no habrá un respaldo válido y algunas partes de su sitio podrían estar vacías.</p>",
+  "language.create": "Añadir un nuevo idioma",
+  "language.delete.confirm":
+    "¿De verdad quieres eliminar el idioma <strong>{name}</strong> incluyendo todas las traducciones? ¡Esto no se puede deshacer!",
+  "language.deleted": "El idioma ha sido eliminado",
+  "language.direction": "Leyendo dirección",
+  "language.direction.ltr": "De izquierda a derecha",
+  "language.direction.rtl": "De derecha a izquierda",
+  "language.locale": "PHP locale string",
+  "language.name": "Nombre",
+  "language.updated": "El idioma ha sido actualizado",
+
+  "languages": "Idiomas",
+  "languages.default": "Idioma predeterminado",
+  "languages.empty": "Todavía no hay idiomas",
+  "languages.secondary": "Idiomas secundarios",
+  "languages.secondary.empty": "Todavía no hay idiomas secundarios",
+
+  "license": "Licencia",
+  "license.buy": "Comprar una licencia",
+  "license.register": "Registro",
+  "license.register.help":
+    "Recibió su código de licencia después de la compra por correo electrónico. Por favor copie y pegue para registrarse.",
+  "license.register.label": "Por favor ingrese su código de licencia",
+  "license.register.success": "Gracias por apoyar a Kirby",
+  "license.unregistered": "Esta es una demo no registrada de Kirby",
+
+  "link": "Enlace",
+  "link.text": "Texto del enlace",
+
+  "loading": "Cargando",
+
+  "login": "Iniciar sesión",
+  "login.remember": "Mantener sesión iniciada",
+
+  "logout": "Cerrar sesión",
+
+  "menu": "Menu",
+  "meridiem": "AM/PM",
+  "mime": "Tipos de medios",
+  "minutes": "Minutos",
+
+  "month": "Mes",
+  "months.april": "Abril",
+  "months.august": "Agosto",
+  "months.december": "Diciembre",
+  "months.february": "Febrero",
+  "months.january": "Enero",
+  "months.july": "Julio",
+  "months.june": "Junio",
+  "months.march": "Marzo",
+  "months.may": "Mayo",
+  "months.november": "Noviembre",
+  "months.october": "Octubre",
+  "months.september": "Septiembre",
+
+  "more": "Más",
+  "name": "Nombre",
+  "next": "Siguiente",
+  "open": "Abrir",
+  "options": "Opciones",
+
+  "orientation": "Orientacion",
+  "orientation.landscape": "Paisaje",
+  "orientation.portrait": "Retrato",
+  "orientation.square": "Cuadrado",
+
+  "page.changeSlug": "Cambiar URL",
+  "page.changeSlug.fromTitle": "Crear en base al título",
+  "page.changeStatus": "Cambiar estado",
+  "page.changeStatus.position": "Por favor seleccione una posición",
+  "page.changeStatus.select": "Seleccione un nuevo estado",
+  "page.changeTemplate": "Cambiar plantilla",
+  "page.delete.confirm":
+    "¿Realmente quieres eliminar <strong>{title}</strong>?",
+  "page.delete.confirm.subpages":
+    "<strong>Esta página tiene subpáginas</strong>. <br>Todas las subpáginas también serán eliminadas.",
+  "page.delete.confirm.title": "Introduzca el título de la página para confirmar",
+  "page.draft.create": "Crear borrador",
+  "page.status": "Estado",
+  "page.status.draft": "Borrador",
+  "page.status.draft.description":
+    "La página está en modo borrador y solo está visible para los editores registrados",
+  "page.status.listed": "Publica",
+  "page.status.listed.description": "La página es pública para cualquiera",
+  "page.status.unlisted": "Sin publicar",
+  "page.status.unlisted.description": "La página solo es accesible vía URL",
+
+  "pages": "Paginas",
+  "pages.empty": "Aún no hay páginas",
+  "pages.status.draft": "Borradores",
+  "pages.status.listed": "Publicadas",
+  "pages.status.unlisted": "Sin publicar",
+
+  "password": "Contraseña",
+  "pixel": "Pixel",
+  "prev": "Anterior",
+  "remove": "Eliminar",
+  "rename": "Renombrar",
+  "replace": "Remplazar",
+  "retry": "Inténtalo de nuevo",
+  "revert": "Revertir",
+
+  "role": "Rol",
+  "role.all": "Todos",
+  "role.empty": "No hay usuarios con este rol",
+  "role.description.placeholder": "Sin descripción",
+
+  "save": "Guardar",
+  "search": "Buscar",
+  "select": "Seleccionar",
+  "settings": "Ajustes",
+  "size": "Tamaño",
+  "slug": "Apéndice URL",
+  "sort": "Ordenar",
+  "title": "Titulo",
+  "template": "Plantilla",
+  "today": "Hoy",
+
+  "toolbar.button.code": "Código",
+  "toolbar.button.bold": "Negritas",
+  "toolbar.button.email": "Correo electrónico",
+  "toolbar.button.headings": "Encabezados",
+  "toolbar.button.heading.1": "Encabezado 1",
+  "toolbar.button.heading.2": "Encabezado 2",
+  "toolbar.button.heading.3": "Encabezado 3",
+  "toolbar.button.italic": "Italica",
+  "toolbar.button.link": "Enlace",
+  "toolbar.button.ol": "Lista ordenada",
+  "toolbar.button.ul": "Lista de viñetas",
+
+  "translation.author": "Turqueso",
+  "translation.direction": "ltr",
+  "translation.name": "Español",
+
+  "upload": "Subir",
+  "upload.errors": "Error",
+  "upload.progress": "Cargando…",
+
+  "url": "Url",
+  "url.placeholder": "https://ejemplo.com",
+
+  "user": "Usuario",
+  "user.blueprint":
+    "Puede definir secciones adicionales y campos de formulario para este rol de usuario en <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.changeEmail": "Cambiar correo electrónico",
+  "user.changeLanguage": "Cambiar idioma",
+  "user.changeName": "Renombrar a este usuario",
+  "user.changePassword": "Cambia contraseña",
+  "user.changePassword.new": "Nueva contraseña",
+  "user.changePassword.new.confirm": "Confirmar nueva contraseña…",
+  "user.changeRole": "Cambiar rol",
+  "user.changeRole.select": "Seleccione un nuevo rol",
+  "user.create": "Añadir un nuevo usuario",
+  "user.delete": "Eliminar este usuario",
+  "user.delete.confirm":
+    "¿Realmente quieres eliminar <br><strong>{email}</strong>?",
+
+  "version": "Versión",
+
+  "view.account": "Su cuenta",
+  "view.installation": "Instalación",
+  "view.settings": "Ajustes",
+  "view.site": "Sitio",
+  "view.users": "Usuarios",
+
+  "welcome": "Bienvenido(a)",
+  "year": "Año"
+}
