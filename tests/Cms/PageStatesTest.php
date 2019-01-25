@@ -58,6 +58,7 @@ class PageStatesTest extends TestCase
         $mother  = $grandma->find('mother');
         $child   = $mother->find('child');
 
+        $this->assertFalse($grandma->isChildOf($mother));
         $this->assertTrue($mother->isChildOf($grandma));
         $this->assertTrue($child->isChildOf($mother));
     }
