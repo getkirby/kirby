@@ -24,7 +24,16 @@ export default {
     this.running++;
 
     return fetch(api.config.endpoint + "/" + path, options)
-      .then(response => response.json())
+      .then(response => {
+        return response.text();
+      })
+      .then(text => {
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          throw new Error("The JSON response from the API could not be parsed. Please check your API connection.");
+        }
+      })
       .then(json => {
         if (json.status && json.status === "error") {
           throw json;
