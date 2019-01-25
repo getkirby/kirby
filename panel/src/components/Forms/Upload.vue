@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import uploadFile from "../../helpers/uploadFile.js";
+import uploadFile from "@/helpers/uploadFile.js";
 
 export default {
   props: {

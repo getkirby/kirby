@@ -45,7 +45,7 @@
 
 <script>
 import Field from "../Field.vue";
-import clone from "@/ui/helpers/clone.js";
+import clone from "@/helpers/clone.js";
 
 export default {
   inheritAttrs: false,

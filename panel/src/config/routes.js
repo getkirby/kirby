@@ -1,5 +1,5 @@
 import auth from "./auth.js";
-import store from "./store.js";
+import store from "@/store/store.js";
 
 /* Views */
 import BrowserView from "@/components/Views/BrowserView.vue";

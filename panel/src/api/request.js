@@ -1,5 +1,5 @@
 import api from "./api.js";
-import store from "../config/store.js";
+import store from "@/store/store.js";
 
 export default {
   running: 0,

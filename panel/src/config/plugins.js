@@ -1,5 +1,5 @@
 import Vue from "vue";
-import store from "./store.js";
+import store from "@/store/store.js";
 import section from "../mixins/section.js";
 
 let components = {};

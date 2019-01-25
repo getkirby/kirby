@@ -35,7 +35,7 @@
 
 <script>
 
-import debounce from "@/ui/helpers/debounce.js";
+import debounce from "@/helpers/debounce.js";
 import config from "@/config/config.js";
 
 export default {
