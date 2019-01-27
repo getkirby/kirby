@@ -1,0 +1,409 @@
+{
+  "add": "P\u0159idat",
+  "avatar": "Profilov\u00fd obr\u00e1zek",
+  "back": "Zpět",
+  "cancel": "Zru\u0161it",
+  "change": "Zm\u011bnit",
+  "close": "Zav\u0159it",
+  "confirm": "Ok",
+  "copy": "Kopírovat",
+  "create": "Vytvořit",
+
+  "date": "Datum",
+  "date.select": "Vyberte datum",
+
+  "day": "Den",
+  "days.fri": "p\u00e1",
+  "days.mon": "po",
+  "days.sat": "so",
+  "days.sun": "ne",
+  "days.thu": "\u010dt",
+  "days.tue": "\u00fat",
+  "days.wed": "st",
+
+  "delete": "Smazat",
+  "dimensions": "Velikosti",
+  "discard": "Zahodit",
+  "edit": "Upravit",
+
+  "email": "Email",
+  "email.placeholder": "mail@example.com",
+
+  "error.access.login": "Neplatné přihlášení",
+  "error.access.panel": "Nemáte povoleno vstoupit do panelu",
+
+  "error.avatar.create.fail": "Nebylo možné nahrát profilový obrázek",
+  "error.avatar.delete.fail": "Nebylo mo\u017en\u00e9 smazat profilov\u00fd obr\u00e1zek",
+  "error.avatar.dimensions.invalid":
+    "Výšku a šířka profilového obrázku by měla být pod 3000 pixelů",
+  "error.avatar.mime.forbidden":
+    "Profilový obrázek musí být ve formátu JPEG nebo PNG",
+
+  "error.blueprint.notFound": "Nelze načíst blueprint \"{name}\" ",
+
+  "error.email.preset.notFound": "Nelze nalézt emailové přednastavení \"{name}\"",
+
+  "error.field.converter.invalid": "Neplatný konvertor \"{converter}\"",
+
+  "error.file.changeName.permission":
+    "Nemáte povoleno změnit jméno souboru \"{filename}\"",
+  "error.file.duplicate": "Soubor s názvem \"{filename}\" již existuje",
+  "error.file.extension.forbidden":
+    "Přípona souboru \"{extension}\" není povolena",
+  "error.file.extension.missing":
+    "Nem\u016f\u017eete nahr\u00e1t soubor bez p\u0159\u00edpony",
+  "error.file.mime.differs":
+    "Nahraný soubor musí být stejného typu \"{mime}\"",
+  "error.file.mime.forbidden": "Soubor typu \"{mime}\" není povolený",
+  "error.file.mime.missing":
+    "Nelze rozeznat mime typ souboru \"{filename}\"",
+  "error.file.name.missing": "Název souboru nesmí být prázdný",
+  "error.file.notFound": "Soubor se nepoda\u0159ilo nal\u00e9zt",
+  "error.file.type.forbidden": "Nemáte povoleno nahrávat soubory typu {type} ",
+  "error.file.undefined": "Soubor se nepoda\u0159ilo nal\u00e9zt",
+
+  "error.form.incomplete": "Prosím opravte všechny chyby ve formuláři",
+  "error.form.notSaved": "Formulář nemohl být uložen",
+
+  "error.page.changeSlug.permission":
+    "Nem\u016f\u017eete zm\u011bnit URL t\u00e9to str\u00e1nky",
+  "error.page.changeStatus.incomplete":
+    "Stránka obsahuje chyby a nemohla být zveřejněna",
+  "error.page.changeStatus.permission":
+    "Stav této stránky nelze změnit",
+  "error.page.changeStatus.toDraft.invalid":
+    "Stránka \"{slug}\" nemůže být převedena na koncept",
+  "error.page.changeTemplate.invalid":
+    "Šablonu stránky \"{slug}\" nelze změnit",
+  "error.page.changeTemplate.permission":
+    "Nemáte dovoleno změnit šablonu stránky \"{slug}\"",
+  "error.page.changeTitle.empty": "Titulek nesmí být prázdný",
+  "error.page.changeTitle.permission":
+    "Nemáte dovoleno změnit titulek stránky \"{slug}\"",
+  "error.page.create.permission": "Nemáte dovoleno vytvořit \"{slug}\"",
+  "error.page.delete": "Stránku \"{slug}\" nelze vymazat",
+  "error.page.delete.confirm": "Pro potvrzení prosím zadejte titulek stránky",
+  "error.page.delete.hasChildren":
+    "Stránka má podstránky, nemůže být vymazána",
+  "error.page.delete.permission": "Nemáte dovoleno odstranit \"{slug}\"",
+  "error.page.draft.duplicate":
+    "Koncept stránky, který obsahuje v adrese URL \"{slug}\" již existuje ",
+  "error.page.duplicate":
+    "Stránka, která v adrese URL obsahuje \"{slug}\" již existuje",
+  "error.page.notFound": "Str\u00e1nku se nepoda\u0159ilo nal\u00e9zt.",
+  "error.page.num.invalid":
+    "Zadejte prosím platné pořadové číslo. Čísla nesmí být záporná.",
+  "error.page.slug.invalid": "Zadejte prosím platnou předponu URL",
+  "error.page.sort.permission": "Stránce \"{slug}\" nelze změnit pořadí",
+  "error.page.status.invalid": "Nastavte prosím platný status stránky",
+  "error.page.undefined": "Str\u00e1nku se nepoda\u0159ilo nal\u00e9zt.",
+  "error.page.update.permission": "Nemáte dovoleno upravit \"{slug}\"",
+
+  "error.section.files.max.plural":
+    "Sekce \"{section}\" nesmí obsahovat více jak {max} souborů",
+  "error.section.files.max.singular":
+    "Sekce \"{section}\" může obsahovat nejvýše jeden soubor",
+  "error.section.files.min.plural":
+    "Do sekce \"{section}\" přidejte alepoň {min} souborů",
+  "error.section.files.min.singular":
+    "Do sekce \"{section}\" přidejte alepoň jeden soubor",
+
+  "error.section.pages.max.plural":
+    "Sekce \"{section}\" nesmí obsahovat více jak {max} stránek",
+  "error.section.pages.max.singular":
+    "Sekce \"{section}\" může obsahovat nejvýše jednu stránku",
+  "error.section.pages.min.plural":
+    "Do sekce \"{section}\" přidejte alepoň {min} stránek",
+  "error.section.pages.min.singular":
+    "Do sekce \"{section}\" přidejte alespoň jednu stránku",
+
+  "error.section.notLoaded": "Nelze načíst sekci \"{name}\"",
+  "error.section.type.invalid": "Typ sekce \"{type}\" není platný",
+
+  "error.site.changeTitle.permission":
+    "Nemáte dovoleno změnit titulek stránky",
+  "error.site.update.permission": "Nemáte dovoleno upravit stránku",
+
+  "error.template.default.notFound": "Výchozí šablona neexistuje",
+
+  "error.user.changeEmail.permission":
+    "Nemáte dovoleno měnit email uživatele \"{name}\"",
+  "error.user.changeLanguage.permission":
+    "Nemáte dovoleno změnit jazyk uživatele \"{name}\"",
+  "error.user.changeName.permission":
+    "Nemáte dovoleno změnit jméno uživatele \"{name}\"",
+  "error.user.changePassword.permission":
+    "Nemáte dovoleno změnit heslo uživatele \"{name}\"",
+  "error.user.changeRole.lastAdmin":
+    "Role posledního administrátora nemůže být změněna",
+  "error.user.changeRole.permission":
+    "Nemáte dovoleno změnit roli uživatele \"{name}\"",
+  "error.user.create.permission": "Nemáte dovoleno vytvořit tohoto uživatele",
+  "error.user.delete": "U\u017eivatel nemohl b\u00fdt smaz\u00e1n",
+  "error.user.delete.lastAdmin": "Nem\u016f\u017eete smazat posledn\u00edho administr\u00e1tora",
+  "error.user.delete.lastUser": "Poslední uživatel nemůže být smazán",
+  "error.user.delete.permission":
+    "Nem\u00e1te dovoleno smazat tohoto u\u017eivatele",
+  "error.user.duplicate":
+    "Uživatel s emailovou adresou \"{email}\" již existuje",
+  "error.user.email.invalid": "Zadejte prosím platnou emailovou adresu",
+  "error.user.language.invalid": "Zadejte prosím platný jazyk",
+  "error.user.notFound": "U\u017eivatele se nepoda\u0159ilo nal\u00e9zt",
+  "error.user.password.invalid":
+    "Zadejte prosím platné heslo. Heslo musí být dlouhé alespoň 8 znaků.",
+  "error.user.password.notSame": "Pros\u00edm potvr\u010fte heslo",
+  "error.user.password.undefined": "Uživatel nemá nastavené heslo.",
+  "error.user.role.invalid": "Zadejte prosím platnou roli",
+  "error.user.undefined": "U\u017eivatele se nepoda\u0159ilo nal\u00e9zt",
+  "error.user.update.permission":
+    "Nemáte dovoleno upravit uživatele \"{name}\"",
+
+  "error.validation.accepted": "Potvrďte prosím",
+  "error.validation.alpha": "Zadávejte prosím pouze znaky v rozmezí a-z",
+  "error.validation.alphanum":
+    "Zadávejte prosím pouze znaky v rozmezí a-z nebo čísla v rozmezí 0-9",
+  "error.validation.between":
+    "Zadejte prosím hodnotu mez \"{min}\" a \"{max}\"",
+  "error.validation.boolean": "Potvrďte prosím, nebo odmítněte",
+  "error.validation.contains":
+    "Zadejte prosím hodnotu, která obsahuje \"{needle}\"",
+  "error.validation.date": "Zadejte prosím platné datum",
+  "error.validation.denied": "Prosím, odmítněte",
+  "error.validation.different": "Hodnota nesmí být \"{other}\"",
+  "error.validation.email": "Zadejte prosím platnou emailovou adresu",
+  "error.validation.endswith": "Hodnota nesmí končit \"{end}\"",
+  "error.validation.filename": "Zadejte prosím platný název souboru",
+  "error.validation.in": "Zadejte prosím některou z následujíích hodnot: ({in})",
+  "error.validation.integer": "Zadejte prosím platné celé číslo",
+  "error.validation.ip": "Zadejte prosím platnou IP adresu",
+  "error.validation.less": "Zadejte prosím hodnotu menší než {max}",
+  "error.validation.match": "Hodnota neodpovídá očekávanému vzoru",
+  "error.validation.max": "Zadejte prosím hodnotu rovnou, nebo menší než {max}",
+  "error.validation.maxlength":
+    "Zadaná hodnota je příliš dlouhá. (Povoleno nejvýše {max} znaků)",
+  "error.validation.maxwords": "Nezadávejte prosím více jak {max} slov",
+  "error.validation.min": "Zadejte prosím hodnotu rovnou, nebo větší než {min}",
+  "error.validation.minlength":
+    "Zadaná hodnota je příliš krátká. (Požadováno nejméně {min} znaků)",
+  "error.validation.minwords": "Zadejte prosím alespoň {min} slov",
+  "error.validation.more": "Zadejte prosím hodnotu větší než {min}",
+  "error.validation.notcontains":
+    "Zadejte prosím hodnotu, která neobsahuje \"{needle}\"",
+  "error.validation.notin":
+    "Nezadávejte prosím žádnou z následujíích hodnot: ({notIn})",
+  "error.validation.option": "Vyberte prosím platnou možnost",
+  "error.validation.num": "Zadejte prosím platné číslo",
+  "error.validation.required": "Zadejte prosím jakoukoli hodnotu",
+  "error.validation.same": "Zadejte prosím \"{other}\"",
+  "error.validation.size": "Velikost hodnoty musí být \"{size}\"",
+  "error.validation.startswith": "Hodnota musí začínat \"{start}\"",
+  "error.validation.time": "Zadejte prosím platný čas",
+  "error.validation.url": "Zadejte prosím platnou adresu URL",
+
+  "field.files.empty": "Nebyly zatím vybrány žádné soubory",
+  "field.pages.empty": "Nebyly zatím vybrány žádné stránky",
+  "field.structure.delete.confirm": "Opravdu chcete smazat tento z\u00e1znam?",
+  "field.structure.empty": "Zat\u00edm nejsou \u017e\u00e1dn\u00e9 z\u00e1znamy.",
+  "field.users.empty": "Nebyli zatím vybráni žádní uživatelé",
+
+  "file.delete.confirm":
+    "Opravdu chcete smazat tento soubor?",
+
+  "files": "Soubory",
+  "files.empty": "Zatím žádné soubory",
+
+  "hour": "Hodina",
+  "insert": "Vlo\u017eit",
+  "install": "Instalovat",
+
+  "installation": "Instalace",
+  "installation.completed": "Panel byl nainstalován",
+  "installation.disabled": "Instalátor panelu je ve výchozím nastavení na veřejných serverech zakázán. Spusťte prosím instalátor na lokálním počítači nebo jej povolte prostřednictvím <code>panel.install</code>.",
+  "installation.issues.accounts":
+    "\/site\/accounts nen\u00ed zapisovateln\u00e9",
+  "installation.issues.content":
+    "Slo\u017eka content a v\u0161echny soubory a slo\u017eky v n\u00ed mus\u00ed b\u00fdt zapisovateln\u00e9.",
+  "installation.issues.curl": "Je vyžadováno rozšíření<code>CURL</code>",
+  "installation.issues.headline": "Panel nelze nainstalovat",
+  "installation.issues.mbstring":
+    "Je vyžadováno rozšíření<code>MB String</code>",
+  "installation.issues.media":
+    "Složka<code>/media</code> neexistuje, nebo nemá povolený zápis",
+  "installation.issues.php": "Ujistěte se, že používáte<code>PHP 7+</code>",
+  "installation.issues.server":
+    "Kirby vyžaduje<code>Apache</code>, <code>Nginx</code> nebo<code>Caddy</code>",
+  "installation.issues.sessions": "Složka<code>/site/sessions</code> neexistuje, nebo nemá povolený zápis",
+
+  "language": "Jazyk",
+  "language.code": "Kód",
+  "language.convert": "Nastavte výchozí možnost",
+  "language.convert.confirm":
+    "<p>Opravdu chcete převést<strong>{name}</strong> na výchozí jazyk? Tuto volbu nelze vzít zpátky.</p><p>Pokud <strong>{name}</strong> obsahuje nepřeložený text, nebude již k dispozici záložní varianta a části stránky mohou zůstat prázdné.</p>",
+  "language.create": "Přidat nový jazyk",
+  "language.delete.confirm":
+    "Opravdu chcete smazat jazyk <strong>{name}</strong> včetně všech překladů? Tuto volbu nelze vzít zpátky!",
+  "language.deleted": "Jazyk byl smazán",
+  "language.direction": "Směr čtení",
+  "language.direction.ltr": "Zleva doprava",
+  "language.direction.rtl": "Zprava doleva",
+  "language.locale": "Řetězec lokalizace PHP",
+  "language.name": "Jméno",
+  "language.updated": "Jazyk byl aktualizován",
+
+  "languages": "Jazyky",
+  "languages.default": "Výchozí jazyk",
+  "languages.empty": "Zatím neexistují žádné jazyky",
+  "languages.secondary": "Další jazyky",
+  "languages.secondary.empty": "Neexistují zatím žádné další jazyky",
+
+  "license": "Kirby licence",
+  "license.buy": "Zakoupit licenci",
+  "license.register": "Registrovat",
+  "license.register.help":
+    "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
+  "license.register.label": "Zadejte prosím licenční kód",
+  "license.register.success": "Děkujeme Vám za podporu Kirby",
+  "license.unregistered": "Toto je neregistrovaná kopie Kirby",
+
+  "link": "Odkaz",
+  "link.text": "Text odkazu",
+
+  "loading": "Načítám",
+
+  "login": "P\u0159ihl\u00e1sit se",
+  "login.remember": "Zůstat přihlášen",
+
+  "logout": "Odhl\u00e1sit se",
+
+  "menu": "Menu",
+  "meridiem": "AM/PM",
+  "mime": "Typ média",
+  "minutes": "Minuty",
+
+  "month": "Měsíc",
+  "months.april": "Duben",
+  "months.august": "Srpen",
+  "months.december": "Prosinec",
+  "months.february": "\u00danor",
+  "months.january": "Leden",
+  "months.july": "\u010cervenec",
+  "months.june": "\u010cerven",
+  "months.march": "B\u0159ezen",
+  "months.may": "Kv\u011bten",
+  "months.november": "Listopad",
+  "months.october": "\u0158\u00edjen",
+  "months.september": "Z\u00e1\u0159\u00ed",
+
+  "more": "Více",
+  "name": "Jméno",
+  "next": "Další",
+  "open": "Otevřít",
+  "options": "Možnosti",
+
+  "orientation": "Orientace",
+  "orientation.landscape": "Na šířku",
+  "orientation.portrait": "Na výšku",
+  "orientation.square": "Čtverec",
+
+  "page.changeSlug": "Zm\u011bnit URL",
+  "page.changeSlug.fromTitle": "Vytvo\u0159it z n\u00e1zvu",
+  "page.changeStatus": "Změnit stav",
+  "page.changeStatus.position": "Vybrte prosím pozici",
+  "page.changeStatus.select": "Vybrat nový status",
+  "page.changeTemplate": "Změnit šablonu",
+  "page.delete.confirm":
+    "Opravdu chcete smazat tuto str\u00e1nku?",
+  "page.delete.confirm.subpages":
+    "<strong>Tato stránka má podstránky</strong>. <br>Všechny podstránky budou vymazány.",
+  "page.delete.confirm.title": "Pro potvrzení zadejte titulek stránky",
+  "page.draft.create": "Vytvořit koncept",
+  "page.status": "Stav",
+  "page.status.draft": "Koncept",
+  "page.status.draft.description":
+    "Stránka je ve stavu konceptu a je viditelná pouze pro přihlášené editory",
+  "page.status.listed": "Veřejný",
+  "page.status.listed.description": "Stránka je zveřejněná pro všechny",
+  "page.status.unlisted": "Nevypsané",
+  "page.status.unlisted.description": "Tato stránka je dostupná pouze přes adresu URL",
+
+  "pages": "Stránky",
+  "pages.empty": "Zatím žádné stránky",
+  "pages.status.draft": "Koncepty",
+  "pages.status.listed": "Zveřejněno",
+  "pages.status.unlisted": "Nevypsané",
+
+  "password": "Heslo",
+  "pixel": "Pixel",
+  "prev": "Předchozí",
+  "remove": "Odstranit",
+  "rename": "Přejmenovat",
+  "replace": "Nahradit",
+  "retry": "Zkusit znovu",
+  "revert": "Zahodit",
+
+  "role": "Role",
+  "role.all": "Vše",
+  "role.empty": "Neexistují uživatelé s touto rolí",
+  "role.description.placeholder": "Žádný popis",
+
+  "save": "Ulo\u017eit",
+  "search": "Hledat",
+  "select": "Vybrat",
+  "settings": "Nastavení",
+  "size": "Velikost",
+  "slug": "P\u0159\u00edpona URL",
+  "sort": "Řadit",
+  "title": "Název",
+  "template": "\u0160ablona",
+  "today": "Dnes",
+
+  "toolbar.button.code": "Kód",
+  "toolbar.button.bold": "Tu\u010dn\u00fd text",
+  "toolbar.button.email": "Email",
+  "toolbar.button.headings": "Nadpisy",
+  "toolbar.button.heading.1": "Nadpis 1",
+  "toolbar.button.heading.2": "Nadpis 2",
+  "toolbar.button.heading.3": "Nadpis 3",
+  "toolbar.button.italic": "Kurz\u00edva",
+  "toolbar.button.link": "Odkaz",
+  "toolbar.button.ol": "Řazený seznam",
+  "toolbar.button.ul": "Odrážkový seznam",
+
+  "translation.author": "Kirby tým",
+  "translation.direction": "ltr",
+  "translation.name": "\u010cesky",
+
+  "upload": "Nahrát",
+  "upload.errors": "Chyba",
+  "upload.progress": "Nahrávání...",
+
+  "url": "Url",
+  "url.placeholder": "https://example.com",
+
+  "user": "Uživatel",
+  "user.blueprint":
+    "Pro tuto uživatelskou roli můžete definovat další sekce a pole v <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.changeEmail": "Změnit email",
+  "user.changeLanguage": "Změnit jazyk",
+  "user.changeName": "Přejmenovat tohoto uživatele",
+  "user.changePassword": "Změnit heslo",
+  "user.changePassword.new": "Nové heslo",
+  "user.changePassword.new.confirm": "Potvrdit nové heslo...",
+  "user.changeRole": "Změnit roli",
+  "user.changeRole.select": "Vybrat novou roli",
+  "user.create": "Přidat nového uživatele",
+  "user.delete": "Smazat tohoto uživatele",
+  "user.delete.confirm":
+    "Opravdu chcete smazat tohoto u\u017eivatele?",
+
+  "version": "Verze Kirby",
+
+  "view.account": "V\u00e1\u0161 \u00fa\u010det",
+  "view.installation": "Instalace",
+  "view.settings": "Nastavení",
+  "view.site": "Stránka",
+  "view.users": "U\u017eivatel\u00e9",
+
+  "welcome": "Vítejte",
+  "year": "Rok"
+}
