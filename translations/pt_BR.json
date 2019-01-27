@@ -257,7 +257,7 @@
   "languages.secondary.empty": "Nenhum idioma secundário",
 
   "license": "Licen\u00e7a do Kirby ",
-  "license.buy": "Comprar uma licença",
+  "license.buy": "Comprar licença",
   "license.register": "Registrar",
   "license.register.help":
     "Você recebeu o código da sua licença por email após a compra. Por favor, copie e cole-a para completar o registro.",
@@ -385,7 +385,7 @@
     "Você pode definir seções e campos de formulário adicionais para este papel de usuário em <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Alterar email",
   "user.changeLanguage": "Alterar idioma",
-  "user.changeName": "Renomear este usuário",
+  "user.changeName": "Renomear usuário",
   "user.changePassword": "Alterar senha",
   "user.changePassword.new": "Nova senha",
   "user.changePassword.new.confirm": "Confirme a nova senha…",
