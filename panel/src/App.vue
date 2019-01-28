@@ -98,6 +98,15 @@ export default {
   box-sizing: border-box;
 }
 
+noscript {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
 html {
   font-family: $font-family-sans;
   background: $color-background;
