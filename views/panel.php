@@ -23,6 +23,10 @@
   <?= $icons ?>
   <div id="app"></div>
 
+  <noscript>
+    Please enable JavaScript in your browser
+  </noscript>
+
   <script>window.panel = <?= json_encode($options, JSON_UNESCAPED_SLASHES) ?></script>
 
   <script src="<?= $assetUrl ?>/js/plugins.js"></script>
