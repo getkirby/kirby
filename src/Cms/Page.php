@@ -1488,7 +1488,11 @@ class Page extends ModelWithContent
         }
 
         if ($parent = $this->parent()) {
-            return $this->url = $this->parent()->url() . '/' . $this->uid();
+            if ($parent->isHomePage() === true) {
+                return $this->url = $this->kirby()->url('base') . '/' . $parent->uid() . '/' . $this->uid();
+            } else {
+                return $this->url = $this->parent()->url() . '/' . $this->uid();
+            }
         }
 
         return $this->url = $this->kirby()->url('base') . '/' . $this->uid();
@@ -1512,7 +1516,11 @@ class Page extends ModelWithContent
         }
 
         if ($parent = $this->parent()) {
-            return $this->url = $this->parent()->urlForLanguage($language) . '/' . $this->slug($language);
+            if ($parent->isHomePage() === true) {
+                return $this->url = $this->site()->urlForLanguage($language) . '/' . $parent->slug($language) . '/' . $this->slug($language);
+            } else {
+                return $this->url = $this->parent()->urlForLanguage($language) . '/' . $this->slug($language);
+            }
         }
 
         return $this->url = $this->site()->urlForLanguage($language) . '/' . $this->slug($language);

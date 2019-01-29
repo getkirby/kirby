@@ -402,6 +402,61 @@ class PagePropsTest extends TestCase
         $this->assertEquals('/', $app->site()->find('home')->url());
     }
 
+    public function testHomeChildUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home',
+                        'children' => [
+                            ['slug' => 'a']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('/home/a', $app->site()->find('home/a')->url());
+    }
+
+    public function testMultiLangHomeChildUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                ],
+                [
+                    'code'    => 'de',
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home',
+                        'children' => [
+                            ['slug' => 'a']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('/en/home/a', $app->site()->find('home/a')->url());
+        $this->assertEquals('/de/home/a', $app->site()->find('home/a')->url('de'));
+    }
+
     public function testPreviewUrl()
     {
         $app = new App([
