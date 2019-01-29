@@ -78,6 +78,7 @@ class FTest extends TestCase
         $this->assertTrue(F::is($this->tmp, 'txt'));
         $this->assertTrue(F::is($this->tmp, 'text/plain'));
         $this->assertFalse(F::is($this->tmp, 'something/weird'));
+        $this->assertFalse(F::is($this->tmp, 'no-clue'));
     }
 
     public function testIsReadable()
@@ -155,11 +156,30 @@ class FTest extends TestCase
 
     public function testRemove()
     {
-        F::write($this->tmp, 'test');
+        F::write($a = $this->fixtures . '/a.jpg', '');
 
-        $this->assertTrue(file_exists($this->tmp));
-        $this->assertTrue(F::remove($this->tmp));
-        $this->assertFalse(file_exists($this->tmp));
+        $this->assertFileExists($a);
+
+        F::remove($this->fixtures . '/a.jpg');
+
+        $this->assertFileNotExists($a);
+    }
+
+    public function testRemoveGlob()
+    {
+        F::write($a = $this->fixtures . '/a.jpg', '');
+        F::write($b = $this->fixtures . '/a.1234.jpg', '');
+        F::write($c = $this->fixtures . '/a.3456.jpg', '');
+
+        $this->assertFileExists($a);
+        $this->assertFileExists($b);
+        $this->assertFileExists($c);
+
+        F::remove($this->fixtures . '/a*.jpg');
+
+        $this->assertFileNotExists($a);
+        $this->assertFileNotExists($b);
+        $this->assertFileNotExists($c);
     }
 
     public function testSafeName()
@@ -212,8 +232,28 @@ class FTest extends TestCase
         $this->assertEquals($expected, F::uri($this->tmp));
     }
 
+    public function testUriOfNonExistingFile()
+    {
+        $this->assertFalse(F::uri('/does-not-exist'));
+    }
+
     public function testWrite()
     {
         $this->assertTrue(F::write($this->tmp, 'my content'));
+    }
+
+    public function testSimilar()
+    {
+        F::write($a = $this->fixtures . '/a.jpg', '');
+        F::write($b = $this->fixtures . '/a.1234.jpg', '');
+        F::write($c = $this->fixtures . '/a.3456.jpg', '');
+
+        $expected = [
+            $b,
+            $c,
+            $a
+        ];
+
+        $this->assertEquals($expected, F::similar($a));
     }
 }
