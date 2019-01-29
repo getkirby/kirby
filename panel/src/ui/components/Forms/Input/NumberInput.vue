@@ -76,7 +76,12 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
-      this.$emit("input", Number(value));
+      // don't convert empty values to a number
+      if (value !== null && value !== "") {
+        value = Number(value);
+      }
+
+      this.$emit("input", value);
     },
     select() {
       this.$refs.input.select();
