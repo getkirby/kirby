@@ -17,6 +17,12 @@ class QueryTest extends TestCase
         $this->assertEquals(null, $query->result());
     }
 
+    public function testWithEmptyQuery()
+    {
+        $query = new Query('', $data = ['foo' => 'bar']);
+        $this->assertEquals($data, $query->result());
+    }
+
     public function test0LevelArrayQuery()
     {
         $query = new Query('user', [
