@@ -301,9 +301,9 @@
   "options": "Asetukset",
 
   "orientation": "Suunta",
-  "orientation.landscape": "Vaakasuunta",
-  "orientation.portrait": "Pystysuunta",
-  "orientation.square": "Square",
+  "orientation.landscape": "Vaakasuuntainen",
+  "orientation.portrait": "Pystysuuntainen",
+  "orientation.square": "Neliskulmainen",
 
   "page.changeSlug": "Vaihda URL-osoite",
   "page.changeSlug.fromTitle": "Luo nimen perusteella",
