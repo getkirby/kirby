@@ -28,6 +28,26 @@ class HeaderTest extends TestCase
         ];
     }
 
+    public function testCreateSingle()
+    {
+        $this->assertEquals('Key: Value', Header::create('Key', 'Value'));
+    }
+
+    public function testCreateMultiple()
+    {
+        $input = [
+            'a' => 'value a',
+            'b' => 'value b',
+        ];
+
+        $expected = [
+            'a: value a',
+            'b: value b'
+        ];
+
+        $this->assertEquals(implode("\r\n", $expected), Header::create($input));
+    }
+
     public function testNamedStatuses()
     {
         $h = $this->statusHeaders;
@@ -114,9 +134,22 @@ class HeaderTest extends TestCase
             Header::contentType('webm', '', false),
             'Can send Content-type header with no encoding'
         );
+
+        $this->assertEquals(
+            'Content-type: video/webm',
+            Header::type('webm', '', false),
+            'Can send Content-type header with no encoding'
+        );
+
         $this->assertEquals(
             'Content-type: application/json; charset=ISO-8859-1',
             Header::contentType('json', 'ISO-8859-1', false),
+            'Can send Content-type header with custom charset'
+        );
+
+        $this->assertEquals(
+            'Content-type: application/json; charset=ISO-8859-1',
+            Header::type('json', 'ISO-8859-1', false),
             'Can send Content-type header with custom charset'
         );
     }
