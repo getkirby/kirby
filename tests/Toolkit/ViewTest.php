@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class ViewTest extends TestCase
 {
-    const FIXTURES = __DIR__ . '/fixtures';
+    const FIXTURES = __DIR__ . '/fixtures/view';
 
     protected function _view(array $data = [])
     {
@@ -44,5 +44,15 @@ class ViewTest extends TestCase
         $this->assertEquals('Hello Tester', $view->toString());
         $this->assertEquals('Hello Tester', $view->__toString());
         $this->assertEquals('Hello Tester', (string)$view);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage View exception
+     */
+    public function testWithException()
+    {
+        $view = new View(static::FIXTURES . '/view-with-exception.php');
+        $view->render();
     }
 }
