@@ -61,7 +61,7 @@ class Silo
     public static function remove(string $key = null): array
     {
         // reset the entire array
-        if ($key === true) {
+        if ($key === null) {
             return static::$data = [];
         }
 
