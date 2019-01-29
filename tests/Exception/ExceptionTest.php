@@ -52,4 +52,30 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
         $class = new WillFail();
         $class->fail();
     }
+
+    public function testGetDetails()
+    {
+        $exception = new Exception([
+            'details' => ['test']
+        ]);
+
+        $this->assertEquals(['test'], $exception->getDetails());
+    }
+
+    public function testToArray()
+    {
+        $exception = new Exception();
+
+        $expected = [
+            'exception' => 'Kirby\Exception\Exception',
+            'message'   => 'An error occurred',
+            'key'       => 'error.general',
+            'file'      => __FILE__,
+            'line'      => $exception->getLine(),
+            'details'   => [],
+            'code'      => 500
+        ];
+
+        $this->assertEquals($expected, $exception->toArray());
+    }
 }
