@@ -36,6 +36,29 @@ class DirTest extends TestCase
 
     /**
      * @expectedException Exception
+     * @expectedExceptionMessage The directory "/does-not-exist" does not exist
+     */
+    public function testCopyMissingSource()
+    {
+        $src    = '/does-not-exist';
+        $target = static::FIXTURES . '/copy-target';
+
+        $result = Dir::copy($src, $target);
+    }
+
+    public function testCopyExistingTarget()
+    {
+        $src    = static::FIXTURES . '/copy';
+        $target = static::FIXTURES . '/copy';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The target directory "' . $target . '" exists');
+
+        $result = Dir::copy($src, $target);
+    }
+
+    /**
+     * @expectedException Exception
      * @expectedExceptionMessage The target directory
      */
     public function testCopyExists()
@@ -71,6 +94,11 @@ class DirTest extends TestCase
         Dir::make($this->tmp);
 
         $this->assertTrue(Dir::move($this->tmp, $this->moved));
+    }
+
+    public function testMoveNonExisting()
+    {
+        $this->assertFalse(Dir::move('/does-not-exist', $this->moved));
     }
 
     public function testRead()
@@ -190,5 +218,10 @@ class DirTest extends TestCase
         $this->assertEquals('15 B', Dir::niceSize($this->tmp));
 
         Dir::remove($this->tmp);
+    }
+
+    public function testSizeOfNonExistingDir()
+    {
+        $this->assertFalse(Dir::size('/does-not-exist'));
     }
 }
