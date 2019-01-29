@@ -101,6 +101,21 @@ class I18nTest extends TestCase
         $this->assertEquals('Save', I18n::translate('save', 'Save'));
     }
 
+    public function testTranslateWithArrayFallback()
+    {
+        I18n::$locale = 'de';
+
+        $input = [
+        ];
+
+        $fallback = [
+            'en' => 'Save',
+            'de' => 'Speichern'
+        ];
+
+        $this->assertEquals('Speichern', I18n::translate($input, $fallback));
+    }
+
     public function testTranslateArray()
     {
         $this->assertEquals('Save', I18n::translate([
@@ -144,6 +159,42 @@ class I18nTest extends TestCase
         $this->assertEquals('3 cars', I18n::translateCount('car', 3));
     }
 
+    public function testTranslateCountWithMissingTranslation()
+    {
+        I18n::$translations = [
+            'en' => []
+        ];
+
+        $this->assertNull(I18n::translateCount('car', 1));
+    }
+
+    public function testTranslateCountWithStringTranslation()
+    {
+        I18n::$translations = [
+            'en' => [
+                'car' => 'One car'
+            ]
+        ];
+
+        $this->assertEquals('One car', I18n::translateCount('car', 1));
+        $this->assertEquals('One car', I18n::translateCount('car', 2));
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Please provide 3 translations
+     */
+    public function testTranslateCountWithInvalidArgs()
+    {
+        I18n::$translations = [
+            'en' => [
+                'car' => ['No cars', 'One car']
+            ]
+        ];
+
+        I18n::translateCount('car', 2);
+    }
+
     public function testLoadTranslation()
     {
         $translations = [
@@ -166,6 +217,13 @@ class I18nTest extends TestCase
         $this->assertEquals('juhu', I18n::translate('test'));
     }
 
+    public function testLastResortFallback()
+    {
+        I18n::$fallback = null;
+
+        $this->assertEquals('en', I18n::fallback());
+    }
+
     public function testLazyFallback()
     {
         I18n::$fallback = function () {
@@ -182,5 +240,18 @@ class I18nTest extends TestCase
         };
 
         $this->assertEquals('de', I18n::locale());
+    }
+
+    public function testTranslations()
+    {
+        $this->assertEquals([], I18n::translations());
+
+        I18n::$translations = $translations = [
+            'en' => [
+                'foo' => 'bar'
+            ]
+        ];
+
+        $this->assertEquals($translations, I18n::translations());
     }
 }
