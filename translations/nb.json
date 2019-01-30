@@ -1,0 +1,409 @@
+{
+  "add": "Legg til",
+  "avatar": "Profilbilde",
+  "back": "Tilbake",
+  "cancel": "Avbryt",
+  "change": "Endre",
+  "close": "Lukk",
+  "confirm": "Lagre",
+  "copy": "Kopier",
+  "create": "Opprett",
+
+  "date": "Dato",
+  "date.select": "Velg dato",
+
+  "day": "Dag",
+  "days.fri": "Fre",
+  "days.mon": "Man",
+  "days.sat": "L\u00f8r",
+  "days.sun": "S\u00f8n",
+  "days.thu": "Tor",
+  "days.tue": "Tir",
+  "days.wed": "Ons",
+
+  "delete": "Slett",
+  "dimensions": "Dimensjoner",
+  "discard": "Forkast",
+  "edit": "Rediger",
+
+  "email": "Epost",
+  "email.placeholder": "epost@eksempel.no",
+
+  "error.access.login": "Ugyldig innlogging",
+  "error.access.panel": "Du har ikke tilgang til panelet",
+
+  "error.avatar.create.fail": "Profilbildet kunne ikke lastes opp",
+  "error.avatar.delete.fail": "Profil bildet kunne ikke bli slette",
+  "error.avatar.dimensions.invalid":
+    "Vennligst hold profilbildets bredde og høyde under 3000 piksler",
+  "error.avatar.mime.forbidden":
+    "Ugyldig MIME-type",
+
+  "error.blueprint.notFound": "Blueprint \"{name}\" kunne ikke lastes inn",
+
+  "error.email.preset.notFound": "E-postinnstillingen \"{name}\" ble ikke funnet",
+
+  "error.field.converter.invalid": "Ugyldig omformer \"{converter}\"",
+
+  "error.file.changeName.permission":
+    "Du er ikke tillatt å endre navnet til \"{filename}\"",
+  "error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
+  "error.file.extension.forbidden":
+    "Ugyldig filtype",
+  "error.file.extension.missing":
+    "Du kan ikke laste opp filer uten filtype",
+  "error.file.mime.differs":
+    "Den opplastede filen må være av samme MIME-type \"{mime}\"",
+  "error.file.mime.forbidden": "Mediatypen \"{mime}\" er ikke tillatt",
+  "error.file.mime.missing":
+    "Mediatypen for \"{filename}\" kan ikke gjenkjennes",
+  "error.file.name.missing": "Filnavnet kan ikke være tomt",
+  "error.file.notFound": "Filen kunne ikke bli funnet",
+  "error.file.type.forbidden": "Du har ikke lov til å laste opp filer av typen {type}",
+  "error.file.undefined": "Filen kunne ikke bli funnet",
+
+  "error.form.incomplete": "Vennligst fiks alle feil…",
+  "error.form.notSaved": "Skjemaet kunne ikke lagres",
+
+  "error.page.changeSlug.permission":
+    "Du kan ikke endre URLen for denne siden",
+  "error.page.changeStatus.incomplete":
+    "Siden har feil og kan ikke publiseres",
+  "error.page.changeStatus.permission":
+    "Sidens status kan ikke endres",
+  "error.page.changeStatus.toDraft.invalid":
+    "Siden \"{slug}\" kan ikke konverteres til et utkast",
+  "error.page.changeTemplate.invalid":
+    "Malen for siden \"{slug}\" kan ikke endres",
+  "error.page.changeTemplate.permission":
+    "Du har ikke tillatelse til å endre malen for \"{slug}\"",
+  "error.page.changeTitle.empty": "Tittelen kan ikke være tom",
+  "error.page.changeTitle.permission":
+    "Du har ikke tillatelse til å endre tittelen for \"{slug}\"",
+  "error.page.create.permission": "Du har ikke tillatelse til å opprette \"{slug}\"",
+  "error.page.delete": "Siden \"{slug}\" kan ikke slettes",
+  "error.page.delete.confirm": "Vennligst skriv inn sidens tittel for å bekrefte",
+  "error.page.delete.hasChildren":
+    "Siden har undersider og kan derfor ikke slettes",
+  "error.page.delete.permission": "Du har ikke tilgang til å slette \"{slug}\"",
+  "error.page.draft.duplicate":
+    "Et sideutkast med URL-tillegget \"{slug}\" eksisterer allerede",
+  "error.page.duplicate":
+    "En side med URL-tillegget \"{slug}\" eksisterer allerede",
+  "error.page.notFound": "Siden \"{slug}\" ble ikke funnet",
+  "error.page.num.invalid":
+    "Vennligst skriv inn et gyldig sorteringsnummer. Tallet må ikke være negativt.",
+  "error.page.slug.invalid": "Vennligst skriv inn en gyldig URL-prefiks",
+  "error.page.sort.permission": "Siden \"{slug}\" kan ikke sorteres",
+  "error.page.status.invalid": "Vennligst angi en gyldig sidestatus",
+  "error.page.undefined": "Siden kunne ikke bli funnet",
+  "error.page.update.permission": "Du har ikke tilgang til å oppdatere \"{slug}\"",
+
+  "error.section.files.max.plural":
+    "Det er ikke mulig å legge til mer enn {max} filer i seksjonen \"{section}\"",
+  "error.section.files.max.singular":
+    "Det er ikke mulig å legge til mer enn én fil i seksjonen \"{section}\"",
+  "error.section.files.min.plural":
+    "Legg til minst {min} filer i \"{section}\" seksjonen",
+  "error.section.files.min.singular":
+    "Legg til minst én fil i \"{section}\" seksjonen",
+
+  "error.section.pages.max.plural":
+    "Det er ikke mulig å legge til mer enn {max} sider i \"{section}\" seksjonen",
+  "error.section.pages.max.singular":
+    "Det er ikke mulig å legge til mer enn én side i \"{section}\" seksjonen",
+  "error.section.pages.min.plural":
+    "Legg til mist {min} sider i \"{section}\" seksjonen",
+  "error.section.pages.min.singular":
+    "Legg til minst én side i \"{section}\" seksjonen",
+
+  "error.section.notLoaded": "Seksjonen \"{name}\" kunne ikke lastes inn",
+  "error.section.type.invalid": "Seksjonstypen \"{type}\" er ikke gyldig",
+
+  "error.site.changeTitle.permission":
+    "Du har ikke tillatelse til å endre tittel på siden",
+  "error.site.update.permission": "Du har ikke tillatelse til å oppdatere denne siden",
+
+  "error.template.default.notFound": "Standardmalen eksisterer ikke",
+
+  "error.user.changeEmail.permission":
+    "Du har ikke tillatelse til å endre e-post for brukeren \"{name}\"",
+  "error.user.changeLanguage.permission":
+    "Du har ikke tillatelse til å endre språk for brukeren \"{name}\"",
+  "error.user.changeName.permission":
+    "Du har ikke tillatelse til å endre navn for brukeren \"{name}\"",
+  "error.user.changePassword.permission":
+    "Du har ikke tillatelse til å endre passord for brukeren \"{name}\"",
+  "error.user.changeRole.lastAdmin":
+    "Rollen for den siste administratoren kan ikke endres",
+  "error.user.changeRole.permission":
+    "Du har ikke tillatelse til å endre rollen for brukeren \"{name}\"",
+  "error.user.create.permission": "Du har ikke tilgang til å opprette denne brukeren",
+  "error.user.delete": "Denne brukeren kunne ikke bli slettet",
+  "error.user.delete.lastAdmin": "Siste administrator kan ikke slettes",
+  "error.user.delete.lastUser": "Den siste brukeren kan ikke slettes",
+  "error.user.delete.permission":
+    "Du er ikke tillat \u00e5 slette denne brukeren",
+  "error.user.duplicate":
+    "En bruker med e-postadresse \"{email}\" eksisterer allerede",
+  "error.user.email.invalid": "Vennligst skriv inn en gyldig e-postadresse",
+  "error.user.language.invalid": "Vennligst skriv inn et gyldig språk",
+  "error.user.notFound": "Brukeren kunne ikke bli funnet",
+  "error.user.password.invalid":
+    "Vennligst skriv inn et gyldig passord. Passordet må minst være 8 tegn langt.",
+  "error.user.password.notSame": "Vennligst bekreft passordet",
+  "error.user.password.undefined": "Brukeren har ikke et passord",
+  "error.user.role.invalid": "Vennligst skriv inn en gyldig rolle",
+  "error.user.undefined": "Brukeren kunne ikke bli funnet",
+  "error.user.update.permission":
+    "Du har ikke tillatelse til å oppdatere brukeren \"{name}\"",
+
+  "error.validation.accepted": "Vennligst bekreft",
+  "error.validation.alpha": "Vennligst skriv kun tegn mellom a-z",
+  "error.validation.alphanum":
+    "Vennligst skriv kun tegn mellom a-z eller tall mellom 0-9",
+  "error.validation.between":
+    "Vennligst angi en verdi mellom \"{min}\" og \"{max}\"",
+  "error.validation.boolean": "Vennligst bekreft eller avslå",
+  "error.validation.contains":
+    "Vennligst skriv inn en verdi som inneholder \"{needle}\"",
+  "error.validation.date": "Vennligst skriv inn en gyldig dato",
+  "error.validation.denied": "Vennligst avslå",
+  "error.validation.different": "Verdien kan ikke være \"{other}\"",
+  "error.validation.email": "Vennligst skriv inn en gyldig e-postadresse",
+  "error.validation.endswith": "Verdien må ende med \"{end}\"",
+  "error.validation.filename": "Vennligst skriv inn et gyldig filnavn",
+  "error.validation.in": "Vennligst skriv inn en av følgende: ({in})",
+  "error.validation.integer": "Vennligst skriv inn et gyldig tall",
+  "error.validation.ip": "Vennligst skriv inn en gyldig IP-adresse",
+  "error.validation.less": "Vennligst angi en verdi lavere enn {max}",
+  "error.validation.match": "Verdien samsvarer ikke med det forventede mønsteret",
+  "error.validation.max": "Vennligst angi en verdi lik eller lavere enn {max}",
+  "error.validation.maxlength":
+    "Vennligst angi en kortere verdi. (maks. {max} tegn)",
+  "error.validation.maxwords": "Vennligst ikke skriv inn mer enn {max} ord",
+  "error.validation.min": "Vennligst angi en verdi lik eller større enn {min}",
+  "error.validation.minlength":
+    "Vennligst angi en lengre verdi. (minimum. {min} tegn)",
+  "error.validation.minwords": "Vennligst skriv inn minst {min} ord",
+  "error.validation.more": "Vennligst angi en verdi større enn {min}",
+  "error.validation.notcontains":
+    "Vennligst angi en verdi som ikke inneholder \"{needle}\"",
+  "error.validation.notin":
+    "Vennligst ikke angi noen av følgende:({notIn})",
+  "error.validation.option": "Vennligst velg et gyldig alternativ",
+  "error.validation.num": "Vennligst angi et gyldig nummer",
+  "error.validation.required": "Vennligst skriv inn noe",
+  "error.validation.same": "Vennligst angi \"{other}\"",
+  "error.validation.size": "Størrelsen på verdien må være \"{size}\"",
+  "error.validation.startswith": "Verdien må starte med \"{start}\"",
+  "error.validation.time": "Vennligst angi et gyldig tidspunkt",
+  "error.validation.url": "Vennligst skriv inn en gyldig URL",
+
+  "field.files.empty": "Ingen filer har blitt valgt",
+  "field.pages.empty": "Ingen side har blitt valgt",
+  "field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",
+  "field.structure.empty": "Ingen oppf\u00f8ringer enda",
+  "field.users.empty": "Ingen bruker har blitt valgt",
+
+  "file.delete.confirm":
+    "Vil du virkelig slette denne filen?",
+
+  "files": "Filer",
+  "files.empty": "Ingen filer ennå",
+
+  "hour": "Time",
+  "insert": "Sett Inn",
+  "install": "Installer",
+
+  "installation": "Installasjon",
+  "installation.completed": "Panelet har blitt installert",
+  "installation.disabled": "Installasjonsprogrammet for Panelet er deaktivert på offentlige servere som standard. Vennligst kjør installasjonsprogrammet på en lokal maskin eller aktiver den med <code>panel.install</code> innstillingen.",
+  "installation.issues.accounts":
+    "\/site\/accounts er ikke skrivbar",
+  "installation.issues.content":
+    "Mappen content og alt av innhold m\u00e5 v\u00e6re skrivbar.",
+  "installation.issues.curl": "Utvidelsen <code>CURL</code> er nødvendig",
+  "installation.issues.headline": "Panelet kan ikke installeres",
+  "installation.issues.mbstring":
+    "Utvidelsen <code>MB String</code> er nødvendig",
+  "installation.issues.media":
+    "Mappen <code>/media</code> eksisterer ikke eller er ikke skrivbar",
+  "installation.issues.php": "Pass på at du bruker <code>PHP 7+</code>",
+  "installation.issues.server":
+    "Kirby krever <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
+  "installation.issues.sessions": "Mappen <code>/site/sessions</code> eksisterer ikke eller er ikke skrivbar",
+
+  "language": "Spr\u00e5k",
+  "language.code": "Kode",
+  "language.convert": "Gjør til standard",
+  "language.convert.confirm":
+    "<p>Vil du virkelig konvertere <strong>{name}</strong> til standardspråk? Dette kan ikke angres. </p><p>Dersom <strong>{name}</strong> har innhold som ikke er oversatt, vil nettstedet mangle innhold å falle tilbake på. Dette kan resultere i at deler av nettstedet fremstår som tomt.</p>",
+  "language.create": "Legg til språk",
+  "language.delete.confirm":
+    "Vil du virkelig slette språket <strong>{name}</strong> inkludert alle oversettelser? Dette kan ikke angres!",
+  "language.deleted": "Språket har blitt slettet",
+  "language.direction": "Leseretning",
+  "language.direction.ltr": "Venstre til høyre",
+  "language.direction.rtl": "Høyre til venstre",
+  "language.locale": "PHP locale streng",
+  "language.name": "Navn",
+  "language.updated": "Språk har blitt oppdatert",
+
+  "languages": "Språk",
+  "languages.default": "Standardspråk",
+  "languages.empty": "Det er ingen språk ennå",
+  "languages.secondary": "Sekundære språk",
+  "languages.secondary.empty": "Det er ingen andre språk ennå",
+
+  "license": "Kirby lisens",
+  "license.buy": "Kjøp lisens",
+  "license.register": "Registrer",
+  "license.register.help":
+    "Du skal ha mottatt din lisenskode for kjøpet via e-post. Vennligst kopier og lim inn denne for å registrere deg.",
+  "license.register.label": "Vennligst skriv inn din lisenskode",
+  "license.register.success": "Takk for at du støtter Kirby",
+  "license.unregistered": "Dette er en uregistrert demo av Kirby",
+
+  "link": "Adresse",
+  "link.text": "Koblingstekst",
+
+  "loading": "Laster inn",
+
+  "login": "Logg Inn",
+  "login.remember": "Hold meg innlogget",
+
+  "logout": "Logg ut",
+
+  "menu": "Meny",
+  "meridiem": "AM/PM",
+  "mime": "Mediatype",
+  "minutes": "Minutter",
+
+  "month": "Måned",
+  "months.april": "April",
+  "months.august": "August",
+  "months.december": "Desember",
+  "months.february": "Februar",
+  "months.january": "Januar",
+  "months.july": "July",
+  "months.june": "Juni",
+  "months.march": "Mars",
+  "months.may": "Mai",
+  "months.november": "November",
+  "months.october": "Oktober",
+  "months.september": "September",
+
+  "more": "Mer",
+  "name": "Navn",
+  "next": "Neste",
+  "open": "Åpne",
+  "options": "Alternativer",
+
+  "orientation": "Orientering",
+  "orientation.landscape": "Landskap",
+  "orientation.portrait": "Portrett",
+  "orientation.square": "Kvadrat",
+
+  "page.changeSlug": "Endre URL",
+  "page.changeSlug.fromTitle": "Opprett fra tittel",
+  "page.changeStatus": "Endre status",
+  "page.changeStatus.position": "Vennligst velg en posisjon",
+  "page.changeStatus.select": "Velg ny status",
+  "page.changeTemplate": "Endre mal",
+  "page.delete.confirm":
+    "Vil du virkelig slette denne siden?",
+  "page.delete.confirm.subpages":
+    "<strong>Denne siden har undersider</strong>. <br>Alle undersider vil også bli slettet.",
+  "page.delete.confirm.title": "Skriv inn sidetittel for å bekrefte",
+  "page.draft.create": "Lag utkast",
+  "page.status": "Status",
+  "page.status.draft": "Utkast",
+  "page.status.draft.description":
+    "Siden er i utkastmodus og bare synlig for innloggede redaktører",
+  "page.status.listed": "Offentlig",
+  "page.status.listed.description": "Siden er offentlig og synlig for alle",
+  "page.status.unlisted": "Unotert",
+  "page.status.unlisted.description": "Siden er ikke er oppført og er kun tilgjengelig via URL",
+
+  "pages": "Sider",
+  "pages.empty": "Ingen sider ennå",
+  "pages.status.draft": "Utkast",
+  "pages.status.listed": "Publisert",
+  "pages.status.unlisted": "Unotert",
+
+  "password": "Passord",
+  "pixel": "Piksel",
+  "prev": "Forrige",
+  "remove": "Fjern",
+  "rename": "Endre navn",
+  "replace": "Erstatt",
+  "retry": "Pr\u00f8v p\u00e5 nytt",
+  "revert": "Forkast",
+
+  "role": "Rolle",
+  "role.all": "Alle",
+  "role.empty": "Det er ingen brukere med denne rollen",
+  "role.description.placeholder": "Ingen beskrivelse",
+
+  "save": "Lagre",
+  "search": "Søk",
+  "select": "Velg",
+  "settings": "Innstillinger",
+  "size": "Størrelse",
+  "slug": "URL-appendiks",
+  "sort": "Sortere",
+  "title": "Tittel",
+  "template": "Mal",
+  "today": "I dag",
+
+  "toolbar.button.code": "Kode",
+  "toolbar.button.bold": "Tykk tekst",
+  "toolbar.button.email": "Epost",
+  "toolbar.button.headings": "Overskrifter",
+  "toolbar.button.heading.1": "Overskrift 1",
+  "toolbar.button.heading.2": "Overskrift 2",
+  "toolbar.button.heading.3": "Overskrift 3",
+  "toolbar.button.italic": "Kursiv tekst",
+  "toolbar.button.link": "Adresse",
+  "toolbar.button.ol": "Ordnet liste",
+  "toolbar.button.ul": "Punktliste",
+
+  "translation.author": "Kirby Team",
+  "translation.direction": "ltr",
+  "translation.name": "Norsk Bokm\u00e5l",
+
+  "upload": "Last opp",
+  "upload.errors": "Feil",
+  "upload.progress": "Laster opp…",
+
+  "url": "Nettadresse",
+  "url.placeholder": "https://example.com",
+
+  "user": "Bruker",
+  "user.blueprint":
+    "Du kan definere flere seksjoner og skjemafelter for denne brukerrollen i <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.changeEmail": "Endre e-post",
+  "user.changeLanguage": "Endre språk",
+  "user.changeName": "Angi nytt navn for denne brukeren",
+  "user.changePassword": "Bytt passord",
+  "user.changePassword.new": "Nytt passord",
+  "user.changePassword.new.confirm": "Bekreft nytt passord…",
+  "user.changeRole": "Bytt rolle",
+  "user.changeRole.select": "Velg en ny rolle",
+  "user.create": "Legg til ny bruker",
+  "user.delete": "Slett denne brukeren",
+  "user.delete.confirm":
+    "Vil du virkelig slette denne konten?",
+
+  "version": "Kirby versjon",
+
+  "view.account": "Din konto",
+  "view.installation": "Installasjon",
+  "view.settings": "Innstillinger",
+  "view.site": "Side",
+  "view.users": "Brukere",
+
+  "welcome": "Velkommen",
+  "year": "År"
+}
