@@ -36,7 +36,21 @@
 </template>
 
 <script>
+/* Components */
+import Icon from "@/components/Misc/Icon.vue";
+import Link from "@/components/Navigation/Link.vue";
+
+/* Directives */
+import TabDirective from "@/directives/tab.js";
+
 export default {
+  components: {
+    "k-icon": Icon,
+    "k-link": Link
+  },
+  directives: {
+    "tab": TabDirective,
+  },
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
