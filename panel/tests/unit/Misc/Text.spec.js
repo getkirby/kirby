@@ -3,7 +3,7 @@ import Text from '@/components/Misc/Text.vue'
 
 describe("Text.vue", () => {
 
-  it("renders correctly", () => {
+  it("renders text", () => {
     const wrapper = mount(Text, {
       slots: {
         default: "text"
