@@ -146,6 +146,8 @@ class Form
                 $strings[$key] = null;
             } elseif (is_array($value) === true) {
                 $strings[$key] = Yaml::encode($value);
+            } elseif (is_float($value) === true) {
+                $strings[$key] = str_replace(',', '.', $value);
             } else {
                 $strings[$key] = (string)$value;
             }
