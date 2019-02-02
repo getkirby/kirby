@@ -141,6 +141,27 @@ class StrTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testFloat()
+    {
+        $this->assertEquals('0', Str::float(false));
+        $this->assertEquals('0', Str::float(null));
+        $this->assertEquals('0', Str::float(0));
+        $this->assertEquals('0', Str::float('0'));
+        $this->assertEquals('1', Str::float(true));
+        $this->assertEquals('1', Str::float(1));
+        $this->assertEquals('1', Str::float('1'));
+        $this->assertEquals('1.1', Str::float(1.1));
+        $this->assertEquals('1.1', Str::float('1.1'));
+        $this->assertEquals('1.1', Str::float('1,1'));
+        $this->assertEquals('1.11', Str::float('1,11'));
+        $this->assertEquals('1.111', Str::float('1,111'));
+        $this->assertEquals('-1', Str::float(-1));
+        $this->assertEquals('-1.1', Str::float(-1.1));
+        $this->assertEquals('-1.11', Str::float('-1.11'));
+        $this->assertEquals('-1.111', Str::float('-1,111'));
+    }
+
+
     public function testFrom()
     {
         $string = 'Hellö Wörld';

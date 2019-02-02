@@ -337,6 +337,20 @@ class Str
     }
 
     /**
+     * Convert the value to a float with a decimal
+     * point, no matter what the locale setting is
+     *
+     * @param string|int|float $value
+     * @return string
+     */
+    public static function float($value): string
+    {
+        $value   = str_replace(',', '.', $value);
+        $decimal = strlen(substr(strrchr($value, "."), 1));
+        return number_format((float)$value, $decimal);
+    }
+
+    /**
      * Returns the rest of the string starting from the given character
      *
      * @param  string   $string
