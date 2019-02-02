@@ -4,6 +4,10 @@ about: Adding a new feature
 
 ---
 
+**Read the guide**
+Please make sure to read our guide on contributing:
+https://github.com/getkirby/kirby/blob/master/.github/CONTRIBUTING.md
+
 **Status**
 Use our GitHub labels on the right with the `status: ` prefix to set the PR as in progress, to be reviewed or currently blocked.
 

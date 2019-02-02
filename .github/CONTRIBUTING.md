@@ -35,4 +35,4 @@ Please understand that we cannot merge all feature ideas or that it might take a
 
 Let us know [in the forum](https://forum.getkirby.com) if you have questions.
 
-And once more: thank you :+1::tada:
+And once more: thank you! :+1::tada:
