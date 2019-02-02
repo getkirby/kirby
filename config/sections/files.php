@@ -8,6 +8,7 @@ return [
     'mixins' => [
         'empty',
         'headline',
+        'help',
         'layout',
         'min',
         'max',

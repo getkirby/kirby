@@ -404,6 +404,7 @@ trait AppPlugins
         // section mixins
         Section::$mixins['empty']          = include static::$root . '/config/sections/mixins/empty.php';
         Section::$mixins['headline']       = include static::$root . '/config/sections/mixins/headline.php';
+        Section::$mixins['help']           = include static::$root . '/config/sections/mixins/help.php';
         Section::$mixins['layout']         = include static::$root . '/config/sections/mixins/layout.php';
         Section::$mixins['max']            = include static::$root . '/config/sections/mixins/max.php';
         Section::$mixins['min']            = include static::$root . '/config/sections/mixins/min.php';

@@ -69,4 +69,7 @@ export default {
     left: 0;
   }
 }
+.k-section-help {
+  padding-top: 0.5rem;
+}
 </style>

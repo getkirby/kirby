@@ -113,7 +113,6 @@ class PagesSectionTest extends TestCase
 
     public function testTemplates()
     {
-
         // single template
         $section = new Section('pages', [
             'name'      => 'test',
@@ -162,5 +161,30 @@ class PagesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('Test', $section->empty());
+    }
+
+    public function testHelp()
+    {
+
+        // single help
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'help'  => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $section->help());
+
+        // translated help
+        $section = new Section('pages', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'help' => [
+                'en' => 'Information',
+                'de' => 'Informationen'
+            ]
+        ]);
+
+        $this->assertEquals('Information', $section->help());
     }
 }

@@ -1,7 +1,8 @@
 export default {
   props: {
-    parent: String,
     blueprint: String,
+    parent: String,
+    help: String,
     name: String
   },
   data() {
