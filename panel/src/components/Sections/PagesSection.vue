@@ -51,6 +51,14 @@
 
     </template>
 
+    <footer v-if="help">
+      <k-text
+        theme="help"
+        class="k-section-help"
+        v-html="help"
+      />
+    </footer>
+
   </section>
 
 </template>
