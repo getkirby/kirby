@@ -162,7 +162,7 @@ export default [
     component: UserView,
     beforeEnter: auth,
     props: () => ({
-      id: store.state.user.current.id
+      id: store.state.user.current ? store.state.user.current.id : null
     })
   },
   {
