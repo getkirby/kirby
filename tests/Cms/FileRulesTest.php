@@ -62,5 +62,4 @@ class FileRulesTest extends TestCase
         $file = $page->file('a.jpg');
         FileRules::changeName($file, 'b');
     }
-
 }
