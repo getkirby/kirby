@@ -25,7 +25,7 @@ class FileRules
         }
 
         $parent    = $file->parent();
-        $duplicate = $parent->files()->not($file)->findBy('name', $name);
+        $duplicate = $parent->files()->not($file)->findBy('filename', $name . '.' . $file->extension());
 
         if ($duplicate) {
             throw new DuplicateException([
