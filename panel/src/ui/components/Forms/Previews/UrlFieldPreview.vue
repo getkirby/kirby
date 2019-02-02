@@ -9,7 +9,12 @@
 <script>
 export default {
   props: {
-    column: Object,
+    column: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
     value: String,
   },
   computed: {
