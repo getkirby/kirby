@@ -40,6 +40,18 @@ class CollectionTest extends TestCase
         $this->assertEquals($c, $collection->last());
     }
 
+    public function testWithArray()
+    {
+        $collection = new Collection([
+            $a = ['id' => 'a', 'name' => 'a'],
+            $b = ['id' => 'b', 'name' => 'b'],
+            $c = ['id' => 'c', 'name' => 'c']
+        ]);
+
+        $this->assertEquals($a, $collection->first());
+        $this->assertEquals($c, $collection->last());
+    }
+
     public function testGetAttribute()
     {
         $object     = new MockObject(['id' => 'a']);
