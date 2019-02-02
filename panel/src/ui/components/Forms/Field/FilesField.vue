@@ -105,6 +105,12 @@ export default {
       this.selected = value;
     }
   },
+  created() {
+    this.$events.$on("file.delete", this.unset);
+  },
+  destroyed() {
+    this.$events.$off("file.delete", this.unset);
+  },
   methods: {
     open() {
       return this.$api
@@ -147,6 +153,10 @@ export default {
     },
     select(files) {
       this.selected = files;
+      this.onInput();
+    },
+    unset(id) {
+      this.selected = this.selected.filter(item => item.id !== id);
       this.onInput();
     }
   }
