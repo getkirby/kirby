@@ -517,6 +517,22 @@ class HelpersTest extends TestCase
         $this->assertEquals('<svg>test</svg>', trim($result));
     }
 
+    public function testSvgWithAbsolutePath()
+    {
+        $result = svg(__DIR__ . '/fixtures/HelpersTest/test.svg');
+        $this->assertEquals('<svg>test</svg>', trim($result));
+    }
+
+    public function testSvgWithInvalidFileType()
+    {
+        $this->assertFalse(svg('somefile.jpg'));
+    }
+
+    public function testSvgWithMissingFile()
+    {
+        $this->assertFalse(svg('somefile.svg'));
+    }
+
     public function testTwitter()
     {
         // simple

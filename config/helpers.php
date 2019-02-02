@@ -640,15 +640,25 @@ function snippet(string $name, $data = [], bool $return = false)
  */
 function svg(string $file)
 {
-    $root = App::instance()->root();
-    $file = $root . '/' . $file;
+    $extension = F::extension($file);
 
-    if (file_exists($file) === false) {
+    // check for valid svg files
+    if ($extension !== 'svg') {
         return false;
     }
 
+    // try to convert relative paths to absolute
+    if (file_exists($file) === false) {
+        $root = App::instance()->root();
+        $file = realpath($root . '/' . $file);
+
+        if (file_exists($file) === false) {
+            return false;
+        }
+    }
+
     ob_start();
-    include F::realpath($file, $root);
+    include $file;
     $svg = ob_get_contents();
     ob_end_clean();
 
