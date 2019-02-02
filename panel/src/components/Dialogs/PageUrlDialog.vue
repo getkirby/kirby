@@ -47,6 +47,7 @@ export default {
         required: true,
         icon: "url",
         help: "/" + this.url,
+        counter: false,
         preselect: true
       };
     }
