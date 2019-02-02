@@ -1,4 +1,6 @@
 <script>
+import config from "@/config/config.js";
+
 export default {
   data() {
     return {
@@ -6,6 +8,10 @@ export default {
     };
   },
   errorCaptured(error) {
+    if (config.debug) {
+      window.console.error(error);
+    }
+
     this.error = error;
     return false;
   },
