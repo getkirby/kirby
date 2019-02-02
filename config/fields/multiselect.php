@@ -3,6 +3,12 @@
 return [
     'extends' => 'tags',
     'props' => [
+
+        /**
+         * Unset inherited props
+         */
+        'accept' => null,
+
         /**
          * Custom icon to replace the arrow down.
          */
