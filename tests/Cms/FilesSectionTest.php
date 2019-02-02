@@ -199,4 +199,29 @@ class FilesSectionTest extends TestCase
         $data = $section->data();
         $this->assertEquals('(image: a/a.jpg)', $data[0]['dragText']);
     }
+
+    public function testHelp()
+    {
+
+        // single help
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'help'  => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $section->help());
+
+        // translated help
+        $section = new Section('files', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'help' => [
+                'en' => 'Information',
+                'de' => 'Informationen'
+            ]
+        ]);
+
+        $this->assertEquals('Information', $section->help());
+    }
 }
