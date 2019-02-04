@@ -97,7 +97,7 @@ export default {
         .then(() => {
           this.$store.dispatch("languages/load");
           this.success({
-            message: this.$t("language.created"),
+            message: ":)",
             event: "language.create"
           });
         })
