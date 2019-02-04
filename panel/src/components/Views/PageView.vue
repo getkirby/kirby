@@ -16,6 +16,7 @@
           v-if="permissions.preview && page.previewUrl"
           :responsive="true"
           :link="page.previewUrl"
+          :tooltip="$t('open')"
           target="_blank"
           icon="open"
         >
@@ -27,12 +28,17 @@
           :disabled="permissions.changeStatus === false"
           :icon="permissions.changeStatus === false ? 'protected' : 'circle'"
           :responsive="true"
+          :tooltip="$t('page.status') + ': ' + $t('page.status.' + page.status)"
           @click="action('status')"
         >
           {{ status.label }}
         </k-button>
         <k-dropdown>
-          <k-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
+          <k-button
+            :responsive="true"
+            :tooltip="$t('settings')"
+            icon="cog"
+            @click="$refs.settings.toggle()">
             {{ $t('settings') }}
           </k-button>
           <k-dropdown-content ref="settings" :options="options" @action="action" />

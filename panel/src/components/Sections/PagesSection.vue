@@ -127,7 +127,7 @@ export default {
       return data.map(page => {
         page.flag = {
           class: "k-status-flag k-status-flag-" + page.status,
-          tooltip: this.$t("page.status"),
+          tooltip: this.$t("page.status") + ": " + this.$t("page.status." + page.status),
           icon:
             page.permissions.changeStatus === false ? "protected" : "circle",
           disabled: page.permissions.changeStatus === false,
