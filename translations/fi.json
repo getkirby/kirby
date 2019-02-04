@@ -5,7 +5,7 @@
   "cancel": "Peruuta",
   "change": "Muuta",
   "close": "Sulje",
-  "confirm": "Tallenna",
+  "confirm": "Ok",
   "copy": "Kopioi",
   "create": "Luo",
 
@@ -29,7 +29,7 @@
   "email": "S\u00e4hk\u00f6posti",
   "email.placeholder": "nimi@osoite.fi",
 
-  "error.access.login": "Invalid login",
+  "error.access.login": "Kirjautumistiedot eivät kelpaa",
   "error.access.panel": "Sinulla ei ole oikeutta käyttää paneelia",
 
   "error.avatar.create.fail": "Profiilikuvaa ei voitu lähettää",
@@ -41,7 +41,7 @@
 
   "error.blueprint.notFound": "Kaavaa \"{name}\" ei voitu ladata",
 
-  "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
+  "error.email.preset.notFound": "Nimellä \"{name}\" ja kyseisellä verkkotunnuksella ei löydy sähköpostiosoitetta",
 
   "error.field.converter.invalid": "Muunnin \"{converter}\" ei kelpaa",
 
@@ -158,17 +158,17 @@
   "error.user.update.permission":
     "Sinulla ei ole oikeutta päivittää käyttäjää \"{name}\"",
 
-  "error.validation.accepted": "Please confirm",
+  "error.validation.accepted": "Ole hyvä ja vahvista",
   "error.validation.alpha": "Anna vain merkkejä väliltä a-z",
   "error.validation.alphanum":
     "Anna vain merkkejä väliltä a-z tai/ja numeroita väliltä 0-9",
   "error.validation.between":
     "Anna arvo väliltä \"{min}\" ja \"{max}\"",
-  "error.validation.boolean": "Please confirm or deny",
+  "error.validation.boolean": "Vahvista tai peruuta",
   "error.validation.contains":
     "Anna arvo joka sisältää \"{needle}\"",
   "error.validation.date": "Anna kelpaava päivämäärä",
-  "error.validation.denied": "Please deny",
+  "error.validation.denied": "Ole hyvä ja peruuta",
   "error.validation.different": "Arvo ei voi olla \"{other}\"",
   "error.validation.email": "Anna kelpaava sähköpostiosoite",
   "error.validation.endswith": "Arvon loppuosa täytyy olla \"{end}\"",
@@ -203,7 +203,7 @@
   "field.files.empty": "Tiedostoja ei ole vielä valittu",
   "field.pages.empty": " Sivuja ei ole vielä valittu",
   "field.structure.delete.confirm": "Haluatko varmasti poistaa tämän rivin?",
-  "field.structure.empty": "Kirjoituksia ei ole vielä lisätty",
+  "field.structure.empty": "Rivejä ei ole vielä lisätty",
   "field.users.empty": "Käyttäjiä ei ole vielä valittu",
 
   "file.delete.confirm":
@@ -371,7 +371,7 @@
 
   "translation.author": "Kirby-tiimi",
   "translation.direction": "ltr",
-  "translation.name": "Englanti",
+  "translation.name": "Suomi",
 
   "upload": "Lähetä",
   "upload.errors": "Virhe",

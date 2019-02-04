@@ -218,21 +218,21 @@
 
   "installation": "Installazione",
   "installation.completed": "Il pannello è stato installato",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "L'installazione del pannello è disabilitata di default sui server pubblici. Esegui l'installazione in locale oppure abilitala usando l'opzione <code>panel.install</code>.",
   "installation.issues.accounts":
-    "\/site\/accounts non dispone dei permessi di scrittura",
+    "<code>/site/accounts</code> non esiste o non dispone dei permessi di scrittura",
   "installation.issues.content":
-    "La cartella \/content e tutti i file e le cartelle in essa contenuti devono disporre dei permessi di scrittura.",
+    "La cartella <code>/content</code> non esiste o non dispone dei permessi di scrittura",
   "installation.issues.curl": "È necessaria l'estensione <code>CURL</code>",
   "installation.issues.headline": "Il pannello non può esser installato",
   "installation.issues.mbstring":
     "È necessaria l'estensione <code>MB String</code>",
   "installation.issues.media":
-    "La cartella <code>/media</code> non esiste o non è scrivibile",
+    "La cartella <code>/media</code> non esiste o non dispone dei permessi di scrittura",
   "installation.issues.php": "Assicurati di utilizzare <code>PHP 7.1+</code>",
   "installation.issues.server":
     "Kirby necessita di <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "La cartella <code>/site/sessions</code>non esiste o non dispone dei permessi di scrittura",
 
   "language": "Lingua",
   "language.code": "Codice",

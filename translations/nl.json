@@ -207,7 +207,7 @@
   "field.users.empty": "Nog geen gebruikers geselecteerd",
 
   "file.delete.confirm":
-    "Wil je dit bestand verwijderen?",
+    "Wil je dit bestand <br><strong>{filename}</strong> verwijderen?",
 
   "files": "Bestanden",
   "files.empty": "Nog geen bestanden",
@@ -218,11 +218,11 @@
 
   "installation": "Installatie",
   "installation.completed": "Het Panel is geïnstalleerd",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "Je kan geen Panel installatie uitvoeren op een openbare server. Voer het installatieprogramma uit op een lokale computer of schakel het in met de <code>panel.install</code> optie.",
   "installation.issues.accounts":
     "De map <code>/site/accounts</code> heeft geen schrijfrechten",
   "installation.issues.content":
-    "De contentmap en alle bestanden hierin moeten schrijfrechten hebben.",
+    "De map <code>/content</code> bestaat niet of heeft geen schrijfrechten",
   "installation.issues.curl": "De <code>CURL</code>-extensie is vereist",
   "installation.issues.headline": "Het Panel kan niet worden geïnstalleerd",
   "installation.issues.mbstring":
@@ -241,7 +241,7 @@
     "<p>Weet je zeker dat je <strong>{name}</strong>wilt aanpassen naar de standaard taal? Dit kan niet ongedaan worden gemaakt</p><p>Als <strong>{name}</strong> nog niet vertaalde content heeft, is er geen content meer om op terug te vallen en zouden delen van je site leeg kunnen zijn.</p>",
   "language.create": "Nieuwe taal toevoegen",
   "language.delete.confirm":
-    "Weet je zeker dat je de taal {name} -inclusief alle vertalingen- wilt verwijderen? Je kunt dit niet ongedaan maken!",
+    "Weet je zeker dat je de taal <strong>{name}</strong> inclusief alle vertalingen wilt verwijderen? Je kunt dit niet ongedaan maken!",
   "language.deleted": "De taal is verwijderd",
   "language.direction": "Leesrichting",
   "language.direction.ltr": "Links naar rechts",
@@ -256,7 +256,7 @@
   "languages.secondary": "Andere talen",
   "languages.secondary.empty": "Er zijn nog geen andere talen beschikbaar",
 
-  "license": "Kirby-licentie",
+  "license": "Licentie",
   "license.buy": "Koop een licentie",
   "license.register": "Registreren",
   "license.register.help":
@@ -371,7 +371,7 @@
 
   "translation.author": "Het team van Kirby",
   "translation.direction": "ltr",
-  "translation.name": "Engels",
+  "translation.name": "Nederlands",
 
   "upload": "Upload",
   "upload.errors": "Foutmelding",
