@@ -422,6 +422,10 @@ class App
         $id       = dirname($path);
         $filename = basename($path);
 
+        if (is_a($parent, File::class) === true) {
+            $parent = $parent->parent();
+        }
+
         if ($id === '.') {
             if ($file = $parent->file($filename)) {
                 return $file;
