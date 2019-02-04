@@ -643,7 +643,10 @@ class PagePropsTest extends TestCase
         $format = 'd.m.Y';
         $this->assertEquals(date($format, $modified), $page->modified($format));
 
-        // custom date handler
+        // custom date handler without format
+        $this->assertEquals($modified, $page->modified(null, 'strftime'));
+
+        // custom date handler with format
         $format = '%d.%m.%Y';
         $this->assertEquals(strftime($format, $modified), $page->modified($format, 'strftime'));
 
