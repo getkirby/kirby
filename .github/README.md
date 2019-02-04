@@ -7,15 +7,16 @@ This is Kirby's core application folder. Get started with one of the following r
 - [Starterkit](https://github.com/getkirby/starterkit)
 - [Plainkit](https://github.com/getkirby/plainkit)
 
-## Bug reports
+## Contribute
 
-Please post all bug reports in our issue tracker:
-https://github.com/getkirby/kirby/issues
+**Bug reports**  
+Please post all bug reports in our [issue tracker](https://github.com/getkirby/kirby/issues).
 
-## Feature suggestions
+**Contributing guidelines**  
+Read about how to contribute to the development in our [contributing guide](/.github/CONTRIBUTING.md).
 
-If you want to suggest features or enhancements for Kirby, please use our Ideas repository:
-https://github.com/getkirby/ideas/issues
+**Feature suggestions**  
+If you want to suggest features or enhancements for Kirby, please use our [ideas repository](https://github.com/getkirby/ideas/issues).
 
 ## License
 
