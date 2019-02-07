@@ -41,9 +41,17 @@ class Form extends BaseForm
     {
         // get the original model data
         $original = $model->content()->toArray();
+        $values   = $props['values'] ?? [];
+
+        // convert closures to values
+        foreach ($values as $key => $value) {
+            if (is_a($value, 'Closure') === true) {
+                $values[$key] = $value($original[$key] ?? null);
+            }
+        }
 
         // set a few defaults
-        $props['values'] = array_merge($original, $props['values'] ?? []);
+        $props['values'] = array_merge($original, $values);
         $props['fields'] = $props['fields'] ?? [];
         $props['model']  = $model;
 

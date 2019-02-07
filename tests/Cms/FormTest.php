@@ -39,6 +39,32 @@ class FormTest extends TestCase
         $this->assertNull($values['date']);
     }
 
+    public function testPageFormWithClosures()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'content' => [
+                'a' => 'A'
+            ]
+        ]);
+
+        $form = Form::for($page, [
+            'values' => [
+                'a' => function ($value) {
+                    return $value . 'A';
+                },
+                'b' => function ($value) {
+                    return $value . 'B';
+                },
+            ]
+        ]);
+
+        $values = $form->values();
+
+        $this->assertEquals('AA', $values['a']);
+        $this->assertEquals('B', $values['b']);
+    }
+
     public function testFileFormWithoutBlueprint()
     {
         new App([
