@@ -2,8 +2,13 @@
 
 namespace Kirby\Cms;
 
-class FileVersion extends Asset
+use Kirby\Toolkit\Properties;
+
+class FileVersion
 {
+    use FileFoundation;
+    use Properties;
+
     protected $modifications;
     protected $original;
 
@@ -23,8 +28,10 @@ class FileVersion extends Asset
             return $this->asset()->$method(...$arguments);
         }
 
-        // content fields
-        return $this->original()->content()->get($method, $arguments);
+        if (is_a($this->original(), File::class) === true) {
+            // content fields
+            return $this->original()->content()->get($method, $arguments);
+        }
     }
 
     public function id(): string
@@ -42,7 +49,7 @@ class FileVersion extends Asset
         return $this->modifications ?? [];
     }
 
-    public function original(): File
+    public function original()
     {
         return $this->original;
     }
@@ -58,7 +65,7 @@ class FileVersion extends Asset
         $this->modifications = $modifications;
     }
 
-    protected function setOriginal(File $original)
+    protected function setOriginal($original)
     {
         $this->original = $original;
     }

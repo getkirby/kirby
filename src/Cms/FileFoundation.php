@@ -158,6 +158,18 @@ trait FileFoundation
     }
 
     /**
+     * Get the file's last modification time.
+     *
+     * @param  string $format
+     * @param  string|null $handler date or strftime
+     * @return mixed
+     */
+    public function modified(string $format = null, string $handler = null)
+    {
+        return F::modified($this->root(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
+    }
+
+    /**
      * Returns the absolute path to the file root
      *
      * @return string|null
