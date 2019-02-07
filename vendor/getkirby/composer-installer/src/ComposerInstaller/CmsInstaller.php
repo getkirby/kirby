@@ -4,7 +4,6 @@ namespace Kirby\ComposerInstaller;
 
 use InvalidArgumentException;
 use Composer\Config;
-use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
 
 /**
@@ -14,7 +13,7 @@ use Composer\Package\PackageInterface;
  * @copyright Bastian Allgeier
  * @license   MIT
  */
-class Installer extends LibraryInstaller
+class CmsInstaller extends Installer
 {
     /**
      * Decides if the installer supports the given type

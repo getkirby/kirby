@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "795a9baff274c8a85cd3670e696e6331",
+    "content-hash": "b4bfa5287bd05b9d23be8ff5411080ff",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -108,24 +108,24 @@
         },
         {
             "name": "getkirby/composer-installer",
-            "version": "1.0.1",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/k-next/composer-installer.git",
-                "reference": "dc0e38c4f0fc04875c1a523d82364a44f436cbf4"
+                "url": "https://github.com/getkirby/composer-installer.git",
+                "reference": "162497e4d9465fae95cb44b6135506eac54c9a05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/k-next/composer-installer/zipball/dc0e38c4f0fc04875c1a523d82364a44f436cbf4",
-                "reference": "dc0e38c4f0fc04875c1a523d82364a44f436cbf4",
+                "url": "https://api.github.com/repos/getkirby/composer-installer/zipball/162497e4d9465fae95cb44b6135506eac54c9a05",
+                "reference": "162497e4d9465fae95cb44b6135506eac54c9a05",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0"
             },
             "require-dev": {
-                "composer/composer": "^1.3",
-                "phpunit/phpunit": "^6.0"
+                "composer/composer": "^1.8",
+                "phpunit/phpunit": "^7.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -133,16 +133,16 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Kirby\\ComposerInstaller\\": "src/"
+                    "Kirby\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "Kirby's custom Composer installer for the Kirby CMS",
+            "description": "Kirby's custom Composer installer for the Kirby CMS and for Kirby plugins",
             "homepage": "https://getkirby.com",
-            "time": "2018-12-19T10:01:45+00:00"
+            "time": "2019-02-06T09:15:26+00:00"
         },
         {
             "name": "league/color-extractor",

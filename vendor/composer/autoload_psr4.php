@@ -12,7 +12,6 @@ return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
-    'Kirby\\ComposerInstaller\\' => array($vendorDir . '/getkirby/composer-installer/src'),
-    'Kirby\\' => array($baseDir . '/src'),
+    'Kirby\\' => array($baseDir . '/src', $vendorDir . '/getkirby/composer-installer/src'),
     '' => array($vendorDir . '/league/color-extractor/src'),
 );
