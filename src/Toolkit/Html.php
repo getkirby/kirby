@@ -118,7 +118,9 @@ class Html
             if (isset($value['value']) && isset($value['escape'])) {
                 $value = $value['escape'] === true ? htmlspecialchars($value['value'], ENT_QUOTES, 'UTF-8') : $value['value'];
             } else {
-                $value = implode(' ', $value);
+                $value = implode(' ', array_filter($value, function($value) {
+                    return !empty($value) || is_numeric($value);
+                }));
             }
         } else {
             $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
