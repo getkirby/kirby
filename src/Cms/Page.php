@@ -608,10 +608,19 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is a descendant of the given page
      *
+     * @param string|Page $parent
      * @return boolean
      */
-    public function isDescendantOf(Page $parent): bool
+    public function isDescendantOf($parent): bool
     {
+        if (is_string($parent) === true) {
+            $parent = $this->site()->find($parent);
+        }
+
+        if (!$parent) {
+            return false;
+        }
+
         return $this->parents()->has($parent->id()) === true;
     }
 

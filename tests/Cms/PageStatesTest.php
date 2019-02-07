@@ -71,7 +71,9 @@ class PageStatesTest extends TestCase
         $child   = $mother->find('child');
 
         $this->assertTrue($child->isDescendantOf($mother));
+        $this->assertTrue($child->isDescendantOf('grandma/mother'));
         $this->assertTrue($child->isDescendantOf($grandma));
+        $this->assertTrue($child->isDescendantOf('grandma'));
     }
 
     public function testIsDescendantOfActive()
