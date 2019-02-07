@@ -586,4 +586,15 @@ class HelpersTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testLoad()
+    {
+        load([
+            'helperstest\\a' => __DIR__ . '/fixtures/HelpersTest/load/a/a.php',
+            'HelpersTest\\B' => __DIR__ . '/fixtures/HelpersTest/load/B/B.php',
+        ]);
+
+        $this->assertTrue(class_exists('HelpersTest\\A'));
+        $this->assertTrue(class_exists('HelpersTest\\B'));
+    }
 }

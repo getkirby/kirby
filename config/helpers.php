@@ -425,6 +425,9 @@ function kirbytext(string $text = null, array $data = []): string
  */
 function load(array $classmap, string $base = null)
 {
+    // convert all classnames to lowercase
+    $classmap = array_change_key_case($classmap);
+
     spl_autoload_register(function ($class) use ($classmap, $base) {
         $class = strtolower($class);
 
