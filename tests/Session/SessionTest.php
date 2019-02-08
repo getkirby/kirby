@@ -30,11 +30,10 @@ class SessionTest extends TestCase
         unset($this->store);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testConstructInvalidToken()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Session($this->sessions, 123, []);
     }
 
@@ -103,43 +102,39 @@ class SessionTest extends TestCase
         $this->assertTrue(isset($this->store->sessions[$token[0] . '.' . $token[1]]));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testCreateInvalidExpiry()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Session($this->sessions, null, [
             'startTime'  => time() - 3600,
             'expiryTime' => time() - 1800
         ]);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testCreateInvalidDuration()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Session($this->sessions, null, [
             'startTime'  => time() + 60,
             'expiryTime' => time()
         ]);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testCreateInvalidTimeout()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Session($this->sessions, null, [
             'timeout' => 'at some point'
         ]);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testCreateInvalidRenewable()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Session($this->sessions, null, [
             'renewable' => 'maybe'
         ]);
@@ -156,11 +151,10 @@ class SessionTest extends TestCase
         $this->assertEquals('cookie', $session->mode());
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testModeStartedSession()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'mode' => 'manual'
         ]);
@@ -195,11 +189,10 @@ class SessionTest extends TestCase
         $this->assertNotEquals($originalToken, $session->token());
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testExpiryTimeInvalidType()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
@@ -207,11 +200,10 @@ class SessionTest extends TestCase
         $session->expiryTime(false);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testExpiryTimeInvalidString()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
@@ -219,11 +211,10 @@ class SessionTest extends TestCase
         $session->expiryTime('some gibberish that is definitely no valid time');
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testExpiryTimeInvalidTime1()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
@@ -231,11 +222,10 @@ class SessionTest extends TestCase
         $session->expiryTime(time() - 1);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testExpiryTimeInvalidTime2()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
@@ -263,11 +253,10 @@ class SessionTest extends TestCase
         $this->assertNotEquals($originalToken, $session->token());
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testDurationInvalidTime1()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
@@ -275,11 +264,10 @@ class SessionTest extends TestCase
         $session->duration(-1);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testDurationInvalidTime2()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'startTime'  => 1000000000,
             'expiryTime' => 7777777777
@@ -311,33 +299,30 @@ class SessionTest extends TestCase
         $this->assertWriteMode(true, $session);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testTimeoutInvalidType()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'timeout' => 1234
         ]);
         $session->timeout('after an hour');
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testTimeoutInvalidTimeout1()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'timeout' => 1234
         ]);
         $session->timeout(-10);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testTimeoutInvalidTimeout2()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $session = new Session($this->sessions, null, [
             'timeout' => 1234
         ]);
@@ -421,11 +406,10 @@ class SessionTest extends TestCase
         $this->assertEquals([], $session->get());
     }
 
-    /**
-     * @expectedException Kirby\Exception\BadMethodCallException
-     */
     public function testInvalidMethod()
     {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+
         $session = new Session($this->sessions, null, []);
         $session->someGibberish();
     }
@@ -560,12 +544,11 @@ class SessionTest extends TestCase
         ], $this->store->sessions['9999999999.' . $oldTokenParts[1]]);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.notRenewable
-     */
     public function testRenewNotRenewable()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.notRenewable');
+
         $token = '2000000000.nonRenewable.' . $this->store->validKey;
 
         $session = new Session($this->sessions, $token, []);
@@ -636,12 +619,11 @@ class SessionTest extends TestCase
         $this->assertEquals(124, $session->data()->get('someId'));
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.readonly
-     */
     public function testPrepareForWritingReadonly()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.readonly');
+
         $token = '9999999999.moved.' . $this->store->validKey;
         $session = new Session($this->sessions, $token, []);
 
@@ -670,29 +652,26 @@ class SessionTest extends TestCase
         $this->assertNull($tokenKey->getValue($session));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testParseTokenInvalidToken1()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $token = '9999999999.thisIsNotAValidToken';
         $session = new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testParseTokenInvalidToken2()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $token = 'something.thisIsNotAValidToken.abcdefabcdef';
         $session = new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testParseTokenInvalidToken3()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $reflector = new ReflectionClass(Session::class);
         $parseToken = $reflector->getMethod('parseToken');
         $parseToken->setAccessible(true);
@@ -716,11 +695,10 @@ class SessionTest extends TestCase
         $this->assertEquals(strtotime('tomorrow', 1357924680), $timeToTimestamp->invoke(null, 'tomorrow', 1357924680));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testTimeToTimestampInvalidParam()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $reflector = new ReflectionClass(Session::class);
         $timeToTimestamp = $reflector->getMethod('timeToTimestamp');
         $timeToTimestamp->setAccessible(true);
@@ -728,11 +706,10 @@ class SessionTest extends TestCase
         $timeToTimestamp->invoke(null, ['tomorrow']);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testTimeToTimestampInvalidTimeString()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         $reflector = new ReflectionClass(Session::class);
         $timeToTimestamp = $reflector->getMethod('timeToTimestamp');
         $timeToTimestamp->setAccessible(true);
@@ -779,72 +756,65 @@ class SessionTest extends TestCase
         $this->assertFalse($obj === $session->data()->get('obj'));
     }
 
-    /**
-     * @expectedException     Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.session.notFound
-     */
     public function testInitNonExisting()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.session.notFound');
+
         $token = '9999999999.nonExisting.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitWrongKey()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '9999999999.valid.' . $this->store->invalidKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException        Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid argument "$token" in method "Session::parseToken"
-     */
     public function testInitMissingKey()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid argument "$token" in method "Session::parseToken"');
+
         $token = '9999999999.valid';
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitInvalidSerialization()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '9999999999.invalidSerialization.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitInvalidStructure()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '9999999999.invalidStructure.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitExpired()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '1000000000.expired.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitNotStarted()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '9999999999.notStarted.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
@@ -882,12 +852,11 @@ class SessionTest extends TestCase
         $this->assertWriteMode(false, $session);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.readonly
-     */
     public function testInitMovedManualRenewal()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.readonly');
+
         $token = '9999999999.movedRenewal.' . $this->store->validKey;
 
         $session = new Session($this->sessions, $token, []);
@@ -912,42 +881,38 @@ class SessionTest extends TestCase
         $this->assertWriteMode(false, $session);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitMovedExpired()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '1000000000.movedExpired.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.session.notFound
-     */
     public function testInitMovedInvalid()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.session.notFound');
+
         $token = '9999999999.movedInvalid.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitMovedWrongKey()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '9999999999.moved.' . $this->store->invalidKey;
         new Session($this->sessions, $token, []);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.invalid
-     */
     public function testInitExpiredTimeout()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.invalid');
+
         $token = '9999999999.timeout.' . $this->store->validKey;
         new Session($this->sessions, $token, []);
     }

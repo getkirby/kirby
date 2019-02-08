@@ -10,11 +10,10 @@ class TplTest extends TestCase
         $this->assertEquals('Hello Peter', $tpl);
     }
 
-    /**
-     * @expectedException Error
-     */
     public function testLoadWithBadTemplate()
     {
+        $this->expectException('Error');
+
         $tpl = Tpl::load(__DIR__ . '/fixtures/tpl/bad.php');
     }
 }

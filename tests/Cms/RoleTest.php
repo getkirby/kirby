@@ -35,13 +35,10 @@ class RoleTest extends TestCase
         $this->assertEquals('Editor', $role->title());
     }
 
-    /**
-     * @expectedException Exception
-     *
-     * @return void
-     */
     public function testMissingRole()
     {
+        $this->expectException('Exception');
+
         $app  = $this->app();
         $role = Role::load('does-not-exist');
     }

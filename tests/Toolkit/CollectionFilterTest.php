@@ -63,12 +63,11 @@ class CollectionFilterTest extends TestCase
         }));
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The filter method needs either an array of filterBy rules or a closure function to be passed as parameter.
-     */
     public function testFilterException()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The filter method needs either an array of filterBy rules or a closure function to be passed as parameter.');
+
         $collection = new Collection([
             'one'   => 'eins'
         ]);

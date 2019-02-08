@@ -46,21 +46,19 @@ class BlueprintFieldTest extends TestCase
         $this->assertEquals('Text', $props['label']);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The field name is missing
-     */
     public function testMissingFieldName()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The field name is missing');
+
         $props = Blueprint::fieldProps([]);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid field type ("test")
-     */
     public function testInvalidFieldType()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid field type ("test")');
+
         $props = Blueprint::fieldProps([
             'name' => 'test',
             'type' => 'test'

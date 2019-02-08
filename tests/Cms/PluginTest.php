@@ -22,11 +22,10 @@ class PluginTest extends TestCase
         $this->assertEquals($name, $plugin->name());
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testNameWithInvalidInput()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Plugin('äöü/!!!', []);
     }
 

@@ -43,12 +43,11 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $exception->getData());
     }
 
-    /**
-     * @expectedException Kirby\Exception\Exception
-     * @expectedExceptionCode error.key.unique
-     */
     public function testPHPUnitTesting()
     {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionCode('error.key.unique');
+
         $class = new WillFail();
         $class->fail();
     }

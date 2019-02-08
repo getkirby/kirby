@@ -34,12 +34,11 @@ class DirTest extends TestCase
         Dir::remove($target);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The directory "/does-not-exist" does not exist
-     */
     public function testCopyMissingSource()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The directory "/does-not-exist" does not exist');
+
         $src    = '/does-not-exist';
         $target = static::FIXTURES . '/copy-target';
 
@@ -57,12 +56,11 @@ class DirTest extends TestCase
         $result = Dir::copy($src, $target);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The target directory
-     */
     public function testCopyExists()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The target directory');
+
         $src    = static::FIXTURES . '/copy';
         $target = static::FIXTURES . '/copy';
 

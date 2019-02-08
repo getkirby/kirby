@@ -31,11 +31,10 @@ class UserPropsTest extends TestCase
         $this->assertEquals($content, $user->content()->toArray());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidContent()
     {
+        $this->expectException('TypeError');
+
         $user = new User(['email' => 'user@domain.com', 'content' => 'something']);
     }
 
@@ -54,11 +53,10 @@ class UserPropsTest extends TestCase
         $this->assertEquals($email, $user->email());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidEmail()
     {
+        $this->expectException('TypeError');
+
         $user = new User(['email' => []]);
     }
 

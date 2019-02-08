@@ -38,12 +38,11 @@ class ResponseTest extends TestCase
         ], $response->headers());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The file could not be found
-     */
     public function testDownloadWithMissingFile()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The file could not be found');
+
         Response::download('does/not/exist.txt');
     }
 

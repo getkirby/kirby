@@ -41,11 +41,10 @@ class ApiTest extends TestCase
         $this->assertInstanceOf(Model::class, $result);
     }
 
-    /**
-     * @expectedException Kirby\Exception\NotFoundException
-     */
     public function testModelResolverWithMissingModel()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+
         $api = new Api([]);
         $api->resolve(new MockModel);
     }

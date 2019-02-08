@@ -45,12 +45,11 @@ class FileRulesTest extends TestCase
         $this->assertTrue(FileRules::changeName($file, 'b'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\DuplicateException
-     * @expectedExceptionMessage A file with the name "b.jpg" already exists
-     */
     public function testChangeNameToExistingFile()
     {
+        $this->expectException('Kirby\Exception\DuplicateException');
+        $this->expectExceptionMessage('A file with the name "b.jpg" already exists');
+
         $page = new Page([
             'slug' => 'test',
             'files' => [

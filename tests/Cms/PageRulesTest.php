@@ -31,12 +31,11 @@ class PageRulesTest extends TestCase
         $this->assertTrue(PageRules::changeNum($page));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionCode error.page.num.invalid
-     */
     public function testInvalidChangeNum()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionCode('error.page.num.invalid');
+
         $page = new Page([
             'slug'  => 'test',
             'kirby' => $this->appWithAdmin(),
@@ -55,12 +54,11 @@ class PageRulesTest extends TestCase
         $this->assertTrue(PageRules::changeSlug($page, 'test-a'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\PermissionException
-     * @expectedExceptionCode error.page.changeSlug.permission
-     */
     public function testChangeSlugWithHomepage()
     {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionCode('error.page.changeSlug.permission');
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null',
@@ -77,12 +75,11 @@ class PageRulesTest extends TestCase
         PageRules::changeSlug($app->page('home'), 'test-a');
     }
 
-    /**
-     * @expectedException Kirby\Exception\PermissionException
-     * @expectedExceptionCode error.page.changeSlug.permission
-     */
     public function testChangeSlugWithErrorPage()
     {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionCode('error.page.changeSlug.permission');
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null',
@@ -167,12 +164,11 @@ class PageRulesTest extends TestCase
         $this->assertTrue(PageRules::delete($page));
     }
 
-    /**
-     * @expectedException Kirby\Exception\PermissionException
-     * @expectedExceptionCode error.page.delete.permission
-     */
     public function testDeleteHomepage()
     {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionCode('error.page.delete.permission');
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null',
@@ -189,12 +185,11 @@ class PageRulesTest extends TestCase
         PageRules::delete($app->page('home'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\PermissionException
-     * @expectedExceptionCode error.page.delete.permission
-     */
     public function testDeleteErrorPage()
     {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionCode('error.page.delete.permission');
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null',
@@ -211,12 +206,11 @@ class PageRulesTest extends TestCase
         PageRules::delete($app->page('error'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\LogicException
-     * @expectedExceptionCode error.page.delete.hasChildren
-     */
     public function testDeleteWithChildren()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.page.delete.hasChildren');
+
         $page = new Page([
             'kirby' => $this->appWithAdmin(),
             'slug'  => 'test',

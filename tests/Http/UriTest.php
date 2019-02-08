@@ -50,12 +50,11 @@ class UriTest extends TestCase
         $this->assertEquals('https', $url->scheme());
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid URL scheme: abc
-     */
     public function testInvalidScheme()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid URL scheme: abc');
+
         $url = new Uri;
         $url->setScheme('abc');
     }
@@ -101,20 +100,18 @@ class UriTest extends TestCase
         $this->assertEquals(null, $url->port());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidPortFormat1()
     {
+        $this->expectException('TypeError');
+
         $url = new Uri(['port' => 'a']);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid port format: 12010210210
-     */
     public function testInvalidPortFormat2()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid port format: 12010210210');
+
         $url = new Uri(['port' => 12010210210]);
     }
 

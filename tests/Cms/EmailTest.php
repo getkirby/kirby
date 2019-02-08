@@ -36,12 +36,11 @@ class EmailTest extends TestCase
         $this->assertEquals($cc, $email->toArray()['cc']);
     }
 
-    /**
-     * @expectedException Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.email.preset.notFound
-     */
     public function testEmailInvalidPreset()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.email.preset.notFound');
+
         $email = new Email('not-a-preset', []);
     }
 
@@ -76,12 +75,11 @@ class EmailTest extends TestCase
         ], $email->toArray()['body']);
     }
 
-    /**
-     * @expectedException        Kirby\Exception\NotFoundException
-     * @expectedExceptionMessage The email template "subscription" cannot be found
-     */
     public function testEmailInvalidTemplate()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The email template "subscription" cannot be found');
+
         $email = new Email([
             'template' => 'subscription'
         ]);

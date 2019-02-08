@@ -10,11 +10,10 @@ class SiteFilesTest extends TestCase
         $this->assertInstanceOf(Files::class, $site->files());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidFiles()
     {
+        $this->expectException('TypeError');
+
         $site = new Site([
             'files' => 'files'
         ]);

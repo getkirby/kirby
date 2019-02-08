@@ -19,12 +19,11 @@ class ViewTest extends TestCase
         $this->assertEquals(static::FIXTURES . '/view.php', $view->file());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The view does not exist: invalid-file.php
-     */
     public function testWithMissingFile()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The view does not exist: invalid-file.php');
+
         $view = new View('invalid-file.php');
         $view->render();
     }
@@ -46,12 +45,11 @@ class ViewTest extends TestCase
         $this->assertEquals('Hello Tester', (string)$view);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage View exception
-     */
     public function testWithException()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('View exception');
+
         $view = new View(static::FIXTURES . '/view-with-exception.php');
         $view->render();
     }

@@ -53,32 +53,29 @@ class RouterTest extends TestCase
         $this->assertEquals('POST', $resultB->method());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testRegisterInvalidData()
     {
+        $this->expectException('TypeError');
+
         $router = new Router('route');
     }
 
-    /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Invalid routing method: KIRBY
-     * @expectedExceptionCode    400
-     */
     public function testFindWithNonexistingMethod()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid routing method: KIRBY');
+        $this->expectExceptionCode(400);
+
         $router = new Router;
         $router->find('a', 'KIRBY');
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage No route found for path: "a" and request method: "GET"
-     * @expectedExceptionCode    404
-     */
     public function testFindNonexistingRoute()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('No route found for path: "a" and request method: "GET"');
+        $this->expectExceptionCode(404);
+
         $router = new Router;
         $router->find('a', 'GET');
     }

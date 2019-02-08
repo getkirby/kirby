@@ -76,12 +76,11 @@ class FieldTest extends TestCase
         $this->assertEquals('Modified', $field->value());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid field value type: object
-     */
     public function testInvalidValueSetter()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid field value type: object');
+
         $field = new Field(null, 'title', 'Title');
         $field->value(new Page(['slug' => 'yay']));
     }
