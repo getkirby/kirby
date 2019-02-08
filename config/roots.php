@@ -56,9 +56,6 @@ return [
     'controllers' => function (array $roots) {
         return $roots['site'] . '/controllers';
     },
-    'emails' => function (array $roots) {
-        return $roots['site'] . '/emails';
-    },
     'languages' => function (array $roots) {
         return $roots['site'] . '/languages';
     },
