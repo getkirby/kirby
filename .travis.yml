@@ -17,6 +17,7 @@ install:
 
 before_script:
   - composer require friendsofphp/php-cs-fixer
+  - composer require phpunit/phpunit ^7
   - mkdir -p build/logs
   - ls -al
 
