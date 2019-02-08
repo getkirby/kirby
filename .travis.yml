@@ -8,6 +8,8 @@ php:
 install:
   # Install composer packages, will also trigger dump-autoload
   - composer self-update
+  - composer require phpunit/phpunit ^7
+  - composer require friendsofphp/php-cs-fixer
   - composer install --no-interaction --ignore-platform-reqs
 
   # Install coveralls.phar
@@ -15,17 +17,13 @@ install:
   - chmod +x php-coveralls.phar
   - php php-coveralls.phar --version
 
-before_install:
-  - composer require phpunit/phpunit ^7
-
 before_script:
-  - composer require friendsofphp/php-cs-fixer
   - mkdir -p build/logs
   - ls -al
 
 script:
   - composer validate
-  - phpunit --coverage-clover build/logs/clover.xml
+  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
   - PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix . --verbose --diff --dry-run
 
 after_success:
