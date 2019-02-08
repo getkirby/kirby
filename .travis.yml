@@ -15,9 +15,11 @@ install:
   - chmod +x php-coveralls.phar
   - php php-coveralls.phar --version
 
+before_install:
+  - composer require phpunit/phpunit ^7
+
 before_script:
   - composer require friendsofphp/php-cs-fixer
-  - composer require phpunit/phpunit ^7
   - mkdir -p build/logs
   - ls -al
 
