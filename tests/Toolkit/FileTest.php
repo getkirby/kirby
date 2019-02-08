@@ -365,7 +365,7 @@ class FileTest extends TestCase
         $file->delete();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         @chmod(static::FIXTURES . '/tmp/unreadable.txt', 755);
         @\unlink(static::FIXTURES . '/tmp/unreadable.txt');

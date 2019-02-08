@@ -58,7 +58,7 @@ class DbTest extends TestCase
         ]);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         // kill the database
         F::remove(self::$database);
