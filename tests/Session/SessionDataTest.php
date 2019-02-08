@@ -11,7 +11,7 @@ class SessionDataTest extends TestCase
     protected $session;
     protected $sessionData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session     = new MockSession();
         $this->sessionData = new SessionData($this->session, [
@@ -20,7 +20,7 @@ class SessionDataTest extends TestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->session);
         unset($this->sessionData);

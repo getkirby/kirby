@@ -9,7 +9,7 @@ class DirTest extends TestCase
     protected $tmp;
     protected $moved;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tmp   = static::FIXTURES . '/test';
         $this->moved = static::FIXTURES . '/moved';

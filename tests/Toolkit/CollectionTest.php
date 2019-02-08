@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 class CollectionTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->data = [
             'first'  => 'My first element',

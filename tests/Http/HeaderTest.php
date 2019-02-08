@@ -8,7 +8,7 @@ class HeaderTest extends TestCase
 {
     protected $statusHeaders;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // incomplete list compared to Header::$codes, mostly for
         // testing Header::success and other named methods

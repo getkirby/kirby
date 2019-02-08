@@ -7,7 +7,7 @@ use Kirby\Toolkit\Dir;
 
 class AppUsersTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
@@ -16,7 +16,7 @@ class AppUsersTest extends TestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

@@ -10,7 +10,7 @@ class TestCase extends BaseTestCase
 {
     protected $app;
 
-    public function setUp()
+    public function setUp(): void
     {
         // start with a fresh set of fields
         Field::$mixins = [];

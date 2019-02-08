@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class SiloTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         Silo::$data = [];
     }

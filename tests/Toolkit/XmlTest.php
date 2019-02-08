@@ -8,7 +8,7 @@ class XmlTest extends TestCase
 {
     protected $string;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->string = 'Süper Önencœded ßtring';
     }

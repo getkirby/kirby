@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class KirbyTagTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         KirbyTag::$types = [
             'test' => [
@@ -25,7 +25,7 @@ class KirbyTagTest extends TestCase
         ];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         KirbyTag::$types = [];
     }

@@ -6,7 +6,7 @@ use Kirby\Toolkit\Dir;
 
 class ApiTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
@@ -51,9 +51,9 @@ class ApiTest extends TestCase
         $this->api = $this->app->api();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
-        return Dir::remove($this->fixtures);
+        Dir::remove($this->fixtures);
     }
 
     public function testSiteFind()

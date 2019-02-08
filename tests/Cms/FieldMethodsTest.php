@@ -7,7 +7,7 @@ use Kirby\Data\Yaml;
 
 class FieldMethodsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         new App([

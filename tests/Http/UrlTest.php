@@ -11,7 +11,7 @@ class UrlTest extends TestCase
     protected $_docs = 'http://getkirby.com/docs/';
     protected $_SERVER = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         Uri::$current = null;
         Url::$current = null;
@@ -20,7 +20,7 @@ class UrlTest extends TestCase
         $this->_SERVER = $_SERVER;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $_SERVER = $this->_SERVER;
     }

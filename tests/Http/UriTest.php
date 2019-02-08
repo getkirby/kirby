@@ -8,7 +8,7 @@ class UriTest extends TestCase
 {
     protected $_SERVER = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         Uri::$current = null;
 
@@ -18,7 +18,7 @@ class UriTest extends TestCase
         $this->_SERVER = $_SERVER;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $_SERVER = $this->_SERVER;
     }

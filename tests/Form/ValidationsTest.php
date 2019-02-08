@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ValidationsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         new App([
             'roots' => [
@@ -29,7 +29,7 @@ class ValidationsTest extends TestCase
         Field::$mixins = [];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Field::$types  = [];
         Field::$mixins = [];

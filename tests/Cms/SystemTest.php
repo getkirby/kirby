@@ -10,7 +10,7 @@ class SystemTest extends TestCase
 {
     protected $_SERVER = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
@@ -21,7 +21,7 @@ class SystemTest extends TestCase
         $this->_SERVER = $_SERVER;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $_SERVER = $this->_SERVER;
 

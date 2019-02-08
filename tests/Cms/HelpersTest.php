@@ -12,7 +12,7 @@ class HelpersTest extends TestCase
 {
     protected $kirby;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->kirby = new Kirby([
             'roots' => [
@@ -26,7 +26,7 @@ class HelpersTest extends TestCase
         Dir::make($this->fixtures . '/site');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures . '/site');
     }

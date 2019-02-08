@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class AppComponentsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->kirby = new App([
             'roots' => [

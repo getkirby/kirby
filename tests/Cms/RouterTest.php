@@ -6,7 +6,7 @@ class RouterTest extends TestCase
 {
     protected $app;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [

@@ -7,7 +7,7 @@ class UserActionsTest extends TestCase
     protected $app;
     protected $fixtures;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roles' => [
@@ -38,7 +38,7 @@ class UserActionsTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

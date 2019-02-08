@@ -62,13 +62,13 @@ class FileActionsTest extends TestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->app();
         Dir::make($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

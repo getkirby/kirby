@@ -10,7 +10,7 @@ class SiteActionsTest extends TestCase
     protected $app;
     protected $fixtures = __DIR__ . '/fixtures/SiteActionsTest';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
@@ -39,7 +39,7 @@ class SiteActionsTest extends TestCase
         Dir::make($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

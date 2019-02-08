@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class PresetsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [

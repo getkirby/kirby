@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class FieldTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         new App([
             'roots' => [
@@ -20,7 +20,7 @@ class FieldTest extends TestCase
         Field::$mixins = [];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Field::$types  = [];
         Field::$mixins = [];

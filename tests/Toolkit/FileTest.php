@@ -36,7 +36,7 @@ class FileTest extends TestCase
 
     public static $block = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         static::$block = [];
     }

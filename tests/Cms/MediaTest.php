@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class MediaTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
@@ -19,7 +19,7 @@ class MediaTest extends TestCase
         Dir::make($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

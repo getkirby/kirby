@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class RemoteTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->defaults = Remote::$defaults;
 
@@ -15,7 +15,7 @@ class RemoteTest extends TestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Remote::$defaults = $this->defaults;
     }

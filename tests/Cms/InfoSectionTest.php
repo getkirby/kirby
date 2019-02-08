@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class InfoSectionTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         new App([
             'roots' => [

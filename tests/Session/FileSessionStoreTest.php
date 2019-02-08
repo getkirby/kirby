@@ -15,7 +15,7 @@ class FileSessionStoreTest extends TestCase
     protected $storeHandles;
     protected $storeIsLocked;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->store = new FileSessionStore($this->root);
         $this->assertDirectoryExists($this->root);
@@ -35,7 +35,7 @@ class FileSessionStoreTest extends TestCase
         F::write($this->root . '/9999999999.abcdefghijabcdefghij.sess', '9999999999');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // let the store __destruct() itself
         unset($this->store);

@@ -10,7 +10,7 @@ class TestCase extends BaseTestCase
 {
     public $page = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         App::destroy();
 
@@ -27,7 +27,7 @@ class TestCase extends BaseTestCase
         I18n::$translations = [];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         App::destroy();
         Blueprint::$loaded = [];

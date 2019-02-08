@@ -12,7 +12,7 @@ class PageActionsTest extends TestCase
     protected $app;
     protected $fixtures;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
@@ -25,7 +25,7 @@ class PageActionsTest extends TestCase
         Dir::make($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

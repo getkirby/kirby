@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 class ComponentTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         Component::$types  = [];
         Component::$mixins = [];

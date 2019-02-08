@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 class FTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->fixtures = __DIR__ . '/fixtures/f';
         $this->tmp      = $this->fixtures . '/test.txt';
@@ -14,7 +14,7 @@ class FTest extends TestCase
         Dir::make($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

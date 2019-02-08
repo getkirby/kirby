@@ -8,7 +8,7 @@ use Kirby\Form\Field;
 
 class UsersFieldTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [

@@ -14,7 +14,7 @@ class SessionsTest extends TestCase
     protected $store;
     protected $sessions;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->store    = new TestSessionStore();
         $this->sessions = new Sessions($this->store);
@@ -22,7 +22,7 @@ class SessionsTest extends TestCase
         MockTime::$time = 1337000000;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->sessions);
         unset($this->store);

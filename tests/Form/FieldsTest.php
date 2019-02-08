@@ -8,13 +8,13 @@ use PHPUnit\Framework\TestCase;
 
 class FieldsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         Field::$types  = [];
         Field::$mixins = [];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Field::$types  = [];
         Field::$mixins = [];

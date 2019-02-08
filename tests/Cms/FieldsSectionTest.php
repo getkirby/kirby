@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class FieldsSectionTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
@@ -18,7 +18,7 @@ class FieldsSectionTest extends TestCase
         Dir::make($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

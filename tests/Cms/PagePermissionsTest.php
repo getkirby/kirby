@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class PagePermissionsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->kirby = new App([
             'roots' => [

@@ -18,7 +18,7 @@ class DummyPage extends Page
 
 class AppPluginsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         App::destroy();
     }

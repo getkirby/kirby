@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class UserMethodsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         // make sure field methods are loaded
         new App([

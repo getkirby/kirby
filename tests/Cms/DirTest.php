@@ -7,13 +7,13 @@ use PHPUnit\Framework\TestCase;
 
 class DirTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         Dir::remove($this->fixtures = __DIR__ . '/fixtures/DirTest');
         Dir::make($this->fixtures);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove($this->fixtures);
     }

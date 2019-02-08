@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class BlueprintFieldsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [

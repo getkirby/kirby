@@ -9,7 +9,7 @@ class DbTest extends TestCase
 {
     public static $database = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::$database = ':memory:';
 
