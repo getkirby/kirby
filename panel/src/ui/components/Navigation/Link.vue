@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     href() {
-      if (this.$route !== undefined && this.to[0] === '/') {
+      if (this.$route !== undefined && this.to[0] === '/' && !this.target) {
         return (this.$router.options.url || '') + this.to;
       }
       return this.to;
