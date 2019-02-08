@@ -32,7 +32,11 @@ return [
             return $system->toArray();
         },
         'breadcrumbTitle' => function () {
-            return $this->site()->blueprint()->title();
+            try {
+                return $this->site()->blueprint()->title();
+            } catch (Throwable $e) {
+                return $this->site()->title()->value();
+            }
         },
         'title' => function () {
             return $this->site()->title()->value();

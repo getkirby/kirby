@@ -376,6 +376,10 @@ class Blueprint
     protected function normalizeColumns(string $tabName, array $columns): array
     {
         foreach ($columns as $columnKey => $columnProps) {
+            if (is_array($columnProps) === false) {
+                continue;
+            }
+
             $columnProps = $this->convertFieldsToSections($tabName . '-col-' . $columnKey, $columnProps);
 
             // inject getting started info, if the sections are empty
