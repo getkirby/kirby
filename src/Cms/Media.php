@@ -25,22 +25,34 @@ class Media
      * @param string $filename
      * @return Response|false
      */
-    public static function thumb(Model $model, string $hash, string $filename)
+    public static function thumb($model, string $hash, string $filename)
     {
+        $kirby = App::instance();
+
+        if (is_string($model) === true) {
+            // assets
+            $root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
+        } else {
+            // model files
+            $root = $model->mediaRoot() . '/' . $hash;
+        }
+
         try {
-            $kirby   = $model->kirby();
-            $url     = $model->mediaUrl()  . '/' . $hash . '/' . $filename;
-            $root    = $model->mediaRoot() . '/' . $hash;
             $thumb   = $root . '/' . $filename;
             $job     = $root . '/.jobs/' . $filename . '.json';
             $options = Data::read($job);
-            $file    = $model->file($options['filename']);
 
-            if (!$file || empty($options) === true) {
+            if (empty($options) === true) {
                 return false;
             }
 
-            $kirby->thumb($file->root(), $thumb, $options);
+            if (is_string($model) === true) {
+                $source = $kirby->root('index') . '/' . $model . '/' . $options['filename'];
+            } else {
+                $source = $model->file($options['filename'])->root();
+            }
+
+            $kirby->thumb($source, $thumb, $options);
 
             F::remove($job);
 

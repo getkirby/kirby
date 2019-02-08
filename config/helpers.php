@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
@@ -10,6 +11,17 @@ use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\View;
+
+/**
+ * Helper to create an asset object
+ *
+ * @param string $path
+ * @return Asset
+ */
+function asset(string $path)
+{
+    return new Asset($path);
+}
 
 /**
  * Generates a list of HTML attributes

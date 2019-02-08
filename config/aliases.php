@@ -3,6 +3,7 @@
 $aliases = [
 
     // cms classes
+    'asset'      => 'Kirby\Cms\Asset',
     'collection' => 'Kirby\Cms\Collection',
     'dir'        => 'Kirby\Cms\Dir',
     'field'      => 'Kirby\Cms\Field',

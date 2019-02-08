@@ -29,6 +29,7 @@ class File extends ModelWithContent
 
     use FileActions;
     use FileFoundation;
+    use FileModifications;
     use HasMethods;
     use HasSiblings;
 
@@ -180,27 +181,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Blurs the image by the given amount of pixels
-     *
-     * @param boolean $pixels
-     * @return self
-     */
-    public function blur($pixels = true)
-    {
-        return $this->thumb(['blur' => $pixels]);
-    }
-
-    /**
-     * Converts the image to black and white
-     *
-     * @return self
-     */
-    public function bw()
-    {
-        return $this->thumb(['grayscale' => true]);
-    }
-
-    /**
      * Store the template in addition to the
      * other content.
      *
@@ -237,38 +217,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Crops the image by the given width and height
-     *
-     * @param integer $width
-     * @param integer $height
-     * @param string|array $options
-     * @return self
-     */
-    public function crop(int $width, int $height = null, $options = null)
-    {
-        $quality = null;
-        $crop    = 'center';
-
-        if (is_int($options) === true) {
-            $quality = $options;
-        } elseif (is_string($options)) {
-            $crop = $options;
-        } elseif (is_a($options, 'Kirby\Cms\Field') === true) {
-            $crop = $options->value();
-        } elseif (is_array($options)) {
-            $quality = $options['quality'] ?? $quality;
-            $crop    = $options['crop']    ?? $crop;
-        }
-
-        return $this->thumb([
-            'width'   => $width,
-            'height'  => $height,
-            'quality' => $quality,
-            'crop'    => $crop
-        ]);
-    }
-
-    /**
      * Provides a kirbytag or markdown
      * tag for the file, which will be
      * used in the panel, when the file
@@ -296,16 +244,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Checks if the file exists on disk
-     *
-     * @return boolean
-     */
-    public function exists(): bool
-    {
-        return is_file($this->root()) === true;
-    }
-
-    /**
      * Returns the filename with extension
      *
      * @return string
@@ -323,21 +261,6 @@ class File extends ModelWithContent
     public function files(): Files
     {
         return $this->siblingsCollection();
-    }
-
-    /**
-     * Converts the file to html
-     *
-     * @param  array  $attr
-     * @return string
-     */
-    public function html(array $attr = []): string
-    {
-        if ($this->type() === 'image') {
-            return Html::img($this->url(), array_merge(['alt' => $this->alt()], $attr));
-        } else {
-            return Html::a($this->url(), $attr);
-        }
     }
 
     /**
@@ -423,18 +346,6 @@ class File extends ModelWithContent
     public function model()
     {
         return $this->parent();
-    }
-
-    /**
-     * Get the file's last modification time.
-     *
-     * @param  string $format
-     * @param  string|null $handler date or strftime
-     * @return mixed
-     */
-    public function modified(string $format = null, string $handler = null)
-    {
-        return F::modified($this->root(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
     }
 
     /**
@@ -608,17 +519,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Sets the JPEG compression quality
-     *
-     * @param integer $quality
-     * @return self
-     */
-    public function quality(int $quality)
-    {
-        return $this->thumb(['quality' => $quality]);
-    }
-
-    /**
      * Creates a string query, starting from the model
      *
      * @param string|null $query
@@ -642,24 +542,6 @@ class File extends ModelWithContent
         }
 
         return $result;
-    }
-
-    /**
-     * Resizes the file with the given width and height
-     * while keeping the aspect ratio.
-     *
-     * @param integer $width
-     * @param integer $height
-     * @param integer $quality
-     * @return self
-     */
-    public function resize(int $width = null, int $height = null, int $quality = null)
-    {
-        return $this->thumb([
-            'width'   => $width,
-            'height'  => $height,
-            'quality' => $quality
-        ]);
     }
 
     /**
@@ -797,33 +679,6 @@ class File extends ModelWithContent
     public function templateSiblings(bool $self = true)
     {
         return $this->siblings($self)->filterBy('template', $this->template());
-    }
-
-    /**
-     * Creates a modified version of images
-     * The media manager takes care of generating
-     * those modified versions and putting them
-     * in the right place. This is normally the
-     * /media folder of your installation, but
-     * could potentially also be a CDN or any other
-     * place.
-     *
-     * @param array|null $options
-     * @return FileVersion|File
-     */
-    public function thumb(array $options = null)
-    {
-        if (empty($options) === true) {
-            return $this;
-        }
-
-        $result = $this->kirby()->component('file::version')($this->kirby(), $this, $options);
-
-        if (is_a($result, FileVersion::class) === false && is_a($result, File::class) === false) {
-            throw new InvalidArgumentException('The file::version component must return a File or FileVersion object');
-        }
-
-        return $result;
     }
 
     /**

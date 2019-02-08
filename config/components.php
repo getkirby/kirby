@@ -14,7 +14,7 @@ use Kirby\Toolkit\F;
 use Kirby\Toolkit\Tpl as Snippet;
 
 return [
-    'file::version' => function (App $kirby, Model $file, array $options = []) {
+    'file::version' => function (App $kirby, $file, array $options = []) {
         if ($file->isResizable() === false) {
             return $file;
         }
@@ -24,8 +24,7 @@ return [
         $attributes = $darkroom->preprocess($file->root(), $options);
 
         // create url and root
-        $parent    = $file->parent();
-        $mediaRoot = $parent->mediaRoot() . '/' . $file->mediaHash();
+        $mediaRoot = dirname($file->mediaRoot());
         $dst       = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
         $thumbRoot = (new Filename($file->root(), $dst, $attributes))->toString();
         $thumbName = basename($thumbRoot);
@@ -45,10 +44,10 @@ return [
             'modifications' => $options,
             'original'      => $file,
             'root'          => $thumbRoot,
-            'url'           => $parent->mediaUrl() . '/' . $file->mediaHash() . '/' . $thumbName,
+            'url'           => dirname($file->mediaUrl()) . '/' . $thumbName,
         ]);
     },
-    'file::url' => function (App $kirby, Model $file) {
+    'file::url' => function (App $kirby, $file) {
         return $file->mediaUrl();
     },
     'markdown' => function (App $kirby, string $text = null, array $options = []): string {

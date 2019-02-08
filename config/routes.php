@@ -94,6 +94,13 @@ return function ($kirby) {
             'action'  => function ($id, $hash, $filename) use ($kirby) {
                 return Media::link($kirby->user($id), $hash, $filename);
             }
+        ],
+        [
+            'pattern' => 'media/assets/(:all)/(:any)/(:any)',
+            'env'     => 'media',
+            'action'  => function ($path, $hash, $filename) use ($kirby) {
+                return Media::thumb($path, $hash, $filename);
+            }
         ]
     ];
 
