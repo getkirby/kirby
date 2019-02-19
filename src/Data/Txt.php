@@ -50,6 +50,7 @@ class Txt extends Handler
         // avoid problems with arrays
         if (is_array($value) === true) {
             $value = Yaml::encode($value);
+        // avoid problems with localized floats
         } elseif (is_float($value) === true) {
             $value = Str::float($value);
         }
