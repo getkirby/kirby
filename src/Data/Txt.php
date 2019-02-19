@@ -50,6 +50,8 @@ class Txt extends Handler
         // avoid problems with arrays
         if (is_array($value) === true) {
             $value = Yaml::encode($value);
+        } elseif (is_float($value) === true) {
+            $value = Str::float($value);
         }
 
         // escape accidental dividers within a field
