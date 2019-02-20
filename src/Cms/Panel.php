@@ -62,7 +62,7 @@ class Panel
         try {
             if (static::link($kirby) === true) {
                 usleep(1);
-                go($kirby->request()->url());
+                go($kirby->url('index') . '/' . $kirby->path());
             }
         } catch (Throwable $e) {
             die('The panel assets cannot be installed properly. Please check permissions of your media folder.');
