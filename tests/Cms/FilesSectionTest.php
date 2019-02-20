@@ -9,7 +9,7 @@ class FilesSectionTest extends TestCase
 {
     public function setUp(): void
     {
-        new App([
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ]
@@ -140,5 +140,63 @@ class FilesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('Test', $section->empty());
+    }
+
+    public function testDragText()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                [
+                    'filename' => 'a.jpg'
+                ],
+                [
+                    'filename' => 'b.jpg'
+                ]
+            ]
+        ]);
+
+        // already reached the max
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => $model
+        ]);
+
+        $data = $section->data();
+        $this->assertEquals('(image: a.jpg)', $data[0]['dragText']);
+    }
+
+    public function testDragTextWithDifferentParent()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'  => 'a',
+                        'files' => [
+                            [
+                                'filename' => 'a.jpg'
+                            ],
+                            [
+                                'filename' => 'b.jpg'
+                            ]
+                        ]
+                    ],
+                    [
+                        'slug' => 'b'
+                    ]
+                ]
+            ]
+        ]);
+
+        // already reached the max
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $app->page('b'),
+            'parent' => 'site.find("a")'
+        ]);
+
+        $data = $section->data();
+        $this->assertEquals('(image: a/a.jpg)', $data[0]['dragText']);
     }
 }

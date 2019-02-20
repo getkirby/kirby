@@ -60,7 +60,7 @@ class FilePropsTest extends TestCase
         $file = $page->file('test.pdf');
 
         $this->assertEquals('(file: test.pdf)', $file->dragText());
-        $this->assertEquals('[test.pdf](./test.pdf)', $file->dragText('markdown'));
+        $this->assertEquals('[test.pdf](test.pdf)', $file->dragText('markdown'));
     }
 
     public function testDragTextForImages()
@@ -77,7 +77,7 @@ class FilePropsTest extends TestCase
         $file = $page->file('test.jpg');
 
         $this->assertEquals('(image: test.jpg)', $file->dragText());
-        $this->assertEquals('![](./test.jpg)', $file->dragText('markdown'));
+        $this->assertEquals('![](test.jpg)', $file->dragText('markdown'));
     }
 
     public function testFilename()

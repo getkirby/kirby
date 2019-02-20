@@ -222,23 +222,27 @@ class File extends ModelWithContent
      * used in the panel, when the file
      * gets dragged onto a textarea
      *
+     * @param string $type
+     * @param bool $absolute
      * @return string
      */
-    public function dragText($type = 'kirbytext'): string
+    public function dragText($type = 'kirbytext', bool $absolute = false): string
     {
+        $url = $absolute ? $this->id() : $this->filename();
+
         switch ($type) {
             case 'kirbytext':
                 if ($this->type() === 'image') {
-                    return '(image: ' . $this->filename() . ')';
+                    return '(image: ' . $url . ')';
                 } else {
-                    return '(file: ' . $this->filename() . ')';
+                    return '(file: ' . $url . ')';
                 }
                 // no break
             case 'markdown':
                 if ($this->type() === 'image') {
-                    return '![' . $this->alt() . '](./' . $this->filename() . ')';
+                    return '![' . $this->alt() . '](' . $url . ')';
                 } else {
-                    return '[' . $this->filename() . '](./' . $this->filename() . ')';
+                    return '[' . $this->filename() . '](' . $url . ')';
                 }
         }
     }
