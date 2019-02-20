@@ -334,7 +334,7 @@ class System
      */
     public function php(): bool
     {
-        return version_compare(phpversion(), '7.1.0', '>');
+        return version_compare(phpversion(), '7.1.0', '>=');
     }
 
     /**

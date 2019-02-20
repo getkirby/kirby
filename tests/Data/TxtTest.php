@@ -36,6 +36,29 @@ class TxtTest extends TestCase
         $this->assertEquals(file_get_contents(static::FIXTURES . '/test.txt'), $data);
     }
 
+    public function testEncodeFloat()
+    {
+        $data = Txt::encode([
+            'number' => (float)3.2
+        ]);
+
+        $this->assertEquals('Number: 3.2', $data);
+    }
+
+    public function testEncodeFloatWithLocaleSetting()
+    {
+        $currentLocale = setlocale(LC_ALL, 0);
+        setlocale(LC_ALL, 'de_DE');
+
+        $data = Txt::encode([
+            'number' => (float)3.2
+        ]);
+
+        $this->assertEquals('Number: 3.2', $data);
+
+        setlocale(LC_ALL, $currentLocale);
+    }
+
     public function testDecodeFile()
     {
         $array = [

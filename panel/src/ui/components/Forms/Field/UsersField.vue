@@ -42,7 +42,7 @@
       </k-draggable>
     </template>
     <k-empty v-else icon="users" @click="open">
-      {{ $t('field.users.empty') }}
+      {{ empty || $t('field.users.empty') }}
     </k-empty>
     <k-users-dialog ref="selector" @submit="select" />
   </k-field>
@@ -55,6 +55,7 @@ export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
+    empty: String,
     max: Number,
     multiple: Boolean,
     value: {

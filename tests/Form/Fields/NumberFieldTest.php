@@ -24,16 +24,16 @@ class NumberFieldTest extends TestCase
     {
         return [
             [null, null],
-            [false, '0'],
-            [0, '0'],
-            ['0', '0'],
-            [1, '1'],
-            ['1', '1'],
-            ['one', '0'],
-            ['1.1', '1.1'],
-            ['1.11111', '1.11111'],
-            [1.11111, '1.11111'],
-            ['1,1', '1.1'],
+            [false, (float)0],
+            [0, (float)0],
+            ['0', (float)0],
+            [1, (float)1],
+            ['1', (float)1],
+            ['one', (float)0],
+            ['1.1', (float)1.1],
+            ['1.11111', (float)1.11111],
+            [1.11111, (float)1.11111],
+            ['1,1', (float)1.1],
         ];
     }
 
@@ -52,7 +52,7 @@ class NumberFieldTest extends TestCase
         $this->assertTrue($expected === $field->default());
 
         if ($input === null) {
-            $this->assertTrue('1' === $field->step());
+            $this->assertTrue((float)1 === $field->step());
         } else {
             $this->assertTrue($expected === $field->step());
         }

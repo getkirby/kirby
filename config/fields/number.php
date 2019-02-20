@@ -36,7 +36,7 @@ return [
                 return null;
             }
 
-            return Str::float($value);
+            return (float)Str::float($value);
         }
     ],
     'validations' => [

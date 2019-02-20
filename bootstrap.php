@@ -4,7 +4,7 @@
  * Validate the PHP version to already
  * stop at older versions
  */
-if (version_compare(phpversion(), '7.1.0', '>') === false) {
+if (version_compare(phpversion(), '7.1.0', '>=') === false) {
     die(include __DIR__ . '/views/php.php');
 }
 

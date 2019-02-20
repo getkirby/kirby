@@ -28,9 +28,10 @@
                 :min="1"
                 :max="pages"
                 type="number"
-                @focus="$event.target.select()"
-                @input="goTo($event.target.value)"
+                @keydown.stop
+                @keydown.enter="goTo($event.target.value)"
               >
+              <k-button icon="angle-up" @click="goTo($refs.page.value)" />
             </div>
           </k-dropdown-content>
         </k-dropdown>
@@ -231,9 +232,13 @@ export default {
   text-align: right;
 }
 
-.k-pagination-selector {
-  width: 100%;
-  padding: 0 !important;
+.k-dropdown-content.k-pagination-selector {
+  position: absolute;
+  top: calc(100% + .75rem);
+  left: 50%;
+  width: 15rem;
+  margin-left: -7.5rem;
+  background: $color-black;
 
   [dir="ltr"] & {
     direction: ltr;
@@ -246,21 +251,25 @@ export default {
 .k-pagination-selector > div {
   font-size: $font-size-small;
   display: flex;
+  align-items: center;
+}
+.k-pagination-selector .k-button {
+  padding: .75rem 1rem;
+  line-height: 1;
 }
 .k-pagination-selector > div > label {
-  flex-grow: 1;
-  padding: 0.5rem 1rem;
-  border-right: 1px solid rgba(#fff, 0.1);
+  padding: .75rem 1rem;
 }
 .k-pagination-selector > div > input {
   flex-grow: 1;
   font: inherit;
   border: 0;
-  background: $color-focus;
-  color: $color-dark;
-  padding: 0.5rem 1rem;
-  border-top-right-radius: $border-radius;
-  border-bottom-right-radius: $border-radius;
+  padding: .75rem 1rem;
+  color: #fff;
+  background: none;
+  text-align: center;
+  border-left: 1px solid rgba(#fff, .2);
+  border-right: 1px solid rgba(#fff, .2);
 }
 .k-pagination-selector > div > input:focus {
   outline: 0;

@@ -5,8 +5,8 @@ return [
         /**
          * Sets the text for the empty state box
          */
-        'empty' => function (string $empty = null) {
-            return I18n::translate($empty);
+        'empty' => function ($empty = null) {
+            return I18n::translate($empty, $empty);
         }
     ],
     'methods' => [

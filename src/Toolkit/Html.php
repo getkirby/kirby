@@ -336,8 +336,14 @@ class Html
      */
     public static function rel(string $rel = null, string $target = null)
     {
+        $rel = trim($rel);
+
         if ($target === '_blank') {
-            return trim($rel . ' noopener noreferrer');
+            if (empty($rel) === false) {
+                return $rel;
+            }
+
+            return trim($rel . ' noopener noreferrer', ' ');
         }
 
         return $rel;

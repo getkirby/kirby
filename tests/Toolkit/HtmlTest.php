@@ -54,6 +54,14 @@ class HtmlTest extends TestCase
         $this->assertEquals($expected, $html);
     }
 
+    public function testAWithTargetAndRel()
+    {
+        $html = Html::a('https://getkirby.com', 'Kirby', ['target' => '_blank', 'rel' => 'noopener']);
+        $expected = '<a href="https://getkirby.com" rel="noopener" target="_blank">Kirby</a>';
+
+        $this->assertEquals($expected, $html);
+    }
+
     public function testAttr()
     {
         $tests = [
@@ -226,8 +234,8 @@ class HtmlTest extends TestCase
 
         $this->assertEquals($expected, $html);
 
-        $html = Html::rel('me', '_blank');
-        $expected = 'me noopener noreferrer';
+        $html = Html::rel('noopener', '_blank');
+        $expected = 'noopener';
 
         $this->assertEquals($expected, $html);
     }
