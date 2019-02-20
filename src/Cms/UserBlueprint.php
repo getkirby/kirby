@@ -10,6 +10,10 @@ class UserBlueprint extends Blueprint
 {
     public function __construct(array $props)
     {
+        // normalize and translate the description
+        $props['description'] = $this->i18n($props['description'] ?? null);
+
+        // register the other props
         parent::__construct($props);
 
         // normalize all available page options

@@ -60,4 +60,30 @@ class RoleTest extends TestCase
         $this->assertEquals('nobody', $role->name());
         $this->assertEquals('Nobody', $role->title());
     }
+
+    public function testTranslateTitle()
+    {
+        $role = new Role([
+            'name' => 'editor',
+            'title' => [
+                'en' => 'Editor',
+                'de' => 'Bearbeiter'
+            ]
+        ]);
+
+        $this->assertEquals('Editor', $role->title());
+    }
+
+    public function testTranslateDescription()
+    {
+        $role = new Role([
+            'name' => 'editor',
+            'description' => [
+                'en' => 'Editor',
+                'de' => 'Bearbeiter'
+            ]
+        ]);
+
+        $this->assertEquals('Editor', $role->title());
+    }
 }
