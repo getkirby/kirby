@@ -107,6 +107,9 @@ class App
             'users'
         ]);
 
+        // set the singleton
+        Model::$kirby = static::$instance = $this;
+
         // setup the I18n class with the translation loader
         $this->i18n();
 
@@ -119,9 +122,6 @@ class App
 
         // handle those damn errors
         $this->handleErrors();
-
-        // set the singleton
-        Model::$kirby = static::$instance = $this;
 
         // bake config
         Config::$data = $this->options;
