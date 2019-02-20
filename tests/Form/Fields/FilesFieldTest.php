@@ -195,5 +195,4 @@ class FilesFieldTest extends TestCase
 
         $this->assertEquals('Test', $field->empty());
     }
-
 }

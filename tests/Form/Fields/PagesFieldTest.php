@@ -126,5 +126,4 @@ class PagesFieldTest extends TestCase
 
         $this->assertEquals('Test', $field->empty());
     }
-
 }

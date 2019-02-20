@@ -229,5 +229,4 @@ class StructureFieldTest extends TestCase
 
         $this->assertEquals('Test', $field->empty());
     }
-
 }

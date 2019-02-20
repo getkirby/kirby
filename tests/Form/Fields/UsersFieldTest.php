@@ -156,5 +156,4 @@ class UsersFieldTest extends TestCase
 
         $this->assertEquals('Test', $field->empty());
     }
-
 }

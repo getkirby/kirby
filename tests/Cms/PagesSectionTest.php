@@ -163,5 +163,4 @@ class PagesSectionTest extends TestCase
 
         $this->assertEquals('Test', $section->empty());
     }
-
 }

@@ -141,5 +141,4 @@ class FilesSectionTest extends TestCase
 
         $this->assertEquals('Test', $section->empty());
     }
-
 }
