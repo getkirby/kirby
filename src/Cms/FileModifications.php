@@ -99,12 +99,19 @@ trait FileModifications
      * could potentially also be a CDN or any other
      * place.
      *
-     * @param array|null $options
+     * @param array|null|string $options
      * @return FileVersion|File
      */
-    public function thumb(array $options = null)
+    public function thumb($options = null)
     {
+        // thumb presets
         if (empty($options) === true) {
+            $options = $this->kirby()->option('thumbs.presets.default');
+        } elseif (is_string($options) === true) {
+            $options = $this->kirby()->option('thumbs.presets.' . $options);
+        }
+
+        if (empty($options) === true || is_array($options) === false) {
             return $this;
         }
 
