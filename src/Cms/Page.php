@@ -757,7 +757,7 @@ class Page extends ModelWithContent
      */
     public function isUnlisted(): bool
     {
-        return !$this->isListed();
+        return $this->isListed() === false;
     }
 
     /**
