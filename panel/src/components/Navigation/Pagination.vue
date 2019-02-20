@@ -1,5 +1,5 @@
 <template>
-  <k-button-group v-if="show" :data-align="align" class="k-pagination">
+  <nav v-if="show" :data-align="align" class="k-pagination">
     <k-button
       :disabled="!hasPrev"
       :tooltip="prevLabel"
@@ -50,7 +50,7 @@
       icon="angle-right"
       @click="next"
     />
-  </k-button-group>
+  </nav>
 </template>
 
 <script>
@@ -234,7 +234,7 @@ export default {
 
 .k-dropdown-content.k-pagination-selector {
   position: absolute;
-  top: calc(100% + .75rem);
+  top: 100%;
   left: 50%;
   width: 15rem;
   margin-left: -7.5rem;
