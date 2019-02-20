@@ -23,6 +23,12 @@ return [
             return array_change_key_case($columns);
         },
         /**
+         * The placeholder text if no items have been added yet
+         */
+        'empty' => function ($empty = null) {
+            return I18n::translate($empty, $empty);
+        },
+        /**
          * Fields setup for the structure form. Works just like fields in regular forms.
          */
         'fields' => function (array $fields) {

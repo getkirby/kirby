@@ -141,4 +141,27 @@ class PagesSectionTest extends TestCase
 
         $this->assertEquals(['blog'], $section->templates());
     }
+
+    public function testEmpty()
+    {
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'empty' => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $section->empty());
+    }
+
+    public function testTranslatedEmpty()
+    {
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'empty' => ['en' => 'Test', 'de' => 'Töst']
+        ]);
+
+        $this->assertEquals('Test', $section->empty());
+    }
+
 }

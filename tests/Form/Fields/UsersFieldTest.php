@@ -136,4 +136,25 @@ class UsersFieldTest extends TestCase
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
     }
+
+    public function testEmpty()
+    {
+        $field = new Field('users', [
+            'model' => new Page(['slug' => 'test']),
+            'empty' => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $field->empty());
+    }
+
+    public function testTranslatedEmpty()
+    {
+        $field = new Field('users', [
+            'model' => new Page(['slug' => 'test']),
+            'empty' => ['en' => 'Test', 'de' => 'Töst']
+        ]);
+
+        $this->assertEquals('Test', $field->empty());
+    }
+
 }

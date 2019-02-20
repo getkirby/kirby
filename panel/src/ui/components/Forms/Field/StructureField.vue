@@ -45,7 +45,7 @@
 
     <!-- Empty State -->
     <k-empty v-else-if="items.length === 0" icon="list-bullet" @click="add">
-      {{ $t("field.structure.empty") }}
+      {{ empty || $t("field.structure.empty") }}
     </k-empty>
 
     <!-- Table -->
@@ -158,6 +158,7 @@ export default {
   props: {
     ...Field.props,
     columns: Object,
+    empty: String,
     fields: Object,
     limit: Number,
     max: Number,

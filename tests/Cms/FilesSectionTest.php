@@ -119,4 +119,27 @@ class FilesSectionTest extends TestCase
         $this->assertEquals($b, $section->parent());
         $this->assertEquals('pages/b/files', $section->upload()['api']);
     }
+
+    public function testEmpty()
+    {
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'empty' => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $section->empty());
+    }
+
+    public function testTranslatedEmpty()
+    {
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'empty' => ['en' => 'Test', 'de' => 'Töst']
+        ]);
+
+        $this->assertEquals('Test', $section->empty());
+    }
+
 }
