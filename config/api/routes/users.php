@@ -23,7 +23,7 @@ return [
     ],
     [
         'pattern' => 'users/search',
-        'method'  => 'POST',
+        'method'  => 'GET|POST',
         'action'  => function () {
             return $this->users()->query($this->requestBody());
         }
