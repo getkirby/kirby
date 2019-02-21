@@ -1,6 +1,7 @@
 <template>
   <nav v-if="show" :data-align="align" class="k-pagination">
     <k-button
+      v-if="show"
       :disabled="!hasPrev"
       :tooltip="prevLabel"
       icon="angle-left"
@@ -43,8 +44,8 @@
       </template>
     </template>
 
-
     <k-button
+      v-if="show"
       :disabled="!hasNext"
       :tooltip="nextLabel"
       icon="angle-right"
@@ -177,6 +178,7 @@ export default {
           }
 
           this.currentPage = page;
+          this.$refs.dropdown.close();
 
           this.$emit("paginate", {
             page: parseInt(this.currentPage),
@@ -222,7 +224,6 @@ export default {
   white-space: nowrap;
 }
 .k-pagination > span {
-  padding: 1rem;
   font-size: $font-size-small;
 }
 .k-pagination[data-align="center"] {
@@ -236,8 +237,8 @@ export default {
   position: absolute;
   top: 100%;
   left: 50%;
-  width: 15rem;
-  margin-left: -7.5rem;
+  width: 14rem;
+  margin-left: -7rem;
   background: $color-black;
 
   [dir="ltr"] & {

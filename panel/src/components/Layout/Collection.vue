@@ -20,11 +20,16 @@
       />
     </k-draggable>
 
-    <k-pagination
-      v-if="pagination !== false && paginationOptions.hide !== true"
-      v-bind="paginationOptions"
-      @paginate="$emit('paginate', $event)"
-    />
+    <footer v-if="hasFooter" class="k-collection-footer">
+      <div class="k-collection-pagination">
+        <k-pagination
+          v-if="hasPagination"
+          v-bind="paginationOptions"
+          @paginate="$emit('paginate', $event)"
+        />
+      </div>
+      <k-text v-if="help" theme="help" class="k-collection-help" v-html="help" />
+    </footer>
   </div>
 
 </template>
@@ -32,6 +37,7 @@
 <script>
 export default {
   props: {
+    help: String,
     items: {
       type: [Array, Object],
       default() {
@@ -57,6 +63,28 @@ export default {
     };
   },
   computed: {
+    hasPagination() {
+      if (this.pagination === false) {
+        return false;
+      }
+
+      if (this.paginationOptions.hide === true) {
+        return false;
+      }
+
+      if (this.pagination.total <= this.pagination.limit) {
+        return false;
+      }
+
+      return true;
+    },
+    hasFooter() {
+      if (!this.hasPagination && !this.help) {
+        return false;
+      }
+
+      return true;
+    },
     dragOptions() {
       return {
         sort: this.sortable,
@@ -87,7 +115,6 @@ export default {
         typeof this.pagination !== "object" ? {} : this.pagination;
       return {
         limit: 10,
-        align: "center",
         details: true,
         keys: false,
         total: 0,
@@ -121,3 +148,23 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-collection-help {
+  padding: .75rem;
+}
+.k-collection-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-right: -.75rem;
+  margin-left: -.75rem;
+}
+.k-collection-pagination {
+  line-height: 1.25rem;
+  min-height: 2.75rem;
+}
+.k-collection-pagination .k-pagination .k-button {
+  padding: .75rem;
+  line-height: 1.125rem;
+}
+</style>

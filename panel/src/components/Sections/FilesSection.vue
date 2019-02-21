@@ -24,6 +24,7 @@
       <k-dropzone :disabled="add === false" @drop="drop">
         <k-collection
           v-if="data.length"
+          :help="help"
           :items="data"
           :layout="options.layout"
           :pagination="pagination"
