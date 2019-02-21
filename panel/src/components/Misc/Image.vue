@@ -1,5 +1,5 @@
 <template>
-  <figure
+  <span
     :data-ratio="ratio"
     :data-back="back"
     :data-cover="cover"
@@ -25,8 +25,7 @@
         type="cancel"
       />
     </span>
-    <figcaption v-if="caption" v-html="caption" />
-  </figure>
+  </span>
 </template>
 
 <script>
@@ -38,7 +37,6 @@ export default {
     alt: String,
     ratio: String,
     back: String,
-    caption: String,
     cover: Boolean
   },
   data() {
