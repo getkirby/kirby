@@ -19,18 +19,12 @@
     class="k-button"
     v-on="$listeners"
   >
-    <figure v-if="image || icon" class="k-button-figure">
-      <img
-        v-if="image"
-        :src="imageUrl"
-        :alt="tooltip || ''"
-      >
-      <k-icon
-        v-else
-        :type="icon"
-        :alt="tooltip"
-      />
-    </figure>
+    <k-icon
+      v-if="icon"
+      :type="icon"
+      :alt="tooltip"
+      class="k-button-icon"
+    />
     <span v-if="$slots.default" class="k-button-text"><slot /></span>
   </component>
 </template>
@@ -58,7 +52,6 @@ export default {
     disabled: Boolean,
     icon: String,
     id: [String, Number],
-    image: [String, Object],
     link: String,
     responsive: Boolean,
     role: String,
@@ -162,25 +155,13 @@ button::-moz-focus-inner {
   color: $color-negative;
 }
 
-.k-button-figure {
-  display: inline-block;
+.k-button-icon {
+  display: inline-flex;
+  align-items: center;
   line-height: 0;
 }
-.k-button-figure .k-icon {
-  position: relative;
-  top: 0px;
-  color: currentColor;
-}
 
-.k-button-figure img {
-  width: 16px;
-  height: 16px;
-  background: $color-dark;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.k-button-figure ~ .k-button-text {
+.k-button-icon ~ .k-button-text {
   [dir="ltr"] & {
     padding-left: 0.5rem;
   }
