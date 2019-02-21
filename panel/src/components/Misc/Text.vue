@@ -56,6 +56,6 @@ export default {
 .k-text[data-theme="help"] {
   font-size: $font-size-small;
   color: $color-dark-grey;
-  line-height: 1.5rem;
+  line-height: 1.25rem;
 }
 </style>

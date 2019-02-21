@@ -48,18 +48,17 @@ export default {
 .k-section-header {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   z-index: 1;
 }
 .k-section-header .k-headline {
   line-height: 1.25rem;
   padding-bottom: 0.75rem;
-  flex-grow: 1;
   min-height: 2rem;
 }
 .k-section-header .k-button-group {
   position: absolute;
-  top: -.975rem;
+  top: -.875rem;
 
   [dir="ltr"] & {
     right: 0;
@@ -69,7 +68,5 @@ export default {
     left: 0;
   }
 }
-.k-section-help {
-  padding-top: 0.5rem;
-}
+
 </style>
