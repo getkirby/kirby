@@ -7,7 +7,7 @@
       :target="target"
       class="k-list-item-content"
     >
-      <figure class="k-list-item-image">
+      <span class="k-list-item-image">
         <k-image
           v-if="image && image.url"
           :src="image.url"
@@ -15,11 +15,11 @@
           :cover="image.cover"
         />
         <k-icon v-else v-bind="icon" />
-      </figure>
-      <figcaption class="k-list-item-text">
+      </span>
+      <span class="k-list-item-text">
         <em>{{ text }}</em>
         <small v-if="info" v-html="info" />
-      </figcaption>
+      </span>
     </k-link>
     <nav class="k-list-item-options">
       <slot name="options">
