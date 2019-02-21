@@ -1,6 +1,8 @@
 <template>
-  <span class="k-sort-handle">
-    <k-icon type="sort" />
+  <span class="k-sort-handle" aria-hidden="true">
+    <svg viewBox="0 0 16 16">
+      <use xlink:href="#icon-sort"></use>
+    </svg>
   </span>
 </template>
 
@@ -14,13 +16,13 @@
   line-height: 0;
   width: 2rem;
   height: 2rem;
+  display: flex;
   will-change: opacity, color;
   transition: opacity 0.3s;
   z-index: 1;
 }
-.k-sort-handle .k-icon {
-  width: 100%;
-  height: 100%;
+.k-sort-handle svg {
+  width: 1rem;
 }
 .k-sort-handle:active {
   cursor: -webkit-grabbing;
