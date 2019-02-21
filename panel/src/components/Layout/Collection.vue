@@ -28,7 +28,12 @@
           @paginate="$emit('paginate', $event)"
         />
       </div>
-      <k-text v-if="help" theme="help" class="k-collection-help" v-html="help" />
+      <k-text
+        v-if="help"
+        theme="help"
+        class="k-collection-help"
+        v-html="help"
+      />
     </footer>
   </div>
 
