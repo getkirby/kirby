@@ -396,6 +396,8 @@
   "user.delete.confirm":
     "Do you really want to delete <br><strong>{email}</strong>?",
 
+  "users": "Users",
+
   "version": "Version",
 
   "view.account": "Your account",
