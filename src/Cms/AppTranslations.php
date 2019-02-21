@@ -58,7 +58,7 @@ trait AppTranslations
      */
     public function setCurrentLanguage(string $languageCode = null)
     {
-        if ($languageCode === null) {
+        if ($this->multilang() === false) {
             $this->setLocale($this->option('locale', 'en_US.utf-8'));
             return $this->language = null;
         }
