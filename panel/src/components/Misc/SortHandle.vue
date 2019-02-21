@@ -1,7 +1,7 @@
 <template>
   <span class="k-sort-handle" aria-hidden="true">
     <svg viewBox="0 0 16 16">
-      <use xlink:href="#icon-sort"></use>
+      <use xlink:href="#icon-sort" />
     </svg>
   </span>
 </template>

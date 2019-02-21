@@ -21,7 +21,7 @@
         <small v-if="info" v-html="info" />
       </figcaption>
     </k-link>
-    <div class="k-list-item-options">
+    <nav class="k-list-item-options">
       <slot name="options">
         <k-button
           v-if="flag"
@@ -43,7 +43,7 @@
           @action="$emit('action', $event)"
         />
       </slot>
-    </div>
+    </nav>
   </component>
 </template>
 
@@ -181,7 +181,7 @@ $list-item-height: 38px;
   height: $list-item-height;
   padding: 0 12px;
 }
-.k-list-item-options > .k-button .k-icon {
+.k-list-item-options > .k-button > .k-button-icon {
   height: $list-item-height;
 }
 </style>
