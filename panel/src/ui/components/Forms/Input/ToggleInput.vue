@@ -35,7 +35,7 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
-        change: (event) => this.onInput(event.target.checked),
+        input: (event) => this.onInput(event.target.checked),
         keydown: this.onEnter
       }
     }
