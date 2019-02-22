@@ -153,6 +153,17 @@ class Route
     }
 
     /**
+     * Throws a specific exception to tell
+     * the router to jump to the next route
+     *
+     * @return void
+     */
+    public function next()
+    {
+        throw new Exceptions\NextRouteException('next');
+    }
+
+    /**
      * Getter for the pattern
      *
      * @return string
