@@ -28,7 +28,7 @@ export default {
   props: {
     parent: String,
     blueprint: String,
-    columns: Array
+    columns: [Array, Object]
   },
   methods: {
     exists(type) {
