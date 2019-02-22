@@ -87,7 +87,5 @@ class NumberFieldTest extends TestCase
         ]);
 
         $this->assertEquals(1000, $field->value());
-
     }
-
 }
