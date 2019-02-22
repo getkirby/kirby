@@ -285,9 +285,8 @@ export default {
 
       Object.keys(this.fields).forEach(fieldName => {
         const field = this.fields[fieldName];
-
         if (field.default) {
-          data[fieldName] = field.default;
+          data[fieldName] = clone(field.default);
         }
       });
 
