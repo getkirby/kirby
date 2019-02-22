@@ -41,6 +41,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    conditions: [Array, Object],
     counter: [Boolean, Object],
     disabled: Boolean,
     endpoints: Object,
