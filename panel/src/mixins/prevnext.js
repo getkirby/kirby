@@ -8,11 +8,6 @@ export default {
     this.$events.$off("keydown.left", this.toPrev);
     this.$events.$off("keydown.right", this.toNext);
   },
-  watch: {
-    $route() {
-      this.fetch();
-    }
-  },
   methods: {
     toPrev(e) {
       if (this.prev && e.target.localName === "body") {
