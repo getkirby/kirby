@@ -133,7 +133,7 @@ class RouterTest extends TestCase
                 'pattern' => '(:any)',
                 'action'  => function ($slug) {
                     if ($slug === 'a') {
-                        return 'first';
+                        return 'a';
                     }
 
                     $this->next();
@@ -141,16 +141,38 @@ class RouterTest extends TestCase
             ],
             [
                 'pattern' => '(:any)',
-                'action'  => function () {
-                    return 'last';
+                'action'  => function ($slug) {
+                    if ($slug === 'b') {
+                        return 'b';
+                    }
+
+                    $this->next();
+                }
+            ],
+            [
+                'pattern' => '(:any)',
+                'action'  => function ($slug) {
+                    if ($slug === 'c') {
+                        return 'c';
+                    }
+
+                    $this->next();
                 }
             ]
         ]);
 
         $result = $router->call('a');
-        $this->assertEquals('first', $result);
+        $this->assertEquals('a', $result);
 
         $result = $router->call('b');
-        $this->assertEquals('last', $result);
+        $this->assertEquals('b', $result);
+
+        $result = $router->call('c');
+        $this->assertEquals('c', $result);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('No route found for path: "d" and request method: "GET"');
+
+        $result = $router->call('d');
     }
 }

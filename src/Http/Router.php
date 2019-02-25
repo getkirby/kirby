@@ -86,12 +86,12 @@ class Router
      */
     public function call(string $path = '', string $method = 'GET')
     {
-        $prev   = null;
+        $ignore = [];
         $result = null;
         $loop   = true;
 
         while ($loop === true) {
-            $route = $this->find($path, $method, $prev);
+            $route = $this->find($path, $method, $ignore);
 
             if (is_a(static::$beforeEach, 'Closure') === true) {
                 (static::$beforeEach)($route, $path, $method);
@@ -101,7 +101,7 @@ class Router
                 $result = $route->action()->call($route, ...$route->arguments());
                 $loop   = false;
             } catch (Exceptions\NextRouteException $e) {
-                $prev = $route;
+                $ignore[] = $route;
             }
 
             if (is_a(static::$afterEach, 'Closure') === true) {
@@ -120,10 +120,10 @@ class Router
      *
      * @param  string $path
      * @param  string $method
-     * @param  Route  $ignore
+     * @param  array  $ignore
      * @return Route|null
      */
-    public function find(string $path, string $method, Route $ignore = null)
+    public function find(string $path, string $method, array $ignore = null)
     {
         if (isset($this->routes[$method]) === false) {
             throw new InvalidArgumentException('Invalid routing method: ' . $method, 400);
@@ -136,7 +136,7 @@ class Router
             $arguments = $route->parse($route->pattern(), $path);
 
             if ($arguments !== false) {
-                if ($ignore === null || $route !== $ignore) {
+                if (empty($ignore) === true || in_array($route, $ignore) === false) {
                     return $this->route = $route;
                 }
             }
