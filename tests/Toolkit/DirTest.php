@@ -67,6 +67,44 @@ class DirTest extends TestCase
         Dir::copy($src, $target);
     }
 
+    public function testIndex()
+    {
+        Dir::make($dir = $this->tmp);
+        Dir::make($sub = $this->tmp . '/sub');
+
+        F::write($a = $this->tmp . '/a.txt', 'test');
+        F::write($b = $this->tmp . '/b.txt', 'test');
+
+        $expected = [
+            'a.txt',
+            'b.txt',
+            'sub',
+        ];
+
+        $this->assertEquals($expected, Dir::index($dir));
+    }
+
+    public function testIndexRecursive()
+    {
+        Dir::make($dir = $this->tmp);
+        Dir::make($sub = $this->tmp . '/sub');
+        Dir::make($subsub = $this->tmp . '/sub/sub');
+
+        F::write($a = $this->tmp . '/a.txt', 'test');
+        F::write($b = $this->tmp . '/sub/b.txt', 'test');
+        F::write($c = $this->tmp . '/sub/sub/c.txt', 'test');
+
+        $expected = [
+            'a.txt',
+            'sub',
+            'sub/b.txt',
+            'sub/sub',
+            'sub/sub/c.txt'
+        ];
+
+        $this->assertEquals($expected, Dir::index($dir, true));
+    }
+
     public function testIsWritable()
     {
         Dir::make($this->tmp);
@@ -97,6 +135,39 @@ class DirTest extends TestCase
     public function testMoveNonExisting()
     {
         $this->assertFalse(Dir::move('/does-not-exist', $this->moved));
+    }
+
+    public function testLink()
+    {
+        $source = $this->tmp . '/source';
+        $link   = $this->tmp . '/link';
+
+        Dir::make($source);
+
+        $this->assertTrue(Dir::link($source, $link));
+        $this->assertTrue(is_link($link));
+    }
+
+    public function testLinkExistingLink()
+    {
+        $source = $this->tmp . '/source';
+        $link   = $this->tmp . '/link';
+
+        Dir::make($source);
+        Dir::link($source, $link);
+
+        $this->assertTrue(Dir::link($source, $link));
+    }
+
+    public function testLinkWithoutSource()
+    {
+        $source = $this->tmp . '/source';
+        $link   = $this->tmp . '/link';
+
+        $this->expectExceptionMessage('Expection');
+        $this->expectExceptionMessage('The directory "' . $source . '" does not exist and cannot be linked');
+
+        Dir::link($source, $link);
     }
 
     public function testRead()
@@ -218,8 +289,41 @@ class DirTest extends TestCase
         Dir::remove($this->tmp);
     }
 
+    public function testSizeWithNestedFolders()
+    {
+        Dir::make($this->tmp);
+        Dir::make($this->tmp . '/sub');
+        Dir::make($this->tmp . '/sub/sub');
+
+        F::write($this->tmp . '/testfile-1.txt', Str::random(5));
+        F::write($this->tmp . '/sub/testfile-2.txt', Str::random(5));
+        F::write($this->tmp . '/sub/sub/testfile-3.txt', Str::random(5));
+
+        $this->assertEquals(15, Dir::size($this->tmp));
+        $this->assertEquals('15 B', Dir::niceSize($this->tmp));
+
+        Dir::remove($this->tmp);
+    }
+
     public function testSizeOfNonExistingDir()
     {
         $this->assertFalse(Dir::size('/does-not-exist'));
+    }
+
+    public function testWasModifiedAfter()
+    {
+        Dir::make($this->tmp);
+        Dir::make($this->tmp . '/sub');
+
+        F::write($this->tmp . '/sub/test.txt', 'test');
+
+        $time = time();
+        $this->assertFalse(Dir::wasModifiedAfter($this->tmp, $time));
+
+        sleep(1);
+
+        F::write($this->tmp . '/sub/test.txt', 'foo');
+
+        $this->assertTrue(Dir::wasModifiedAfter($this->tmp, $time));
     }
 }

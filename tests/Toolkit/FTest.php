@@ -95,6 +95,71 @@ class FTest extends TestCase
         $this->assertEquals(is_writable($this->tmp), F::isWritable($this->tmp));
     }
 
+    public function testLink()
+    {
+        $src  = $this->fixtures . '/a.txt';
+        $link = $this->fixtures . '/b.txt';
+
+        F::write($src, 'test');
+
+        $this->assertTrue(F::link($src, $link));
+        $this->assertTrue(is_file($link));
+    }
+
+    public function testSymlink()
+    {
+        $src  = $this->fixtures . '/a.txt';
+        $link = $this->fixtures . '/b.txt';
+
+        F::write($src, 'test');
+
+        $this->assertTrue(F::link($src, $link, 'symlink'));
+        $this->assertTrue(is_link($link));
+    }
+
+    public function testLinkExistingLink()
+    {
+        $src  = $this->fixtures . '/a.txt';
+        $link = $this->fixtures . '/b.txt';
+
+        F::write($src, 'test');
+        F::link($src, $link);
+
+        $this->assertTrue(F::link($src, $link));
+    }
+
+    public function testLinkWithMissingSource()
+    {
+        $src  = $this->fixtures . '/a.txt';
+        $link = $this->fixtures . '/b.txt';
+
+        $this->expectExceptionMessage('Expection');
+        $this->expectExceptionMessage('The file "' . $src . '" does not exist and cannot be linked');
+
+        F::link($src, $link);
+    }
+
+    public function testLoad()
+    {
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo"; ?>');
+
+        $this->assertEquals('foo', F::load($file));
+    }
+
+    public function testLoadWithFallback()
+    {
+        $this->assertEquals('foo', F::load('does-not-exist.php', 'foo'));
+    }
+
+    public function testLoadWithTypeMismatch()
+    {
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo"; ?>');
+
+        $expected = ['a' => 'b'];
+
+        $this->assertEquals($expected, F::load($file, $expected));
+    }
+
     public function testMove()
     {
         F::write($this->tmp, 'test');
@@ -240,6 +305,26 @@ class FTest extends TestCase
     public function testWrite()
     {
         $this->assertTrue(F::write($this->tmp, 'my content'));
+    }
+
+    public function testWriteArray()
+    {
+        $input = ['a' => 'a'];
+
+        F::write($this->tmp, $input);
+
+        $result = unserialize(F::read($this->tmp));
+        $this->assertEquals($input, $result);
+    }
+
+    public function testWriteObject()
+    {
+        $input = new \stdClass;
+
+        F::write($this->tmp, $input);
+
+        $result = unserialize(F::read($this->tmp));
+        $this->assertEquals($input, $result);
     }
 
     public function testSimilar()

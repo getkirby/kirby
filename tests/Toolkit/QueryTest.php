@@ -142,4 +142,50 @@ class QueryTest extends TestCase
 
         $this->assertNull($query->result());
     }
+
+    public function scalarProvider()
+    {
+        return [
+            ['test'],
+            [1],
+            [1.1],
+            [true],
+            [false]
+        ];
+    }
+
+    /**
+     * @dataProvider scalarProvider
+     */
+    public function test1LevelScalarQuery($scalar)
+    {
+        $query = new Query('value', [
+            'value' => $scalar
+        ]);
+
+        $this->assertEquals($scalar, $query->result());
+    }
+
+    /**
+     * @dataProvider scalarProvider
+     */
+    public function test2LevelScalarQuery($scalar)
+    {
+        $query = new Query('parent.value', [
+            'parent' => [
+                'value' => $scalar
+            ]
+        ]);
+
+        $this->assertEquals($scalar, $query->result());
+    }
+
+    public function testNullValueQuery()
+    {
+        $query = new Query('value', [
+            'value' => null
+        ]);
+
+        $this->assertEquals(null, $query->result());
+    }
 }
