@@ -15,7 +15,7 @@ abstract class Facade
      *
      * @return mixed
      */
-    abstract protected static function instance();
+    abstract public static function instance();
 
     /**
      * Proxy for all public instance calls

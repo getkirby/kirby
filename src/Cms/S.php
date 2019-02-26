@@ -13,7 +13,7 @@ class S extends Facade
     /**
      * @return Session
      */
-    protected static function instance()
+    public static function instance()
     {
         return App::instance()->session();
     }
