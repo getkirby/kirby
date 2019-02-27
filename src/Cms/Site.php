@@ -641,8 +641,10 @@ class Site extends ModelWithContent
      */
     public function visit($page, string $languageCode = null): Page
     {
-        $this->kirby()->setCurrentTranslation($languageCode);
-        $this->kirby()->setCurrentLanguage($languageCode);
+        if ($languageCode !== null) {
+            $this->kirby()->setCurrentTranslation($languageCode);
+            $this->kirby()->setCurrentLanguage($languageCode);
+        }
 
         // convert ids to a Page object
         if (is_string($page)) {
