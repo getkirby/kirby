@@ -809,33 +809,32 @@ class App
         // the site is needed a couple times here
         $site = $this->site();
 
+        // use the home page
         if ($path === null) {
             return $site->homePage();
         }
 
-        if ($page = $site->find($path)) {
-            return $page;
-        }
+        // search for the page by path
+        $page = $site->find($path);
 
-        if ($draft = $site->draft($path)) {
+        // search for a draft if the page cannot be found
+        if (!$page && $draft = $site->draft($path)) {
             if ($this->user() || $draft->isVerified(get('token'))) {
-                return $draft;
+                $page = $draft;
             }
         }
 
         // try to resolve content representations if the path has an extension
         $extension = F::extension($path);
 
-        // remove the extension from the path
-        $path = Str::rtrim($path, '.' . $extension);
-
-        // stop when there's no extension
+        // no content representation? then return the page
         if (empty($extension) === true) {
-            return null;
+            return $page;
         }
 
-        // try to find the page for the representation
-        if ($page = $site->find($path)) {
+        // only try to return a representation
+        // when the page has been found
+        if ($page) {
             try {
                 return $this
                     ->response()
@@ -847,7 +846,7 @@ class App
         }
 
         $id       = dirname($path);
-        $filename = basename($path) . '.' . $extension;
+        $filename = basename($path);
 
         // try to resolve image urls for pages and drafts
         if ($page = $site->findPageOrDraft($id)) {
