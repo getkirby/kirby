@@ -22,7 +22,7 @@
   "days.wed": "st",
 
   "delete": "Smazat",
-  "dimensions": "Velikosti",
+  "dimensions": "Rozměry",
   "discard": "Zahodit",
   "edit": "Upravit",
 
@@ -70,7 +70,7 @@
   "error.page.changeStatus.incomplete":
     "Stránka obsahuje chyby a nemohla být zveřejněna",
   "error.page.changeStatus.permission":
-    "Stav této stránky nelze změnit",
+    "Status této stránky nelze změnit",
   "error.page.changeStatus.toDraft.invalid":
     "Stránka \"{slug}\" nemůže být převedena na koncept",
   "error.page.changeTemplate.invalid":
@@ -307,8 +307,8 @@
 
   "page.changeSlug": "Zm\u011bnit URL",
   "page.changeSlug.fromTitle": "Vytvo\u0159it z n\u00e1zvu",
-  "page.changeStatus": "Změnit stav",
-  "page.changeStatus.position": "Vybrte prosím pozici",
+  "page.changeStatus": "Změnit status",
+  "page.changeStatus.position": "Vyberte prosím pozici",
   "page.changeStatus.select": "Vybrat nový status",
   "page.changeTemplate": "Změnit šablonu",
   "page.delete.confirm":
@@ -321,16 +321,16 @@
   "page.status.draft": "Koncept",
   "page.status.draft.description":
     "Stránka je ve stavu konceptu a je viditelná pouze pro přihlášené editory",
-  "page.status.listed": "Veřejný",
+  "page.status.listed": "Veřejná",
   "page.status.listed.description": "Stránka je zveřejněná pro všechny",
-  "page.status.unlisted": "Nevypsané",
+  "page.status.unlisted": "Neveřejná",
   "page.status.unlisted.description": "Tato stránka je dostupná pouze přes adresu URL",
 
   "pages": "Stránky",
   "pages.empty": "Zatím žádné stránky",
   "pages.status.draft": "Koncepty",
   "pages.status.listed": "Zveřejněno",
-  "pages.status.unlisted": "Nevypsané",
+  "pages.status.unlisted": "Neveřejná",
 
   "password": "Heslo",
   "pixel": "Pixel",

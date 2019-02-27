@@ -43,20 +43,20 @@
 
   "error.email.preset.notFound": "기본 이메일 주소({name})가 없습니다.",
 
-  "error.field.converter.invalid": "컨버터({converter})가 잘못되었습니다.",
+  "error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
 
   "error.file.changeName.permission":
     "파일명({filename})을 변경할 권한이 없습니다.",
-  "error.file.duplicate": "이름이 같은 파일({filename})이 있습니다.",
+  "error.file.duplicate": "파일명이 같은 파일({filename})이 있습니다.",
   "error.file.extension.forbidden":
     "이 확장자({extension})는 업로드할 수 없습니다.",
   "error.file.extension.missing":
     "파일({filename})에 확장자가 없습니다.",
   "error.file.mime.differs":
     "기존 파일과 MIME 형식({mime})이 다릅니다.",
-  "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
+  "error.file.mime.forbidden": "이 MIME 형식({mime})은 업로드할 수 없습니다.",
   "error.file.mime.missing":
-    "The media type for \"{filename}\" cannot be detected",
+    "파일({filename})의 형식을 알 수 없습니다.",
   "error.file.name.missing": "파일명을 입력하세요.",
   "error.file.notFound": "파일({filename})이 없습니다.",
   "error.file.type.forbidden": "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
@@ -92,7 +92,7 @@
     "고유 주소({slug})가 같은 페이지가 있습니다.",
   "error.page.notFound": "페이지({slug})가 없습니다.",
   "error.page.num.invalid":
-    "정수를 입력하세요.",
+    "올바른 정수를 입력하세요.",
   "error.page.slug.invalid": "올바른 접두사를 입력하세요.",
   "error.page.sort.permission": "페이지({slug})를 정렬할 수 없습니다.",
   "error.page.status.invalid": "올바른 상태를 설정하세요.",
@@ -100,7 +100,7 @@
   "error.page.update.permission": "페이지({slug})를 변경할 권한이 없습니다.",
 
   "error.section.files.max.plural":
-    "이 섹션({section})에 파일을 {max}개 이상 추가할 수 없습니다.",
+    "이 섹션({section})에는 파일을 {max}개 이상 추가할 수 없습니다.",
   "error.section.files.max.singular":
     "이 섹션({section})에는 파일을 하나 이상 추가할 수 없습니다.",
   "error.section.files.min.plural":
@@ -121,7 +121,7 @@
   "error.section.type.invalid": "섹션의 형식({type})이 올바르지 않습니다.",
 
   "error.site.changeTitle.permission":
-    "사이트의 제목을 변경할 권한이 없습니다.",
+    "사이트명을 변경할 권한이 없습니다.",
   "error.site.update.permission": "사이트의 정보를 변경할 권한이 없습니다.",
 
   "error.template.default.notFound": "기본 템플릿이 없습니다.",
@@ -164,39 +164,39 @@
     "알파벳 또는 숫자만 입력할 수 있습니다.",
   "error.validation.between":
     "{min}과 {max} 사이의 값을 입력하세요.",
-  "error.validation.boolean": "Please confirm or deny",
+  "error.validation.boolean": "확인하거나 취소하세요.",
   "error.validation.contains":
     "{needle}에 포함된 값을 입력하세요.",
   "error.validation.date": "올바른 날짜를 입력하세요.",
-  "error.validation.denied": "Please deny",
-  "error.validation.different": "The value must not be \"{other}\"",
+  "error.validation.denied": "취소하세요.",
+  "error.validation.different": "{other}에 포함된 값은 입력할 수 없습니다.",
   "error.validation.email": "올바른 이메일 주소를 입력하세요.",
-  "error.validation.endswith": "The value must end with \"{end}\"",
+  "error.validation.endswith": "값은 {end}(으)로 끝나야 합니다.",
   "error.validation.filename": "올바른 파일명을 입력하세요.",
-  "error.validation.in": "Please enter one of the following: ({in})",
+  "error.validation.in": "{in}에 포함된 값을 입력하세요.",
   "error.validation.integer": "올바른 정수를 입력하세요.",
   "error.validation.ip": "올바른 IP 주소를 입력하세요.",
   "error.validation.less": "{max}보다 작은 값을 입력하세요.",
-  "error.validation.match": "The value does not match the expected pattern",
-  "error.validation.max": "Please enter a value equal to or lower than {max}",
+  "error.validation.match": "입력한 값이 예상 패턴과 일치하지 않습니다.",
+  "error.validation.max": "{max} 이하의 값을 입력하세요.",
   "error.validation.maxlength":
-    "Please enter a shorter value. (max. {max} characters)",
-  "error.validation.maxwords": "Please enter no more than {max} word(s)",
-  "error.validation.min": "Please enter a value equal to or greater than {min}",
+    "{max} 이하의 값을 입력하세요.",
+  "error.validation.maxwords": "{max}자 이하의 값을 입력하세요.",
+  "error.validation.min": "{min} 이상의 값을 입력하세요.",
   "error.validation.minlength":
-    "Please enter a longer value. (min. {min} characters)",
-  "error.validation.minwords": "Please enter at least {min} word(s)",
-  "error.validation.more": "Please enter a greater value than {min}",
+    "{min} 이상의 값을 입력하세요.",
+  "error.validation.minwords": "{min}자 이상의 값을 입력하세요.",
+  "error.validation.more": "{min} 이상의 값을 입력하세요.",
   "error.validation.notcontains":
-    "Please enter a value that does not contain \"{needle}\"",
+    "{needle}에 포함된 값은 입력할 수 없습니다.",
   "error.validation.notin":
-    "Please don't enter any of the following: ({notIn})",
+    "{notIn}에 포함된 값은 입력할 수 없습니다.",
   "error.validation.option": "올바른 옵션을 선택하세요.",
   "error.validation.num": "올바른 숫자를 입력하세요.",
   "error.validation.required": "아무거나 입력하세요.",
-  "error.validation.same": "다음을 입력하세요. {other}",
-  "error.validation.size": "The size of the value must be \"{size}\"",
-  "error.validation.startswith": "‘{start}’으(로) 시작해야 합니다.",
+  "error.validation.same": "{other}를(을) 입력하세요.",
+  "error.validation.size": "값은 {size}과(와) 같아야 합니다.",
+  "error.validation.startswith": "값은 {start}(으)로 시작해야 합니다.",
   "error.validation.time": "올바른 시간을 입력하세요.",
   "error.validation.url": "올바른 URL을 입력하세요.",
 
@@ -218,37 +218,37 @@
 
   "installation": "설치",
   "installation.completed": "패널을 설치했습니다.",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "패널 설치 관리자는 로컬 서버에서 실행하거나 <code>panel.install</code> 옵션을 설정하세요.",
   "installation.issues.accounts":
-    "<code>/site/accounts</code> 폴더에 쓰기 권한이 없습니다.",
+    "폴더(/site/accounts)에 쓰기 권한이 없습니다.",
   "installation.issues.content":
-    "<code>/content</code> 폴더에 쓰기 권한이 없습니다.",
+    "폴더(/content)에 쓰기 권한이 없습니다.",
   "installation.issues.curl": "<code>cURL</code> 확장 기능이 필요합니다.",
   "installation.issues.headline": "패널을 설치할 수 없습니다.",
   "installation.issues.mbstring":
     "<code>MB String</code> 확장 기능이 필요합니다.",
   "installation.issues.media":
-    "<code>/media</code> 폴더에 쓰기 권한이 없습니다.",
+    "폴더(/media)에 쓰기 권한이 없습니다.",
   "installation.issues.php": "<code>PHP</code> 버전이 7 이상인지 확인하세요.",
   "installation.issues.server":
     "<code>Apache</code>, <code>Nginx</code>, 또는 <code>Caddy</code>가 필요합니다.",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "폴더(/site/sessions)에 쓰기 권한이 없습니다.",
 
   "language": "\uc5b8\uc5b4",
   "language.code": "코드",
   "language.convert": "기본 언어로 설정",
   "language.convert.confirm":
-    "<p>이 <strong>언어({name})</strong>를 기본 언어로 설정할까요? 설정한 뒤에는 복구할 수 없습니다.</p><p>번역되지 않은 항목은 올바르게 표시되지 않습니다.</p>",
+    "이 언어({name})를 기본 언어로 설정할까요? 설정한 뒤에는 복원할 수 없습니다. 번역되지 않은 항목은 올바르게 표시되지 않을 수 있습니다.",
   "language.create": "새 언어 추가",
   "language.delete.confirm":
-    "언어({name})를 삭제할까요? 삭제한 뒤에는 복구할 수 없습니다.",
-  "language.deleted": "언어가 삭제되었습니다.",
+    "언어({name})를 삭제할까요? 삭제한 뒤에는 복원할 수 없습니다.",
+  "language.deleted": "언어를 삭제했습니다.",
   "language.direction": "읽기 방향",
   "language.direction.ltr": "왼쪽에서 오른쪽",
   "language.direction.rtl": "오른쪽에서 왼쪽",
   "language.locale": "PHP 로캘 문자열",
   "language.name": "이름",
-  "language.updated": "언어가 변경되었습니다.",
+  "language.updated": "언어를 변경했습니다.",
 
   "languages": "언어",
   "languages.default": "기본 언어",
@@ -260,7 +260,7 @@
   "license.buy": "라이선스 구매",
   "license.register": "등록",
   "license.register.help":
-    "입력하신 이메일 주소로 라이선스 코드를 전송합니다. 라이선스 코드를 입력해 등록하세요.",
+    "입력한 이메일 주소로 라이선스 코드를 전송합니다. Kirby를 등록하려면 라이선스 코드를 입력하세요.",
   "license.register.label": "라이선스 코드를 입력하세요.",
   "license.register.success": "Kirby를 구입해주셔서 감사합니다.",
   "license.unregistered": "Kirby가 등록되지 않았습니다.",
@@ -300,9 +300,9 @@
   "open": "열기",
   "options": "옵션",
 
-  "orientation": "형태",
-  "orientation.landscape": "직사각형(가로)",
-  "orientation.portrait": "직사각형(세로)",
+  "orientation": "비율",
+  "orientation.landscape": "가로로 긴 사각형",
+  "orientation.portrait": "세로로 긴 사각형",
   "orientation.square": "정사각형",
 
   "page.changeSlug": "고유 주소 변경",
@@ -336,7 +336,7 @@
   "pixel": "픽셀",
   "prev": "이전",
   "remove": "삭제",
-  "rename": "이름 변경",
+  "rename": "제목 변경",
   "replace": "\uad50\uccb4",
   "retry": "\ub2e4\uc2dc \uc2dc\ub3c4",
   "revert": "복원",
