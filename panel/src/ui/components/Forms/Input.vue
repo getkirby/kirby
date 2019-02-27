@@ -85,7 +85,7 @@ export default {
       }
 
       // use dedicated focus method if provided
-      if (this.$refs.input.focus) {
+      if (this.$refs.input && this.$refs.input.focus) {
         this.$refs.input.focus();
         return;
       }
