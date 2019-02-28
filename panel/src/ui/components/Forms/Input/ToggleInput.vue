@@ -7,7 +7,7 @@
       :id="id"
       class="k-toggle-input-native"
       type="checkbox"
-      v-on="listeners"
+      @change="onInput($event.target.checked)"
     >
     <span class="k-toggle-input-label" v-html="label" />
   </label>
@@ -30,15 +30,6 @@ export default {
     },
     required: Boolean,
     value: Boolean,
-  },
-  data() {
-    return {
-      listeners: {
-        ...this.$listeners,
-        input: (event) => this.onInput(event.target.checked),
-        keydown: this.onEnter
-      }
-    }
   },
   computed: {
     label() {
