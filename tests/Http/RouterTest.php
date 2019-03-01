@@ -6,6 +6,12 @@ use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
+    public function setUp(): void
+    {
+        Router::$beforeEach = null;
+        Router::$afterEach  = null;
+    }
+
     public function testRegisterSingleRoute()
     {
         $router = new Router([
@@ -78,5 +84,95 @@ class RouterTest extends TestCase
 
         $router = new Router;
         $router->find('a', 'GET');
+    }
+
+    public function testBeforeEach()
+    {
+        $router = new Router([
+            [
+                'pattern' => '/',
+                'action'  => function () {
+                }
+            ]
+        ]);
+
+        $router::$beforeEach = function ($route, $path, $method) {
+            $this->assertInstanceOf(Route::class, $route);
+            $this->assertEquals('/', $path);
+            $this->assertEquals('GET', $method);
+        };
+
+        $router->call('/', 'GET');
+    }
+
+    public function testAfterEach()
+    {
+        $router = new Router([
+            [
+                'pattern' => '/',
+                'action'  => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $router::$afterEach = function ($route, $path, $method, $result) {
+            $this->assertInstanceOf(Route::class, $route);
+            $this->assertEquals('/', $path);
+            $this->assertEquals('GET', $method);
+            $this->assertEquals('test', $result);
+        };
+
+        $router->call('/', 'GET');
+    }
+
+    public function testNext()
+    {
+        $router = new Router([
+            [
+                'pattern' => '(:any)',
+                'action'  => function ($slug) {
+                    if ($slug === 'a') {
+                        return 'a';
+                    }
+
+                    $this->next();
+                }
+            ],
+            [
+                'pattern' => '(:any)',
+                'action'  => function ($slug) {
+                    if ($slug === 'b') {
+                        return 'b';
+                    }
+
+                    $this->next();
+                }
+            ],
+            [
+                'pattern' => '(:any)',
+                'action'  => function ($slug) {
+                    if ($slug === 'c') {
+                        return 'c';
+                    }
+
+                    $this->next();
+                }
+            ]
+        ]);
+
+        $result = $router->call('a');
+        $this->assertEquals('a', $result);
+
+        $result = $router->call('b');
+        $this->assertEquals('b', $result);
+
+        $result = $router->call('c');
+        $this->assertEquals('c', $result);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('No route found for path: "d" and request method: "GET"');
+
+        $result = $router->call('d');
     }
 }

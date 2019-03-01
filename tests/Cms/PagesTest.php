@@ -78,6 +78,12 @@ class PagesTest extends TestCase
         $this->assertIsPage($this->pages()->find('c'), 'c');
     }
 
+    public function testFindWithExtension()
+    {
+        $this->assertIsPage($this->pages()->find('a.xml'), 'a');
+        $this->assertIsPage($this->pages()->find('b.json'), 'b');
+    }
+
     public function testFindByIdAndUri()
     {
         $site = new Site([
@@ -102,14 +108,17 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findById('grandma/'), 'grandma');
         $this->assertIsPage($site->children()->findByUri('grandma'), 'grandma');
         $this->assertIsPage($site->children()->findByUri('grandma/'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('grandma.json'), 'grandma');
         $this->assertIsPage($site->children()->findById('grandma/mother'), 'grandma/mother');
         $this->assertIsPage($site->children()->findById('grandma/mother/'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma/mother'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mother.json'), 'grandma/mother');
         $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findById('grandma/mother/child/'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child/'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
     }
 
     public function testIndex()

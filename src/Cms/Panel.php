@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Http\Response;
+use Kirby\Http\Uri;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\View;
@@ -62,11 +63,14 @@ class Panel
         try {
             if (static::link($kirby) === true) {
                 usleep(1);
-                go($kirby->request()->url());
+                go($kirby->url('index') . '/' . $kirby->path());
             }
         } catch (Throwable $e) {
             die('The panel assets cannot be installed properly. Please check permissions of your media folder.');
         }
+
+        // get the uri object for the panel url
+        $uri = new Uri($url = $kirby->url('panel'));
 
         $view = new View($kirby->root('kirby') . '/views/panel.php', [
             'kirby'     => $kirby,
@@ -75,7 +79,7 @@ class Panel
             'pluginCss' => $kirby->url('media') . '/plugins/index.css',
             'pluginJs'  => $kirby->url('media') . '/plugins/index.js',
             'icons'     => F::read($kirby->root('panel') . '/dist/img/icons.svg'),
-            'panelUrl'  => $url = $kirby->url('panel'),
+            'panelUrl'  => $uri->path()->toString(true) . '/',
             'options'   => [
                 'url'         => $url,
                 'site'        => $kirby->url('index'),

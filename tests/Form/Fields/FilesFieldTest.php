@@ -175,4 +175,24 @@ class FilesFieldTest extends TestCase
 
         $this->assertEquals('user.files', $field->query());
     }
+
+    public function testEmpty()
+    {
+        $field = new Field('files', [
+            'model' => new Page(['slug' => 'test']),
+            'empty' => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $field->empty());
+    }
+
+    public function testTranslatedEmpty()
+    {
+        $field = new Field('files', [
+            'model' => new Page(['slug' => 'test']),
+            'empty' => ['en' => 'Test', 'de' => 'Töst']
+        ]);
+
+        $this->assertEquals('Test', $field->empty());
+    }
 }

@@ -5,7 +5,7 @@
     :aria-hidden="!alt"
     :data-back="back"
     :data-size="size"
-    class="k-icon"
+    :class="'k-icon k-icon-' + type"
   >
     <span v-if="emoji" class="k-icon-emoji">{{ type }}</span>
     <svg v-else :style="{ color: color }" viewBox="0 0 16 16">

@@ -79,4 +79,13 @@ class NumberFieldTest extends TestCase
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
     }
+
+    public function testLargeValue()
+    {
+        $field = new Field('number', [
+            'value' => 1000
+        ]);
+
+        $this->assertEquals(1000, $field->value());
+    }
 }

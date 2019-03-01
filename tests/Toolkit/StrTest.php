@@ -159,8 +159,12 @@ class StrTest extends TestCase
         $this->assertEquals('-1.1', Str::float(-1.1));
         $this->assertEquals('-1.11', Str::float('-1.11'));
         $this->assertEquals('-1.111', Str::float('-1,111'));
+        $this->assertEquals('1000', Str::float('1000'));
+        $this->assertEquals('1000.00', Str::float('1000.00'));
+        $this->assertEquals('1000.00', Str::float('1000,00'));
+        $this->assertEquals('1000', Str::float('1000'));
+        $this->assertEquals('1000000.00', Str::float('1000000.00'));
     }
-
 
     public function testFrom()
     {
