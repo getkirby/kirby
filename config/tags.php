@@ -126,7 +126,7 @@ return [
                 return $link($image);
             }
 
-            return Html::figure([ $link($image) ], $tag->caption, [
+            return Html::figure([ $link($image) ], [$tag->caption], [
                 'class' => $tag->class
             ]);
         }
