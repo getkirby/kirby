@@ -166,6 +166,15 @@ class Field
     }
 
     /**
+     * @see Field::parent()
+     * @return Page|File|Site|User
+     */
+    public function model()
+    {
+        return $this->parent;
+    }
+
+    /**
      * Provides a fallback if the field value is empty
      *
      * @param mixed $fallback

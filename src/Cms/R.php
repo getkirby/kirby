@@ -13,7 +13,7 @@ class R extends Facade
     /**
      * @return Request
      */
-    protected static function instance()
+    public static function instance()
     {
         return App::instance()->request();
     }

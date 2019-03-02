@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\I18n;
 
 /**
  * Represents a User role with attached
@@ -92,10 +93,8 @@ class Role extends Model
 
     public static function load(string $file, array $inject = []): self
     {
-        $name = F::name($file);
-
         $data = Data::read($file);
-        $data['name'] = $name;
+        $data['name'] = F::name($file);
 
         return static::factory($data, $inject);
     }
@@ -119,9 +118,9 @@ class Role extends Model
         return $this->permissions;
     }
 
-    protected function setDescription(string $description = null): self
+    protected function setDescription($description = null): self
     {
-        $this->description = $description;
+        $this->description = I18n::translate($description, $description);
         return $this;
     }
 
@@ -139,7 +138,7 @@ class Role extends Model
 
     protected function setTitle($title = null): self
     {
-        $this->title = $title;
+        $this->title = I18n::translate($title, $title);
         return $this;
     }
 

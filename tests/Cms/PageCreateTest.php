@@ -110,11 +110,10 @@ class PageCreateTest extends TestCase
         $this->assertTrue($site->children()->has($page));
     }
 
-    /**
-     * @expectedException Kirby\Exception\DuplicateException
-     */
     public function testCreateDuplicate()
     {
+        $this->expectException('Kirby\Exception\DuplicateException');
+
         $page = Page::create([
             'slug' => 'new-page',
         ]);

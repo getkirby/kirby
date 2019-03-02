@@ -38,11 +38,6 @@ export default {
     }
   },
   watch: {
-    $route() {
-      this.fields = {};
-      this.isLoading = true;
-      this.issue = null;
-    },
     language() {
       this.fetch();
     }

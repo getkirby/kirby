@@ -156,24 +156,22 @@ class FileTest extends TestCase
         $this->assertEquals('test', file_get_contents($file->root()));
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage is not writable
-     */
     public function testWriteUnwritable()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('is not writable');
+
         $file = new File(static::FIXTURES . '/tmp/unwritable.txt');
         $file->write('test');
         chmod($file->root(), 555);
         $file->write('kirby');
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be written
-     */
     public function testWriteFail()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be written');
+
         static::$block[] = 'file_put_contents';
         $file = new File(static::FIXTURES . '/tmp/test.txt');
         $file->write('test');
@@ -221,32 +219,29 @@ class FileTest extends TestCase
         $this->assertEquals($newRoot, $moved->root());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be moved
-     */
     public function testMoveToExisting()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be moved');
+
         $file = $this->_file();
         $file->move(static::FIXTURES . '/folder/b.txt');
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be moved
-     */
     public function testMoveNonExisting()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be moved');
+
         $file = $this->_file('a.txt');
         $file->move(static::FIXTURES . '/b.txt');
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be moved
-     */
     public function testMoveFail()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be moved');
+
         static::$block[] = 'rename';
         $file = new File(static::FIXTURES . '/tmp/awesome.txt');
         $file->move(static::FIXTURES . '/tmp/moved.txt');
@@ -275,32 +270,29 @@ class FileTest extends TestCase
         $this->assertEquals($newRoot, $new->root());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be copied
-     */
     public function testCopyToExisting()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be copied');
+
         $file = $this->_file();
         $file->copy(static::FIXTURES . '/folder/b.txt');
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be copied
-     */
     public function testCopyNonExisting()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be copied');
+
         $file = $this->_file('a.txt');
         $file->copy(static::FIXTURES . '/b.txt');
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be copied
-     */
     public function testCopyFail()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be copied');
+
         static::$block[] = 'copy';
         $file = new File(static::FIXTURES . '/tmp/awesome.txt');
         $file->copy(static::FIXTURES . '/tmp/copied.txt');
@@ -354,12 +346,11 @@ class FileTest extends TestCase
         $this->assertTrue($file->delete());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage could not be deleted
-     */
     public function testDeleteFail()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('could not be deleted');
+
         static::$block[] = 'unlink';
         $file = new File(static::FIXTURES . '/tmp/awesome.txt');
         $file->delete();

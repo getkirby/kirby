@@ -57,11 +57,9 @@ class AppUsersTest extends TestCase
         $this->assertEquals('homer@simpsons.com', $app->user()->email());
     }
 
-    /**
-     * @expectedException Kirby\Exception\NotFoundException
-     */
     public function testImpersonateAsMissingUser()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
         $this->app->impersonate('homer@simpsons.com');
     }
 
@@ -124,12 +122,11 @@ class AppUsersTest extends TestCase
         $this->assertEquals('test@getkirby.com', $user->email());
     }
 
-    /**
-     * @expectedException Kirby\Exception\PermissionException
-     * @expectedExceptionMessage Basic authentication is not activated
-     */
     public function testUserFromBasicAuthDisabled()
     {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('Basic authentication is not activated');
+
         $app = $this->basicAuthApp()->clone([
             'options' => [
                 'api' => [
@@ -142,12 +139,11 @@ class AppUsersTest extends TestCase
         $user = $app->auth()->currentUserFromBasicAuth($auth);
     }
 
-    /**
-     * @expectedException Kirby\Exception\PermissionException
-     * @expectedExceptionMessage Basic authentication is only allowed over HTTPS
-     */
     public function testUserFromBasicAuthOverHttp()
     {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('Basic authentication is only allowed over HTTPS');
+
         $app = $this->basicAuthApp()->clone([
             'request' => [
                 'url' => 'http://getkirby.com/login'
@@ -158,12 +154,11 @@ class AppUsersTest extends TestCase
         $user = $app->auth()->currentUserFromBasicAuth($auth);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid authorization header
-     */
     public function testUserFromBasicAuthWithInvalidHeader()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid authorization header');
+
         $app = $this->basicAuthApp()->clone([
             'request' => [
                 'url' => 'http://getkirby.com/login'

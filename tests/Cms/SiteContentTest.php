@@ -24,11 +24,10 @@ class SiteContentTest extends TestCase
         $this->assertEquals('lorem ipsum', $site->text()->value());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidContent()
     {
+        $this->expectException('TypeError');
+
         $site = new Site([
             'content' => 'content'
         ]);

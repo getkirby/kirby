@@ -160,9 +160,9 @@ return function ($kirby) {
                             ->response()
                             ->redirect($page->url());
                     }
-
-                    return $kirby->resolve($path, $kirby->defaultLanguage()->code());
                 }
+
+                return $kirby->resolve($path, $kirby->defaultLanguage()->code());
             }
         ];
     } else {

@@ -180,12 +180,11 @@ class I18nTest extends TestCase
         $this->assertEquals('One car', I18n::translateCount('car', 2));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Please provide 3 translations
-     */
     public function testTranslateCountWithInvalidArgs()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Please provide 3 translations');
+
         I18n::$translations = [
             'en' => [
                 'car' => ['No cars', 'One car']

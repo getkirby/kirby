@@ -191,4 +191,42 @@ class StructureFieldTest extends TestCase
         $this->assertEquals('test', $childrenNameField->model());
         $this->assertEquals(null, $childrenNameField->data());
     }
+
+    public function testFloatsWithNonUsLocale()
+    {
+        $field = new Field('structure', [
+            'fields' => [
+                'number' => [
+                    'type' => 'number'
+                ]
+            ],
+            'value' => [
+                [
+                    'number' => 3.2
+                ]
+            ]
+        ]);
+
+        $this->assertTrue(is_float($field->data()[0]['number']));
+    }
+
+    public function testEmpty()
+    {
+        $field = new Field('structure', [
+            'fields' => [],
+            'empty' => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $field->empty());
+    }
+
+    public function testTranslatedEmpty()
+    {
+        $field = new Field('structure', [
+            'fields' => [],
+            'empty' => ['en' => 'Test', 'de' => 'Töst']
+        ]);
+
+        $this->assertEquals('Test', $field->empty());
+    }
 }

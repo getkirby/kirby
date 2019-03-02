@@ -42,7 +42,7 @@
       <k-tabs
         v-if="file.id"
         ref="tabs"
-        :key="'file-' + file.id + '-tabs'"
+        :key="tabsKey"
         :parent="$api.files.url(path, file.filename)"
         :tabs="tabs"
         :blueprint="file.blueprint.name"
@@ -119,6 +119,9 @@ export default {
         };
       }
     },
+    tabsKey() {
+      return "file-" + this.file.id + "-tabs";
+    },
     language() {
       return this.$store.state.languages.current;
     },
@@ -138,7 +141,7 @@ export default {
     language() {
       this.fetch();
     },
-    path() {
+    filename() {
       this.fetch();
     }
   },

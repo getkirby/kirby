@@ -21,11 +21,10 @@ class PageContentTest extends TestCase
         $this->assertEquals('lorem ipsum', $page->text()->value());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidContent()
     {
+        $this->expectException('TypeError');
+
         $page = new Page([
             'slug'    => 'test',
             'content' => 'content'

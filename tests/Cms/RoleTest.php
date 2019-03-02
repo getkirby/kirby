@@ -35,13 +35,10 @@ class RoleTest extends TestCase
         $this->assertEquals('Editor', $role->title());
     }
 
-    /**
-     * @expectedException Exception
-     *
-     * @return void
-     */
     public function testMissingRole()
     {
+        $this->expectException('Exception');
+
         $app  = $this->app();
         $role = Role::load('does-not-exist');
     }
@@ -62,5 +59,31 @@ class RoleTest extends TestCase
 
         $this->assertEquals('nobody', $role->name());
         $this->assertEquals('Nobody', $role->title());
+    }
+
+    public function testTranslateTitle()
+    {
+        $role = new Role([
+            'name' => 'editor',
+            'title' => [
+                'en' => 'Editor',
+                'de' => 'Bearbeiter'
+            ]
+        ]);
+
+        $this->assertEquals('Editor', $role->title());
+    }
+
+    public function testTranslateDescription()
+    {
+        $role = new Role([
+            'name' => 'editor',
+            'description' => [
+                'en' => 'Editor',
+                'de' => 'Bearbeiter'
+            ]
+        ]);
+
+        $this->assertEquals('Editor', $role->title());
     }
 }

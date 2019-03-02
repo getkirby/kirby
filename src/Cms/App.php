@@ -107,6 +107,9 @@ class App
             'users'
         ]);
 
+        // set the singleton
+        Model::$kirby = static::$instance = $this;
+
         // setup the I18n class with the translation loader
         $this->i18n();
 
@@ -119,9 +122,6 @@ class App
 
         // handle those damn errors
         $this->handleErrors();
-
-        // set the singleton
-        Model::$kirby = static::$instance = $this;
 
         // bake config
         Config::$data = $this->options;
@@ -226,15 +226,17 @@ class App
      */
     public function call(string $path = null, string $method = null)
     {
-        $path   = $path   ?? $this->path();
-        $method = $method ?? $this->request()->method();
-        $route  = $this->router()->find($path, $method);
+        $router = $this->router();
 
-        $this->trigger('route:before', $route, $path, $method);
-        $result = $route->action()->call($route, ...$route->arguments());
-        $this->trigger('route:after', $route, $path, $method, $result);
+        $router::$beforeEach = function ($route, $path, $method) {
+            $this->trigger('route:before', $route, $path, $method);
+        };
 
-        return $result;
+        $router::$afterEach = function ($route, $path, $method, $result) {
+            $this->trigger('route:after', $route, $path, $method, $result);
+        };
+
+        return $router->call($path ?? $this->path(), $method ?? $this->request()->method());
     }
 
     /**

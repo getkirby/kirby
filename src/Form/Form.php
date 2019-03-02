@@ -147,7 +147,7 @@ class Form
             } elseif (is_array($value) === true) {
                 $strings[$key] = Yaml::encode($value);
             } else {
-                $strings[$key] = (string)$value;
+                $strings[$key] = $value;
             }
         }
 

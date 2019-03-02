@@ -346,8 +346,8 @@ class Str
     public static function float($value): string
     {
         $value   = str_replace(',', '.', $value);
-        $decimal = strlen(substr(strrchr($value, "."), 1));
-        return number_format((float)$value, $decimal);
+        $decimal = strlen(substr(strrchr($value, '.'), 1));
+        return number_format((float)$value, $decimal, '.', false);
     }
 
     /**

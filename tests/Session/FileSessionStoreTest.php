@@ -46,12 +46,11 @@ class FileSessionStoreTest extends TestCase
         $this->assertDirectoryNotExists($this->root);
     }
 
-    /**
-     * @expectedException     Kirby\Exception\Exception
-     * @expectedExceptionCode error.session.filestore.dirNotWritable
-     */
     public function testConstructorNotWritable()
     {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionCode('error.session.filestore.dirNotWritable');
+
         Dir::make($this->root, true);
         chmod($this->root, 0555);
 
@@ -95,12 +94,11 @@ class FileSessionStoreTest extends TestCase
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
     }
 
-    /**
-     * @expectedException     Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.session.filestore.notFound
-     */
     public function testLockNonExistingFile()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.session.filestore.notFound');
+
         $this->store->lock(1234567890, 'someotherid');
     }
 
@@ -128,21 +126,19 @@ class FileSessionStoreTest extends TestCase
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
     }
 
-    /**
-     * @expectedException     Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.session.filestore.notFound
-     */
     public function testGetNonExistingFile()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.session.filestore.notFound');
+
         $this->store->get(1234567890, 'someotherid');
     }
 
-    /**
-     * @expectedException     Kirby\Exception\Exception
-     * @expectedExceptionCode error.session.filestore.notOpened
-     */
     public function testGetUnreadableFile()
     {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionCode('error.session.filestore.notOpened');
+
         // session files need to have read and write permissions even for reading
         chmod($this->root . '/1234567890.abcdefghijabcdefghij.sess', 0444);
         $this->store->get(1234567890, 'abcdefghijabcdefghij');
@@ -161,21 +157,19 @@ class FileSessionStoreTest extends TestCase
         $this->assertEquals('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
     }
 
-    /**
-     * @expectedException     Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.session.filestore.notFound
-     */
     public function testSetNonExistingFile()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.session.filestore.notFound');
+
         $this->store->set(1234567890, 'someotherid', 'some other data');
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.filestore.notLocked
-     */
     public function testSetWithoutLock()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.filestore.notLocked');
+
         $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
 
         $this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
@@ -207,12 +201,11 @@ class FileSessionStoreTest extends TestCase
         $this->store->destroy(1234567890, 'abcdefghijabcdefghij');
     }
 
-    /**
-     * @expectedException     Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.session.filestore.notFound
-     */
     public function testAccessAfterDestroy()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.session.filestore.notFound');
+
         // make sure we get a handle
         $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
         $this->store->lock(1234567890, 'abcdefghijabcdefghij');

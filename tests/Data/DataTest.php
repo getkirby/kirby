@@ -28,12 +28,11 @@ class DataTest extends TestCase
         $this->assertInstanceOf(CustomHandler::class, Data::handler('test'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Missing Handler for type: "foo"
-     */
     public function testMissingHandler()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing Handler for type: "foo"');
+
         Data::handler('foo');
     }
 

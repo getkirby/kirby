@@ -136,12 +136,11 @@ class PagePropsTest extends TestCase
         $this->assertEquals('test', $page->id());
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The property "slug" is required
-     */
     public function testEmptyId()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The property "slug" is required');
+
         $page = new Page(['slug' => null]);
     }
 
@@ -195,11 +194,10 @@ class PagePropsTest extends TestCase
         $this->assertEquals([], $page->errors());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidId()
     {
+        $this->expectException('TypeError');
+
         $page = new Page([
             'slug' => []
         ]);
@@ -215,11 +213,10 @@ class PagePropsTest extends TestCase
         $this->assertEquals(1, $page->num());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidNum()
     {
+        $this->expectException('TypeError');
+
         $page = new Page([
             'slug'  => 'test',
             'num' => []
@@ -280,11 +277,10 @@ class PagePropsTest extends TestCase
         $this->assertEquals(null, $child->parent()->prev());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidParent()
     {
+        $this->expectException('TypeError');
+
         $page = new Page([
             'slug'     => 'test/child',
             'parent' => 'some parent'
@@ -302,11 +298,10 @@ class PagePropsTest extends TestCase
         $this->assertEquals($site, $page->site());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidSite()
     {
+        $this->expectException('TypeError');
+
         $page = new Page([
             'slug'   => 'test',
             'site' => 'mysite'
@@ -332,11 +327,10 @@ class PagePropsTest extends TestCase
         $this->assertEquals('testtemplate', $page->intendedTemplate()->name());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidTemplate()
     {
+        $this->expectException('TypeError');
+
         $page = new Page([
             'slug'       => 'test',
             'template' => []
@@ -375,11 +369,10 @@ class PagePropsTest extends TestCase
         $this->assertEquals('/test', $page->url());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidUrl()
     {
+        $this->expectException('TypeError');
+
         $page = new Page([
             'slug'  => 'test',
             'url' => []

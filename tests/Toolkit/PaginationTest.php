@@ -47,12 +47,11 @@ class PaginationTest extends TestCase
         $this->assertEquals(12, $pagination->total());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage Invalid total number of items: -1
-     */
     public function testTotalInvalid()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid total number of items: -1');
+
         $pagination = new Pagination();
         $pagination->total(-1);
     }
@@ -76,12 +75,11 @@ class PaginationTest extends TestCase
         $this->assertEquals(100, $pagination->limit());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage Invalid pagination limit: -1
-     */
     public function testLimitInvalid()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid pagination limit: -1');
+
         $pagination = new Pagination();
         $pagination->limit(-1);
     }

@@ -41,12 +41,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::boolean($field, true));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please confirm or deny
-     */
     public function testBooleanInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please confirm or deny');
+
         $field = new Field('test');
         Validations::boolean($field, 'nope');
     }
@@ -57,12 +56,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::date($field, '2012-12-12'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a valid date
-     */
     public function testDateInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a valid date');
+
         $field = new Field('test');
         Validations::date($field, 'somewhen');
     }
@@ -73,12 +71,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::email($field, 'test@getkirby.com'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a valid email address
-     */
     public function testEmailInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a valid email address');
+
         $field = new Field('test');
         Validations::email($field, 'test[at]getkirby.com');
     }
@@ -92,12 +89,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::max($field, 4));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a value equal to or lower than 5
-     */
     public function testMaxInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a value equal to or lower than 5');
+
         $field = new Field('test', [
             'max' => 5
         ]);
@@ -114,12 +110,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::maxlength($field, 'test'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a shorter value. (max. 5 characters)
-     */
     public function testMaxLengthInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a shorter value. (max. 5 characters)');
+
         $field = new Field('test', [
             'maxlength' => 5
         ]);
@@ -136,12 +131,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::min($field, 6));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a value equal to or greater than 5
-     */
     public function testMinInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a value equal to or greater than 5');
+
         $field = new Field('test', [
             'min' => 5
         ]);
@@ -158,12 +152,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::minlength($field, 'testest'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter a longer value. (min. 5 characters)
-     */
     public function testMinLengthInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a longer value. (min. 5 characters)');
+
         $field = new Field('test', [
             'minlength' => 5
         ]);
@@ -180,12 +173,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::required($field, 'something'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please enter something
-     */
     public function testRequiredInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter something');
+
         $field = new Field('test', [
             'required' => true
         ]);
@@ -205,12 +197,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::option($field, 'a'));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please select a valid option
-     */
     public function testOptionInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please select a valid option');
+
         $field = new Field('test', [
             'options' => [
                 ['value' => 'a'],
@@ -233,12 +224,11 @@ class ValidationsTest extends TestCase
         $this->assertTrue(Validations::options($field, ['a', 'b']));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Please select a valid option
-     */
     public function testOptionsInvalid()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please select a valid option');
+
         $field = new Field('test', [
             'options' => [
                 ['value' => 'a'],

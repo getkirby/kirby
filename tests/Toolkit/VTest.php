@@ -40,12 +40,11 @@ class VTest extends TestCase
         $this->assertFalse(V::me('you'));
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The validator does not exist: fool
-     */
     public function testInvalidMethod()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The validator does not exist: fool');
+
         V::fool('me');
     }
 
@@ -343,21 +342,19 @@ class VTest extends TestCase
         $this->assertFalse(V::size(7, 5, '<'));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage $value is of type without size
-     */
     public function testSizeInvalid()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('$value is of type without size');
+
         V::size(false, 5);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage $value is an uncountable object
-     */
     public function testSizeInvalidObject()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('$value is an uncountable object');
+
         V::size(new \StdClass, 5);
     }
 
@@ -520,12 +517,11 @@ class VTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The "same" validation failed
-     */
     public function testValueFails()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The "same" validation failed');
+
         $result = V::value('a', [
             'same' => 'b'
         ]);

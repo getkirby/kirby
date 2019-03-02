@@ -10,11 +10,10 @@ class SiteChildrenTest extends TestCase
         $this->assertInstanceOf(Pages::class, $site->children());
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testInvalidChildren()
     {
+        $this->expectException('TypeError');
+
         $site = new Site([
             'children' => 'children'
         ]);

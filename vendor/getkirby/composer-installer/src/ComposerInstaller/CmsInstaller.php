@@ -42,7 +42,16 @@ class CmsInstaller extends Installer
         }
 
         // use path from configuration, otherwise fall back to default
-        $path = $extra['kirby-cms-path'] ?? 'kirby';
+        if (isset($extra['kirby-cms-path'])) {
+            $path = $extra['kirby-cms-path'];
+        } else {
+            $path = 'kirby';
+        }
+
+        // if explicitly set to something invalid (e.g. `false`), install to vendor dir
+        if (!is_string($path)) {
+            return parent::getInstallPath($package);
+        }
 
         // don't allow unsafe directories
         $vendorDir = $this->composer->getConfig()->get('vendor-dir', Config::RELATIVE_PATHS) ?? 'vendor';

@@ -6,6 +6,19 @@ use PHPUnit\Framework\TestCase;
 
 class UserBlueprintTest extends TestCase
 {
+    public function testTranslatedDescription()
+    {
+        $blueprint = new UserBlueprint([
+            'model' => new User(['email' => 'test@getkirby.com']),
+            'description' => [
+                'en' => 'User',
+                'de' => 'Benutzer'
+            ]
+        ]);
+
+        $this->assertEquals('User', $blueprint->description());
+    }
+
     public function testOptions()
     {
         $blueprint = new UserBlueprint([

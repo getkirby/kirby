@@ -48,11 +48,10 @@ class SessionsTest extends TestCase
         $this->assertEquals($path, $pathProperty->getValue($sessions->store()));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testConstructorInvalidStore()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Sessions(new InvalidSessionStore());
     }
 
@@ -71,19 +70,17 @@ class SessionsTest extends TestCase
         $this->assertEquals('header', $modeProperty->getValue($sessions));
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testConstructorInvalidMode()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Sessions(__DIR__ . '/fixtures/store', ['mode' => 'invalid']);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testConstructorInvalidCookieName()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Sessions(__DIR__ . '/fixtures/store', ['cookieName' => 123]);
     }
 
@@ -100,11 +97,10 @@ class SessionsTest extends TestCase
         $this->assertFalse($this->store->collectedGarbage);
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     */
     public function testConstructorInvalidGcInterval()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+
         new Sessions(__DIR__ . '/fixtures/store', ['gcInterval' => 0]);
     }
 
@@ -153,12 +149,11 @@ class SessionsTest extends TestCase
         $this->assertEquals('someValue', $session2->data()->get('someKey'));
     }
 
-    /**
-     * @expectedException     Kirby\Exception\NotFoundException
-     * @expectedExceptionCode error.session.notFound
-     */
     public function testGetInvalid()
     {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionCode('error.session.notFound');
+
         $this->sessions->get('9999999999.doesNotExist.' . $this->store->validKey);
     }
 
@@ -190,12 +185,11 @@ class SessionsTest extends TestCase
         $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
     }
 
-    /**
-     * @expectedException     Kirby\Exception\LogicException
-     * @expectedExceptionCode error.session.sessions.manualMode
-     */
     public function testCurrentManualMode()
     {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionCode('error.session.sessions.manualMode');
+
         $sessions = new Sessions($this->store, ['mode' => 'manual']);
         $sessions->current();
     }

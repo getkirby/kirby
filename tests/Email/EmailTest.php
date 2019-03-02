@@ -38,12 +38,11 @@ class EmailTest extends TestCase
         $this->assertEquals(['type' => 'mail'], $email->transport());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage The property "from" is required
-     */
     public function testRequiredProperty()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The property "from" is required');
+
         $email = $this->_email([
             'from' => null
         ]);
@@ -62,12 +61,11 @@ class EmailTest extends TestCase
         $this->assertEquals([], $email->bcc());
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage "not-valid" is not a valid email address
-     */
     public function testInvalidAddress()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('"not-valid" is not a valid email address');
+
         $email = $this->_email([
             'to' => [
                 'valid@company.com',

@@ -224,13 +224,11 @@ class ComponentTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $component->toArray());
     }
 
-    /**
-     * @expectedException Kirby\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Undefined component type: test
-     *
-     */
     public function testInvalidType()
     {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Undefined component type: test');
+
         $component = new Component('test');
     }
 

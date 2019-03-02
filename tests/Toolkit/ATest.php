@@ -179,25 +179,19 @@ class ATest extends TestCase
         $this->assertEquals(['b', 'a', 'c', 'd'], A::move($input, 1, 0));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid "from" index
-     *
-     * @return void
-     */
     public function testMoveWithInvalidFrom()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid "from" index');
+
         A::move(['a', 'b', 'c'], -1, 2);
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Invalid "to" index
-     *
-     * @return void
-     */
     public function testMoveWithInvalidTo()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid "to" index');
+
         A::move(['a', 'b', 'c'], 0, 4);
     }
 

@@ -20,12 +20,11 @@ class JsonTest extends TestCase
         $this->assertEquals($array, $result);
     }
 
-    /**
-     * @expectedException        \Exception
-     * @expectedExceptionMessage JSON string is invalid
-     */
     public function testDecodeCorrupted()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('JSON string is invalid');
+
         Json::decode('some gibberish');
     }
 }

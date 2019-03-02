@@ -14,6 +14,8 @@ use InvalidArgumentException;
  */
 class Router
 {
+    public static $beforeEach;
+    public static $afterEach;
 
     /**
      * Store for the current route,
@@ -84,10 +86,30 @@ class Router
      */
     public function call(string $path = '', string $method = 'GET')
     {
-        return $this
-            ->find($path, $method)
-            ->action()
-            ->call($this->route, ...$this->route->arguments());
+        $ignore = [];
+        $result = null;
+        $loop   = true;
+
+        while ($loop === true) {
+            $route = $this->find($path, $method, $ignore);
+
+            if (is_a(static::$beforeEach, 'Closure') === true) {
+                (static::$beforeEach)($route, $path, $method);
+            }
+
+            try {
+                $result = $route->action()->call($route, ...$route->arguments());
+                $loop   = false;
+            } catch (Exceptions\NextRouteException $e) {
+                $ignore[] = $route;
+            }
+
+            if (is_a(static::$afterEach, 'Closure') === true) {
+                (static::$afterEach)($route, $path, $method, $result);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -98,9 +120,10 @@ class Router
      *
      * @param  string $path
      * @param  string $method
+     * @param  array  $ignore
      * @return Route|null
      */
-    public function find(string $path, string $method)
+    public function find(string $path, string $method, array $ignore = null)
     {
         if (isset($this->routes[$method]) === false) {
             throw new InvalidArgumentException('Invalid routing method: ' . $method, 400);
@@ -113,7 +136,9 @@ class Router
             $arguments = $route->parse($route->pattern(), $path);
 
             if ($arguments !== false) {
-                return $this->route = $route;
+                if (empty($ignore) === true || in_array($route, $ignore) === false) {
+                    return $this->route = $route;
+                }
             }
         }
 

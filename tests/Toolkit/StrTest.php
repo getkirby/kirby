@@ -159,8 +159,12 @@ class StrTest extends TestCase
         $this->assertEquals('-1.1', Str::float(-1.1));
         $this->assertEquals('-1.11', Str::float('-1.11'));
         $this->assertEquals('-1.111', Str::float('-1,111'));
+        $this->assertEquals('1000', Str::float('1000'));
+        $this->assertEquals('1000.00', Str::float('1000.00'));
+        $this->assertEquals('1000.00', Str::float('1000,00'));
+        $this->assertEquals('1000', Str::float('1000'));
+        $this->assertEquals('1000000.00', Str::float('1000000.00'));
     }
-
 
     public function testFrom()
     {
@@ -291,27 +295,24 @@ class StrTest extends TestCase
         $this->assertEquals('apearpearle pear', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 3]));
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testReplaceInvalid1()
     {
+        $this->expectException('Exception');
+
         Str::replace('some string', 'string', ['array'], 1);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testReplaceInvalid2()
     {
+        $this->expectException('Exception');
+
         Str::replace('some string', 'string', 'other string', 'some invalid string as limit');
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testReplaceInvalid3()
     {
+        $this->expectException('Exception');
+
         Str::replace('some string', ['some', 'string'], 'other string', [1, 'string']);
     }
 
@@ -356,11 +357,10 @@ class StrTest extends TestCase
         ], Str::replacements(['a', 'b'], ['c', 'd'], [2]));
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testReplacementsInvalid()
     {
+        $this->expectException('Exception');
+
         Str::replacements('string', ['array'], 1);
     }
 
@@ -396,11 +396,10 @@ class StrTest extends TestCase
         // edge cases are tested in the Str::replace() unit test
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testReplaceReplacementsInvalid()
     {
+        $this->expectException('Exception');
+
         Str::replaceReplacements('some string', [
             [
                 'search'  => 'some',
