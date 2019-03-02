@@ -489,6 +489,8 @@ class App
             if ($code < 400 || $code > 599) {
                 $code = 500;
             }
+            
+            $this->trigger('notFound:after', $input, $code, $message);
 
             if ($errorPage = $this->site()->errorPage()) {
                 return $response->code($code)->send($errorPage->render([
@@ -854,8 +856,13 @@ class App
             return $page->file($filename);
         }
 
-        // try to resolve site files at least
-        return $site->file($filename);
+        // try to resolve site files
+        if ($file = $site->file($filename)) {
+            return $file;
+        };
+
+        // try to resolve via hook at least
+        return $this->apply('notFound:before', $path, $language);
     }
 
     /**
