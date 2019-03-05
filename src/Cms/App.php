@@ -811,7 +811,11 @@ class App
 
         // use the home page
         if ($path === null) {
-            return $site->homePage();
+            if ($homePage = $site->homePage()) {
+                return $homePage;
+            }
+
+            throw new NotFoundException('The home page does not exist');
         }
 
         // search for the page by path

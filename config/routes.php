@@ -115,7 +115,7 @@ return function ($kirby) {
             'action'  => function () use ($kirby) {
                 $home = $kirby->site()->homePage();
 
-                if ($kirby->url() !== $home->url()) {
+                if ($home && $kirby->url() !== $home->url()) {
                     if ($kirby->option('languages.detect') === true) {
                         return $kirby
                             ->response()
@@ -126,7 +126,7 @@ return function ($kirby) {
                             ->redirect($kirby->site()->url());
                     }
                 } else {
-                    return $home;
+                    return $kirby->resolve();
                 }
             }
         ];
@@ -178,7 +178,7 @@ return function ($kirby) {
             'method'  => 'ALL',
             'env'     => 'site',
             'action'  => function () use ($kirby) {
-                return $kirby->site()->homePage();
+                return $kirby->resolve();
             }
         ];
 

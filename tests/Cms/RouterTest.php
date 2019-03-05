@@ -74,6 +74,20 @@ class RouterTest extends TestCase
         $this->assertEquals(302, $response->code());
     }
 
+    public function testHomeRouteWithoutHomePage()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => []
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The home page does not exist');
+
+        $app->call('/');
+    }
+
     public function testPageRoute()
     {
         $app = $this->app->clone([
@@ -403,6 +417,34 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
         $this->assertEquals('de', $app->language()->code());
+    }
+
+
+    public function testMultiLangHomeRouteWithoutHomePage()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => []
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'url'     => '/'
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The home page does not exist');
+
+        $app->call('/');
     }
 
     public function testMultiLangPageRoute()
