@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Controller;
+use Kirby\Toolkit\Str;
 
 /**
  * Manages and loads all collections
@@ -107,11 +108,11 @@ class Collections
         $collections = $app->extensions('collections');
         $root        = $app->root('collections');
 
-        foreach (glob($root . '/*.php') as $file) {
+        foreach (glob($root . '/{,*/}*.php', GLOB_BRACE) as $file) {
             $collection = require $file;
 
             if (is_a($collection, 'Closure')) {
-                $name = pathinfo($file, PATHINFO_FILENAME);
+                $name = Str::between($file, $root . '/', '.php');
                 $collections[$name] = $collection;
             }
         }

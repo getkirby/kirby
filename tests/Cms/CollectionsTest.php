@@ -71,8 +71,11 @@ class CollectionsTest extends TestCase
         ]);
 
         $collections = Collections::load($app);
-        $result      = $collections->get('test');
 
+        $result = $collections->get('test');
+        $this->assertInstanceOf(Collection::class, $result);
+
+        $result = $collections->get('nested/test');
         $this->assertInstanceOf(Collection::class, $result);
     }
 }
