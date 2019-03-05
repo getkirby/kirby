@@ -28,20 +28,10 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('TES…', $field->value());
     }
 
-    public function testIsEmpty()
-    {
-        $this->assertTrue($this->field()->isEmpty());
-    }
-
     public function testIsFalse()
     {
         $this->assertTrue($this->field('false')->isFalse());
         $this->assertTrue($this->field(false)->isFalse());
-    }
-
-    public function testIsNotEmpty()
-    {
-        $this->assertTrue($this->field('test')->isNotEmpty());
     }
 
     public function testIsTrue()

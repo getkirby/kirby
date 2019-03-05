@@ -142,7 +142,7 @@ class Field
      */
     public function isEmpty(): bool
     {
-        return empty($this->value) === true;
+        return empty($this->value) === true && in_array($this->value, [0, '0', false], true) === false;
     }
 
     /**
@@ -152,7 +152,7 @@ class Field
      */
     public function isNotEmpty(): bool
     {
-        return empty($this->value) === false;
+        return $this->isEmpty() === false;
     }
 
     /**

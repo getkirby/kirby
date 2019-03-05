@@ -108,4 +108,38 @@ class FieldTest extends TestCase
         $this->assertEquals('Title', $original->value);
         $this->assertEquals('Test', $modified->value);
     }
+
+    public function emptyDataProvider()
+    {
+        return [
+            ['test', false],
+            ['0', false],
+            [0, false],
+            [true, false],
+            ['true', false],
+            [false, false],
+            ['false', false],
+            [null, true],
+            ['', true],
+        ];
+    }
+
+    /**
+     * @dataProvider emptyDataProvider
+     */
+    public function testIsEmpty($input, $expected)
+    {
+        $field = new Field(null, 'test', $input);
+        $this->assertEquals($expected, $field->isEmpty());
+    }
+
+    /**
+     * @dataProvider emptyDataProvider
+     */
+    public function testIsNotEmpty($input, $expected)
+    {
+        $field = new Field(null, 'test', $input);
+        $this->assertEquals(!$expected, $field->isNotEmpty());
+    }
+
 }
