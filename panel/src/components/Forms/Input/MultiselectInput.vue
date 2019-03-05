@@ -25,7 +25,7 @@
     <k-dropdown-content
       slot="footer"
       ref="dropdown"
-      @open="$nextTick(() => { $refs.search.focus() })"
+      @open="onOpen"
       @close="q = null"
     >
       <k-dropdown-item
@@ -215,6 +215,13 @@ export default {
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
+    },
+    onOpen() {
+      this.$nextTick(() => { 
+        if (this.$refs.search) {
+          this.$refs.search.focus();
+        }
+      });
     },
     remove(option) {
       this.state.splice(this.index(option), 1);
