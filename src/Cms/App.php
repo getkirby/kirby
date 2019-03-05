@@ -505,6 +505,8 @@ class App
             if ($code < 400 || $code > 599) {
                 $code = 500;
             }
+            
+            $this->trigger('page.notFound:after', $input, $code, $message);
 
             if ($errorPage = $this->site()->errorPage()) {
                 return $response->code($code)->send($errorPage->render([
@@ -848,6 +850,11 @@ class App
             if ($this->user() || $draft->isVerified(get('token'))) {
                 $page = $draft;
             }
+        }
+        
+        // try to get page from notFound hook
+        if (!$page) {
+            $page = $this->apply('page.notFound:before', $path);
         }
 
         // try to resolve content representations if the path has an extension
