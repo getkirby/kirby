@@ -92,18 +92,6 @@ class StructureObject extends Model
     }
 
     /**
-     * Returns a formatted date field from the content
-     *
-     * @param string $format
-     * @param string $field
-     * @return Field
-     */
-    public function date(string $format = null, $field = 'date')
-    {
-        return $this->content()->get($field)->toDate($format);
-    }
-
-    /**
      * Returns the required id
      *
      * @return string

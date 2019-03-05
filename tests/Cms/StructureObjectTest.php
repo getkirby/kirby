@@ -43,6 +43,18 @@ class StructureObjectTest extends TestCase
         $this->assertEquals($content, $object->content()->toArray());
     }
 
+    public function testToDate()
+    {
+        $object = new StructureObject([
+            'id'      => 'test',
+            'content' => [
+                'date' => '2012-12-12'
+            ]
+        ]);
+
+        $this->assertEquals('12.12.2012', $object->date()->toDate('d.m.Y'));
+    }
+
     public function testDefaultContent()
     {
         $object  = new StructureObject([
