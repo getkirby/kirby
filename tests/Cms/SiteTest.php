@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
 
-class SitePropsTest extends TestCase
+class SiteTest extends TestCase
 {
     public function testUrl()
     {
@@ -166,5 +166,26 @@ class SitePropsTest extends TestCase
         $this->assertEquals($modified, $site->modified());
 
         Dir::remove($index);
+    }
+
+    public function testIs()
+    {
+        $appA = new App([
+            'roots' => [
+                'index' => '/dev/null/a',
+            ]
+        ]);
+
+        $appB = new App([
+            'roots' => [
+                'index' => '/dev/null/b',
+            ]
+        ]);
+
+        $a = $appA->site();
+        $b = $appB->site();
+
+        $this->assertTrue($a->is($a));
+        $this->assertFalse($a->is($b));
     }
 }

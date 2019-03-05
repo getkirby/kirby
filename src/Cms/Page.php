@@ -510,6 +510,10 @@ class Page extends ModelWithContent
     public function is($page): bool
     {
         if (is_a($page, Page::class) === false) {
+            if (is_string($page) === false) {
+                return false;
+            }
+
             $page = $this->kirby()->page($page);
         }
 

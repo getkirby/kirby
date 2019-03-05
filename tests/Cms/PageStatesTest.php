@@ -40,6 +40,32 @@ class PageStatesTest extends TestCase
         ]);
     }
 
+    public function testIs()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'a'],
+                    ['slug' => 'b'],
+                ]
+            ]
+        ]);
+
+        $a = $app->page('a');
+        $b = $app->page('b');
+        $site = $app->site();
+
+        $this->assertTrue($a->is($a));
+        $this->assertTrue($a->is('a'));
+
+        $this->assertFalse($a->is($b));
+        $this->assertFalse($a->is('b'));
+        $this->assertFalse($a->is($site));
+    }
+
     public function testIsAncestorOf()
     {
         $family  = $this->family();

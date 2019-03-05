@@ -325,6 +325,17 @@ class Site extends ModelWithContent
     }
 
     /**
+     * Compares the current object with the given site object
+     *
+     * @param Site $site
+     * @return bool
+     */
+    public function is(Site $site): bool
+    {
+        return $this === $site;
+    }
+
+    /**
      * Returns the root to the media folder for the site
      *
      * @return string
