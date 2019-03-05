@@ -154,7 +154,7 @@ class Request
 
     /**
      * Detects ajax requests
-     *
+     * @deprecated 3.1.0 No longer reliable, especially with the fetch api.
      * @return boolean
      */
     public function ajax(): bool
