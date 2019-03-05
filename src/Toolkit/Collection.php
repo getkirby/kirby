@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
+use Countable;
 use Exception;
 
 /**
@@ -10,7 +11,7 @@ use Exception;
  * interface around arrays of arrays or objects,
  * with advanced filters, sorting, navigation and more.
  */
-class Collection extends Iterator
+class Collection extends Iterator implements Countable
 {
 
     /**

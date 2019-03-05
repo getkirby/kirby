@@ -43,6 +43,7 @@ class CollectionTest extends TestCase
     public function testCount()
     {
         $this->assertEquals(3, $this->collection->count());
+        $this->assertEquals(3, count($this->collection));
     }
 
     public function testFilter()
