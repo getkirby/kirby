@@ -50,6 +50,48 @@ class CollectionsTest extends TestCase
         $this->assertEquals('ab', $result);
     }
 
+    public function testGetWithDifferentData()
+    {
+        $collections = new Collections([
+            'test' => function ($a, $b) {
+                return $a . $b;
+            }
+        ]);
+
+        $result = $collections->get('test', [
+            'a' => 'a',
+            'b' => 'b'
+        ]);
+
+        $this->assertEquals('ab', $result);
+
+        $result = $collections->get('test', [
+            'a' => 'c',
+            'b' => 'd'
+        ]);
+
+        $this->assertEquals('cd', $result);
+    }
+
+    public function testGetAfterModifiedResult()
+    {
+        $collection  = new Collection();
+        $collections = new Collections([
+            'test' => function () use ($collection) {
+                return $collection;
+            }
+        ]);
+
+        $a = $collections->get('test');
+        $this->assertEquals(0, $a->count());
+
+        $a->add('kirby');
+        $this->assertEquals(1, $a->count());
+
+        $b = $collections->get('test');
+        $this->assertEquals(0, $b->count());
+    }
+
     public function testHas()
     {
         $collections = new Collections([

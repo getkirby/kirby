@@ -71,17 +71,22 @@ class Collections
      */
     public function get(string $name, array $data = [])
     {
-        if (isset($this->cache[$name]) === true) {
-            return $this->cache[$name];
-        }
-
         if (isset($this->collections[$name]) === false) {
             return null;
         }
 
-        $controller = new Controller($this->collections[$name]);
+        // if not cached yet
+        if (isset($this->cache[$name]) === false) {
+            $controller = new Controller($this->collections[$name]);
+            $this->cache[$name] = $controller->call(null, $data);
+        }
 
-        return $this->cache[$name] = $controller->call(null, $data);
+        // return cloned object
+        if (is_object($this->cache[$name]) === true) {
+            return clone $this->cache[$name];
+        }
+
+        return $this->cache[$name];
     }
 
     /**
