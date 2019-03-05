@@ -25,8 +25,10 @@
         class="k-textarea-input-native"
         @focus="onFocus"
         @input="onInput"
+        @click="onInteraction"
         @keydown.meta.enter="onSubmit"
         @keydown.meta="onShortcut"
+        @keydown.exact="onInteraction"
         @dragover="onOver"
         @dragleave="onOut"
         @drop="onDrop"
@@ -170,6 +172,13 @@ export default {
     },
     onInput($event) {
       this.$emit("input", $event.target.value);
+    },
+    onInteraction($event) {
+      if (this.$refs.toolbar) {
+        Object.keys(this.$refs.toolbar.$refs).forEach(dropdown => {
+          this.$refs.toolbar.$refs[dropdown][0].close();
+        });
+      }
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
