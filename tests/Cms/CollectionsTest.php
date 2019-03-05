@@ -76,6 +76,6 @@ class CollectionsTest extends TestCase
         $this->assertInstanceOf(Collection::class, $result);
 
         $result = $collections->get('nested/test');
-        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertEquals('a', $result);
     }
 }

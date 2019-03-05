@@ -3,5 +3,5 @@
 use Kirby\Cms\Collection;
 
 return function () {
-    return new Collection();
+    return 'a';
 };
