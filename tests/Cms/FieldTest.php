@@ -141,5 +141,4 @@ class FieldTest extends TestCase
         $field = new Field(null, 'test', $input);
         $this->assertEquals(!$expected, $field->isNotEmpty());
     }
-
 }
