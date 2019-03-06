@@ -23,9 +23,9 @@ return [
     ],
     [
         'pattern' => 'users/search',
-        'method'  => 'GET|POST',
+        'method'  => 'GET',
         'action'  => function () {
-            return $this->users()->query($this->requestBody());
+            return $this->users()->search($this->requestQuery('q'));
         }
     ],
     [
