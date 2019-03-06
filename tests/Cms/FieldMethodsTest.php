@@ -413,6 +413,15 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($expected, $this->field($kirbytext)->kt());
     }
 
+    public function testKirbytextInline()
+    {
+        $kirbytext = '(link: # text: Test)';
+        $expected  = '<a href="#">Test</a>';
+
+        $this->assertEquals($expected, $this->field($kirbytext)->kirbytextinline());
+        $this->assertEquals($expected, $this->field($kirbytext)->kti());
+    }
+
     public function testKirbytags()
     {
         $kirbytext = '(link: # text: Test)';

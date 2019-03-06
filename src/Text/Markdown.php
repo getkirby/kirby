@@ -58,9 +58,10 @@ class Markdown
      * Parses the given text and returns the HTML
      *
      * @param  string $text
+     * @param  bool $inline
      * @return string
      */
-    public function parse(string $text): string
+    public function parse(string $text, bool $inline = false): string
     {
         if ($this->options['extra'] === true) {
             $parser = new ParsedownExtra;
@@ -70,7 +71,10 @@ class Markdown
 
         $parser->setBreaksEnabled($this->options['breaks']);
 
-        // we need the @ here, because parsedown has some notice issues :(
-        return @$parser->text($text);
+        if ($inline === true) {
+            return @$parser->line($text);
+        } else {
+            return @$parser->text($text);
+        }
     }
 }

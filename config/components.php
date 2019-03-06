@@ -51,12 +51,12 @@ return [
     'file::url' => function (App $kirby, $file) {
         return $file->mediaUrl();
     },
-    'markdown' => function (App $kirby, string $text = null, array $options = []): string {
+    'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;
 
         $markdown = $markdown ?? new Markdown($options);
 
-        return $markdown->parse($text);
+        return $markdown->parse($text, $inline);
     },
     'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
         static $smartypants;
