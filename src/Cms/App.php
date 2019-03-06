@@ -273,7 +273,7 @@ class App
      */
     public function collections(): Collections
     {
-        return $this->collections = $this->collections ?? Collections::load($this);
+        return $this->collections = $this->collections ?? new Collections;
     }
 
     /**
