@@ -5,7 +5,14 @@
         <k-dropdown class="k-search-types">
           <k-button :icon="type.icon" @click="$refs.types.toggle()">{{ type.label }}:</k-button>
           <k-dropdown-content ref="types">
-            <k-dropdown-item v-for="(type, typeIndex) in types" :key="typeIndex" :icon="type.icon" @click="currentType = typeIndex">{{ type.label }}</k-dropdown-item>
+            <k-dropdown-item
+              v-for="(type, typeIndex) in types"
+              :key="typeIndex"
+              :icon="type.icon"
+              @click="currentType = typeIndex"
+            >
+              {{ type.label }}
+            </k-dropdown-item>
           </k-dropdown-content>
         </k-dropdown>
         <input
@@ -20,7 +27,12 @@
           @keydown.enter="enter"
           @keydown.esc="close"
         >
-        <k-button :tooltip="$t('close')" class="k-search-close" icon="cancel" @click="close" />
+        <k-button
+          :tooltip="$t('close')"
+          class="k-search-close"
+          icon="cancel"
+          @click="close"
+        />
       </div>
       <ul>
         <li
@@ -76,7 +88,7 @@ export default {
     q: debounce(function (q) {
       this.search(q);
     }, 200),
-    currentType(value) {
+    currentType() {
       this.search(this.q);
     }
   },
