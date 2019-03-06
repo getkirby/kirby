@@ -610,11 +610,11 @@ class App
      * @param array $data
      * @return string
      */
-    public function kirbytext(string $text = null, array $data = []): string
+    public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
     {
         $text = $this->apply('kirbytext:before', $text);
         $text = $this->kirbytags($text, $data);
-        $text = $this->markdown($text);
+        $text = $this->markdown($text, $inline);
         $text = $this->apply('kirbytext:after', $text);
 
         return $text;
@@ -673,11 +673,12 @@ class App
      *
      * @internal
      * @param string $text
+     * @param bool $inline
      * @return string
      */
-    public function markdown(string $text = null): string
+    public function markdown(string $text = null, bool $inline = false): string
     {
-        return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? []);
+        return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? [], $inline);
     }
 
     /**

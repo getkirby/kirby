@@ -380,6 +380,7 @@ trait AppPlugins
             'h'       => 'html',
             'int'     => 'toInt',
             'kt'      => 'kirbytext',
+            'kti'     => 'kirbytextinline',
             'link'    => 'toLink',
             'md'      => 'markdown',
             'sp'      => 'smartypants',

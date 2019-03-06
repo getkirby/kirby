@@ -373,6 +373,18 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $tag);
     }
 
+    public function testKirbyTextHelper()
+    {
+        $text   = 'This is **just** a text.';
+        $normal = '<p>This is <strong>just</strong> a text.</p>';
+        $inline = 'This is <strong>just</strong> a text.';
+
+        $this->assertEquals($normal, kirbytext($text));
+        $this->assertEquals($normal, kt($text));
+        $this->assertEquals($inline, kirbytextinline($text));
+        $this->assertEquals($inline, kti($text));
+    }
+
     public function testMarkdownHelper()
     {
         $tag = markdown('# Kirby');
