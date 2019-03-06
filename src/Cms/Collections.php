@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Controller;
-use Kirby\Toolkit\Str;
 
 /**
  * Manages and loads all collections
