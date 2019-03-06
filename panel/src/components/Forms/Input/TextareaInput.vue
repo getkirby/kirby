@@ -23,6 +23,7 @@
         }"
         :data-size="size"
         class="k-textarea-input-native"
+        @click="onClick"
         @focus="onFocus"
         @input="onInput"
         @keydown.meta.enter="onSubmit"
@@ -144,6 +145,11 @@ export default {
     },
     resize() {
       autosize.update(this.$refs.input);
+    },
+    onClick() {
+      if (this.$refs.toolbar) {
+        this.$refs.toolbar.close();
+      }
     },
     onCommand(command, callback) {
       if (typeof this[command] !== "function") {
