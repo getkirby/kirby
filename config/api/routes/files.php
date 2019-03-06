@@ -29,9 +29,15 @@ return [
     ],
     [
         'pattern' => '(:all)/files/search',
-        'method'  => 'POST',
+        'method'  => 'GET|POST',
         'action'  => function (string $path) {
-            return $this->parent($path)->files()->query($this->requestBody());
+            $files = $this->parent($path)->files();
+
+            if ($this->requestMethod() === 'GET') {
+                return $files->search($this->requestQuery('q'));
+            } else {
+                return $files->query($this->requestBody());
+            }
         }
     ],
     [

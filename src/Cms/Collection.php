@@ -231,6 +231,38 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Runs a combination of filterBy, sortBy, not
+     * offset, limit, search and paginate on the collection.
+     * Any part of the query is optional.
+     *
+     * @param array $query
+     * @return self
+     */
+    public function query(array $query = [])
+    {
+        $paginate = $query['paginate'] ?? null;
+        $search   = $query['search'] ?? null;
+
+        unset($query['paginate']);
+
+        $result = parent::query($query);
+
+        if (empty($search) === false) {
+            if (is_array($search) === true) {
+                $result = $result->search($search['query'] ?? null, $search['options'] ?? null);
+            } else {
+                $result = $result->search($search);
+            }
+        }
+
+        if (empty($paginate) === false) {
+            $result = $result->paginate($paginate);
+        }
+
+        return $result;
+    }
+
+    /**
      * Removes an object
      *
      * @param mixed $key the name of the key
