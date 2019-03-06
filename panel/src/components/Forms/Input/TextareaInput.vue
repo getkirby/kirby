@@ -36,11 +36,14 @@
 
     <k-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
     <k-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
+    <k-files-dialog ref="fileDialog" @cancel="cancel" @submit="insertFile($event)" />
+    <k-upload ref="fileUpload" @success="insertUpload" />
 
   </div>
 </template>
 
 <script>
+import config from "@/config/config.js";
 import Toolbar from "../Toolbar.vue";
 import EmailDialog from "../Toolbar/EmailDialog.vue";
 import LinkDialog from "../Toolbar/LinkDialog.vue";
@@ -61,6 +64,7 @@ export default {
       default: true
     },
     disabled: Boolean,
+    endpoints: Object,
     id: [Number, String],
     name: [Number, String],
     maxlength: Number,
@@ -158,6 +162,9 @@ export default {
       }
 
       if (typeof callback === "function") {
+
+        console.log(callback);
+
         this[command](callback(this.$refs.input, this.selection()));
       } else {
         this[command](callback);
@@ -217,6 +224,25 @@ export default {
     },
     wrap(text) {
       this.insert(text + this.selection() + text);
+    },
+    uploadFile() {
+      this.$refs.fileUpload.open({
+        url: config.api + "/" + this.endpoints.field + "/upload",
+        multiple: false,
+      });
+    },
+    insertUpload(files, response) {
+      this.insert(response[0].dragText);
+    },
+    selectFile() {
+      this.$api.get(this.endpoints.field + "/files").then(files => {
+        this.$refs.fileDialog.open(files, {
+          multiple: false
+        });
+      });
+    },
+    insertFile(files) {
+      this.insert(files[0].dragText);
     }
   },
   validations() {

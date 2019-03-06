@@ -71,8 +71,9 @@ export default {
     "|",
     "link",
     "email",
-    "code",
+    "file",
     "|",
+    "code",
     "ul",
     "ol"
   ],
@@ -188,6 +189,22 @@ export default {
           shortcut: "e",
           command: "dialog",
           args: "email"
+        },
+        file: {
+          label: this.$t("toolbar.button.file"),
+          icon: "attachment",
+          dropdown: {
+            select: {
+              label: this.$t("toolbar.button.file.select"),
+              icon: "check",
+              command: "selectFile"
+            },
+            upload: {
+              label: this.$t("toolbar.button.file.upload"),
+              icon: "upload",
+              command: "uploadFile"
+            }
+          }
         },
         code: {
           label: this.$t("toolbar.button.code"),

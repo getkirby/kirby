@@ -30,6 +30,17 @@ return [
         },
 
         /**
+         * Sets the options for the files picker
+         */
+        'files' => function ($files = []) {
+            if (is_string($files) === true) {
+                return ['query' => $files];
+            }
+
+            return $files;
+        },
+
+        /**
          * Maximum number of allowed characters
          */
         'maxlength' => function (int $maxlength = null) {
@@ -54,6 +65,52 @@ return [
             return trim($value);
         }
     ],
+    'api' => function () {
+        return [
+            [
+                'pattern' => 'files',
+                'action' => function () {
+
+                    $field = $this->field();
+                    $files = $field->model()->query($field->files['query'] ?? 'page.files', 'Kirby\Cms\Files');
+                    $data  = [];
+
+                    foreach ($files as $index => $file) {
+
+                        $image = $file->panelImage($field->files['image'] ?? []);
+                        $model = $field->model();
+
+                        $data[] = [
+                            'filename' => $file->filename(),
+                            'dragText' => $file->dragText(),
+                            'image'    => $image,
+                            'icon'     => $file->panelIcon($image)
+                        ];
+                    }
+
+                    return $data;
+                }
+            ],
+            [
+                'pattern' => 'upload',
+                'action' => function () {
+                    $field = $this->field();
+
+                    return $this->upload(function ($source, $filename) use ($field) {
+                        $file = $field->model()->createFile([
+                            'source'   => $source,
+                            'filename' => $filename
+                        ]);
+
+                        return [
+                            'filename' => $file->filename(),
+                            'dragText' => $file->dragText(),
+                        ];
+                    });
+                }
+            ]
+        ];
+    },
     'validations' => [
         'minlength',
         'maxlength'
