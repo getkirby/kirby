@@ -50,30 +50,7 @@ class CollectionsTest extends TestCase
         $this->assertEquals('ab', $result);
     }
 
-    public function testGetWithDifferentData()
-    {
-        $collections = new Collections([
-            'test' => function ($a, $b) {
-                return $a . $b;
-            }
-        ]);
-
-        $result = $collections->get('test', [
-            'a' => 'a',
-            'b' => 'b'
-        ]);
-
-        $this->assertEquals('ab', $result);
-
-        $result = $collections->get('test', [
-            'a' => 'c',
-            'b' => 'd'
-        ]);
-
-        $this->assertEquals('cd', $result);
-    }
-
-    public function testGetAfterModifiedResult()
+    public function testGetCloned()
     {
         $collection  = new Collection();
         $collections = new Collections([
