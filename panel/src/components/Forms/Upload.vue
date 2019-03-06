@@ -119,18 +119,18 @@ export default {
               this.$refs[file.name][0].set(progress);
             }
           },
-          success: (xhr, file) => {
-            this.complete(file);
+          success: (xhr, file, response) => {
+            this.complete(file, response.data);
           },
           error: (xhr, file, response) => {
             this.errors.push({ file: file, message: response.message });
-            this.complete(file, response.message);
+            this.complete(file);
           }
         });
       });
     },
-    complete(file) {
-      this.completed[file.name] = true;
+    complete(file, data) {
+      this.completed[file.name] = data;
 
       if (Object.keys(this.completed).length == this.total) {
         // remove the selected file
@@ -144,7 +144,7 @@ export default {
 
         setTimeout(() => {
           this.$refs.dialog.close();
-          this.$emit("success", this.files);
+          this.$emit("success", this.files, Object.values(this.completed));
         }, 250);
       }
     }
