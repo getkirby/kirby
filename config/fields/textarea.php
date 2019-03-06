@@ -70,13 +70,11 @@ return [
             [
                 'pattern' => 'files',
                 'action' => function () {
-
                     $field = $this->field();
                     $files = $field->model()->query($field->files['query'] ?? 'page.files', 'Kirby\Cms\Files');
                     $data  = [];
 
                     foreach ($files as $index => $file) {
-
                         $image = $file->panelImage($field->files['image'] ?? []);
                         $model = $field->model();
 
