@@ -57,6 +57,17 @@ class Search
             $keys = array_keys($data);
             $keys[] = 'id';
 
+            if (is_a($item, User::class) === true) {
+                $keys[] = 'email';
+                $keys[] = 'role';
+            } elseif (is_a($item, Page::class) === true) {
+                // apply the default score for pages
+                $options['score'] = array_merge([
+                    'id'    => 64,
+                    'title' => 64,
+                ], $options['score']);
+            }
+
             if (empty($options['fields']) === false) {
                 $keys = array_intersect($keys, $options['fields']);
             }
@@ -66,7 +77,7 @@ class Search
 
             foreach ($keys as $key) {
                 $score = $options['score'][$key] ?? 1;
-                $value = $key === 'id' ? $item->id() : $data[$key];
+                $value = $data[$key] ?? (string)$item->$key();
 
                 $lowerValue = strtolower($value);
 

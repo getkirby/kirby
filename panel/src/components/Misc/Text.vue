@@ -37,7 +37,7 @@ export default {
   text-align: center;
 }
 .k-text[data-align="right"] {
-  text-align: center;
+  text-align: right;
 }
 
 .k-text[data-size="tiny"] {
