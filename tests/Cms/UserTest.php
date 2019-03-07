@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
 
-class UserPropsTest extends TestCase
+class UserTest extends TestCase
 {
     public function testAvatar()
     {
@@ -92,5 +92,43 @@ class UserPropsTest extends TestCase
         $this->assertEquals(strftime($format, $modified), $user->modified($format, 'strftime'));
 
         Dir::remove($index);
+    }
+
+    public function passwordProvider()
+    {
+        return [
+            [null, false],
+            ['', false],
+            ['abc', false],
+            ['correct-horse-battery-staple', true],
+        ];
+    }
+
+    /**
+     * @dataProvider passwordProvider
+     */
+    public function testValidatePassword($input, $valid)
+    {
+        $user = new User([
+            'email'    => 'test@getkirby.com',
+            'password' => User::hashPassword('correct-horse-battery-staple')
+        ]);
+
+        if ($valid === false) {
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $user->validatePassword($input);
+        } else {
+            $this->assertTrue($user->validatePassword($input));
+        }
+    }
+
+    public function testValidateUndefinedPassword()
+    {
+        $user = new User([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $user->validatePassword('test');
     }
 }

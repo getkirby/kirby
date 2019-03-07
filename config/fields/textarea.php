@@ -37,6 +37,10 @@ return [
                 return ['query' => $files];
             }
 
+            if (is_array($files) === false) {
+                $files = [];
+            }
+
             return $files;
         },
 
@@ -61,6 +65,21 @@ return [
             return $size;
         },
 
+        /**
+         * Sets the upload options for linked files
+         */
+        'uploads' => function ($uploads = []) {
+            if (is_string($uploads) === true) {
+                return ['template' => $uploads];
+            }
+
+            if (is_array($uploads) === false) {
+                $uploads = [];
+            }
+
+            return $uploads;
+        },
+
         'value' => function (string $value = null) {
             return trim($value);
         }
@@ -70,13 +89,13 @@ return [
             [
                 'pattern' => 'files',
                 'action' => function () {
-
                     $field = $this->field();
-                    $files = $field->model()->query($field->files['query'] ?? 'page.files', 'Kirby\Cms\Files');
+                    $model = $field->model();
+                    $query = $field->files['query'] ?? $model::CLASS_ALIAS . '.files';
+                    $files = $model->query($query, 'Kirby\Cms\Files');
                     $data  = [];
 
                     foreach ($files as $index => $file) {
-
                         $image = $file->panelImage($field->files['image'] ?? []);
                         $model = $field->model();
 
@@ -97,9 +116,16 @@ return [
                     $field = $this->field();
 
                     return $this->upload(function ($source, $filename) use ($field) {
-                        $file = $field->model()->createFile([
+                        if ($parentQuery = ($field->uploads()['parent'] ?? null)) {
+                            $parent = $field->model()->query($parentQuery);
+                        } else {
+                            $parent = $field->model();
+                        }
+
+                        $file = $parent->createFile([
                             'source'   => $source,
-                            'filename' => $filename
+                            'template' => $field->uploads()['template'] ?? null,
+                            'filename' => $filename,
                         ]);
 
                         return [

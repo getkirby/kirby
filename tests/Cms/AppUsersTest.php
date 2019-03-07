@@ -103,7 +103,7 @@ class AppUsersTest extends TestCase
             'users' => [
                 [
                     'email'    => 'test@getkirby.com',
-                    'password' => User::hashPassword('test')
+                    'password' => User::hashPassword('correct-horse-battery-staple')
                 ]
             ],
             'request' => [
@@ -115,7 +115,7 @@ class AppUsersTest extends TestCase
     public function testUserFromBasicAuth()
     {
         $app  = $this->basicAuthApp();
-        $auth = new BasicAuth(base64_encode('test@getkirby.com:test'));
+        $auth = new BasicAuth(base64_encode('test@getkirby.com:correct-horse-battery-staple'));
         $user = $app->auth()->currentUserFromBasicAuth($auth);
 
         $this->assertInstanceOf(User::class, $user);
@@ -135,7 +135,7 @@ class AppUsersTest extends TestCase
             ]
         ]);
 
-        $auth = new BasicAuth(base64_encode('test@getkirby.com:test'));
+        $auth = new BasicAuth(base64_encode('test@getkirby.com:correct-horse-battery-staple'));
         $user = $app->auth()->currentUserFromBasicAuth($auth);
     }
 
@@ -150,7 +150,7 @@ class AppUsersTest extends TestCase
             ]
         ]);
 
-        $auth = new BasicAuth(base64_encode('test@getkirby.com:test'));
+        $auth = new BasicAuth(base64_encode('test@getkirby.com:correct-horse-battery-staple'));
         $user = $app->auth()->currentUserFromBasicAuth($auth);
     }
 
