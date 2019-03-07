@@ -786,7 +786,7 @@ class User extends ModelWithContent
             throw new NotFoundException(['key' => 'user.password.undefined']);
         }
 
-        if ($password === null) {
+        if (Str::length($password) < 8) {
             throw new InvalidArgumentException(['key' => 'user.password.invalid']);
         }
 
