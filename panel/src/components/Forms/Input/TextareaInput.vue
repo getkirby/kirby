@@ -162,9 +162,6 @@ export default {
       }
 
       if (typeof callback === "function") {
-
-        console.log(callback);
-
         this[command](callback(this.$refs.input, this.selection()));
       } else {
         this[command](callback);
@@ -233,6 +230,7 @@ export default {
     },
     insertUpload(files, response) {
       this.insert(response[0].dragText);
+      this.$events.$emit("model.update");
     },
     selectFile() {
       this.$api.get(this.endpoints.field + "/files").then(files => {
