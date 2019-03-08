@@ -69,6 +69,10 @@ return [
          * Sets the upload options for linked files
          */
         'uploads' => function ($uploads = []) {
+            if ($uploads === false) {
+                return false;
+            }
+
             if (is_string($uploads) === true) {
                 return ['template' => $uploads];
             }
@@ -113,10 +117,16 @@ return [
             [
                 'pattern' => 'upload',
                 'action' => function () {
-                    $field = $this->field();
 
-                    return $this->upload(function ($source, $filename) use ($field) {
-                        if ($parentQuery = ($field->uploads()['parent'] ?? null)) {
+                    $field   = $this->field();
+                    $uploads = $field->uploads();
+
+                    if ($uploads === false) {
+                        throw new Exception('Uploads are disabled for this field');
+                    }
+
+                    return $this->upload(function ($source, $filename) use ($field, $uploads) {
+                        if ($parentQuery = ($uploads['parent'] ?? null)) {
                             $parent = $field->model()->query($parentQuery);
                         } else {
                             $parent = $field->model();
@@ -124,7 +134,7 @@ return [
 
                         $file = $parent->createFile([
                             'source'   => $source,
-                            'template' => $field->uploads()['template'] ?? null,
+                            'template' => $uploads['template'] ?? null,
                             'filename' => $filename,
                         ]);
 

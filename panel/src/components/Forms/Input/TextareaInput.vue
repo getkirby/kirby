@@ -5,6 +5,7 @@
         v-if="buttons"
         ref="toolbar"
         :buttons="buttons"
+        :uploads="uploads"
         @mousedown.native.prevent
         @command="onCommand"
       />
@@ -37,7 +38,7 @@
     <k-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
     <k-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
     <k-files-dialog ref="fileDialog" @cancel="cancel" @submit="insertFile($event)" />
-    <k-upload ref="fileUpload" @success="insertUpload" />
+    <k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
 
   </div>
 </template>
@@ -78,6 +79,7 @@ export default {
       default: "off"
     },
     theme: String,
+    uploads: [Boolean, Object],
     value: String
   },
   data() {
