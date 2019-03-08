@@ -178,7 +178,10 @@ export default {
           }
 
           this.currentPage = page;
-          this.$refs.dropdown.close();
+
+          if (this.$refs.dropdown) {
+            this.$refs.dropdown.close();
+          }
 
           this.$emit("paginate", {
             page: parseInt(this.currentPage),
