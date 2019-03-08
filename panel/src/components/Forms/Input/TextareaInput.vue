@@ -235,11 +235,15 @@ export default {
       this.$events.$emit("model.update");
     },
     selectFile() {
-      this.$api.get(this.endpoints.field + "/files").then(files => {
-        this.$refs.fileDialog.open(files, {
-          multiple: false
+      this.$api
+        .get(this.endpoints.field + "/files").then(files => {
+          this.$refs.fileDialog.open(files, {
+            multiple: false
+          });
+        })
+        .catch(error => {
+          this.$store.dispatch("notification/error", error);
         });
-      });
     },
     insertFile(files) {
       this.insert(files[0].dragText);
