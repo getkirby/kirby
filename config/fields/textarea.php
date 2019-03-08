@@ -125,7 +125,6 @@ return [
             [
                 'pattern' => 'upload',
                 'action' => function () {
-
                     $field   = $this->field();
                     $uploads = $field->uploads();
 
@@ -144,7 +143,6 @@ return [
                     }
 
                     return $this->upload(function ($source, $filename) use ($field, $parent, $uploads) {
-
                         $file = $parent->createFile([
                             'source'   => $source,
                             'template' => $uploads['template'] ?? null,
