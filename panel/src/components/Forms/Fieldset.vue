@@ -85,15 +85,15 @@ export default {
     },
     meetsCondition(field) {
 
-      if (!field.conditions) {
+      if (!field.when) {
         return true;
       }
 
       let result = true;
 
-      Object.keys(field.conditions).forEach(key => {
+      Object.keys(field.when).forEach(key => {
         const value     = this.value[key];
-        const condition = field.conditions[key];
+        const condition = field.when[key];
 
         if (value !== condition) {
           result = false;
