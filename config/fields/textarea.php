@@ -95,7 +95,15 @@ return [
                 'action' => function () {
                     $field = $this->field();
                     $model = $field->model();
-                    $query = $field->files['query'] ?? $model::CLASS_ALIAS . '.files';
+
+                    if (empty($filed->files['query']) === false) {
+                        $query = $filed->files['query'];
+                    } elseif (is_a($model, 'Kirby\Cms\File') === true) {
+                        $query = 'file.siblings';
+                    } else {
+                        $query = $model::CLASS_ALIAS . '.files';
+                    }
+
                     $files = $model->query($query, 'Kirby\Cms\Files');
                     $data  = [];
 
