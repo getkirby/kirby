@@ -79,7 +79,7 @@ export default {
       default: "off"
     },
     theme: String,
-    uploads: [Boolean, Object],
+    uploads: [Boolean, Object, Array],
     value: String
   },
   data() {

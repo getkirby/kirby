@@ -82,7 +82,7 @@ export default {
       type: [Boolean, Array],
       default: true
     },
-    uploads: [Boolean, Object]
+    uploads: [Boolean, Object, Array]
   },
   data() {
     let layout = {};
