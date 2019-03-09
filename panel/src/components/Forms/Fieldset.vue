@@ -92,7 +92,7 @@ export default {
       let result = true;
 
       Object.keys(field.when).forEach(key => {
-        const value     = this.value[key];
+        const value     = this.value[key.toLowerCase()];
         const condition = field.when[key];
 
         if (value !== condition) {
