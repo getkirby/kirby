@@ -7,7 +7,7 @@
       :id="id"
       class="k-checkbox-input-native"
       type="checkbox"
-      v-on="listeners"
+      @change="onChange($event.target.checked)"
     >
     <span class="k-checkbox-input-icon" aria-hidden="true">
       <svg
@@ -40,14 +40,6 @@ export default {
     label: String,
     required: Boolean,
     value: Boolean,
-  },
-  data() {
-    return {
-      listeners: {
-        ...this.$listeners,
-        change: (event) => this.onChange(event.target.checked)
-      }
-    }
   },
   watch: {
     value() {
