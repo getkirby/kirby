@@ -44,6 +44,21 @@ class CollectionsTest extends TestCase
         $this->assertEquals('ab', $result);
     }
 
+    public function testGetCloned()
+    {
+        $app         = $this->_app();
+        $collections = $app->collections();
+
+        $a = $collections->get('test');
+        $this->assertEquals(0, $a->count());
+
+        $a->add('kirby');
+        $this->assertEquals(1, $a->count());
+
+        $b = $collections->get('test');
+        $this->assertEquals(0, $b->count());
+    }
+
     public function testHas()
     {
         $app= $this->_app();
