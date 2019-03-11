@@ -20,6 +20,7 @@
             :style="{ color: file.panelIcon.color }"
             class="k-file-preview-icon"
           />
+          <span v-else class="k-file-preview-placeholder" />
         </a>
       </div>
       <div class="k-file-preview-details">
@@ -115,6 +116,10 @@ export default {
   @media screen and (min-width: $breakpoint-medium) {
     padding-bottom: 100%;
   }
+}
+.k-file-preview-placeholder {
+  display: block;
+  padding-bottom: 100%;
 }
 .k-file-preview-image img {
   padding: 3rem;
