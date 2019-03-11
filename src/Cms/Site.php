@@ -337,8 +337,12 @@ class Site extends ModelWithContent
      * @param Site $site
      * @return bool
      */
-    public function is(Site $site): bool
+    public function is($site): bool
     {
+        if (is_a($site, Site::class) === false) {
+            return false;
+        }
+
         return $this === $site;
     }
 

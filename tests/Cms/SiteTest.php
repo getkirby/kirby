@@ -184,8 +184,11 @@ class SiteTest extends TestCase
 
         $a = $appA->site();
         $b = $appB->site();
+        $c = new Page(['slug' => 'test']);
 
         $this->assertTrue($a->is($a));
         $this->assertFalse($a->is($b));
+        $this->assertFalse($a->is($c));
+        $this->assertFalse($b->is($c));
     }
 }
