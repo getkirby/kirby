@@ -73,6 +73,8 @@ class Field
      */
     public function __call(string $method, array $arguments = [])
     {
+        $method = strtolower($method);
+
         if (isset(static::$methods[$method]) === true) {
             return static::$methods[$method](clone $this, ...$arguments);
         }
