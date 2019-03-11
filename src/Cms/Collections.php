@@ -101,12 +101,12 @@ class Collections
     }
 
     /**
-    * Loads collection from php file in a
-    * given directory or from plugin extension.
-    *
-    * @param  string $name
-    * @return mixed
-    */
+     * Loads collection from php file in a
+     * given directory or from plugin extension.
+     *
+     * @param  string $name
+     * @return mixed
+     */
     public function load(string $name)
     {
         $kirby = App::instance();
