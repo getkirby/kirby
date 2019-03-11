@@ -169,7 +169,16 @@ export default {
         this[command](callback);
       }
     },
-    onDrop() {
+    onDrop(event) {
+      // dropping files
+      if (event.dataTransfer && event.dataTransfer.types.includes("Files") === true) {
+        return this.$refs.fileUpload.drop(event.dataTransfer.files, {
+          url: config.api + "/" + this.endpoints.field + "/upload",
+          multiple: false
+        });
+      }
+
+      // dropping text
       const drag = this.$store.state.drag;
 
       if (drag && drag.type === "text") {
@@ -191,6 +200,16 @@ export default {
       this.over = false;
     },
     onOver($event) {
+
+      // drag & drop for files
+      if (this.uploads && event.dataTransfer && event.dataTransfer.types.includes("Files") === true) {
+        $event.dataTransfer.dropEffect = "copy";
+        this.focus();
+        this.over = true;
+        return;
+      }
+
+      // drag & drop for text
       const drag = this.$store.state.drag;
 
       if (drag && drag.type === "text") {
