@@ -222,4 +222,10 @@ b {
   white-space: nowrap;
   width: 1px;
 }
+
+.k-icons {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
 </style>

@@ -3,7 +3,7 @@
     <k-grid>
       <k-column
         v-for="(field, fieldName) in fields"
-        v-if="field.type !== 'hidden'"
+        v-if="field.type !== 'hidden' && meetsCondition(field)"
         :key="field.signature"
         :width="field.width"
       >
@@ -82,6 +82,26 @@ export default {
     },
     hasField(name) {
       return this.$refs[name] && this.$refs[name][0];
+    },
+    meetsCondition(field) {
+
+      if (!field.when) {
+        return true;
+      }
+
+      let result = true;
+
+      Object.keys(field.when).forEach(key => {
+        const value     = this.value[key.toLowerCase()];
+        const condition = field.when[key];
+
+        if (value !== condition) {
+          result = false;
+        }
+      });
+
+      return result;
+
     },
     onInvalid($invalid, $v, field, fieldName) {
       this.errors[fieldName] = $v;

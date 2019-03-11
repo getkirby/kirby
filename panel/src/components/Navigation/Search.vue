@@ -142,7 +142,6 @@ export default {
       this.close();
     },
     search(query) {
-
       this.$api.get(this.type.endpoint, { q: query, limit: config.search.limit }).then(response => {
         this.items = response.data.map(this['map_' + this.currentType]);
         this.selected = -1;

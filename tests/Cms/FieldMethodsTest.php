@@ -22,6 +22,13 @@ class FieldMethodsTest extends TestCase
         return new Field(null, 'test', $value);
     }
 
+    public function testFieldMethodCaseInsensitivity()
+    {
+        $field = $this->field('test');
+        $this->assertEquals('TEST', $field->upper());
+        $this->assertEquals('TEST', $field->UPPER());
+    }
+
     public function testFieldMethodCombination()
     {
         $field = $this->field('test')->upper()->short(3);
@@ -411,6 +418,15 @@ class FieldMethodsTest extends TestCase
 
         $this->assertEquals($expected, $this->field($kirbytext)->kirbytext());
         $this->assertEquals($expected, $this->field($kirbytext)->kt());
+    }
+
+    public function testKirbytextInline()
+    {
+        $kirbytext = '(link: # text: Test)';
+        $expected  = '<a href="#">Test</a>';
+
+        $this->assertEquals($expected, $this->field($kirbytext)->kirbytextinline());
+        $this->assertEquals($expected, $this->field($kirbytext)->kti());
     }
 
     public function testKirbytags()

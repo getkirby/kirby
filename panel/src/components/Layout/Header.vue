@@ -177,7 +177,7 @@ export default {
   margin-right: -1px;
 }
 
-.k-tab-button {
+.k-tab-button.k-button {
   position: relative;
   z-index: 1;
   display: inline-flex;

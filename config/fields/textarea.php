@@ -69,6 +69,10 @@ return [
          * Sets the upload options for linked files
          */
         'uploads' => function ($uploads = []) {
+            if ($uploads === false) {
+                return false;
+            }
+
             if (is_string($uploads) === true) {
                 return ['template' => $uploads];
             }
@@ -91,7 +95,15 @@ return [
                 'action' => function () {
                     $field = $this->field();
                     $model = $field->model();
-                    $query = $field->files['query'] ?? $model::CLASS_ALIAS . '.files';
+
+                    if (empty($filed->files['query']) === false) {
+                        $query = $filed->files['query'];
+                    } elseif (is_a($model, 'Kirby\Cms\File') === true) {
+                        $query = 'file.siblings';
+                    } else {
+                        $query = $model::CLASS_ALIAS . '.files';
+                    }
+
                     $files = $model->query($query, 'Kirby\Cms\Files');
                     $data  = [];
 
@@ -113,20 +125,33 @@ return [
             [
                 'pattern' => 'upload',
                 'action' => function () {
-                    $field = $this->field();
+                    $field   = $this->field();
+                    $uploads = $field->uploads();
 
-                    return $this->upload(function ($source, $filename) use ($field) {
-                        if ($parentQuery = ($field->uploads()['parent'] ?? null)) {
-                            $parent = $field->model()->query($parentQuery);
-                        } else {
-                            $parent = $field->model();
-                        }
+                    if ($uploads === false) {
+                        throw new Exception('Uploads are disabled for this field');
+                    }
 
+                    if ($parentQuery = ($uploads['parent'] ?? null)) {
+                        $parent = $field->model()->query($parentQuery);
+                    } else {
+                        $parent = $field->model();
+                    }
+
+                    if (is_a($parent, 'Kirby\Cms\File') === true) {
+                        $parent = $parent->parent();
+                    }
+
+                    return $this->upload(function ($source, $filename) use ($field, $parent, $uploads) {
                         $file = $parent->createFile([
                             'source'   => $source,
-                            'template' => $field->uploads()['template'] ?? null,
+                            'template' => $uploads['template'] ?? null,
                             'filename' => $filename,
                         ]);
+
+                        if (is_a($file, 'Kirby\Cms\File') === false) {
+                            throw new Exception('The file could not be uploaded');
+                        }
 
                         return [
                             'filename' => $file->filename(),

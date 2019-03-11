@@ -81,7 +81,8 @@ export default {
     buttons: {
       type: [Boolean, Array],
       default: true
-    }
+    },
+    uploads: [Boolean, Object, Array]
   },
   data() {
     let layout = {};
@@ -135,6 +136,32 @@ export default {
           component.close();
         }
       });
+    },
+    fileCommandSetup() {
+
+      let command = {
+        label: this.$t("toolbar.button.file"),
+        icon: "attachment",
+      };
+
+      if (this.uploads === false) {
+        command.command = "selectFile";
+      } else {
+        command.dropdown = {
+          select: {
+            label: this.$t("toolbar.button.file.select"),
+            icon: "check",
+            command: "selectFile"
+          },
+          upload: {
+            label: this.$t("toolbar.button.file.upload"),
+            icon: "upload",
+            command: "uploadFile"
+          }
+        };
+      }
+
+      return command;
     },
     commands() {
       return {
@@ -190,22 +217,7 @@ export default {
           command: "dialog",
           args: "email"
         },
-        file: {
-          label: this.$t("toolbar.button.file"),
-          icon: "attachment",
-          dropdown: {
-            select: {
-              label: this.$t("toolbar.button.file.select"),
-              icon: "check",
-              command: "selectFile"
-            },
-            upload: {
-              label: this.$t("toolbar.button.file.upload"),
-              icon: "upload",
-              command: "uploadFile"
-            }
-          }
-        },
+        file: this.fileCommandSetup(),
         code: {
           label: this.$t("toolbar.button.code"),
           icon: "code",

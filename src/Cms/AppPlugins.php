@@ -134,7 +134,7 @@ trait AppPlugins
 
     protected function extendFieldMethods(array $methods): array
     {
-        return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, $methods);
+        return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, array_change_key_case($methods));
     }
 
     protected function extendFields(array $fields): array
@@ -380,6 +380,7 @@ trait AppPlugins
             'h'       => 'html',
             'int'     => 'toInt',
             'kt'      => 'kirbytext',
+            'kti'     => 'kirbytextinline',
             'link'    => 'toLink',
             'md'      => 'markdown',
             'sp'      => 'smartypants',

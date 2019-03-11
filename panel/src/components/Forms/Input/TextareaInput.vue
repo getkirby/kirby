@@ -5,6 +5,7 @@
         v-if="buttons"
         ref="toolbar"
         :buttons="buttons"
+        :uploads="uploads"
         @mousedown.native.prevent
         @command="onCommand"
       />
@@ -37,7 +38,7 @@
     <k-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
     <k-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
     <k-files-dialog ref="fileDialog" @cancel="cancel" @submit="insertFile($event)" />
-    <k-upload ref="fileUpload" @success="insertUpload" />
+    <k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
 
   </div>
 </template>
@@ -78,6 +79,7 @@ export default {
       default: "off"
     },
     theme: String,
+    uploads: [Boolean, Object, Array],
     value: String
   },
   data() {
@@ -167,7 +169,16 @@ export default {
         this[command](callback);
       }
     },
-    onDrop() {
+    onDrop(event) {
+      // dropping files
+      if (event.dataTransfer && event.dataTransfer.types.includes("Files") === true) {
+        return this.$refs.fileUpload.drop(event.dataTransfer.files, {
+          url: config.api + "/" + this.endpoints.field + "/upload",
+          multiple: false
+        });
+      }
+
+      // dropping text
       const drag = this.$store.state.drag;
 
       if (drag && drag.type === "text") {
@@ -189,6 +200,16 @@ export default {
       this.over = false;
     },
     onOver($event) {
+
+      // drag & drop for files
+      if (this.uploads && event.dataTransfer && event.dataTransfer.types.includes("Files") === true) {
+        $event.dataTransfer.dropEffect = "copy";
+        this.focus();
+        this.over = true;
+        return;
+      }
+
+      // drag & drop for text
       const drag = this.$store.state.drag;
 
       if (drag && drag.type === "text") {
@@ -233,11 +254,15 @@ export default {
       this.$events.$emit("model.update");
     },
     selectFile() {
-      this.$api.get(this.endpoints.field + "/files").then(files => {
-        this.$refs.fileDialog.open(files, {
-          multiple: false
+      this.$api
+        .get(this.endpoints.field + "/files").then(files => {
+          this.$refs.fileDialog.open(files, {
+            multiple: false
+          });
+        })
+        .catch(error => {
+          this.$store.dispatch("notification/error", error);
         });
-      });
     },
     insertFile(files) {
       this.insert(files[0].dragText);

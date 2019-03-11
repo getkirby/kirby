@@ -103,6 +103,12 @@ class Field extends Component
                     return I18n::translate($before, $before);
                 },
                 /**
+                 * Conditions when the field will be shown
+                 */
+                'when' => function ($when = null) {
+                    return $when;
+                },
+                /**
                  * Default value for the field, which will be used when a Page/File/User is created
                  */
                 'default' => function ($default = null) {
