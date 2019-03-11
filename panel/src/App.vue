@@ -150,6 +150,9 @@ b {
   left: 0;
   background: $color-background;
 }
+.k-panel[data-loading] {
+  animation: LoadingCursor 0.5s;
+}
 .k-panel-header {
   position: absolute;
   top: 0;
@@ -182,9 +185,6 @@ b {
 .k-panel[data-topbar] .k-panel-view {
   top: 2.5rem;
 }
-.k-panel[data-loading] {
-  animation: Loading 0.5s;
-}
 .k-panel[data-loading]::after,
 .k-panel[data-dragging] {
   user-select: none;
@@ -207,9 +207,15 @@ b {
   color: $color-white;
 }
 
-@keyframes Loading {
+@keyframes LoadingCursor {
   100% {
     cursor: progress;
+  }
+}
+
+@keyframes Spin {
+  100% {
+    transform: rotate(360deg);
   }
 }
 

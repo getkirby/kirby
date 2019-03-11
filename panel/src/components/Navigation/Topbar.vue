@@ -85,6 +85,12 @@
         </nav>
 
         <div class="k-topbar-signals">
+          <span class="k-topbar-loader" v-show="$store.state.isLoading">
+            <svg viewBox="0 0 16 18">
+              <path fill="white" d="M8,0 L16,4.50265232 L16,13.5112142 L8,18.0138665 L0,13.5112142 L0,4.50265232 L8,0 Z M2.10648757,5.69852516 L2.10648757,12.3153414 L8,15.632396 L13.8935124,12.3153414 L13.8935124,5.69852516 L8,2.38147048 L2.10648757,5.69852516 Z" />
+            </svg>
+          </span>
+
           <k-button
             v-if="notification"
             class="k-topbar-notification"
@@ -105,7 +111,7 @@
               {{ $t('license.buy') }}
             </k-button>
           </div>
-          <k-button :tooltip="$t('search')" icon="search" @click="$store.dispatch('search', true)" />
+          <k-button v-else :tooltip="$t('search')" icon="search" @click="$store.dispatch('search', true)" />
         </div>
       </div>
     </k-view>
@@ -179,6 +185,26 @@ export default {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
 }
+.k-topbar-loader {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 2.5rem;
+  width: 2.5rem;
+  padding: .75rem;
+  background: $color-dark;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.k-topbar-loader svg {
+  height: 18px;
+  width: 18px;
+  animation: Spin .9s linear infinite;
+}
+
 .k-topbar-menu {
   flex-shrink: 0;
 }

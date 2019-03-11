@@ -4,13 +4,21 @@ import config from "./config.js";
 import store from "@/store/store.js";
 
 Api.config.endpoint = config.api;
+Api.requests = [];
 
-Api.config.onStart = () => {
+Api.config.onStart = (requestId) => {
   store.dispatch("isLoading", true);
+  Api.requests.push(requestId);
 };
 
-Api.config.onComplete = () => {
-  store.dispatch("isLoading", false);
+Api.config.onComplete = (requestId) => {
+  Api.requests = Api.requests.filter(value => {
+    return value !== requestId;
+  });
+
+  if (Api.requests.length === 0) {
+    store.dispatch("isLoading", false);
+  }
 };
 
 Api.config.onError = error => {
