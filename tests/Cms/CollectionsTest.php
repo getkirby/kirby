@@ -12,6 +12,7 @@ class CollectionsTest extends TestCase
             ]
         ]);
     }
+
     public function testGet()
     {
         $app        = $this->_app();
@@ -57,6 +58,13 @@ class CollectionsTest extends TestCase
         $result = $app->collections()->load('test');
         $this->assertInstanceOf(Collection::class, $result());
 
+        $result = $app->collections()->load('nested/test');
+        $this->assertEquals('a', $result());
+    }
+
+    public function testLoadNested()
+    {
+        $app = $this->_app();
         $result = $app->collections()->load('nested/test');
         $this->assertEquals('a', $result());
     }
