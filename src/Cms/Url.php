@@ -76,7 +76,7 @@ class Url extends BaseUrl
         }
 
         // get a language url for the linked page, if the page can be found
-        if ($language !== null && $kirby->multilang() === true && $page = page($path)) {
+        if ($kirby->multilang() === true && $page = page($path)) {
             $path = $page->url($language);
         }
 

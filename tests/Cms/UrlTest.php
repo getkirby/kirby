@@ -43,16 +43,31 @@ class UrlTest extends TestCase
             'site' => [
                 'children' => [
                     ['slug' => 'a'],
-                    ['slug' => 'b']
+                    ['slug' => 'b'],
+                    [
+                        'slug' => 'c',
+                        'translations' => [
+                            [
+                                'code' => 'de',
+                                'content' => [
+                                    'slug' => 'custom'
+                                ]
+                            ]
+                        ]
+                    ]
                 ]
             ]
         ]);
 
+        $this->assertEquals('https://getkirby.com/en/a', Url::to('a'));
         $this->assertEquals('https://getkirby.com/en/a', Url::to('a', 'en'));
         $this->assertEquals('https://getkirby.com/de/a', Url::to('a', 'de'));
 
         $this->assertEquals('https://getkirby.com/en/a', Url::to('a', ['language' => 'en']));
         $this->assertEquals('https://getkirby.com/de/a', Url::to('a', ['language' => 'de']));
+
+        // translated slug
+        $this->assertEquals('https://getkirby.com/de/custom', Url::to('c', 'de'));
     }
 
     public function testToTemplateAsset()
