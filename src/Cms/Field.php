@@ -80,7 +80,7 @@ class Field
         }
 
         if (isset(static::$aliases[$method]) === true) {
-            $method = static::$aliases[$method];
+            $method = strtolower(static::$aliases[$method]);
 
             if (isset(static::$methods[$method]) === true) {
                 return static::$methods[$method](clone $this, ...$arguments);

@@ -29,6 +29,13 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('TEST', $field->UPPER());
     }
 
+    public function testFieldMethodAliasCaseInsensitivity()
+    {
+        $field = $this->field('1');
+        $this->assertEquals(1, $field->toInt());
+        $this->assertEquals(1, $field->int());
+    }
+
     public function testFieldMethodCombination()
     {
         $field = $this->field('test')->upper()->short(3);
