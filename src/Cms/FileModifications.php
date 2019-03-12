@@ -94,6 +94,7 @@ trait FileModifications
      * Create a srcset definition for the given sizes
      * Sizes can be defined as a simple array. They can
      * also be set up in the config with the thumbs.srcsets option.
+     * @since 3.1.0
      *
      * @param array|string $sizes
      * @return string

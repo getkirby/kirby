@@ -431,6 +431,7 @@ function kirbytext(string $text = null, array $data = []): string
 /**
  * Parses KirbyTags and inline Markdown in the
  * given string.
+ * @since 3.1.0
  *
  * @param string $text
  * @param array $data
@@ -455,6 +456,7 @@ function kt(string $text = null, array $data = []): string
 
 /**
  * Shortcut for `kirbytextinline()` helper
+ * @since 3.1.0
  *
  * @param string $text
  * @param array $data
