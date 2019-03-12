@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Cms\App;
 use Kirby\Data\Yaml;
 use Kirby\Form\Field;
 
@@ -228,5 +229,48 @@ class StructureFieldTest extends TestCase
         ]);
 
         $this->assertEquals('Test', $field->empty());
+    }
+
+    public function testTranslate()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        $field = new Field('structure', [
+            'fields' => [
+                'a' => [
+                    'type' => 'text'
+                ],
+                'b' => [
+                    'type' => 'text',
+                    'translate' => false
+                ]
+            ]
+        ]);
+
+        $app->setCurrentLanguage('en');
+
+        $this->assertFalse($field->form()->fields()->a()->disabled());
+        $this->assertFalse($field->form()->fields()->b()->disabled());
+
+        $app->setCurrentLanguage('de');
+
+        $this->assertFalse($field->form()->fields()->a()->disabled());
+        $this->assertTrue($field->form()->fields()->b()->disabled());
     }
 }
