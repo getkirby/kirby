@@ -155,6 +155,7 @@ class Route
     /**
      * Throws a specific exception to tell
      * the router to jump to the next route
+     * @since 3.0.3
      *
      * @return void
      */
