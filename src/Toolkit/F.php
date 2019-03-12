@@ -3,8 +3,8 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use Throwable;
 use Kirby\Http\Header;
+use Throwable;
 use ZipArchive;
 
 /**
@@ -332,7 +332,11 @@ class F
             throw new Exception(sprintf('The file "%s" does not exist and cannot be linked', $source));
         }
 
-        return $method($source, $link);
+        try {
+            return $method($source, $link) === true;
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     /**

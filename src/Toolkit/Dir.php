@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Throwable;
 
 /**
  * The `Dir` class provides methods
@@ -183,7 +184,11 @@ class Dir
             throw new Exception(sprintf('The directory "%s" does not exist and cannot be linked', $source));
         }
 
-        return symlink($source, $link);
+        try {
+            return symlink($source, $link) === true;
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     /**

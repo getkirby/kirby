@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Response;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
@@ -104,9 +105,11 @@ class PluginAssets
                 $target = $plugin->mediaRoot() . '/' . $filename;
                 $url    = $plugin->mediaUrl() . '/' . $filename;
 
-                F::link($source, $target, 'symlink');
+                if (F::link($source, $target, 'symlink') === true) {
+                    return Response::redirect($url);
+                }
 
-                return $url;
+                return Response::file($source);
             }
         }
 

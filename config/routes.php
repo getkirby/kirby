@@ -56,11 +56,7 @@ return function ($kirby) {
             'pattern' => 'media/plugins/(:any)/(:any)/(:all).(css|gif|js|jpg|png|svg|webp|woff2|woff)',
             'env'     => 'media',
             'action'  => function (string $provider, string $pluginName, string $filename, string $extension) use ($kirby) {
-                if ($url = PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension)) {
-                    return $kirby
-                        ->response()
-                        ->redirect($url, 307);
-                }
+                return PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension);
             }
         ],
         [
