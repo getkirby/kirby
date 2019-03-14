@@ -32,7 +32,7 @@ class Body
         return $this->html;
     }
 
-    public function text(): string
+    public function text()
     {
         return $this->text;
     }
@@ -43,7 +43,7 @@ class Body
         return $this;
     }
 
-    protected function setText(string $text)
+    protected function setText(string $text = null)
     {
         $this->text = $text;
         return $this;
