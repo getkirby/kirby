@@ -197,9 +197,12 @@ export default {
 .k-search-types > .k-button {
   padding: 0 0 0 .7rem;
   font-size: $font-size-medium;
-  line-height: 1rem;
-  display: flex;
+  line-height: 1;
+  height: 2.5rem;
 
+  .k-icon {
+    height: 2.5rem;
+  }
   .k-button-text {
     opacity: 1;
     font-weight: 500;
