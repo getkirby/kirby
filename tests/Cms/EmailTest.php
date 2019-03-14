@@ -64,6 +64,19 @@ class EmailTest extends TestCase
     {
         $app = new App([
             'templates' => [
+                'emails/media.html' => __DIR__ . '/fixtures/emails/media.html.php'
+            ]
+        ]);
+        $email = new Email(['template' => 'media']);
+        $this->assertEquals([
+            'html' => '<b>Image:</b> <img src=""/>'
+        ], $email->toArray()['body']);
+    }
+
+    public function testEmailTemplateHtmlText()
+    {
+        $app = new App([
+            'templates' => [
                 'emails/media.html' => __DIR__ . '/fixtures/emails/media.html.php',
                 'emails/media.text' => __DIR__ . '/fixtures/emails/media.text.php',
             ]
