@@ -413,6 +413,7 @@ abstract class ModelWithContent extends Model
     {
         $form = Form::for($this, [
             'input'          => $input,
+            'languageCode'   => $languageCode,
             'ignoreDisabled' => $validate === false,
         ]);
 
