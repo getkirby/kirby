@@ -101,6 +101,16 @@ class ResponseTest extends TestCase
         $this->assertEquals($expected, $response->body());
     }
 
+    public function testFile()
+    {
+        $file = __DIR__ . '/fixtures/download.txt';
+
+        $response = Response::file($file);
+
+        $this->assertEquals('text/plain', $response->type());
+        $this->assertEquals('test', $response->body());
+    }
+
     public function testType()
     {
         $response = new Response;
