@@ -3,6 +3,7 @@ import Directives from "./config/directives.js";
 import Filters from "./config/filters.js";
 import Events from "./config/events.js";
 import Vue from "vue";
+import Vuex from "vuex";
 import Vuelidate from "vuelidate";
 
 Vue.use(Directives);
@@ -12,6 +13,9 @@ Vue.use(Vuelidate);
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
+
+window.panel.Vue = Vue;
+window.panel.Vuex = Vuex;
 
 import "./config/components.js";
 import "./config/api.js";
