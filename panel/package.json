@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "autosize": "^4.0.2",
-    "dayjs": "^1.8.6",
+    "dayjs": "^1.8.10",
     "npm": "^6.8.0",
     "slugify": "^1.3.4",
     "vue": "^2.6.6",
