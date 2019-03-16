@@ -55,17 +55,16 @@ class Files extends Collection
      * Sort all given files by the
      * order in the array
      *
-     * @param array $files
+     * @param array $files List of filenames
+     * @param int $offset Sorting offset
      * @return self
      */
-    public function changeSort(array $files)
+    public function changeSort(array $files, int $offset = 0)
     {
-        $index = 0;
-
         foreach ($files as $filename) {
             if ($file = $this->get($filename)) {
-                $index++;
-                $file->changeSort($index);
+                $offset++;
+                $file->changeSort($offset);
             }
         }
 

@@ -62,7 +62,10 @@ return [
         'pattern' => '(:all)/files/sort',
         'method'  => 'PATCH',
         'action'  => function (string $path) {
-            return $this->parent($path)->files()->changeSort($this->requestBody('files'));
+            return $this->parent($path)->files()->changeSort(
+                $this->requestBody('files'),
+                $this->requestBody('index')
+            );
         }
     ],
     [

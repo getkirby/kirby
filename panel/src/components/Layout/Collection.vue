@@ -62,11 +62,6 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      list: this.items
-    };
-  },
   computed: {
     hasPagination() {
       if (this.pagination === false) {
@@ -129,9 +124,6 @@ export default {
     }
   },
   watch: {
-    items() {
-      this.list = this.items;
-    },
     $props() {
       this.$forceUpdate();
     }
