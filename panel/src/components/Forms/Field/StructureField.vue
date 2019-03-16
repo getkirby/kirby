@@ -346,7 +346,8 @@ export default {
         }
         case "date": {
           const date = dayjs(value);
-          return date.isValid() ? date.format("YYYY-MM-DD") : "";
+          const format = field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
+          return date.isValid() ? date.format(format) : "";
         }
         case "tags":
           return value
