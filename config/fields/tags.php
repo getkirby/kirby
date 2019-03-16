@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'mixins' => ['options'],
+    'mixins' => ['min', 'options'],
     'props' => [
 
         /**
