@@ -352,6 +352,31 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(2, $executed);
     }
 
+    public function testHooksEndless()
+    {
+        $executed = 0;
+
+        $kirby = new App([
+            'hooks' => [
+                'testHook.A' => [
+                    function () use (&$executed) {
+                        $executed++;
+                        $this->trigger('testHook.B');
+                    }
+                ],
+                'testHook.B' => [
+                    function () use (&$executed) {
+                        $executed++;
+                        $this->trigger('testHook.A');
+                    }
+                ]
+            ]
+        ]);
+
+        $kirby->trigger('testHook.A');
+        $this->assertEquals(2, $executed);
+    }
+
     public function testPageMethod()
     {
         $kirby = new App([

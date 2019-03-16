@@ -1156,15 +1156,31 @@ class App
     public function trigger(string $name, ...$arguments)
     {
         if ($functions = $this->extension('hooks', $name)) {
+
             static $triggered = [];
 
+            // get id for object hook is called on
+            if (isset($arguments[0]) === true) {
+                if (
+                    is_object($arguments[0]) === true &&
+                    method_exists($arguments[0], 'id') === true
+                ) {
+                    $id = $arguments[0]->id();
+                } else if (is_string($arguments[0]) === true) {
+                    $id = $arguments[0];
+                }
+            }
+
+            // generate unique key
+            $key = $name . '(' . ($id ?? '') . ')';
+
             foreach ($functions as $function) {
-                if (in_array($function, $triggered[$name] ?? []) === true) {
+                if (in_array($function, $triggered[$key] ?? []) === true) {
                     continue;
                 }
 
                 // mark the hook as triggered, to avoid endless loops
-                $triggered[$name][] = $function;
+                $triggered[$key][] = $function;
 
                 // bind the App object to the hook
                 $function->call($this, ...$arguments);
