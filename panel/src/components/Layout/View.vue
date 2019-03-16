@@ -31,7 +31,7 @@ export default {
 }
 
 .k-view[data-align="center"] {
-  height: 100vh;
+  height: calc(100vh - 6rem);
   display: flex;
   align-items: center;
   justify-content: center;
