@@ -305,4 +305,38 @@ class PageActionsTest extends TestCase
         // also check in a freshly found page object
         $this->assertEquals('Test', $this->app->page('test')->headline()->value());
     }
+
+
+    public function testChangeStatusHooks()
+    {
+        $phpunit = $this;
+        $before  = 0;
+        $after   = 0;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.changeStatus:before' => function (Page $page, $status, $position) use (&$before, $phpunit) {
+                    $phpunit->assertEquals('listed', $status);
+                    $phpunit->assertEquals($before + 1, $position);
+                    $before++;
+                },
+                'page.changeStatus:after' => function (Page $newPage, Page $oldPage) use (&$after, $phpunit) {
+                    $phpunit->assertEquals('draft', $oldPage->status());
+                    $phpunit->assertEquals('listed', $newPage->status());
+                    $after++;
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $pageA = Page::create(['slug' => 'test-a', 'num'  => null]);
+        $pageB = Page::create(['slug' => 'test-b', 'num'  => null]);
+
+        $pageA->changeStatus('listed');
+        $pageB->changeStatus('listed');
+
+        $this->assertEquals(2, $before);
+        $this->assertEquals(2, $after);
+    }
 }
