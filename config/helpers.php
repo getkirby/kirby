@@ -264,7 +264,17 @@ function image(string $path = null)
         $uri = null;
     }
 
-    $page = $uri === '/' ? site() : page($uri);
+    switch ($uri) {
+        case '/':
+            $page = site();
+            break;
+        case null:
+            $page = page();
+            break;
+        default:
+            $page = page($uri);
+            break;
+    }
 
     if ($page) {
         return $page->image($filename);
