@@ -21,7 +21,7 @@ return [
             return Form::for($site)->values();
         },
         'files' => function (Site $site) {
-            return $site->files();
+            return $site->files()->sortBy('sort', 'asc');
         },
         'options' => function (Site $site) {
             return $site->permissions()->toArray();
