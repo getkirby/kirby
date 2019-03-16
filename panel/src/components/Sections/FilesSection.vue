@@ -138,7 +138,10 @@ export default {
       });
 
       this.$api
-        .patch(this.parent + "/files/sort", { files: items })
+        .patch(this.parent + "/files/sort", {
+          files: items,
+          index: this.pagination.offset
+        })
         .then(() => {
           this.$store.dispatch("notification/success", ":)");
         })
