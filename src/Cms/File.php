@@ -368,6 +368,28 @@ class File extends ModelWithContent
     }
 
     /**
+     * Get the file's last modification time.
+     *
+     * @param  string $format
+     * @param  string|null $handler date or strftime
+     * @return mixed
+     */
+    public function modified(string $format = null, string $handler = null)
+    {
+        $file     = F::modified($this->root());
+        $content  = F::modified($this->contentFile());
+        $modified = max($file, $content);
+
+        if (is_null($format) === true) {
+            return $modified;
+        }
+
+        $handler = $handler ?? $this->kirby()->option('date.handler', 'date');
+
+        return $handler($format, $modified);
+    }
+
+    /**
      * Returns the parent Page object
      *
      * @return Page

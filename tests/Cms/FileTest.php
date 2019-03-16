@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Image\Image;
 use Kirby\Toolkit\F;
 
-class FilePropsTest extends TestCase
+class FileTest extends TestCase
 {
     protected function defaults(): array
     {
@@ -114,12 +114,12 @@ class FilePropsTest extends TestCase
     {
         $app = new App([
             'roots' => [
-                'index'   => $index = __DIR__ . '/fixtures/FilePropsTest/modified',
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
                 'content' => $index
             ]
         ]);
 
-        // create a site file
+        // create a file
         F::write($file = $index . '/test.js', 'test');
 
         $modified = filemtime($file);
@@ -135,7 +135,35 @@ class FilePropsTest extends TestCase
         $format = '%d.%m.%Y';
         $this->assertEquals(strftime($format, $modified), $file->modified($format, 'strftime'));
 
-        Dir::remove($index);
+        Dir::remove(dirname($index));
+    }
+
+    public function testModifiedContent()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
+                'content' => $index
+            ]
+        ]);
+
+        // create a file
+        F::write($file = $index . '/test.js', 'test');
+
+        // write the content file a bit later
+        usleep(1000000);
+
+        F::write($content = $index . '/test.js.txt', 'test');
+
+        $modifiedFile    = F::modified($file);
+        $modifiedContent = F::modified($content);
+
+        $file = $app->file('test.js');
+
+        $this->assertNotEquals($modifiedFile, $file->modified());
+        $this->assertEquals($modifiedContent, $file->modified());
+
+        Dir::remove(dirname($index));
     }
 
     public function testPanelIconDefault()
