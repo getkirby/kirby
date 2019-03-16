@@ -1156,7 +1156,6 @@ class App
     public function trigger(string $name, ...$arguments)
     {
         if ($functions = $this->extension('hooks', $name)) {
-
             static $triggered = [];
 
             // get id for object hook is called on
@@ -1166,7 +1165,7 @@ class App
                     method_exists($arguments[0], 'id') === true
                 ) {
                     $id = $arguments[0]->id();
-                } else if (is_string($arguments[0]) === true) {
+                } elseif (is_string($arguments[0]) === true) {
                     $id = $arguments[0];
                 }
             }
