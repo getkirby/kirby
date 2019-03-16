@@ -4,6 +4,7 @@ use Kirby\Cms\Form;
 use Kirby\Cms\Blueprint;
 
 return [
+    'mixins' => ['min'],
     'props' => [
         /**
          * Unset inherited props
@@ -121,7 +122,7 @@ return [
             }
 
             return $columns;
-        },
+        }
     ],
     'methods' => [
         'rows' => function ($value) {

@@ -4,6 +4,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [
+    'mixins' => ['min'],
     'props' => [
         /**
          * Unset inherited props

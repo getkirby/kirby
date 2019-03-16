@@ -4,7 +4,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 return [
-    'mixins' => ['options'],
+    'mixins' => ['min', 'options'],
     'props' => [
         /**
          * Unset inherited props

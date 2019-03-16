@@ -398,6 +398,47 @@ class FieldTest extends TestCase
         $this->assertEquals('en', $field->label);
     }
 
+    public function testMixinMin()
+    {
+        Field::$mixins['min'] = include kirby()->root('kirby') . '/config/fields/mixins/min.php';
+
+        Field::$types = [
+            'test' => ['mixins' => ['min']]
+        ];
+
+        $field = new Field('test', [
+            'model' => new Page(['slug' => 'test']),
+        ]);
+
+        $this->assertFalse($field->isRequired());
+        $this->assertNull($field->min());
+
+        $field = new Field('test', [
+            'model' => new Page(['slug' => 'test']),
+            'min'   => 5
+        ]);
+
+        $this->assertTrue($field->isRequired());
+        $this->assertEquals(5, $field->min());
+
+        $field = new Field('test', [
+            'model' => new Page(['slug' => 'test']),
+            'required' => true
+        ]);
+
+        $this->assertTrue($field->isRequired());
+        $this->assertEquals(1, $field->min());
+
+        $field = new Field('test', [
+            'model'    => new Page(['slug' => 'test']),
+            'required' => true,
+            'min'      => 5
+        ]);
+
+        $this->assertTrue($field->isRequired());
+        $this->assertEquals(5, $field->min());
+    }
+
     public function testModel()
     {
         Field::$types = [

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'mixins' => ['min'],
     'props' => [
         /**
          * Unset inherited props
