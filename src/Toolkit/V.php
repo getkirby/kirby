@@ -71,6 +71,11 @@ class V
             $value = $params[$index] ?? null;
 
             if (is_array($value) === true) {
+                foreach ($value as $index => $item) {
+                    if (is_array($item) === true) {
+                        $value[$index] = implode('|', $item);
+                    }
+                }
                 $value = implode(', ', $value);
             }
 
