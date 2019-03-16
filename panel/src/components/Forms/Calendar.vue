@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     date() {
-      return dayjs(`${this.year}-${this.month + 1}-${this.day}`);
+      return dayjs(`${this.year}/${this.month + 1}/${this.day}`);
     },
     numberOfDays() {
       return this.date.daysInMonth();
