@@ -170,6 +170,9 @@ class HelpersTest extends TestCase
         $app->site()->visit('test');
         $image = image();
         $this->assertInstanceOf(File::class, $image);
+
+        $image = image('pagefile.jpg');
+        $this->assertInstanceOf(File::class, $image);
     }
 
     public function testInvalid()
