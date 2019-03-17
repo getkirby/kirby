@@ -50,6 +50,7 @@ export default {
 }
 .k-icon[data-back="white"] {
   background: $color-white;
+  color: $color-dark;
 }
 .k-icon[data-back="pattern"] {
   background: lighten($color-dark, 10%) url($pattern);
