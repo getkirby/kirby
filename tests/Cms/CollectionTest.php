@@ -140,6 +140,21 @@ class CollectionTest extends TestCase
         $this->assertEquals($c, $result->last());
     }
 
+    public function testNotWithCollection()
+    {
+        $collection = new Collection([
+            $a = new MockObject(['id' => 'a']),
+            $b = new MockObject(['id' => 'b']),
+            $c = new MockObject(['id' => 'c'])
+        ]);
+
+        $not = $collection->find('a', 'c');
+
+        $result = $collection->not($not);
+        $this->assertCount(1, $result);
+        $this->assertEquals('b', $result->first()->id());
+    }
+
     public function testNotWithString()
     {
         $collection = new Collection([
@@ -189,6 +204,50 @@ class CollectionTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertEquals($c, $result->first());
         $this->assertEquals($c, $result->last());
+    }
+
+    public function testQuerySearch()
+    {
+        $collection = new Collection([
+            new Page(['slug' => 'project-a']),
+            new Page(['slug' => 'project-b']),
+            new Page(['slug' => 'project-c'])
+        ]);
+
+        // simple
+        $result = $collection->query([
+            'search' => 'project-b'
+        ]);
+
+        $this->assertCount(1, $result);
+        $this->assertEquals('project-b', $result->first()->id());
+
+        // with options array
+        $result = $collection->query([
+            'search' => [
+                'query' => 'project-b'
+            ]
+        ]);
+
+        $this->assertCount(1, $result);
+        $this->assertEquals('project-b', $result->first()->id());
+    }
+
+    public function testQueryPagination()
+    {
+        $collection = new Collection([
+            new Page(['slug' => 'project-a']),
+            new Page(['slug' => 'project-b']),
+            new Page(['slug' => 'project-c'])
+        ]);
+
+        $result = $collection->query([
+            'paginate' => 1
+        ]);
+
+        $this->assertCount(1, $result);
+        $this->assertEquals('project-a', $result->first()->id());
+        $this->assertEquals(3, $result->pagination()->pages());
     }
 
     public function testToArray()
