@@ -351,20 +351,14 @@ class RouterTest extends TestCase
             'languages' => [
                 [
                     'code'    => 'en',
-                    'default' => true
                 ],
                 [
                     'code' => 'de',
+                    'default' => true
                 ]
             ]
         ]);
 
-        // en
-        $page = $app->call('en');
-
-        $this->assertInstanceOf(Page::class, $page);
-        $this->assertEquals('home', $page->id());
-        $this->assertEquals('en', $app->language()->code());
 
         // de
         $page = $app->call('de');
@@ -372,6 +366,15 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
         $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('de', I18n::locale());
+
+        // en
+        $page = $app->call('en');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
 
         // redirect
         $result = $app->call('/');
@@ -394,31 +397,32 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'de',
                     'default' => true,
                     'url'     => '/'
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
 
-        // en
+        // de
         $page = $app->call('/');
 
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
-        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('de', I18n::locale());
 
-        // de
-        $page = $app->call('de');
+        // en
+        $page = $app->call('en');
 
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
-        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
     }
-
 
     public function testMultiLangHomeRouteWithoutHomePage()
     {
@@ -431,12 +435,12 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'de',
                     'default' => true,
                     'url'     => '/'
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
@@ -462,11 +466,11 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'de',
                     'default' => true
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
@@ -477,6 +481,7 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('projects', $page->id());
         $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
 
         // de
         $page = $app->call('de/projects');
@@ -484,6 +489,7 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('projects', $page->id());
         $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('de', I18n::locale());
     }
 
     public function testMultilangPageRepresentationRoute()
@@ -506,27 +512,14 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'de',
                     'default' => true
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
-
-        /* EN */
-
-        // missing representation
-        $result = $app->call('en/test.json');
-        $this->assertNull($result);
-
-        // xml presentation
-        $result = $app->call('en/test.xml');
-
-        $this->assertInstanceOf(Responder::class, $result);
-        $this->assertEquals('xml', $result->body());
-        $this->assertEquals('en', $app->language()->code());
 
         /* DE */
 
@@ -540,6 +533,21 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Responder::class, $result);
         $this->assertEquals('xml', $result->body());
         $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('de', I18n::locale());
+
+        /* EN */
+
+        // missing representation
+        $result = $app->call('en/test.json');
+        $this->assertNull($result);
+
+        // xml presentation
+        $result = $app->call('en/test.xml');
+
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertEquals('xml', $result->body());
+        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
     }
 
     public function testMultilangPageRepresentationRouteWithoutLanguageCode()
@@ -562,17 +570,17 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'de',
                     'default' => true,
                     'url'     => '/'
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
 
-        /* EN */
+        /* DE */
 
         // missing representation
         $result = $app->call('test.json');
@@ -583,19 +591,21 @@ class RouterTest extends TestCase
 
         $this->assertInstanceOf(Responder::class, $result);
         $this->assertEquals('xml', $result->body());
-        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('de', I18n::locale());
 
-        /* DE */
+        /* EN */
 
         // missing representation
-        $result = $app->call('de/test.json');
+        $result = $app->call('en/test.json');
         $this->assertNull($result);
 
         // xml presentation
-        $result = $app->call('de/test.xml');
+        $result = $app->call('en/test.xml');
 
         $this->assertInstanceOf(Responder::class, $result);
         $this->assertEquals('xml', $result->body());
-        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
     }
 }

@@ -122,7 +122,7 @@ return function ($kirby) {
                             ->redirect($kirby->site()->url());
                     }
                 } else {
-                    return $kirby->resolve();
+                    return $kirby->resolve(null, $kirby->detectedLanguage()->code());
                 }
             }
         ];
