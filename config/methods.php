@@ -299,6 +299,19 @@ return function (App $app) {
         },
 
         /**
+         * Converts the field content from inline Markdown/Kirbytext to valid HTML
+         * @since 3.1.0
+         */
+        'kirbytextinline' => function (Field $field) use ($app) {
+            $field->value = $app->kirbytext($field->value, [
+                'parent' => $field->parent(),
+                'field'  => $field
+            ], true);
+
+            return $field;
+        },
+
+        /**
          * Parses all KirbyTags without also parsing Markdown
          */
         'kirbytags' => function (Field $field) use ($app) {

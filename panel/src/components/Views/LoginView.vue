@@ -48,12 +48,14 @@ export default {
           autofocus: true,
           label: this.$t("email"),
           type: "email",
+          required: true,
           link: false
         },
         password: {
           label: this.$t("password"),
           type: "password",
           minLength: 8,
+          required: true,
           autocomplete: "current-password",
           counter: false
         }
@@ -107,6 +109,9 @@ export default {
 }
 .k-login-form[data-invalid] .k-field label {
   animation: nope 2s linear;
+}
+.k-login-form label abbr {
+  visibility: hidden;
 }
 .k-login-buttons {
   display: flex;

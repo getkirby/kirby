@@ -23,9 +23,13 @@ return [
     ],
     [
         'pattern' => 'users/search',
-        'method'  => 'POST',
+        'method'  => 'GET|POST',
         'action'  => function () {
-            return $this->users()->query($this->requestBody());
+            if ($this->requestMethod() === 'GET') {
+                return $this->users()->search($this->requestQuery('q'));
+            } else {
+                return $this->users()->query($this->requestBody());
+            }
         }
     ],
     [

@@ -5,10 +5,12 @@
       <k-headline :link="options.link">
         {{ headline }} <abbr v-if="options.min" title="This section is required">*</abbr>
       </k-headline>
+
       <k-button-group v-if="add">
         <k-button icon="add" @click="action(null, 'create')">{{ $t("add") }}</k-button>
       </k-button-group>
     </header>
+
 
     <template v-if="error">
       <k-box theme="negative">
@@ -24,6 +26,7 @@
       <k-collection
         v-if="data.length"
         :layout="options.layout"
+        :help="help"
         :items="data"
         :pagination="pagination"
         :sortable="options.sortable"

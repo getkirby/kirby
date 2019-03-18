@@ -5,7 +5,9 @@ namespace Kirby\Toolkit;
 use Exception;
 
 /**
- * A set of handy string methods
+ * The String class provides a set
+ * of handy methods for string
+ * handling and manipulation.
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>

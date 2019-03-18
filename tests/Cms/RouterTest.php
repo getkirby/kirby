@@ -2,65 +2,54 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\F;
+
 class RouterTest extends TestCase
 {
     protected $app;
 
     public function setUp(): void
     {
+        $this->fixtures = __DIR__ . '/fixtures/RouterTest';
+
         $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
-            ],
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'home',
-                    ],
-                    [
-                        'slug' => 'projects',
-                        'children' => [
-                            [
-                                'slug'  => 'project-a',
-                                'files' => [
-                                    [
-                                        'filename' => 'cover.jpg'
-                                    ]
-                                ]
-                            ],
-                        ],
-                    ]
-                ],
-                'files' => [
-                    [
-                        'filename' => 'background.jpg'
-                    ]
-                ]
-            ],
-            'users' => [
-                [
-                    'id'    => 'test',
-                    'email' => 'admin@getkirby.com',
-                    'files' => [
-                        [
-                            'filename' => 'test.jpg'
-                        ]
-                    ]
-                ]
             ]
         ]);
     }
 
+    public function tearDown(): void
+    {
+        Dir::remove($this->fixtures);
+    }
+
     public function testHomeRoute()
     {
-        $page = $this->app->call('');
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'home']
+                ]
+            ]
+        ]);
+
+        $page = $app->call('');
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
     }
 
     public function testHomeFolderRoute()
     {
-        $response = $this->app->call('home');
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'home']
+                ]
+            ]
+        ]);
+
+        $response = $app->call('home');
         $this->assertInstanceOf(Responder::class, $response);
         $this->assertEquals(302, $response->code());
     }
@@ -71,9 +60,11 @@ class RouterTest extends TestCase
             'options' => [
                 'home' => 'homie'
             ],
-            'children' => [
-                [
-                    'slug' => 'homie'
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'homie'
+                    ]
                 ]
             ]
         ]);
@@ -83,30 +74,125 @@ class RouterTest extends TestCase
         $this->assertEquals(302, $response->code());
     }
 
+    public function testHomeRouteWithoutHomePage()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => []
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The home page does not exist');
+
+        $app->call('/');
+    }
+
     public function testPageRoute()
     {
-        $page = $this->app->call('projects');
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'projects'
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->call('projects');
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('projects', $page->id());
     }
 
+    public function testPageRepresentationRoute()
+    {
+        F::write($template = $this->fixtures . '/test.php', 'html');
+        F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+
+        $app = new App([
+            'roots' => [
+                'index'     => '/dev/null',
+                'templates' => $this->fixtures
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test'
+                    ]
+                ],
+            ]
+        ]);
+
+        // missing representation
+        $result = $app->call('test.json');
+        $this->assertNull($result);
+
+        // xml presentation
+        $result = $app->call('test.xml');
+
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertEquals('xml', $result->body());
+    }
+
     public function testPageFileRoute()
     {
-        $file = $this->app->call('projects/project-a/cover.jpg');
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'  => 'projects',
+                        'files' => [
+                            [
+                                'filename' => 'cover.jpg'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = $app->call('projects/cover.jpg');
         $this->assertInstanceOf(File::class, $file);
-        $this->assertEquals('projects/project-a/cover.jpg', $file->id());
+        $this->assertEquals('projects/cover.jpg', $file->id());
     }
 
     public function testSiteFileRoute()
     {
-        $file = $this->app->call('background.jpg');
+        $app = $this->app->clone([
+            'site' => [
+                'files' => [
+                    [
+                        'filename' => 'background.jpg'
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = $app->call('background.jpg');
         $this->assertInstanceOf(File::class, $file);
         $this->assertEquals('background.jpg', $file->id());
     }
 
     public function testNestedPageRoute()
     {
-        $page = $this->app->call('projects/project-a');
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'  => 'projects',
+                        'children' => [
+                            [
+                                'slug' => 'project-a'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->call('projects/project-a');
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('projects/project-a', $page->id());
     }
@@ -119,19 +205,58 @@ class RouterTest extends TestCase
 
     public function testPageMediaRoute()
     {
-        $response = $this->app->call('media/pages/projects/project-a/1234-5678/cover.jpg');
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'  => 'projects',
+                        'files' => [
+                            [
+                                'filename' => 'cover.jpg'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $response = $app->call('media/pages/projects/1234-5678/cover.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testSiteMediaRoute()
     {
-        $response = $this->app->call('media/site/1234-5678/background.jpg');
+        $app = $this->app->clone([
+            'site' => [
+                'files' => [
+                    [
+                        'filename' => 'background.jpg'
+                    ]
+                ]
+            ]
+        ]);
+
+        $response = $app->call('media/site/1234-5678/background.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testUserMediaRoute()
     {
-        $response = $this->app->call('media/users/test/1234-5678/test.jpg');
+        $app = $this->app->clone([
+            'users' => [
+                [
+                    'id'    => 'test',
+                    'email' => 'admin@getkirby.com',
+                    'files' => [
+                        [
+                            'filename' => 'test.jpg'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $response = $app->call('media/users/test/1234-5678/test.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -208,5 +333,269 @@ class RouterTest extends TestCase
         $this->expectExceptionCode(400);
 
         $this->app->call('/', 'WURST');
+    }
+
+    public function testMultiLangHomeRoute()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        // en
+        $page = $app->call('en');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals('en', $app->language()->code());
+
+        // de
+        $page = $app->call('de');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals('de', $app->language()->code());
+
+        // redirect
+        $result = $app->call('/');
+
+        $this->assertInstanceOf(Responder::class, $result);
+    }
+
+    public function testMultiLangHomeRouteWithoutLanguageCode()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'url'     => '/'
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        // en
+        $page = $app->call('/');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals('en', $app->language()->code());
+
+        // de
+        $page = $app->call('de');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals('de', $app->language()->code());
+    }
+
+
+    public function testMultiLangHomeRouteWithoutHomePage()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => []
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'url'     => '/'
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The home page does not exist');
+
+        $app->call('/');
+    }
+
+    public function testMultiLangPageRoute()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'projects'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        // en
+        $page = $app->call('en/projects');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('projects', $page->id());
+        $this->assertEquals('en', $app->language()->code());
+
+        // de
+        $page = $app->call('de/projects');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('projects', $page->id());
+        $this->assertEquals('de', $app->language()->code());
+    }
+
+    public function testMultilangPageRepresentationRoute()
+    {
+        F::write($template = $this->fixtures . '/test.php', 'html');
+        F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+
+        $app = new App([
+            'roots' => [
+                'index'     => '/dev/null',
+                'templates' => $this->fixtures
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test'
+                    ]
+                ],
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        /* EN */
+
+        // missing representation
+        $result = $app->call('en/test.json');
+        $this->assertNull($result);
+
+        // xml presentation
+        $result = $app->call('en/test.xml');
+
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertEquals('xml', $result->body());
+        $this->assertEquals('en', $app->language()->code());
+
+        /* DE */
+
+        // missing representation
+        $result = $app->call('de/test.json');
+        $this->assertNull($result);
+
+        // xml presentation
+        $result = $app->call('de/test.xml');
+
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertEquals('xml', $result->body());
+        $this->assertEquals('de', $app->language()->code());
+    }
+
+    public function testMultilangPageRepresentationRouteWithoutLanguageCode()
+    {
+        F::write($template = $this->fixtures . '/test.php', 'html');
+        F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+
+        $app = new App([
+            'roots' => [
+                'index'     => '/dev/null',
+                'templates' => $this->fixtures
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test'
+                    ]
+                ],
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'url'     => '/'
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        /* EN */
+
+        // missing representation
+        $result = $app->call('test.json');
+        $this->assertNull($result);
+
+        // xml presentation
+        $result = $app->call('test.xml');
+
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertEquals('xml', $result->body());
+        $this->assertEquals('en', $app->language()->code());
+
+        /* DE */
+
+        // missing representation
+        $result = $app->call('de/test.json');
+        $this->assertNull($result);
+
+        // xml presentation
+        $result = $app->call('de/test.xml');
+
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertEquals('xml', $result->body());
+        $this->assertEquals('de', $app->language()->code());
     }
 }

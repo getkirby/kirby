@@ -62,7 +62,7 @@
   "error.file.type.forbidden": "Δεν επιτρέπεται η μεταφόρτωση αρχείων {type}",
   "error.file.undefined": "Δεν ήταν δυνατή η εύρεση του αρχείου",
 
-  "error.form.incomplete": "Επιδιορθώστε όλα τα σφάλματα της φόρμας ...",
+  "error.form.incomplete": "Παρακαλώ διορθώστε τα σφάλματα στη φόρμα...",
   "error.form.notSaved": "Δεν ήταν δυνατή η αποθήκευση της φόρμας",
 
   "error.page.changeSlug.permission":

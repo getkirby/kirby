@@ -1,8 +1,9 @@
 export default {
   props: {
-    parent: String,
     blueprint: String,
-    name: String
+    help: String,
+    name: String,
+    parent: String
   },
   methods: {
     load() {

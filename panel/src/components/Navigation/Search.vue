@@ -2,6 +2,19 @@
   <div class="k-search" role="search" @click="close">
     <div class="k-search-box" @click.stop>
       <div class="k-search-input">
+        <k-dropdown class="k-search-types">
+          <k-button :icon="type.icon" @click="$refs.types.toggle()">{{ type.label }}:</k-button>
+          <k-dropdown-content ref="types">
+            <k-dropdown-item
+              v-for="(type, typeIndex) in types"
+              :key="typeIndex"
+              :icon="type.icon"
+              @click="currentType = typeIndex"
+            >
+              {{ type.label }}
+            </k-dropdown-item>
+          </k-dropdown-content>
+        </k-dropdown>
         <input
           ref="input"
           v-model="q"
@@ -14,18 +27,23 @@
           @keydown.enter="enter"
           @keydown.esc="close"
         >
-        <k-button :tooltip="$t('close')" icon="cancel" @click="close" />
+        <k-button
+          :tooltip="$t('close')"
+          class="k-search-close"
+          icon="cancel"
+          @click="close"
+        />
       </div>
       <ul>
         <li
-          v-for="(page, pageIndex) in pages"
-          :key="page.id"
-          :data-selected="selected === pageIndex"
-          @mouseover="selected = pageIndex"
+          v-for="(item, itemIndex) in items"
+          :key="item.id"
+          :data-selected="selected === itemIndex"
+          @mouseover="selected = itemIndex"
         >
-          <k-link :to="$api.pages.link(page.id)" @click="click(pageIndex)">
-            <strong>{{ page.title }}</strong>
-            <small>{{ page.id }}</small>
+          <k-link :to="item.link" @click="click(itemIndex)">
+            <strong>{{ item.title }}</strong>
+            <small>{{ item.info }}</small>
           </k-link>
         </li>
       </ul>
@@ -35,21 +53,44 @@
 
 <script>
 
-import debounce from "@/ui/helpers/debounce.js";
+import debounce from "@/helpers/debounce.js";
 import config from "@/config/config.js";
 
 export default {
   data() {
     return {
-      pages: [],
+      items: [],
       q: null,
-      selected: -1
+      selected: -1,
+      currentType: "pages"
+    }
+  },
+  computed: {
+    type() {
+      return this.types[this.currentType] || this.types["pages"];
+    },
+    types() {
+      return {
+        pages: {
+          label: this.$t("pages"),
+          icon: "page",
+          endpoint: "site/search"
+        },
+        users: {
+          label: this.$t("users"),
+          icon: "users",
+          endpoint: "users/search"
+        }
+      };
     }
   },
   watch: {
     q: debounce(function (q) {
       this.search(q);
-    }, 200)
+    }, 200),
+    currentType() {
+      this.search(this.q);
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -69,35 +110,51 @@ export default {
       this.$store.dispatch("search", false);
     },
     down() {
-      if (this.selected < this.pages.length - 1) {
+      if (this.selected < this.items.length - 1) {
         this.selected++;
       }
     },
     enter() {
-      let page = this.pages[this.selected] || this.pages[0];
+      let item = this.items[this.selected] || this.items[0];
 
-      if (page) {
-        this.navigate(page);
+      if (item) {
+        this.navigate(item);
       }
     },
-    navigate(page) {
-      this.$router.push(this.$api.pages.link(page.id));
+    map_pages(item) {
+      return {
+        id: item.id,
+        title: item.title,
+        link: this.$api.pages.link(item.id),
+        info: item.id
+      };
+    },
+    map_users(item) {
+      return {
+        id: item.id,
+        title: item.name,
+        link: this.$api.users.link(item.id),
+        info: item.email
+      };
+    },
+    navigate(item) {
+      this.$router.push(item.link);
       this.close();
     },
     search(query) {
-      this.$api.get('site/search', { q: query, limit: config.search.limit }).then(response => {
-        this.pages = response.data;
+      this.$api.get(this.type.endpoint, { q: query, limit: config.search.limit }).then(response => {
+        this.items = response.data.map(this['map_' + this.currentType]);
         this.selected = -1;
       }).catch(() => {
-        this.pages = [];
+        this.items = [];
         this.selected = -1;
       });
     },
     tab() {
-      const page = this.pages[this.selected];
+      const item = this.items[this.selected];
 
-      if (page) {
-        this.navigate(page);
+      if (item) {
+        this.navigate(item);
       }
     },
     up() {
@@ -133,6 +190,24 @@ export default {
   background: #efefef;
   display: flex;
 }
+.k-search-types {
+  flex-shrink: 0;
+  display: flex;
+}
+.k-search-types > .k-button {
+  padding: 0 0 0 .7rem;
+  font-size: $font-size-medium;
+  line-height: 1;
+  height: 2.5rem;
+
+  .k-icon {
+    height: 2.5rem;
+  }
+  .k-button-text {
+    opacity: 1;
+    font-weight: 500;
+  }
+}
 .k-search-input input {
   background: none;
   flex-grow: 1;
@@ -141,7 +216,7 @@ export default {
   border: 0;
   height: 2.5rem;
 }
-.k-search-input .k-button {
+.k-search-close {
   width: 2.5rem;
   line-height: 1;
 }

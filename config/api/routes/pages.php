@@ -51,9 +51,15 @@ return [
     ],
     [
         'pattern' => 'pages/(:any)/children/search',
-        'method'  => 'POST',
+        'method'  => 'GET|POST',
         'action'  => function (string $id) {
-            return $this->page($id)->children()->query($this->requestBody());
+            $pages = $this->page($id)->children();
+
+            if ($this->requestMethod() === 'GET') {
+                return $pages->search($this->requestQuery('q'));
+            } else {
+                return $pages->query($this->requestBody());
+            }
         }
     ],
     [

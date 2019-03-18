@@ -9,6 +9,7 @@ use Kirby\Cms\Template;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Image\Darkroom;
+use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Tpl as Snippet;
@@ -50,17 +51,12 @@ return [
     'file::url' => function (App $kirby, $file) {
         return $file->mediaUrl();
     },
-    'markdown' => function (App $kirby, string $text = null, array $options = []): string {
+    'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;
 
-        if (isset($markdown) === false) {
-            $parser   = ($options['extra'] ?? false) === true ? 'ParsedownExtra' : 'Parsedown';
-            $markdown = new $parser;
-            $markdown->setBreaksEnabled($options['breaks'] ?? true);
-        }
+        $markdown = $markdown ?? new Markdown($options);
 
-        // we need the @ here, because parsedown has some notice issues :(
-        return @$markdown->text($text);
+        return $markdown->parse($text, $inline);
     },
     'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
         static $smartypants;

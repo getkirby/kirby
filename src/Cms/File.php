@@ -12,6 +12,13 @@ use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
+ * The `$file` object provides a set
+ * of methods that can be used when
+ * dealing with a single image or
+ * other media file, like getting the
+ * URL or resizing an image. It also
+ * handles file meta data.
+ *
  * The File class is a wrapper around
  * the Kirby\Image\Image class, which
  * is used to handle all file methods.
@@ -148,6 +155,7 @@ class File extends ModelWithContent
     /**
      * Returns the url to api endpoint
      *
+     * @internal
      * @param bool $relative
      * @return string
      */
@@ -157,8 +165,9 @@ class File extends ModelWithContent
     }
 
     /**
-     * Returns the Asset object
+     * Returns the Image object
      *
+     * @internal
      * @return Image
      */
     public function asset(): Image
@@ -183,7 +192,8 @@ class File extends ModelWithContent
     /**
      * Store the template in addition to the
      * other content.
-     *
+
+     * @internal
      * @param array $data
      * @param string|null $languageCode
      * @return array
@@ -199,6 +209,7 @@ class File extends ModelWithContent
      * Returns the directory in which
      * the content file is located
      *
+     * @internal
      * @return string
      */
     public function contentFileDirectory(): string
@@ -209,6 +220,7 @@ class File extends ModelWithContent
     /**
      * Filename for the content file
      *
+     * @internal
      * @return string
      */
     public function contentFileName(): string
@@ -222,6 +234,7 @@ class File extends ModelWithContent
      * used in the panel, when the file
      * gets dragged onto a textarea
      *
+     * @internal
      * @param string $type
      * @param bool $absolute
      * @return string
@@ -301,6 +314,7 @@ class File extends ModelWithContent
     /**
      * Create a unique media hash
      *
+     * @internal
      * @return string
      */
     public function mediaHash(): string
@@ -311,6 +325,7 @@ class File extends ModelWithContent
     /**
      * Returns the absolute path to the file in the public media folder
      *
+     * @internal
      * @return string
      */
     public function mediaRoot(): string
@@ -321,6 +336,7 @@ class File extends ModelWithContent
     /**
      * Returns the absolute Url to the file in the public media folder
      *
+     * @internal
      * @return string
      */
     public function mediaUrl(): string
@@ -329,9 +345,7 @@ class File extends ModelWithContent
     }
 
     /**
-     * Alias for the old way of fetching File
-     * content. Nowadays `File::content()` should
-     * be used instead.
+     * @deprecated 3.0.0 Use `File::content()` instead
      *
      * @return Content
      */
@@ -345,6 +359,7 @@ class File extends ModelWithContent
      * This is normally the parent page
      * or the site object.
      *
+     * @internal
      * @return Site|Page
      */
     public function model()
@@ -365,6 +380,7 @@ class File extends ModelWithContent
     /**
      * Panel icon definition
      *
+     * @internal
      * @param array $params
      * @return array
      */
@@ -415,6 +431,7 @@ class File extends ModelWithContent
     /**
      * Panel image definition
      *
+     * @internal
      * @param string|array|false $settings
      * @param array $thumbSettings
      * @return array
@@ -455,6 +472,7 @@ class File extends ModelWithContent
     /**
      * Returns the full path without leading slash
      *
+     * @internal
      * @return string
      */
     public function panelPath(): string
@@ -466,6 +484,7 @@ class File extends ModelWithContent
      * Returns the url to the editing view
      * in the panel
      *
+     * @internal
      * @param bool $relative
      * @return string
      */
@@ -487,6 +506,7 @@ class File extends ModelWithContent
     /**
      * Returns the parent id if a parent exists
      *
+     * @internal
      * @return string|null
      */
     public function parentId(): ?string
@@ -525,6 +545,7 @@ class File extends ModelWithContent
     /**
      * Creates a string query, starting from the model
      *
+     * @internal
      * @param string|null $query
      * @param string|null $expect
      * @return mixed
@@ -646,6 +667,7 @@ class File extends ModelWithContent
 
     /**
      * Returns the parent Files collection
+     * @internal
      *
      * @return Files
      */

@@ -1,5 +1,5 @@
 import api from "./api.js";
-import store from "../config/store.js";
+import store from "@/store/store.js";
 
 export default {
   running: 0,
@@ -20,7 +20,10 @@ export default {
     // add the csrf token to every request if it has been set
     options.headers["x-csrf"] = window.panel.csrf;
 
-    api.config.onStart();
+    // create a request id
+    const id = path + "/" + JSON.stringify(options);
+
+    api.config.onStart(id);
     this.running++;
 
     return fetch(api.config.endpoint + "/" + path, options)
@@ -46,13 +49,13 @@ export default {
         }
 
         this.running--;
-        api.config.onComplete();
+        api.config.onComplete(id);
         api.config.onSuccess(json);
         return response;
       })
       .catch(error => {
         this.running--;
-        api.config.onComplete();
+        api.config.onComplete(id);
         api.config.onError(error);
         throw error;
       });

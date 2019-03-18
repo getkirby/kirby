@@ -29,9 +29,16 @@ use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Url;
 
 /**
- * The App object is a big-ass monolith that's
- * in the center between all the other CMS classes.
- * It's the $kirby object in templates and handles
+ * The `$kirby` object is the app instance of
+ * your Kirby installation. It's the central
+ * starting point to get all the different
+ * aspects of your site, like the options, urls,
+ * roots, languages, roles, etc.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      http://getkirby.com
+ * @copyright Bastian Allgeier
  */
 class App
 {
@@ -148,6 +155,7 @@ class App
     /**
      * Returns the Api instance
      *
+     * @internal
      * @return Api
      */
     public function api(): Api
@@ -170,8 +178,9 @@ class App
     }
 
     /**
-     *  Apply a hook to the given value
+     * Apply a hook to the given value
      *
+     * @internal
      * @param string $name
      * @param mixed $value
      * @return mixed
@@ -264,12 +273,13 @@ class App
      */
     public function collections(): Collections
     {
-        return $this->collections = $this->collections ?? Collections::load($this);
+        return $this->collections = $this->collections ?? new Collections;
     }
 
     /**
      * Returns a core component
      *
+     * @internal
      * @param string $name
      * @return mixed
      */
@@ -281,6 +291,7 @@ class App
     /**
      * Returns the content extension
      *
+     * @internal
      * @return string
      */
     public function contentExtension(): string
@@ -291,6 +302,7 @@ class App
     /**
      * Returns files that should be ignored when scanning folders
      *
+     * @internal
      * @return array
      */
     public function contentIgnore(): array
@@ -302,6 +314,7 @@ class App
      * Calls a page controller by name
      * and with the given arguments
      *
+     * @internal
      * @param string $name
      * @param array $arguments
      * @return array
@@ -369,6 +382,8 @@ class App
     /**
      * Destroy the instance singleton and
      * purge other static props
+     *
+     * @internal
      */
     public static function destroy()
     {
@@ -424,6 +439,10 @@ class App
         $id       = dirname($path);
         $filename = basename($path);
 
+        if (is_a($parent, User::class) === true) {
+            return $parent->file($filename);
+        }
+
         if (is_a($parent, File::class) === true) {
             $parent = $parent->parent();
         }
@@ -468,6 +487,7 @@ class App
      * Takes almost any kind of input and
      * tries to convert it into a valid response
      *
+     * @internal
      * @param mixed $input
      * @return Response
      */
@@ -553,6 +573,7 @@ class App
     /**
      * Renders a single KirbyTag with the given attributes
      *
+     * @internal
      * @param string $type
      * @param string $value
      * @param array $attr
@@ -571,6 +592,7 @@ class App
     /**
      * KirbyTags Parser
      *
+     * @internal
      * @param string $text
      * @param array $data
      * @return string
@@ -587,15 +609,16 @@ class App
     /**
      * Parses KirbyTags first and Markdown afterwards
      *
+     * @internal
      * @param string $text
      * @param array $data
      * @return string
      */
-    public function kirbytext(string $text = null, array $data = []): string
+    public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
     {
         $text = $this->apply('kirbytext:before', $text);
         $text = $this->kirbytags($text, $data);
-        $text = $this->markdown($text);
+        $text = $this->markdown($text, $inline);
         $text = $this->apply('kirbytext:after', $text);
 
         return $text;
@@ -627,6 +650,7 @@ class App
     /**
      * Returns the current language code
      *
+     * @internal
      * @return string|null
      */
     public function languageCode(string $languageCode = null): ?string
@@ -651,12 +675,14 @@ class App
     /**
      * Parses Markdown
      *
+     * @internal
      * @param string $text
+     * @param bool $inline
      * @return string
      */
-    public function markdown(string $text = null): string
+    public function markdown(string $text = null, bool $inline = false): string
     {
-        return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? []);
+        return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? [], $inline);
     }
 
     /**
@@ -794,6 +820,7 @@ class App
     /**
      * Path resolver for the router
      *
+     * @internal
      * @param string $path
      * @param string|null $language
      * @return mixed
@@ -809,33 +836,36 @@ class App
         // the site is needed a couple times here
         $site = $this->site();
 
+        // use the home page
         if ($path === null) {
-            return $site->homePage();
+            if ($homePage = $site->homePage()) {
+                return $homePage;
+            }
+
+            throw new NotFoundException('The home page does not exist');
         }
 
-        if ($page = $site->find($path)) {
-            return $page;
-        }
+        // search for the page by path
+        $page = $site->find($path);
 
-        if ($draft = $site->draft($path)) {
+        // search for a draft if the page cannot be found
+        if (!$page && $draft = $site->draft($path)) {
             if ($this->user() || $draft->isVerified(get('token'))) {
-                return $draft;
+                $page = $draft;
             }
         }
 
         // try to resolve content representations if the path has an extension
         $extension = F::extension($path);
 
-        // remove the extension from the path
-        $path = Str::rtrim($path, '.' . $extension);
-
-        // stop when there's no extension
+        // no content representation? then return the page
         if (empty($extension) === true) {
-            return null;
+            return $page;
         }
 
-        // try to find the page for the representation
-        if ($page = $site->find($path)) {
+        // only try to return a representation
+        // when the page has been found
+        if ($page) {
             try {
                 return $this
                     ->response()
@@ -847,7 +877,7 @@ class App
         }
 
         $id       = dirname($path);
-        $filename = basename($path) . '.' . $extension;
+        $filename = basename($path);
 
         // try to resolve image urls for pages and drafts
         if ($page = $site->findPageOrDraft($id)) {
@@ -912,6 +942,7 @@ class App
     /**
      * Returns the Router singleton
      *
+     * @internal
      * @return Router
      */
     public function router(): Router
@@ -922,6 +953,7 @@ class App
     /**
      * Returns all defined routes
      *
+     * @internal
      * @return array
      */
     public function routes(): array
@@ -1053,6 +1085,7 @@ class App
     /**
      * Applies the smartypants rule on the text
      *
+     * @internal
      * @param string $text
      * @return string
      */
@@ -1065,6 +1098,7 @@ class App
      * Uses the snippet component to create
      * and return a template snippet
      *
+     * @internal
      * @return Snippet
      */
     public function snippet(string $name, array $data = []): ?string
@@ -1086,6 +1120,7 @@ class App
      * Uses the template component to initialize
      * and return the Template object
      *
+     * @internal
      * @return Template
      */
     public function template(string $name, string $type = 'html', string $defaultType = 'html'): Template
@@ -1107,8 +1142,9 @@ class App
     }
 
     /**
-     *  Trigger a hook by name
+     * Trigger a hook by name
      *
+     * @internal
      * @param string $name
      * @param mixed ...$arguments
      * @return void

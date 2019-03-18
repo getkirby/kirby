@@ -3,9 +3,20 @@
 namespace Kirby\Cms;
 
 use Kirby\Http\Route;
+use Kirby\Toolkit\F;
 
 class AppTest extends TestCase
 {
+    public function setUp(): void
+    {
+        $this->fixtures = __DIR__ . '/fixtures/AppTest';
+    }
+
+    public function tearDown(): void
+    {
+        Dir::remove($this->fixtures);
+    }
+
     public function testDefaultRoles()
     {
         $app = new App([
@@ -171,6 +182,34 @@ class AppTest extends TestCase
 
         // with page parent
         $this->assertEquals($fileA, $app->file('test-a.jpg', $site));
+
+        // with file parent
+        $this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
+    }
+
+    public function testFindUserFile()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'files' => [
+                        ['filename' => 'test-a.jpg'],
+                        ['filename' => 'test-b.jpg']
+                    ]
+                ]
+            ]
+        ]);
+
+        $user  = $app->user('test@getkirby.com');
+        $fileA = $user->file('test-a.jpg');
+        $fileB = $user->file('test-b.jpg');
+
+        // with user parent
+        $this->assertEquals($fileA, $app->file('test-a.jpg', $user));
 
         // with file parent
         $this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));

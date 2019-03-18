@@ -187,7 +187,7 @@ class Response
      */
     public static function file(string $file)
     {
-        return new static(F::read($file), F::mime($file));
+        return new static(F::read($file), F::extensionToMime(F::extension($file)));
     }
 
     /**

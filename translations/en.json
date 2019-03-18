@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Heading 2",
   "toolbar.button.heading.3": "Heading 3",
   "toolbar.button.italic": "Italic",
+  "toolbar.button.file": "File",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Ordered list",
   "toolbar.button.ul": "Bullet list",
@@ -395,6 +398,8 @@
   "user.delete": "Delete this user",
   "user.delete.confirm":
     "Do you really want to delete <br><strong>{email}</strong>?",
+
+  "users": "Users",
 
   "version": "Version",
 

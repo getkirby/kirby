@@ -289,6 +289,7 @@ export default {
   transform: translateX(-50%);
 }
 .k-user-view-image .k-image {
+  display: block;
   width: 4rem;
   height: 4rem;
   line-height: 0;

@@ -22,26 +22,30 @@ class FieldMethodsTest extends TestCase
         return new Field(null, 'test', $value);
     }
 
+    public function testFieldMethodCaseInsensitivity()
+    {
+        $field = $this->field('test');
+        $this->assertEquals('TEST', $field->upper());
+        $this->assertEquals('TEST', $field->UPPER());
+    }
+
+    public function testFieldMethodAliasCaseInsensitivity()
+    {
+        $field = $this->field('1');
+        $this->assertEquals(1, $field->toInt());
+        $this->assertEquals(1, $field->int());
+    }
+
     public function testFieldMethodCombination()
     {
         $field = $this->field('test')->upper()->short(3);
         $this->assertEquals('TES…', $field->value());
     }
 
-    public function testIsEmpty()
-    {
-        $this->assertTrue($this->field()->isEmpty());
-    }
-
     public function testIsFalse()
     {
         $this->assertTrue($this->field('false')->isFalse());
         $this->assertTrue($this->field(false)->isFalse());
-    }
-
-    public function testIsNotEmpty()
-    {
-        $this->assertTrue($this->field('test')->isNotEmpty());
     }
 
     public function testIsTrue()
@@ -421,6 +425,15 @@ class FieldMethodsTest extends TestCase
 
         $this->assertEquals($expected, $this->field($kirbytext)->kirbytext());
         $this->assertEquals($expected, $this->field($kirbytext)->kt());
+    }
+
+    public function testKirbytextInline()
+    {
+        $kirbytext = '(link: # text: Test)';
+        $expected  = '<a href="#">Test</a>';
+
+        $this->assertEquals($expected, $this->field($kirbytext)->kirbytextinline());
+        $this->assertEquals($expected, $this->field($kirbytext)->kti());
     }
 
     public function testKirbytags()

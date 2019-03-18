@@ -56,13 +56,13 @@
     "فایل آپلود شده باید از همان نوع باشد «{mime}»",
   "error.file.mime.forbidden": "فرمت فایل «{mime}» غیرمجاز است",
   "error.file.mime.missing":
-    "فرنت فایل «{filename}» قابل شناسایی نیست",
+    "فرمت فایل «{filename}» قابل شناسایی نیست",
   "error.file.name.missing": "نام فایل اجباری است",
   "error.file.notFound": "فایل «{filename}» پیدا نشد.",
-  "error.file.type.forbidden": "شما اجازه بارگزاری فایلهای «{type}» را ندارید",
+  "error.file.type.forbidden": "شما اجازه بارگذاری فایلهای «{type}» را ندارید",
   "error.file.undefined": "\u0641\u0627\u06cc\u0644 \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f.",
 
-  "error.form.incomplete": "لطفا کلیه خطاهای فرم را اصلاح کنید",
+  "error.form.incomplete": "لطفا کلیه خطاهای فرم را برطرف کنید",
   "error.form.notSaved": "امکان دخیره فرم وجود ندارد",
 
   "error.page.changeSlug.permission":
@@ -84,7 +84,7 @@
   "error.page.delete": "حذف صفحه «{slug}» ممکن نیست",
   "error.page.delete.confirm": "جهت ادامه عنوان صفحه را وارد کنید",
   "error.page.delete.hasChildren":
-    "این صفحه جاوی زیرصفحه است و نمی تواند حذف شود.",
+    "این صفحه جاوی زیرصفحه است و نمی تواند حذف شود",
   "error.page.delete.permission": "شما اجازه حذف «{slug}» را ندارید",
   "error.page.draft.duplicate":
     "صفحه پیش‌نویسی با پسوند Url مشابه «{slug}» هم اکنون موجود است",
@@ -96,7 +96,7 @@
   "error.page.slug.invalid": "لطفا یک پیشوند Url صحیح وارد کنید",
   "error.page.sort.permission": "امکان مرتب‌سازی «{slug}» نیست",
   "error.page.status.invalid": "لطفا وضعیت صحیحی برای صفحه انتخاب کنید",
-  "error.page.undefined": "\u0635\u0641\u062d\u0647 \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f.",
+  "error.page.undefined": "صفحه مورد نظر پیدا نشد",
   "error.page.update.permission": "شما اجازه بروزرسانی «{slug}» را ندارید",
 
   "error.section.files.max.plural":
@@ -117,7 +117,7 @@
   "error.section.pages.min.singular":
     "حداقل یک صفحه به بخش «{section}» اضافه کنید",
 
-  "error.section.notLoaded": "بخش «{name}» پیدا نشد",
+  "error.section.notLoaded": "بخش «{name}» قابل بارکذاری نیست",
   "error.section.type.invalid": "نوع بخش «{type}» غیرمجاز است",
 
   "error.site.changeTitle.permission":

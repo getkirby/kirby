@@ -67,6 +67,7 @@ trait AppPlugins
     /**
      * Register all given extensions
      *
+     * @internal
      * @param array $extensions
      * @param Plugin $plugin The plugin which defined those extensions
      * @return array
@@ -133,7 +134,7 @@ trait AppPlugins
 
     protected function extendFieldMethods(array $methods): array
     {
-        return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, $methods);
+        return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, array_change_key_case($methods));
     }
 
     protected function extendFields(array $fields): array
@@ -258,6 +259,7 @@ trait AppPlugins
     /**
      * Returns a given extension by type and name
      *
+     * @internal
      * @param string $type i.e. `'hooks'`
      * @param string $name i.e. `'page.delete:before'`
      * @param mixed $fallback
@@ -270,7 +272,9 @@ trait AppPlugins
 
     /**
      * Returns the extensions registry
-     *
+
+     * @internal
+     * @param string|null $type
      * @return array
      */
     public function extensions(string $type = null)
@@ -376,6 +380,7 @@ trait AppPlugins
             'h'       => 'html',
             'int'     => 'toInt',
             'kt'      => 'kirbytext',
+            'kti'     => 'kirbytextinline',
             'link'    => 'toLink',
             'md'      => 'markdown',
             'sp'      => 'smartypants',
@@ -404,6 +409,7 @@ trait AppPlugins
         // section mixins
         Section::$mixins['empty']          = include static::$root . '/config/sections/mixins/empty.php';
         Section::$mixins['headline']       = include static::$root . '/config/sections/mixins/headline.php';
+        Section::$mixins['help']           = include static::$root . '/config/sections/mixins/help.php';
         Section::$mixins['layout']         = include static::$root . '/config/sections/mixins/layout.php';
         Section::$mixins['max']            = include static::$root . '/config/sections/mixins/max.php';
         Section::$mixins['min']            = include static::$root . '/config/sections/mixins/min.php';
@@ -447,6 +453,7 @@ trait AppPlugins
      * Loads and returns all plugins in the site/plugins directory
      * Loading only happens on the first call.
      *
+     * @internal
      * @param array $plugins Can be used to overwrite the plugins registry
      * @return array
      */

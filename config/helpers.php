@@ -429,6 +429,45 @@ function kirbytext(string $text = null, array $data = []): string
 }
 
 /**
+ * Parses KirbyTags and inline Markdown in the
+ * given string.
+ * @since 3.1.0
+ *
+ * @param string $text
+ * @param array $data
+ * @return string
+ */
+function kirbytextinline(string $text = null, array $data = []): string
+{
+    return App::instance()->kirbytext($text, $data, true);
+}
+
+/**
+ * Shortcut for `kirbytext()` helper
+ *
+ * @param string $text
+ * @param array $data
+ * @return string
+ */
+function kt(string $text = null, array $data = []): string
+{
+    return kirbytext($text, $data);
+}
+
+/**
+ * Shortcut for `kirbytextinline()` helper
+ * @since 3.1.0
+ *
+ * @param string $text
+ * @param array $data
+ * @return string
+ */
+function kti(string $text = null, array $data = []): string
+{
+    return kirbytextinline($text, $data);
+}
+
+/**
  * A super simple class autoloader
  *
  * @param array $classmap

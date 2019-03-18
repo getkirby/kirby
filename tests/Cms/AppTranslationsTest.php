@@ -3,13 +3,17 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 
 class AppTranslationsTest extends TestCase
 {
-    public function app()
+    public function setUp(): void
     {
-        return new App([
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'users' => [
                 [
                     'email' => 'admin@getkirby.com',
@@ -29,6 +33,18 @@ class AppTranslationsTest extends TestCase
                 ]
             ]
         ]);
+
+        $this->fixtures = __DIR__ . '/fixtures/AppTranslationsTest';
+    }
+
+    public function tearDown(): void
+    {
+        Dir::remove($this->fixtures);
+    }
+
+    public function app()
+    {
+        return $this->app;
     }
 
     public function testTranslations()
@@ -87,6 +103,52 @@ class AppTranslationsTest extends TestCase
 
         $this->assertEquals('Speichern', t('save'));
         $this->assertEquals('Reset', t('reset'));
+    }
+
+    public function testTranslationInTemplate()
+    {
+        // create a dummy template
+        F::write($this->fixtures . '/test.php', '<?= t("button") ?>');
+
+        $app = new App([
+            'roots' => [
+                'index'     => '/dev/null',
+                'templates' => $this->fixtures
+            ],
+            'languages' => [
+                [
+                    'code'         => 'de',
+                    'default'      => true,
+                    'translations' => [
+                        'button' => 'Knopf'
+                    ]
+                ],
+                [
+                    'code'         => 'en',
+                    'default'      => false,
+                    'translations' => [
+                        'button' => 'Button'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test'
+                    ]
+                ]
+            ]
+        ]);
+
+        $result = $app->render('de/test');
+        $this->assertEquals('Knopf', $result->body());
+
+        $result = $app->render('en/test');
+        $this->assertEquals('Button', $result->body());
     }
 
     public function testExceptionWithoutLanguage()

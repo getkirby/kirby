@@ -73,12 +73,14 @@ class Field
      */
     public function __call(string $method, array $arguments = [])
     {
+        $method = strtolower($method);
+
         if (isset(static::$methods[$method]) === true) {
             return static::$methods[$method](clone $this, ...$arguments);
         }
 
         if (isset(static::$aliases[$method]) === true) {
-            $method = static::$aliases[$method];
+            $method = strtolower(static::$aliases[$method]);
 
             if (isset(static::$methods[$method]) === true) {
                 return static::$methods[$method](clone $this, ...$arguments);
@@ -142,7 +144,7 @@ class Field
      */
     public function isEmpty(): bool
     {
-        return empty($this->value) === true;
+        return empty($this->value) === true && in_array($this->value, [0, '0', false], true) === false;
     }
 
     /**
@@ -152,7 +154,7 @@ class Field
      */
     public function isNotEmpty(): bool
     {
-        return empty($this->value) === false;
+        return $this->isEmpty() === false;
     }
 
     /**

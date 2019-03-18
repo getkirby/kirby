@@ -19,6 +19,8 @@ class TextareaFieldTest extends TestCase
         $this->assertEquals(null, $field->maxlength());
         $this->assertEquals(null, $field->minlength());
         $this->assertEquals(null, $field->size());
+        $this->assertEquals([], $field->files());
+        $this->assertEquals([], $field->uploads());
         $this->assertTrue($field->save());
     }
 
@@ -42,5 +44,49 @@ class TextareaFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('maxlength', $field->errors());
+    }
+
+    public function testFiles()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'files' => [
+                'query' => 'page.images'
+            ]
+        ]);
+
+        $this->assertEquals(['query' => 'page.images'], $field->files());
+    }
+
+    public function testFilesQuery()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'files' => 'page.images'
+        ]);
+
+        $this->assertEquals(['query' => 'page.images'], $field->files());
+    }
+
+    public function testUploads()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'uploads' => [
+                'template' => 'test'
+            ]
+        ]);
+
+        $this->assertEquals(['template' => 'test'], $field->uploads());
+    }
+
+    public function testUploadsTemplate()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'uploads' => 'test'
+        ]);
+
+        $this->assertEquals(['template' => 'test'], $field->uploads());
     }
 }

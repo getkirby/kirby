@@ -5,6 +5,13 @@ namespace Kirby\Toolkit;
 use Zend\Escaper\Escaper;
 
 /**
+ * The `Escape` class provides methods
+ * for escaping common HTML attributes
+ * data. This can be used to put
+ * untrusted data into typical
+ * attribute values like width, name,
+ * value, etc.
+ *
  * Wrapper for the Zend Escaper
  *
  * @link https://github.com/zendframework/zend-escaper

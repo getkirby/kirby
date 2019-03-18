@@ -12,7 +12,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
- * The Request class provides
+ * The `Request` class provides
  * a simple API to inspect incoming
  * requests.
  *
@@ -154,7 +154,7 @@ class Request
 
     /**
      * Detects ajax requests
-     *
+     * @deprecated 3.1.0 No longer reliable, especially with the fetch api.
      * @return boolean
      */
     public function ajax(): bool

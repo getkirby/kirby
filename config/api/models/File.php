@@ -17,6 +17,9 @@ return [
         'dimensions' => function (File $file) {
             return $file->dimensions()->toArray();
         },
+        'dragText' => function (File $file) {
+            return $file->dragText();
+        },
         'exists' => function (File $file) {
             return $file->exists();
         },
@@ -52,6 +55,15 @@ return [
         },
         'options' => function (File $file) {
             return $file->permissions()->toArray();
+        },
+        'panelIcon' => function (File $file) {
+            return $file->panelIcon();
+        },
+        'panelImage' => function (File $file) {
+            return $file->panelImage();
+        },
+        'panelUrl' => function (File $file) {
+            return $file->panelUrl(true);
         },
         'prev' => function (File $file) {
             return $file->prev();

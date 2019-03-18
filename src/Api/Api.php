@@ -27,6 +27,8 @@ class Api
     protected $collections = [];
     protected $data = [];
     protected $models = [];
+    protected $route;
+    protected $router;
     protected $routes = [];
     protected $requestData = [];
     protected $requestMethod;
@@ -62,15 +64,15 @@ class Api
         $this->setRequestMethod($method);
         $this->setRequestData($requestData);
 
-        $router = new Router($this->routes());
-        $result = $router->find($path, $method);
-        $auth   = $result->attributes()['auth'] ?? true;
+        $this->router = new Router($this->routes());
+        $this->route  = $this->router->find($path, $method);
+        $auth   = $this->route->attributes()['auth'] ?? true;
 
         if ($auth !== false) {
             $this->authenticate();
         }
 
-        $output = $result->action()->call($this, ...$result->arguments());
+        $output = $this->route->action()->call($this, ...$this->route->arguments());
 
         if (is_object($output) === true) {
             return $this->resolve($output)->toResponse();
@@ -272,7 +274,10 @@ class Api
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
             if (is_a($e, 'Kirby\Exception\Exception') === true) {
-                $result = ['status' => 'error'] + $e->toArray();
+                $result = [
+                    'status' => 'error',
+                    'route'  => $this->route->pattern()
+                ] + $e->toArray();
             } else {
                 $result = [
                     'status'    => 'error',
@@ -280,7 +285,8 @@ class Api
                     'message'   => $e->getMessage(),
                     'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
                     'line'      => $e->getLine(),
-                    'code'      => empty($e->getCode()) === false ? $e->getCode() : 500
+                    'code'      => empty($e->getCode()) === false ? $e->getCode() : 500,
+                    'route'     => $this->route->pattern()
                 ];
             }
         }

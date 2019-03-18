@@ -65,7 +65,7 @@ trait FileFoundation
     }
 
     /**
-     * Returns the Asset object
+     * Returns the Image object
      *^
      * @return Image
      */
@@ -148,7 +148,7 @@ trait FileFoundation
     }
 
     /**
-     * Returns the paren app instance
+     * Returns the app instance
      *
      * @return App
      */

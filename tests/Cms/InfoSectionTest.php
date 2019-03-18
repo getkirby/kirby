@@ -33,12 +33,12 @@ class InfoSectionTest extends TestCase
             'name'     => 'test',
             'model'    => new Page(['slug' => 'test']),
             'headline' => [
-                'en' => 'Informations',
+                'en' => 'Information',
                 'de' => 'Informationen'
             ]
         ]);
 
-        $this->assertEquals('Informations', $section->headline());
+        $this->assertEquals('Information', $section->headline());
     }
 
     public function testText()
@@ -58,11 +58,49 @@ class InfoSectionTest extends TestCase
             'name'  => 'test',
             'model' => new Page(['slug' => 'test']),
             'text'  => [
-                'en' => 'Informations',
+                'en' => 'Information',
                 'de' => 'Informationen'
             ]
         ]);
 
-        $this->assertEquals('<p>Informations</p>', $section->text());
+        $this->assertEquals('<p>Information</p>', $section->text());
+    }
+
+    public function testTheme()
+    {
+
+        // single help
+        $section = new Section('info', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'theme' => 'notice'
+        ]);
+
+        $this->assertEquals('notice', $section->theme());
+    }
+
+    public function testHelp()
+    {
+
+        // single help
+        $section = new Section('info', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'help'  => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $section->help());
+
+        // translated help
+        $section = new Section('info', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'help' => [
+                'en' => 'Information',
+                'de' => 'Informationen'
+            ]
+        ]);
+
+        $this->assertEquals('Information', $section->help());
     }
 }

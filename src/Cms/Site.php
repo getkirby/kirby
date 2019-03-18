@@ -9,9 +9,10 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
- * The Site class is the root element
+ * The `$site` object is the root element
  * for any site with pages. It represents
- * the main content folder with its site.txt
+ * the main content folder with its
+ * `site.txt`.
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -143,6 +144,7 @@ class Site extends ModelWithContent
     /**
      * Returns the url to the api endpoint
      *
+     * @internal
      * @param bool $relative
      * @return string
      */
@@ -217,6 +219,7 @@ class Site extends ModelWithContent
     /**
      * Prepares the content for the write method
      *
+     * @internal
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -229,6 +232,7 @@ class Site extends ModelWithContent
     /**
      * Filename for the content file
      *
+     * @internal
      * @return string
      */
     public function contentFileName(): string
@@ -257,6 +261,7 @@ class Site extends ModelWithContent
     /**
      * Returns the global error page id
      *
+     * @internal
      * @return string
      */
     public function errorPageId(): string
@@ -295,6 +300,7 @@ class Site extends ModelWithContent
     /**
      * Returns the global home page id
      *
+     * @internal
      * @return string
      */
     public function homePageId(): string
@@ -306,6 +312,7 @@ class Site extends ModelWithContent
      * Creates an inventory of all files
      * and children in the site directory
      *
+     * @internal
      * @return array
      */
     public function inventory(): array
@@ -325,8 +332,24 @@ class Site extends ModelWithContent
     }
 
     /**
+     * Compares the current object with the given site object
+     *
+     * @param Site $site
+     * @return bool
+     */
+    public function is($site): bool
+    {
+        if (is_a($site, Site::class) === false) {
+            return false;
+        }
+
+        return $this === $site;
+    }
+
+    /**
      * Returns the root to the media folder for the site
      *
+     * @internal
      * @return string
      */
     public function mediaRoot(): string
@@ -337,6 +360,7 @@ class Site extends ModelWithContent
     /**
      * The site's base url for any files
      *
+     * @internal
      * @return string
      */
     public function mediaUrl(): string
@@ -399,6 +423,7 @@ class Site extends ModelWithContent
     /**
      * Returns the full path without leading slash
      *
+     * @internal
      * @return string
      */
     public function panelPath(): string
@@ -410,6 +435,7 @@ class Site extends ModelWithContent
      * Returns the url to the editing view
      * in the panel
      *
+     * @internal
      * @param bool $relative
      * @return string
      */
@@ -435,6 +461,7 @@ class Site extends ModelWithContent
     /**
      * Creates a string query, starting from the model
      *
+     * @internal
      * @param string|null $query
      * @param string|null $expect
      * @return mixed
@@ -540,6 +567,7 @@ class Site extends ModelWithContent
     /**
      * Sets the current page object
      *
+     * @internal
      * @param Page|null $page
      * @return self
      */
@@ -617,8 +645,9 @@ class Site extends ModelWithContent
     /**
      * Returns the translated url
      *
-     * @params string $languageCode
-     * @params array $options
+     * @internal
+     * @param string $languageCode
+     * @param array $options
      * @return string
      */
     public function urlForLanguage(string $languageCode = null, array $options = null): string
@@ -635,14 +664,17 @@ class Site extends ModelWithContent
      * id or page object and
      * returns the current page
      *
+     * @internal
      * @param  string|Page $page
      * @param  string|null $languageCode
      * @return Page
      */
     public function visit($page, string $languageCode = null): Page
     {
-        $this->kirby()->setCurrentTranslation($languageCode);
-        $this->kirby()->setCurrentLanguage($languageCode);
+        if ($languageCode !== null) {
+            $this->kirby()->setCurrentTranslation($languageCode);
+            $this->kirby()->setCurrentLanguage($languageCode);
+        }
 
         // convert ids to a Page object
         if (is_string($page)) {
