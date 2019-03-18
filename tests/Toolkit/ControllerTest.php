@@ -59,4 +59,10 @@ class ControllerTest extends TestCase
         $controller = Controller::load(__DIR__ . '/fixtures/controller/does-not-exist.php');
         $this->assertEquals(null, $controller);
     }
+
+    public function testLoadInvalidController()
+    {
+        $controller = Controller::load(__DIR__ . '/fixtures/controller/invalid.php');
+        $this->assertNull($controller);
+    }
 }
