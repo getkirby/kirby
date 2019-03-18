@@ -201,4 +201,45 @@ class ApiTest extends TestCase
         $this->assertEquals(200, $result['code']);
         $this->assertEquals('a filename with spaces.jpg', $result['data']['filename']);
     }
+
+    public function testAuthenticationWithoutCsrf()
+    {
+        $auth = $this->createMock(Auth::class);
+        $auth->method('type')->willReturn('session');
+        $auth->method('csrf')->willReturn(false);
+
+        $kirby = $this->createMock(App::class);
+        $kirby->method('auth')->willReturn($auth);
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('Unauthenticated');
+
+        $function = require $this->app->root('kirby') . '/config/api/authentication.php';
+
+        $api = new Api([
+            'kirby' => $kirby
+        ]);
+
+        $function->call($api);
+    }
+
+    public function testAuthenticationWithoutUser()
+    {
+        $auth = $this->createMock(Auth::class);
+        $auth->method('user')->willReturn(null);
+
+        $kirby = $this->createMock(App::class);
+        $kirby->method('auth')->willReturn($auth);
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('Unauthenticated');
+
+        $function = require $this->app->root('kirby') . '/config/api/authentication.php';
+
+        $api = new Api([
+            'kirby' => $kirby
+        ]);
+
+        $function->call($api);
+    }
 }
