@@ -546,7 +546,7 @@ class F
             $parent = realpath($in);
 
             if ($parent === false || is_dir($parent) === false) {
-                throw new Exception(sprintf('The parent directory does not exist: "%s"', $parent));
+                throw new Exception(sprintf('The parent directory does not exist: "%s"', $in));
             }
 
             if (substr($realpath, 0, strlen($parent)) !== $parent) {

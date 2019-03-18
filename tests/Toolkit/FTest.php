@@ -106,6 +106,53 @@ class FTest extends TestCase
         $this->assertTrue(is_file($link));
     }
 
+    public function testRealpath()
+    {
+        $path = F::realpath(__DIR__ . '/../Toolkit/FTest.php');
+        $this->assertEquals(__FILE__, $path);
+    }
+
+    public function testRealpathToMissingFile()
+    {
+        $path = __DIR__ . '/../does-not-exist.php';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The file does not exist at the given path: "' . $path . '"');
+
+        F::realpath($path);
+    }
+
+    public function testRealpathToParent()
+    {
+        $parent = __DIR__ . '/..';
+        $file   = $parent . '/Toolkit/FTest.php';
+        $path   = F::realpath($file, $parent);
+
+        $this->assertEquals(__FILE__, $path);
+    }
+
+    public function testRealpathToNonExistingParent()
+    {
+        $parent = __DIR__ . '/../does-not-exist';
+        $file   = __DIR__ . '/../Toolkit/FTest.php';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
+
+        F::realpath($file, $parent);
+    }
+
+    public function testRealpathToInvalidParent()
+    {
+        $parent = __DIR__ . '/../Cms';
+        $file   = __DIR__ . '/../Toolkit/FTest.php';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The file is not within the parent directory');
+
+        F::realpath($file, $parent);
+    }
+
     public function testSymlink()
     {
         $src  = $this->fixtures . '/a.txt';
