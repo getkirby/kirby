@@ -354,4 +354,23 @@ class EscapeTest extends TestCase
             }
         }
     }
+
+    public function xmlStringProvider()
+    {
+        return [
+            ['\'', '&apos;'],
+            ['"', '&quot;'],
+            ['&', '&amp;'],
+            ['<', '&lt;'],
+            ['>', '&gt;'],
+        ];
+    }
+
+    /**
+     * @dataProvider xmlStringProvider
+     */
+    public function testXml($input, $expected)
+    {
+        $this->assertEquals($expected, Escape::xml($input));
+    }
 }
