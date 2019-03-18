@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Nadpis 2",
   "toolbar.button.heading.3": "Nadpis 3",
   "toolbar.button.italic": "Kurz\u00edva",
+  "toolbar.button.file": "Soubor",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Odkaz",
   "toolbar.button.ol": "Řazený seznam",
   "toolbar.button.ul": "Odrážkový seznam",
@@ -395,6 +398,8 @@
   "user.delete": "Smazat tohoto uživatele",
   "user.delete.confirm":
     "Opravdu chcete smazat tohoto u\u017eivatele?",
+
+  "users": "Uživatelé",
 
   "version": "Verze Kirby",
 

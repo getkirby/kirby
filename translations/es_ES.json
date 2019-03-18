@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Encabezado 2",
   "toolbar.button.heading.3": "Encabezado 3",
   "toolbar.button.italic": "Italica",
+  "toolbar.button.file": "Archivo",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Enlace",
   "toolbar.button.ol": "Lista ordenada",
   "toolbar.button.ul": "Lista de viñetas",
@@ -395,6 +398,8 @@
   "user.delete": "Eliminar este usuario",
   "user.delete.confirm":
     "¿Realmente quieres eliminar <br><strong>{email}</strong>?",
+
+  "users": "Usuarios",
 
   "version": "Versión",
 

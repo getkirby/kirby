@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Overskrift 2",
   "toolbar.button.heading.3": "Overskrift 3",
   "toolbar.button.italic": "Kursiv tekst",
+  "toolbar.button.file": "Fil",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Ordnet liste",
   "toolbar.button.ul": "Punktliste",
@@ -395,6 +398,8 @@
   "user.delete": "Slet denne bruger",
   "user.delete.confirm":
     "\u00d8nsker du virkelig at slette denne bruger?",
+
+  "users": "Brugere",
 
   "version": "Kirby version",
 

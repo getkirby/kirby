@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Titolo 2",
   "toolbar.button.heading.3": "Titolo 3",
   "toolbar.button.italic": "Corsivo",
+  "toolbar.button.file": "File",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Elenco numerato",
   "toolbar.button.ul": "Elenco puntato",
@@ -395,6 +398,8 @@
   "user.delete": "Elimina questo utente",
   "user.delete.confirm":
     "Sei sicuro di voler eliminare questo utente?",
+
+  "users": "Utenti",
 
   "version": "Versione di Kirby",
 

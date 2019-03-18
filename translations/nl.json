@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Titel 2",
   "toolbar.button.heading.3": "Titel 3",
   "toolbar.button.italic": "Cursieve tekst",
+  "toolbar.button.file": "Bestand",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Genummerde lijst",
   "toolbar.button.ul": "Opsomming",
@@ -395,6 +398,8 @@
   "user.delete": "Verwijder deze gebruiker",
   "user.delete.confirm":
     "Weet je zeker dat je <br><strong>{email}</strong>wil verwijderen?",
+
+  "users": "Gebruikers",
 
   "version": "Kirby-versie",
 

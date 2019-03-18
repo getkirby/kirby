@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Nadpis 2",
   "toolbar.button.heading.3": "Nadpis 3",
   "toolbar.button.italic": "Kurzíva",
+  "toolbar.button.file": "Súbor",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Odkaz",
   "toolbar.button.ol": "Číslovaný zoznam",
   "toolbar.button.ul": "Odrážkový zoznam",
@@ -395,6 +398,8 @@
   "user.delete": "Zmazať tohto užívateľa",
   "user.delete.confirm":
     "Ste si istý, že chcete zmazať <br><strong>{email}</strong>?",
+
+  "users": "Užívatelia",
 
   "version": "Verzia",
 

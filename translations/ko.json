@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "제목 2",
   "toolbar.button.heading.3": "제목 3",
   "toolbar.button.italic": "강조 2",
+  "toolbar.button.file": "파일",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "링크",
   "toolbar.button.ol": "숫자 목록",
   "toolbar.button.ul": "기호 목록",
@@ -395,6 +398,8 @@
   "user.delete": "사용자 삭제",
   "user.delete.confirm":
     "<strong>이메일({email})</strong>을 삭제할까요?",
+
+  "users": "사용자",
 
   "version": "버전",
 

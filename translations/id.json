@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Penajukan 2",
   "toolbar.button.heading.3": "Penajukan 3",
   "toolbar.button.italic": "Miring",
+  "toolbar.button.file": "Berkas",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Tautan",
   "toolbar.button.ol": "Daftar berurut",
   "toolbar.button.ul": "Daftar tidak berurut",
@@ -395,6 +398,8 @@
   "user.delete": "Hapus pengguna ini",
   "user.delete.confirm":
     "Anda yakin menghapus <br><strong>{email}</strong>?",
+
+  "users": "Pengguna",
 
   "version": "Versi",
 

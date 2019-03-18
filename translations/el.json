@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Επικεφαλίδα 2",
   "toolbar.button.heading.3": "Επικεφαλίδα 3",
   "toolbar.button.italic": "\u03a0\u03bb\u03ac\u03b3\u03b9\u03b1 \u03b3\u03c1\u03b1\u03c6\u03ae",
+  "toolbar.button.file": "Αρχείο",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "\u03a3\u03cd\u03bd\u03b4\u03b5\u03c3\u03bc\u03bf\u03c2",
   "toolbar.button.ol": "Ταξινομημένη λίστα",
   "toolbar.button.ul": "Λίστα κουκκίδων",
@@ -395,6 +398,8 @@
   "user.delete": "Διαγραφή χρήστη",
   "user.delete.confirm":
     "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc\u03bd \u03c4\u03bf\u03bd \u03c7\u03c1\u03ae\u03c3\u03c4\u03b7;",
+
+  "users": "Χρήστες",
 
   "version": "\u0388\u03ba\u03b4\u03bf\u03c3\u03b7 Kirby",
 
