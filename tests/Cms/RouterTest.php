@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\I18n;
 
 class RouterTest extends TestCase
 {
