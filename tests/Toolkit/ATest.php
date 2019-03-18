@@ -305,6 +305,17 @@ class ATest extends TestCase
         $this->assertEquals($merged, A::extend($a, $b));
     }
 
+    public function testJoin()
+    {
+        $array = ['a', 'b', 'c'];
+        $this->assertEquals('a, b, c', A::join($array));
+
+        $array = ['a', 'b', 'c'];
+        $this->assertEquals('a/b/c', A::join($array, '/'));
+
+        $this->assertEquals('a/b/c', A::join('a/b/c'));
+    }
+
     public function testUpdate()
     {
         $array = $this->_array();
