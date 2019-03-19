@@ -205,8 +205,7 @@ trait FileActions
     }
 
     /**
-     * Alias for changeName
-     * @deprecated
+     * @deprecated 3.0.0 Use `File::changeName()` instead
      *
      * @param string $name
      * @param bool $sanitize
