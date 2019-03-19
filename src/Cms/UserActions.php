@@ -186,7 +186,7 @@ trait UserActions
             $user->writePassword($user->password());
 
             // write the user data
-            return $user->save();
+            return $user->save($user->content()->toArray());
         });
     }
 

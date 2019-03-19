@@ -96,6 +96,19 @@ class UserActionsTest extends TestCase
         $this->assertEquals('editor', $user->role());
     }
 
+    public function testCreateWithContent()
+    {
+        $user = User::create([
+            'email' => 'new@domain.com',
+            'role'  => 'editor',
+            'content' => [
+                'a' => 'Custom A'
+            ],
+        ]);
+
+        $this->assertEquals('Custom A', $user->a()->value());
+    }
+
     public function testCreateWithDefaults()
     {
         $user = User::create([
@@ -145,6 +158,38 @@ class UserActionsTest extends TestCase
 
         $this->assertEquals('Custom A', $user->a()->value());
         $this->assertEquals('B', $user->b()->value());
+    }
+
+    public function testCreateWithContentMultilang()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                ],
+                [
+                    'code'    => 'de',
+                ]
+            ]
+        ]);
+
+        $user = User::create([
+            'email' => 'new@domain.com',
+            'role'  => 'editor',
+            'content' => [
+                'a' => 'a',
+                'b' => 'b',
+            ],
+        ]);
+
+        $this->assertTrue($user->exists());
+
+        $this->assertEquals('a', $user->a()->value());
+        $this->assertEquals('b', $user->b()->value());
     }
 
     public function testDelete()
