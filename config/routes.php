@@ -111,6 +111,7 @@ return function ($kirby) {
             'action'  => function () use ($kirby) {
                 $home = $kirby->site()->homePage();
 
+                // language detection on the home page with / as URL
                 if ($home && $kirby->url() !== $home->url()) {
                     if ($kirby->option('languages.detect') === true) {
                         return $kirby
@@ -121,8 +122,10 @@ return function ($kirby) {
                             ->response()
                             ->redirect($kirby->site()->url());
                     }
+
+                    // default home page
                 } else {
-                    return $kirby->resolve(null, $kirby->detectedLanguage()->code());
+                    return $kirby->resolve(null, $kirby->defaultLanguage()->code());
                 }
             }
         ];
