@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Filename;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\FileModifications;
@@ -43,11 +44,11 @@ return [
      * Adapt file characteristics
      *
      * @param Kirby\Cms\App $kirby Kirby instance
-     * @param Kirby\Cms\FileModifications $file The file modifications object
+     * @param Kirby\Cms\File|Kirby\Cms\FileModifications $file The file object
      * @param array $options All thumb options (width, height, crop, blur, grayscale)
      * @return Kirby\Cms\File|Kirby\Cms\FileVersion
      */
-    'file::version' => function (App $kirby, FileModifications $file, array $options = []) {
+    'file::version' => function (App $kirby, $file, array $options = []) {
         if ($file->isResizable() === false) {
             return $file;
         }
@@ -181,11 +182,11 @@ return [
      *
      * @param Kirby\Cms\App $kirby Kirby instance
      * @param string $path URL path
-     * @param array $options Array of options for the Uri class
+     * @param array|null $options Array of options for the Uri class
      * @param Closure $originalHandler Callback function to the original URL handler with `$path` and `$options` as parameters
      * @return string
      */
-    'url' => function (App $kirby, string $path, array $options = [], Closure $originalHandler): string {
+    'url' => function (App $kirby, string $path, $options = [], Closure $originalHandler): string {
         return $originalHandler($path, $options);
     },
 
