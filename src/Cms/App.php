@@ -682,7 +682,7 @@ class App
      */
     public function markdown(string $text = null, bool $inline = false): string
     {
-        return $this->extensions['components']['markdown']($this, $text, $this->options['markdown'] ?? [], $inline);
+        return $this->component('markdown')($this, $text, $this->options['markdown'] ?? [], $inline);
     }
 
     /**
@@ -1091,7 +1091,7 @@ class App
      */
     public function smartypants(string $text = null): string
     {
-        return $this->extensions['components']['smartypants']($this, $text, $this->options['smartypants'] ?? []);
+        return $this->component('smartypants')($this, $text, $this->options['smartypants'] ?? []);
     }
 
     /**
@@ -1103,7 +1103,7 @@ class App
      */
     public function snippet(string $name, array $data = []): ?string
     {
-        return $this->extensions['components']['snippet']($this, $name, array_merge($this->data, $data));
+        return $this->component('snippet')($this, $name, array_merge($this->data, $data));
     }
 
     /**
@@ -1125,7 +1125,7 @@ class App
      */
     public function template(string $name, string $type = 'html', string $defaultType = 'html'): Template
     {
-        return $this->extensions['components']['template']($this, $name, $type, $defaultType);
+        return $this->component('template')($this, $name, $type, $defaultType);
     }
 
     /**
@@ -1134,11 +1134,11 @@ class App
      * @param string $src
      * @param string $dst
      * @param array $options
-     * @return null
+     * @return string
      */
-    public function thumb(string $src, string $dst, array $options = [])
+    public function thumb(string $src, string $dst, array $options = []): string
     {
-        return $this->extensions['components']['thumb']($this, $src, $dst, $options);
+        return $this->component('thumb')($this, $src, $dst, $options);
     }
 
     /**
