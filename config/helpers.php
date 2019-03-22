@@ -105,16 +105,13 @@ function css($url, $options = null)
 
     $kirby = App::instance();
 
-    if ($component = $kirby->component('css')) {
-        $url = $component($kirby, $url, $options);
-    }
-
     if ($url === '@auto') {
         if (!$url = Url::toTemplateAsset('css/templates', 'css')) {
             return null;
         }
     }
 
+    $url  = $kirby->component('css')($kirby, $url, $options);
     $url  = Url::to($url);
     $attr = array_merge((array)$options, [
         'href' => $url,
@@ -369,16 +366,13 @@ function js($url, $options = null)
 
     $kirby = App::instance();
 
-    if ($component = $kirby->component('js')) {
-        $url = $component($kirby, $url, $options);
-    }
-
     if ($url === '@auto') {
         if (!$url = Url::toTemplateAsset('js/templates', 'js')) {
             return null;
         }
     }
 
+    $url  = $kirby->component('js')($kirby, $url, $options);
     $url  = Url::to($url);
     $attr = array_merge((array)$options, ['src' => $url]);
 
