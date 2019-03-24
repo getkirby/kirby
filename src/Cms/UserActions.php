@@ -278,8 +278,12 @@ trait UserActions
     protected function writeCredentials(array $credentials): bool
     {
         $export = '<?php' . PHP_EOL . PHP_EOL . 'return ' . var_export($credentials, true) . ';';
+        $file = $this->root() . '/index.php';
 
-        return F::write($this->root() . '/index.php', $export);
+        $result = F::write($file, $export);
+        F::invalidateOpcodeCache($file);
+
+        return $result;
     }
 
     /**
