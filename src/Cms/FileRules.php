@@ -64,7 +64,7 @@ class FileRules
     public static function delete(File $file): bool
     {
         if ($file->permissions()->delete() !== true) {
-            throw new LogicException('The file cannot be deleted');
+            throw new PermissionException('The file cannot be deleted');
         }
 
         return true;
@@ -73,7 +73,7 @@ class FileRules
     public static function replace(File $file, Image $upload): bool
     {
         if ($file->permissions()->replace() !== true) {
-            throw new LogicException('The file cannot be replaced');
+            throw new PermissionException('The file cannot be replaced');
         }
 
         static::validMime($file, $upload->mime());
@@ -94,7 +94,7 @@ class FileRules
     public static function update(File $file, array $content = []): bool
     {
         if ($file->permissions()->update() !== true) {
-            throw new LogicException('The file cannot be updated');
+            throw new PermissionException('The file cannot be updated');
         }
 
         return true;

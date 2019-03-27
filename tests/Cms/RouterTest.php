@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\I18n;
 
 class RouterTest extends TestCase
 {
@@ -351,13 +352,22 @@ class RouterTest extends TestCase
             'languages' => [
                 [
                     'code'    => 'en',
-                    'default' => true
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'fr',
+                    'default' => true
                 ]
             ]
         ]);
+
+
+        // fr
+        $page = $app->call('fr');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals('fr', $app->language()->code());
+        $this->assertEquals('fr', I18n::locale());
 
         // en
         $page = $app->call('en');
@@ -365,13 +375,7 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
         $this->assertEquals('en', $app->language()->code());
-
-        // de
-        $page = $app->call('de');
-
-        $this->assertInstanceOf(Page::class, $page);
-        $this->assertEquals('home', $page->id());
-        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
 
         // redirect
         $result = $app->call('/');
@@ -394,31 +398,83 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'fr',
                     'default' => true,
                     'url'     => '/'
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
 
-        // en
+        // fr
         $page = $app->call('/');
 
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
-        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('fr', $app->language()->code());
+        $this->assertEquals('fr', I18n::locale());
 
-        // de
-        $page = $app->call('de');
+        // en
+        $page = $app->call('en');
 
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('home', $page->id());
-        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
     }
 
+    public function acceptedLanguageProvider()
+    {
+        return [
+            ['fr,en;q=0.8', '/fr'],
+            ['en', '/en'],
+            ['de', '/fr']
+        ];
+    }
+
+    /**
+     * @dataProvider acceptedLanguageProvider
+     */
+    public function testMultiLangHomeRouteWithoutLanguageCodeAndLanguageDetection($accept, $redirect)
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true,
+                'languages.detect' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'fr',
+                    'default' => true,
+                ],
+                [
+                    'code' => 'en',
+                ]
+            ]
+        ]);
+
+        $acceptedLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
+
+        // set the accepted visitor language
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
+
+        $response = $app->call('/');
+
+        $this->assertInstanceOf(Responder::class, $response);
+        $this->assertEquals(['Location' => $redirect], $response->headers());
+
+        // reset the accepted visitor language
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
+    }
 
     public function testMultiLangHomeRouteWithoutHomePage()
     {
@@ -431,12 +487,12 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'fr',
                     'default' => true,
                     'url'     => '/'
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
@@ -462,11 +518,11 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'fr',
                     'default' => true
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
@@ -477,13 +533,15 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('projects', $page->id());
         $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
 
-        // de
-        $page = $app->call('de/projects');
+        // fr
+        $page = $app->call('fr/projects');
 
         $this->assertInstanceOf(Page::class, $page);
         $this->assertEquals('projects', $page->id());
-        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('fr', $app->language()->code());
+        $this->assertEquals('fr', I18n::locale());
     }
 
     public function testMultilangPageRepresentationRoute()
@@ -506,14 +564,28 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'fr',
                     'default' => true
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
+
+        /* DE */
+
+        // missing representation
+        $result = $app->call('fr/test.json');
+        $this->assertNull($result);
+
+        // xml presentation
+        $result = $app->call('fr/test.xml');
+
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertEquals('xml', $result->body());
+        $this->assertEquals('fr', $app->language()->code());
+        $this->assertEquals('fr', I18n::locale());
 
         /* EN */
 
@@ -527,19 +599,7 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Responder::class, $result);
         $this->assertEquals('xml', $result->body());
         $this->assertEquals('en', $app->language()->code());
-
-        /* DE */
-
-        // missing representation
-        $result = $app->call('de/test.json');
-        $this->assertNull($result);
-
-        // xml presentation
-        $result = $app->call('de/test.xml');
-
-        $this->assertInstanceOf(Responder::class, $result);
-        $this->assertEquals('xml', $result->body());
-        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
     }
 
     public function testMultilangPageRepresentationRouteWithoutLanguageCode()
@@ -562,17 +622,17 @@ class RouterTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'    => 'en',
+                    'code'    => 'fr',
                     'default' => true,
                     'url'     => '/'
                 ],
                 [
-                    'code' => 'de',
+                    'code' => 'en',
                 ]
             ]
         ]);
 
-        /* EN */
+        /* FR */
 
         // missing representation
         $result = $app->call('test.json');
@@ -583,19 +643,21 @@ class RouterTest extends TestCase
 
         $this->assertInstanceOf(Responder::class, $result);
         $this->assertEquals('xml', $result->body());
-        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('fr', $app->language()->code());
+        $this->assertEquals('fr', I18n::locale());
 
-        /* DE */
+        /* EN */
 
         // missing representation
-        $result = $app->call('de/test.json');
+        $result = $app->call('en/test.json');
         $this->assertNull($result);
 
         // xml presentation
-        $result = $app->call('de/test.xml');
+        $result = $app->call('en/test.xml');
 
         $this->assertInstanceOf(Responder::class, $result);
         $this->assertEquals('xml', $result->body());
-        $this->assertEquals('de', $app->language()->code());
+        $this->assertEquals('en', $app->language()->code());
+        $this->assertEquals('en', I18n::locale());
     }
 }

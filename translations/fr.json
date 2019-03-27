@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Titre 2",
   "toolbar.button.heading.3": "Titre 3",
   "toolbar.button.italic": "Italique",
+  "toolbar.button.file": "Fichier",
+  "toolbar.button.file.select": "Sélectionner un fichier",
+  "toolbar.button.file.upload": "Transférer un fichier",
   "toolbar.button.link": "Lien",
   "toolbar.button.ol": "Liste ordonnée",
   "toolbar.button.ul": "Liste non-ordonnée",
@@ -395,6 +398,8 @@
   "user.delete": "Supprimer cet utilisateur",
   "user.delete.confirm":
     "Voulez-vous vraiment supprimer <br><strong>{email}</strong>?",
+
+  "users": "Utilisateurs",
 
   "version": "Version",
 

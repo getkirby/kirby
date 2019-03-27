@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Encapçalament 2",
   "toolbar.button.heading.3": "Encapçalament 3",
   "toolbar.button.italic": "Cursiva",
+  "toolbar.button.file": "Arxiu",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Enlla\u00e7",
   "toolbar.button.ol": "Llista ordenada",
   "toolbar.button.ul": "Llista de vinyetes",
@@ -395,6 +398,8 @@
   "user.delete": "Eliminar aquest usuari",
   "user.delete.confirm":
     "Segur que voleu eliminar <br> <strong>{email}</strong>?",
+
+  "users": "Usuaris",
 
   "version": "Versi\u00f3 de Kirby",
 

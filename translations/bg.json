@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Заглавие 2",
   "toolbar.button.heading.3": "Заглавие 3",
   "toolbar.button.italic": "\u041d\u0430\u043a\u043b\u043e\u043d\u0435\u043d \u0448\u0440\u0438\u0444\u0442",
+  "toolbar.button.file": "Файл",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "\u0412\u0440\u044a\u0437\u043a\u0430",
   "toolbar.button.ol": "Подреден списък",
   "toolbar.button.ul": "Списък",
@@ -395,6 +398,8 @@
   "user.delete": "Изтрийте потребителя",
   "user.delete.confirm":
     "Сигурни ли сте, че искате да изтриете <br><strong>{email}</strong>?",
+
+  "users": "Потребители",
 
   "version": "\u0412\u0435\u0440\u0441\u0438\u044f \u043d\u0430 Kirby",
 

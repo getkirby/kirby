@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "عنوان 2",
   "toolbar.button.heading.3": "عنوان 3",
   "toolbar.button.italic": "\u0645\u062a\u0646 \u0627\u0631\u06cc\u0628",
+  "toolbar.button.file": "فایل",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "\u067e\u06cc\u0648\u0646\u062f",
   "toolbar.button.ol": "لیست مرتب",
   "toolbar.button.ul": "لیست معمولی",
@@ -395,6 +398,8 @@
   "user.delete": "حذف کاربر جاری",
   "user.delete.confirm":
     "آیا واقعا میخواهید<strong> {email}</strong> را حذف کنید؟",
+
+  "users": "کاربران",
 
   "version": "\u0646\u0633\u062e\u0647 \u0646\u0631\u0645 \u0627\u0641\u0632\u0627\u0631",
 

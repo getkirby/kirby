@@ -65,6 +65,33 @@ class UserRulesTest extends TestCase
         $this->assertTrue(UserRules::{'change' . $key}($user, $value));
     }
 
+    public function missingPermissionProvider()
+    {
+        return [
+            ['Email', 'domain.com', 'You are not allowed to change the email for the user "test"'],
+            ['Language', 'english', 'You are not allowed to change the language for the user "test"'],
+            ['Password', '1234', 'You are not allowed to change the password for the user "test"'],
+        ];
+    }
+
+    /**
+     * @dataProvider missingPermissionProvider
+     */
+    public function testChangeWithoutPermission($key, $value, $message)
+    {
+        $permissions = $this->createMock(UserPermissions::class);
+        $permissions->method('__call')->with('change' . $key)->willReturn(false);
+
+        $user = $this->createMock(User::class);
+        $user->method('permissions')->willReturn($permissions);
+        $user->method('username')->willReturn('test');
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage($message);
+
+        UserRules::{'change' . $key}($user, $value);
+    }
+
     public function testChangeEmailDuplicate()
     {
         $this->expectException('Kirby\Exception\DuplicateException');
@@ -81,6 +108,7 @@ class UserRulesTest extends TestCase
         $this->expectExceptionCode('error.user.changeRole.lastAdmin');
 
         $kirby = $this->appWithAdmin();
+        $kirby->impersonate('kirby');
 
         UserRules::changeRole($kirby->user('admin@domain.com'), 'editor');
     }

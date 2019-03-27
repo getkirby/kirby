@@ -98,6 +98,21 @@ class EmailTest extends TestCase
         $this->assertTrue($email->isHtml());
     }
 
+    public function testBodyHtmlOnly()
+    {
+        $email = $this->_email([
+            'body' => $body = [
+                'html' => 'HTML is even <b>better</b>'
+            ]
+        ]);
+
+        $this->assertInstanceOf(Body::class, $email->body());
+        $this->assertEquals(null, $email->body()->text());
+        $this->assertEquals($body['html'], $email->body()->html());
+
+        $this->assertTrue($email->isHtml());
+    }
+
     public function testAttachments()
     {
         $email = $this->_email([

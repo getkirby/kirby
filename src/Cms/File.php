@@ -745,6 +745,6 @@ class File extends ModelWithContent
      */
     public function url(): string
     {
-        return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this, []);
+        return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this);
     }
 }

@@ -120,7 +120,8 @@ export default {
         }));
       }
 
-      const regex = new RegExp(`(${this.q})`, "ig");
+      RegExp.escape = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
       return this.options
         .filter(option => {

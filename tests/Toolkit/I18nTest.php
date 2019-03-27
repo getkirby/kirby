@@ -123,6 +123,13 @@ class I18nTest extends TestCase
         ]));
     }
 
+    public function testTranslateArrayWithFallback()
+    {
+        $this->assertEquals('fallback', I18n::translate([
+            'de' => 'Save',
+        ], 'fallback'));
+    }
+
     public function testTranslateArrayWithDifferentLocale()
     {
         I18n::$locale = 'de';
