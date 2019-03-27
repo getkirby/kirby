@@ -266,18 +266,18 @@ function image(string $path = null)
 
     switch ($uri) {
         case '/':
-            $page = site();
+            $parent = site();
             break;
         case null:
-            $page = page();
+            $parent = page();
             break;
         default:
-            $page = page($uri);
+            $parent = page($uri);
             break;
     }
 
-    if ($page) {
-        return $page->image($filename);
+    if ($parent) {
+        return $parent->image($filename);
     } else {
         return null;
     }
