@@ -349,7 +349,7 @@ class Collection extends Iterator implements Countable
 
         foreach ($keys as $key) {
             if ($item = $this->findByKey($key)) {
-                if (method_exists($item, 'id') === true) {
+                if (is_object($item) && method_exists($item, 'id') === true) {
                     $key = $item->id();
                 }
                 $result[$key] = $item;
