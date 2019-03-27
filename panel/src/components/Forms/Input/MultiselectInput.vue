@@ -120,7 +120,7 @@ export default {
         }));
       }
 
-      RegExp.escape = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      RegExp.escape = s => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
       const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
       return this.options
@@ -218,7 +218,7 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onOpen() {
-      this.$nextTick(() => { 
+      this.$nextTick(() => {
         if (this.$refs.search) {
           this.$refs.search.focus();
         }
