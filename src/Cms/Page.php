@@ -875,29 +875,20 @@ class Page extends ModelWithContent
      */
     public function panelIcon(array $params = null): array
     {
+        $options = [
+            'type'  => 'page',
+            'ratio' => $params['ratio'] ?? null,
+            'back'  => $params['back'] ?? 'black',
+        ];
+
         if ($icon = $this->blueprint()->icon()) {
+            $options['type'] = $icon;
 
             // check for emojis
             if (strlen($icon) !== Str::length($icon)) {
-                $options = [
-                    'type'  => $icon,
-                    'back'  => 'black',
-                    'emoji' => true
-                ];
-            } else {
-                $options = [
-                    'type' => $icon,
-                    'back' => 'black',
-                ];
+                $options['emoji'] = true;
             }
-        } else {
-            $options = [
-                'type' => 'page',
-                'back' => 'black',
-            ];
         }
-
-        $options['ratio'] = $params['ratio'] ?? null;
 
         return $options;
     }

@@ -110,9 +110,11 @@ export default {
 }
 .k-image[data-back="white"] span {
   background: $color-white;
+  color: $color-dark;
 }
 .k-image[data-back="white"] .k-image-error {
   background: $color-dark;
+  color: $color-white;
 }
 .k-image[data-back="pattern"] span {
   background: lighten($color-dark, 10%) url($pattern);

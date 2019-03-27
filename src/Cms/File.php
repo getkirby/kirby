@@ -418,14 +418,12 @@ class File extends ModelWithContent
 
         $definition = array_merge($types[$this->type()] ?? [], $extensions[$this->extension()] ?? []);
 
-        $settings = [
+        return [
             'type'  => $definition['type'] ?? 'file',
-            'back'  => 'pattern',
             'color' => $definition['color'] ?? $colorWhite,
+            'back'  => $params['back'] ?? 'pattern',
             'ratio' => $params['ratio'] ?? null,
         ];
-
-        return $settings;
     }
 
     /**
@@ -745,6 +743,6 @@ class File extends ModelWithContent
      */
     public function url(): string
     {
-        return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this, []);
+        return $this->url ?? $this->url = $this->kirby()->component('file::url')($this->kirby(), $this);
     }
 }
