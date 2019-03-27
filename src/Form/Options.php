@@ -121,7 +121,9 @@ class Options
             }
 
             // translate the option text
-            $option['text'] = I18n::translate($option['text'], $option['text']);
+            if (is_array($option['text']) === true) {
+                $option['text'] = I18n::translate($option['text'], $option['text']);
+            }
 
             // add the option to the list
             $result[] = $option;

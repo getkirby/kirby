@@ -80,12 +80,8 @@ class Url extends BaseUrl
             $path = $page->url($language);
         }
 
-        if ($handler = $kirby->component('url')) {
-            return $handler($kirby, $path, $options, function (string $path = null, $options = null) {
-                return parent::to($path, $options);
-            });
-        }
-
-        return parent::to($path, $options);
+        return $kirby->component('url')($kirby, $path, $options, function (string $path = null, $options = null) {
+            return parent::to($path, $options);
+        });
     }
 }
