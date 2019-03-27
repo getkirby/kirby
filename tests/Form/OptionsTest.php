@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Data\Data;
 use Kirby\Data\Yaml;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase;
 
 class OptionsTest extends TestCase
@@ -157,5 +158,46 @@ class OptionsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testTranslated()
+    {
+        I18n::$locale = 'en';
+
+        $options = Options::factory([
+            'a' => ['en' => 'A (en)', 'de' => 'A (de)'],
+            'b' => ['en' => 'B (en)', 'de' => 'B (de)']
+        ]);
+
+        $this->assertEquals('A (en)', $options[0]['text']);
+        $this->assertEquals('B (en)', $options[1]['text']);
+
+        I18n::$locale = 'de';
+
+        $options = Options::factory([
+            'a' => ['en' => 'A (en)', 'de' => 'A (de)'],
+            'b' => ['en' => 'B (en)', 'de' => 'B (de)']
+        ]);
+
+        $this->assertEquals('A (de)', $options[0]['text']);
+        $this->assertEquals('B (de)', $options[1]['text']);
+    }
+
+    public function testUntranslated()
+    {
+        I18n::$translations = [
+            'en' => [
+                'language' => 'Language'
+            ],
+            'de' => [
+                'language' => 'Sprache'
+            ]
+        ];
+
+        $options = Options::factory([
+            'language' => 'language',
+        ]);
+
+        $this->assertEquals('language', $options[0]['text']);
     }
 }
