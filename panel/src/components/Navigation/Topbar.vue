@@ -99,24 +99,26 @@
           >
             {{ notification.message }}
           </k-button>
-          <div v-else-if="unregistered" class="k-registration">
-            <p>{{ $t('license.unregistered') }}</p>
-            <k-button :responsive="true" icon="key" @click="$emit('register')">{{ $t('license.register') }}</k-button>
+
+          <template v-else>
+            <div v-if="unregistered" class="k-registration">
+              <p>{{ $t('license.unregistered') }}</p>
+              <k-button :responsive="true" icon="key" @click="$emit('register')">{{ $t('license.register') }}</k-button>
+              <k-button
+                :responsive="true"
+                link="https://getkirby.com/buy"
+                target="_blank"
+                icon="cart"
+              >
+                {{ $t('license.buy') }}
+              </k-button>
+            </div>
             <k-button
-              :responsive="true"
-              link="https://getkirby.com/buy"
-              target="_blank"
-              icon="cart"
-            >
-              {{ $t('license.buy') }}
-            </k-button>
-          </div>
-          <k-button
-            v-else
-            :tooltip="$t('search')"
-            icon="search"
-            @click="$store.dispatch('search', true)"
-          />
+              :tooltip="$t('search')"
+              icon="search"
+              @click="$store.dispatch('search', true)"
+            />
+          </template>
         </div>
       </div>
     </k-view>
