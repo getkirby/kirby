@@ -254,7 +254,7 @@ class App
      * automatically injected
      *
      * @param string $name
-     * @return void
+     * @return Kirby\Cms\Collection|null
      */
     public function collection(string $name)
     {
