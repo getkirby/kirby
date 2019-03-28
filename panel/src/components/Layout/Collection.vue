@@ -79,11 +79,11 @@ export default {
       return true;
     },
     hasFooter() {
-      if (!this.hasPagination && !this.help) {
-        return false;
+      if (this.hasPagination || this.help) {
+        return true;
       }
 
-      return true;
+      return false;
     },
     dragOptions() {
       return {

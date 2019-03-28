@@ -43,6 +43,14 @@
         >
           {{ options.empty || $t('pages.empty') }}
         </k-empty>
+        <footer class="k-collection-footer">
+          <k-text
+            v-if="help"
+            theme="help"
+            class="k-collection-help"
+            v-html="help"
+          />
+        </footer>
       </template>
 
       <k-page-create-dialog ref="create" />

@@ -34,14 +34,23 @@
           @paginate="paginate"
           @action="action"
         />
-        <k-empty
-          v-else
-          :layout="options.layout"
-          icon="image"
-          @click="if (add) upload()"
-        >
-          {{ options.empty || $t('files.empty') }}
-        </k-empty>
+        <template v-else>
+          <k-empty
+            :layout="options.layout"
+            icon="image"
+            @click="if (add) upload()"
+          >
+            {{ options.empty || $t('files.empty') }}
+          </k-empty>
+          <footer class="k-collection-footer">
+            <k-text
+              v-if="help"
+              theme="help"
+              class="k-collection-help"
+              v-html="help"
+            />
+          </footer>
+        </template>
       </k-dropzone>
 
       <k-file-rename-dialog ref="rename" @success="update" />
