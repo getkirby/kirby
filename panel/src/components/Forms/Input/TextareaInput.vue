@@ -146,11 +146,14 @@ export default {
 
       this.resize();
     },
-    prepend(prepend) {
-      this.insert(prepend + " " + this.selection());
+    insertFile(files) {
+      if (files && files.length > 0) {
+        this.insert(files[0].dragText);
+      }
     },
-    resize() {
-      autosize.update(this.$refs.input);
+    insertUpload(files, response) {
+      this.insert(response[0].dragText);
+      this.$events.$emit("model.update");
     },
     onClick() {
       if (this.$refs.toolbar) {
@@ -230,28 +233,14 @@ export default {
     onSubmit($event) {
       return this.$emit("submit", $event);
     },
+    prepend(prepend) {
+      this.insert(prepend + " " + this.selection());
+    },
+    resize() {
+      autosize.update(this.$refs.input);
+    },
     select() {
       this.$refs.select();
-    },
-    selection() {
-      const area = this.$refs.input;
-      const start = area.selectionStart;
-      const end = area.selectionEnd;
-
-      return area.value.substring(start, end);
-    },
-    wrap(text) {
-      this.insert(text + this.selection() + text);
-    },
-    uploadFile() {
-      this.$refs.fileUpload.open({
-        url: config.api + "/" + this.endpoints.field + "/upload",
-        multiple: false,
-      });
-    },
-    insertUpload(files, response) {
-      this.insert(response[0].dragText);
-      this.$events.$emit("model.update");
     },
     selectFile() {
       this.$api
@@ -264,8 +253,21 @@ export default {
           this.$store.dispatch("notification/error", error);
         });
     },
-    insertFile(files) {
-      this.insert(files[0].dragText);
+    selection() {
+      const area = this.$refs.input;
+      const start = area.selectionStart;
+      const end = area.selectionEnd;
+
+      return area.value.substring(start, end);
+    },
+    uploadFile() {
+      this.$refs.fileUpload.open({
+        url: config.api + "/" + this.endpoints.field + "/upload",
+        multiple: false,
+      });
+    },
+    wrap(text) {
+      this.insert(text + this.selection() + text);
     }
   },
   validations() {
