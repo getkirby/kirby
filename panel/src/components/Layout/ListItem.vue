@@ -127,7 +127,7 @@ $list-item-height: 38px;
   height: $list-item-height;
 }
 .k-list-item-image .k-icon svg {
-  color: rgba($color-white, 0.5);
+  opacity: .5;
 }
 .k-list-item-content {
   display: flex;

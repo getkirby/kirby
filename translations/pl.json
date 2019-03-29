@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Nagłówek 2",
   "toolbar.button.heading.3": "Nagłówek 3",
   "toolbar.button.italic": "Kursywa",
+  "toolbar.button.file": "Plik",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Lista numerowana",
   "toolbar.button.ul": "Lista wypunktowana",
@@ -395,6 +398,8 @@
   "user.delete": "Usuń tego użytkownika",
   "user.delete.confirm":
     "Czy na pewno chcesz usunąć <br><strong>{email}</strong>?",
+
+  "users": "Użytkownicy",
 
   "version": "Wersja",
 

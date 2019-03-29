@@ -48,17 +48,19 @@ export default {
       this.$emit("cancel");
     },
     createKirbytext() {
-      if (this.value.text.length > 0) {
-        return `(email: ${this.value.email} text: ${this.value.text})`;
+      const email = this.value.email || '';
+      if (this.value.text && this.value.text.length > 0) {
+        return `(email: ${email} text: ${this.value.text})`;
       } else {
-        return `(email: ${this.value.email})`;
+        return `(email: ${email})`;
       }
     },
     createMarkdown() {
-      if (this.value.text.length > 0) {
-        return `[${this.value.text}](mailto:${this.value.email})`;
+      const email = this.value.email || '';
+      if (this.value.text && this.value.text.length > 0) {
+        return `[${this.value.text}](mailto:${email})`;
       } else {
-        return `<${this.value.email}>`;
+        return `<${email}>`;
       }
     },
     submit() {

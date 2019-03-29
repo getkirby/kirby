@@ -15,7 +15,7 @@ use Kirby\Toolkit\Obj;
 /**
  * Foundation for the Options query
  * classes, that are used to generate
- * options arrays for select fiels,
+ * options arrays for select fields,
  * radio boxes, checkboxes and more.
  */
 class Options
@@ -121,7 +121,9 @@ class Options
             }
 
             // translate the option text
-            $option['text'] = I18n::translate($option['text'], $option['text']);
+            if (is_array($option['text']) === true) {
+                $option['text'] = I18n::translate($option['text'], $option['text']);
+            }
 
             // add the option to the list
             $result[] = $option;

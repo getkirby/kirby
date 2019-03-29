@@ -120,7 +120,8 @@ export default {
         }));
       }
 
-      const regex = new RegExp(`(${this.q})`, "ig");
+      RegExp.escape = s => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
       return this.options
         .filter(option => {
@@ -217,7 +218,7 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onOpen() {
-      this.$nextTick(() => { 
+      this.$nextTick(() => {
         if (this.$refs.search) {
           this.$refs.search.focus();
         }

@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Başlık 2",
   "toolbar.button.heading.3": "Başlık 3",
   "toolbar.button.italic": "Eğik Yazı",
+  "toolbar.button.file": "Dosya",
+  "toolbar.button.file.select": "Bir dosya seçin",
+  "toolbar.button.file.upload": "Bir dosya yükleyin",
   "toolbar.button.link": "Ba\u011flant\u0131",
   "toolbar.button.ol": "Sıralı liste",
   "toolbar.button.ul": "Madde listesi",
@@ -395,6 +398,8 @@
   "user.delete": "Bu kullanıcıyı sil",
   "user.delete.confirm":
     "<strong>{email}</strong> kullanıcısını silmek istediğinizden emin misiniz?",
+
+  "users": "Kullanıcılar",
 
   "version": "Versiyon",
 

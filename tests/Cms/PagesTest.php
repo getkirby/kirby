@@ -121,6 +121,25 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
     }
 
+    public function testFindMultiple()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'page',
+                'children' => [
+                    ['slug' => 'a'],
+                    ['slug' => 'b'],
+                    ['slug' => 'c']
+                ]
+            ]
+        ]);
+
+        $collection = $pages->find('page')->children()->find('a', 'c');
+        $page       = $pages->find('page')->children()->last();
+
+        $this->assertTrue($collection->has($page));
+    }
+
     public function testIndex()
     {
         $pages = Pages::factory([

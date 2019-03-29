@@ -69,7 +69,8 @@ class Search
             }
 
             if (empty($options['fields']) === false) {
-                $keys = array_intersect($keys, $options['fields']);
+                $fields = array_map('strtolower', $options['fields']);
+                $keys   = array_intersect($keys, $fields);
             }
 
             $item->searchHits  = 0;

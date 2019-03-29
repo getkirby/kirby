@@ -51,6 +51,7 @@ class AppTranslationsTest extends TestCase
     {
         $app = new App([
             'roots' => [
+                'index' => '/dev/null',
                 'translations' => __DIR__ . '/fixtures/translations'
             ]
         ]);
@@ -72,6 +73,9 @@ class AppTranslationsTest extends TestCase
     public function testTranslationFromCurrentLanguage()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'languages' => [
                 [
                     'code'         => 'de',

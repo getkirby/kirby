@@ -105,6 +105,14 @@ class StrTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testExcerptWithZeroLength()
+    {
+        $string = 'This is a long text with some html';
+        $result = Str::excerpt($string, 0);
+
+        $this->assertEquals($string, $result);
+    }
+
     public function testExcerptWithoutStripping()
     {
         $string   = 'This is a long text<br>with some html';
@@ -179,6 +187,15 @@ class StrTest extends TestCase
         $this->assertEquals('ö Wörld', Str::from($string, 'ö', true));
         $this->assertEquals('ö Wörld', Str::from($string, 'Ö', true));
         $this->assertEquals(false, Str::from($string, 'x'));
+    }
+
+    public function testKebab()
+    {
+        $string = 'KingCobra';
+        $this->assertEquals('king-cobra', Str::kebab($string));
+
+        $string = 'kingCobra';
+        $this->assertEquals('king-cobra', Str::kebab($string));
     }
 
     public function testLength()
@@ -485,6 +502,15 @@ class StrTest extends TestCase
         Str::$defaults['slug'] = $defaults;
     }
 
+    public function testSnake()
+    {
+        $string = 'KingCobra';
+        $this->assertEquals('king_cobra', Str::snake($string));
+
+        $string = 'kingCobra';
+        $this->assertEquals('king_cobra', Str::snake($string));
+    }
+
     public function testSplit()
     {
         $string = 'ä,ö,ü,ß';
@@ -592,6 +618,12 @@ class StrTest extends TestCase
         $this->assertEquals('Hello World', Str::ucwords('hello world'));
         $this->assertEquals('Hello World', Str::ucwords('Hello world'));
         $this->assertEquals('Hello World', Str::ucwords('HELLO WORLD'));
+    }
+
+    public function testUnhtml()
+    {
+        $string = 'some <em>crazy</em> stuff';
+        $this->assertEquals('some crazy stuff', Str::unhtml($string));
     }
 
     public function testUntil()

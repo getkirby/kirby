@@ -65,7 +65,7 @@ class OptionsQuery
         }
 
         $data    = $this->data();
-        $query   = new Query($this->query(), $this->data());
+        $query   = new Query($this->query(), $data);
         $result  = $query->result();
         $result  = $this->resultToCollection($result);
         $options = [];

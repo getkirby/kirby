@@ -11,7 +11,6 @@
       </k-button-group>
     </header>
 
-
     <template v-if="error">
       <k-box theme="negative">
         <k-text size="small">
@@ -36,14 +35,15 @@
         @action="action"
       />
 
-      <k-empty
-        v-else
-        :layout="options.layout"
-        icon="page"
-        @click="if (add) action(null, 'create')"
-      >
-        {{ options.empty || $t('pages.empty') }}
-      </k-empty>
+      <template v-else>
+        <k-empty
+          :layout="options.layout"
+          icon="page"
+          @click="if (add) action(null, 'create')"
+        >
+          {{ options.empty || $t('pages.empty') }}
+        </k-empty>
+      </template>
 
       <k-page-create-dialog ref="create" />
       <k-page-rename-dialog ref="rename" @success="update" />

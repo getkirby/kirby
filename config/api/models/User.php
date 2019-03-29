@@ -23,6 +23,9 @@ return [
         'email' => function (User $user) {
             return $user->email();
         },
+        'files' => function (User $user) {
+            return $user->files()->sortBy('sort', 'asc');
+        },
         'id' => function (User $user) {
             return $user->id();
         },

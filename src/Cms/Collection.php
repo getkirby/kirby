@@ -249,7 +249,7 @@ class Collection extends BaseCollection
 
         if (empty($search) === false) {
             if (is_array($search) === true) {
-                $result = $result->search($search['query'] ?? null, $search['options'] ?? null);
+                $result = $result->search($search['query'] ?? null, $search['options'] ?? []);
             } else {
                 $result = $result->search($search);
             }

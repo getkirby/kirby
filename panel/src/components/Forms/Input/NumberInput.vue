@@ -76,8 +76,9 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
-      // don't convert empty values to a number
-      if (value !== null && value !== "") {
+      // don't convert empty values or the beginning of
+      // a negative number to a Number
+      if (value !== null && value !== "" && value !== "-" && value !== "-0") {
         value = Number(value);
       }
 

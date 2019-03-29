@@ -159,7 +159,7 @@ export default {
 .k-card-icon .k-icon svg {
   width: 3rem;
   height: 3rem;
-  color: rgba($color-white, 0.5);
+  opacity: .5;
 }
 
 .k-card-content {

@@ -365,6 +365,9 @@
   "toolbar.button.heading.2": "Título 2",
   "toolbar.button.heading.3": "Título 3",
   "toolbar.button.italic": "Itálico",
+  "toolbar.button.file": "Ficheiro",
+  "toolbar.button.file.select": "Select a file",
+  "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Lista ordenada",
   "toolbar.button.ul": "Lista não-ordenada",
@@ -395,6 +398,8 @@
   "user.delete": "Excluir este utilizador",
   "user.delete.confirm":
     "Deseja realmente excluir <br><strong>{email}</strong>?",
+
+  "users": "Utilizadores",
 
   "version": "Vers\u00e3o do Kirby",
 

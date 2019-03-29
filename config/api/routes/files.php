@@ -29,7 +29,7 @@ return [
         'pattern' => '(:all)/files',
         'method'  => 'GET',
         'action'  => function (string $path) {
-            return $this->parent($path)->files();
+            return $this->parent($path)->files()->sortBy('sort', 'asc');
         }
     ],
     [
@@ -62,7 +62,10 @@ return [
         'pattern' => '(:all)/files/sort',
         'method'  => 'PATCH',
         'action'  => function (string $path) {
-            return $this->parent($path)->files()->changeSort($this->requestBody('files'));
+            return $this->parent($path)->files()->changeSort(
+                $this->requestBody('files'),
+                $this->requestBody('index')
+            );
         }
     ],
     [
