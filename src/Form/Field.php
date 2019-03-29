@@ -103,12 +103,6 @@ class Field extends Component
                     return I18n::translate($before, $before);
                 },
                 /**
-                 * Conditions when the field will be shown
-                 */
-                'when' => function ($when = null) {
-                    return $when;
-                },
-                /**
                  * Default value for the field, which will be used when a Page/File/User is created
                  */
                 'default' => function ($default = null) {
@@ -155,6 +149,12 @@ class Field extends Component
                  */
                 'translate' => function (bool $translate = true): bool {
                     return $translate;
+                },
+                /**
+                 * Conditions when the field will be shown
+                 */
+                'when' => function ($when = null) {
+                    return $when;
                 },
                 /**
                  * The width of the field in the field grid. Available widths: 1/1, 1/2, 1/3, 1/4, 2/3, 3/4
