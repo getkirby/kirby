@@ -15,7 +15,7 @@ use Kirby\Toolkit\Obj;
 /**
  * Foundation for the Options query
  * classes, that are used to generate
- * options arrays for select fiels,
+ * options arrays for select fields,
  * radio boxes, checkboxes and more.
  */
 class Options
