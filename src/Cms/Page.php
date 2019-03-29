@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
+use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -1053,7 +1054,10 @@ class Page extends ModelWithContent
         }
 
         if ($this->isDraft() === true) {
-            $url .= '?token=' . $this->token();
+            $uri = new Uri($url);
+            $uri->query->token = $this->token();
+
+            $url = $uri->toString();
         }
 
         return $url;
