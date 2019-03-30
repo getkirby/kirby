@@ -160,9 +160,17 @@ class App
      */
     public function api(): Api
     {
+        if ($this->api !== null) {
+            return $this->api;
+        }
+
         $root       = static::$root . '/config/api';
         $extensions = $this->extensions['api'] ?? [];
         $routes     = (include $root . '/routes.php')($this);
+
+        if (is_a($extensions['routes'] ?? [], Closure::class) === true) {
+            $extensions['routes'] = $extensions['routes']($this);
+        }
 
         $api = [
             'debug'          => $this->option('debug', false),
@@ -174,7 +182,7 @@ class App
             'kirby'          => $this,
         ];
 
-        return $this->api = $this->api ?? new Api($api);
+        return $this->api = new Api($api);
     }
 
     /**

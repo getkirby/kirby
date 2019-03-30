@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
 
-class PagePropsTest extends TestCase
+class PageTest extends TestCase
 {
 
     /**
@@ -472,13 +472,14 @@ class PagePropsTest extends TestCase
     {
         return [
             [null, '/test', false],
-            [null, '/test', true],
+            [null, '/test?{token}', true],
             [true, '/test', false],
-            [true, '/test', true],
+            [true, '/test?{token}', true],
             ['/something/different', '/something/different', false],
-            ['/something/different', '/something/different', true],
+            ['/something/different', '/something/different?{token}', true],
             ['{{ site.url }}#{{ page.slug }}', '/#test', false],
-            ['{{ site.url }}#{{ page.slug }}', '/#test', true],
+            ['{{ site.url }}#{{ page.slug }}', '/?{token}#test', true],
+            ['{{ page.url }}?preview=true', '/test?preview=true&{token}', true],
             [false, null, false],
             [false, null, true],
         ];
@@ -517,7 +518,7 @@ class PagePropsTest extends TestCase
         ]);
 
         if ($draft === true && $expected !== null) {
-            $expected .= '?token=' . sha1($page->id() . $page->template());
+            $expected = str_replace('{token}', 'token=' . sha1($page->id() . $page->template()), $expected);
         }
 
         $this->assertEquals($expected, $page->previewUrl());
@@ -619,7 +620,7 @@ class PagePropsTest extends TestCase
     {
         $app = new App([
             'roots' => [
-                'index'   => $index = __DIR__ . '/fixtures/PagePropsTest/modified',
+                'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
                 'content' => $index
             ]
         ]);
@@ -650,7 +651,7 @@ class PagePropsTest extends TestCase
     {
         $app = new App([
             'roots' => [
-                'index'   => $index = __DIR__ . '/fixtures/PagePropsTest/modified',
+                'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
                 'content' => $index
             ],
             'languages' => [

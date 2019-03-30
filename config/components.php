@@ -186,7 +186,7 @@ return [
      * @param Closure $originalHandler Callback function to the original URL handler with `$path` and `$options` as parameters
      * @return string
      */
-    'url' => function (App $kirby, string $path, $options = [], Closure $originalHandler): string {
+    'url' => function (App $kirby, string $path = null, $options = [], Closure $originalHandler): string {
         return $originalHandler($path, $options);
     },
 
