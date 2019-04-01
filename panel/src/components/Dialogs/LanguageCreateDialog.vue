@@ -82,7 +82,6 @@ export default {
       this.language.code = slug(name).substr(0, 2);
     },
     open() {
-
       this.language = {
         name: "",
         code: "",
@@ -93,7 +92,12 @@ export default {
     },
     submit() {
       this.$api
-        .post("languages", this.language)
+        .post("languages", {
+          name: this.language.name,
+          code: this.language.code,
+          direction: this.language.direction,
+          locale: this.language.locale
+        })
         .then(() => {
           this.$store.dispatch("languages/load");
           this.success({

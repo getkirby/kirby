@@ -32,10 +32,10 @@ abstract class Handler
     /**
      * Converts an array to an encoded string
      *
-     * @param  array  $data
+     * @param  mixed  $data
      * @return string
      */
-    abstract public static function encode(array $data): string;
+    abstract public static function encode($data): string;
 
     /**
      * Reads data from a file

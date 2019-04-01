@@ -30,9 +30,9 @@ class Data
      * @var array
      */
     public static $aliases = [
-        'yml'   => 'yaml',
         'md'    => 'txt',
-        'mdown' => 'txt'
+        'mdown' => 'txt',
+        'yml'   => 'yaml',
     ];
 
     /**
@@ -42,8 +42,9 @@ class Data
      */
     public static $handlers = [
         'json' => 'Kirby\Data\Json',
+        'php'  => 'Kirby\Data\PHP',
+        'txt'  => 'Kirby\Data\Txt',
         'yaml' => 'Kirby\Data\Yaml',
-        'txt'  => 'Kirby\Data\Txt'
     ];
 
     /**

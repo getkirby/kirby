@@ -44,7 +44,11 @@ export default {
     },
     submit() {
       this.$api
-        .patch("languages/" + this.language.code, this.language)
+        .patch("languages/" + this.language.code, {
+          name: this.language.name,
+          direction: this.language.direction,
+          locale: this.language.locale
+        })
         .then(() => {
           this.$store.dispatch("languages/load");
           this.success({

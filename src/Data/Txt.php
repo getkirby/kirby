@@ -19,14 +19,14 @@ class Txt extends Handler
     /**
      * Converts an array to an encoded Kirby txt string
      *
-     * @param  array  $data
+     * @param  mixed  $data
      * @return string
      */
-    public static function encode(array $data): string
+    public static function encode($data): string
     {
         $result = [];
 
-        foreach ($data as $key => $value) {
+        foreach ((array)$data as $key => $value) {
             if (empty($key) === true || $value === null) {
                 continue;
             }
