@@ -45,6 +45,58 @@ class PageActionsTest extends TestCase
         ];
     }
 
+    public function testChangeNum()
+    {
+        $phpunit = $this;
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'hooks' => [
+                'page.changeNum:before' => function ($page, $num) use ($phpunit) {
+                    $phpunit->assertEquals(2, $num);
+                },
+                'page.changeNum:after' => function ($newPage, $oldPage) use ($phpunit) {
+                    $phpunit->assertEquals(1, $oldPage->num());
+                    $phpunit->assertEquals(2, $newPage->num());
+                }
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1
+        ]);
+
+        $updatedPage = $page->changeNum(2);
+
+        $this->assertNotEquals($page, $updatedPage);
+        $this->assertEquals(2, $updatedPage->num());
+    }
+
+    public function testChangeNumWhenNumStaysTheSame()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'hooks' => [
+                'page.changeNum:before' => function () {
+                    throw new \Exception("This should not be called");
+                }
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1
+        ]);
+
+        // the result page should stay the same
+        $this->assertEquals($page, $page->changeNum(1));
+    }
+
     /**
      * @dataProvider slugProvider
      */

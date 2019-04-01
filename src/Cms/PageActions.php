@@ -29,6 +29,11 @@ trait PageActions
             throw new LogicException('Drafts cannot change their sorting number');
         }
 
+        // don't run the action if everything stayed the same
+        if ($this->num() === $num) {
+            return $this;
+        }
+
         return $this->commit('changeNum', [$this, $num], function ($oldPage, $num) {
             $newPage = $oldPage->clone([
                 'num'     => $num,
