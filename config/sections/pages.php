@@ -188,7 +188,7 @@ return [
             }
 
             if ($this->validateMin() === false) {
-                $errors['min'] = I18n::template('error.section.pages.min.' . I18n::form($this->max), [
+                $errors['min'] = I18n::template('error.section.pages.min.' . I18n::form($this->min), [
                     'min'     => $this->min,
                     'section' => $this->headline
                 ]);
