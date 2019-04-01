@@ -218,23 +218,18 @@ trait PageActions
             return $this;
         }
 
-        // prepare data to transfer between blueprints
-        $oldBlueprint = 'pages/' . $this->template();
-        $newBlueprint = 'pages/' . $template;
-
-        return $this->commit('changeTemplate', [$this, $template], function ($oldPage, $template) use ($oldBlueprint, $newBlueprint) {
+        return $this->commit('changeTemplate', [$this, $template], function ($oldPage, $template) {
             if ($this->kirby()->multilang() === true) {
                 $newPage = $this->clone([
                     'template' => $template
                 ]);
 
                 foreach ($this->kirby()->languages()->codes() as $code) {
+                    $content = $oldPage->content($code)->convertTo($template);
+
                     if (F::remove($oldPage->contentFile($code)) !== true) {
                         throw new LogicException('The old text file could not be removed');
                     }
-
-                    // convert the content to the new blueprint
-                    $content = $oldPage->transferData($oldPage->content($code), $oldBlueprint, $newBlueprint)['data'];
 
                     // save the language file
                     $newPage->save($content, $code);
@@ -244,7 +239,7 @@ trait PageActions
                 return $newPage->clone();
             } else {
                 $newPage = $this->clone([
-                    'content'  => $this->transferData($this->content(), $oldBlueprint, $newBlueprint)['data'],
+                    'content'  => $this->content()->convertTo($template),
                     'template' => $template
                 ]);
 
@@ -599,79 +594,6 @@ trait PageActions
     public function sort($position = null)
     {
         return $this->changeStatus('listed', $position);
-    }
-
-    /**
-     * Transfers data from old to new blueprint and tracks changes
-     *
-     * @param Content $content
-     * @param string $old       Old blueprint
-     * @param string $new       New blueprint
-     * @return array
-     */
-    protected function transferData(Content $content, string $old, string $new): array
-    {
-        // Prepare data
-        $data      = [];
-        $old       = Blueprint::factory($old, 'pages/default', $this);
-        $new       = Blueprint::factory($new, 'pages/default', $this);
-        $oldForm   = new Form(['fields' => $old->fields(), 'model' => $this]);
-        $newForm   = new Form(['fields' => $new->fields(), 'model' => $this]);
-        $oldFields = $oldForm->fields();
-        $newFields = $newForm->fields();
-
-        // Tracking changes
-        $added    = [];
-        $replaced = [];
-        $removed  = [];
-
-        // Ensure to keep title
-        $data['title'] = $content->get('title')->value();
-
-        // Go through all fields of new template
-        foreach ($newFields as $newField) {
-            $name     = $newField->name();
-            $oldField = $oldFields->get($name);
-
-            // Field name matches with old template
-            if ($oldField !== null) {
-
-                // Same field type, add and keep value
-                if ($oldField->type() === $newField->type()) {
-                    $data[$name] = $content->get($name)->value();
-
-                // Different field type, add with empty value
-                } else {
-                    $data[$name]     = null;
-                    $replaced[$name] = $oldFields->get($name)->label() ?? $name;
-                }
-
-                // Field does not exist in old template,
-            // add with empty or preserved value
-            } else {
-                $preserved    = $content->get($name);
-                $data[$name]  = $preserved ? $preserved->value(): null;
-                $added[$name] = $newField->label() ?? $name;
-            }
-        }
-
-        // Go through all values to preserve them
-        foreach ($content->fields() as $field) {
-            $name     = $field->key();
-            $newField = $newFields->get($name);
-
-            if ($newField === null) {
-                $data[$name]    = $field->value();
-                $removed[$name] = $field->name();
-            }
-        }
-
-        return [
-            'data'     => $data,
-            'added'    => $added,
-            'replaced' => $replaced,
-            'removed'  => $removed
-        ];
     }
 
     /**

@@ -80,6 +80,48 @@ class Content
     }
 
     /**
+     * Converts the content to a new blueprint
+     *
+     * @param string $to
+     * @return array
+     */
+    public function convertTo(string $to): array
+    {
+        // prepare data
+        $data    = [];
+        $content = $this;
+
+        // blueprints
+        $old       = $this->parent->blueprint();
+        $subfolder = dirname($old->name());
+        $new       = Blueprint::factory($subfolder . '/' . $to, $subfolder . '/default', $this->parent);
+
+        // forms
+        $oldForm = new Form(['fields' => $old->fields(), 'model' => $this->parent]);
+        $newForm = new Form(['fields' => $new->fields(), 'model' => $this->parent]);
+
+        // fields
+        $oldFields = $oldForm->fields();
+        $newFields = $newForm->fields();
+
+        // go through all fields of new template
+        foreach ($newFields as $newField) {
+            $name     = $newField->name();
+            $oldField = $oldFields->get($name);
+
+            // field name and type matches with old template
+            if ($oldField && $oldField->type() === $newField->type()) {
+                $data[$name] = $content->get($name)->value();
+            } else {
+                $data[$name] = $newField->default();
+            }
+        }
+
+        // preserve existing fields
+        return array_merge($this->data, $data);
+    }
+
+    /**
      * Returns the raw data array
      *
      * @return array
