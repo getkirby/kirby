@@ -80,6 +80,17 @@ class PageCacheTest extends TestCase
         $this->assertFalse($app->page('a')->isCacheable());
     }
 
+    public function testRequestParams()
+    {
+        $app = $this->app->clone([
+            'request' => [
+                'url' => 'https://getkirby.com/blog/page:2'
+            ]
+        ]);
+
+        $this->assertFalse($app->page('a')->isCacheable());
+    }
+
     public function testIgnoreId()
     {
         $app = $this->app->clone([
