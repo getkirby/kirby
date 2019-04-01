@@ -87,7 +87,7 @@ class Blueprint
      */
     public function __debuginfo(): array
     {
-        return $this->props;
+        return $this->props ?? [];
     }
 
     /**
