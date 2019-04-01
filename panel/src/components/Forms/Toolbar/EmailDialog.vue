@@ -48,7 +48,7 @@ export default {
       this.$emit("cancel");
     },
     createKirbytext() {
-      const email = this.value.email || '';
+      const email = this.value.email || "";
       if (this.value.text && this.value.text.length > 0) {
         return `(email: ${email} text: ${this.value.text})`;
       } else {
@@ -56,7 +56,7 @@ export default {
       }
     },
     createMarkdown() {
-      const email = this.value.email || '';
+      const email = this.value.email || '';
       if (this.value.text && this.value.text.length > 0) {
         return `[${this.value.text}](mailto:${email})`;
       } else {
