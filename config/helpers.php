@@ -715,12 +715,7 @@ function svg(string $file)
         }
     }
 
-    ob_start();
-    include $file;
-    $svg = ob_get_contents();
-    ob_end_clean();
-
-    return $svg;
+    return F::read($file);
 }
 
 /**
