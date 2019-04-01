@@ -185,8 +185,15 @@ trait UserActions
 
             $user->writePassword($user->password());
 
+            // always create users in the default language
+            if ($user->kirby()->multilang() === true) {
+                $languageCode = $user->kirby()->defaultLanguage()->code();
+            } else {
+                $languageCode = null;
+            }
+
             // write the user data
-            return $user->save($user->content()->toArray());
+            return $user->save($user->content()->toArray(), $languageCode);
         });
     }
 
