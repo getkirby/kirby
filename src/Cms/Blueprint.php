@@ -503,6 +503,12 @@ class Blueprint
                 $fieldProps = [];
             }
 
+            // unset / remove field if its propperty is false
+            if ($fieldProps === false) {
+                unset($fields[$fieldName]);
+                continue;
+            }
+
             // inject the name
             $fieldProps['name'] = $fieldName;
 
@@ -580,6 +586,12 @@ class Blueprint
     {
         foreach ($sections as $sectionName => $sectionProps) {
 
+            // unset / remove section if its propperty is false
+            if ($sectionProps === false) {
+                unset($sections[$sectionName]);
+                continue;
+            }
+
             // inject all section extensions
             $sectionProps = $this->extend($sectionProps);
 
@@ -647,6 +659,12 @@ class Blueprint
         }
 
         foreach ($tabs as $tabName => $tabProps) {
+
+            // unset / remove tab if its propperty is false
+            if ($tabProps === false) {
+                unset($tabs[$tabName]);
+                continue;
+            }
 
             // inject all tab extensions
             $tabProps = $this->extend($tabProps);
