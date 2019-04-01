@@ -273,4 +273,26 @@ class StructureFieldTest extends TestCase
         $this->assertFalse($field->form()->fields()->a()->disabled());
         $this->assertTrue($field->form()->fields()->b()->disabled());
     }
+
+    public function testDefault()
+    {
+        $field = new Field('structure', [
+            'fields' => [
+                'a' => [
+                    'type' => 'text'
+                ],
+                'b' => [
+                    'type' => 'text',
+                ]
+            ],
+            'default' => $data = [
+                [
+                    'a' => 'A',
+                    'b' => 'B'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals($data, $field->data(true));
+    }
 }
