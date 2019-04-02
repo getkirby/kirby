@@ -29,6 +29,7 @@
 /vendor/**/readme.php
 /vendor/**/LICENSE
 /vendor/**/COPYING
+/vendor/**/COMMITMENT
 /vendor/**/VERSION
 /vendor/**/docs/*
 /vendor/**/example/*

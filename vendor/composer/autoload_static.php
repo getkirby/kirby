@@ -195,6 +195,7 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Data\\Data' => __DIR__ . '/../..' . '/src/Data/Data.php',
         'Kirby\\Data\\Handler' => __DIR__ . '/../..' . '/src/Data/Handler.php',
         'Kirby\\Data\\Json' => __DIR__ . '/../..' . '/src/Data/Json.php',
+        'Kirby\\Data\\PHP' => __DIR__ . '/../..' . '/src/Data/PHP.php',
         'Kirby\\Data\\Txt' => __DIR__ . '/../..' . '/src/Data/Txt.php',
         'Kirby\\Data\\Yaml' => __DIR__ . '/../..' . '/src/Data/Yaml.php',
         'Kirby\\Database\\Database' => __DIR__ . '/../..' . '/src/Database/Database.php',
