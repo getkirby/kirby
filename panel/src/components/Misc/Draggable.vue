@@ -1,9 +1,9 @@
 <template>
   <draggable
-    :element="element"
+    :tag="element"
     :list="list"
     :move="move"
-    :options="dragOptions"
+    v-bind="dragOptions"
     class="k-draggable"
     v-on="listeners"
   >
