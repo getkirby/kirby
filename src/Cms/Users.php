@@ -78,7 +78,7 @@ class Users extends Collection
     public function findByKey($key)
     {
         if (Str::contains($key, '@') === true) {
-            return parent::findBy('email', $key);
+            return parent::findBy('email', strtolower($key));
         }
 
         return parent::findByKey($key);
