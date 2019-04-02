@@ -89,6 +89,8 @@ class PagesFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->isValid());
+        $this->assertEquals(3, $field->min());
+        $this->assertTrue($field->required());
         $this->assertArrayHasKey('min', $field->errors());
     }
 
@@ -104,6 +106,7 @@ class PagesFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->isValid());
+        $this->assertEquals(1, $field->max());
         $this->assertArrayHasKey('max', $field->errors());
     }
 
@@ -125,5 +128,39 @@ class PagesFieldTest extends TestCase
         ]);
 
         $this->assertEquals('Test', $field->empty());
+    }
+
+    public function testRequiredProps()
+    {
+        $field = new Field('pages', [
+            'model'    => new Page(['slug' => 'test']),
+            'required' => true
+        ]);
+
+        $this->assertTrue($field->required());
+        $this->assertEquals(1, $field->min());
+    }
+
+    public function testRequiredInvalid()
+    {
+        $field = new Field('pages', [
+            'model'    => new Page(['slug' => 'test']),
+            'required' => true
+        ]);
+
+        $this->assertFalse($field->isValid());
+    }
+
+    public function testRequiredValid()
+    {
+        $field = new Field('pages', [
+            'model'    => new Page(['slug' => 'test']),
+            'required' => true,
+            'value' => [
+                'a/aa',
+            ],
+        ]);
+
+        $this->assertTrue($field->isValid());
     }
 }

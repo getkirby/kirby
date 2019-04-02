@@ -90,6 +90,7 @@ class CheckboxesFieldTest extends TestCase
             'min'     => 2
         ]);
 
+        $this->assertTrue($field->required());
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
     }
@@ -104,5 +105,38 @@ class CheckboxesFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('max', $field->errors());
+    }
+
+    public function testRequiredProps()
+    {
+        $field = new Field('checkboxes', [
+            'options'  => ['a', 'b', 'c'],
+            'required' => true
+        ]);
+
+        $this->assertTrue($field->required());
+        $this->assertEquals(1, $field->min());
+    }
+
+    public function testRequiredInvalid()
+    {
+        $field = new Field('checkboxes', [
+            'options'  => ['a', 'b', 'c'],
+            'value'    => null,
+            'required' => true
+        ]);
+
+        $this->assertFalse($field->isValid());
+    }
+
+    public function testRequiredValid()
+    {
+        $field = new Field('checkboxes', [
+            'options'  => ['a', 'b', 'c'],
+            'required' => true,
+            'value'    => 'a'
+        ]);
+
+        $this->assertTrue($field->isValid());
     }
 }

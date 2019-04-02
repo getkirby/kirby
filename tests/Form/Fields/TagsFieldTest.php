@@ -114,6 +114,8 @@ class TagsFieldTest extends TestCase
 
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('min', $field->errors());
+        $this->assertEquals(2, $field->min());
+        $this->assertTrue($field->required());
     }
 
     public function testMax()
@@ -125,6 +127,40 @@ class TagsFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->isValid());
+        $this->assertEquals(1, $field->max());
         $this->assertArrayHasKey('max', $field->errors());
+    }
+
+    public function testRequiredProps()
+    {
+        $field = new Field('tags', [
+            'options'  => ['a', 'b', 'c'],
+            'required' => true
+        ]);
+
+        $this->assertTrue($field->required());
+        $this->assertEquals(1, $field->min());
+    }
+
+    public function testRequiredInvalid()
+    {
+        $field = new Field('tags', [
+            'options'  => ['a', 'b', 'c'],
+            'value'    => null,
+            'required' => true
+        ]);
+
+        $this->assertFalse($field->isValid());
+    }
+
+    public function testRequiredValid()
+    {
+        $field = new Field('tags', [
+            'options'  => ['a', 'b', 'c'],
+            'required' => true,
+            'value'    => 'a'
+        ]);
+
+        $this->assertTrue($field->isValid());
     }
 }
