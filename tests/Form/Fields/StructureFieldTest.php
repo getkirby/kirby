@@ -91,6 +91,8 @@ class StructureFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->isValid());
+        $this->assertEquals(2, $field->min());
+        $this->assertTrue($field->required());
         $this->assertArrayHasKey('min', $field->errors());
     }
 
@@ -110,6 +112,7 @@ class StructureFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->isValid());
+        $this->assertEquals(1, $field->max());
         $this->assertArrayHasKey('max', $field->errors());
     }
 
@@ -294,5 +297,51 @@ class StructureFieldTest extends TestCase
         ]);
 
         $this->assertEquals($data, $field->data(true));
+    }
+
+    public function testRequiredProps()
+    {
+        $field = new Field('structure', [
+            'fields' => [
+                'title' => [
+                    'type' => 'text'
+                ]
+            ],
+            'required' => true
+        ]);
+
+        $this->assertTrue($field->required());
+        $this->assertEquals(1, $field->min());
+    }
+
+    public function testRequiredInvalid()
+    {
+        $field = new Field('structure', [
+            'fields' => [
+                'title' => [
+                    'type' => 'text'
+                ]
+            ],
+            'required' => true
+        ]);
+
+        $this->assertFalse($field->isValid());
+    }
+
+    public function testRequiredValid()
+    {
+        $field = new Field('structure', [
+            'fields' => [
+                'title' => [
+                    'type' => 'text'
+                ]
+            ],
+            'value' => [
+                ['title' => 'a'],
+            ],
+            'required' => true
+        ]);
+
+        $this->assertTrue($field->isValid());
     }
 }
