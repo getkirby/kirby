@@ -18,7 +18,7 @@ return [
             return false;
         },
         'validateMax' => function () {
-            if ($this->max && $this->max < $this->total) {
+            if ($this->max && $this->total > $this->max) {
                 return false;
             }
 

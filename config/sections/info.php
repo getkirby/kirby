@@ -5,7 +5,6 @@ use Kirby\Toolkit\I18n;
 return [
     'mixins' => [
         'headline',
-        'help'
     ],
     'props' => [
         'text' => function ($text = null) {

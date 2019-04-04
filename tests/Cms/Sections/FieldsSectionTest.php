@@ -9,18 +9,13 @@ class FieldsSectionTest extends TestCase
 {
     public function setUp(): void
     {
+        App::destroy();
+
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/FieldsSectionTest'
+                'index' => '/dev/null'
             ]
         ]);
-
-        Dir::make($this->fixtures);
-    }
-
-    public function tearDown(): void
-    {
-        Dir::remove($this->fixtures);
     }
 
     public function modelProvider()

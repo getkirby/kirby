@@ -9,7 +9,9 @@ class SectionTest extends TestCase
 {
     public function setUp(): void
     {
-        new App([
+        App::destroy();
+
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ]

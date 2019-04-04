@@ -9,7 +9,9 @@ class InfoSectionTest extends TestCase
 {
     public function setUp(): void
     {
-        new App([
+        App::destroy();
+
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ]
@@ -18,7 +20,6 @@ class InfoSectionTest extends TestCase
 
     public function testHeadline()
     {
-
         // single headline
         $section = new Section('info', [
             'name'     => 'test',
@@ -43,8 +44,7 @@ class InfoSectionTest extends TestCase
 
     public function testText()
     {
-
-        // single headline
+        // single language text
         $section = new Section('info', [
             'name'     => 'test',
             'model'    => new Page(['slug' => 'test']),
@@ -53,7 +53,7 @@ class InfoSectionTest extends TestCase
 
         $this->assertEquals('<p>Test</p>', $section->text());
 
-        // translated headline
+        // translated text
         $section = new Section('info', [
             'name'  => 'test',
             'model' => new Page(['slug' => 'test']),
@@ -68,8 +68,6 @@ class InfoSectionTest extends TestCase
 
     public function testTheme()
     {
-
-        // single help
         $section = new Section('info', [
             'name'  => 'test',
             'model' => new Page(['slug' => 'test']),
@@ -79,28 +77,24 @@ class InfoSectionTest extends TestCase
         $this->assertEquals('notice', $section->theme());
     }
 
-    public function testHelp()
+    public function testToArray()
     {
-
-        // single help
-        $section = new Section('info', [
-            'name'  => 'test',
-            'model' => new Page(['slug' => 'test']),
-            'help'  => 'Test'
-        ]);
-
-        $this->assertEquals('Test', $section->help());
-
-        // translated help
         $section = new Section('info', [
             'name'     => 'test',
             'model'    => new Page(['slug' => 'test']),
-            'help' => [
-                'en' => 'Information',
-                'de' => 'Informationen'
-            ]
+            'headline' => 'Test Headline',
+            'text'     => 'Test Text',
+            'theme'    => 'notice'
         ]);
 
-        $this->assertEquals('Information', $section->help());
+        $expected = [
+            'options' => [
+                'headline' => 'Test Headline',
+                'text'     => '<p>Test Text</p>',
+                'theme'    => 'notice'
+            ]
+        ];
+
+        $this->assertEquals($expected, $section->toArray());
     }
 }

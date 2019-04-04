@@ -20,6 +20,9 @@ return [
         'content' => function (Site $site) {
             return Form::for($site)->values();
         },
+        'drafts' => function (Site $site) {
+            return $site->drafts();
+        },
         'files' => function (Site $site) {
             return $site->files()->sortBy('sort', 'asc');
         },
