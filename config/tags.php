@@ -106,10 +106,9 @@ return [
                     return $img;
                 }
                 
-                if($link = $tag->file($tag->link)) {
+                if ($link = $tag->file($tag->link)) {
                     $link = $link->url();
-                }
-                else {
+                } else {
                     $link = $tag->link === 'self' ? $tag->src : $tag->link;
                 }
 
