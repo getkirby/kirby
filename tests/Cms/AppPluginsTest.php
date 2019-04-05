@@ -377,6 +377,25 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(2, $executed);
     }
 
+    public function testHooksDifferentParameters()
+    {
+        $executed = 0;
+
+        $kirby = new App([
+            'hooks' => [
+                'testHook' => [
+                    function ($add) use (&$executed) {
+                        $executed += $add;
+                    }
+                ]
+            ]
+        ]);
+
+        $kirby->trigger('testHook', 2);
+        $kirby->trigger('testHook', 3);
+        $this->assertEquals(5, $executed);
+    }
+
     public function testPageMethod()
     {
         $kirby = new App([

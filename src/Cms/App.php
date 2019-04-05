@@ -1158,28 +1158,15 @@ class App
         if ($functions = $this->extension('hooks', $name)) {
             static $triggered = [];
 
-            // get id for object hook is called on
-            if (isset($arguments[0]) === true) {
-                if (
-                    is_object($arguments[0]) === true &&
-                    method_exists($arguments[0], 'id') === true
-                ) {
-                    $id = $arguments[0]->id();
-                } elseif (is_string($arguments[0]) === true) {
-                    $id = $arguments[0];
-                }
-            }
+            $id = $name . md5(serialize($arguments));
 
-            // generate unique key
-            $key = $name . '(' . ($id ?? '') . ')';
-
-            foreach ($functions as $function) {
-                if (in_array($function, $triggered[$key] ?? []) === true) {
+            foreach ($functions as $index => $function) {
+                if (in_array($function, $triggered[$id] ?? []) === true) {
                     continue;
                 }
 
                 // mark the hook as triggered, to avoid endless loops
-                $triggered[$key][] = $function;
+                $triggered[$id][] = $function;
 
                 // bind the App object to the hook
                 $function->call($this, ...$arguments);
