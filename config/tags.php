@@ -105,8 +105,15 @@ return [
                 if (empty($tag->link) === true) {
                     return $img;
                 }
+                
+                if($link = $tag->file($tag->link)) {
+                    $link = $link->url();
+                }
+                else {
+                    $link = $tag->link === 'self' ? $tag->src : $tag->link;
+                }
 
-                return Html::a($tag->link === 'self' ? $tag->src : $tag->link, [$img], [
+                return Html::a($link, [$img], [
                     'rel'    => $tag->rel,
                     'class'  => $tag->linkclass,
                     'target' => $tag->target
