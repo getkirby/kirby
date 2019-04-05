@@ -91,6 +91,17 @@ export default {
           this.replace(file);
           break;
         case "remove":
+          if (this.data.length <= this.options.min) {
+            const number = this.options.min > 1 ? "plural" : "singular";
+            this.$store.dispatch("notification/error", {
+              message: this.$t("error.section.files.min." + number, {
+                section: this.name,
+                min: this.options.min
+              })
+            });
+            break;
+          }
+
           this.$refs.remove.open(file.parent, file.filename);
           break;
       }
