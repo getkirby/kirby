@@ -46,8 +46,11 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
 import padZero from "@/helpers/padZero.js";
+
+import dayjs from "dayjs";
+import customFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat);
 
 export default {
   inheritAttrs: false,
@@ -135,10 +138,11 @@ export default {
 
       const h = padZero(this.hour || 0);
       const m = padZero(this.minute || 0);
-      const a = this.meridiem || "AM";
+      const a = this.meridiem.toUpperCase() || "AM";
 
-      const time = this.notation === 24 ? `${h}:${m}:00` : `${h}:${m}:00 ${a}`;
-      const date = dayjs("2000/01/01 " + time);
+      const time   = this.notation === 24 ? `${h}:${m}:00` : `${h}:${m}:00 ${a}`;
+      const format = this.notation === 24 ? `HH:mm:ss` : `hh:mm:ss A`
+      const date = dayjs("2000-01-01 " + time, "YYYY-MM-DD " + format);
 
       this.$emit("input", date.format("HH:mm"));
     },
@@ -167,7 +171,7 @@ export default {
     },
     toObject(time) {
 
-      const date = dayjs("2001/01/01 " + time + ":00");
+      const date = dayjs("2001-01-01 " + time + ":00", "YYYY-MM-DD HH:mm:ss");
 
       if (!time || date.isValid() === false) {
         return {
