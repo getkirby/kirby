@@ -406,7 +406,7 @@ class App
         $visitor   = $this->visitor();
 
         foreach ($visitor->acceptedLanguages() as $lang) {
-            if ($language = $languages->findBy('locale', $lang->locale())) {
+            if ($language = $languages->findBy('locale', $lang->locale(LC_ALL))) {
                 return $language;
             }
         }
