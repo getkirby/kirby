@@ -743,4 +743,22 @@ class PageTest extends TestCase
 
         $this->assertEquals($expected, $icon);
     }
+
+    public function testPanelIconWithEmoji()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'name' => 'test',
+                'icon' => $emoji = '❤️'
+            ]
+        ]);
+
+        $icon = $page->panelIcon();
+
+        $this->assertTrue($icon['emoji']);
+        $this->assertEquals($emoji, $icon['type']);
+        $this->assertEquals('black', $icon['back']);
+        $this->assertEquals(null, $icon['ratio']);
+    }
 }
