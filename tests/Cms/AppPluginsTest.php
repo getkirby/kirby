@@ -121,6 +121,34 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
+        App::plugin('test/b', [
+            'api' => [
+                'routes' => function ($kirby) {
+                    return [
+                        [
+                            'pattern' => 'b',
+                            'action'  => function () use ($kirby) {
+                                return 'b';
+                            }
+                        ]
+                    ];
+                }
+            ]
+        ]);
+
+        App::plugin('test/c', [
+            'api' => [
+                'routes' => [
+                    [
+                        'pattern' => 'c',
+                        'action'  => function () {
+                            return 'c';
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -135,6 +163,8 @@ class AppPluginsTest extends TestCase
         $app->impersonate('kirby');
 
         $this->assertEquals('/dev/null', $app->api()->call('a'));
+        $this->assertEquals('b', $app->api()->call('b'));
+        $this->assertEquals('c', $app->api()->call('c'));
     }
 
     public function testBlueprint()
