@@ -18,6 +18,18 @@ class SectionTest extends TestCase
         ]);
     }
 
+    public function testMissingModel()
+    {
+        Section::$types = [
+            'test' => []
+        ];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Undefined section model');
+
+        $section = new Section('test', []);
+    }
+
     public function testPropsDefaults()
     {
         Section::$types = [
@@ -39,5 +51,39 @@ class SectionTest extends TestCase
 
         $this->assertEquals('default', $section->example());
         $this->assertEquals(['one', 'two'], $section->buttons());
+    }
+
+    public function testToResponse()
+    {
+        Section::$types = [
+            'test' => [
+                'props' => [
+                    'a' => function ($a) {
+                        return $a;
+                    },
+                    'a' => function ($b) {
+                        return $b;
+                    },
+                ]
+            ]
+        ];
+
+        $section = new Section('test', [
+            'model' => new Page(['slug' => 'test']),
+            'a' => 'A',
+            'b' => 'B'
+        ]);
+
+
+        $expected = [
+            'status' => 'ok',
+            'code'   => 200,
+            'name'   => 'test',
+            'type'   => 'test',
+            'a'      => 'A',
+            'b'      => 'B'
+        ];
+
+        $this->assertEquals($expected, $section->toResponse());
     }
 }
