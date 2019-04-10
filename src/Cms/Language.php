@@ -46,7 +46,7 @@ class Language extends Model
     protected $direction;
 
     /**
-     * @var string
+     * @var array
      */
     protected $locale;
 
@@ -293,13 +293,18 @@ class Language extends Model
     }
 
     /**
-     * Returns the PHP locale setting string
+     * Returns the PHP locale setting array
      *
-     * @return string
+     * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
+     * @return array|string
      */
-    public function locale(): string
+    public function locale(int $category = null)
     {
-        return $this->locale;
+        if ($category !== null) {
+            return $this->locale[$category] ?? $this->locale[LC_ALL] ?? null;
+        } else {
+            return $this->locale;
+        }
     }
 
     /**
@@ -401,12 +406,21 @@ class Language extends Model
     }
 
     /**
-     * @param string $locale
+     * @param string|array $locale
      * @return self
      */
-    protected function setLocale(string $locale = null): self
+    protected function setLocale($locale = null): self
     {
-        $this->locale = $locale ?? $this->code;
+        if (is_array($locale)) {
+            $this->locale = $locale;
+        } elseif (is_string($locale)) {
+            $this->locale = [LC_ALL => $locale];
+        } elseif ($locale === null) {
+            $this->locale = [LC_ALL => $this->code];
+        } else {
+            throw new InvalidArgumentException('Locale must be string or array');
+        }
+
         return $this;
     }
 

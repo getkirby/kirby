@@ -247,6 +247,21 @@ class PageTest extends TestCase
         $this->assertEquals($parent, $page->parent());
     }
 
+    public function testParentId()
+    {
+        $mother = new Page([
+            'slug' => 'mother',
+            'children' => [
+                [
+                    'slug' => 'child'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(null, $mother->parentId());
+        $this->assertEquals('mother', $mother->find('child')->parentId());
+    }
+
     public function testParentPrevNext()
     {
         $app = new App([
@@ -742,5 +757,81 @@ class PageTest extends TestCase
         ];
 
         $this->assertEquals($expected, $icon);
+    }
+
+    public function testPanelIconWithEmoji()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'name' => 'test',
+                'icon' => $emoji = '❤️'
+            ]
+        ]);
+
+        $icon = $page->panelIcon();
+
+        $this->assertTrue($icon['emoji']);
+        $this->assertEquals($emoji, $icon['type']);
+        $this->assertEquals('black', $icon['back']);
+        $this->assertEquals(null, $icon['ratio']);
+    }
+
+    public function testPanelUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'mother',
+                        'children' => [
+                            [
+                                'slug' => 'child'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('mother/child');
+
+        $this->assertEquals('https://getkirby.com/panel/pages/mother+child', $page->panelUrl());
+        $this->assertEquals('/pages/mother+child', $page->panelUrl(true));
+    }
+
+    public function testApiUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'mother',
+                        'children' => [
+                            [
+                                'slug' => 'child'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('mother/child');
+
+        $this->assertEquals('https://getkirby.com/api/pages/mother+child', $page->apiUrl());
+        $this->assertEquals('pages/mother+child', $page->apiUrl(true));
     }
 }

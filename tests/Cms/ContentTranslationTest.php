@@ -19,6 +19,7 @@ class ContentTranslationTest extends TestCase
 
         $this->assertEquals($page, $translation->parent());
         $this->assertEquals('de', $translation->code());
+        $this->assertEquals('de', $translation->id());
     }
 
     public function testContentAndSlug()
@@ -60,5 +61,38 @@ class ContentTranslationTest extends TestCase
         ]);
 
         $this->assertEquals('/content/test/project.de.txt', $translation->contentFile());
+    }
+
+    public function testExists()
+    {
+        $page = new Page(['slug' => 'test']);
+
+        $translation = new ContentTranslation([
+            'parent' => $page,
+            'code'   => 'de',
+        ]);
+
+        $this->assertFalse($translation->exists());
+    }
+
+    public function testToArrayAndDebugInfo()
+    {
+        $page = new Page(['slug' => 'test']);
+
+        $translation = new ContentTranslation([
+            'parent'  => $page,
+            'code'    => 'de',
+            'content' => $content = ['a' => 'A']
+        ]);
+
+        $expected = [
+            'code'    => 'de',
+            'content' => $content,
+            'exists'  => false,
+            'slug'    => null
+        ];
+
+        $this->assertEquals($expected, $translation->toArray());
+        $this->assertEquals($expected, $translation->__debuginfo());
     }
 }

@@ -62,8 +62,20 @@ class UserTest extends TestCase
 
     public function testToString()
     {
-        $user = new User(['email' => 'user@domain.com']);
-        $this->assertEquals('user@domain.com', $user->toString('{{ user.email }}'));
+        $user = new User([
+            'email' => 'test@getkirby.com'
+        ]);
+
+        $this->assertEquals('test@getkirby.com', $user->toString());
+    }
+
+    public function testToStringWithTemplate()
+    {
+        $user = new User([
+            'email' => 'test@getkirby.com'
+        ]);
+
+        $this->assertEquals('Email: test@getkirby.com', $user->toString('Email: {{ user.email }}'));
     }
 
     public function testModified()
@@ -99,7 +111,8 @@ class UserTest extends TestCase
         return [
             [null, false],
             ['', false],
-            ['abc', false],
+            ['short', false],
+            ['invalid-password', false],
             ['correct-horse-battery-staple', true],
         ];
     }
@@ -130,5 +143,62 @@ class UserTest extends TestCase
 
         $this->expectException('Kirby\Exception\NotFoundException');
         $user->validatePassword('test');
+    }
+
+    public function testIsAdmin()
+    {
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'role'  => 'admin'
+        ]);
+
+        $this->assertTrue($user->isAdmin());
+
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'role'  => 'editor'
+        ]);
+
+        $this->assertFalse($user->isAdmin());
+    }
+
+    public function testIsLoggedIn()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'users' => [
+                ['email' => 'a@getkirby.com'],
+                ['email' => 'b@getkirby.com']
+            ],
+        ]);
+
+        $a = $app->user('a@getkirby.com');
+        $b = $app->user('b@getkirby.com');
+
+        $this->assertFalse($a->isLoggedIn());
+        $this->assertFalse($b->isLoggedIn());
+
+        $app->impersonate('a@getkirby.com');
+
+        $this->assertTrue($a->isLoggedIn());
+        $this->assertFalse($b->isLoggedIn());
+
+        $app->impersonate('b@getkirby.com');
+
+        $this->assertFalse($a->isLoggedIn());
+        $this->assertTrue($b->isLoggedIn());
+    }
+
+    public function testQuery()
+    {
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'name'  => 'Test User'
+        ]);
+
+        $this->assertEquals('Test User', $user->query('user.name'));
+        $this->assertEquals('test@getkirby.com', $user->query('user.email'));
     }
 }
