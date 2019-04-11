@@ -37,6 +37,7 @@ class FileTest extends TestCase
         ]);
 
         $this->assertEquals('Test', $file->content()->get('test')->value());
+        $this->assertEquals($file->content(), $file->meta());
     }
 
     public function testDefaultContent()
@@ -92,6 +93,22 @@ class FileTest extends TestCase
         ]);
 
         $this->assertEquals($page, $file->page());
+    }
+
+    public function testParentId()
+    {
+        $file = new File([
+            'filename' => 'test.jpg',
+            'parent'   => $page = new Page(['slug' => 'test'])
+        ]);
+
+        $this->assertEquals('test', $file->parentId());
+
+        $file = new File([
+            'filename' => 'test.jpg',
+        ]);
+
+        $this->assertNull($file->parentId());
     }
 
     public function testDefaultPage()
@@ -198,5 +215,121 @@ class FileTest extends TestCase
         ];
 
         $this->assertEquals($expected, $icon);
+    }
+
+    public function testPanelUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'mother',
+                        'children' => [
+                            [
+                                'slug' => 'child',
+                                'files' => [
+                                    ['filename' => 'page-file.jpg'],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'files' => [
+                    ['filename' => 'site-file.jpg']
+                ]
+            ],
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'id'    => 'test',
+                    'files' => [
+                        ['filename' => 'user-file.jpg']
+                    ]
+                ]
+            ]
+        ]);
+
+        // site file
+        $file = $app->file('site-file.jpg');
+
+        $this->assertEquals('https://getkirby.com/panel/site/files/site-file.jpg', $file->panelUrl());
+        $this->assertEquals('/site/files/site-file.jpg', $file->panelUrl(true));
+
+        // page file
+        $file = $app->file('mother/child/page-file.jpg');
+
+        $this->assertEquals('https://getkirby.com/panel/pages/mother+child/files/page-file.jpg', $file->panelUrl());
+        $this->assertEquals('/pages/mother+child/files/page-file.jpg', $file->panelUrl(true));
+
+        // user file
+        $user = $app->user('test@getkirby.com');
+        $file = $user->file('user-file.jpg');
+
+        $this->assertEquals('https://getkirby.com/panel/users/test/files/user-file.jpg', $file->panelUrl());
+        $this->assertEquals('/users/test/files/user-file.jpg', $file->panelUrl(true));
+    }
+
+    public function testApiUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'mother',
+                        'children' => [
+                            [
+                                'slug' => 'child',
+                                'files' => [
+                                    ['filename' => 'page-file.jpg'],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'files' => [
+                    ['filename' => 'site-file.jpg']
+                ]
+            ],
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'id'    => 'test',
+                    'files' => [
+                        ['filename' => 'user-file.jpg']
+                    ]
+                ]
+            ]
+        ]);
+
+        // site file
+        $file = $app->file('site-file.jpg');
+
+        $this->assertEquals('https://getkirby.com/api/site/files/site-file.jpg', $file->apiUrl());
+        $this->assertEquals('site/files/site-file.jpg', $file->apiUrl(true));
+
+        // page file
+        $file = $app->file('mother/child/page-file.jpg');
+
+        $this->assertEquals('https://getkirby.com/api/pages/mother+child/files/page-file.jpg', $file->apiUrl());
+        $this->assertEquals('pages/mother+child/files/page-file.jpg', $file->apiUrl(true));
+
+        // user file
+        $user = $app->user('test@getkirby.com');
+        $file = $user->file('user-file.jpg');
+
+        $this->assertEquals('https://getkirby.com/api/users/test/files/user-file.jpg', $file->apiUrl());
+        $this->assertEquals('users/test/files/user-file.jpg', $file->apiUrl(true));
     }
 }

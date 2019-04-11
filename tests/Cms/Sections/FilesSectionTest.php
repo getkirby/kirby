@@ -9,6 +9,8 @@ class FilesSectionTest extends TestCase
 {
     public function setUp(): void
     {
+        App::destroy();
+
         $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -223,5 +225,37 @@ class FilesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('Information', $section->help());
+    }
+
+    public function testSortable()
+    {
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+        ]);
+
+        $this->assertTrue($section->sortable());
+    }
+
+    public function testDisableSortable()
+    {
+        $section = new Section('files', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'sortable' => false
+        ]);
+
+        $this->assertFalse($section->sortable());
+    }
+
+    public function testDisableSortableWhenSortBy()
+    {
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => new Page(['slug' => 'test']),
+            'sortBy' => 'filename desc'
+        ]);
+
+        $this->assertFalse($section->sortable());
     }
 }

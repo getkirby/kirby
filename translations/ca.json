@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "No podeu afegir més d'un fitxer a la secció \"{section}\"",
   "error.section.files.min.plural":
-    "Afegeix com a mínim {min} fitxers a la secció \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Afegeix com a mínim un fitxer a la secció \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "No heu d'afegir més de {max} pàgines a la secció \"{section}\"",
   "error.section.pages.max.singular":
     "No podeu afegir més d'una pàgina a la secció \"{section}\"",
   "error.section.pages.min.plural":
-    "Afegiu com a mínim {min} pàgines a la secció \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Afegeix com a mínim una pàgina a la secció \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "No s'ha pogut carregar la secció \"{name}\"",
   "error.section.type.invalid": "La secció tipus \"{type}\" no és vàlida",

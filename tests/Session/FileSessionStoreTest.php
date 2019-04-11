@@ -8,6 +8,8 @@ use ReflectionClass;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
+require_once(__DIR__ . '/mocks.php');
+
 class FileSessionStoreTest extends TestCase
 {
     protected $root = __DIR__ . '/fixtures/store';
@@ -229,8 +231,7 @@ class FileSessionStoreTest extends TestCase
         $this->store->collectGarbage();
 
         $this->assertFileExists($this->root . '/.gitignore');
-        // TODO: no longer works
-        // $this->assertFileNotExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+        $this->assertFileNotExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/1357913579.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/7777777777.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/9999999999.abcdefghijabcdefghij.sess');

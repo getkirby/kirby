@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Do sekcji \"{section}\" można dodać tylko jeden plik",
   "error.section.files.min.plural":
-    "Dodaj co najmniej {min} pliki do sekcji \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Dodaj co najmniej jeden plik do sekcji \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Do sekcji \"{section}\" można dodać nie więcej niż {max} stron",
   "error.section.pages.max.singular":
     "Do sekcji \"{section}\" można dodać tylko jedną stronę",
   "error.section.pages.min.plural":
-    "Dodaj co najmniej {min} stron/-y do sekcji \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Dodaj co najmniej jedną stronę do sekcji \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Nie udało się załadować sekcji \"{name}\"",
   "error.section.type.invalid": "Typ sekcji \"{type}\" jest nieprawidłowy",

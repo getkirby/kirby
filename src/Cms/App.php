@@ -168,10 +168,6 @@ class App
         $extensions = $this->extensions['api'] ?? [];
         $routes     = (include $root . '/routes.php')($this);
 
-        if (is_a($extensions['routes'] ?? [], Closure::class) === true) {
-            $extensions['routes'] = $extensions['routes']($this);
-        }
-
         $api = [
             'debug'          => $this->option('debug', false),
             'authentication' => $extensions['authentication'] ?? include $root . '/authentication.php',
@@ -410,7 +406,7 @@ class App
         $visitor   = $this->visitor();
 
         foreach ($visitor->acceptedLanguages() as $lang) {
-            if ($language = $languages->findBy('locale', $lang->locale())) {
+            if ($language = $languages->findBy('locale', $lang->locale(LC_ALL))) {
                 return $language;
             }
         }

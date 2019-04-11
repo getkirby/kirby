@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Не можете да добавяте повече от един файл в секция \"{section}\"",
   "error.section.files.min.plural":
-    "Добавете поне {min} файла в секция \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Добавете поне един файл в секция \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Не можете да добавяте повече от {max} страници в секция \"{section}\"",
   "error.section.pages.max.singular":
     "Не можете да добавяте повече от една страница в секция \"{section}\"",
   "error.section.pages.min.plural":
-    "Добавете поне {min} страници в секция \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Добавете поне една страница в секция \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Секция \"{name}\" не може да бъде заредена",
   "error.section.type.invalid": "Типът \"{type}\" на секция не е валиден",

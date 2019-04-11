@@ -6,6 +6,7 @@ use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
 use Kirby\Cache\FileCache;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\I18n;
 
 class DummyCache extends FileCache
@@ -26,6 +27,9 @@ class AppPluginsTest extends TestCase
     public function testApi()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'api' => [
                 'routes' => [
                     [
@@ -121,6 +125,34 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
+        App::plugin('test/b', [
+            'api' => [
+                'routes' => function ($kirby) {
+                    return [
+                        [
+                            'pattern' => 'b',
+                            'action'  => function () use ($kirby) {
+                                return 'b';
+                            }
+                        ]
+                    ];
+                }
+            ]
+        ]);
+
+        App::plugin('test/c', [
+            'api' => [
+                'routes' => [
+                    [
+                        'pattern' => 'c',
+                        'action'  => function () {
+                            return 'c';
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -135,11 +167,16 @@ class AppPluginsTest extends TestCase
         $app->impersonate('kirby');
 
         $this->assertEquals('/dev/null', $app->api()->call('a'));
+        $this->assertEquals('b', $app->api()->call('b'));
+        $this->assertEquals('c', $app->api()->call('c'));
     }
 
     public function testBlueprint()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'blueprints' => [
                 'pages/test' => $file = 'test.yml'
             ]
@@ -151,6 +188,9 @@ class AppPluginsTest extends TestCase
     public function testCacheType()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => $fixtures = __DIR__ . '/fixtures/AppPluginsTest/testCacheType'
+            ],
             'cacheTypes' => [
                 'file' => DummyCache::class
             ],
@@ -162,12 +202,17 @@ class AppPluginsTest extends TestCase
         ]);
 
         $this->assertInstanceOf(DummyCache::class, $kirby->cache('pages'));
+
+        Dir::remove($fixtures);
     }
 
     public function testCollection()
     {
         $pages = new Pages([]);
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'collections' => [
                 'test' => function () use ($pages) {
                     return $pages;
@@ -187,6 +232,9 @@ class AppPluginsTest extends TestCase
         Collection::$filters = [];
 
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'collectionFilters' => [
                 '**' => $filter = [
                     'validator' => function ($value, $test) {
@@ -205,6 +253,9 @@ class AppPluginsTest extends TestCase
     public function testController()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'controllers' => [
                 'test' => function () {
                     return ['foo' => 'bar'];
@@ -218,6 +269,9 @@ class AppPluginsTest extends TestCase
     public function testFieldMethod()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'fieldMethods' => [
                 'test' => function () {
                     return 'test';
@@ -235,6 +289,9 @@ class AppPluginsTest extends TestCase
     public function testField()
     {
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'fields' => [
                 'dummy' => __DIR__ . '/fixtures/fields/DummyField.php'
             ]
@@ -255,6 +312,9 @@ class AppPluginsTest extends TestCase
         $phpUnit  = $this;
 
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'hooks' => [
                 'testHook' => function ($message) use ($phpUnit, &$executed) {
                     $phpUnit->assertEquals('test', $message);
@@ -271,6 +331,9 @@ class AppPluginsTest extends TestCase
         $executed = 0;
 
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'hooks' => [
                 'testHook' => [
                     function ($message) use ($phpUnit, &$executed) {
@@ -336,6 +399,9 @@ class AppPluginsTest extends TestCase
     public function testPageMethod()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'pageMethods' => [
                 'test' => function () {
                     return 'test';
@@ -353,6 +419,9 @@ class AppPluginsTest extends TestCase
     public function testPageModel()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'pageModels' => [
                 'dummy' => DummyPage::class
             ]
@@ -370,6 +439,7 @@ class AppPluginsTest extends TestCase
     {
         $kirby = new App([
             'roots' => [
+                'index'  => '/dev/null',
                 'models' => __DIR__ . '/fixtures/models'
             ]
         ]);
@@ -386,6 +456,9 @@ class AppPluginsTest extends TestCase
     {
         // simple
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'options' => [
                 'testOption' => 'testValue'
             ]
@@ -424,6 +497,9 @@ class AppPluginsTest extends TestCase
 
         // simple
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'options' => [
                 'test.plugin.foo' => 'another-bar'
             ]
@@ -442,6 +518,9 @@ class AppPluginsTest extends TestCase
         ]);
 
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'options' => [
                 'test.plugin.foo' => ['three']
             ]
@@ -463,6 +542,9 @@ class AppPluginsTest extends TestCase
         ]);
 
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'options' => [
                 'test.plugin.foo' => [
                     'a' => 'Custom A'
@@ -476,6 +558,9 @@ class AppPluginsTest extends TestCase
     public function testRoutes()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'routes' => [
                 [
                     'pattern' => 'test',
@@ -492,6 +577,9 @@ class AppPluginsTest extends TestCase
     public function testRoutesCallback()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'routes' => function () {
                 return [
                     [
@@ -510,6 +598,9 @@ class AppPluginsTest extends TestCase
     public function testSnippet()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'snippets' => [
                 'header' => $file = 'header.php'
             ]
@@ -521,6 +612,9 @@ class AppPluginsTest extends TestCase
     public function testTemplate()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'templates' => [
                 'project' => $file = 'project.php'
             ]
@@ -532,6 +626,9 @@ class AppPluginsTest extends TestCase
     public function testTranslation()
     {
         $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'translations' => [
                 'en' => [
                     'test' => 'English Test'
@@ -564,7 +661,11 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
-        new App();
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
 
         I18n::$locale = 'en';
 
