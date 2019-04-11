@@ -12,6 +12,11 @@ export default {
   props: {
     plugin: String
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$store.dispatch("breadcrumb", []);
+    })
+  },
   watch: {
     plugin() {
       this.$store.dispatch("view", this.plugin);
