@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "No debes agregar más de 1 archivo a la sección \"{section}\"",
   "error.section.files.min.plural":
-    "Agregue al menos {min} archivos a la sección \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Agregue al menos un archivo a la sección \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "No debe agregar más de {max} páginas a la sección \"{section}\"",
   "error.section.pages.max.singular":
     "No debe agregar más de una página a la sección \"{section}\"",
   "error.section.pages.min.plural":
-    "Agregue al menos {min} páginas a la sección \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Añadir al menos una página a la sección \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "La sección \"{name}\" no pudo ser cargada",
   "error.section.type.invalid": "El sección tipo \"{tipo}\" no es válido",

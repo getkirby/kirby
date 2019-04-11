@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Du får inte lägga till mer än en fil i sektionen \"{section}\"",
   "error.section.files.min.plural":
-    "Lägg minst {min} filer till sektionen \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Lägg minst en fil till sektionen \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Du får inte lägga till mer än {max} sidor till sektionen \"{section}\"",
   "error.section.pages.max.singular":
     "Du får inte lägga till mer än en sida i sektionen \"{section}\"",
   "error.section.pages.min.plural":
-    "Lägg till minst {min} sidor till sektionen \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Lägg till minst en sida till sektionen \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Sektionen \"{name}\" kunde inte laddas",
   "error.section.type.invalid": "Sektionstypen \"{type}\" är inte giltig",

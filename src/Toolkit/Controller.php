@@ -27,12 +27,7 @@ class Controller
 
         foreach ($info->getParameters() as $parameter) {
             $name = $parameter->getName();
-
-            if (isset($data[$name]) === false) {
-                throw new Exception(sprintf('The "%s" parameter is missing', $name));
-            }
-
-            $args[] = $data[$name];
+            $args[] = $data[$name] ?? null;
         }
 
         return $args;

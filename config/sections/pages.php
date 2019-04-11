@@ -228,7 +228,7 @@ return [
             return $this->pagination();
         },
         'sortable' => function () {
-            if ($this->status !== 'listed' && $this->status !== 'all') {
+            if (in_array($this->status, ['listed', 'published', 'all']) === false) {
                 return false;
             }
 
@@ -285,6 +285,8 @@ return [
                 'headline' => $this->headline,
                 'layout'   => $this->layout,
                 'link'     => $this->link,
+                'max'      => $this->max,
+                'min'      => $this->min,
                 'size'     => $this->size,
                 'sortable' => $this->sortable
             ],

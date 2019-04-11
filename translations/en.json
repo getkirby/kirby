@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "You must not add more than one file to the \"{section}\" section",
   "error.section.files.min.plural":
-    "Add at least {min} files to the \"{section}\" section",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Add at least one file to the \"{section}\" section",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "You must not add more than {max} pages to the \"{section}\" section",
   "error.section.pages.max.singular":
     "You must not add more than one page to the \"{section}\" section",
   "error.section.pages.min.plural":
-    "Add at least {min} pages to the \"{section}\" section",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Add at least one page to the \"{section}\" section",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "The section \"{name}\" could not be loaded",
   "error.section.type.invalid": "The section type \"{type}\" is not valid",

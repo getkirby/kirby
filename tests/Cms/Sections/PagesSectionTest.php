@@ -9,6 +9,8 @@ class PagesSectionTest extends TestCase
 {
     public function setUp(): void
     {
+        App::destroy();
+
         $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
@@ -68,6 +70,133 @@ class PagesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('test/a', $section->parent()->id());
+    }
+
+    public function statusProvider()
+    {
+        return [
+            [null, 'all'],
+            ['', 'all'],
+            ['draft', 'draft'],
+            ['drafts', 'draft'],
+            ['published', 'published'],
+            ['listed', 'listed'],
+            ['unlisted', 'unlisted'],
+            ['invalid', 'all'],
+        ];
+    }
+
+    /**
+     * @dataProvider statusProvider
+     */
+    public function testStatus($input, $expected)
+    {
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => new Page(['slug' => 'test']),
+            'status' => $input
+        ]);
+
+        $this->assertEquals($expected, $section->status());
+    }
+
+    public function addableStatusProvider()
+    {
+        return [
+            ['all', true],
+            ['draft', true],
+            ['published', false],
+            ['listed', false],
+            ['unlisted', false],
+        ];
+    }
+
+    public function testAdd()
+    {
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+        ]);
+
+        $this->assertTrue($section->add());
+    }
+
+    /**
+     * @dataProvider addableStatusProvider
+     */
+    public function testAddWhenStatusIs($input, $expected)
+    {
+        $section = new Section('pages', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'status'   => $input
+        ]);
+
+        $this->assertEquals($expected, $section->add());
+    }
+
+    public function testAddWhenSectionIsFull()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage']
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $page,
+            'max'   => 1
+        ]);
+
+        $this->assertFalse($section->add());
+    }
+
+    public function testSortable()
+    {
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+        ]);
+
+        $this->assertTrue($section->sortable());
+    }
+
+    public function testDisableSortable()
+    {
+        $section = new Section('pages', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'sortable' => false
+        ]);
+
+        $this->assertFalse($section->sortable());
+    }
+
+    public function sortableStatusProvider()
+    {
+        return [
+            ['all', true],
+            ['listed', true],
+            ['published', true],
+            ['draft', false],
+            ['unlisted', false],
+        ];
+    }
+
+    /**
+     * @dataProvider sortableStatusProvider
+     */
+    public function testSortableStatus($input, $expected)
+    {
+        $section = new Section('pages', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'status'   => $input
+        ]);
+
+        $this->assertEquals($expected, $section->sortable());
     }
 
     public function testImageString()

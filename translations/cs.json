@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Sekce \"{section}\" může obsahovat nejvýše jeden soubor",
   "error.section.files.min.plural":
-    "Do sekce \"{section}\" přidejte alepoň {min} souborů",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Do sekce \"{section}\" přidejte alepoň jeden soubor",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Sekce \"{section}\" nesmí obsahovat více jak {max} stránek",
   "error.section.pages.max.singular":
     "Sekce \"{section}\" může obsahovat nejvýše jednu stránku",
   "error.section.pages.min.plural":
-    "Do sekce \"{section}\" přidejte alepoň {min} stránek",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Do sekce \"{section}\" přidejte alespoň jednu stránku",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Nelze načíst sekci \"{name}\"",
   "error.section.type.invalid": "Typ sekce \"{type}\" není platný",

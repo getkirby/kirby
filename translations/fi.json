@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Et voi lisätä enempää kuin yhden tiedoston osioon \"{section}\"",
   "error.section.files.min.plural":
-    "Lisää ainakin {min} tiedostoa osioon \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Lisää ainakin yksi tiedosto osioon \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Et voi lisätä enemmän kuin {max} sivua osioon \"{section}\"",
   "error.section.pages.max.singular":
     "Et voi lisätä enempää kuin yhden sivun osioon \"{section}\"",
   "error.section.pages.min.plural":
-    "Lisää ainakin {min} sivua osioon \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Lisää ainakin yksi sivu osioon \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Osiota \"{name}\" ei voitu ladata",
   "error.section.type.invalid": "Osion tyyppi \"{type}\" ei ole kelvollinen",
@@ -366,8 +366,8 @@
   "toolbar.button.heading.3": "Otsikko 3",
   "toolbar.button.italic": "Kursivointi",
   "toolbar.button.file": "Tiedosto",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Valitse tiedosto",
+  "toolbar.button.file.upload": "Lähetä tiedosto",
   "toolbar.button.link": "Linkki",
   "toolbar.button.ol": "Järjestetty lista",
   "toolbar.button.ul": "Järjestämätön lista",

@@ -292,11 +292,15 @@ class User extends ModelWithContent
     /**
      * Compares the current object with the given user object
      *
-     * @param User $user
+     * @param User|null $user
      * @return bool
      */
-    public function is(User $user): bool
+    public function is(User $user = null): bool
     {
+        if ($user === null) {
+            return false;
+        }
+
         return $this->id() === $user->id();
     }
 
