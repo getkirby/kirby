@@ -1,7 +1,7 @@
 <template>
   <k-field v-bind="$props" class="k-users-field">
     <k-button
-      v-if="more"
+      v-if="more && !disabled"
       slot="options"
       icon="add"
       @click="open"
@@ -37,7 +37,12 @@
             back: 'black'
           }"
         >
-          <k-button slot="options" icon="remove" @click="remove(index)" />
+          <k-button
+            v-if="!disabled"
+            slot="options"
+            icon="remove"
+            @click="remove(index)"
+          />
         </component>
       </k-draggable>
     </template>

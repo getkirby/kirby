@@ -1,7 +1,7 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
     <k-button
-      v-if="more"
+      v-if="more && !disabled"
       slot="options"
       icon="add"
       @click="open"
@@ -28,6 +28,7 @@
           :icon="file.icon"
         >
           <k-button
+            v-if="!disabled"
             slot="options"
             :tooltip="$t('remove')"
             icon="remove"

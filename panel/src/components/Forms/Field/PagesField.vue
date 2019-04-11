@@ -1,7 +1,7 @@
 <template>
   <k-field v-bind="$props" class="k-pages-field">
     <k-button
-      v-if="more"
+      v-if="more && !disabled"
       slot="options"
       icon="add"
       @click="open"
@@ -27,7 +27,12 @@
           :icon="page.icon"
           :image="page.image"
         >
-          <k-button slot="options" icon="remove" @click="remove(index)" />
+          <k-button
+            v-if="!disabled"
+            slot="options"
+            icon="remove"
+            @click="remove(index)"
+          />
         </component>
       </k-draggable>
     </template>
