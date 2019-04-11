@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use Kirby\Http\Route;
 use Kirby\Toolkit\F;
 
@@ -213,5 +214,44 @@ class AppTest extends TestCase
 
         // with file parent
         $this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
+    }
+
+    public function testBlueprints()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'blueprints' => $fixtures = __DIR__ . '/fixtures/AppTest/blueprints',
+            ],
+            'blueprints' => [
+                'pages/a' => ['title' => 'A'],
+                'pages/d' => ['title' => 'C'],
+                'files/a' => ['title' => 'File A']
+            ]
+        ]);
+
+        Data::write($fixtures . '/pages/b.yml', ['title' => 'B']);
+        Data::write($fixtures . '/pages/c.yml', ['title' => 'C']);
+        Data::write($fixtures . '/files/b.yml', ['title' => 'File B']);
+
+        $expected = [
+            'a',
+            'b',
+            'c',
+            'd',
+            'default'
+        ];
+
+        $this->assertEquals($expected, $app->blueprints());
+
+        $expected = [
+            'a',
+            'b',
+            'default'
+        ];
+
+        $this->assertEquals($expected, $app->blueprints('files'));
+
+        Dir::remove($fixtures);
     }
 }

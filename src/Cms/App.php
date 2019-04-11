@@ -233,6 +233,33 @@ class App
     }
 
     /**
+     * Returns all available blueprints for this installation
+     *
+     * @param string $type
+     * @return array
+     */
+    public function blueprints(string $type = 'pages')
+    {
+        $blueprints = [];
+
+        foreach ($this->extensions('blueprints') as $name => $blueprint) {
+            if (dirname($name) === $type) {
+                $name = basename($name);
+                $blueprints[$name] = $name;
+            }
+        }
+
+        foreach (glob($this->root('blueprints') . '/' . $type . '/*.yml') as $blueprint) {
+            $name = F::name($blueprint);
+            $blueprints[$name] = $name;
+        }
+
+        ksort($blueprints);
+
+        return array_values($blueprints);
+    }
+
+    /**
      * Calls any Kirby route
      *
      * @return mixed
