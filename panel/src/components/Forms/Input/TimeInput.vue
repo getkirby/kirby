@@ -49,7 +49,7 @@
 import padZero from "@/helpers/padZero.js";
 
 import dayjs from "dayjs";
-import customFormat from 'dayjs/plugin/customParseFormat'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat);
 
 export default {
