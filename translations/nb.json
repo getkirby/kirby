@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Det er ikke mulig å legge til mer enn én fil i seksjonen \"{section}\"",
   "error.section.files.min.plural":
-    "Legg til minst {min} filer i \"{section}\" seksjonen",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Legg til minst én fil i \"{section}\" seksjonen",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Det er ikke mulig å legge til mer enn {max} sider i \"{section}\" seksjonen",
   "error.section.pages.max.singular":
     "Det er ikke mulig å legge til mer enn én side i \"{section}\" seksjonen",
   "error.section.pages.min.plural":
-    "Legg til mist {min} sider i \"{section}\" seksjonen",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Legg til minst én side i \"{section}\" seksjonen",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Seksjonen \"{name}\" kunne ikke lastes inn",
   "error.section.type.invalid": "Seksjonstypen \"{type}\" er ikke gyldig",

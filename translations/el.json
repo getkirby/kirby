@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Δεν πρέπει να προσθέσετε περισσότερα από ένα αρχεία στην ενότητα \"{section}\"",
   "error.section.files.min.plural":
-    "Προσθέστε τουλάχιστον {min} αρχεία στην ενότητα \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Προσθέστε τουλάχιστον ένα αρχείο στην ενότητα \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Δεν μπορείτε να προσθέσετε περισσότερες από {max} σελίδες στην ενότητα \"{section}\"",
   "error.section.pages.max.singular":
     "Δεν μπορείτε να προσθέσετε περισσότερες από μία σελίδες στην ενότητα \"{section}\"",
   "error.section.pages.min.plural":
-    "Προσθέστε τουλάχιστον {min} σελίδες στην ενότητα \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Προσθέστε τουλάχιστον μία σελίδα στην ενότητα \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Δεν ήταν δυνατή η φόρτωση της ενότητας \"{name}\"",
   "error.section.type.invalid": "Ο τύπος ενότητας \"{type}\" δεν είναι έγκυρος",
