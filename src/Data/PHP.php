@@ -82,6 +82,11 @@ class PHP extends Handler
         $php = static::encode($data);
         $php = "<?php\n\nreturn $php;";
 
-        return F::write($file, $php);
+        if (F::write($file, $php) === true) {
+            F::invalidateOpcodeCache($file);
+            return true;
+        }
+
+        return false;
     }
 }

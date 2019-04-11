@@ -265,6 +265,21 @@ class F
     }
 
     /**
+     * Invalidate opcode cache for file.
+     *
+     * @param  string $file The path of the file
+     * @return boolean
+     */
+    public static function invalidateOpcodeCache(string $file): bool
+    {
+        if (function_exists('opcache_invalidate') && strlen(ini_get('opcache.restrict_api')) === 0) {
+            return opcache_invalidate($file, true);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Checks if a file is of a certain type
      *
      * @param string $file Full path to the file
