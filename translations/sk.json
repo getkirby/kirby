@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Nemôžete pridať viac ako 1 súbor do sekcie \"{section}\"",
   "error.section.files.min.plural":
-    "Pridajte aspoň {min} súbory/ov do sekcie \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Pridajte aspoň 1 súbor do sekcie \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Nemôžete pridať viac ako {max} stránky/ok do sekcie \"{section}\"",
   "error.section.pages.max.singular":
     "Nemôžete pridať viac ako 1 stránku do sekcie \"{section}\"",
   "error.section.pages.min.plural":
-    "Pridajte aspoň {min} stránky/ok do sekcie \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Pridajte aspoň 1 stránku do sekcie \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Sekciu \"{name}\" sa nepodarilo nahrať",
   "error.section.type.invalid": "Typ sekcie \"{type}\" nie je platný",

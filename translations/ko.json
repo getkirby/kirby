@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "이 섹션({section})에는 파일을 하나 이상 추가할 수 없습니다.",
   "error.section.files.min.plural":
-    "이 섹션({section})에는 파일을 {min}개 이상 추가하세요.",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "이 섹션({section})에는 파일을 하나 이상 추가하세요.",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "이 섹션({section})에는 페이지를 {max}개 이상 추가할 수 없습니다.",
   "error.section.pages.max.singular":
     "이 섹션({section})에는 페이지를 하나 이상 추가할 수 없습니다.",
   "error.section.pages.min.plural":
-    "이 섹션({section})에는 페이지를 {min}개 이상 추가하세요.",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "이 섹션({section})에는 페이지를 하나 이상 추가하세요.",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "섹션({name})을 불러올 수 없습니다.",
   "error.section.type.invalid": "섹션의 형식({type})이 올바르지 않습니다.",

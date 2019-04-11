@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Nem adhatsz hozzá egynél több fájlt a(z) \"{section}\" szekcióhoz",
   "error.section.files.min.plural":
-    "Adj hozzá legalább {min} fájlt a(z) \"{section}\" szekcióhoz",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Adj hozzá legalább egy fájlt a(z) \"{section}\" szekcióhoz",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Maximum {max} oldalt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
   "error.section.pages.max.singular":
     "Nem adhatsz hozzá egynél több oldalt a(z) \"{section}\" szekcióhoz",
   "error.section.pages.min.plural":
-    "Adj hozzá legalább {min} oldalt a(z) \"{section}\" szekcióhoz",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Adj hozzá legalább egy oldalt a(z) \"{section}\" szekcióhoz",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "A(z) \"{name}\" szekció nem tölthető be",
   "error.section.type.invalid": "A szekció típusa (\"{type}\") nem megfelelő",

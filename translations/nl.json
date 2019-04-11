@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Je kunt niet meer dan 1 bestand toevoegen aan de zone \"{section}\"",
   "error.section.files.min.plural":
-    "Voeg minmaal {min} bestanden toe aan de zone \"{section}\"",
+    "The \"{section}\" section requires at least {min} files",
   "error.section.files.min.singular":
-    "Voeg minimaal 1 bestand toe aan de zone \"{section}\"",
+    "The \"{section}\" section requires at least one file",
 
   "error.section.pages.max.plural":
     "Je kunt niet meer dan {max} pagina's toevoegen aan de zone \"{section}\"",
   "error.section.pages.max.singular":
     "Je kunt niet meer dan 1 pagina toevoegen aan de zone \"{section}\"",
   "error.section.pages.min.plural":
-    "Voeg minimaal {min} pagina's toe aan de zone \"{section}\"",
+    "The \"{section}\" section requires at least {min} pages",
   "error.section.pages.min.singular":
-    "Voeg minimaal 1 pagina toe aan de zone \"{section}\"",
+    "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "De zone \"{name}\" kan niet worden geladen",
   "error.section.type.invalid": "Zone-type \"{type}\" is niet geldig",
