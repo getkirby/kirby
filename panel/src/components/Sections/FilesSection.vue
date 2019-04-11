@@ -95,7 +95,7 @@ export default {
             const number = this.options.min > 1 ? "plural" : "singular";
             this.$store.dispatch("notification/error", {
               message: this.$t("error.section.files.min." + number, {
-                section: this.name,
+                section: this.options.headline || this.name,
                 min: this.options.min
               })
             });
