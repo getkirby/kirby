@@ -47,7 +47,7 @@ class ATest extends TestCase
     public function testGetWithDotNotation()
     {
         $data = [
-            'grandma' => $grandma = [
+            'grand.ma' => $grandma = [
                 'mother' => $mother = [
                     'child' => $child = 'a',
                     'another.child' => $anotherChild = 'b',
@@ -55,10 +55,10 @@ class ATest extends TestCase
             ]
         ];
 
-        $this->assertEquals($grandma, A::get($data, 'grandma'));
-        $this->assertEquals($mother, A::get($data, 'grandma.mother'));
-        $this->assertEquals($child, A::get($data, 'grandma.mother.child'));
-        $this->assertEquals($anotherChild, A::get($data, 'grandma.mother.another.child'));
+        $this->assertEquals($grandma, A::get($data, 'grand.ma'));
+        $this->assertEquals($mother, A::get($data, 'grand.ma.mother'));
+        $this->assertEquals($child, A::get($data, 'grand.ma.mother.child'));
+        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.child'));
 
         // with default
         $this->assertEquals('default', A::get($data, 'grandma.mother.sister', 'default'));

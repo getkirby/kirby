@@ -59,6 +59,29 @@ class AppTest extends TestCase
         $this->assertEquals('test', $app->option('mother.child'));
     }
 
+    public function testOptionFromPlugin()
+    {
+        App::destroy();
+        App::plugin('namespace/plugin', [
+            'options' => [
+                'key' => 'A',
+                'nested' => [
+                    'key' => 'B'
+                ]
+            ]
+        ]);
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $this->assertEquals('A', $app->option('namespace.plugin.key'));
+        $this->assertEquals('B', $app->option('namespace.plugin.nested.key'));
+        $this->assertEquals('B', $app->option('namespace.plugin.nested')['key']);
+    }
+
     public function testRolesFromFixtures()
     {
         $app = new App([

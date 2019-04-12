@@ -83,6 +83,16 @@ class A
             $firstKey = array_shift($keys);
 
             if (isset($array[$firstKey]) === false) {
+                $currentKey = $firstKey;
+
+                while ($innerKey = array_shift($keys)) {
+                    $currentKey = $currentKey . '.' . $innerKey;
+
+                    if (isset($array[$currentKey]) === true) {
+                        return static::get($array[$currentKey], implode('.', $keys), $default);
+                    }
+                }
+
                 return $default;
             }
 
