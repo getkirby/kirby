@@ -57,8 +57,12 @@ class A
      *                          returned if no element has been found
      * @return  mixed
      */
-    public static function get(array $array, $key, $default = null)
+    public static function get($array, $key, $default = null)
     {
+        if (is_array($array) === false) {
+            return $array;
+        }
+
         // return the entire array if the key is null
         if ($key === null) {
             return $array;
