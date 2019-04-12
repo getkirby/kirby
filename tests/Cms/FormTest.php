@@ -84,4 +84,71 @@ class FormTest extends TestCase
 
         $this->assertEquals(['a' => 'A', 'b' => 'B'], $form->data());
     }
+
+    public function testUntranslatedFields()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de'
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'fields' => [
+                    'a' => [
+                        'type' => 'text'
+                    ],
+                    'b' => [
+                        'type' => 'text',
+                        'translate' => false
+                    ]
+                ],
+            ]
+        ]);
+
+        // default language
+        $form = Form::for($page, [
+            'input' => [
+                'a' => 'A',
+                'b' => 'B'
+            ]
+        ]);
+
+        $expected = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $this->assertEquals($expected, $form->values());
+
+        // secondary language
+        $form = Form::for($page, [
+            'language' => 'de',
+            'input' => [
+                'a' => 'A',
+                'b' => 'B'
+            ]
+        ]);
+
+        $expected = [
+            'a' => 'A',
+            'b' => ''
+        ];
+
+        $this->assertEquals($expected, $form->values());
+    }
 }

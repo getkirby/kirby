@@ -21,7 +21,7 @@ class Form extends BaseForm
 
         if ($kirby->multilang() === true) {
             $fields            = $props['fields'] ?? [];
-            $languageCode      = $props['languageCode'] ?? $kirby->language()->code();
+            $languageCode      = $props['language'] ?? $kirby->language()->code();
             $isDefaultLanguage = $languageCode === $kirby->defaultLanguage()->code();
 
             foreach ($fields as $fieldName => $fieldProps) {
