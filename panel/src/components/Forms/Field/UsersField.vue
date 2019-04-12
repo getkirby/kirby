@@ -54,48 +54,10 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import picker from "@/mixins/picker.js";
 
 export default {
-  inheritAttrs: false,
-  props: {
-    ...Field.props,
-    empty: String,
-    max: Number,
-    multiple: Boolean,
-    value: {
-      type: Array,
-      default() {
-        return [];
-      }
-    }
-  },
-  data() {
-    return {
-      layout: "list",
-      selected: this.value
-    };
-  },
-  computed: {
-    elements() {
-      return {
-        list: "k-list",
-        item: "k-list-item"
-      };
-    },
-    more() {
-      if (!this.max) {
-        return true;
-      }
-
-      return this.max > this.selected.length;
-    }
-  },
-  watch: {
-    value(value) {
-      this.selected = value;
-    }
-  },
+  mixins: [picker],
   methods: {
     open() {
       this.$refs.selector.open({
@@ -103,18 +65,6 @@ export default {
         multiple: this.multiple,
         selected: this.selected.map(user => user.email)
       });
-    },
-    remove(index) {
-      this.selected.splice(index, 1);
-      this.onInput();
-    },
-    focus() {},
-    onInput() {
-      this.$emit("input", this.selected);
-    },
-    select(files) {
-      this.selected = files;
-      this.onInput();
     }
   }
 };

@@ -49,62 +49,11 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import picker from "@/mixins/picker.js";
 import clone from "@/helpers/clone.js";
 
 export default {
-  inheritAttrs: false,
-  props: {
-    ...Field.props,
-    empty: String,
-    layout: String,
-    max: Number,
-    multiple: Boolean,
-    size: String,
-    value: {
-      type: Array,
-      default() {
-        return [];
-      }
-    }
-  },
-  data() {
-    return {
-      selected: this.value
-    };
-  },
-  computed: {
-    elements() {
-      const layouts = {
-        cards: {
-          list: "k-cards",
-          item: "k-card"
-        },
-        list: {
-          list: "k-list",
-          item: "k-list-item"
-        }
-      };
-
-      if (layouts[this.layout]) {
-        return layouts[this.layout];
-      }
-
-      return layouts["list"];
-    },
-    more() {
-      if (!this.max) {
-        return true;
-      }
-
-      return this.max > this.selected.length;
-    }
-  },
-  watch: {
-    value(value) {
-      this.selected = value;
-    }
-  },
+  mixins: [picker],
   methods: {
     open() {
       this.$refs.selector.open({
@@ -113,18 +62,6 @@ export default {
         multiple: this.multiple,
         selected: clone(this.selected)
       });
-    },
-    remove(index) {
-      this.selected.splice(index, 1);
-      this.onInput();
-    },
-    focus() {},
-    onInput() {
-      this.$emit("input", this.selected);
-    },
-    select(files) {
-      this.selected = files;
-      this.onInput();
     }
   }
 };

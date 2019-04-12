@@ -50,67 +50,15 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import picker from "@/mixins/picker.js";
 
 export default {
-  inheritAttrs: false,
-  props: {
-    ...Field.props,
-    empty: String,
-    layout: String,
-    max: Number,
-    multiple: Boolean,
-    parent: String,
-    size: String,
-    value: {
-      type: Array,
-      default() {
-        return [];
-      }
-    }
-  },
-  data() {
-    return {
-      selected: this.value
-    };
-  },
-  computed: {
-    elements() {
-      const layouts = {
-        cards: {
-          list: "k-cards",
-          item: "k-card"
-        },
-        list: {
-          list: "k-list",
-          item: "k-list-item"
-        }
-      };
-
-      if (layouts[this.layout]) {
-        return layouts[this.layout];
-      }
-
-      return layouts["list"];
-    },
-    more() {
-      if (!this.max) {
-        return true;
-      }
-
-      return this.max > this.selected.length;
-    }
-  },
-  watch: {
-    value(value) {
-      this.selected = value;
-    }
-  },
+  mixins: [picker],
   created() {
-    this.$events.$on("file.delete", this.unset);
+    this.$events.$on("file.delete", this.removeById);
   },
   destroyed() {
-    this.$events.$off("file.delete", this.unset);
+    this.$events.$off("file.delete", this.removeById);
   },
   methods: {
     open() {
@@ -144,22 +92,6 @@ export default {
           );
         });
     },
-    remove(index) {
-      this.selected.splice(index, 1);
-      this.onInput();
-    },
-    focus() {},
-    onInput() {
-      this.$emit("input", this.selected);
-    },
-    select(files) {
-      this.selected = files;
-      this.onInput();
-    },
-    unset(id) {
-      this.selected = this.selected.filter(item => item.id !== id);
-      this.onInput();
-    }
   }
 };
 </script>
