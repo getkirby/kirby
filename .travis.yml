@@ -1,9 +1,15 @@
 language: php
 os: linux
+sudo: false
+
 php:
   - 7.1
   - 7.2
   - 7.3
+
+before_install:
+  - echo yes | pecl install -f apcu
+  - phpenv config-add ./tests/php.ini
 
 install:
   # Install composer packages, will also trigger dump-autoload

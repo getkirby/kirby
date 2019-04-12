@@ -53,6 +53,21 @@ class Cache
     }
 
     /**
+     * Adds the prefix to the key if given
+     *
+     * @param string $key
+     * @return string
+     */
+    protected function key(string $key): string
+    {
+        if (empty($this->options['prefix']) === false) {
+            $key = $this->options['prefix'] . '/' . $key;
+        }
+
+        return $key;
+    }
+
+    /**
      * Private method to retrieve the cache value
      * This needs to be defined by the driver
      *
