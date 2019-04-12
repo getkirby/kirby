@@ -138,9 +138,32 @@ export default {
       }
 
       string = string.trim();
-      if (string.length === 0) return;
 
-      this.addTag({ text: string, value: string });
+      if (string.includes(this.separator)) {
+        string.split(this.separator).forEach(tag => {
+          this.addString(tag);
+        });
+
+        return;
+      }
+
+      if (string.length === 0) {
+        return;
+      }
+
+      if (this.accept === "options") {
+        const option = this.options.filter(
+          option => option.text === string
+        )[0];
+
+        if (!option) {
+          return;
+        }
+
+        this.addTag(option);
+      } else {
+        this.addTag({ text: string, value: string });
+      }
     },
     addTag(tag) {
       this.addTagToIndex(tag);
