@@ -19,7 +19,7 @@
           v-for="(user, index) in selected"
           :is="elements.item"
           :key="user.email"
-          :sortable="true"
+          :sortable="!disabled && selected.length > 1"
           :text="user.username"
           :link="$api.users.link(user.id)"
           :image="
@@ -119,3 +119,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-users-field[data-disabled] * {
+  pointer-events: all !important;
+}
+</style>

@@ -20,7 +20,7 @@
           v-for="(file, index) in selected"
           :is="elements.item"
           :key="file.filename"
-          :sortable="selected.length > 1"
+          :sortable="!disabled && selected.length > 1"
           :text="file.text"
           :link="file.link"
           :info="file.info"
@@ -163,3 +163,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-files-field[data-disabled] * {
+  pointer-events: all !important;
+}
+</style>

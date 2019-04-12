@@ -20,7 +20,7 @@
           v-for="(page, index) in selected"
           :is="elements.item"
           :key="page.id"
-          :sortable="selected.length > 1"
+          :sortable="!disabled && selected.length > 1"
           :text="page.text"
           :info="page.info"
           :link="page.link"
@@ -129,3 +129,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-pages-field[data-disabled] * {
+  pointer-events: all !important;
+}
+</style>
