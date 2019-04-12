@@ -79,17 +79,14 @@ class A
 
         // support dot notation
         if (strpos($key, '.') !== false) {
-            $keys = explode('.', $key);
+            $keys     = explode('.', $key);
+            $firstKey = array_shift($keys);
 
-            foreach ($keys as $innerKey) {
-                if (isset($array[$innerKey]) === false) {
-                    return $default;
-                }
-
-                $array = $array[$innerKey];
+            if (isset($array[$firstKey]) === false) {
+                return $default;
             }
 
-            return $array;
+            return static::get($array[$firstKey], implode('.', $keys), $default);
         }
 
         return $default;

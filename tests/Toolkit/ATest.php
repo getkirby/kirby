@@ -49,7 +49,8 @@ class ATest extends TestCase
         $data = [
             'grandma' => $grandma = [
                 'mother' => $mother = [
-                    'child' => $child = 'test'
+                    'child' => $child = 'a',
+                    'another.child' => $anotherChild = 'b',
                 ]
             ]
         ];
@@ -57,6 +58,7 @@ class ATest extends TestCase
         $this->assertEquals($grandma, A::get($data, 'grandma'));
         $this->assertEquals($mother, A::get($data, 'grandma.mother'));
         $this->assertEquals($child, A::get($data, 'grandma.mother.child'));
+        $this->assertEquals($anotherChild, A::get($data, 'grandma.mother.another.child'));
 
         // with default
         $this->assertEquals('default', A::get($data, 'grandma.mother.sister', 'default'));
