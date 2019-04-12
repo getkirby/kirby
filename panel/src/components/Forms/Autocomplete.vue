@@ -53,10 +53,6 @@ export default {
         return;
       }
 
-      if (this.skip.indexOf(query) !== -1) {
-        return;
-      }
-
       // Filter options by query to retrieve items (no more than this.limit)
       const regex = new RegExp(query, "ig");
 
@@ -69,7 +65,7 @@ export default {
           }
 
           // skip all options in the skip array
-          if (this.skip.indexOf(option.text) !== -1) {
+          if (this.skip.indexOf(option.value) !== -1) {
             return false;
           }
 

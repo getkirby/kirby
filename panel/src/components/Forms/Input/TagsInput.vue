@@ -115,7 +115,7 @@ export default {
       return this.tags.length > 1;
     },
     skip() {
-      return this.tags.map(tag => tag.text);
+      return this.tags.map(tag => tag.value);
     }
   },
   watch: {
