@@ -13,8 +13,7 @@ class PageCacheTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => '/dev/null',
-                'cache' => $this->fixtures = __DIR__ . '/fixtures/PageCacheTest',
+                'index' => $this->fixtures = __DIR__ . '/fixtures/PageCacheTest'
             ],
             'site' => [
                 'children' => [
