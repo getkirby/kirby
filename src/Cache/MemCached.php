@@ -2,6 +2,8 @@
 
 namespace Kirby\Cache;
 
+use Kirby\Toolkit\Str;
+
 /**
 * Memcached Driver
 *
@@ -132,6 +134,20 @@ class MemCached extends Cache
      */
     public function flush(): bool
     {
-        return $this->connection->flush();
+        if (empty($this->options['prefix']) === false) {
+            $keys = $this->connection->getAllKeys();
+            if (!is_array($keys)) {
+                return false;
+            }
+
+            // only delete keys with the current prefix
+            $keys = array_filter($keys, function($key) {
+                return Str::startsWith($key, $this->options['prefix']);
+            });
+
+            return $this->connection->deleteMulti($keys);
+        } else {
+            return $this->connection->flush();
+        }
     }
 }
