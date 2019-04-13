@@ -141,7 +141,7 @@ class MemCached extends Cache
             }
 
             // only delete keys with the current prefix
-            $keys = array_filter($keys, function($key) {
+            $keys = array_filter($keys, function ($key) {
                 return Str::startsWith($key, $this->options['prefix']);
             });
 
