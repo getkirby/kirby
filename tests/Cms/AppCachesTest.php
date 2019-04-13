@@ -44,6 +44,9 @@ class AppCachesTest extends TestCase
     public function testEnabledCacheWithOptions()
     {
         $kirby = $this->app([
+            'urls' => [
+                'index' => 'https://getkirby.com/test'
+            ],
             'options' => [
                 'cache.pages' => [
                     'type' => 'file',
@@ -56,7 +59,7 @@ class AppCachesTest extends TestCase
         $this->assertEquals(__DIR__ . '/fixtures/cache', $kirby->cache('pages')->options()['root']);
 
         $kirby->cache('pages')->set('home', 'test');
-        $this->assertFileExists(__DIR__ . '/fixtures/cache/pages/home.cache');
+        $this->assertFileExists(__DIR__ . '/fixtures/cache/getkirby.com_test/pages/home.cache');
     }
 
     public function testPluginDefaultCache()
