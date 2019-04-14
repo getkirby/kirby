@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import "@/helpers/regex.js";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
@@ -120,7 +121,6 @@ export default {
         }));
       }
 
-      RegExp.escape = s => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
       const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
       return this.options

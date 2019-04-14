@@ -43,10 +43,10 @@
           @input="type($event.target.value)"
           @blur="blurInput"
           @keydown.meta.s="blurInput"
-          @keydown.left="leaveInput"
-          @keydown.enter="enter"
-          @keydown.tab="tab"
-          @keydown.backspace="leaveInput"
+          @keydown.left.exact="leaveInput"
+          @keydown.enter.exact="enter"
+          @keydown.tab.exact="tab"
+          @keydown.backspace.exact="leaveInput"
         >
       </k-autocomplete>
     </span>
