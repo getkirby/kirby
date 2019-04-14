@@ -47,7 +47,8 @@ export default {
       default: false,
     },
     value: {
-      type: [String, Boolean, Number, Object, Array]
+      type: [String, Boolean, Number, Object, Array],
+      default: null
     }
   },
   data() {
