@@ -90,7 +90,7 @@
               :data-width="column.width"
               :data-align="column.align"
               class="k-structure-table-column"
-              @click="jump(index, columnName)"
+              @click="jump(index + pagination.offset, columnName)"
             >
               <template v-if="columnIsEmpty(item[columnName]) === false">
                 <component
@@ -246,6 +246,7 @@ export default {
     pagination() {
       return {
         page: this.page,
+        offset: (this.page - 1) * this.limit,
         limit: this.limit,
         total: this.items.length,
         align: "center",
@@ -257,10 +258,10 @@ export default {
         return this.items;
       }
 
-      const index = this.page - 1;
-      const offset = index * this.limit;
-
-      return this.items.slice(offset, offset + this.limit);
+      return this.items.slice(
+        this.pagination.offset,
+        this.pagination.offset + this.limit
+      );
     }
   },
   watch: {
