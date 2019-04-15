@@ -379,6 +379,7 @@ export default {
             })
             .join(", ");
         }
+        case "radio":
         case "select": {
           const option = field.options.filter(item => item.value === value)[0];
           return option ? option.text : null;
