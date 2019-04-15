@@ -16,10 +16,10 @@ use Kirby\Toolkit\View;
 return function ($kirby) {
     $api   = $kirby->option('api.slug', 'api');
     $panel = $kirby->option('panel.slug', 'panel');
-
     $index = $kirby->url('index');
     $media = $kirby->url('media');
-    if (Str::startsWith($media, $index)) {
+
+    if (Str::startsWith($media, $index) === true) {
         $media = Str::after($media, $index);
     } else {
         // media URL is outside of the site, we can't make routing work;
