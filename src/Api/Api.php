@@ -538,7 +538,7 @@ class Api
                     'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
                     'line'      => $e->getLine(),
                     'code'      => empty($e->getCode()) === false ? $e->getCode() : 500,
-                    'route'     => $this->route->pattern()
+                    'route'     => $this->route ? $this->route->pattern() : null
                 ];
             }
         }
