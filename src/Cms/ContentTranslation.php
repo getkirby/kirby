@@ -82,10 +82,12 @@ class ContentTranslation
      */
     public function content(): array
     {
-        $parent  = $this->parent();
+        $parent = $this->parent();
+
         if ($this->content === null) {
             $this->content = $parent->readContent($this->code());
         }
+
         $content = $this->content;
 
         // merge with the default content
