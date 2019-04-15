@@ -90,7 +90,7 @@
               :data-width="column.width"
               :data-align="column.align"
               class="k-structure-table-column"
-              @click="jump(index + pagination.offset, columnName)"
+              @click="jump(index, columnName)"
             >
               <template v-if="columnIsEmpty(item[columnName]) === false">
                 <component
@@ -244,9 +244,15 @@ export default {
       return true;
     },
     pagination() {
+      let offset = 0;
+
+      if (this.limit) {
+        offset = (this.page - 1) * this.limit;
+      }
+
       return {
         page: this.page,
-        offset: (this.page - 1) * this.limit,
+        offset: offset,
         limit: this.limit,
         total: this.items.length,
         align: "center",
@@ -288,6 +294,8 @@ export default {
         const field = this.fields[fieldName];
         if (field.default) {
           data[fieldName] = clone(field.default);
+        } else {
+          data[fieldName] = null;
         }
       });
 
@@ -416,7 +424,7 @@ export default {
       return this.currentIndex === index;
     },
     jump(index, field) {
-      this.open(index, field);
+      this.open(index + this.pagination.offset, field);
     },
     makeItems(value) {
       if (Array.isArray(value) === false) {
@@ -431,7 +439,6 @@ export default {
     open(index, field) {
       this.currentIndex = index;
       this.currentModel = clone(this.items[index]);
-
       this.createForm(field);
     },
     beforePaginate() {
