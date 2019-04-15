@@ -56,6 +56,8 @@ class Yaml extends Handler
             return $yaml;
         }
 
+        // remove bom
+        $yaml   = str_replace("\xEF\xBB\xBF", '', $yaml);
         $result = Spyc::YAMLLoadString($yaml);
 
         if (is_array($result)) {
