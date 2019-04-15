@@ -16,6 +16,16 @@ use Kirby\Toolkit\View;
 return function ($kirby) {
     $api   = $kirby->option('api.slug', 'api');
     $panel = $kirby->option('panel.slug', 'panel');
+    $index = $kirby->url('index');
+    $media = $kirby->url('media');
+
+    if (Str::startsWith($media, $index) === true) {
+        $media = Str::after($media, $index);
+    } else {
+        // media URL is outside of the site, we can't make routing work;
+        // fall back to the standard media route
+        $media = 'media';
+    }
 
     /**
      * Before routes are running before the
@@ -43,7 +53,7 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/plugins/index.(css|js)',
+            'pattern' => $media . '/plugins/index.(css|js)',
             'env'     => 'media',
             'action'  => function (string $extension) use ($kirby) {
                 return $kirby
@@ -53,7 +63,7 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/plugins/(:any)/(:any)/(:all).(css|gif|js|jpg|png|svg|webp|woff2|woff)',
+            'pattern' => $media . '/plugins/(:any)/(:any)/(:all).(css|gif|js|jpg|png|svg|webp|woff2|woff)',
             'env'     => 'media',
             'action'  => function (string $provider, string $pluginName, string $filename, string $extension) use ($kirby) {
                 return PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension);
@@ -71,28 +81,28 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => 'media/pages/(:all)/(:any)/(:any)',
+            'pattern' => $media . '/pages/(:all)/(:any)/(:any)',
             'env'     => 'media',
             'action'  => function ($path, $hash, $filename) use ($kirby) {
                 return Media::link($kirby->page($path), $hash, $filename);
             }
         ],
         [
-            'pattern' => 'media/site/(:any)/(:any)',
+            'pattern' => $media . '/site/(:any)/(:any)',
             'env'     => 'media',
             'action'  => function ($hash, $filename) use ($kirby) {
                 return Media::link($kirby->site(), $hash, $filename);
             }
         ],
         [
-            'pattern' => 'media/users/(:any)/(:any)/(:any)',
+            'pattern' => $media . '/users/(:any)/(:any)/(:any)',
             'env'     => 'media',
             'action'  => function ($id, $hash, $filename) use ($kirby) {
                 return Media::link($kirby->user($id), $hash, $filename);
             }
         ],
         [
-            'pattern' => 'media/assets/(:all)/(:any)/(:any)',
+            'pattern' => $media . '/assets/(:all)/(:any)/(:any)',
             'env'     => 'media',
             'action'  => function ($path, $hash, $filename) use ($kirby) {
                 return Media::thumb($path, $hash, $filename);

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Route;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 
@@ -659,5 +660,40 @@ class RouterTest extends TestCase
         $this->assertEquals('xml', $result->body());
         $this->assertEquals('en', $app->language()->code());
         $this->assertEquals('en', I18n::locale());
+    }
+
+    public function testCustomMediaFolder()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com',
+                'media' => $media = 'https://getkirby.com/thumbs'
+            ]
+        ]);
+
+        $this->assertEquals($media, $app->url('media'));
+
+        // call custom media route
+        $route = $app->router()->find('thumbs/pages/a/b/1234-5678/test.jpg', 'GET');
+        $this->assertContains('thumbs/pages/(.*)', $route->pattern());
+
+        $route = $app->router()->find('thumbs/site/1234-5678/test.jpg', 'GET');
+        $this->assertContains('thumbs/site/([a-z', $route->pattern());
+
+        $route = $app->router()->find('thumbs/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
+        $this->assertContains('thumbs/users/([a-z', $route->pattern());
+
+        // default media route should result in the fallback route
+        $route = $app->router()->find('media/pages/a/b/1234-5678/test.jpg', 'GET');
+        $this->assertEquals('(.*)', $route->pattern());
+
+        $route = $app->router()->find('media/site/1234-5678/test.jpg', 'GET');
+        $this->assertEquals('(.*)', $route->pattern());
+
+        $route = $app->router()->find('media/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
+        $this->assertEquals('(.*)', $route->pattern());
     }
 }
