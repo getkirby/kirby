@@ -21,6 +21,12 @@
     </k-draggable>
 
     <footer v-if="hasFooter" class="k-collection-footer">
+      <k-text
+        v-if="help"
+        theme="help"
+        class="k-collection-help"
+        v-html="help"
+      />
       <div class="k-collection-pagination">
         <k-pagination
           v-if="hasPagination"
@@ -28,12 +34,6 @@
           @paginate="$emit('paginate', $event)"
         />
       </div>
-      <k-text
-        v-if="help"
-        theme="help"
-        class="k-collection-help"
-        v-html="help"
-      />
     </footer>
   </div>
 
@@ -148,7 +148,7 @@ export default {
 
 <style lang="scss">
 .k-collection-help {
-  padding: .75rem;
+  padding: .5rem .75rem;
 }
 .k-collection-footer {
   display: flex;
@@ -161,7 +161,7 @@ export default {
   min-height: 2.75rem;
 }
 .k-collection-pagination .k-pagination .k-button {
-  padding: .75rem;
+  padding: .5rem .75rem;
   line-height: 1.125rem;
 }
 </style>
