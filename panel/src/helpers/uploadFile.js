@@ -14,7 +14,7 @@ export default (file, params) => {
   const options = Object.assign(defaults, params);
   const formData = new FormData();
 
-  formData.append(options.field, file);
+  formData.append(options.field, file, file.name);
 
   if (options.attributes) {
     Object.keys(options.attributes).forEach(key => {
