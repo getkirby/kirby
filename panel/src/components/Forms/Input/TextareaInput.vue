@@ -1,5 +1,9 @@
 <template>
-  <div :data-theme="theme" :data-over="over" class="k-textarea-input">
+  <div
+    :data-theme="theme"
+    :data-over="over"
+    class="k-textarea-input"
+  >
     <div class="k-textarea-input-wrapper">
       <k-toolbar
         v-if="buttons"
@@ -22,6 +26,7 @@
           spellcheck,
           value
         }"
+        :data-font="font"
         :data-size="size"
         class="k-textarea-input-native"
         @click="onClick"
@@ -66,6 +71,7 @@ export default {
     },
     disabled: Boolean,
     endpoints: Object,
+    font: String,
     id: [Number, String],
     name: [Number, String],
     maxlength: Number,
@@ -316,6 +322,9 @@ export default {
 }
 .k-textarea-input-native[data-size="huge"] {
   min-height: 45rem;
+}
+.k-textarea-input-native[data-font="monospace"] {
+  font-family: $font-family-mono;
 }
 
 .k-toolbar {
