@@ -13,9 +13,10 @@ class Permissions
 {
     protected $actions = [
         'access' => [
-            'panel' => true,
-            'users' => true,
-            'site'  => true
+            'panel'    => true,
+            'settings' => true,
+            'site'     => true,
+            'users'    => true,
         ],
         'files' => [
             'changeName' => true,
