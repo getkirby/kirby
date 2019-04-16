@@ -57,7 +57,7 @@
             <th
               v-for="(column, columnName) in columns"
               :key="columnName + '-header'"
-              :data-width="column.width"
+              :style="'width:' + width(column.width)"
               :data-align="column.align"
               class="k-structure-table-column"
             >
@@ -87,7 +87,7 @@
               v-for="(column, columnName) in columns"
               :key="columnName"
               :title="column.label"
-              :data-width="column.width"
+              :style="'width:' + width(column.width)"
               :data-align="column.align"
               class="k-structure-table-column"
               @click="jump(index, columnName)"
@@ -134,6 +134,7 @@ import Field from "../Field.vue";
 import dayjs from "dayjs";
 import sorter from "@/helpers/sort.js";
 import clone from "@/helpers/clone.js";
+import ratioPadding from "@/helpers/ratioPadding.js";
 
 Array.prototype.sortBy = function(sortBy) {
   const sort = sorter();
@@ -533,6 +534,22 @@ export default {
             return true;
           }
         });
+    },
+    width(fraction) {
+      if (!fraction) {
+        return "auto";
+      }
+
+      const parts = fraction.split("/");
+
+      if (parts.length !== 2) {
+        return "auto";
+      }
+
+      const a = Number(parts[0]);
+      const b = Number(parts[1]);
+
+      return parseFloat(100 / b * a, 2).toFixed(2) + "%";
     }
   }
 };
@@ -641,6 +658,18 @@ $structure-item-height: 38px;
   }
   .k-structure-table-column[data-width="1/4"] {
     width: 25%;
+  }
+  .k-structure-table-column[data-width="1/5"] {
+    width: 20%;
+  }
+  .k-structure-table-column[data-width="1/6"] {
+    width: 16.66%;
+  }
+  .k-structure-table-column[data-width="1/8"] {
+    width: 12.5%;
+  }
+  .k-structure-table-column[data-width="1/9"] {
+    width: 11.11%;
   }
   .k-structure-table-column[data-width="2/3"] {
     width: 66.66%;
