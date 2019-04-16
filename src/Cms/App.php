@@ -1136,7 +1136,7 @@ class App
      * @internal
      * @return Snippet
      */
-    public function snippet(string $name, array $data = []): ?string
+    public function snippet($name, array $data = []): ?string
     {
         return $this->component('snippet')($this, $name, array_merge($this->data, $data));
     }
