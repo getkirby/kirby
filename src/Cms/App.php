@@ -1240,6 +1240,16 @@ class App
     }
 
     /**
+     * Creates a hash of the version number
+     *
+     * @return string
+     */
+    public static function versionHash(): string
+    {
+        return md5(static::version());
+    }
+
+    /**
      * Returns the visitor object
      *
      * @return Visitor

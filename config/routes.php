@@ -4,6 +4,7 @@ use Kirby\Api\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\Media;
 use Kirby\Cms\Panel;
+use Kirby\Cms\PanelPlugins;
 use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
 use Kirby\Exception\NotFoundException;
@@ -53,13 +54,27 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => $media . '/plugins/index.(css|js)',
+            'pattern' => $media . '/panel/(:any)/plugins/(css|js)/(:any)/index.(css|js)',
             'env'     => 'media',
-            'action'  => function (string $extension) use ($kirby) {
+            'action'  => function (string $version, string $type) use ($kirby) {
+                $plugins = new PanelPlugins($type);
+                $plugins->publish();
+
                 return $kirby
                     ->response()
-                    ->type($extension)
-                    ->body(PluginAssets::index($extension));
+                    ->type($type)
+                    ->body($plugins->read());
+            }
+        ],
+        [
+            'pattern' => $media . '/panel/plugins/index.(css|js)',
+            'env'     => 'media',
+            'action'  => function (string $type) use ($kirby) {
+                $plugins = new PanelPlugins($type);
+
+                return $kirby
+                    ->response()
+                    ->redirect($plugins->url(), 302);
             }
         ],
         [

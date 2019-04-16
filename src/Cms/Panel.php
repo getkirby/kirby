@@ -30,7 +30,7 @@ class Panel
     {
         $mediaRoot   = $kirby->root('media') . '/panel';
         $panelRoot   = $kirby->root('panel') . '/dist';
-        $versionHash = md5($kirby->version());
+        $versionHash = $kirby->versionHash();
         $versionRoot = $mediaRoot . '/' . $versionHash;
 
         // check if the version already exists
@@ -72,12 +72,15 @@ class Panel
         // get the uri object for the panel url
         $uri = new Uri($url = $kirby->url('panel'));
 
+        $pluginCss = new PanelPlugins('css');
+        $pluginJs  = new PanelPlugins('js');
+
         $view = new View($kirby->root('kirby') . '/views/panel.php', [
             'kirby'     => $kirby,
             'config'    => $kirby->option('panel'),
-            'assetUrl'  => $kirby->url('media') . '/panel/' . md5($kirby->version()),
-            'pluginCss' => $kirby->url('media') . '/plugins/index.css',
-            'pluginJs'  => $kirby->url('media') . '/plugins/index.js',
+            'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
+            'pluginCss' => $pluginCss->url(),
+            'pluginJs'  => $pluginJs->url(),
             'icons'     => F::read($kirby->root('panel') . '/dist/img/icons.svg'),
             'panelUrl'  => $uri->path()->toString(true) . '/',
             'options'   => [
