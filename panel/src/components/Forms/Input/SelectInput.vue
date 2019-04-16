@@ -12,7 +12,13 @@
       class="k-select-input-native"
       v-on="listeners"
     >
-      <option :disabled="required" value="">{{ placeholder }}</option>
+      <option
+        v-if="hasEmpty"
+        :disabled="required"
+        value=""
+      >
+        {{ placeholder }}
+      </option>
       <option
         v-for="option in options"
         :disabled="option.disabled"
@@ -34,6 +40,7 @@ export default {
   props: {
     autofocus: Boolean,
     ariaLabel: String,
+    default: String,
     disabled: Boolean,
     id: [Number, String],
     name: [Number, String],
@@ -61,6 +68,9 @@ export default {
     };
   },
   computed: {
+    hasEmpty() {
+      return !(this.required && this.default);
+    },
     label() {
       const label = this.text(this.selected);
 
