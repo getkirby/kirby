@@ -526,6 +526,19 @@ class HelpersTest extends TestCase
         $this->assertEquals('Hello world', $result);
     }
 
+    public function testSnippetAlternatives()
+    {
+        $app = $this->kirby->clone([
+            'roots' => [
+                'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
+                'snippets'  => $index,
+            ]
+        ]);
+
+        $result = snippet(['does-not-exist', 'does-not-exist-either', 'snippet'], ['message' => 'world'], true);
+        $this->assertEquals('Hello world', $result);
+    }
+
     public function testSvg()
     {
         $result = svg('test.svg');

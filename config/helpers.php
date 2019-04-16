@@ -669,12 +669,12 @@ function smartypants(string $text = null): string
 /**
  * Embeds a snippet from the snippet folder
  *
- * @param string $name
+ * @param string|array $name
  * @param array|object $data
  * @param boolean $return
  * @return string
  */
-function snippet(string $name, $data = [], bool $return = false)
+function snippet($name, $data = [], bool $return = false)
 {
     if (is_object($data) === true) {
         $data = ['item' => $data];
