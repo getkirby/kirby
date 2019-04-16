@@ -9,7 +9,6 @@ return [
          */
         'after'       => null,
         'before'      => null,
-        'placeholder' => null,
 
         /**
          * If set to <code>all</code>, any type of input is accepted. If set to <code>options</code> only the predefined options are accepted as input.

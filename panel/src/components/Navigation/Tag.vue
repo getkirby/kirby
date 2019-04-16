@@ -1,7 +1,7 @@
 <template>
   <span
     ref="button"
-    :data-size="size"
+    :data-disabled="disabled"
     class="k-tag"
     tabindex="0"
     @keydown.delete.prevent="remove"
@@ -14,8 +14,8 @@
 <script>
 export default {
   props: {
+    disabled: Boolean,
     removable: Boolean,
-    size: String
   },
   methods: {
     remove() {
@@ -49,6 +49,11 @@ export default {
   background-color: $color-focus;
   border-color: $color-focus;
   color: #fff;
+}
+.k-tag[data-disabled] {
+  background-color: $color-light-grey;
+  pointer-events: none;
+  cursor: default;
 }
 .k-tag-text {
   padding: 0 .75rem;

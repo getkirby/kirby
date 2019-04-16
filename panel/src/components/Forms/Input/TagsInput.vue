@@ -8,10 +8,11 @@
     @end="onInput"
   >
     <k-tag
-      v-for="(tag, tagIndex) in tags"
+      v-for="(tag, tagIndex) in displayedTags"
       :ref="tag.value"
       :key="tagIndex"
-      :removable="true"
+      :removable="!isEmpty"
+      :disabled="isEmpty"
       name="tag"
       @click.native.stop
       @blur.native="selectTag(null)"
@@ -74,6 +75,7 @@ export default {
     max: Number,
     min: Number,
     name: [Number, String],
+    placeholder: String,
     options: {
       type: Array,
       default() {
@@ -104,6 +106,9 @@ export default {
     };
   },
   computed: {
+    displayedTags() {
+      return this.isEmpty ? this.placeholderTags : this.tags;
+    },
     dragOptions() {
       return {
         delay: 1,
@@ -113,6 +118,20 @@ export default {
     },
     draggable() {
       return this.tags.length > 1;
+    },
+    isEmpty() {
+      return this.tags.length === 0;
+    },
+    placeholderTags() {
+      if (!this.placeholder) {
+        return [];
+      }
+
+      return this.placeholder.split(this.separator).map(tag => {
+        return {
+          text: tag
+        }
+      });
     },
     skip() {
       return this.tags.map(tag => tag.value);
