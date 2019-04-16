@@ -1183,20 +1183,26 @@ class App
     public function trigger(string $name, ...$arguments)
     {
         if ($functions = $this->extension('hooks', $name)) {
+            static $level = 0;
             static $triggered = [];
-
-            $id = $name . md5(serialize($arguments));
+            $level++;
 
             foreach ($functions as $index => $function) {
-                if (in_array($function, $triggered[$id] ?? []) === true) {
+                if (in_array($function, $triggered[$name] ?? []) === true) {
                     continue;
                 }
 
                 // mark the hook as triggered, to avoid endless loops
-                $triggered[$id][] = $function;
+                $triggered[$name][] = $function;
 
                 // bind the App object to the hook
                 $function->call($this, ...$arguments);
+            }
+
+            $level--;
+
+            if ($level === 0) {
+                $triggered = [];
             }
         }
     }
