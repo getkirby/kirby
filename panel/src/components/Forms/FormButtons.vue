@@ -2,6 +2,7 @@
   <nav v-if="hasChanges" class="k-form-buttons">
     <k-view>
       <k-button
+        :disabled="isLocked"
         icon="undo"
         class="k-form-button"
         @click="reset"
@@ -9,6 +10,7 @@
         {{ $t("revert") }}
       </k-button>
       <k-button
+        :disabled="isLocked"
         icon="check"
         class="k-form-button"
         @click="save"
@@ -27,6 +29,9 @@ export default {
     },
     id() {
       return this.$store.state.form.current;
+    },
+    isLocked() {
+      return this.$store.getters["form/isLocked"];
     }
   },
   created() {
