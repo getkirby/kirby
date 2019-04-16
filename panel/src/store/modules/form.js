@@ -105,8 +105,10 @@ export default {
         model.id = context.getters.id(model.id);
       }
 
-      // remove title from model content
-      delete model.content.title;
+      if (model.id.startsWith("pages/") || model.id.startsWith("site")) {
+        // remove title from model content
+        delete model.content.title;
+      }
 
       context.commit("CREATE", model);
       context.commit("CURRENT", model.id);
