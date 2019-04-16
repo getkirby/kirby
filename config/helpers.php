@@ -743,6 +743,21 @@ function tc($key, int $count)
 }
 
 /**
+ * Translate by key and then replace
+ * placeholders in the text
+ *
+ * @param string $key
+ * @param string $fallback
+ * @param array $replace
+ * @param string $locale
+ * @return string
+ */
+function tt(string $key, $fallback = null, array $replace = null, string $locale = null)
+{
+    return I18n::template($key, $fallback, $replace, $locale);
+}
+
+/**
  * Builds a Twitter link
  *
  * @param string $username
