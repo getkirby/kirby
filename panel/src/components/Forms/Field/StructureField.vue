@@ -633,21 +633,25 @@ $structure-item-height: 38px;
   }
 
   /* column widths */
-  .k-structure-table-column[data-width="1/2"] {
-    width: 50%;
-  }
-  .k-structure-table-column[data-width="1/3"] {
-    width: 33.33%;
-  }
-  .k-structure-table-column[data-width="1/4"] {
-    width: 25%;
-  }
-  .k-structure-table-column[data-width="2/3"] {
-    width: 66.66%;
-  }
-  .k-structure-table-column[data-width="3/4"] {
-    width: 75%;
-  }
+  .k-structure-table-column[data-width="1/2"]  { width: 50%; }
+  .k-structure-table-column[data-width="1/3"]  { width: 33.33%; }
+  .k-structure-table-column[data-width="2/3"]  { width: 66.66%; }
+  .k-structure-table-column[data-width="1/4"]  { width: 25%; }
+  .k-structure-table-column[data-width="3/4"]  { width: 75%; }
+  .k-structure-table-column[data-width="1/5"]  { width: 20%; }
+  .k-structure-table-column[data-width="2/5"]  { width: 40%; }
+  .k-structure-table-column[data-width="3/5"]  { width: 60%; }
+  .k-structure-table-column[data-width="4/5"]  { width: 80%; }
+  .k-structure-table-column[data-width="1/6"]  { width: 16.66%; }
+  .k-structure-table-column[data-width="5/6"]  { width: 83.33%; }
+  .k-structure-table-column[data-width="1/8"]  { width: 12.5%; }
+  .k-structure-table-column[data-width="3/8"]  { width: 37.5%; }
+  .k-structure-table-column[data-width="5/8"]  { width: 62.5%; }
+  .k-structure-table-column[data-width="7/8"]  { width: 87.5%; }
+  .k-structure-table-column[data-width="1/10"] { width: 10%; }
+  .k-structure-table-column[data-width="3/10"] { width: 30%; }
+  .k-structure-table-column[data-width="7/10"] { width: 70%; }
+  .k-structure-table-column[data-width="9/10"] { width: 90%; }
 
   .k-structure-table-index {
     width: $structure-item-height;
