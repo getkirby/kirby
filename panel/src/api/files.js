@@ -1,44 +1,12 @@
 import Vue from "vue";
-import api from "./api.js";
+import api from "@getkirby/api-js";
 
 export default {
-  get(parent, filename, query) {
-    return api.get(this.url(parent, filename), query).then(file => {
-      if (Array.isArray(file.content) === true) {
-        file.content = {};
-      }
-
-      return file;
-    });
-  },
-  update(parent, filename, data) {
-    return api.patch(this.url(parent, filename), data);
-  },
-  rename(parent, filename, to) {
-    return api.patch(this.url(parent, filename, "name"), {
-      name: to
-    });
-  },
-  url(parent, filename, path) {
-    let url = parent + "/files/" + filename;
-
-    if (path) {
-      url += "/" + path;
-    }
-
-    return url;
-  },
-  link(parent, filename, path) {
-    return "/" + this.url(parent, filename, path);
-  },
-  delete(parent, filename) {
-    return api.delete(this.url(parent, filename));
-  },
   options(parent, filename, view) {
     return api.get(this.url(parent, filename), {select: "options"}).then(file => {
-      const options = file.options;
-      let result    = [];
 
+      const options = file.options;
+      let result = [];
       if (view === "list") {
         result.push({
           icon: "open",
@@ -46,28 +14,24 @@ export default {
           click: "download"
         });
       }
-
       result.push({
         icon: "title",
         text: Vue.i18n.translate("rename"),
         click: "rename",
         disabled: !options.changeName
       });
-
       result.push({
         icon: "upload",
         text: Vue.i18n.translate("replace"),
         click: "replace",
         disabled: !options.replace
       });
-
       result.push({
         icon: "trash",
         text: Vue.i18n.translate("delete"),
         click: "remove",
         disabled: !options.delete
       });
-
       return result;
     });
   },

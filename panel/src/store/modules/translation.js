@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Api from "@/api/api.js";
+import Api from "@getkirby/api-js";
 
 export default {
   namespaced: true,
