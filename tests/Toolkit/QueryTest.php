@@ -81,68 +81,6 @@ class QueryTest extends TestCase
         $this->assertEquals('@homer', $query->result());
     }
 
-    public function testObjectMethodWithSingleArgument()
-    {
-        $query = new Query('user.says("hello world")', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertEquals('hello world', $query->result());
-    }
-
-    public function testObjectMethodWithMultipleArguments()
-    {
-        $query = new Query('user.says("hello", "world")', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertEquals('hello world', $query->result());
-    }
-
-    public function testObjectMethodWithMultipleArgumentsAndComma()
-    {
-        $query = new Query('user.says("hello,", "world")', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertEquals('hello, world', $query->result());
-    }
-
-    public function testObjectMethodWithInteger()
-    {
-        $query = new Query('user.age(12)', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertEquals(12, $query->result());
-    }
-
-    public function testObjectMethodWithBoolean()
-    {
-        // true
-        $query = new Query('user.isYello(true)', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertTrue($query->result());
-
-        // false
-        $query = new Query('user.isYello(false)', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertFalse($query->result());
-    }
-
-    public function testObjectMethodWithNull()
-    {
-        $query = new Query('user.brainDump(null)', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertNull($query->result());
-    }
-
     public function scalarProvider()
     {
         return [
@@ -187,5 +125,112 @@ class QueryTest extends TestCase
         ]);
 
         $this->assertEquals(null, $query->result());
+    }
+
+    public function testObjectMethodWithInteger()
+    {
+        $query = new Query('user.age(12)', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals(12, $query->result());
+    }
+
+    public function testObjectMethodWithBoolean()
+    {
+        // true
+        $query = new Query('user.isYello(true)', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertTrue($query->result());
+
+        // false
+        $query = new Query('user.isYello(false)', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertFalse($query->result());
+    }
+
+    public function testObjectMethodWithNull()
+    {
+        $query = new Query('user.brainDump(null)', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertNull($query->result());
+    }
+
+    public function testObjectMethodWithSingleArgument()
+    {
+        $query = new Query('user.says("hello world")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals('hello world', $query->result());
+    }
+
+    public function testObjectMethodWithMultipleArguments()
+    {
+        $query = new Query('user.says("hello", "world")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals('hello world', $query->result());
+    }
+
+    public function testObjectMethodWithMultipleArgumentsAndComma()
+    {
+        $query = new Query('user.says("hello,", "world")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals('hello, world', $query->result());
+    }
+
+    public function testObjectMethodWithMultipleArgumentsAndDot()
+    {
+        $query = new Query('user.says("I like", "love.jpg")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals('I like love.jpg', $query->result());
+    }
+
+    public function testObjectMethodWithTrickyCharacters()
+    {
+        $query = new Query("user.likes(['(', ',', ']', '[']).self.brainDump('hello')", [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertEquals('hello', $query->result());
+    }
+
+    public function testObjectMethodWithArray()
+    {
+        $query = new Query('user.self.check("gin", "tonic", ["gin", "tonic", "cucumber"])', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertTrue($query->result());
+    }
+
+    public function testObjectMethodWithObjectMethodAsParameter()
+    {
+        $query = new Query('user.self.check("gin", "tonic", user.drink)', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertTrue($query->result());
+    }
+
+    public function testObjectMethodWithObjectMethodAsParameterAndMoreLevels()
+    {
+        $query = new Query("user.likes([',']).likes(user.brainDump(['(', ',', ']', '['])).self", [
+            'user' => $user = new QueryTestUser()
+        ]);
+
+        $this->assertEquals($user, $query->result());
     }
 }
