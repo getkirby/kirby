@@ -112,12 +112,9 @@ export default {
     dragOptions() {
       return {
         delay: 1,
-        disabled: !this.draggable,
+        disabled: this.isEmpty,
         draggable: ".k-tag"
       };
-    },
-    draggable() {
-      return this.tags.length > 1;
     },
     isEmpty() {
       return this.tags.length === 0;
@@ -128,9 +125,7 @@ export default {
       }
 
       return this.placeholder.split(this.separator).map(tag => {
-        return {
-          text: tag
-        }
+        return { text: tag };
       });
     },
     skip() {
