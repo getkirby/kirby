@@ -10,11 +10,7 @@ class PluginAssetsTest extends TestCase
 {
     public function setUp(): void
     {
-        $app = new App([
-            'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/PluginAssetsTest'
-            ]
-        ]);
+        $this->fixtures = __DIR__ . '/fixtures/PluginAssetsTest';
 
         Dir::remove($this->fixtures);
 
@@ -22,6 +18,12 @@ class PluginAssetsTest extends TestCase
 
         F::write($plugin . '/index.php', '<?php Kirby::plugin("test/test", []);');
         F::write($plugin . '/assets/test.css', 'test');
+
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures
+            ]
+        ]);
     }
 
     public function tearDown(): void
