@@ -509,7 +509,7 @@ class Language extends Model
     }
 
     /**
-     * Returns the slug rules for this language
+     * Returns the custom slug rules for this language
      *
      * @return array
      */
