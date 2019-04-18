@@ -1,0 +1,36 @@
+<?php
+
+namespace Kirby\Cms;
+
+class ChildrenApiCollectionTest extends TestCase
+{
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        $this->api = $this->app->api();
+    }
+
+    public function testCollection()
+    {
+        $collection = $this->api->collection('languages', $this->app->languages());
+        $result     = $collection->toArray();
+
+        $this->assertCount(2, $result);
+        $this->assertEquals('en', $result[0]['code']);
+        $this->assertEquals('de', $result[1]['code']);
+    }
+}
