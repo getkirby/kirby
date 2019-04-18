@@ -32,6 +32,9 @@ export default {
   actions: {
     current(context, language) {
       context.commit("SET_CURRENT", language);
+      Api.get("languages/" + language.code, { view: "current" }).then(response => {
+        context.commit("SET_CURRENT", response);
+      });
     },
     install(context, languages) {
       const defaultLanguage = languages.filter(language => language.default)[0];
@@ -49,12 +52,12 @@ export default {
         })[0];
 
         if (currentLanguage) {
-          context.commit("SET_CURRENT", currentLanguage);
+          context.dispatch("current", currentLanguage);
           return;
         }
       }
 
-      context.commit("SET_CURRENT", defaultLanguage || languages[0]);
+      context.dispatch("current", defaultLanguage || languages[0]);
 
     },
     load(context) {
