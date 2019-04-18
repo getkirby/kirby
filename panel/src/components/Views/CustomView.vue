@@ -22,7 +22,7 @@ export default {
       handler: () => {
         this.$store.dispatch("view", this.plugin);
       },
-      inmediate: true
+      immediate: true
     }
   }
 };
