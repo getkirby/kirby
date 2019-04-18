@@ -9,9 +9,11 @@ export default (string, rules = []) => {
 
   // replace according to language and ascii rules
   rules.forEach(ruleset => {
-    Object.keys(ruleset).forEach(rule => {
-      string = string.replace(new RegExp(rule, "g"), ruleset[rule]);
-    });
+    if (ruleset) {
+      Object.keys(ruleset).forEach(rule => {
+        string = string.replace(new RegExp(rule, "g"), ruleset[rule]);
+      });
+    }
   });
 
   // remove all other non-ASCII characters
