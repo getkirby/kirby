@@ -105,8 +105,14 @@ return [
      */
     'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;
+        static $config;
 
-        $markdown = $markdown ?? new Markdown($options);
+        // if the config options have changed or the component is called for the first time,
+        // (re-)initialize the parser object
+        if ($config !== $options) {
+            $markdown = new Markdown($options);
+            $config   = $options;
+        }
 
         return $markdown->parse($text, $inline);
     },
@@ -121,8 +127,14 @@ return [
      */
     'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
         static $smartypants;
+        static $config;
 
-        $smartypants = $smartypants ?? new Smartypants($options);
+        // if the config options have changed or the component is called for the first time,
+        // (re-)initialize the parser object
+        if ($config !== $options) {
+            $smartypants = new Smartypants($options);
+            $config      = $options;
+        }
 
         return $smartypants->parse($text);
     },
