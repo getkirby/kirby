@@ -1,12 +1,16 @@
 <?php
 
 use Kirby\Cms\System;
+use Kirby\Toolkit\Str;
 
 /**
  * System
  */
 return [
     'fields' => [
+        'ascii' => function () {
+            return Str::$ascii;
+        },
         'isOk' => function (System $system) {
             return $system->isOk();
         },
@@ -82,6 +86,7 @@ return [
             'requirements'
         ],
         'panel' => [
+            'ascii',
             'breadcrumbTitle',
             'isOk',
             'isInstalled',

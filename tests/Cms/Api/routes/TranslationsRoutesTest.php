@@ -21,7 +21,7 @@ class TranslationsRoutesTest extends TestCase
     {
         $app      = $this->app;
         $response = $app->api()->call('translations');
-        $files    = glob($app->root('kirby') . '/translations/*.json');
+        $files    = glob($app->root('kirby') . '/i18n/translations/*.json');
 
         $this->assertCount(count($files), $response['data']);
     }
