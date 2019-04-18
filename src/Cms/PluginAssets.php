@@ -22,13 +22,11 @@ class PluginAssets
     public static function clean(string $pluginName)
     {
         if ($plugin = App::instance()->plugin($pluginName)) {
-
             $root   = $plugin->root() . '/assets';
             $media  = $plugin->mediaRoot();
             $assets = Dir::index($media, true);
 
             foreach ($assets as $asset) {
-
                 $original = $root . '/' . $asset;
 
                 if (file_exists($original) === false) {

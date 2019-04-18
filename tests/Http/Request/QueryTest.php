@@ -54,11 +54,12 @@ class QueryTest extends TestCase
         $this->assertEquals('foo=bar', $query);
     }
 
-    public function testToArray()
+    public function testToArrayAndDebuginfo()
     {
         $data  = ['a' => 'a'];
         $query = new Query($data);
         $this->assertEquals($data, $query->toArray());
+        $this->assertEquals($data, $query->__debuginfo());
     }
 
     public function testToJson()

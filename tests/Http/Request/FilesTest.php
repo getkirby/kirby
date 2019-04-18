@@ -69,7 +69,7 @@ class FilesTest extends TestCase
         $this->assertEquals(123, $files->get('upload')['size']);
     }
 
-    public function testToArray()
+    public function testToArrayAndDebuginfo()
     {
         $data  = [
             'upload' => [
@@ -82,6 +82,7 @@ class FilesTest extends TestCase
 
         $files = new Files($data);
         $this->assertEquals($data, $files->toArray());
+        $this->assertEquals($data, $files->__debuginfo());
     }
 
     public function testToJson()
