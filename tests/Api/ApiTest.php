@@ -112,6 +112,12 @@ class ApiTest extends TestCase
         ];
 
         $this->assertEquals($expected, $data);
+
+        // missing collection
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The collection "not-available" does not exist');
+
+        $api->collection('not-available', $instance);
     }
 
     public function testData()
@@ -146,6 +152,35 @@ class ApiTest extends TestCase
         ]);
 
         $this->assertTrue($api->debug());
+    }
+
+    public function testModels()
+    {
+        $api = new Api([
+            'models' => [
+                'test' => [
+                    'fields' => [
+                        'id' => function ($object) {
+                            return $object->id();
+                        }
+                    ],
+                    'type' => 'Kirby\Toolkit\Obj'
+                ]
+            ]
+        ]);
+
+        $instance = new \Kirby\Toolkit\Obj(['id' => 'a']);
+        $model    = $api->model('test', $instance);
+        $data     = $model->toArray();
+        $expected = ['id' => 'a'];
+
+        $this->assertEquals($expected, $data);
+
+        // missing model
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The model "not-available" does not exist');
+
+        $api->model('not-available', $instance);
     }
 
     public function testModelResolver()
@@ -358,6 +393,60 @@ class ApiTest extends TestCase
 
         $this->assertInstanceOf('Kirby\Http\Response', $result);
         $this->assertEquals(json_encode($expected), $result->body());
+    }
+
+    public function testRenderKirbyException()
+    {
+        $api = new Api([
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        throw new \Kirby\Exception\NotFoundException([
+                            'key'      => 'test',
+                            'fallback' => 'Test',
+                            'details'  => [
+                                'a' => 'A'
+                            ]
+                        ]);
+                    }
+                ]
+            ]
+        ]);
+
+        $result = $api->render('test', 'POST');
+
+        $expected = [
+            'status'  => 'error',
+            'route'   => 'test',
+            'message' => 'Test',
+            'key'     => 'error.test',
+            'details' => ['a' => 'A'],
+            'code'    => 404,
+        ];
+
+        $this->assertInstanceOf('Kirby\Http\Response', $result);
+        $this->assertEquals(json_encode($expected), $result->body());
+    }
+
+    public function testRenderWithSanitizedErrorCode()
+    {
+        $api = new Api([
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        throw new \Exception('nope', 1000);
+                    }
+                ]
+            ]
+        ]);
+
+        $result = $api->render('test', 'POST');
+
+        $this->assertEquals(500, $result->code());
     }
 
     public function testRequestMethod()
