@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-class ChildrenApiCollectionTest extends TestCase
+class LanguagesApiCollectionTest extends TestCase
 {
     public function setUp(): void
     {

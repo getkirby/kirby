@@ -31,6 +31,12 @@ class HelpersTest extends TestCase
         Dir::remove($this->fixtures . '/site');
     }
 
+    public function testAsset()
+    {
+        $asset = asset('something.jpg');
+        $this->assertInstanceOf(Asset::class, $asset);
+    }
+
     public function testCollectionHelper()
     {
         $app = $this->kirby->clone([
