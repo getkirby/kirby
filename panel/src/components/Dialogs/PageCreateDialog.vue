@@ -63,11 +63,17 @@ export default {
           options: this.templates
         }
       };
+    },
+    language() {
+      return this.$store.state.languages.current;
+    },
+    system() {
+      return this.$store.state.system.info;
     }
   },
   watch: {
     "page.title"(title) {
-      this.page.slug = slug(title);
+      this.page.slug = slug(title, [this.language.rules, this.system.ascii]);
     }
   },
   methods: {

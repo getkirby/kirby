@@ -2,7 +2,11 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
+use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 /**
  * AppTranslations
@@ -34,7 +38,11 @@ trait AppTranslations
             // inject translations from the current language
             if ($this->multilang() === true && $language = $this->languages()->find($locale)) {
                 $data = array_merge($data, $language->translations());
+
+                // Add language slug rules to Str class
+                Str::$language = $language->rules();
             }
+
 
             return $data;
         };
