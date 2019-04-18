@@ -59,6 +59,11 @@ class Language extends Model
     /**
      * @var array|null
      */
+    protected $slug;
+
+    /**
+     * @var array|null
+     */
     protected $translations;
 
     /**
@@ -82,6 +87,7 @@ class Language extends Model
             'direction',
             'locale',
             'name',
+            'slug',
             'translations',
             'url',
         ]);
@@ -361,6 +367,31 @@ class Language extends Model
     }
 
     /**
+     * Get slug rules for language
+     *
+     * @internal
+     * @return array
+     */
+    public function rules(): array
+    {
+        $code = $this->locale(LC_CTYPE);
+        $code = Str::contains($code, '.') ? Str::before($code, '.') : $code;
+        $file = $this->kirby()->root('i18n:rules') . '/' . $code . '.json';
+
+        if (F::exists($file) === false) {
+            $file = $this->kirby()->root('i18n:rules') . '/' . Str::before($code, '_') . '.json';
+        }
+
+        try {
+            $data = Data::read($file);
+        } catch (\Exception $e) {
+            $data = [];
+        }
+
+        return array_merge($data, $this->slug());
+    }
+
+    /**
      * Saves the language settings in the languages folder
      *
      * @internal
@@ -453,6 +484,16 @@ class Language extends Model
     }
 
     /**
+     * @param array $slug
+     * @return self
+     */
+    protected function setSlug(array $slug = null): self
+    {
+        $this->slug = $slug ?? [];
+        return $this;
+    }
+
+    /**
      * @param array $translations
      * @return self
      */
@@ -473,6 +514,16 @@ class Language extends Model
     }
 
     /**
+     * Returns the slug rules for this language
+     *
+     * @return array
+     */
+    public function slug(): array
+    {
+        return $this->slug;
+    }
+
+    /**
      * Returns the most important
      * properties as array
      *
@@ -486,6 +537,7 @@ class Language extends Model
             'direction' => $this->direction(),
             'locale'    => $this->locale(),
             'name'      => $this->name(),
+            'rules'     => $this->rules(),
             'url'       => $this->url()
         ];
     }

@@ -14,7 +14,8 @@ export default {
           code: language.code,
           name: language.name,
           default: language.default,
-          direction: language.direction
+          direction: language.direction,
+          rules: language.rules
         };
       });
     },
