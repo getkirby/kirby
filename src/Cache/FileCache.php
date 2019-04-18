@@ -35,11 +35,6 @@ class FileCache extends Cache
 
         // try to create the directory
         Dir::make($this->options['root'], true);
-
-        // check for a valid cache directory
-        if (is_dir($this->options['root']) === false) {
-            throw new Exception('The cache directory does not exist');
-        }
     }
 
     /**
