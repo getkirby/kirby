@@ -277,4 +277,32 @@ class PagesTest extends TestCase
         $result = $pages->search('mountain');
         $this->assertCount(2, $result);
     }
+
+    public function testCustomMethods()
+    {
+        Pages::$methods = [
+            'test' => function () {
+                $slugs = '';
+                foreach ($this as $page) {
+                    $slugs .= $page->slug();
+                }
+                return $slugs;
+            }
+        ];
+
+        $pages = Pages::factory([
+            [
+                'slug' => 'page',
+                'children' => [
+                    ['slug' => 'a'],
+                    ['slug' => 'b']
+                ]
+            ]
+        ]);
+
+        $pages = $pages->find('page')->children();
+        $this->assertEquals('ab', $pages->test());
+
+        Pages::$methods = [];
+    }
 }

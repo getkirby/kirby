@@ -19,6 +19,14 @@ use Kirby\Toolkit\Str;
  */
 class Users extends Collection
 {
+
+    /**
+     * All registered users methods
+     *
+     * @var array
+     */
+    public static $methods = [];
+
     public function create(array $data)
     {
         return User::create($data);
