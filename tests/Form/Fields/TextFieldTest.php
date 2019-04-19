@@ -48,6 +48,16 @@ class TextFieldTest extends TestCase
         $this->assertEquals($expected, $field->default());
     }
 
+    public function testInvalidConverter()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid converter "does-not-exist"');
+
+        $field = new Field('text', [
+            'converter' => 'does-not-exist',
+        ]);
+    }
+
     public function testMinLength()
     {
         $field = new Field('text', [
