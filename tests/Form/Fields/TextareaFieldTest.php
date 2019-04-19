@@ -24,26 +24,34 @@ class TextareaFieldTest extends TestCase
         $this->assertTrue($field->save());
     }
 
-    public function testMinLength()
+    public function testButtonsDisabled()
     {
         $field = new Field('textarea', [
-            'value' => 'test',
-            'minlength' => 5
+            'buttons' => false
         ]);
 
-        $this->assertFalse($field->isValid());
-        $this->assertArrayHasKey('minlength', $field->errors());
+        $this->assertFalse($field->buttons());
     }
 
-    public function testMaxLength()
+    public function testButtonsArray()
     {
         $field = new Field('textarea', [
-            'value'     => 'test',
-            'maxlength' => 3
+            'buttons' => [
+                'bold',
+                'italic'
+            ]
         ]);
 
-        $this->assertFalse($field->isValid());
-        $this->assertArrayHasKey('maxlength', $field->errors());
+        $this->assertEquals(['bold', 'italic'], $field->buttons());
+    }
+
+    public function testDefaultTrimmed()
+    {
+        $field = new Field('textarea', [
+            'default' => 'test '
+        ]);
+
+        $this->assertEquals('test', $field->default());
     }
 
     public function testFiles()
@@ -68,6 +76,37 @@ class TextareaFieldTest extends TestCase
         $this->assertEquals(['query' => 'page.images'], $field->files());
     }
 
+    public function testFilesWithInvalidInput()
+    {
+        $field = new Field('textarea', [
+            'files' => 1
+        ]);
+
+        $this->assertEquals([], $field->files());
+    }
+
+    public function testMaxLength()
+    {
+        $field = new Field('textarea', [
+            'value'     => 'test',
+            'maxlength' => 3
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('maxlength', $field->errors());
+    }
+
+    public function testMinLength()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'minlength' => 5
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertArrayHasKey('minlength', $field->errors());
+    }
+
     public function testUploads()
     {
         $field = new Field('textarea', [
@@ -80,6 +119,16 @@ class TextareaFieldTest extends TestCase
         $this->assertEquals(['template' => 'test'], $field->uploads());
     }
 
+    public function testUploadsDisabled()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'uploads' => false,
+        ]);
+
+        $this->assertFalse($field->uploads());
+    }
+
     public function testUploadsTemplate()
     {
         $field = new Field('textarea', [
@@ -88,5 +137,24 @@ class TextareaFieldTest extends TestCase
         ]);
 
         $this->assertEquals(['template' => 'test'], $field->uploads());
+    }
+
+    public function testUploadsWithInvalidInput()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test',
+            'uploads' => 1,
+        ]);
+
+        $this->assertEquals([], $field->uploads());
+    }
+
+    public function testValueTrimmed()
+    {
+        $field = new Field('textarea', [
+            'value' => 'test '
+        ]);
+
+        $this->assertEquals('test', $field->value());
     }
 }
