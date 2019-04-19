@@ -80,6 +80,13 @@ class User extends ModelWithContent
     public static $methods = [];
 
     /**
+     * Registry with all User models
+     *
+     * @var array
+     */
+    public static $models = [];
+
+    /**
      * @var string
      */
     protected $name;
@@ -249,6 +256,22 @@ class User extends ModelWithContent
     public function exists(): bool
     {
         return is_file($this->contentFile('default')) === true;
+    }
+
+    /**
+     * Constructs a User object and also
+     * takes User models into account.
+     *
+     * @internal
+     * @return self
+     */
+    public static function factory($props): self
+    {
+        if (empty($props['model']) === false) {
+            return static::model($props['model'], $props);
+        }
+
+        return new static($props);
     }
 
     /**
@@ -457,6 +480,27 @@ class User extends ModelWithContent
     public function mediaUrl(): string
     {
         return $this->kirby()->url('media') . '/users/' . $this->id();
+    }
+
+    /**
+     * Creates a user model if it has been registered
+     *
+     * @internal
+     * @param string $name
+     * @param array $props
+     * @return User
+     */
+    public static function model(string $name, array $props = [])
+    {
+        if ($class = (static::$models[$name] ?? null)) {
+            $object = new $class($props);
+
+            if (is_a($object, 'Kirby\Cms\User') === true) {
+                return $object;
+            }
+        }
+
+        return new static($props);
     }
 
     /**

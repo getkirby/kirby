@@ -202,7 +202,7 @@ class UserTest extends TestCase
         $this->assertEquals('test@getkirby.com', $user->query('user.email'));
     }
 
-    public function testCustomMethods()
+    public function testUserMethods()
     {
         User::$methods = [
             'test' => function () {
@@ -218,5 +218,21 @@ class UserTest extends TestCase
         $this->assertEquals('homer', $user->test());
 
         User::$methods = [];
+    }
+
+    public function testUserModel()
+    {
+        User::$models = [
+            'dummy' => DummyUser::class
+        ];
+
+        $user = User::factory([
+            'slug'  => 'test',
+            'model' => 'dummy'
+        ]);
+
+        $this->assertInstanceOf(DummyUser::class, $user);
+
+        User::$models = [];
     }
 }
