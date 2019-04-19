@@ -21,12 +21,37 @@ class AppComponentsTest extends TestCase
         $this->assertEquals($expected, $this->kirby->markdown($text));
     }
 
+    public function testMarkdownCachedInstance()
+    {
+        $text     = '1st line
+2nd line';
+        $expected = '<p>1st line<br />
+2nd line</p>';
+
+        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, []));
+
+        $expected = '<p>1st line
+2nd line</p>';
+        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, ['breaks' => false]));
+    }
+
     public function testSmartypants()
     {
         $text     = '"Test"';
         $expected = '&#8220;Test&#8221;';
 
         $this->assertEquals($expected, $this->kirby->smartypants($text));
+    }
+
+    public function testSmartypantsCachedInstance()
+    {
+        $text     = '"Test"';
+        $expected = '&#8220;Test&#8221;';
+
+        $this->assertEquals($expected, $this->kirby->component('smartypants')($this->kirby, $text, []));
+
+        $expected = 'TestTest&#8221;';
+        $this->assertEquals($expected, $this->kirby->component('smartypants')($this->kirby, $text, ['doublequote.open' => 'Test']));
     }
 
     public function testSnippet()
