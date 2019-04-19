@@ -71,7 +71,7 @@ class Users extends Collection
 
         // read all user blueprints
         foreach ($users as $props) {
-            $user = new User($props + $inject);
+            $user = User::factory($props + $inject);
             $collection->set($user->id(), $user);
         }
 
