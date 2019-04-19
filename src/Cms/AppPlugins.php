@@ -62,6 +62,8 @@ trait AppPlugins
         'tags' => [],
         'templates' => [],
         'translations' => [],
+        'userMethods' => [],
+        'usersMethods' => [],
         'validators' => []
     ];
 
@@ -262,6 +264,17 @@ trait AppPlugins
     protected function extendTranslations(array $translations): array
     {
         return $this->extensions['translations'] = array_replace_recursive($this->extensions['translations'], $translations);
+    }
+
+    protected function extendUserMethods(array $methods): array
+    {
+        return $this->extensions['userMethods'] = User::$methods = array_merge(User::$methods, $methods);
+    }
+
+
+    protected function extendUsersMethods(array $methods): array
+    {
+        return $this->extensions['usersMethods'] = Users::$methods = array_merge(Users::$methods, $methods);
     }
 
     protected function extendValidators(array $validators): array

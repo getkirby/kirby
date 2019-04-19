@@ -416,6 +416,26 @@ class AppPluginsTest extends TestCase
         Page::$methods = [];
     }
 
+    public function testPagesMethod()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'pagesMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $pages = new Pages([]);
+        $this->assertEquals('test', $pages->test());
+
+        // reset methods
+        Pages::$methods = [];
+    }
+
     public function testPageModel()
     {
         $kirby = new App([
@@ -674,5 +694,48 @@ class AppPluginsTest extends TestCase
         I18n::$locale = 'de';
 
         $this->assertEquals('Deutscher Test', I18n::translate('test'));
+    }
+
+    public function testUserMethod()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'userMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'name'  => 'Test User'
+        ]);
+        $this->assertEquals('test', $user->test());
+
+        // reset methods
+        User::$methods = [];
+    }
+
+    public function testUsersMethod()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'usersMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $users = new Users([]);
+        $this->assertEquals('test', $users->test());
+
+        // reset methods
+        Users::$methods = [];
     }
 }
