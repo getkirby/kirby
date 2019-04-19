@@ -8,6 +8,14 @@ return [
         'default' => function ($default = null) {
             return $default;
         },
+
+        /**
+         * Defines a custom format that is used when the field is saved
+         */
+        'format' => function (string $format = null) {
+            return $format;
+        },
+
         /**
          * Changes the calendar icon to something custom
          */

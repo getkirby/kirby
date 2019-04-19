@@ -39,6 +39,31 @@ class DateFieldTest extends TestCase
         ];
     }
 
+    public function testSave()
+    {
+        // default value
+        $field = new Field('date', [
+            'value' => '12.12.2012',
+        ]);
+
+        $this->assertEquals('2012-12-12', $field->data());
+
+        // with custom format
+        $field = new Field('date', [
+            'format' => 'd.m.Y',
+            'value'  => '12.12.2012',
+        ]);
+
+        $this->assertEquals('12.12.2012', $field->data());
+
+        // empty value
+        $field = new Field('date', [
+            'value'  => null,
+        ]);
+
+        $this->assertEquals('', $field->data());
+    }
+
     /**
      * @dataProvider valueProvider
      */
