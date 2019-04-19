@@ -28,6 +28,7 @@ class User extends ModelWithContent
     const CLASS_ALIAS = 'user';
 
     use HasFiles;
+    use HasMethods;
     use HasSiblings;
     use UserActions;
 
@@ -72,6 +73,13 @@ class User extends ModelWithContent
     protected $language;
 
     /**
+     * All registered user methods
+     *
+     * @var array
+     */
+    public static $methods = [];
+
+    /**
      * @var string
      */
     protected $name;
@@ -101,6 +109,11 @@ class User extends ModelWithContent
         // public property access
         if (isset($this->$method) === true) {
             return $this->$method;
+        }
+
+        // user methods
+        if ($this->hasMethod($method)) {
+            return $this->callMethod($method, $arguments);
         }
 
         // return site content otherwise

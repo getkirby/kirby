@@ -201,4 +201,22 @@ class UserTest extends TestCase
         $this->assertEquals('Test User', $user->query('user.name'));
         $this->assertEquals('test@getkirby.com', $user->query('user.email'));
     }
+
+    public function testCustomMethods()
+    {
+        User::$methods = [
+            'test' => function () {
+                return 'homer';
+            }
+        ];
+
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'name'  => 'Test User'
+        ]);
+
+        $this->assertEquals('homer', $user->test());
+
+        User::$methods = [];
+    }
 }
