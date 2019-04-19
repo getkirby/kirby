@@ -63,6 +63,7 @@ trait AppPlugins
         'templates' => [],
         'translations' => [],
         'userMethods' => [],
+        'userModels' => [],
         'usersMethods' => [],
         'validators' => []
     ];
@@ -271,6 +272,10 @@ trait AppPlugins
         return $this->extensions['userMethods'] = User::$methods = array_merge(User::$methods, $methods);
     }
 
+    protected function extendUserModels(array $models): array
+    {
+        return $this->extensions['userModels'] = User::$models = array_merge(User::$models, $models);
+    }
 
     protected function extendUsersMethods(array $methods): array
     {

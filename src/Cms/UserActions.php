@@ -173,7 +173,9 @@ trait UserActions
             $data['password'] = static::hashPassword($props['password']);
         }
 
-        $user = new static($data);
+        $props['role'] = $props['model'] = strtolower($props['role'] ?? 'default');
+
+        $user = User::factory($data);
 
         // create a form for the user
         $form = Form::for($user, [

@@ -17,6 +17,10 @@ class DummyPage extends Page
 {
 }
 
+class DummyUser extends User
+{
+}
+
 class AppPluginsTest extends TestCase
 {
     public function setUp(): void
@@ -717,6 +721,25 @@ class AppPluginsTest extends TestCase
 
         // reset methods
         User::$methods = [];
+    }
+
+    public function testUserModel()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'userModels' => [
+                'dummy' => DummyUser::class
+            ]
+        ]);
+
+        $user = User::factory([
+            'slug'  => 'test',
+            'model' => 'dummy'
+        ]);
+
+        $this->assertInstanceOf(DummyUser::class, $user);
     }
 
     public function testUsersMethod()
