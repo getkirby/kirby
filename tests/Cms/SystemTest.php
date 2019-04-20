@@ -104,7 +104,7 @@ class SystemTest extends TestCase
         $_SERVER['SERVER_ADDR'] = null;
     }
 
-    public function licenseUrlProvider()
+    public function indexUrlProvider()
     {
         return [
             ['http://getkirby.com', 'getkirby.com'],
@@ -117,14 +117,10 @@ class SystemTest extends TestCase
     }
 
     /**
-     * @dataProvider licenseUrlProvider
+     * @dataProvider indexUrlProvider
      */
-    public function testLicenseUrl($indexUrl, $expected)
+    public function testIndexUrl($indexUrl, $expected)
     {
-        $reflector = new ReflectionClass(System::class);
-        $licenseUrl = $reflector->getMethod('licenseUrl');
-        $licenseUrl->setAccessible(true);
-
         $_SERVER['SERVER_ADDR'] = 'example.com';
 
         $system = new System($this->app->clone([
@@ -132,13 +128,13 @@ class SystemTest extends TestCase
                 'url' => $indexUrl
             ]
         ]));
-        $this->assertEquals($expected, $licenseUrl->invoke($system));
+        $this->assertEquals($expected, $system->indexUrl($indexUrl));
 
         // reset SERVER_ADDR
         $_SERVER['SERVER_ADDR'] = null;
     }
 
-    public function licenseUrlNormalizedProvider()
+    public function licenseUrlProvider()
     {
         return [
             [null, 'getkirby.com'],
@@ -157,20 +153,20 @@ class SystemTest extends TestCase
     }
 
     /**
-     * @dataProvider licenseUrlNormalizedProvider
+     * @dataProvider licenseUrlProvider
      */
-    public function testLicenseUrlNormalized($url, $expected)
+    public function testLicenseUrl($url, $expected)
     {
         $reflector = new ReflectionClass(System::class);
-        $licenseUrlNormalized = $reflector->getMethod('licenseUrlNormalized');
-        $licenseUrlNormalized->setAccessible(true);
+        $licenseUrl = $reflector->getMethod('licenseUrl');
+        $licenseUrl->setAccessible(true);
 
         $system = new System($this->app->clone([
             'options' => [
                 'url' => 'https://getkirby.com'
             ]
         ]));
-        $this->assertEquals($expected, $licenseUrlNormalized->invoke($system, $url));
+        $this->assertEquals($expected, $licenseUrl->invoke($system, $url));
     }
 
     public function testIsInstallableOnLocalhost()
