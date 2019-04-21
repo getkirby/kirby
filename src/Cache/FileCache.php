@@ -60,8 +60,9 @@ class FileCache extends Cache
      * @param  string  $key
      * @param  mixed   $value
      * @param  int     $minutes
+     * @return boolean
      */
-    public function set(string $key, $value, int $minutes = 0)
+    public function set(string $key, $value, int $minutes = 0): bool
     {
         return F::write($this->file($key), $this->value($value, $minutes)->toJson());
     }
@@ -72,7 +73,7 @@ class FileCache extends Cache
      * @param  string  $key
      * @return mixed
      */
-    public function retrieve(string $key)
+    public function retrieve(string $key): ?Value
     {
         return Value::fromJson(F::read($this->file($key)));
     }
