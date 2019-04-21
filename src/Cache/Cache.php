@@ -99,7 +99,7 @@ abstract class Cache
         }
 
         // remove the item if it is expired
-        if (time() >= $value->expires()) {
+        if ($value->expires() > 0 && time() >= $value->expires()) {
             $this->remove($key);
             return $default;
         }
@@ -119,9 +119,9 @@ abstract class Cache
      */
     protected function expiration(int $minutes = 0): int
     {
-        // keep forever if minutes are not defined
+        // 0 = keep forever
         if ($minutes === 0) {
-            $minutes = 2628000;
+            return 0;
         }
 
         // calculate the time
@@ -156,7 +156,15 @@ abstract class Cache
      */
     public function expired(string $key): bool
     {
-        return $this->expires($key) <= time();
+        $expires = $this->expires($key);
+
+        if ($expires === null) {
+            return false;
+        } elseif (!is_int($expires)) {
+            return true;
+        } else {
+            return time() >= $expires;
+        }
     }
 
     /**
@@ -198,7 +206,7 @@ abstract class Cache
      */
     public function exists(string $key): bool
     {
-        return !$this->expired($key);
+        return $this->expired($key) === false;
     }
 
     /**
