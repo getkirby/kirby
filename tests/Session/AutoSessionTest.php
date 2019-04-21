@@ -9,6 +9,9 @@ use Kirby\Http\Cookie;
 
 require_once(__DIR__ . '/mocks.php');
 
+/**
+ * @coversDefaultClass \Kirby\Session\AutoSession
+ */
 class AutoSessionTest extends TestCase
 {
     protected $store;
@@ -25,6 +28,9 @@ class AutoSessionTest extends TestCase
         unset($this->store);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testSessionsOptions()
     {
         $autoSessionReflector = new ReflectionClass(AutoSession::class);
@@ -61,6 +67,9 @@ class AutoSessionTest extends TestCase
         $this->assertFalse($this->store->collectedGarbage);
     }
 
+    /**
+     * @covers ::get
+     */
     public function testGet()
     {
         Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
@@ -219,6 +228,9 @@ class AutoSessionTest extends TestCase
         $session->commit();
     }
 
+    /**
+     * @covers ::createManually
+     */
     public function testCreateManually()
     {
         $autoSession = new AutoSession($this->store);
@@ -229,6 +241,9 @@ class AutoSessionTest extends TestCase
         $this->assertEquals('manual', $session->mode());
     }
 
+    /**
+     * @covers ::collectGarbage
+     */
     public function testCollectGarbage()
     {
         $this->store->collectedGarbage = false;
