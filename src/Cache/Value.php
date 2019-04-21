@@ -25,10 +25,10 @@ class Value
     protected $value;
 
     /**
-     * the expiration timestamp
+     * the number of minutes until the value expires
      * @var int
      */
-    protected $expires;
+    protected $minutes;
 
     /**
      * the creation timestamp
@@ -43,10 +43,10 @@ class Value
      * @param int   $minutes the number of minutes until the value expires
      * @param int   $created the unix timestamp when the value has been created
      */
-    public function __construct($value, int $minutes = 0, $created = null)
+    public function __construct($value, int $minutes = 0, int $created = null)
     {
         $this->value   = $value;
-        $this->minutes = $minutes;
+        $this->minutes = $minutes ?? 0;
         $this->created = $created ?? time();
     }
 
