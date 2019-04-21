@@ -24,6 +24,7 @@ class SessionData
     /**
      * Creates a new SessionData instance
      *
+     * @codeCoverageIgnore
      * @param Session $session Session object this data belongs to
      * @param array   $data    Currently stored session data
      */

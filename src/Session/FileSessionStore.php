@@ -370,6 +370,8 @@ class FileSessionStore extends SessionStore
 
     /**
      * Cleans up the open locks and file handles
+     *
+     * @codeCoverageIgnore
      */
     public function __destruct()
     {
