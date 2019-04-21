@@ -276,7 +276,7 @@ class App
         };
 
         $router::$afterEach = function ($route, $path, $method, $result) {
-            $this->trigger('route:after', $route, $path, $method, $result);
+            return $this->apply('route:after', $route, $path, $method, $result);
         };
 
         return $router->call($path ?? $this->path(), $method ?? $this->request()->method());

@@ -121,9 +121,11 @@ class RouterTest extends TestCase
             $this->assertEquals('/', $path);
             $this->assertEquals('GET', $method);
             $this->assertEquals('test', $result);
+
+            return $result . ':after';
         };
 
-        $router->call('/', 'GET');
+        $this->assertEquals('test:after', $router->call('/', 'GET'));
     }
 
     public function testNext()
