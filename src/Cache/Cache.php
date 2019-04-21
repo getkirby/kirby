@@ -191,18 +191,6 @@ abstract class Cache
     }
 
     /**
-     * Returns Value object
-     *
-     * @param  mixed  $value    The value, which should be cached
-     * @param  int    $minutes  The number of minutes before expiration
-     * @return Kirby\Cache\Value
-     */
-    protected function value($value, int $minutes)
-    {
-        return new Value($value, $minutes);
-    }
-
-    /**
      * Determine if an item exists in the cache.
      *
      * @param  string  $key
