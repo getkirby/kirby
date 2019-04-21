@@ -7,9 +7,9 @@ namespace Kirby\Cache;
  *
  * @package   Kirby Cache
  * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class NullCache extends Cache
 {
@@ -23,9 +23,9 @@ class NullCache extends Cache
      *   $cache->set('value', 'my value', 15);
      * </code>
      *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @param  int     $minutes
+     * @param string $key
+     * @param mixed $value
+     * @param int $minutes
      * @return boolean
      */
     public function set(string $key, $value, int $minutes = 0): bool
@@ -37,7 +37,7 @@ class NullCache extends Cache
      * Internal method to retrieve the raw cache value;
      * needs to return a Value object or null if not found
      *
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     public function retrieve(string $key): ?Value
@@ -49,7 +49,7 @@ class NullCache extends Cache
      * Removes an item from the cache and returns
      * whether the operation was successful
      *
-     * @param  string $key
+     * @param string $key
      * @return boolean
      */
     public function remove(string $key): bool

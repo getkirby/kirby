@@ -4,10 +4,9 @@ namespace Kirby\Cache;
 
 /**
  * Cache foundation
- * This class doesn't do anything
- * and is perfect as foundation for
- * other cache drivers and to be used
- * when the cache is disabled
+ * This abstract class is used as
+ * foundation for other cache drivers
+ * by extending it
  *
  * @package   Kirby Cache
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -19,13 +18,13 @@ abstract class Cache
 {
 
     /**
-     * stores all options for the driver
+     * Stores all options for the driver
      * @var array
      */
     protected $options = [];
 
     /**
-     * Set all parameters which are needed to connect to the cache storage
+     * Sets all parameters which are needed to connect to the cache storage
      *
      * @param array $options
      */
@@ -35,16 +34,18 @@ abstract class Cache
     }
 
     /**
-     * Write an item to the cache for a given number of minutes.
+     * Writes an item to the cache for a given number of minutes and
+     * returns whether the operation was successful;
+     * this needs to be defined by the driver
      *
      * <code>
-     *   // Put an item in the cache for 15 minutes
-     *   Cache::set('value', 'my value', 15);
+     *   // put an item in the cache for 15 minutes
+     *   $cache->set('value', 'my value', 15);
      * </code>
      *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @param  int     $minutes
+     * @param string $key
+     * @param mixed $value
+     * @param int $minutes
      * @return boolean
      */
     abstract public function set(string $key, $value, int $minutes = 0): bool;
@@ -65,27 +66,28 @@ abstract class Cache
     }
 
     /**
-     * Private method to retrieve the cache value
-     * This needs to be defined by the driver
+     * Internal method to retrieve the raw cache value;
+     * needs to return a Value object or null if not found;
+     * this needs to be defined by the driver
      *
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     abstract public function retrieve(string $key): ?Value;
 
     /**
-     * Get an item from the cache.
+     * Gets an item from the cache
      *
      * <code>
-     *   // Get an item from the cache driver
-     *   $value = Cache::get('value');
+     *   // get an item from the cache driver
+     *   $value = $cache->get('value');
      *
-     *   // Return a default value if the requested item isn't cached
-     *   $value = Cache::get('value', 'default value');
+     *   // return a default value if the requested item isn't cached
+     *   $value = $cache->get('value', 'default value');
      * </code>
      *
-     * @param  string  $key
-     * @param  mixed   $default
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function get(string $key, $default = null)
@@ -111,7 +113,7 @@ abstract class Cache
     /**
      * Calculates the expiration timestamp
      *
-     * @param  int $minutes
+     * @param int $minutes
      * @return int
      */
     protected function expiration(int $minutes = 0): int
@@ -126,9 +128,11 @@ abstract class Cache
     }
 
     /**
-     * Checks when an item in the cache expires
+     * Checks when an item in the cache expires;
+     * returns the expiry timestamp on success, null if the
+     * item never expires and false if the item does not exist
      *
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     public function expires(string $key)
@@ -148,7 +152,7 @@ abstract class Cache
     /**
      * Checks if an item in the cache is expired
      *
-     * @param  string   $key
+     * @param string $key
      * @return boolean
      */
     public function expired(string $key): bool
@@ -165,9 +169,11 @@ abstract class Cache
     }
 
     /**
-     * Checks when the cache has been created
+     * Checks when the cache has been created;
+     * returns the creation timestamp on success
+     * and false if the item does not exist
      *
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     public function created(string $key)
@@ -187,7 +193,7 @@ abstract class Cache
     /**
      * Alternate version for Cache::created($key)
      *
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     public function modified(string $key)
@@ -196,9 +202,9 @@ abstract class Cache
     }
 
     /**
-     * Determine if an item exists in the cache.
+     * Determines if an item exists in the cache
      *
-     * @param  string  $key
+     * @param string $key
      * @return boolean
      */
     public function exists(string $key): bool
@@ -207,15 +213,19 @@ abstract class Cache
     }
 
     /**
-     * Remove an item from the cache
+     * Removes an item from the cache and returns
+     * whether the operation was successful;
+     * this needs to be defined by the driver
      *
-     * @param  string $key
+     * @param string $key
      * @return boolean
      */
     abstract public function remove(string $key): bool;
 
     /**
-     * Flush the entire cache
+     * Flushes the entire cache and returns
+     * whether the operation was successful;
+     * this needs to be defined by the driver
      *
      * @return boolean
      */
