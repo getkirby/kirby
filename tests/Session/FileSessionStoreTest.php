@@ -37,6 +37,7 @@ class FileSessionStoreTest extends TestCase
         F::write($this->root . '/1234567890.abcdefghijabcdefghij.sess', '1234567890');
         F::write($this->root . '/1357913579.abcdefghijabcdefghij.sess', '1357913579');
         F::write($this->root . '/7777777777.abcdefghijabcdefghij.sess', '7777777777');
+        F::write($this->root . '/8888888888.abcdefghijabcdefghij.sess', '');
         F::write($this->root . '/9999999999.abcdefghijabcdefghij.sess', '9999999999');
     }
 
@@ -91,12 +92,14 @@ class FileSessionStoreTest extends TestCase
         $this->assertTrue($this->store->exists(1234567890, 'abcdefghijabcdefghij'));
         $this->assertTrue($this->store->exists(1357913579, 'abcdefghijabcdefghij'));
         $this->assertTrue($this->store->exists(7777777777, 'abcdefghijabcdefghij'));
+        $this->assertTrue($this->store->exists(8888888888, 'abcdefghijabcdefghij'));
         $this->assertTrue($this->store->exists(9999999999, 'abcdefghijabcdefghij'));
         $this->assertFalse($this->store->exists(1234567890, 'someotherid'));
 
         $this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
         $this->assertHandleNotExists('1357913579.abcdefghijabcdefghij');
         $this->assertHandleNotExists('7777777777.abcdefghijabcdefghij');
+        $this->assertHandleNotExists('8888888888.abcdefghijabcdefghij');
         $this->assertHandleNotExists('9999999999.abcdefghijabcdefghij');
     }
 
@@ -151,6 +154,13 @@ class FileSessionStoreTest extends TestCase
 
         // non-existing file: *not* supposed to throw an Exception
         $this->store->unlock(1234567890, 'someotherid');
+
+        // locked file that doesn't exist anymore
+        $this->store->lock(1357913579, 'abcdefghijabcdefghij');
+        $this->assertLocked('1357913579.abcdefghijabcdefghij');
+        unlink($this->root . '/1357913579.abcdefghijabcdefghij.sess');
+        $this->store->unlock(1357913579, 'abcdefghijabcdefghij');
+        $this->assertNotLocked('1357913579.abcdefghijabcdefghij');
     }
 
     /**
@@ -162,6 +172,8 @@ class FileSessionStoreTest extends TestCase
     {
         $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
+
+        $this->assertEquals('', $this->store->get(8888888888, 'abcdefghijabcdefghij'));
     }
 
     /**
@@ -308,6 +320,7 @@ class FileSessionStoreTest extends TestCase
         $this->assertFileExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/1357913579.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/7777777777.abcdefghijabcdefghij.sess');
+        $this->assertFileExists($this->root . '/8888888888.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/9999999999.abcdefghijabcdefghij.sess');
 
         $this->store->collectGarbage();
@@ -316,6 +329,7 @@ class FileSessionStoreTest extends TestCase
         $this->assertFileNotExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/1357913579.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/7777777777.abcdefghijabcdefghij.sess');
+        $this->assertFileExists($this->root . '/8888888888.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/9999999999.abcdefghijabcdefghij.sess');
     }
 
