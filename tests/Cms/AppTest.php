@@ -6,6 +6,9 @@ use Kirby\Data\Data;
 use Kirby\Http\Route;
 use Kirby\Toolkit\F;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\App
+ */
 class AppTest extends TestCase
 {
     public function setUp(): void
@@ -16,6 +19,51 @@ class AppTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+    }
+
+    /**
+     * @covers ::apply
+     */
+    public function testApply()
+    {
+        $app = new App([
+            'options' => [
+                'hooks' => [
+                    'singleParam' => [
+                        function ($value) {
+                            if (func_num_args() !== 1) {
+                                throw new \Exception();
+                            }
+
+                            return $value * 2;
+                        },
+                        function ($value) {
+                            return $value + 1;
+                        },
+                    ],
+                    'multiParams' => [
+                        function ($arg1, $arg2, $value) {
+                            if (func_num_args() !== 3 || $arg1 !== 'arg1' || $arg2 !== 'arg2') {
+                                throw new \Exception();
+                            }
+
+                            return $value * 2;
+                        },
+                        function ($arg1, $arg2, $value) {
+                            return $value + 1;
+                        },
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(5, $app->apply('singleParam', 2));
+        $this->assertEquals(21, $app->apply('singleParam', 10));
+
+        $this->assertEquals(5, $app->apply('multiParams', 'arg1', 'arg2', 2));
+        $this->assertEquals(21, $app->apply('multiParams', 'arg1', 'arg2', 10));
+
+        $this->assertEquals(2, $app->apply('does-not-exist', 2));
     }
 
     public function testDefaultRoles()
