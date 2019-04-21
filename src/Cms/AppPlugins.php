@@ -613,6 +613,7 @@ trait AppPlugins
             'apcu'      => 'Kirby\Cache\ApcuCache',
             'file'      => 'Kirby\Cache\FileCache',
             'memcached' => 'Kirby\Cache\MemCached',
+            'memory'    => 'Kirby\Cache\MemoryCache',
         ]);
 
         $this->extendComponents(include static::$root . '/config/components.php');
