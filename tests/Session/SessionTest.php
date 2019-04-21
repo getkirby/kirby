@@ -722,6 +722,24 @@ class SessionTest extends TestCase
     }
 
     /**
+     * @covers ::__destruct
+     * @covers ::data
+     */
+    public function testDestruct()
+    {
+        $token = '9999999999.valid.' . $this->store->validKey;
+        $session = new Session($this->sessions, $token, []);
+
+        $this->assertWriteMode(false, $session);
+        $session->data()->set('someId', 1);
+        $this->assertWriteMode(true, $session);
+
+        $this->assertFalse(isset($this->store->sessions['9999999999.valid']['data']['someId']));
+        $session->__destruct(); // actually destructing is not possible in the test (we need to access the store later)
+        $this->assertEquals(1, $this->store->sessions['9999999999.valid']['data']['someId']);
+    }
+
+    /**
      * @covers ::prepareForWriting
      * @covers ::data
      */
