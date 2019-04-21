@@ -5,8 +5,14 @@ namespace Kirby\Session;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
+/**
+ * @coversDefaultClass \Kirby\Session\SessionStore
+ */
 class SessionStoreTest extends TestCase
 {
+    /**
+     * @covers ::generateId
+     */
     public function testGenerateId()
     {
         // get a reference to the protected method
