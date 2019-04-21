@@ -10,6 +10,9 @@ use Kirby\Toolkit\F;
 
 require_once(__DIR__ . '/mocks.php');
 
+/**
+ * @coversDefaultClass \Kirby\Session\FileSessionStore
+ */
 class FileSessionStoreTest extends TestCase
 {
     protected $root = __DIR__ . '/fixtures/store';
@@ -48,6 +51,9 @@ class FileSessionStoreTest extends TestCase
         $this->assertDirectoryNotExists($this->root);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorNotWritable()
     {
         $this->expectException('Kirby\Exception\Exception');
@@ -59,6 +65,11 @@ class FileSessionStoreTest extends TestCase
         new FileSessionStore($this->root);
     }
 
+    /**
+     * @covers ::createId
+     * @covers ::name
+     * @covers ::path
+     */
     public function testCreateId()
     {
         $id = $this->store->createId(1234567890);
@@ -70,6 +81,11 @@ class FileSessionStoreTest extends TestCase
         $this->assertLocked('1234567890.' . $id);
     }
 
+    /**
+     * @covers ::exists
+     * @covers ::name
+     * @covers ::path
+     */
     public function testExists()
     {
         $this->assertTrue($this->store->exists(1234567890, 'abcdefghijabcdefghij'));
@@ -84,6 +100,11 @@ class FileSessionStoreTest extends TestCase
         $this->assertHandleNotExists('9999999999.abcdefghijabcdefghij');
     }
 
+    /**
+     * @covers ::lock
+     * @covers ::name
+     * @covers ::path
+     */
     public function testLock()
     {
         $this->store->lock(1234567890, 'abcdefghijabcdefghij');
@@ -96,6 +117,11 @@ class FileSessionStoreTest extends TestCase
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
     }
 
+    /**
+     * @covers ::lock
+     * @covers ::name
+     * @covers ::path
+     */
     public function testLockNonExistingFile()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
@@ -104,6 +130,11 @@ class FileSessionStoreTest extends TestCase
         $this->store->lock(1234567890, 'someotherid');
     }
 
+    /**
+     * @covers ::unlock
+     * @covers ::name
+     * @covers ::path
+     */
     public function testUnlock()
     {
         // unlock an unlocked file
@@ -122,12 +153,22 @@ class FileSessionStoreTest extends TestCase
         $this->store->unlock(1234567890, 'someotherid');
     }
 
+    /**
+     * @covers ::get
+     * @covers ::name
+     * @covers ::path
+     */
     public function testGet()
     {
         $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
     }
 
+    /**
+     * @covers ::get
+     * @covers ::name
+     * @covers ::path
+     */
     public function testGetNonExistingFile()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
@@ -136,6 +177,12 @@ class FileSessionStoreTest extends TestCase
         $this->store->get(1234567890, 'someotherid');
     }
 
+    /**
+     * @covers ::get
+     * @covers ::name
+     * @covers ::path
+     * @covers ::handle
+     */
     public function testGetUnreadableFile()
     {
         $this->expectException('Kirby\Exception\Exception');
@@ -146,6 +193,11 @@ class FileSessionStoreTest extends TestCase
         $this->store->get(1234567890, 'abcdefghijabcdefghij');
     }
 
+    /**
+     * @covers ::set
+     * @covers ::name
+     * @covers ::path
+     */
     public function testSet()
     {
         $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
@@ -159,6 +211,11 @@ class FileSessionStoreTest extends TestCase
         $this->assertEquals('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
     }
 
+    /**
+     * @covers ::set
+     * @covers ::name
+     * @covers ::path
+     */
     public function testSetNonExistingFile()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
@@ -167,6 +224,11 @@ class FileSessionStoreTest extends TestCase
         $this->store->set(1234567890, 'someotherid', 'some other data');
     }
 
+    /**
+     * @covers ::set
+     * @covers ::name
+     * @covers ::path
+     */
     public function testSetWithoutLock()
     {
         $this->expectException('Kirby\Exception\LogicException');
@@ -177,6 +239,12 @@ class FileSessionStoreTest extends TestCase
         $this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
     }
 
+    /**
+     * @covers ::destroy
+     * @covers ::name
+     * @covers ::path
+     * @covers ::closeHandle
+     */
     public function testDestroy()
     {
         $this->assertFileExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
@@ -190,6 +258,12 @@ class FileSessionStoreTest extends TestCase
         $this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
     }
 
+    /**
+     * @covers ::destroy
+     * @covers ::name
+     * @covers ::path
+     * @covers ::closeHandle
+     */
     public function testDestroyAlreadyDestroyed()
     {
         // make sure we get a handle
@@ -203,6 +277,11 @@ class FileSessionStoreTest extends TestCase
         $this->store->destroy(1234567890, 'abcdefghijabcdefghij');
     }
 
+    /**
+     * @covers ::handle
+     * @covers ::name
+     * @covers ::path
+     */
     public function testAccessAfterDestroy()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
@@ -220,6 +299,9 @@ class FileSessionStoreTest extends TestCase
         $this->store->set(1234567890, 'abcdefghijabcdefghij', 'something else');
     }
 
+    /**
+     * @covers ::collectGarbage
+     */
     public function testCollectGarbage()
     {
         $this->assertFileExists($this->root . '/.gitignore');
