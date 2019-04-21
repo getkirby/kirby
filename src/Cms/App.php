@@ -175,19 +175,28 @@ class App
     }
 
     /**
-     * Apply a hook to the given value
+     * Apply a hook to the given value;
+     * the value that gets modified by the hooks
+     * is always the last argument
      *
      * @internal
-     * @param string $name
-     * @param mixed $value
-     * @return mixed
+     * @param string $name Hook name
+     * @param mixed $args Arguments to pass to the hooks
+     * @return mixed Resulting value as modified by the hooks
      */
-    public function apply(string $name, $value)
+    public function apply(string $name, ...$args)
     {
+        // split up args into "passive" args and the value
+        $value = array_pop($args);
+
         if ($functions = $this->extension('hooks', $name)) {
             foreach ($functions as $function) {
+                // re-assemble args
+                $hookArgs   = $args;
+                $hookArgs[] = $value;
+
                 // bind the App object to the hook
-                $value = $function->call($this, $value);
+                $value = $function->call($this, ...$hookArgs);
             }
         }
 
