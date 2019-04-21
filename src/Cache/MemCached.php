@@ -59,22 +59,11 @@ class MemCached extends Cache
     }
 
     /**
-     * Returns the full keyname
-     * including the prefix (if set)
+     * Internal method to retrieve the raw cache value;
+     * needs to return a Value object or null if not found
      *
      * @param  string $key
-     * @return string
-     */
-    public function key(string $key): string
-    {
-        return $this->options['prefix'] . $key;
-    }
-
-    /**
-     * Retrieve the CacheValue object from the cache.
-     *
-     * @param  string  $key
-     * @return object  CacheValue
+     * @return mixed
      */
     public function retrieve(string $key): ?Value
     {
@@ -90,39 +79,6 @@ class MemCached extends Cache
     public function remove(string $key): bool
     {
         return $this->connection->delete($this->key($key));
-    }
-
-    /**
-     * Checks when an item in the cache expires
-     *
-     * @param  string $key
-     * @return int
-     */
-    public function expires(string $key): int
-    {
-        return parent::expires($this->key($key));
-    }
-
-    /**
-     * Checks if an item in the cache is expired
-     *
-     * @param  string $key
-     * @return boolean
-     */
-    public function expired(string $key): bool
-    {
-        return parent::expired($this->key($key));
-    }
-
-    /**
-     * Checks when the cache has been created
-     *
-     * @param  string $key
-     * @return int
-     */
-    public function created(string $key): int
-    {
-        return parent::created($this->key($key));
     }
 
     /**
