@@ -1,6 +1,8 @@
 language: php
 os: linux
 sudo: false
+services:
+  - memcached
 
 php:
   - 7.1

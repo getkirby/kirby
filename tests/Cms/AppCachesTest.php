@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cache\Cache;
 use Kirby\Cache\FileCache;
+use Kirby\Cache\NullCache;
 
 class AppCachesTest extends TestCase
 {
@@ -18,7 +18,7 @@ class AppCachesTest extends TestCase
 
     public function testDisabledCache()
     {
-        $this->assertEquals(Cache::class, get_class($this->app()->cache('pages')));
+        $this->assertEquals(NullCache::class, get_class($this->app()->cache('pages')));
     }
 
     public function testEnabledCacheWithoutOptions()

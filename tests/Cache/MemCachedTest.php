@@ -5,19 +5,25 @@ namespace Kirby\Cache;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Cache\ApcuCache
+ * @coversDefaultClass \Kirby\Cache\MemCached
  */
-class ApcuCacheTest extends TestCase
+class MemCachedTest extends TestCase
 {
+    public function tearDown()
+    {
+        $connection = new \Memcached();
+        $connection->addServer('localhost', 11211);
+        $connection->flush();
+    }
+
     /**
      * @covers ::set
-     * @covers ::exists
      * @covers ::retrieve
      * @covers ::remove
      */
     public function testOperations()
     {
-        $cache = new ApcuCache([]);
+        $cache = new MemCached([]);
 
         $time = time();
         $this->assertTrue($cache->set('foo', 'A basic value', 10));
@@ -36,16 +42,15 @@ class ApcuCacheTest extends TestCase
 
     /**
      * @covers ::set
-     * @covers ::exists
      * @covers ::retrieve
      * @covers ::remove
      */
     public function testOperationsWithPrefix()
     {
-        $cache1 = new ApcuCache([
+        $cache1 = new MemCached([
             'prefix' => 'test1'
         ]);
-        $cache2 = new ApcuCache([
+        $cache2 = new MemCached([
             'prefix' => 'test2'
         ]);
 
@@ -70,11 +75,33 @@ class ApcuCacheTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
+     */
+    public function testConstructServer()
+    {
+        $cache = new MemCached([
+            'host' => 'localhost',
+            'port' => 1234
+        ]);
+        $this->assertFalse($cache->set('foo', 'A basic value'));
+        $this->assertNull($cache->retrieve('foo'));
+        $this->assertFalse($cache->remove('foo'));
+
+        $cache = new MemCached([
+            'host' => 'asdfgh.invalid',
+            'port' => 11211
+        ]);
+        $this->assertFalse($cache->set('foo', 'A basic value'));
+        $this->assertNull($cache->retrieve('foo'));
+        $this->assertFalse($cache->remove('foo'));
+    }
+
+    /**
      * @covers ::flush
      */
     public function testFlush()
     {
-        $cache = new ApcuCache([]);
+        $cache = new MemCached([]);
 
         $cache->set('a', 'A basic value');
         $cache->set('b', 'A basic value');
@@ -87,33 +114,5 @@ class ApcuCacheTest extends TestCase
         $this->assertFalse($cache->exists('a'));
         $this->assertFalse($cache->exists('b'));
         $this->assertFalse($cache->exists('c'));
-    }
-
-    /**
-     * @covers ::flush
-     */
-    public function testFlushWithPrefix()
-    {
-        $cache1 = new ApcuCache([
-            'prefix' => 'test1'
-        ]);
-        $cache2 = new ApcuCache([
-            'prefix' => 'test2'
-        ]);
-
-        $cache1->set('a', 'A basic value');
-        $cache1->set('b', 'A basic value');
-        $cache2->set('a', 'A basic value');
-        $cache2->set('b', 'A basic value');
-        $this->assertTrue($cache1->exists('a'));
-        $this->assertTrue($cache1->exists('b'));
-        $this->assertTrue($cache2->exists('a'));
-        $this->assertTrue($cache2->exists('b'));
-
-        $this->assertTrue($cache1->flush());
-        $this->assertFalse($cache1->exists('a'));
-        $this->assertFalse($cache1->exists('b'));
-        $this->assertTrue($cache2->exists('a'));
-        $this->assertTrue($cache2->exists('b'));
     }
 }

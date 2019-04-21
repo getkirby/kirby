@@ -3,21 +3,22 @@
 namespace Kirby\Cache;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use Kirby\Toolkit\Dir;
 
 /**
- * @coversDefaultClass \Kirby\Cache\ApcuCache
+ * @coversDefaultClass \Kirby\Cache\MemoryCache
  */
-class ApcuCacheTest extends TestCase
+class MemoryCacheTest extends TestCase
 {
     /**
      * @covers ::set
-     * @covers ::exists
      * @covers ::retrieve
      * @covers ::remove
      */
     public function testOperations()
     {
-        $cache = new ApcuCache([]);
+        $cache = new MemoryCache();
 
         $time = time();
         $this->assertTrue($cache->set('foo', 'A basic value', 10));
@@ -36,18 +37,13 @@ class ApcuCacheTest extends TestCase
 
     /**
      * @covers ::set
-     * @covers ::exists
      * @covers ::retrieve
      * @covers ::remove
      */
-    public function testOperationsWithPrefix()
+    public function testOperationsWithMultipleInstances()
     {
-        $cache1 = new ApcuCache([
-            'prefix' => 'test1'
-        ]);
-        $cache2 = new ApcuCache([
-            'prefix' => 'test2'
-        ]);
+        $cache1 = new MemoryCache();
+        $cache2 = new MemoryCache();
 
         $time = time();
         $this->assertTrue($cache1->set('foo', 'A basic value', 10));
@@ -74,7 +70,7 @@ class ApcuCacheTest extends TestCase
      */
     public function testFlush()
     {
-        $cache = new ApcuCache([]);
+        $cache = new MemoryCache();
 
         $cache->set('a', 'A basic value');
         $cache->set('b', 'A basic value');
@@ -92,14 +88,10 @@ class ApcuCacheTest extends TestCase
     /**
      * @covers ::flush
      */
-    public function testFlushWithPrefix()
+    public function testFlushWithMultipleInstances()
     {
-        $cache1 = new ApcuCache([
-            'prefix' => 'test1'
-        ]);
-        $cache2 = new ApcuCache([
-            'prefix' => 'test2'
-        ]);
+        $cache1 = new MemoryCache();
+        $cache2 = new MemoryCache();
 
         $cache1->set('a', 'A basic value');
         $cache1->set('b', 'A basic value');
