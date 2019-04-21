@@ -15,7 +15,7 @@ namespace Kirby\Cache;
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
  */
-class Cache
+abstract class Cache
 {
 
     /**
@@ -45,12 +45,9 @@ class Cache
      * @param  string  $key
      * @param  mixed   $value
      * @param  int     $minutes
-     * @return null
+     * @return boolean
      */
-    public function set(string $key, $value, int $minutes = 0)
-    {
-        return null;
-    }
+    abstract public function set(string $key, $value, int $minutes = 0): bool;
 
     /**
      * Adds the prefix to the key if given
@@ -74,10 +71,7 @@ class Cache
      * @param  string $key
      * @return mixed
      */
-    public function retrieve(string $key)
-    {
-        return null;
-    }
+    abstract public function retrieve(string $key): ?Value;
 
     /**
      * Get an item from the cache.
@@ -225,20 +219,14 @@ class Cache
      * @param  string $key
      * @return boolean
      */
-    public function remove(string $key): bool
-    {
-        return true;
-    }
+    abstract public function remove(string $key): bool;
 
     /**
      * Flush the entire cache
      *
      * @return boolean
      */
-    public function flush(): bool
-    {
-        return true;
-    }
+    abstract public function flush(): bool;
 
     /**
      * Returns all passed cache options

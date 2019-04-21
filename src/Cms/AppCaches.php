@@ -50,7 +50,17 @@ trait AppCaches
         $className = $types[$type];
 
         // initialize the cache class
-        return $this->caches[$key] = new $className($options);
+        $cache = new $className($options);
+
+        // check if it is a useable cache object
+        if (is_a($cache, Cache::class) !== true) {
+            throw new InvalidArgumentException([
+                'key'  => 'app.invalid.cacheType',
+                'data' => ['type' => $type]
+            ]);
+        }
+
+        return $this->caches[$key] = $cache;
     }
 
     /**
