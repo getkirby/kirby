@@ -21,12 +21,13 @@ class MemCached extends Cache
     protected $connection;
 
     /**
-     * Set all parameters which are needed for the memcache client
-     * see defaults for available parameters
+     * Sets all parameters which are needed to connect to Memcached
      *
-     * @param array $params
+     * @param array $options 'host'   (default: localhost)
+     *                       'port'   (default: 11211)
+     *                       'prefix' (default: null)
      */
-    public function __construct(array $params = [])
+    public function __construct(array $options = [])
     {
         $defaults = [
             'host'    => 'localhost',
@@ -34,23 +35,24 @@ class MemCached extends Cache
             'prefix'  => null,
         ];
 
-        parent::__construct(array_merge($defaults, $params));
+        parent::__construct(array_merge($defaults, $options));
 
         $this->connection = new \Memcached();
         $this->connection->addServer($this->options['host'], $this->options['port']);
     }
 
     /**
-     * Write an item to the cache for a given number of minutes.
+     * Writes an item to the cache for a given number of minutes and
+     * returns whether the operation was successful
      *
      * <code>
-     *    // Put an item in the cache for 15 minutes
-     *    Cache::set('value', 'my value', 15);
+     *   // put an item in the cache for 15 minutes
+     *   $cache->set('value', 'my value', 15);
      * </code>
      *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @param  int     $minutes
+     * @param string $key
+     * @param mixed $value
+     * @param int $minutes
      * @return boolean
      */
     public function set(string $key, $value, int $minutes = 0): bool
@@ -62,7 +64,7 @@ class MemCached extends Cache
      * Internal method to retrieve the raw cache value;
      * needs to return a Value object or null if not found
      *
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     public function retrieve(string $key): ?Value
@@ -71,9 +73,10 @@ class MemCached extends Cache
     }
 
     /**
-     * Remove an item from the cache
+     * Removes an item from the cache and returns
+     * whether the operation was successful
      *
-     * @param  string  $key
+     * @param string $key
      * @return boolean
      */
     public function remove(string $key): bool
@@ -82,7 +85,9 @@ class MemCached extends Cache
     }
 
     /**
-     * Flush the entire cache directory
+     * Flushes the entire cache and returns
+     * whether the operation was successful;
+     * WARNING: Memcached only supports flushing the whole cache at once!
      *
      * @return boolean
      */
