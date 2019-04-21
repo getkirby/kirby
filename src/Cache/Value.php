@@ -45,11 +45,6 @@ class Value
      */
     public function __construct($value, int $minutes = 0, $created = null)
     {
-        // keep forever if minutes are not defined
-        if ($minutes === 0) {
-            $minutes = 2628000;
-        }
-
         $this->value   = $value;
         $this->minutes = $minutes;
         $this->created = $created ?? time();
@@ -66,12 +61,18 @@ class Value
     }
 
     /**
-     * Returns the expiration date as UNIX timestamp
+     * Returns the expiration date as UNIX timestamp or
+     * null if the value never expires
      *
      * @return int
      */
-    public function expires(): int
+    public function expires(): ?int
     {
+        // 0 = keep forever
+        if ($this->minutes === 0) {
+            return null;
+        }
+
         return $this->created + ($this->minutes * 60);
     }
 
