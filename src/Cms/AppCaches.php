@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cache\Cache;
+use Kirby\Cache\NullCache;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -34,7 +35,8 @@ trait AppCaches
         $options = $this->cacheOptions($key);
 
         if ($options['active'] === false) {
-            return $this->caches[$key] = new Cache;
+            // use a dummy cache that does nothing
+            return $this->caches[$key] = new NullCache;
         }
 
         $type  = strtolower($options['type']);
