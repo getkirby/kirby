@@ -88,6 +88,6 @@ class PHP extends Handler
             return true;
         }
 
-        return false;
+        return false; // @codeCoverageIgnore
     }
 }

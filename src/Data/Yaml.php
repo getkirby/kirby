@@ -63,7 +63,9 @@ class Yaml extends Handler
         if (is_array($result)) {
             return $result;
         } else {
-            throw new Exception('YAML string is invalid');
+            // apparently Spyc always returns an array, even for invalid YAML syntax
+            // so this Exception should currently never be thrown
+            throw new Exception('YAML string is invalid'); // @codeCoverageIgnore
         }
     }
 }
