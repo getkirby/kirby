@@ -91,17 +91,21 @@ class Value
      * Creates a value object from a json string
      *
      * @param string $json
-     * @return self
+     * @return Value|null
      */
-    public static function fromJson($json)
+    public static function fromJson(string $json)
     {
         try {
-            $array = json_decode($json, true) ?? [];
-        } catch (Throwable $e) {
-            $array = [];
-        }
+            $array = json_decode($json, true);
 
-        return static::fromArray($array);
+            if (is_array($array)) {
+                return static::fromArray($array);
+            } else {
+                return null;
+            }
+        } catch (Throwable $e) {
+            return null;
+        }
     }
 
     /**

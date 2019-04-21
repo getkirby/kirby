@@ -104,11 +104,8 @@ abstract class Cache
             return $default;
         }
 
-        // get the pure value
-        $cache = $value->value();
-
-        // return the cache value or the default
-        return $cache ?? $default;
+        // return the pure value
+        return $value->value();
     }
 
     /**
