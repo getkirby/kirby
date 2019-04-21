@@ -78,6 +78,6 @@ class ApcuCache extends Cache
      */
     public function set(string $key, $value, int $minutes = 0): bool
     {
-        return apcu_store($this->key($key), $this->value($value, $minutes)->toJson(), $this->expiration($minutes));
+        return apcu_store($this->key($key), (new Value($value, $minutes))->toJson(), $this->expiration($minutes));
     }
 }

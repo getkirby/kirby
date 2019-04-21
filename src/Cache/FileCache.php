@@ -64,7 +64,9 @@ class FileCache extends Cache
      */
     public function set(string $key, $value, int $minutes = 0): bool
     {
-        return F::write($this->file($key), $this->value($value, $minutes)->toJson());
+        $file = $this->file($key);
+
+        return F::write($file, (new Value($value, $minutes))->toJson());
     }
 
     /**

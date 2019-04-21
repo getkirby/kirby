@@ -55,7 +55,7 @@ class MemCached extends Cache
      */
     public function set(string $key, $value, int $minutes = 0): bool
     {
-        return $this->connection->set($this->key($key), $this->value($value, $minutes)->toJson(), $this->expiration($minutes));
+        return $this->connection->set($this->key($key), (new Value($value, $minutes))->toJson(), $this->expiration($minutes));
     }
 
     /**
