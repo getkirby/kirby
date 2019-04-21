@@ -70,11 +70,13 @@ class Txt extends Handler
      */
     protected static function encodeResult(string $key, string $value): string
     {
-        $result = $key . ': ';
+        $result = $key . ':';
 
         // multi-line content
         if (preg_match('!\R!', $value) === 1) {
             $result .= "\n\n";
+        } else {
+            $result .= ' ';
         }
 
         $result .= trim($value);
