@@ -2,8 +2,13 @@
 
 namespace Kirby\Exception;
 
-class NotFoundExceptionTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class NotFoundExceptionTest extends TestCase
 {
+    /**
+     * @coversNothing
+     */
     public function testDefaults()
     {
         $exception = new NotFoundException();

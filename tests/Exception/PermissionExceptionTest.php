@@ -2,8 +2,13 @@
 
 namespace Kirby\Exception;
 
-class PermissionExceptionTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class PermissionExceptionTest extends TestCase
 {
+    /**
+     * @coversNothing
+     */
     public function testDefaults()
     {
         $exception = new PermissionException();
