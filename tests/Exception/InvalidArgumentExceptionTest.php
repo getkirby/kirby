@@ -2,8 +2,13 @@
 
 namespace Kirby\Exception;
 
-class InvalidArgumentExceptionTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class InvalidArgumentExceptionTest extends TestCase
 {
+    /**
+     * @coversNothing
+     */
     public function testDefaults()
     {
         $exception = new InvalidArgumentException();
@@ -13,6 +18,9 @@ class InvalidArgumentExceptionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['argument' => null, 'method' => null], $exception->getData());
     }
 
+    /**
+     * @coversNothing
+     */
     public function testPlaceholders()
     {
         $exception = new InvalidArgumentException([
@@ -22,5 +30,9 @@ class InvalidArgumentExceptionTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
         $this->assertEquals('Invalid argument "key" in method "get"', $exception->getMessage());
+        $this->assertEquals([
+            'argument' => 'key',
+            'method' => 'get'
+        ], $exception->getData());
     }
 }
