@@ -2,8 +2,13 @@
 
 namespace Kirby\Exception;
 
-class BadMethodCallExceptionTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class BadMethodCallExceptionTest extends TestCase
 {
+    /**
+     * @coversNothing
+     */
     public function testDefaults()
     {
         $exception = new BadMethodCallException();
@@ -13,6 +18,9 @@ class BadMethodCallExceptionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['method' => null], $exception->getData());
     }
 
+    /**
+     * @coversNothing
+     */
     public function testPlaceholders()
     {
         $exception = new BadMethodCallException([
@@ -21,5 +29,6 @@ class BadMethodCallExceptionTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
         $this->assertEquals('The method "get" does not exist', $exception->getMessage());
+        $this->assertEquals(['method' => 'get'], $exception->getData());
     }
 }
