@@ -28,15 +28,15 @@ class Exception extends \Exception
         $this->httpCode = $args['httpCode'] ?? static::$defaultHttpCode;
         $this->details  = $args['details']  ?? static::$defaultDetails;
 
+        // define the Exception key
+        $key = self::$prefix . '.' . ($args['key'] ?? static::$defaultKey);
+
         if (is_string($args) === true) {
             $this->isTranslated = false;
             parent::__construct($args);
         } else {
             // Define whether message can/should be translated
             $translate = ($args['translate'] ?? true) === true && class_exists('Kirby\Cms\App') === true;
-
-            // Define the Exception key
-            $key = self::$prefix . '.' . ($args['key'] ?? static::$defaultKey);
 
             // Fallback waterfall for message string
             $message = null;
@@ -76,10 +76,10 @@ class Exception extends \Exception
 
             // Handover to Exception parent class constructor
             parent::__construct($message, null, $args['previous'] ?? null);
-
-            // Set the Exception code to the key
-            $this->code = $key;
         }
+
+        // set the Exception code to the key
+        $this->code = $key;
     }
 
     final public function getData(): array
