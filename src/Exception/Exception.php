@@ -109,11 +109,17 @@ class Exception extends \Exception
 
     public function toArray(): array
     {
+        // remove the document root from the file path
+        $file = $this->getFile();
+        if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
+            $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
+        }
+
         return [
             'exception' => static::class,
             'message'   => $this->getMessage(),
             'key'       => $this->getKey(),
-            'file'      => ltrim($this->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+            'file'      => $file,
             'line'      => $this->getLine(),
             'details'   => $this->getDetails(),
             'code'      => $this->getHttpCode()
