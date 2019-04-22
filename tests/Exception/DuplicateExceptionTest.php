@@ -2,8 +2,13 @@
 
 namespace Kirby\Exception;
 
-class DuplicateExceptionTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class DuplicateExceptionTest extends TestCase
 {
+    /**
+     * @coversNothing
+     */
     public function testDefaults()
     {
         $exception = new DuplicateException();

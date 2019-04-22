@@ -2,8 +2,13 @@
 
 namespace Kirby\Exception;
 
-class LogicExceptionTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class LogicExceptionTest extends TestCase
 {
+    /**
+     * @coversNothing
+     */
     public function testDefaults()
     {
         $exception = new LogicException();
