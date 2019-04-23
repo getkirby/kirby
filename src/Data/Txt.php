@@ -56,7 +56,7 @@ class Txt extends Handler
         }
 
         // escape accidental dividers within a field
-        $value = preg_replace('!(\n|^)----(.*?\R*)!', '$1\\----$2', $value);
+        $value = preg_replace('!(?<=\n|^)----!', '\\----', $value);
 
         return $value;
     }
