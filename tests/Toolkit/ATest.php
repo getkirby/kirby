@@ -34,10 +34,12 @@ class ATest extends TestCase
         // fallback value
         $this->assertEquals(null, A::get($array, 'elephant'));
         $this->assertEquals('toot', A::get($array, 'elephant', 'toot'));
+
         $this->assertEquals([
             'cat' => 'miao',
             'elephant'  => null,
         ], A::get($array, ['cat', 'elephant']));
+
         $this->assertEquals([
             'cat' => 'miao',
             'elephant'  => 'toot',
@@ -52,7 +54,7 @@ class ATest extends TestCase
                     'child' => $child = 'a',
                     'another.child' => $anotherChild = 'b',
                 ]
-            ]
+            ],
         ];
 
         $this->assertEquals($grandma, A::get($data, 'grand.ma'));
@@ -61,7 +63,9 @@ class ATest extends TestCase
         $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.child'));
 
         // with default
-        $this->assertEquals('default', A::get($data, 'grandma.mother.sister', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.mother.sister', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
     }
 
     public function testMerge()

@@ -272,6 +272,10 @@ class RouterTest extends TestCase
 
         $this->assertNull($app->call('api'));
         $this->assertNull($app->call('api/something'));
+
+        // the api route should still be there
+        $patterns = array_column($app->routes(), 'pattern');
+        $this->assertEquals('api/(:all)', $patterns[0]);
     }
 
     public function testDisabledPanel()

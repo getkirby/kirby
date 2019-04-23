@@ -100,7 +100,11 @@ class A
                 return $default;
             }
 
-            return static::get($array[$firstKey], implode('.', $keys), $default);
+            if (is_array($array[$firstKey]) === true) {
+                return static::get($array[$firstKey], implode('.', $keys), $default);
+            }
+
+            return $default;
         }
 
         return $default;
