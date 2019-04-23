@@ -306,6 +306,61 @@ class PageActionsTest extends TestCase
         $this->assertEquals('Test', $this->app->page('test')->headline()->value());
     }
 
+    public function testUpdateMergeMultilang()
+    {
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug' => 'test'
+        ]);
+
+        // add some content in both languages
+        $page = $page->update([
+            'a' => 'A (en)',
+            'b' => 'B (en)'
+        ], 'en');
+
+        $page = $page->update([
+            'a' => 'A (de)',
+            'b' => 'B (de)'
+        ], 'de');
+
+        $this->assertEquals('A (en)', $page->content('en')->a());
+        $this->assertEquals('B (en)', $page->content('en')->b());
+        $this->assertEquals('A (de)', $page->content('de')->a());
+        $this->assertEquals('B (de)', $page->content('de')->b());
+
+        // update a single field in the primary language
+        $page = $page->update([
+            'b' => 'B modified (en)'
+        ], 'en');
+
+        $this->assertEquals('A (en)', $page->content('en')->a());
+        $this->assertEquals('B modified (en)', $page->content('en')->b());
+
+        // update a single field in the secondary language
+        $page = $page->update([
+            'b' => 'B modified (de)'
+        ], 'de');
+
+        $this->assertEquals('A (de)', $page->content('de')->a());
+        $this->assertEquals('B modified (de)', $page->content('de')->b());
+    }
+
 
     public function testChangeStatusHooks()
     {

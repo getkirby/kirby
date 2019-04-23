@@ -41,7 +41,7 @@ class Form extends BaseForm
     public static function for(Model $model, array $props = [])
     {
         // get the original model data
-        $original = $model->content()->toArray();
+        $original = $model->content($props['language'] ?? null)->toArray();
         $values   = $props['values'] ?? [];
 
         // convert closures to values
