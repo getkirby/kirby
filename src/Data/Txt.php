@@ -107,7 +107,10 @@ class Txt extends Handler
                 continue;
             }
 
-            $data[$key] = trim(substr($field, $pos + 1));
+            $value = trim(substr($field, $pos + 1));
+
+            // unescape escaped dividers within a field
+            $data[$key] = preg_replace('!(?<=\n|^)\\\\----!', '----', $value);
         }
 
         return $data;
