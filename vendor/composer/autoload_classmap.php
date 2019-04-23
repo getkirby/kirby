@@ -68,6 +68,7 @@ return array(
     'Kirby\\Cms\\Pages' => $baseDir . '/src/Cms/Pages.php',
     'Kirby\\Cms\\Pagination' => $baseDir . '/src/Cms/Pagination.php',
     'Kirby\\Cms\\Panel' => $baseDir . '/src/Cms/Panel.php',
+    'Kirby\\Cms\\PanelPlugins' => $baseDir . '/src/Cms/PanelPlugins.php',
     'Kirby\\Cms\\Permissions' => $baseDir . '/src/Cms/Permissions.php',
     'Kirby\\Cms\\Plugin' => $baseDir . '/src/Cms/Plugin.php',
     'Kirby\\Cms\\PluginAssets' => $baseDir . '/src/Cms/PluginAssets.php',
