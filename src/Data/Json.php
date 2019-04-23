@@ -15,6 +15,7 @@ use Exception;
  */
 class Json extends Handler
 {
+
     /**
      * Converts an array to an encoded JSON string
      *

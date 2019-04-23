@@ -40,9 +40,9 @@ class Txt extends Handler
     }
 
     /**
-     * Helper for converting value
+     * Helper for converting the value
      *
-     * @param  array|string  $value
+     * @param  array|string $value
      * @return string
      */
     protected static function encodeValue($value): string
@@ -62,7 +62,7 @@ class Txt extends Handler
     }
 
     /**
-     * Helper for converting key and value to result string
+     * Helper for converting the key and value to the result string
      *
      * @param  string $key
      * @param  string $value

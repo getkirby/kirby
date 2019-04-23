@@ -16,11 +16,12 @@ use Kirby\Toolkit\F;
  */
 class PHP extends Handler
 {
+
     /**
      * Converts an array to PHP file content
      *
      * @param  mixed  $data
-     * @param  string $indent
+     * @param  string $indent For internal use only
      * @return string
      */
     public static function encode($data, $indent = ''): string
@@ -64,7 +65,7 @@ class PHP extends Handler
      */
     public static function read(string $file): array
     {
-        if (file_exists($file) !== true) {
+        if (is_file($file) !== true) {
             throw new Exception('The file "' . $file . '" does not exist');
         }
 
@@ -74,7 +75,7 @@ class PHP extends Handler
     /**
      * Creates a PHP file with the given data
      *
-     * @param  array    $data
+     * @param  array   $data
      * @return boolean
      */
     public static function write(string $file = null, array $data = []): bool
