@@ -9,6 +9,7 @@ use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response\Redirect;
+use Kirby\Http\Router;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -150,7 +151,7 @@ return function ($kirby) {
 
                     // default home page
                 } else {
-                    return $kirby->resolve(null, $kirby->defaultLanguage()->code());
+                    return $kirby->defaultLanguage()->router()->call();
                 }
             }
         ];
@@ -161,7 +162,7 @@ return function ($kirby) {
                 'method'  => 'ALL',
                 'env'     => 'site',
                 'action'  => function ($path = null) use ($kirby, $language) {
-                    return $kirby->resolve($path, $language->code());
+                    return $language->router()->call($path);
                 }
             ];
         }
@@ -191,7 +192,7 @@ return function ($kirby) {
                     }
                 }
 
-                return $kirby->resolve($path, $kirby->defaultLanguage()->code());
+                return $kirby->defaultLanguage()->router()->call($path);
             }
         ];
     } else {

@@ -978,16 +978,27 @@ class App
      */
     public function router(): Router
     {
-        return $this->router = $this->router ?? new Router($this->routes());
+        $routes = $this->routes();
+
+        if ($this->multilang() === true) {
+            foreach ($routes as $index => $route) {
+                if (($route['languages'] ?? false) === true) {
+                    unset($routes[$index]);
+                }
+            }
+        }
+
+        return $this->router = $this->router ?? new Router($routes);
     }
 
     /**
      * Returns all defined routes
      *
      * @internal
+     * @param string|null $type
      * @return array
      */
-    public function routes(): array
+    public function routes(string $type = null): array
     {
         if (is_array($this->routes) === true) {
             return $this->routes;
@@ -995,8 +1006,9 @@ class App
 
         $registry = $this->extensions('routes');
         $system   = (include static::$root . '/config/routes.php')($this);
+        $routes   = array_merge($system['before'], $registry, $system['after']);
 
-        return $this->routes = array_merge($system['before'], $registry, $system['after']);
+        return $this->routes = $routes;
     }
 
     /**
