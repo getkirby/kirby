@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Closure;
 use Exception;
 use InvalidArgumentException;
 
@@ -84,8 +85,9 @@ class Router
      * @param  string $method
      * @return mixed
      */
-    public function call(string $path = '', string $method = 'GET')
+    public function call(string $path = null, string $method = 'GET', Closure $callback = null)
     {
+        $path   = $path ?? '';
         $ignore = [];
         $result = null;
         $loop   = true;
@@ -98,7 +100,12 @@ class Router
             }
 
             try {
-                $result = $route->action()->call($route, ...$route->arguments());
+                if ($callback) {
+                    $result = $callback($route);
+                } else {
+                    $result = $route->action()->call($route, ...$route->arguments());
+                }
+
                 $loop   = false;
             } catch (Exceptions\NextRouteException $e) {
                 $ignore[] = $route;
