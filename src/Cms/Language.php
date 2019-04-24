@@ -347,6 +347,11 @@ class Language extends Model
         return App::instance()->root('languages') . '/' . $this->code() . '.php';
     }
 
+    public function router()
+    {
+        return new LanguageRouter($this);
+    }
+
     /**
      * Saves the language settings in the languages folder
      *
