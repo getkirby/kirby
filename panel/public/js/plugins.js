@@ -34,6 +34,12 @@ window.panel.plugin = function (plugin, parts) {
   resolve(parts, "views", function (name, options) {
     window.panel.plugins["views"][name] = options;
   });
+
+  // Login
+  if (parts.login) {
+    window.panel.plugins.login = parts.login;
+  }
+
 };
 
 function resolve(object, type, callback) {
