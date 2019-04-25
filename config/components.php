@@ -54,20 +54,16 @@ return [
             return $file;
         }
 
-        // pre-calculate all thumb attributes
-        $darkroom   = Darkroom::factory(option('thumbs.driver', 'gd'), option('thumbs', []));
-        $attributes = $darkroom->preprocess($file->root(), $options);
-
         // create url and root
         $mediaRoot = dirname($file->mediaRoot());
         $dst       = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-        $thumbRoot = (new Filename($file->root(), $dst, $attributes))->toString();
+        $thumbRoot = (new Filename($file->root(), $dst, $options))->toString();
         $thumbName = basename($thumbRoot);
         $job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
         if (file_exists($thumbRoot) === false) {
             try {
-                Data::write($job, array_merge($attributes, [
+                Data::write($job, array_merge($options, [
                     'filename' => $file->filename()
                 ]));
             } catch (Throwable $e) {
