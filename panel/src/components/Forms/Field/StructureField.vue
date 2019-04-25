@@ -134,7 +134,6 @@ import Field from "../Field.vue";
 import dayjs from "dayjs";
 import sorter from "@/helpers/sort.js";
 import clone from "@/helpers/clone.js";
-import ratioPadding from "@/helpers/ratioPadding.js";
 
 Array.prototype.sortBy = function(sortBy) {
   const sort = sorter();
