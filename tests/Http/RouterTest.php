@@ -175,4 +175,24 @@ class RouterTest extends TestCase
 
         $result = $router->call('d');
     }
+
+    public function testCallWithCallback()
+    {
+        $router = new Router([
+            [
+                'pattern' => '(:any)',
+                'action'  => function ($slug) {
+                    // does not really get called
+                }
+            ],
+        ]);
+
+        $phpunit = $this;
+        $result  = $router->call('test', 'GET', function ($route) use ($phpunit) {
+            $phpunit->assertInstanceOf(Route::class, $route);
+            return $route->arguments()[0];
+        });
+
+        $this->assertEquals('test', $result);
+    }
 }

@@ -986,7 +986,7 @@ class App
 
         if ($this->multilang() === true) {
             foreach ($routes as $index => $route) {
-                if (($route['languages'] ?? false) === true) {
+                if (empty($route['language']) === false) {
                     unset($routes[$index]);
                 }
             }
