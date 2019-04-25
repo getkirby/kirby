@@ -347,7 +347,14 @@ class Language extends Model
         return App::instance()->root('languages') . '/' . $this->code() . '.php';
     }
 
-    public function router()
+    /**
+     * Returns the LanguageRouter instance
+     * which is used to handle language specific
+     * routes.
+     *
+     * @return LanguageRouter
+     */
+    public function router(): LanguageRouter
     {
         return new LanguageRouter($this);
     }

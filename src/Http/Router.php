@@ -83,6 +83,7 @@ class Router
      *
      * @param  string $path
      * @param  string $method
+     * @param  Closure|null $callback
      * @return mixed
      */
     public function call(string $path = null, string $method = 'GET', Closure $callback = null)
