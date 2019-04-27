@@ -75,6 +75,14 @@ class File extends ModelWithContent
     public static $methods = [];
 
     /**
+     * Registry with all File models
+     *
+     * @var array
+     */
+    public static $models = [];
+
+
+    /**
      * The parent object
      *
      * @var Model
@@ -262,6 +270,22 @@ class File extends ModelWithContent
     }
 
     /**
+     * Constructs a File object and also
+     * takes File models into account.
+     *
+     * @internal
+     * @return self
+     */
+    public static function factory($props): self
+    {
+        if (empty($props['model']) === false) {
+            return static::model($props['model'], $props);
+        }
+
+        return new static($props);
+    }
+
+    /**
      * Returns the filename with extension
      *
      * @return string
@@ -356,16 +380,24 @@ class File extends ModelWithContent
     }
 
     /**
-     * Returns the parent model.
-     * This is normally the parent page
-     * or the site object.
+     * Creates a file model if it has been registered
      *
      * @internal
-     * @return Site|Page
+     * @param string $name
+     * @param array $props
+     * @return User
      */
-    public function model()
+    public static function model(string $name, array $props = [])
     {
-        return $this->parent();
+        if ($class = (static::$models[$name] ?? null)) {
+            $object = new $class($props);
+
+            if (is_a($object, 'Kirby\Cms\File') === true) {
+                return $object;
+            }
+        }
+
+        return new static($props);
     }
 
     /**

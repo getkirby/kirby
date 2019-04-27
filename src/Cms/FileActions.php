@@ -135,8 +135,10 @@ trait FileActions
         // prefer the filename from the props
         $props['filename'] = F::safeName($props['filename'] ?? basename($props['source']));
 
+        $props['model'] = strtolower($props['template'] ?? 'default');
+
         // create the basic file and a test upload object
-        $file   = new static($props);
+        $file = File::factory($props);
         $upload = new Image($props['source']);
 
         // create a form for the file

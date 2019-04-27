@@ -48,13 +48,14 @@ trait AppPlugins
         'fieldMethods' => [],
         'fileMethods' => [],
         'filesMethods' => [],
+        'fileModels' => [],
         'fields' => [],
         'hooks' => [],
         'options' => [],
         'pages' => [],
         'pageMethods' => [],
-        'pageModels' => [],
         'pagesMethods' => [],
+        'pageModels' => [],
         'routes' => [],
         'sections' => [],
         'siteMethods' => [],
@@ -146,6 +147,11 @@ trait AppPlugins
     protected function extendFilesMethods(array $methods): array
     {
         return $this->extensions['filesMethods'] = Files::$methods = array_merge(Files::$methods, $methods);
+    }
+
+    protected function extendFileModels(array $models): array
+    {
+        return $this->extensions['fileModels'] = File::$models = array_merge(File::$models, $models);
     }
 
     protected function extendFieldMethods(array $methods): array
