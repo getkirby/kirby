@@ -42,6 +42,9 @@ return [
                 return $this->site()->title()->value();
             }
         },
+        'slugs' => function () {
+            return Str::$language;
+        },
         'title' => function () {
             return $this->site()->title()->value();
         },
@@ -96,10 +99,11 @@ return [
             'license',
             'multilang',
             'requirements',
+            'slugs',
             'title',
             'translation',
             'user' => 'auth',
-                'version'
+            'version'
         ]
     ],
 ];

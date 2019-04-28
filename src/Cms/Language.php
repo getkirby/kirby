@@ -59,7 +59,7 @@ class Language extends Model
     /**
      * @var array|null
      */
-    protected $slug;
+    protected $slugs;
 
     /**
      * @var array|null
@@ -87,7 +87,7 @@ class Language extends Model
             'direction',
             'locale',
             'name',
-            'slug',
+            'slugs',
             'translations',
             'url',
         ]);
@@ -388,7 +388,7 @@ class Language extends Model
             $data = [];
         }
 
-        return array_merge($data, $this->slug());
+        return array_merge($data, $this->slugs());
     }
 
     /**
@@ -487,9 +487,9 @@ class Language extends Model
      * @param array $slug
      * @return self
      */
-    protected function setSlug(array $slug = null): self
+    protected function setSlugs(array $slugs = null): self
     {
-        $this->slug = $slug ?? [];
+        $this->slugs = $slugs ?? [];
         return $this;
     }
 
@@ -518,9 +518,9 @@ class Language extends Model
      *
      * @return array
      */
-    public function slug(): array
+    public function slugs(): array
     {
-        return $this->slug;
+        return $this->slugs;
     }
 
     /**
