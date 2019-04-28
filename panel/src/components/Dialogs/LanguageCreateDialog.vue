@@ -80,7 +80,7 @@ export default {
       this.onNameChanges(name);
     },
     "language.code"(code) {
-      this.language.code = slug(code, [this.language.rules, this.system.ascii]);
+      this.language.code = slug(code, [this.system.ascii]);
     }
   },
   methods: {
