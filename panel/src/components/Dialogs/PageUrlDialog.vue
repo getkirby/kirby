@@ -51,8 +51,8 @@ export default {
         preselect: true
       };
     },
-    language() {
-      return this.$store.state.languages.current;
+    slugs() {
+      return this.$store.state.languages.current ? this.$store.state.languages.current.rules : this.system.slugs;
     },
     system() {
       return this.$store.state.system.info;
@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     sluggify(input) {
-      this.slug = slug(input, [this.language.rules, this.system.ascii]);
+      this.slug = slug(input, [this.slugs, this.system.ascii]);
 
       if (this.page.parents) {
         this.url = this.page.parents.map(p => p.slug).

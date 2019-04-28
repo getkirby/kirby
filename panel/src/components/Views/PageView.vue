@@ -176,10 +176,6 @@ export default {
           break;
       }
     },
-    changeLanguage(language) {
-      this.$store.dispatch("languages/current", language);
-      this.fetch();
-    },
     fetch() {
       this.$api.pages
         .get(this.path, { view: "panel" })

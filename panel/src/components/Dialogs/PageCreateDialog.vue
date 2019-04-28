@@ -64,8 +64,8 @@ export default {
         }
       };
     },
-    language() {
-      return this.$store.state.languages.current;
+    slugs() {
+      return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
     },
     system() {
       return this.$store.state.system.info;
@@ -73,7 +73,7 @@ export default {
   },
   watch: {
     "page.title"(title) {
-      this.page.slug = slug(title, [this.language.rules, this.system.ascii]);
+      this.page.slug = slug(title, [this.slugs, this.system.ascii]);
     }
   },
   methods: {
