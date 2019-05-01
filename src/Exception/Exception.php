@@ -15,7 +15,7 @@ use Kirby\Toolkit\Str;
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
- * @license   MIT
+ * @license   https://opensource.org/licenses/MIT
  */
 class Exception extends \Exception
 {
