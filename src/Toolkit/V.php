@@ -8,14 +8,14 @@ use Kirby\Toolkit\Str;
 use ReflectionFunction;
 
 /**
-* A set of validator methods
-*
-* @package   Kirby Toolkit
-* @author    Bastian Allgeier <bastian@getkirby.com>
-* @link      http://getkirby.com
-* @copyright Bastian Allgeier
-* @license   MIT
-*/
+ * A set of validator methods
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   MIT
+ */
 class V
 {
 

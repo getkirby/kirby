@@ -13,8 +13,8 @@ use Exception;
  * @package   Kirby Email
  * @author    Bastian Allgeier <bastian@getkirby.com>,
  *            Nico Hoffmann <nico@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
  * @license   MIT
 */
 class Email
