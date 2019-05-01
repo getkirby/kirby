@@ -8,6 +8,12 @@ use Kirby\Toolkit\Obj;
  * A wrapper around a URL query string
  * that converts it into a Kirby Obj for easier
  * access of each query attribute.
+ *
+ * @package   Kirby Http
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Query extends Obj
 {

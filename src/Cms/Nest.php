@@ -11,6 +11,12 @@ use Kirby\Toolkit\Obj;
  * with Kirby queries.
  *
  * REFACTOR: move this to the toolkit
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Nest
 {

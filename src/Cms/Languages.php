@@ -6,6 +6,12 @@ use Kirby\Toolkit\F;
 
 /**
  * A collection of all defined site languages
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Languages extends Collection
 {

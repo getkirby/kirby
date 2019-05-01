@@ -15,6 +15,12 @@ use Throwable;
  * a working panel view with all the right URLs
  * and other panel options. The view template is
  * located in `kirby/views/panel.php`
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Panel
 {

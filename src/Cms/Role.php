@@ -11,6 +11,12 @@ use Kirby\Toolkit\I18n;
 /**
  * Represents a User role with attached
  * permissions. Roles are defined by user blueprints.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Role extends Model
 {

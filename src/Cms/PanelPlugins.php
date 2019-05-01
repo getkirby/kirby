@@ -9,6 +9,12 @@ use Kirby\Toolkit\F;
  * The PanelPlugins class takes care of collecting
  * js and css plugin files for the panel and caches
  * them in the media folder
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class PanelPlugins
 {

@@ -10,6 +10,12 @@ use Kirby\Toolkit\F;
  * Plugin assets are automatically copied/linked
  * to the media folder, to make them publicly
  * available. This class handles the magic around that.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class PluginAssets
 {

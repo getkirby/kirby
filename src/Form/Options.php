@@ -17,6 +17,12 @@ use Kirby\Toolkit\Obj;
  * classes, that are used to generate
  * options arrays for select fields,
  * radio boxes, checkboxes and more.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Options
 {
