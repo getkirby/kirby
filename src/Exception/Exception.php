@@ -13,8 +13,8 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Exception
  * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
  * @license   MIT
  */
 class Exception extends \Exception
