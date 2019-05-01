@@ -10,6 +10,15 @@ use Kirby\Image\Image;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
+/**
+ * FileActions
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait FileActions
 {
 

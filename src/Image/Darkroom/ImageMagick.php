@@ -6,6 +6,15 @@ use Exception;
 use Kirby\Image\Darkroom;
 use Kirby\Toolkit\F;
 
+/**
+ * ImageMagick
+ *
+ * @package   Kirby Image
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
+ */
 class ImageMagick extends Darkroom
 {
     protected function defaults(): array

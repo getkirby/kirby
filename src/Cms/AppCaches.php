@@ -5,6 +5,15 @@ namespace Kirby\Cms;
 use Kirby\Cache\Cache;
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * AppCaches
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait AppCaches
 {
     protected $caches = [];

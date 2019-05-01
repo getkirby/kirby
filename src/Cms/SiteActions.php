@@ -8,6 +8,15 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
+/**
+ * SiteActions
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait SiteActions
 {
 

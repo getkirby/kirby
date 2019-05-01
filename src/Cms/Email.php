@@ -10,6 +10,12 @@ use Kirby\Toolkit\Tpl;
  * handles all the magic connections between Kirby
  * and sending emails, like email templates, file
  * attachments, etc.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Email
 {

@@ -4,6 +4,15 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\I18n;
 
+/**
+ * AppTranslations
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait AppTranslations
 {
     protected $translations;

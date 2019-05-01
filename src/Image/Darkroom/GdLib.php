@@ -8,6 +8,15 @@ use Exception;
 use claviska\SimpleImage;
 use Kirby\Image\Darkroom;
 
+/**
+ * GdLib
+ *
+ * @package   Kirby Image
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
+ */
 class GdLib extends Darkroom
 {
     public function process(string $file, array $options = []): array

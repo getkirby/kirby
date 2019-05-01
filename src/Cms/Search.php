@@ -9,6 +9,12 @@ use Kirby\Toolkit\Str;
  * search logic from collections, to
  * provide a more globally usable interface
  * for any searches.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Search
 {

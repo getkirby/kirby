@@ -14,6 +14,12 @@ use Kirby\Toolkit\V;
  * Form Field object that takes a Vue component style
  * array of properties and methods and converts them
  * to a usable field option array for the API.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Field extends Component
 {

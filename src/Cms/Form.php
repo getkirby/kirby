@@ -8,6 +8,12 @@ use Kirby\Form\Form as BaseForm;
  * Extension of `Kirby\Form\Form` that introduces
  * a Form::for method that creates a proper form
  * definition for any Cms Model.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Form extends BaseForm
 {
