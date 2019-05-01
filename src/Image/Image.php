@@ -18,8 +18,8 @@ use Kirby\Toolkit\V;
  *
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
  * @license   MIT
 */
 class Image extends File

@@ -15,8 +15,8 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Session
  * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
  * @license   MIT
  */
 class Sessions

@@ -3,14 +3,14 @@
 namespace Kirby\Cache;
 
 /**
-* Memcached Driver
-*
-* @package   Kirby Cache
-* @author    Bastian Allgeier <bastian@getkirby.com>
-* @link      http://getkirby.com
-* @copyright Bastian Allgeier
-* @license   MIT
-*/
+ * Memcached Driver
+ *
+ * @package   Kirby Cache
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   MIT
+ */
 class MemCached extends Cache
 {
 
