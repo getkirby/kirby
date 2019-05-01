@@ -13,8 +13,13 @@ use Zend\Escaper\Escaper;
  * value, etc.
  *
  * Wrapper for the Zend Escaper
- *
  * @link https://github.com/zendframework/zend-escaper
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Escape
 {

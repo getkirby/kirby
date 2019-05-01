@@ -10,6 +10,12 @@ use Kirby\Toolkit\F;
  * Provides a factory method to convert an array
  * to a collection of Translation objects and load
  * method to load all translations from disk
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Translations extends Collection
 {

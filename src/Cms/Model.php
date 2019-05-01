@@ -9,6 +9,12 @@ use Kirby\Toolkit\Str;
 
 /**
  * Foundation for Page, Site, File and User models.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 abstract class Model
 {

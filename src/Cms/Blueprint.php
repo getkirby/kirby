@@ -17,6 +17,12 @@ use Throwable;
  * The Blueprint class normalizes an array from a
  * blueprint file and converts sections, columns, fields
  * etc. into a correct tab layout.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Blueprint
 {

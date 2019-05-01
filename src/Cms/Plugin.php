@@ -11,6 +11,12 @@ use Kirby\Toolkit\F;
  * Represents a Plugin and handles parsing of
  * the composer.json. It also creates the prefix
  * and media url for the plugin.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Plugin extends Model
 {

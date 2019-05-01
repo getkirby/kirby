@@ -7,6 +7,12 @@ use Kirby\Toolkit\Str;
 
 /**
  * Global response configuration
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Responder
 {

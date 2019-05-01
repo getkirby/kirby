@@ -5,6 +5,12 @@ namespace Kirby\Cms;
 /**
  * Extended KirbyTag class to provide
  * common helpers for tag objects
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class KirbyTag extends \Kirby\Text\KirbyTag
 {

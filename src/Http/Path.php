@@ -8,6 +8,12 @@ use Kirby\Toolkit\Str;
 /**
  * A wrapper around an URL path
  * that converts the path into a Kirby stack
+ *
+ * @package   Kirby Http
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Path extends Collection
 {

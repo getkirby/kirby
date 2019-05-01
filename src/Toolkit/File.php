@@ -10,9 +10,9 @@ use Exception;
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @license   http://getkirby.com/license
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class File
 {
