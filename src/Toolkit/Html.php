@@ -10,9 +10,9 @@ use Kirby\Http\Url;
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Html
 {

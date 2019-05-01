@@ -14,7 +14,7 @@ use Kirby\Toolkit\Str;
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license   https://opensource.org/licenses/MIT
  */
 class Remote
 {
