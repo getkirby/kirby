@@ -2,6 +2,7 @@
 window.panel = window.panel || {};
 window.panel.plugins = {
   components: {},
+  created: [],
   fields: {},
   sections: {},
   routes: [],
@@ -29,6 +30,11 @@ window.panel.plugin = function (plugin, parts) {
   resolve(parts, "use", function (name, options) {
     window.panel.plugins["use"].push(options);
   });
+
+  // created callback
+  if (parts["created"]) {
+    window.panel.plugins["created"].push(parts["created"]);
+  }
 
   // Views
   resolve(parts, "views", function (name, options) {
