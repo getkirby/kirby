@@ -8,6 +8,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Http\Url;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Throwable;

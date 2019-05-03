@@ -1497,7 +1497,7 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Returns the Url
+     * Returns the URL
      *
      * @param array|string|null $options
      * @return string
