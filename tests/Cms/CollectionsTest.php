@@ -44,6 +44,23 @@ class CollectionsTest extends TestCase
         $this->assertEquals('ab', $result);
     }
 
+    public function testGetWithDifferentData()
+    {
+        $app = $this->_app();
+
+        $result = $app->collections()->get('string', [
+            'a' => 'a',
+            'b' => 'b'
+        ]);
+        $this->assertEquals('ab', $result);
+
+        $result = $app->collections()->get('string', [
+            'a' => 'c',
+            'b' => 'd'
+        ]);
+        $this->assertEquals('cd', $result);
+    }
+
     public function testGetCloned()
     {
         $app         = $this->_app();
