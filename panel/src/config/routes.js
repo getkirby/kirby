@@ -1,17 +1,6 @@
+import Vue from "vue";
 import auth from "./auth.js";
 import store from "@/store/store.js";
-
-/* Views */
-import BrowserView from "@/components/Views/BrowserView.vue";
-import CustomView from "@/components/Views/CustomView.vue";
-import FileView from "@/components/Views/FileView.vue";
-import InstallationView from "@/components/Views/InstallationView.vue";
-import SettingsView from "@/components/Views/SettingsView.vue";
-import LoginView from "@/components/Views/LoginView.vue";
-import PageView from "@/components/Views/PageView.vue";
-import SiteView from "@/components/Views/SiteView.vue";
-import UsersView from "@/components/Views/UsersView.vue";
-import UserView from "@/components/Views/UserView.vue";
 
 /* Routes */
 export default [
@@ -23,14 +12,14 @@ export default [
   {
     path: "/browser",
     name: "Browser",
-    component: BrowserView,
+    component: Vue.component("k-browser-view"),
     meta: {
       outside: true
     }
   },
   {
     path: "/login",
-    component: LoginView,
+    component: Vue.component("k-login-view"),
     meta: {
       outside: true
     }
@@ -46,7 +35,7 @@ export default [
   },
   {
     path: "/installation",
-    component: InstallationView,
+    component: Vue.component("k-installtaion-view"),
     meta: {
       outside: true
     }
@@ -57,7 +46,7 @@ export default [
     meta: {
       view: "site"
     },
-    component: SiteView,
+    component: Vue.component("k-site-view"),
     beforeEnter: auth
   },
   {
@@ -66,7 +55,7 @@ export default [
     meta: {
       view: "site"
     },
-    component: FileView,
+    component: Vue.component("k-file-view"),
     beforeEnter: auth,
     props: route => ({
       path: "site",
@@ -79,7 +68,7 @@ export default [
     meta: {
       view: "site"
     },
-    component: FileView,
+    component: Vue.component("k-file-view"),
     beforeEnter: auth,
     props: route => ({
       path: "pages/" + route.params.path,
@@ -92,7 +81,7 @@ export default [
     meta: {
       view: "users"
     },
-    component: FileView,
+    component: Vue.component("k-file-view"),
     beforeEnter: auth,
     props: route => ({
       path: "users/" + route.params.path,
@@ -105,7 +94,7 @@ export default [
     meta: {
       view: "site"
     },
-    component: PageView,
+    component: Vue.component("k-page-view"),
     beforeEnter: auth,
     props: route => ({
       path: route.params.path
@@ -117,7 +106,7 @@ export default [
     meta: {
       view: "settings"
     },
-    component: SettingsView,
+    component: Vue.component("k-settings-view"),
     beforeEnter: auth
   },
   {
@@ -126,7 +115,7 @@ export default [
     meta: {
       view: "users"
     },
-    component: UsersView,
+    component: Vue.component("k-users-view"),
     beforeEnter: auth,
     props: route => ({
       role: route.params.role
@@ -139,7 +128,7 @@ export default [
       view: "users"
     },
     beforeEnter: auth,
-    component: UsersView
+    component: Vue.component("k-users-view")
   },
   {
     path: "/users/:id",
@@ -147,7 +136,7 @@ export default [
     meta: {
       view: "users"
     },
-    component: UserView,
+    component: Vue.component("k-user-view"),
     beforeEnter: auth,
     props: route => ({
       id: route.params.id
@@ -159,7 +148,7 @@ export default [
     meta: {
       view: "account"
     },
-    component: UserView,
+    component: Vue.component("k-user-view"),
     beforeEnter: auth,
     props: () => ({
       id: store.state.user.current ? store.state.user.current.id : null
@@ -175,7 +164,7 @@ export default [
       plugin: route.params.id
     }),
     beforeEnter: auth,
-    component: CustomView
+    component: Vue.component("k-custom-view")
   },
   {
     path: "*",
