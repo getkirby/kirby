@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class NestTest extends TestCase
 {
-
     public function testCreateScalar()
     {
         $n = Nest::create($expected = 'a');
