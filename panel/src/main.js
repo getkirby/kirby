@@ -22,10 +22,18 @@ import "./config/plugins.js";
 import router from "./config/router.js";
 import store from "./store/store.js";
 
-window.panel.app = new Vue({
+ new Vue({
   router,
   store,
   render: h => {
     return h(App);
+  },
+  created() {
+    window.panel.app = this;
+
+    // created plugin callbacks
+    window.panel.plugins.created.forEach(plugin => {
+      plugin(this);
+    });
   }
 }).$mount("#app");
