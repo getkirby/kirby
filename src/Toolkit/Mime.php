@@ -124,8 +124,9 @@ class Mime
                 'svg' => [Mime::class, 'fromSvg'],
             ],
             'text/plain' => [
-                'css' => 'text/css',
-                'svg' => [Mime::class, 'fromSvg'],
+                'css'  => 'text/css',
+                'json' => 'application/json',
+                'svg'  => [Mime::class, 'fromSvg'],
             ],
             'text/x-asm' => [
                 'css' => 'text/css'
