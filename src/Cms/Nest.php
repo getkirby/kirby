@@ -25,7 +25,7 @@ class Nest
         foreach ($data as $key => $value) {
             if (is_array($value) === true) {
                 $result[$key] = static::create($value, $parent);
-            } elseif (is_string($value) === true) {
+            } elseif (is_scalar($value) === true) {
                 $result[$key] = new Field($parent, $key, $value);
             }
         }
