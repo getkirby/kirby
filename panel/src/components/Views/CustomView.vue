@@ -19,7 +19,7 @@ export default {
   },
   watch: {
     plugin: {
-      handler: () => {
+      handler() {
         this.$store.dispatch("view", this.plugin);
       },
       immediate: true
