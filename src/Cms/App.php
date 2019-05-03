@@ -700,7 +700,11 @@ class App
      */
     public function languages(): Languages
     {
-        return $this->languages = $this->languages ?? Languages::load();
+        if ($this->languages !== null) {
+            return clone $this->languages;
+        }
+
+        return $this->languages = Languages::load();
     }
 
     /**

@@ -178,6 +178,12 @@ class PageBlueprintTest extends TestCase
 
     public function testStatusTranslations()
     {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
         $input = [
             'draft' => [
                 'label' => ['en' => 'Draft Label'],

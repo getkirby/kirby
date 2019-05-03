@@ -49,6 +49,12 @@ class MimeTest extends TestCase
         $this->assertEquals('image/svg+xml', $mime);
     }
 
+    public function testTypeWithJson()
+    {
+        $mime = Mime::type(static::FIXTURES . '/something.json');
+        $this->assertEquals('application/json', $mime);
+    }
+
     public function testTypes()
     {
         $this->assertEquals(Mime::$types, Mime::types());
