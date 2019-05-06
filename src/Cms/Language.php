@@ -489,7 +489,7 @@ class Language extends Model
      */
     public function url(): string
     {
-        return Url::to($this->pattern());
+        return Url::makeAbsolute($this->pattern(), $this->kirby()->url());
     }
 
     /**

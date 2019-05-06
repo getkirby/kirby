@@ -54,8 +54,8 @@ class Html
     /**
      * Generates an a tag
      *
-     * @param string $href The url for the a tag
-     * @param mixed $text The optional text. If null, the url will be used as text
+     * @param string $href The url for the `a` tag
+     * @param mixed $text The optional text. If `null`, the url will be used as text
      * @param array $attr Additional attributes for the tag
      * @return string the generated html
      */
@@ -64,7 +64,7 @@ class Html
         $attr = array_merge(['href' => $href], $attr);
 
         if (empty($text) === true) {
-            $text = $href;
+            $text = $attr['href'];
         }
 
         if (is_string($text) === true && Str::isUrl($text) === true) {
@@ -160,7 +160,7 @@ class Html
     }
 
     /**
-     * Generates an "a mailto" tag
+     * Generates an `a` tag with `mailto:`
      *
      * @param string $email The url for the a tag
      * @param mixed $text The optional text. If null, the url will be used as text
@@ -328,7 +328,7 @@ class Html
     }
 
     /**
-     * Add noopeener noreferrer to rels when target is _blank
+     * Add noopeener noreferrer to rels when target is `_blank`
      *
      * @param string $rel
      * @param string $target
@@ -352,8 +352,8 @@ class Html
     /**
      * Generates an Html tag with optional content and attributes
      *
-     * @param string $name The name of the tag, i.e. "a"
-     * @param mixed $content The content if availble. Pass null to generate a self-closing tag, Pass an empty string to generate empty content
+     * @param string $name The name of the tag, i.e. `a`
+     * @param mixed $content The content if availble. Pass `null` to generate a self-closing tag, Pass an empty string to generate empty content
      * @param array $attr An associative array with additional attributes for the tag
      * @return string The generated Html
      */
@@ -383,10 +383,10 @@ class Html
 
 
     /**
-     * Generates an a tag for a phone number
+     * Generates an `a` tag for a phone number
      *
      * @param string $tel The phone number
-     * @param mixed $text The optional text. If null, the number will be used as text
+     * @param mixed $text The optional text. If `null`, the number will be used as text
      * @param array $attr Additional attributes for the tag
      * @return string the generated html
      */
@@ -404,7 +404,7 @@ class Html
     /**
      * Creates a video embed via iframe for Youtube or Vimeo
      * videos. The embed Urls are automatically detected from
-     * the given Url.
+     * the given URL.
      *
      * @param string $url
      * @param array $options

@@ -75,7 +75,7 @@ return [
                     'value' => $option,
                     'text'  => $option,
                 ];
-            }, Str::split($value));
+            }, Str::split($value, $this->separator()));
         }
     ],
     'save' => function (array $value = null): string {

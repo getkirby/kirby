@@ -67,17 +67,23 @@ class Collections
         }
 
         // if not yet cached
-        if (isset($this->cache[$name]) === false) {
+        if (
+            isset($this->cache[$name]) === false ||
+            $this->cache[$name]['data'] !== $data
+        ) {
             $controller = new Controller($this->collections[$name]);
-            $this->cache[$name] = $controller->call(null, $data);
+            $this->cache[$name] = [
+                'result' => $controller->call(null, $data),
+                'data'   => $data
+            ];
         }
 
         // return cloned object
-        if (is_object($this->cache[$name]) === true) {
-            return clone $this->cache[$name];
+        if (is_object($this->cache[$name]['result']) === true) {
+            return clone $this->cache[$name]['result'];
         }
 
-        return $this->cache[$name];
+        return $this->cache[$name]['result'];
     }
 
     /**

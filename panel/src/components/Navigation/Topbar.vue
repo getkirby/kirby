@@ -24,7 +24,7 @@
                   :icon="view.icon"
                   :link="view.link"
                 >
-                  {{ viewTitle(viewName, view) }}
+                  {{ $t("view." + viewName, view.label) }}
                 </k-dropdown-item>
               </li>
               <li><hr></li>
@@ -160,17 +160,6 @@ export default {
     },
     unregistered() {
       return !this.$store.state.system.info.license ? true : false;
-    }
-  },
-  methods: {
-    viewTitle(name, options) {
-      let title = this.$t(`view.${name}`, options.label);
-
-      if (name === "site") {
-        return this.$store.state.system.info.breadcrumbTitle || title;
-      }
-
-      return title;
     }
   }
 };
