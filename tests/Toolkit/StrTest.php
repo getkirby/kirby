@@ -600,6 +600,42 @@ class StrTest extends TestCase
         $this->assertEquals('homer says: hi', $template);
     }
 
+    public function testToType()
+    {
+        // string to string
+        $this->assertEquals('a', Str::toType('a', 'string'));
+
+        // string to array
+        $this->assertEquals(['a'], Str::toType('a', 'array'));
+        $this->assertEquals(['a'], Str::toType('a', []));
+
+        // string to bool
+        $this->assertEquals(true, Str::toType(true, 'bool'));
+        $this->assertEquals(true, Str::toType('true', 'bool'));
+        $this->assertEquals(true, Str::toType('true', 'boolean'));
+        $this->assertEquals(true, Str::toType(1, 'bool'));
+        $this->assertEquals(true, Str::toType('1', 'bool'));
+        $this->assertEquals(true, Str::toType('1', true));
+        $this->assertEquals(false, Str::toType(false, 'bool'));
+        $this->assertEquals(false, Str::toType('false', 'bool'));
+        $this->assertEquals(false, Str::toType('false', 'boolean'));
+        $this->assertEquals(false, Str::toType(0, 'bool'));
+        $this->assertEquals(false, Str::toType('0', 'bool'));
+        $this->assertEquals(false, Str::toType('0', false));
+
+        // string to float
+        $this->assertEquals(1.1, Str::toType(1.1, 'float'));
+        $this->assertEquals(1.1, Str::toType('1.1', 'float'));
+        $this->assertEquals(1.1, Str::toType('1.1', 'double'));
+        $this->assertEquals(1.1, Str::toType('1.1', 1.1));
+
+        // string to int
+        $this->assertEquals(1, Str::toType(1, 'int'));
+        $this->assertEquals(1, Str::toType('1', 'int'));
+        $this->assertEquals(1, Str::toType('1', 'integer'));
+        $this->assertEquals(1, Str::toType('1', 1));
+    }
+
     public function testTrim()
     {
         $this->assertEquals('test', Str::trim(' test '));

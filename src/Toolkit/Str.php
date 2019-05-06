@@ -871,6 +871,36 @@ class Str
     }
 
     /**
+     * Convert the string to the given type
+     *
+     * @param string $string
+     * @param mixed $type
+     * @return mixed
+     */
+    public static function toType($string = null, $type)
+    {
+        if (is_string($type) === false) {
+            $type = gettype($type);
+        }
+
+        switch ($type) {
+            case 'array':
+                return (array)$string;
+            case 'bool':
+            case 'boolean':
+                return filter_var($string, FILTER_VALIDATE_BOOLEAN);
+            case 'double':
+            case 'float':
+                return floatval($string);
+            case 'int':
+            case 'integer':
+                return intval($string);
+        }
+
+        return (string)$string;
+    }
+
+    /**
      * Safe trim alternative
      *
      * @param string $string
