@@ -76,6 +76,19 @@ class PageTest extends TestCase
         ]);
 
         $this->assertEquals(['A', 'B'], array_column($page->blueprints(), 'title'));
+
+        // template option is simply true
+        $page = new Page([
+            'slug' => 'test',
+            'template' => 'a',
+            'blueprint' => [
+                'options' => [
+                    'template' => true
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(['A'], array_column($page->blueprints(), 'title'));
     }
 
     public function testDepth()

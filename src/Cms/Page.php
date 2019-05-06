@@ -248,10 +248,11 @@ class Page extends ModelWithContent
 
         $blueprints      = [];
         $templates       = $this->blueprint()->options()['changeTemplate'] ?? [];
-        if (!is_array($templates)) {
+        $currentTemplate = $this->intendedTemplate()->name();
+
+        if (is_array($templates) === false) {
             $templates = [];
         }
-        $currentTemplate = $this->intendedTemplate()->name();
 
         // add the current template to the array
         $templates[] = $currentTemplate;
