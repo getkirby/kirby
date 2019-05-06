@@ -433,14 +433,19 @@ class Collection extends Iterator implements Countable
      * @param array|object $item
      * @param string $attribute
      * @param boolean $split
+     * @param mixed $related
      * @return mixed
      */
-    public function getAttribute($item, string $attribute, $split = false)
+    public function getAttribute($item, string $attribute, $split = false, $related = null)
     {
         $value = $this->{'getAttributeFrom' . gettype($item)}($item, $attribute);
 
         if ($split !== false) {
-            $value = Str::split($value, $split === true ? ',' : $split);
+            return Str::split($value, $split === true ? ',' : $split);
+        }
+
+        if ($related !== null) {
+            return Str::toType((string)$value, $related);
         }
 
         return $value;
@@ -983,13 +988,13 @@ class Collection extends Iterator implements Countable
  */
 Collection::$filters['=='] = function ($collection, $field, $test, $split = false) {
     foreach ($collection->data as $key => $item) {
-        $value = $collection->getAttribute($item, $field, $split);
+        $value = $collection->getAttribute($item, $field, $split, $test);
 
         if ($split !== false) {
             if (in_array($test, $value) === false) {
                 unset($collection->data[$key]);
             }
-        } elseif ($value != $test) {
+        } elseif ($value !== $test) {
             unset($collection->data[$key]);
         }
     }
@@ -1002,13 +1007,13 @@ Collection::$filters['=='] = function ($collection, $field, $test, $split = fals
  */
 Collection::$filters['!='] = function ($collection, $field, $test, $split = false) {
     foreach ($collection->data as $key => $item) {
-        $value = $collection->getAttribute($item, $field, $split);
+        $value = $collection->getAttribute($item, $field, $split, $test);
 
         if ($split !== false) {
             if (in_array($test, $value) === true) {
                 unset($collection->data[$key]);
             }
-        } elseif ($value == $test) {
+        } elseif ((string)$value == $test) {
             unset($collection->data[$key]);
         }
     }
