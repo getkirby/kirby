@@ -11,6 +11,7 @@ use Kirby\Http\Router;
 use Kirby\Http\Response;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
+use Kirby\Toolkit\Str;
 
 /**
  * The API class is a generic container
@@ -531,11 +532,17 @@ class Api
                     'route'  => $this->route->pattern()
                 ] + $e->toArray();
             } else {
+                // remove the document root from the file path
+                $file = $e->getFile();
+                if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
+                    $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
+                }
+
                 $result = [
                     'status'    => 'error',
                     'exception' => get_class($e),
                     'message'   => $e->getMessage(),
-                    'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+                    'file'      => $file,
                     'line'      => $e->getLine(),
                     'code'      => empty($e->getCode()) === false ? $e->getCode() : 500,
                     'route'     => $this->route ? $this->route->pattern() : null
