@@ -133,6 +133,23 @@ class Exception extends \Exception
     }
 
     /**
+     * Returns the file in which the Exception was created
+     * relative to the document root
+     *
+     * @return string
+     */
+    final public function getFileRelative(): string
+    {
+        $file = $this->getFile();
+
+        if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
+            $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
+        }
+
+        return $file;
+    }
+
+    /**
      * Returns the data variables from the message
      *
      * @return array
@@ -192,17 +209,11 @@ class Exception extends \Exception
      */
     public function toArray(): array
     {
-        // remove the document root from the file path
-        $file = $this->getFile();
-        if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
-            $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
-        }
-
         return [
             'exception' => static::class,
             'message'   => $this->getMessage(),
             'key'       => $this->getKey(),
-            'file'      => $file,
+            'file'      => $this->getFileRelative(),
             'line'      => $this->getLine(),
             'details'   => $this->getDetails(),
             'code'      => $this->getHttpCode()

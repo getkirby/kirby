@@ -21,6 +21,11 @@ class WillFail
  */
 class ExceptionTest extends TestCase
 {
+    public function tearDown()
+    {
+        unset($_SERVER['DOCUMENT_ROOT']);
+    }
+
     /**
      * @covers ::__construct
      * @covers ::getKey
@@ -173,6 +178,21 @@ class ExceptionTest extends TestCase
     }
 
     /**
+     * @covers ::getFileRelative
+     */
+    public function testGetFileRelative()
+    {
+        $exception = new Exception();
+        $this->assertEquals(__FILE__, $exception->getFileRelative());
+
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+        $this->assertEquals(F::filename(__FILE__), $exception->getFileRelative());
+
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/';
+        $this->assertEquals(F::filename(__FILE__), $exception->getFileRelative());
+    }
+
+    /**
      * @covers ::toArray
      */
     public function testToArray()
@@ -192,11 +212,6 @@ class ExceptionTest extends TestCase
         $_SERVER['DOCUMENT_ROOT'] = __DIR__;
         $exception = new Exception();
         $expected['file'] = F::filename(__FILE__);
-        $expected['line'] = $exception->getLine();
-        $this->assertEquals($expected, $exception->toArray());
-
-        $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/';
-        $exception = new Exception();
         $expected['line'] = $exception->getLine();
         $this->assertEquals($expected, $exception->toArray());
     }
