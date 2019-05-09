@@ -6,6 +6,7 @@ export default {
   request(path, options) {
     options = Object.assign(options || {}, {
       credentials: "same-origin",
+      cache: "no-cache",
       headers: {
         "x-requested-with": "xmlhttprequest",
         "content-type": "application/json",
