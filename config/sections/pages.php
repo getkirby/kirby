@@ -141,22 +141,9 @@ return [
         'data' => function () {
             $data = [];
 
-            if ($this->layout === 'list') {
-                $thumb = [
-                    'width'  => 100,
-                    'height' => 100
-                ];
-            } else {
-                $thumb = [
-                    'width'  => 400,
-                    'height' => 400
-                ];
-            }
-
             foreach ($this->pages as $item) {
                 $permissions = $item->permissions();
-                $blueprint   = $item->blueprint();
-                $image       = $item->panelImage($this->image, $thumb);
+                $image       = $item->panelImage($this->image);
 
                 $data[] = [
                     'id'          => $item->id(),

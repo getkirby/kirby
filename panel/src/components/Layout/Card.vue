@@ -6,6 +6,7 @@
       <k-image
         v-if="image && image.url"
         :src="image.url"
+        :srcset="image.srcset"
         :ratio="image.ratio || '3/2'"
         :back="image.back || 'black'"
         :cover="image.cover"
