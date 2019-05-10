@@ -276,7 +276,7 @@ class PageSortTest extends TestCase
         $page = new Page([
             'slug' => 'test',
             'blueprint' => [
-                'num' => 'date'
+                'num' => '{{ page.created.toDate("Ymd", "today") }}'
             ]
         ]);
 
@@ -286,10 +286,10 @@ class PageSortTest extends TestCase
         $page = new Page([
             'slug' => 'test',
             'blueprint' => [
-                'num' => 'date',
+                'num' => '{{ page.created.toDate("Ymd", "today") }}'
             ],
             'content' => [
-                'date' => '2012-12-12'
+                'created' => '2012-12-12'
             ]
         ]);
 
@@ -495,7 +495,7 @@ class PageSortTest extends TestCase
             'blueprint' => [
                 'title' => 'Test',
                 'name'  => 'test',
-                'num'   => 'date'
+                'num'   => '{{ page.date.toDate("Ymd") }}'
             ],
             'content' => [
                 'date' => '2012-12-12'
