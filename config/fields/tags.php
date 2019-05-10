@@ -43,9 +43,6 @@ return [
         },
     ],
     'computed' => [
-        'options' => function () {
-            return $this->getOptions();
-        },
         'default' => function (): array {
             return $this->toTags($this->default);
         },
@@ -55,6 +52,10 @@ return [
     ],
     'methods' => [
         'toTags' => function ($value) {
+            if (is_null($value) === true) {
+                return [];
+            }
+
             $options = $this->options();
 
             // transform into value-text objects

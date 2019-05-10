@@ -23,6 +23,12 @@ return [
             return $query;
         },
     ],
+    'computed' => [
+        'options' => function (): array {
+            static $options;
+            return $options = $options ?? $this->getOptions();
+        }
+    ],
     'methods' => [
         'getOptions' => function () {
             return Options::factory(
