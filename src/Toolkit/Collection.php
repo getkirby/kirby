@@ -132,7 +132,7 @@ class Collection extends Iterator implements Countable
      * @return Collection        A new collection with an element for each chunk and
      *                           a sub collection in each chunk
      */
-    public function chunk(int $size): self
+    public function chunk(int $size)
     {
         // create a multidimensional array that is chunked with the given
         // chunk size keep keys of the elements
@@ -219,7 +219,7 @@ class Collection extends Iterator implements Countable
      * @param Closure $filter
      * @return self
      */
-    public function filter($filter): self
+    public function filter($filter)
     {
         if (is_callable($filter) === true) {
             $collection = clone $this;
@@ -246,7 +246,7 @@ class Collection extends Iterator implements Countable
      * @param string $field
      * @return self
      */
-    public function filterBy(string $field, ...$args): self
+    public function filterBy(string $field, ...$args)
     {
         $operator = '==';
         $test     = $args[0] ?? null;
@@ -405,7 +405,7 @@ class Collection extends Iterator implements Countable
      *
      * @return Collection
      */
-    public function flip(): self
+    public function flip()
     {
         $collection = clone $this;
         $collection->data = array_reverse($this->data, true);
@@ -592,7 +592,7 @@ class Collection extends Iterator implements Countable
      * @param  int        $limit  The number of elements to return
      * @return Collection
      */
-    public function limit(int $limit): self
+    public function limit(int $limit)
     {
         return $this->slice(0, $limit);
     }
@@ -603,7 +603,7 @@ class Collection extends Iterator implements Countable
      * @param  callable $callback
      * @return Collection
      */
-    public function map(callable $callback): self
+    public function map(callable $callback)
     {
         $this->data = array_map($callback, $this->data);
         return $this;
@@ -630,7 +630,7 @@ class Collection extends Iterator implements Countable
     {
         $collection = clone $this;
         foreach ($keys as $key) {
-            unset($collection->$key);
+            unset($collection->data[$key]);
         }
         return $collection;
     }
@@ -641,7 +641,7 @@ class Collection extends Iterator implements Countable
      * @param  int        $offset  The index to start from
      * @return Collection
      */
-    public function offset(int $offset): self
+    public function offset(int $offset)
     {
         return $this->slice($offset);
     }
@@ -803,7 +803,7 @@ class Collection extends Iterator implements Countable
      *
      * @return Collection
      */
-    public function shuffle(): self
+    public function shuffle()
     {
         $data = $this->data;
         $keys = $this->keys();
@@ -826,7 +826,7 @@ class Collection extends Iterator implements Countable
      * @param  int        $limit   The optional number of elements to return
      * @return Collection
      */
-    public function slice(int $offset = 0, int $limit = null): self
+    public function slice(int $offset = 0, int $limit = null)
     {
         if ($offset === 0 && $limit === null) {
             return $this;
@@ -845,7 +845,7 @@ class Collection extends Iterator implements Countable
      * @param   $method     int              The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
      * @return  Collection
      */
-    public function sortBy(): self
+    public function sortBy()
     {
         // there is no need to sort empty collections
         if (empty($this->data) === true) {
