@@ -69,7 +69,7 @@ export default {
         });
     },
     sluggify(input) {
-      return slug(input, [this.slugs, this.system.ascii]);
+      return slug(input, [this.slugs, this.system.ascii], "\.");
     },
     submit() {
       this.$api.files

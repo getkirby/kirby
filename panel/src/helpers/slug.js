@@ -1,11 +1,10 @@
 import "./regex";
 
-export default (string, rules = []) => {
+export default (string, rules = [], allowed = "") => {
 
   const separator = "-";
-  const allowed = "a-z0-9";
-
-  string = string.trim().toLowerCase();
+  allowed = "a-z0-9" + allowed;
+  string  = string.trim().toLowerCase();
 
   // replace according to language and ascii rules
   rules.forEach(ruleset => {
@@ -29,8 +28,8 @@ export default (string, rules = []) => {
   string = string.replace("/", separator);
 
   // trim leading and trailing non-word-chars
-  string = string.replace(new RegExp("^[^a-z0-9]+", "g"), "");
-  string = string.replace(new RegExp("[^a-z0-9]+$", "g"), "");
+  string = string.replace(new RegExp("^[^" + allowed + "]+", "g"), "");
+  string = string.replace(new RegExp("[^" + allowed + "]+$", "g"), "");
 
   return string;
 };
