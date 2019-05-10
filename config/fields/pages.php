@@ -81,7 +81,7 @@ return [
         /**
          * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
          */
-        'size' => function (string $size = null) {
+        'size' => function (string $size = 'auto') {
             return $size;
         },
 
@@ -98,20 +98,7 @@ return [
     ],
     'methods' => [
         'pageResponse' => function ($page) {
-            if ($this->layout === 'list') {
-                $thumb = [
-                    'width'  => 100,
-                    'height' => 100
-                ];
-            } else {
-                $thumb = [
-                    'width'  => 400,
-                    'height' => 400
-                ];
-            }
-
-            $image = $page->panelImage($this->image, $thumb);
-            $model = $this->model();
+            $image = $page->panelImage($this->image);
 
             return [
                 'text'        => $page->toString($this->text ?? '{{ page.title }}'),

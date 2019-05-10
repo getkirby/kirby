@@ -924,10 +924,9 @@ class Page extends ModelWithContent
     /**
      * @internal
      * @param string|array|false $settings
-     * @param array|null $thumbSettings
      * @return array|null
      */
-    public function panelImage($settings = null, array $thumbSettings = null): ?array
+    public function panelImage($settings = null): ?array
     {
         $defaults = [
             'ratio' => '3/2',
@@ -947,7 +946,8 @@ class Page extends ModelWithContent
         }
 
         if ($image = $this->query($settings['query'] ?? 'page.image', 'Kirby\Cms\File')) {
-            $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
+            $settings['url']    = $image->url() . '?t=' . $image->modified();
+            $settings['srcset'] = $image->srcset([128, 256, 512, 768, 1024, 2048]);
 
             unset($settings['query']);
         }

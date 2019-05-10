@@ -454,10 +454,9 @@ class File extends ModelWithContent
      *
      * @internal
      * @param string|array|false $settings
-     * @param array $thumbSettings
      * @return array
      */
-    public function panelImage($settings = null, array $thumbSettings = null): ?array
+    public function panelImage($settings = null): ?array
     {
         $defaults = [
             'ratio' => '3/2',
@@ -483,7 +482,8 @@ class File extends ModelWithContent
         }
 
         if ($image) {
-            $settings['url'] = $image->thumb($thumbSettings)->url(true);
+            $settings['url']    = $image->url() . '?t=' . $image->modified();
+            $settings['srcset'] = $image->srcset([128, 256, 512, 768, 1024, 2048]);
             unset($settings['query']);
         }
 
