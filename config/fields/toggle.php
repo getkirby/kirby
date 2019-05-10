@@ -10,7 +10,7 @@ return [
         'placeholder' => null,
 
         /**
-         * Default value which will be saved when a new Page/User/File is created
+         * Default value which will be saved when a new page/user/file is created
          */
         'default' => function ($value = null) {
             return $this->toBool($value);

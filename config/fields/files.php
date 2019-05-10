@@ -43,7 +43,7 @@ return [
         },
 
         /**
-         * Changes the layout of the selected files. Available layouts: list, cards
+         * Changes the layout of the selected files. Available layouts: `list`, `cards`
          */
         'layout' => function (string $layout = 'list') {
             return $layout;
@@ -78,7 +78,7 @@ return [
         },
 
         /**
-         * Layout size for cards
+         * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
          */
         'size' => function (string $size = null) {
             return $size;

@@ -22,7 +22,7 @@ return [
             return $search;
         },
         /**
-         * If true, selected entries will be sorted
+         * If `true`, selected entries will be sorted
          * according to their position in the dropdown
          */
         'sort' => function (bool $sort = false) {

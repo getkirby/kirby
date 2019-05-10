@@ -8,7 +8,7 @@ return [
         'placeholder' => null,
 
         /**
-         * Sets the default time when a new Page/File/User is created
+         * Sets the default time when a new page/file/user is created
          */
         'default' => function ($default = null) {
             return $default;
@@ -20,7 +20,7 @@ return [
             return $icon;
         },
         /**
-         * 12 or 24 hour notation. If 12, an AM/PM selector will be shown.
+         * `12` or `24` hour notation. If `12`, an AM/PM selector will be shown.
          */
         'notation' => function (int $value = 24) {
             return $value === 24 ? 24 : 12;

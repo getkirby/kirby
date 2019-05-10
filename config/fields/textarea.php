@@ -9,7 +9,7 @@ return [
         'before' => null,
 
         /**
-         * Enables/disables the format buttons. Can either be true/false or a list of allowed buttons. Available buttons: headlines, italic, bold, link, email, file, list, code, ul, ol
+         * Enables/disables the format buttons. Can either be `true`/`false` or a list of allowed buttons. Available buttons: `headlines`, `italic`, `bold`, `link`, `email`, `file`, `list`, `code`, `ul`, `ol` (as well as `|` for a divider)
          */
         'buttons' => function ($buttons = true) {
             return $buttons;
@@ -23,7 +23,7 @@ return [
         },
 
         /**
-         * Sets the default text when a new Page/File/User is created
+         * Sets the default text when a new page/file/user is created
          */
         'default' => function (string $default = null) {
             return trim($default);
@@ -59,7 +59,7 @@ return [
         },
 
         /**
-         * Changes the size of the textarea. Available sizes: small, medium, large, huge
+         * Changes the size of the textarea. Available sizes: `small`, `medium`, `large`, `huge`
          */
         'size' => function (string $size = null) {
             return $size;

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'mixins' => ['min'],
+    'mixins' => ['min', 'selector'],
     'props' => [
         /**
          * Unset inherited props
@@ -13,7 +13,7 @@ return [
         'placeholder' => null,
 
         /**
-         * Default selected user(s) when a new Page/File/User is created
+         * Default selected user(s) when a new page/file/user is created
          */
         'default' => function ($default = null) {
             if ($default === false) {
@@ -28,30 +28,35 @@ return [
 
             return $this->toUsers($default);
         },
-        /**
-         * The placeholder text if no users have been selected yet
+
+         /**
+         * The placeholder text if none have been selected yet
          */
         'empty' => function ($empty = null) {
             return I18n::translate($empty, $empty);
         },
+
         /**
-         * The minimum number of required selected users
+         * The minimum number of required selected
          */
         'min' => function (int $min = null) {
             return $min;
         },
+
         /**
-         * The maximum number of allowed selected users
+         * The maximum number of allowed selected
          */
         'max' => function (int $max = null) {
             return $max;
         },
+
         /**
-         * If false, only a single user can be selected
+         * If `false`, only a single one can be selected
          */
         'multiple' => function (bool $multiple = true) {
             return $multiple;
         },
+
         'value' => function ($value = null) {
             return $this->toUsers($value);
         },

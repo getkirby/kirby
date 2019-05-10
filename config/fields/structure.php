@@ -68,7 +68,7 @@ return [
             return $sortable;
         },
         /**
-         * Sorts the entries by the given field and order (i.e. title desc)
+         * Sorts the entries by the given field and order (i.e. `title desc`)
          * Drag & drop is disabled in this case
          */
         'sortBy' => function (string $sort = null) {

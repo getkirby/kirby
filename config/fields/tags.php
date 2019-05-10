@@ -12,7 +12,7 @@ return [
         'placeholder' => null,
 
         /**
-         * If set to <code>all</code>, any type of input is accepted. If set to <code>options</code> only the predefined options are accepted as input.
+         * If set to `all`, any type of input is accepted. If set to `options` only the predefined options are accepted as input.
          */
         'accept' => function ($value = 'all') {
             return V::in($value, ['all', 'options']) ? $value : 'all';

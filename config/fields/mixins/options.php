@@ -5,7 +5,7 @@ use Kirby\Form\Options;
 return [
     'props' => [
         /**
-         * API settings for options requests. This will only take affect when <code>options</code> is set to <code>api</code>.
+         * API settings for options requests. This will only take affect when `options` is set to `api`.
          */
         'api' => function ($api = null) {
             return $api;
@@ -17,7 +17,7 @@ return [
             return $options;
         },
         /**
-         * Query settings for options queries. This will only take affect when <code>options</code> is set to <code>query</code>.
+         * Query settings for options queries. This will only take affect when `options` is set to `query`.
          */
         'query' => function ($query = null) {
             return $query;

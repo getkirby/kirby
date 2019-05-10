@@ -18,7 +18,7 @@ return [
         'translate'   => null,
 
         /**
-         * If false, the prepended number will be hidden
+         * If `false`, the prepended number will be hidden
          */
         'numbered' => function (bool $numbered = true) {
             return $numbered;
