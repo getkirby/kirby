@@ -61,7 +61,7 @@
     />
 
     <k-page-rename-dialog ref="rename" @success="update" />
-    <k-page-url-dialog ref="url" />
+    <k-page-url-dialog ref="url" @success="update" />
     <k-page-status-dialog ref="status" @success="update" />
     <k-page-template-dialog ref="template" @success="update" />
     <k-page-remove-dialog ref="remove" />
