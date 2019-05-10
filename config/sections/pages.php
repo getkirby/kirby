@@ -37,7 +37,7 @@ return [
             return $info;
         },
         /**
-         * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: tiny, small, medium, large
+         * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
          */
         'size' => function (string $size = 'auto') {
             return $size;
@@ -49,13 +49,13 @@ return [
             return $sortable;
         },
         /**
-         * Overwrites manual sorting and sorts by the given field and sorting direction (i.e. date desc)
+         * Overwrites manual sorting and sorts by the given field and sorting direction (i.e. `date desc`)
          */
         'sortBy' => function (string $sortBy = null) {
             return $sortBy;
         },
         /**
-         * Filters pages by their status. Available status settings: draft, unlisted, listed, published, all.
+         * Filters pages by their status. Available status settings: `draft`, `unlisted`, `listed`, `published`, `all`.
          */
         'status' => function (string $status = '') {
             if ($status === 'drafts') {
