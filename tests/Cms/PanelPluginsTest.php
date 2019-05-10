@@ -65,10 +65,10 @@ class PanelPluginsTest extends TestCase
     public function testHashWithoutFiles()
     {
         $plugins = new PanelPlugins('css');
-        $this->assertEquals('0-0', $plugins->hash());
+        $this->assertEquals('00000000-0', $plugins->hash());
 
         $plugins = new PanelPlugins('js');
-        $this->assertEquals('0-0', $plugins->hash());
+        $this->assertEquals('00000000-0', $plugins->hash());
     }
 
     public function testHashWithFiles()
@@ -96,10 +96,10 @@ class PanelPluginsTest extends TestCase
         $this->createPlugins();
 
         $plugins = new PanelPlugins('css');
-        $this->assertRegExp('![0-9]{10}!', $plugins->id());
+        $this->assertRegExp('![a-z0-9]{8}!', $plugins->id());
 
         $plugins = new PanelPlugins('js');
-        $this->assertRegExp('![0-9]{10}!', $plugins->id());
+        $this->assertRegExp('![a-z0-9]{8}!', $plugins->id());
     }
 
     public function testModifiedWithoutFiles()
@@ -166,13 +166,13 @@ class PanelPluginsTest extends TestCase
     {
         // css
         $plugins  = new PanelPlugins('css');
-        $expected = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/plugins/css/0-0/index.css';
+        $expected = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/plugins/css/00000000-0/index.css';
 
         $this->assertEquals($expected, $plugins->root());
 
         // js
         $plugins  = new PanelPlugins('js');
-        $expected = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/plugins/js/0-0/index.js';
+        $expected = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/plugins/js/00000000-0/index.js';
 
         $this->assertEquals($expected, $plugins->root());
     }
@@ -181,13 +181,13 @@ class PanelPluginsTest extends TestCase
     {
         // css
         $plugins  = new PanelPlugins('css');
-        $expected = $this->app->url('media') . '/panel/' . $this->app->versionHash() . '/plugins/css/0-0/index.css';
+        $expected = $this->app->url('media') . '/panel/' . $this->app->versionHash() . '/plugins/css/00000000-0/index.css';
 
         $this->assertEquals($expected, $plugins->url());
 
         // js
         $plugins  = new PanelPlugins('js');
-        $expected = $this->app->url('media') . '/panel/' . $this->app->versionHash() . '/plugins/js/0-0/index.js';
+        $expected = $this->app->url('media') . '/panel/' . $this->app->versionHash() . '/plugins/js/00000000-0/index.js';
 
         $this->assertEquals($expected, $plugins->url());
     }
