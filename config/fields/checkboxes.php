@@ -43,9 +43,6 @@ return [
         },
     ],
     'computed' => [
-        'options' => function (): array {
-            return $this->getOptions();
-        },
         'default' => function () {
             return $this->sanitizeOptions($this->default);
         },
