@@ -98,24 +98,12 @@ return [
         'data' => function () {
             $data = [];
 
-            if ($this->layout === 'list') {
-                $thumb = [
-                    'width'  => 100,
-                    'height' => 100
-                ];
-            } else {
-                $thumb = [
-                    'width'  => 400,
-                    'height' => 400
-                ];
-            }
-
             // the drag text needs to be absolute when the files come from
             // a different parent model
             $dragTextAbsolute = $this->model->is($this->parent) === false;
 
             foreach ($this->files as $file) {
-                $image = $file->panelImage($this->image, $thumb);
+                $image = $file->panelImage($this->image);
 
                 $data[] = [
                     'dragText' => $file->dragText($this->dragTextType, $dragTextAbsolute),

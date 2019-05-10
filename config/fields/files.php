@@ -80,7 +80,7 @@ return [
         /**
          * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
          */
-        'size' => function (string $size = null) {
+        'size' => function (string $size = 'auto') {
             return $size;
         },
 
@@ -118,19 +118,7 @@ return [
     ],
     'methods' => [
         'fileResponse' => function ($file) {
-            if ($this->layout === 'list') {
-                $thumb = [
-                    'width'  => 100,
-                    'height' => 100
-                ];
-            } else {
-                $thumb = [
-                    'width'  => 400,
-                    'height' => 400
-                ];
-            }
-
-            $image = $file->panelImage($this->image, $thumb);
+            $image = $file->panelImage($this->image);
             $model = $this->model();
             $uuid  = $file->parent() === $model ? $file->filename() : $file->id();
 
@@ -149,7 +137,6 @@ return [
         },
         'toFiles' => function ($value = null) {
             $files = [];
-            $kirby = kirby();
 
             foreach (Yaml::decode($value) as $id) {
                 if (is_array($id) === true) {
