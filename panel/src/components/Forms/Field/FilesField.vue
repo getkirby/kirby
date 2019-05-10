@@ -41,7 +41,7 @@
       v-else
       :layout="layout"
       icon="image"
-      @click="open"
+      v-on="{ click: !disabled ? open : null }"
     >
       {{ empty || $t('field.files.empty') }}
     </k-empty>

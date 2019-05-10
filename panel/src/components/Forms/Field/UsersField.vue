@@ -46,7 +46,11 @@
         </component>
       </k-draggable>
     </template>
-    <k-empty v-else icon="users" @click="open">
+    <k-empty
+      v-else
+      icon="users"
+      v-on="{ click: !disabled ? open : null }"
+    >
       {{ empty || $t('field.users.empty') }}
     </k-empty>
     <k-users-dialog ref="selector" @submit="select" />
