@@ -71,4 +71,26 @@ class StructureTest extends TestCase
 
         $this->assertEquals('B', $grouped->last()->first()->name());
     }
+
+    public function testSiblings()
+    {
+        $structure = new Structure([
+            ['name' => 'A'],
+            ['name' => 'B'],
+            ['name' => 'C']
+        ]);
+
+
+        $this->assertEquals('A', $structure->first()->name());
+        $this->assertEquals('B', $structure->first()->next()->name());
+        $this->assertEquals('C', $structure->last()->name());
+        $this->assertEquals('B', $structure->last()->prev()->name());
+
+        $this->assertEquals(2, $structure->last()->indexOf());
+
+        $this->assertTrue($structure->first()->isFirst());
+        $this->assertTrue($structure->last()->isLast());
+        $this->assertFalse($structure->last()->isFirst());
+        $this->assertFalse($structure->first()->isLast());
+    }
 }

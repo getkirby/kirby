@@ -102,6 +102,21 @@ class StructureObject extends Model
     }
 
     /**
+     * Compares the current object with the given structure object
+     *
+     * @param mixed $structure
+     * @return bool
+     */
+    public function is($structure): bool
+    {
+        if (is_a($structure, StructureObject::class) === false) {
+            return false;
+        }
+
+        return $this === $structure;
+    }
+
+    /**
      * Returns the parent Model object
      *
      * @return Page|Site|File|User
