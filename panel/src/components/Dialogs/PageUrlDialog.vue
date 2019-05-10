@@ -105,12 +105,17 @@ export default {
             event: "page.changeSlug"
           };
 
-          // if in PageView, redirect
+          // if in PageView and default language, redirect
           if (
             this.$route.params.path &&
-            this.page.id === this.$route.params.path.replace(/\+/g, "/")
+            this.page.id === this.$route.params.path.replace(/\+/g, "/") &&
+            (
+              !this.$store.state.languages.current ||
+              this.$store.state.languages.current.default === true
+            )
           ) {
             payload.route = this.$api.pages.link(page.id);
+            delete payload.event;
           }
 
           this.success(payload);
