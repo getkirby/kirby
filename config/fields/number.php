@@ -27,7 +27,7 @@ return [
             return $this->toNumber($step);
         },
         'value' => function ($value = null) {
-            return $this->toNumber($value);
+            return $this->toValue($value);
         }
     ],
     'methods' => [
@@ -37,6 +37,11 @@ return [
             }
 
             return (float)Str::float($value);
+        },
+        'toValue' => function ($value) {
+            $decimal = strlen(substr(strrchr($this->step(), '.'), 1));
+
+            return number_format((float)$this->toNumber($value), $decimal, '.', false);
         }
     ],
     'validations' => [
