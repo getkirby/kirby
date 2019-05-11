@@ -482,7 +482,7 @@ class File extends ModelWithContent
         }
 
         if ($image) {
-            $settings['url']    = $image->url() . '?t=' . $image->modified();
+            $settings['url']    = $image->thumb([ "width" => 128, "height" => 128])->url(true) . '?t=' . $image->modified();
             $settings['srcset'] = $image->srcset([128, 256, 512, 768, 1024, 2048]);
             unset($settings['query']);
         }
