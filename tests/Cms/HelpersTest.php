@@ -519,6 +519,23 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $text);
     }
 
+    public function testSmartypantsWithKirbytext()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'smartypants' => true
+            ]
+        ]);
+
+        $text     = kirbytextinline('"Test"');
+        $expected = '&#8220;Test&#8221;';
+
+        $this->assertEquals($expected, $text);
+    }
+
     public function testSnippet()
     {
         $app = $this->kirby->clone([

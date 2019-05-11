@@ -650,6 +650,11 @@ class App
         $text = $this->apply('kirbytext:before', $text);
         $text = $this->kirbytags($text, $data);
         $text = $this->markdown($text, $inline);
+
+        if ($this->option('smartypants', false) !== false) {
+            $text = $this->smartypants($text);
+        }
+
         $text = $this->apply('kirbytext:after', $text);
 
         return $text;
@@ -1126,7 +1131,13 @@ class App
      */
     public function smartypants(string $text = null): string
     {
-        return $this->component('smartypants')($this, $text, $this->options['smartypants'] ?? []);
+        $options = $this->option('smartypants', []);
+
+        if ($options === true) {
+            $options = [];
+        }
+
+        return $this->component('smartypants')($this, $text, $options);
     }
 
     /**
