@@ -251,7 +251,7 @@ trait AppPlugins
 
     protected function extendTags(array $tags): array
     {
-        return $this->extensions['tags'] = KirbyTag::$types = array_merge(KirbyTag::$types, $tags);
+        return $this->extensions['tags'] = KirbyTag::$types = array_merge(KirbyTag::$types, array_change_key_case($tags));
     }
 
     protected function extendTemplates(array $templates): array
