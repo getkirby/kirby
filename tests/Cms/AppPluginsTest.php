@@ -396,6 +396,33 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(5, $executed);
     }
 
+    public function testKirbyTag()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'tags' => [
+                'test' => [
+                    'html' => function () {
+                        return 'test';
+                    }
+                ],
+                'FoO' => [
+                    'html' => function () {
+                        return 'test';
+                    }
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('test', $kirby->kirbytags('(test: foo)'));
+        $this->assertEquals('test', $kirby->kirbytags('(TEST: foo)'));
+
+        $this->assertEquals('test', $kirby->kirbytags('(foo: bar)'));
+        $this->assertEquals('test', $kirby->kirbytags('(FOO: bar)'));
+    }
+
     public function testPageMethod()
     {
         $kirby = new App([

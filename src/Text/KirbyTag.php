@@ -47,6 +47,7 @@ class KirbyTag
         }
 
         foreach ($attrs as $attrName => $attrValue) {
+            $attrName = strtolower($attrName);
             $this->$attrName = $attrValue;
         }
 
@@ -60,11 +61,13 @@ class KirbyTag
 
     public function __get(string $attr)
     {
-        return null;
+        $attr = strtolower($attr);
+        return $this->$attr ?? null;
     }
 
     public function attr(string $name, $default = null)
     {
+        $name = strtolower($name);
         return $this->$name ?? $default;
     }
 
@@ -78,6 +81,7 @@ class KirbyTag
         // remove the brackets, extract the first attribute (the tag type)
         $tag  = trim(rtrim(ltrim($string, '('), ')'));
         $type = trim(substr($tag, 0, strpos($tag, ':')));
+        $type = strtolower($type);
         $attr = static::$types[$type]['attr'] ?? [];
 
         // the type should be parsed as an attribute, so we add it here
