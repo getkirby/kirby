@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Data\Data;
-use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 
@@ -31,7 +30,7 @@ class Role extends Model
     }
 
     /**
-     * Improved var_dump() output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -54,7 +53,7 @@ class Role extends Model
         }
     }
 
-    protected static function defaults()
+    protected static function defaults(): array
     {
         return [
             'admin' => [
@@ -110,7 +109,7 @@ class Role extends Model
         return $this->name;
     }
 
-    public static function nobody(array $inject = [])
+    public static function nobody(array $inject = []): self
     {
         try {
             return static::load('nobody');

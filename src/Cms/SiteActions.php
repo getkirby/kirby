@@ -3,10 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 
 /**
  * SiteActions

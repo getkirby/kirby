@@ -31,7 +31,7 @@ class Languages extends Collection
      *
      * @internal
      * @param array $props
-     * @return Language
+     * @return Kirby\Cms\Language
      */
     public function create(array $props): Language
     {
@@ -41,7 +41,7 @@ class Languages extends Collection
     /**
      * Returns the default language
      *
-     * @return Language|null
+     * @return Kirby\Cms\Language|null
      */
     public function default(): ?Language
     {
@@ -50,15 +50,6 @@ class Languages extends Collection
         } else {
             return $this->first();
         }
-    }
-
-    /**
-     * @deprecated 3.0.0  Use `Languages::default()`instead
-     * @return Language|null
-     */
-    public function findDefault(): ?Language
-    {
-        return $this->default();
     }
 
     /**

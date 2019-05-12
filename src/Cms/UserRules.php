@@ -170,7 +170,7 @@ class UserRules
 
     public static function validId(User $user, string $id): bool
     {
-        if ($duplicate = $user->kirby()->users()->find($id)) {
+        if ($user->kirby()->users()->find($id)) {
             throw new DuplicateException('A user with this id exists');
         }
 

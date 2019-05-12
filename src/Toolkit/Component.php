@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 use ArgumentCountError;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\A;
 use TypeError;
 
 /**
@@ -135,7 +134,7 @@ class Component
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */

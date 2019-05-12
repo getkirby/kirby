@@ -31,13 +31,12 @@ class FileTest extends TestCase
     public function testContent()
     {
         $file = $this->file([
-            'content' => $content = [
+            'content' => [
                 'test' => 'Test'
             ]
         ]);
 
         $this->assertEquals('Test', $file->content()->get('test')->value());
-        $this->assertEquals($file->content(), $file->meta());
     }
 
     public function testDefaultContent()

@@ -32,9 +32,9 @@ class Files extends Collection
      * current collection
      *
      * @param mixed $item
-     * @return Files
+     * @return self
      */
-    public function add($object)
+    public function add($object): self
     {
         // add a page collection
         if (is_a($object, static::class) === true) {
@@ -60,7 +60,7 @@ class Files extends Collection
      * @param int $offset Sorting offset
      * @return self
      */
-    public function changeSort(array $files, int $offset = 0)
+    public function changeSort(array $files, int $offset = 0): self
     {
         foreach ($files as $filename) {
             if ($file = $this->get($filename)) {
@@ -78,9 +78,9 @@ class Files extends Collection
      * @param array $files
      * @param Model $parent
      * @param array $inject
-     * @return Files
+     * @return self
      */
-    public static function factory(array $files, Model $parent)
+    public static function factory(array $files, Model $parent): self
     {
         $collection = new static([], $parent);
         $kirby      = $parent->kirby();
@@ -104,7 +104,7 @@ class Files extends Collection
      * @param string $id
      * @return File|null
      */
-    public function findById($id)
+    public function findById($id): ?File
     {
         return $this->get(ltrim($this->parent->id() . '/' . $id, '/'));
     }
@@ -117,7 +117,7 @@ class Files extends Collection
      * @param string $key
      * @return File|null
      */
-    public function findByKey($key)
+    public function findByKey($key): ?File
     {
         return $this->findById($key);
     }

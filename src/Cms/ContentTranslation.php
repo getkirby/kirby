@@ -2,10 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use Kirby\Data\Data;
-use Kirby\Exception\PermissionException;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 
 /**
@@ -39,7 +35,7 @@ class ContentTranslation
     protected $contentFile;
 
     /**
-     * @var Page|Site|File
+     * @var Model
      */
     protected $parent;
 
@@ -60,7 +56,7 @@ class ContentTranslation
     }
 
     /**
-     * Improve var_dump() output
+     * Improve `var_dump` output
      *
      * @return array
      */
@@ -133,9 +129,9 @@ class ContentTranslation
     /**
      * Returns the translation code as id
      *
-     * @return void
+     * @return string
      */
-    public function id()
+    public function id(): string
     {
         return $this->code();
     }
@@ -156,11 +152,11 @@ class ContentTranslation
     }
 
     /**
-     * Returns the parent Page, File or Site object
+     * Returns the parent page, file or site object
      *
-     * @return Page|File|Site
+     * @return Model
      */
-    public function parent()
+    public function parent(): Model
     {
         return $this->parent;
     }

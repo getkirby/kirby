@@ -116,7 +116,7 @@ class Asset
      * @param string $path
      * @return self
      */
-    protected function setPath(string $path)
+    protected function setPath(string $path): self
     {
         $this->path = $path === '.' ? '' : $path;
         return $this;

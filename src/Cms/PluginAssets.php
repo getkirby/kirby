@@ -25,7 +25,7 @@ class PluginAssets
      * @param string $pluginName
      * @return void
      */
-    public static function clean(string $pluginName)
+    public static function clean(string $pluginName): void
     {
         if ($plugin = App::instance()->plugin($pluginName)) {
             $root   = $plugin->root() . '/assets';
@@ -54,9 +54,9 @@ class PluginAssets
      *
      * @param string $pluginName
      * @param string $filename
-     * @return string
+     * @return Kirby\Cms\Response|null
      */
-    public static function resolve(string $pluginName, string $filename)
+    public static function resolve(string $pluginName, string $filename): ?Response
     {
         if ($plugin = App::instance()->plugin($pluginName)) {
             $source = $plugin->root() . '/assets/' . $filename;

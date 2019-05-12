@@ -6,7 +6,6 @@ use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -94,7 +93,7 @@ class Language extends Model
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -174,7 +173,6 @@ class Language extends Model
         $props['code'] = Str::slug($props['code'] ?? null);
         $kirby         = App::instance();
         $languages     = $kirby->languages();
-        $site          = $kirby->site();
 
         // make the first language the default language
         if ($languages->count() === 0) {
@@ -211,7 +209,6 @@ class Language extends Model
 
         $kirby     = App::instance();
         $languages = $kirby->languages();
-        $site      = $kirby->site();
         $code      = $this->code();
 
         if (F::remove($this->root()) !== true) {

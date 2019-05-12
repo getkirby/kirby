@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\F;
 
 /**
  * Represents a Plugin and handles parsing of
@@ -95,7 +94,7 @@ class Plugin extends Model
         return $this->root;
     }
 
-    protected function setName(string $name)
+    protected function setName(string $name): self
     {
         if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) == false) {
             throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');

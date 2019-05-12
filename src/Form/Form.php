@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Throwable;
-use Kirby\Toolkit\Collection;
 use Kirby\Data\Yaml;
 
 /**
@@ -160,7 +159,7 @@ class Form
         return $strings;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $array = [
             'errors' => $this->errors(),

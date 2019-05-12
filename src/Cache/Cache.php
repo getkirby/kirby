@@ -45,7 +45,7 @@ class Cache
      * @param  string  $key
      * @param  mixed   $value
      * @param  int     $minutes
-     * @return void
+     * @return null
      */
     public function set(string $key, $value, int $minutes = 0)
     {
@@ -55,7 +55,7 @@ class Cache
     /**
      * Adds the prefix to the key if given
      *
-     * @param string $key
+     * @param  string $key
      * @return string
      */
     protected function key(string $key): string

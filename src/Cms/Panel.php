@@ -51,7 +51,7 @@ class Panel
         Dir::make($mediaRoot, true);
 
         // create a symlink to the dist folder
-        if (Dir::copy($kirby->root('panel') . '/dist', $versionRoot) !== true) {
+        if (Dir::copy($panelRoot, $versionRoot) !== true) {
             throw new Exception('Panel assets could not be linked');
         }
 
@@ -61,8 +61,8 @@ class Panel
     /**
      * Renders the main panel view
      *
-     * @param App $kirby
-     * @return Response
+     * @param Kirby\Cms\App $kirby
+     * @return Kirby\Cms\Response
      */
     public static function render(App $kirby): Response
     {

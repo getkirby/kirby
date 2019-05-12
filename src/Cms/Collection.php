@@ -55,7 +55,7 @@ class Collection extends BaseCollection
      * @param array $objects
      * @param object $parent
      */
-    public function __construct($objects = [], $parent = null)
+    public function __construct(array $objects = [], $parent = null)
     {
         $this->parent = $parent;
 

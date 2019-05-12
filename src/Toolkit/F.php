@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use Kirby\Http\Header;
 use Throwable;
 use ZipArchive;
 

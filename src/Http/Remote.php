@@ -136,7 +136,7 @@ class Remote
      *
      * @return self
      */
-    public function fetch()
+    public function fetch(): self
     {
 
         // curl options
@@ -180,7 +180,7 @@ class Remote
         }
 
         // do some request specific stuff
-        switch ($action = strtoupper($this->options['method'])) {
+        switch (strtoupper($this->options['method'])) {
             case 'POST':
                 $this->curlopt[CURLOPT_POST]          = true;
                 $this->curlopt[CURLOPT_CUSTOMREQUEST] = 'POST';
@@ -241,7 +241,7 @@ class Remote
      * @param array $params
      * @return self
      */
-    public static function get(string $url, array $params = [])
+    public static function get(string $url, array $params = []): self
     {
         $defaults = [
             'method' => 'GET',
@@ -335,7 +335,7 @@ class Remote
      * @param array $params
      * @return self
      */
-    public static function request(string $url, array $params = [])
+    public static function request(string $url, array $params = []): self
     {
         return new static($url, $params);
     }
