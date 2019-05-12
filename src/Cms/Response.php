@@ -2,10 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
-use Kirby\Http\Response as BaseResponse;
-
 /**
  * Custom response object with an optimized
  * redirect method to build correct Urls
@@ -16,7 +12,7 @@ use Kirby\Http\Response as BaseResponse;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class Response extends BaseResponse
+class Response extends \Kirby\Http\Response
 {
 
     /**
@@ -28,7 +24,7 @@ class Response extends BaseResponse
      * @param int $code
      * @return self
      */
-    public static function redirect(?string $location = null, ?int $code = null)
+    public static function redirect(?string $location = null, ?int $code = null): self
     {
         return parent::redirect(Url::to($location ?? '/'), $code);
     }

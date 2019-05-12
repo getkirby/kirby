@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -154,7 +153,7 @@ trait PageActions
      *
      * @param string $status "draft", "listed" or "unlisted"
      * @param integer $position Optional sorting number
-     * @return Page
+     * @return self
      */
     public function changeStatus(string $status, int $position = null): self
     {

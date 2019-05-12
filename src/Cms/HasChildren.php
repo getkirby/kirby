@@ -19,23 +19,23 @@ trait HasChildren
     /**
      * The Pages collection
      *
-     * @var Pages
+     * @var Kirby\Cms\Pages
      */
     public $children;
 
     /**
      * The list of available drafts
      *
-     * @var Pages
+     * @var Kirby\Cms\Pages
      */
     public $drafts;
 
     /**
      * Returns the Pages collection
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
-    public function children()
+    public function children(): Pages
     {
         if (is_a($this->children, 'Kirby\Cms\Pages') === true) {
             return $this->children;
@@ -47,9 +47,9 @@ trait HasChildren
     /**
      * Returns all children and drafts at the same time
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
-    public function childrenAndDrafts()
+    public function childrenAndDrafts(): Pages
     {
         return $this->children()->merge($this->drafts());
     }
@@ -69,9 +69,9 @@ trait HasChildren
      * Searches for a child draft by id
      *
      * @param string $path
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
-    public function draft(string $path)
+    public function draft(string $path): ?Page
     {
         $path = str_replace('_drafts/', '', $path);
 
@@ -102,9 +102,9 @@ trait HasChildren
     /**
      * Return all drafts of the model
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
-    public function drafts()
+    public function drafts(): Pages
     {
         if (is_a($this->drafts, 'Kirby\Cms\Pages') === true) {
             return $this->drafts;
@@ -127,7 +127,7 @@ trait HasChildren
      * Finds one or multiple children by id
      *
      * @param string ...$arguments
-     * @return Pages
+     * @return Kirby\Cms\Page|Kirby\Cms\Pages
      */
     public function find(...$arguments)
     {
@@ -137,9 +137,9 @@ trait HasChildren
     /**
      * Finds a single page or draft
      *
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
-    public function findPageOrDraft(string $path)
+    public function findPageOrDraft(string $path): ?Page
     {
         return $this->children()->find($path) ?? $this->drafts()->find($path);
     }
@@ -147,7 +147,7 @@ trait HasChildren
     /**
      * Returns a collection of all children of children
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function grandChildren(): Pages
     {
@@ -175,15 +175,6 @@ trait HasChildren
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasUnlistedChildren` instead
-     * @return boolean
-     */
-    public function hasInvisibleChildren(): bool
-    {
-        return $this->children()->invisible()->count() > 0;
-    }
-
-    /**
      * Checks if the page has any listed children
      *
      * @return boolean
@@ -204,19 +195,10 @@ trait HasChildren
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasListedChildren` instead
-     * @return boolean
-     */
-    public function hasVisibleChildren(): bool
-    {
-        return $this->children()->listed()->count() > 0;
-    }
-
-    /**
      * Creates a flat child index
      *
      * @param bool $drafts
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function index(bool $drafts = false): Pages
     {
@@ -233,7 +215,7 @@ trait HasChildren
      * @param array|null $children
      * @return self
      */
-    protected function setChildren(array $children = null)
+    protected function setChildren(array $children = null): self
     {
         if ($children !== null) {
             $this->children = Pages::factory($children, $this);
@@ -248,7 +230,7 @@ trait HasChildren
      * @param array|null $drafts
      * @return self
      */
-    protected function setDrafts(array $drafts = null)
+    protected function setDrafts(array $drafts = null): self
     {
         if ($drafts !== null) {
             $this->drafts = Pages::factory($drafts, $this, true);

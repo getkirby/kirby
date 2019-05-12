@@ -2,7 +2,6 @@
 
 namespace Kirby\Cache;
 
-use Exception;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 

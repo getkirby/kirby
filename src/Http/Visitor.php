@@ -2,7 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\Obj;
@@ -87,7 +86,7 @@ class Visitor
      *
      * @return Collection
      */
-    public function acceptedLanguages()
+    public function acceptedLanguages(): Collection
     {
         $accepted  = Str::accepted($this->acceptedLanguage);
         $languages = [];
@@ -153,7 +152,7 @@ class Visitor
      *
      * @return Collection
      */
-    public function acceptedMimeTypes()
+    public function acceptedMimeTypes(): Collection
     {
         $accepted = Str::accepted($this->acceptedMimeType);
         $mimes    = [];

@@ -3,9 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\Nest;
-use Kirby\Cms\Structure;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;

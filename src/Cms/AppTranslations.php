@@ -27,9 +27,9 @@ trait AppTranslations
      *
      * @return void
      */
-    protected function i18n()
+    protected function i18n(): void
     {
-        I18n::$load = function ($locale) {
+        I18n::$load = function ($locale): array {
             $data = [];
 
             if ($translation = $this->translation($locale)) {
@@ -48,7 +48,7 @@ trait AppTranslations
             return $data;
         };
 
-        I18n::$locale = function () {
+        I18n::$locale = function (): string {
             if ($this->multilang() === true) {
                 return $this->defaultLanguage()->code();
             } else {
@@ -56,7 +56,7 @@ trait AppTranslations
             }
         };
 
-        I18n::$fallback = function () {
+        I18n::$fallback = function (): string {
             if ($this->multilang() === true) {
                 return $this->defaultLanguage()->code();
             } else {
@@ -89,7 +89,7 @@ trait AppTranslations
      * @param string $languageCode
      * @return Language|null
      */
-    public function setCurrentLanguage(string $languageCode = null)
+    public function setCurrentLanguage(string $languageCode = null): ?Language
     {
         if ($this->multilang() === false) {
             $this->setLocale($this->option('locale', 'en_US.utf-8'));
@@ -116,7 +116,7 @@ trait AppTranslations
      * @param string $translationCode
      * @return void
      */
-    public function setCurrentTranslation(string $translationCode = null)
+    public function setCurrentTranslation(string $translationCode = null): void
     {
         I18n::$locale = $translationCode ?? 'en';
     }
@@ -127,7 +127,7 @@ trait AppTranslations
      * @internal
      * @param string|array $locale
      */
-    public function setLocale($locale)
+    public function setLocale($locale): void
     {
         if (is_array($locale) === true) {
             foreach ($locale as $key => $value) {
@@ -144,7 +144,7 @@ trait AppTranslations
      * @param string|null $locale
      * @return Translation|null
      */
-    public function translation(string $locale = null)
+    public function translation(string $locale = null): ?Translation
     {
         $locale = $locale ?? I18n::locale();
         $locale = basename($locale);
@@ -168,7 +168,7 @@ trait AppTranslations
      *
      * @return Translations
      */
-    public function translations()
+    public function translations(): Translations
     {
         if (is_a($this->translations, 'Kirby\Cms\Translations') === true) {
             return $this->translations;

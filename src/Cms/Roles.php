@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 
 /**
  * Extension of the Collection class that

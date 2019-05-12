@@ -19,7 +19,7 @@ abstract class ModelPermissions
     protected $permissions;
     protected $user;
 
-    public function __call(string $method, array $arguments = [])
+    public function __call(string $method, array $arguments = []): bool
     {
         return $this->can($method);
     }
@@ -33,7 +33,7 @@ abstract class ModelPermissions
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */

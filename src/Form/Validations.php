@@ -137,7 +137,7 @@ class Validations
     {
         if ($field->isEmpty($value) === false) {
             $values = array_column($field->options(), 'value');
-            foreach ($value as $key => $val) {
+            foreach ($value as $val) {
                 if (in_array($val, $values, true) === false) {
                     throw new InvalidArgumentException([
                         'key' => 'validation.option'

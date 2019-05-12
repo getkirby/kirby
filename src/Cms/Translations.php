@@ -19,17 +19,17 @@ use Kirby\Toolkit\F;
  */
 class Translations extends Collection
 {
-    public function start(string $code)
+    public function start(string $code): void
     {
         F::move($this->parent->contentFile('', true), $this->parent->contentFile($code, true));
     }
 
-    public function stop(string $code)
+    public function stop(string $code): void
     {
         F::move($this->parent->contentFile($code, true), $this->parent->contentFile('', true));
     }
 
-    public static function factory(array $translations)
+    public static function factory(array $translations): self
     {
         $collection = new static;
 
@@ -41,7 +41,7 @@ class Translations extends Collection
         return $collection;
     }
 
-    public static function load(string $root, array $inject = [])
+    public static function load(string $root, array $inject = []): self
     {
         $collection = new static;
 

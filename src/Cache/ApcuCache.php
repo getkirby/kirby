@@ -74,7 +74,7 @@ class ApcuCache extends Cache
      * @param  string  $key
      * @param  mixed   $value
      * @param  int     $minutes
-     * @return void
+     * @return boolean
      */
     public function set(string $key, $value, int $minutes = 0)
     {

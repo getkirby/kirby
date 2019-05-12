@@ -7,11 +7,8 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Session\Session;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\V;
-use Throwable;
 
 /**
  * The `$user` object represents a
@@ -139,7 +136,7 @@ class User extends ModelWithContent
     }
 
     /**
-     * Improved var_dump() output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -173,7 +170,7 @@ class User extends ModelWithContent
      *
      * @return File|null
      */
-    public function avatar()
+    public function avatar(): ?File
     {
         return $this->files()->template('avatar')->first();
     }
@@ -183,7 +180,7 @@ class User extends ModelWithContent
      *
      * @return UserBlueprint
      */
-    public function blueprint()
+    public function blueprint(): UserBlueprint
     {
         if (is_a($this->blueprint, 'Kirby\Cms\Blueprint') === true) {
             return $this->blueprint;
@@ -281,7 +278,7 @@ class User extends ModelWithContent
      * @param string|null $password
      * @return string|null
      */
-    public static function hashPassword($password)
+    public static function hashPassword($password): ?string
     {
         if ($password !== null) {
             $info = password_get_info($password);
@@ -429,7 +426,7 @@ class User extends ModelWithContent
      * @param Session|array $session Session options or session object to set the user in
      * @return void
      */
-    public function loginPasswordless($session = null)
+    public function loginPasswordless($session = null): void
     {
         $session = $this->sessionFromOptions($session);
 
@@ -443,7 +440,7 @@ class User extends ModelWithContent
      * @param Session|array $session Session options or session object to unset the user in
      * @return void
      */
-    public function logout($session = null)
+    public function logout($session = null): void
     {
         $session = $this->sessionFromOptions($session);
 
@@ -523,7 +520,7 @@ class User extends ModelWithContent
      *
      * @return Field
      */
-    public function name()
+    public function name(): Field
     {
         if (is_string($this->name) === true) {
             return new Field($this, 'name', $this->name);
@@ -595,7 +592,7 @@ class User extends ModelWithContent
     /**
      * @return UserPermissions
      */
-    public function permissions()
+    public function permissions(): UserPermissions
     {
         return new UserPermissions($this);
     }
@@ -630,7 +627,7 @@ class User extends ModelWithContent
     /**
      * Returns the user role
      *
-     * @return string
+     * @return Role
      */
     public function role(): Role
     {
@@ -663,7 +660,7 @@ class User extends ModelWithContent
      *
      * @return UserRules
      */
-    protected function rules()
+    protected function rules(): UserRules
     {
         return new UserRules();
     }
@@ -781,7 +778,7 @@ class User extends ModelWithContent
      *
      * @return Users
      */
-    protected function siblingsCollection()
+    protected function siblingsCollection(): Users
     {
         return $this->kirby()->users();
     }
@@ -829,7 +826,7 @@ class User extends ModelWithContent
      * which is the given name or the email
      * as a fallback
      *
-     * @return string
+     * @return string|null
      */
     public function username(): ?string
     {

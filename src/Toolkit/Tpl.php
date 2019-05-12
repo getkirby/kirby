@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
 use Throwable;
 
 /**

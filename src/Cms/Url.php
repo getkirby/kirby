@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Http\Url as BaseUrl;
-use Kirby\Toolkit\Str;
 
 /**
  * The `Url` class extends the

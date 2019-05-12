@@ -15,15 +15,6 @@ trait PageSiblings
 {
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasNextUnlisted` instead
-     * @return boolean
-     */
-    public function hasNextInvisible(): bool
-    {
-        return $this->hasNextUnlisted();
-    }
-
-    /**
      * Checks if there's a next listed
      * page in the siblings collection
      *
@@ -35,15 +26,6 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasNextListed` instead
-     * @return boolean
-     */
-    public function hasNextVisible(): bool
-    {
-        return $this->hasNextListed();
-    }
-
-    /**
      * Checks if there's a next unlisted
      * page in the siblings collection
      *
@@ -52,15 +34,6 @@ trait PageSiblings
     public function hasNextUnlisted(): bool
     {
         return $this->nextUnlisted() !== null;
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::hasPrevUnlisted` instead
-     * @return boolean
-     */
-    public function hasPrevInvisible(): bool
-    {
-        return $this->hasPrevUnlisted();
     }
 
     /**
@@ -86,29 +59,11 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasPrevListed instead`
-     * @return boolean
-     */
-    public function hasPrevVisible(): bool
-    {
-        return $this->hasPrevListed();
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::nextUnlisted()` instead
-     * @return self|null
-     */
-    public function nextInvisible()
-    {
-        return $this->nextUnlisted();
-    }
-
-    /**
      * Returns the next listed page if it exists
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
-    public function nextListed()
+    public function nextListed(): ?Page
     {
         return $this->nextAll()->listed()->first();
     }
@@ -116,37 +71,19 @@ trait PageSiblings
     /**
      * Returns the next unlisted page if it exists
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
-    public function nextUnlisted()
+    public function nextUnlisted(): ?Page
     {
         return $this->nextAll()->unlisted()->first();
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::prevListed()` instead
-     * @return self|null
-     */
-    public function nextVisible()
-    {
-        return $this->nextListed();
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::prevUnlisted()` instead
-     * @return self|null
-     */
-    public function prevInvisible()
-    {
-        return $this->prevUnlisted();
-    }
-
-    /**
      * Returns the previous listed page
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
-    public function prevListed()
+    public function prevListed(): ?Page
     {
         return $this->prevAll()->listed()->last();
     }
@@ -154,28 +91,19 @@ trait PageSiblings
     /**
      * Returns the previous unlisted page
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
-    public function prevUnlisted()
+    public function prevUnlisted(): ?Page
     {
         return $this->prevAll()->unlisted()->first();
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::prevListed()` instead
-     * @return self|null
-     */
-    public function prevVisible()
-    {
-        return $this->prevListed();
-    }
-
-    /**
      * Private siblings collector
      *
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
-    protected function siblingsCollection()
+    protected function siblingsCollection(): Collection
     {
         if ($this->isDraft() === true) {
             return $this->parentModel()->drafts();
@@ -188,9 +116,9 @@ trait PageSiblings
      * Returns siblings with the same template
      *
      * @param bool $self
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function templateSiblings(bool $self = true)
+    public function templateSiblings(bool $self = true): Pages
     {
         return $this->siblings($self)->filterBy('intendedTemplate', $this->intendedTemplate()->name());
     }

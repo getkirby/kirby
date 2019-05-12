@@ -2,14 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
-use Kirby\Exception\Exception;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\Image;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
-use Throwable;
 
 /**
  * The `$file` object provides a set
@@ -46,14 +42,14 @@ class File extends ModelWithContent
      * This is used to do actual file
      * method calls, like size, mime, etc.
      *
-     * @var Image
+     * @var Kirby\Image\Image
      */
     protected $asset;
 
     /**
      * Cache for the initialized blueprint object
      *
-     * @var FileBlueprint
+     * @var Kirby\Cms\FileBlueprint
      */
     protected $blueprint;
 
@@ -85,7 +81,7 @@ class File extends ModelWithContent
     /**
      * The parent object
      *
-     * @var Model
+     * @var Kirby\Cms\Model
      */
     protected $parent;
 
@@ -149,7 +145,7 @@ class File extends ModelWithContent
     }
 
     /**
-     * Improved var_dump() output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -177,7 +173,7 @@ class File extends ModelWithContent
      * Returns the Image object
      *
      * @internal
-     * @return Image
+     * @return Kirby\Image\Image
      */
     public function asset(): Image
     {
@@ -187,7 +183,7 @@ class File extends ModelWithContent
     /**
      * Returns the FileBlueprint object for the file
      *
-     * @return FileBlueprint
+     * @return Kirby\Cms\FileBlueprint
      */
     public function blueprint(): FileBlueprint
     {
@@ -298,7 +294,7 @@ class File extends ModelWithContent
     /**
      * Returns the parent Files collection
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function files(): Files
     {
@@ -328,7 +324,7 @@ class File extends ModelWithContent
     /**
      * Compares the current object with the given file object
      *
-     * @param File $file
+     * @param Kirby\Cms\File $file
      * @return bool
      */
     public function is(File $file): bool
@@ -367,16 +363,6 @@ class File extends ModelWithContent
     public function mediaUrl(): string
     {
         return $this->parent()->mediaUrl() . '/' . $this->mediaHash() . '/' . $this->filename();
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `File::content()` instead
-     *
-     * @return Content
-     */
-    public function meta(): Content
-    {
-        return $this->content();
     }
 
     /**
@@ -425,9 +411,9 @@ class File extends ModelWithContent
     /**
      * Returns the parent Page object
      *
-     * @return Page
+     * @return Kirby\Cms\Page|null
      */
-    public function page()
+    public function page(): ?Page
     {
         return is_a($this->parent(), 'Kirby\Cms\Page') === true ? $this->parent() : null;
     }
@@ -486,7 +472,12 @@ class File extends ModelWithContent
      *
      * @internal
      * @param string|array|false $settings
+<<<<<<< HEAD
      * @return array
+=======
+     * @param array $thumbSettings
+     * @return array|null
+>>>>>>> Fix and clean code base
      */
     public function panelImage($settings = null): ?array
     {
@@ -549,9 +540,9 @@ class File extends ModelWithContent
     /**
      * Returns the parent Model object
      *
-     * @return Model
+     * @return Kirby\Cms\Model
      */
-    public function parent()
+    public function parent(): Model
     {
         return $this->parent = $this->parent ?? $this->kirby()->site();
     }
@@ -574,7 +565,7 @@ class File extends ModelWithContent
     /**
      * Returns a collection of all parent pages
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function parents(): Pages
     {
@@ -588,9 +579,9 @@ class File extends ModelWithContent
     /**
      * Returns the permissions object for this file
      *
-     * @return FilePermissions
+     * @return Kirby\Cms\FilePermissions
      */
-    public function permissions()
+    public function permissions(): FilePermissions
     {
         return new FilePermissions($this);
     }
@@ -636,9 +627,9 @@ class File extends ModelWithContent
      * Returns the FileRules class to
      * validate any important action.
      *
-     * @return FileRules
+     * @return Kirby\Cms\FileRules
      */
-    protected function rules()
+    protected function rules(): FileRules
     {
         return new FileRules();
     }
@@ -674,7 +665,7 @@ class File extends ModelWithContent
     /**
      * Sets the parent model object
      *
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @return self
      */
     protected function setParent(Model $parent = null): self
@@ -722,9 +713,9 @@ class File extends ModelWithContent
      * Returns the parent Files collection
      * @internal
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    protected function siblingsCollection()
+    protected function siblingsCollection(): Files
     {
         return $this->parent()->files();
     }
@@ -732,7 +723,7 @@ class File extends ModelWithContent
     /**
      * Returns the parent Site object
      *
-     * @return Site
+     * @return Kirby\Cms\Site
      */
     public function site(): Site
     {
@@ -753,9 +744,9 @@ class File extends ModelWithContent
      * Returns siblings with the same template
      *
      * @param bool $self
-     * @return self
+     * @return Kirby\Cms\Files
      */
-    public function templateSiblings(bool $self = true)
+    public function templateSiblings(bool $self = true): Files
     {
         return $this->siblings($self)->filterBy('template', $this->template());
     }

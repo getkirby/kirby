@@ -5,8 +5,6 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Tpl;
-use Kirby\Toolkit\View;
-use Throwable;
 
 /**
  * Represents a Kirby template and takes care

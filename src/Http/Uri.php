@@ -5,7 +5,6 @@ namespace Kirby\Http;
 use Throwable;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Properties;
-use Kirby\Toolkit\Str;
 
 /**
  * Uri builder class
@@ -197,7 +196,7 @@ class Uri
      *
      * @return string|null
      */
-    public function auth()
+    public function auth(): ?string
     {
         $auth = trim($this->username . ':' . $this->password);
         return $auth !== ':' ? $auth : null;
@@ -207,9 +206,9 @@ class Uri
      * Returns the base url (scheme + host)
      * without trailing slash
      *
-     * @return string
+     * @return string|null
      */
-    public function base()
+    public function base(): ?string
     {
         if (empty($this->host) === true || $this->host === '/') {
             return null;

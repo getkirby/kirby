@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Str;
-
 /**
  * HasFiles
  *
@@ -19,14 +17,14 @@ trait HasFiles
     /**
      * The Files collection
      *
-     * @var Files
+     * @var Kirby\Cms\Files
      */
     protected $files;
 
     /**
      * Filters the Files collection by type audio
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function audio(): Files
     {
@@ -36,7 +34,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type code
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function code(): Files
     {
@@ -58,9 +56,9 @@ trait HasFiles
      * Creates a new file
      *
      * @param array $props
-     * @return File
+     * @return Kirby\Cms\File
      */
-    public function createFile(array $props)
+    public function createFile(array $props): File
     {
         $props = array_merge($props, [
             'parent' => $this,
@@ -73,7 +71,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type documents
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function documents(): Files
     {
@@ -85,9 +83,9 @@ trait HasFiles
      *
      * @param string $filename
      * @param string $in
-     * @return File
+     * @return Kirby\Cms\File|null
      */
-    public function file(string $filename = null, string $in = 'files')
+    public function file(string $filename = null, string $in = 'files'): ?File
     {
         if ($filename === null) {
             return $this->$in()->first();
@@ -110,7 +108,7 @@ trait HasFiles
     /**
      * Returns the Files collection
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function files(): Files
     {
@@ -185,9 +183,9 @@ trait HasFiles
      * Returns a specific image by filename or the first one
      *
      * @param string $filename
-     * @return File
+     * @return Kirby\Cms\File|null
      */
-    public function image(string $filename = null)
+    public function image(string $filename = null): ?File
     {
         return $this->file($filename, 'images');
     }
@@ -195,7 +193,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type image
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function images(): Files
     {
@@ -205,7 +203,7 @@ trait HasFiles
     /**
      * Sets the Files collection
      *
-     * @param Files|null $files
+     * @param Kirby\Cms\Files|null $files
      * @return self
      */
     protected function setFiles(array $files = null): self
@@ -220,7 +218,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type videos
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function videos(): Files
     {

@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use Kirby\Image\Image;
 use Kirby\Toolkit\Str;
 use ReflectionFunction;
 

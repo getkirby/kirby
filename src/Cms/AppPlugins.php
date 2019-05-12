@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Exception\DuplicateException;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field as FormField;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
@@ -183,7 +182,7 @@ trait AppPlugins
         return $this->extensions['hooks'];
     }
 
-    protected function extendMarkdown(Closure $markdown): array
+    protected function extendMarkdown(Closure $markdown): Closure
     {
         return $this->extensions['markdown'] = $markdown;
     }
@@ -248,7 +247,7 @@ trait AppPlugins
         return $this->extensions['siteMethods'] = Site::$methods = array_merge(Site::$methods, $methods);
     }
 
-    protected function extendSmartypants(Closure $smartypants): array
+    protected function extendSmartypants(Closure $smartypants): Closure
     {
         return $this->extensions['smartypants'] = $smartypants;
     }

@@ -3,12 +3,10 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Image\Image;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 
 /**
  * FileActions
@@ -83,7 +81,7 @@ trait FileActions
      * @param integer $sort
      * @return self
      */
-    public function changeSort(int $sort)
+    public function changeSort(int $sort): self
     {
         return $this->commit('changeSort', [$this, $sort], function ($file, $sort) {
             return $file->save(['sort' => $sort]);
@@ -213,18 +211,6 @@ trait FileActions
     {
         Media::publish($this->root(), $this->mediaRoot());
         return $this;
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `File::changeName()` instead
-     *
-     * @param string $name
-     * @param bool $sanitize
-     * @return self
-     */
-    public function rename(string $name, bool $sanitize = true)
-    {
-        return $this->changeName($name, $sanitize);
     }
 
     /**

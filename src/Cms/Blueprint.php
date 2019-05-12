@@ -10,7 +10,6 @@ use Kirby\Form\Field;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Obj;
 use Throwable;
 
 /**
@@ -87,7 +86,7 @@ class Blueprint
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -226,7 +225,7 @@ class Blueprint
      * @param Model $model
      * @return self
      */
-    public static function factory(string $name, string $fallback = null, Model $model)
+    public static function factory(string $name, string $fallback = null, Model $model): self
     {
         try {
             $props = static::load($name);
@@ -317,11 +316,9 @@ class Blueprint
      * Loads a blueprint from file or array
      *
      * @param string $name
-     * @param string $fallback
-     * @param Model $model
      * @return array
      */
-    public static function load(string $name)
+    public static function load(string $name): array
     {
         if (isset(static::$loaded[$name]) === true) {
             return static::$loaded[$name];
@@ -357,7 +354,7 @@ class Blueprint
      *
      * @return Model
      */
-    public function model()
+    public function model(): Model
     {
         return $this->model;
     }
@@ -408,7 +405,7 @@ class Blueprint
         return $columns;
     }
 
-    public static function helpList(array $items)
+    public static function helpList(array $items): string
     {
         $md = [];
 
