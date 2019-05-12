@@ -132,6 +132,11 @@ class Language extends Model
         $kirby = App::instance();
         $site  = $kirby->site();
 
+        // convert site
+        foreach ($site->files() as $file) {
+            F::move($file->contentFile($from, true), $file->contentFile($to, true));
+        }
+
         F::move($site->contentFile($from, true), $site->contentFile($to, true));
 
         // convert all pages
