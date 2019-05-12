@@ -132,6 +132,12 @@ export default {
 
       // fetch from api
       return Api.get(model.api, { select: "content" }).then(response => {
+
+        if (id.startsWith("pages/") || id.startsWith("site")) {
+          // remove title from response content
+          delete response.content.title;
+        }
+
         context.commit("SET_ORIGINALS", [id, response.content]);
         context.commit("SET_VALUES", [id, response.content]);
         context.commit("DELETE_CHANGES", id);
