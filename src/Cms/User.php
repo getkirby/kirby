@@ -372,6 +372,8 @@ class User extends ModelWithContent
      * @param string $password
      * @param Session|array $session Session options or session object to set the user in
      * @return bool
+     *
+     * @throws PermissionException If the password is not valid
      */
     public function login(string $password, $session = null): bool
     {
@@ -783,6 +785,10 @@ class User extends ModelWithContent
      *
      * @param string $password
      * @return boolean
+     *
+     * @throws NotFoundException If the user has no password
+     * @throws InvalidArgumentException If the entered password is not valid
+     * @throws InvalidArgumentException If the entered password does not match the user password
      */
     public function validatePassword(string $password = null): bool
     {
