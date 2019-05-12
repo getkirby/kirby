@@ -40,7 +40,7 @@ class Content
      * for testing, but field methods might
      * need it.
      *
-     * @var Page|File|User|Site
+     * @var Model
      */
     protected $parent;
 
@@ -49,7 +49,7 @@ class Content
      *
      * @param string $name
      * @param array $arguments
-     * @return Field
+     * @return Kirby\Cms\Field
      */
     public function __call(string $name, array $arguments = []): Field
     {
@@ -59,10 +59,10 @@ class Content
     /**
      * Creates a new Content object
      *
-     * @param array $data
-     * @param object $parent
+     * @param array|null $data
+     * @param object|null $parent
      */
-    public function __construct($data = [], $parent = null)
+    public function __construct(array $data = [], $parent = null)
     {
         $this->data   = $data;
         $this->parent = $parent;
@@ -70,7 +70,7 @@ class Content
 
     /**
      * Same as `self::data()` to improve
-     * var_dump output
+     * `var_dump` output
      *
      * @see    self::data()
      * @return array
@@ -150,7 +150,7 @@ class Content
      * or all registered fields
      *
      * @param   string $key
-     * @return  Field|array
+     * @return  Kirby\Cms\Field|array
      */
     public function get(string $key = null)
     {
@@ -219,9 +219,9 @@ class Content
      * Returns the parent
      * Site, Page, File or User object
      *
-     * @return Site|Page|File|User
+     * @return Kirby\Cms\Model
      */
-    public function parent()
+    public function parent(): Model
     {
         return $this->parent;
     }

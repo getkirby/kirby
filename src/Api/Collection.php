@@ -2,7 +2,6 @@
 
 namespace Kirby\Api;
 
-use Closure;
 use Exception;
 use Kirby\Toolkit\Str;
 

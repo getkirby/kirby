@@ -28,9 +28,9 @@ trait HasSiblings
     /**
      * Returns the next item in the collection if available
      *
-     * @return Model|null
+     * @return Kirby\Cms\Model|null
      */
-    public function next()
+    public function next(): ?Model
     {
         return $this->siblingsCollection()->nth($this->indexOf() + 1);
     }
@@ -38,9 +38,9 @@ trait HasSiblings
     /**
      * Returns the end of the collection starting after the current item
      *
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
-    public function nextAll()
+    public function nextAll(): Collection
     {
         return $this->siblingsCollection()->slice($this->indexOf() + 1);
     }
@@ -48,9 +48,9 @@ trait HasSiblings
     /**
      * Returns the previous item in the collection if available
      *
-     * @return Model|null
+     * @return Kirby\Cms\Model|null
      */
-    public function prev()
+    public function prev(): ?Model
     {
         return $this->siblingsCollection()->nth($this->indexOf() - 1);
     }
@@ -58,9 +58,9 @@ trait HasSiblings
     /**
      * Returns the beginning of the collection before the current item
      *
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
-    public function prevAll()
+    public function prevAll(): Collection
     {
         return $this->siblingsCollection()->slice(0, $this->indexOf());
     }
@@ -69,9 +69,9 @@ trait HasSiblings
      * Returns all sibling elements
      *
      * @param bool $self
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
-    public function siblings(bool $self = true)
+    public function siblings(bool $self = true): Collection
     {
         $siblings = $this->siblingsCollection();
 

@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
-
 /**
  * The Structure class wraps
  * array data into a nicely chainable

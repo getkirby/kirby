@@ -40,7 +40,7 @@ class Users extends Collection
      * @param mixed $item
      * @return Users
      */
-    public function add($object)
+    public function add($object): self
     {
         // add a page collection
         if (is_a($object, static::class) === true) {
@@ -84,7 +84,7 @@ class Users extends Collection
      * @param string $key
      * @return User|null
      */
-    public function findByKey($key)
+    public function findByKey($key): ?User
     {
         if (Str::contains($key, '@') === true) {
             return parent::findBy('email', strtolower($key));

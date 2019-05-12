@@ -131,7 +131,7 @@ class Router
      * @param  array  $ignore
      * @return Route|null
      */
-    public function find(string $path, string $method, array $ignore = null)
+    public function find(string $path, string $method, array $ignore = null): ?Route
     {
         if (isset($this->routes[$method]) === false) {
             throw new InvalidArgumentException('Invalid routing method: ' . $method, 400);
@@ -161,7 +161,7 @@ class Router
      *
      * @return Route|null
      */
-    public function route()
+    public function route(): ?Route
     {
         return $this->route;
     }

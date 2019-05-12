@@ -45,12 +45,12 @@ class Section extends Component
         parent::__construct($type, $attrs);
     }
 
-    public function kirby()
+    public function kirby(): App
     {
         return $this->model->kirby();
     }
 
-    public function model()
+    public function model(): Model
     {
         return $this->model;
     }

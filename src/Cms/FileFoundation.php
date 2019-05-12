@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Properties;
 
 /**
  * Foundation for all file objects
@@ -73,7 +72,7 @@ trait FileFoundation
     /**
      * Returns the Image object
      *^
-     * @return Image
+     * @return Kirby\Image\Image
      */
     public function asset(): Image
     {
@@ -156,7 +155,7 @@ trait FileFoundation
     /**
      * Returns the app instance
      *
-     * @return App
+     * @return Kirby\Cms\App
      */
     public function kirby(): App
     {
@@ -191,7 +190,7 @@ trait FileFoundation
      * @param string $root
      * @return self
      */
-    protected function setRoot(string $root = null)
+    protected function setRoot(string $root = null): self
     {
         $this->root = $root;
         return $this;
@@ -203,7 +202,7 @@ trait FileFoundation
      * @param string $url
      * @return self
      */
-    protected function setUrl(string $url)
+    protected function setUrl(string $url): self
     {
         $this->url = $url;
         return $this;
@@ -231,7 +230,7 @@ trait FileFoundation
      *
      * @return string|null
      */
-    public function type()
+    public function type(): ?string
     {
         return F::type($this->root());
     }

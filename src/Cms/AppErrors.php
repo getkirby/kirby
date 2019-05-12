@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler;
@@ -22,7 +20,7 @@ use Whoops\Handler\CallbackHandler;
  */
 trait AppErrors
 {
-    protected function handleCliErrors()
+    protected function handleCliErrors(): void
     {
         $whoops = new Whoops;
         $whoops->pushHandler(new PlainTextHandler);

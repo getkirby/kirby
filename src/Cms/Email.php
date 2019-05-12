@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
-use Kirby\Toolkit\Tpl;
 
 /**
  * Wrapper around our PHPMailer package, which
@@ -34,7 +33,7 @@ class Email
 
     public function __construct($preset = [], array $props = [])
     {
-        $this->options = $options = App::instance()->option('email');
+        $this->options = App::instance()->option('email');
 
         // load presets from options
         $this->preset = $this->preset($preset);
@@ -52,7 +51,11 @@ class Email
         $this->template();
     }
 
-    protected function preset($preset)
+    /**
+     * @param string|array $preset
+     * @return array
+     */
+    protected function preset($preset): array
     {
         // only passed props, not preset name
         if (is_string($preset) !== true) {
@@ -70,7 +73,7 @@ class Email
         return $this->options['presets'][$preset];
     }
 
-    protected function template()
+    protected function template(): void
     {
         if (isset($this->props['template']) === true) {
 
@@ -99,7 +102,7 @@ class Email
         }
     }
 
-    protected function getTemplate(string $name, string $type = null)
+    protected function getTemplate(string $name, string $type = null): Template
     {
         return App::instance()->template('emails/' . $name, $type, 'text');
     }
@@ -136,7 +139,7 @@ class Email
         }
     }
 
-    protected function transformProp($prop, $model)
+    protected function transformProp(string $prop, string $model): void
     {
         if (isset($this->props[$prop]) === true) {
             $this->props[$prop] = $this->{'transform' . ucfirst($model)}($this->props[$prop]);

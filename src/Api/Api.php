@@ -17,7 +17,7 @@ use Kirby\Toolkit\Str;
  * The API class is a generic container
  * for API routes, models and collections and is used
  * to run our REST API. You can find our API setup
- * in kirby/config/api.php
+ * in `kirby/config/api.php`.
  *
  * @package   Kirby Api
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -186,9 +186,11 @@ class Api
      *
      * @param string $name
      * @param array|null $collection
-     * @return Collection
+     * @return Kirby\Api\Collection
+     *
+     * @throws NotFoundException If no collection for `$name` exists
      */
-    public function collection(string $name, $collection = null)
+    public function collection(string $name, $collection = null): Collection
     {
         if (isset($this->collections[$name]) === false) {
             throw new NotFoundException(sprintf('The collection "%s" does not exist', $name));
@@ -214,6 +216,8 @@ class Api
      * @param string|null $key
      * @param mixed ...$args
      * @return mixed
+     *
+     * @throws NotFoundException If no data for `$key` exists
      */
     public function data($key = null, ...$args)
     {
@@ -259,9 +263,11 @@ class Api
      *
      * @param string $name
      * @param mixed $object
-     * @return Model
+     * @return Kirby\Api\Model
+     *
+     * @throws NotFoundException If no model for `$name` exists
      */
-    public function model(string $name, $object = null)
+    public function model(string $name, $object = null): Model
     {
         if (isset($this->models[$name]) === false) {
             throw new NotFoundException(sprintf('The model "%s" does not exist', $name));
@@ -369,7 +375,9 @@ class Api
      * API model or collection representation
      *
      * @param mixed $object
-     * @return Model|Collection
+     * @return Kirby\Api\Model|Kirby\Api\Collection
+     *
+     * @throws NotFoundException If `$object` cannot be resolved
      */
     public function resolve($object)
     {
@@ -418,7 +426,7 @@ class Api
      * @param Closure $authentication
      * @return self
      */
-    protected function setAuthentication(Closure $authentication = null)
+    protected function setAuthentication(Closure $authentication = null): self
     {
         $this->authentication = $authentication;
         return $this;
@@ -430,7 +438,7 @@ class Api
      * @param array $collections
      * @return self
      */
-    protected function setCollections(array $collections = null)
+    protected function setCollections(array $collections = null): self
     {
         if ($collections !== null) {
             $this->collections = array_change_key_case($collections);
@@ -444,7 +452,7 @@ class Api
      * @param array $data
      * @return self
      */
-    protected function setData(array $data = null)
+    protected function setData(array $data = null): self
     {
         $this->data = $data ?? [];
         return $this;
@@ -456,7 +464,7 @@ class Api
      * @param boolean $debug
      * @return self
      */
-    protected function setDebug(bool $debug = false)
+    protected function setDebug(bool $debug = false): self
     {
         $this->debug = $debug;
         return $this;
@@ -468,7 +476,7 @@ class Api
      * @param array $models
      * @return self
      */
-    protected function setModels(array $models = null)
+    protected function setModels(array $models = null): self
     {
         if ($models !== null) {
             $this->models = array_change_key_case($models);
@@ -483,7 +491,7 @@ class Api
      * @param array $requestData
      * @return self
      */
-    protected function setRequestData(array $requestData = null)
+    protected function setRequestData(array $requestData = null): self
     {
         $defaults = [
             'query' => [],
@@ -501,7 +509,7 @@ class Api
      * @param string $requestMethod
      * @return self
      */
-    protected function setRequestMethod(string $requestMethod = null)
+    protected function setRequestMethod(string $requestMethod = null): self
     {
         $this->requestMethod = $requestMethod ?? 'GET';
         return $this;
@@ -513,7 +521,7 @@ class Api
      * @param array $routes
      * @return self
      */
-    protected function setRoutes(array $routes = null)
+    protected function setRoutes(array $routes = null): self
     {
         $this->routes = $routes ?? [];
         return $this;
@@ -615,6 +623,9 @@ class Api
      * @param Closure $callback
      * @param boolean $single
      * @return array
+     *
+     * @throws Exception If request has no files
+     * @throws Exception If there was an error with the upload
      */
     public function upload(Closure $callback, $single = false): array
     {

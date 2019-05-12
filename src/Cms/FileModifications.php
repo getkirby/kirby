@@ -20,7 +20,7 @@ trait FileModifications
      * @param boolean $pixels
      * @return self
      */
-    public function blur($pixels = true)
+    public function blur($pixels = true): self
     {
         return $this->thumb(['blur' => $pixels]);
     }
@@ -30,7 +30,7 @@ trait FileModifications
      *
      * @return self
      */
-    public function bw()
+    public function bw(): self
     {
         return $this->thumb(['grayscale' => true]);
     }
@@ -43,7 +43,7 @@ trait FileModifications
      * @param string|array $options
      * @return self
      */
-    public function crop(int $width, int $height = null, $options = null)
+    public function crop(int $width, int $height = null, $options = null): self
     {
         $quality = null;
         $crop    = 'center';
@@ -73,7 +73,7 @@ trait FileModifications
      * @param integer $quality
      * @return self
      */
-    public function quality(int $quality)
+    public function quality(int $quality): self
     {
         return $this->thumb(['quality' => $quality]);
     }
@@ -87,7 +87,7 @@ trait FileModifications
      * @param integer $quality
      * @return self
      */
-    public function resize(int $width = null, int $height = null, int $quality = null)
+    public function resize(int $width = null, int $height = null, int $quality = null): self
     {
         return $this->thumb([
             'width'   => $width,
@@ -103,7 +103,7 @@ trait FileModifications
      * @since 3.1.0
      *
      * @param array|string $sizes
-     * @return string
+     * @return string|null
      */
     public function srcset($sizes = null): ?string
     {
@@ -141,12 +141,12 @@ trait FileModifications
      * The media manager takes care of generating
      * those modified versions and putting them
      * in the right place. This is normally the
-     * /media folder of your installation, but
+     * `/media` folder of your installation, but
      * could potentially also be a CDN or any other
      * place.
      *
      * @param array|null|string $options
-     * @return FileVersion|File
+     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
      */
     public function thumb($options = null)
     {

@@ -74,16 +74,16 @@ class Permissions
 
     public function __construct($settings = [])
     {
-        if (is_bool($settings) === true) {
-            return $this->setAll($settings);
-        }
-
         if (is_array($settings) === true) {
             return $this->setCategories($settings);
         }
+
+        if (is_bool($settings) === true) {
+            return $this->setAll($settings);
+        }
     }
 
-    public function for(string $category = null, string $action = null)
+    public function for(string $category = null, string $action = null): bool
     {
         if ($action === null) {
             if ($this->hasCategory($category) === false) {
@@ -100,17 +100,17 @@ class Permissions
         return $this->actions[$category][$action];
     }
 
-    protected function hasAction(string $category, string $action)
+    protected function hasAction(string $category, string $action): bool
     {
         return $this->hasCategory($category) === true && array_key_exists($action, $this->actions[$category]) === true;
     }
 
-    protected function hasCategory(string $category)
+    protected function hasCategory(string $category): bool
     {
         return array_key_exists($category, $this->actions) === true;
     }
 
-    protected function setAction(string $category, string $action, $setting)
+    protected function setAction(string $category, string $action, $setting): self
     {
         // wildcard to overwrite the entire category
         if ($action === '*') {
@@ -122,7 +122,7 @@ class Permissions
         return $this;
     }
 
-    protected function setAll(bool $setting)
+    protected function setAll(bool $setting): self
     {
         foreach ($this->actions as $categoryName => $actions) {
             $this->setCategory($categoryName, $setting);
@@ -131,7 +131,7 @@ class Permissions
         return $this;
     }
 
-    protected function setCategories(array $settings)
+    protected function setCategories(array $settings): self
     {
         foreach ($settings as $categoryName => $categoryActions) {
             if (is_bool($categoryActions) === true) {
@@ -148,7 +148,7 @@ class Permissions
         return $this;
     }
 
-    protected function setCategory(string $category, bool $setting)
+    protected function setCategory(string $category, bool $setting): self
     {
         if ($this->hasCategory($category) === false) {
             throw new InvalidArgumentException('Invalid permissions category');

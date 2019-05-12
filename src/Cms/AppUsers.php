@@ -27,7 +27,7 @@ trait AppUsers
      * @internal
      * @return Auth
      */
-    public function auth()
+    public function auth(): Auth
     {
         return $this->auth = $this->auth ?? new Auth($this);
     }
@@ -36,9 +36,9 @@ trait AppUsers
      * Become any existing user
      *
      * @param string|null $who
-     * @return self
+     * @return User|null
      */
-    public function impersonate(string $who = null)
+    public function impersonate(string $who = null): ?User
     {
         return $this->auth()->impersonate($who);
     }
@@ -77,10 +77,9 @@ trait AppUsers
      * or the current user if no id is given
      *
      * @param  string        $id
-     * @param  \Kirby\Session\Session|array $session Session options or session object for getting the current user
      * @return User|null
      */
-    public function user(string $id = null, $session = null)
+    public function user(string $id = null): ?User
     {
         if ($id !== null) {
             return $this->users()->find($id);

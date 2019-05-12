@@ -52,7 +52,7 @@ class Responder
      */
     public function __toString(): string
     {
-        return $this->send();
+        return (string)$this->send();
     }
 
     /**
@@ -91,9 +91,8 @@ class Responder
      * Construct response from an array
      *
      * @param array $response
-     * @return self
      */
-    public function fromArray(array $response)
+    public function fromArray(array $response): void
     {
         $this->body($response['body'] ?? null);
         $this->code($response['code'] ?? null);
@@ -143,9 +142,9 @@ class Responder
      * Shortcut to configure a json response
      *
      * @param array $json
-     * @return self
+     * @return string|self
      */
-    public function json(array $json = null)
+    public function json(array $json = null): self
     {
         if ($json !== null) {
             $this->body(json_encode($json));
@@ -161,7 +160,7 @@ class Responder
      * @param integer|null $code
      * @return self
      */
-    public function redirect(?string $location = null, ?int $code = null)
+    public function redirect(?string $location = null, ?int $code = null): self
     {
         $location = Url::to($location ?? '/');
         $location = Url::unIdn($location);
@@ -175,9 +174,9 @@ class Responder
      * Creates and returns the response object from the config
      *
      * @param string|null $body
-     * @return Response
+     * @return Kirby\Cms\Response
      */
-    public function send(string $body = null)
+    public function send(string $body = null): Response
     {
         if ($body !== null) {
             $this->body($body);

@@ -24,7 +24,7 @@ trait AppCaches
      * @param string $key
      * @return Cache
      */
-    public function cache(string $key)
+    public function cache(string $key): Cache
     {
         if (isset($this->caches[$key]) === true) {
             return $this->caches[$key];

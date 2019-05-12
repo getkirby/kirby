@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Closure;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection;
 
 /**

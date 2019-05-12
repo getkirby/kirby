@@ -54,7 +54,7 @@ class Field
      * This will be the page, site, user or file
      * to which the content belongs
      *
-     * @var Site|Page|File|User
+     * @var Model
      */
     protected $parent;
 
@@ -170,9 +170,9 @@ class Field
 
     /**
      * @see Field::parent()
-     * @return Page|File|Site|User
+     * @return Kirby\Cms\Model|null
      */
-    public function model()
+    public function model(): ?Model
     {
         return $this->parent;
     }
@@ -183,7 +183,7 @@ class Field
      * @param mixed $fallback
      * @return self
      */
-    public function or($fallback = null)
+    public function or($fallback = null): self
     {
         if ($this->isNotEmpty()) {
             return $this;
@@ -201,9 +201,9 @@ class Field
     /**
      * Returns the parent object of the field
      *
-     * @return Page|File|Site|User
+     * @return Kirby\Cms\Model|null
      */
-    public function parent()
+    public function parent(): ?Model
     {
         return $this->parent;
     }
@@ -229,12 +229,12 @@ class Field
     }
 
     /**
-     * Returns the field content
+     * Returns the field content. If a new value is passed,
+     * the modified field will be returned. Otherwise it
+     * will return the field value.
      *
      * @param  string|Closure  $value
-     * @return mixed                    If a new value is passed, the modified
-     *                                  field will be returned. Otherwise it
-     *                                  will return the field value.
+     * @return mixed
      */
     public function value($value = null)
     {

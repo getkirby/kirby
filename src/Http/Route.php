@@ -3,7 +3,6 @@
 namespace Kirby\Http;
 
 use Closure;
-use Exception;
 
 /**
  * @package   Kirby Http
@@ -117,7 +116,7 @@ class Route
      *
      * @return array
      */
-    public function arguments()
+    public function arguments(): array
     {
         return $this->arguments;
     }
@@ -159,7 +158,7 @@ class Route
      *
      * @return void
      */
-    public function next()
+    public function next(): void
     {
         throw new Exceptions\NextRouteException('next');
     }

@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use ReflectionClass;
 use ReflectionMethod;
 
 /**

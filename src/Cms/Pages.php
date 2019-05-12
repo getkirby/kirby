@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\F;
-
 /**
  * The `$pages` object refers to a
  * collection of pages. The pages in this
@@ -26,7 +24,7 @@ class Pages extends Collection
     /**
      * Cache for the index
      *
-     * @var null|Pages
+     * @var Kirby\Cms\Pages|null
      */
     protected $index = null;
 
@@ -43,9 +41,9 @@ class Pages extends Collection
      * current collection
      *
      * @param mixed $item
-     * @return Pages
+     * @return self
      */
-    public function add($object)
+    public function add($object): self
     {
         // add a page collection
         if (is_a($object, static::class) === true) {
@@ -66,7 +64,7 @@ class Pages extends Collection
     /**
      * Returns all audio files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function audio(): Files
     {
@@ -76,13 +74,13 @@ class Pages extends Collection
     /**
      * Returns all children for each page in the array
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function children(): Pages
     {
         $children = new Pages([], $this->parent);
 
-        foreach ($this->data as $pageKey => $page) {
+        foreach ($this->data as $page) {
             foreach ($page->children() as $childKey => $child) {
                 $children->data[$childKey] = $child;
             }
@@ -94,7 +92,7 @@ class Pages extends Collection
     /**
      * Returns all code files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function code(): Files
     {
@@ -104,7 +102,7 @@ class Pages extends Collection
     /**
      * Returns all documents of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function documents(): Files
     {
@@ -114,13 +112,13 @@ class Pages extends Collection
     /**
      * Fetch all drafts for all pages in the collection
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
-    public function drafts()
+    public function drafts(): Pages
     {
         $drafts = new Pages([], $this->parent);
 
-        foreach ($this->data as $pageKey => $page) {
+        foreach ($this->data as $page) {
             foreach ($page->drafts() as $draftKey => $draft) {
                 $drafts->data[$draftKey] = $draft;
             }
@@ -133,12 +131,12 @@ class Pages extends Collection
      * Creates a pages collection from an array of props
      *
      * @param array $pages
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @param array $inject
      * @param bool $draft
-     * @return Pages
+     * @return self
      */
-    public static function factory(array $pages, Model $model = null, bool $draft = false)
+    public static function factory(array $pages, Model $model = null, bool $draft = false): self
     {
         $model    = $model ?? App::instance()->site();
         $children = new static([], $model);
@@ -169,13 +167,13 @@ class Pages extends Collection
     /**
      * Returns all files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function files(): Files
     {
         $files = new Files([], $this->parent);
 
-        foreach ($this->data as $pageKey => $page) {
+        foreach ($this->data as $page) {
             foreach ($page->files() as $fileKey => $file) {
                 $files->data[$fileKey] = $file;
             }
@@ -192,7 +190,7 @@ class Pages extends Collection
      * @param string $id
      * @return mixed
      */
-    public function findById($id)
+    public function findById(string $id)
     {
         // remove trailing or leading slashes
         $id = trim($id, '/');
@@ -229,10 +227,11 @@ class Pages extends Collection
      * Finds a child or child of a child recursively.
      *
      * @param string $id
-     * @param string $startAt
+     * @param string|null $startAt
+     * @param bool $multiLang
      * @return mixed
      */
-    public function findByIdRecursive($id, $startAt = null, bool $multiLang = false)
+    public function findByIdRecursive(string $id, string $startAt = null, bool $multiLang = false)
     {
         $path       = explode('/', $id);
         $collection = $this;
@@ -263,7 +262,7 @@ class Pages extends Collection
      * @param string $key
      * @return mixed
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         return $this->findById($key);
     }
@@ -272,9 +271,9 @@ class Pages extends Collection
      * Alias for Pages::findById
      *
      * @param string $id
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
-    public function findByUri(string $id)
+    public function findByUri(string $id): ?Page
     {
         return $this->findById($id);
     }
@@ -282,9 +281,9 @@ class Pages extends Collection
     /**
      * Finds the currently open page
      *
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
-    public function findOpen()
+    public function findOpen(): ?Page
     {
         return $this->findBy('isOpen', true);
     }
@@ -294,9 +293,9 @@ class Pages extends Collection
      * extension pages
      *
      * @param string $key
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
-    public function get($key, $default = null)
+    public function get($key, $default = null): ?Page
     {
         if ($key === null) {
             return null;
@@ -312,7 +311,7 @@ class Pages extends Collection
     /**
      * Returns all images of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function images(): Files
     {
@@ -324,7 +323,7 @@ class Pages extends Collection
      * pages and subpages, etc.
      *
      * @param bool $drafts
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function index(bool $drafts = false): Pages
     {
@@ -358,9 +357,9 @@ class Pages extends Collection
     /**
      * Returns all listed pages in the collection
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function listed(): self
+    public function listed(): Pages
     {
         return $this->filterBy('isListed', '==', true);
     }
@@ -368,9 +367,9 @@ class Pages extends Collection
     /**
      * Returns all unlisted pages in the collection
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function unlisted(): self
+    public function unlisted(): Pages
     {
         return $this->filterBy('isUnlisted', '==', true);
     }
@@ -442,9 +441,9 @@ class Pages extends Collection
     /*
      * Returns all listed and unlisted pages in the collection
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function published(): self
+    public function published(): Pages
     {
         return $this->filterBy('isDraft', '==', false);
     }
@@ -452,10 +451,10 @@ class Pages extends Collection
     /**
      * Filter all pages by the given template
      *
-     * @param null|string|array $template
-     * @return self
+     * @param string|array $templates
+     * @return Kirby\Cms\Pages
      */
-    public function template($templates): self
+    public function template($templates): Pages
     {
         if (empty($templates) === true) {
             return $this;
@@ -473,7 +472,7 @@ class Pages extends Collection
     /**
      * Returns all video files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
     public function videos(): Files
     {
@@ -483,9 +482,9 @@ class Pages extends Collection
     /**
      * Deprecated alias for Pages::listed()
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function visible(): self
+    public function visible(): Pages
     {
         return $this->filterBy('isListed', '==', true);
     }

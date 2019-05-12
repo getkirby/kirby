@@ -17,9 +17,9 @@ use Kirby\Toolkit\Facade;
 class R extends Facade
 {
     /**
-     * @return Request
+     * @return Kirby\Cms\Request
      */
-    public static function instance()
+    public static function instance(): Request
     {
         return App::instance()->request();
     }

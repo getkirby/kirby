@@ -44,7 +44,7 @@ class Form extends BaseForm
         parent::__construct($props);
     }
 
-    public static function for(Model $model, array $props = [])
+    public static function for(Model $model, array $props = []): self
     {
         // get the original model data
         $original = $model->content($props['language'] ?? null)->toArray();

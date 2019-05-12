@@ -18,7 +18,7 @@ class Visitor extends Facade
     /**
      * @return \Kirby\Http\Visitor
      */
-    public static function instance()
+    public static function instance(): \Kirby\Http\Visitor
     {
         return App::instance()->visitor();
     }

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
@@ -129,7 +128,7 @@ class Site extends ModelWithContent
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -161,7 +160,7 @@ class Site extends ModelWithContent
     /**
      * Returns the blueprint object
      *
-     * @return SiteBlueprint
+     * @return Kirby\Cms\SiteBlueprint
      */
     public function blueprint(): SiteBlueprint
     {
@@ -203,7 +202,7 @@ class Site extends ModelWithContent
      *
      * @return Pages
      */
-    public function breadcrumb()
+    public function breadcrumb(): Pages
     {
         // get all parents and flip the order
         $crumb = $this->page()->parents()->flip();
@@ -244,9 +243,9 @@ class Site extends ModelWithContent
     /**
      * Returns the error page object
      *
-     * @return Page
+     * @return Page|null
      */
-    public function errorPage()
+    public function errorPage(): ?Page
     {
         if (is_a($this->errorPage, 'Kirby\Cms\Page') === true) {
             return $this->errorPage;
@@ -283,9 +282,9 @@ class Site extends ModelWithContent
     /**
      * Returns the home page object
      *
-     * @return Page
+     * @return Page|null
      */
-    public function homePage()
+    public function homePage(): ?Page
     {
         if (is_a($this->homePage, 'Kirby\Cms\Page') === true) {
             return $this->homePage;
@@ -335,7 +334,7 @@ class Site extends ModelWithContent
     /**
      * Compares the current object with the given site object
      *
-     * @param Site $site
+     * @param mixed $site
      * @return bool
      */
     public function is($site): bool
@@ -394,7 +393,7 @@ class Site extends ModelWithContent
      * @param  string $path
      * @return Page|null
      */
-    public function page(string $path = null)
+    public function page(string $path = null): ?Page
     {
         if ($path !== null) {
             return $this->find($path);
@@ -454,7 +453,7 @@ class Site extends ModelWithContent
      *
      * @return SitePermissions
      */
-    public function permissions()
+    public function permissions(): SitePermissions
     {
         return new SitePermissions($this);
     }
@@ -502,7 +501,7 @@ class Site extends ModelWithContent
      *
      * @return SiteRules
      */
-    protected function rules()
+    protected function rules(): SiteRules
     {
         return new SiteRules();
     }
@@ -514,7 +513,7 @@ class Site extends ModelWithContent
      * @param array $params
      * @return Pages
      */
-    public function search(string $query = null, $params = [])
+    public function search(string $query = null, $params = []): Pages
     {
         return $this->index()->search($query, $params);
     }

@@ -4,12 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Data\Data;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
-use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -27,19 +22,19 @@ abstract class ModelWithContent extends Model
     /**
      * The content
      *
-     * @var Content
+     * @var Kirby\Cms\Content
      */
     public $content;
 
     /**
-     * @var Translations
+     * @var Kirby\Cms\Translations
      */
     public $translations;
 
     /**
      * Returns the blueprint of the model
      *
-     * @return Blueprint
+     * @return Kirby\Cms\Blueprint
      */
     abstract public function blueprint();
 
@@ -57,7 +52,7 @@ abstract class ModelWithContent extends Model
      * Returns the content
      *
      * @param string $languageCode
-     * @return Content
+     * @return Kirby\Cms\Content
      */
     public function content(string $languageCode = null): Content
     {
@@ -260,7 +255,7 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the absolute path to the model
      *
-     * @return string
+     * @return string|null
      */
     abstract public function root(): ?string;
 
@@ -339,10 +334,10 @@ abstract class ModelWithContent extends Model
     /**
      * Sets the Content object
      *
-     * @param Content|null $content
+     * @param array|null $content
      * @return self
      */
-    protected function setContent(array $content = null)
+    protected function setContent(array $content = null): self
     {
         if ($content !== null) {
             $content = new Content($content, $this);
@@ -358,7 +353,7 @@ abstract class ModelWithContent extends Model
      * @param array $translations
      * @return self
      */
-    protected function setTranslations(array $translations = null)
+    protected function setTranslations(array $translations = null): self
     {
         if ($translations !== null) {
             $this->translations = new Collection;
@@ -377,10 +372,10 @@ abstract class ModelWithContent extends Model
      * Returns a single translation by language code
      * If no code is specified the current translation is returned
      *
-     * @param string $languageCode
-     * @return Translation|null
+     * @param string|null $languageCode
+     * @return Kirby\Cms\ContentTranslation|null
      */
-    public function translation(string $languageCode = null)
+    public function translation(string $languageCode = null): ?ContentTranslation
     {
         return $this->translations()->find($languageCode ?? $this->kirby()->language()->code());
     }
@@ -388,9 +383,9 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the translations collection
      *
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
-    public function translations()
+    public function translations(): Collection
     {
         if ($this->translations !== null) {
             return $this->translations;

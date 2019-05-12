@@ -372,11 +372,11 @@ class Collection extends Iterator implements Countable
      *
      * @param string $attribute
      * @param mixed $value
-     * @return mixed
+     * @return mixed|null
      */
     public function findBy(string $attribute, $value)
     {
-        foreach ($this->data as $key => $item) {
+        foreach ($this->data as $item) {
             if ($this->getAttribute($item, $attribute) == $value) {
                 return $item;
             }
@@ -390,7 +390,7 @@ class Collection extends Iterator implements Countable
      * @param string $key
      * @return mixed
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         return $this->get($key);
     }
