@@ -476,6 +476,23 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($expected, $this->field($text)->smartypants());
     }
 
+    public function testSmartypantsWithKirbytext()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'smartypants' => true
+            ]
+        ]);
+
+        $text     = '"Test"';
+        $expected = '&#8220;Test&#8221;';
+
+        $this->assertEquals($expected, $this->field($text)->kti());
+    }
+
     public function testSlug()
     {
         $text     = 'Ä--Ö--Ü';
