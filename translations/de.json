@@ -35,9 +35,9 @@
   "error.avatar.create.fail": "Das Profilbild konnte nicht hochgeladen werden",
   "error.avatar.delete.fail": "Das Profilbild konnte nicht gel\u00f6scht werden",
   "error.avatar.dimensions.invalid":
-    "Bitte lade ein Profilbild hoch, das nicht größer als 3000 Pixel in der Breite und Höhe ist.",
+    "Bitte lade ein Profilbild hoch, das nicht breiter oder höher als 3000 Pixel ist.",
   "error.avatar.mime.forbidden":
-    "Verbotener Medientyp",
+    "Das Profilbild muss vom Format JPEG oder PNG sein",
 
   "error.blueprint.notFound": "Das Blueprint \"{name}\" konnte nicht geladen werden.",
 
@@ -46,7 +46,7 @@
   "error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
 
   "error.file.changeName.permission":
-    "Du kannst den Dateinamen von \"{filename}\" nicht ändern",
+    "Du darfst den Dateinamen von \"{filename}\" nicht ändern",
   "error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
   "error.file.extension.forbidden":
     "Verbotene Dateiendung \"{extension}\"",
@@ -66,7 +66,7 @@
   "error.form.notSaved": "Das Formular konnte nicht gespeichert werden",
 
   "error.page.changeSlug.permission":
-    "Du kannst die URL der Seite \"{slug}\" nicht ändern",
+    "Du darfst die URL der Seite \"{slug}\" nicht ändern",
   "error.page.changeStatus.incomplete":
     "Die Seite ist nicht vollständig und kann daher nicht veröffentlicht werden",
   "error.page.changeStatus.permission":
@@ -122,7 +122,7 @@
 
   "error.site.changeTitle.permission":
     "Du kannst den Titel der Seite nicht ändern",
-  "error.site.update.permission": "Du kannst die Seite nicht editieren",
+  "error.site.update.permission": "Du darfst die Seite nicht editieren",
 
   "error.template.default.notFound": "Die \"Default\"-Vorlage existiert nicht",
 
@@ -156,7 +156,7 @@
   "error.user.role.invalid": "Bitte gib eine gültige Rolle an",
   "error.user.undefined": "Der Benutzer wurde nicht gefunden",
   "error.user.update.permission":
-    "Du kannst den den Benutzer \"{name}\" nicht editieren",
+    "Du darfst den den Benutzer \"{name}\" nicht editieren",
 
   "error.validation.accepted": "Bitte bestätige",
   "error.validation.alpha": "Bitte gib nur Zeichen zwischen A und Z ein",
@@ -218,11 +218,11 @@
 
   "installation": "Installation",
   "installation.completed": "Das Panel wurde installiert",
-  "installation.disabled": "Die Panel Installation ist auf öffentlichen Servern automatisch deaktiviert. Bitte installiere das Panel auf einem lokalen Server oder aktiviere die Installation gezielt mit der <code>panel.install</code> Option. ",
+  "installation.disabled": "Die Panel-Installation ist auf öffentlichen Servern automatisch deaktiviert. Bitte installiere das Panel auf einem lokalen Server oder aktiviere die Installation gezielt mit der <code>panel.install</code> Option. ",
   "installation.issues.accounts":
     "<code>/site/accounts</code> ist nicht beschreibbar",
   "installation.issues.content":
-    "<code>/content</code> und alle Inhalte müssen beschreibbar sein",
+    "<code>/content</code> existiert nicht oder ist nicht beschreibbar",
   "installation.issues.curl": "Die <code>CURL</code> Erweiterung wird benötigt",
   "installation.issues.headline": "Das Panel kann nicht installiert werden",
   "installation.issues.mbstring":
@@ -232,7 +232,7 @@
   "installation.issues.php": "Bitte verwende <code>PHP 7+</code>",
   "installation.issues.server":
     "Kirby benötigt <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
-  "installation.issues.sessions": "Der <code>/site/sessions</code> Ordner ist nicht beschreibbar",
+  "installation.issues.sessions": "<code>/site/sessions</code> ist nicht beschreibbar",
 
   "language": "Sprache",
   "language.code": "Code",
@@ -260,7 +260,7 @@
   "license.buy": "Kaufe eine Lizenz",
   "license.register": "Registrieren",
   "license.register.help":
-    "Der Lizenzcode steht in deiner Kaufbestätigungsmail. Bitte kopiere ihn und füge ihn ein, um Kirby zu registrieren.",
+    "Den Lizenzcode findest du in der Bestätigungsmai zu deinem Kauf. Bitte kopiere und füge ihn ein, um Kirby zu registrieren.",
   "license.register.label": "Bitte gib deinen Lizenzcode ein",
   "license.register.success": "Vielen Dank für deine Unterstützung",
   "license.unregistered": "Dies ist eine unregistrierte Kirby-Demo",

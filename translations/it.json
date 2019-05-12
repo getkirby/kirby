@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Non puoi aggiungere più di un file alla sezione \"{section}\"",
   "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
+    "La sezione \"{section}\" richiede almeno {min} file",
   "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+    "La sezione \"{section}\" richiede almeno un file",
 
   "error.section.pages.max.plural":
     "Non puoi aggiungere più di {max} pagine alla sezione \"{section}\"",
   "error.section.pages.max.singular":
     "Non puoi aggiungere più di una pagina alla sezione \"{section}\"",
   "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
+    "La sezione \"{section}\" richiede almeno {min} pagine",
   "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+    "La sezione \"{section}\" richiede almeno una pagina",
 
   "error.section.notLoaded": "Non è stato possibile caricare la sezione \"{name}\"",
   "error.section.type.invalid": "Il tipo di sezione \"{type}\" non è valido",
@@ -366,8 +366,8 @@
   "toolbar.button.heading.3": "Titolo 3",
   "toolbar.button.italic": "Corsivo",
   "toolbar.button.file": "File",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Seleziona un file",
+  "toolbar.button.file.upload": "Carica un file",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Elenco numerato",
   "toolbar.button.ul": "Elenco puntato",

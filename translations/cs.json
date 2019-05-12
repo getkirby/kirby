@@ -104,18 +104,18 @@
   "error.section.files.max.singular":
     "Sekce \"{section}\" může obsahovat nejvýše jeden soubor",
   "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
+    "Sekce \"{section}\" vyžaduje nejméně {min} souborů",
   "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+    "Sekce \"{section}\" vyžaduje alespoň jeden soubor",
 
   "error.section.pages.max.plural":
     "Sekce \"{section}\" nesmí obsahovat více jak {max} stránek",
   "error.section.pages.max.singular":
     "Sekce \"{section}\" může obsahovat nejvýše jednu stránku",
   "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
+    "Sekce \"{section}\" vyžaduje alespoň {min} stránek",
   "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+    "Sekce \"{section}\" vyžaduje alespoň jednu stránku",
 
   "error.section.notLoaded": "Nelze načíst sekci \"{name}\"",
   "error.section.type.invalid": "Typ sekce \"{type}\" není platný",
@@ -324,7 +324,7 @@
   "page.status.listed": "Veřejná",
   "page.status.listed.description": "Stránka je zveřejněná pro všechny",
   "page.status.unlisted": "Neveřejná",
-  "page.status.unlisted.description": "Tato stránka je dostupná pouze přes adresu URL",
+  "page.status.unlisted.description": "Tato stránka je dostupná pouze přes URL.",
 
   "pages": "Stránky",
   "pages.empty": "Zatím žádné stránky",
@@ -366,8 +366,8 @@
   "toolbar.button.heading.3": "Nadpis 3",
   "toolbar.button.italic": "Kurz\u00edva",
   "toolbar.button.file": "Soubor",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Vyberte soubor",
+  "toolbar.button.file.upload": "Nahrajte soubor",
   "toolbar.button.link": "Odkaz",
   "toolbar.button.ol": "Řazený seznam",
   "toolbar.button.ul": "Odrážkový seznam",
