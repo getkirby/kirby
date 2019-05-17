@@ -84,7 +84,7 @@ class Users extends Collection
      * @param string $key
      * @return Kirby\Cms\User|null
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         if (Str::contains($key, '@') === true) {
             return parent::findBy('email', strtolower($key));
