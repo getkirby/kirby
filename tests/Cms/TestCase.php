@@ -33,12 +33,12 @@ class TestCase extends BaseTestCase
         Blueprint::$loaded = [];
     }
 
-    public function kirby($props = []): App
+    public function kirby($props = [])
     {
         return new App($props);
     }
 
-    public function site(): Site
+    public function site()
     {
         return $this->kirby()->site();
     }

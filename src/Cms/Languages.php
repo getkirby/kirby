@@ -33,7 +33,7 @@ class Languages extends Collection
      * @param array $props
      * @return Kirby\Cms\Language
      */
-    public function create(array $props): Language
+    public function create(array $props)
     {
         return Language::create($props);
     }
@@ -43,7 +43,7 @@ class Languages extends Collection
      *
      * @return Kirby\Cms\Language|null
      */
-    public function default(): ?Language
+    public function default()
     {
         if ($language = $this->findBy('isDefault', true)) {
             return $language;
@@ -53,12 +53,21 @@ class Languages extends Collection
     }
 
     /**
+     * @deprecated 3.0.0  Use `Languages::default()`instead
+     * @return Kirby\Cms\Language|null
+     */
+    public function findDefault()
+    {
+        return $this->default();
+    }
+
+    /**
      * Convert all defined languages to a collection
      *
      * @internal
      * @return self
      */
-    public static function load(): self
+    public static function load()
     {
         $languages = new static;
         $files     = glob(App::instance()->root('languages') . '/*.php');

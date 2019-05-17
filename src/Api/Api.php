@@ -190,7 +190,7 @@ class Api
      *
      * @throws NotFoundException If no collection for `$name` exists
      */
-    public function collection(string $name, $collection = null): Collection
+    public function collection(string $name, $collection = null)
     {
         if (isset($this->collections[$name]) === false) {
             throw new NotFoundException(sprintf('The collection "%s" does not exist', $name));
@@ -267,7 +267,7 @@ class Api
      *
      * @throws NotFoundException If no model for `$name` exists
      */
-    public function model(string $name, $object = null): Model
+    public function model(string $name, $object = null)
     {
         if (isset($this->models[$name]) === false) {
             throw new NotFoundException(sprintf('The model "%s" does not exist', $name));
@@ -426,7 +426,7 @@ class Api
      * @param Closure $authentication
      * @return self
      */
-    protected function setAuthentication(Closure $authentication = null): self
+    protected function setAuthentication(Closure $authentication = null)
     {
         $this->authentication = $authentication;
         return $this;
@@ -438,7 +438,7 @@ class Api
      * @param array $collections
      * @return self
      */
-    protected function setCollections(array $collections = null): self
+    protected function setCollections(array $collections = null)
     {
         if ($collections !== null) {
             $this->collections = array_change_key_case($collections);
@@ -452,7 +452,7 @@ class Api
      * @param array $data
      * @return self
      */
-    protected function setData(array $data = null): self
+    protected function setData(array $data = null)
     {
         $this->data = $data ?? [];
         return $this;
@@ -464,7 +464,7 @@ class Api
      * @param boolean $debug
      * @return self
      */
-    protected function setDebug(bool $debug = false): self
+    protected function setDebug(bool $debug = false)
     {
         $this->debug = $debug;
         return $this;
@@ -476,7 +476,7 @@ class Api
      * @param array $models
      * @return self
      */
-    protected function setModels(array $models = null): self
+    protected function setModels(array $models = null)
     {
         if ($models !== null) {
             $this->models = array_change_key_case($models);
@@ -491,7 +491,7 @@ class Api
      * @param array $requestData
      * @return self
      */
-    protected function setRequestData(array $requestData = null): self
+    protected function setRequestData(array $requestData = null)
     {
         $defaults = [
             'query' => [],
@@ -509,7 +509,7 @@ class Api
      * @param string $requestMethod
      * @return self
      */
-    protected function setRequestMethod(string $requestMethod = null): self
+    protected function setRequestMethod(string $requestMethod = null)
     {
         $this->requestMethod = $requestMethod ?? 'GET';
         return $this;
@@ -521,7 +521,7 @@ class Api
      * @param array $routes
      * @return self
      */
-    protected function setRoutes(array $routes = null): self
+    protected function setRoutes(array $routes = null)
     {
         $this->routes = $routes ?? [];
         return $this;

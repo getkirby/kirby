@@ -84,9 +84,9 @@ class Visitor
      * Returns an array of all accepted languages
      * including their quality and locale
      *
-     * @return Collection
+     * @return Kirby\Toolkit\Collection
      */
-    public function acceptedLanguages(): Collection
+    public function acceptedLanguages()
     {
         $accepted  = Str::accepted($this->acceptedLanguage);
         $languages = [];
@@ -150,9 +150,9 @@ class Visitor
     /**
      * Returns a collection of all accepted mime types
      *
-     * @return Collection
+     * @return Kirby\Toolkit\Collection
      */
-    public function acceptedMimeTypes(): Collection
+    public function acceptedMimeTypes()
     {
         $accepted = Str::accepted($this->acceptedMimeType);
         $mimes    = [];

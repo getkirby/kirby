@@ -48,7 +48,10 @@ class FileVersion
         return dirname($this->original()->id()) . '/' . $this->filename();
     }
 
-    public function kirby(): App
+    /**
+     * @return Kirby\Cms\App
+     */
+    public function kirby()
     {
         return $this->original()->kirby();
     }

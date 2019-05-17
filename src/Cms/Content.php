@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-
 /**
  * The Content class handles all fields
  * for content from pages, the site and users
@@ -51,7 +49,7 @@ class Content
      * @param array $arguments
      * @return Kirby\Cms\Field
      */
-    public function __call(string $name, array $arguments = []): Field
+    public function __call(string $name, array $arguments = [])
     {
         return $this->get($name);
     }
@@ -203,7 +201,7 @@ class Content
      * @param  string ...$keys
      * @return self
      */
-    public function not(...$keys): self
+    public function not(...$keys)
     {
         $copy = clone $this;
         $copy->fields = null;
@@ -221,7 +219,7 @@ class Content
      *
      * @return Kirby\Cms\Model
      */
-    public function parent(): Model
+    public function parent()
     {
         return $this->parent;
     }
@@ -229,10 +227,10 @@ class Content
     /**
      * Set the parent model
      *
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @return self
      */
-    public function setParent(Model $parent): self
+    public function setParent(Model $parent)
     {
         $this->parent = $parent;
         return $this;
@@ -257,7 +255,7 @@ class Content
      * @param  bool $overwrite
      * @return self
      */
-    public function update(array $content = null, bool $overwrite = false): self
+    public function update(array $content = null, bool $overwrite = false)
     {
         $this->data = $overwrite === true ? (array)$content : array_merge($this->data, (array)$content);
         return $this;

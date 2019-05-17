@@ -159,9 +159,9 @@ class Database
      * Returns one of the started instance
      *
      * @param string $id
-     * @return Database
+     * @return self
      */
-    public static function instance(string $id = null): self
+    public static function instance(string $id = null)
     {
         return $id === null ? A::last(static::$connections) : static::$connections[$id] ?? null;
     }

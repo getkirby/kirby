@@ -52,9 +52,9 @@ class Data
      * Handler getter
      *
      * @param  string  $type
-     * @return Handler
+     * @return Kirby\Data\Handler
      */
-    public static function handler(string $type): Handler
+    public static function handler(string $type)
     {
         // normalize the type
         $type = strtolower($type);

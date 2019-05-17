@@ -30,7 +30,7 @@ trait HasSiblings
      *
      * @return Kirby\Cms\Model|null
      */
-    public function next(): ?Model
+    public function next()
     {
         return $this->siblingsCollection()->nth($this->indexOf() + 1);
     }
@@ -40,7 +40,7 @@ trait HasSiblings
      *
      * @return Kirby\Cms\Collection
      */
-    public function nextAll(): Collection
+    public function nextAll()
     {
         return $this->siblingsCollection()->slice($this->indexOf() + 1);
     }
@@ -50,7 +50,7 @@ trait HasSiblings
      *
      * @return Kirby\Cms\Model|null
      */
-    public function prev(): ?Model
+    public function prev()
     {
         return $this->siblingsCollection()->nth($this->indexOf() - 1);
     }
@@ -60,7 +60,7 @@ trait HasSiblings
      *
      * @return Kirby\Cms\Collection
      */
-    public function prevAll(): Collection
+    public function prevAll()
     {
         return $this->siblingsCollection()->slice(0, $this->indexOf());
     }
@@ -71,7 +71,7 @@ trait HasSiblings
      * @param bool $self
      * @return Kirby\Cms\Collection
      */
-    public function siblings(bool $self = true): Collection
+    public function siblings(bool $self = true)
     {
         $siblings = $this->siblingsCollection();
 

@@ -45,12 +45,18 @@ class Section extends Component
         parent::__construct($type, $attrs);
     }
 
-    public function kirby(): App
+    /**
+     * @return Kirby\Cms\App
+     */
+    public function kirby()
     {
         return $this->model->kirby();
     }
 
-    public function model(): Model
+    /**
+     * @return Kirby\Cms\Model
+     */
+    public function model()
     {
         return $this->model;
     }

@@ -24,7 +24,7 @@ class Response extends \Kirby\Http\Response
      * @param int $code
      * @return self
      */
-    public static function redirect(?string $location = null, ?int $code = null): self
+    public static function redirect(?string $location = null, ?int $code = null)
     {
         return parent::redirect(Url::to($location ?? '/'), $code);
     }

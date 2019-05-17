@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-
 use Kirby\Data\Data;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -87,9 +85,9 @@ trait AppTranslations
      *
      * @internal
      * @param string $languageCode
-     * @return Language|null
+     * @return Kirby\Cms\Language|null
      */
-    public function setCurrentLanguage(string $languageCode = null): ?Language
+    public function setCurrentLanguage(string $languageCode = null)
     {
         if ($this->multilang() === false) {
             $this->setLocale($this->option('locale', 'en_US.utf-8'));
@@ -142,9 +140,9 @@ trait AppTranslations
      * Load a specific translation by locale
      *
      * @param string|null $locale
-     * @return Translation|null
+     * @return Kirby\Cms\Translation|null
      */
-    public function translation(string $locale = null): ?Translation
+    public function translation(string $locale = null)
     {
         $locale = $locale ?? I18n::locale();
         $locale = basename($locale);
@@ -166,9 +164,9 @@ trait AppTranslations
     /**
      * Returns all available translations
      *
-     * @return Translations
+     * @return Kirby\Cms\Translations
      */
-    public function translations(): Translations
+    public function translations()
     {
         if (is_a($this->translations, 'Kirby\Cms\Translations') === true) {
             return $this->translations;

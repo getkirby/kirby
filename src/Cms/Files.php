@@ -34,7 +34,7 @@ class Files extends Collection
      * @param mixed $item
      * @return self
      */
-    public function add($object): self
+    public function add($object)
     {
         // add a page collection
         if (is_a($object, static::class) === true) {
@@ -60,7 +60,7 @@ class Files extends Collection
      * @param int $offset Sorting offset
      * @return self
      */
-    public function changeSort(array $files, int $offset = 0): self
+    public function changeSort(array $files, int $offset = 0)
     {
         foreach ($files as $filename) {
             if ($file = $this->get($filename)) {
@@ -76,11 +76,11 @@ class Files extends Collection
      * Creates a files collection from an array of props
      *
      * @param array $files
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @param array $inject
      * @return self
      */
-    public static function factory(array $files, Model $parent): self
+    public static function factory(array $files, Model $parent)
     {
         $collection = new static([], $parent);
         $kirby      = $parent->kirby();
@@ -102,9 +102,9 @@ class Files extends Collection
      * Tries to find a file by id/filename
      *
      * @param string $id
-     * @return File|null
+     * @return Kirby\Cms\File|null
      */
-    public function findById($id): ?File
+    public function findById($id)
     {
         return $this->get(ltrim($this->parent->id() . '/' . $id, '/'));
     }
@@ -115,9 +115,9 @@ class Files extends Collection
      * map the get method correctly.
      *
      * @param string $key
-     * @return File|null
+     * @return Kirby\Cms\File|null
      */
-    public function findByKey($key): ?File
+    public function findByKey($key)
     {
         return $this->findById($key);
     }
@@ -128,7 +128,7 @@ class Files extends Collection
      * @param null|string|array $template
      * @return self
      */
-    public function template($template): self
+    public function template($template)
     {
         if (empty($template) === true) {
             return $this;

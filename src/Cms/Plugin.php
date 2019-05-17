@@ -94,7 +94,11 @@ class Plugin extends Model
         return $this->root;
     }
 
-    protected function setName(string $name): self
+    /**
+     * @param string $name
+     * @return self
+     */
+    protected function setName(string $name)
     {
         if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) == false) {
             throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');

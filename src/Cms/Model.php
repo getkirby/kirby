@@ -57,7 +57,7 @@ abstract class Model
      *
      * @return Kirby\Cms\App
      */
-    public function kirby(): App
+    public function kirby()
     {
         return static::$kirby = static::$kirby ?? App::instance();
     }
@@ -67,7 +67,7 @@ abstract class Model
      *
      * @return Kirby\Cms\Site
      */
-    public function site(): Site
+    public function site()
     {
         return $this->site = $this->site ?? $this->kirby()->site();
     }
@@ -75,10 +75,10 @@ abstract class Model
     /**
      * Setter for the parent Kirby object
      *
-     * @param Kirby\Cms\Kirby|null $kirby
+     * @param Kirby\Cms\App|null $kirby
      * @return self
      */
-    protected function setKirby(App $kirby = null): self
+    protected function setKirby(App $kirby = null)
     {
         static::$kirby = $kirby;
         return $this;
@@ -91,7 +91,7 @@ abstract class Model
      * @param Kirby\Cms\Site|null $site
      * @return self
      */
-    public function setSite(Site $site = null): self
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
         return $this;

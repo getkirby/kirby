@@ -28,7 +28,7 @@ trait UserActions
      * @param string $email
      * @return self
      */
-    public function changeEmail(string $email): self
+    public function changeEmail(string $email)
     {
         return $this->commit('changeEmail', [$this, $email], function ($user, $email) {
             $user = $user->clone([
@@ -49,7 +49,7 @@ trait UserActions
      * @param string $language
      * @return self
      */
-    public function changeLanguage(string $language): self
+    public function changeLanguage(string $language)
     {
         return $this->commit('changeLanguage', [$this, $language], function ($user, $language) {
             $user = $user->clone([
@@ -70,7 +70,7 @@ trait UserActions
      * @param string $name
      * @return self
      */
-    public function changeName(string $name): self
+    public function changeName(string $name)
     {
         return $this->commit('changeName', [$this, $name], function ($user, $name) {
             $user = $user->clone([
@@ -91,7 +91,7 @@ trait UserActions
      * @param string $password
      * @return self
      */
-    public function changePassword(string $password): self
+    public function changePassword(string $password)
     {
         return $this->commit('changePassword', [$this, $password], function ($user, $password) {
             $user = $user->clone([
@@ -110,7 +110,7 @@ trait UserActions
      * @param string $role
      * @return self
      */
-    public function changeRole(string $role): self
+    public function changeRole(string $role)
     {
         return $this->commit('changeRole', [$this, $role], function ($user, $role) {
             $user = $user->clone([
@@ -161,7 +161,7 @@ trait UserActions
      * @param array $input
      * @return self
      */
-    public static function create(array $props = null): self
+    public static function create(array $props = null)
     {
         $data = $props;
 

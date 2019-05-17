@@ -382,9 +382,9 @@ function js($url, $options = null)
 /**
  * Returns the Kirby object in any situation
  *
- * @return App
+ * @return Kirby\Cms\App
  */
-function kirby(): App
+function kirby()
 {
     return App::instance();
 }
