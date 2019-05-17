@@ -203,7 +203,7 @@ trait HasChildren
         return $this->children()->unlisted()->count() > 0;
     }
 
-     /**
+    /**
      * @deprecated 3.0.0 Use `Page::hasListedChildren` instead
      * @return boolean
      */

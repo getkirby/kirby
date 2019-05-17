@@ -104,7 +104,7 @@ class Files extends Collection
      * @param string $id
      * @return Kirby\Cms\File|null
      */
-    public function findById($id)
+    public function findById(string $id)
     {
         return $this->get(ltrim($this->parent->id() . '/' . $id, '/'));
     }
@@ -117,7 +117,7 @@ class Files extends Collection
      * @param string $key
      * @return Kirby\Cms\File|null
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         return $this->findById($key);
     }
