@@ -172,7 +172,7 @@ class Field
      * @see Field::parent()
      * @return Kirby\Cms\Model|null
      */
-    public function model(): ?Model
+    public function model()
     {
         return $this->parent;
     }
@@ -183,7 +183,7 @@ class Field
      * @param mixed $fallback
      * @return self
      */
-    public function or($fallback = null): self
+    public function or($fallback = null)
     {
         if ($this->isNotEmpty()) {
             return $this;
@@ -203,7 +203,7 @@ class Field
      *
      * @return Kirby\Cms\Model|null
      */
-    public function parent(): ?Model
+    public function parent()
     {
         return $this->parent;
     }

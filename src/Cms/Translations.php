@@ -29,7 +29,11 @@ class Translations extends Collection
         F::move($this->parent->contentFile($code, true), $this->parent->contentFile('', true));
     }
 
-    public static function factory(array $translations): self
+    /**
+     * @param array $translations
+     * @return self
+     */
+    public static function factory(array $translations)
     {
         $collection = new static;
 
@@ -41,7 +45,12 @@ class Translations extends Collection
         return $collection;
     }
 
-    public static function load(string $root, array $inject = []): self
+    /**
+     * @param string $root
+     * @param array $inject
+     * @return self
+     */
+    public static function load(string $root, array $inject = [])
     {
         $collection = new static;
 

@@ -76,7 +76,13 @@ class KirbyTag
         return (new static(...$arguments))->render();
     }
 
-    public static function parse(string $string, array $data = [], array $options = []): self
+    /**
+     * @param string $string
+     * @param array $data
+     * @param array $options
+     * @return self
+     */
+    public static function parse(string $string, array $data = [], array $options = [])
     {
         // remove the brackets, extract the first attribute (the tag type)
         $tag  = trim(rtrim(ltrim($string, '('), ')'));

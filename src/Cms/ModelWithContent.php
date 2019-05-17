@@ -54,7 +54,7 @@ abstract class ModelWithContent extends Model
      * @param string $languageCode
      * @return Kirby\Cms\Content
      */
-    public function content(string $languageCode = null): Content
+    public function content(string $languageCode = null)
     {
 
         // single language support
@@ -337,7 +337,7 @@ abstract class ModelWithContent extends Model
      * @param array|null $content
      * @return self
      */
-    protected function setContent(array $content = null): self
+    protected function setContent(array $content = null)
     {
         if ($content !== null) {
             $content = new Content($content, $this);
@@ -353,7 +353,7 @@ abstract class ModelWithContent extends Model
      * @param array $translations
      * @return self
      */
-    protected function setTranslations(array $translations = null): self
+    protected function setTranslations(array $translations = null)
     {
         if ($translations !== null) {
             $this->translations = new Collection;
@@ -375,7 +375,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $languageCode
      * @return Kirby\Cms\ContentTranslation|null
      */
-    public function translation(string $languageCode = null): ?ContentTranslation
+    public function translation(string $languageCode = null)
     {
         return $this->translations()->find($languageCode ?? $this->kirby()->language()->code());
     }
@@ -385,7 +385,7 @@ abstract class ModelWithContent extends Model
      *
      * @return Kirby\Cms\Collection
      */
-    public function translations(): Collection
+    public function translations()
     {
         if ($this->translations !== null) {
             return $this->translations;

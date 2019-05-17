@@ -76,7 +76,12 @@ class Role extends Model
         return $this->description;
     }
 
-    public static function factory(array $props, array $inject = []): self
+    /**
+     * @param array $props
+     * @param array $inject
+     * @return self
+     */
+    public static function factory(array $props, array $inject = [])
     {
         return new static($props + $inject);
     }
@@ -96,7 +101,12 @@ class Role extends Model
         return $this->name() === 'nobody';
     }
 
-    public static function load(string $file, array $inject = []): self
+    /**
+     * @param string $file
+     * @param array $inject
+     * @return self
+     */
+    public static function load(string $file, array $inject = [])
     {
         $data = Data::read($file);
         $data['name'] = F::name($file);
@@ -109,7 +119,11 @@ class Role extends Model
         return $this->name;
     }
 
-    public static function nobody(array $inject = []): self
+    /**
+     * @param array $inject
+     * @return self
+     */
+    public static function nobody(array $inject = [])
     {
         try {
             return static::load('nobody');
@@ -118,30 +132,49 @@ class Role extends Model
         }
     }
 
-    public function permissions(): Permissions
+    /**
+     * @return Kirby\Cms\Permissions
+     */
+    public function permissions()
     {
         return $this->permissions;
     }
 
-    protected function setDescription($description = null): self
+    /**
+     * @param [type] $description
+     * @return self
+     */
+    protected function setDescription($description = null)
     {
         $this->description = I18n::translate($description, $description);
         return $this;
     }
 
-    protected function setName(string $name): self
+    /**
+     * @param string $name
+     * @return self
+     */
+    protected function setName(string $name)
     {
         $this->name = $name;
         return $this;
     }
 
-    protected function setPermissions($permissions = null): self
+    /**
+     * @param [type] $permissions
+     * @return self
+     */
+    protected function setPermissions($permissions = null)
     {
         $this->permissions = new Permissions($permissions);
         return $this;
     }
 
-    protected function setTitle($title = null): self
+    /**
+     * @param [type] $title
+     * @return self
+     */
+    protected function setTitle($title = null)
     {
         $this->title = I18n::translate($title, $title);
         return $this;

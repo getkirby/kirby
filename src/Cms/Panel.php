@@ -64,7 +64,7 @@ class Panel
      * @param Kirby\Cms\App $kirby
      * @return Kirby\Cms\Response
      */
-    public static function render(App $kirby): Response
+    public static function render(App $kirby)
     {
         try {
             if (static::link($kirby) === true) {

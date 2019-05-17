@@ -102,7 +102,14 @@ class Email
         }
     }
 
-    protected function getTemplate(string $name, string $type = null): Template
+    /**
+     * Undocumented function
+     *
+     * @param string $name
+     * @param string|null $type
+     * @return Kirby\Cms\Template
+     */
+    protected function getTemplate(string $name, string $type = null)
     {
         return App::instance()->template('emails/' . $name, $type, 'text');
     }

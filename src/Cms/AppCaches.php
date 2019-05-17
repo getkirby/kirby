@@ -22,9 +22,9 @@ trait AppCaches
      * Returns a cache instance by key
      *
      * @param string $key
-     * @return Cache
+     * @return Kirby\Cache\Cache
      */
-    public function cache(string $key): Cache
+    public function cache(string $key)
     {
         if (isset($this->caches[$key]) === true) {
             return $this->caches[$key];
@@ -112,7 +112,7 @@ trait AppCaches
         $cacheName    = implode('.', array_slice($parts, 2));
 
         // check if such a plugin exists
-        if ($plugin = $this->plugin($pluginName)) {
+        if ($this->plugin($pluginName)) {
             return empty($cacheName) === true ? $pluginPrefix . '.cache' : $pluginPrefix . '.cache.' . $cacheName;
         }
 

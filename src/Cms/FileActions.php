@@ -28,7 +28,7 @@ trait FileActions
      * @param bool $sanitize
      * @return self
      */
-    public function changeName(string $name, bool $sanitize = true): self
+    public function changeName(string $name, bool $sanitize = true)
     {
         if ($sanitize === true) {
             $name = F::safeName($name);
@@ -81,7 +81,7 @@ trait FileActions
      * @param integer $sort
      * @return self
      */
-    public function changeSort(int $sort): self
+    public function changeSort(int $sort)
     {
         return $this->commit('changeSort', [$this, $sort], function ($file, $sort) {
             return $file->save(['sort' => $sort]);
@@ -124,7 +124,7 @@ trait FileActions
      * @param array $props
      * @return self
      */
-    public static function create(array $props): self
+    public static function create(array $props)
     {
         if (isset($props['source'], $props['parent']) === false) {
             throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
@@ -207,10 +207,22 @@ trait FileActions
      *
      * @return self
      */
-    public function publish(): self
+    public function publish()
     {
         Media::publish($this->root(), $this->mediaRoot());
         return $this;
+    }
+
+    /**
+     * @deprecated 3.0.0 Use `File::changeName()` instead
+     *
+     * @param string $name
+     * @param bool $sanitize
+     * @return self
+     */
+    public function rename(string $name, bool $sanitize = true)
+    {
+        return $this->changeName($name, $sanitize);
     }
 
     /**
@@ -223,7 +235,7 @@ trait FileActions
      * @param string $source
      * @return self
      */
-    public function replace(string $source): self
+    public function replace(string $source)
     {
         return $this->commit('replace', [$this, new Image($source)], function ($file, $upload) {
 
@@ -245,7 +257,7 @@ trait FileActions
      *
      * @return self
      */
-    public function unpublish(): self
+    public function unpublish()
     {
         Media::unpublish($this->parent()->mediaRoot(), $this->filename());
         return $this;

@@ -16,9 +16,9 @@ use Kirby\Toolkit\Facade;
 class Visitor extends Facade
 {
     /**
-     * @return \Kirby\Http\Visitor
+     * @return Kirby\Http\Visitor
      */
-    public static function instance(): \Kirby\Http\Visitor
+    public static function instance()
     {
         return App::instance()->visitor();
     }

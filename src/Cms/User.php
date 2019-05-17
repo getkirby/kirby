@@ -168,9 +168,9 @@ class User extends ModelWithContent
     /**
      * Returns the File object for the avatar or null
      *
-     * @return File|null
+     * @return Kirby\Cms\File|null
      */
-    public function avatar(): ?File
+    public function avatar()
     {
         return $this->files()->template('avatar')->first();
     }
@@ -178,9 +178,9 @@ class User extends ModelWithContent
     /**
      * Returns the UserBlueprint object
      *
-     * @return UserBlueprint
+     * @return Kirby\Cms\UserBlueprint
      */
-    public function blueprint(): UserBlueprint
+    public function blueprint()
     {
         if (is_a($this->blueprint, 'Kirby\Cms\Blueprint') === true) {
             return $this->blueprint;
@@ -262,7 +262,7 @@ class User extends ModelWithContent
      * @internal
      * @return self
      */
-    public static function factory($props): self
+    public static function factory($props)
     {
         if (empty($props['model']) === false) {
             return static::model($props['model'], $props);
@@ -520,9 +520,9 @@ class User extends ModelWithContent
     /**
      * Returns the user's name
      *
-     * @return Field
+     * @return Kirby\Cms\Field
      */
-    public function name(): Field
+    public function name()
     {
         if (is_string($this->name) === true) {
             return new Field($this, 'name', $this->name);
@@ -541,7 +541,7 @@ class User extends ModelWithContent
      * @internal
      * @return self
      */
-    public static function nobody(): self
+    public static function nobody()
     {
         return new static([
             'email' => 'nobody@getkirby.com',
@@ -592,9 +592,9 @@ class User extends ModelWithContent
     }
 
     /**
-     * @return UserPermissions
+     * @return Kirby\Cms\UserPermissions
      */
-    public function permissions(): UserPermissions
+    public function permissions()
     {
         return new UserPermissions($this);
     }
@@ -629,9 +629,9 @@ class User extends ModelWithContent
     /**
      * Returns the user role
      *
-     * @return Role
+     * @return Kirby\Cms\Role
      */
-    public function role(): Role
+    public function role()
     {
         if (is_a($this->role, 'Kirby\Cms\Role') === true) {
             return $this->role;
@@ -660,9 +660,9 @@ class User extends ModelWithContent
      * Returns the UserRules class to
      * validate any important action.
      *
-     * @return UserRules
+     * @return Kirby\Cms\UserRules
      */
-    protected function rules(): UserRules
+    protected function rules()
     {
         return new UserRules();
     }
@@ -673,7 +673,7 @@ class User extends ModelWithContent
      * @param array|null $blueprint
      * @return self
      */
-    protected function setBlueprint(array $blueprint = null): self
+    protected function setBlueprint(array $blueprint = null)
     {
         if ($blueprint !== null) {
             $blueprint['model'] = $this;
@@ -689,7 +689,7 @@ class User extends ModelWithContent
      * @param string $email
      * @return self
      */
-    protected function setEmail(string $email = null): self
+    protected function setEmail(string $email = null)
     {
         if ($email !== null) {
             $this->email = strtolower(trim($email));
@@ -703,7 +703,7 @@ class User extends ModelWithContent
      * @param string $id
      * @return self
      */
-    protected function setId(string $id = null): self
+    protected function setId(string $id = null)
     {
         $this->id = $id;
         return $this;
@@ -715,7 +715,7 @@ class User extends ModelWithContent
      * @param string $language
      * @return self
      */
-    protected function setLanguage(string $language = null): self
+    protected function setLanguage(string $language = null)
     {
         $this->language = $language !== null ? trim($language) : null;
         return $this;
@@ -727,7 +727,7 @@ class User extends ModelWithContent
      * @param string $name
      * @return self
      */
-    protected function setName(string $name = null): self
+    protected function setName(string $name = null)
     {
         $this->name = $name !== null ? trim($name) : null;
         return $this;
@@ -739,7 +739,7 @@ class User extends ModelWithContent
      * @param string $password
      * @return self
      */
-    protected function setPassword(string $password = null): self
+    protected function setPassword(string $password = null)
     {
         $this->password = $password;
         return $this;
@@ -751,7 +751,7 @@ class User extends ModelWithContent
      * @param string $role
      * @return self
      */
-    protected function setRole(string $role = null): self
+    protected function setRole(string $role = null)
     {
         $this->role = $role !== null ? strtolower(trim($role)) : null;
         return $this;
@@ -761,9 +761,9 @@ class User extends ModelWithContent
      * Converts session options into a session object
      *
      * @param Session|array $session Session options or session object to unset the user in
-     * @return Session
+     * @return Kirby\Session\Session
      */
-    protected function sessionFromOptions($session): Session
+    protected function sessionFromOptions($session)
     {
         // use passed session options or session object if set
         if (is_array($session) === true) {
@@ -778,9 +778,9 @@ class User extends ModelWithContent
     /**
      * Returns the parent Users collection
      *
-     * @return Users
+     * @return Kirby\Cms\Users
      */
-    protected function siblingsCollection(): Users
+    protected function siblingsCollection()
     {
         return $this->kirby()->users();
     }

@@ -20,7 +20,13 @@ use Kirby\Toolkit\Dir;
  */
 class Roles extends Collection
 {
-    public static function factory(array $roles, array $inject = []): self
+
+    /**
+     * @param array $roles
+     * @param array $inject
+     * @return self
+     */
+    public static function factory(array $roles, array $inject = [])
     {
         $collection = new static;
 
@@ -39,7 +45,12 @@ class Roles extends Collection
         return $collection->sortBy('name', 'asc');
     }
 
-    public static function load(string $root = null, array $inject = []): self
+    /**
+     * @param string $root
+     * @param array $inject
+     * @return self
+     */
+    public static function load(string $root = null, array $inject = [])
     {
         $roles = new static;
 

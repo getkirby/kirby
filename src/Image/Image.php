@@ -80,9 +80,9 @@ class Image extends File
     /**
      * Returns the dimensions of the file if possible
      *
-     * @return Dimensions
+     * @return Kirby\Image\Dimensions
      */
-    public function dimensions(): Dimensions
+    public function dimensions()
     {
         if ($this->dimensions !== null) {
             return $this->dimensions;
@@ -114,9 +114,9 @@ class Image extends File
     /**
      * Returns the exif object for this file (if image)
      *
-     * @return Exif
+     * @return Kirby\Image\Exif
      */
-    public function exif(): Exif
+    public function exif()
     {
         if ($this->exif !== null) {
             return $this->exif;

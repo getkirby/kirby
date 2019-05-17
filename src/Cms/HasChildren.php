@@ -35,7 +35,7 @@ trait HasChildren
      *
      * @return Kirby\Cms\Pages
      */
-    public function children(): Pages
+    public function children()
     {
         if (is_a($this->children, 'Kirby\Cms\Pages') === true) {
             return $this->children;
@@ -49,7 +49,7 @@ trait HasChildren
      *
      * @return Kirby\Cms\Pages
      */
-    public function childrenAndDrafts(): Pages
+    public function childrenAndDrafts()
     {
         return $this->children()->merge($this->drafts());
     }
@@ -71,7 +71,7 @@ trait HasChildren
      * @param string $path
      * @return Kirby\Cms\Page|null
      */
-    public function draft(string $path): ?Page
+    public function draft(string $path)
     {
         $path = str_replace('_drafts/', '', $path);
 
@@ -104,7 +104,7 @@ trait HasChildren
      *
      * @return Kirby\Cms\Pages
      */
-    public function drafts(): Pages
+    public function drafts()
     {
         if (is_a($this->drafts, 'Kirby\Cms\Pages') === true) {
             return $this->drafts;
@@ -139,7 +139,7 @@ trait HasChildren
      *
      * @return Kirby\Cms\Page|null
      */
-    public function findPageOrDraft(string $path): ?Page
+    public function findPageOrDraft(string $path)
     {
         return $this->children()->find($path) ?? $this->drafts()->find($path);
     }
@@ -149,7 +149,7 @@ trait HasChildren
      *
      * @return Kirby\Cms\Pages
      */
-    public function grandChildren(): Pages
+    public function grandChildren()
     {
         return $this->children()->children();
     }
@@ -175,6 +175,15 @@ trait HasChildren
     }
 
     /**
+     * @deprecated 3.0.0 Use `Page::hasUnlistedChildren` instead
+     * @return boolean
+     */
+    public function hasInvisibleChildren(): bool
+    {
+        return $this->hasUnlistedChildren();
+    }
+
+    /**
      * Checks if the page has any listed children
      *
      * @return boolean
@@ -194,13 +203,22 @@ trait HasChildren
         return $this->children()->unlisted()->count() > 0;
     }
 
+     /**
+     * @deprecated 3.0.0 Use `Page::hasListedChildren` instead
+     * @return boolean
+     */
+    public function hasVisibleChildren(): bool
+    {
+        return $this->hasListedChildren();
+    }
+
     /**
      * Creates a flat child index
      *
      * @param bool $drafts
      * @return Kirby\Cms\Pages
      */
-    public function index(bool $drafts = false): Pages
+    public function index(bool $drafts = false)
     {
         if ($drafts === true) {
             return $this->childrenAndDrafts()->index($drafts);
@@ -215,7 +233,7 @@ trait HasChildren
      * @param array|null $children
      * @return self
      */
-    protected function setChildren(array $children = null): self
+    protected function setChildren(array $children = null)
     {
         if ($children !== null) {
             $this->children = Pages::factory($children, $this);
@@ -230,7 +248,7 @@ trait HasChildren
      * @param array|null $drafts
      * @return self
      */
-    protected function setDrafts(array $drafts = null): self
+    protected function setDrafts(array $drafts = null)
     {
         if ($drafts !== null) {
             $this->drafts = Pages::factory($drafts, $this, true);

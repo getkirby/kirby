@@ -106,7 +106,7 @@ class Route
      *
      * @return Closure
      */
-    public function action(): Closure
+    public function action()
     {
         return $this->action;
     }

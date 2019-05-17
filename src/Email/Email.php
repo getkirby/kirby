@@ -46,7 +46,10 @@ class Email
         return $this->attachments;
     }
 
-    public function body(): Body
+    /**
+     * @return Kirby\Email\Body
+     */
+    public function body()
     {
         return $this->body;
     }
