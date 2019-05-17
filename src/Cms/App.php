@@ -297,7 +297,7 @@ class App
     /**
      * Returns all user-defined collections
      *
-     * @return Collections
+     * @return Kirby\Cms\Collections
      */
     public function collections(): Collections
     {
@@ -376,7 +376,7 @@ class App
      * Try to find a controller by name
      *
      * @param string $name
-     * @return Controller|null
+     * @return Kirby\Toolkit\Controller|null
      */
     protected function controllerLookup(string $name, string $contentType = 'html'): ?Controller
     {
@@ -400,7 +400,7 @@ class App
     /**
      * Returns the default language object
      *
-     * @return Language|null
+     * @return Kirby\Cms\Language|null
      */
     public function defaultLanguage(): ?Language
     {
@@ -422,7 +422,7 @@ class App
     /**
      * Detect the prefered language from the visitor object
      *
-     * @return Language
+     * @return Kirby\Cms\Language
      */
     public function detectedLanguage(): Language
     {
@@ -517,7 +517,7 @@ class App
      *
      * @internal
      * @param mixed $input
-     * @return Response
+     * @return Kirby\Http\Response
      */
     public function io($input): Response
     {
