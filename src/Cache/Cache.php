@@ -71,9 +71,9 @@ abstract class Cache
      * this needs to be defined by the driver
      *
      * @param string $key
-     * @return mixed
+     * @return Kirby\Cache\Value|null
      */
-    abstract public function retrieve(string $key): ?Value;
+    abstract public function retrieve(string $key);
 
     /**
      * Gets an item from the cache
@@ -133,7 +133,7 @@ abstract class Cache
      * item never expires and false if the item does not exist
      *
      * @param string $key
-     * @return mixed
+     * @return int|null|false
      */
     public function expires(string $key)
     {
@@ -174,7 +174,7 @@ abstract class Cache
      * and false if the item does not exist
      *
      * @param string $key
-     * @return mixed
+     * @return int|false
      */
     public function created(string $key)
     {
@@ -194,7 +194,7 @@ abstract class Cache
      * Alternate version for Cache::created($key)
      *
      * @param string $key
-     * @return mixed
+     * @return int|false
      */
     public function modified(string $key)
     {
