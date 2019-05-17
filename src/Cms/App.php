@@ -2,21 +2,16 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-use Exception;
-use Throwable;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Field;
 use Kirby\Http\Route;
 use Kirby\Http\Router;
 use Kirby\Http\Request;
+use Kirby\Http\Response;
 use Kirby\Http\Server;
 use Kirby\Http\Visitor;
-use Kirby\Image\Darkroom;
 use Kirby\Session\AutoSession;
 use Kirby\Session\Session;
 use Kirby\Text\KirbyTag;
@@ -26,8 +21,6 @@ use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Properties;
-use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Url;
 
 /**
  * The `$kirby` object is the app instance of
