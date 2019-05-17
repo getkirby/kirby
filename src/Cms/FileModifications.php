@@ -18,9 +18,9 @@ trait FileModifications
      * Blurs the image by the given amount of pixels
      *
      * @param boolean $pixels
-     * @return self
+     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
      */
-    public function blur($pixels = true): self
+    public function blur($pixels = true)
     {
         return $this->thumb(['blur' => $pixels]);
     }
@@ -28,9 +28,9 @@ trait FileModifications
     /**
      * Converts the image to black and white
      *
-     * @return self
+     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
      */
-    public function bw(): self
+    public function bw()
     {
         return $this->thumb(['grayscale' => true]);
     }
@@ -41,9 +41,9 @@ trait FileModifications
      * @param integer $width
      * @param integer $height
      * @param string|array $options
-     * @return self
+     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
      */
-    public function crop(int $width, int $height = null, $options = null): self
+    public function crop(int $width, int $height = null, $options = null)
     {
         $quality = null;
         $crop    = 'center';
@@ -71,9 +71,9 @@ trait FileModifications
      * Sets the JPEG compression quality
      *
      * @param integer $quality
-     * @return self
+     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
      */
-    public function quality(int $quality): self
+    public function quality(int $quality)
     {
         return $this->thumb(['quality' => $quality]);
     }
@@ -85,9 +85,9 @@ trait FileModifications
      * @param integer $width
      * @param integer $height
      * @param integer $quality
-     * @return self
+     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
      */
-    public function resize(int $width = null, int $height = null, int $quality = null): self
+    public function resize(int $width = null, int $height = null, int $quality = null)
     {
         return $this->thumb([
             'width'   => $width,
