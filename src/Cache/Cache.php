@@ -201,9 +201,9 @@ class Cache
      *
      * @param  mixed  $value    The value, which should be cached
      * @param  int    $minutes  The number of minutes before expiration
-     * @return Value
+     * @return Kirby\Cache\Value
      */
-    protected function value($value, int $minutes): Value
+    protected function value($value, int $minutes)
     {
         return new Value($value, $minutes);
     }

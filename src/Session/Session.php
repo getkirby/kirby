@@ -305,9 +305,9 @@ class Session
     /**
      * Returns the session data object
      *
-     * @return SessionData
+     * @return Kirby\Session\SessionData
      */
-    public function data(): SessionData
+    public function data()
     {
         return $this->data;
     }

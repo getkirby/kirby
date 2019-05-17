@@ -136,7 +136,7 @@ class Remote
      *
      * @return self
      */
-    public function fetch(): self
+    public function fetch()
     {
 
         // curl options
@@ -241,7 +241,7 @@ class Remote
      * @param array $params
      * @return self
      */
-    public static function get(string $url, array $params = []): self
+    public static function get(string $url, array $params = [])
     {
         $defaults = [
             'method' => 'GET',
@@ -335,7 +335,7 @@ class Remote
      * @param array $params
      * @return self
      */
-    public static function request(string $url, array $params = []): self
+    public static function request(string $url, array $params = [])
     {
         return new static($url, $params);
     }

@@ -74,7 +74,7 @@ trait FileFoundation
      *^
      * @return Kirby\Image\Image
      */
-    public function asset(): Image
+    public function asset()
     {
         return $this->asset = $this->asset ?? new Image($this->root());
     }
@@ -157,7 +157,7 @@ trait FileFoundation
      *
      * @return Kirby\Cms\App
      */
-    public function kirby(): App
+    public function kirby()
     {
         return App::instance();
     }
@@ -190,7 +190,7 @@ trait FileFoundation
      * @param string $root
      * @return self
      */
-    protected function setRoot(string $root = null): self
+    protected function setRoot(string $root = null)
     {
         $this->root = $root;
         return $this;
@@ -202,7 +202,7 @@ trait FileFoundation
      * @param string $url
      * @return self
      */
-    protected function setUrl(string $url): self
+    protected function setUrl(string $url)
     {
         $this->url = $url;
         return $this;

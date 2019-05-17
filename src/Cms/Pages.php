@@ -43,7 +43,7 @@ class Pages extends Collection
      * @param mixed $item
      * @return self
      */
-    public function add($object): self
+    public function add($object)
     {
         // add a page collection
         if (is_a($object, static::class) === true) {
@@ -66,7 +66,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Files
      */
-    public function audio(): Files
+    public function audio()
     {
         return $this->files()->filterBy("type", "audio");
     }
@@ -76,7 +76,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Pages
      */
-    public function children(): Pages
+    public function children()
     {
         $children = new Pages([], $this->parent);
 
@@ -94,7 +94,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Files
      */
-    public function code(): Files
+    public function code()
     {
         return $this->files()->filterBy("type", "code");
     }
@@ -104,7 +104,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Files
      */
-    public function documents(): Files
+    public function documents()
     {
         return $this->files()->filterBy("type", "document");
     }
@@ -114,7 +114,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Pages
      */
-    public function drafts(): Pages
+    public function drafts()
     {
         $drafts = new Pages([], $this->parent);
 
@@ -136,7 +136,7 @@ class Pages extends Collection
      * @param bool $draft
      * @return self
      */
-    public static function factory(array $pages, Model $model = null, bool $draft = false): self
+    public static function factory(array $pages, Model $model = null, bool $draft = false)
     {
         $model    = $model ?? App::instance()->site();
         $children = new static([], $model);
@@ -169,7 +169,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Files
      */
-    public function files(): Files
+    public function files()
     {
         $files = new Files([], $this->parent);
 
@@ -273,7 +273,7 @@ class Pages extends Collection
      * @param string $id
      * @return Kirby\Cms\Page|null
      */
-    public function findByUri(string $id): ?Page
+    public function findByUri(string $id)
     {
         return $this->findById($id);
     }
@@ -283,7 +283,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Page|null
      */
-    public function findOpen(): ?Page
+    public function findOpen()
     {
         return $this->findBy('isOpen', true);
     }
@@ -295,7 +295,7 @@ class Pages extends Collection
      * @param string $key
      * @return Kirby\Cms\Page|null
      */
-    public function get($key, $default = null): ?Page
+    public function get($key, $default = null)
     {
         if ($key === null) {
             return null;
@@ -313,7 +313,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Files
      */
-    public function images(): Files
+    public function images()
     {
         return $this->files()->filterBy("type", "image");
     }
@@ -325,7 +325,7 @@ class Pages extends Collection
      * @param bool $drafts
      * @return Kirby\Cms\Pages
      */
-    public function index(bool $drafts = false): Pages
+    public function index(bool $drafts = false)
     {
         if (is_a($this->index, 'Kirby\Cms\Pages') === true) {
             return $this->index;
@@ -349,7 +349,7 @@ class Pages extends Collection
      *
      * @return self
      */
-    public function invisible(): self
+    public function invisible()
     {
         return $this->filterBy('isUnlisted', '==', true);
     }
@@ -359,7 +359,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Pages
      */
-    public function listed(): Pages
+    public function listed()
     {
         return $this->filterBy('isListed', '==', true);
     }
@@ -369,7 +369,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Pages
      */
-    public function unlisted(): Pages
+    public function unlisted()
     {
         return $this->filterBy('isUnlisted', '==', true);
     }
@@ -379,7 +379,7 @@ class Pages extends Collection
      *
      * @return self
      */
-    public function merge(...$args): self
+    public function merge(...$args)
     {
         // merge multiple arguments at once
         if (count($args) > 1) {
@@ -443,7 +443,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Pages
      */
-    public function published(): Pages
+    public function published()
     {
         return $this->filterBy('isDraft', '==', false);
     }
@@ -454,7 +454,7 @@ class Pages extends Collection
      * @param string|array $templates
      * @return Kirby\Cms\Pages
      */
-    public function template($templates): Pages
+    public function template($templates)
     {
         if (empty($templates) === true) {
             return $this;
@@ -474,7 +474,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Files
      */
-    public function videos(): Files
+    public function videos()
     {
         return $this->files()->filterBy("type", "video");
     }
@@ -484,7 +484,7 @@ class Pages extends Collection
      *
      * @return Kirby\Cms\Pages
      */
-    public function visible(): Pages
+    public function visible()
     {
         return $this->filterBy('isListed', '==', true);
     }

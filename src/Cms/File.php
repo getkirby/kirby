@@ -175,7 +175,7 @@ class File extends ModelWithContent
      * @internal
      * @return Kirby\Image\Image
      */
-    public function asset(): Image
+    public function asset()
     {
         return $this->asset = $this->asset ?? new Image($this->root());
     }
@@ -185,7 +185,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\FileBlueprint
      */
-    public function blueprint(): FileBlueprint
+    public function blueprint()
     {
         if (is_a($this->blueprint, 'Kirby\Cms\FileBlueprint') === true) {
             return $this->blueprint;
@@ -272,7 +272,7 @@ class File extends ModelWithContent
      * @internal
      * @return self
      */
-    public static function factory($props): self
+    public static function factory($props)
     {
         if (empty($props['model']) === false) {
             return static::model($props['model'], $props);
@@ -296,7 +296,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\Files
      */
-    public function files(): Files
+    public function files()
     {
         return $this->siblingsCollection();
     }
@@ -366,6 +366,16 @@ class File extends ModelWithContent
     }
 
     /**
+     * @deprecated 3.0.0 Use `File::content()` instead
+     *
+     * @return Kirby\Cms\Content
+     */
+    public function meta()
+    {
+        return $this->content();
+    }
+
+    /**
      * Creates a file model if it has been registered
      *
      * @internal
@@ -413,7 +423,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\Page|null
      */
-    public function page(): ?Page
+    public function page()
     {
         return is_a($this->parent(), 'Kirby\Cms\Page') === true ? $this->parent() : null;
     }
@@ -542,7 +552,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\Model
      */
-    public function parent(): Model
+    public function parent()
     {
         return $this->parent = $this->parent ?? $this->kirby()->site();
     }
@@ -567,7 +577,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\Pages
      */
-    public function parents(): Pages
+    public function parents()
     {
         if (is_a($this->parent(), 'Kirby\Cms\Page') === true) {
             return $this->parent()->parents()->prepend($this->parent()->id(), $this->parent());
@@ -581,7 +591,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\FilePermissions
      */
-    public function permissions(): FilePermissions
+    public function permissions()
     {
         return new FilePermissions($this);
     }
@@ -629,7 +639,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\FileRules
      */
-    protected function rules(): FileRules
+    protected function rules()
     {
         return new FileRules();
     }
@@ -640,7 +650,7 @@ class File extends ModelWithContent
      * @param array|null $blueprint
      * @return self
      */
-    protected function setBlueprint(array $blueprint = null): self
+    protected function setBlueprint(array $blueprint = null)
     {
         if ($blueprint !== null) {
             $blueprint['model'] = $this;
@@ -656,7 +666,7 @@ class File extends ModelWithContent
      * @param string $filename
      * @return self
      */
-    protected function setFilename(string $filename): self
+    protected function setFilename(string $filename)
     {
         $this->filename = $filename;
         return $this;
@@ -668,7 +678,7 @@ class File extends ModelWithContent
      * @param Kirby\Cms\Model $parent
      * @return self
      */
-    protected function setParent(Model $parent = null): self
+    protected function setParent(Model $parent = null)
     {
         $this->parent = $parent;
         return $this;
@@ -691,7 +701,7 @@ class File extends ModelWithContent
      * @param string $template
      * @return self
      */
-    protected function setTemplate(string $template = null): self
+    protected function setTemplate(string $template = null)
     {
         $this->template = $template;
         return $this;
@@ -703,7 +713,7 @@ class File extends ModelWithContent
      * @param string $url
      * @return self
      */
-    protected function setUrl(string $url = null): self
+    protected function setUrl(string $url = null)
     {
         $this->url = $url;
         return $this;
@@ -715,7 +725,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\Files
      */
-    protected function siblingsCollection(): Files
+    protected function siblingsCollection()
     {
         return $this->parent()->files();
     }
@@ -725,7 +735,7 @@ class File extends ModelWithContent
      *
      * @return Kirby\Cms\Site
      */
-    public function site(): Site
+    public function site()
     {
         return is_a($this->parent(), 'Kirby\Cms\Site') === true ? $this->parent() : $this->kirby()->site();
     }
@@ -746,7 +756,7 @@ class File extends ModelWithContent
      * @param bool $self
      * @return Kirby\Cms\Files
      */
-    public function templateSiblings(bool $self = true): Files
+    public function templateSiblings(bool $self = true)
     {
         return $this->siblings($self)->filterBy('template', $this->template());
     }

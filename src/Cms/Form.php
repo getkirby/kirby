@@ -44,7 +44,12 @@ class Form extends BaseForm
         parent::__construct($props);
     }
 
-    public static function for(Model $model, array $props = []): self
+    /**
+     * @param Kirby\Cms\Model $model
+     * @param array $props
+     * @return self
+     */
+    public static function for(Model $model, array $props = [])
     {
         // get the original model data
         $original = $model->content($props['language'] ?? null)->toArray();

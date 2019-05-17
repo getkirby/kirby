@@ -18,7 +18,13 @@ use Kirby\Toolkit\Str;
  */
 class Search
 {
-    public static function files(string $query = null, $params = []): Files
+
+    /**
+     * @param string $query
+     * @param array $params
+     * @return Kirby\Cms\Files
+     */
+    public static function files(string $query = null, $params = [])
     {
         return App::instance()->site()->index()->files()->search($query, $params);
     }
@@ -117,12 +123,22 @@ class Search
         return $results->sortBy('searchScore', 'desc');
     }
 
-    public static function pages(string $query = null, $params = []): Pages
+    /**
+     * @param string $query
+     * @param array $params
+     * @return Kirby\Cms\Pages
+     */
+    public static function pages(string $query = null, $params = [])
     {
         return App::instance()->site()->index()->search($query, $params);
     }
 
-    public static function users(string $query = null, $params = []): Users
+    /**
+     * @param string $query
+     * @param array $params
+     * @return Kirby\Cms\Users
+     */
+    public static function users(string $query = null, $params = [])
     {
         return App::instance()->users()->search($query, $params);
     }

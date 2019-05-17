@@ -129,9 +129,9 @@ class Router
      * @param  string $path
      * @param  string $method
      * @param  array  $ignore
-     * @return Route|null
+     * @return Kirby\Http\Route|null
      */
-    public function find(string $path, string $method, array $ignore = null): ?Route
+    public function find(string $path, string $method, array $ignore = null)
     {
         if (isset($this->routes[$method]) === false) {
             throw new InvalidArgumentException('Invalid routing method: ' . $method, 400);
@@ -159,9 +159,9 @@ class Router
      * once Router::find() has been called
      * and only if a route was found.
      *
-     * @return Route|null
+     * @return Kirby\Http\Route|null
      */
-    public function route(): ?Route
+    public function route()
     {
         return $this->route;
     }

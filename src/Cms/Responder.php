@@ -144,7 +144,7 @@ class Responder
      * @param array $json
      * @return string|self
      */
-    public function json(array $json = null): self
+    public function json(array $json = null)
     {
         if ($json !== null) {
             $this->body(json_encode($json));
@@ -160,7 +160,7 @@ class Responder
      * @param integer|null $code
      * @return self
      */
-    public function redirect(?string $location = null, ?int $code = null): self
+    public function redirect(?string $location = null, ?int $code = null)
     {
         $location = Url::to($location ?? '/');
         $location = Url::unIdn($location);
@@ -176,7 +176,7 @@ class Responder
      * @param string|null $body
      * @return Kirby\Cms\Response
      */
-    public function send(string $body = null): Response
+    public function send(string $body = null)
     {
         if ($body !== null) {
             $this->body($body);

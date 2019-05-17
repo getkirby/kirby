@@ -79,9 +79,9 @@ class Value
      * Creates a value object from an array
      *
      * @param array $array
-     * @return array
+     * @return self
      */
-    public static function fromArray(array $array): self
+    public static function fromArray(array $array)
     {
         return new static($array['value'] ?? null, $array['minutes'] ?? 0, $array['created'] ?? null);
     }
@@ -90,9 +90,9 @@ class Value
      * Creates a value object from a json string
      *
      * @param string $json
-     * @return array
+     * @return self
      */
-    public static function fromJson($json): self
+    public static function fromJson($json)
     {
         try {
             $array = json_decode($json, true) ?? [];

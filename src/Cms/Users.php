@@ -38,9 +38,9 @@ class Users extends Collection
      * current collection
      *
      * @param mixed $item
-     * @return Users
+     * @return self
      */
-    public function add($object): self
+    public function add($object)
     {
         // add a page collection
         if (is_a($object, static::class) === true) {
@@ -65,7 +65,7 @@ class Users extends Collection
      * @param array $inject
      * @return self
      */
-    public static function factory(array $users, array $inject = []): self
+    public static function factory(array $users, array $inject = [])
     {
         $collection = new static;
 
@@ -82,9 +82,9 @@ class Users extends Collection
      * Finds a user in the collection by id or email address
      *
      * @param string $key
-     * @return User|null
+     * @return Kirby\Cms\User|null
      */
-    public function findByKey($key): ?User
+    public function findByKey($key)
     {
         if (Str::contains($key, '@') === true) {
             return parent::findBy('email', strtolower($key));
@@ -100,7 +100,7 @@ class Users extends Collection
      * @param array $inject
      * @return self
      */
-    public static function load(string $root, array $inject = []): self
+    public static function load(string $root, array $inject = [])
     {
         $users = new static;
 

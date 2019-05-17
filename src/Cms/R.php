@@ -19,7 +19,7 @@ class R extends Facade
     /**
      * @return Kirby\Cms\Request
      */
-    public static function instance(): Request
+    public static function instance()
     {
         return App::instance()->request();
     }

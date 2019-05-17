@@ -182,9 +182,9 @@ class Request
     /**
      * Returns the Body object
      *
-     * @return Body
+     * @return Kirby\Http\Request\Body
      */
-    public function body(): Body
+    public function body()
     {
         return $this->body = $this->body ?? new Body();
     }
@@ -234,9 +234,9 @@ class Request
     /**
      * Returns the Files object
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function files(): Files
+    public function files()
     {
         return $this->files = $this->files ?? new Files();
     }
@@ -336,9 +336,9 @@ class Request
     /**
      * Returns the Query object
      *
-     * @return Query
+     * @return Kirby\Http\Query
      */
-    public function query(): Query
+    public function query()
     {
         return $this->query = $this->query ?? new Query();
     }
@@ -360,9 +360,9 @@ class Request
      * the original object.
      *
      * @param array $props
-     * @return Uri
+     * @return Kirby\Http\Uri
      */
-    public function url(array $props = null): Uri
+    public function url(array $props = null)
     {
         if ($props !== null) {
             return $this->url()->clone($props);

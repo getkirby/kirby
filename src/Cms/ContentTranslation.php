@@ -154,9 +154,9 @@ class ContentTranslation
     /**
      * Returns the parent page, file or site object
      *
-     * @return Model
+     * @return Kirby\Cms\Model
      */
-    public function parent(): Model
+    public function parent()
     {
         return $this->parent;
     }
@@ -165,7 +165,7 @@ class ContentTranslation
      * @param string $code
      * @return self
      */
-    protected function setCode(string $code): self
+    protected function setCode(string $code)
     {
         $this->code = $code;
         return $this;
@@ -175,7 +175,7 @@ class ContentTranslation
      * @param array $content
      * @return self
      */
-    protected function setContent(array $content = null): self
+    protected function setContent(array $content = null)
     {
         $this->content = $content;
         return $this;
@@ -185,7 +185,7 @@ class ContentTranslation
      * @param Model $parent
      * @return self
      */
-    protected function setParent(Model $parent): self
+    protected function setParent(Model $parent)
     {
         $this->parent = $parent;
         return $this;
@@ -195,7 +195,7 @@ class ContentTranslation
      * @param string $slug
      * @return self
      */
-    protected function setSlug(string $slug = null): self
+    protected function setSlug(string $slug = null)
     {
         $this->slug = $slug;
         return $this;

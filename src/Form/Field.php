@@ -216,7 +216,10 @@ class Field extends Component
         return empty($this->errors) === true;
     }
 
-    public function kirby(): App
+    /**
+     * @return Kirby\Cms\App
+     */
+    public function kirby()
     {
         return $this->model->kirby();
     }

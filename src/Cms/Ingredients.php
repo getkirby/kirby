@@ -73,7 +73,7 @@ class Ingredients
      * @param array $ingredients
      * @return self
      */
-    public static function bake(array $ingredients): self
+    public static function bake(array $ingredients)
     {
         foreach ($ingredients as $name => $ingredient) {
             if (is_a($ingredient, 'Closure') === true) {
