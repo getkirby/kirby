@@ -59,9 +59,9 @@ class ApcuCache extends Cache
      * needs to return a Value object or null if not found
      *
      * @param string $key
-     * @return mixed
+     * @return Kirby\Cache\Value|null
      */
-    public function retrieve(string $key): ?Value
+    public function retrieve(string $key)
     {
         return Value::fromJson(apcu_fetch($this->key($key)));
     }
