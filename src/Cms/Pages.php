@@ -187,10 +187,10 @@ class Pages extends Collection
      * This works recursively for children and
      * children of children, etc.
      *
-     * @param string $id
+     * @param string|null $id
      * @return mixed
      */
-    public function findById(string $id)
+    public function findById(string $id = null)
     {
         // remove trailing or leading slashes
         $id = trim($id, '/');
@@ -259,10 +259,10 @@ class Pages extends Collection
     /**
      * Uses the specialized find by id method
      *
-     * @param string $key
+     * @param string|null $key
      * @return mixed
      */
-    public function findByKey(string $key)
+    public function findByKey(string $key = null)
     {
         return $this->findById($key);
     }
