@@ -482,12 +482,8 @@ class File extends ModelWithContent
      *
      * @internal
      * @param string|array|false $settings
-<<<<<<< HEAD
-     * @return array
-=======
      * @param array $thumbSettings
      * @return array|null
->>>>>>> Fix and clean code base
      */
     public function panelImage($settings = null): ?array
     {
