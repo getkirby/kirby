@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 
 /**
@@ -25,7 +26,7 @@ class ContentLock
     protected $data;
 
     /**
-     * The model
+     * The model to manage locking/unlocking for
      *
      * @var ModelWithContent
      */
@@ -47,7 +48,7 @@ class ContentLock
      */
     public function create(): bool
     {
-        // Check if model is already locked by another user
+        // check if model is already locked by another user
         if (
             isset($this->data['lock']) === true &&
             $this->data['lock']['user'] !== $this->user()->id()
@@ -79,11 +80,13 @@ class ContentLock
             $data['user'] !== $this->user()->id() &&
             $user = $this->kirby()->user($data['user'])
         ) {
+            $time = intval($data['time']);
+
             return [
                 'locked'    => true,
                 'user'      => $user->id(),
                 'email'     => $user->email(),
-                'time'      => $time = intval($data['time']),
+                'time'      => $time,
                 'canUnlock' => $time + $this->kirby()->option('lock.duration', 60 * 2) <= time()
             ];
         }
@@ -113,7 +116,7 @@ class ContentLock
     }
 
     /**
-     * Returns if the user's lock has been removed by another user
+     * Returns if the current user's lock has been removed by another user
      *
      * @return bool
      */
@@ -190,12 +193,9 @@ class ContentLock
             return true;
         }
 
-        // store lock data
-        $data = $this->data['lock'];
-
         // add lock user to unlocked data
         $this->data['unlock']   = $this->data['unlock'] ?? [];
-        $this->data['unlock'][] = $data['user'];
+        $this->data['unlock'][] = $this->data['lock']['user'];
 
         // remove lock
         unset($this->data['lock']);
@@ -204,8 +204,8 @@ class ContentLock
     }
 
     /**
-     * Get current authenticated user.
-     * Throws exception if none is authenticated.
+     * Returns currently authenticated user;
+     * throws exception if none is authenticated
      *
      * @return Kirby\Cms\User
      */
