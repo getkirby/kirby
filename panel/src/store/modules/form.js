@@ -71,6 +71,7 @@ export default {
     },
     DELETE_CHANGES(state, id) {
       Vue.set(state.models[id], "changes", {});
+      Vue.set(state.models[id], "values", clone(state.models[id].originals));
       localStorage.removeItem("kirby$form$" + id);
     },
     IS_DISABLED(state, disabled) {
@@ -103,14 +104,15 @@ export default {
       if (original === current) {
         Vue.delete(state.models[id].changes, field);
       } else {
-        Vue.set(state.models[id].changes, field, value);
+        Vue.set(state.models[id].changes, field, true);
       }
 
       localStorage.setItem(
         "kirby$form$" + id,
         JSON.stringify({
+          api: state.models[id].api,
           originals: state.models[id].originals,
-          changes: state.models[id].changes
+          values: state.models[id].values
         })
       );
     }
@@ -140,11 +142,11 @@ export default {
 
         Api.get(model.api + "/unlock").then(response => {
           if (response.isUnlocked === true) {
-            context.commit("UNLOCK", data.changes);
+            context.commit("UNLOCK", data.values);
 
-          } else if (data.changes) {
-            Object.keys(data.changes).forEach(field => {
-              const value = data.changes[field];
+          } else if (data.values) {
+            Object.keys(data.values).forEach(field => {
+              const value = data.values[field];
               context.commit("UPDATE", [model.id, field, value]);
             });
           }
