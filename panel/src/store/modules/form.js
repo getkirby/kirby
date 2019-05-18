@@ -7,7 +7,9 @@ export default {
   state: {
     models: {},
     current: null,
-    isLocked: false
+    isDisabled: false,
+    lock: null,
+    unlock: null
   },
   getters: {
     current: state => {
@@ -29,8 +31,11 @@ export default {
     isCurrent: (state) => id => {
       return state.current === id;
     },
-    isLocked: (state) => {
-      return state.isLocked === true;
+    isDisabled: (state) => {
+      return state.isDisabled === true;
+    },
+    lock: state => {
+      return state.lock;
     },
     model: (state, getters) => id => {
       return getters.exists(id)
@@ -47,6 +52,9 @@ export default {
     },
     values: (state, getters) => id => {
       return clone(getters.model(id).values);
+    },
+    unlock: state => {
+      return state.unlock;
     }
   },
   mutations: {
@@ -61,15 +69,18 @@ export default {
     CURRENT(state, id) {
       state.current = id;
     },
-    IS_LOCKED(state, locked) {
-      state.isLocked = locked;
+    DELETE_CHANGES(state, id) {
+      Vue.set(state.models[id], "changes", {});
+      localStorage.removeItem("kirby$form$" + id);
+    },
+    IS_DISABLED(state, disabled) {
+      state.isDisabled = disabled;
+    },
+    LOCK(state, lock) {
+      state.lock = lock;
     },
     REMOVE(state, id) {
       Vue.delete(state.models, id);
-      localStorage.removeItem("kirby$form$" + id);
-    },
-    DELETE_CHANGES(state, id) {
-      Vue.set(state.models[id], "changes", {});
       localStorage.removeItem("kirby$form$" + id);
     },
     SET_ORIGINALS(state, [id, originals]) {
@@ -77,6 +88,9 @@ export default {
     },
     SET_VALUES(state, [id, values]) {
       state.models[id].values = clone(values);
+    },
+    UNLOCK(state, unlock) {
+      state.unlock = unlock;
     },
     UPDATE(state, [id, field, value]) {
       value = clone(value);
@@ -89,12 +103,15 @@ export default {
       if (original === current) {
         Vue.delete(state.models[id].changes, field);
       } else {
-        Vue.set(state.models[id].changes, field, true);
+        Vue.set(state.models[id].changes, field, value);
       }
 
       localStorage.setItem(
         "kirby$form$" + id,
-        JSON.stringify(state.models[id].values)
+        JSON.stringify({
+          originals: state.models[id].originals,
+          changes: state.models[id].changes
+        })
       );
     }
   },
@@ -116,19 +133,40 @@ export default {
       context.commit("CREATE", model);
       context.commit("CURRENT", model.id);
 
-      const values = localStorage.getItem("kirby$form$" + model.id);
+      const stored = localStorage.getItem("kirby$form$" + model.id);
 
-      if (values) {
-        const data = JSON.parse(values);
+      if (stored) {
+        const data = JSON.parse(stored);
 
-        Object.keys(data).forEach(field => {
-          const value = data[field];
-          context.commit("UPDATE", [model.id, field, value]);
+        Api.get(model.api + "/unlock").then(response => {
+          if (response.isUnlocked === true) {
+            context.commit("UNLOCK", data.changes);
+
+          } else if (data.changes) {
+            Object.keys(data.changes).forEach(field => {
+              const value = data.changes[field];
+              context.commit("UPDATE", [model.id, field, value]);
+            });
+          }
         });
       }
     },
+    disable(context) {
+      context.commit("IS_DISABLED", true);
+    },
+    enable(context) {
+      context.commit("IS_DISABLED", false);
+    },
+    lock(context, lock) {
+      context.commit("LOCK", lock);
+    },
     remove(context, id) {
       context.commit("REMOVE", id);
+    },
+    reset(context) {
+      context.commit("CURRENT", null);
+      context.commit("LOCK", null);
+      context.commit("UNLOCK", null);
     },
     revert(context, id) {
       const model = context.getters.model(id);
@@ -153,21 +191,21 @@ export default {
       const model = context.getters.model(id);
 
       if (context.getters.isCurrent(id)) {
-        if (context.state.isLocked) {
+        if (context.state.isDisabled) {
           return false;
         }
       }
 
+      context.dispatch("disable");
+
       // Send to api
       return Api.patch(model.api, model.values).then(() => {
         context.dispatch("revert", id);
+        context.dispatch("enable");
       });
     },
-    lock(context) {
-      context.commit("IS_LOCKED", true);
-    },
-    unlock(context) {
-      context.commit("IS_LOCKED", false);
+    unlock(context, unlock) {
+      context.commit("UNLOCK", unlock);
     },
     update(context, [id, field, value]) {
       context.commit("UPDATE", [id, field, value]);

@@ -2,12 +2,12 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <k-view v-else class="k-page-view">
+  <k-view v-else :data-locked="isLocked" class="k-page-view">
 
     <k-header
       :tabs="tabs"
       :tab="tab"
-      :editable="permissions.changeTitle"
+      :editable="permissions.changeTitle && !isLocked"
       @edit="action('rename')"
     >
       {{ page.title }}
@@ -24,15 +24,20 @@
         <k-button
           v-if="status"
           :class="['k-status-flag', 'k-status-flag-' + page.status]"
-          :disabled="permissions.changeStatus === false"
-          :icon="permissions.changeStatus === false ? 'protected' : 'circle'"
+          :disabled="!permissions.changeStatus || isLocked"
+          :icon="!permissions.changeStatus || isLocked ? 'protected' : 'circle'"
           :responsive="true"
           @click="action('status')"
         >
           {{ status.label }}
         </k-button>
         <k-dropdown>
-          <k-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
+          <k-button
+            :responsive="true"
+            :disabled="isLocked === true"
+            icon="cog"
+            @click="$refs.settings.toggle()"
+          >
             {{ $t('settings') }}
           </k-button>
           <k-dropdown-content ref="settings" :options="options" @action="action" />
@@ -105,14 +110,6 @@ export default {
     };
   },
   computed: {
-    prev() {
-      if (this.page.prev) {
-        return {
-          link: this.$api.pages.link(this.page.prev.id),
-          tooltip: this.page.prev.title
-        };
-      }
-    },
     language() {
       return this.$store.state.languages.current;
     },
@@ -121,6 +118,14 @@ export default {
         return {
           link: this.$api.pages.link(this.page.next.id),
           tooltip: this.page.next.title
+        };
+      }
+    },
+    prev() {
+      if (this.page.prev) {
+        return {
+          link: this.$api.pages.link(this.page.prev.id),
+          tooltip: this.page.prev.title
         };
       }
     },

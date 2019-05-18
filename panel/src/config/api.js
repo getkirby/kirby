@@ -6,8 +6,10 @@ import store from "@/store/store.js";
 Api.config.endpoint = config.api;
 Api.requests = [];
 
-Api.config.onStart = (requestId) => {
-  store.dispatch("isLoading", true);
+Api.config.onStart = (requestId, silent) => {
+  if (silent === false) {
+    store.dispatch("isLoading", true);
+  }
   Api.requests.push(requestId);
 };
 
@@ -27,7 +29,10 @@ Api.config.onError = error => {
   }
 
   // handle requests that return no auth
-  if (error.code === 403) {
+  if (
+    error.code === 403 &&
+    (error.message === "Unauthenticated" || error.key === "access.panel")
+  ) {
     store.dispatch("user/logout", true);
   }
 };

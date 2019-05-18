@@ -86,34 +86,45 @@ export default {
   },
   methods: {
     action(file, action) {
-      switch (action) {
-        case "edit":
-          this.$router.push(file.link);
-          break;
-        case "download":
-          window.open(file.url);
-          break;
-        case "rename":
-          this.$refs.rename.open(file.parent, file.filename);
-          break;
-        case "replace":
-          this.replace(file);
-          break;
-        case "remove":
-          if (this.data.length <= this.options.min) {
-            const number = this.options.min > 1 ? "plural" : "singular";
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.section.files.min." + number, {
-                section: this.options.headline || this.name,
-                min: this.options.min
-              })
-            });
-            break;
-          }
+      // check first if file is locked
+      const url = this.$api.files.url(file.parent, file.filename, "lock");
+      this.$api.get(url).then(response => {
 
-          this.$refs.remove.open(file.parent, file.filename);
-          break;
-      }
+        // restrict actions if file is locked
+        if (response.locked && ["download", "edit"].includes(action) === false) {
+          this.$store.dispatch('notification/error', this.$t("lock.file.isLocked", { email: response.email }));
+          return;
+        }
+
+        switch (action) {
+          case "edit":
+            this.$router.push(file.link);
+            break;
+          case "download":
+            window.open(file.url);
+            break;
+          case "rename":
+            this.$refs.rename.open(file.parent, file.filename);
+            break;
+          case "replace":
+            this.replace(file);
+            break;
+          case "remove":
+            if (this.data.length <= this.options.min) {
+              const number = this.options.min > 1 ? "plural" : "singular";
+              this.$store.dispatch("notification/error", {
+                message: this.$t("error.section.files.min." + number, {
+                  section: this.options.headline || this.name,
+                  min: this.options.min
+                })
+              });
+              break;
+            }
+
+            this.$refs.remove.open(file.parent, file.filename);
+            break;
+        }
+      });
     },
     drop(files) {
       if (this.add === false) {

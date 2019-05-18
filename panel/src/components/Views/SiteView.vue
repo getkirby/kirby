@@ -2,11 +2,16 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <k-view v-else key="site-view" class="k-site-view">
+  <k-view 
+    v-else 
+    key="site-view" 
+    :data-locked="isLocked" 
+    class="k-site-view"
+  >
     <k-header
       :tabs="tabs"
       :tab="tab"
-      :editable="permissions.changeTitle"
+      :editable="permissions.changeTitle && !isLocked"
       @edit="action('rename')"
     >
       {{ site.title }}
@@ -55,6 +60,9 @@ export default {
     };
   },
   computed: {
+    isLocked() {
+      return this.$store.getters["form/lock"] !== null;
+    },
     language() {
       return this.$store.state.languages.current;
     }

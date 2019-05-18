@@ -7,10 +7,10 @@
 
     <k-file-preview :file="file" />
 
-    <k-view class="k-file-content">
+    <k-view :data-locked="isLocked" class="k-file-content">
 
       <k-header
-        :editable="permissions.changeName"
+        :editable="permissions.changeName && !isLocked"
         :tabs="tabs"
         :tab="tab"
         @edit="action('rename')"
@@ -23,7 +23,12 @@
             {{ $t("open") }}
           </k-button>
           <k-dropdown>
-            <k-button :responsive="true" icon="cog" @click="$refs.settings.toggle()">
+            <k-button 
+              :responsive="true" 
+              :disabled="isLocked" 
+              icon="cog" 
+              @click="$refs.settings.toggle()"
+            >
               {{ $t('settings') }}
             </k-button>
             <k-dropdown-content ref="settings" :options="options" @action="action" />
