@@ -56,12 +56,13 @@ class ContentLocks
      */
     protected function closeHandle(string $file)
     {
-        if (!isset($this->handles[$file])) {
+        if (isset($this->handles[$file]) === false) {
             return;
         }
-        $handle = $this->handles[$file];
 
+        $handle = $this->handles[$file];
         $result = flock($handle, LOCK_UN) && fclose($handle);
+
         if ($result !== true) {
             throw new Exception('Unexpected file system error.'); // @codeCoverageIgnore
         }
@@ -99,26 +100,20 @@ class ContentLocks
         // first get a handle to ensure a file system lock
         $handle = $this->handle($file);
 
-        if (is_resource($handle)) {
+        if (is_resource($handle) === true) {
             // read data from file
             clearstatcache();
             $filesize = filesize($file);
+
             if ($filesize > 0) {
                 // always read the whole file
                 rewind($handle);
                 $string = fread($handle, $filesize);
-
-                $data = Yaml::decode($string);
-            } else {
-                // we don't need to read empty files
-                $data = [];
+                $data   = Yaml::decode($string);
             }
-        } else {
-            // file does not already exist
-            $data = [];
         }
 
-        $this->data[$file] = $data;
+        $this->data[$file] = $data ?? [];
 
         return $this->data[$file][$id] ?? [];
     }
@@ -133,7 +128,7 @@ class ContentLocks
     protected function handle(string $file, bool $create = false)
     {
         // check for an already open handle
-        if (isset($this->handles[$file])) {
+        if (isset($this->handles[$file]) === true) {
             return $this->handles[$file];
         }
 
@@ -143,7 +138,7 @@ class ContentLocks
         }
 
         $handle = @fopen($file, 'c+b');
-        if (!is_resource($handle)) {
+        if (is_resource($handle) === false) {
             throw new Exception('Lock file ' . $file . ' could not be opened.'); // @codeCoverageIgnore
         }
 
@@ -186,18 +181,19 @@ class ContentLocks
         // make sure to unset model id entries,
         // if no lock data for the model exists
         foreach ($this->data[$file] as $id => $data) {
+            // there is no data for that model whatsoever
             if (
                 isset($data['lock']) === false &&
                 (isset($data['unlock']) === false ||
                 count($data['unlock']) === 0)
             ) {
-                // there is no data for that model whatsoever
                 unset($this->data[$file][$id]);
+
+            // there is empty unlock data, but still lock data
             } elseif (
                 isset($data['unlock']) === true &&
                 count($data['unlock']) === 0
             ) {
-                // there is empty unlock data, but still lock data
                 unset($this->data[$file][$id]['unlock']);
             }
         }
@@ -221,7 +217,7 @@ class ContentLocks
 
         // write the new contents
         $result = fwrite($handle, $yaml);
-        if (!is_int($result) || $result === 0) {
+        if (is_int($result) === false || $result === 0) {
             throw new Exception('Could not write lock file ' . $file . '.'); // @codeCoverageIgnore
         }
 
