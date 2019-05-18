@@ -8,7 +8,7 @@ use Kirby\Toolkit\F;
 use Throwable;
 
 /**
- * ContentLocks
+ * Manages all content lock files
  *
  * @package   Kirby Cms
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -20,14 +20,16 @@ class ContentLocks
 {
 
     /**
-     * The data
+     * Data from the `.lock` files
+     * that have been read so far
+     * cached by `.lock` file path
      *
      * @var array
      */
     protected $data = [];
 
     /**
-     * Returns path to a model's lock file
+     * Returns the path to a model's lock file
      *
      * @param ModelWithContent $model
      * @return string
@@ -37,16 +39,20 @@ class ContentLocks
         return $model->contentFileDirectory() . '/.lock';
     }
 
+    /**
+     * Returns the lock/unlock data for the specified model
+     *
+     * @param ModelWithContent $model
+     * @return array
+     */
     public function get(ModelWithContent $model): array
     {
         $file = static::file($model);
         $id   = static::id($model);
 
-        if (
-            isset($this->data[$file]) === true &&
-            isset($this->data[$file][$id]) === true
-        ) {
-            return $this->data[$file][$id];
+        // return from cache if file was already loaded
+        if (isset($this->data[$file]) === true) {
+            return $this->data[$file][$id] ?? [];
         }
 
         try {
@@ -61,7 +67,8 @@ class ContentLocks
     }
 
     /**
-     * Returns prepended model id
+     * Returns model ID used as the key for the data array;
+     * prepended with a slash because the $site otherwise won't have an ID
      *
      * @param ModelWithContent $model
      * @return string
@@ -71,6 +78,13 @@ class ContentLocks
         return '/' . $model->id();
     }
 
+    /**
+     * Sets and writes the lock/unlock data for the specified model
+     *
+     * @param ModelWithContent $model
+     * @param array $data
+     * @return boolean
+     */
     public function set(ModelWithContent $model, array $data): bool
     {
         $file = static::file($model);
@@ -86,15 +100,18 @@ class ContentLocks
                 (isset($data['unlock']) === false ||
                 count($data['unlock']) === 0)
             ) {
+                // there is no data for that model whatsoever
                 unset($this->data[$file][$id]);
             } elseif (
                 isset($data['unlock']) === true &&
                 count($data['unlock']) === 0
             ) {
+                // there is empty unlock data, but still lock data
                 unset($this->data[$file][$id]['unlock']);
             }
         }
 
+        // there is no data left in the file whatsoever, delete the file
         if (count($this->data[$file]) === 0) {
             return F::remove($file);
         }
