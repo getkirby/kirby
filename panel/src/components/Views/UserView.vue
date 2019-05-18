@@ -2,13 +2,18 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else-if="ready" class="k-user-view">
+  <div v-else-if="ready" :data-locked="isLocked" class="k-user-view">
 
     <div class="k-user-profile">
       <k-view>
         <template v-if="avatar">
           <k-dropdown>
-            <k-button :tooltip="$t('avatar')" class="k-user-view-image" @click="$refs.picture.toggle()">
+            <k-button 
+              :tooltip="$t('avatar')" 
+              :disabled="isLocked" 
+              class="k-user-view-image" 
+              @click="$refs.picture.toggle()"
+            >
               <k-image
                 v-if="avatar"
                 :cover="true"
@@ -33,9 +38,9 @@
         </template>
 
         <k-button-group>
-          <k-button :disabled="!permissions.changeEmail" icon="email" @click="action('email')">{{ $t("email") }}: {{ user.email }}</k-button>
-          <k-button :disabled="!permissions.changeRole" icon="bolt" @click="action('role')">{{ $t("role") }}: {{ user.role.title }}</k-button>
-          <k-button :disabled="!permissions.changeLanguage" icon="globe" @click="action('language')">{{ $t("language") }}: {{ user.language }}</k-button>
+          <k-button :disabled="!permissions.changeEmail || isLocked" icon="email" @click="action('email')">{{ $t("email") }}: {{ user.email }}</k-button>
+          <k-button :disabled="!permissions.changeRole || isLocked" icon="bolt" @click="action('role')">{{ $t("role") }}: {{ user.role.title }}</k-button>
+          <k-button :disabled="!permissions.changeLanguage || isLocked" icon="globe" @click="action('language')">{{ $t("language") }}: {{ user.language }}</k-button>
         </k-button-group>
       </k-view>
     </div>
@@ -43,7 +48,7 @@
     <k-view>
 
       <k-header
-        :editable="permissions.changeName"
+        :editable="permissions.changeName && !isLocked"
         :tabs="tabs"
         :tab="tab"
         @edit="action('rename')"
@@ -52,7 +57,7 @@
         <template v-else>{{ user.name }}</template>
         <k-button-group slot="left">
           <k-dropdown>
-            <k-button icon="cog" @click="$refs.settings.toggle()">
+            <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
               {{ $t('settings') }}
             </k-button>
             <k-dropdown-content ref="settings" :options="options" @action="action" />

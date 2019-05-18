@@ -707,6 +707,16 @@ class App
     }
 
     /**
+     * Returns the app's locks object
+     *
+     * @return ContentLocks
+     */
+    public function locks(): ContentLocks
+    {
+        return new ContentLocks;
+    }
+
+    /**
      * Parses Markdown
      *
      * @internal

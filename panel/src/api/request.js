@@ -3,7 +3,7 @@ import store from "@/store/store.js";
 
 export default {
   running: 0,
-  request(path, options) {
+  request(path, options, silent = false) {
     options = Object.assign(options || {}, {
       credentials: "same-origin",
       cache: "no-cache",
@@ -24,7 +24,7 @@ export default {
     // create a request id
     const id = path + "/" + JSON.stringify(options);
 
-    api.config.onStart(id);
+    api.config.onStart(id, silent);
     this.running++;
 
     return fetch(api.config.endpoint + "/" + path, options)
@@ -61,7 +61,7 @@ export default {
         throw error;
       });
   },
-  get(path, query, options) {
+  get(path, query, options, silent = false) {
     if (query) {
       path +=
         "?" +
@@ -70,21 +70,22 @@ export default {
           .join("&");
     }
 
-    return this.request(path, Object.assign(options || {}, { method: "GET" }));
+    return this.request(path, Object.assign(options || {}, { method: "GET" }), silent);
   },
-  post(path, data, options, method = "POST") {
+  post(path, data, options, method = "POST", silent = false) {
     return this.request(
       path,
       Object.assign(options || {}, {
         method: method,
         body: JSON.stringify(data)
-      })
+      }),
+      silent
     );
   },
-  patch(path, data, options) {
-    return this.post(path, data, options, "PATCH");
+  patch(path, data, options, silent = false) {
+    return this.post(path, data, options, "PATCH", silent);
   },
-  delete(path, data, options) {
-    return this.post(path, data, options, "DELETE");
+  delete(path, data, options, silent = false) {
+    return this.post(path, data, options, "DELETE", silent);
   }
 };

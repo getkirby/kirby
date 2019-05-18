@@ -23,6 +23,9 @@ router.beforeEach((to, from, next) => {
   // store the current view
   store.dispatch("view", to.meta.view);
 
+  // reset the form store
+  store.dispatch("form/reset");
+
   // keep the last visted path
   if (!to.meta.outside) {
     store.dispatch("user/visit", to.path);

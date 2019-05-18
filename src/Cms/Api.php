@@ -122,6 +122,10 @@ class Api extends BaseApi
         $modelTypes = ['site' => 'site', 'users' => 'user', 'pages' => 'page'];
         $modelName  = $modelTypes[$modelType] ?? null;
 
+        if (Str::endsWith($modelType, '/files') === true) {
+            $modelName = 'file';
+        }
+
         if ($modelName === null) {
             throw new InvalidArgumentException('Invalid file model type');
         }
@@ -133,6 +137,12 @@ class Api extends BaseApi
 
             if ($modelName === 'page') {
                 $modelId = str_replace('+', '/', $modelId);
+            }
+
+            if ($modelName === 'file') {
+                if ($model = $this->file(...explode('/files/', $path))) {
+                    return $model;
+                }
             }
         }
 

@@ -89,4 +89,9 @@ export default {
 .k-fields-section input[type="submit"] {
   display: none;
 }
+
+[data-locked] .k-fields-section {
+  opacity: .2;
+  pointer-events: none;
+}
 </style>
