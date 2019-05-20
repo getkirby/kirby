@@ -13,6 +13,13 @@ class MemCachedTest extends TestCase
     {
         if (class_exists('Memcached') === false) {
             $this->markTestSkipped('The Memcached extension is not available.');
+            return;
+        }
+
+        $connection = new \Memcached();
+        $connection->addServer('localhost', 11211);
+        if (is_array($connection->getStats()) !== true) {
+            $this->markTestSkipped('The Memcached server is not running.');
         }
     }
 
