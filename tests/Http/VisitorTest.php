@@ -58,4 +58,14 @@ class VisitorTest extends TestCase
         $visitor = new Visitor(['acceptedMimeType' => 'text/html']);
         $this->assertTrue($visitor->acceptsMimeType('text/html'));
     }
+
+    public function testAcceptsLanguage()
+    {
+        $visitor = new Visitor(['acceptedLanguage' => 'en-US']);
+        $this->assertTrue($visitor->acceptsLanguage('en_US'));
+        $this->assertTrue($visitor->acceptsLanguage('en'));
+        $this->assertFalse($visitor->acceptsLanguage('de_DE'));
+        $this->assertFalse($visitor->acceptsLanguage('de'));
+    }
+
 }
