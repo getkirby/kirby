@@ -36,6 +36,23 @@ class DataTest extends TestCase
         Data::handler('foo');
     }
 
+    public function testEncodeDecode()
+    {
+        $data = [
+            'name'  => 'Homer Simpson',
+            'email' => 'homer@simpson.com'
+        ];
+
+        $handlers = ['json', 'yml', 'txt'];
+
+        foreach ($handlers as $handler) {
+            $encoded = Data::encode($data, $handler);
+            $decoded = Data::decode($encoded, $handler);
+
+            $this->assertEquals($data, $decoded);
+        }
+    }
+
     public function testReadWrite()
     {
         $data = [
