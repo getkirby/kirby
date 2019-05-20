@@ -22,6 +22,14 @@ class HtmlTest extends TestCase
         $this->assertEquals($expected, $html);
     }
 
+    public function test__callStaticWithVoidElement()
+    {
+        $html = Html::hr(['class' => 'test']);
+        $expected = '<hr class="test">';
+
+        $this->assertEquals($expected, $html);
+    }
+
     public function testA()
     {
         $html = Html::a('https://getkirby.com');
@@ -91,6 +99,21 @@ class HtmlTest extends TestCase
             $result = Html::attr($test['input']);
             $this->assertEquals($test['expected'], $result);
         }
+    }
+
+    public function testAttrSingleMode()
+    {
+        $result = Html::attr('a', 'a');
+        $this->assertEquals('a="a"', $result);
+
+        $result = Html::attr('a', null);
+        $this->assertEquals(null, $result);
+
+        $result = Html::attr('a', ['a', 'b']);
+        $this->assertEquals('a="a b"', $result);
+
+        $result = Html::attr('a', ['a', null]);
+        $this->assertEquals('a="a"', $result);
     }
 
     public function testBreaks()
@@ -336,5 +359,29 @@ class HtmlTest extends TestCase
         $expected = '<iframe allowfullscreen src="' . $src . '?foo=bar"></iframe>';
 
         $this->assertEquals($expected, $html);
+    }
+
+    public function testVideoWithInvalidUrl()
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Unexpected video type');
+
+        Html::video('https://somevideo.com');
+    }
+
+    public function testVideoWithInvalidYoutubeUrl()
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid Youtube source');
+
+        Html::video('https://youtube.com/asldjhaskjdhakjs');
+    }
+
+    public function testVideoWithInvalidVimeoUrl()
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid Vimeo source');
+
+        Html::video('https://vimeo.com/asldjhaskjdhakjs');
     }
 }

@@ -93,6 +93,20 @@ class CollectionTest extends TestCase
         $this->assertCount(1, $groupB);
     }
 
+    public function testGroupByWithInvalidKey()
+    {
+        $collection = new Collection([
+            $a = new MockObject(['id' => 'a', 'group' => 'a']),
+            $b = new MockObject(['id' => 'b', 'group' => 'a']),
+            $c = new MockObject(['id' => 'c', 'group' => 'b']),
+        ]);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Cannot group by non-string values. Did you mean to call group()?');
+
+        $collection->groupBy(1);
+    }
+
     public function testIndexOfWithObject()
     {
         $collection = new Collection([

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
@@ -125,8 +126,12 @@ class Collection extends BaseCollection
      * @param bool   $i (ignore upper/lowercase for group names)
      * @return Collection A collection with an item for each group and a Collection for each group
      */
-    public function groupBy(string $field, bool $i = true)
+    public function groupBy($field, bool $i = true)
     {
+        if (is_string($field) === false) {
+            throw new Exception('Cannot group by non-string values. Did you mean to call group()?');
+        }
+
         $groups = new Collection([], $this->parent());
 
         foreach ($this->data as $key => $item) {
