@@ -19,6 +19,9 @@ class ATest extends TestCase
     {
         $array = $this->_array();
 
+        // non-array
+        $this->assertEquals('test', A::get('test', 'test'));
+
         // single key
         $this->assertEquals('miao', A::get($array, 'cat'));
 
