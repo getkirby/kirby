@@ -521,7 +521,7 @@ class Collection extends Iterator implements Countable
      * @param bool $i
      * @return Collection A new collection with an element for each group and a subcollection in each group
      */
-    public function groupBy(string $field, bool $i = true)
+    public function groupBy($field, bool $i = true)
     {
         if (is_string($field) === false) {
             throw new Exception('Cannot group by non-string values. Did you mean to call group()?');

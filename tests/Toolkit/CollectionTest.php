@@ -2,6 +2,21 @@
 
 namespace Kirby\Toolkit;
 
+class StringObject
+{
+    protected $value;
+
+    public function __construct(string $value)
+    {
+        $this->value = $value;
+    }
+
+    public function __toString()
+    {
+        return $this->value;
+    }
+}
+
 class CollectionTest extends TestCase
 {
     public function setUp(): void
@@ -13,6 +28,12 @@ class CollectionTest extends TestCase
         ];
 
         $this->collection = new Collection($this->data);
+    }
+
+    public function test__debuginfo()
+    {
+        $collection = new Collection(['a' => 'A', 'b' => 'B']);
+        $this->assertEquals(['a', 'b'], $collection->__debuginfo());
     }
 
     public function assertIsUntouched()
@@ -153,6 +174,72 @@ class CollectionTest extends TestCase
         $this->assertEquals('peter', $firstAdmin['username']);
     }
 
+    public function testGroupWithInvalidKey()
+    {
+        $collection = new Collection(['a' => 'A']);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid grouping value for key: a');
+
+        $collection->group(function ($item) {
+            return false;
+        });
+    }
+
+    public function testGroupByArray()
+    {
+        $collection = new Collection(['a' => 'A']);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('You cannot group by arrays or objects');
+
+        $collection->group(function ($item) {
+            return ['a' => 'b'];
+        });
+    }
+
+    public function testGroupByObject()
+    {
+        $collection = new Collection(['a' => 'A']);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('You cannot group by arrays or objects');
+
+        $collection->group(function ($item) {
+            return new Obj(['a' => 'b']);
+        });
+    }
+
+    public function testGroupByStringObject()
+    {
+        $collection = new Collection();
+
+        $collection->user1 = [
+            'username' => 'peter',
+            'group'    => new StringObject('admin')
+        ];
+
+        $collection->user2 = [
+            'username' => 'paul',
+            'group'    => new StringObject('admin')
+        ];
+
+        $collection->user3 = [
+            'username' => 'mary',
+            'group'    => new StringObject('client')
+        ];
+
+        $groups = $collection->group(function ($item) {
+            return $item['group'];
+        });
+
+        $this->assertEquals(2, $groups->admin()->count());
+        $this->assertEquals(1, $groups->client()->count());
+
+        $firstAdmin = $groups->admin()->first();
+        $this->assertEquals('peter', $firstAdmin['username']);
+    }
+
     public function testGroupBy()
     {
         $collection = new Collection();
@@ -181,6 +268,16 @@ class CollectionTest extends TestCase
         $this->assertEquals('peter', $firstAdmin['username']);
     }
 
+    public function testGroupByWithInvalidKey()
+    {
+        $collection = new Collection(['a' => 'A']);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Cannot group by non-string values. Did you mean to call group()?');
+
+        $collection->groupBy(1);
+    }
+
     public function testIndexOf()
     {
         $this->assertEquals(1, $this->collection->indexOf('My second element'));
@@ -197,12 +294,30 @@ class CollectionTest extends TestCase
         $this->assertFalse($collection->isEmpty());
     }
 
+    public function testIsEven()
+    {
+        $collection = new Collection(['a' => 'a']);
+        $this->assertFalse($collection->isEven());
+
+        $collection = new Collection(['a' => 'a', 'b' => 'b']);
+        $this->assertTrue($collection->isEven());
+    }
+
     public function testIsNotEmpty()
     {
         $collection = new Collection([]);
 
         $this->assertTrue($collection->isEmpty());
         $this->assertFalse($collection->isNotEmpty());
+    }
+
+    public function testIsOdd()
+    {
+        $collection = new Collection(['a' => 'a']);
+        $this->assertTrue($collection->isOdd());
+
+        $collection = new Collection(['a' => 'a', 'b' => 'b']);
+        $this->assertFalse($collection->isOdd());
     }
 
     public function testIsset()

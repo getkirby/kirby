@@ -67,5 +67,4 @@ class VisitorTest extends TestCase
         $this->assertFalse($visitor->acceptsLanguage('de_DE'));
         $this->assertFalse($visitor->acceptsLanguage('de'));
     }
-
 }
