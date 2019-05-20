@@ -94,7 +94,7 @@ class KirbyTagTest extends TestCase
             'b' => 'attrB'
         ];
 
-        $result = KirbyTag::test('test value', $attr);
+        $result = KirbyTag::factory('test', 'test value', $attr);
 
         $this->assertEquals('test: test value-attrA-attrB', $result);
     }

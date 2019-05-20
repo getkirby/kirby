@@ -59,6 +59,7 @@ class RoleTest extends TestCase
 
         $this->assertEquals('nobody', $role->name());
         $this->assertEquals('Nobody', $role->title());
+        $this->assertTrue($role->isNobody());
     }
 
     public function testTranslateTitle()
@@ -85,5 +86,24 @@ class RoleTest extends TestCase
         ]);
 
         $this->assertEquals('Editor', $role->title());
+    }
+
+    public function testToArrayAndDebuginfo()
+    {
+        $role = new Role([
+            'name'        => 'editor',
+            'description' => 'Editor'
+        ]);
+
+        $expected = [
+            'description' => 'Editor',
+            'id'          => 'editor',
+            'name'        => 'editor',
+            'permissions' => $role->permissions()->toArray(),
+            'title'       => 'Editor'
+        ];
+
+        $this->assertEquals($expected, $role->toArray());
+        $this->assertEquals($expected, $role->__debuginfo());
     }
 }
