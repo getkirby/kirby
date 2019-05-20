@@ -49,6 +49,8 @@ class UrlTest extends TestCase
         $this->assertEquals('/', Url::to());
         $this->assertEquals($this->_yt, Url::to($this->_yt));
         $this->assertEquals('/getkirby.com', Url::to('getkirby.com'));
+        $this->assertEquals('./something', Url::to('./something'));
+        $this->assertEquals('../something', Url::to('../something'));
     }
 
     public function testLast()
@@ -106,6 +108,63 @@ class UrlTest extends TestCase
     {
         $this->assertEquals(null, Url::base());
         $this->assertEquals('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
+    }
+
+    public function testPath()
+    {
+        // stripped
+        $this->assertEquals('', Url::path('https://getkirby.com'));
+        $this->assertEquals('', Url::path('https://getkirby.com/'));
+        $this->assertEquals('a/b', Url::path('a/b'));
+        $this->assertEquals('a/b', Url::path('https://getkirby.com/a/b'));
+        $this->assertEquals('a/b', Url::path('https://getkirby.com/a/b/'));
+
+        // leading slash
+        $this->assertEquals('', Url::path('https://getkirby.com', true));
+        $this->assertEquals('', Url::path('https://getkirby.com/', true));
+        $this->assertEquals('/a/b', Url::path('a/b', true));
+        $this->assertEquals('/a/b', Url::path('https://getkirby.com/a/b', true));
+        $this->assertEquals('/a/b', Url::path('https://getkirby.com/a/b/', true));
+
+        // trailing slash
+        $this->assertEquals('', Url::path('https://getkirby.com', false, true));
+        $this->assertEquals('', Url::path('https://getkirby.com/', false, true));
+        $this->assertEquals('a/b/', Url::path('a/b', false, true));
+        $this->assertEquals('a/b/', Url::path('https://getkirby.com/a/b', false, true));
+        $this->assertEquals('a/b/', Url::path('https://getkirby.com/a/b/', false, true));
+
+        // leading and trailing slash
+        $this->assertEquals('', Url::path('https://getkirby.com', true, true));
+        $this->assertEquals('', Url::path('https://getkirby.com/', true, true));
+        $this->assertEquals('/a/b/', Url::path('a/b', true, true));
+        $this->assertEquals('/a/b/', Url::path('https://getkirby.com/a/b', true, true));
+        $this->assertEquals('/a/b/', Url::path('https://getkirby.com/a/b/', true, true));
+    }
+
+    public function testStripPath()
+    {
+        $this->assertEquals('https://getkirby.com', Url::stripPath('https://getkirby.com/a/b'));
+        $this->assertEquals('https://getkirby.com/', Url::stripPath('https://getkirby.com/a/b/'));
+    }
+
+    public function testStripQuery()
+    {
+        $this->assertEquals('https://getkirby.com', Url::stripQuery('https://getkirby.com?a=b'));
+        $this->assertEquals('https://getkirby.com/', Url::stripQuery('https://getkirby.com/?a=b'));
+    }
+
+    public function testStripFragment()
+    {
+        $this->assertEquals('https://getkirby.com', Url::stripFragment('https://getkirby.com#a/b'));
+        $this->assertEquals('https://getkirby.com/', Url::stripFragment('https://getkirby.com/#a/b'));
+    }
+
+    public function testQuery()
+    {
+        $this->assertEquals('', Url::query('https://getkirby.com'));
+        $this->assertEquals('a=b', Url::query('?a=b'));
+        $this->assertEquals('a=b', Url::query('https://getkirby.com?a=b'));
+        $this->assertEquals('a=b', Url::query('https://getkirby.com/?a=b'));
     }
 
     public function testShort()
