@@ -25,9 +25,6 @@ import store from "./store/store.js";
  new Vue({
   router,
   store,
-  render: h => {
-    return h(App);
-  },
   created() {
     window.panel.app = this;
 
@@ -35,5 +32,8 @@ import store from "./store/store.js";
     window.panel.plugins.created.forEach(plugin => {
       plugin(this);
     });
-  }
+  },
+  render: h => {
+    return h(App);
+  },
 }).$mount("#app");

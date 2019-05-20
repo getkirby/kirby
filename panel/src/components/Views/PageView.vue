@@ -132,12 +132,6 @@ export default {
       return "page-" + this.page.id + "-tabs";
     }
   },
-  created() {
-    this.$events.$on("page.changeSlug", this.update);
-  },
-  destroyed() {
-    this.$events.$off("page.changeSlug", this.update);
-  },
   watch: {
     language() {
       this.fetch();
@@ -145,6 +139,12 @@ export default {
     path() {
       this.fetch();
     }
+  },
+  created() {
+    this.$events.$on("page.changeSlug", this.update);
+  },
+  destroyed() {
+    this.$events.$off("page.changeSlug", this.update);
   },
   methods: {
     action(action) {
