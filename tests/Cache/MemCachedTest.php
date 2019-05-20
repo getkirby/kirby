@@ -9,7 +9,14 @@ use PHPUnit\Framework\TestCase;
  */
 class MemCachedTest extends TestCase
 {
-    public function tearDown()
+    public function setUp(): void
+    {
+        if (class_exists('Memcached') === false) {
+            $this->markTestSkipped('The Memcached extension is not available.');
+        }
+    }
+
+    public function tearDown(): void
     {
         $connection = new \Memcached();
         $connection->addServer('localhost', 11211);
