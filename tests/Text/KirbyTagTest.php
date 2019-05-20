@@ -30,6 +30,37 @@ class KirbyTagTest extends TestCase
         KirbyTag::$types = [];
     }
 
+    public function test__call()
+    {
+        $attr = [
+            'a' => 'attrA',
+            'b' => 'attrB'
+        ];
+
+        $data = [
+            'a' => 'dataA',
+            'c' => 'dataC'
+        ];
+
+        $tag = new KirbyTag('test', 'test value', $attr, $data);
+
+        $this->assertEquals('dataA', $tag->a());
+        $this->assertEquals('attrB', $tag->b());
+        $this->assertEquals('dataC', $tag->c());
+    }
+
+    public function test__callStatic()
+    {
+        $attr = [
+            'a' => 'attrA',
+            'b' => 'attrB'
+        ];
+
+        $result = KirbyTag::test('test value', $attr);
+
+        $this->assertEquals('test: test value-attrA-attrB', $result);
+    }
+
     public function testAttr()
     {
         $tag = new KirbyTag('test', 'test value', [
@@ -54,6 +85,42 @@ class KirbyTagTest extends TestCase
 
         $this->assertNull($tag->b);
         $this->assertEquals('fallback', $tag->attr('b', 'fallback'));
+    }
+
+    public function testFactory()
+    {
+        $attr = [
+            'a' => 'attrA',
+            'b' => 'attrB'
+        ];
+
+        $result = KirbyTag::test('test value', $attr);
+
+        $this->assertEquals('test: test value-attrA-attrB', $result);
+    }
+
+    public function testOption()
+    {
+        $attr = [
+            'a' => 'attrA',
+            'b' => 'attrB'
+        ];
+
+        $data = [
+            'a' => 'dataA',
+            'b' => 'dataB'
+        ];
+
+        $options = [
+            'a' => 'optionA',
+            'b' => 'optionB'
+        ];
+
+        $tag = new KirbyTag('test', 'test value', $attr, $data, $options);
+
+        $this->assertEquals('optionA', $tag->option('a'));
+        $this->assertEquals('optionB', $tag->option('b'));
+        $this->assertEquals('optionC', $tag->option('c', 'optionC'));
     }
 
     public function testParse()
@@ -181,5 +248,11 @@ class KirbyTagTest extends TestCase
             'b' => 'attrB'
         ]);
         $tag->render();
+    }
+
+    public function testType()
+    {
+        $tag = new KirbyTag('test', 'test value');
+        $this->assertEquals('test', $tag->type());
     }
 }
