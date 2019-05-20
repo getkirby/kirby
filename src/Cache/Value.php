@@ -64,7 +64,7 @@ class Value
      * Returns the expiration date as UNIX timestamp or
      * null if the value never expires
      *
-     * @return int
+     * @return int|null
      */
     public function expires(): ?int
     {
@@ -80,7 +80,7 @@ class Value
      * Creates a value object from an array
      *
      * @param array $array
-     * @return Kirby\Cache\Value
+     * @return self
      */
     public static function fromArray(array $array)
     {
@@ -92,7 +92,7 @@ class Value
      * returns null on error
      *
      * @param string $json
-     * @return Kirby\Cache\Value|null
+     * @return self|null
      */
     public static function fromJson(string $json)
     {
