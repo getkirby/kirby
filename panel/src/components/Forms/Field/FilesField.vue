@@ -117,6 +117,10 @@ export default {
         });
     },
     selectUpload(upload, files) {
+      if (this.multiple === false) {
+        this.selected = [];
+      }
+
       files.forEach(file => {
         this.selected.push(file);
       });
@@ -127,7 +131,7 @@ export default {
     upload() {
       this.$refs.fileUpload.open({
         url: config.api + "/" + this.endpoints.field + "/upload",
-        multiple: true,
+        multiple: this.multiple,
       });
     }
   }
