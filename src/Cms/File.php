@@ -531,6 +531,37 @@ class File extends ModelWithContent
     }
 
     /**
+     * Prepares the response data for file pickers
+     * and file fields
+     *
+     * @param array|null $params
+     * @return array
+     */
+    public function panelPickerData(array $params = []): array
+    {
+        $image = $this->panelImage($params['image'] ?? []);
+        $icon  = $this->panelIcon($image);
+
+        if (empty($params['model']) === false) {
+            $uuid = $this->parent() === $params['model'] ? $this->filename() : $this->id();
+        }
+
+        return [
+            'filename' => $this->filename(),
+            'dragText' => $this->dragText(),
+            'icon'     => $icon,
+            'id'       => $this->id(),
+            'image'    => $image,
+            'info'     => $this->toString($params['info'] ?? false),
+            'link'     => $this->panelUrl(true),
+            'text'     => $this->toString($params['text'] ?? '{{ file.filename }}'),
+            'type'     => $this->type(),
+            'url'      => $this->url(),
+            'uuid'     => $uuid,
+        ];
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *

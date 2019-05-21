@@ -1,12 +1,21 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
-    <k-dropdown slot="options" v-if="more && !disabled">
-      <k-button icon="add" @click="$refs.picker.toggle()">{{ $t('add') }}</k-button>
-      <k-dropdown-content ref="picker" align="right">
-        <k-dropdown-item icon="check" @click="open">{{ $t('select') }}</k-dropdown-item>
-        <k-dropdown-item icon="upload" @click="upload">{{ $t('upload') }}</k-dropdown-item>
-      </k-dropdown-content>
-    </k-dropdown>
+
+    <template slot="options" v-if="more && !disabled">
+      <template v-if="uploads">
+        <k-dropdown>
+          <k-button ref="pickerToggle" icon="add" @click="$refs.picker.toggle()">{{ $t('add') }}</k-button>
+          <k-dropdown-content ref="picker" align="right">
+            <k-dropdown-item icon="check" @click="open">{{ $t('select') }}</k-dropdown-item>
+            <k-dropdown-item icon="upload" @click="upload">{{ $t('upload') }}</k-dropdown-item>
+          </k-dropdown-content>
+        </k-dropdown>
+      </template>
+      <template v-else>
+        <k-button icon="add" @click="open">{{ $t('add') }}</k-button>
+      </template>
+    </template>
+
     <template v-if="selected.length">
       <k-draggable
         :element="elements.list"
@@ -40,7 +49,7 @@
       v-else
       :layout="layout"
       icon="image"
-      v-on="{ click: !disabled ? open : null }"
+      v-on="{ click: !disabled ? prompt : null }"
     >
       {{ empty || $t('field.files.empty') }}
     </k-empty>
@@ -57,6 +66,9 @@ import picker from "@/mixins/picker.js";
 
 export default {
   mixins: [picker],
+  props: {
+    uploads: [Boolean, Object, Array],
+  },
   created() {
     this.$events.$on("file.delete", this.removeById);
   },
@@ -64,6 +76,15 @@ export default {
     this.$events.$off("file.delete", this.removeById);
   },
   methods: {
+    prompt(e) {
+      e.stopPropagation();
+
+      if (this.uploads) {
+        this.$refs.picker.toggle();
+      } else {
+        this.open();
+      }
+    },
     open() {
       return this.$api
         .get(this.endpoints.field)
@@ -100,6 +121,7 @@ export default {
         this.selected.push(file);
       });
 
+      this.onInput();
       this.$events.$emit("model.update");
     },
     upload() {

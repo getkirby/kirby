@@ -580,8 +580,10 @@ trait AppPlugins
     protected function extensionsFromSystem()
     {
         // Form Field Mixins
-        FormField::$mixins['min']     = include static::$root . '/config/fields/mixins/min.php';
-        FormField::$mixins['options'] = include static::$root . '/config/fields/mixins/options.php';
+        FormField::$mixins['filepicker'] = include static::$root . '/config/fields/mixins/filepicker.php';
+        FormField::$mixins['min']        = include static::$root . '/config/fields/mixins/min.php';
+        FormField::$mixins['options']    = include static::$root . '/config/fields/mixins/options.php';
+        FormField::$mixins['upload']     = include static::$root . '/config/fields/mixins/upload.php';
 
         // Tag Aliases
         KirbyTag::$aliases = [

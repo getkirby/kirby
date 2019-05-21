@@ -31,7 +31,7 @@ export default {
   font-size: $font-size-small;
   color: $color-dark-grey;
 }
-.k-empty .k-icon {
+.k-empty > .k-icon {
   color: $color-light-grey;
 }
 
@@ -56,13 +56,13 @@ export default {
 .k-empty[data-layout="list"] {
   height: 38px;
 
-  .k-icon {
+  & > .k-icon {
     width: 36px;
     height: 36px;
     border-right: 1px solid rgba(#000, 0.05);
   }
 
-  p {
+  & > p {
     line-height: 1.25rem;
     padding: 0.5rem 0.75rem;
   }
