@@ -35,7 +35,7 @@ export default [
   },
   {
     path: "/installation",
-    component: Vue.component("k-installtaion-view"),
+    component: Vue.component("k-installation-view"),
     meta: {
       outside: true
     }
