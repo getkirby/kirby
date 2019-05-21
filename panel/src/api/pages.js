@@ -9,6 +9,9 @@ export default {
 
     return api.post(this.url(parent, "children"), data);
   },
+  duplicate(id, data) {
+    return api.post(this.url(id, "duplicate"), data);
+  },
   url(id, path) {
     let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
 
@@ -70,6 +73,13 @@ export default {
         icon: "template",
         text: Vue.i18n.translate("page.changeTemplate"),
         disabled: !options.changeTemplate
+      });
+
+      result.push({
+        click: "duplicate",
+        icon: "copy",
+        text: Vue.i18n.translate("duplicate"),
+        disabled: !options.duplicate
       });
 
       result.push({

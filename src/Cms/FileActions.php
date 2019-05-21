@@ -116,6 +116,33 @@ trait FileActions
     }
 
     /**
+     * Copy the file to the given page
+     *
+     * @param Page $page
+     * @return File
+     */
+    public function copy(Page $page): File
+    {
+        F::copy($this->root(), $page->root() . '/' . $this->filename());
+
+        if ($this->kirby()->multilang() === true) {
+
+            foreach ($this->kirby()->languages() as $language) {
+                $contentFile = $this->contentFile($language->code());
+                F::copy($contentFile, $page->root() . '/' . basename($contentFile));
+            }
+
+        } else {
+
+            $contentFile = $this->contentFile();
+            F::copy($contentFile, $page->root() . '/' . basename($contentFile));
+
+        }
+
+        return $page->clone()->file($this->filename());
+    }
+
+    /**
      * Creates a new file on disk and returns the
      * File object. The store is used to handle file
      * writing, so it can be replaced by any other

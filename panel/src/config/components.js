@@ -10,6 +10,7 @@ import LanguageCreateDialog from "@/components/Dialogs/LanguageCreateDialog.vue"
 import LanguageRemoveDialog from "@/components/Dialogs/LanguageRemoveDialog.vue";
 import LanguageUpdateDialog from "@/components/Dialogs/LanguageUpdateDialog.vue";
 import PageCreateDialog from "@/components/Dialogs/PageCreateDialog.vue";
+import PageDuplicateDialog from "@/components/Dialogs/PageDuplicateDialog.vue";
 import PageRemoveDialog from "@/components/Dialogs/PageRemoveDialog.vue";
 import PageRenameDialog from "@/components/Dialogs/PageRenameDialog.vue";
 import PageStatusDialog from "@/components/Dialogs/PageStatusDialog.vue";
@@ -35,6 +36,7 @@ Vue.component("k-language-create-dialog", LanguageCreateDialog);
 Vue.component("k-language-remove-dialog", LanguageRemoveDialog);
 Vue.component("k-language-update-dialog", LanguageUpdateDialog);
 Vue.component("k-page-create-dialog", PageCreateDialog);
+Vue.component("k-page-duplicate-dialog", PageDuplicateDialog);
 Vue.component("k-page-rename-dialog", PageRenameDialog);
 Vue.component("k-page-remove-dialog", PageRemoveDialog);
 Vue.component("k-page-status-dialog", PageStatusDialog);

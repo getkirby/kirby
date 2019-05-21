@@ -488,6 +488,38 @@ trait PageActions
         });
     }
 
+    /**
+     * Duplicates the page with the given
+     * parameters (title, slug, files)
+     *
+     * @param array $params
+     * @return Page
+     */
+    public function duplicate(array $params = [])
+    {
+        $content = $this->content()->toArray();
+
+        if (empty($params['title']) === false) {
+            $content['title'] = $params['title'];
+        }
+
+        $copy = Page::create([
+            'content'  => $content,
+            'isDraft'  => true,
+            'parent'   => $this->parent(),
+            'slug'     => $params['slug'] ?? ($this->slug() . '-copy'),
+            'template' => $this->intendedTemplate()->name(),
+        ]);
+
+        if (($params['files'] ?? false) === true) {
+            foreach ($this->files() as $file) {
+                $file->copy($copy);
+            }
+        }
+
+        return $copy;
+    }
+
     public function publish()
     {
         if ($this->isDraft() === false) {

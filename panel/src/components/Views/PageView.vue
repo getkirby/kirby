@@ -61,6 +61,7 @@
     />
 
     <k-page-rename-dialog ref="rename" @success="update" />
+    <k-page-duplicate-dialog ref="duplicate" />
     <k-page-url-dialog ref="url" />
     <k-page-status-dialog ref="status" @success="update" />
     <k-page-template-dialog ref="template" @success="update" />
@@ -149,6 +150,9 @@ export default {
   methods: {
     action(action) {
       switch (action) {
+        case "duplicate":
+          this.$refs.duplicate.open(this.page.id);
+          break;
         case "preview":
           this.$api.pages
             .preview(this.page.id)

@@ -42,6 +42,7 @@ class Permissions
             'changeTitle'    => true,
             'create'         => true,
             'delete'         => true,
+            'duplicate'      => true,
             'preview'        => true,
             'read'           => true,
             'sort'           => true,

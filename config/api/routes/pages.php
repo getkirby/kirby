@@ -63,6 +63,13 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/duplicate',
+        'method'  => 'POST',
+        'action'  => function (string $id) {
+            return $this->page($id)->duplicate($this->requestBody());
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/slug',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
