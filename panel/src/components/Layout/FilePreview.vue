@@ -12,6 +12,7 @@
           <k-image
             v-if="file.panelImage && file.panelImage.url"
             :src="file.panelImage.url"
+            :srcset="file.panelImage.srcset"
             back="none"
           />
           <k-icon
