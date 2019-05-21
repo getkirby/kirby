@@ -158,6 +158,7 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Cms\\Pages' => __DIR__ . '/../..' . '/src/Cms/Pages.php',
         'Kirby\\Cms\\Pagination' => __DIR__ . '/../..' . '/src/Cms/Pagination.php',
         'Kirby\\Cms\\Panel' => __DIR__ . '/../..' . '/src/Cms/Panel.php',
+        'Kirby\\Cms\\PanelPlugins' => __DIR__ . '/../..' . '/src/Cms/PanelPlugins.php',
         'Kirby\\Cms\\Permissions' => __DIR__ . '/../..' . '/src/Cms/Permissions.php',
         'Kirby\\Cms\\Plugin' => __DIR__ . '/../..' . '/src/Cms/Plugin.php',
         'Kirby\\Cms\\PluginAssets' => __DIR__ . '/../..' . '/src/Cms/PluginAssets.php',
