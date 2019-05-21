@@ -166,6 +166,43 @@ return [
 
                     return $data;
                 }
+            ],
+            [
+                'pattern' => 'upload',
+                'action' => function () {
+                    $field   = $this->field();
+                    $uploads = $field->uploads();
+
+                    if ($uploads === false) {
+                        throw new Exception('Uploads are disabled for this field');
+                    }
+
+                    if ($parentQuery = ($uploads['parent'] ?? null)) {
+                        $parent = $field->model()->query($parentQuery);
+                    } else {
+                        $parent = $field->model();
+                    }
+
+                    if (is_a($parent, 'Kirby\Cms\File') === true) {
+                        $parent = $parent->parent();
+                    }
+
+                    return $this->upload(function ($source, $filename) use ($field, $parent, $uploads) {
+
+                        $file = $parent->createFile([
+                            'source'   => $source,
+                            'template' => $uploads['template'] ?? null,
+                            'filename' => $filename,
+                        ]);
+
+                        if (is_a($file, 'Kirby\Cms\File') === false) {
+                            throw new Exception('The file could not be uploaded');
+                        }
+
+                        return $field->fileResponse($file);
+
+                    });
+                }
             ]
         ];
     },

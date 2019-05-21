@@ -1,13 +1,12 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
-    <k-button
-      v-if="more && !disabled"
-      slot="options"
-      icon="add"
-      @click="open"
-    >
-      {{ $t('select') }}
-    </k-button>
+    <k-dropdown slot="options" v-if="more && !disabled">
+      <k-button icon="add" @click="$refs.picker.toggle()">{{ $t('add') }}</k-button>
+      <k-dropdown-content ref="picker" align="right">
+        <k-dropdown-item icon="check" @click="open">{{ $t('select') }}</k-dropdown-item>
+        <k-dropdown-item icon="upload" @click="upload">{{ $t('upload') }}</k-dropdown-item>
+      </k-dropdown-content>
+    </k-dropdown>
     <template v-if="selected.length">
       <k-draggable
         :element="elements.list"
@@ -45,11 +44,15 @@
     >
       {{ empty || $t('field.files.empty') }}
     </k-empty>
+
     <k-files-dialog ref="selector" @submit="select" />
+    <k-upload ref="fileUpload" @success="selectUpload" />
+
   </k-field>
 </template>
 
 <script>
+import config from "@/config/config.js";
 import picker from "@/mixins/picker.js";
 
 export default {
@@ -92,6 +95,19 @@ export default {
           );
         });
     },
+    selectUpload(upload, files) {
+      files.forEach(file => {
+        this.selected.push(file);
+      });
+
+      this.$events.$emit("model.update");
+    },
+    upload() {
+      this.$refs.fileUpload.open({
+        url: config.api + "/" + this.endpoints.field + "/upload",
+        multiple: true,
+      });
+    }
   }
 };
 </script>
