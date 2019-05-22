@@ -33,7 +33,7 @@
   "error.access.panel": "No estás autorizado para acceder al panel",
 
   "error.avatar.create.fail": "No se pudo subir la foto de perfil.",
-  "error.avatar.delete.fail": "Nose pudo borrar la foto de perfil",
+  "error.avatar.delete.fail": "No se pudo borrar la foto de perfil",
   "error.avatar.dimensions.invalid":
     "Por favor, mantenga el ancho y la altura de la imagen de perfil debajo de 3000 píxeles",
   "error.avatar.mime.forbidden":
@@ -300,7 +300,7 @@
   "open": "Abrir",
   "options": "Opciones",
 
-  "orientation": "Orientacion",
+  "orientation": "Orientación",
   "orientation.landscape": "Paisaje",
   "orientation.portrait": "Retrato",
   "orientation.square": "Cuadrado",
