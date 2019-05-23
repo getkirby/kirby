@@ -27,30 +27,24 @@ export default {
     return {
       notification: null,
       page: {
+        copyFiles: false,
         id: null,
-        files: false,
         slug: '',
-        title: '',
       }
     };
   },
   computed: {
     fields() {
       return {
-        title: {
-          label: this.$t("title"),
-          type: "text",
-          required: true,
-          icon: "title"
-        },
         slug: {
           label: this.$t("slug"),
           type: "text",
           required: true,
           counter: false,
+          spellcheck: false,
           icon: "url"
         },
-        files: {
+        copyFiles: {
           label: this.$t("page.duplicate.files"),
           type: "toggle",
           required: true,
@@ -59,17 +53,17 @@ export default {
     }
   },
   watch: {
-    "page.title"(title) {
-      this.page.slug = slug(title);
+    "page.slug"(value) {
+      this.page.slug = slug(value);
     }
   },
   methods: {
     open(id) {
       this.$api.pages
-        .get(id)
+        .get(id, {language: "@default"})
         .then(page => {
-          this.page.id    = page.id;
-          this.page.title = page.title + " " + this.$t("page.duplicate.appendix");
+          this.page.id   = page.id;
+          this.page.slug = page.slug + "-" + slug(this.$t("copy"));
           this.$refs.dialog.open();
         })
         .catch(error => {
@@ -78,11 +72,7 @@ export default {
     },
     submit() {
       this.$api.pages
-        .duplicate(this.page.id, {
-          files: this.page.files,
-          slug: this.page.slug,
-          title: this.page.title,
-        })
+        .duplicate(this.page.id, this.page.slug, this.page.copyFiles)
         .then(page => {
           this.success({
             route: this.$api.pages.link(page.id),

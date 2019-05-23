@@ -490,34 +490,55 @@ trait PageActions
 
     /**
      * Duplicates the page with the given
-     * parameters (title, slug, files)
+     * slug and optionally copies all files
      *
-     * @param array $params
+     * @param string $slug
+     * @param bool $copyFiles
      * @return Page
      */
-    public function duplicate(array $params = [])
+    public function duplicate(string $slug = null, bool $copyFiles = false)
     {
-        $content = $this->content()->toArray();
 
-        if (empty($params['title']) === false) {
-            $content['title'] = $params['title'];
-        }
+        // create the slug for the duplicate
+        $slug = Str::slug($slug ?? $this->slug() . '-copy');
 
-        $copy = Page::create([
-            'content'  => $content,
-            'isDraft'  => true,
-            'parent'   => $this->parent(),
-            'slug'     => $params['slug'] ?? ($this->slug() . '-copy'),
-            'template' => $this->intendedTemplate()->name(),
-        ]);
+        return $this->commit('duplicate', [$this, $slug, $copyFiles], function ($page, $slug, $copyFiles) {
+            $kirby = $page->kirby();
 
-        if (($params['files'] ?? false) === true) {
-            foreach ($this->files() as $file) {
-                $file->copy($copy);
+            if ($kirby->multilang() === true) {
+                $defaultLang = $kirby->defaultLanguage()->code();
+                $content     = $page->content($defaultLang)->toArray();
+            } else {
+                $content = $page->content()->toArray();
             }
-        }
 
-        return $copy;
+            $copy = Page::create([
+                'content'  => $content,
+                'isDraft'  => true,
+                'parent'   => $page->parent(),
+                'slug'     => $slug,
+                'template' => $page->intendedTemplate()->name(),
+            ]);
+
+            // copy translated content
+            if ($kirby->multilang() === true) {
+                foreach ($kirby->languages()->not($defaultLang) as $language) {
+                    // get translated content
+                    $content = $page->content($language->code())->toArray();
+
+                    // save the translated content
+                    $copy = $copy->save($content, $language->code());
+                }
+            }
+
+            if ($copyFiles === true) {
+                foreach ($page->files() as $file) {
+                    $file->copy($copy);
+                }
+            }
+
+            return $copy;
+        });
     }
 
     public function publish()

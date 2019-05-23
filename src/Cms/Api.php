@@ -37,7 +37,7 @@ class Api extends BaseApi
         $this->setRequestMethod($method);
         $this->setRequestData($requestData);
 
-        if ($languageCode = $this->requestHeaders('x-language')) {
+        if ($languageCode = $this->language()) {
             $this->kirby->setCurrentLanguage($languageCode);
         }
 
@@ -162,7 +162,7 @@ class Api extends BaseApi
      */
     public function language(): ?string
     {
-        return $this->requestHeaders('x-language');
+        return get('language') ?? $this->requestHeaders('x-language');
     }
 
     /**

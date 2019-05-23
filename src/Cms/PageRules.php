@@ -262,6 +262,20 @@ class PageRules
         return true;
     }
 
+    public static function duplicate(Page $page, string $slug, bool $files = false): bool
+    {
+        if ($page->permissions()->duplicate() !== true) {
+            throw new PermissionException([
+                'key' => 'page.duplicate.permission',
+                'data' => [
+                    'slug' => $page->slug()
+                ]
+            ]);
+        }
+
+        return true;
+    }
+
     public static function update(Page $page, array $content = []): bool
     {
         if ($page->permissions()->update() !== true) {

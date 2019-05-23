@@ -9,8 +9,11 @@ export default {
 
     return api.post(this.url(parent, "children"), data);
   },
-  duplicate(id, data) {
-    return api.post(this.url(id, "duplicate"), data);
+  duplicate(id, slug, copyFiles) {
+    return api.post(this.url(id, "duplicate"), {
+      slug: slug,
+      copyFiles: copyFiles
+    });
   },
   url(id, path) {
     let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
