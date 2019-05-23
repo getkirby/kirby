@@ -1,7 +1,7 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
 
-    <template slot="options" v-if="more && !disabled">
+    <template v-if="more && !disabled" slot="options">
       <template v-if="uploads">
         <k-dropdown>
           <k-button ref="pickerToggle" icon="add" @click="$refs.picker.toggle()">{{ $t('add') }}</k-button>

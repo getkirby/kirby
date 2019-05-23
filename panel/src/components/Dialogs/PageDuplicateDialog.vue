@@ -51,7 +51,7 @@ export default {
           icon: "url"
         },
         files: {
-          label: "Copy files",
+          label: this.$t("page.duplicate.files"),
           type: "toggle",
           required: true,
         }
@@ -69,8 +69,7 @@ export default {
         .get(id)
         .then(page => {
           this.page.id    = page.id;
-          this.page.title = page.title + " copy";
-          this.page.slug  = page.slug + "-copy";
+          this.page.title = page.title + " " + this.$t("page.duplicate.appendix");
           this.$refs.dialog.open();
         })
         .catch(error => {

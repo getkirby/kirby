@@ -318,6 +318,8 @@
     "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
   "page.delete.confirm.title": "Enter the page title to confirm",
   "page.draft.create": "Create draft",
+  "page.duplicate.appendix": "Copy",
+  "page.duplicate.files": "Copy files",
   "page.status": "Status",
   "page.status.draft": "Draft",
   "page.status.draft.description":
