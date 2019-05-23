@@ -48,6 +48,9 @@ export default {
           text: Vue.i18n.translate("open"),
           disabled: options.preview === false
         });
+
+        result.push("-");
+
       }
 
       result.push({
@@ -56,6 +59,15 @@ export default {
         text: Vue.i18n.translate("rename"),
         disabled: !options.changeTitle
       });
+
+      result.push({
+        click: "duplicate",
+        icon: "copy",
+        text: Vue.i18n.translate("duplicate"),
+        disabled: !options.duplicate
+      });
+
+      result.push("-");
 
       result.push({
         click: "url",
@@ -78,12 +90,7 @@ export default {
         disabled: !options.changeTemplate
       });
 
-      result.push({
-        click: "duplicate",
-        icon: "copy",
-        text: Vue.i18n.translate("duplicate"),
-        disabled: !options.duplicate
-      });
+      result.push("-");
 
       result.push({
         click: "remove",

@@ -1,15 +1,18 @@
 <template>
   <div v-if="isOpen" :data-align="align" class="k-dropdown-content">
     <slot>
-      <k-dropdown-item
-        v-for="(option, index) in items"
-        :ref="_uid + '-item-' + index"
-        :key="_uid + '-item-' + index"
-        v-bind="option"
-        @click="$emit('action', option.click)"
-      >
-        {{ option.text }}
-      </k-dropdown-item>
+      <template v-for="(option, index) in items">
+        <hr v-if="option === '-'" :key="_uid + '-item-' + index">
+        <k-dropdown-item
+          v-else
+          :ref="_uid + '-item-' + index"
+          :key="_uid + '-item-' + index"
+          v-bind="option"
+          @click="$emit('action', option.click)"
+        >
+          {{ option.text }}
+        </k-dropdown-item>
+      </template>
     </slot>
   </div>
 </template>
