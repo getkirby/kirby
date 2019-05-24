@@ -35,7 +35,7 @@ class File extends ModelWithContent
     use FileFoundation;
     use FileModifications;
     use HasMethods;
-    use hasPanelImage;
+    use HasPanelImage;
     use HasSiblings;
 
     /**
