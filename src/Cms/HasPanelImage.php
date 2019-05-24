@@ -71,7 +71,7 @@ trait HasPanelImage
                     'width' => 76,
                     'height' => 76,
                     'crop' => 'center'
-                ])->url(true) . $modified . ' 2x' . $image->thumb([
+                ])->url(true) . $modified . ' 2x, ' . $image->thumb([
                     'width' => 152,
                     'height' => 152,
                     'crop' => 'center'
