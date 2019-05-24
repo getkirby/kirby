@@ -10,6 +10,7 @@ class FieldMethodsTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
         new App([
             'roots' => [
                 'index' => '/dev/null'

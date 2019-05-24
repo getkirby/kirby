@@ -145,7 +145,7 @@ class ExceptionTest extends TestCase
         $this->assertTrue($exception->isTranslated());
 
         I18n::$translations = [
-            'en' => [
+            'test' => [
                 'error.general'      => 'Some general fallback',
                 'error.translatable' => 'Some other translatable fallback'
             ]
