@@ -2,7 +2,6 @@ export default {
   props: {
     blueprint: String,
     parent: String,
-    help: String,
     name: String
   },
   data() {
