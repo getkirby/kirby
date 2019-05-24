@@ -207,4 +207,24 @@ class SystemTest extends TestCase
 
         $this->assertTrue($system->isInstallable());
     }
+
+    public function testRegisterWithInvalidLicenseKey()
+    {
+        $system = new System($this->app);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a valid license key');
+
+        $system->register('abc');
+    }
+
+    public function testRegisterWithInvalidEmail()
+    {
+        $system = new System($this->app);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a valid email address');
+
+        $system->register('K3-PRO-abc', 'invalid');
+    }
 }
