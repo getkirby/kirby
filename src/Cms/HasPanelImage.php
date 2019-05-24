@@ -39,12 +39,13 @@ trait HasPanelImage
         }
 
         if ($image = $this->panelImageSource($settings['query'] ?? null)) {
+            $modified = '?t=' . $image->modified();
+
             // for cards
             $settings['cards'] = [
                 'url' => $image->thumb([
-                    'width'  => 128,
-                    'height' => 128
-                ])->url(true) . '?t=' . $image->modified(),
+                    'width'  => 128
+                ])->url(true) . $modified,
                 'srcset' => $image->srcset([
                     128,
                     256,
@@ -59,13 +60,22 @@ trait HasPanelImage
             $settings['list'] = [
                 'url' => $image->thumb([
                     'width'  => 38,
-                    'height' => 38
-                ])->url(true) . '?t=' . $image->modified(),
-                'srcset' => $image->srcset([
-                    38  => '1x',
-                    76  => '2x',
-                    152 => '3x'
-                ])
+                    'height' => 38,
+                    'crop' => 'center'
+                ])->url(true) . $modified,
+                'srcset' => $image->thumb([
+                    'width' => 38,
+                    'height' => 38,
+                    'crop' => 'center'
+                ])->url(true) . $modified . ' 1x, ' . $image->thumb([
+                    'width' => 76,
+                    'height' => 76,
+                    'crop' => 'center'
+                ])->url(true) . $modified . ' 2x' . $image->thumb([
+                    'width' => 152,
+                    'height' => 152,
+                    'crop' => 'center'
+                ])->url(true) . $modified . ' 3x'
             ];
 
             unset($settings['query']);
