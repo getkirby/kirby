@@ -208,6 +208,7 @@ return [
                 'accept'   => $this->accept,
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
+                'help'     => $this->help,
                 'layout'   => $this->layout,
                 'link'     => $this->link,
                 'max'      => $this->max,

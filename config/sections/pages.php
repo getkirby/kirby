@@ -1,9 +1,7 @@
 <?php
 
-use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 return [
@@ -268,6 +266,7 @@ return [
                 'add'      => $this->add,
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
+                'help'     => $this->help,
                 'layout'   => $this->layout,
                 'link'     => $this->link,
                 'max'      => $this->max,
