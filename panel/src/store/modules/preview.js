@@ -2,7 +2,7 @@ export default {
   namespaced: true,
   state: {
     active: false,
-    after: null,
+    exit: null,
     model: null,
   },
   getters: {
