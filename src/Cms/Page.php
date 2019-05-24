@@ -951,24 +951,24 @@ class Page extends ModelWithContent
             $settings['url'] = $image->thumb([
                 "width" => 128,
                 "height" => 128
-           ])->url(true) . '?t=' . $image->modified();
+            ])->url(true) . '?t=' . $image->modified();
 
-           // srcset for cards
-           $settings['srcCard'] = $image->srcset([
-               128,
-               256,
-               512,
-               768,
-               1024,
-               2048
-           ]);
+            // srcset for cards
+            $settings['srcCard'] = $image->srcset([
+                128,
+                256,
+                512,
+                768,
+                1024,
+                2048
+            ]);
 
-           // srcset for list items
-           $settings['srcList'] = $image->srcset([
-               38  => '1x',
-               76  => '2x',
-               152 => '3x'
-           ]);
+            // srcset for list items
+            $settings['srcList'] = $image->srcset([
+                38  => '1x',
+                76  => '2x',
+                152 => '3x'
+            ]);
 
             unset($settings['query']);
         }
