@@ -11,7 +11,7 @@
         <k-image
           v-if="image && image.url"
           :src="image.url"
-          :srcset="image.srcset"
+          :srcset="image.srcList"
           :back="image.back || 'pattern'"
           :cover="image.cover"
         />

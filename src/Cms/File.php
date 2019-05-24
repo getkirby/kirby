@@ -511,8 +511,29 @@ class File extends ModelWithContent
         }
 
         if ($image) {
-            $settings['url']    = $image->thumb([ "width" => 128, "height" => 128])->url(true) . '?t=' . $image->modified();
-            $settings['srcset'] = $image->srcset([128, 256, 512, 768, 1024, 2048]);
+            // default thumb
+            $settings['url'] = $image->thumb([
+                 "width" => 128,
+                 "height" => 128
+            ])->url(true) . '?t=' . $image->modified();
+
+            // srcset for cards
+            $settings['srcCard'] = $image->srcset([
+                128,
+                256,
+                512,
+                768,
+                1024,
+                2048
+            ]);
+
+            // srcset for list items
+            $settings['srcList'] = $image->srcset([
+                38  => '1x',
+                76  => '2x',
+                152 => '3x'
+            ]);
+
             unset($settings['query']);
         }
 
