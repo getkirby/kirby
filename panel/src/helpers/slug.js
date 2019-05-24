@@ -10,7 +10,10 @@ export default (string, rules = [], allowed = "") => {
   rules.forEach(ruleset => {
     if (ruleset) {
       Object.keys(ruleset).forEach(rule => {
-        string = string.replace(new RegExp(rule, "g"), ruleset[rule]);
+        const isTrimmed = rule.substr(0,1) !== "/";
+        const trimmed   = rule.substring(1, rule.length - 1);
+        const regex     = isTrimmed ? rule : trimmed;
+        string = string.replace(new RegExp(regex, "g"), ruleset[rule]);
       });
     }
   });
