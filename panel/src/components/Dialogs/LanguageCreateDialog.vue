@@ -68,9 +68,6 @@ export default {
         },
       };
     },
-    language() {
-      return this.$store.state.languages.current;
-    },
     system() {
       return this.$store.state.system.info;
     }
