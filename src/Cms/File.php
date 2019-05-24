@@ -35,6 +35,7 @@ class File extends ModelWithContent
     use FileFoundation;
     use FileModifications;
     use HasMethods;
+    use hasPanelImage;
     use HasSiblings;
 
     /**
@@ -475,69 +476,6 @@ class File extends ModelWithContent
             'back'  => $params['back'] ?? 'pattern',
             'ratio' => $params['ratio'] ?? null,
         ];
-    }
-
-    /**
-     * Panel image definition
-     *
-     * @internal
-     * @param string|array|false $settings
-     * @param array $thumbSettings
-     * @return array|null
-     */
-    public function panelImage($settings = null): ?array
-    {
-        $defaults = [
-            'ratio' => '3/2',
-            'back'  => 'pattern',
-            'cover' => false
-        ];
-
-        // switch the image off
-        if ($settings === false) {
-            return null;
-        }
-
-        if (is_string($settings) === true) {
-            $settings = [
-                'query' => $settings
-            ];
-        }
-
-        $image = $this->query($settings['query'] ?? null, 'Kirby\Cms\File');
-
-        if ($image === null && $this->isViewable() === true) {
-            $image = $this;
-        }
-
-        if ($image) {
-            // default thumb
-            $settings['url'] = $image->thumb([
-                 "width" => 128,
-                 "height" => 128
-            ])->url(true) . '?t=' . $image->modified();
-
-            // srcset for cards
-            $settings['srcCard'] = $image->srcset([
-                128,
-                256,
-                512,
-                768,
-                1024,
-                2048
-            ]);
-
-            // srcset for list items
-            $settings['srcList'] = $image->srcset([
-                38  => '1x',
-                76  => '2x',
-                152 => '3x'
-            ]);
-
-            unset($settings['query']);
-        }
-
-        return array_merge($defaults, (array)$settings);
     }
 
     /**

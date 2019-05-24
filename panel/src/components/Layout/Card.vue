@@ -4,9 +4,9 @@
 
     <component :is="wrapper" :to="link" :target="target">
       <k-image
-        v-if="image && image.url"
-        :src="image.url"
-        :srcset="image.srcCard"
+        v-if="image && image.cards && image.cards.url"
+        :src="image.cards.url"
+        :srcset="image.cards.srcset"
         :ratio="image.ratio || '3/2'"
         :back="image.back || 'black'"
         :cover="image.cover"
