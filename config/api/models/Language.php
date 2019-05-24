@@ -35,11 +35,6 @@ return [
             'code',
             'default',
             'name',
-        ],
-        'current' => [
-            'code',
-            'default',
-            'name',
             'rules'
         ]
     ]

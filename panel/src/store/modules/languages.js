@@ -32,11 +32,6 @@ export default {
   actions: {
     current(context, language) {
       context.commit("SET_CURRENT", language);
-      if (language && language.code) {
-        Api.get("languages/" + language.code, { view: "current" }).then(response => {
-          context.commit("SET_CURRENT", response);
-        });
-      }
     },
     install(context, languages) {
       const defaultLanguage = languages.filter(language => language.default)[0];
