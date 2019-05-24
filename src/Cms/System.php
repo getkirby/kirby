@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Throwable;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Remote;
 use Kirby\Http\Uri;
@@ -12,6 +13,7 @@ use Kirby\Http\Url;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 /**
  * The System class gathers all information
@@ -352,8 +354,20 @@ class System
      * @param string $email
      * @return boolean
      */
-    public function register(string $license, string $email): bool
+    public function register(string $license = null, string $email = null): bool
     {
+        if (Str::startsWith($license, 'K3-PRO-') === false) {
+            throw new InvalidArgumentException([
+                'key' => 'license.format'
+            ]);
+        }
+
+        if (V::email($email) === false) {
+            throw new InvalidArgumentException([
+                'key' => 'license.email'
+            ]);
+        }
+
         $response = Remote::get('https://licenses.getkirby.com/register', [
             'data' => [
                 'license' => $license,
@@ -379,7 +393,9 @@ class System
         Json::write($file, $json);
 
         if ($this->license() === false) {
-            throw new Exception('The license could not be verified');
+            throw new InvalidArgumentException([
+                'key' => 'license.verification'
+            ]);
         }
 
         return true;

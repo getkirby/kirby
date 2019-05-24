@@ -504,7 +504,7 @@ class Str
      * @param  bool     $caseInsensitive
      * @return int|bool
      */
-    public static function position(string $string, string $needle, bool $caseInsensitive = false)
+    public static function position(string $string = null, string $needle, bool $caseInsensitive = false)
     {
         if ($caseInsensitive === true) {
             $string = static::lower($string);
@@ -848,7 +848,7 @@ class Str
      * @param  bool     $caseInsensitive
      * @return bool
      */
-    public static function startsWith(string $string, string $needle, bool $caseInsensitive = false): bool
+    public static function startsWith(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
         if ($needle === '') {
             return true;

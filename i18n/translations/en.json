@@ -66,6 +66,10 @@
   "error.form.incomplete": "Please fix all form errors…",
   "error.form.notSaved": "The form could not be saved",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Please enter a valid email address",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "You are not allowed to change the URL appendix for \"{slug}\"",
   "error.page.changeStatus.incomplete":
