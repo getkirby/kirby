@@ -16,7 +16,6 @@
 export default {
   data() {
     return {
-      hasAccess: false,
       scroll: 0
     }
   },
@@ -27,8 +26,8 @@ export default {
     id() {
       return this.$store.state.form.current;
     },
-    url() {
-      return this.$store.getters["preview/url"];
+    model() {
+      return this.$store.getters["preview/model"];
     },
     view() {
       return window.location.href;
@@ -38,12 +37,11 @@ export default {
     changes() {
       this.load();
     },
-    url() {
+    model() {
       this.load();
     }
   },
   mounted() {
-    this.canAccess();
     this.load();
     this.$events.$on("model.update", this.load);
     this.$events.$on("page.changeTitle", this.load);
@@ -54,23 +52,15 @@ export default {
     window.location.href = this.$store.state.preview.after;
   },
   methods: {
-    canAccess() {
-      try {
-        const doc = this.$refs.preview.contentDocument || this.$refs.preview.content.document;
-        this.hasAccess = doc.body.innerHTML !== null;
-      } catch(err){
-      }
-    },
     load() {
-      if (this.url) {
-        // if permitted, store scroll position
-        if (this.hasAccess) {
-          this.scroll = this.$refs.preview.contentWindow.pageYOffset;
-        }
+      console.log(this.model);
+      if (this.model) {
+        // store scroll position
+        this.scroll = this.$refs.preview.contentWindow.pageYOffset;
 
         // create fake form element
         let form = document.createElement("form");
-        form.action = this.url;
+        form.action = this.model.previewUrl || this.model.url;
         form.target = "k-page-preview";
 
         // create fake input element with JSOn stringified changes
@@ -87,10 +77,8 @@ export default {
       }
     },
     onLoaded() {
-      // if permitted, restore scroll position
-      if (this.hasAccess) {
-        this.$refs.preview.contentWindow.scrollTo({top: this.scroll});
-      }
+      // restore scroll position
+      this.$refs.preview.contentWindow.scrollTo({top: this.scroll});
     }
   }
 };

@@ -32,8 +32,9 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to, from) => {
+  // store the current path for preview exit
   if (window !== window.top) {
-    store.dispatch("preview/after", to.path);
+    store.dispatch("preview/exit", to.path);
   }
 });
 

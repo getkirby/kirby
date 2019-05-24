@@ -78,8 +78,9 @@ export default {
           // remove changes for the old file
           this.$store.dispatch("form/revert", "files/" + this.file.id);
           this.$store.dispatch("notification/success", ":)");
-          this.$emit("success", file);
           this.$events.$emit("file.changeName", file);
+          this.$events.$emit("model.update");
+          this.$emit("success", file);
           this.$refs.dialog.close();
         })
         .catch(error => {

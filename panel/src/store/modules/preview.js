@@ -6,30 +6,31 @@ export default {
     model: null,
   },
   getters: {
-    url: state => {
-      return state.model.previewUrl;
+    model: state => {
+      return state.model;
     }
   },
   mutations: {
     SET_ACTIVE(state, active) {
       state.active = active;
     },
-    SET_AFTER(state, after) {
-      state.after = after;
+    SET_EXIT(state, exit) {
+      state.exit = exit;
     },
     SET_MODEL(state, model) {
       state.model = model;
     }
   },
   actions: {
-    after(context, url) {
-      context.commit("SET_AFTER", url);
-    },
     current(context, model) {
       context.commit("SET_MODEL", model);
     },
+    exit(context, url) {
+      context.commit("SET_EXIT", url);
+    },
     toggle(context) {
-      context.commit("SET_ACTIVE", !context.state.active);
+      const state = !context.state.active;
+      context.commit("SET_ACTIVE", state);
     }
   }
 };

@@ -43,6 +43,7 @@ export default {
           this.$store.dispatch("form/remove", "files/" + this.id);
           this.$store.dispatch("notification/success", ":)");
           this.$events.$emit("file.delete", this.id);
+          this.$events.$emit("model.update");
           this.$emit("success");
           this.$refs.dialog.close();
         })
