@@ -1,6 +1,7 @@
 <template>
+  <k-page-preview v-if="$store.state.preview.active" />
   <div
-    v-if="!$store.state.system.info.isBroken"
+    v-else-if="!$store.state.system.info.isBroken"
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
     :data-topbar="inside"
@@ -32,8 +33,8 @@
 </template>
 
 <script>
-import Search from "@/components/Navigation/Search.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
+import Search from "@/components/Navigation/Search.vue";
 import config from "@/config/config.js";
 
 export default {

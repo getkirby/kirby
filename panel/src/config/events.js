@@ -1,8 +1,19 @@
+import Vue from "vue";
 import { lcfirst } from "@/helpers/stringCase.js";
+
+class EventBus extends Vue {
+  $emit(event, ...args) {
+    if (window !== window.top) {
+      window.top.panel.app.$events.$emit(event, ...args);
+    }
+
+    return super.$emit(event, ...args)
+  }
+}
 
 export default {
   install(Vue) {
-    Vue.prototype.$events = new Vue({
+    Vue.prototype.$events = new EventBus({
       data() {
         return {
           entered: null

@@ -22,6 +22,14 @@
           {{ $t('open') }}
         </k-button>
         <k-button
+          v-if="page.previewUrl"
+          :responsive="true"
+          icon="preview"
+          @click="$store.dispatch('preview/toggle')"
+        >
+          {{ $t('preview') }}
+        </k-button>
+        <k-button
           v-if="status"
           :class="['k-status-flag', 'k-status-flag-' + page.status]"
           :disabled="permissions.changeStatus === false"
@@ -92,7 +100,6 @@ export default {
         status: null
       },
       blueprint: null,
-      preview: true,
       permissions: {
         changeTitle: false,
         changeStatus: false
@@ -207,6 +214,7 @@ export default {
             api: this.$api.pages.link(page.id),
             content: page.content
           });
+          this.$store.dispatch("preview/current", this.page);
         })
         .catch(error => {
           this.issue = error;

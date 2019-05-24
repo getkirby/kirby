@@ -5,6 +5,7 @@ import Vuex from "vuex";
 import form from "./modules/form.js";
 import languages from "./modules/languages.js";
 import notification from "./modules/notification.js";
+import preview from "./modules/preview.js";
 import system from "./modules/system.js";
 import translation from "./modules/translation.js";
 import user from "./modules/user.js";
@@ -89,6 +90,7 @@ export default new Vuex.Store({
     form: form,
     languages: languages,
     notification: notification,
+    preview: preview,
     system: system,
     translation: translation,
     user: user

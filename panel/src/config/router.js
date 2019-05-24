@@ -31,4 +31,10 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+router.afterEach((to, from) => {
+  if (window !== window.top) {
+    store.dispatch("preview/after", to.path);
+  }
+});
+
 export default router;

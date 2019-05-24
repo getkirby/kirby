@@ -22,7 +22,7 @@ import "./config/plugins.js";
 import router from "./config/router.js";
 import store from "./store/store.js";
 
- new Vue({
+new Vue({
   router,
   store,
   created() {
@@ -32,6 +32,13 @@ import store from "./store/store.js";
     window.panel.plugins.created.forEach(plugin => {
       plugin(this);
     });
+
+    // split view: pass store actions to parent window
+    if (window && window !== window.top) {
+      this.$store.subscribeAction((action, state) => {
+        window.top.panel.app.$store.dispatch(action.type, action.payload);
+      })
+    }
   },
   render: h => {
     return h(App);

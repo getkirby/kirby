@@ -87,7 +87,7 @@ export default {
             api: "site",
             content: site.content
           });
-
+          this.$store.dispatch("preview/current", this.site);
         })
         .catch(error => {
           this.issue = error;

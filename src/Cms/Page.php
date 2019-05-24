@@ -342,7 +342,25 @@ class Page extends ModelWithContent
         ]);
 
         // call the template controller if there's one.
-        return array_merge($kirby->controller($this->template()->name(), $data, $contentType), $data);
+        $data = array_merge(
+            $kirby->controller(
+                $this->template()->name(),
+                $data,
+                $contentType
+            ),
+            $data
+        );
+
+        // inject data from preview request
+        if ($preview = get('preview')) {
+            $input = json_decode($preview, true);
+            $form = Form::for($this, [
+                'input' => $input
+            ]);
+            $data['page']->content()->update($form->data());
+        }
+
+        return $data;
     }
 
     /**

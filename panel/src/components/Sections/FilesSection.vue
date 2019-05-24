@@ -163,6 +163,7 @@ export default {
           index: this.pagination.offset
         })
         .then(() => {
+          this.$events.$emit("model.update");
           this.$store.dispatch("notification/success", ":)");
         })
         .catch(response => {
