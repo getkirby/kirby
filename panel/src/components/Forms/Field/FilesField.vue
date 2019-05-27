@@ -49,7 +49,7 @@
       v-else
       :layout="layout"
       icon="image"
-      v-on="{ click: !disabled ? prompt : null }"
+      v-on="{ click: !disabled ? open : false }"
     >
       {{ empty || $t('field.files.empty') }}
     </k-empty>
