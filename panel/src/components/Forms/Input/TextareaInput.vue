@@ -40,8 +40,8 @@
       />
     </div>
 
-    <k-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
-    <k-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
+    <k-toolbar-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
+    <k-toolbar-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
     <k-files-dialog ref="fileDialog" @cancel="cancel" @submit="insertFile($event)" />
     <k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
 
@@ -50,18 +50,10 @@
 
 <script>
 import config from "@/config/config.js";
-import Toolbar from "../Toolbar.vue";
-import EmailDialog from "../Toolbar/EmailDialog.vue";
-import LinkDialog from "../Toolbar/LinkDialog.vue";
 import autosize from "autosize";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
-  components: {
-    "k-toolbar": Toolbar,
-    "k-email-dialog": EmailDialog,
-    "k-link-dialog": LinkDialog
-  },
   inheritAttrs: false,
   props: {
     autofocus: Boolean,

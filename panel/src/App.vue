@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import Search from "@/components/Navigation/Search.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 import config from "@/config/config.js";
 
@@ -40,7 +39,6 @@ export default {
   name: "App",
   components: {
     "k-registration": Registration,
-    "k-search": Search
   },
   data() {
     return {

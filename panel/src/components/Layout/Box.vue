@@ -7,12 +7,7 @@
 </template>
 
 <script>
-import Text from "@/components/Misc/Text.vue";
-
 export default {
-  components: {
-    "k-text": Text
-  },
   props: {
     theme: String,
     text: String

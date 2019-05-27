@@ -109,6 +109,11 @@ import ToggleField from "@/components/Forms/Field/ToggleField.vue";
 import UrlField from "@/components/Forms/Field/UrlField.vue";
 import UsersField from "@/components/Forms/Field/UsersField.vue";
 
+/* Form Toolbar */
+import Toolbar from "@/components/Forms/Toolbar.vue";
+import ToolbarEmailDialog from "@/components/Forms/Toolbar/EmailDialog.vue";
+import ToolbarLinkDialog from "@/components/Forms/Toolbar/LinkDialog.vue";
+
 /* Form Field Previews */
 import FilesFieldPreview from "@/components/Forms/Previews/FilesFieldPreview.vue";
 import EmailFieldPreview from "@/components/Forms/Previews/EmailFieldPreview.vue";
@@ -168,6 +173,10 @@ Vue.component("k-time-field", TimeField);
 Vue.component("k-toggle-field", ToggleField);
 Vue.component("k-url-field", UrlField);
 Vue.component("k-users-field", UsersField);
+
+Vue.component("k-toolbar", Toolbar);
+Vue.component("k-toolbar-email-dialog", ToolbarEmailDialog);
+Vue.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 
 Vue.component("k-email-field-preview", EmailFieldPreview);
 Vue.component("k-files-field-preview", FilesFieldPreview);
@@ -237,6 +246,7 @@ import Link from "@/components/Navigation/Link.vue";
 import Languages from "@/components/Navigation/Languages.vue";
 import Pagination from "@/components/Navigation/Pagination.vue";
 import PrevNext from "@/components/Navigation/PrevNext.vue";
+import Search from "@/components/Navigation/Search.vue";
 import Tag from "@/components/Navigation/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
@@ -249,6 +259,7 @@ Vue.component("k-languages-dropdown", Languages);
 Vue.component("k-link", Link);
 Vue.component("k-pagination", Pagination);
 Vue.component("k-prev-next", PrevNext);
+Vue.component("k-search", Search);
 Vue.component("k-tag", Tag);
 Vue.component("k-topbar", Topbar);
 

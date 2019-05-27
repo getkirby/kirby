@@ -12,12 +12,8 @@
 </template>
 
 <script>
-import Link from "@/components/Navigation/Link.vue";
 
 export default {
-  components: {
-    "k-link": Link
-  },
   props: {
     link: String,
     size: {
