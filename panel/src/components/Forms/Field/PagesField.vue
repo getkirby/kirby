@@ -40,7 +40,7 @@
       v-else
       :layout="layout"
       icon="page"
-      v-on="{ click: !disabled ? open : null }"
+      v-on="{ click: !disabled ? open : false }"
     >
       {{ empty || $t('field.pages.empty') }}
     </k-empty>

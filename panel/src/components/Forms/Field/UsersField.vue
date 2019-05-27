@@ -49,7 +49,7 @@
     <k-empty
       v-else
       icon="users"
-      v-on="{ click: !disabled ? open : null }"
+      v-on="{ click: !disabled ? open : false }"
     >
       {{ empty || $t('field.users.empty') }}
     </k-empty>
