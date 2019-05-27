@@ -10,9 +10,9 @@ namespace Kirby\Image;
  *
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Dimensions
 {
@@ -44,7 +44,7 @@ class Dimensions
     }
 
     /**
-     * Improved var_dump() output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -68,9 +68,9 @@ class Dimensions
      *
      * @param    int         $width
      * @param    int         $height
-     * @return   Dimensions
+     * @return   self
      */
-    public function crop(int $width, int $height = null): self
+    public function crop(int $width, int $height = null)
     {
         $this->width  = $width;
         $this->height = $width;
@@ -111,9 +111,9 @@ class Dimensions
      * @param int         $box    the max width and/or height
      * @param bool        $force  If true, the dimensions will be
      *                            upscaled to fit the box if smaller
-     * @return Dimensions         object with recalculated dimensions
+     * @return self object with recalculated dimensions
      */
-    public function fit(int $box, bool $force = false): self
+    public function fit(int $box, bool $force = false)
     {
         if ($this->width == 0 || $this->height == 0) {
             $this->width  = $box;
@@ -163,9 +163,9 @@ class Dimensions
      * @param   int         $fit    the max height
      * @param   bool        $force  If true, the dimensions will be
      *                              upscaled to fit the box if smaller
-     * @return  Dimensions          object with recalculated dimensions
+     * @return  self          object with recalculated dimensions
      */
-    public function fitHeight(int $fit = null, bool $force = false): self
+    public function fitHeight(int $fit = null, bool $force = false)
     {
         return $this->fitSize('height', $fit, $force);
     }
@@ -177,9 +177,9 @@ class Dimensions
      * @param   int         $fit    the max width
      * @param   bool        $force  If true, the dimensions will be
      *                              upscaled to fit the box if smaller
-     * @return  Dimensions          object with recalculated dimensions
+     * @return  self object with recalculated dimensions
     */
-    protected function fitSize(string $ref, int $fit = null, bool $force = false): self
+    protected function fitSize(string $ref, int $fit = null, bool $force = false)
     {
         if ($fit === 0 || $fit === null) {
             return $this;
@@ -216,9 +216,9 @@ class Dimensions
      * @param   int         $fit    the max width
      * @param   bool        $force  If true, the dimensions will be
      *                              upscaled to fit the box if smaller
-     * @return  Dimensions          object with recalculated dimensions
+     * @return  self object with recalculated dimensions
     */
-    public function fitWidth(int $fit = null, bool $force = false): self
+    public function fitWidth(int $fit = null, bool $force = false)
     {
         return $this->fitSize('width', $fit, $force);
     }
@@ -229,9 +229,9 @@ class Dimensions
      * @param   int         $width      the max height
      * @param   int         $height     the max width
      * @param   bool        $force
-     * @return  Dimensions
+     * @return  self
      */
-    public function fitWidthAndHeight(int $width = null, int $height = null, bool $force = false): self
+    public function fitWidthAndHeight(int $width = null, int $height = null, bool $force = false)
     {
         if ($this->width > $this->height) {
             $this->fitWidth($width, $force);
@@ -258,7 +258,7 @@ class Dimensions
      * @param string $root
      * @return self
      */
-    public static function forImage(string $root): self
+    public static function forImage(string $root)
     {
         if (file_exists($root) === false) {
             return new static(0, 0);
@@ -274,7 +274,7 @@ class Dimensions
      * @param string $root
      * @return self
      */
-    public static function forSvg(string $root): self
+    public static function forSvg(string $root)
     {
         // avoid xml errors
         libxml_use_internal_errors(true);
@@ -366,9 +366,9 @@ class Dimensions
      * @param   int         $width
      * @param   int         $height
      * @param   bool        $force
-     * @return  Dimensions
+     * @return  self
      */
-    public function resize(int $width = null, int $height = null, bool $force = false): self
+    public function resize(int $width = null, int $height = null, bool $force = false)
     {
         return $this->fitWidthAndHeight($width, $height, $force);
     }

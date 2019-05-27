@@ -13,6 +13,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Image\Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Tpl as Snippet;
 
@@ -53,20 +54,16 @@ return [
             return $file;
         }
 
-        // pre-calculate all thumb attributes
-        $darkroom   = Darkroom::factory(option('thumbs.driver', 'gd'), option('thumbs', []));
-        $attributes = $darkroom->preprocess($file->root(), $options);
-
         // create url and root
         $mediaRoot = dirname($file->mediaRoot());
         $dst       = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-        $thumbRoot = (new Filename($file->root(), $dst, $attributes))->toString();
+        $thumbRoot = (new Filename($file->root(), $dst, $options))->toString();
         $thumbName = basename($thumbRoot);
         $job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
         if (file_exists($thumbRoot) === false) {
             try {
-                Data::write($job, array_merge($attributes, [
+                Data::write($job, array_merge($options, [
                     'filename' => $file->filename()
                 ]));
             } catch (Throwable $e) {
@@ -104,8 +101,14 @@ return [
      */
     'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;
+        static $config;
 
-        $markdown = $markdown ?? new Markdown($options);
+        // if the config options have changed or the component is called for the first time,
+        // (re-)initialize the parser object
+        if ($config !== $options) {
+            $markdown = new Markdown($options);
+            $config   = $options;
+        }
 
         return $markdown->parse($text, $inline);
     },
@@ -120,8 +123,14 @@ return [
      */
     'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
         static $smartypants;
+        static $config;
 
-        $smartypants = $smartypants ?? new Smartypants($options);
+        // if the config options have changed or the component is called for the first time,
+        // (re-)initialize the parser object
+        if ($config !== $options) {
+            $smartypants = new Smartypants($options);
+            $config      = $options;
+        }
 
         return $smartypants->parse($text);
     },
@@ -130,15 +139,23 @@ return [
      * Add your own snippet loader
      *
      * @param Kirby\Cms\App $kirby Kirby instance
-     * @param string $name Snippet name
+     * @param string|array $name Snippet name
      * @param array $data Data array for the snippet
      * @return string|null
      */
-    'snippet' => function (App $kirby, string $name, array $data = []): ?string {
-        $file = $kirby->root('snippets') . '/' . $name . '.php';
+    'snippet' => function (App $kirby, $name, array $data = []): ?string {
+        $snippets = A::wrap($name);
 
-        if (file_exists($file) === false) {
-            $file = $kirby->extensions('snippets')[$name] ?? null;
+        foreach ($snippets as $name) {
+            $file = $kirby->root('snippets') . '/' . $name . '.php';
+
+            if (file_exists($file) === false) {
+                $file = $kirby->extensions('snippets')[$name] ?? null;
+            }
+
+            if ($file) {
+                break;
+            }
         }
 
         return Snippet::load($file, $data);

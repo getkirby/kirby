@@ -10,9 +10,9 @@ use Exception;
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   http://getkirby.com/license
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class File
 {
@@ -35,7 +35,7 @@ class File
     }
 
     /**
-     * Improved var_dump() output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -61,7 +61,7 @@ class File
      * @param  boolean $force
      * @return self
      */
-    public function copy(string $target, bool $force = false): self
+    public function copy(string $target, bool $force = false)
     {
         if (F::copy($this->root, $target, $force) !== true) {
             throw new Exception('The file "' . $this->root . '" could not be copied');
@@ -194,7 +194,7 @@ class File
      * @param  bool   $overwrite Force overwriting any existing files
      * @return self
      */
-    public function move(string $newRoot, bool $overwrite = false): self
+    public function move(string $newRoot, bool $overwrite = false)
     {
         if (F::move($this->root, $newRoot, $overwrite) !== true) {
             throw new Exception('The file: "' . $this->root . '" could not be moved to: "' . $newRoot . '"');
@@ -253,7 +253,7 @@ class File
      * @param  bool   $overwrite Force overwrite existing files
      * @return self
      */
-    public function rename(string $newName, bool $overwrite = false): self
+    public function rename(string $newName, bool $overwrite = false)
     {
         $newRoot = F::rename($this->root, $newName, $overwrite);
 

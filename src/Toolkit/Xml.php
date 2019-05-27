@@ -3,14 +3,14 @@
 namespace Kirby\Toolkit;
 
 /**
-* XML parser and creator Class
-*
-* @package   Kirby Toolkit
-* @author    Bastian Allgeier <bastian@getkirby.com>
-* @link      http://getkirby.com
-* @copyright Bastian Allgeier
-* @license   http://www.opensource.org/licenses/mit-license.php MIT License
-*/
+ * XML parser and creator Class
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
+ */
 class Xml
 {
 

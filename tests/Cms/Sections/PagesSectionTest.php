@@ -233,11 +233,11 @@ class PagesSectionTest extends TestCase
         $data = $section->data();
 
         // existing covers
-        $this->assertContains('/media/pages/test/a', $data[0]['image']['url']);
-        $this->assertContains('/media/pages/test/b', $data[1]['image']['url']);
+        $this->assertContains('/media/pages/test/a', $data[0]['image']['cards']['url']);
+        $this->assertContains('/media/pages/test/b', $data[1]['image']['cards']['url']);
 
         // non-existing covers
-        $this->assertNull($data[2]['image']['url'] ?? null);
+        $this->assertNull($data[2]['image']['cards']['url'] ?? null);
     }
 
     public function testTemplates()

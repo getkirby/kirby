@@ -11,12 +11,19 @@ use Kirby\Http\Router;
 use Kirby\Http\Response;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
+use Kirby\Toolkit\Str;
 
 /**
  * The API class is a generic container
  * for API routes, models and collections and is used
  * to run our REST API. You can find our API setup
- * in kirby/config/api.php
+ * in `kirby/config/api.php`.
+ *
+ * @package   Kirby Api
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Api
 {
@@ -179,7 +186,9 @@ class Api
      *
      * @param string $name
      * @param array|null $collection
-     * @return Collection
+     * @return Kirby\Api\Collection
+     *
+     * @throws NotFoundException If no collection for `$name` exists
      */
     public function collection(string $name, $collection = null)
     {
@@ -207,6 +216,8 @@ class Api
      * @param string|null $key
      * @param mixed ...$args
      * @return mixed
+     *
+     * @throws NotFoundException If no data for `$key` exists
      */
     public function data($key = null, ...$args)
     {
@@ -252,7 +263,9 @@ class Api
      *
      * @param string $name
      * @param mixed $object
-     * @return Model
+     * @return Kirby\Api\Model
+     *
+     * @throws NotFoundException If no model for `$name` exists
      */
     public function model(string $name, $object = null)
     {
@@ -362,7 +375,9 @@ class Api
      * API model or collection representation
      *
      * @param mixed $object
-     * @return Model|Collection
+     * @return Kirby\Api\Model|Kirby\Api\Collection
+     *
+     * @throws NotFoundException If `$object` cannot be resolved
      */
     public function resolve($object)
     {
@@ -531,11 +546,17 @@ class Api
                     'route'  => $this->route->pattern()
                 ] + $e->toArray();
             } else {
+                // remove the document root from the file path
+                $file = $e->getFile();
+                if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
+                    $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
+                }
+
                 $result = [
                     'status'    => 'error',
                     'exception' => get_class($e),
                     'message'   => $e->getMessage(),
-                    'file'      => ltrim($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+                    'file'      => $file,
                     'line'      => $e->getLine(),
                     'code'      => empty($e->getCode()) === false ? $e->getCode() : 500,
                     'route'     => $this->route ? $this->route->pattern() : null
@@ -602,6 +623,9 @@ class Api
      * @param Closure $callback
      * @param boolean $single
      * @return array
+     *
+     * @throws Exception If request has no files
+     * @throws Exception If there was an error with the upload
      */
     public function upload(Closure $callback, $single = false): array
     {

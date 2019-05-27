@@ -8,6 +8,12 @@ use Kirby\Exception\InvalidArgumentException;
  * Handles permission definition in each user
  * blueprint and wraps a couple useful methods
  * around it to check for available permissions.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Permissions
 {
@@ -36,6 +42,7 @@ class Permissions
             'changeTitle'    => true,
             'create'         => true,
             'delete'         => true,
+            'duplicate'      => true,
             'preview'        => true,
             'read'           => true,
             'sort'           => true,
@@ -68,16 +75,16 @@ class Permissions
 
     public function __construct($settings = [])
     {
-        if (is_bool($settings) === true) {
-            return $this->setAll($settings);
-        }
-
         if (is_array($settings) === true) {
             return $this->setCategories($settings);
         }
+
+        if (is_bool($settings) === true) {
+            return $this->setAll($settings);
+        }
     }
 
-    public function for(string $category = null, string $action = null)
+    public function for(string $category = null, string $action = null): bool
     {
         if ($action === null) {
             if ($this->hasCategory($category) === false) {
@@ -94,12 +101,12 @@ class Permissions
         return $this->actions[$category][$action];
     }
 
-    protected function hasAction(string $category, string $action)
+    protected function hasAction(string $category, string $action): bool
     {
         return $this->hasCategory($category) === true && array_key_exists($action, $this->actions[$category]) === true;
     }
 
-    protected function hasCategory(string $category)
+    protected function hasCategory(string $category): bool
     {
         return array_key_exists($category, $this->actions) === true;
     }

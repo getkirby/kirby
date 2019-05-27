@@ -14,8 +14,9 @@ namespace Kirby\Cms;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class StructureObject extends Model
 {
@@ -76,9 +77,9 @@ class StructureObject extends Model
     /**
      * Returns the content
      *
-     * @return Content
+     * @return Kirby\Cms\Content
      */
-    public function content(): Content
+    public function content()
     {
         if (is_a($this->content, 'Kirby\Cms\Content') === true) {
             return $this->content;
@@ -132,7 +133,7 @@ class StructureObject extends Model
      * @param array|null $content
      * @return self
      */
-    protected function setContent(array $content = null): self
+    protected function setContent(array $content = null)
     {
         $this->content = $content;
         return $this;
@@ -147,7 +148,7 @@ class StructureObject extends Model
      * @param string $id
      * @return self
      */
-    protected function setId(string $id): self
+    protected function setId(string $id)
     {
         $this->id = $id;
         return $this;
@@ -157,10 +158,10 @@ class StructureObject extends Model
      * Sets the parent Model. This can either be a
      * Page, Site, File or User object
      *
-     * @param Page|Site|File|User|null $parent
+     * @param Kirby\Cms\Model|null $parent
      * @return self
      */
-    protected function setParent(Model $parent = null): self
+    protected function setParent(Model $parent = null)
     {
         $this->parent = $parent;
         return $this;
@@ -169,10 +170,10 @@ class StructureObject extends Model
     /**
      * Sets the parent Structure collection
      *
-     * @param Structure $structure
+     * @param Kirby\Cms\Structure $structure
      * @return self
      */
-    protected function setStructure(Structure $structure = null): self
+    protected function setStructure(Structure $structure = null)
     {
         $this->structure = $structure;
         return $this;

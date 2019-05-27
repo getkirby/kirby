@@ -14,7 +14,8 @@ export default {
           code: language.code,
           name: language.name,
           default: language.default,
-          direction: language.direction
+          direction: language.direction,
+          rules: language.rules
         };
       });
     },
@@ -47,13 +48,14 @@ export default {
           return language.code === currentLanguageCode
         })[0];
 
+
         if (currentLanguage) {
-          context.commit("SET_CURRENT", currentLanguage);
+          context.dispatch("current", currentLanguage);
           return;
         }
       }
 
-      context.commit("SET_CURRENT", defaultLanguage || languages[0]);
+      context.dispatch("current", defaultLanguage || languages[0] || null);
 
     },
     load(context) {

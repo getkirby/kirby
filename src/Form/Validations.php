@@ -7,6 +7,12 @@ use Kirby\Toolkit\V;
 
 /**
  * Often used validation rules for fields
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Validations
 {
@@ -131,7 +137,7 @@ class Validations
     {
         if ($field->isEmpty($value) === false) {
             $values = array_column($field->options(), 'value');
-            foreach ($value as $key => $val) {
+            foreach ($value as $val) {
                 if (in_array($val, $values, true) === false) {
                     throw new InvalidArgumentException([
                         'key' => 'validation.option'

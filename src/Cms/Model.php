@@ -2,13 +2,16 @@
 
 namespace Kirby\Cms;
 
-use stdClass;
-use ReflectionMethod;
 use Kirby\Toolkit\Properties;
-use Kirby\Toolkit\Str;
 
 /**
  * Foundation for Page, Site, File and User models.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 abstract class Model
 {
@@ -17,14 +20,14 @@ abstract class Model
     /**
      * The parent Kirby instance
      *
-     * @var App
+     * @var Kirby\Cms\App
      */
     public static $kirby;
 
     /**
-     * The parent Site instance
+     * The parent site instance
      *
-     * @var Site
+     * @var Kirby\Cms\Site
      */
     protected $site;
 
@@ -34,7 +37,7 @@ abstract class Model
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->id();
     }
@@ -52,9 +55,9 @@ abstract class Model
     /**
      * Returns the parent Kirby instance
      *
-     * @return App|null
+     * @return Kirby\Cms\App
      */
-    public function kirby(): App
+    public function kirby()
     {
         return static::$kirby = static::$kirby ?? App::instance();
     }
@@ -62,7 +65,7 @@ abstract class Model
     /**
      * Returns the parent Site instance
      *
-     * @return Site|null
+     * @return Kirby\Cms\Site
      */
     public function site()
     {
@@ -72,7 +75,7 @@ abstract class Model
     /**
      * Setter for the parent Kirby object
      *
-     * @param Kirby|null $kirby
+     * @param Kirby\Cms\App|null $kirby
      * @return self
      */
     protected function setKirby(App $kirby = null)
@@ -82,10 +85,10 @@ abstract class Model
     }
 
     /**
-     * Setter for the parent Site object
+     * Setter for the parent site object
      *
      * @internal
-     * @param Site|null $site
+     * @param Kirby\Cms\Site|null $site
      * @return self
      */
     public function setSite(Site $site = null)

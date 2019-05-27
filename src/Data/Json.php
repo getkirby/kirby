@@ -9,12 +9,13 @@ use Exception;
  *
  * @package   Kirby Data
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Json extends Handler
 {
+
     /**
      * Converts an array to an encoded JSON string
      *

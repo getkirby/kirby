@@ -2,6 +2,15 @@
 
 namespace Kirby\Cms;
 
+/**
+ * PageSiblings
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait PageSiblings
 {
 
@@ -26,15 +35,6 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasNextListed` instead
-     * @return boolean
-     */
-    public function hasNextVisible(): bool
-    {
-        return $this->hasNextListed();
-    }
-
-    /**
      * Checks if there's a next unlisted
      * page in the siblings collection
      *
@@ -43,6 +43,15 @@ trait PageSiblings
     public function hasNextUnlisted(): bool
     {
         return $this->nextUnlisted() !== null;
+    }
+
+    /**
+     * @deprecated 3.0.0 Use `Page::hasNextListed` instead
+     * @return boolean
+     */
+    public function hasNextVisible(): bool
+    {
+        return $this->hasNextListed();
     }
 
     /**
@@ -97,7 +106,7 @@ trait PageSiblings
     /**
      * Returns the next listed page if it exists
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
     public function nextListed()
     {
@@ -107,7 +116,7 @@ trait PageSiblings
     /**
      * Returns the next unlisted page if it exists
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
     public function nextUnlisted()
     {
@@ -135,7 +144,7 @@ trait PageSiblings
     /**
      * Returns the previous listed page
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
     public function prevListed()
     {
@@ -145,7 +154,7 @@ trait PageSiblings
     /**
      * Returns the previous unlisted page
      *
-     * @return self|null
+     * @return Kirby\Cms\Page|null
      */
     public function prevUnlisted()
     {
@@ -164,7 +173,7 @@ trait PageSiblings
     /**
      * Private siblings collector
      *
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
     protected function siblingsCollection()
     {
@@ -179,7 +188,7 @@ trait PageSiblings
      * Returns siblings with the same template
      *
      * @param bool $self
-     * @return self
+     * @return Kirby\Cms\Pages
      */
     public function templateSiblings(bool $self = true)
     {

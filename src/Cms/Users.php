@@ -13,11 +13,20 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Users extends Collection
 {
+
+    /**
+     * All registered users methods
+     *
+     * @var array
+     */
+    public static $methods = [];
+
     public function create(array $data)
     {
         return User::create($data);
@@ -29,7 +38,7 @@ class Users extends Collection
      * current collection
      *
      * @param mixed $item
-     * @return Users
+     * @return self
      */
     public function add($object)
     {
@@ -56,13 +65,13 @@ class Users extends Collection
      * @param array $inject
      * @return self
      */
-    public static function factory(array $users, array $inject = []): self
+    public static function factory(array $users, array $inject = [])
     {
         $collection = new static;
 
         // read all user blueprints
         foreach ($users as $props) {
-            $user = new User($props + $inject);
+            $user = User::factory($props + $inject);
             $collection->set($user->id(), $user);
         }
 
@@ -73,9 +82,9 @@ class Users extends Collection
      * Finds a user in the collection by id or email address
      *
      * @param string $key
-     * @return User|null
+     * @return Kirby\Cms\User|null
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         if (Str::contains($key, '@') === true) {
             return parent::findBy('email', strtolower($key));
@@ -91,7 +100,7 @@ class Users extends Collection
      * @param array $inject
      * @return self
      */
-    public static function load(string $root, array $inject = []): self
+    public static function load(string $root, array $inject = [])
     {
         $users = new static;
 

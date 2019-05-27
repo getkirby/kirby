@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Throwable;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Remote;
 use Kirby\Http\Uri;
@@ -12,6 +13,7 @@ use Kirby\Http\Url;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 /**
  * The System class gathers all information
@@ -20,6 +22,12 @@ use Kirby\Toolkit\Str;
  *
  * This is mostly used by the panel installer
  * to check if the panel can be installed at all.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class System
 {
@@ -41,7 +49,7 @@ class System
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -97,6 +105,29 @@ class System
     public function curl(): bool
     {
         return extension_loaded('curl');
+    }
+
+    /**
+     * Returns the app's human-readable
+     * index URL without scheme
+     *
+     * @return string
+     */
+    public function indexUrl(): string
+    {
+        $url = $this->app->url('index');
+
+        if (Url::isAbsolute($url)) {
+            $uri = Url::toObject($url);
+        } else {
+            // index URL was configured without host, use the current host
+            $uri = Uri::current([
+                'path'   => $url,
+                'query'  => null
+            ]);
+        }
+
+        return $uri->setScheme(null)->setSlash(false)->toString();
     }
 
     /**
@@ -195,39 +226,16 @@ class System
     }
 
     /**
-     * Returns the app's index URL for
-     * licensing purposes without scheme
-     *
-     * @return string
-     */
-    protected function licenseUrl(): string
-    {
-        $url = $this->app->url('index');
-
-        if (Url::isAbsolute($url)) {
-            $uri = Url::toObject($url);
-        } else {
-            // index URL was configured without host, use the current host
-            $uri = Uri::current([
-                'path'   => $url,
-                'query'  => null
-            ]);
-        }
-
-        return $uri->setScheme(null)->setSlash(false)->toString();
-    }
-
-    /**
      * Normalizes the app's index URL for
      * licensing purposes
      *
      * @param string|null $url Input URL, by default the app's index URL
      * @return string Normalized URL
      */
-    protected function licenseUrlNormalized(string $url = null): string
+    protected function licenseUrl(string $url = null): string
     {
         if ($url === null) {
-            $url = $this->licenseUrl();
+            $url = $this->indexUrl();
         }
 
         // remove common "testing" subdomains as well as www.
@@ -300,7 +308,7 @@ class System
         }
 
         // verify the URL
-        if ($this->licenseUrlNormalized() !== $this->licenseUrlNormalized($license['domain'])) {
+        if ($this->licenseUrl() !== $this->licenseUrl($license['domain'])) {
             return false;
         }
 
@@ -346,13 +354,25 @@ class System
      * @param string $email
      * @return boolean
      */
-    public function register(string $license, string $email): bool
+    public function register(string $license = null, string $email = null): bool
     {
+        if (Str::startsWith($license, 'K3-PRO-') === false) {
+            throw new InvalidArgumentException([
+                'key' => 'license.format'
+            ]);
+        }
+
+        if (V::email($email) === false) {
+            throw new InvalidArgumentException([
+                'key' => 'license.email'
+            ]);
+        }
+
         $response = Remote::get('https://licenses.getkirby.com/register', [
             'data' => [
                 'license' => $license,
                 'email'   => $email,
-                'domain'  => $this->licenseUrl()
+                'domain'  => $this->indexUrl()
             ]
         ]);
 
@@ -373,7 +393,9 @@ class System
         Json::write($file, $json);
 
         if ($this->license() === false) {
-            throw new Exception('The license could not be verified');
+            throw new InvalidArgumentException([
+                'key' => 'license.verification'
+            ]);
         }
 
         return true;

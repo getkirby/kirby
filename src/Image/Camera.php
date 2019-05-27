@@ -3,14 +3,14 @@
 namespace Kirby\Image;
 
 /**
-* Small class which hold info about the camera
-*
-* @package   Kirby Toolkit
-* @author    Bastian Allgeier <bastian@getkirby.com>
-* @link      http://getkirby.com
-* @copyright Bastian Allgeier
-* @license   MIT
-*/
+ * Small class which hold info about the camera
+ *
+ * @package   Kirby Image
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
+ */
 class Camera
 {
 
@@ -83,7 +83,7 @@ class Camera
     }
 
     /**
-     * Improved var_dump() output
+     * Improved `var_dump` output
      *
      * @return array
      */

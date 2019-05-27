@@ -3,9 +3,17 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use ReflectionClass;
 use ReflectionMethod;
 
+/**
+ * Properties
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
+ */
 trait Properties
 {
     protected $propertyData = [];

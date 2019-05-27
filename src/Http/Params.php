@@ -2,13 +2,18 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 
 /**
  * A wrapper around a URL params
  * that converts it into a Kirby Obj for easier
  * access of each param.
+ *
+ * @package   Kirby Http
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Params extends Query
 {

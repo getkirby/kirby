@@ -5,12 +5,17 @@ namespace Kirby\Cms;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 
 /**
  * Validators for all page actions
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class PageRules
 {
@@ -252,6 +257,20 @@ class PageRules
 
         if (($page->hasChildren() === true || $page->hasDrafts() === true) && $force === false) {
             throw new LogicException(['key' => 'page.delete.hasChildren']);
+        }
+
+        return true;
+    }
+
+    public static function duplicate(Page $page, string $slug, bool $files = false): bool
+    {
+        if ($page->permissions()->duplicate() !== true) {
+            throw new PermissionException([
+                'key' => 'page.duplicate.permission',
+                'data' => [
+                    'slug' => $page->slug()
+                ]
+            ]);
         }
 
         return true;

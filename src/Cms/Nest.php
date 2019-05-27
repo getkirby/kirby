@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Obj;
-
 /**
  * The Nest class converts any array type
  * into a Kirby style collection/object. This
@@ -11,6 +9,12 @@ use Kirby\Toolkit\Obj;
  * with Kirby queries.
  *
  * REFACTOR: move this to the toolkit
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Nest
 {

@@ -14,7 +14,7 @@ class ContentTest extends TestCase
         ];
     }
 
-    protected function mockObject(): Content
+    protected function mockObject()
     {
         return new Content($this->mockData());
     }

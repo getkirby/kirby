@@ -13,7 +13,15 @@ class DummyCache extends FileCache
 {
 }
 
+class DummyFile extends File
+{
+}
+
 class DummyPage extends Page
+{
+}
+
+class DummyUser extends User
 {
 }
 
@@ -266,6 +274,25 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $kirby->controller('test'));
     }
 
+    public function testfileModel()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'fileModels' => [
+                'dummy' => DummyFile::class
+            ]
+        ]);
+
+        $user = File::factory([
+            'filename' => 'test',
+            'model'    => 'dummy'
+        ]);
+
+        $this->assertInstanceOf(DummyFile::class, $user);
+    }
+
     public function testFieldMethod()
     {
         $kirby = new App([
@@ -396,6 +423,33 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(5, $executed);
     }
 
+    public function testKirbyTag()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'tags' => [
+                'test' => [
+                    'html' => function () {
+                        return 'test';
+                    }
+                ],
+                'FoO' => [
+                    'html' => function () {
+                        return 'test';
+                    }
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('test', $kirby->kirbytags('(test: foo)'));
+        $this->assertEquals('test', $kirby->kirbytags('(TEST: foo)'));
+
+        $this->assertEquals('test', $kirby->kirbytags('(foo: bar)'));
+        $this->assertEquals('test', $kirby->kirbytags('(FOO: bar)'));
+    }
+
     public function testPageMethod()
     {
         $kirby = new App([
@@ -414,6 +468,26 @@ class AppPluginsTest extends TestCase
 
         // reset methods
         Page::$methods = [];
+    }
+
+    public function testPagesMethod()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'pagesMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $pages = new Pages([]);
+        $this->assertEquals('test', $pages->test());
+
+        // reset methods
+        Pages::$methods = [];
     }
 
     public function testPageModel()
@@ -674,5 +748,67 @@ class AppPluginsTest extends TestCase
         I18n::$locale = 'de';
 
         $this->assertEquals('Deutscher Test', I18n::translate('test'));
+    }
+
+    public function testUserMethod()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'userMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'name'  => 'Test User'
+        ]);
+        $this->assertEquals('test', $user->test());
+
+        // reset methods
+        User::$methods = [];
+    }
+
+    public function testUserModel()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'userModels' => [
+                'dummy' => DummyUser::class
+            ]
+        ]);
+
+        $user = User::factory([
+            'slug'  => 'test',
+            'model' => 'dummy'
+        ]);
+
+        $this->assertInstanceOf(DummyUser::class, $user);
+    }
+
+    public function testUsersMethod()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'usersMethods' => [
+                'test' => function () {
+                    return 'test';
+                }
+            ]
+        ]);
+
+        $users = new Users([]);
+        $this->assertEquals('test', $users->test());
+
+        // reset methods
+        Users::$methods = [];
     }
 }

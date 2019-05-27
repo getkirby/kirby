@@ -54,6 +54,7 @@
       </template>
 
       <k-page-create-dialog ref="create" />
+      <k-page-duplicate-dialog ref="duplicate" />
       <k-page-rename-dialog ref="rename" @success="update" />
       <k-page-url-dialog ref="url" @success="update" />
       <k-page-status-dialog ref="status" @success="update" />
@@ -92,6 +93,10 @@ export default {
             this.parent + "/children/blueprints",
             this.name
           );
+          break;
+        }
+        case "duplicate": {
+          this.$refs.duplicate.open(page.id);
           break;
         }
         case "preview": {

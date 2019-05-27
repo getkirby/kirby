@@ -847,4 +847,35 @@ class PageTest extends TestCase
         $this->assertEquals('https://getkirby.com/api/pages/mother+child', $page->apiUrl());
         $this->assertEquals('pages/mother+child', $page->apiUrl(true));
     }
+
+    public function testPageMethods()
+    {
+        Page::$methods = [
+            'test' => function () {
+                return 'homer';
+            }
+        ];
+
+        $page = new Page(['slug' => 'test']);
+
+        $this->assertEquals('homer', $page->test());
+
+        Page::$methods = [];
+    }
+
+    public function testPageModel()
+    {
+        Page::$models = [
+            'dummy' => DummyPage::class
+        ];
+
+        $page = Page::factory([
+            'slug'  => 'test',
+            'model' => 'dummy'
+        ]);
+
+        $this->assertInstanceOf(DummyPage::class, $page);
+
+        Page::$models = [];
+    }
 }

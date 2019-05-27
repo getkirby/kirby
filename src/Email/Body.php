@@ -11,9 +11,9 @@ use Kirby\Toolkit\Properties;
  * @package   Kirby Email
  * @author    Bastian Allgeier <bastian@getkirby.com>,
  *            Nico Hoffmann <nico@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
 */
 class Body
 {

@@ -2,11 +2,15 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-
 /**
  * Extension of `Kirby\Text\KirbyTags` that introduces
  * `kirbytags:before` and `kirbytags:after` hooks
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class KirbyTags extends \Kirby\Text\KirbyTags
 {
@@ -42,9 +46,9 @@ class KirbyTags extends \Kirby\Text\KirbyTags
      * @param string $text
      * @param array $data
      * @param array $options
-     * @return string
+     * @return string|null
      */
-    protected static function hooks(array $hooks, string $text = null, array $data, array $options)
+    protected static function hooks(array $hooks, string $text = null, array $data, array $options): ?string
     {
         foreach ($hooks as $hook) {
             $text = $hook->call($data['kirby'], $text, $data, $options);

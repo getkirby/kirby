@@ -5,12 +5,17 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
  * Handles all tasks to get the Media API
  * up and running and link files correctly
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Media
 {
@@ -23,7 +28,7 @@ class Media
      * @param Model $model
      * @param string $hash
      * @param string $filename
-     * @return Response|false
+     * @return Kirby\Cms\Response|false
      */
     public static function thumb($model, string $hash, string $filename)
     {
@@ -66,10 +71,10 @@ class Media
      * Tries to find a file by model and filename
      * and to copy it to the media folder.
      *
-     * @param Model $model
+     * @param Kirby\Cms\Model $model
      * @param string $hash
      * @param string $filename
-     * @return Response|false
+     * @return Kirby\Cms\Response|false
      */
     public static function link(Model $model = null, string $hash, string $filename)
     {

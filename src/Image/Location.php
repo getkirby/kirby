@@ -3,15 +3,15 @@
 namespace Kirby\Image;
 
 /**
-* Returns the latitude and longitude values
-* for exif location data if available
-*
-* @package   Kirby Toolkit
-* @author    Bastian Allgeier <bastian@getkirby.com>
-* @link      http://getkirby.com
-* @copyright Bastian Allgeier
-* @license   MIT
-*/
+ * Returns the latitude and longitude values
+ * for exif location data if available
+ *
+ * @package   Kirby Image
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
+ */
 class Location
 {
 
@@ -126,7 +126,7 @@ class Location
     }
 
     /**
-     * Improved var_dump() output
+     * Improved `var_dump` output
      *
      * @return array
      */

@@ -6,6 +6,12 @@ use Kirby\Toolkit\F;
 
 /**
  * A collection of all defined site languages
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Languages extends Collection
 {
@@ -25,9 +31,9 @@ class Languages extends Collection
      *
      * @internal
      * @param array $props
-     * @return Language
+     * @return Kirby\Cms\Language
      */
-    public function create(array $props): Language
+    public function create(array $props)
     {
         return Language::create($props);
     }
@@ -35,9 +41,9 @@ class Languages extends Collection
     /**
      * Returns the default language
      *
-     * @return Language|null
+     * @return Kirby\Cms\Language|null
      */
-    public function default(): ?Language
+    public function default()
     {
         if ($language = $this->findBy('isDefault', true)) {
             return $language;
@@ -48,9 +54,9 @@ class Languages extends Collection
 
     /**
      * @deprecated 3.0.0  Use `Languages::default()`instead
-     * @return Language|null
+     * @return Kirby\Cms\Language|null
      */
-    public function findDefault(): ?Language
+    public function findDefault()
     {
         return $this->default();
     }
@@ -61,7 +67,7 @@ class Languages extends Collection
      * @internal
      * @return self
      */
-    public static function load(): self
+    public static function load()
     {
         $languages = new static;
         $files     = glob(App::instance()->root('languages') . '/*.php');

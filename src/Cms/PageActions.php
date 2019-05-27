@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -12,6 +11,15 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
+/**
+ * PageActions
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait PageActions
 {
 
@@ -23,7 +31,7 @@ trait PageActions
      * @param int $num
      * @return self
      */
-    public function changeNum(int $num = null): self
+    public function changeNum(int $num = null)
     {
         if ($this->isDraft() === true) {
             throw new LogicException('Drafts cannot change their sorting number');
@@ -63,7 +71,7 @@ trait PageActions
      * @param string $language
      * @return self
      */
-    public function changeSlug(string $slug, string $languageCode = null): self
+    public function changeSlug(string $slug, string $languageCode = null)
     {
         // always sanitize the slug
         $slug = Str::slug($slug);
@@ -117,7 +125,7 @@ trait PageActions
      * @param string $language
      * @return self
      */
-    protected function changeSlugForLanguage(string $slug, string $languageCode = null): self
+    protected function changeSlugForLanguage(string $slug, string $languageCode = null)
     {
         $language = $this->kirby()->language($languageCode);
 
@@ -145,9 +153,9 @@ trait PageActions
      *
      * @param string $status "draft", "listed" or "unlisted"
      * @param integer $position Optional sorting number
-     * @return Page
+     * @return self
      */
-    public function changeStatus(string $status, int $position = null): self
+    public function changeStatus(string $status, int $position = null)
     {
         switch ($status) {
             case 'draft':
@@ -161,7 +169,7 @@ trait PageActions
         }
     }
 
-    protected function changeStatusToDraft(): self
+    protected function changeStatusToDraft()
     {
         $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
             return $page->unpublish();
@@ -170,7 +178,11 @@ trait PageActions
         return $page;
     }
 
-    protected function changeStatusToListed(int $position = null): self
+    /**
+     * @param int $position
+     * @return self
+     */
+    protected function changeStatusToListed(int $position = null)
     {
         // create a sorting number for the page
         $num = $this->createNum($position);
@@ -191,7 +203,10 @@ trait PageActions
         return $page;
     }
 
-    protected function changeStatusToUnlisted(): self
+    /**
+     * @return self
+     */
+    protected function changeStatusToUnlisted()
     {
         if ($this->status() === 'unlisted') {
             return $this;
@@ -212,7 +227,7 @@ trait PageActions
      * @param string $template
      * @return self
      */
-    public function changeTemplate(string $template): self
+    public function changeTemplate(string $template)
     {
         if ($template === $this->template()->name()) {
             return $this;
@@ -259,7 +274,7 @@ trait PageActions
      * @param string|null $languageCode
      * @return self
      */
-    public function changeTitle(string $title, string $languageCode = null): self
+    public function changeTitle(string $title, string $languageCode = null)
     {
         return $this->commit('changeTitle', [$this, $title, $languageCode], function ($page, $title, $languageCode) {
             return $page->save(['title' => $title], $languageCode);
@@ -297,7 +312,7 @@ trait PageActions
      * @param array $props
      * @return self
      */
-    public static function create(array $props): self
+    public static function create(array $props)
     {
         // clean up the slug
         $props['slug']     = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
@@ -352,7 +367,7 @@ trait PageActions
      * @param array $props
      * @return self
      */
-    public function createChild(array $props): self
+    public function createChild(array $props)
     {
         $props = array_merge($props, [
             'url'    => null,
@@ -473,6 +488,59 @@ trait PageActions
         });
     }
 
+    /**
+     * Duplicates the page with the given
+     * slug and optionally copies all files
+     *
+     * @param string $slug
+     * @param bool $copyFiles
+     * @return Page
+     */
+    public function duplicate(string $slug = null, bool $copyFiles = false)
+    {
+
+        // create the slug for the duplicate
+        $slug = Str::slug($slug ?? $this->slug() . '-copy');
+
+        return $this->commit('duplicate', [$this, $slug, $copyFiles], function ($page, $slug, $copyFiles) {
+            $kirby = $page->kirby();
+
+            if ($kirby->multilang() === true) {
+                $defaultLang = $kirby->defaultLanguage()->code();
+                $content     = $page->content($defaultLang)->toArray();
+            } else {
+                $content = $page->content()->toArray();
+            }
+
+            $copy = Page::create([
+                'content'  => $content,
+                'isDraft'  => true,
+                'parent'   => $page->parent(),
+                'slug'     => $slug,
+                'template' => $page->intendedTemplate()->name(),
+            ]);
+
+            // copy translated content
+            if ($kirby->multilang() === true) {
+                foreach ($kirby->languages()->not($defaultLang) as $language) {
+                    // get translated content
+                    $content = $page->content($language->code())->toArray();
+
+                    // save the translated content
+                    $copy = $copy->save($content, $language->code());
+                }
+            }
+
+            if ($copyFiles === true) {
+                foreach ($page->files() as $file) {
+                    $file->copy($copy);
+                }
+            }
+
+            return $copy;
+        });
+    }
+
     public function publish()
     {
         if ($this->isDraft() === false) {
@@ -508,8 +576,9 @@ trait PageActions
 
     /**
      * Clean internal caches
+     * @return self
      */
-    public function purge(): self
+    public function purge()
     {
         $this->children  = null;
         $this->blueprint = null;

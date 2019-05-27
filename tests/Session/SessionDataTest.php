@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/mocks.php');
 
+/**
+ * @coversDefaultClass \Kirby\Session\SessionData
+ */
 class SessionDataTest extends TestCase
 {
     protected $session;
@@ -26,6 +29,9 @@ class SessionDataTest extends TestCase
         unset($this->sessionData);
     }
 
+    /**
+     * @covers ::set
+     */
     public function testSet()
     {
         // string as key
@@ -49,6 +55,9 @@ class SessionDataTest extends TestCase
         $this->assertEquals('someValue2', $this->sessionData->get('someKey2'));
     }
 
+    /**
+     * @covers ::set
+     */
     public function testSetInvalidKey()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -56,6 +65,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->set(123, 'someValue');
     }
 
+    /**
+     * @covers ::increment
+     */
     public function testIncrement()
     {
         $this->session->ensuredToken = false;
@@ -81,6 +93,9 @@ class SessionDataTest extends TestCase
         $this->assertEquals(155, $this->sessionData->get('someInt'));
     }
 
+    /**
+     * @covers ::increment
+     */
     public function testIncrementInvalidKey()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -88,6 +103,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->increment(123, 10);
     }
 
+    /**
+     * @covers ::increment
+     */
     public function testIncrementInvalidMax()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -95,6 +113,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->increment('someInt', 10, 'some invalid max value');
     }
 
+    /**
+     * @covers ::increment
+     */
     public function testIncrementNonIntValue()
     {
         $this->expectException('Kirby\Exception\LogicException');
@@ -103,6 +124,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->increment('someString', 10);
     }
 
+    /**
+     * @covers ::decrement
+     */
     public function testDecrement()
     {
         $this->session->ensuredToken = false;
@@ -128,6 +152,9 @@ class SessionDataTest extends TestCase
         $this->assertEquals(85, $this->sessionData->get('someInt'));
     }
 
+    /**
+     * @covers ::decrement
+     */
     public function testDecrementInvalidKey()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -135,6 +162,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->decrement(123, 10);
     }
 
+    /**
+     * @covers ::decrement
+     */
     public function testDecrementInvalidMin()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -142,6 +172,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->decrement('someInt', 10, 'some invalid min value');
     }
 
+    /**
+     * @covers ::decrement
+     */
     public function testDecrementNonIntValue()
     {
         $this->expectException('Kirby\Exception\LogicException');
@@ -150,6 +183,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->decrement('someString', 10);
     }
 
+    /**
+     * @covers ::get
+     */
     public function testGet()
     {
         // string as key
@@ -165,6 +201,9 @@ class SessionDataTest extends TestCase
         ], $this->sessionData->get());
     }
 
+    /**
+     * @covers ::get
+     */
     public function testGetInvalidKey()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -172,6 +211,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->get(123, 456);
     }
 
+    /**
+     * @covers ::pull
+     */
     public function testPull()
     {
         $this->session->ensuredToken = false;
@@ -185,6 +227,9 @@ class SessionDataTest extends TestCase
         $this->assertEquals('someDefault', $this->sessionData->pull('someOtherString', 'someDefault'));
     }
 
+    /**
+     * @covers ::remove
+     */
     public function testRemove()
     {
         // string as key
@@ -204,6 +249,9 @@ class SessionDataTest extends TestCase
         $this->assertEquals([], $this->sessionData->get());
     }
 
+    /**
+     * @covers ::remove
+     */
     public function testRemoveInvalidKey()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -211,6 +259,9 @@ class SessionDataTest extends TestCase
         $this->sessionData->remove(123);
     }
 
+    /**
+     * @covers ::clear
+     */
     public function testClear()
     {
         $this->session->ensuredToken = false;
@@ -221,6 +272,9 @@ class SessionDataTest extends TestCase
         $this->assertEquals([], $this->sessionData->get());
     }
 
+    /**
+     * @covers ::reload
+     */
     public function testReload()
     {
         $newData = ['someOtherString' => 'someOtherValue'];

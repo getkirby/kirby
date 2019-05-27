@@ -12,6 +12,7 @@
         :key="src"
         :alt="alt || ''"
         :src="src"
+        :srcset="srcset"
         @dragstart.prevent
       >
       <k-loader
@@ -34,6 +35,7 @@ import ratioPadding from "@/helpers/ratioPadding.js";
 export default {
   props: {
     src: String,
+    srcset: String,
     alt: String,
     ratio: String,
     back: String,

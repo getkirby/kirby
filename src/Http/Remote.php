@@ -12,9 +12,9 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Remote
 {
@@ -180,7 +180,7 @@ class Remote
         }
 
         // do some request specific stuff
-        switch ($action = strtoupper($this->options['method'])) {
+        switch (strtoupper($this->options['method'])) {
             case 'POST':
                 $this->curlopt[CURLOPT_POST]          = true;
                 $this->curlopt[CURLOPT_CUSTOMREQUEST] = 'POST';

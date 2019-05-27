@@ -10,6 +10,12 @@ use Kirby\Toolkit\F;
  * Plugin assets are automatically copied/linked
  * to the media folder, to make them publicly
  * available. This class handles the magic around that.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class PluginAssets
 {
@@ -19,7 +25,7 @@ class PluginAssets
      * @param string $pluginName
      * @return void
      */
-    public static function clean(string $pluginName)
+    public static function clean(string $pluginName): void
     {
         if ($plugin = App::instance()->plugin($pluginName)) {
             $root   = $plugin->root() . '/assets';
@@ -48,7 +54,7 @@ class PluginAssets
      *
      * @param string $pluginName
      * @param string $filename
-     * @return string
+     * @return Kirby\Cms\Response|null
      */
     public static function resolve(string $pluginName, string $filename)
     {

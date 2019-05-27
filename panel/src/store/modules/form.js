@@ -27,7 +27,10 @@ export default {
       }
     },
     isCurrent: (state) => id => {
-      return state.current = id;
+      return state.current === id;
+    },
+    isLocked: (state) => {
+      return state.isLocked === true;
     },
     model: (state, getters) => id => {
       return getters.exists(id)

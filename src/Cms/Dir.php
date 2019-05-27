@@ -2,14 +2,17 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use Kirby\Toolkit\F;
-
 /**
- * Extension of the Toolkit Dir class with a new
- * Dir::inventory method, that handles scanning directories
+ * Extension of the Toolkit `Dir` class with a new
+ * `Dir::inventory` method, that handles scanning directories
  * and converts the results into our children, files and
  * other page stuff.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Dir extends \Kirby\Toolkit\Dir
 {
@@ -107,7 +110,7 @@ class Dir extends \Kirby\Toolkit\Dir
             $content = array_unique($content);
         }
 
-        $inventory = static::inventoryContent($dir, $inventory, $content);
+        $inventory = static::inventoryContent($inventory, $content);
         $inventory = static::inventoryModels($inventory, $contentExtension, $multilang);
 
         return $inventory;
@@ -122,7 +125,7 @@ class Dir extends \Kirby\Toolkit\Dir
      * @param array $content
      * @return array
      */
-    protected static function inventoryContent(string $dir, array $inventory, array $content): array
+    protected static function inventoryContent(array $inventory, array $content): array
     {
 
         // filter meta files from the content file

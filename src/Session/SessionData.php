@@ -12,9 +12,9 @@ use Kirby\Exception\LogicException;
  *
  * @package   Kirby Session
  * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class SessionData
 {
@@ -24,6 +24,7 @@ class SessionData
     /**
      * Creates a new SessionData instance
      *
+     * @codeCoverageIgnore
      * @param Session $session Session object this data belongs to
      * @param array   $data    Currently stored session data
      */

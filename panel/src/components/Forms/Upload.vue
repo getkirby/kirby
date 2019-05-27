@@ -124,7 +124,7 @@ export default {
           },
           error: (xhr, file, response) => {
             this.errors.push({ file: file, message: response.message });
-            this.complete(file);
+            this.complete(file, response.data);
           }
         });
       });

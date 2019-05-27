@@ -7,11 +7,16 @@ use Kirby\Exception\PermissionException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request\Auth\BasicAuth;
-use Kirby\Session\Session;
 use Throwable;
 
 /**
  * Authentication layer
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Auth
 {
@@ -53,8 +58,8 @@ class Auth
      * for a basic authentication header with
      * valid credentials
      *
-     * @param BasicAuth|null $auth
-     * @return User|null
+     * @param Kirby\Http\Request\Auth\BasicAuth|null $auth
+     * @return Kirby\Cms\User|null
      */
     public function currentUserFromBasicAuth(BasicAuth $auth = null)
     {
@@ -88,13 +93,13 @@ class Auth
      * the current session and finding a valid
      * valid user id in there
      *
-     * @param Session|null $session
-     * @return User|null
+     * @param Kirby\Cms\Session|array|null $session
+     * @return Kirby\Cms\User|null
      */
     public function currentUserFromSession($session = null)
     {
         // use passed session options or session object if set
-        if (is_array($session)) {
+        if (is_array($session) === true) {
             $session = $this->kirby->session($session);
         }
 
@@ -123,7 +128,7 @@ class Auth
      * Become any existing user
      *
      * @param string|null $who
-     * @return User|null
+     * @return Kirby\Cms\User|null
      */
     public function impersonate(string $who = null)
     {
@@ -311,10 +316,10 @@ class Auth
     /**
      * Validates the currently logged in user
      *
-     * @param array|Session|null $session
+     * @param array|Kirby\Session\Session|null $session
      * @return User|null
      */
-    public function user($session = null): ?User
+    public function user($session = null)
     {
         if ($this->impersonate !== null) {
             return $this->impersonate;

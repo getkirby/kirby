@@ -67,6 +67,9 @@ export default {
           placeholder: "en_US"
         },
       };
+    },
+    system() {
+      return this.$store.state.system.info;
     }
   },
   watch: {
@@ -74,12 +77,12 @@ export default {
       this.onNameChanges(name);
     },
     "language.code"(code) {
-      this.language.code = slug(code);
+      this.language.code = slug(code, [this.system.ascii]);
     }
   },
   methods: {
     onNameChanges(name) {
-      this.language.code = slug(name).substr(0, 2);
+      this.language.code = slug(name, [this.language.rules, this.system.ascii]).substr(0, 2);
     },
     open() {
       this.language = {

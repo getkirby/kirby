@@ -9,17 +9,17 @@ use APCUIterator;
  *
  * @package   Kirby Cache
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class ApcuCache extends Cache
 {
 
     /**
-     * Checks if the current key exists in cache
+     * Determines if an item exists in the cache
      *
-     * @param  string  $key
+     * @param string $key
      * @return boolean
      */
     public function exists(string $key): bool
@@ -28,7 +28,8 @@ class ApcuCache extends Cache
     }
 
     /**
-     * Flush the entire cache directory
+     * Flushes the entire cache and returns
+     * whether the operation was successful
      *
      * @return boolean
      */
@@ -42,9 +43,10 @@ class ApcuCache extends Cache
     }
 
     /**
-     * Remove an item from the cache
+     * Removes an item from the cache and returns
+     * whether the operation was successful
      *
-     * @param  string  $key
+     * @param string $key
      * @return boolean
      */
     public function remove(string $key): bool
@@ -53,10 +55,11 @@ class ApcuCache extends Cache
     }
 
     /**
-     * Retrieve an item from the cache.
+     * Internal method to retrieve the raw cache value;
+     * needs to return a Value object or null if not found
      *
-     * @param  string  $key
-     * @return mixed
+     * @param string $key
+     * @return Kirby\Cache\Value|null
      */
     public function retrieve(string $key)
     {
@@ -64,20 +67,21 @@ class ApcuCache extends Cache
     }
 
     /**
-     * Write an item to the cache for a given number of minutes.
+     * Writes an item to the cache for a given number of minutes and
+     * returns whether the operation was successful
      *
      * <code>
-     *    // Put an item in the cache for 15 minutes
-     *    Cache::set('value', 'my value', 15);
+     *   // put an item in the cache for 15 minutes
+     *   $cache->set('value', 'my value', 15);
      * </code>
      *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @param  int     $minutes
-     * @return void
+     * @param string $key
+     * @param mixed $value
+     * @param int $minutes
+     * @return boolean
      */
-    public function set(string $key, $value, int $minutes = 0)
+    public function set(string $key, $value, int $minutes = 0): bool
     {
-        return apcu_store($this->key($key), $this->value($value, $minutes)->toJson(), $this->expiration($minutes));
+        return apcu_store($this->key($key), (new Value($value, $minutes))->toJson(), $this->expiration($minutes));
     }
 }

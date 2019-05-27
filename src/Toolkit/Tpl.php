@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
 use Throwable;
 
 /**
@@ -10,9 +9,9 @@ use Throwable;
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Tpl
 {

@@ -8,8 +8,9 @@ namespace Kirby\Cms;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 trait HasSiblings
 {
@@ -27,7 +28,7 @@ trait HasSiblings
     /**
      * Returns the next item in the collection if available
      *
-     * @return Model|null
+     * @return Kirby\Cms\Model|null
      */
     public function next()
     {
@@ -37,7 +38,7 @@ trait HasSiblings
     /**
      * Returns the end of the collection starting after the current item
      *
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
     public function nextAll()
     {
@@ -47,7 +48,7 @@ trait HasSiblings
     /**
      * Returns the previous item in the collection if available
      *
-     * @return Model|null
+     * @return Kirby\Cms\Model|null
      */
     public function prev()
     {
@@ -57,7 +58,7 @@ trait HasSiblings
     /**
      * Returns the beginning of the collection before the current item
      *
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
     public function prevAll()
     {
@@ -68,7 +69,7 @@ trait HasSiblings
      * Returns all sibling elements
      *
      * @param bool $self
-     * @return Collection
+     * @return Kirby\Cms\Collection
      */
     public function siblings(bool $self = true)
     {

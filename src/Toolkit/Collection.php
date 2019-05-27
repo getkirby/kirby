@@ -10,6 +10,12 @@ use Exception;
  * The collection class provides a nicer
  * interface around arrays of arrays or objects,
  * with advanced filters, sorting, navigation and more.
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Collection extends Iterator implements Countable
 {
@@ -162,7 +168,7 @@ class Collection extends Iterator implements Countable
      *
      * @return self
      */
-    public function clone(): self
+    public function clone()
     {
         return clone $this;
     }
@@ -204,9 +210,9 @@ class Collection extends Iterator implements Countable
     /**
      * Adds all elements to the collection
      *
-     * @return Collection
+     * @return self
      */
-    public function extend($items): self
+    public function extend($items)
     {
         $collection = clone $this;
         return $collection->set($items);
@@ -366,11 +372,11 @@ class Collection extends Iterator implements Countable
      *
      * @param string $attribute
      * @param mixed $value
-     * @return mixed
+     * @return mixed|null
      */
     public function findBy(string $attribute, $value)
     {
-        foreach ($this->data as $key => $item) {
+        foreach ($this->data as $item) {
             if ($this->getAttribute($item, $attribute) == $value) {
                 return $item;
             }
@@ -384,7 +390,7 @@ class Collection extends Iterator implements Countable
      * @param string $key
      * @return mixed
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         return $this->get($key);
     }
@@ -475,9 +481,9 @@ class Collection extends Iterator implements Countable
      * Groups the elements by a given callback
      *
      * @param Closure $callback
-     * @return Collection A new collection with an element for each group and a subcollection in each group
+     * @return self A new collection with an element for each group and a subcollection in each group
      */
-    public function group(Closure $callback): Collection
+    public function group(Closure $callback)
     {
         $groups = [];
 
@@ -704,9 +710,9 @@ class Collection extends Iterator implements Countable
      *
      * @param  mixed       $key
      * @param  mixed       $item
-     * @return Collection
+     * @return self
      */
-    public function prepend(...$args): self
+    public function prepend(...$args)
     {
         if (count($args) === 1) {
             array_unshift($this->data, $args[0]);
@@ -786,7 +792,7 @@ class Collection extends Iterator implements Countable
      * @param  mixed  $value
      * @return self
      */
-    public function set($key, $value = null): self
+    public function set($key, $value = null)
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {

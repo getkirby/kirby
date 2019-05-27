@@ -25,10 +25,8 @@ if (is_file($autoloader = dirname(__DIR__) . '/vendor/autoload.php')) {
 } else {
 
     /**
-     * If neither one exists, don't bother searching
+     * If neither one exists, don't bother searching;
      * it's a custom directory setup and the users need to
      * load the autoloader themselves
      */
 }
-
-define('DS', '/');

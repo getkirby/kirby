@@ -1,9 +1,7 @@
 <?php
 
-use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 return [
@@ -141,22 +139,9 @@ return [
         'data' => function () {
             $data = [];
 
-            if ($this->layout === 'list') {
-                $thumb = [
-                    'width'  => 100,
-                    'height' => 100
-                ];
-            } else {
-                $thumb = [
-                    'width'  => 400,
-                    'height' => 400
-                ];
-            }
-
             foreach ($this->pages as $item) {
                 $permissions = $item->permissions();
-                $blueprint   = $item->blueprint();
-                $image       = $item->panelImage($this->image, $thumb);
+                $image       = $item->panelImage($this->image);
 
                 $data[] = [
                     'id'          => $item->id(),
@@ -281,6 +266,7 @@ return [
                 'add'      => $this->add,
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
+                'help'     => $this->help,
                 'layout'   => $this->layout,
                 'link'     => $this->link,
                 'max'      => $this->max,

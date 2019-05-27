@@ -32,4 +32,26 @@ class UsersTest extends TestCase
         $this->assertEquals('b@getkirby.com', $users->find('B@getkirby.com')->email());
         $this->assertEquals('b@getkirby.com', $users->find('b@getkirby.com')->email());
     }
+
+    public function testCustomMethods()
+    {
+        Users::$methods = [
+            'test' => function () {
+                $i = 0;
+                foreach ($this as $user) {
+                    $i++;
+                }
+                return $i;
+            }
+        ];
+
+        $users = new Users([
+            new User(['email' => 'a@getkirby.com']),
+            new User(['email' => 'B@getKirby.com']),
+        ]);
+
+        $this->assertEquals(2, $users->test());
+
+        Users::$methods = [];
+    }
 }

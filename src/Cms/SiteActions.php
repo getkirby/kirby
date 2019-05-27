@@ -3,11 +3,16 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Data\Data;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 
+/**
+ * SiteActions
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait SiteActions
 {
 
@@ -44,7 +49,7 @@ trait SiteActions
      * @param string|null $languageCode
      * @return self
      */
-    public function changeTitle(string $title, string $languageCode = null): self
+    public function changeTitle(string $title, string $languageCode = null)
     {
         return $this->commit('changeTitle', [$this, $title, $languageCode], function ($site, $title, $languageCode) {
             return $site->save(['title' => $title], $languageCode);
@@ -71,8 +76,10 @@ trait SiteActions
 
     /**
      * Clean internal caches
+     *
+     * @return self
      */
-    public function purge(): self
+    public function purge()
     {
         $this->children  = null;
         $this->blueprint = null;

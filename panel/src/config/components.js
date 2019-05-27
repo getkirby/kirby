@@ -10,6 +10,7 @@ import LanguageCreateDialog from "@/components/Dialogs/LanguageCreateDialog.vue"
 import LanguageRemoveDialog from "@/components/Dialogs/LanguageRemoveDialog.vue";
 import LanguageUpdateDialog from "@/components/Dialogs/LanguageUpdateDialog.vue";
 import PageCreateDialog from "@/components/Dialogs/PageCreateDialog.vue";
+import PageDuplicateDialog from "@/components/Dialogs/PageDuplicateDialog.vue";
 import PageRemoveDialog from "@/components/Dialogs/PageRemoveDialog.vue";
 import PageRenameDialog from "@/components/Dialogs/PageRenameDialog.vue";
 import PageStatusDialog from "@/components/Dialogs/PageStatusDialog.vue";
@@ -35,6 +36,7 @@ Vue.component("k-language-create-dialog", LanguageCreateDialog);
 Vue.component("k-language-remove-dialog", LanguageRemoveDialog);
 Vue.component("k-language-update-dialog", LanguageUpdateDialog);
 Vue.component("k-page-create-dialog", PageCreateDialog);
+Vue.component("k-page-duplicate-dialog", PageDuplicateDialog);
 Vue.component("k-page-rename-dialog", PageRenameDialog);
 Vue.component("k-page-remove-dialog", PageRemoveDialog);
 Vue.component("k-page-status-dialog", PageStatusDialog);
@@ -263,7 +265,27 @@ Vue.component("k-pages-section", PagesSection);
 Vue.component("k-files-section", FilesSection);
 Vue.component("k-fields-section", FieldsSection);
 
-/* View */
+/* Views */
+import BrowserView from "@/components/Views/BrowserView.vue";
+import CustomView from "@/components/Views/CustomView.vue";
 import ErrorView from "@/components/Views/ErrorView.vue";
+import FileView from "@/components/Views/FileView.vue";
+import InstallationView from "@/components/Views/InstallationView.vue";
+import LoginView from "@/components/Views/LoginView.vue";
+import PageView from "@/components/Views/PageView.vue";
+import SettingsView from "@/components/Views/SettingsView.vue";
+import SiteView from "@/components/Views/SiteView.vue";
+import UsersView from "@/components/Views/UsersView.vue";
+import UserView from "@/components/Views/UserView.vue";
 
+Vue.component("k-browser-view", BrowserView);
+Vue.component("k-custom-view", CustomView);
 Vue.component("k-error-view", ErrorView);
+Vue.component("k-file-view", FileView);
+Vue.component("k-installation-view", InstallationView);
+Vue.component("k-login-view", LoginView);
+Vue.component("k-page-view", PageView);
+Vue.component("k-settings-view", SettingsView);
+Vue.component("k-site-view", SiteView);
+Vue.component("k-users-view", UsersView);
+Vue.component("k-user-view", UserView);

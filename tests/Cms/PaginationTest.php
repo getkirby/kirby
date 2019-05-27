@@ -7,7 +7,7 @@ use Kirby\Http\Uri;
 
 class PaginationTest extends TestCase
 {
-    protected function pagination(array $options = []): Pagination
+    protected function pagination(array $options = [])
     {
         return new Pagination(array_merge([
             'page'  => 1,

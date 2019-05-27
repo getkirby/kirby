@@ -45,6 +45,12 @@ export default {
           preselect: true
         }
       };
+    },
+    slugs() {
+      return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
+    },
+    system() {
+      return this.$store.state.system.info;
     }
   },
   methods: {
@@ -63,7 +69,7 @@ export default {
         });
     },
     sluggify(input) {
-      return slug(input);
+      return slug(input, [this.slugs, this.system.ascii], "\.");
     },
     submit() {
       this.$api.files

@@ -3,9 +3,9 @@
 namespace Kirby\Form;
 
 use Exception;
-use Kirby\Data\Yaml;
+use Kirby\Cms\App;
+use Kirby\Cms\Model;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Http\Router;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
@@ -14,6 +14,12 @@ use Kirby\Toolkit\V;
  * Form Field object that takes a Vue component style
  * array of properties and methods and converts them
  * to a usable field option array for the API.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Field extends Component
 {
@@ -54,6 +60,9 @@ class Field extends Component
         $this->validate();
     }
 
+    /**
+     * @return mixed
+     */
     public function api()
     {
         if (isset($this->options['api']) === true && is_callable($this->options['api']) === true) {
@@ -61,6 +70,9 @@ class Field extends Component
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function data($default = false)
     {
         $save = $this->options['save'] ?? true;
@@ -103,13 +115,13 @@ class Field extends Component
                     return I18n::translate($before, $before);
                 },
                 /**
-                 * Default value for the field, which will be used when a Page/File/User is created
+                 * Default value for the field, which will be used when a page/file/user is created
                  */
                 'default' => function ($default = null) {
                     return $default;
                 },
                 /**
-                 * If true, the field is no longer editable and will not be saved
+                 * If `true`, the field is no longer editable and will not be saved
                  */
                 'disabled' => function (bool $disabled = null): bool {
                     return $disabled ?? false;
@@ -139,13 +151,13 @@ class Field extends Component
                     return I18n::translate($placeholder, $placeholder);
                 },
                 /**
-                 * If true, the field has to be filled in correctly to be saved.
+                 * If `true`, the field has to be filled in correctly to be saved.
                  */
                 'required' => function (bool $required = null): bool {
                     return $required ?? false;
                 },
                 /**
-                 * If false, the field will be disabled in non-default languages and cannot be translated. This is only relevant in multi-language setups.
+                 * If `false`, the field will be disabled in non-default languages and cannot be translated. This is only relevant in multi-language setups.
                  */
                 'translate' => function (bool $translate = true): bool {
                     return $translate;
@@ -157,7 +169,7 @@ class Field extends Component
                     return $when;
                 },
                 /**
-                 * The width of the field in the field grid. Available widths: 1/1, 1/2, 1/3, 1/4, 2/3, 3/4
+                 * The width of the field in the field grid. Available widths: `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
                  */
                 'width' => function (string $width = '1/1') {
                     return $width;
@@ -204,6 +216,9 @@ class Field extends Component
         return empty($this->errors) === true;
     }
 
+    /**
+     * @return Kirby\Cms\App
+     */
     public function kirby()
     {
         return $this->model->kirby();
@@ -236,7 +251,7 @@ class Field extends Component
         });
     }
 
-    protected function validate()
+    protected function validate(): void
     {
         $validations  = $this->options['validations'] ?? [];
         $this->errors = [];

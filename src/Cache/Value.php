@@ -7,31 +7,31 @@ use Throwable;
 /**
  * Cache Value
  * Stores the value, creation timestamp and expiration timestamp
- * and makes it possible to store all three with a single cache key.
+ * and makes it possible to store all three with a single cache key
  *
  * @package   Kirby Cache
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Value
 {
 
     /**
-     * the cached value
+     * Cached value
      * @var mixed
      */
     protected $value;
 
     /**
-     * the expiration timestamp
+     * the number of minutes until the value expires
      * @var int
      */
-    protected $expires;
+    protected $minutes;
 
     /**
-     * the creation timestamp
+     * Creation timestamp
      * @var int
      */
     protected $created;
@@ -40,18 +40,13 @@ class Value
      * Constructor
      *
      * @param mixed $value
-     * @param int   $minutes the number of minutes until the value expires
-     * @param int   $created the unix timestamp when the value has been created
+     * @param int $minutes the number of minutes until the value expires
+     * @param int $created the unix timestamp when the value has been created
      */
-    public function __construct($value, int $minutes = 0, $created = null)
+    public function __construct($value, int $minutes = 0, int $created = null)
     {
-        // keep forever if minutes are not defined
-        if ($minutes === 0) {
-            $minutes = 2628000;
-        }
-
         $this->value   = $value;
-        $this->minutes = $minutes;
+        $this->minutes = $minutes ?? 0;
         $this->created = $created ?? time();
     }
 
@@ -66,12 +61,18 @@ class Value
     }
 
     /**
-     * Returns the expiration date as UNIX timestamp
+     * Returns the expiration date as UNIX timestamp or
+     * null if the value never expires
      *
-     * @return int
+     * @return int|null
      */
-    public function expires(): int
+    public function expires(): ?int
     {
+        // 0 = keep forever
+        if ($this->minutes === 0) {
+            return null;
+        }
+
         return $this->created + ($this->minutes * 60);
     }
 
@@ -79,32 +80,37 @@ class Value
      * Creates a value object from an array
      *
      * @param array $array
-     * @return array
+     * @return self
      */
-    public static function fromArray(array $array): self
+    public static function fromArray(array $array)
     {
         return new static($array['value'] ?? null, $array['minutes'] ?? 0, $array['created'] ?? null);
     }
 
     /**
-     * Creates a value object from a json string
+     * Creates a value object from a JSON string;
+     * returns null on error
      *
      * @param string $json
-     * @return array
+     * @return self|null
      */
-    public static function fromJson($json): self
+    public static function fromJson(string $json)
     {
         try {
-            $array = json_decode($json, true) ?? [];
-        } catch (Throwable $e) {
-            $array = [];
-        }
+            $array = json_decode($json, true);
 
-        return static::fromArray($array);
+            if (is_array($array)) {
+                return static::fromArray($array);
+            } else {
+                return null;
+            }
+        } catch (Throwable $e) {
+            return null;
+        }
     }
 
     /**
-     * Convert the object to a json string
+     * Converts the object to a JSON string
      *
      * @return string
      */
@@ -114,7 +120,7 @@ class Value
     }
 
     /**
-     * Convert the object to an array
+     * Converts the object to an array
      *
      * @return array
      */
@@ -128,7 +134,7 @@ class Value
     }
 
     /**
-     * Returns the value
+     * Returns the pure value
      *
      * @return mixed
      */

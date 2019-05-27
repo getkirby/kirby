@@ -3,8 +3,18 @@
 namespace Kirby\Cms;
 
 use Kirby\Cache\Cache;
+use Kirby\Cache\NullCache;
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * AppCaches
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait AppCaches
 {
     protected $caches = [];
@@ -13,7 +23,7 @@ trait AppCaches
      * Returns a cache instance by key
      *
      * @param string $key
-     * @return Cache
+     * @return Kirby\Cache\Cache
      */
     public function cache(string $key)
     {
@@ -25,7 +35,8 @@ trait AppCaches
         $options = $this->cacheOptions($key);
 
         if ($options['active'] === false) {
-            return $this->caches[$key] = new Cache;
+            // use a dummy cache that does nothing
+            return $this->caches[$key] = new NullCache;
         }
 
         $type  = strtolower($options['type']);
@@ -41,7 +52,17 @@ trait AppCaches
         $className = $types[$type];
 
         // initialize the cache class
-        return $this->caches[$key] = new $className($options);
+        $cache = new $className($options);
+
+        // check if it is a useable cache object
+        if (is_a($cache, Cache::class) !== true) {
+            throw new InvalidArgumentException([
+                'key'  => 'app.invalid.cacheType',
+                'data' => ['type' => $type]
+            ]);
+        }
+
+        return $this->caches[$key] = $cache;
     }
 
     /**
@@ -60,11 +81,16 @@ trait AppCaches
             ];
         }
 
+        $prefix = str_replace('/', '_', $this->system()->indexUrl()) .
+                  '/' .
+                  str_replace('.', '/', $key);
+
         $defaults = [
             'active'    => true,
             'type'      => 'file',
             'extension' => 'cache',
-            'root'      => $this->root('cache') . '/' . str_replace('.', '/', $key)
+            'root'      => $this->root('cache'),
+            'prefix'    => $prefix
         ];
 
         if ($options === true) {
@@ -103,7 +129,7 @@ trait AppCaches
         $cacheName    = implode('.', array_slice($parts, 2));
 
         // check if such a plugin exists
-        if ($plugin = $this->plugin($pluginName)) {
+        if ($this->plugin($pluginName)) {
             return empty($cacheName) === true ? $pluginPrefix . '.cache' : $pluginPrefix . '.cache.' . $cacheName;
         }
 

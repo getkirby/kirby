@@ -380,4 +380,29 @@ class PageRulesTest extends TestCase
 
         $this->assertTrue(PageRules::delete($page, true));
     }
+
+    public function testDuplicate()
+    {
+        $page = new Page([
+            'slug'  => 'test',
+            'kirby' => $this->appWithAdmin(),
+        ]);
+
+        $this->assertTrue(PageRules::duplicate($page, 'test-copy'));
+    }
+
+    public function testDuplicateWithoutPermissions()
+    {
+        $permissions = $this->createMock(PagePermissions::class);
+        $permissions->method('__call')->with('duplicate')->willReturn(false);
+
+        $page = $this->createMock(Page::class);
+        $page->method('slug')->willReturn('test');
+        $page->method('permissions')->willReturn($permissions);
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to duplicate "test"');
+
+        PageRules::duplicate($page, 'something');
+    }
 }

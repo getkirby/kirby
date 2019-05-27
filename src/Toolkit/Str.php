@@ -11,19 +11,36 @@ use Exception;
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Str
 {
+
+    /**
+     * Language translation table
+     *
+     * @var array
+     */
+    public static $language = [];
 
     /**
      * Ascii translation table
      *
      * @var array
      */
-    protected static $ascii = [
+    public static $ascii = [
+        '/°|₀/' => '0',
+        '/¹|₁/' => '1',
+        '/²|₂/' => '2',
+        '/³|₃/' => '3',
+        '/⁴|₄/' => '4',
+        '/⁵|₅/' => '5',
+        '/⁶|₆/' => '6',
+        '/⁷|₇/' => '7',
+        '/⁸|₈/' => '8',
+        '/⁹|₉/' => '9',
         '/À|Á|Â|Ã|Å|Ǻ|Ā|Ă|Ą|Ǎ|Ä|A/' => 'A',
         '/à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª|æ|ǽ|ä|a/' => 'a',
         '/Б/' => 'B',
@@ -75,7 +92,7 @@ class Str
         '/Ź|Ż|Ž|З/' => 'Z',
         '/ź|ż|ž|з/' => 'z',
         '/Æ|Ǽ/' => 'AE',
-        '/ß/'=> 'ss',
+        '/ß/' => 'ss',
         '/Ĳ/' => 'IJ',
         '/ĳ/' => 'ij',
         '/Œ/' => 'OE',
@@ -177,8 +194,18 @@ class Str
      */
     public static function ascii(string $string): string
     {
-        $foreign = static::$ascii;
-        $string  = preg_replace(array_keys($foreign), array_values($foreign), $string);
+        $string  = str_replace(
+            array_keys(static::$language),
+            array_values(static::$language),
+            $string
+        );
+
+        $string  = preg_replace(
+            array_keys(static::$ascii),
+            array_values(static::$ascii),
+            $string
+        );
+
         return preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string);
     }
 
@@ -477,7 +504,7 @@ class Str
      * @param  bool     $caseInsensitive
      * @return int|bool
      */
-    public static function position(string $string, string $needle, bool $caseInsensitive = false)
+    public static function position(string $string = null, string $needle, bool $caseInsensitive = false)
     {
         if ($caseInsensitive === true) {
             $string = static::lower($string);
@@ -821,7 +848,7 @@ class Str
      * @param  bool     $caseInsensitive
      * @return bool
      */
-    public static function startsWith(string $string, string $needle, bool $caseInsensitive = false): bool
+    public static function startsWith(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
         if ($needle === '') {
             return true;

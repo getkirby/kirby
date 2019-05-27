@@ -2,7 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\Obj;
@@ -15,9 +14,9 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
 */
 class Visitor
 {
@@ -85,7 +84,7 @@ class Visitor
      * Returns an array of all accepted languages
      * including their quality and locale
      *
-     * @return Collection
+     * @return Kirby\Toolkit\Collection
      */
     public function acceptedLanguages()
     {
@@ -151,7 +150,7 @@ class Visitor
     /**
      * Returns a collection of all accepted mime types
      *
-     * @return Collection
+     * @return Kirby\Toolkit\Collection
      */
     public function acceptedMimeTypes()
     {

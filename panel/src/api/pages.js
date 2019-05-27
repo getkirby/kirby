@@ -9,6 +9,12 @@ export default {
 
     return api.post(this.url(parent, "children"), data);
   },
+  duplicate(id, slug, copyFiles) {
+    return api.post(this.url(id, "duplicate"), {
+      slug: slug,
+      copyFiles: copyFiles
+    });
+  },
   url(id, path) {
     let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
 
@@ -42,6 +48,9 @@ export default {
           text: Vue.i18n.translate("open"),
           disabled: options.preview === false
         });
+
+        result.push("-");
+
       }
 
       result.push({
@@ -50,6 +59,15 @@ export default {
         text: Vue.i18n.translate("rename"),
         disabled: !options.changeTitle
       });
+
+      result.push({
+        click: "duplicate",
+        icon: "copy",
+        text: Vue.i18n.translate("duplicate"),
+        disabled: !options.duplicate
+      });
+
+      result.push("-");
 
       result.push({
         click: "url",
@@ -71,6 +89,8 @@ export default {
         text: Vue.i18n.translate("page.changeTemplate"),
         disabled: !options.changeTemplate
       });
+
+      result.push("-");
 
       result.push({
         click: "remove",

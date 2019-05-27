@@ -2,15 +2,16 @@
 
 namespace Kirby\Http;
 
+use Closure;
 use Exception;
 use InvalidArgumentException;
 
 /**
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Router
 {
@@ -82,10 +83,12 @@ class Router
      *
      * @param  string $path
      * @param  string $method
+     * @param  Closure|null $callback
      * @return mixed
      */
-    public function call(string $path = '', string $method = 'GET')
+    public function call(string $path = null, string $method = 'GET', Closure $callback = null)
     {
+        $path   = $path ?? '';
         $ignore = [];
         $result = null;
         $loop   = true;
@@ -98,7 +101,12 @@ class Router
             }
 
             try {
-                $result = $route->action()->call($route, ...$route->arguments());
+                if ($callback) {
+                    $result = $callback($route);
+                } else {
+                    $result = $route->action()->call($route, ...$route->arguments());
+                }
+
                 $loop   = false;
             } catch (Exceptions\NextRouteException $e) {
                 $ignore[] = $route;
@@ -121,7 +129,7 @@ class Router
      * @param  string $path
      * @param  string $method
      * @param  array  $ignore
-     * @return Route|null
+     * @return Kirby\Http\Route|null
      */
     public function find(string $path, string $method, array $ignore = null)
     {
@@ -151,7 +159,7 @@ class Router
      * once Router::find() has been called
      * and only if a route was found.
      *
-     * @return Route|null
+     * @return Kirby\Http\Route|null
      */
     public function route()
     {

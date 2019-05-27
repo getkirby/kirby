@@ -18,12 +18,12 @@ export default {
     })
   },
   watch: {
-    plugin() {
-      this.$store.dispatch("view", this.plugin);
+    plugin: {
+      handler() {
+        this.$store.dispatch("view", this.plugin);
+      },
+      immediate: true
     }
-  },
-  created() {
-    this.$store.dispatch("view", this.plugin);
   }
 };
 </script>

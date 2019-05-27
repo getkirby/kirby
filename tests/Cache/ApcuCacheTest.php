@@ -4,36 +4,74 @@ namespace Kirby\Cache;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cache\ApcuCache
+ */
 class ApcuCacheTest extends TestCase
 {
-    public function testSetGetRemove()
+    /**
+     * @covers ::set
+     * @covers ::exists
+     * @covers ::retrieve
+     * @covers ::remove
+     */
+    public function testOperations()
     {
         $cache = new ApcuCache([]);
 
-        $cache->set('foo', 'A basic value');
+        $time = time();
+        $this->assertTrue($cache->set('foo', 'A basic value', 10));
 
-        $this->assertEquals('A basic value', $cache->get('foo'));
-        $this->assertEquals(time(), $cache->created('foo'));
+        $this->assertTrue($cache->exists('foo'));
+        $this->assertEquals('A basic value', $cache->retrieve('foo')->value());
+        $this->assertEquals($time, $cache->created('foo'));
+        $this->assertEquals($time + 600, $cache->expires('foo'));
 
-        $cache->remove('foo');
+        $this->assertTrue($cache->remove('foo'));
         $this->assertFalse($cache->exists('foo'));
+        $this->assertNull($cache->retrieve('foo'));
+
+        $this->assertFalse($cache->remove('doesnotexist'));
     }
 
-    public function testSetGetRemoveWithPrefix()
+    /**
+     * @covers ::set
+     * @covers ::exists
+     * @covers ::retrieve
+     * @covers ::remove
+     */
+    public function testOperationsWithPrefix()
     {
-        $cache = new ApcuCache([
-            'prefix' => 'test'
+        $cache1 = new ApcuCache([
+            'prefix' => 'test1'
+        ]);
+        $cache2 = new ApcuCache([
+            'prefix' => 'test2'
         ]);
 
-        $cache->set('foo', 'A basic value');
+        $time = time();
+        $this->assertTrue($cache1->set('foo', 'A basic value', 10));
 
-        $this->assertEquals('A basic value', $cache->get('foo'));
-        $this->assertEquals(time(), $cache->created('foo'));
+        $this->assertTrue($cache1->exists('foo'));
+        $this->assertFalse($cache2->exists('foo'));
+        $this->assertEquals('A basic value', $cache1->retrieve('foo')->value());
+        $this->assertEquals($time, $cache1->created('foo'));
+        $this->assertEquals($time + 600, $cache1->expires('foo'));
 
-        $cache->remove('foo');
-        $this->assertFalse($cache->exists('foo'));
+        $this->assertTrue($cache2->set('foo', 'Another basic value'));
+        $this->assertTrue($cache2->exists('foo'));
+
+        $this->assertEquals('A basic value', $cache1->retrieve('foo')->value());
+        $this->assertTrue($cache1->remove('foo'));
+        $this->assertFalse($cache1->exists('foo'));
+        $this->assertNull($cache1->retrieve('foo'));
+        $this->assertTrue($cache2->exists('foo'));
+        $this->assertEquals('Another basic value', $cache2->retrieve('foo')->value());
     }
 
+    /**
+     * @covers ::flush
+     */
     public function testFlush()
     {
         $cache = new ApcuCache([]);
@@ -45,28 +83,37 @@ class ApcuCacheTest extends TestCase
         $this->assertTrue($cache->exists('b'));
         $this->assertTrue($cache->exists('c'));
 
-        $cache->flush();
+        $this->assertTrue($cache->flush());
         $this->assertFalse($cache->exists('a'));
         $this->assertFalse($cache->exists('b'));
         $this->assertFalse($cache->exists('c'));
     }
 
+    /**
+     * @covers ::flush
+     */
     public function testFlushWithPrefix()
     {
-        $cache = new ApcuCache([
-            'prefix' => 'test'
+        $cache1 = new ApcuCache([
+            'prefix' => 'test1'
+        ]);
+        $cache2 = new ApcuCache([
+            'prefix' => 'test2'
         ]);
 
-        $cache->set('a', 'A basic value');
-        $cache->set('b', 'A basic value');
-        $cache->set('c', 'A basic value');
-        $this->assertTrue($cache->exists('a'));
-        $this->assertTrue($cache->exists('b'));
-        $this->assertTrue($cache->exists('c'));
+        $cache1->set('a', 'A basic value');
+        $cache1->set('b', 'A basic value');
+        $cache2->set('a', 'A basic value');
+        $cache2->set('b', 'A basic value');
+        $this->assertTrue($cache1->exists('a'));
+        $this->assertTrue($cache1->exists('b'));
+        $this->assertTrue($cache2->exists('a'));
+        $this->assertTrue($cache2->exists('b'));
 
-        $cache->flush();
-        $this->assertFalse($cache->exists('a'));
-        $this->assertFalse($cache->exists('b'));
-        $this->assertFalse($cache->exists('c'));
+        $this->assertTrue($cache1->flush());
+        $this->assertFalse($cache1->exists('a'));
+        $this->assertFalse($cache1->exists('b'));
+        $this->assertTrue($cache2->exists('a'));
+        $this->assertTrue($cache2->exists('b'));
     }
 }

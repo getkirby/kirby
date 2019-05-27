@@ -2,7 +2,7 @@ Title: Title
 
 ----
 
-Text: 
+Text:
 
 - a
 - b

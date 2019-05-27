@@ -7,6 +7,12 @@ use Exception;
 
 /**
  * Localization class, roughly inspired by VueI18n
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class I18n
 {

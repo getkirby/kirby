@@ -382,9 +382,9 @@ function js($url, $options = null)
 /**
  * Returns the Kirby object in any situation
  *
- * @return App
+ * @return Kirby\Cms\App
  */
-function kirby(): App
+function kirby()
 {
     return App::instance();
 }
@@ -669,12 +669,12 @@ function smartypants(string $text = null): string
 /**
  * Embeds a snippet from the snippet folder
  *
- * @param string $name
+ * @param string|array $name
  * @param array|object $data
  * @param boolean $return
  * @return string
  */
-function snippet(string $name, $data = [], bool $return = false)
+function snippet($name, $data = [], bool $return = false)
 {
     if (is_object($data) === true) {
         $data = ['item' => $data];
@@ -740,6 +740,21 @@ function t($key, string $fallback = null)
 function tc($key, int $count)
 {
     return I18n::translateCount($key, $count);
+}
+
+/**
+ * Translate by key and then replace
+ * placeholders in the text
+ *
+ * @param string $key
+ * @param string $fallback
+ * @param array $replace
+ * @param string $locale
+ * @return string
+ */
+function tt(string $key, $fallback = null, array $replace = null, string $locale = null)
+{
+    return I18n::template($key, $fallback, $replace, $locale);
 }
 
 /**

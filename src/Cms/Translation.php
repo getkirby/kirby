@@ -8,6 +8,12 @@ use Kirby\Data\Data;
 /**
  * Wrapper around Kirby's localization files,
  * which are store in `kirby/translations`.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Translation
 {
@@ -32,7 +38,7 @@ class Translation
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */

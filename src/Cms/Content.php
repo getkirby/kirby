@@ -2,16 +2,15 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-
 /**
  * The Content class handles all fields
  * for content from pages, the site and users
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Content
 {
@@ -39,7 +38,7 @@ class Content
      * for testing, but field methods might
      * need it.
      *
-     * @var Page|File|User|Site
+     * @var Model
      */
     protected $parent;
 
@@ -48,9 +47,9 @@ class Content
      *
      * @param string $name
      * @param array $arguments
-     * @return Field
+     * @return Kirby\Cms\Field
      */
-    public function __call(string $name, array $arguments = []): Field
+    public function __call(string $name, array $arguments = [])
     {
         return $this->get($name);
     }
@@ -58,10 +57,10 @@ class Content
     /**
      * Creates a new Content object
      *
-     * @param array $data
-     * @param object $parent
+     * @param array|null $data
+     * @param object|null $parent
      */
-    public function __construct($data = [], $parent = null)
+    public function __construct(array $data = [], $parent = null)
     {
         $this->data   = $data;
         $this->parent = $parent;
@@ -69,7 +68,7 @@ class Content
 
     /**
      * Same as `self::data()` to improve
-     * var_dump output
+     * `var_dump` output
      *
      * @see    self::data()
      * @return array
@@ -149,7 +148,7 @@ class Content
      * or all registered fields
      *
      * @param   string $key
-     * @return  Field|array
+     * @return  Kirby\Cms\Field|array
      */
     public function get(string $key = null)
     {
@@ -202,7 +201,7 @@ class Content
      * @param  string ...$keys
      * @return self
      */
-    public function not(...$keys): self
+    public function not(...$keys)
     {
         $copy = clone $this;
         $copy->fields = null;
@@ -218,7 +217,7 @@ class Content
      * Returns the parent
      * Site, Page, File or User object
      *
-     * @return Site|Page|File|User
+     * @return Kirby\Cms\Model
      */
     public function parent()
     {
@@ -228,10 +227,10 @@ class Content
     /**
      * Set the parent model
      *
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @return self
      */
-    public function setParent(Model $parent): self
+    public function setParent(Model $parent)
     {
         $this->parent = $parent;
         return $this;
@@ -256,7 +255,7 @@ class Content
      * @param  bool $overwrite
      * @return self
      */
-    public function update(array $content = null, bool $overwrite = false): self
+    public function update(array $content = null, bool $overwrite = false)
     {
         $this->data = $overwrite === true ? (array)$content : array_merge($this->data, (array)$content);
         return $this;

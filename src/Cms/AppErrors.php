@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler;
@@ -11,9 +9,18 @@ use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\CallbackHandler;
 
+/**
+ * AppErrors
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait AppErrors
 {
-    protected function handleCliErrors()
+    protected function handleCliErrors(): void
     {
         $whoops = new Whoops;
         $whoops->pushHandler(new PlainTextHandler);

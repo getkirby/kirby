@@ -50,11 +50,17 @@ export default {
         counter: false,
         preselect: true
       };
+    },
+    slugs() {
+      return this.$store.state.languages.current ? this.$store.state.languages.current.rules : this.system.slugs;
+    },
+    system() {
+      return this.$store.state.system.info;
     }
   },
   methods: {
     sluggify(input) {
-      this.slug = slug(input);
+      this.slug = slug(input, [this.slugs, this.system.ascii]);
 
       if (this.page.parents) {
         this.url = this.page.parents.map(p => p.slug).

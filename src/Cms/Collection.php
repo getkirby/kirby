@@ -19,8 +19,9 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Collection extends BaseCollection
 {
@@ -55,7 +56,7 @@ class Collection extends BaseCollection
      * @param array $objects
      * @param object $parent
      */
-    public function __construct($objects = [], $parent = null)
+    public function __construct(array $objects = [], $parent = null)
     {
         $this->parent = $parent;
 

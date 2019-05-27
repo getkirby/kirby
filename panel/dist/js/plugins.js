@@ -2,6 +2,7 @@
 window.panel = window.panel || {};
 window.panel.plugins = {
   components: {},
+  created: [],
   fields: {},
   sections: {},
   routes: [],
@@ -30,10 +31,21 @@ window.panel.plugin = function (plugin, parts) {
     window.panel.plugins["use"].push(options);
   });
 
+  // created callback
+  if (parts["created"]) {
+    window.panel.plugins["created"].push(parts["created"]);
+  }
+
   // Views
   resolve(parts, "views", function (name, options) {
     window.panel.plugins["views"][name] = options;
   });
+
+  // Login
+  if (parts.login) {
+    window.panel.plugins.login = parts.login;
+  }
+
 };
 
 function resolve(object, type, callback) {

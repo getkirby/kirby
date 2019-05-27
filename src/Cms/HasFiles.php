@@ -2,24 +2,31 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Str;
-
+/**
+ * HasFiles
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 trait HasFiles
 {
 
     /**
      * The Files collection
      *
-     * @var Files
+     * @var Kirby\Cms\Files
      */
     protected $files;
 
     /**
      * Filters the Files collection by type audio
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function audio(): Files
+    public function audio()
     {
         return $this->files()->filterBy('type', '==', 'audio');
     }
@@ -27,9 +34,9 @@ trait HasFiles
     /**
      * Filters the Files collection by type code
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function code(): Files
+    public function code()
     {
         return $this->files()->filterBy('type', '==', 'code');
     }
@@ -49,7 +56,7 @@ trait HasFiles
      * Creates a new file
      *
      * @param array $props
-     * @return File
+     * @return Kirby\Cms\File
      */
     public function createFile(array $props)
     {
@@ -64,9 +71,9 @@ trait HasFiles
     /**
      * Filters the Files collection by type documents
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function documents(): Files
+    public function documents()
     {
         return $this->files()->filterBy('type', '==', 'document');
     }
@@ -76,7 +83,7 @@ trait HasFiles
      *
      * @param string $filename
      * @param string $in
-     * @return File
+     * @return Kirby\Cms\File|null
      */
     public function file(string $filename = null, string $in = 'files')
     {
@@ -101,9 +108,9 @@ trait HasFiles
     /**
      * Returns the Files collection
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function files(): Files
+    public function files()
     {
         if (is_a($this->files, 'Kirby\Cms\Files') === true) {
             return $this->files;
@@ -176,7 +183,7 @@ trait HasFiles
      * Returns a specific image by filename or the first one
      *
      * @param string $filename
-     * @return File
+     * @return Kirby\Cms\File|null
      */
     public function image(string $filename = null)
     {
@@ -186,9 +193,9 @@ trait HasFiles
     /**
      * Filters the Files collection by type image
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function images(): Files
+    public function images()
     {
         return $this->files()->filterBy('type', '==', 'image');
     }
@@ -196,10 +203,10 @@ trait HasFiles
     /**
      * Sets the Files collection
      *
-     * @param Files|null $files
+     * @param Kirby\Cms\Files|null $files
      * @return self
      */
-    protected function setFiles(array $files = null): self
+    protected function setFiles(array $files = null)
     {
         if ($files !== null) {
             $this->files = Files::factory($files, $this);
@@ -211,9 +218,9 @@ trait HasFiles
     /**
      * Filters the Files collection by type videos
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function videos(): Files
+    public function videos()
     {
         return $this->files()->filterBy('type', '==', 'video');
     }

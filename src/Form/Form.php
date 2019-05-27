@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Throwable;
-use Kirby\Toolkit\Collection;
 use Kirby\Data\Yaml;
 
 /**
@@ -11,6 +10,12 @@ use Kirby\Data\Yaml;
  * used to create a list of form fields
  * and handles global form validation
  * and submission
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Form
 {
@@ -154,7 +159,7 @@ class Form
         return $strings;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $array = [
             'errors' => $this->errors(),

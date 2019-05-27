@@ -4,11 +4,16 @@ namespace Kirby\Toolkit;
 
 use ArgumentCountError;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\A;
 use TypeError;
 
 /**
  * Vue-like components
+ *
+ * @package   Kirby Toolkit
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Component
 {
@@ -129,7 +134,7 @@ class Component
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */

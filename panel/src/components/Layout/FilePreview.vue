@@ -10,8 +10,9 @@
           target="_blank"
         >
           <k-image
-            v-if="file.panelImage && file.panelImage.url"
-            :src="file.panelImage.url"
+            v-if="file.panelImage && file.panelImage.cards && file.panelImage.cards.url"
+            :src="file.panelImage.cards.url"
+            :srcset="file.panelImage.cards.srcset"
             back="none"
           />
           <k-icon

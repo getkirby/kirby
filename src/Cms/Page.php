@@ -2,15 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
-use Throwable;
 
 /**
  * The `$page` object is the heart and
@@ -20,8 +17,9 @@ use Throwable;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Page extends ModelWithContent
 {
@@ -32,6 +30,7 @@ class Page extends ModelWithContent
     use HasChildren;
     use HasFiles;
     use HasMethods;
+    use HasPanelImage;
     use HasSiblings;
 
     /**
@@ -51,7 +50,7 @@ class Page extends ModelWithContent
     /**
      * The PageBlueprint object
      *
-     * @var PageBlueprint
+     * @var Kirby\Cms\PageBlueprint
      */
     protected $blueprint;
 
@@ -94,7 +93,7 @@ class Page extends ModelWithContent
      * The template, that should be loaded
      * if it exists
      *
-     * @var Template
+     * @var Kirby\Cms\Template
      */
     protected $intendedTemplate;
 
@@ -113,7 +112,7 @@ class Page extends ModelWithContent
     /**
      * The parent page
      *
-     * @var Page|null
+     * @var Kirby\Cms\Page|null
      */
     protected $parent;
 
@@ -127,7 +126,7 @@ class Page extends ModelWithContent
     /**
      * The parent Site object
      *
-     * @var Site|null
+     * @var Kirby\Cms\Site|null
      */
     protected $site;
 
@@ -190,7 +189,7 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */
@@ -224,9 +223,9 @@ class Page extends ModelWithContent
     /**
      * Returns the blueprint object
      *
-     * @return PageBlueprint
+     * @return Kirby\Cms\PageBlueprint
      */
-    public function blueprint(): PageBlueprint
+    public function blueprint()
     {
         if (is_a($this->blueprint, 'Kirby\Cms\PageBlueprint') === true) {
             return $this->blueprint;
@@ -394,7 +393,7 @@ class Page extends ModelWithContent
         }
 
         if ($parent = $this->parent()) {
-            return $this->diruri = $this->parent()->diruri() . '/' . $dirname;
+            return $this->diruri = $parent->diruri() . '/' . $dirname;
         } else {
             return $this->diruri = $dirname;
         }
@@ -436,7 +435,7 @@ class Page extends ModelWithContent
      * @internal
      * @return self
      */
-    public static function factory($props): self
+    public static function factory($props)
     {
         if (empty($props['model']) === false) {
             return static::model($props['model'], $props);
@@ -479,7 +478,7 @@ class Page extends ModelWithContent
      * Returns the template that should be
      * loaded if it exists.
      *
-     * @return Template
+     * @return Kirby\Cms\Template
      */
     public function intendedTemplate()
     {
@@ -516,7 +515,7 @@ class Page extends ModelWithContent
     /**
      * Compares the current object with the given page object
      *
-     * @param Page|string $page
+     * @param Kirby\Cms\Page|string $page
      * @return bool
      */
     public function is($page): bool
@@ -619,7 +618,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is a child of the given page
      *
-     * @param string|Page $parent
+     * @param Kirby\Cms\Page|string $parent
      * @return boolean
      */
     public function isChildOf($parent): bool
@@ -634,7 +633,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is a descendant of the given page
      *
-     * @param string|Page $parent
+     * @param Kirby\Cms\Page|string $parent
      * @return boolean
      */
     public function isDescendantOf($parent): bool
@@ -786,6 +785,15 @@ class Page extends ModelWithContent
     }
 
     /**
+     * @deprecated 3.0.0 Use `Page::isListed()` intead
+     * @return bool
+     */
+    public function isVisible(): bool
+    {
+        return $this->isListed();
+    }
+
+    /**
      * Checks if the page access is verified.
      * This is only used for drafts so far.
      *
@@ -795,7 +803,10 @@ class Page extends ModelWithContent
      */
     public function isVerified(string $token = null)
     {
-        if ($this->isDraft() === false && !$draft = $this->parents()->findBy('status', 'draft')) {
+        if (
+            $this->isDraft() === false &&
+            $this->parents()->findBy('status', 'draft') === null
+        ) {
             return true;
         }
 
@@ -804,15 +815,6 @@ class Page extends ModelWithContent
         }
 
         return $this->token() === $token;
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::isListed()` intead
-     * @return bool
-     */
-    public function isVisible(): bool
-    {
-        return $this->isListed();
     }
 
     /**
@@ -843,7 +845,7 @@ class Page extends ModelWithContent
      * @internal
      * @param string $name
      * @param array $props
-     * @return Page
+     * @return self
      */
     public static function model(string $name, array $props = [])
     {
@@ -875,7 +877,7 @@ class Page extends ModelWithContent
      *
      * @return integer|null
      */
-    public function num()
+    public function num(): ?int
     {
         return $this->num;
     }
@@ -921,40 +923,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * @internal
-     * @param string|array|false $settings
-     * @param array|null $thumbSettings
-     * @return array|null
-     */
-    public function panelImage($settings = null, array $thumbSettings = null): ?array
-    {
-        $defaults = [
-            'ratio' => '3/2',
-            'back'  => 'pattern',
-            'cover' => false
-        ];
-
-        // switch the image off
-        if ($settings === false) {
-            return null;
-        }
-
-        if (is_string($settings) === true) {
-            $settings = [
-                'query' => $settings
-            ];
-        }
-
-        if ($image = $this->query($settings['query'] ?? 'page.image', 'Kirby\Cms\File')) {
-            $settings['url'] = $image->thumb($thumbSettings)->url(true) . '?t=' . $image->modified();
-
-            unset($settings['query']);
-        }
-
-        return array_merge($defaults, (array)$settings);
-    }
-
-    /**
      * Returns the full path without leading slash
      *
      * @internal
@@ -984,7 +952,7 @@ class Page extends ModelWithContent
     /**
      * Returns the parent Page object
      *
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
     public function parent()
     {
@@ -1012,7 +980,7 @@ class Page extends ModelWithContent
      * or the Site
      *
      * @internal
-     * @return Page|Site
+     * @return Kirby\Cms\Page|Kirby\Cms\Site
      */
     public function parentModel()
     {
@@ -1022,9 +990,9 @@ class Page extends ModelWithContent
     /**
      * Returns a list of all parents and their parents recursively
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
-    public function parents(): Pages
+    public function parents()
     {
         $parents = new Pages;
         $page    = $this->parent();
@@ -1040,7 +1008,7 @@ class Page extends ModelWithContent
     /**
      * Returns the permissions object for this page
      *
-     * @return PagePermissions
+     * @return Kirby\Cms\PagePermissions
      */
     public function permissions()
     {
@@ -1171,7 +1139,7 @@ class Page extends ModelWithContent
 
     /**
      * @internal
-     * @return Template
+     * @return Kirby\Cms\Template
      */
     public function representation($type)
     {
@@ -1202,7 +1170,7 @@ class Page extends ModelWithContent
      * which is being used in various methods
      * to check for valid actions and input.
      *
-     * @return PageRules
+     * @return Kirby\Cms\PageRules
      */
     protected function rules()
     {
@@ -1214,7 +1182,7 @@ class Page extends ModelWithContent
      *
      * @param string $query
      * @param array $params
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function search(string $query = null, $params = [])
     {
@@ -1227,7 +1195,7 @@ class Page extends ModelWithContent
      * @param array|null $blueprint
      * @return self
      */
-    protected function setBlueprint(array $blueprint = null): self
+    protected function setBlueprint(array $blueprint = null)
     {
         if ($blueprint !== null) {
             $blueprint['model'] = $this;
@@ -1245,7 +1213,7 @@ class Page extends ModelWithContent
      * @param string $dirname
      * @return self
      */
-    protected function setDirname(string $dirname = null): self
+    protected function setDirname(string $dirname = null)
     {
         $this->dirname = $dirname;
         return $this;
@@ -1257,7 +1225,7 @@ class Page extends ModelWithContent
      * @param boolean $isDraft
      * @return self
      */
-    protected function setIsDraft(bool $isDraft = null): self
+    protected function setIsDraft(bool $isDraft = null)
     {
         $this->isDraft = $isDraft ?? false;
         return $this;
@@ -1269,7 +1237,7 @@ class Page extends ModelWithContent
      * @param integer $num
      * @return self
      */
-    protected function setNum(int $num = null): self
+    protected function setNum(int $num = null)
     {
         $this->num = $num === null ? $num : intval($num);
         return $this;
@@ -1278,10 +1246,10 @@ class Page extends ModelWithContent
     /**
      * Sets the parent page object
      *
-     * @param Page|null $parent
+     * @param Kirby\Cms\Page|null $parent
      * @return self
      */
-    protected function setParent(Page $parent = null): self
+    protected function setParent(Page $parent = null)
     {
         $this->parent = $parent;
         return $this;
@@ -1293,7 +1261,7 @@ class Page extends ModelWithContent
      * @param string|null $root
      * @return self
      */
-    protected function setRoot(string $root = null): self
+    protected function setRoot(string $root = null)
     {
         $this->root = $root;
         return $this;
@@ -1305,7 +1273,7 @@ class Page extends ModelWithContent
      * @param string $slug
      * @return self
      */
-    protected function setSlug(string $slug): self
+    protected function setSlug(string $slug)
     {
         $this->slug = $slug;
         return $this;
@@ -1317,7 +1285,7 @@ class Page extends ModelWithContent
      * @param string $template
      * @return self
      */
-    protected function setTemplate(string $template = null): self
+    protected function setTemplate(string $template = null)
     {
         if ($template !== null) {
             $this->intendedTemplate = $this->kirby()->template($template);
@@ -1332,7 +1300,7 @@ class Page extends ModelWithContent
      * @param string $url
      * @return self
      */
-    protected function setUrl(string $url = null): self
+    protected function setUrl(string $url = null)
     {
         if (is_string($url) === true) {
             $url = rtrim($url, '/');
@@ -1369,7 +1337,7 @@ class Page extends ModelWithContent
      *
      * @return string
      */
-    public function status()
+    public function status(): string
     {
         if ($this->isDraft() === true) {
             return 'draft';
@@ -1385,7 +1353,7 @@ class Page extends ModelWithContent
     /**
      * Returns the final template
      *
-     * @return Template
+     * @return Kirby\Cms\Template
      */
     public function template()
     {
@@ -1405,9 +1373,9 @@ class Page extends ModelWithContent
     /**
      * Returns the title field or the slug as fallback
      *
-     * @return Field
+     * @return Kirby\Cms\Field
      */
-    public function title(): Field
+    public function title()
     {
         return $this->content()->get('title')->or($this->slug());
     }

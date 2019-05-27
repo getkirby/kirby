@@ -9,8 +9,9 @@
     >
       <span class="k-list-item-image">
         <k-image
-          v-if="image && image.url"
-          :src="image.url"
+          v-if="image && image.list && image.list.url"
+          :src="image.list.url"
+          :srcset="image.list.srcset"
           :back="image.back || 'pattern'"
           :cover="image.cover"
         />

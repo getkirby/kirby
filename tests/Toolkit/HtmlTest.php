@@ -36,6 +36,16 @@ class HtmlTest extends TestCase
         $expected = '<a href="https://getkirby.com">getkirby.com</a>';
 
         $this->assertEquals($expected, $html);
+
+        $html = Html::a('mailto:mail@company.com');
+        $expected = '!\<a href="mailto\:.*?">.*?\</a>!';
+
+        $this->assertRegExp($expected, $html);
+
+        $html = Html::a('tel:1234');
+        $expected = '<a href="tel:1234">tel:1234</a>';
+
+        $this->assertEquals($expected, $html);
     }
 
     public function testAWithText()
@@ -259,6 +269,14 @@ class HtmlTest extends TestCase
 
         $html = Html::rel('noopener', '_blank');
         $expected = 'noopener';
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testTel()
+    {
+        $html = Html::tel('1234');
+        $expected = '<a href="tel:1234">1234</a>';
 
         $this->assertEquals($expected, $html);
     }

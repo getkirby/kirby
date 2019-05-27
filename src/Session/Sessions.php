@@ -15,9 +15,9 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Session
  * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Sessions
 {
@@ -105,9 +105,9 @@ class Sessions
      *                                          Defaults to `1800` (half an hour)
      *                          - `renewable`:  Should it be possible to extend the expiry date?
      *                                          Defaults to `true`
-     * @return Session
+     * @return Kirby\Session\Session
      */
-    public function create(array $options = []): Session
+    public function create(array $options = [])
     {
         // fall back to default mode
         if (!isset($options['mode'])) {
@@ -122,9 +122,9 @@ class Sessions
      *
      * @param  string $token Session token, either including or without the key
      * @param  string $mode  Optional transmission mode override
-     * @return Session
+     * @return Kirby\Session\Session
      */
-    public function get(string $token, string $mode = null): Session
+    public function get(string $token, string $mode = null)
     {
         if (isset($this->cache[$token])) {
             return $this->cache[$token];
@@ -211,9 +211,9 @@ class Sessions
      * Getter for the session store instance
      * Used internally
      *
-     * @return SessionStore
+     * @return Kirby\Session\SessionStore
      */
-    public function store(): SessionStore
+    public function store()
     {
         return $this->store;
     }

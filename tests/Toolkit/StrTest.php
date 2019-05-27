@@ -500,6 +500,11 @@ class StrTest extends TestCase
 
         // Reset str defaults
         Str::$defaults['slug'] = $defaults;
+
+        // Language rules
+        Str::$language = ['ä' => 'ae'];
+        $this->assertEquals('ae-b', Str::slug('ä b'));
+        Str::$language = [];
     }
 
     public function testSnake()

@@ -3,9 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\Nest;
-use Kirby\Cms\Structure;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
@@ -13,6 +11,12 @@ use Kirby\Toolkit\Str;
 /**
  * The OptionsApi class handles fetching options
  * from any REST API with valid JSON data.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class OptionsApi
 {

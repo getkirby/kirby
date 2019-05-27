@@ -2,11 +2,16 @@
 
 namespace Kirby\Http;
 
-use Exception;
 use Kirby\Toolkit\Str;
 
 /**
  * Static URL tools
+ *
+ * @package   Kirby Http
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Url
 {
@@ -16,7 +21,7 @@ class Url
      *
      * @var string
      */
-    public static $home    = '/';
+    public static $home = '/';
 
     /**
      * The current Uri object
@@ -47,7 +52,7 @@ class Url
      */
     public static function build(array $parts = [], string $url = null): string
     {
-        return (new Uri($url ?? static::current()))->clone($parts);
+        return (string)(new Uri($url ?? static::current()))->clone($parts);
     }
 
     /**
@@ -76,7 +81,7 @@ class Url
      * @param string $url
      * @return string
      */
-    public static function fix(string $url = null)
+    public static function fix(string $url = null): string
     {
         // make sure to not touch absolute urls
         return (!preg_match('!^(https|http|ftp)\:\/\/!i', $url)) ? 'http://' . $url : $url;
@@ -125,7 +130,7 @@ class Url
      * @param string $home
      * @return string
      */
-    public static function makeAbsolute(string $path = null, string $home = null)
+    public static function makeAbsolute(string $path = null, string $home = null): string
     {
         if ($path === '' || $path === '/' || $path === null) {
             return $home ?? static::home();
@@ -156,7 +161,7 @@ class Url
      * @param string|array|null $url
      * @param bool $leadingSlash
      * @param bool $trailingSlash
-     * @return mixed
+     * @return xtring
      */
     public static function path($url = null, bool $leadingSlash = false, bool $trailingSlash = false): string
     {
@@ -167,7 +172,7 @@ class Url
      * Returns the query for the given url
      *
      * @param string|array|null $url
-     * @return mixed
+     * @return string
      */
     public static function query($url = null): string
     {
@@ -188,12 +193,12 @@ class Url
      * Shortens the Url by removing all unnecessary parts
      *
      * @param string $url
-     * @param boolean $length
+     * @param int $length
      * @param boolean $base
      * @param string $rep
      * @return string
      */
-    public static function short($url = null, $length = false, bool $base = false, string $rep = '…'): string
+    public static function short($url = null, int $length = 0, bool $base = false, string $rep = '…'): string
     {
         $uri = static::toObject($url);
 
@@ -250,7 +255,7 @@ class Url
      * Smart resolver for internal and external urls
      *
      * @param string $path
-     * @param $options
+     * @param mixed $options
      * @return string
      */
     public static function to(string $path = null, $options = null): string
@@ -273,7 +278,7 @@ class Url
      * Converts the Url to a Uri object
      *
      * @param string $url
-     * @return Uri
+     * @return Kirby\Http\Uri
      */
     public static function toObject($url = null)
     {

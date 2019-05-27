@@ -4,28 +4,27 @@ namespace Kirby\Cache;
 
 /**
  * Cache foundation
- * This class doesn't do anything
- * and is perfect as foundation for
- * other cache drivers and to be used
- * when the cache is disabled
+ * This abstract class is used as
+ * foundation for other cache drivers
+ * by extending it
  *
  * @package   Kirby Cache
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
-class Cache
+abstract class Cache
 {
 
     /**
-     * stores all options for the driver
+     * Stores all options for the driver
      * @var array
      */
     protected $options = [];
 
     /**
-     * Set all parameters which are needed to connect to the cache storage
+     * Sets all parameters which are needed to connect to the cache storage
      *
      * @param array $options
      */
@@ -35,27 +34,26 @@ class Cache
     }
 
     /**
-     * Write an item to the cache for a given number of minutes.
+     * Writes an item to the cache for a given number of minutes and
+     * returns whether the operation was successful;
+     * this needs to be defined by the driver
      *
      * <code>
-     *   // Put an item in the cache for 15 minutes
-     *   Cache::set('value', 'my value', 15);
+     *   // put an item in the cache for 15 minutes
+     *   $cache->set('value', 'my value', 15);
      * </code>
      *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @param  int     $minutes
-     * @return void
+     * @param string $key
+     * @param mixed $value
+     * @param int $minutes
+     * @return boolean
      */
-    public function set(string $key, $value, int $minutes = 0)
-    {
-        return null;
-    }
+    abstract public function set(string $key, $value, int $minutes = 0): bool;
 
     /**
      * Adds the prefix to the key if given
      *
-     * @param string $key
+     * @param  string $key
      * @return string
      */
     protected function key(string $key): string
@@ -68,30 +66,28 @@ class Cache
     }
 
     /**
-     * Private method to retrieve the cache value
-     * This needs to be defined by the driver
+     * Internal method to retrieve the raw cache value;
+     * needs to return a Value object or null if not found;
+     * this needs to be defined by the driver
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key
+     * @return Kirby\Cache\Value|null
      */
-    public function retrieve(string $key)
-    {
-        return null;
-    }
+    abstract public function retrieve(string $key);
 
     /**
-     * Get an item from the cache.
+     * Gets an item from the cache
      *
      * <code>
-     *   // Get an item from the cache driver
-     *   $value = Cache::get('value');
+     *   // get an item from the cache driver
+     *   $value = $cache->get('value');
      *
-     *   // Return a default value if the requested item isn't cached
-     *   $value = Cache::get('value', 'default value');
+     *   // return a default value if the requested item isn't cached
+     *   $value = $cache->get('value', 'default value');
      * </code>
      *
-     * @param  string  $key
-     * @param  mixed   $default
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function get(string $key, $default = null)
@@ -100,34 +96,31 @@ class Cache
         $value = $this->retrieve($key);
 
         // check for a valid cache value
-        if (!is_a($value, 'Kirby\Cache\Value')) {
+        if (!is_a($value, Value::class)) {
             return $default;
         }
 
         // remove the item if it is expired
-        if (time() >= $value->expires()) {
+        if ($value->expires() > 0 && time() >= $value->expires()) {
             $this->remove($key);
             return $default;
         }
 
-        // get the pure value
-        $cache = $value->value();
-
-        // return the cache value or the default
-        return $cache ?? $default;
+        // return the pure value
+        return $value->value();
     }
 
     /**
      * Calculates the expiration timestamp
      *
-     * @param  int $minutes
+     * @param int $minutes
      * @return int
      */
     protected function expiration(int $minutes = 0): int
     {
-        // keep forever if minutes are not defined
+        // 0 = keep forever
         if ($minutes === 0) {
-            $minutes = 2628000;
+            return 0;
         }
 
         // calculate the time
@@ -135,10 +128,12 @@ class Cache
     }
 
     /**
-     * Checks when an item in the cache expires
+     * Checks when an item in the cache expires;
+     * returns the expiry timestamp on success, null if the
+     * item never expires and false if the item does not exist
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key
+     * @return int|null|false
      */
     public function expires(string $key)
     {
@@ -146,7 +141,7 @@ class Cache
         $value = $this->retrieve($key);
 
         // check for a valid Value object
-        if (!is_a($value, 'Kirby\Cache\Value')) {
+        if (!is_a($value, Value::class)) {
             return false;
         }
 
@@ -157,19 +152,29 @@ class Cache
     /**
      * Checks if an item in the cache is expired
      *
-     * @param  string   $key
+     * @param string $key
      * @return boolean
      */
     public function expired(string $key): bool
     {
-        return $this->expires($key) <= time();
+        $expires = $this->expires($key);
+
+        if ($expires === null) {
+            return false;
+        } elseif (!is_int($expires)) {
+            return true;
+        } else {
+            return time() >= $expires;
+        }
     }
 
     /**
-     * Checks when the cache has been created
+     * Checks when the cache has been created;
+     * returns the creation timestamp on success
+     * and false if the item does not exist
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key
+     * @return int|false
      */
     public function created(string $key)
     {
@@ -177,7 +182,7 @@ class Cache
         $value = $this->retrieve($key);
 
         // check for a valid Value object
-        if (!is_a($value, 'Kirby\Cache\Value')) {
+        if (!is_a($value, Value::class)) {
             return false;
         }
 
@@ -188,8 +193,8 @@ class Cache
     /**
      * Alternate version for Cache::created($key)
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key
+     * @return int|false
      */
     public function modified(string $key)
     {
@@ -197,48 +202,34 @@ class Cache
     }
 
     /**
-     * Returns Value object
+     * Determines if an item exists in the cache
      *
-     * @param  mixed  $value    The value, which should be cached
-     * @param  int    $minutes  The number of minutes before expiration
-     * @return Value
-     */
-    protected function value($value, int $minutes): Value
-    {
-        return new Value($value, $minutes);
-    }
-
-    /**
-     * Determine if an item exists in the cache.
-     *
-     * @param  string  $key
+     * @param string $key
      * @return boolean
      */
     public function exists(string $key): bool
     {
-        return !$this->expired($key);
+        return $this->expired($key) === false;
     }
 
     /**
-     * Remove an item from the cache
+     * Removes an item from the cache and returns
+     * whether the operation was successful;
+     * this needs to be defined by the driver
      *
-     * @param  string $key
+     * @param string $key
      * @return boolean
      */
-    public function remove(string $key): bool
-    {
-        return true;
-    }
+    abstract public function remove(string $key): bool;
 
     /**
-     * Flush the entire cache
+     * Flushes the entire cache and returns
+     * whether the operation was successful;
+     * this needs to be defined by the driver
      *
      * @return boolean
      */
-    public function flush(): bool
-    {
-        return true;
-    }
+    abstract public function flush(): bool;
 
     /**
      * Returns all passed cache options

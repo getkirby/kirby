@@ -3,14 +3,13 @@
 namespace Kirby\Http;
 
 use Closure;
-use Exception;
 
 /**
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Route
 {
@@ -107,7 +106,7 @@ class Route
      *
      * @return Closure
      */
-    public function action(): Closure
+    public function action()
     {
         return $this->action;
     }
@@ -117,7 +116,7 @@ class Route
      *
      * @return array
      */
-    public function arguments()
+    public function arguments(): array
     {
         return $this->arguments;
     }
@@ -159,7 +158,7 @@ class Route
      *
      * @return void
      */
-    public function next()
+    public function next(): void
     {
         throw new Exceptions\NextRouteException('next');
     }

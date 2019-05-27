@@ -268,4 +268,13 @@ class LanguageTest extends TestCase
 
         Dir::remove($fixtures);
     }
+
+    public function testRouter()
+    {
+        $language = new Language([
+            'code' => 'de'
+        ]);
+
+        $this->assertInstanceOf(LanguageRouter::class, $language->router());
+    }
 }

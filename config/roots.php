@@ -5,8 +5,23 @@ return [
     'kirby' => function (array $roots) {
         return realpath(__DIR__ . '/../');
     },
+
+    // i18n
+    'i18n' => function (array $roots) {
+        return $roots['kirby'] . '/i18n';
+    },
+    'i18n:translations' => function (array $roots) {
+        return $roots['translations'];
+    },
+    'i18n:rules' => function (array $roots) {
+        return $roots['i18n'] . '/rules';
+    },
+    /**
+     * @deprecated 3.2.0 Use `i18n:translations` instead
+     * @TODO move logic over to i18n:translations before removing
+     */
     'translations' => function (array $roots) {
-        return $roots['kirby'] . '/translations';
+        return $roots['i18n'] . '/translations';
     },
 
     // index

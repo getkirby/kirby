@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 class TestCase extends BaseTestCase
 {
@@ -25,6 +26,7 @@ class TestCase extends BaseTestCase
         I18n::$locale       = null;
         I18n::$fallback     = 'en';
         I18n::$translations = [];
+        Str::$language      = [];
     }
 
     public function tearDown(): void
@@ -33,12 +35,12 @@ class TestCase extends BaseTestCase
         Blueprint::$loaded = [];
     }
 
-    public function kirby($props = []): App
+    public function kirby($props = [])
     {
         return new App($props);
     }
 
-    public function site(): Site
+    public function site()
     {
         return $this->kirby()->site();
     }

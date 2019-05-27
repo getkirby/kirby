@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Http\Url as BaseUrl;
-use Kirby\Toolkit\Str;
 
 /**
  * The `Url` class extends the
@@ -16,8 +15,9 @@ use Kirby\Toolkit\Str;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Url extends BaseUrl
 {

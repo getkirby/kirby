@@ -2,8 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cache\Cache;
 use Kirby\Cache\FileCache;
+use Kirby\Cache\NullCache;
+use Kirby\Toolkit\Dir;
 
 class AppCachesTest extends TestCase
 {
@@ -16,9 +17,16 @@ class AppCachesTest extends TestCase
         ], $props));
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        Dir::remove(__DIR__ . '/fixtures/cache');
+    }
+
     public function testDisabledCache()
     {
-        $this->assertEquals(Cache::class, get_class($this->app()->cache('pages')));
+        $this->assertEquals(NullCache::class, get_class($this->app()->cache('pages')));
     }
 
     public function testEnabledCacheWithoutOptions()
@@ -30,11 +38,15 @@ class AppCachesTest extends TestCase
         ]);
 
         $this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
+        $this->assertEquals($kirby->root('cache'), $kirby->cache('pages')->options()['root']);
     }
 
     public function testEnabledCacheWithOptions()
     {
         $kirby = $this->app([
+            'urls' => [
+                'index' => 'https://getkirby.com/test'
+            ],
             'options' => [
                 'cache.pages' => [
                     'type' => 'file',
@@ -44,6 +56,10 @@ class AppCachesTest extends TestCase
         ]);
 
         $this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
+        $this->assertEquals(__DIR__ . '/fixtures/cache', $kirby->cache('pages')->options()['root']);
+
+        $kirby->cache('pages')->set('home', 'test');
+        $this->assertFileExists(__DIR__ . '/fixtures/cache/getkirby.com_test/pages/home.cache');
     }
 
     public function testPluginDefaultCache()

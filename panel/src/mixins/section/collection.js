@@ -2,7 +2,6 @@ export default {
   props: {
     blueprint: String,
     parent: String,
-    help: String,
     name: String
   },
   data() {
@@ -13,6 +12,7 @@ export default {
       options: {
         empty: null,
         headline: null,
+        help: null,
         layout: "list",
         link: null,
         max: null,
@@ -28,6 +28,9 @@ export default {
   computed: {
     headline() {
       return this.options.headline || " ";
+    },
+    help() {
+      return this.options.help;
     },
     language() {
       return this.$store.state.languages.current;

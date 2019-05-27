@@ -24,6 +24,7 @@
   "delete": "Delete",
   "dimensions": "Dimensions",
   "discard": "Discard",
+  "duplicate": "Duplicate",
   "edit": "Edit",
 
   "email": "Email",
@@ -65,6 +66,10 @@
   "error.form.incomplete": "Please fix all form errors…",
   "error.form.notSaved": "The form could not be saved",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Please enter a valid email address",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "You are not allowed to change the URL appendix for \"{slug}\"",
   "error.page.changeStatus.incomplete":
@@ -90,6 +95,7 @@
     "A page draft with the URL appendix \"{slug}\" already exists",
   "error.page.duplicate":
     "A page with the URL appendix \"{slug}\" already exists",
+  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "The page \"{slug}\" cannot be found",
   "error.page.num.invalid":
     "Please enter a valid sorting number. Numbers must not be negative.",
@@ -317,6 +323,8 @@
     "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
   "page.delete.confirm.title": "Enter the page title to confirm",
   "page.draft.create": "Create draft",
+  "page.duplicate.appendix": "Copy",
+  "page.duplicate.files": "Copy files",
   "page.status": "Status",
   "page.status.draft": "Draft",
   "page.status.draft.description":

@@ -12,6 +12,12 @@ use Throwable;
 
 /**
  * A simple database class
+ *
+ * @package   Kirby Database
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Database
 {
@@ -153,9 +159,9 @@ class Database
      * Returns one of the started instance
      *
      * @param string $id
-     * @return Database
+     * @return self
      */
-    public static function instance(string $id = null): self
+    public static function instance(string $id = null)
     {
         return $id === null ? A::last(static::$connections) : static::$connections[$id] ?? null;
     }

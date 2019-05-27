@@ -2,16 +2,18 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use Kirby\Data\Data;
-use Kirby\Exception\PermissionException;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 
 /**
  * Each page, file or site can have multiple
  * translated versions of their content,
  * represented by this class
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class ContentTranslation
 {
@@ -33,7 +35,7 @@ class ContentTranslation
     protected $contentFile;
 
     /**
-     * @var Page|Site|File
+     * @var Model
      */
     protected $parent;
 
@@ -54,7 +56,7 @@ class ContentTranslation
     }
 
     /**
-     * Improve var_dump() output
+     * Improve `var_dump` output
      *
      * @return array
      */
@@ -127,9 +129,9 @@ class ContentTranslation
     /**
      * Returns the translation code as id
      *
-     * @return void
+     * @return string
      */
-    public function id()
+    public function id(): string
     {
         return $this->code();
     }
@@ -150,9 +152,9 @@ class ContentTranslation
     }
 
     /**
-     * Returns the parent Page, File or Site object
+     * Returns the parent page, file or site object
      *
-     * @return Page|File|Site
+     * @return Kirby\Cms\Model
      */
     public function parent()
     {
@@ -163,7 +165,7 @@ class ContentTranslation
      * @param string $code
      * @return self
      */
-    protected function setCode(string $code): self
+    protected function setCode(string $code)
     {
         $this->code = $code;
         return $this;
@@ -173,7 +175,7 @@ class ContentTranslation
      * @param array $content
      * @return self
      */
-    protected function setContent(array $content = null): self
+    protected function setContent(array $content = null)
     {
         $this->content = $content;
         return $this;
@@ -183,7 +185,7 @@ class ContentTranslation
      * @param Model $parent
      * @return self
      */
-    protected function setParent(Model $parent): self
+    protected function setParent(Model $parent)
     {
         $this->parent = $parent;
         return $this;
@@ -193,7 +195,7 @@ class ContentTranslation
      * @param string $slug
      * @return self
      */
-    protected function setSlug(string $slug = null): self
+    protected function setSlug(string $slug = null)
     {
         $this->slug = $slug;
         return $this;

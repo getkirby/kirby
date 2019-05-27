@@ -16,6 +16,12 @@ use Kirby\Toolkit\Str;
  * of data. In case of Kirby, you can query
  * pages, files, users or structures to create
  * options out of them.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class OptionsQuery
 {

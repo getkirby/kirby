@@ -35,4 +35,30 @@ class QueryTestUser
     {
         return $dump;
     }
+
+    public function check($needle1, $needle2, $array)
+    {
+        return in_array($needle1, $array) && in_array($needle2, $array);
+    }
+
+    public function drink()
+    {
+        return ["gin", "tonic", "cucumber"];
+    }
+
+    public function self()
+    {
+        return $this;
+    }
+
+    public function likes($arguments)
+    {
+        foreach ($arguments as $arg) {
+            if (in_array($arg, ['(', ',', ']', '[']) === false) {
+                throw new \Exception;
+            }
+        }
+
+        return $this;
+    }
 }

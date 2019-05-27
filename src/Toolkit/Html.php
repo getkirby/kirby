@@ -10,9 +10,9 @@ use Kirby\Http\Url;
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Html
 {
@@ -52,7 +52,7 @@ class Html
     }
 
     /**
-     * Generates an a tag
+     * Generates an `a` tag
      *
      * @param string $href The url for the `a` tag
      * @param mixed $text The optional text. If `null`, the url will be used as text
@@ -61,20 +61,15 @@ class Html
      */
     public static function a(string $href = null, $text = null, array $attr = []): string
     {
-        $attr = array_merge(['href' => $href], $attr);
-
-        if (empty($text) === true) {
-            $text = $attr['href'];
+        if (Str::startsWith($href, 'mailto:')) {
+            return static::email($href, $text, $attr);
         }
 
-        if (is_string($text) === true && Str::isUrl($text) === true) {
-            $text = Url::short($text);
+        if (Str::startsWith($href, 'tel:')) {
+            return static::tel($href, $text, $attr);
         }
 
-        // add rel=noopener to target blank links to improve security
-        $attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
-
-        return static::tag('a', $text, $attr);
+        return static::link($href, $text, $attr);
     }
 
     /**
@@ -328,6 +323,32 @@ class Html
     }
 
     /**
+     * Generates an `a` link tag
+     *
+     * @param string $href The url for the `a` tag
+     * @param mixed $text The optional text. If `null`, the url will be used as text
+     * @param array $attr Additional attributes for the tag
+     * @return string the generated html
+     */
+    public static function link(string $href = null, $text = null, array $attr = []): string
+    {
+        $attr = array_merge(['href' => $href], $attr);
+
+        if (empty($text) === true) {
+            $text = $attr['href'];
+        }
+
+        if (is_string($text) === true && Str::isUrl($text) === true) {
+            $text = Url::short($text);
+        }
+
+        // add rel=noopener to target blank links to improve security
+        $attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
+
+        return static::tag('a', $text, $attr);
+    }
+
+    /**
      * Add noopeener noreferrer to rels when target is `_blank`
      *
      * @param string $rel
@@ -398,7 +419,7 @@ class Html
             $text = $tel;
         }
 
-        return static::a('tel:' . $number, $text, $attr);
+        return static::link('tel:' . $number, $text, $attr);
     }
 
     /**

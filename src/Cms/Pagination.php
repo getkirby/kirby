@@ -16,8 +16,9 @@ use Kirby\Toolkit\Pagination as BasePagination;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Pagination extends BasePagination
 {
@@ -117,9 +118,9 @@ class Pagination extends BasePagination
      * Returns the Url for the next page.
      * Returns null if there's no next page.
      *
-     * @return string
+     * @return string|null
      */
-    public function nextPageUrl()
+    public function nextPageUrl(): ?string
     {
         if ($page = $this->nextPage()) {
             return $this->pageUrl($page);
@@ -129,13 +130,14 @@ class Pagination extends BasePagination
     }
 
     /**
-     * Returns the Url of the current page.
-     * If the $page variable is set, the Url
+     * Returns the URL of the current page.
+     * If the `$page` variable is set, the URL
      * for that page will be returned.
      *
+     * @param int|null $page
      * @return string|null
      */
-    public function pageUrl(int $page = null)
+    public function pageUrl(int $page = null): ?string
     {
         if ($page === null) {
             return $this->pageUrl($this->page());
@@ -163,9 +165,9 @@ class Pagination extends BasePagination
      * Returns the Url for the previous page.
      * Returns null if there's no previous page.
      *
-     * @return string
+     * @return string|null
      */
-    public function prevPageUrl()
+    public function prevPageUrl(): ?string
     {
         if ($page = $this->prevPage()) {
             return $this->pageUrl($page);

@@ -9,9 +9,21 @@ use Kirby\Toolkit\Str;
  * search logic from collections, to
  * provide a more globally usable interface
  * for any searches.
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Search
 {
+
+    /**
+     * @param string $query
+     * @param array $params
+     * @return Kirby\Cms\Files
+     */
     public static function files(string $query = null, $params = [])
     {
         return App::instance()->site()->index()->files()->search($query, $params);
@@ -111,11 +123,21 @@ class Search
         return $results->sortBy('searchScore', 'desc');
     }
 
+    /**
+     * @param string $query
+     * @param array $params
+     * @return Kirby\Cms\Pages
+     */
     public static function pages(string $query = null, $params = [])
     {
         return App::instance()->site()->index()->search($query, $params);
     }
 
+    /**
+     * @param string $query
+     * @param array $params
+     * @return Kirby\Cms\Users
+     */
     public static function users(string $query = null, $params = [])
     {
         return App::instance()->users()->search($query, $params);

@@ -15,6 +15,12 @@ use Throwable;
  * a working panel view with all the right URLs
  * and other panel options. The view template is
  * located in `kirby/views/panel.php`
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Panel
 {
@@ -45,7 +51,7 @@ class Panel
         Dir::make($mediaRoot, true);
 
         // create a symlink to the dist folder
-        if (Dir::copy($kirby->root('panel') . '/dist', $versionRoot) !== true) {
+        if (Dir::copy($panelRoot, $versionRoot) !== true) {
             throw new Exception('Panel assets could not be linked');
         }
 
@@ -55,10 +61,10 @@ class Panel
     /**
      * Renders the main panel view
      *
-     * @param App $kirby
-     * @return Response
+     * @param Kirby\Cms\App $kirby
+     * @return Kirby\Cms\Response
      */
-    public static function render(App $kirby): Response
+    public static function render(App $kirby)
     {
         try {
             if (static::link($kirby) === true) {

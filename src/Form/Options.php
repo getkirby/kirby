@@ -3,20 +3,19 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
-use Kirby\Cms\File;
-use Kirby\Cms\Page;
-use Kirby\Cms\Site;
-use Kirby\Cms\StructureObject;
-use Kirby\Cms\User;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Obj;
 
 /**
  * Foundation for the Options query
  * classes, that are used to generate
  * options arrays for select fields,
  * radio boxes, checkboxes and more.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Options
 {

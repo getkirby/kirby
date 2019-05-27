@@ -14,5 +14,11 @@ return [
         'icon' => function (string $icon = null) {
             return $icon;
         },
+        /**
+         * Custom placeholder string for empty option.
+         */
+        'placeholder' => function (string $placeholder = '—') {
+            return $placeholder;
+        },
     ]
 ];

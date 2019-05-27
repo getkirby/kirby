@@ -12,8 +12,9 @@ namespace Kirby\Cms;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Files extends Collection
 {
@@ -31,7 +32,7 @@ class Files extends Collection
      * current collection
      *
      * @param mixed $item
-     * @return Files
+     * @return self
      */
     public function add($object)
     {
@@ -75,9 +76,9 @@ class Files extends Collection
      * Creates a files collection from an array of props
      *
      * @param array $files
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @param array $inject
-     * @return Files
+     * @return self
      */
     public static function factory(array $files, Model $parent)
     {
@@ -89,7 +90,7 @@ class Files extends Collection
             $props['kirby']      = $kirby;
             $props['parent']     = $parent;
 
-            $file = new File($props);
+            $file = File::factory($props);
 
             $collection->data[$file->id()] = $file;
         }
@@ -101,9 +102,9 @@ class Files extends Collection
      * Tries to find a file by id/filename
      *
      * @param string $id
-     * @return File|null
+     * @return Kirby\Cms\File|null
      */
-    public function findById($id)
+    public function findById(string $id)
     {
         return $this->get(ltrim($this->parent->id() . '/' . $id, '/'));
     }
@@ -114,9 +115,9 @@ class Files extends Collection
      * map the get method correctly.
      *
      * @param string $key
-     * @return File|null
+     * @return Kirby\Cms\File|null
      */
-    public function findByKey($key)
+    public function findByKey(string $key)
     {
         return $this->findById($key);
     }
@@ -127,7 +128,7 @@ class Files extends Collection
      * @param null|string|array $template
      * @return self
      */
-    public function template($template): self
+    public function template($template)
     {
         if (empty($template) === true) {
             return $this;

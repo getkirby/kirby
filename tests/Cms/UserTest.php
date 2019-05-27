@@ -201,4 +201,38 @@ class UserTest extends TestCase
         $this->assertEquals('Test User', $user->query('user.name'));
         $this->assertEquals('test@getkirby.com', $user->query('user.email'));
     }
+
+    public function testUserMethods()
+    {
+        User::$methods = [
+            'test' => function () {
+                return 'homer';
+            }
+        ];
+
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'name'  => 'Test User'
+        ]);
+
+        $this->assertEquals('homer', $user->test());
+
+        User::$methods = [];
+    }
+
+    public function testUserModel()
+    {
+        User::$models = [
+            'dummy' => DummyUser::class
+        ];
+
+        $user = User::factory([
+            'slug'  => 'test',
+            'model' => 'dummy'
+        ]);
+
+        $this->assertInstanceOf(DummyUser::class, $user);
+
+        User::$models = [];
+    }
 }

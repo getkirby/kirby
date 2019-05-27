@@ -12,9 +12,9 @@ use Kirby\Toolkit\Str;
 /**
  * @package   Kirby Session
  * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class FileSessionStore extends SessionStore
 {
@@ -370,6 +370,8 @@ class FileSessionStore extends SessionStore
 
     /**
      * Cleans up the open locks and file handles
+     *
+     * @codeCoverageIgnore
      */
     public function __destruct()
     {

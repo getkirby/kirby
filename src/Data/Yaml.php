@@ -10,9 +10,9 @@ use Spyc;
  *
  * @package   Kirby Data
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class Yaml extends Handler
 {
@@ -56,14 +56,16 @@ class Yaml extends Handler
             return $yaml;
         }
 
-        // remove bom
+        // remove BOM
         $yaml   = str_replace("\xEF\xBB\xBF", '', $yaml);
         $result = Spyc::YAMLLoadString($yaml);
 
         if (is_array($result)) {
             return $result;
         } else {
-            throw new Exception('YAML string is invalid');
+            // apparently Spyc always returns an array, even for invalid YAML syntax
+            // so this Exception should currently never be thrown
+            throw new Exception('YAML string is invalid'); // @codeCoverageIgnore
         }
     }
 }

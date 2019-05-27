@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\F;
-
 /**
  * The `$pages` object refers to a
  * collection of pages. The pages in this
@@ -16,8 +14,9 @@ use Kirby\Toolkit\F;
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      http://getkirby.com
- * @copyright Bastian Allgeier
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
  */
 class Pages extends Collection
 {
@@ -25,7 +24,7 @@ class Pages extends Collection
     /**
      * Cache for the index
      *
-     * @var null|Pages
+     * @var Kirby\Cms\Pages|null
      */
     protected $index = null;
 
@@ -42,7 +41,7 @@ class Pages extends Collection
      * current collection
      *
      * @param mixed $item
-     * @return Pages
+     * @return self
      */
     public function add($object)
     {
@@ -65,9 +64,9 @@ class Pages extends Collection
     /**
      * Returns all audio files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function audio(): Files
+    public function audio()
     {
         return $this->files()->filterBy("type", "audio");
     }
@@ -75,13 +74,13 @@ class Pages extends Collection
     /**
      * Returns all children for each page in the array
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
-    public function children(): Pages
+    public function children()
     {
         $children = new Pages([], $this->parent);
 
-        foreach ($this->data as $pageKey => $page) {
+        foreach ($this->data as $page) {
             foreach ($page->children() as $childKey => $child) {
                 $children->data[$childKey] = $child;
             }
@@ -93,9 +92,9 @@ class Pages extends Collection
     /**
      * Returns all code files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function code(): Files
+    public function code()
     {
         return $this->files()->filterBy("type", "code");
     }
@@ -103,9 +102,9 @@ class Pages extends Collection
     /**
      * Returns all documents of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function documents(): Files
+    public function documents()
     {
         return $this->files()->filterBy("type", "document");
     }
@@ -113,13 +112,13 @@ class Pages extends Collection
     /**
      * Fetch all drafts for all pages in the collection
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function drafts()
     {
         $drafts = new Pages([], $this->parent);
 
-        foreach ($this->data as $pageKey => $page) {
+        foreach ($this->data as $page) {
             foreach ($page->drafts() as $draftKey => $draft) {
                 $drafts->data[$draftKey] = $draft;
             }
@@ -132,10 +131,10 @@ class Pages extends Collection
      * Creates a pages collection from an array of props
      *
      * @param array $pages
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @param array $inject
      * @param bool $draft
-     * @return Pages
+     * @return self
      */
     public static function factory(array $pages, Model $model = null, bool $draft = false)
     {
@@ -168,13 +167,13 @@ class Pages extends Collection
     /**
      * Returns all files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function files(): Files
+    public function files()
     {
         $files = new Files([], $this->parent);
 
-        foreach ($this->data as $pageKey => $page) {
+        foreach ($this->data as $page) {
             foreach ($page->files() as $fileKey => $file) {
                 $files->data[$fileKey] = $file;
             }
@@ -188,10 +187,10 @@ class Pages extends Collection
      * This works recursively for children and
      * children of children, etc.
      *
-     * @param string $id
+     * @param string|null $id
      * @return mixed
      */
-    public function findById($id)
+    public function findById(string $id = null)
     {
         // remove trailing or leading slashes
         $id = trim($id, '/');
@@ -228,10 +227,11 @@ class Pages extends Collection
      * Finds a child or child of a child recursively.
      *
      * @param string $id
-     * @param string $startAt
+     * @param string|null $startAt
+     * @param bool $multiLang
      * @return mixed
      */
-    public function findByIdRecursive($id, $startAt = null, bool $multiLang = false)
+    public function findByIdRecursive(string $id, string $startAt = null, bool $multiLang = false)
     {
         $path       = explode('/', $id);
         $collection = $this;
@@ -259,10 +259,10 @@ class Pages extends Collection
     /**
      * Uses the specialized find by id method
      *
-     * @param string $key
+     * @param string|null $key
      * @return mixed
      */
-    public function findByKey($key)
+    public function findByKey(string $key = null)
     {
         return $this->findById($key);
     }
@@ -271,7 +271,7 @@ class Pages extends Collection
      * Alias for Pages::findById
      *
      * @param string $id
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
     public function findByUri(string $id)
     {
@@ -281,7 +281,7 @@ class Pages extends Collection
     /**
      * Finds the currently open page
      *
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
     public function findOpen()
     {
@@ -293,7 +293,7 @@ class Pages extends Collection
      * extension pages
      *
      * @param string $key
-     * @return Page|null
+     * @return Kirby\Cms\Page|null
      */
     public function get($key, $default = null)
     {
@@ -311,9 +311,9 @@ class Pages extends Collection
     /**
      * Returns all images of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function images(): Files
+    public function images()
     {
         return $this->files()->filterBy("type", "image");
     }
@@ -323,9 +323,9 @@ class Pages extends Collection
      * pages and subpages, etc.
      *
      * @param bool $drafts
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
-    public function index(bool $drafts = false): Pages
+    public function index(bool $drafts = false)
     {
         if (is_a($this->index, 'Kirby\Cms\Pages') === true) {
             return $this->index;
@@ -349,7 +349,7 @@ class Pages extends Collection
      *
      * @return self
      */
-    public function invisible(): self
+    public function invisible()
     {
         return $this->filterBy('isUnlisted', '==', true);
     }
@@ -357,9 +357,9 @@ class Pages extends Collection
     /**
      * Returns all listed pages in the collection
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function listed(): self
+    public function listed()
     {
         return $this->filterBy('isListed', '==', true);
     }
@@ -367,9 +367,9 @@ class Pages extends Collection
     /**
      * Returns all unlisted pages in the collection
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function unlisted(): self
+    public function unlisted()
     {
         return $this->filterBy('isUnlisted', '==', true);
     }
@@ -379,7 +379,7 @@ class Pages extends Collection
      *
      * @return self
      */
-    public function merge(...$args): self
+    public function merge(...$args)
     {
         // merge multiple arguments at once
         if (count($args) > 1) {
@@ -441,9 +441,9 @@ class Pages extends Collection
     /*
      * Returns all listed and unlisted pages in the collection
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function published(): self
+    public function published()
     {
         return $this->filterBy('isDraft', '==', false);
     }
@@ -451,10 +451,10 @@ class Pages extends Collection
     /**
      * Filter all pages by the given template
      *
-     * @param null|string|array $template
-     * @return self
+     * @param string|array $templates
+     * @return Kirby\Cms\Pages
      */
-    public function template($templates): self
+    public function template($templates)
     {
         if (empty($templates) === true) {
             return $this;
@@ -472,9 +472,9 @@ class Pages extends Collection
     /**
      * Returns all video files of all children
      *
-     * @return Files
+     * @return Kirby\Cms\Files
      */
-    public function videos(): Files
+    public function videos()
     {
         return $this->files()->filterBy("type", "video");
     }
@@ -482,9 +482,9 @@ class Pages extends Collection
     /**
      * Deprecated alias for Pages::listed()
      *
-     * @return self
+     * @return Kirby\Cms\Pages
      */
-    public function visible(): self
+    public function visible()
     {
         return $this->filterBy('isListed', '==', true);
     }

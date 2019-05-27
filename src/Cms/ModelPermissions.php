@@ -2,6 +2,15 @@
 
 namespace Kirby\Cms;
 
+/**
+ * ModelPermissions
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 abstract class ModelPermissions
 {
     protected $category;
@@ -10,7 +19,7 @@ abstract class ModelPermissions
     protected $permissions;
     protected $user;
 
-    public function __call(string $method, array $arguments = [])
+    public function __call(string $method, array $arguments = []): bool
     {
         return $this->can($method);
     }
@@ -24,7 +33,7 @@ abstract class ModelPermissions
     }
 
     /**
-     * Improved var_dump output
+     * Improved `var_dump` output
      *
      * @return array
      */
