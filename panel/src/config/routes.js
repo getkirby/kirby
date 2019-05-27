@@ -27,7 +27,16 @@ export default [
   {
     path: "/logout",
     beforeEnter() {
+
+      // remove all form changes from localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("kirby$form")) {
+          localStorage.removeItem(key);
+        }
+      });
+
       store.dispatch("user/logout");
+
     },
     meta: {
       outside: true
