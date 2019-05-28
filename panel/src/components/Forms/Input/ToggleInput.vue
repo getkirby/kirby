@@ -25,7 +25,10 @@ export default {
     text: {
       type: [Array, String],
       default() {
-        return ['off', 'on'];
+        return [
+          this.$t("off"),
+          this.$t("on"),
+        ];
       }
     },
     required: Boolean,
