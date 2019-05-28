@@ -1,10 +1,11 @@
 <template>
-  <nav class="k-form-buttons">
-    <k-view v-if="hasLock === true" theme="lock">
-      <k-text class="k-form-lock-info">
+  <nav class="k-form-buttons" :data-theme="mode">
+
+    <k-view v-if="mode === 'lock'">
+      <p class="k-form-lock-info">
         <k-icon type="lock" />
         <span v-html="$t('lock.isLocked', { email: form.lock.email })" />
-      </k-text>
+      </p>
       <k-button
         :disabled="!form.lock.canUnlock"
         icon="unlock"
@@ -15,7 +16,7 @@
       </k-button>
     </k-view>
 
-    <k-view v-else-if="hasUnlock === true" theme="unlock">
+    <k-view v-else-if="mode === 'unlock'">
       <k-text>
         {{ $t("lock.isUnlocked") }}
       </k-text>
@@ -35,7 +36,7 @@
       </k-button>
     </k-view>
 
-    <k-view v-else-if="hasChanges === true" theme="changes">
+    <k-view v-else-if="mode === 'changes'">
       <k-button
         :disabled="isDisabled"
         icon="undo"
@@ -79,6 +80,19 @@ export default {
     },
     isDisabled() {
       return this.$store.getters["form/isDisabled"];
+    },
+    mode() {
+      if (this.hasLock === true) {
+        return "lock";
+      }
+
+      if (this.hasUnlock === true) {
+        return "unlock";
+      }
+
+      if (this.hasChanges === true) {
+        return "changes";
+      }
     }
   },
   watch: {
@@ -157,7 +171,7 @@ export default {
         this.$store.dispatch("heartbeat/add", this.listen);
       });
     },
-    setUnlock(user) {
+    setUnlock() {
       this.$store.dispatch("heartbeat/remove", this.setLock);
       this.$api.patch(this.$route.path + "/unlock", null, null, true).then(() => {
         this.$store.dispatch("form/lock", null);
@@ -242,22 +256,24 @@ export default {
 </script>
 
 <style lang="scss">
+.k-form-buttons {
+  &[data-theme="changes"] {
+      background: $color-notice-on-dark;
+  }
+
+  &[data-theme="lock"] {
+      background: $color-negative-on-dark;
+  }
+
+  &[data-theme="unlock"] {
+      background: $color-focus-on-dark;
+  }
+}
+
 .k-form-buttons .k-view {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  &[theme="changes"] {
-      background: $color-notice-on-dark;
-  }
-
-  &[theme="lock"] {
-      background: $color-negative-on-dark;
-  }
-
-  &[theme="unlock"] {
-      background: $color-focus-on-dark;
-  }
 }
 .k-form-button {
   font-weight: 500;
@@ -277,6 +293,9 @@ export default {
 
 .k-form-lock-info {
   display: flex;
+  font-size: $font-size-small;
+  align-items: center;
+  line-height: 1;
 
   > .k-icon {
     margin-right: .5rem;
