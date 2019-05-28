@@ -8,10 +8,10 @@
       <k-view>
         <template v-if="avatar">
           <k-dropdown>
-            <k-button 
-              :tooltip="$t('avatar')" 
-              :disabled="isLocked" 
-              class="k-user-view-image" 
+            <k-button
+              :tooltip="$t('avatar')"
+              :disabled="isLocked"
+              class="k-user-view-image"
               @click="$refs.picture.toggle()"
             >
               <k-image
@@ -38,9 +38,9 @@
         </template>
 
         <k-button-group>
-          <k-button :disabled="!permissions.changeEmail || isLocked" icon="email" @click="action('email')">{{ $t("email") }}: {{ user.email }}</k-button>
-          <k-button :disabled="!permissions.changeRole || isLocked" icon="bolt" @click="action('role')">{{ $t("role") }}: {{ user.role.title }}</k-button>
-          <k-button :disabled="!permissions.changeLanguage || isLocked" icon="globe" @click="action('language')">{{ $t("language") }}: {{ user.language }}</k-button>
+          <k-button :disabled="!permissions.changeEmail || isLocked" icon="email" @click="action('email')">{{ $t("email") }}: {{ user.email }}</k-button>
+          <k-button :disabled="!permissions.changeRole || isLocked" icon="bolt" @click="action('role')">{{ $t("role") }}: {{ user.role.title }}</k-button>
+          <k-button :disabled="!permissions.changeLanguage || isLocked" icon="globe" @click="action('language')">{{ $t("language") }}: {{ user.language }}</k-button>
         </k-button-group>
       </k-view>
     </div>
