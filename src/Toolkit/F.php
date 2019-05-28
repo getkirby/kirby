@@ -77,6 +77,7 @@ class F
             'jpeg',
             'jpg',
             'jpe',
+            'jp2',
             'png',
             'ps',
             'psd',
