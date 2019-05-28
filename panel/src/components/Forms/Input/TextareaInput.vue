@@ -6,9 +6,10 @@
   >
     <div class="k-textarea-input-wrapper">
       <k-toolbar
-        v-if="buttons"
+        v-if="buttons && !disabled"
         ref="toolbar"
         :buttons="buttons"
+        :disabled="disabled"
         :uploads="uploads"
         @mousedown.native.prevent
         @command="onCommand"
