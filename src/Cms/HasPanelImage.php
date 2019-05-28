@@ -59,23 +59,27 @@ trait HasPanelImage
             // for lists
             $settings['list'] = [
                 'url' => $image->thumb([
-                    'width'  => 38,
-                    'height' => 38,
-                    'crop' => 'center'
-                ])->url(true) . $modified,
-                'srcset' => $image->thumb([
                     'width' => 38,
                     'height' => 38,
                     'crop' => 'center'
-                ])->url(true) . $modified . ' 1x, ' . $image->thumb([
-                    'width' => 76,
-                    'height' => 76,
-                    'crop' => 'center'
-                ])->url(true) . $modified . ' 2x, ' . $image->thumb([
-                    'width' => 152,
-                    'height' => 152,
-                    'crop' => 'center'
-                ])->url(true) . $modified . ' 3x'
+                ])->url(true) . $modified,
+                'srcset' => $image->srcset([
+                    '1x' => [
+                        'width' => 38,
+                        'height' => 38,
+                        'crop' => 'center'
+                    ],
+                    '2x' => [
+                        'width' => 76,
+                        'height' => 76,
+                        'crop' => 'center'
+                    ],
+                    '3x' => [
+                        'width' => 152,
+                        'height' => 152,
+                        'crop' => 'center'
+                    ]
+                ])
             ];
 
             unset($settings['query']);

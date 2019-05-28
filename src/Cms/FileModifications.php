@@ -122,15 +122,22 @@ trait FileModifications
         $set = [];
 
         foreach ($sizes as $key => $value) {
-            if (is_string($value) === true) {
-                $size = $key;
-                $attr = $value;
+            if (is_array($value)) {
+                $options = $value;
+                $condition = $key;
+            } elseif (is_string($value) === true) {
+                $options = [
+                    'width' => $key
+                ];
+                $condition = $value;
             } else {
-                $size = $value;
-                $attr = $value . 'w';
+                $options = [
+                    'width' => $value
+                ];
+                $condition = $value . 'w';
             }
 
-            $set[] = $this->resize($size)->url() . ' ' . $attr;
+            $set[] = $this->thumb($options)->url() . ' ' . $condition;
         }
 
         return implode(', ', $set);
