@@ -24,8 +24,8 @@
         <k-button
           v-if="status"
           :class="['k-status-flag', 'k-status-flag-' + page.status]"
-          :disabled="!permissions.changeStatus || isLocked"
-          :icon="!permissions.changeStatus || isLocked ? 'protected' : 'circle'"
+          :disabled="!permissions.changeStatus || isLocked"
+          :icon="!permissions.changeStatus || isLocked ? 'protected' : 'circle'"
           :responsive="true"
           @click="action('status')"
         >
