@@ -1,7 +1,29 @@
 <template>
-  <nav class="k-form-buttons" :data-theme="mode">
+  <nav :data-theme="mode" class="k-form-buttons">
 
-    <k-view v-if="mode === 'lock'">
+    <k-view v-if="mode === 'unlock'">
+      <p class="k-form-lock-info">
+        {{ $t("lock.isUnlocked") }}
+      </p>
+      <span class="k-form-lock-buttons">
+        <k-button
+          icon="download"
+          class="k-form-button"
+          @click="onDownload"
+        >
+          {{ $t("download") }}
+        </k-button>
+        <k-button
+          icon="check"
+          class="k-form-button"
+          @click="onResolve"
+        >
+          {{ $t("confirm") }}
+        </k-button>
+      </span>
+    </k-view>
+
+    <k-view v-else-if="mode === 'lock'">
       <p class="k-form-lock-info">
         <k-icon type="lock" />
         <span v-html="$t('lock.isLocked', { email: form.lock.email })" />
@@ -13,26 +35,6 @@
         @click="setUnlock"
       >
         {{ $t('lock.unlock') }}
-      </k-button>
-    </k-view>
-
-    <k-view v-else-if="mode === 'unlock'">
-      <k-text>
-        {{ $t("lock.isUnlocked") }}
-      </k-text>
-      <k-button
-        icon="download"
-        class="k-form-button"
-        @click="onDownload"
-      >
-        {{ $t("download") }}
-      </k-button>
-      <k-button
-        icon="check"
-        class="k-form-button"
-        @click="onResolve"
-      >
-        {{ $t("confirm") }}
       </k-button>
     </k-view>
 
@@ -82,12 +84,12 @@ export default {
       return this.$store.getters["form/isDisabled"];
     },
     mode() {
-      if (this.hasLock === true) {
-        return "lock";
-      }
-
       if (this.hasUnlock === true) {
         return "unlock";
+      }
+
+      if (this.hasLock === true) {
+        return "lock";
       }
 
       if (this.hasChanges === true) {
@@ -295,10 +297,16 @@ export default {
   display: flex;
   font-size: $font-size-small;
   align-items: center;
-  line-height: 1;
+  line-height: 1.5em;
+  padding: .625rem 0;
+  margin-right: 3rem;
 
   > .k-icon {
     margin-right: .5rem;
   }
+}
+.k-form-lock-buttons {
+  display: flex;
+  flex-shrink: 0;
 }
 </style>
