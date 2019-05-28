@@ -459,6 +459,29 @@ class Site extends ModelWithContent
     }
 
     /**
+     * Preview Url
+     *
+     * @internal
+     * @return string|null
+     */
+    public function previewUrl(): ?string
+    {
+        $preview = $this->blueprint()->preview();
+
+        if ($preview === false) {
+            return null;
+        }
+
+        if ($preview === true) {
+            $url = $this->url();
+        } else {
+            $url = $preview;
+        }
+
+        return $url;
+    }
+
+    /**
      * Creates a string query, starting from the model
      *
      * @internal

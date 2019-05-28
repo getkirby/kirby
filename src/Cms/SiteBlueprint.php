@@ -14,6 +14,12 @@ namespace Kirby\Cms;
  */
 class SiteBlueprint extends Blueprint
 {
+    /**
+     * Creates a new page blueprint object
+     * with the given props
+     *
+     * @param array $props
+     */
     public function __construct(array $props)
     {
         parent::__construct($props);
@@ -31,5 +37,24 @@ class SiteBlueprint extends Blueprint
                 'title' => 'changeTitle',
             ]
         );
+    }
+
+    /**
+     * Returns the preview settings
+     * The preview setting controlls the "Open"
+     * button in the panel and redirects it to a
+     * different URL if necessary.
+     *
+     * @return string|boolean
+     */
+    public function preview()
+    {
+        $preview = $this->props['options']['preview'] ?? true;
+
+        if (is_string($preview) === true) {
+            return $this->model->toString($preview);
+        }
+
+        return $preview;
     }
 }

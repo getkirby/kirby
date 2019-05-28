@@ -2,10 +2,10 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <k-view 
-    v-else 
-    key="site-view" 
-    :data-locked="isLocked" 
+  <k-view
+    v-else
+    key="site-view"
+    :data-locked="isLocked"
     class="k-site-view"
   >
     <k-header
@@ -18,7 +18,7 @@
       <k-button-group slot="left">
         <k-button
           :responsive="true"
-          :link="site.url"
+          :link="site.previewUrl"
           target="_blank"
           icon="open"
         >

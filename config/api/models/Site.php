@@ -29,6 +29,9 @@ return [
         'options' => function (Site $site) {
             return $site->permissions()->toArray();
         },
+        'previewUrl' => function (Site $site) {
+            return $site->previewUrl();
+        },
         'title' => function (Site $site) {
             return $site->title()->value();
         },
@@ -53,6 +56,7 @@ return [
             'blueprint',
             'content',
             'options',
+            'previewUrl',
             'url'
         ],
         'selector' => [
