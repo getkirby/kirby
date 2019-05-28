@@ -158,16 +158,6 @@ export default {
         case "duplicate":
           this.$refs.duplicate.open(this.page.id);
           break;
-        case "preview":
-          this.$api.pages
-            .preview(this.page.id)
-            .then(url => {
-              window.open(url);
-            })
-            .catch(error => {
-              this.$store.dispatch("notification/error", error);
-            });
-          break;
         case "rename":
           this.$refs.rename.open(this.page.id);
           break;
