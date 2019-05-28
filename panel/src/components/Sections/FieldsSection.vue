@@ -19,6 +19,7 @@ import SectionMixin from "@/mixins/section.js";
 
 export default {
   mixins: [SectionMixin],
+  inheritAttrs: false,
   data() {
     return {
       fields: {},

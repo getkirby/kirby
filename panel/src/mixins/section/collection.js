@@ -1,4 +1,5 @@
 export default {
+  inheritAttrs: false,
   props: {
     blueprint: String,
     parent: String,
