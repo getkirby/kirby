@@ -24,6 +24,8 @@
   "delete": "Radera",
   "dimensions": "Dimensioner",
   "discard": "Kassera",
+  "download": "Download",
+  "duplicate": "Duplicate",
   "edit": "Redigera",
 
   "email": "E-post",
@@ -65,6 +67,10 @@
   "error.form.incomplete": "Vänligen åtgärda alla formulärfel...",
   "error.form.notSaved": "Formuläret kunde inte sparas",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Ange en giltig e-postadress",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "Du har inte behörighet att ändra URL-appendixen för \"{slug}\"",
   "error.page.changeStatus.incomplete":
@@ -90,6 +96,7 @@
     "Ett utkast med URL-appendixen \"{slug}\" existerar redan",
   "error.page.duplicate":
     "En sida med URL-appendixen \"{slug}\" existerar redan",
+  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Sidan \"{slug}\" kan inte hittas",
   "error.page.num.invalid":
     "Ange ett giltigt nummer för sortering. Numret får inte vara negativt.",
@@ -270,6 +277,12 @@
 
   "loading": "Laddar",
 
+  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
+  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
+  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
+  "lock.unlock": "Unlock",
+  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+
   "login": "Logga in",
   "login.remember": "Håll mig inloggad",
 
@@ -297,6 +310,8 @@
   "more": "Mer",
   "name": "Namn",
   "next": "Nästa",
+  "off": "off",
+  "on": "on",
   "open": "Öppna",
   "options": "Alternativ",
 
@@ -317,6 +332,8 @@
     "<strong>Denna sida har undersidor.</strong> <br>Alla undersidor kommer också att raderas.",
   "page.delete.confirm.title": "Fyll i sidans titel för att bekräfta",
   "page.draft.create": "Skapa utkast",
+  "page.duplicate.appendix": "Kopiera",
+  "page.duplicate.files": "Copy files",
   "page.status": "Status",
   "page.status.draft": "Utkast",
   "page.status.draft.description":

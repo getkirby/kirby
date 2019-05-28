@@ -24,6 +24,8 @@
   "delete": "L\u00f6schen",
   "dimensions": "Maße",
   "discard": "Verwerfen",
+  "download": "Download",
+  "duplicate": "Duplizieren",
   "edit": "Bearbeiten",
 
   "email": "E-Mail",
@@ -65,6 +67,10 @@
   "error.form.incomplete": "Bitte behebe alle Fehler …",
   "error.form.notSaved": "Das Formular konnte nicht gespeichert werden",
 
+  "error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
+  "error.license.email": "Bitte gib eine gültige E-Mailadresse an",
+  "error.license.verification": "Die Lizenz konnte nicht verifiziert werden",
+
   "error.page.changeSlug.permission":
     "Du darfst die URL der Seite \"{slug}\" nicht ändern",
   "error.page.changeStatus.incomplete":
@@ -90,6 +96,7 @@
     "Ein Entwurf mit dem URL-Kürzel \"{slug}\" besteht bereits",
   "error.page.duplicate":
     "Eine Seite mit dem URL-Kürzel \"{slug}\" besteht bereits",
+  "error.page.duplicate.permission": "Du kannst die Seite \"{slug}\" nicht duplizieren",
   "error.page.notFound": "Die Seite \"{slug}\" konnte nicht gefunden werden",
   "error.page.num.invalid":
     "Bitte gib eine gültige Sortierungszahl an. Negative Zahlen sind nicht erlaubt.",
@@ -260,7 +267,7 @@
   "license.buy": "Kaufe eine Lizenz",
   "license.register": "Registrieren",
   "license.register.help":
-    "Den Lizenzcode findest du in der Bestätigungsmai zu deinem Kauf. Bitte kopiere und füge ihn ein, um Kirby zu registrieren.",
+    "Den Lizenzcode findest du in der Bestätigungsmail zu deinem Kauf. Bitte kopiere und füge ihn ein, um Kirby zu registrieren.",
   "license.register.label": "Bitte gib deinen Lizenzcode ein",
   "license.register.success": "Vielen Dank für deine Unterstützung",
   "license.unregistered": "Dies ist eine unregistrierte Kirby-Demo",
@@ -269,6 +276,12 @@
   "link.text": "Linktext",
 
   "loading": "Laden",
+
+  "lock.isLocked": "Ungespeicherte Änderungen von <strong>{email}</strong>",
+  "lock.file.isLocked": "Die Datei wird von {email} bearbeitet und kann nicht geändert werden.",
+  "lock.page.isLocked": "Die Seite wird von {email} bearbeitet und kann nicht geändert werden.",
+  "lock.unlock": "Entsperren",
+  "lock.isUnlocked": "Deine ungespeicherten Änderungen wurden von einem anderen Benutzer überschrieben. Du kannst sie herunterladen, um sie manuell einzufügen. ",
 
   "login": "Anmelden",
   "login.remember": "Angemeldet bleiben",
@@ -297,6 +310,8 @@
   "more": "Mehr",
   "name": "Name",
   "next": "Nächster Eintrag",
+  "off": "aus",
+  "on": "an",
   "open": "Öffnen",
   "options": "Optionen",
 
@@ -317,6 +332,8 @@
     "<strong>Diese Seite hat Unterseiten</strong>. <br>Alle Unterseiten werden ebenfalls gelöscht.",
   "page.delete.confirm.title": "Gib zur Bestätigung den Seitentitel ein",
   "page.draft.create": "Entwurf anlegen",
+  "page.duplicate.appendix": "Kopie",
+  "page.duplicate.files": "Dateien kopieren",
   "page.status": "Status",
   "page.status.draft": "Entwurf",
   "page.status.draft.description":

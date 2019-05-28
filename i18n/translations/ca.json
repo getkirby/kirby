@@ -24,6 +24,8 @@
   "delete": "Eliminar",
   "dimensions": "Dimensions",
   "discard": "Descartar",
+  "download": "Download",
+  "duplicate": "Duplicate",
   "edit": "Editar",
 
   "email": "Email",
@@ -65,6 +67,10 @@
   "error.form.incomplete": "Si us plau, corregeix els errors del formulari ...",
   "error.form.notSaved": "No s'ha pogut desar el formulari",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "No teniu permís per canviar l'apèndix d'URL per a \"{slug}\"",
   "error.page.changeStatus.incomplete":
@@ -90,6 +96,7 @@
     "Ja existeix un esborrany de pàgina amb l'apèndix d'URL \"{slug}\"",
   "error.page.duplicate":
     "Ja existeix una pàgina amb l'apèndix d'URL \"{slug}\"",
+  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "La pàgina \"{slug}\" no s'ha trobat",
   "error.page.num.invalid":
     "Si us plau, introdueix un número d 'ordenació vàlid. Els números no poden ser negatius.",
@@ -104,18 +111,18 @@
   "error.section.files.max.singular":
     "No podeu afegir més d'un fitxer a la secció \"{section}\"",
   "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
+    "La secció \"{section}\" requereix almenys {min} fitxer",
   "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+    "La secció \"{section}\" requereix almenys un fitxer",
 
   "error.section.pages.max.plural":
     "No heu d'afegir més de {max} pàgines a la secció \"{section}\"",
   "error.section.pages.max.singular":
     "No podeu afegir més d'una pàgina a la secció \"{section}\"",
   "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
+    "La secció \"{section}\" requereix almenys {min} pàgines",
   "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+    "La secció \"{section}\" requereix almenys una pàgina",
 
   "error.section.notLoaded": "No s'ha pogut carregar la secció \"{name}\"",
   "error.section.type.invalid": "La secció tipus \"{type}\" no és vàlida",
@@ -270,6 +277,12 @@
 
   "loading": "Carregant",
 
+  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
+  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
+  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
+  "lock.unlock": "Unlock",
+  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+
   "login": "Entrar",
   "login.remember": "Manten-me connectat",
 
@@ -297,6 +310,8 @@
   "more": "Més",
   "name": "Nom",
   "next": "Següent",
+  "off": "off",
+  "on": "on",
   "open": "Obrir",
   "options": "Opcions",
 
@@ -317,6 +332,8 @@
     "<strong>Aquesta pàgina té subpàgines</strong>. <br>Totes les subpàgines també s'eliminaran.",
   "page.delete.confirm.title": "Introduïu el títol de la pàgina per confirmar",
   "page.draft.create": "Crear un esborrany",
+  "page.duplicate.appendix": "Copiar",
+  "page.duplicate.files": "Copy files",
   "page.status": "Estat",
   "page.status.draft": "Esborrany",
   "page.status.draft.description":
@@ -366,8 +383,8 @@
   "toolbar.button.heading.3": "Encapçalament 3",
   "toolbar.button.italic": "Cursiva",
   "toolbar.button.file": "Arxiu",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Selecciona un fitxer",
+  "toolbar.button.file.upload": "Carrega un fitxer",
   "toolbar.button.link": "Enlla\u00e7",
   "toolbar.button.ol": "Llista ordenada",
   "toolbar.button.ul": "Llista de vinyetes",

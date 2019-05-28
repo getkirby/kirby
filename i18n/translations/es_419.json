@@ -24,6 +24,8 @@
   "delete": "Eliminar",
   "dimensions": "Dimensiones",
   "discard": "Descartar",
+  "download": "Download",
+  "duplicate": "Duplicate",
   "edit": "Editar",
 
   "email": "Correo Electrónico",
@@ -65,6 +67,10 @@
   "error.form.incomplete": "Por favor, corrige todos los errores del formulario...",
   "error.form.notSaved": "No se pudo guardar el formulario.",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Por favor ingresa un correo electrónico valido",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "No está permitido cambiar el apéndice de URL para \"{slug}\".",
   "error.page.changeStatus.incomplete":
@@ -90,6 +96,7 @@
     "Ya existe un borrador de página con el apéndice de URL \"{slug}\"",
   "error.page.duplicate":
     "Ya existe una página con el apéndice de URL \"{slug}\"",
+  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "La página \"{slug}\" no se encuentra",
   "error.page.num.invalid":
     "Por favor, introduce un número de posición válido. Los números no deben ser negativos.",
@@ -270,6 +277,12 @@
 
   "loading": "Cargando",
 
+  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
+  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
+  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
+  "lock.unlock": "Unlock",
+  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+
   "login": "Iniciar sesi\u00f3n",
   "login.remember": "Mantener mi sesión iniciada",
 
@@ -297,6 +310,8 @@
   "more": "Màs",
   "name": "Nombre",
   "next": "Siguiente",
+  "off": "off",
+  "on": "on",
   "open": "Abrir",
   "options": "Opciones",
 
@@ -317,6 +332,8 @@
     "<strong>Esta página tiene subpáginas</strong>. <br>Todas las súbpaginas serán eliminadas también.",
   "page.delete.confirm.title": "Introduce el título de la página para confirmar",
   "page.draft.create": "Crear borrador",
+  "page.duplicate.appendix": "Copiar",
+  "page.duplicate.files": "Copy files",
   "page.status": "Estado",
   "page.status.draft": "Borrador",
   "page.status.draft.description":

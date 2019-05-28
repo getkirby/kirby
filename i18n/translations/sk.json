@@ -24,6 +24,8 @@
   "delete": "Zmazať",
   "dimensions": "Rozmery",
   "discard": "Zahodiť",
+  "download": "Download",
+  "duplicate": "Duplicate",
   "edit": "Upraviť",
 
   "email": "E-mail",
@@ -65,6 +67,10 @@
   "error.form.incomplete": "Prosím, opravte všetky chyby v rámci formuláru...",
   "error.form.notSaved": "Formulár sa nepodarilo uložiť",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Prosím, zadajte platnú e-mailovú adresu",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "Nemáte povolenie na zmenu URL príponu pre \"{slug}\"",
   "error.page.changeStatus.incomplete":
@@ -90,6 +96,7 @@
     "Koncept stránky s URL appendix-om \"{slug}\" už existuje",
   "error.page.duplicate":
     "Stránka s URL appendix-om \"{slug}\" už existuje",
+  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Stránku \"{slug}\" nie je možné nájsť",
   "error.page.num.invalid":
     "Prosím, zadajte platné číslo pre radenie. Čísla nemôžu byť záporné.",
@@ -270,6 +277,12 @@
 
   "loading": "Načítavanie",
 
+  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
+  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
+  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
+  "lock.unlock": "Unlock",
+  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+
   "login": "Prihlásenie",
   "login.remember": "Ponechať ma prihláseného",
 
@@ -297,6 +310,8 @@
   "more": "Viac",
   "name": "Meno",
   "next": "Ďalej",
+  "off": "off",
+  "on": "on",
   "open": "Otvoriť",
   "options": "Nastavenia",
 
@@ -317,6 +332,8 @@
     "<strong>Táto stránka obsahuje podstránky</strong>. <br>Všetky podstránky budú taktiež zmazané.",
   "page.delete.confirm.title": "Pre potvrdenie zadajte titulok stránky",
   "page.draft.create": "Vytvoriť koncept",
+  "page.duplicate.appendix": "Kopírovať",
+  "page.duplicate.files": "Copy files",
   "page.status": "Status",
   "page.status.draft": "Koncept",
   "page.status.draft.description":

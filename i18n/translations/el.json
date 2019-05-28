@@ -24,6 +24,8 @@
   "delete": "\u0394\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03ae",
   "dimensions": "Διαστάσεις",
   "discard": "Απόρριψη",
+  "download": "Download",
+  "duplicate": "Duplicate",
   "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
 
   "email": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
@@ -65,6 +67,10 @@
   "error.form.incomplete": "Παρακαλώ διορθώστε τα σφάλματα στη φόρμα...",
   "error.form.notSaved": "Δεν ήταν δυνατή η αποθήκευση της φόρμας",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "Δεν επιτρέπεται να αλλάξετε το URL της σελίδας \"{slug}\"",
   "error.page.changeStatus.incomplete":
@@ -90,6 +96,7 @@
     "Υπάρχει ήδη ένα προσχέδιο σελίδας με την διεύθυνση URL \"{slug}\"",
   "error.page.duplicate":
     "Υπάρχει ήδη μια σελίδα με την διεύθυνση URL \"{slug}\"",
+  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Δεν ήταν δυνατή η εύρεση της σελίδας \"{slug}\"",
   "error.page.num.invalid":
     "Παρακαλώ εισάγετε έναν έγκυρο αριθμό ταξινόμησης. Οι αριθμοί δεν μπορεί να είναι αρνητικοί.",
@@ -270,6 +277,12 @@
 
   "loading": "Φόρτωση",
 
+  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
+  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
+  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
+  "lock.unlock": "Unlock",
+  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+
   "login": "\u03a3\u03cd\u03bd\u03b4\u03b5\u03c3\u03b7",
   "login.remember": "Κρατήστε με συνδεδεμένο",
 
@@ -297,6 +310,8 @@
   "more": "Περισσότερα",
   "name": "Ονομασία",
   "next": "Επόμενο",
+  "off": "off",
+  "on": "on",
   "open": "Άνοιγμα",
   "options": "Eπιλογές",
 
@@ -317,6 +332,8 @@
     "<strong>Αυτή η σελίδα έχει υποσελίδες</strong>. <br>Όλες οι υποσελίδες θα διαγραφούν επίσης.",
   "page.delete.confirm.title": "Εισάγετε τον τίτλο της σελίδας για επιβεβαίωση",
   "page.draft.create": "Δημιουργία προσχεδίου",
+  "page.duplicate.appendix": "Αντιγραφή",
+  "page.duplicate.files": "Copy files",
   "page.status": "Kατάσταση",
   "page.status.draft": "Προσχέδιο",
   "page.status.draft.description":

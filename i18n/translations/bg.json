@@ -24,6 +24,8 @@
   "delete": "\u0418\u0437\u0442\u0440\u0438\u0439",
   "dimensions": "Размери",
   "discard": "\u041e\u0442\u043c\u0435\u043d\u0438",
+  "download": "Download",
+  "duplicate": "Duplicate",
   "edit": "\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0430\u0439",
 
   "email": "Email",
@@ -65,6 +67,10 @@
   "error.form.incomplete": "Моля коригирайте всички грешки във формата...",
   "error.form.notSaved": "Формата не може да бъде запазена",
 
+  "error.license.format": "Please enter a valid license key",
+  "error.license.email": "Моля въведете валиден email адрес",
+  "error.license.verification": "The license could not be verified",
+
   "error.page.changeSlug.permission":
     "Не можете да смените URL на \"{slug}\"",
   "error.page.changeStatus.incomplete":
@@ -90,6 +96,7 @@
     "Вече съществува чернова с URL-добавка \"{slug}\"",
   "error.page.duplicate":
     "Страница с URL-добавка \"{slug}\" вече съществува",
+  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Страницата \"{slug}\" не може да бъде намерена",
   "error.page.num.invalid":
     "Моля въведете валидно число за сортиране. Числата не трябва да са негативни.",
@@ -270,6 +277,12 @@
 
   "loading": "Зареждане",
 
+  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
+  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
+  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
+  "lock.unlock": "Unlock",
+  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+
   "login": "Вход",
   "login.remember": "Keep me logged in",
 
@@ -297,6 +310,8 @@
   "more": "Още",
   "name": "Име",
   "next": "Next",
+  "off": "off",
+  "on": "on",
   "open": "Отвори",
   "options": "Options",
 
@@ -317,6 +332,8 @@
     "<strong>Тази страница има подстраници</strong>. <br>Всички подстраници също ще бъдат изтрити.",
   "page.delete.confirm.title": "Въведи заглавие на страница за да потвърдиш",
   "page.draft.create": "Създай чернова",
+  "page.duplicate.appendix": "Копирай",
+  "page.duplicate.files": "Copy files",
   "page.status": "Status",
   "page.status.draft": "Чернова",
   "page.status.draft.description":
