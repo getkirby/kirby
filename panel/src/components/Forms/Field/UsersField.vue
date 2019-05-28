@@ -49,7 +49,7 @@
     <k-empty
       v-else
       icon="users"
-      v-on="{ click: !disabled ? open : false }"
+      @click="open"
     >
       {{ empty || $t('field.users.empty') }}
     </k-empty>
@@ -64,6 +64,10 @@ export default {
   mixins: [picker],
   methods: {
     open() {
+      if (this.disabled) {
+        return false;
+      }
+
       this.$refs.selector.open({
         max: this.max,
         multiple: this.multiple,

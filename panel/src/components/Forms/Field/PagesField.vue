@@ -40,7 +40,7 @@
       v-else
       :layout="layout"
       icon="page"
-      v-on="{ click: !disabled ? open : false }"
+      @click="open"
     >
       {{ empty || $t('field.pages.empty') }}
     </k-empty>
@@ -56,6 +56,10 @@ export default {
   mixins: [picker],
   methods: {
     open() {
+      if (this.disabled) {
+        return false;
+      }
+
       this.$refs.selector.open({
         endpoint: this.endpoints.field,
         max: this.max,

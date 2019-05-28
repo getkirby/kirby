@@ -49,7 +49,7 @@
       v-else
       :layout="layout"
       icon="image"
-      v-on="{ click: !disabled ? open : false }"
+      @click="open"
     >
       {{ empty || $t('field.files.empty') }}
     </k-empty>
@@ -86,6 +86,11 @@ export default {
       }
     },
     open() {
+
+      if (this.disabled) {
+        return false;
+      }
+
       return this.$api
         .get(this.endpoints.field)
         .then(files => {
