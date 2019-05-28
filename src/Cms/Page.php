@@ -1144,7 +1144,7 @@ class Page extends ModelWithContent
     public function representation($type)
     {
         $kirby          = $this->kirby();
-        $template       = $this->template();
+        $template       = $this->intendedTemplate();
         $representation = $kirby->template($template->name(), $type);
 
         if ($representation->exists() === true) {
