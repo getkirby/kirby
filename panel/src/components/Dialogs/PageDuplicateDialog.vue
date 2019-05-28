@@ -69,7 +69,7 @@ export default {
         .get(id, {language: "@default"})
         .then(page => {
           this.page.id   = page.id;
-          this.page.slug = page.slug + "-" + slug(this.$t("copy"));
+          this.page.slug = page.slug + "-" + slug(this.$t("page.duplicate.appendix"));
           this.$refs.dialog.open();
         })
         .catch(error => {
