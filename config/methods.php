@@ -92,16 +92,21 @@ return function (App $app) {
          * @param string $format PHP date formatting string
          * @return string|int
          */
-        'toDate' => function (Field $field, string $format = null) use ($app) {
-            if (empty($field->value) === true) {
+        'toDate' => function (Field $field, string $format = null, string $fallback = null) use ($app) {
+            if (
+                empty($field->value) === true &&
+                is_null($fallback) === true
+            ) {
                 return null;
             }
 
+            $time = empty($field->value) === true ? strtotime($fallback) : $field->toTimestamp();
+
             if ($format === null) {
-                return $field->toTimestamp();
+                return $time;
             }
 
-            return $app->option('date.handler', 'date')($format, $field->toTimestamp());
+            return $app->option('date.handler', 'date')($format, $time);
         },
 
         /**

@@ -396,10 +396,7 @@ trait PageActions
             case 'date':
             case 'datetime':
                 $format = $mode === 'date' ? 'Ymd' : 'YmdHi';
-                $date   = $this->content()->get('date')->value();
-                $time   = empty($date) === true ? time() : strtotime($date);
-
-                return date($format, $time);
+                return $this->date()->toDate($format, 'now');
                 break;
             case 'default':
 

@@ -122,6 +122,15 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($date, $field->toDate('%d.%m.%Y'));
     }
 
+    public function testToDateWithFallback()
+    {
+        $field = $this->field(null);
+        $date  = '12.12.2012';
+
+        $this->assertEquals($date, $field->toDate('d.m.Y', '2012-12-12'));
+        $this->assertEquals(date('d.m.Y'), $field->toDate('d.m.Y', 'today'));
+    }
+
     public function testToFile()
     {
         $page = new Page([
