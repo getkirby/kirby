@@ -359,9 +359,13 @@
   "revert": "Palauta",
 
   "role": "K\u00e4ytt\u00e4j\u00e4taso",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Kaikki",
   "role.empty": "Tällä käyttäjätasolla ei ole yhtään käyttäjää",
   "role.description.placeholder": "Ei kuvausta",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Tallenna",
   "search": "Haku",

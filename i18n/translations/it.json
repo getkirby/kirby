@@ -359,9 +359,13 @@
   "revert": "Abbandona",
 
   "role": "Ruolo",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Tutti",
   "role.empty": "Non ci sono utenti con questo ruolo",
   "role.description.placeholder": "Nessuna descrizione",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Salva",
   "search": "Cerca",

@@ -35,7 +35,8 @@ return [
             'code',
             'default',
             'name',
-            'rules'
+            'rules',
+            'direction'
         ]
     ]
 ];

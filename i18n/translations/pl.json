@@ -359,9 +359,13 @@
   "revert": "Odrzu\u0107",
 
   "role": "Rola",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Wszystkie",
   "role.empty": "Nie ma użytkowników z tą rolą",
   "role.description.placeholder": "Brak opisu",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Zapisz",
   "search": "Szukaj",

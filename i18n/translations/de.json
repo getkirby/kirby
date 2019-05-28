@@ -359,9 +359,13 @@
   "revert": "Verwerfen",
 
   "role": "Rolle",
+  "role.admin.description": "Administratoren haben alle Rechte",
+  "role.admin.title": "Administrator",
   "role.all": "Alle",
   "role.empty": "Keine Benutzer mit dieser Rolle",
   "role.description.placeholder": "Keine Beschreibung",
+  "role.nobody.description": "Dies ist die Platzhalterrolle ohne Rechte",
+  "role.nobody.title": "Niemand",
 
   "save": "Speichern",
   "search": "Suchen",

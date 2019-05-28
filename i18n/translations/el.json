@@ -359,9 +359,13 @@
   "revert": "\u0391\u03b3\u03bd\u03cc\u03b7\u03c3\u03b7",
 
   "role": "\u03a1\u03cc\u03bb\u03bf\u03c2",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Όλα",
   "role.empty": "Δεν υπάρχουν χρήστες με αυτόν τον ρόλο",
   "role.description.placeholder": "Χωρίς περιγραφή",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "\u0391\u03c0\u03bf\u03b8\u03ae\u03ba\u03b5\u03c5\u03c3\u03b7",
   "search": "Αναζήτηση",

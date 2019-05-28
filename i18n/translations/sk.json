@@ -359,9 +359,13 @@
   "revert": "Vrátiť späť",
 
   "role": "Rola",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Všetko",
   "role.empty": "S touto rolou neexistujú žiadni užívatelia",
   "role.description.placeholder": "Žiadny popis",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Uložiť",
   "search": "Hľadať",

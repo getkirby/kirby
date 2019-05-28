@@ -359,9 +359,13 @@
   "revert": "Återgå",
 
   "role": "Roll",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Alla",
   "role.empty": "Det finns inga användare med denna roll",
   "role.description.placeholder": "Ingen beskrivning",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Spara",
   "search": "Sök",

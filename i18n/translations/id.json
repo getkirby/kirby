@@ -359,9 +359,13 @@
   "revert": "Kembalikan",
 
   "role": "Peran",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Semua",
   "role.empty": "Tidak ada pengguna dengan peran ini",
   "role.description.placeholder": "Tidak ada deskripsi",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Simpan",
   "search": "Cari",

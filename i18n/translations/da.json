@@ -359,9 +359,13 @@
   "revert": "Kass\u00e9r",
 
   "role": "Rolle",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "All",
   "role.empty": "Der er ingen bruger med denne rolle",
   "role.description.placeholder": "Ingen beskrivelse",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Gem",
   "search": "Søg",

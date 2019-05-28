@@ -57,15 +57,15 @@ class Role extends Model
     {
         return [
             'admin' => [
-                'description' => 'The admin has all rights',
                 'name'        => 'admin',
-                'title'       => 'Admin',
+                'description' => I18n::translate('role.admin.description'),
+                'title'       => I18n::translate('role.admin.title'),
                 'permissions' => true,
             ],
             'nobody' => [
-                'description' => 'This is a fallback role without any permissions',
                 'name'        => 'nobody',
-                'title'       => 'Nobody',
+                'description' => I18n::translate('role.nobody.description'),
+                'title'       => I18n::translate('role.nobody.title'),
                 'permissions' => false,
             ]
         ];

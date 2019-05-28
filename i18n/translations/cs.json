@@ -359,9 +359,13 @@
   "revert": "Zahodit",
 
   "role": "Role",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Vše",
   "role.empty": "Neexistují uživatelé s touto rolí",
   "role.description.placeholder": "Žádný popis",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Ulo\u017eit",
   "search": "Hledat",

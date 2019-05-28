@@ -359,9 +359,13 @@
   "revert": "بازگرداندن تغییرات",
 
   "role": "\u0646\u0642\u0634",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "همه",
   "role.empty": "هیچ کاربری با این نقش وجود ندارد",
   "role.description.placeholder": "فاقد شرح",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "\u0630\u062e\u06cc\u0631\u0647",
   "search": "جستجو",

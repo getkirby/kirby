@@ -359,9 +359,13 @@
   "revert": "Revertir",
 
   "role": "Rol",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Tots",
   "role.empty": "No hi ha usuaris amb aquest rol",
   "role.description.placeholder": "Sense descripció",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Desar",
   "search": "Cercar",

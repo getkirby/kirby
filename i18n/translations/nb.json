@@ -359,9 +359,13 @@
   "revert": "Forkast",
 
   "role": "Rolle",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Alle",
   "role.empty": "Det er ingen brukere med denne rollen",
   "role.description.placeholder": "Ingen beskrivelse",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Lagre",
   "search": "Søk",

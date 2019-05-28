@@ -359,9 +359,13 @@
   "revert": "복원",
 
   "role": "역할",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "전체 보기",
   "role.empty": "이 역할에 해당하는 사용자가 없습니다.",
   "role.description.placeholder": "설명이 없습니다.",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "\uc800\uc7a5",
   "search": "검색",

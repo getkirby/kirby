@@ -359,9 +359,13 @@
   "revert": "Visszavon\u00e1s",
 
   "role": "Szerepkör",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Összes",
   "role.empty": "Nincsenek felhasználók ilyen szerepkörrel",
   "role.description.placeholder": "Nincs leírás",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Ment\u00e9s",
   "search": "Keresés",

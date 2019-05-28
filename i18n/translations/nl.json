@@ -359,9 +359,13 @@
   "revert": "Annuleren",
 
   "role": "Rol",
+  "role.admin.description": "The admin has all rights",
+  "role.admin.title": "Admin",
   "role.all": "Alle",
   "role.empty": "Er zijn geen gebruikers met deze rol",
   "role.description.placeholder": "Geen beschrijving",
+  "role.nobody.description": "This is a fallback role without any permissions",
+  "role.nobody.title": "Nobody",
 
   "save": "Opslaan",
   "search": "Zoeken",
