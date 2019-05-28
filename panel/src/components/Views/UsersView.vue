@@ -108,7 +108,8 @@ export default {
         paginate: {
           page: this.page,
           limit: this.limit
-        }
+        },
+        sortBy: "username asc"
       };
 
       if (this.role) {
