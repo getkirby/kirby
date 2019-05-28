@@ -11,7 +11,7 @@
       v-for="(tag, tagIndex) in tags"
       :ref="tag.value"
       :key="tagIndex"
-      :removable="true"
+      :removable="!disabled"
       name="tag"
       @click.native.stop
       @blur.native="selectTag(null)"
