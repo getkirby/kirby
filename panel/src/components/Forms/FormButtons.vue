@@ -191,7 +191,7 @@ export default {
       let content = "";
 
       Object.keys(this.form.unlock).forEach(key => {
-        content += key + ": \n" + this.form.unlock[key];
+        content += key + ": \n\n" + this.form.unlock[key];
         content += "\n\n----\n\n";
       });
 
