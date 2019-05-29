@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use Exception;
 use Kirby\Toolkit\Str;
 use ReflectionFunction;
+use Throwable;
 
 /**
  * A set of validator methods
@@ -65,17 +66,21 @@ class V
         $reflection = new ReflectionFunction($validator);
         $arguments  = [];
 
-
         foreach ($reflection->getParameters() as $index => $parameter) {
             $value = $params[$index] ?? null;
 
             if (is_array($value) === true) {
-                foreach ($value as $index => $item) {
-                    if (is_array($item) === true) {
-                        $value[$index] = implode('|', $item);
+
+                try {
+                    foreach ($value as $index => $item) {
+                        if (is_array($item) === true) {
+                            $value[$index] = implode('|', $item);
+                        }
                     }
+                    $value = implode(', ', $value);
+                } catch (Throwable $e) {
+                    $value = '-';
                 }
-                $value = implode(', ', $value);
             }
 
             $arguments[$parameter->getName()] = $value;
