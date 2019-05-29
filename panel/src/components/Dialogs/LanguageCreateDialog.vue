@@ -29,7 +29,8 @@ export default {
       language: {
         name: "",
         code: "",
-        direction: "ltr"
+        direction: "ltr",
+        locale: ""
       }
     };
   },

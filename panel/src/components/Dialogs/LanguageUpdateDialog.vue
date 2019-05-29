@@ -24,6 +24,15 @@ export default {
     fields() {
       let fields = LanguageCreateDialog.computed.fields.apply(this);
       fields.code.disabled = true;
+
+      if (typeof this.language.locale === "object") {
+        fields.locale = {
+          label: fields.locale.label,
+          type: "info",
+          text: "You are using a custom locale set up. Please modify it in the language file in /site/languages"
+        };
+      }
+
       return fields;
     }
   },
