@@ -93,10 +93,7 @@ return function (App $app) {
          * @return string|int
          */
         'toDate' => function (Field $field, string $format = null, string $fallback = null) use ($app) {
-            if (
-                empty($field->value) === true &&
-                is_null($fallback) === true
-            ) {
+            if (empty($field->value) === true && $fallback === null) {
                 return null;
             }
 
