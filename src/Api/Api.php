@@ -599,7 +599,8 @@ class Api
             unset(
                 $result['file'],
                 $result['exception'],
-                $result['line']
+                $result['line'],
+                $result['route']
             );
         }
 

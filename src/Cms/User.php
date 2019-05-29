@@ -411,12 +411,7 @@ class User extends ModelWithContent
      */
     public function login(string $password, $session = null): bool
     {
-        try {
-            $this->validatePassword($password);
-        } catch (Exception $e) {
-            throw new PermissionException(['key' => 'access.login']);
-        }
-
+        $this->validatePassword($password);
         $this->loginPasswordless($session);
 
         return true;

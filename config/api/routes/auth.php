@@ -43,8 +43,14 @@ return [
                         'user'   => $this->resolve($user)->view('auth')->toArray()
                     ];
                 }
+
+                throw new NotFoundException(['key' => 'user.undefined']);
             } catch (Throwable $e) {
-                // catch any kind of login error
+                if ($this->kirby()->option('debug') === true) {
+                    throw $e;
+                } else {
+                    // catch any kind of login error
+                }
             }
 
             throw new InvalidArgumentException('Invalid email or password');
