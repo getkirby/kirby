@@ -341,7 +341,7 @@ class File extends ModelWithContent
      */
     public function mediaHash(): string
     {
-        return crc32($this->filename()) . '-' . $this->modified();
+        return crc32($this->filename()) . '-' . $this->modifiedFile();
     }
 
     /**
@@ -406,8 +406,8 @@ class File extends ModelWithContent
      */
     public function modified(string $format = null, string $handler = null)
     {
-        $file     = F::modified($this->root());
-        $content  = F::modified($this->contentFile());
+        $file     = $this->modifiedFile();
+        $content  = $this->modifiedContent();
         $modified = max($file, $content);
 
         if (is_null($format) === true) {
@@ -417,6 +417,28 @@ class File extends ModelWithContent
         $handler = $handler ?? $this->kirby()->option('date.handler', 'date');
 
         return $handler($format, $modified);
+    }
+
+    /**
+     * Timestamp of the last modification
+     * of the content file
+     *
+     * @return integer
+     */
+    protected function modifiedContent(): int
+    {
+        return F::modified($this->contentFile());
+    }
+
+    /**
+     * Timestamp of the last modification
+     * of the source file
+     *
+     * @return integer
+     */
+    protected function modifiedFile(): int
+    {
+        return F::modified($this->root());
     }
 
     /**
