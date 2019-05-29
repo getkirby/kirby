@@ -388,7 +388,6 @@ class ApiTest extends TestCase
             'status'  => 'error',
             'message' => 'nope',
             'code'    => 500,
-            'route'   => 'test'
         ];
 
         $this->assertInstanceOf('Kirby\Http\Response', $result);
@@ -419,7 +418,6 @@ class ApiTest extends TestCase
 
         $expected = [
             'status'  => 'error',
-            'route'   => 'test',
             'message' => 'Test',
             'key'     => 'error.test',
             'details' => ['a' => 'A'],
