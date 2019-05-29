@@ -70,7 +70,6 @@ class V
             $value = $params[$index] ?? null;
 
             if (is_array($value) === true) {
-
                 try {
                     foreach ($value as $index => $item) {
                         if (is_array($item) === true) {

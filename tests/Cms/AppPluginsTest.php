@@ -179,6 +179,36 @@ class AppPluginsTest extends TestCase
         $this->assertEquals('c', $app->api()->call('c'));
     }
 
+    public function testApiRouteCallbackPluginWithOptionAccess()
+    {
+        App::plugin('your/plugin', [
+            'options' => [
+                'test' => 'Test'
+            ],
+            'api' => [
+                'routes' => function ($kirby) {
+                    return [
+                        [
+                            'pattern' => 'test',
+                            'action'  => function () use ($kirby) {
+                                return $kirby->option('your.plugin.test');
+                            }
+                        ]
+                    ];
+                }
+            ]
+        ]);
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+        ]);
+
+        $app->impersonate('kirby');
+        $this->assertEquals('Test', $app->api()->call('test'));
+    }
+
     public function testBlueprint()
     {
         $kirby = new App([

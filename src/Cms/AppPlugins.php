@@ -37,6 +37,10 @@ trait AppPlugins
      * @var array
      */
     protected $extensions = [
+        // load options first to make them available for the rest
+        'options' => [],
+
+        // other plugin types
         'api' => [],
         'blueprints' => [],
         'cacheTypes' => [],
@@ -50,7 +54,6 @@ trait AppPlugins
         'fileModels' => [],
         'fields' => [],
         'hooks' => [],
-        'options' => [],
         'pages' => [],
         'pageMethods' => [],
         'pagesMethods' => [],
