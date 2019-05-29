@@ -37,6 +37,15 @@ class MimeTest extends TestCase
         $this->assertEquals('jpg', $extension);
     }
 
+    public function testToExtensions()
+    {
+        $extensions = Mime::toExtensions('image/jpeg');
+        $this->assertEquals(['jpg', 'jpeg', 'jpe'], $extensions);
+
+        $extensions = Mime::toExtensions('text/css');
+        $this->assertEquals(['css'], $extensions);
+    }
+
     public function testTypeWithOptimizedSvg()
     {
         $mime = Mime::type(static::FIXTURES . '/optimized.svg');

@@ -256,6 +256,31 @@ class Mime
     }
 
     /**
+     * Returns all available extensions for a given mime type
+     *
+     * @param string|null $mime
+     * @return array
+     */
+    public static function toExtensions(string $mime = null): array
+    {
+        $extensions = [];
+
+        foreach (static::$types as $key => $value) {
+            if (is_array($value) === true && in_array($mime, $value) === true) {
+                $extensions[] = $key;
+                continue;
+            }
+
+            if ($value === $mime) {
+                $extensions[] = $key;
+                continue;
+            }
+        }
+
+        return $extensions;
+    }
+
+    /**
      * Returns the mime type of a file
      *
      * @param string $file
