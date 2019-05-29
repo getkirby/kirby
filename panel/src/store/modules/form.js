@@ -201,10 +201,16 @@ export default {
       context.dispatch("disable");
 
       // Send to api
-      return Api.patch(model.api, model.values).then(() => {
-        context.dispatch("revert", id);
-        context.dispatch("enable");
-      });
+      return Api
+        .patch(model.api, model.values)
+        .then(() => {
+          context.dispatch("revert", id);
+          context.dispatch("enable");
+        })
+        .catch(error => {
+          context.dispatch("enable");
+          throw error;
+        });
     },
     unlock(context, unlock) {
       context.commit("UNLOCK", unlock);
