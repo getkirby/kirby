@@ -7,7 +7,7 @@
       </k-headline>
 
       <k-button-group v-if="add">
-        <k-button icon="add" @click="action(null, 'create')">{{ $t("add") }}</k-button>
+        <k-button icon="add" @click="create">{{ $t("add") }}</k-button>
       </k-button-group>
     </header>
 
@@ -39,7 +39,7 @@
         <k-empty
           :layout="options.layout"
           icon="page"
-          @click="if (add) action(null, 'create')"
+          @click="create"
         >
           {{ options.empty || $t('pages.empty') }}
         </k-empty>
@@ -85,9 +85,19 @@ export default {
     this.$events.$off("page.changeStatus", this.reload);
   },
   methods: {
+    create() {
+      if (this.add) {
+        this.$refs.create.open(
+          this.options.link || this.parent,
+          this.parent + "/children/blueprints",
+          this.name
+        );
+      }
+    },
     action(page, action) {
       // check first if page is locked
       const url = this.$api.pages.url(page.id, "lock")
+
       this.$api.get(url).then(response => {
 
         // restrict actions if page is locked
@@ -97,14 +107,6 @@ export default {
         }
 
         switch (action) {
-          case "create": {
-            this.$refs.create.open(
-              this.options.link || this.parent,
-              this.parent + "/children/blueprints",
-              this.name
-            );
-            break;
-          }
           case "duplicate": {
             this.$refs.duplicate.open(page.id);
             break;
