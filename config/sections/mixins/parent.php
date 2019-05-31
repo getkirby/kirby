@@ -16,7 +16,12 @@ return [
             $parent = $this->parent;
 
             if (is_string($parent) === true) {
-                $parent = $this->model->query($parent);
+                $query  = $parent;
+                $parent = $this->model->query($query);
+
+                if (!$parent) {
+                    throw new Exception('The parent for the query "' . $query . '" cannot be found in the section "' . $this->name() . '"');
+                }
             }
 
             if ($parent === null) {
