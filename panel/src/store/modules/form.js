@@ -51,6 +51,7 @@ export default {
       return clone(getters.model(id).originals);
     },
     values: (state, getters) => id => {
+      id = id || state.current;
       return clone(getters.model(id).values);
     },
     unlock: state => {

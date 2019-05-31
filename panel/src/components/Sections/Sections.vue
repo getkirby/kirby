@@ -1,7 +1,7 @@
 <template>
   <k-grid class="k-sections" gutter="large">
     <k-column v-for="(column, columnIndex) in columns" :key="parent + '-column-' + columnIndex" :width="column.width">
-      <template v-for="(section, sectionIndex) in column.sections">
+      <template v-for="(section, sectionIndex) in column.sections" v-if="meetsCondition(section)">
         <component
           v-if="exists(section.type)"
           :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
@@ -30,10 +30,35 @@ export default {
     blueprint: String,
     columns: [Array, Object]
   },
+  computed: {
+    content() {
+      return this.$store.getters["form/values"]();
+    }
+  },
   methods: {
     exists(type) {
       return Vue.options.components["k-" + type + "-section"];
-    }
+    },
+    meetsCondition(section) {
+
+      if (!section.when) {
+        return true;
+      }
+
+      let result = true;
+
+      Object.keys(section.when).forEach(key => {
+        const value     = this.content[key.toLowerCase()];
+        const condition = section.when[key];
+
+        if (value !== condition) {
+          result = false;
+        }
+      });
+
+      return result;
+
+    },
   }
 };
 </script>
