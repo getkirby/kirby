@@ -125,7 +125,6 @@ return [
             'id',
             'blueprint',
             'content',
-            'errors',
             'status',
             'options',
             'next'    => ['id', 'slug', 'title'],
