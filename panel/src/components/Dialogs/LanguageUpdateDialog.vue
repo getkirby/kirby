@@ -45,6 +45,13 @@ export default {
         .get("languages/" + code)
         .then(language => {
           this.language = language;
+
+          const localeKeys = Object.keys(this.language.locale);
+
+          if (localeKeys.length === 1) {
+            this.language.locale = this.language.locale[localeKeys[0]];
+          }
+
           this.$refs.dialog.open();
         })
         .catch (error => {
