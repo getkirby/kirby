@@ -14,7 +14,7 @@ namespace Kirby\Cms;
 trait HasPanelImage
 {
 
-      /**
+    /**
      * @internal
      * @param string|array|false $settings
      * @return array|null
@@ -39,13 +39,12 @@ trait HasPanelImage
         }
 
         if ($image = $this->panelImageSource($settings['query'] ?? null)) {
-            $modified = '?t=' . $image->modified();
 
             // for cards
             $settings['cards'] = [
                 'url' => $image->thumb([
                     'width'  => 128
-                ])->url(true) . $modified,
+                ])->url(true),
                 'srcset' => $image->srcset([
                     128,
                     256,
@@ -62,20 +61,20 @@ trait HasPanelImage
                     'width'  => 38,
                     'height' => 38,
                     'crop' => 'center'
-                ])->url(true) . $modified,
+                ])->url(true),
                 'srcset' => $image->thumb([
                     'width' => 38,
                     'height' => 38,
                     'crop' => 'center'
-                ])->url(true) . $modified . ' 1x, ' . $image->thumb([
+                ])->url(true) . ' 1x, ' . $image->thumb([
                     'width' => 76,
                     'height' => 76,
                     'crop' => 'center'
-                ])->url(true) . $modified . ' 2x, ' . $image->thumb([
+                ])->url(true) . ' 2x, ' . $image->thumb([
                     'width' => 152,
                     'height' => 152,
                     'crop' => 'center'
-                ])->url(true) . $modified . ' 3x'
+                ])->url(true) . ' 3x'
             ];
 
             unset($settings['query']);
@@ -89,7 +88,7 @@ trait HasPanelImage
      *
      * @internal
      * @param string|null $query
-     * @return Kirby\Cms\File|null
+     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
      */
     protected function panelImageSource(string $query = null)
     {
@@ -98,14 +97,15 @@ trait HasPanelImage
             $default = 'page.image';
         }
 
-        $image = $this->query($query ?? $default ?? null, 'Kirby\Cms\File');
+        $image = $this->query($query ?? $default ?? null);
+
+        // validate the query result
+        if (is_a($image, File::class) === false && is_a($image, Asset::class) === false) {
+            $image = null;
+        }
 
         // fallback for files
-        if (
-            $image === null &&
-            is_a($this, File::class) === true &&
-            $this->isViewable() === true
-        ) {
+        if ($image === null && is_a($this, File::class) === true && $this->isViewable() === true) {
             $image = $this;
         }
 
