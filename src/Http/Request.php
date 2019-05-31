@@ -220,6 +220,16 @@ class Request
     }
 
     /**
+     * Returns the domain
+     *
+     * @return string
+     */
+    public function domain(): string
+    {
+        return $this->url()->domain();
+    }
+
+    /**
      * Fetches a single file array
      * from the Files object by key
      *
@@ -331,6 +341,14 @@ class Request
     public function params()
     {
         return $this->url()->params();
+    }
+
+    /**
+     * Shortcut to the Path object
+     */
+    public function path()
+    {
+        return $this->url()->path();
     }
 
     /**

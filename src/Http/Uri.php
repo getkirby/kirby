@@ -210,24 +210,11 @@ class Uri
      */
     public function base(): ?string
     {
-        if (empty($this->host) === true || $this->host === '/') {
-            return null;
+        if ($domain = $this->domain()) {
+            return $this->scheme ? $this->scheme . '://' . $domain : $domain;
         }
 
-        $auth = $this->auth();
-        $base = $this->scheme ? $this->scheme . '://' : '';
-
-        if ($auth !== null) {
-            $base .= $auth . '@';
-        }
-
-        $base .= $this->host;
-
-        if ($this->port !== null && in_array($this->port, [80, 443]) === false) {
-            $base .= ':' . $this->port;
-        }
-
-        return $base;
+        return null;
     }
 
     /**
@@ -270,6 +257,33 @@ class Uri
         ], $props));
 
         return $url;
+    }
+
+    /**
+     * Returns the domain without scheme, path or query
+     *
+     * @return string|null
+     */
+    public function domain(): ?string
+    {
+        if (empty($this->host) === true || $this->host === '/') {
+            return null;
+        }
+
+        $auth   = $this->auth();
+        $domain = '';
+
+        if ($auth !== null) {
+            $domain .= $auth . '@';
+        }
+
+        $domain .= $this->host;
+
+        if ($this->port !== null && in_array($this->port, [80, 443]) === false) {
+            $domain .= ':' . $this->port;
+        }
+
+        return $domain;
     }
 
     /**
