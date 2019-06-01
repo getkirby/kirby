@@ -174,7 +174,7 @@ class App
     }
 
     /**
-     * Apply a hook to the given value;
+     * Applies a hook to the given value;
      * the value that gets modified by the hooks
      * is always the last argument
      *
@@ -195,7 +195,12 @@ class App
                 $hookArgs[] = $value;
 
                 // bind the App object to the hook
-                $value = $function->call($this, ...$hookArgs);
+                $newValue = $function->call($this, ...$hookArgs);
+
+                // update value if one was returned
+                if ($newValue !== null) {
+                    $value = $newValue;
+                }
             }
         }
 
