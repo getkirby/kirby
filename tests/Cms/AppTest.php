@@ -29,6 +29,15 @@ class AppTest extends TestCase
         $app = new App([
             'options' => [
                 'hooks' => [
+                    'noModify' => [
+                        function ($value) {
+                            // don't return anything
+                        },
+                        function ($value) {
+                            // explicitly return null (should be the same internally)
+                            return null;
+                        }
+                    ],
                     'singleParam' => [
                         function ($value) {
                             if (func_num_args() !== 1) {
@@ -36,6 +45,9 @@ class AppTest extends TestCase
                             }
 
                             return $value * 2;
+                        },
+                        function ($value) {
+                            // don't return anything
                         },
                         function ($value) {
                             return $value + 1;
@@ -50,12 +62,25 @@ class AppTest extends TestCase
                             return $value * 2;
                         },
                         function ($arg1, $arg2, $value) {
+                            if (func_num_args() !== 3 || $arg1 !== 'arg1' || $arg2 !== 'arg2') {
+                                throw new \Exception();
+                            }
+
+                            // don't return anything
+                        },
+                        function ($arg1, $arg2, $value) {
+                            if (func_num_args() !== 3 || $arg1 !== 'arg1' || $arg2 !== 'arg2') {
+                                throw new \Exception();
+                            }
+
                             return $value + 1;
                         },
                     ]
                 ]
             ]
         ]);
+
+        $this->assertEquals(10, $app->apply('noModify', 10));
 
         $this->assertEquals(5, $app->apply('singleParam', 2));
         $this->assertEquals(21, $app->apply('singleParam', 10));
