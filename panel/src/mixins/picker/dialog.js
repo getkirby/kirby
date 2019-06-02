@@ -43,7 +43,7 @@ export default {
           this.models = models.map(model => {
             return {
               ...model,
-              selected: this.isSelected(model, selected)
+              selected: selected.indexOf(model[this.id || "id"]) !== -1
             };
           });
         })
@@ -51,12 +51,6 @@ export default {
           this.models = [];
           this.issue = e.message;
         });
-    },
-    isSelectable(model) {
-      return true;
-    },
-    isSelected(model, selected) {
-      return false;
     },
     open(options) {
       this.options = options;
@@ -69,6 +63,9 @@ export default {
       this.$refs.dialog.close();
     },
     toggle(index) {
+      // transform index of filtered models to index of all models
+      index = this.models.findIndex(model => model[this.id || "id"] === this.filtered[index].id);
+
       if (this.options.multiple === false) {
         this.models = this.models.map(model => {
           return {

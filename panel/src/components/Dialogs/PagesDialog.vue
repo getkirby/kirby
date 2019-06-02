@@ -21,6 +21,13 @@
         <k-headline>{{ model.title }}</k-headline>
       </header>
 
+      <div class="k-pages-dialog-search">
+        <k-text-input
+          v-model="search"
+          :placeholder="$t('search')"
+        />
+      </div>
+
       <k-list v-if="filtered.length">
         <k-list-item
           v-for="(page, index) in filtered"
@@ -139,6 +146,10 @@ export default {
 .k-pages-dialog-navbar .k-headline {
   flex-grow: 1;
   text-align: center;
+}
+
+.k-pages-dialog-search {
+  margin-bottom: 0.5rem;
 }
 
 .k-pages-dialog .k-list-item {
