@@ -28,6 +28,10 @@
   "duplicate": "Duplicate",
   "edit": "Edit",
 
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
+
   "email": "Email",
   "email.placeholder": "mail@example.com",
 

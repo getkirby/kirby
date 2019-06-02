@@ -49,7 +49,7 @@
         </k-list-item>
       </k-list>
       <k-empty v-else icon="users">
-        No users to select
+        {{ $t("dialog.users.empty") }}
       </k-empty>
     </template>
   </k-dialog>
