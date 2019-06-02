@@ -21,19 +21,19 @@
         <k-headline>{{ model.title }}</k-headline>
       </header>
 
-      <k-list v-if="pages.length">
+      <k-list v-if="filtered.length">
         <k-list-item
-          v-for="page in pages"
+          v-for="(page, index) in filtered"
           :key="page.id"
           :text="page.text"
           :info="page.info"
           :image="page.image"
           :icon="page.icon"
-          @click="toggle(page)"
+          @click="toggle(index)"
         >
           <template slot="options">
             <k-button
-              v-if="isSelected(page)"
+              v-if="page.selected"
               slot="options"
               :autofocus="true"
               :icon="checkedIcon"
@@ -65,15 +65,17 @@
 </template>
 
 <script>
+import picker from "@/mixins/picker/dialog.js";
+
 export default {
+  mixins: [picker],
   data() {
     return {
+      ...picker.data(),
       model: {
         title: null,
         parent: null
       },
-      pages: [],
-      issue: null,
       options: {
         endpoint: null,
         max: null,
@@ -83,67 +85,38 @@ export default {
       }
     };
   },
-  computed: {
-    multiple() {
-      return this.options.multiple === true && this.options.max !== 1;
-    },
-    checkedIcon() {
-      return this.multiple === true ? "check" : "circle-filled";
-    }
-  },
   methods: {
-    fetch() {
-      return this.$api
-        .get(this.options.endpoint, { parent: this.options.parent })
-        .then(response => {
-          this.model = response.model;
-          this.pages = response.pages;
-        })
-        .catch(e => {
-          this.pages = [];
-          this.issue = e.message;
-        });
-    },
     back() {
       this.options.parent = this.model.parent ? this.model.parent.id : null;
       this.fetch();
     },
-    submit() {
-      this.$emit("submit", this.options.selected);
-      this.$refs.dialog.close();
-    },
-    isSelected(page) {
-      return this.options.selected.map(page => page.id).includes(page.id);
-    },
-    toggle(page) {
-      if (this.options.multiple === false) {
-        this.options.selected = [];
-      }
+    fetch() {
+      return this.$api
+        .get(this.options.endpoint, { parent: this.options.parent })
+        .then(response => {
+          this.model  = response.model;
 
-      if (this.isSelected(page) === false) {
-        if (
-          this.options.max &&
-          this.options.max <= this.options.selected.length
-        ) {
-          return;
-        }
-
-        this.options.selected.push(page);
-      } else {
-        this.options.selected = this.options.selected.filter(
-          p => p.id !== page.id
-        );
-      }
-    },
-    open(options) {
-      this.options = options;
-      this.fetch().then(() => {
-        this.$refs.dialog.open();
-      });
+          const selected = this.options.selected || [];
+          this.models = response.pages.map(page => {
+            return {
+              ...page,
+              selected: selected.indexOf(page.id) !== -1
+            };
+          });
+        })
+        .catch(e => {
+          this.models = [];
+          this.issue = e.message;
+        });
     },
     go(page) {
       this.options.parent = page.id;
       this.fetch();
+    },
+    isFiltered(page) {
+      return page.id.includes(this.search) ||
+             page.text.includes(this.search) ||
+             page.info.includes(this.search);
     }
   }
 };

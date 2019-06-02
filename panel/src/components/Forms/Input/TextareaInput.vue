@@ -242,15 +242,10 @@ export default {
       this.$refs.select();
     },
     selectFile() {
-      this.$api
-        .get(this.endpoints.field + "/files").then(files => {
-          this.$refs.fileDialog.open(files, {
-            multiple: false
-          });
-        })
-        .catch(error => {
-          this.$store.dispatch("notification/error", error);
-        });
+      this.$refs.fileDialog.open({
+        endpoint: this.endpoints.field + "/files",
+        multiple: false
+      });
     },
     selection() {
       const area = this.$refs.input;

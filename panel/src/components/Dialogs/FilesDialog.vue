@@ -6,13 +6,15 @@
     @cancel="$emit('cancel')"
     @submit="submit"
   >
+
     <template v-if="issue">
       <k-box :text="issue" theme="negative" />
     </template>
+
     <template v-else>
-      <k-list v-if="files.length">
+      <k-list v-if="models.length">
         <k-list-item
-          v-for="(file, index) in files"
+          v-for="(file, index) in models"
           :key="file.filename"
           :text="file.filename"
           :image="file.image"
@@ -36,6 +38,7 @@
           />
         </k-list-item>
       </k-list>
+
       <k-empty v-else icon="image">
         {{ $t("dialog.files.empty") }}
       </k-empty>
@@ -44,58 +47,16 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      files: [],
-      issue: null,
-      options: {
-        max: null,
-        multiple: true,
-        api: null,
-        selected: []
-      }
-    };
-  },
-  computed: {
-    multiple() {
-      return this.options.multiple === true && this.options.max !== 1;
-    },
-    checkedIcon() {
-      return this.multiple === true ? "check" : "circle-filled";
-    }
-  },
-  methods: {
-    selected() {
-      return this.files.filter(file => file.selected);
-    },
-    submit() {
-      this.$emit("submit", this.selected());
-      this.$refs.dialog.close();
-    },
-    toggle(index) {
-      if (this.multiple === false) {
-        this.files = this.files.map(file => {
-          file.selected = false;
-          return file;
-        });
+import picker from "@/mixins/picker/dialog.js";
 
-        this.files[index].selected = true;
-      } else {
-        if (!this.files[index].selected) {
-          if (this.options.max && this.options.max <= this.selected().length) {
-            return;
-          }
-          this.files[index].selected = true;
-        } else {
-          this.files[index].selected = false;
-        }
-      }
+export default {
+  mixins: [picker],
+  methods: {
+    isFiltered(file) {
+      return file.filename.includes(this.search);
     },
-    open(files, options) {
-      this.files = files;
-      this.options = options;
-      this.$refs.dialog.open();
+    isSelected(file, selected) {
+      return selected.indexOf(file.id) !== -1;
     }
   }
 };

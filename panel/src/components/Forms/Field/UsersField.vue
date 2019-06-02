@@ -69,6 +69,7 @@ export default {
       }
 
       this.$refs.selector.open({
+        endpoint: "users",
         max: this.max,
         multiple: this.multiple,
         selected: this.selected.map(user => user.email)
