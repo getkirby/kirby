@@ -81,6 +81,17 @@ export default {
     LOCK(state, lock) {
       state.lock = lock;
     },
+    MOVE(state, ids) {
+      // move state
+      const model = clone(state.models[ids.old]);
+      Vue.delete(state.models, ids.old);
+      Vue.set(state.models, ids.new, model);
+
+      // move local storage
+      const storage = localStorage.getItem("kirby$form$" + ids.old);
+      localStorage.removeItem("kirby$form$" + ids.old);
+      localStorage.setItem("kirby$form$" + ids.new, storage);
+    },
     REMOVE(state, id) {
       Vue.delete(state.models, id);
       localStorage.removeItem("kirby$form$" + id);
@@ -162,6 +173,9 @@ export default {
     },
     lock(context, lock) {
       context.commit("LOCK", lock);
+    },
+    move(context, ids) {
+      context.commit("MOVE", ids);
     },
     remove(context, id) {
       context.commit("REMOVE", id);
