@@ -34,6 +34,7 @@ export default {
   methods: {
     fetch() {
       this.models = [];
+      this.search = null;
 
       return this.$api
         .get(this.options.endpoint, this.fetchData || {})
