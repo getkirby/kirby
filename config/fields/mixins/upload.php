@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Form\Options;
 use Kirby\Cms\Api;
 
 return [

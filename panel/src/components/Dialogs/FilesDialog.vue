@@ -12,7 +12,7 @@
     </template>
 
     <template v-else>
-      <div class="k-files-dialog-search">
+      <div v-if="options.search" class="k-files-dialog-search">
         <k-text-input
           v-model="search"
           :placeholder="$t('search')"
