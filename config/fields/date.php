@@ -3,6 +3,11 @@
 return [
     'props' => [
         /**
+         * Unset inherited props
+         */
+        'placeholder' => null,
+
+        /**
          * Default date when a new page/file/user gets created
          */
         'default' => function ($default = null) {
@@ -22,28 +27,28 @@ return [
         'icon' => function (string $icon = "calendar") {
             return $icon;
         },
+
         /**
          * Youngest date, which can be selected/saved
          */
         'max' => function (string $max = null) {
             return $this->toDate($max);
         },
+
         /**
          * Oldest date, which can be selected/saved
          */
         'min' => function (string $min = null) {
             return $this->toDate($min);
         },
-        /**
-         * The placeholder is not available
-         */
-        'placeholder' => null,
+
         /**
          * Pass `true` or an array of time field options to show the time selector.
          */
         'time' => function ($time = false) {
             return $time;
         },
+
         /**
          * Must be a parseable date string
          */

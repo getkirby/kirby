@@ -151,7 +151,7 @@ class ATest extends TestCase
             'tweet'
         ];
 
-        // placholder
+        // placeholder
         $this->assertEquals([
             'miao',
             'wuff',

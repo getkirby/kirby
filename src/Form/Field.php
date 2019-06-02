@@ -100,6 +100,7 @@ class Field extends Component
                  * Optional text that will be shown after the input
                  */
                 'after' => function ($after = null) {
+                    $after = $this->model->toString($after);
                     return I18n::translate($after, $after);
                 },
                 /**
@@ -112,6 +113,7 @@ class Field extends Component
                  * Optional text that will be shown before the input
                  */
                 'before' => function ($before = null) {
+                    $before = $this->model->toString($before);
                     return I18n::translate($before, $before);
                 },
                 /**
@@ -130,6 +132,7 @@ class Field extends Component
                  * Optional help text below the field
                  */
                 'help' => function ($help = null) {
+                    $help = $this->model->toString($help);
                     return I18n::translate($help, $help);
                 },
                 /**
@@ -142,12 +145,14 @@ class Field extends Component
                  * The field label can be set as string or associative array with translations
                  */
                 'label' => function ($label = null) {
+                    $label = $this->model->toString($label);
                     return I18n::translate($label, $label);
                 },
                 /**
                  * Optional placeholder value that will be shown when the field is empty
                  */
                 'placeholder' => function ($placeholder = null) {
+                    $placeholder = $this->model->toString($placeholder);
                     return I18n::translate($placeholder, $placeholder);
                 },
                 /**
