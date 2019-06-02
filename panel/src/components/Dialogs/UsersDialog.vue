@@ -6,13 +6,15 @@
     @cancel="$emit('cancel')"
     @submit="submit"
   >
+
     <template v-if="issue">
       <k-box :text="issue" theme="negative" />
     </template>
+
     <template v-else>
-      <k-list v-if="users.length">
+      <k-list v-if="models.length">
         <k-list-item
-          v-for="(user, index) in users"
+          v-for="(user, index) in models"
           :key="user.email"
           :text="user.username"
           :image="
@@ -48,6 +50,7 @@
           />
         </k-list-item>
       </k-list>
+
       <k-empty v-else icon="users">
         {{ $t("dialog.users.empty") }}
       </k-empty>
@@ -56,77 +59,17 @@
 </template>
 
 <script>
+import picker from "@/mixins/picker/dialog.js";
+
 export default {
-  data() {
-    return {
-      users: [],
-      issue: null,
-      options: {
-        max: null,
-        multiple: true,
-        selected: []
-      }
-    }
-  },
-  computed: {
-    multiple() {
-      return this.options.multiple === true && this.options.max !== 1;
-    },
-    checkedIcon() {
-      return this.multiple === true ? "check" : "circle-filled";
-    }
-  },
+  mixins: [picker],
   methods: {
-    fetch() {
-
-      this.users = [];
-
-      return this.$api
-        .get("users")
-        .then(users => {
-
-          const selected = this.options.selected || [];
-
-          this.users = users.data.map(user => {
-            user.selected = selected.indexOf(user.email) !== -1;
-            return user;
-          });
-
-        })
-        .catch(e => {
-          this.users = [];
-          this.issue = e.message;
-        });
+    isFiltered(user) {
+      return user.email.includes(this.search) ||
+             user.username.includes(this.search);
     },
-    selected() {
-      return this.users.filter(user => user.selected);
-    },
-    submit() {
-      this.$emit("submit", this.selected());
-      this.$refs.dialog.close();
-    },
-    toggle(index) {
-      if (this.options.multiple === false) {
-        this.users = this.users.map(user => {
-          user.selected = false;
-          return user;
-        });
-      }
-
-      if (!this.users[index].selected) {
-        if (this.options.max && this.options.max <= this.selected().length) {
-          return;
-        }
-        this.users[index].selected = true;
-      } else {
-        this.users[index].selected = false;
-      }
-    },
-    open(options) {
-      this.options = options;
-      this.fetch().then(() => {
-        this.$refs.dialog.open();
-      });
+    isSelected(user, selected) {
+      return selected.indexOf(user.email) !== -1;
     }
   }
 };

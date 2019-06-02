@@ -86,40 +86,16 @@ export default {
       }
     },
     open() {
-
       if (this.disabled) {
         return false;
       }
 
-      return this.$api
-        .get(this.endpoints.field)
-        .then(files => {
-          const selectedIds = this.selected.map(file => file.id);
-
-          files = files.map(file => {
-            file.selected = selectedIds.indexOf(file.id) !== -1;
-
-            file.thumb = this.image || {};
-            file.thumb.url = false;
-
-            if (file.thumbs && file.thumbs.tiny) {
-              file.thumb.url = file.thumbs.medium;
-            }
-
-            return file;
-          });
-
-          this.$refs.selector.open(files, {
-            max: this.max,
-            multiple: this.multiple
-          });
-        })
-        .catch(() => {
-          this.$store.dispatch(
-            "notification/error",
-            "The files query does not seem to be correct"
-          );
-        });
+      this.$refs.selector.open({
+        endpoint: this.endpoints.field,
+        max: this.max,
+        multiple: this.multiple,
+        selected: this.selected.map(file => file.id)
+      });
     },
     selectUpload(upload, files) {
       if (this.multiple === false) {

@@ -64,7 +64,7 @@ export default {
         endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
-        selected: clone(this.selected)
+        selected: this.selected.map(page => page.id)
       });
     }
   }
