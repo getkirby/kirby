@@ -77,18 +77,16 @@ import picker from "@/mixins/picker/dialog.js";
 export default {
   mixins: [picker],
   data() {
+    const mixin = picker.data();
     return {
-      ...picker.data(),
+      ...mixin,
       model: {
         title: null,
         parent: null
       },
       options: {
-        endpoint: null,
-        max: null,
-        multiple: true,
+        ...mixin.options,
         parent: null,
-        selected: []
       }
     };
   },
