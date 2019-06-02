@@ -36,9 +36,9 @@ export default {
       this.models = [];
 
       return this.$api
-        .get(this.options.endpoint)
+        .get(this.options.endpoint, this.fetchData || {})
         .then(response => {
-          const models   = response.data || response;
+          const models   = response.data || response.pages || response;
           const selected = this.options.selected || [];
 
           this.models = models.map(model => {
@@ -47,6 +47,10 @@ export default {
               selected: selected.indexOf(model[this.id || "id"]) !== -1
             };
           });
+
+          if (this.onFetched) {
+            this.onFetched(response);
+          }
         })
         .catch(e => {
           this.models = [];

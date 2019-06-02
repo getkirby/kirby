@@ -92,6 +92,7 @@ export default {
 
       this.$refs.selector.open({
         endpoint: this.endpoints.field,
+        image: this.image,
         max: this.max,
         multiple: this.multiple,
         search: this.search,

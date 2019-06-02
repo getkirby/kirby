@@ -92,29 +92,15 @@ export default {
       }
     };
   },
+  computed: {
+    fetchData() {
+      return { parent: this.options.parent };
+    }
+  },
   methods: {
     back() {
       this.options.parent = this.model.parent ? this.model.parent.id : null;
       this.fetch();
-    },
-    fetch() {
-      return this.$api
-        .get(this.options.endpoint, { parent: this.options.parent })
-        .then(response => {
-          this.model  = response.model;
-
-          const selected = this.options.selected || [];
-          this.models = response.pages.map(page => {
-            return {
-              ...page,
-              selected: selected.indexOf(page.id) !== -1
-            };
-          });
-        })
-        .catch(e => {
-          this.models = [];
-          this.issue = e.message;
-        });
     },
     go(page) {
       this.options.parent = page.id;
@@ -124,6 +110,9 @@ export default {
       return page.id.includes(this.search) ||
              page.text.includes(this.search) ||
              page.info.includes(this.search);
+    },
+    onFetched(response) {
+      this.model = response.model;
     }
   }
 };
