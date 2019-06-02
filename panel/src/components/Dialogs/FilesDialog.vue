@@ -37,7 +37,7 @@
         </k-list-item>
       </k-list>
       <k-empty v-else icon="image">
-        No files to select
+        {{ $t("dialog.files.empty") }}
       </k-empty>
     </template>
   </k-dialog>

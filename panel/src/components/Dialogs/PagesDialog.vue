@@ -58,7 +58,7 @@
         </k-list-item>
       </k-list>
       <k-empty v-else icon="page">
-        No pages to select
+        {{ $t("dialog.pages.empty") }}
       </k-empty>
     </template>
   </k-dialog>
