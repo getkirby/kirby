@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import SectionMixin from "@/mixins/section.js";
+import SectionMixin from "@/mixins/section/section.js";
 
 export default {
   mixins: [SectionMixin],

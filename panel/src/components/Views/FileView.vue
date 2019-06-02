@@ -23,10 +23,10 @@
             {{ $t("open") }}
           </k-button>
           <k-dropdown>
-            <k-button 
-              :responsive="true" 
-              :disabled="isLocked" 
-              icon="cog" 
+            <k-button
+              :responsive="true"
+              :disabled="isLocked"
+              icon="cog"
               @click="$refs.settings.toggle()"
             >
               {{ $t('settings') }}
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import PrevNext from "@/mixins/prevnext.js";
+import PrevNext from "@/mixins/view/prevnext.js";
 import config from "@/config/config.js";
 
 export default {
