@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import picker from "@/mixins/picker.js";
+import picker from "@/mixins/picker/field.js";
 import clone from "@/helpers/clone.js";
 
 export default {

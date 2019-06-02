@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import PrevNext from "@/mixins/prevnext.js";
+import PrevNext from "@/mixins/view/prevnext.js";
 import config from "@/config/config.js";
 
 export default {

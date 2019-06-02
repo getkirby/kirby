@@ -62,7 +62,7 @@
 
 <script>
 import config from "@/config/config.js";
-import picker from "@/mixins/picker.js";
+import picker from "@/mixins/picker/field.js";
 
 export default {
   mixins: [picker],

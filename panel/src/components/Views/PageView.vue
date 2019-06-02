@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import PrevNext from "@/mixins/prevnext.js";
+import PrevNext from "@/mixins/view/prevnext.js";
 
 export default {
   mixins: [PrevNext],
