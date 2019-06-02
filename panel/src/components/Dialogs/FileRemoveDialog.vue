@@ -36,14 +36,19 @@ export default {
         });
     },
     submit() {
+      // unlock old file id
+      this.$api.delete(this.$route.path + "/lock");
+
       this.$api.files
         .delete(this.parent, this.filename)
         .then(() => {
           // remove data from cache
           this.$store.dispatch("form/remove", "files/" + this.id);
+
           this.$store.dispatch("notification/success", ":)");
           this.$events.$emit("file.delete", this.id);
           this.$emit("success");
+
           this.$refs.dialog.close();
         })
         .catch(error => {

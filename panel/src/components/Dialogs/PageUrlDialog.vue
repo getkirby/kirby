@@ -93,6 +93,9 @@ export default {
         return;
       }
 
+      // unlock old page id
+      this.$api.delete(this.$route.path + "/lock");
+
       this.$api.pages
         .slug(this.page.id, this.slug)
         .then(page => {

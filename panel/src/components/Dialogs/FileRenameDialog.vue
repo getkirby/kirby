@@ -72,6 +72,9 @@ export default {
       return slug(input, [this.slugs, this.system.ascii], "\.");
     },
     submit() {
+      // unlock old file id
+      this.$api.delete(this.$route.path + "/lock");
+
       this.$api.files
         .rename(this.parent, this.file.filename, this.file.name)
         .then(file => {
