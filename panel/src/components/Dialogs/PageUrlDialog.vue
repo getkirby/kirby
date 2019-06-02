@@ -97,8 +97,11 @@ export default {
         .slug(this.page.id, this.slug)
         .then(page => {
 
-          // remove changes for the old page id
-          this.$store.dispatch("form/remove", "pages/" + this.page.id);
+          // move form changes
+          this.$store.dispatch("form/move", {
+            old: this.$store.getters["form/id"](this.page.id),
+            new: this.$store.getters["form/id"](page.id)
+          });
 
           const payload = {
             message: ":)",
