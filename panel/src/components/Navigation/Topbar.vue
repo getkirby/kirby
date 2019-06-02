@@ -113,6 +113,7 @@
                 {{ $t('license.buy') }}
               </k-button>
             </div>
+            <k-form-indicator />
             <k-button
               :tooltip="$t('search')"
               icon="search"

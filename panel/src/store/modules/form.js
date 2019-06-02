@@ -113,7 +113,8 @@ export default {
         JSON.stringify({
           api: state.models[id].api,
           originals: state.models[id].originals,
-          values: state.models[id].values
+          values: state.models[id].values,
+          changes: state.models[id].changes
         })
       );
     }
