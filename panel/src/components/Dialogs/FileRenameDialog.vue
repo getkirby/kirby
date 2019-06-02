@@ -75,11 +75,18 @@ export default {
       this.$api.files
         .rename(this.parent, this.file.filename, this.file.name)
         .then(file => {
-          // remove changes for the old file
-          this.$store.dispatch("form/revert", "files/" + this.file.id);
+
+          // move form changes
+          this.$store.dispatch("form/move", {
+            old: this.$store.getters["form/id"](this.file.id),
+            new: this.$store.getters["form/id"](file.id)
+          });
+
           this.$store.dispatch("notification/success", ":)");
           this.$emit("success", file);
+
           this.$events.$emit("file.changeName", file);
+
           this.$refs.dialog.close();
         })
         .catch(error => {
