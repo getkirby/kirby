@@ -72,6 +72,7 @@ export default {
         endpoint: "users",
         max: this.max,
         multiple: this.multiple,
+        search: this.search,
         selected: this.selected.map(user => user.email)
       });
     }

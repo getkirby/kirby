@@ -7,6 +7,7 @@ export default {
         endpoint: null,
         max: null,
         multiple: true,
+        search: false,
         selected: []
       },
       search: null
@@ -53,7 +54,10 @@ export default {
         });
     },
     open(options) {
-      this.options = options;
+      this.options = {
+        ...this.options,
+        ...options
+      };
       this.fetch().then(() => {
         this.$refs.dialog.open();
       });

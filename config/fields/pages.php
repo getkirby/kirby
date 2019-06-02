@@ -4,7 +4,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [
-    'mixins' => ['min'],
+    'mixins' => ['min', 'picker'],
     'props' => [
         /**
          * Unset inherited props
@@ -23,13 +23,6 @@ return [
         },
 
         /**
-         * The placeholder text if no pages have been selected yet
-         */
-        'empty' => function ($empty = null) {
-            return I18n::translate($empty, $empty);
-        },
-
-        /**
          * Image settings for each item
          */
         'image' => function (array $image = null) {
@@ -37,7 +30,7 @@ return [
         },
 
         /**
-         * Info text
+         * Info text for each item
          */
         'info' => function (string $info = null) {
             return $info;
@@ -48,27 +41,6 @@ return [
          */
         'layout' => function (string $layout = 'list') {
             return $layout;
-        },
-
-        /**
-         * The minimum number of required selected pages
-         */
-        'min' => function (int $min = null) {
-            return $min;
-        },
-
-        /**
-         * The maximum number of allowed selected pages
-         */
-        'max' => function (int $max = null) {
-            return $max;
-        },
-
-        /**
-         * If `false`, only a single page can be selected
-         */
-        'multiple' => function (bool $multiple = true) {
-            return $multiple;
         },
 
         /**
@@ -86,7 +58,7 @@ return [
         },
 
         /**
-         * Main text
+         * Main text for each item
          */
         'text' => function (string $text = null) {
             return $text;

@@ -586,6 +586,7 @@ trait AppPlugins
         FormField::$mixins['filepicker'] = include static::$root . '/config/fields/mixins/filepicker.php';
         FormField::$mixins['min']        = include static::$root . '/config/fields/mixins/min.php';
         FormField::$mixins['options']    = include static::$root . '/config/fields/mixins/options.php';
+        FormField::$mixins['picker']     = include static::$root . '/config/fields/mixins/picker.php';
         FormField::$mixins['upload']     = include static::$root . '/config/fields/mixins/upload.php';
 
         // Tag Aliases

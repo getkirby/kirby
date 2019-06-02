@@ -94,6 +94,7 @@ export default {
         endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
+        search: this.search,
         selected: this.selected.map(file => file.id)
       });
     },

@@ -21,7 +21,7 @@
         <k-headline>{{ model.title }}</k-headline>
       </header>
 
-      <div class="k-pages-dialog-search">
+      <div v-if="options.search" class="k-pages-dialog-search">
         <k-text-input
           v-model="search"
           :placeholder="$t('search')"

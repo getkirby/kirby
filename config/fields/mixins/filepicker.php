@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Form\Options;
-
 return [
     'methods' => [
         'filepicker' => function ($params) {
