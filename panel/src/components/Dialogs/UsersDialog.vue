@@ -12,9 +12,16 @@
     </template>
 
     <template v-else>
-      <k-list v-if="models.length">
+      <div class="k-users-dialog-search">
+        <k-text-input
+          v-model="search"
+          :placeholder="$t('search')"
+        />
+      </div>
+
+      <k-list v-if="filtered.length">
         <k-list-item
-          v-for="(user, index) in models"
+          v-for="(user, index) in filtered"
           :key="user.email"
           :text="user.username"
           :image="
@@ -63,13 +70,15 @@ import picker from "@/mixins/picker/dialog.js";
 
 export default {
   mixins: [picker],
+  computed: {
+    id() {
+      return "email";
+    }
+  },
   methods: {
     isFiltered(user) {
       return user.email.includes(this.search) ||
              user.username.includes(this.search);
-    },
-    isSelected(user, selected) {
-      return selected.indexOf(user.email) !== -1;
     }
   }
 };
@@ -81,5 +90,8 @@ export default {
 }
 .k-users-dialog .k-empty {
   border: 0;
+}
+.k-users-dialog-search {
+  margin-bottom: 0.5rem;
 }
 </style>

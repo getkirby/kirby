@@ -12,9 +12,16 @@
     </template>
 
     <template v-else>
-      <k-list v-if="models.length">
+      <div class="k-files-dialog-search">
+        <k-text-input
+          v-model="search"
+          :placeholder="$t('search')"
+        />
+      </div>
+
+      <k-list v-if="filtered.length">
         <k-list-item
-          v-for="(file, index) in models"
+          v-for="(file, index) in filtered"
           :key="file.filename"
           :text="file.filename"
           :image="file.image"
@@ -65,5 +72,8 @@ export default {
 <style lang="scss">
 .k-files-dialog .k-list-item {
   cursor: pointer;
+}
+.k-files-dialog-search {
+  margin-bottom: 0.5rem;
 }
 </style>
