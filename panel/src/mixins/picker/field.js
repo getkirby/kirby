@@ -9,7 +9,6 @@ export default {
     max: Number,
     multiple: Boolean,
     parent: String,
-    search: Boolean,
     size: String,
     value: {
       type: Array,

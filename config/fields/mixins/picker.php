@@ -29,13 +29,6 @@ return [
          */
         'multiple' => function (bool $multiple = true) {
             return $multiple;
-        },
-
-        /**
-         * If `true`, show input to filter list in picker
-         */
-        'search' => function (bool $search = false) {
-            return $search;
-        },
+        }
     ],
 ];

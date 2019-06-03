@@ -21,16 +21,9 @@
         <k-headline>{{ model.title }}</k-headline>
       </header>
 
-      <div v-if="options.search" class="k-pages-dialog-search">
-        <k-text-input
-          v-model="search"
-          :placeholder="$t('search')"
-        />
-      </div>
-
-      <k-list v-if="filtered.length">
+      <k-list v-if="models.length">
         <k-list-item
-          v-for="(page, index) in filtered"
+          v-for="(page, index) in models"
           :key="page.id"
           :text="page.text"
           :info="page.info"

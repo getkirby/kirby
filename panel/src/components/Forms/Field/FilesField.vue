@@ -95,7 +95,6 @@ export default {
         image: this.image,
         max: this.max,
         multiple: this.multiple,
-        search: this.search,
         selected: this.selected.map(file => file.id)
       });
     },
