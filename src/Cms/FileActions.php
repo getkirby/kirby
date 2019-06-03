@@ -52,6 +52,9 @@ trait FileActions
                 throw new LogicException('The new file exists and cannot be overwritten');
             }
 
+            // remove the lock of the old file
+            $oldFile->lock()->remove();
+
             // remove all public versions
             $oldFile->unpublish();
 
@@ -208,7 +211,12 @@ trait FileActions
     public function delete(): bool
     {
         return $this->commit('delete', [$this], function ($file) {
+
+            // remove all versions in the media folder
             $file->unpublish();
+
+            // remove the lock of the old file
+            $file->lock()->remove();
 
             if ($file->kirby()->multilang() === true) {
                 foreach ($file->translations() as $translation) {

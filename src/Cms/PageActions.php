@@ -98,8 +98,11 @@ trait PageActions
                 'root'    => null
             ]);
 
-            // actually move stuff on disk
             if ($oldPage->exists() === true) {
+                // remove the lock of the old page
+                $oldPage->lock()->remove();
+
+                // actually move stuff on disk
                 if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
                     throw new LogicException('The page directory cannot be moved');
                 }
