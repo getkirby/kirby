@@ -187,6 +187,7 @@ export default {
         };
 
         page.sortable = page.permissions.sort && this.options.sortable;
+        page.column   = this.width;
 
         return page;
       });

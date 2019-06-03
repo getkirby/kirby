@@ -9,6 +9,7 @@
           :name="section.name"
           :parent="parent"
           :blueprint="blueprint"
+          :column="column.width"
           :class="'k-section k-section-name-' + section.name"
           v-bind="section"
           @submit="$emit('submit', $event)"
