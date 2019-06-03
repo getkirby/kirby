@@ -148,6 +148,7 @@ export default {
         };
 
         file.sortable = this.options.sortable;
+        file.column   = this.column;
 
         return file;
       });

@@ -2,8 +2,9 @@ export default {
   inheritAttrs: false,
   props: {
     blueprint: String,
+    column: String,
     parent: String,
-    name: String
+    name: String,
   },
   data() {
     return {
