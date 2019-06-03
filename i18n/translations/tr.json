@@ -24,8 +24,8 @@
   "delete": "Sil",
   "dimensions": "Boyutlar",
   "discard": "Vazge\u00e7",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "İndir",
+  "duplicate": "Kopyala",
   "edit": "D\u00fczenle",
 
   "email": "E-Posta",
@@ -67,9 +67,9 @@
   "error.form.incomplete": "Lütfen tüm form hatalarını düzeltin...",
   "error.form.notSaved": "Form kaydedilemedi",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "Lisans doğrulanamadı",
 
   "error.page.changeSlug.permission":
     "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
@@ -96,7 +96,7 @@
     "\"{slug}\" adres eki olan bir sayfa taslağı zaten mevcut",
   "error.page.duplicate":
     "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "\"{slug}\" öğesini çoğaltmanıza izin verilmiyor",
   "error.page.notFound": "\"{slug}\" uzantısındaki sayfa bulunamadı",
   "error.page.num.invalid":
     "Lütfen geçerli bir sıralama numarası girin. Sayılar negatif olmamalıdır.",
@@ -277,11 +277,11 @@
 
   "loading": "Yükleniyor",
 
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.isLocked": "<strong>{email}</strong> tarafından kaydedilmemiş değişiklikler",
+  "lock.file.isLocked": "Dosya şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
+  "lock.page.isLocked": "Sayfa şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
+  "lock.unlock": "Kilidi Aç",
+  "lock.isUnlocked": "Kaydedilmemiş değişikliklerin üzerine başka bir kullanıcı yazmış. Değişikliklerinizi el ile birleştirmek için değişikliklerinizi indirebilirsiniz.",
 
   "login": "Giri\u015f",
   "login.remember": "Oturumumu açık tut",
@@ -310,8 +310,8 @@
   "more": "Daha Fazla",
   "name": "İsim",
   "next": "Sonraki",
-  "off": "off",
-  "on": "on",
+  "off": "kapalı",
+  "on": "açık",
   "open": "Açık",
   "options": "Seçenekler",
 
@@ -333,7 +333,7 @@
   "page.delete.confirm.title": "Onaylamak için sayfa başlığını girin",
   "page.draft.create": "Taslak oluştur",
   "page.duplicate.appendix": "Kopyala",
-  "page.duplicate.files": "Copy files",
+  "page.duplicate.files": "Dosyaları kopyala",
   "page.status": "Durum",
   "page.status.draft": "Taslak",
   "page.status.draft.description":
@@ -359,13 +359,13 @@
   "revert": "Vazge\u00e7",
 
   "role": "Rol",
-  "role.admin.description": "The admin has all rights",
-  "role.admin.title": "Admin",
+  "role.admin.description": "Yönetici tüm haklara sahiptir",
+  "role.admin.title": "Yönetici",
   "role.all": "Tümü",
   "role.empty": "Bu role ait kullanıcı bulunamadı",
   "role.description.placeholder": "Açıklama yok",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Bu hiçbir izni olmayan bir geri dönüş rolüdür.",
+  "role.nobody.title": "Hiçkimse",
 
   "save": "Kaydet",
   "search": "Arama",

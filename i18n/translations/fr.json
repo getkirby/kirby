@@ -24,8 +24,8 @@
   "delete": "Supprimer",
   "dimensions": "Dimensions",
   "discard": "Supprimer",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Télécharger",
+  "duplicate": "Dupliquer",
   "edit": "Éditer",
 
   "email": "Courriel",
@@ -67,9 +67,9 @@
   "error.form.incomplete": "Veuillez corriger toutes les erreurs du formulaire…",
   "error.form.notSaved": "Le formulaire n’a pu être enregistré",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Veuillez saisir un numéro de licence valide",
   "error.license.email": "Veuillez saisir un courriel valide",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "La licence n’a pu être vérifiée",
 
   "error.page.changeSlug.permission":
     "Vous n’êtes pas autorisé à modifier l’identifiant d’URL pour «&nbsp;{slug}&nbsp;»",
@@ -96,7 +96,7 @@
     "Un brouillon avec l’identifiant d’URL «&nbsp;{slug}&nbsp;» existe déjà",
   "error.page.duplicate":
     "Une page avec l’identifiant d’URL «&nbsp;{slug}&nbsp;» existe déjà",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Vous n'êtes pas autorisé à dupliquer «&nbsp;{slug}&nbsp;»",
   "error.page.notFound": "La page «&nbsp;{slug}&nbsp;» n’a pu être trouvée",
   "error.page.num.invalid":
     "Veuillez saisir un numéro de position valide. Les numéros ne doivent pas être négatifs.",
@@ -277,11 +277,11 @@
 
   "loading": "Chargement",
 
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.isLocked": "Modifications non enregistrées par <strong>{email}</strong>",
+  "lock.file.isLocked": "Le fichier est actuellement édité par {email} et ne peut être modifié.",
+  "lock.page.isLocked": "La page est actuellement éditée par {email} et ne peut être modifiée.",
+  "lock.unlock": "Déverrouiller",
+  "lock.isUnlocked": "Vos modifications non enregistrées ont été écrasées pas un autre utilisateur. Vous pouvez télécharger vos modifications pour les fusionner manuellement.",
 
   "login": "Se connecter",
   "login.remember": "Rester connecté",
@@ -333,7 +333,7 @@
   "page.delete.confirm.title": "Veuillez saisir le titre de la page pour confirmer",
   "page.draft.create": "Créer un brouillon",
   "page.duplicate.appendix": "Copier",
-  "page.duplicate.files": "Copy files",
+  "page.duplicate.files": "Copier les fichiers",
   "page.status": "Statut",
   "page.status.draft": "Brouillon",
   "page.status.draft.description":
@@ -359,13 +359,13 @@
   "revert": "Revenir",
 
   "role": "Rôle",
-  "role.admin.description": "The admin has all rights",
-  "role.admin.title": "Admin",
+  "role.admin.description": "L’administrateur dispose de tous les droits",
+  "role.admin.title": "Administrateur",
   "role.all": "Tous",
   "role.empty": "Il n’y a aucun utilisateur avec ce rôle",
   "role.description.placeholder": "Pas de description",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Ceci est un rôle de secours sans aucune permission.",
+  "role.nobody.title": "Personne",
 
   "save": "Enregistrer",
   "search": "Rechercher",

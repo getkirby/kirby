@@ -1,5 +1,5 @@
 {
-  "add": "Toevoegen",
+  "add": "Voeg toe",
   "avatar": "Avatar",
   "back": "Terug",
   "cancel": "Annuleren",
@@ -25,7 +25,7 @@
   "dimensions": "Dimensies",
   "discard": "Annuleren",
   "download": "Download",
-  "duplicate": "Duplicate",
+  "duplicate": "Dupliceren",
   "edit": "Wijzig",
 
   "email": "E-mailadres",
@@ -67,9 +67,9 @@
   "error.form.incomplete": "Verbeter alle fouten in het formulier",
   "error.form.notSaved": "Het formulier kon niet worden opgeslagen",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Vul een gelidge licentie-key in",
   "error.license.email": "Gelieve een geldig emailadres in te voeren",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "De licentie kon niet worden geverifieerd. ",
 
   "error.page.changeSlug.permission":
     "Je kunt de URL van deze pagina niet wijzigen",
@@ -96,7 +96,7 @@
     "Er bestaat al een conceptpagina met de URL-appendix \"{slug}\"",
   "error.page.duplicate":
     "Er bestaat al een pagina met de URL-appendix \"{slug}\"",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Je bent niet gemachtigd om \"{slug}\" te dupliceren",
   "error.page.notFound": "De pagina \"{slug}\" kan niet worden gevonden",
   "error.page.num.invalid":
     "Vul een geldig sorteer-cijfer in. Het cijfer mag niet negatief zijn",
@@ -111,18 +111,18 @@
   "error.section.files.max.singular":
     "Je kunt niet meer dan 1 bestand toevoegen aan de zone \"{section}\"",
   "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
+    "De \"{section}\" sectie moet minimaal {min} bestanden bevatten.",
   "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+    "De \"{section}\" sectie moet minimaal 1 bestand bevatten.",
 
   "error.section.pages.max.plural":
     "Je kunt niet meer dan {max} pagina's toevoegen aan de zone \"{section}\"",
   "error.section.pages.max.singular":
     "Je kunt niet meer dan 1 pagina toevoegen aan de zone \"{section}\"",
   "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
+    "De \"{section}\" sectie moet minimaal {min} pagina's bevatten.",
   "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+    "De \"{section}\" sectie moet minimaal 1 pagina bevatten.",
 
   "error.section.notLoaded": "De zone \"{name}\" kan niet worden geladen",
   "error.section.type.invalid": "Zone-type \"{type}\" is niet geldig",
@@ -277,11 +277,11 @@
 
   "loading": "Laden",
 
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.isLocked": "Niet opgeslagen wijzigingen door <strong>{email}</strong>",
+  "lock.file.isLocked": "Dit bestand wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
+  "lock.page.isLocked": "Deze pagina wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
+  "lock.unlock": "Ontgrendelen",
+  "lock.isUnlocked": "Je niet opgeslagen wijzigingen zijn overschreven door een andere gebruiker. Je kunt je wijzigingen downloaden om ze handmatig samen te voegen.",
 
   "login": "Inloggen",
   "login.remember": "Houd mij ingelogd",
@@ -310,8 +310,8 @@
   "more": "Meer",
   "name": "Naam",
   "next": "Volgende",
-  "off": "off",
-  "on": "on",
+  "off": "uit",
+  "on": "aan",
   "open": "Open",
   "options": "Opties",
 
@@ -333,7 +333,7 @@
   "page.delete.confirm.title": "Voeg een paginatitel in om te bevestigen",
   "page.draft.create": "Maak concept",
   "page.duplicate.appendix": "Kopiëren",
-  "page.duplicate.files": "Copy files",
+  "page.duplicate.files": "Kopieer bestanden",
   "page.status": "Status",
   "page.status.draft": "Concept",
   "page.status.draft.description":
@@ -359,13 +359,13 @@
   "revert": "Annuleren",
 
   "role": "Rol",
-  "role.admin.description": "The admin has all rights",
+  "role.admin.description": "De admin heeft alle rechten",
   "role.admin.title": "Admin",
   "role.all": "Alle",
   "role.empty": "Er zijn geen gebruikers met deze rol",
   "role.description.placeholder": "Geen beschrijving",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Dit is een fallback-rol zonder rechten",
+  "role.nobody.title": "Niemand",
 
   "save": "Opslaan",
   "search": "Zoeken",
@@ -387,8 +387,8 @@
   "toolbar.button.heading.3": "Titel 3",
   "toolbar.button.italic": "Cursieve tekst",
   "toolbar.button.file": "Bestand",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Selecteer een bestand",
+  "toolbar.button.file.upload": "Upload bestand",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Genummerde lijst",
   "toolbar.button.ul": "Opsomming",
