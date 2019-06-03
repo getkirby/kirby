@@ -12,16 +12,9 @@
     </template>
 
     <template v-else>
-      <div v-if="options.search" class="k-files-dialog-search">
-        <k-text-input
-          v-model="search"
-          :placeholder="$t('search')"
-        />
-      </div>
-
-      <k-list v-if="filtered.length">
+      <k-list v-if="models.length">
         <k-list-item
-          v-for="(file, index) in filtered"
+          v-for="(file, index) in models"
           :key="file.filename"
           :text="file.filename"
           :image="file.image"

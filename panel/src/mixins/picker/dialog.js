@@ -7,7 +7,6 @@ export default {
         endpoint: null,
         max: null,
         multiple: true,
-        search: false,
         selected: []
       },
       search: null
@@ -20,13 +19,6 @@ export default {
     checkedIcon() {
       return this.multiple === true ? "check" : "circle-filled";
     },
-    filtered() {
-      if (this.search === null) {
-        return this.models;
-      }
-
-      return this.models.filter(model => this.isFiltered(model));
-    },
     selected() {
       return this.models.filter(model => model.selected);
     }
@@ -34,7 +26,6 @@ export default {
   methods: {
     fetch() {
       this.models = [];
-      this.search = null;
 
       return this.$api
         .get(this.options.endpoint, this.fetchData || {})
@@ -72,9 +63,6 @@ export default {
       this.$refs.dialog.close();
     },
     toggle(index) {
-      // transform index of filtered models to index of all models
-      index = this.models.findIndex(model => model[this.id || "id"] === this.filtered[index].id);
-
       if (this.options.multiple === false) {
         this.models = this.models.map(model => {
           return {

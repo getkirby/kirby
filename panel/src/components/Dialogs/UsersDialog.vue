@@ -12,16 +12,9 @@
     </template>
 
     <template v-else>
-      <div v-if="options.search" class="k-users-dialog-search">
-        <k-text-input
-          v-model="search"
-          :placeholder="$t('search')"
-        />
-      </div>
-
-      <k-list v-if="filtered.length">
+      <k-list v-if="models.length">
         <k-list-item
-          v-for="(user, index) in filtered"
+          v-for="(user, index) in models"
           :key="user.email"
           :text="user.username"
           :image="
