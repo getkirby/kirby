@@ -93,7 +93,7 @@
 
           <k-button
             v-if="notification"
-            class="k-topbar-notification"
+            class="k-topbar-notification k-topbar-signals-button"
             theme="positive"
             @click="$store.dispatch('notification/close')"
           >
@@ -103,9 +103,17 @@
           <template v-else>
             <div v-if="unregistered" class="k-registration">
               <p>{{ $t('license.unregistered') }}</p>
-              <k-button :responsive="true" icon="key" @click="$emit('register')">{{ $t('license.register') }}</k-button>
               <k-button
                 :responsive="true"
+                class="k-topbar-signals-button"
+                icon="key"
+                @click="$emit('register')"
+              >
+                {{ $t('license.register') }}
+              </k-button>
+              <k-button
+                :responsive="true"
+                class="k-topbar-signals-button"
                 link="https://getkirby.com/buy"
                 target="_blank"
                 icon="cart"
@@ -116,6 +124,7 @@
             <k-form-indicator />
             <k-button
               :tooltip="$t('search')"
+              class="k-topbar-signals-button"
               icon="search"
               @click="$store.dispatch('search', true)"
             />
@@ -215,7 +224,7 @@ export default {
 .k-topbar-menu-button .k-button-text {
   opacity: 1;
 }
-.k-topbar-signals .k-button,
+.k-topbar-signals-button,
 .k-topbar-button {
   padding: 0.75rem;
   line-height: 1;
