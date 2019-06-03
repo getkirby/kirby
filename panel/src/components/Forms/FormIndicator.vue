@@ -1,19 +1,20 @@
 <template>
   <k-dropdown v-if="changes.length > 0" class="k-form-indicator">
-    <k-button @click="$refs.list.toggle()">
+    <k-button class="k-topbar-button" @click="$refs.list.toggle()">
       <k-icon type="edit" class="k-form-indicator-icon" />
     </k-button>
 
-    <k-dropdown-content ref="list">
-      <k-dropdown-item>
-        <strong>{{ $t("lock.unsaved") }}</strong>
-      </k-dropdown-item>
+    <k-dropdown-content align="right" ref="list">
+      <p class="k-form-indicator-info">
+        {{ $t("lock.unsaved") }}:
+      </p>
+      <hr />
       <k-dropdown-item
         v-for="change in changes"
         :key="change.id"
+        :icon="change.icon"
         :link="change.link"
       >
-        <k-icon :type="change.icon" />
         {{ label(change) }}
       </k-dropdown-item>
     </k-dropdown-content>
@@ -54,7 +55,7 @@ export default {
 
       if (stored.id.startsWith("files/")) {
         return {
-          icon: "file-" + model.type,
+          icon: "image",
           link: model.link
         };
       }
@@ -118,26 +119,17 @@ export default {
 </script>
 
 <style lang="scss">
-[dir="ltr"] .k-form-indicator .k-dropdown-content {
-  left: auto;
-  right: 0;
-}
-
-[dir="rtl"] .k-form-indicator .k-dropdown-content {
-  left: 0;
-  right: auto;
-}
-
-.k-form-indicator .k-dropdown-content .k-button-text {
-  display: flex;
-
-  > .k-icon {
-    margin-right: .5rem;
-  }
-}
 
 .k-form-indicator-icon {
   color: $color-notice-on-dark;
+}
+
+.k-form-indicator-info {
+  font-size: $font-size-small;
+  font-weight: $font-weight-bold;
+  padding: .75rem 1rem .25rem;
+  line-height: 1.25em;
+  width: 15rem;
 }
 
 </style>
