@@ -125,6 +125,26 @@ abstract class ModelWithContent extends Model
     }
 
     /**
+     * Returns an array with all content files
+     *
+     * @return array
+     */
+    public function contentFiles(): array
+    {
+        if ($this->kirby()->multilang() === true) {
+            $files = [];
+            foreach ($this->kirby()->languages()->codes() as $code) {
+                $files[] = $this->contentFile($code);
+            }
+            return $files;
+        } else {
+            return [
+                $this->contentFile()
+            ];
+        }
+    }
+
+    /**
      * Prepares the content that should be written
      * to the text file
      *

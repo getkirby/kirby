@@ -9,10 +9,11 @@ export default {
 
     return api.post(this.url(parent, "children"), data);
   },
-  duplicate(id, slug, copyFiles) {
+  duplicate(id, slug, options) {
     return api.post(this.url(id, "duplicate"), {
-      slug: slug,
-      copyFiles: copyFiles
+      slug:     slug,
+      children: options.children || false,
+      files:    options.files    || false,
     });
   },
   url(id, path) {

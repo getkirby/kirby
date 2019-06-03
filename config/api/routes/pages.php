@@ -66,7 +66,10 @@ return [
         'pattern' => 'pages/(:any)/duplicate',
         'method'  => 'POST',
         'action'  => function (string $id) {
-            return $this->page($id)->duplicate($this->requestBody('slug'), $this->requestBody('copyFiles'));
+            return $this->page($id)->duplicate($this->requestBody('slug'), [
+                'children' => $this->requestBody('children'),
+                'files'    => $this->requestBody('files'),
+            ]);
         }
     ],
     [

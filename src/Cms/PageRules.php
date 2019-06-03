@@ -262,7 +262,7 @@ class PageRules
         return true;
     }
 
-    public static function duplicate(Page $page, string $slug, bool $files = false): bool
+    public static function duplicate(Page $page, string $slug, array $options = []): bool
     {
         if ($page->permissions()->duplicate() !== true) {
             throw new PermissionException([

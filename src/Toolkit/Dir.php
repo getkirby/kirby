@@ -43,9 +43,11 @@ class Dir
      *
      * @param string $dir
      * @param string $target
+     * @param bool $recursive
+     * @param array $ignore
      * @return bool
      */
-    public static function copy(string $dir, string $target): bool
+    public static function copy(string $dir, string $target, bool $recursive = true, array $ignore = []): bool
     {
         if (is_dir($dir) === false) {
             throw new Exception('The directory "' . $dir . '" does not exist');
@@ -62,8 +64,14 @@ class Dir
         foreach (static::read($dir) as $name) {
             $root = $dir . '/' . $name;
 
+            if (in_array($root, $ignore) === true) {
+                continue;
+            }
+
             if (is_dir($root) === true) {
-                static::copy($root, $target . '/' . $name);
+                if ($recursive === true) {
+                    static::copy($root, $target . '/' . $name);
+                }
             } else {
                 F::copy($root, $target . '/' . $name);
             }

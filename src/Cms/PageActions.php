@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -310,6 +311,58 @@ trait PageActions
     }
 
     /**
+     * Copies the page to a new parent
+     *
+     * @param array $options
+     * @return Page
+     */
+    public function copy(array $options = [])
+    {
+        $slug        = $options['slug']      ?? $this->slug();
+        $isDraft     = $options['isDraft']   ?? $this->isDraft();
+        $parent      = $options['parent']    ?? null;
+        $parentModel = $options['parent']    ?? $this->site();
+        $num         = $options['num']       ?? null;
+        $children    = $options['children']  ?? false;
+        $files       = $options['files']     ?? false;
+
+        // clean up the slug
+        $slug = Str::slug($slug);
+
+        if ($parentModel->findPageOrDraft($slug)) {
+            throw new DuplicateException([
+                'key'  => 'page.duplicate',
+                'data' => [
+                    'slug' => $slug
+                ]
+            ]);
+        }
+
+        $tmp = new static([
+            'isDraft' => $isDraft,
+            'num'     => $num,
+            'parent'  => $parent,
+            'slug'    => $slug,
+        ]);
+
+        $ignore = [];
+
+        // don't copy files
+        if ($files === false) {
+            foreach ($this->files() as $file) {
+                $ignore[] = $file->root();
+
+                // append all content files
+                array_push($ignore, ...$file->contentFiles());
+            }
+        }
+
+        Dir::copy($this->root(), $tmp->root(), $children, $ignore);
+
+        return $parentModel->clone()->findPageOrDraft($slug);
+    }
+
+    /**
      * Creates and stores a new page
      *
      * @param array $props
@@ -493,51 +546,23 @@ trait PageActions
      * slug and optionally copies all files
      *
      * @param string $slug
-     * @param bool $copyFiles
+     * @param array $options
      * @return Page
      */
-    public function duplicate(string $slug = null, bool $copyFiles = false)
+    public function duplicate(string $slug = null, array $options = [])
     {
 
         // create the slug for the duplicate
         $slug = Str::slug($slug ?? $this->slug() . '-copy');
 
-        return $this->commit('duplicate', [$this, $slug, $copyFiles], function ($page, $slug, $copyFiles) {
-            $kirby = $page->kirby();
-
-            if ($kirby->multilang() === true) {
-                $defaultLang = $kirby->defaultLanguage()->code();
-                $content     = $page->content($defaultLang)->toArray();
-            } else {
-                $content = $page->content()->toArray();
-            }
-
-            $copy = Page::create([
-                'content'  => $content,
-                'isDraft'  => true,
-                'parent'   => $page->parent(),
+        return $this->commit('duplicate', [$this, $slug, $options], function ($page, $slug, $options) {
+            return $this->copy([
+                'parent'   => $this->parent(),
                 'slug'     => $slug,
-                'template' => $page->intendedTemplate()->name(),
+                'isDraft'  => true,
+                'files'    => $options['files']    ?? false,
+                'children' => $options['children'] ?? false,
             ]);
-
-            // copy translated content
-            if ($kirby->multilang() === true) {
-                foreach ($kirby->languages()->not($defaultLang) as $language) {
-                    // get translated content
-                    $content = $page->content($language->code())->toArray();
-
-                    // save the translated content
-                    $copy = $copy->save($content, $language->code());
-                }
-            }
-
-            if ($copyFiles === true) {
-                foreach ($page->files() as $file) {
-                    $file->copy($copy);
-                }
-            }
-
-            return $copy;
         });
     }
 

@@ -27,7 +27,8 @@ export default {
     return {
       notification: null,
       page: {
-        copyFiles: false,
+        children: false,
+        files: false,
         id: null,
         slug: '',
       }
@@ -44,10 +45,17 @@ export default {
           spellcheck: false,
           icon: "url"
         },
-        copyFiles: {
+        files: {
           label: this.$t("page.duplicate.files"),
           type: "toggle",
           required: true,
+          width: "1/2"
+        },
+        children: {
+          label: this.$t("page.duplicate.pages"),
+          type: "toggle",
+          required: true,
+          width: "1/2"
         }
       };
     },
@@ -78,7 +86,10 @@ export default {
     },
     submit() {
       this.$api.pages
-        .duplicate(this.page.id, this.page.slug, this.page.copyFiles)
+        .duplicate(this.page.id, this.page.slug, {
+          children: this.page.children,
+          files:    this.page.files
+        })
         .then(page => {
           this.success({
             route: this.$api.pages.link(page.id),
