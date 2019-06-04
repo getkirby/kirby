@@ -55,27 +55,15 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => $media . '/panel/(:any)/plugins/(css|js)/(:any)/index.(css|js)',
+            'pattern' => $media . '/plugins/index.(css|js)',
             'env'     => 'media',
-            'action'  => function (string $version, string $type) use ($kirby) {
-                $plugins = new PanelPlugins($type);
-                $plugins->publish();
+            'action'  => function (string $type) use ($kirby) {
+                $plugins = new PanelPlugins();
 
                 return $kirby
                     ->response()
                     ->type($type)
-                    ->body($plugins->read());
-            }
-        ],
-        [
-            'pattern' => $media . '/panel/plugins/index.(css|js)',
-            'env'     => 'media',
-            'action'  => function (string $type) use ($kirby) {
-                $plugins = new PanelPlugins($type);
-
-                return $kirby
-                    ->response()
-                    ->redirect($plugins->url(), 302);
+                    ->body($plugins->read($type));
             }
         ],
         [

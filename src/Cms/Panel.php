@@ -78,15 +78,15 @@ class Panel
         // get the uri object for the panel url
         $uri = new Uri($url = $kirby->url('panel'));
 
-        $pluginCss = new PanelPlugins('css');
-        $pluginJs  = new PanelPlugins('js');
+        // fetch all plugins
+        $plugins = new PanelPlugins();
 
         $view = new View($kirby->root('kirby') . '/views/panel.php', [
             'kirby'     => $kirby,
             'config'    => $kirby->option('panel'),
             'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
-            'pluginCss' => $pluginCss->url(),
-            'pluginJs'  => $pluginJs->url(),
+            'pluginCss' => $plugins->url('css'),
+            'pluginJs'  => $plugins->url('js'),
             'icons'     => F::read($kirby->root('panel') . '/dist/img/icons.svg'),
             'panelUrl'  => $uri->path()->toString(true) . '/',
             'options'   => [

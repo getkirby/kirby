@@ -40,74 +40,15 @@ class PanelPluginsTest extends TestCase
         // app must be created again to load the new plugins
         $app = $this->app->clone();
 
-        // css
-        $plugins  = new PanelPlugins('css');
-        $expected = [$this->cssA, $this->cssB];
+        $plugins  = new PanelPlugins();
+        $expected = [$this->cssA, $this->jsA, $this->cssB, $this->jsB];
 
         $this->assertEquals($expected, $plugins->files());
-
-        // js
-        $plugins  = new PanelPlugins('js');
-        $expected = [$this->jsA, $this->jsB];
-
-        $this->assertEquals($expected, $plugins->files());
-    }
-
-    public function testFolder()
-    {
-        $plugins = new PanelPlugins('css');
-        $this->assertEquals('panel/' . $this->app->versionHash() . '/plugins/css', $plugins->folder());
-
-        $plugins = new PanelPlugins('js');
-        $this->assertEquals('panel/' . $this->app->versionHash() . '/plugins/js', $plugins->folder());
-    }
-
-    public function testHashWithoutFiles()
-    {
-        $plugins = new PanelPlugins('css');
-        $this->assertEquals('00000000-0', $plugins->hash());
-
-        $plugins = new PanelPlugins('js');
-        $this->assertEquals('00000000-0', $plugins->hash());
-    }
-
-    public function testHashWithFiles()
-    {
-        $this->createPlugins();
-
-        $plugins = new PanelPlugins('css');
-        $this->assertEquals($plugins->id() . '-' . $plugins->modified(), $plugins->hash());
-
-        $plugins = new PanelPlugins('js');
-        $this->assertEquals($plugins->id() . '-' . $plugins->modified(), $plugins->hash());
-    }
-
-    public function testIdWithoutFiles()
-    {
-        $plugins = new PanelPlugins('css');
-        $this->assertEquals(0, $plugins->id());
-
-        $plugins = new PanelPlugins('js');
-        $this->assertEquals(0, $plugins->id());
-    }
-
-    public function testIdWithFiles()
-    {
-        $this->createPlugins();
-
-        $plugins = new PanelPlugins('css');
-        $this->assertRegExp('![a-z0-9]{8}!', $plugins->id());
-
-        $plugins = new PanelPlugins('js');
-        $this->assertRegExp('![a-z0-9]{8}!', $plugins->id());
     }
 
     public function testModifiedWithoutFiles()
     {
-        $plugins = new PanelPlugins('css');
-        $this->assertEquals(0, $plugins->modified());
-
-        $plugins = new PanelPlugins('js');
+        $plugins = new PanelPlugins();
         $this->assertEquals(0, $plugins->modified());
     }
 
@@ -117,29 +58,8 @@ class PanelPluginsTest extends TestCase
 
         $time = time();
 
-        $plugins = new PanelPlugins('css');
+        $plugins = new PanelPlugins();
         $this->assertEquals($time, $plugins->modified());
-
-        $plugins = new PanelPlugins('js');
-        $this->assertEquals($time, $plugins->modified());
-    }
-
-    public function testPath()
-    {
-        $plugins = new PanelPlugins('css');
-        $this->assertEquals($plugins->folder() . '/' . $plugins->hash() . '/index.css', $plugins->path());
-
-        $plugins = new PanelPlugins('js');
-        $this->assertEquals($plugins->folder() . '/' . $plugins->hash() . '/index.js', $plugins->path());
-    }
-
-    public function testPublish()
-    {
-        $plugins = new PanelPlugins('css');
-
-        $this->assertFalse($plugins->exist());
-        $this->assertTrue($plugins->publish());
-        $this->assertTrue($plugins->exist());
     }
 
     public function testRead()
@@ -149,55 +69,29 @@ class PanelPluginsTest extends TestCase
         // app must be created again to load the new plugins
         $app = $this->app->clone();
 
-        // css
-        $plugins  = new PanelPlugins('css');
-        $expected = "a\nb";
+        $plugins = new PanelPlugins();
 
-        $this->assertEquals($expected, $plugins->read());
+        // css
+        $expected = "a\nb";
+        $this->assertEquals($expected, $plugins->read('css'));
 
         // js
-        $plugins  = new PanelPlugins('js');
         $expected = "a\nb";
-
-        $this->assertEquals($expected, $plugins->read());
-    }
-
-    public function testRoot()
-    {
-        // css
-        $plugins  = new PanelPlugins('css');
-        $expected = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/plugins/css/00000000-0/index.css';
-
-        $this->assertEquals($expected, $plugins->root());
-
-        // js
-        $plugins  = new PanelPlugins('js');
-        $expected = $this->app->root('media') . '/panel/' . $this->app->versionHash() . '/plugins/js/00000000-0/index.js';
-
-        $this->assertEquals($expected, $plugins->root());
+        $this->assertEquals($expected, $plugins->read('js'));
     }
 
     public function testUrl()
     {
         // css
-        $plugins  = new PanelPlugins('css');
-        $expected = $this->app->url('media') . '/panel/' . $this->app->versionHash() . '/plugins/css/00000000-0/index.css';
+        $plugins  = new PanelPlugins();
+        $expected = $this->app->url('media') . '/plugins/index.css?0';
 
-        $this->assertEquals($expected, $plugins->url());
+        $this->assertEquals($expected, $plugins->url('css'));
 
         // js
-        $plugins  = new PanelPlugins('js');
-        $expected = $this->app->url('media') . '/panel/' . $this->app->versionHash() . '/plugins/js/00000000-0/index.js';
+        $plugins  = new PanelPlugins();
+        $expected = $this->app->url('media') . '/plugins/index.js?0';
 
-        $this->assertEquals($expected, $plugins->url());
-    }
-
-    public function testWrite()
-    {
-        $plugins = new PanelPlugins('css');
-
-        $this->assertFileNotExists($plugins->root());
-        $this->assertTrue($plugins->write());
-        $this->assertFileExists($plugins->root());
+        $this->assertEquals($expected, $plugins->url('js'));
     }
 }
