@@ -7,7 +7,7 @@
         v-if="image && image.cards && image.cards.url"
         :src="image.cards.url"
         :srcset="image.cards.srcset"
-        :sizes="getSizes(image.column)"
+        :sizes="getSizes(column)"
         :ratio="image.ratio || '3/2'"
         :back="image.back || 'black'"
         :cover="image.cover"
@@ -56,6 +56,7 @@ import ratioPadding from "@/helpers/ratioPadding.js";
 export default {
   inheritAttrs: false,
   props: {
+    column: String,
     flag: Object,
     icon: {
       type: Object,
