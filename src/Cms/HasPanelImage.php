@@ -42,9 +42,7 @@ trait HasPanelImage
 
             // for cards
             $settings['cards'] = [
-                'url' => $image->thumb([
-                    'width'  => 352
-                ])->url(true),
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
                 'srcset' => $image->srcset([
                     352,
                     432,
