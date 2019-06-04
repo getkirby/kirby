@@ -50,7 +50,6 @@
 
 <script>
 import picker from "@/mixins/picker/field.js";
-import clone from "@/helpers/clone.js";
 
 export default {
   mixins: [picker],

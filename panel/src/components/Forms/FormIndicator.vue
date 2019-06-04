@@ -4,11 +4,11 @@
       <k-icon type="edit" class="k-form-indicator-icon" />
     </k-button>
 
-    <k-dropdown-content align="right" ref="list">
+    <k-dropdown-content ref="list" align="right">
       <p class="k-form-indicator-info">
         {{ $t("lock.unsaved") }}:
       </p>
-      <hr />
+      <hr>
       <k-dropdown-item
         v-for="change in changes"
         :key="change.id"
@@ -111,7 +111,7 @@ export default {
           id: key.split("kirby$form$")[1]
         };
       }).filter(data => {
-        return Object.keys(data.changes).length > 0
+        return Object.keys(data.changes || {}).length > 0
       });
     }
   }

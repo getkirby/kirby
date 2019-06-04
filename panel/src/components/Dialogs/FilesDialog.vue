@@ -58,7 +58,7 @@ export default {
     isSelected(file, selected) {
       return selected.indexOf(file.id) !== -1;
     },
-    onFetched(response) {
+    onFetched() {
       this.models = this.models.map(file => {
         file.thumb = this.options.image || {};
         file.thumb.url = false;
