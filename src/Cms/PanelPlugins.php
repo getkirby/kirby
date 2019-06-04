@@ -97,5 +97,4 @@ class PanelPlugins
     {
         return App::instance()->url('media') . '/plugins/index.' . $type . '?' . $this->modified();
     }
-
 }
