@@ -359,7 +359,18 @@ trait PageActions
 
         Dir::copy($this->root(), $tmp->root(), $children, $ignore);
 
-        return $parentModel->clone()->findPageOrDraft($slug);
+        $copy = $parentModel->clone()->findPageOrDraft($slug);
+
+        // remove all translated slugs
+        if ($this->kirby()->multilang() === true) {
+            foreach ($this->kirby()->languages() as $language) {
+                if ($language->isDefault() === false) {
+                    $copy = $copy->save(['slug' => null], $language->code());
+                }
+            }
+        }
+
+        return $copy;
     }
 
     /**
