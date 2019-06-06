@@ -1,5 +1,5 @@
 <template>
-  <label class="k-toggle-input" :data-disabled="disabled">
+  <label :data-disabled="disabled" class="k-toggle-input">
     <input
       ref="input"
       :checked="value"
