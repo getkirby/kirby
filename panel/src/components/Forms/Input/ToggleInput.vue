@@ -1,5 +1,5 @@
 <template>
-  <label class="k-toggle-input">
+  <label class="k-toggle-input" :data-disabled="disabled">
     <input
       ref="input"
       :checked="value"
@@ -115,6 +115,12 @@ $toggle-height: 16px;
     background-color: $toggle-active-color;
   }
 
+  &[disabled] {
+    border-color: $color-border;
+    box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height 0px 0px 2px $color-background;
+    background-color: $color-border;
+  }
+
   &:focus:checked {
     border: 2px solid $color-focus;
     background-color: $toggle-focus-color;
@@ -124,7 +130,6 @@ $toggle-height: 16px;
     opacity: 0;
   }
 }
-
 
 .k-toggle-input-label {
   cursor: pointer;
