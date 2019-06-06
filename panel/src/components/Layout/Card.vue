@@ -4,13 +4,8 @@
 
     <component :is="wrapper" :to="link" :target="target">
       <k-image
-        v-if="image && image.cards && image.cards.url"
-        :src="image.cards.url"
-        :srcset="image.cards.srcset"
-        :sizes="getSizes(column)"
-        :ratio="image.ratio || '3/2'"
-        :back="image.back || 'black'"
-        :cover="image.cover"
+        v-if="imageOptions"
+        v-bind="imageOptions"
         class="k-card-image"
       />
       <span v-else :style="'padding-bottom:' + ratioPadding" class="k-card-icon">
@@ -83,6 +78,35 @@ export default {
       return this.icon && this.icon.ratio
         ? ratioPadding(this.icon.ratio)
         : ratioPadding("3/2");
+    },
+    imageOptions() {
+      if (!this.image) {
+        return false;
+      }
+
+      let src    = null;
+      let srcset = null;
+
+      if (this.image.cards) {
+        src    = this.image.cards.url;
+        srcset = this.image.cards.srcset;
+      } else {
+        src    = this.image.url;
+        srcset = this.image.srcset;
+      }
+
+      if (!src) {
+        return false;
+      }
+
+      return {
+        src: src,
+        srcset: srcset,
+        back: this.image.back || "black",
+        cover: this.image.cover,
+        ratio: this.image.ratio || "3/2",
+        sizes: this.getSizes(this.column)
+      };
     }
   },
   methods: {

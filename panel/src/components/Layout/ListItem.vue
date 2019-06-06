@@ -8,13 +8,7 @@
       class="k-list-item-content"
     >
       <span class="k-list-item-image">
-        <k-image
-          v-if="image && image.list && image.list.url"
-          :src="image.list.url"
-          :srcset="image.list.srcset"
-          :back="image.back || 'pattern'"
-          :cover="image.cover"
-        />
+        <k-image v-if="imageOptions" v-bind="imageOptions" />
         <k-icon v-else v-bind="icon" />
       </span>
       <span class="k-list-item-text">
@@ -73,6 +67,35 @@ export default {
     link: String,
     flag: Object,
     options: [Array, Function]
+  },
+  computed: {
+    imageOptions() {
+      if (!this.image) {
+        return false;
+      }
+
+      let src    = null;
+      let srcset = null;
+
+      if (this.image.list) {
+        src    = this.image.list.url;
+        srcset = this.image.list.srcset;
+      } else {
+        src    = this.image.url;
+        srcset = this.image.srcset;
+      }
+
+      if (!src) {
+        return false;
+      }
+
+      return {
+        src: src,
+        srcset: srcset,
+        back: this.image.back || "black",
+        cover: this.image.cover
+      };
+    }
   }
 };
 </script>
