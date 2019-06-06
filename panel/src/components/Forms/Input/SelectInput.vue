@@ -17,7 +17,7 @@
         :disabled="required"
         value=""
       >
-        {{ placeholder }}
+        {{ empty }}
       </option>
       <option
         v-for="option in options"
@@ -68,6 +68,9 @@ export default {
     };
   },
   computed: {
+    empty() {
+      return this.placeholder || "—";
+    },
     hasEmpty() {
       return !(this.required && this.default);
     },
@@ -75,7 +78,7 @@ export default {
       const label = this.text(this.selected);
 
       if (this.selected === "" || this.selected === null || label === null) {
-        return this.placeholder;
+        return this.empty;
       }
 
       return label;
