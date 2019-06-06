@@ -253,6 +253,7 @@ class PresetsTest extends TestCase
                     'type'     => 'files',
                     'layout'   => 'cards',
                     'info'     => '{{ file.dimensions }}',
+                    'template' => null,
                 ]
             ]
         ];
