@@ -9,7 +9,7 @@ export default {
   },
   errorCaptured(error) {
     if (config.debug) {
-      window.console.error(error);
+      window.console.warn(error);
     }
 
     this.error = error;
