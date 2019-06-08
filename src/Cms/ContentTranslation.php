@@ -182,7 +182,7 @@ class ContentTranslation
     }
 
     /**
-     * @param Model $parent
+     * @param Kirby\Cms\Model $parent
      * @return self
      */
     protected function setParent(Model $parent)

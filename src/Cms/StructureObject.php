@@ -120,7 +120,7 @@ class StructureObject extends Model
     /**
      * Returns the parent Model object
      *
-     * @return Page|Site|File|User
+     * @return Kirby\Cms\Model
      */
     public function parent()
     {
@@ -182,7 +182,7 @@ class StructureObject extends Model
     /**
      * Returns the parent Structure collection as siblings
      *
-     * @return Structure
+     * @return Kirby\Cms\Structure
      */
     protected function siblingsCollection()
     {

@@ -29,7 +29,7 @@ class Panel
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
-     * @param App $kirby
+     * @param Kirby\Cms\App $kirby
      * @return bool
      */
     public static function link(App $kirby): bool

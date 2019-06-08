@@ -25,7 +25,7 @@ class Auth
     protected $user;
 
     /**
-     * @param App $kirby
+     * @param Kirby\Cms\App $kirby
      */
     public function __construct(App $kirby)
     {
@@ -190,7 +190,7 @@ class Auth
      * @param string $email
      * @param string $password
      * @param boolean $long
-     * @return User|false
+     * @return Kirby\Cms\User|false
      */
     public function login(string $email, string $password, bool $long = false)
     {
@@ -316,8 +316,8 @@ class Auth
     /**
      * Validates the currently logged in user
      *
-     * @param array|Kirby\Session\Session|null $session
-     * @return User|null
+     * @param Kirby\Session\Sessionarray||null $session
+     * @return Kirby\Cms\User|null
      */
     public function user($session = null)
     {

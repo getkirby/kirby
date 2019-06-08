@@ -17,7 +17,7 @@ use Kirby\Toolkit\Facade;
 class S extends Facade
 {
     /**
-     * @return Session
+     * @return Kirby\Session\Session
      */
     public static function instance()
     {
