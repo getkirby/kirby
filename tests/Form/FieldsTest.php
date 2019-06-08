@@ -2,8 +2,6 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\App;
-use Kirby\Cms\Page;
 use PHPUnit\Framework\TestCase;
 
 class FieldsTest extends TestCase

@@ -3,7 +3,6 @@
 namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
-use Kirby\Data\Yaml;
 use Kirby\Form\Field;
 
 class StructureFieldTest extends TestCase

@@ -2,7 +2,6 @@
 
 namespace Kirby\Image\Darkroom;
 
-use Exception;
 use Kirby\Image\Darkroom;
 use Kirby\Toolkit\F;
 

@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
 class PageTranslationsTest extends TestCase

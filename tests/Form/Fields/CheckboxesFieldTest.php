@@ -2,7 +2,6 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Cms\Page;
 use Kirby\Form\Field;
 
 class CheckboxesFieldTest extends TestCase

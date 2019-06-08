@@ -3,8 +3,6 @@
 namespace Kirby\Cache;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
-use Kirby\Toolkit\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Cache\MemoryCache

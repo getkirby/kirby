@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Closure;
 use Kirby\Image\Image;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Dir;

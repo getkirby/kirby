@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Http\Route;
-use Kirby\Toolkit\F;
 
 /**
  * @coversDefaultClass \Kirby\Cms\App

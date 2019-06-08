@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-
 class ContentTest extends TestCase
 {
     protected function mockData(): array

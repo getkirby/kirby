@@ -7,7 +7,6 @@ use Kirby\Http\Response;
 use Kirby\Toolkit\File;
 use Kirby\Toolkit\Html;
 use Kirby\Toolkit\Mime;
-use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 /**

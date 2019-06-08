@@ -5,12 +5,10 @@ use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
-use Kirby\Exception\Exception;
 use Kirby\Http\Server;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\View;
 
 /**
  * Helper to create an asset object

@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
-use Kirby\Data\Yaml;
 use PHPUnit\Framework\TestCase;
 
 class FormTest extends TestCase
