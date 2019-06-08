@@ -16,7 +16,7 @@ class PageActionsTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-               'index' => $this->fixtures = __DIR__ . '/fixtures/PageActionsTest'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/PageActionsTest'
             ],
         ]);
 

@@ -81,7 +81,7 @@ class App
     public function __construct(array $props = [])
     {
         // the kirby folder directory
-        static::$root = dirname(dirname(__DIR__));
+        static::$root = dirname(__DIR__, 2);
 
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
