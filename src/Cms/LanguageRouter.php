@@ -39,7 +39,7 @@ class LanguageRouter
      * Creates a new language router instance
      * for the given language
      *
-     * @param Language $language
+     * @param Kirby\Cms\Language $language
      */
     public function __construct(Language $language)
     {

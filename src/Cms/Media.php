@@ -25,7 +25,7 @@ class Media
      * given filename and then calls the thumb
      * component to create a thumbnail accordingly
      *
-     * @param Model $model
+     * @param Kirby\Cms\Model $model
      * @param string $hash
      * @param string $filename
      * @return Kirby\Cms\Response|false

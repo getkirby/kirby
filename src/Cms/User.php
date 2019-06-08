@@ -326,7 +326,7 @@ class User extends ModelWithContent
     /**
      * Compares the current object with the given user object
      *
-     * @param User|null $user
+     * @param Kirby\Cms\User|null $user
      * @return bool
      */
     public function is(User $user = null): bool
@@ -404,7 +404,7 @@ class User extends ModelWithContent
      * Logs the user in
      *
      * @param string $password
-     * @param Session|array $session Session options or session object to set the user in
+     * @param Kirby\Session\Session|array $session Session options or session object to set the user in
      * @return bool
      *
      * @throws PermissionException If the password is not valid
@@ -420,7 +420,7 @@ class User extends ModelWithContent
     /**
      * Logs the user in without checking the password
      *
-     * @param Session|array $session Session options or session object to set the user in
+     * @param SKirby\Session\Session|array $session Session options or session object to set the user in
      * @return void
      */
     public function loginPasswordless($session = null): void
@@ -434,7 +434,7 @@ class User extends ModelWithContent
     /**
      * Logs the user out
      *
-     * @param Session|array $session Session options or session object to unset the user in
+     * @param Kirby\Session\Session|array $session Session options or session object to unset the user in
      * @return void
      */
     public function logout($session = null): void
@@ -480,7 +480,7 @@ class User extends ModelWithContent
      * @internal
      * @param string $name
      * @param array $props
-     * @return User
+     * @return Kirby\Cms\User
      */
     public static function model(string $name, array $props = [])
     {
@@ -755,7 +755,7 @@ class User extends ModelWithContent
     /**
      * Converts session options into a session object
      *
-     * @param Session|array $session Session options or session object to unset the user in
+     * @param Kirby\Session\Session|array $session Session options or session object to unset the user in
      * @return Kirby\Session\Session
      */
     protected function sessionFromOptions($session)

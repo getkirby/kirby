@@ -129,7 +129,7 @@ class Image extends File
      * Sends an appropriate header for the asset
      *
      * @param  boolean          $send
-     * @return Response|string
+     * @return Kirby\Http\Response|string
      */
     public function header(bool $send = true)
     {

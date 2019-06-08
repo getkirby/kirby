@@ -16,7 +16,7 @@ use Kirby\Toolkit\View;
  * Helper to create an asset object
  *
  * @param string $path
- * @return Asset
+ * @return Kirby\Cms\Asset
  */
 function asset(string $path)
 {
@@ -44,7 +44,7 @@ function attr(array $attr = null, $before = null, $after = null)
  * Returns the result of a collection by name
  *
  * @param string $name
- * @return Collection|null
+ * @return Kirby\Cms\Collection|null
  */
 function collection(string $name)
 {
@@ -246,7 +246,7 @@ function html(string $string = null, bool $keepTags = false)
  * <?= image('some/page/myimage.jpg') ?>
  *
  * @param string $path
- * @return File|null
+ * @return Kirby\Cms\File|null
  */
 function image(string $path = null)
 {
@@ -527,7 +527,7 @@ function option(string $key, $default = null)
  * id or the current page when no id is specified
  *
  * @param string|array ...$id
- * @return Page|null
+ * @return Kirby\Cms\Page|null
  */
 function page(...$id)
 {
@@ -542,7 +542,7 @@ function page(...$id)
  * Helper to build page collections
  *
  * @param string|array ...$id
- * @return Pages
+ * @return Kirby\Cms\Pages
  */
 function pages(...$id)
 {
@@ -616,7 +616,7 @@ function timestamp(string $date = null, int $step = null): ?string
 /**
  * Returns the currrent site object
  *
- * @return Site
+ * @return Kirby\Cms\Site
  */
 function site()
 {

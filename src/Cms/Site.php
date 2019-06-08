@@ -200,7 +200,7 @@ class Site extends ModelWithContent
     /**
      * Builds a breadcrumb collection
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function breadcrumb()
     {

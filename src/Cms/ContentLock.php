@@ -33,7 +33,7 @@ class ContentLock
     protected $model;
 
     /**
-     * @param ModelWithContent $model
+     * @param Kirby\Cms\ModelWithContent $model
      */
     public function __construct(ModelWithContent $model)
     {

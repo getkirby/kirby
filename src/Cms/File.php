@@ -382,7 +382,7 @@ class File extends ModelWithContent
      * @internal
      * @param string $name
      * @param array $props
-     * @return User
+     * @return Kirby\Cms\File
      */
     public static function model(string $name, array $props = [])
     {

@@ -21,7 +21,7 @@ class AutoSession
     /**
      * Creates a new AutoSession instance
      *
-     * @param SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
+     * @param Kirby\Session\SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
      * @param array               $options Optional additional options:
      *                                     - `durationNormal`: Duration of normal sessions in seconds
      *                                                         Defaults to 2 hours

@@ -121,10 +121,10 @@ trait FileActions
     /**
      * Copy the file to the given page
      *
-     * @param Page $page
-     * @return File
+     * @param Kirby\Cms\Page $page
+     * @return Kirby\Cms\File
      */
-    public function copy(Page $page): File
+    public function copy(Page $page)
     {
         F::copy($this->root(), $page->root() . '/' . $this->filename());
 

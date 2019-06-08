@@ -68,7 +68,7 @@ class Visitor
      * accepted language otherwise
      *
      * @param  string|null $acceptedLanguage
-     * @return Obj|Visitor|null
+     * @return Kirby\Toolkit\Obj|Kirby\Http\Visitor|null
      */
     public function acceptedLanguage(string $acceptedLanguage = null)
     {
@@ -135,7 +135,7 @@ class Visitor
      * accepted mime type otherwise
      *
      * @param  string|null $acceptedMimeType
-     * @return Obj|Visitor
+     * @return Kirby\Toolkit\Obj|Kirby\Http\Visitor
      */
     public function acceptedMimeType(string $acceptedMimeType = null)
     {
