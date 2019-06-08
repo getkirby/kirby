@@ -16,7 +16,7 @@ class PageSortTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-               'index' => $this->fixtures = __DIR__ . '/fixtures/PageSortTest'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/PageSortTest'
             ]
         ]);
 

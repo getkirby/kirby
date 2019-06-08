@@ -13,7 +13,7 @@ class ContentLockTest extends TestCase
     {
         return new App([
             'roots' => [
-               'index' => $this->fixtures = __DIR__ . '/fixtures/ContentLockTest'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/ContentLockTest'
             ],
             'site' => [
                 'children' => [
@@ -85,7 +85,7 @@ class ContentLockTest extends TestCase
 
         $this->assertEquals([
             'locked' => false
-         ], $page->lock()->get());
+        ], $page->lock()->get());
     }
 
     public function testGetWithSameUser()
@@ -98,7 +98,7 @@ class ContentLockTest extends TestCase
 
         $this->assertEquals([
             'locked' => false
-         ], $page->lock()->get());
+        ], $page->lock()->get());
     }
 
     public function testGet()
