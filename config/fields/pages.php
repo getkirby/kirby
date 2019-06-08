@@ -113,12 +113,16 @@ return [
                     } else {
                         if (!$parent = $this->site()->find($this->requestQuery('parent'))) {
                             $parent = $this->site();
+                            $modelParent = null;
+                        } else {
+                            $modelParent = $parent->parent() ? $parent->parent()->id() : null;
                         }
 
                         $pages = $parent->children();
                         $model = [
-                            'id'    => $parent->id() == '' ? null : $parent->id(),
-                            'title' => $parent->title()->value()
+                            'id'     => $parent->id() == '' ? null : $parent->id(),
+                            'title'  => $parent->title()->value(),
+                            'parent' => $modelParent
                         ];
                     }
 

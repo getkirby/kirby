@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     back() {
-      this.options.parent = this.model.parent ? this.model.parent.id : null;
+      this.options.parent = this.model.parent ? this.model.parent : null;
       this.fetch();
     },
     go(page) {
