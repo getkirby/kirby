@@ -77,7 +77,7 @@ export default {
         }
       });
 
-      // add files that are not yet in the selected list
+      // add items that are not yet in the selected list
       items.forEach(item => {
         if (this.selected.filter(selected => item.id === selected.id).length === 0) {
           this.selected.push(item);

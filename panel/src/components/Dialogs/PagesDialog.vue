@@ -90,17 +90,12 @@ export default {
   },
   methods: {
     back() {
-      this.options.parent = this.model.parent ? this.model.parent.id : null;
+      this.options.parent = this.model.parent;
       this.fetch();
     },
     go(page) {
       this.options.parent = page.id;
       this.fetch();
-    },
-    isFiltered(page) {
-      return page.id.includes(this.search) ||
-             page.text.includes(this.search) ||
-             page.info.includes(this.search);
     },
     onFetched(response) {
       this.model = response.model;

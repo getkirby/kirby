@@ -7,7 +7,8 @@ export default {
         endpoint: null,
         max: null,
         multiple: true,
-        selected: []
+        selected: [],
+        parent: null
       },
       search: null
     }
@@ -25,7 +26,6 @@ export default {
   },
   methods: {
     fetch() {
-      this.models = [];
 
       return this.$api
         .get(this.options.endpoint, this.fetchData || {})

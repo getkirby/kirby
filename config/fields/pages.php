@@ -117,8 +117,9 @@ return [
 
                         $pages = $parent->children();
                         $model = [
-                            'id'    => $parent->id() == '' ? null : $parent->id(),
-                            'title' => $parent->title()->value()
+                            'id'     => $parent->id() == '' ? null : $parent->id(),
+                            'title'  => $parent->title()->value(),
+                            'parent' => $parent->parent() ? $parent->parent()->id() : null,
                         ];
                     }
 
