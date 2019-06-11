@@ -39,6 +39,51 @@ class UriTest extends TestCase
         $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
     }
 
+    public function testCurrentInCli()
+    {
+        $uri = Uri::current();
+        $this->assertEquals('/', $uri->toString());
+    }
+
+    public function testCurrentWithRequestUri()
+    {
+        $_SERVER['REQUEST_URI'] = '/a/b';
+
+        $uri = Uri::current();
+        $this->assertEquals('/a/b', $uri->toString());
+        $this->assertEquals('a/b', $uri->path());
+    }
+
+    public function testCurrentWithHostInRequestUri()
+    {
+        $_SERVER['HTTP_HOST'] = 'ktest.loc';
+        $_SERVER['REQUEST_URI'] = '/ktest.loc/';
+
+        $uri = Uri::current();
+        $this->assertEquals('/', $uri->toString());
+        $this->assertEquals('', $uri->path());
+    }
+
+    public function testCurrentWithHostAndPathInRequestUri()
+    {
+        $_SERVER['HTTP_HOST'] = 'ktest.loc';
+        $_SERVER['REQUEST_URI'] = '/ktest.loc/a/b';
+
+        $uri = Uri::current();
+        $this->assertEquals('/a/b', $uri->toString());
+        $this->assertEquals('a/b', $uri->path());
+    }
+
+    public function testCurrentWithHostAndSchemeInRequestUri()
+    {
+        $_SERVER['HTTP_HOST'] = 'ktest.loc';
+        $_SERVER['REQUEST_URI'] = '/http://ktest.loc/';
+
+        $uri = Uri::current();
+        $this->assertEquals('/', $uri->toString());
+        $this->assertEquals('', $uri->path());
+    }
+
     public function testValidScheme()
     {
         $url = new Uri;
