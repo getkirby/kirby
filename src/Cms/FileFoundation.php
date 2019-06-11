@@ -71,7 +71,7 @@ trait FileFoundation
 
     /**
      * Returns the Image object
-     *^
+     *
      * @return Kirby\Image\Image
      */
     public function asset()
