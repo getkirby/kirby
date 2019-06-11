@@ -8,7 +8,6 @@
       :required="required"
       :value="year"
       placeholder="––––"
-      empty="––––"
       @input="setYear"
       @invalid="onInvalid"
     />
@@ -20,7 +19,6 @@
       :disabled="disabled"
       :required="required"
       :value="month"
-      empty="––"
       placeholder="––"
       @input="setMonth"
       @invalid="onInvalid"
@@ -36,7 +34,6 @@
       :required="required"
       :value="day"
       placeholder="––"
-      empty="––"
       @input="setDay"
       @invalid="onInvalid"
     />
