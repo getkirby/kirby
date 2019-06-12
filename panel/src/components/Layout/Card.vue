@@ -205,7 +205,6 @@ export default {
 .k-card-icon .k-icon svg {
   width: 3rem;
   height: 3rem;
-  opacity: .5;
 }
 
 .k-card-content {
