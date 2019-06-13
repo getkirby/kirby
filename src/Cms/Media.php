@@ -21,53 +21,6 @@ class Media
 {
 
     /**
-     * Tries to find a job file for the
-     * given filename and then calls the thumb
-     * component to create a thumbnail accordingly
-     *
-     * @param Kirby\Cms\Model $model
-     * @param string $hash
-     * @param string $filename
-     * @return Kirby\Cms\Response|false
-     */
-    public static function thumb($model, string $hash, string $filename)
-    {
-        $kirby = App::instance();
-
-        if (is_string($model) === true) {
-            // assets
-            $root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
-        } else {
-            // model files
-            $root = $model->mediaRoot() . '/' . $hash;
-        }
-
-        try {
-            $thumb   = $root . '/' . $filename;
-            $job     = $root . '/.jobs/' . $filename . '.json';
-            $options = Data::read($job);
-
-            if (empty($options) === true) {
-                return false;
-            }
-
-            if (is_string($model) === true) {
-                $source = $kirby->root('index') . '/' . $model . '/' . $options['filename'];
-            } else {
-                $source = $model->file($options['filename'])->root();
-            }
-
-            $kirby->thumb($source, $thumb, $options);
-
-            F::remove($job);
-
-            return Response::file($thumb);
-        } catch (Throwable $e) {
-            return false;
-        }
-    }
-
-    /**
      * Tries to find a file by model and filename
      * and to copy it to the media folder.
      *
@@ -120,6 +73,56 @@ class Media
 
         // copy/overwrite the file to the dest folder
         return F::copy($src, $dest, true);
+    }
+
+    /**
+     * Tries to find a job file for the
+     * given filename and then calls the thumb
+     * component to create a thumbnail accordingly
+     *
+     * @param Kirby\Cms\Model $model
+     * @param string $hash
+     * @param string $filename
+     * @return Kirby\Cms\Response|false
+     */
+    public static function thumb($model, string $hash, string $filename)
+    {
+        $kirby = App::instance();
+
+        if (is_string($model) === true) {
+            // assets
+            $root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
+        } else {
+            // model files
+            $root = $model->mediaRoot() . '/' . $hash;
+        }
+
+        try {
+            $thumb   = $root . '/' . $filename;
+            $job     = $root . '/.jobs/' . $filename . '.json';
+            $options = Data::read($job);
+
+            if (empty($options) === true) {
+                return false;
+            }
+
+            if (is_string($model) === true) {
+                $source = $kirby->root('index') . '/' . $model . '/' . $options['filename'];
+            } else {
+                $source = $model->file($options['filename'])->root();
+            }
+
+            try {
+                $kirby->thumb($source, $thumb, $options);
+                F::remove($job);
+                return Response::file($thumb);
+            } catch (Throwable $e) {
+                F::remove($thumb);
+                return Response::file($source);
+            }
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     /**
