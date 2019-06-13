@@ -19,7 +19,6 @@ use Kirby\Toolkit\Str;
  */
 class LanguageRules
 {
-
     public static function create(Language $language): bool
     {
         if (Str::length($language->code()) < 2) {
@@ -53,5 +52,4 @@ class LanguageRules
 
         return true;
     }
-
 }
