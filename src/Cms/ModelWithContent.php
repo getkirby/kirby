@@ -317,25 +317,14 @@ abstract class ModelWithContent extends Model
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
                 'srcset' => $image->srcset([
                     352,
-                    432,
-                    704,
                     864,
-                    944,
-                    1056,
                     1408,
-                    1888,
-                    2112,
-                    2816
                 ])
             ];
 
             // for lists
             $settings['list'] = [
-                'url' => $image->thumb([
-                    'width' => 38,
-                    'height' => 38,
-                    'crop' => 'center'
-                ])->url(true),
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
                 'srcset' => $image->srcset([
                     '1x' => [
                         'width' => 38,
@@ -347,11 +336,6 @@ abstract class ModelWithContent extends Model
                         'height' => 76,
                         'crop' => 'center'
                     ],
-                    '3x' => [
-                        'width' => 152,
-                        'height' => 152,
-                        'crop' => 'center'
-                    ]
                 ])
             ];
 
