@@ -70,17 +70,11 @@ return [
     ],
     'methods' => [
         'pageResponse' => function ($page) {
-            $image = $page->panelImage($this->image);
-
-            return [
-                'text'        => $page->toString($this->text ?? '{{ page.title }}'),
-                'link'        => $page->panelUrl(true),
-                'id'          => $page->id(),
-                'info'        => $page->toString($this->info ?? false),
-                'image'       => $image,
-                'icon'        => $page->panelIcon($image),
-                'hasChildren' => $page->hasChildren(),
-            ];
+            return $page->panelPickerData([
+                'image' => $this->image,
+                'info'  => $this->info,
+                'text'  => $this->text,
+            ]);
         },
         'toPages' => function ($value = null) {
             $pages = [];
