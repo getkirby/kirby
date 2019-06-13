@@ -29,11 +29,11 @@
           :info="page.info"
           :image="page.image"
           :icon="page.icon"
-          @click="toggle(index)"
+          @click="toggle(page)"
         >
           <template slot="options">
             <k-button
-              v-if="page.selected"
+              v-if="isSelected(page)"
               slot="options"
               :autofocus="true"
               :icon="checkedIcon"
@@ -94,7 +94,7 @@ export default {
       this.fetch();
     },
     go(page) {
-      this.options.parent = page.id;
+      this.options.parent = page.link;
       this.fetch();
     },
     onFetched(response) {
