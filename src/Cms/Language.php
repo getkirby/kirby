@@ -186,9 +186,8 @@ class Language extends Model
 
         $language = new static($props);
 
-        if ($language->exists() === true) {
-            throw new DuplicateException('The language already exists');
-        }
+        // validate the new language
+        LanguageRules::create($language);
 
         $language->save();
 
@@ -342,6 +341,16 @@ class Language extends Model
     }
 
     /**
+     * Returns the permissions object for this language
+     *
+     * @return Kirby\Cms\LanguagePermissions
+     */
+    public function permissions()
+    {
+        return new LanguagePermissions($this);
+    }
+
+    /**
      * Returns the absolute path to the language file
      *
      * @return string
@@ -427,7 +436,7 @@ class Language extends Model
      */
     protected function setCode(string $code)
     {
-        $this->code = $code;
+        $this->code = trim($code);
         return $this;
     }
 
@@ -476,7 +485,7 @@ class Language extends Model
      */
     protected function setName(string $name = null)
     {
-        $this->name = $name ?? $this->code;
+        $this->name = trim($name ?? $this->code);
         return $this;
     }
 
