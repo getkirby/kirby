@@ -4,7 +4,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [
-    'mixins' => ['min', 'picker'],
+    'mixins' => ['min', 'pagepicker', 'picker'],
     'props' => [
         /**
          * Unset inherited props
@@ -99,36 +99,14 @@ return [
                 'pattern' => '/',
                 'action' => function () {
                     $field = $this->field();
-                    $query = $field->query();
 
-                    if ($query) {
-                        $pages = $field->model()->query($query, 'Kirby\Cms\Pages');
-                        $model = null;
-                    } else {
-                        if (!$parent = $this->site()->find($this->requestQuery('parent'))) {
-                            $parent = $this->site();
-                        }
-
-                        $pages = $parent->children();
-                        $model = [
-                            'id'     => $parent->id() == '' ? null : $parent->id(),
-                            'title'  => $parent->title()->value(),
-                            'parent' => $parent->parent() ? $parent->parent()->id() : null,
-                        ];
-                    }
-
-                    $children = [];
-
-                    foreach ($pages as $index => $page) {
-                        if ($page->isReadable() === true) {
-                            $children[] = $field->pageResponse($page);
-                        }
-                    }
-
-                    return [
-                        'model' => $model,
-                        'pages' => $children
-                    ];
+                    return $field->pagepicker([
+                        'image'  => $field->image(),
+                        'info'   => $field->info(),
+                        'parent' => $this->requestQuery('parent'),
+                        'query'  => $field->query(),
+                        'text'   => $field->text()
+                    ]);
                 }
             ]
         ];

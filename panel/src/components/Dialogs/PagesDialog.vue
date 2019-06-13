@@ -94,7 +94,7 @@ export default {
       this.fetch();
     },
     go(page) {
-      this.options.parent = page.link;
+      this.options.parent = page.id;
       this.fetch();
     },
     onFetched(response) {

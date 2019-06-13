@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'mixins' => ['min', 'picker'],
+    'mixins' => ['min', 'picker', 'userpicker'],
     'props' => [
         /**
          * Unset inherited props
@@ -58,6 +58,23 @@ return [
             return $users;
         }
     ],
+    'api' => function () {
+        return [
+            [
+                'pattern' => '/',
+                'action' => function () {
+                    $field = $this->field();
+
+                    return $field->userpicker([
+                        'query' => $field->query(),
+                        'image' => $field->image(),
+                        'info'  => $field->info(),
+                        'text'  => $field->text()
+                    ]);
+                }
+            ]
+        ];
+    },
     'save' => function ($value = null) {
         return A::pluck($value, 'email');
     },
