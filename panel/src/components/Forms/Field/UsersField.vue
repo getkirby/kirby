@@ -1,13 +1,17 @@
 <template>
   <k-field v-bind="$props" class="k-users-field">
-    <k-button
-      v-if="more && !disabled"
-      slot="options"
-      icon="add"
-      @click="open"
-    >
-      {{ $t('select') }}
-    </k-button>
+
+    <k-button-group slot="options" class="k-field-options">
+      <k-button
+        v-if="more && !disabled"
+        icon="add"
+        class="k-field-options-button"
+        @click="open"
+      >
+        {{ $t('select') }}
+      </k-button>
+    </k-button-group>
+
     <template v-if="selected.length">
       <k-draggable
         :element="elements.list"
@@ -22,20 +26,8 @@
           :sortable="!disabled && selected.length > 1"
           :text="user.username"
           :link="$api.users.link(user.id)"
-          :image="
-            user.avatar ?
-              {
-                url: user.avatar.url,
-                back: 'pattern',
-                cover: true
-              }
-              :
-              null
-          "
-          :icon="{
-            type: 'user',
-            back: 'black'
-          }"
+          :image="user.image"
+          :icon="user.icon"
         >
           <k-button
             v-if="!disabled"
@@ -72,7 +64,7 @@ export default {
         endpoint: "users",
         max: this.max,
         multiple: this.multiple,
-        selected: this.selected.map(user => user.email)
+        selected: this.selected.map(user => user.id)
       });
     }
   }
