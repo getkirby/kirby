@@ -545,6 +545,36 @@ class User extends ModelWithContent
     }
 
     /**
+     * Panel icon definition
+     *
+     * @internal
+     * @param array $params
+     * @return array
+     */
+    public function panelIcon(array $params = null): array
+    {
+        $params['type'] = 'user';
+
+        return parent::panelIcon($params);
+    }
+
+    /**
+     * Returns the image file object based on provided query
+     *
+     * @internal
+     * @param string|null $query
+     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
+     */
+    protected function panelImageSource(string $query = null)
+    {
+        if ($query === null) {
+            return $this->avatar();
+        }
+
+        return parent::panelImageSource($query);
+    }
+
+    /**
      * Returns the full path without leading slash
      *
      * @internal
@@ -553,6 +583,29 @@ class User extends ModelWithContent
     public function panelPath(): string
     {
         return 'users/' . $this->id();
+    }
+
+    /**
+     * Returns prepared data for the panel user picker
+     *
+     * @param array|null $params
+     * @return array
+     */
+    public function panelPickerData(array $params = null): array
+    {
+        $image = $this->panelImage($params['image'] ?? []);
+        $icon  = $this->panelIcon($image);
+
+        return [
+            'icon'     => $icon,
+            'id'       => $this->id(),
+            'image'    => $image,
+            'email'    => $this->email(),
+            'info'     => $this->toString($params['info'] ?? false),
+            'link'     => $this->panelUrl(true),
+            'text'     => $this->toString($params['text'] ?? '{{ user.username }}'),
+            'username' => $this->username(),
+        ];
     }
 
     /**
@@ -592,33 +645,6 @@ class User extends ModelWithContent
     public function permissions()
     {
         return new UserPermissions($this);
-    }
-
-    /**
-     * Creates a string query, starting from the model
-     *
-     * @internal
-     * @param string|null $query
-     * @param string|null $expect
-     * @return mixed
-     */
-    public function query(string $query = null, string $expect = null)
-    {
-        if ($query === null) {
-            return null;
-        }
-
-        $result = Str::query($query, [
-            'kirby' => $kirby = $this->kirby(),
-            'site'  => $kirby->site(),
-            'user'  => $this
-        ]);
-
-        if ($expect !== null && is_a($result, $expect) !== true) {
-            return null;
-        }
-
-        return $result;
     }
 
     /**
@@ -808,14 +834,10 @@ class User extends ModelWithContent
     public function toString(string $template = null): string
     {
         if ($template === null) {
-            return $this->email();
+            $template = $this->email();
         }
 
-        return Str::template($template, [
-            'user'  => $this,
-            'site'  => $this->site(),
-            'kirby' => $this->kirby()
-        ]);
+        return parent::toString($template);
     }
 
     /**

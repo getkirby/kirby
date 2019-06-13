@@ -729,8 +729,9 @@ class PageTest extends TestCase
         $icon     = $page->panelIcon();
         $expected = [
             'type'  => 'page',
-            'back'  => 'black',
-            'ratio' => null
+            'back'  => 'pattern',
+            'ratio' => null,
+            'color' => '#c5c9c6'
         ];
 
         $this->assertEquals($expected, $icon);
@@ -749,8 +750,9 @@ class PageTest extends TestCase
         $icon     = $page->panelIcon();
         $expected = [
             'type'  => 'test',
-            'back'  => 'black',
-            'ratio' => null
+            'back'  => 'pattern',
+            'ratio' => null,
+            'color' => '#c5c9c6'
         ];
 
         $this->assertEquals($expected, $icon);
@@ -765,8 +767,9 @@ class PageTest extends TestCase
         $icon     = $page->panelIcon(['ratio' => '3/2']);
         $expected = [
             'type'  => 'page',
-            'back'  => 'black',
-            'ratio' => '3/2'
+            'back'  => 'pattern',
+            'ratio' => '3/2',
+            'color' => '#c5c9c6'
         ];
 
         $this->assertEquals($expected, $icon);
@@ -786,7 +789,7 @@ class PageTest extends TestCase
 
         $this->assertTrue($icon['emoji']);
         $this->assertEquals($emoji, $icon['type']);
-        $this->assertEquals('black', $icon['back']);
+        $this->assertEquals('pattern', $icon['back']);
         $this->assertEquals(null, $icon['ratio']);
     }
 

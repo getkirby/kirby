@@ -35,7 +35,6 @@ class File extends ModelWithContent
     use FileFoundation;
     use FileModifications;
     use HasMethods;
-    use HasPanelImage;
     use HasSiblings;
 
     /**
@@ -492,12 +491,26 @@ class File extends ModelWithContent
 
         $definition = array_merge($types[$this->type()] ?? [], $extensions[$this->extension()] ?? []);
 
-        return [
-            'type'  => $definition['type'] ?? 'file',
-            'color' => $definition['color'] ?? $colorWhite,
-            'back'  => $params['back'] ?? 'pattern',
-            'ratio' => $params['ratio'] ?? null,
-        ];
+        $params['type']  = $definition['type']  ?? 'file';
+        $params['color'] = $definition['color'] ?? $colorWhite;
+
+        return parent::panelIcon($params);
+    }
+
+    /**
+     * Returns the image file object based on provided query
+     *
+     * @internal
+     * @param string|null $query
+     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
+     */
+    protected function panelImageSource(string $query = null)
+    {
+        if ($query === null && $this->isViewable()) {
+            return $this;
+        }
+
+        return parent::panelImageSource($query);
     }
 
     /**
@@ -522,6 +535,7 @@ class File extends ModelWithContent
     {
         $image = $this->panelImage($params['image'] ?? []);
         $icon  = $this->panelIcon($image);
+        $uuid  = $this->id();
 
         if (empty($params['model']) === false) {
             $uuid = $this->parent() === $params['model'] ? $this->filename() : $this->id();
@@ -602,33 +616,6 @@ class File extends ModelWithContent
     public function permissions()
     {
         return new FilePermissions($this);
-    }
-
-    /**
-     * Creates a string query, starting from the model
-     *
-     * @internal
-     * @param string|null $query
-     * @param string|null $expect
-     * @return mixed
-     */
-    public function query(string $query = null, string $expect = null)
-    {
-        if ($query === null) {
-            return null;
-        }
-
-        $result = Str::query($query, [
-            'kirby' => $this->kirby(),
-            'site'  => $this->site(),
-            'file'  => $this
-        ]);
-
-        if ($expect !== null && is_a($result, $expect) !== true) {
-            return null;
-        }
-
-        return $result;
     }
 
     /**
@@ -779,25 +766,6 @@ class File extends ModelWithContent
     public function toArray(): array
     {
         return array_merge($this->asset()->toArray(), parent::toArray());
-    }
-
-    /**
-     * String template builder
-     *
-     * @param string|null $template
-     * @return string
-     */
-    public function toString(string $template = null): string
-    {
-        if ($template === null) {
-            return $this->id();
-        }
-
-        return Str::template($template, [
-            'file'  => $this,
-            'site'  => $this->site(),
-            'kirby' => $this->kirby()
-        ]);
     }
 
     /**
