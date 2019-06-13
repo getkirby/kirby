@@ -66,7 +66,17 @@ export default {
       path +=
         "?" +
         Object.keys(query)
-          .map(key => key + "=" + query[key])
+          .map(key => {
+            const value = query[key];
+
+            if (value !== undefined && value !== null) {
+              return key + "=" + value;
+            } else {
+              return null;
+            }
+
+          })
+          .filter(value => value !== null)
           .join("&");
     }
 
