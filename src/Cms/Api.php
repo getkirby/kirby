@@ -118,7 +118,7 @@ class Api extends BaseApi
      */
     public function parent(string $path)
     {
-        $modelType  = $path === 'site' ? 'site' : dirname($path);
+        $modelType  = $path === 'site' ? 'site' : trim(dirname($path), '/');
         $modelTypes = ['site' => 'site', 'users' => 'user', 'pages' => 'page'];
         $modelName  = $modelTypes[$modelType] ?? null;
 
@@ -136,7 +136,7 @@ class Api extends BaseApi
             $modelId = basename($path);
 
             if ($modelName === 'page') {
-                $modelId = str_replace('+', '/', $modelId);
+                $modelId = str_replace(['+', ' '], '/', $modelId);
             }
 
             if ($modelName === 'file') {
