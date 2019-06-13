@@ -122,7 +122,7 @@ return [
         return [
             [
                 'pattern' => '/',
-                'action' => function () {
+                'action'  => function () {
                     $field = $this->field();
 
                     return $field->filepicker([
@@ -135,7 +135,8 @@ return [
             ],
             [
                 'pattern' => 'upload',
-                'action' => function () {
+                'method'  => 'POST',
+                'action'  => function () {
                     $field   = $this->field();
                     $uploads = $field->uploads();
 
