@@ -28,6 +28,10 @@
   "duplicate": "Duplicate",
   "edit": "\ud3b8\uc9d1",
 
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
+
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
 
@@ -66,6 +70,10 @@
 
   "error.form.incomplete": "항목에 오류가 있습니다.",
   "error.form.notSaved": "항목을 저장할 수 없습니다.",
+
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
 
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "올바른 이메일 주소를 입력하세요.",
@@ -277,6 +285,7 @@
 
   "loading": "로딩 중",
 
+  "lock.unsaved": "Unsaved changes",
   "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
   "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
   "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
@@ -334,6 +343,7 @@
   "page.draft.create": "초안 작성",
   "page.duplicate.appendix": "복사",
   "page.duplicate.files": "Copy files",
+  "page.duplicate.pages": "Copy pages",
   "page.status": "상태",
   "page.status.draft": "초안",
   "page.status.draft.description":

@@ -28,6 +28,10 @@
   "duplicate": "Duplizieren",
   "edit": "Bearbeiten",
 
+  "dialog.files.empty": "Keine verfügbaren Dateien",
+  "dialog.pages.empty": "Keine verfügbaren Seiten",
+  "dialog.users.empty": "Keine verfügbaren Benutzer",
+
   "email": "E-Mail",
   "email.placeholder": "mail@beispiel.de",
 
@@ -66,6 +70,10 @@
 
   "error.form.incomplete": "Bitte behebe alle Fehler …",
   "error.form.notSaved": "Das Formular konnte nicht gespeichert werden",
+
+  "error.language.code": "Bitte gib einen gültigen Code für die Sprache an",
+  "error.language.duplicate": "Die Sprache besteht bereits",
+  "error.language.name": "Bitte gib einen gültigen Namen für die Sprache an",
 
   "error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
   "error.license.email": "Bitte gib eine gültige E-Mailadresse an",
@@ -277,6 +285,7 @@
 
   "loading": "Laden",
 
+  "lock.unsaved": "Ungespeicherte Änderungen",
   "lock.isLocked": "Ungespeicherte Änderungen von <strong>{email}</strong>",
   "lock.file.isLocked": "Die Datei wird von {email} bearbeitet und kann nicht geändert werden.",
   "lock.page.isLocked": "Die Seite wird von {email} bearbeitet und kann nicht geändert werden.",
@@ -334,6 +343,7 @@
   "page.draft.create": "Entwurf anlegen",
   "page.duplicate.appendix": "Kopie",
   "page.duplicate.files": "Dateien kopieren",
+  "page.duplicate.pages": "Seiten kopieren",
   "page.status": "Status",
   "page.status.draft": "Entwurf",
   "page.status.draft.description":

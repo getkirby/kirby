@@ -28,6 +28,10 @@
   "duplicate": "Dupliquer",
   "edit": "Éditer",
 
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
+
   "email": "Courriel",
   "email.placeholder": "mail@example.com",
 
@@ -66,6 +70,10 @@
 
   "error.form.incomplete": "Veuillez corriger toutes les erreurs du formulaire…",
   "error.form.notSaved": "Le formulaire n’a pu être enregistré",
+
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
 
   "error.license.format": "Veuillez saisir un numéro de licence valide",
   "error.license.email": "Veuillez saisir un courriel valide",
@@ -277,6 +285,7 @@
 
   "loading": "Chargement",
 
+  "lock.unsaved": "Modifications non enregistrées",
   "lock.isLocked": "Modifications non enregistrées par <strong>{email}</strong>",
   "lock.file.isLocked": "Le fichier est actuellement édité par {email} et ne peut être modifié.",
   "lock.page.isLocked": "La page est actuellement éditée par {email} et ne peut être modifiée.",
@@ -334,6 +343,7 @@
   "page.draft.create": "Créer un brouillon",
   "page.duplicate.appendix": "Copier",
   "page.duplicate.files": "Copier les fichiers",
+  "page.duplicate.pages": "Copier les pages",
   "page.status": "Statut",
   "page.status.draft": "Brouillon",
   "page.status.draft.description":

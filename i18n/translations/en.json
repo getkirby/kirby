@@ -71,6 +71,10 @@
   "error.form.incomplete": "Please fix all form errors…",
   "error.form.notSaved": "The form could not be saved",
 
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
+
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Please enter a valid email address",
   "error.license.verification": "The license could not be verified",
