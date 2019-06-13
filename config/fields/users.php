@@ -35,22 +35,11 @@ return [
     ],
     'methods' => [
         'userResponse' => function ($user) {
-            $avatar = function ($user) {
-                if ($avatar = $user->avatar()) {
-                    return [
-                        'url' => $avatar->crop(512)->url()
-                    ];
-                }
-
-                return null;
-            };
-
-            return [
-                'username' => $user->username(),
-                'id'       => $user->id(),
-                'email'    => $user->email(),
-                'avatar'   => $avatar($user)
-            ];
+            return $user->panelPickerData([
+                'info'  => $this->info,
+                'image' => $this->image,
+                'text'  => $this->text,
+            ]);
         },
         'toUsers' => function ($value = null) {
             $users = [];
