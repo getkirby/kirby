@@ -162,7 +162,7 @@ class Html
      * @param array $attr Additional attributes for the tag
      * @return string the generated html
      */
-    public static function email(string $email, string $text = null, array $attr = []): string
+    public static function email(string $email, $text = null, array $attr = []): string
     {
         if (empty($email) === true) {
             return '';
