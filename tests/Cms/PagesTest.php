@@ -13,6 +13,13 @@ class PagesTest extends TestCase
         ]);
     }
 
+    public function testConstructWithCollection()
+    {
+        $pages = new Pages($this->pages()->not('a'));
+
+        $this->assertCount(2, $pages);
+    }
+
     public function testChildren()
     {
         $pages = Pages::factory([
