@@ -5,11 +5,13 @@ export default {
   props: {
     ...Field.props,
     empty: String,
+    info: String,
     layout: String,
     max: Number,
     multiple: Boolean,
     parent: String,
     size: String,
+    text: String,
     value: {
       type: Array,
       default() {
@@ -69,12 +71,14 @@ export default {
       this.onInput();
     },
     select(items) {
+      if (items.length === 0) {
+        this.selected = [];
+        return;
+      }
 
       // remove all items that are no longer selected
-      this.selected.forEach((selected, index) => {
-        if (items.filter(item => item.id === selected.id).length === 0) {
-          this.selected.splice(index, 1);
-        }
+      this.selected = this.selected.filter(selected => {
+        return items.filter(item => item.id === selected.id).length > 0;
       });
 
       // add items that are not yet in the selected list
