@@ -3,7 +3,6 @@
 return [
     'methods' => [
         'pagepicker' => function ($params) {
-
             $query = $this->query();
             $model = $this->model();
             $site  = $this->kirby()->site();
@@ -28,7 +27,6 @@ return [
 
             foreach ($pages as $index => $page) {
                 if ($page->isReadable() === true) {
-
                     if (empty($params['map']) === false) {
                         $children[] = $params['map']($page);
                     } else {
@@ -46,7 +44,6 @@ return [
                 'model' => $self,
                 'pages' => $children
             ];
-
         }
     ]
 ];

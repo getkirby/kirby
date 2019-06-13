@@ -129,5 +129,4 @@ class Users extends Collection
     {
         return $this->filterBy('role', $role);
     }
-
 }
