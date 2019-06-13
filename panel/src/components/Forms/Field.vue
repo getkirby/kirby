@@ -73,8 +73,28 @@ export default {
   padding-left: 0.25rem;
 }
 .k-field-header {
+  position: relative;
   display: flex;
   align-items: baseline;
+}
+.k-field-options {
+  position: absolute;
+  top: calc(-.5rem - 1px);
+
+  [dir="ltr"] & {
+    right: 0;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+  }
+}
+.k-field-options.k-button-group .k-dropdown {
+  height: auto;
+}
+.k-field-options.k-button-group .k-field-options-button.k-button {
+  padding: .75rem;
+  display: flex;
 }
 .k-field[data-disabled] {
   cursor: not-allowed;
