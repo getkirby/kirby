@@ -24,7 +24,7 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      user: this.emptyUser(),
+      user: this.emptyForm(),
       languages: [],
       roles: []
     };
@@ -80,7 +80,7 @@ export default {
           this.$refs.dialog.error(error.message);
         });
     },
-    emptyUser() {
+    emptyForm() {
       return {
         name: "",
         email: "",
@@ -109,7 +109,7 @@ export default {
         });
     },
     reset() {
-      this.user = this.emptyUser();
+      this.user = this.emptyForm();
     }
   }
 };
