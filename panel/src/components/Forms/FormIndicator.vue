@@ -26,8 +26,8 @@ export default {
   data() {
     return {
       isOpen: false,
+      entries: [],
       storage: [],
-      entries: []
     }
   },
   computed: {
@@ -50,6 +50,9 @@ export default {
     loadFromApi() {
       let promises = this.storage.map(model => {
         return this.$api.get(model.api, { view: "compact" }, null, true).then(response => {
+
+          console.log(model);
+          console.log(response);
 
           if (model.id.startsWith("pages/")) {
             return {
