@@ -6,6 +6,7 @@
     theme="negative"
     icon="trash"
     @submit="submit"
+    @close="reset"
   >
     <template v-if="page.hasChildren || page.hasDrafts">
       <k-text v-html="$t('page.delete.confirm', { title: page.title })" />
@@ -37,9 +38,7 @@ export default {
         hasChildren: false,
         hasDrafts: false
       },
-      model: {
-        check: null
-      }
+      model: this.emptyForm()
     };
   },
   computed: {
@@ -57,6 +56,11 @@ export default {
     }
   },
   methods: {
+    emptyForm() {
+      return {
+        check: null
+      };
+    },
     open(id) {
       this.$api.pages.get(id, {select: "id, title, hasChildren, hasDrafts, parent"})
         .then(page => {
@@ -102,6 +106,9 @@ export default {
         .catch(error => {
           this.$refs.dialog.error(error.message);
         });
+    },
+    reset() {
+      this.model = this.emptyForm();
     }
   }
 };
