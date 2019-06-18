@@ -12,7 +12,7 @@ class AppCachesTest extends TestCase
     {
         return new App(array_merge([
             'roots' => [
-                'index' => __DIR__
+                'index' => __DIR__ . '/fixtures/AppCachesTest',
             ]
         ], $props));
     }
@@ -21,7 +21,7 @@ class AppCachesTest extends TestCase
     {
         parent::tearDown();
 
-        Dir::remove(__DIR__ . '/fixtures/cache');
+        Dir::remove(__DIR__ . '/fixtures/AppCachesTest');
     }
 
     public function testDisabledCache()
@@ -50,16 +50,16 @@ class AppCachesTest extends TestCase
             'options' => [
                 'cache.pages' => [
                     'type' => 'file',
-                    'root' => __DIR__ . '/fixtures/cache'
+                    'root' => $root = __DIR__ . '/fixtures/AppCachesTest/cache'
                 ]
             ]
         ]);
 
         $this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
-        $this->assertEquals(__DIR__ . '/fixtures/cache', $kirby->cache('pages')->options()['root']);
+        $this->assertEquals($root, $kirby->cache('pages')->options()['root']);
 
         $kirby->cache('pages')->set('home', 'test');
-        $this->assertFileExists(__DIR__ . '/fixtures/cache/getkirby.com_test/pages/home.cache');
+        $this->assertFileExists($root . '/getkirby.com_test/pages/home.cache');
     }
 
     public function testPluginDefaultCache()
