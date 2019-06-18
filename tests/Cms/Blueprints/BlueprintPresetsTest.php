@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-class PresetsTest extends TestCase
+class BlueprintPresetsTest extends TestCase
 {
     public function setUp(): void
     {

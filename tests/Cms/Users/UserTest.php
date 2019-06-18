@@ -4,6 +4,10 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
 
+class UserTestModel extends User
+{
+}
+
 class UserTest extends TestCase
 {
     public function testAvatar()
@@ -223,7 +227,7 @@ class UserTest extends TestCase
     public function testUserModel()
     {
         User::$models = [
-            'dummy' => DummyUser::class
+            'dummy' => UserTestModel::class
         ];
 
         $user = User::factory([
@@ -231,7 +235,7 @@ class UserTest extends TestCase
             'model' => 'dummy'
         ]);
 
-        $this->assertInstanceOf(DummyUser::class, $user);
+        $this->assertInstanceOf(UserTestModel::class, $user);
 
         User::$models = [];
     }

@@ -6,7 +6,7 @@ class RootsTest extends TestCase
 {
     public function defaultRootProvider(): array
     {
-        $index = realpath(__DIR__ . '/../../../');
+        $index = realpath(__DIR__ . '/../../../../');
 
         return [
             [$index, 'index'],

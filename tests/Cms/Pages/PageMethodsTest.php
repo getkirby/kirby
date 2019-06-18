@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\TestCase as TestCase;
 
-class MethodsTest extends TestCase
+class PageMethodsTest extends TestCase
 {
     protected $app;
 
@@ -19,21 +19,6 @@ class MethodsTest extends TestCase
             'pagesMethods' => [
                 'test' => function () {
                     return 'pages method';
-                }
-            ],
-            'fileMethods' => [
-                'test' => function () {
-                    return 'file method';
-                }
-            ],
-            'filesMethods' => [
-                'test' => function () {
-                    return 'files method';
-                }
-            ],
-            'siteMethods' => [
-                'test' => function () {
-                    return 'site method';
                 }
             ],
             'site' => [
@@ -51,18 +36,6 @@ class MethodsTest extends TestCase
         ]);
     }
 
-    public function testFileMethod()
-    {
-        $file = $this->app->file('test/test.jpg');
-        $this->assertEquals('file method', $file->test());
-    }
-
-    public function testFilesMethod()
-    {
-        $files = $this->app->page('test')->files();
-        $this->assertEquals('files method', $files->test());
-    }
-
     public function testPageMethod()
     {
         $page = $this->app->page('test');
@@ -73,11 +46,5 @@ class MethodsTest extends TestCase
     {
         $pages = $this->app->site()->children();
         $this->assertEquals('pages method', $pages->test());
-    }
-
-    public function testSiteMethod()
-    {
-        $site = $this->app->site();
-        $this->assertEquals('site method', $site->test());
     }
 }

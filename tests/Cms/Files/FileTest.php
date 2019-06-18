@@ -5,6 +5,10 @@ namespace Kirby\Cms;
 use Kirby\Image\Image;
 use Kirby\Toolkit\F;
 
+class FileTestModel extends File
+{
+}
+
 class FileTest extends TestCase
 {
     protected function defaults(): array
@@ -335,7 +339,7 @@ class FileTest extends TestCase
     public function testFileModel()
     {
         File::$models = [
-            'dummy' => DummyFile::class
+            'dummy' => FileTestModel::class
         ];
 
         $user = File::factory([
@@ -343,7 +347,7 @@ class FileTest extends TestCase
             'model'    => 'dummy'
         ]);
 
-        $this->assertInstanceOf(DummyFile::class, $user);
+        $this->assertInstanceOf(FileTestModel::class, $user);
 
         File::$models = [];
     }

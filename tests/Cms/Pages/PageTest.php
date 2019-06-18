@@ -4,6 +4,11 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
 
+class PageTestModel extends Page
+{
+}
+
+
 class PageTest extends TestCase
 {
 
@@ -869,7 +874,7 @@ class PageTest extends TestCase
     public function testPageModel()
     {
         Page::$models = [
-            'dummy' => DummyPage::class
+            'dummy' => PageTestModel::class
         ];
 
         $page = Page::factory([
@@ -877,7 +882,7 @@ class PageTest extends TestCase
             'model' => 'dummy'
         ]);
 
-        $this->assertInstanceOf(DummyPage::class, $page);
+        $this->assertInstanceOf(PageTestModel::class, $page);
 
         Page::$models = [];
     }
