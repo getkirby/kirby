@@ -126,4 +126,19 @@ class RequestTest extends TestCase
         $this->assertEquals($uriBefore, $uriAfter);
         $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
     }
+
+    public function testPath()
+    {
+        $request = new Request();
+        $this->assertInstanceOf(Path::class, $request->path());
+    }
+
+    public function testDomain()
+    {
+        $request = new Request([
+            'url' => 'https://getkirby.com/a/b'
+        ]);
+
+        $this->assertEquals('getkirby.com', $request->domain());
+    }
 }

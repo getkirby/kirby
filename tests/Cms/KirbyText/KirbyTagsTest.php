@@ -93,6 +93,103 @@ class KirbyTagsTest extends TestCase
         $this->assertEquals($expected, $kirby->kirbytext('(image: myimage.jpg caption: This is an *awesome* image and this a <a href="">link</a>)'));
     }
 
+    public function testImageWithFileLink()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a',
+                        'content' => [
+                            'text' => '(image: image.jpg link: document.pdf)'
+                        ],
+                        'files' => [
+                            [
+                                'filename' => 'image.jpg',
+                            ],
+                            [
+                                'filename' => 'document.pdf',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page  = $kirby->page('a');
+        $image = $page->file('image.jpg');
+        $doc   = $page->file('document.pdf');
+
+        $expected = '<figure><a href="' . $doc->url() . '"><img alt="" src="' . $image->url() . '"></a></figure>';
+
+        $this->assertEquals($expected, $page->text()->kt());
+    }
+
+    public function testFile()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a',
+                        'content' => [
+                            'text' => '(file: a.jpg)'
+                        ],
+                        'files' => [
+                            [
+                                'filename' => 'a.jpg',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $kirby->page('a');
+        $file = $page->file('a.jpg');
+
+        $expected = '<p><a download href="' . $file->url() . '">a.jpg</a></p>';
+
+        $this->assertEquals($expected, $page->text()->kt());
+    }
+
+    public function testFileWithDisabledDownloadOption()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a',
+                        'content' => [
+                            'text' => '(file: a.jpg download: false)'
+                        ],
+                        'files' => [
+                            [
+                                'filename' => 'a.jpg',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $kirby->page('a');
+        $file = $page->file('a.jpg');
+
+        $expected = '<p><a href="' . $file->url() . '">a.jpg</a></p>';
+
+        $this->assertEquals($expected, $page->text()->kt());
+    }
+
     public function testFileWithinFile()
     {
         $kirby = new App([

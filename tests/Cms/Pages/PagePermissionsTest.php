@@ -24,6 +24,7 @@ class PagePermissionsTest extends TestCase
             ['changeTitle'],
             ['create'],
             ['delete'],
+            ['duplicate'],
             ['preview'],
             ['sort'],
             ['update'],
@@ -59,6 +60,136 @@ class PagePermissionsTest extends TestCase
                 'name' => 'test',
                 'options' => [
                     $action => false
+                ]
+            ]
+        ]);
+
+        $this->assertFalse($page->permissions()->can($action));
+    }
+
+    /**
+     * @dataProvider actionProvider
+     */
+    public function testWithEditorAndPositiveWildcard($action)
+    {
+        $app = $this->kirby->clone([
+            'roles' => [
+                ['name' => 'editor']
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1,
+            'blueprint' => [
+                'name' => 'test',
+                'options' => [
+                    $action => [
+                        '*' => true
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertTrue($page->permissions()->can($action));
+    }
+
+    /**
+     * @dataProvider actionProvider
+     */
+    public function testWithEditorAndPositivePermission($action)
+    {
+        $app = $this->kirby->clone([
+            'roles' => [
+                ['name' => 'editor']
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1,
+            'blueprint' => [
+                'name' => 'test',
+                'options' => [
+                    $action => [
+                        '*' => false,
+                        'editor' => true
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertTrue($page->permissions()->can($action));
+    }
+
+    /**
+     * @dataProvider actionProvider
+     */
+    public function testWithEditorAndNegativeWildcard($action)
+    {
+        $app = $this->kirby->clone([
+            'roles' => [
+                ['name' => 'editor']
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1,
+            'blueprint' => [
+                'name' => 'test',
+                'options' => [
+                    $action => [
+                        '*' => false
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertFalse($page->permissions()->can($action));
+    }
+
+    /**
+     * @dataProvider actionProvider
+     */
+    public function testWithEditorAndNegativePermission($action)
+    {
+        $app = $this->kirby->clone([
+            'roles' => [
+                ['name' => 'editor']
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $page = new Page([
+            'slug' => 'test',
+            'num'  => 1,
+            'blueprint' => [
+                'name' => 'test',
+                'options' => [
+                    $action => [
+                        '*' => true,
+                        'editor' => false
+                    ]
                 ]
             ]
         ]);

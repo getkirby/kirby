@@ -191,4 +191,48 @@ class SiteTest extends TestCase
         $this->assertFalse($a->is($c));
         $this->assertFalse($b->is($c));
     }
+
+
+    public function previewUrlProvider()
+    {
+        return [
+            [null, '/'],
+            ['https://test.com', 'https://test.com'],
+            ['{{ site.url }}#test', '/#test'],
+            [false, null],
+        ];
+    }
+
+    /**
+     * @dataProvider previewUrlProvider
+     */
+    public function testCustomPreviewUrl($input, $expected)
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => '/'
+            ]
+        ]);
+
+        $options = [];
+
+        if ($input !== null) {
+            $options = [
+                'preview' => $input
+            ];
+        }
+
+        // simple
+        $site = new Site([
+            'blueprint' => [
+                'name'    => 'site',
+                'options' => $options
+            ]
+        ]);
+
+        $this->assertEquals($expected, $site->previewUrl());
+    }
 }
