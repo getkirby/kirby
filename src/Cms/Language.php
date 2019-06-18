@@ -341,16 +341,6 @@ class Language extends Model
     }
 
     /**
-     * Returns the permissions object for this language
-     *
-     * @return Kirby\Cms\LanguagePermissions
-     */
-    public function permissions()
-    {
-        return new LanguagePermissions($this);
-    }
-
-    /**
      * Returns the absolute path to the language file
      *
      * @return string
