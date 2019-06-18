@@ -28,9 +28,9 @@
   "duplicate": "Kopyala",
   "edit": "D\u00fczenle",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Seçilecek dosya yok",
+  "dialog.pages.empty": "Seçilecek sayfa yok",
+  "dialog.users.empty": "Seçilecek kullanıcı yok",
 
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
@@ -71,9 +71,9 @@
   "error.form.incomplete": "Lütfen tüm form hatalarını düzeltin...",
   "error.form.notSaved": "Form kaydedilemedi",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Lütfen dil için geçerli bir kod girin",
+  "error.language.duplicate": "Bu dil zaten var",
+  "error.language.name": "Lütfen dil için geçerli bir isim girin",
 
   "error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",

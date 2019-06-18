@@ -28,9 +28,9 @@
   "duplicate": "Dupliquer",
   "edit": "Éditer",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Aucun fichier à sélectionner",
+  "dialog.pages.empty": "Aucune page à sélectionner",
+  "dialog.users.empty": "Aucun utilisateur à sélectionner",
 
   "email": "Courriel",
   "email.placeholder": "mail@example.com",
@@ -71,9 +71,9 @@
   "error.form.incomplete": "Veuillez corriger toutes les erreurs du formulaire…",
   "error.form.notSaved": "Le formulaire n’a pu être enregistré",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Veuillez saisir un code valide pour cette langue",
+  "error.language.duplicate": "Cette langue existe déjà",
+  "error.language.name": "Veuillez saisir un nom valide pour cette langue",
 
   "error.license.format": "Veuillez saisir un numéro de licence valide",
   "error.license.email": "Veuillez saisir un courriel valide",

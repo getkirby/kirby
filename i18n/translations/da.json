@@ -28,9 +28,9 @@
   "duplicate": "Dupliker",
   "edit": "Rediger",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Ingen filer kan vælges",
+  "dialog.pages.empty": "Ingen sider kan vælges",
+  "dialog.users.empty": "Ingen brugere kan vælges",
 
   "email": "Email",
   "email.placeholder": "mail@eksempel.dk",
@@ -71,9 +71,9 @@
   "error.form.incomplete": "Ret venligst alle fejl i formularen...",
   "error.form.notSaved": "Formularen kunne ikke gemmes",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Indtast venligst en gyldig kode for sproget",
+  "error.language.duplicate": "Sproget eksisterer allerede",
+  "error.language.name": "Indtast venligst et gyldigt navn for sproget",
 
   "error.license.format": "Indtast venligst en gyldig licensnøgle",
   "error.license.email": "Indtast venligst en gyldig email adresse",

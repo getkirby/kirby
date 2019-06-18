@@ -28,9 +28,9 @@
   "duplicate": "Duplicar",
   "edit": "Editar",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "No hi ha cap fitxer per seleccionar",
+  "dialog.pages.empty": "No hi ha cap pàgina per seleccionar",
+  "dialog.users.empty": "No hi ha cap usuari per seleccionar",
 
   "email": "Email",
   "email.placeholder": "mail@exemple.com",
@@ -71,9 +71,9 @@
   "error.form.incomplete": "Si us plau, corregeix els errors del formulari ...",
   "error.form.notSaved": "No s'ha pogut desar el formulari",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Introdueix un codi vàlid per a l’idioma",
+  "error.language.duplicate": "L'idioma ja existeix",
+  "error.language.name": "Introdueix un nom vàlid per a l'idioma",
 
   "error.license.format": "Introduïu una clau de llicència vàlida",
   "error.license.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",
