@@ -54,4 +54,23 @@ class UsersTest extends TestCase
 
         Users::$methods = [];
     }
+
+    public function testRoles()
+    {
+        $app = new App([
+            'users' => [
+                ['email' => 'a@getkirby.com', 'role' => 'admin'],
+                ['email' => 'b@getkirby.com', 'role' => 'editor'],
+                ['email' => 'c@getkirby.com', 'role' => 'editor'],
+            ],
+            'roles' => [
+                ['name' => 'admin'],
+                ['name' => 'editor']
+            ]
+        ]);
+
+        $this->assertCount(1, $app->users()->role('admin'));
+        $this->assertCount(2, $app->users()->role('editor'));
+    }
+
 }
