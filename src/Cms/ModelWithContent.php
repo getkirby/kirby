@@ -274,7 +274,7 @@ abstract class ModelWithContent extends Model
      * @param array $params
      * @return array
      */
-    public function panelIcon(array $params = []): array
+    public function panelIcon(array $params = null): array
     {
         $defaults = [
             'type'  => 'page',
@@ -283,7 +283,7 @@ abstract class ModelWithContent extends Model
             'color' => '#c5c9c6',
         ];
 
-        return array_merge($defaults, $params);
+        return array_merge($defaults, $params ?? []);
     }
 
     /**

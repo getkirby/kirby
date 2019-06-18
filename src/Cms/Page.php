@@ -889,7 +889,7 @@ class Page extends ModelWithContent
      * @param array $params
      * @return array
      */
-    public function panelIcon(array $params = []): array
+    public function panelIcon(array $params = null): array
     {
         if ($icon = $this->blueprint()->icon()) {
             $params['type'] = $icon;
