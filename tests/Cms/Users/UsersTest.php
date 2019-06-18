@@ -72,5 +72,4 @@ class UsersTest extends TestCase
         $this->assertCount(1, $app->users()->role('admin'));
         $this->assertCount(2, $app->users()->role('editor'));
     }
-
 }

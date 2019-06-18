@@ -11,5 +11,12 @@ return function (array $props) {
         ]
     ];
 
+    // remove global options
+    unset(
+        $props['headline'],
+        $props['layout'],
+        $props['template']
+    );
+
     return $props;
 };

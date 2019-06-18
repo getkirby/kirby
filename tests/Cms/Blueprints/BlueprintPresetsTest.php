@@ -260,4 +260,76 @@ class BlueprintPresetsTest extends TestCase
 
         $this->assertEquals($expected, $props);
     }
+
+    public function testFilesPresetWithHeadline()
+    {
+        $preset = $this->load('files');
+
+        // default setup
+        $props = $preset([
+            'headline' => 'Images'
+        ]);
+
+        $expected = [
+            'sections' => [
+                'files' => [
+                    'headline' => 'Images',
+                    'type'     => 'files',
+                    'layout'   => 'cards',
+                    'info'     => '{{ file.dimensions }}',
+                    'template' => null,
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $props);
+    }
+
+    public function testFilesPresetWithLayout()
+    {
+        $preset = $this->load('files');
+
+        // default setup
+        $props = $preset([
+            'layout' => 'list'
+        ]);
+
+        $expected = [
+            'sections' => [
+                'files' => [
+                    'headline' => 'Files',
+                    'type'     => 'files',
+                    'layout'   => 'list',
+                    'info'     => '{{ file.dimensions }}',
+                    'template' => null,
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $props);
+    }
+
+    public function testFilesPresetWithTemplate()
+    {
+        $preset = $this->load('files');
+
+        // default setup
+        $props = $preset([
+            'template' => 'image'
+        ]);
+
+        $expected = [
+            'sections' => [
+                'files' => [
+                    'headline' => 'Files',
+                    'type'     => 'files',
+                    'layout'   => 'cards',
+                    'info'     => '{{ file.dimensions }}',
+                    'template' => 'image',
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $props);
+    }
 }
