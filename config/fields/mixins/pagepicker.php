@@ -2,8 +2,8 @@
 
 return [
     'methods' => [
-        'pagepicker' => function ($params) {
-            $query = $this->query();
+        'pagepicker' => function (array $params = []) {
+            $query = $params['query'] ?? null;
             $model = $this->model();
             $site  = $this->kirby()->site();
 
@@ -19,7 +19,7 @@ return [
                 $self  = [
                     'id'     => $parent->id() == '' ? null : $parent->id(),
                     'title'  => $parent->title()->value(),
-                    'parent' => $parent->parent() ? $parent->parent()->id() : null,
+                    'parent' => is_a($parent->parent(), Page::class) === true ? $parent->parent()->id() : null,
                 ];
             }
 
