@@ -312,6 +312,9 @@ abstract class ModelWithContent extends Model
 
         if ($image = $this->panelImageSource($settings['query'] ?? null)) {
 
+            // main url
+            $settings['url'] = $image->url();
+
             // for cards
             $settings['cards'] = [
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
