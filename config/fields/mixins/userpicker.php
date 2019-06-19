@@ -2,7 +2,7 @@
 
 return [
     'methods' => [
-        'userpicker' => function ($params) {
+        'userpicker' => function (array $params = []) {
 
             // fetch the parent model
             $model = $this->model();
@@ -19,6 +19,10 @@ return [
             // fetch all users for the picker
             $users = $model->query($query, 'Kirby\Cms\Users');
             $data  = [];
+
+            if (!$users) {
+                return [];
+            }
 
             // prepare the response for each user
             foreach ($users->sortBy('username', 'asc') as $index => $user) {
