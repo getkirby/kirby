@@ -118,6 +118,23 @@ class ContentTest extends TestCase
         $this->assertEquals(null, $content->get('text')->value());
     }
 
+    public function testParent()
+    {
+        $page    = new Page(['slug' => 'test']);
+        $content = new Content(['title' => 'Test'], $page);
+
+        $this->assertEquals($page, $content->parent());
+    }
+
+    public function testSetParent()
+    {
+        $page    = new Page(['slug' => 'test']);
+        $content = new Content(['title' => 'Test']);
+        $content->setParent($page);
+
+        $this->assertEquals($page, $content->parent());
+    }
+
     public function testToArray()
     {
         return $this->assertEquals($this->mockData(), $this->mockObject()->toArray());
