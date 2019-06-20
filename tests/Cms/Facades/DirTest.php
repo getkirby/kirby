@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
@@ -53,6 +54,22 @@ class DirTest extends TestCase
         $this->assertEquals('jpg', $inventory['files']['cover.jpg']['extension']);
 
         $this->assertEquals('projects', $inventory['template']);
+    }
+
+    public function testInventoryWithSkippedFiles()
+    {
+        $inventory = $this->create([
+            'valid.jpg',
+            'skipped.html',
+            'skipped.htm',
+            'skipped.php'
+        ]);
+
+        $expected = [
+            'valid.jpg'
+        ];
+
+        $this->assertEquals($expected, A::pluck($inventory['files'], 'filename'));
     }
 
     public function testChildSorting()
