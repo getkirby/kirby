@@ -31,6 +31,24 @@ class HelpersTest extends TestCase
         Dir::remove($this->fixtures . '/site');
     }
 
+    public function testAttrWithBeforeValue()
+    {
+        $attr = attr(['test' => 'test'], ' ');
+        $this->assertEquals(' test="test"', $attr);
+    }
+
+    public function testAttrWithAfterValue()
+    {
+        $attr = attr(['test' => 'test'], null, ' ');
+        $this->assertEquals('test="test" ', $attr);
+    }
+
+    public function testAttrWithoutValues()
+    {
+        $attr = attr([]);
+        $this->assertNull($attr);
+    }
+
     public function testAsset()
     {
         $asset = asset('something.jpg');
@@ -146,6 +164,32 @@ class HelpersTest extends TestCase
         Server::$cli = false;
         $this->assertEquals("<pre>test</pre>", dump('test', false));
         Server::$cli = null;
+    }
+
+    public function testEscWithInvalidContext()
+    {
+        $escaped = esc('test', 'does-not-exist');
+        $this->assertEquals('test', $escaped);
+    }
+
+    public function testGist()
+    {
+        $gist     = gist('https://gist.github.com/bastianallgeier/d61ab782cd5c2cc02b6f6fec54fd1985', 'static.php');
+        $expected = '<script src="https://gist.github.com/bastianallgeier/d61ab782cd5c2cc02b6f6fec54fd1985.js?file=static.php"></script>';
+
+        $this->assertEquals($gist, $expected);
+    }
+
+    public function testH()
+    {
+        $html = h('Guns & Roses');
+        $this->assertEquals('Guns &amp; Roses', $html);
+    }
+
+    public function testHtml()
+    {
+        $html = html('Guns & Roses');
+        $this->assertEquals('Guns &amp; Roses', $html);
     }
 
     public function testImageHelper()
@@ -394,6 +438,17 @@ class HelpersTest extends TestCase
         $this->assertEquals($inline, kti($text));
     }
 
+    public function testLoad()
+    {
+        load([
+            'helperstest\\a' => __DIR__ . '/fixtures/HelpersTest/load/a/a.php',
+            'HelpersTest\\B' => __DIR__ . '/fixtures/HelpersTest/load/B/B.php',
+        ]);
+
+        $this->assertTrue(class_exists('HelpersTest\\A'));
+        $this->assertTrue(class_exists('HelpersTest\\B'));
+    }
+
     public function testMarkdownHelper()
     {
         $tag = markdown('# Kirby');
@@ -630,6 +685,22 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, u('test', $options));
     }
 
+    public function testVideo()
+    {
+        $video    = video('https://www.youtube.com/watch?v=xB3s_f7PzYk');
+        $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
+    public function testVimeo()
+    {
+        $video    = video('https://vimeo.com/335292911');
+        $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
     public function testWidont()
     {
         $result   = widont('This is a headline');
@@ -638,14 +709,11 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testLoad()
+    public function testYoutube()
     {
-        load([
-            'helperstest\\a' => __DIR__ . '/fixtures/HelpersTest/load/a/a.php',
-            'HelpersTest\\B' => __DIR__ . '/fixtures/HelpersTest/load/B/B.php',
-        ]);
+        $video    = youtube('https://www.youtube.com/watch?v=xB3s_f7PzYk');
+        $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
 
-        $this->assertTrue(class_exists('HelpersTest\\A'));
-        $this->assertTrue(class_exists('HelpersTest\\B'));
+        $this->assertEquals($expected, $video);
     }
 }
