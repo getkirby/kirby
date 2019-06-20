@@ -6,9 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 class LanguagesTest extends TestCase
 {
-    public function testLoad()
+    public function setUp(): void
     {
-        $app = new App([
+        $this->app = new App([
             'languages' => [
                 [
                     'code'    => 'en',
@@ -26,10 +26,34 @@ class LanguagesTest extends TestCase
             ]
         ]);
 
-        $languages = $app->languages();
+        $this->languages = $this->app->languages();
+    }
 
-        $this->assertCount(2, $languages);
-        $this->assertEquals(['en', 'de'], $languages->codes());
-        $this->assertEquals('en', $languages->default()->code());
+    public function testLoad()
+    {
+        $this->assertCount(2, $this->languages);
+        $this->assertEquals(['en', 'de'], $this->languages->codes());
+        $this->assertEquals('en', $this->languages->default()->code());
+    }
+
+    public function testLoadFromFiles()
+    {
+        $this->app->clone([
+            'roots' => [
+                'languages' => __DIR__ . '/fixtures/LanguagesTest'
+            ]
+        ]);
+
+        $languages = $this->app->languages();
+
+        $this->assertCount(2, $this->languages);
+        $this->assertEquals(['en', 'de'], $this->languages->codes());
+        $this->assertEquals('en', $this->languages->default()->code());
+    }
+
+    public function testDefault()
+    {
+        $this->assertEquals('en', $this->languages->default()->code());
+        $this->assertEquals('en', $this->languages->findDefault()->code());
     }
 }
