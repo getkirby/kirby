@@ -450,7 +450,7 @@ class PagesTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals(['a', 'b', 'c'], $pages->template()->pluck('slug'));
+        $this->assertEquals(['a', 'b', 'c'], $pages->template(null)->pluck('slug'));
         $this->assertEquals(['a', 'c'], $pages->template('a')->pluck('slug'));
         $this->assertEquals(['a', 'b', 'c'], $pages->template(['a', 'b'])->pluck('slug'));
     }
