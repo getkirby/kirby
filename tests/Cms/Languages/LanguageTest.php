@@ -3,17 +3,20 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
 class LanguageTest extends TestCase
 {
-    public function testCode()
+    public function testCodeAndId()
     {
         $language = new Language([
             'code' => 'en'
         ]);
 
         $this->assertEquals('en', $language->code());
+        $this->assertEquals('en', $language->id());
     }
 
     public function testDefaultDefault()
@@ -276,5 +279,63 @@ class LanguageTest extends TestCase
         ]);
 
         $this->assertInstanceOf(LanguageRouter::class, $language->router());
+    }
+
+    public function testToArrayAndDebuginfo()
+    {
+        $language = new Language([
+            'code'   => 'de',
+            'name'   => 'Deutsch',
+            'locale' => 'de_DE',
+        ]);
+
+        $expected = [
+            'code'      => 'de',
+            'default'   => false,
+            'direction' => 'ltr',
+            'locale'    => [LC_ALL => 'de_DE'],
+            'name'      => 'Deutsch',
+            'rules'     => $language->rules(),
+            'url'       => '/de'
+        ];
+
+        $this->assertEquals($expected, $language->toArray());
+        $this->assertEquals($expected, $language->__debuginfo());
+    }
+
+    public function testExists()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => __DIR__ . '/fixtures'
+            ]
+        ]);
+
+        $language = new Language([
+            'code' => 'de'
+        ]);
+
+        $this->assertFalse($language->exists());
+
+        F::write($language->root(), 'test');
+
+        $this->assertTrue($language->exists());
+
+        Dir::remove(__DIR__ . '/fixtures');
+    }
+
+    public function testRoot()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => $fixtures = __DIR__ . '/fixtures'
+            ]
+        ]);
+
+        $language = new Language([
+            'code' => 'de'
+        ]);
+
+        $this->assertEquals($fixtures . '/site/languages/de.php', $language->root());
     }
 }
