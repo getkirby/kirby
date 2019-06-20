@@ -4,9 +4,23 @@ namespace Kirby\Cms;
 
 class MyModel extends Model
 {
+    protected $id;
+
     public function __construct(array $props = [])
     {
         $this->setProperties($props);
+        $this->setKirby($props['kirby'] ?? null);
+    }
+
+    protected function setId($id = null)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function id()
+    {
+        return $this->id;
     }
 }
 
@@ -36,5 +50,24 @@ class ModelTest extends TestCase
             'site' => $site
         ]);
         $this->assertEquals($site, $model->site());
+    }
+
+    public function testToString()
+    {
+        $model = new MyModel([
+            'id' => 'test'
+        ]);
+
+        $this->assertEquals('test', $model->__toString());
+        $this->assertEquals('test', (string)$model);
+    }
+
+    public function testToArray()
+    {
+        $model = new MyModel([
+            'id' => 'test'
+        ]);
+
+        $this->assertEquals(['id' => 'test'], $model->toArray());
     }
 }
