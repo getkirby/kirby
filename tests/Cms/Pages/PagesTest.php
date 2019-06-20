@@ -13,6 +13,48 @@ class PagesTest extends TestCase
         ]);
     }
 
+    public function testAudio()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'files' => [
+                    ['filename' => 'a.mp3'],
+                    ['filename' => 'a.pdf']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'files' => [
+                    ['filename' => 'b.mp3']
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['a.mp3', 'b.mp3'], $pages->audio()->pluck('filename'));
+    }
+
+    public function testCode()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'files' => [
+                    ['filename' => 'a.js'],
+                    ['filename' => 'a.pdf']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'files' => [
+                    ['filename' => 'b.js']
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['a.js', 'b.js'], $pages->code()->pluck('filename'));
+    }
+
     public function testConstructWithCollection()
     {
         $pages = new Pages($this->pages()->not('a'));
@@ -49,6 +91,27 @@ class PagesTest extends TestCase
         $this->assertEquals($expected, $pages->children()->keys());
     }
 
+    public function testDocuments()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'files' => [
+                    ['filename' => 'a.pdf'],
+                    ['filename' => 'a.js']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'files' => [
+                    ['filename' => 'b.pdf']
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['a.pdf', 'b.pdf'], $pages->documents()->pluck('filename'));
+    }
+
     public function testDrafts()
     {
         $pages = Pages::factory([
@@ -76,6 +139,26 @@ class PagesTest extends TestCase
         ];
 
         $this->assertEquals($expected, $pages->drafts()->keys());
+    }
+
+    public function testFiles()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'files' => [
+                    ['filename' => 'a.jpg']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'files' => [
+                    ['filename' => 'b.pdf']
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['a.jpg', 'b.pdf'], $pages->files()->pluck('filename'));
     }
 
     public function testFind()
@@ -145,6 +228,27 @@ class PagesTest extends TestCase
         $page       = $pages->find('page')->children()->last();
 
         $this->assertTrue($collection->has($page));
+    }
+
+    public function testImages()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'files' => [
+                    ['filename' => 'a.jpg'],
+                    ['filename' => 'a.pdf']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'files' => [
+                    ['filename' => 'b.png']
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['a.jpg', 'b.png'], $pages->images()->pluck('filename'));
     }
 
     public function testIndex()
@@ -233,6 +337,22 @@ class PagesTest extends TestCase
         $this->assertEquals($expected, $pages->index(true)->keys());
     }
 
+    public function testNums()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'num'  => 1
+            ],
+            [
+                'slug' => 'b',
+                'num'  => 2
+            ],
+        ]);
+
+        $this->assertEquals([1, 2], $pages->nums());
+    }
+
     public function testInvisible()
     {
         $this->assertCount(1, $this->pages()->invisible());
@@ -311,5 +431,48 @@ class PagesTest extends TestCase
         $this->assertEquals('ab', $pages->test());
 
         Pages::$methods = [];
+    }
+
+    public function testTemplate()
+    {
+        $pages = Pages::factory([
+            [
+                'slug'     => 'a',
+                'template' => 'a'
+            ],
+            [
+                'slug'     => 'b',
+                'template' => 'b'
+            ],
+            [
+                'slug'     => 'c',
+                'template' => 'a'
+            ],
+        ]);
+
+        $this->assertEquals(['a', 'b', 'c'], $pages->template()->pluck('slug'));
+        $this->assertEquals(['a', 'c'], $pages->template('a')->pluck('slug'));
+        $this->assertEquals(['a', 'b', 'c'], $pages->template(['a', 'b'])->pluck('slug'));
+    }
+
+    public function testVideos()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'files' => [
+                    ['filename' => 'a.mov'],
+                    ['filename' => 'a.pdf']
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'files' => [
+                    ['filename' => 'b.mp4']
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['a.mov', 'b.mp4'], $pages->videos()->pluck('filename'));
     }
 }
