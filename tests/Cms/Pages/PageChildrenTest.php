@@ -11,6 +11,24 @@ class PageChildrenTest extends TestCase
         $this->assertCount(0, $page->children());
     }
 
+    public function testGrandChildren()
+    {
+        $page = new Page([
+            'slug' => 'grandma',
+            'children' => [
+                [
+                    'slug' => 'mother',
+                    'children' => [
+                        ['slug' => 'child']
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertCount(1, $page->grandChildren());
+        $this->assertEquals('child', $page->grandChildren()->first()->slug());
+    }
+
     public function testHasChildren()
     {
         $page = new Page([
@@ -32,5 +50,79 @@ class PageChildrenTest extends TestCase
         ]);
 
         $this->assertFalse($page->hasChildren());
+    }
+
+    public function testHasListedChildren()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'a', 'num' => 1]
+            ]
+        ]);
+
+        $this->assertTrue($page->hasListedChildren());
+        $this->assertTrue($page->hasVisibleChildren());
+    }
+
+    public function testHasNoListedChildren()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'a']
+            ]
+        ]);
+
+        $this->assertFalse($page->hasListedChildren());
+        $this->assertFalse($page->hasVisibleChildren());
+    }
+
+    public function testHasUnlistedChildren()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'a']
+            ]
+        ]);
+
+        $this->assertTrue($page->hasUnlistedChildren());
+        $this->assertTrue($page->hasInvisibleChildren());
+    }
+
+    public function testHasNoUnlistedChildren()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'a', 'num' => 1]
+            ]
+        ]);
+
+        $this->assertFalse($page->hasUnlistedChildren());
+        $this->assertFalse($page->hasInvisibleChildren());
+    }
+
+    public function testHasDrafts()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'drafts' => [
+                ['slug' => 'a'],
+                ['slug' => 'b']
+            ]
+        ]);
+
+        $this->assertTrue($page->hasDrafts());
+    }
+
+    public function testHasNoDrafts()
+    {
+        $page = new Page([
+            'slug' => 'test',
+        ]);
+
+        $this->assertFalse($page->hasDrafts());
     }
 }
