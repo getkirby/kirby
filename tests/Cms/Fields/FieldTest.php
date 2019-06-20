@@ -141,4 +141,21 @@ class FieldTest extends TestCase
         $field = new Field(null, 'test', $input);
         $this->assertEquals(!$expected, $field->isNotEmpty());
     }
+
+    public function testCallNonExistingMethod()
+    {
+        $field  = new Field(null, 'test', 'value');
+        $result = $field->methodDoesNotExist();
+
+        $this->assertEquals($field, $result);
+    }
+
+    public function testOrWithFieldFallback()
+    {
+        $fallback = new Field(null, 'fallback', 'fallback value');
+        $field    = new Field(null, 'test', '');
+        $result   = $field->or($fallback);
+
+        $this->assertEquals($fallback, $result);
+    }
 }
