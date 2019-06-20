@@ -131,6 +131,12 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals(date('d.m.Y'), $field->toDate('d.m.Y', 'today'));
     }
 
+    public function testToDateWithEmptyValueAndNoFallback()
+    {
+        $field = $this->field(null);
+        $this->assertNull($field->toDate('d.m.Y'));
+    }
+
     public function testToFile()
     {
         $page = new Page([
@@ -232,6 +238,39 @@ class FieldMethodsTest extends TestCase
         ]);
 
         $expected = '<a href="/test">Test</a>';
+
+        $this->assertEquals($expected, $page->title()->toLink());
+    }
+
+    public function testToLinkWithHref()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'content' => [
+                'title' => 'Test'
+            ]
+        ]);
+
+        $expected = '<a class="test" href="https://getkirby.com">Test</a>';
+
+        $this->assertEquals($expected, $page->title()->toLink('https://getkirby.com', ['class' => 'test']));
+    }
+
+    public function testToLinkWithActivePage()
+    {
+        $site = new Site([
+            'children' => [
+                [
+                    'slug' => 'test',
+                    'content' => [
+                        'title' => 'Test'
+                    ]
+                ]
+            ]
+        ]);
+
+        $page     = $site->visit('test');
+        $expected = '<a aria-current="page" href="/test">Test</a>';
 
         $this->assertEquals($expected, $page->title()->toLink());
     }
