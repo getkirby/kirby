@@ -49,6 +49,24 @@ class HasFilesTest extends TestCase
         ];
     }
 
+    public function testFileWithSlash()
+    {
+        $page = new Page([
+            'slug' => 'mother',
+            'children' => [
+                [
+                    'slug' => 'child',
+                    'files' => [
+                        ['filename' => 'file.jpg']
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = $page->file('child/file.jpg');
+        $this->assertEquals('mother/child/file.jpg', $file->id());
+    }
+
     /**
      * @dataProvider fileProvider
      */
@@ -75,5 +93,21 @@ class HasFilesTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $parent->{'has' . $type}());
+    }
+
+    public function testHasFiles()
+    {
+        // no files
+        $parent = new HasFileTraitUser([
+        ]);
+
+        $this->assertFalse($parent->hasFiles());
+
+        // files
+        $parent = new HasFileTraitUser([
+            new File(['filename' => 'test.jpg'])
+        ]);
+
+        $this->assertTrue($parent->hasFiles());
     }
 }
