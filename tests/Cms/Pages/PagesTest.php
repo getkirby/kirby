@@ -13,6 +13,71 @@ class PagesTest extends TestCase
         ]);
     }
 
+    public function testAddPage()
+    {
+        $pages = Pages::factory([
+            ['slug' => 'a']
+        ]);
+
+        $page = new Page([
+            'slug' => 'b'
+        ]);
+
+        $result = $pages->add($page);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals('a', $result->nth(0)->slug());
+        $this->assertEquals('b', $result->nth(1)->slug());
+    }
+
+    public function testAddCollection()
+    {
+        $a = Pages::factory([
+            ['slug' => 'a']
+        ]);
+
+        $b = Pages::factory([
+            ['slug' => 'b'],
+            ['slug' => 'c']
+        ]);
+
+        $c = $a->add($b);
+
+        $this->assertCount(3, $c);
+        $this->assertEquals('a', $c->nth(0)->slug());
+        $this->assertEquals('b', $c->nth(1)->slug());
+        $this->assertEquals('c', $c->nth(2)->slug());
+    }
+
+    public function testAddById()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a',
+                        'children' => [
+                            ['slug' => 'aa']
+                        ]
+                    ],
+                    [
+                        'slug' => 'b',
+                    ]
+                ]
+            ]
+        ]);
+
+        $pages = $app->site()->children()->add('a/aa');
+
+        $this->assertCount(3, $pages);
+        $this->assertEquals('a', $pages->nth(0)->id());
+        $this->assertEquals('b', $pages->nth(1)->id());
+        $this->assertEquals('a/aa', $pages->nth(2)->id());
+    }
+
     public function testAudio()
     {
         $pages = Pages::factory([
