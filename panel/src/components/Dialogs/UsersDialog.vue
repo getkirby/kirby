@@ -14,7 +14,7 @@
     <template v-else>
       <k-list v-if="models.length">
         <k-list-item
-          v-for="(user, index) in models"
+          v-for="user in models"
           :key="user.email"
           :text="user.username"
           :image="user.image"

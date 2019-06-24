@@ -14,7 +14,7 @@
     <template v-else>
       <k-list v-if="models.length">
         <k-list-item
-          v-for="(file, index) in models"
+          v-for="file in models"
           :key="file.filename"
           :text="file.text"
           :info="file.info"

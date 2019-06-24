@@ -23,7 +23,7 @@
 
       <k-list v-if="models.length">
         <k-list-item
-          v-for="(page, index) in models"
+          v-for="page in models"
           :key="page.id"
           :text="page.text"
           :info="page.info"
