@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use PHPUnit\Framework\TestCase;
 
 class LanguagesTest extends TestCase
@@ -40,15 +41,26 @@ class LanguagesTest extends TestCase
     {
         $this->app->clone([
             'roots' => [
-                'languages' => __DIR__ . '/fixtures/LanguagesTest'
+                'languages' => $root = __DIR__ . '/fixtures/LanguagesTest'
             ]
         ]);
 
-        $languages = $this->app->languages();
+        Data::write($root . '/en.php', [
+            'code' => 'en',
+            'default' => true
+        ]);
 
-        $this->assertCount(2, $this->languages);
-        $this->assertEquals(['en', 'de'], $this->languages->codes());
-        $this->assertEquals('en', $this->languages->default()->code());
+        Data::write($root . '/de.php', [
+            'code' => 'de'
+        ]);
+
+        $languages = Languages::load();
+
+        $this->assertCount(2, $languages);
+        $this->assertEquals(['de', 'en'], $languages->codes());
+        $this->assertEquals('en', $languages->default()->code());
+
+        Dir::remove($root);
     }
 
     public function testDefault()
