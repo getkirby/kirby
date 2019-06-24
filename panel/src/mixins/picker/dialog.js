@@ -23,7 +23,6 @@ export default {
   },
   methods: {
     fetch() {
-
       return this.$api
         .get(this.options.endpoint, this.fetchData || {})
         .then(response => {
@@ -38,7 +37,18 @@ export default {
           this.issue  = e.message;
         });
     },
-    open(options) {
+    open(files, options) {
+
+      let fetch = true;
+
+      if (Array.isArray(files)) {
+        this.models = files;
+        fetch       = false;
+      } else {
+        this.models = [];
+        options     = files;
+      }
+
       this.options = {
         ...this.options,
         ...options
@@ -52,9 +62,13 @@ export default {
         });
       });
 
-      this.fetch().then(() => {
+      if (fetch) {
+        this.fetch().then(() => {
+          this.$refs.dialog.open();
+        });
+      } else {
         this.$refs.dialog.open();
-      });
+      }
     },
     submit() {
       this.$emit("submit", Object.values(this.selected));
