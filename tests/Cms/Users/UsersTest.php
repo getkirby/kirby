@@ -4,6 +4,69 @@ namespace Kirby\Cms;
 
 class UsersTest extends TestCase
 {
+    public function testAddUser()
+    {
+        $users = Users::factory([
+            ['email' => 'a@getkirby.com']
+        ]);
+
+        $user = new User([
+            'email' => 'b@getkirby.com'
+        ]);
+
+        $result = $users->add($user);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals('a@getkirby.com', $result->nth(0)->email());
+        $this->assertEquals('b@getkirby.com', $result->nth(1)->email());
+    }
+
+    public function testAddCollection()
+    {
+        $a = Users::factory([
+            ['email' => 'a@getkirby.com']
+        ]);
+
+        $b = Users::factory([
+            ['email' => 'b@getkirby.com'],
+            ['email' => 'c@getkirby.com']
+        ]);
+
+        $c = $a->add($b);
+
+        $this->assertCount(3, $c);
+        $this->assertEquals('a@getkirby.com', $c->nth(0)->email());
+        $this->assertEquals('b@getkirby.com', $c->nth(1)->email());
+        $this->assertEquals('c@getkirby.com', $c->nth(2)->email());
+    }
+
+    public function testAddById()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'users' => [
+                ['email' => 'a@getkirby.com'],
+                ['email' => 'b@getkirby.com'],
+                ['email' => 'c@getkirby.com'],
+            ]
+        ]);
+
+
+        $users = $app->users()->limit(2);
+
+        $this->assertCount(2, $users);
+
+        $users = $users->add('c@getkirby.com');
+
+        $this->assertCount(3, $users);
+        $this->assertEquals('a@getkirby.com', $users->nth(0)->email());
+        $this->assertEquals('b@getkirby.com', $users->nth(1)->email());
+        $this->assertEquals('c@getkirby.com', $users->nth(2)->email());
+    }
+
+
     public function testFind()
     {
         $users = new Users([
