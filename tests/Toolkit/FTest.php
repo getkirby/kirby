@@ -333,6 +333,14 @@ class FTest extends TestCase
         $this->assertEquals('code', F::type('java'));
     }
 
+    public function testTypeWithoutExtension()
+    {
+        F::write($file = $this->fixtures . '/test', '<?php echo "foo"; ?>');
+
+        $this->assertEquals('text/x-php', F::mime($file));
+        $this->assertEquals('code', F::type($file));
+    }
+
     public function testURI()
     {
         F::write($this->tmp, 'test');
