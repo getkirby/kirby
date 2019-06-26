@@ -122,29 +122,6 @@ function css($url, $options = null)
 }
 
 /**
- * Simple object and variable dumper
- * to help with debugging.
- *
- * @param mixed $variable
- * @param boolean $echo
- * @return string
- */
-function dump($variable, bool $echo = true): string
-{
-    if (Server::cli() === true) {
-        $output = print_r($variable, true) . PHP_EOL;
-    } else {
-        $output = '<pre>' . print_r($variable, true) . '</pre>';
-    }
-
-    if ($echo === true) {
-        echo $output;
-    }
-
-    return $output;
-}
-
-/**
  * Smart version of echo with an if condition as first argument
  *
  * @param mixed $condition
