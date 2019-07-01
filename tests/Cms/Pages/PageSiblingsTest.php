@@ -1,0 +1,308 @@
+<?php
+
+namespace Kirby\Cms;
+
+use PHPUnit\Framework\TestCase;
+
+class PageSiblingsTest extends TestCase
+{
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+    }
+
+    protected function site($children = null)
+    {
+        $this->app = $this->app->clone([
+            'site' => [
+                'children' => $children ?? $this->collection(),
+            ]
+        ]);
+
+        return $this->app->site();
+    }
+
+    protected function collection()
+    {
+        return [
+            ['slug' => 'project-a'],
+            ['slug' => 'project-b'],
+            ['slug' => 'project-c']
+        ];
+    }
+
+    public function testDefaultSiblings()
+    {
+        $page = new Page(['slug' => 'test']);
+        $this->assertInstanceOf(Pages::class, $page->siblings());
+    }
+
+    public function testHasNext()
+    {
+        $children = $this->site()->children();
+
+        $this->assertTrue($children->first()->hasNext());
+        $this->assertFalse($children->last()->hasNext());
+    }
+
+    public function testHasNextListed()
+    {
+        $site = $this->site([
+            ['slug' => 'unlisted'],
+            ['slug' => 'listed', 'num' => 1],
+        ]);
+
+        $collection = $site->children();
+
+        $this->assertTrue($collection->first()->hasNextListed());
+        $this->assertTrue($collection->first()->hasNextVisible());
+        $this->assertFalse($collection->last()->hasNextListed());
+        $this->assertFalse($collection->last()->hasNextVisible());
+    }
+
+    public function testHasNextUnlisted()
+    {
+        $site = $this->site([
+            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'unlisted'],
+        ]);
+
+        $collection = $site->children();
+
+        $this->assertTrue($collection->first()->hasNextUnlisted());
+        $this->assertTrue($collection->first()->hasNextInvisible());
+        $this->assertFalse($collection->last()->hasNextUnlisted());
+        $this->assertFalse($collection->last()->hasNextInvisible());
+    }
+
+    public function testHasPrev()
+    {
+        $collection = $this->site()->children();
+
+        $this->assertTrue($collection->last()->hasPrev());
+        $this->assertFalse($collection->first()->hasPrev());
+    }
+
+    public function testHasPrevListed()
+    {
+        $site = $this->site([
+            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'unlisted'],
+        ]);
+
+        $collection = $site->children();
+
+        $this->assertFalse($collection->first()->hasPrevListed());
+        $this->assertFalse($collection->first()->hasPrevVisible());
+        $this->assertTrue($collection->last()->hasPrevListed());
+        $this->assertTrue($collection->last()->hasPrevVisible());
+    }
+
+    public function testHasPrevUnlisted()
+    {
+        $site = $this->site([
+            ['slug' => 'unlisted'],
+            ['slug' => 'listed', 'num' => 1]
+        ]);
+
+        $collection = $site->children();
+
+        $this->assertFalse($collection->first()->hasPrevUnlisted());
+        $this->assertFalse($collection->first()->hasPrevInvisible());
+        $this->assertTrue($collection->last()->hasPrevUnlisted());
+        $this->assertTrue($collection->last()->hasPrevInvisible());
+    }
+
+    public function testIndexOf()
+    {
+        $collection = $this->site()->children();
+
+        $this->assertEquals(0, $collection->first()->indexOf());
+        $this->assertEquals(1, $collection->nth(1)->indexOf());
+        $this->assertEquals(2, $collection->last()->indexOf());
+    }
+
+    public function testIsFirst()
+    {
+        $collection = $this->site()->children();
+
+        $this->assertTrue($collection->first()->isFirst());
+        $this->assertFalse($collection->last()->isFirst());
+    }
+
+    public function testIsLast()
+    {
+        $collection = $this->site()->children();
+
+        $this->assertTrue($collection->last()->isLast());
+        $this->assertFalse($collection->first()->isLast());
+    }
+
+    public function testIsNth()
+    {
+        $collection = $this->site()->children();
+
+        $this->assertTrue($collection->first()->isNth(0));
+        $this->assertTrue($collection->nth(1)->isNth(1));
+        $this->assertTrue($collection->last()->isNth($collection->count() - 1));
+    }
+
+    public function testNext()
+    {
+        $collection = $this->site()->children();
+
+        $this->assertEquals($collection->first()->next(), $collection->nth(1));
+    }
+
+    public function testNextAll()
+    {
+        $collection = $this->site()->children();
+        $first      = $collection->first();
+
+        $this->assertCount(2, $first->nextAll());
+
+        $this->assertEquals($first->nextAll()->first(), $collection->nth(1));
+        $this->assertEquals($first->nextAll()->last(), $collection->nth(2));
+    }
+
+    public function testNextListed()
+    {
+        $collection = $this->site([
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'unlisted-b'],
+            ['slug' => 'listed', 'num' => 1],
+        ])->children();
+
+        $this->assertEquals('listed', $collection->first()->nextListed()->slug());
+        $this->assertEquals('listed', $collection->first()->nextVisible()->slug());
+    }
+
+    public function testNextUnlisted()
+    {
+        $collection = $this->site([
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'listed-b', 'num' => 2],
+            ['slug' => 'unlisted'],
+        ])->children();
+
+        $this->assertEquals('unlisted', $collection->first()->nextUnlisted()->slug());
+        $this->assertEquals('unlisted', $collection->first()->nextInvisible()->slug());
+    }
+
+    public function testPrev()
+    {
+        $collection = $this->site()->children();
+
+        $this->assertEquals($collection->last()->prev(), $collection->nth(1));
+    }
+
+    public function testPrevAll()
+    {
+        $collection = $this->site()->children();
+        $last       = $collection->last();
+
+        $this->assertCount(2, $last->prevAll());
+
+        $this->assertEquals($last->prevAll()->first(), $collection->nth(0));
+        $this->assertEquals($last->prevAll()->last(), $collection->nth(1));
+    }
+
+    public function testPrevListed()
+    {
+        $collection = $this->site([
+            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'unlisted-b'],
+        ])->children();
+
+        $this->assertEquals('listed', $collection->last()->prevListed()->slug());
+        $this->assertEquals('listed', $collection->last()->prevVisible()->slug());
+    }
+
+    public function testPrevUnlisted()
+    {
+        $collection = $this->site([
+            ['slug' => 'unlisted'],
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'listed-b', 'num' => 2],
+        ])->children();
+
+        $this->assertEquals('unlisted', $collection->last()->prevUnlisted()->slug());
+        $this->assertEquals('unlisted', $collection->last()->prevInvisible()->slug());
+    }
+
+    public function testSiblings()
+    {
+        $site     = $this->site();
+        $page     = $site->children()->nth(1);
+        $children = $site->children();
+        $siblings = $children->not($page);
+
+        $this->assertEquals($children, $page->siblings());
+        $this->assertEquals($siblings, $page->siblings(false));
+    }
+
+    public function testDraftSiblings()
+    {
+        $parent = new Page([
+            'slug' => 'parent',
+            'children' => [
+                ['slug' => 'a'],
+                ['slug' => 'b'],
+            ],
+            'drafts' => [
+                ['slug' => 'c'],
+                ['slug' => 'd'],
+                ['slug' => 'e'],
+            ]
+        ]);
+
+        $drafts = $parent->drafts();
+        $draft  = $drafts->find('c');
+
+        $this->assertEquals($drafts, $draft->siblings());
+    }
+
+    public function testTemplateSiblings()
+    {
+        $site = $this->site([
+            [
+                'slug'     => 'a',
+                'template' => 'project'
+            ],
+            [
+                'slug'     => 'b',
+                'template' => 'article'
+            ],
+            [
+                'slug'     => 'c',
+                'template' => 'project'
+            ],
+            [
+                'slug'     => 'd',
+                'template' => 'project'
+            ]
+        ]);
+
+        $pages    = $site->children();
+        $siblings = $pages->first()->templateSiblings();
+
+        $this->assertTrue($siblings->has('a'));
+        $this->assertTrue($siblings->has('c'));
+        $this->assertTrue($siblings->has('d'));
+
+        $this->assertFalse($siblings->has('b'));
+
+        $siblings = $pages->first()->templateSiblings(false);
+
+        $this->assertTrue($siblings->has('c'));
+        $this->assertTrue($siblings->has('d'));
+
+        $this->assertFalse($siblings->has('a'));
+        $this->assertFalse($siblings->has('b'));
+    }
+}

@@ -85,23 +85,27 @@
         </nav>
 
         <div class="k-topbar-signals">
+          <!-- loader -->
           <span v-show="$store.state.isLoading" class="k-topbar-loader">
             <svg viewBox="0 0 16 18">
               <path fill="white" d="M8,0 L16,4.50265232 L16,13.5112142 L8,18.0138665 L0,13.5112142 L0,4.50265232 L8,0 Z M2.10648757,5.69852516 L2.10648757,12.3153414 L8,15.632396 L13.8935124,12.3153414 L13.8935124,5.69852516 L8,2.38147048 L2.10648757,5.69852516 Z" />
             </svg>
           </span>
 
-          <k-button
-            v-if="notification"
-            class="k-topbar-notification k-topbar-signals-button"
-            theme="positive"
-            @click="$store.dispatch('notification/close')"
-          >
-            {{ notification.message }}
-          </k-button>
+          <!-- notifications -->
+          <template v-if="notification">
+            <k-button
+              class="k-topbar-notification k-topbar-signals-button"
+              theme="positive"
+              @click="$store.dispatch('notification/close')"
+            >
+              {{ notification.message }}
+            </k-button>
+          </template>
 
-          <template v-else>
-            <div v-if="unregistered" class="k-registration">
+          <!-- registration -->
+          <template v-else-if="unregistered">
+            <div class="k-registration">
               <p>{{ $t('license.unregistered') }}</p>
               <k-button
                 :responsive="true"
@@ -121,14 +125,15 @@
                 {{ $t('license.buy') }}
               </k-button>
             </div>
-            <k-form-indicator />
-            <k-button
-              :tooltip="$t('search')"
-              class="k-topbar-signals-button"
-              icon="search"
-              @click="$store.dispatch('search', true)"
-            />
           </template>
+
+          <!-- search -->
+          <k-button
+            :tooltip="$t('search')"
+            class="k-topbar-signals-button"
+            icon="search"
+            @click="$store.dispatch('search', true)"
+          />
         </div>
       </div>
     </k-view>

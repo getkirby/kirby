@@ -456,7 +456,7 @@ class F
             }
 
             // delete the existing file
-            unlink($newRoot);
+            static::remove($newRoot);
         }
 
         // actually move the file if it exists

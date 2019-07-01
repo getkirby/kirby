@@ -188,7 +188,7 @@ return [
         $options  = $darkroom->preprocess($src, $options);
         $root     = (new Filename($src, $dst, $options))->toString();
 
-        F::copy($src, $root);
+        F::copy($src, $root, true);
         $darkroom->process($root, $options);
 
         return $root;

@@ -23,17 +23,17 @@
 
       <k-list v-if="models.length">
         <k-list-item
-          v-for="(page, index) in models"
+          v-for="page in models"
           :key="page.id"
           :text="page.text"
           :info="page.info"
           :image="page.image"
           :icon="page.icon"
-          @click="toggle(index)"
+          @click="toggle(page)"
         >
           <template slot="options">
             <k-button
-              v-if="page.selected"
+              v-if="isSelected(page)"
               slot="options"
               :autofocus="true"
               :icon="checkedIcon"
@@ -90,17 +90,12 @@ export default {
   },
   methods: {
     back() {
-      this.options.parent = this.model.parent ? this.model.parent.id : null;
+      this.options.parent = this.model.parent;
       this.fetch();
     },
     go(page) {
       this.options.parent = page.id;
       this.fetch();
-    },
-    isFiltered(page) {
-      return page.id.includes(this.search) ||
-             page.text.includes(this.search) ||
-             page.info.includes(this.search);
     },
     onFetched(response) {
       this.model = response.model;

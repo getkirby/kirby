@@ -11,6 +11,20 @@ return [
         },
 
         /**
+         * Image settings for each item
+         */
+        'image' => function (array $image = null) {
+            return $image ?? [];
+        },
+
+        /**
+         * Info text for each item
+         */
+        'info' => function (string $info = null) {
+            return $info;
+        },
+
+        /**
          * The minimum number of required selected
          */
         'min' => function (int $min = null) {
@@ -29,6 +43,21 @@ return [
          */
         'multiple' => function (bool $multiple = true) {
             return $multiple;
-        }
+        },
+
+        /**
+         * Query for the items to be included in the picker
+         */
+        'query' => function (string $query = null) {
+            return $query;
+        },
+
+        /**
+         * Main text for each item
+         */
+        'text' => function (string $text = '{{ file.filename }}') {
+            return $text;
+        },
+
     ],
 ];

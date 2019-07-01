@@ -106,6 +106,12 @@ export default {
       state.unlock = unlock;
     },
     UPDATE(state, [id, field, value]) {
+
+      // avoid updating without a valid model
+      if (!state.models[id]) {
+        return false;
+      }
+
       value = clone(value);
 
       Vue.set(state.models[id].values, field, value);

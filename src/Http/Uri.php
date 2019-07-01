@@ -246,7 +246,9 @@ class Uri
             return static::$current;
         }
 
-        $uri = parse_url('http://getkirby.com' . Server::get('REQUEST_URI'));
+        $uri = Server::get('REQUEST_URI');
+        $uri = str_replace(Server::get('HTTP_HOST'), '', $uri);
+        $uri = parse_url('http://getkirby.com' . $uri);
 
         $url = new static(array_merge([
             'scheme' => Server::https() === true ? 'https' : 'http',

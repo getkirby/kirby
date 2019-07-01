@@ -3,13 +3,14 @@ export default {
     return {
       models: [],
       issue: null,
+      selected: {},
       options: {
         endpoint: null,
         max: null,
         multiple: true,
-        selected: []
-      },
-      search: null
+        parent: null,
+        selected: [],
+      }
     }
   },
   computed: {
@@ -18,27 +19,14 @@ export default {
     },
     checkedIcon() {
       return this.multiple === true ? "check" : "circle-filled";
-    },
-    selected() {
-      return this.models.filter(model => model.selected);
     }
   },
   methods: {
     fetch() {
-      this.models = [];
-
       return this.$api
         .get(this.options.endpoint, this.fetchData || {})
         .then(response => {
-          const models   = response.data || response.pages || response;
-          const selected = this.options.selected || [];
-
-          this.models = models.map(model => {
-            return {
-              ...model,
-              selected: selected.indexOf(model[this.id || "id"]) !== -1
-            };
-          });
+          this.models = response.data || response.pages || response;
 
           if (this.onFetched) {
             this.onFetched(response);
@@ -46,42 +34,64 @@ export default {
         })
         .catch(e => {
           this.models = [];
-          this.issue = e.message;
+          this.issue  = e.message;
         });
     },
-    open(options) {
+    open(files, options) {
+
+      let fetch = true;
+
+      if (Array.isArray(files)) {
+        this.models = files;
+        fetch       = false;
+      } else {
+        this.models = [];
+        options     = files;
+      }
+
       this.options = {
         ...this.options,
         ...options
       };
-      this.fetch().then(() => {
-        this.$refs.dialog.open();
+
+      this.selected = {};
+
+      this.options.selected.forEach(id => {
+        this.$set(this.selected, id, {
+          id: id
+        });
       });
+
+      if (fetch) {
+        this.fetch().then(() => {
+          this.$refs.dialog.open();
+        });
+      } else {
+        this.$refs.dialog.open();
+      }
     },
     submit() {
-      this.$emit("submit", this.selected);
+      this.$emit("submit", Object.values(this.selected));
       this.$refs.dialog.close();
     },
-    toggle(index) {
+    isSelected(item) {
+      return this.selected[item.id] !== undefined;
+    },
+    toggle(item) {
       if (this.options.multiple === false) {
-        this.models = this.models.map(model => {
-          return {
-            ...model,
-            selected: false
-          };
-        });
+        this.selected = {};
       }
 
-      if (this.models[index].selected === true) {
-        this.models[index].selected = false;
+      if (this.isSelected(item) === true) {
+        this.$delete(this.selected, item.id);
         return;
       }
 
-      if (this.options.max && this.options.max <= this.selected.length) {
+      if (this.options.max && this.options.max <= Object.keys(this.selected).length) {
         return;
       }
 
-      this.models[index].selected = true;
+      this.$set(this.selected, item.id, item);
     }
   }
 };

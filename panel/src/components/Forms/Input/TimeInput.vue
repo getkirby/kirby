@@ -10,7 +10,6 @@
       :disabled="disabled"
       v-model="hour"
       placeholder="––"
-      empty="––"
       @input="setHour"
       @invalid="onInvalid"
     />
@@ -23,7 +22,6 @@
       :disabled="disabled"
       v-model="minute"
       placeholder="––"
-      empty="––"
       @input="setMinute"
       @invalid="onInvalid"
     />

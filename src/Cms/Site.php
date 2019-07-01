@@ -200,7 +200,7 @@ class Site extends ModelWithContent
     /**
      * Builds a breadcrumb collection
      *
-     * @return Pages
+     * @return Kirby\Cms\Pages
      */
     public function breadcrumb()
     {
@@ -482,32 +482,6 @@ class Site extends ModelWithContent
     }
 
     /**
-     * Creates a string query, starting from the model
-     *
-     * @internal
-     * @param string|null $query
-     * @param string|null $expect
-     * @return mixed
-     */
-    public function query(string $query = null, string $expect = null)
-    {
-        if ($query === null) {
-            return null;
-        }
-
-        $result = Str::query($query, [
-            'kirby' => $this->kirby(),
-            'site'  => $this,
-        ]);
-
-        if ($expect !== null && is_a($result, $expect) !== true) {
-            return null;
-        }
-
-        return $result;
-    }
-
-    /**
      * Returns the absolute path to the content directory
      *
      * @return string
@@ -630,24 +604,6 @@ class Site extends ModelWithContent
             'title'     => $this->title()->value(),
             'url'       => $this->url(),
         ];
-    }
-
-    /**
-     * String template builder
-     *
-     * @param string|null $template
-     * @return string
-     */
-    public function toString(string $template = null): string
-    {
-        if ($template === null) {
-            return $this->url();
-        }
-
-        return Str::template($template, [
-            'site'  => $this,
-            'kirby' => $this->kirby()
-        ]);
     }
 
     /**

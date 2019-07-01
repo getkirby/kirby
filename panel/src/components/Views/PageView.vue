@@ -62,7 +62,7 @@
       :parent="$api.pages.url(page.id)"
       :blueprint="blueprint"
       :tabs="tabs"
-      @tab="tab = $event"
+      @tab="onTab"
     />
 
     <k-page-rename-dialog ref="rename" @success="update" />
@@ -197,15 +197,20 @@ export default {
 
           this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
           this.$store.dispatch("title", this.page.title);
+
           this.$store.dispatch("form/create", {
-            id: "pages/" + page.id,
-            api: this.$api.pages.link(page.id),
-            content: page.content
+            id: "pages/" + this.page.id,
+            api: this.$api.pages.link(this.page.id),
+            content: this.page.content
           });
+
         })
         .catch(error => {
           this.issue = error;
         });
+    },
+    onTab(tab) {
+      this.tab = tab;
     },
     update() {
       this.fetch();

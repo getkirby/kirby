@@ -1,13 +1,15 @@
 <template>
   <k-field v-bind="$props" class="k-pages-field">
-    <k-button
-      v-if="more && !disabled"
-      slot="options"
-      icon="add"
-      @click="open"
-    >
-      {{ $t('select') }}
-    </k-button>
+    <k-button-group slot="options" class="k-field-options">
+      <k-button
+        v-if="more && !disabled"
+        icon="add"
+        class="k-field-options-button"
+        @click="open"
+      >
+        {{ $t('select') }}
+      </k-button>
+    </k-button-group>
     <template v-if="selected.length">
       <k-draggable
         :element="elements.list"
@@ -63,7 +65,7 @@ export default {
         endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
-        selected: this.selected.map(page => page.id)
+        selected: this.selected.map(page => page.id),
       });
     }
   }

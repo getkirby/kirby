@@ -314,7 +314,7 @@ trait PageActions
      * Copies the page to a new parent
      *
      * @param array $options
-     * @return Page
+     * @return Kirby\Cms\Page
      */
     public function copy(array $options = [])
     {
@@ -359,7 +359,18 @@ trait PageActions
 
         Dir::copy($this->root(), $tmp->root(), $children, $ignore);
 
-        return $parentModel->clone()->findPageOrDraft($slug);
+        $copy = $parentModel->clone()->findPageOrDraft($slug);
+
+        // remove all translated slugs
+        if ($this->kirby()->multilang() === true) {
+            foreach ($this->kirby()->languages() as $language) {
+                if ($language->isDefault() === false) {
+                    $copy = $copy->save(['slug' => null], $language->code());
+                }
+            }
+        }
+
+        return $copy;
     }
 
     /**
@@ -547,7 +558,7 @@ trait PageActions
      *
      * @param string $slug
      * @param array $options
-     * @return Page
+     * @return Kirby\Cms\Page
      */
     public function duplicate(string $slug = null, array $options = [])
     {

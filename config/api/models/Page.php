@@ -35,6 +35,9 @@ return [
         'hasDrafts' => function (Page $page) {
             return $page->hasDrafts();
         },
+        'hasFiles' => function (Page $page) {
+            return $page->hasFiles();
+        },
         'id' => function (Page $page) {
             return $page->id();
         },

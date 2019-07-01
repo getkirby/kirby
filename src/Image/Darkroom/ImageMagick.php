@@ -17,14 +17,6 @@ use Kirby\Toolkit\F;
  */
 class ImageMagick extends Darkroom
 {
-    protected function defaults(): array
-    {
-        return parent::defaults() + [
-            'bin'       => 'convert',
-            'interlace' => false,
-        ];
-    }
-
     protected function autoOrient(string $file, array $options)
     {
         if ($options['autoOrient'] === true) {
@@ -49,6 +41,14 @@ class ImageMagick extends Darkroom
     protected function convert(string $file, array $options): string
     {
         return sprintf($options['bin'] . ' "%s"', $file);
+    }
+
+    protected function defaults(): array
+    {
+        return parent::defaults() + [
+            'bin'       => 'convert',
+            'interlace' => false,
+        ];
     }
 
     protected function grayscale(string $file, array $options)
@@ -89,7 +89,7 @@ class ImageMagick extends Darkroom
 
         // log broken commands
         if ($return !== 0) {
-            error_log('The imagemagick convert command could not be executed: ' . $command);
+            throw new Exception('The imagemagick convert command could not be executed: ' . $command);
         }
 
         return $options;

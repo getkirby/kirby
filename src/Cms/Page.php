@@ -30,7 +30,6 @@ class Page extends ModelWithContent
     use HasChildren;
     use HasFiles;
     use HasMethods;
-    use HasPanelImage;
     use HasSiblings;
 
     /**
@@ -892,22 +891,16 @@ class Page extends ModelWithContent
      */
     public function panelIcon(array $params = null): array
     {
-        $options = [
-            'type'  => 'page',
-            'ratio' => $params['ratio'] ?? null,
-            'back'  => $params['back'] ?? 'black',
-        ];
-
         if ($icon = $this->blueprint()->icon()) {
-            $options['type'] = $icon;
+            $params['type'] = $icon;
 
             // check for emojis
             if (strlen($icon) !== Str::length($icon)) {
-                $options['emoji'] = true;
+                $params['emoji'] = true;
             }
         }
 
-        return $options;
+        return parent::panelIcon($params);
     }
 
     /**
@@ -923,6 +916,22 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Returns the image file object based on provided query
+     *
+     * @internal
+     * @param string|null $query
+     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
+     */
+    protected function panelImageSource(string $query = null)
+    {
+        if ($query === null) {
+            $query = 'page.image';
+        }
+
+        return parent::panelImageSource($query);
+    }
+
+    /**
      * Returns the full path without leading slash
      *
      * @internal
@@ -931,6 +940,31 @@ class Page extends ModelWithContent
     public function panelPath(): string
     {
         return 'pages/' . $this->panelId();
+    }
+
+    /**
+     * Prepares the response data for page pickers
+     * and page fields
+     *
+     * @param array|null $params
+     * @return array
+     */
+    public function panelPickerData(array $params = []): array
+    {
+        $image = $this->panelImage($params['image'] ?? []);
+        $icon  = $this->panelIcon($image);
+
+        return [
+            'dragText'    => $this->dragText(),
+            'hasChildren' => $this->hasChildren(),
+            'icon'        => $icon,
+            'id'          => $this->id(),
+            'image'       => $image,
+            'info'        => $this->toString($params['info'] ?? false),
+            'link'        => $this->panelUrl(true),
+            'text'        => $this->toString($params['text'] ?? '{{ page.title }}'),
+            'url'         => $this->url(),
+        ];
     }
 
     /**
@@ -1043,33 +1077,6 @@ class Page extends ModelWithContent
         }
 
         return $url;
-    }
-
-    /**
-     * Creates a string query, starting from the model
-     *
-     * @internal
-     * @param string|null $query
-     * @param string|null $expect
-     * @return mixed
-     */
-    public function query(string $query = null, string $expect = null)
-    {
-        if ($query === null) {
-            return null;
-        }
-
-        $result = Str::query($query, [
-            'kirby' => $this->kirby(),
-            'site'  => $this->site(),
-            'page'  => $this
-        ]);
-
-        if ($expect !== null && is_a($result, $expect) !== true) {
-            return null;
-        }
-
-        return $result;
     }
 
     /**
@@ -1415,25 +1422,6 @@ class Page extends ModelWithContent
     protected function token(): string
     {
         return sha1($this->id() . $this->template());
-    }
-
-    /**
-     * String template builder
-     *
-     * @param string|null $template
-     * @return string
-     */
-    public function toString(string $template = null): string
-    {
-        if ($template === null) {
-            return $this->id();
-        }
-
-        return Str::template($template, [
-            'page'  => $this,
-            'site'  => $this->site(),
-            'kirby' => $this->kirby()
-        ]);
     }
 
     /**

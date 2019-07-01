@@ -6,9 +6,17 @@ return function (array $props) {
             'headline' => $props['headline'] ?? t('files'),
             'type'     => 'files',
             'layout'   => $props['layout'] ?? 'cards',
+            'template' => $props['template'] ?? null,
             'info'     => '{{ file.dimensions }}'
         ]
     ];
+
+    // remove global options
+    unset(
+        $props['headline'],
+        $props['layout'],
+        $props['template']
+    );
 
     return $props;
 };

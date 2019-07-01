@@ -29,35 +29,49 @@ export default {
       page: {
         children: false,
         files: false,
+        hasChildren: false,
+        hasDrafts: false,
+        hasFiles: false,
         id: null,
-        slug: '',
+        slug: ''
       }
     };
   },
   computed: {
     fields() {
-      return {
+      const hasChildren = this.page.hasChildren || this.page.hasDrafts;
+      const hasFiles    = this.page.hasFiles;
+
+      let fields = {
         slug: {
           label: this.$t("slug"),
           type: "text",
           required: true,
           counter: false,
           spellcheck: false,
-          icon: "url"
-        },
-        files: {
+          icon: "url",
+        }
+      };
+
+      if (hasFiles) {
+        fields.files = {
           label: this.$t("page.duplicate.files"),
           type: "toggle",
           required: true,
-          width: "1/2"
-        },
-        children: {
+          width: hasChildren ? "1/2" : null
+        };
+      }
+
+      if (hasChildren) {
+        fields.children = {
           label: this.$t("page.duplicate.pages"),
           type: "toggle",
           required: true,
-          width: "1/2"
-        }
-      };
+          width: hasFiles ? "1/2" : null
+        };
+      }
+
+      return fields;
     },
     slugs() {
       return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
@@ -74,10 +88,13 @@ export default {
   methods: {
     open(id) {
       this.$api.pages
-        .get(id, {language: "@default"})
+        .get(id, {language: "@default", select: "id,slug,hasChildren,hasDrafts,hasFiles,title"})
         .then(page => {
-          this.page.id   = page.id;
-          this.page.slug = page.slug + "-" + slug(this.$t("page.duplicate.appendix"));
+          this.page.id          = page.id;
+          this.page.slug        = page.slug + "-" + slug(this.$t("page.duplicate.appendix"));
+          this.page.hasChildren = page.hasChildren;
+          this.page.hasDrafts   = page.hasDrafts;
+          this.page.hasFiles    = page.hasFiles;
           this.$refs.dialog.open();
         })
         .catch(error => {
@@ -88,7 +105,7 @@ export default {
       this.$api.pages
         .duplicate(this.page.id, this.page.slug, {
           children: this.page.children,
-          files:    this.page.files
+          files:    this.page.files,
         })
         .then(page => {
           this.success({

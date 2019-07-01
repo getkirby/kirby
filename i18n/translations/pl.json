@@ -24,9 +24,13 @@
   "delete": "Usu\u0144",
   "dimensions": "Wymiary",
   "discard": "Odrzu\u0107",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Pobierz",
+  "duplicate": "Zduplikuj",
   "edit": "Edytuj",
+
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
 
   "email": "Email",
   "email.placeholder": "mail@example.com",
@@ -67,9 +71,13 @@
   "error.form.incomplete": "Popraw wszystkie błędy w formularzu…",
   "error.form.notSaved": "Nie udało się zapisać formularza",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
+
+  "error.license.format": "Wprowadź poprawny klucz licencyjny",
   "error.license.email": "Wprowadź poprawny adres email",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "Nie udało się zweryfikować licencji",
 
   "error.page.changeSlug.permission":
     "Nie możesz zmienić końcówki adresu URL w \"{slug}\"",
@@ -96,7 +104,7 @@
     "Istnieje już szkic z końcówką URL \"{slug}\"",
   "error.page.duplicate":
     "Istnieje już strona z końcówką URL \"{slug}\"",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Nie masz uprawnień, by zduplikować \"{slug}\"",
   "error.page.notFound": "Nie można znaleźć strony \"{slug}\"",
   "error.page.num.invalid":
     "Wprowadź poprawny numer sortujący. Liczby nie mogą być ujemne.",
@@ -277,7 +285,8 @@
 
   "loading": "Ładuję",
 
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
+  "lock.unsaved": "Niezapisane zmiany",
+  "lock.isLocked": "Niezapisane zmiany autorstwa <strong>{email}</strong>",
   "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
   "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
   "lock.unlock": "Unlock",
@@ -334,6 +343,7 @@
   "page.draft.create": "Utwórz szkic",
   "page.duplicate.appendix": "Kopiuj",
   "page.duplicate.files": "Copy files",
+  "page.duplicate.pages": "Copy pages",
   "page.status": "Status",
   "page.status.draft": "Szkic",
   "page.status.draft.description":

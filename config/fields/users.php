@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'mixins' => ['min', 'picker'],
+    'mixins' => ['min', 'picker', 'userpicker'],
     'props' => [
         /**
          * Unset inherited props
@@ -35,22 +35,11 @@ return [
     ],
     'methods' => [
         'userResponse' => function ($user) {
-            $avatar = function ($user) {
-                if ($avatar = $user->avatar()) {
-                    return [
-                        'url' => $avatar->crop(512)->url()
-                    ];
-                }
-
-                return null;
-            };
-
-            return [
-                'username' => $user->username(),
-                'id'       => $user->id(),
-                'email'    => $user->email(),
-                'avatar'   => $avatar($user)
-            ];
+            return $user->panelPickerData([
+                'info'  => $this->info,
+                'image' => $this->image,
+                'text'  => $this->text,
+            ]);
         },
         'toUsers' => function ($value = null) {
             $users = [];
@@ -69,6 +58,23 @@ return [
             return $users;
         }
     ],
+    'api' => function () {
+        return [
+            [
+                'pattern' => '/',
+                'action' => function () {
+                    $field = $this->field();
+
+                    return $field->userpicker([
+                        'query' => $field->query(),
+                        'image' => $field->image(),
+                        'info'  => $field->info(),
+                        'text'  => $field->text()
+                    ]);
+                }
+            ]
+        ];
+    },
     'save' => function ($value = null) {
         return A::pluck($value, 'email');
     },

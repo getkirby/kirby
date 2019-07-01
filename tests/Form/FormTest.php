@@ -34,6 +34,29 @@ class FormTest extends TestCase
         $this->assertEquals($values, $form->values());
     }
 
+    public function testDataFromUnsaveableFields()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+
+        $form = new Form([
+            'fields' => [
+                'info' => [
+                    'type' => 'info'
+                ]
+            ],
+            'values' => [
+                'info' => 'Yay'
+            ]
+        ]);
+
+        $this->assertNull($form->data()['info']);
+    }
+
     public function testDataFromNestedFields()
     {
         new App([
@@ -157,5 +180,87 @@ class FormTest extends TestCase
 
         $this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->values());
         $this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->data());
+    }
+
+    public function testErrors()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $form = new Form([
+            'fields' => [
+                'a' => [
+                    'label' => 'Email',
+                    'type' => 'email'
+                ],
+                'b' => [
+                    'label' => 'Url',
+                    'type' => 'url'
+                ]
+            ],
+            'values' => [
+                'a' => 'A',
+                'b' => 'B',
+            ]
+        ]);
+
+
+        $this->assertTrue($form->isInvalid());
+        $this->assertFalse($form->isValid());
+
+        $expected = [
+            'a' => [
+                'label' => 'Email',
+                'message' => [
+                    'email' => 'Please enter a valid email address'
+                ]
+            ],
+            'b' => [
+                'label' => 'Url',
+                'message' => [
+                    'url' => 'Please enter a valid URL'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $form->errors());
+
+        // check for a correct cached array
+        $this->assertEquals($expected, $form->errors());
+    }
+
+    public function testToArray()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $form = new Form([
+            'fields' => [
+                'a' => [
+                    'label' => 'A',
+                    'type' => 'text'
+                ],
+                'b' => [
+                    'label' => 'B',
+                    'type' => 'text'
+                ]
+            ],
+            'values' => [
+                'a' => 'A',
+                'b' => 'B',
+            ]
+        ]);
+
+        $this->assertEquals([], $form->toArray()['errors']);
+        $this->assertArrayHasKey('a', $form->toArray()['fields']);
+        $this->assertArrayHasKey('b', $form->toArray()['fields']);
+        $this->assertCount(2, $form->toArray()['fields']);
+        $this->assertEquals(false, $form->toArray()['invalid']);
     }
 }

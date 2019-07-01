@@ -14,15 +14,16 @@
     <template v-else>
       <k-list v-if="models.length">
         <k-list-item
-          v-for="(file, index) in models"
+          v-for="file in models"
           :key="file.filename"
-          :text="file.filename"
+          :text="file.text"
+          :info="file.info"
           :image="file.image"
           :icon="file.icon"
-          @click="toggle(index)"
+          @click="toggle(file)"
         >
           <k-button
-            v-if="file.selected"
+            v-if="isSelected(file)"
             slot="options"
             :autofocus="true"
             :icon="checkedIcon"
@@ -50,35 +51,12 @@
 import picker from "@/mixins/picker/dialog.js";
 
 export default {
-  mixins: [picker],
-  methods: {
-    isFiltered(file) {
-      return file.filename.includes(this.search);
-    },
-    isSelected(file, selected) {
-      return selected.indexOf(file.id) !== -1;
-    },
-    onFetched() {
-      this.models = this.models.map(file => {
-        file.thumb = this.options.image || {};
-        file.thumb.url = false;
-
-        if (file.thumbs && file.thumbs.tiny) {
-          file.thumb.url = file.thumbs.medium;
-        }
-
-        return file;
-      });
-    }
-  }
+  mixins: [picker]
 };
 </script>
 
 <style lang="scss">
 .k-files-dialog .k-list-item {
   cursor: pointer;
-}
-.k-files-dialog-search {
-  margin-bottom: 0.5rem;
 }
 </style>

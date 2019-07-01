@@ -28,6 +28,10 @@
   "duplicate": "Duplicate",
   "edit": "Aloldal szerkeszt\u00e9se",
 
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
+
   "email": "Email",
   "email.placeholder": "mail@pelda.hu",
 
@@ -66,6 +70,10 @@
 
   "error.form.incomplete": "Kérlek javítsd ki az összes hibát az űrlapon",
   "error.form.notSaved": "Az űrlap nem menthető",
+
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
 
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Kérlek adj meg egy valós email-címet",
@@ -277,6 +285,7 @@
 
   "loading": "Betöltés",
 
+  "lock.unsaved": "Unsaved changes",
   "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
   "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
   "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
@@ -334,6 +343,7 @@
   "page.draft.create": "Piszkozat létrehozása",
   "page.duplicate.appendix": "Másol",
   "page.duplicate.files": "Copy files",
+  "page.duplicate.pages": "Copy pages",
   "page.status": "Állapot",
   "page.status.draft": "Piszkozat",
   "page.status.draft.description":

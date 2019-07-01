@@ -27,20 +27,6 @@ return [
         },
 
         /**
-         * Image settings for each item
-         */
-        'image' => function (array $image = null) {
-            return $image ?? [];
-        },
-
-        /**
-         * Info text for each item
-         */
-        'info' => function (string $info = null) {
-            return $info;
-        },
-
-        /**
          * Changes the layout of the selected files. Available layouts: `list`, `cards`
          */
         'layout' => function (string $layout = 'list') {
@@ -48,24 +34,10 @@ return [
         },
 
         /**
-         * Query for the files to be included in the picker
-         */
-        'query' => function (string $query = null) {
-            return $query;
-        },
-
-        /**
          * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
          */
         'size' => function (string $size = 'auto') {
             return $size;
-        },
-
-        /**
-         * Main text for each item
-         */
-        'text' => function (string $text = '{{ file.filename }}') {
-            return $text;
         },
 
         'value' => function ($value = null) {
@@ -122,7 +94,7 @@ return [
         return [
             [
                 'pattern' => '/',
-                'action' => function () {
+                'action'  => function () {
                     $field = $this->field();
 
                     return $field->filepicker([
@@ -135,7 +107,8 @@ return [
             ],
             [
                 'pattern' => 'upload',
-                'action' => function () {
+                'method'  => 'POST',
+                'action'  => function () {
                     $field   = $this->field();
                     $uploads = $field->uploads();
 

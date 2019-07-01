@@ -28,6 +28,10 @@
   "duplicate": "Duplicate",
   "edit": "\u0648\u06cc\u0631\u0627\u06cc\u0634",
 
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
+
   "email": "\u067e\u0633\u062a \u0627\u0644\u06a9\u062a\u0631\u0648\u0646\u06cc\u06a9",
   "email.placeholder": "mail@example.com",
 
@@ -66,6 +70,10 @@
 
   "error.form.incomplete": "لطفا کلیه خطاهای فرم را برطرف کنید",
   "error.form.notSaved": "امکان دخیره فرم وجود ندارد",
+
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
 
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "لطفا ایمیل صحیحی وارد کنید",
@@ -277,6 +285,7 @@
 
   "loading": "بارگزاری",
 
+  "lock.unsaved": "Unsaved changes",
   "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
   "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
   "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
@@ -334,6 +343,7 @@
   "page.draft.create": "ایجاد پیش‌نویس",
   "page.duplicate.appendix": "کپی",
   "page.duplicate.files": "Copy files",
+  "page.duplicate.pages": "Copy pages",
   "page.status": "وضعیت",
   "page.status.draft": "پیش‌نویس",
   "page.status.draft.description":

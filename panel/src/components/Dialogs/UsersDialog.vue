@@ -14,27 +14,15 @@
     <template v-else>
       <k-list v-if="models.length">
         <k-list-item
-          v-for="(user, index) in models"
+          v-for="user in models"
           :key="user.email"
           :text="user.username"
-          :image="
-            user.avatar ?
-              {
-                url: user.avatar.url,
-                back: 'pattern',
-                cover: true
-              }
-              :
-              null
-          "
-          :icon="{
-            type: 'user',
-            back: 'black'
-          }"
-          @click="toggle(index)"
+          :image="user.image"
+          :icon="user.icon"
+          @click="toggle(user)"
         >
           <k-button
-            v-if="user.selected"
+            v-if="isSelected(user)"
             slot="options"
             :autofocus="true"
             :icon="checkedIcon"
@@ -62,29 +50,12 @@
 import picker from "@/mixins/picker/dialog.js";
 
 export default {
-  mixins: [picker],
-  computed: {
-    id() {
-      return "email";
-    }
-  },
-  methods: {
-    isFiltered(user) {
-      return user.email.includes(this.search) ||
-             user.username.includes(this.search);
-    }
-  }
+  mixins: [picker]
 };
 </script>
 
 <style lang="scss">
 .k-users-dialog .k-list-item {
   cursor: pointer;
-}
-.k-users-dialog .k-empty {
-  border: 0;
-}
-.k-users-dialog-search {
-  margin-bottom: 0.5rem;
 }
 </style>

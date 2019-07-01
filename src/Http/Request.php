@@ -156,7 +156,7 @@ class Request
     /**
      * Returns the Auth object if authentication is set
      *
-     * @return BasicAuth|BearerAuth|null
+     * @return Kirby\Http\Request\Auth\BasicAuth|Kirby\Http\Request\Auth\BearerAuth|null
      */
     public function auth()
     {

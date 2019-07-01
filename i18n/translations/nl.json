@@ -28,6 +28,10 @@
   "duplicate": "Dupliceren",
   "edit": "Wijzig",
 
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
+
   "email": "E-mailadres",
   "email.placeholder": "mail@voorbeeld.nl",
 
@@ -66,6 +70,10 @@
 
   "error.form.incomplete": "Verbeter alle fouten in het formulier",
   "error.form.notSaved": "Het formulier kon niet worden opgeslagen",
+
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
 
   "error.license.format": "Vul een gelidge licentie-key in",
   "error.license.email": "Gelieve een geldig emailadres in te voeren",
@@ -277,6 +285,7 @@
 
   "loading": "Laden",
 
+  "lock.unsaved": "Unsaved changes",
   "lock.isLocked": "Niet opgeslagen wijzigingen door <strong>{email}</strong>",
   "lock.file.isLocked": "Dit bestand wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
   "lock.page.isLocked": "Deze pagina wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
@@ -334,6 +343,7 @@
   "page.draft.create": "Maak concept",
   "page.duplicate.appendix": "Kopiëren",
   "page.duplicate.files": "Kopieer bestanden",
+  "page.duplicate.pages": "Copy pages",
   "page.status": "Status",
   "page.status.draft": "Concept",
   "page.status.draft.description":

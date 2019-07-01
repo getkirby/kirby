@@ -28,6 +28,10 @@
   "duplicate": "Kopyala",
   "edit": "D\u00fczenle",
 
+  "dialog.files.empty": "Seçilecek dosya yok",
+  "dialog.pages.empty": "Seçilecek sayfa yok",
+  "dialog.users.empty": "Seçilecek kullanıcı yok",
+
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
 
@@ -66,6 +70,10 @@
 
   "error.form.incomplete": "Lütfen tüm form hatalarını düzeltin...",
   "error.form.notSaved": "Form kaydedilemedi",
+
+  "error.language.code": "Lütfen dil için geçerli bir kod girin",
+  "error.language.duplicate": "Bu dil zaten var",
+  "error.language.name": "Lütfen dil için geçerli bir isim girin",
 
   "error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",
@@ -277,6 +285,7 @@
 
   "loading": "Yükleniyor",
 
+  "lock.unsaved": "Kaydedilmemiş değişiklikler",
   "lock.isLocked": "<strong>{email}</strong> tarafından kaydedilmemiş değişiklikler",
   "lock.file.isLocked": "Dosya şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
   "lock.page.isLocked": "Sayfa şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
@@ -334,6 +343,7 @@
   "page.draft.create": "Taslak oluştur",
   "page.duplicate.appendix": "Kopyala",
   "page.duplicate.files": "Dosyaları kopyala",
+  "page.duplicate.pages": "Sayfaları kopyala",
   "page.status": "Durum",
   "page.status.draft": "Taslak",
   "page.status.draft.description":

@@ -24,9 +24,13 @@
   "delete": "Elimina",
   "dimensions": "Dimensioni",
   "discard": "Abbandona",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Scarica",
+  "duplicate": "Duplica",
   "edit": "Modifica",
+
+  "dialog.files.empty": "No files to select",
+  "dialog.pages.empty": "No pages to select",
+  "dialog.users.empty": "No users to select",
 
   "email": "Email",
   "email.placeholder": "mail@esempio.com",
@@ -67,9 +71,13 @@
   "error.form.incomplete": "Correggi tutti gli errori nel form...",
   "error.form.notSaved": "Non è stato possibile salvare il form",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.language.code": "Please enter a valid code for the language",
+  "error.language.duplicate": "The language already exists",
+  "error.language.name": "Please enter a valid name for the language",
+
+  "error.license.format": "Inserisci un codice di licenza valido",
   "error.license.email": "Inserisci un indirizzo email valido",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "Non è stato possibile verificare la licenza",
 
   "error.page.changeSlug.permission":
     "Non ti è permesso cambiare l'URL di \"{slug}\"",
@@ -96,7 +104,7 @@
     "Una bozza di pagina con l'URL \"{slug}\" esiste già",
   "error.page.duplicate":
     "Una pagina con l'URL \"{slug}\" esiste già",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Non ti è permesso duplicare \"{slug}\"",
   "error.page.notFound": "La pagina \"{slug}\" non è stata trovata",
   "error.page.num.invalid":
     "Inserisci un numero di ordinamento valido. I numeri non devono essere negativi",
@@ -277,11 +285,12 @@
 
   "loading": "Caricamento",
 
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.unsaved": "Modifiche non salvate",
+  "lock.isLocked": "Modifiche non salvate di <strong>{email}</strong>",
+  "lock.file.isLocked": "Il file viene attualmente modificato da {email} e non può essere cambiato.",
+  "lock.page.isLocked": "la pagina viene attualmente modificata da {email} e non può essere cambiata.",
+  "lock.unlock": "Sblocca",
+  "lock.isUnlocked": "Un altro utente ha sovrascritto le tue modifiche non salvate. Puoi scaricarle per recuperarle e quindi incorporarle manualmente. ",
 
   "login": "Accedi",
   "login.remember": "Resta collegato",
@@ -333,7 +342,8 @@
   "page.delete.confirm.title": "Inserisci il titolo della pagina per confermare",
   "page.draft.create": "Crea bozza",
   "page.duplicate.appendix": "Copia",
-  "page.duplicate.files": "Copy files",
+  "page.duplicate.files": "Copia file",
+  "page.duplicate.pages": "Copia pagine",
   "page.status": "Stato",
   "page.status.draft": "Bozza",
   "page.status.draft.description":
@@ -359,13 +369,13 @@
   "revert": "Abbandona",
 
   "role": "Ruolo",
-  "role.admin.description": "The admin has all rights",
-  "role.admin.title": "Admin",
+  "role.admin.description": "L'amministratore ha tutti i permessi",
+  "role.admin.title": "Amministratore",
   "role.all": "Tutti",
   "role.empty": "Non ci sono utenti con questo ruolo",
   "role.description.placeholder": "Nessuna descrizione",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Questo è un ruolo \"fallback\" senza permessi",
+  "role.nobody.title": "Nessuno",
 
   "save": "Salva",
   "search": "Cerca",

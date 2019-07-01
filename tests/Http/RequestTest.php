@@ -4,9 +4,11 @@ namespace Kirby\Http;
 
 use PHPUnit\Framework\TestCase;
 
+use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
 use Kirby\Http\Request\Body;
-use Kirby\Http\Request\Files;
+use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Http\Request\Auth\BearerAuth;
 
 class RequestTest extends TestCase
 {
@@ -55,6 +57,48 @@ class RequestTest extends TestCase
         $this->assertArrayHasKey('files', $info);
         $this->assertArrayHasKey('method', $info);
         $this->assertArrayHasKey('url', $info);
+    }
+
+    public function testAuthMissing()
+    {
+        $request = new Request();
+        $this->assertFalse($request->auth());
+    }
+
+    public function testBasicAuth()
+    {
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode($credentials = 'testuser:testpass');
+
+        $request = new Request();
+
+        $this->assertInstanceOf(BasicAuth::class, $request->auth());
+        $this->assertEquals('testuser', $request->auth()->username());
+        $this->assertEquals('testpass', $request->auth()->password());
+
+        unset($_SERVER['HTTP_AUTHORIZATION']);
+    }
+
+    public function testBearerAuth()
+    {
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer abcd';
+
+        $request = new Request();
+
+        $this->assertInstanceOf(BearerAuth::class, $request->auth());
+        $this->assertEquals('abcd', $request->auth()->token());
+
+        unset($_SERVER['HTTP_AUTHORIZATION']);
+    }
+
+    public function testUnknownAuth()
+    {
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Unknown abcd';
+
+        $request = new Request();
+
+        $this->assertFalse($request->auth());
+
+        unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
     public function testMethod()
@@ -125,5 +169,20 @@ class RequestTest extends TestCase
         $this->assertNotEquals($uriBefore, $clone);
         $this->assertEquals($uriBefore, $uriAfter);
         $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
+    }
+
+    public function testPath()
+    {
+        $request = new Request();
+        $this->assertInstanceOf(Path::class, $request->path());
+    }
+
+    public function testDomain()
+    {
+        $request = new Request([
+            'url' => 'https://getkirby.com/a/b'
+        ]);
+
+        $this->assertEquals('getkirby.com', $request->domain());
     }
 }

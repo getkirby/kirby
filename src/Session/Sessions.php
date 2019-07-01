@@ -30,7 +30,7 @@ class Sessions
     /**
      * Creates a new Sessions instance
      *
-     * @param SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
+     * @param Kirby\Session\SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
      * @param array               $options Optional additional options:
      *                                     - `mode`:       Default token transmission mode (cookie, header or manual)
      *                                                     Defaults to `cookie`
@@ -139,7 +139,7 @@ class Sessions
      * - In `header` mode: Gets the session from the `Authorization` request header
      * - In `manual` mode: Fails and throws an Exception
      *
-     * @return Session|null Either the current session or null in case there isn't one
+     * @return Kirby\Session\Session|null Either the current session or null in case there isn't one
      */
     public function current()
     {
@@ -183,7 +183,7 @@ class Sessions
      * - Tries to get the session from the cookie
      * - Otherwise returns null
      *
-     * @return Session|null Either the current session or null in case there isn't one
+     * @return Kirby\Session\Session|null Either the current session or null in case there isn't one
      */
     public function currentDetected()
     {

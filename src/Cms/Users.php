@@ -118,4 +118,15 @@ class Users extends Collection
 
         return $users;
     }
+
+    /**
+     * Shortcut for `$users->filterBy('role', 'admin')`
+     *
+     * @param string $role
+     * @return self
+     */
+    public function role(string $role)
+    {
+        return $this->filterBy('role', $role);
+    }
 }

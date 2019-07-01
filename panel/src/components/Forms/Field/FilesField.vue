@@ -2,18 +2,27 @@
   <k-field v-bind="$props" class="k-files-field">
 
     <template v-if="more && !disabled" slot="options">
-      <template v-if="uploads">
-        <k-dropdown>
-          <k-button ref="pickerToggle" icon="add" @click="$refs.picker.toggle()">{{ $t('add') }}</k-button>
-          <k-dropdown-content ref="picker" align="right">
-            <k-dropdown-item icon="check" @click="open">{{ $t('select') }}</k-dropdown-item>
-            <k-dropdown-item icon="upload" @click="upload">{{ $t('upload') }}</k-dropdown-item>
-          </k-dropdown-content>
-        </k-dropdown>
-      </template>
-      <template v-else>
-        <k-button icon="add" @click="open">{{ $t('add') }}</k-button>
-      </template>
+      <k-button-group class="k-field-options">
+        <template v-if="uploads">
+          <k-dropdown>
+            <k-button
+              ref="pickerToggle"
+              icon="add"
+              class="k-field-options-button"
+              @click="$refs.picker.toggle()"
+            >
+              {{ $t('add') }}
+            </k-button>
+            <k-dropdown-content ref="picker" align="right">
+              <k-dropdown-item icon="check" @click="open">{{ $t('select') }}</k-dropdown-item>
+              <k-dropdown-item icon="upload" @click="upload">{{ $t('upload') }}</k-dropdown-item>
+            </k-dropdown-content>
+          </k-dropdown>
+        </template>
+        <template v-else>
+          <k-button icon="add" class="k-field-options-button" @click="open">{{ $t('add') }}</k-button>
+        </template>
+      </k-button-group>
     </template>
 
     <template v-if="selected.length">
@@ -92,7 +101,6 @@ export default {
 
       this.$refs.selector.open({
         endpoint: this.endpoints.field,
-        image: this.image,
         max: this.max,
         multiple: this.multiple,
         selected: this.selected.map(file => file.id)

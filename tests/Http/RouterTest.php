@@ -59,6 +59,16 @@ class RouterTest extends TestCase
         $this->assertEquals('POST', $resultB->method());
     }
 
+    public function testRegisterInvalidRoute()
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid route parameters');
+
+        $router = new Router([
+            'test' => 'test'
+        ]);
+    }
+
     public function testRegisterInvalidData()
     {
         $this->expectException('TypeError');

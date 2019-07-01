@@ -11,6 +11,25 @@ class DarkroomTest extends TestCase
         return __DIR__ . '/fixtures/image/cat.jpg';
     }
 
+    public function testFactory()
+    {
+        $instance = Darkroom::factory('gd');
+
+        $this->assertInstanceOf(Darkroom\GdLib::class, $instance);
+
+        $instance = Darkroom::factory('im');
+
+        $this->assertInstanceOf(Darkroom\ImageMagick::class, $instance);
+    }
+
+    public function testFactoryWithInvalidType()
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid Darkroom type');
+
+        $instance = Darkroom::factory('does-not-exist');
+    }
+
     public function testCropWithoutPosition()
     {
         $darkroom = new Darkroom();
@@ -74,6 +93,19 @@ class DarkroomTest extends TestCase
         ]);
 
         $options = $darkroom->preprocess($this->file(), [
+            'quality' => 30
+        ]);
+
+        $this->assertEquals(30, $options['quality']);
+    }
+
+    public function testProcess()
+    {
+        $darkroom = new Darkroom([
+            'quality' => 20
+        ]);
+
+        $options = $darkroom->process($this->file(), [
             'quality' => 30
         ]);
 

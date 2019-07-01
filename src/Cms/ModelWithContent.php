@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -259,11 +260,143 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the lock object for this model
      *
-     * @return ContentLock
+     * @return Kirby\Cms\ContentLock
      */
-    public function lock(): ContentLock
+    public function lock()
     {
         return new ContentLock($this);
+    }
+
+    /**
+     * Returns the panel icon definition
+     *
+     * @internal
+     * @param array $params
+     * @return array
+     */
+    public function panelIcon(array $params = null): array
+    {
+        $defaults = [
+            'type'  => 'page',
+            'ratio' => null,
+            'back'  => 'pattern',
+            'color' => '#c5c9c6',
+        ];
+
+        return array_merge($defaults, $params ?? []);
+    }
+
+    /**
+     * @internal
+     * @param string|array|false $settings
+     * @return array|null
+     */
+    public function panelImage($settings = null): ?array
+    {
+        $defaults = [
+            'ratio' => '3/2',
+            'back'  => 'pattern',
+            'cover' => false
+        ];
+
+        // switch the image off
+        if ($settings === false) {
+            return null;
+        }
+
+        if (is_string($settings) === true) {
+            $settings = [
+                'query' => $settings
+            ];
+        }
+
+        if ($image = $this->panelImageSource($settings['query'] ?? null)) {
+
+            // main url
+            $settings['url'] = $image->url();
+
+            // for cards
+            $settings['cards'] = [
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'srcset' => $image->srcset([
+                    352,
+                    864,
+                    1408,
+                ])
+            ];
+
+            // for lists
+            $settings['list'] = [
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'srcset' => $image->srcset([
+                    '1x' => [
+                        'width' => 38,
+                        'height' => 38,
+                        'crop' => 'center'
+                    ],
+                    '2x' => [
+                        'width' => 76,
+                        'height' => 76,
+                        'crop' => 'center'
+                    ],
+                ])
+            ];
+
+            unset($settings['query']);
+        }
+
+        return array_merge($defaults, (array)$settings);
+    }
+
+    /**
+     * Returns the image file object based on provided query
+     *
+     * @internal
+     * @param string|null $query
+     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
+     */
+    protected function panelImageSource(string $query = null)
+    {
+        $image = $this->query($query ?? null);
+
+        // validate the query result
+        if (is_a($image, File::class) === false && is_a($image, Asset::class) === false) {
+            $image = null;
+        }
+
+        // fallback for files
+        if ($image === null && is_a($this, File::class) === true && $this->isViewable() === true) {
+            $image = $this;
+        }
+
+        return $image;
+    }
+
+    /**
+     * Creates a string query, starting from the model
+     *
+     * @internal
+     * @param string|null $query
+     * @param string|null $expect
+     * @return mixed
+     */
+    public function query(string $query = null, string $expect = null)
+    {
+        if ($query === null) {
+            return null;
+        }
+
+        $result = Str::query($query, [
+            'kirby'             => $this->kirby(),
+            'site'              => is_a($this, Site::class) ? $this : $this->site(),
+            static::CLASS_ALIAS => $this
+        ]);
+
+        if ($expect !== null && is_a($result, $expect) !== true) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**
@@ -396,6 +529,27 @@ abstract class ModelWithContent extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * String template builder
+     *
+     * @param string|null $template
+     * @return string
+     */
+    public function toString(string $template = null): string
+    {
+        if ($template === null) {
+            return $this->id();
+        }
+
+        $result = Str::template($template, [
+            'kirby'             => $this->kirby(),
+            'site'              => is_a($this, Site::class) ? $this : $this->site(),
+            static::CLASS_ALIAS => $this
+        ]);
+
+        return $result;
     }
 
     /**

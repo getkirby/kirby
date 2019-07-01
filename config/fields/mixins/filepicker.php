@@ -2,7 +2,7 @@
 
 return [
     'methods' => [
-        'filepicker' => function ($params) {
+        'filepicker' => function (array $params = []) {
 
             // fetch the parent model
             $model = $this->model();

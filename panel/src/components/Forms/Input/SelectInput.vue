@@ -13,11 +13,11 @@
       v-on="listeners"
     >
       <option
-        v-if="hasEmpty"
+        v-if="hasEmptyOption"
         :disabled="required"
         value=""
       >
-        {{ placeholder }}
+        {{ emptyOption }}
       </option>
       <option
         v-for="option in options"
@@ -42,6 +42,10 @@ export default {
     ariaLabel: String,
     default: String,
     disabled: Boolean,
+    empty: {
+      type: [Boolean, String],
+      default: true
+    },
     id: [Number, String],
     name: [Number, String],
     placeholder: String,
@@ -68,14 +72,21 @@ export default {
     };
   },
   computed: {
-    hasEmpty() {
+    emptyOption() {
+      return this.placeholder || "—";
+    },
+    hasEmptyOption() {
+      if (this.empty === false) {
+        return false;
+      }
+
       return !(this.required && this.default);
     },
     label() {
       const label = this.text(this.selected);
 
       if (this.selected === "" || this.selected === null || label === null) {
-        return this.placeholder;
+        return this.emptyOption;
       }
 
       return label;
@@ -154,5 +165,8 @@ export default {
 }
 .k-select-input-native[disabled] {
   cursor: default;
+}
+.k-select-input-native {
+  font-weight: $font-weight-normal;
 }
 </style>

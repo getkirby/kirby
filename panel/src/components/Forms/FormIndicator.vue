@@ -1,6 +1,6 @@
 <template>
-  <k-dropdown v-if="changes.length > 0" class="k-form-indicator">
-    <k-button class="k-topbar-button" @click="$refs.list.toggle()">
+  <k-dropdown v-if="storage.length > 0" class="k-form-indicator">
+    <k-button class="k-topbar-button" @click="toggle">
       <k-icon type="edit" class="k-form-indicator-icon" />
     </k-button>
 
@@ -10,12 +10,12 @@
       </p>
       <hr>
       <k-dropdown-item
-        v-for="change in changes"
-        :key="change.id"
-        :icon="change.icon"
-        :link="change.link"
+        v-for="entry in entries"
+        :key="entry.link"
+        :icon="entry.icon"
+        :link="entry.link"
       >
-        {{ label(change) }}
+        {{ entry.label }}
       </k-dropdown-item>
     </k-dropdown-content>
   </k-dropdown>
@@ -25,94 +25,89 @@
 export default {
   data() {
     return {
-      changes: []
+      isOpen: false,
+      entries: [],
+      storage: [],
     }
   },
   computed: {
-    models() {
+    store() {
       return this.$store.state.form.models;
     }
   },
   watch: {
-    models: {
+    store: {
       handler() {
-        this.load();
+        this.loadFromStorage();
       },
       deep: true
     }
   },
   created() {
-    this.load();
+    this.loadFromStorage();
   },
   methods: {
-    entry(model, stored) {
-      if (stored.id.startsWith("pages/")) {
-        return {
-          icon: "page",
-          link: this.$api.pages.link(model.id)
-        };
-      }
+    loadFromApi() {
+      let promises = this.storage.map(model => {
+        return this.$api.get(model.api, { view: "compact" }, null, true).then(response => {
+          if (model.id.startsWith("pages/")) {
+            return {
+              icon: "page",
+              label: response.title,
+              link: this.$api.pages.link(response.id),
+            };
+          }
 
-      if (stored.id.startsWith("files/")) {
-        return {
-          icon: "image",
-          link: model.link
-        };
-      }
+          if (model.id.startsWith("files/")) {
+            return {
+              icon: "image",
+              label: response.filename,
+              link: response.link,
+            };
+          }
 
-      if (stored.id.startsWith("users/")) {
-        return {
-          icon: "user",
-          link: this.$api.users.link(model.id)
-        };
-      }
-    },
-    label(change) {
-      return change.model.title || change.model.filename || change.model.email;
-    },
-    load() {
-      let stored = this.loadStorage();
-
-      // filter removed changes
-      this.changes = this.changes.filter(change => {
-        return stored.map(x => x.id).indexOf(change.id) !== -1;
-      });
-
-      // filter changes that have already been fetched
-      stored = stored.filter(stored => {
-        return this.changes.map(x => x.id).indexOf(stored.id) === -1;
-      });
-
-      let promises = stored.map(stored => {
-        return this.$api.get(stored.api, { view: "compact" }, null, true).then(model => {
-          let { icon, link } = this.entry(model, stored);
-          return {
-            id: stored.id,
-            link: link,
-            icon: icon,
-            model: model
-          };
+          if (model.id.startsWith("users/")) {
+            return {
+              icon: "user",
+              label: response.email,
+              link: this.$api.users.link(response.id),
+            };
+          }
         });
       });
 
-      Promise.all(promises).then(models => {
-        this.changes = [
-          ...this.changes,
-          ...models
-        ];
+      return Promise.all(promises).then(entries => {
+        this.entries = entries;
       });
     },
-    loadStorage() {
-      return Object.keys(localStorage)
-                   .filter(key => key.startsWith("kirby$form$"))
-                   .map(key => {
+    loadFromStorage() {
+      // get all localStorage ids for form models
+      let ids = Object.keys(localStorage);
+          ids = ids.filter(key => key.startsWith("kirby$form$"));
+
+      // load the model from localStorage for each id
+      this.storage = ids.map(key => {
         return {
           ...JSON.parse(localStorage.getItem(key)),
           id: key.split("kirby$form$")[1]
         };
-      }).filter(data => {
+      });
+
+      // filter models that do not have any changes
+      this.storage = this.storage.filter(data => {
         return Object.keys(data.changes || {}).length > 0
       });
+    },
+    toggle() {
+      this.isOpen = !this.isOpen;
+
+      if (this.isOpen === true) {
+        this.loadFromApi().then(() => {
+          this.$refs.list.toggle();
+        });
+      } else {
+        this.$refs.list.toggle();
+      }
     }
   }
 };

@@ -84,7 +84,7 @@ trait AppPlugins
      *
      * @internal
      * @param array $extensions
-     * @param Plugin $plugin The plugin which defined those extensions
+     * @param Kirby\Cms\Plugin $plugin The plugin which defined those extensions
      * @return array
      */
     public function extend(array $extensions, Plugin $plugin = null): array
@@ -586,8 +586,10 @@ trait AppPlugins
         FormField::$mixins['filepicker'] = include static::$root . '/config/fields/mixins/filepicker.php';
         FormField::$mixins['min']        = include static::$root . '/config/fields/mixins/min.php';
         FormField::$mixins['options']    = include static::$root . '/config/fields/mixins/options.php';
+        FormField::$mixins['pagepicker'] = include static::$root . '/config/fields/mixins/pagepicker.php';
         FormField::$mixins['picker']     = include static::$root . '/config/fields/mixins/picker.php';
         FormField::$mixins['upload']     = include static::$root . '/config/fields/mixins/upload.php';
+        FormField::$mixins['userpicker'] = include static::$root . '/config/fields/mixins/userpicker.php';
 
         // Tag Aliases
         KirbyTag::$aliases = [
@@ -653,7 +655,7 @@ trait AppPlugins
      *
      * @param string $name
      * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
-     * @return Plugin|null
+     * @return Kirby\Cms\Plugin|null
      */
     public static function plugin(string $name, array $extends = null)
     {

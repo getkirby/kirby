@@ -6,7 +6,7 @@ export default {
   request(path, options, silent = false) {
     options = Object.assign(options || {}, {
       credentials: "same-origin",
-      cache: "no-cache",
+      cache: "no-store",
       headers: {
         "x-requested-with": "xmlhttprequest",
         "content-type": "application/json",
@@ -66,7 +66,17 @@ export default {
       path +=
         "?" +
         Object.keys(query)
-          .map(key => key + "=" + query[key])
+          .map(key => {
+            const value = query[key];
+
+            if (value !== undefined && value !== null) {
+              return key + "=" + value;
+            } else {
+              return null;
+            }
+
+          })
+          .filter(value => value !== null)
           .join("&");
     }
 
