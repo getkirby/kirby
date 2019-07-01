@@ -94,6 +94,13 @@ export default {
         .then(roles => {
           this.roles = roles;
 
+          // don't let non-admins create admins
+          if (this.$user.role.name !== "admin") {
+            this.roles = this.roles.filter(role => {
+              return role.value !== "admin";
+            });
+          }
+
           // load all translations
           this.$api.translations.options().then(languages => {
             this.languages = languages;

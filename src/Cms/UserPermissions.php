@@ -25,6 +25,11 @@ class UserPermissions extends ModelPermissions
 
     protected function canChangeRole(): bool
     {
+        // users who are not admins cannot change their own role
+        if ($this->user->is($this->model) === true && $this->user->isAdmin() === false) {
+            return false;
+        }
+
         return $this->model->isLastAdmin() !== true;
     }
 
