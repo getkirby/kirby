@@ -6,7 +6,7 @@
         v-for="(item, index) in matches"
         :key="index"
         v-bind="item"
-        @click="onSelect(item)"
+        @mousedown="onSelect(item)"
         @keydown.tab.prevent="onSelect(item)"
         @keydown.enter.prevent="onSelect(item)"
         @keydown.left.prevent="close"
