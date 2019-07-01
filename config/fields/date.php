@@ -83,7 +83,6 @@ return [
     'validations' => [
         'date',
         'minMax' => function ($value) {
-
             $min    = $this->min ? strtotime($this->min) : null;
             $max    = $this->max ? strtotime($this->max) : null;
             $value  = strtotime($this->value());
@@ -99,7 +98,6 @@ return [
             }
 
             if (empty($errors) === false) {
-
                 if ($min && $max) {
                     throw new Exception([
                         'key' => 'validation.date.between',
