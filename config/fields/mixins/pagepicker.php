@@ -9,7 +9,19 @@ return [
 
             if ($query) {
                 $pages = $model->query($query, 'Kirby\Cms\Pages');
-                $self  = null;
+                $root = $pages->parent();
+
+                if ($parent = $site->find($params['parent'] ?? null)) {
+                    $pages = $parent->children();
+                } else {
+                    $parent = $root;
+                }
+
+                $self = [
+                    'id' => ($parent->id() == '' or $root == $parent->id()) ? null : $parent->id(),
+                    'title' => $parent->title()->value(),
+                    'parent' => is_a($parent->parent(), Page::class) === true ? $parent->parent()->id() : null,
+                ];
             } else {
                 if (!$parent = $site->find($params['parent'] ?? null)) {
                     $parent = $site;
