@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Exception\Exception;
+
 return [
     'props' => [
         /**
@@ -79,6 +81,49 @@ return [
         return '';
     },
     'validations' => [
-        'date'
+        'date',
+        'minMax' => function ($value) {
+            $min    = $this->min ? strtotime($this->min) : null;
+            $max    = $this->max ? strtotime($this->max) : null;
+            $value  = strtotime($this->value());
+            $format = 'd.m.Y';
+            $errors = [];
+
+            if ($value && $min && $value < $min) {
+                $errors['min'] = $min;
+            }
+
+            if ($value && $max && $value > $max) {
+                $errors['max'] = $max;
+            }
+
+            if (empty($errors) === false) {
+                if ($min && $max) {
+                    throw new Exception([
+                        'key' => 'validation.date.between',
+                        'data' => [
+                            'min' => date($format, $min),
+                            'max' => date($format, $max)
+                        ]
+                    ]);
+                } elseif ($min) {
+                    throw new Exception([
+                        'key' => 'validation.date.after',
+                        'data' => [
+                            'date' => date($format, $min),
+                        ]
+                    ]);
+                } else {
+                    throw new Exception([
+                        'key' => 'validation.date.before',
+                        'data' => [
+                            'date' => date($format, $max),
+                        ]
+                    ]);
+                }
+            }
+
+            return true;
+        },
     ]
 ];

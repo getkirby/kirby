@@ -5,6 +5,8 @@
       :autofocus="autofocus"
       :required="required"
       :id="id"
+      :min="min"
+      :max="max"
       :disabled="disabled"
       :value="dateValue"
       @input="setDate"

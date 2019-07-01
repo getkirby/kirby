@@ -20,7 +20,7 @@ class TextareaFieldTest extends TestCase
         $this->assertEquals(null, $field->minlength());
         $this->assertEquals(null, $field->size());
         $this->assertEquals([], $field->files());
-        $this->assertEquals([], $field->uploads());
+        $this->assertEquals(['accept' => '*'], $field->uploads());
         $this->assertTrue($field->save());
     }
 
@@ -116,7 +116,7 @@ class TextareaFieldTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(['template' => 'test'], $field->uploads());
+        $this->assertEquals(['template' => 'test', 'accept' => '*'], $field->uploads());
     }
 
     public function testUploadsDisabled()
@@ -136,7 +136,7 @@ class TextareaFieldTest extends TestCase
             'uploads' => 'test'
         ]);
 
-        $this->assertEquals(['template' => 'test'], $field->uploads());
+        $this->assertEquals(['template' => 'test', 'accept' => '*'], $field->uploads());
     }
 
     public function testUploadsWithInvalidInput()
@@ -146,7 +146,7 @@ class TextareaFieldTest extends TestCase
             'uploads' => 1,
         ]);
 
-        $this->assertEquals([], $field->uploads());
+        $this->assertEquals(['accept' => '*'], $field->uploads());
     }
 
     public function testValueTrimmed()
