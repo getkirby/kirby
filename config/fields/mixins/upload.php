@@ -14,7 +14,7 @@ return [
             }
 
             if (is_string($uploads) === true) {
-                return ['template' => $uploads];
+                $uploads = ['template' => $uploads];
             }
 
             if (is_array($uploads) === false) {
