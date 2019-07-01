@@ -147,6 +147,7 @@ return [
         $snippets = A::wrap($name);
 
         foreach ($snippets as $name) {
+            $name = (string)$name;
             $file = $kirby->root('snippets') . '/' . $name . '.php';
 
             if (file_exists($file) === false) {
