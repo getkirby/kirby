@@ -25,8 +25,7 @@ class SessionDataTest extends TestCase
 
     public function tearDown(): void
     {
-        unset($this->session);
-        unset($this->sessionData);
+        unset($this->session, $this->sessionData);
     }
 
     /**

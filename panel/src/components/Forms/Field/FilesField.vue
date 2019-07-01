@@ -122,6 +122,7 @@ export default {
       this.$refs.fileUpload.open({
         url: config.api + "/" + this.endpoints.field + "/upload",
         multiple: this.multiple,
+        accept: this.uploads.accept
       });
     }
   }

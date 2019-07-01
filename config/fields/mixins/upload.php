@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\Api;
+use Kirby\Cms\File;
 
 return [
     'props' => [
@@ -18,6 +19,19 @@ return [
 
             if (is_array($uploads) === false) {
                 $uploads = [];
+            }
+
+            $template = $uploads['template'] ?? null;
+
+            if ($template) {
+                $file = new File([
+                    'filename' => 'tmp',
+                    'template' => $template
+                ]);
+
+                $uploads['accept'] = $file->blueprint()->accept()['mime'] ?? '*';
+            } else {
+                $uploads['accept'] = '*';
             }
 
             return $uploads;

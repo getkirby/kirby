@@ -23,20 +23,6 @@ return [
         },
 
         /**
-         * Image settings for each item
-         */
-        'image' => function (array $image = null) {
-            return $image ?? [];
-        },
-
-        /**
-         * Info text for each item
-         */
-        'info' => function (string $info = null) {
-            return $info;
-        },
-
-        /**
          * Changes the layout of the selected files. Available layouts: `list`, `cards`
          */
         'layout' => function (string $layout = 'list') {
@@ -55,13 +41,6 @@ return [
          */
         'size' => function (string $size = 'auto') {
             return $size;
-        },
-
-        /**
-         * Main text for each item
-         */
-        'text' => function (string $text = null) {
-            return $text;
         },
 
         'value' => function ($value = null) {

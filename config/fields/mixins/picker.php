@@ -13,8 +13,8 @@ return [
         /**
          * Image settings for each item
          */
-        'image' => function (array $image = null) {
-            return $image ?? [];
+        'image' => function ($image = null) {
+            return $image;
         },
 
         /**
@@ -55,7 +55,7 @@ return [
         /**
          * Main text for each item
          */
-        'text' => function (string $text = '{{ file.filename }}') {
+        'text' => function (string $text = null) {
             return $text;
         },
 

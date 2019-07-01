@@ -183,20 +183,19 @@ export default {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: .625rem 0;
+  padding: .625rem .75rem;
   font-size: $font-size-tiny;
   text-transform: uppercase;
+  text-align: center;
   font-weight: 500;
   border-left: 1px solid transparent;
   border-right: 1px solid $color-border;
   flex-grow: 1;
+  flex-shrink: 1;
   flex-direction: column;
 
   @media screen and (min-width: $breakpoint-small) {
     flex-direction: row;
-  }
-  @media screen and (min-width: $breakpoint-medium) {
-    max-width: 13rem;
   }
 }
 
@@ -210,6 +209,7 @@ export default {
   padding-top: .375rem;
   font-size: 10px;
   overflow: hidden;
+  max-width: 10rem;
 
   [dir="ltr"] & {
     padding-left: 0;

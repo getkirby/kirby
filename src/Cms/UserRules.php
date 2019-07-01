@@ -70,6 +70,13 @@ class UserRules
 
     public static function changeRole(User $user, string $role): bool
     {
+        if ($user->kirby()->user()->isAdmin() === false) {
+            throw new PermissionException([
+                'key'  => 'user.changeRole.permission',
+                'data' => ['name' => $user->username()]
+            ]);
+        }
+
         static::validRole($user, $role);
 
         if ($role !== 'admin' && $user->isLastAdmin() === true) {
@@ -94,6 +101,15 @@ class UserRules
         static::validId($user, $user->id());
         static::validEmail($user, $user->email(), true);
         static::validLanguage($user, $user->language());
+
+        // only admins are allowed to add admins
+        $role = $props['role'] ?? null;
+
+        if ($role === 'admin' && $user->kirby()->user()->isAdmin() === false) {
+            throw new PermissionException([
+                'key' => 'user.create.permission'
+            ]);
+        }
 
         if (empty($props['password']) === false) {
             static::validPassword($user, $props['password']);
