@@ -109,8 +109,15 @@ class Users extends Collection
                 continue;
             }
 
-            $user = new User([
-                'id' => $userDirectory,
+            // get role information
+            if (file_exists($root . '/' . $userDirectory . '/index.php') === true) {
+                $credentials = require $root . '/' . $userDirectory . '/index.php';
+            }
+
+            // create user model based on role
+            $user = User::factory([
+                'id'    => $userDirectory,
+                'model' => $credentials['role'] ?? null
             ] + $inject);
 
             $users->set($user->id(), $user);
