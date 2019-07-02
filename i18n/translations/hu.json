@@ -24,13 +24,13 @@
   "delete": "T\u00f6rl\u00e9s",
   "dimensions": "Méretek",
   "discard": "Visszavon\u00e1s",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Letöltés",
+  "duplicate": "Másolat",
   "edit": "Aloldal szerkeszt\u00e9se",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Nincsenek fájlok kiválasztva",
+  "dialog.pages.empty": "Nincsenek oldalak kiválasztva",
+  "dialog.users.empty": "Nincsenek felhasználók kiválasztva",
 
   "email": "Email",
   "email.placeholder": "mail@pelda.hu",
@@ -71,13 +71,13 @@
   "error.form.incomplete": "Kérlek javítsd ki az összes hibát az űrlapon",
   "error.form.notSaved": "Az űrlap nem menthető",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Kérlek, add meg a nyelv érvényes kódját",
+  "error.language.duplicate": "A nyelv már létezik",
+  "error.language.name": "Kérlek, add meg a nyelv érvényes nevét",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Kérlek, add meg az évényes lincensz kulcsot",
   "error.license.email": "Kérlek adj meg egy valós email-címet",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "A licensz nem ellenőrizhető",
 
   "error.page.changeSlug.permission":
     "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
@@ -104,7 +104,7 @@
     "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
   "error.page.duplicate":
     "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Nincs engedélyed a(z) \"{slug}\" másolat keszítéséhez",
   "error.page.notFound": "Az oldal nem tal\u00e1lhat\u00f3",
   "error.page.num.invalid":
     "Kérlek megfelelő oldalszámozást adj meg. Negatív szám itt nem használható.",
@@ -119,18 +119,18 @@
   "error.section.files.max.singular":
     "Nem adhatsz hozzá egynél több fájlt a(z) \"{section}\" szekcióhoz",
   "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
+    "A \"{section}\" szakasz legalább {min} fájlt igényel",
   "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+    "A \"{section}\" szakasz legalább egy fájlt igényel",
 
   "error.section.pages.max.plural":
     "Maximum {max} oldalt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
   "error.section.pages.max.singular":
     "Nem adhatsz hozzá egynél több oldalt a(z) \"{section}\" szekcióhoz",
   "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
+    "A \"{section}\" szakasz legalább {min} oldalt igényel",
   "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+    "A \"{section}\" szakasz legalább egy oldalt igényel",
 
   "error.section.notLoaded": "A(z) \"{name}\" szekció nem tölthető be",
   "error.section.type.invalid": "A szekció típusa (\"{type}\") nem megfelelő",
@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Kérlek olyan értéket adj meg, amely tartalmazza ezt: \"{needle}\"",
   "error.validation.date": "Kérlek megfelelő dátumot adj meg",
+  "error.validation.date.after": "Please enter a date after {date}",
+  "error.validation.date.before": "Please enter a date before {date}",
+  "error.validation.date.between": "Please enter a date between {min} and {max}",
   "error.validation.denied": "Kérlek vesd el",
   "error.validation.different": "Az érték nem lehet \"{other}\"",
   "error.validation.email": "Kérlek adj meg egy valós email-címet",
@@ -233,7 +236,7 @@
 
   "installation": "Telepítés",
   "installation.completed": "A panel sikeresen telepítve",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.disabled": "A panel telepítője alapértelmezés szerint le van tiltva a nyilvános szervereken. Kérlek, futtassd a telepítőt egy helyi gépen vagy engedélyezze a <code>panel.install</code> opcióval.",
   "installation.issues.accounts":
     "A <code>/site/accounts</code> mappa nem létezik, vagy nem írható",
   "installation.issues.content":
@@ -247,7 +250,7 @@
   "installation.issues.php": "Bizonyosodj meg róla, hogy az általad használt PHP-verzió <code>PHP 7+</code>",
   "installation.issues.server":
     "A Kirby az alábbi szervereken futtatható: <code>Apache</code>, <code>Nginx</code> vagy <code>Caddy</code>",
-  "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
+  "installation.issues.sessions": "A <code>/site/sessions</code> könyvtár nem létezik vagy nem írható",
 
   "language": "Nyelv",
   "language.code": "Kód",
@@ -285,12 +288,12 @@
 
   "loading": "Betöltés",
 
-  "lock.unsaved": "Unsaved changes",
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.unsaved": "Nem mentett változások",
+  "lock.isLocked": "Nem mentett <strong>{email}</strong> változások",
+  "lock.file.isLocked": "A fájlt jelenleg {email} szerkeszti és nem módosítható.",
+  "lock.page.isLocked": "Az oldalt jelenleg {email} szerkeszti és nem módosítható.",
+  "lock.unlock": "Kinyit",
+  "lock.isUnlocked": "A nem mentett módosításokat egy másik felhasználó felülírta. A módosításokat manuálisan egyesítheted.",
 
   "login": "Bejelentkezés",
   "login.remember": "Maradjak bejelentkezve",
@@ -319,8 +322,8 @@
   "more": "Több",
   "name": "Név",
   "next": "Következő",
-  "off": "off",
-  "on": "on",
+  "off": "ki",
+  "on": "be",
   "open": "Megnyitás",
   "options": "Beállítások",
 
@@ -342,8 +345,8 @@
   "page.delete.confirm.title": "Megerősítéshez add meg az oldal címét",
   "page.draft.create": "Piszkozat létrehozása",
   "page.duplicate.appendix": "Másol",
-  "page.duplicate.files": "Copy files",
-  "page.duplicate.pages": "Copy pages",
+  "page.duplicate.files": "Fájlok másolása",
+  "page.duplicate.pages": "Oldalak másolása",
   "page.status": "Állapot",
   "page.status.draft": "Piszkozat",
   "page.status.draft.description":
@@ -369,13 +372,13 @@
   "revert": "Visszavon\u00e1s",
 
   "role": "Szerepkör",
-  "role.admin.description": "The admin has all rights",
+  "role.admin.description": "Az adminisztrátornak minden joga van",
   "role.admin.title": "Admin",
   "role.all": "Összes",
   "role.empty": "Nincsenek felhasználók ilyen szerepkörrel",
   "role.description.placeholder": "Nincs leírás",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Ez a visszatérő szabály a nem rendelkező jogosultsághoz",
+  "role.nobody.title": "Senki",
 
   "save": "Ment\u00e9s",
   "search": "Keresés",
@@ -397,8 +400,8 @@
   "toolbar.button.heading.3": "Cím 3",
   "toolbar.button.italic": "Dőlt szöveg",
   "toolbar.button.file": "Fájl",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Válassz egy fájlt",
+  "toolbar.button.file.upload": "Fájl feltöltése",
   "toolbar.button.link": "Link",
   "toolbar.button.ol": "Rendezett lista",
   "toolbar.button.ul": "Rendezetlen lista",

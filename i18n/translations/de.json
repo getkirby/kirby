@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Bitte gib einen Wert ein, der \"{needle}\" enthält",
   "error.validation.date": "Bitte gib ein gültiges Datum ein",
+  "error.validation.date.after": "Bitte gib ein Datum nach dem {date} ein",
+  "error.validation.date.before": "Bitte gib ein Datum vor dem {date} ein",
+  "error.validation.date.between": "Bitte gib ein Datum zwischen dem {min} und dem {max} ein",
   "error.validation.denied": "Bitte lehne die Eingabe ab",
   "error.validation.different": "Der Wert darf nicht \"{other}\" sein",
   "error.validation.email": "Bitte gib eine gültige E-Mailadresse an",
