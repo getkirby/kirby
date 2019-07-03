@@ -149,8 +149,9 @@ class PagePickerMixinTest extends TestCase
 
         $response = $field->pages();
         $pages    = $response['pages'];
-
-        $this->assertNull($response['model']);
+        $model    = $response['model'];
+        
+        $this->assertEquals('test', $model['title']);
         $this->assertCount(3, $pages);
         $this->assertEquals('test/a', $pages[0]['id']);
         $this->assertEquals('test/b', $pages[1]['id']);
