@@ -105,7 +105,10 @@ class UserRules
         // only admins are allowed to add admins
         $role = $props['role'] ?? null;
 
-        if ($role === 'admin' && $user->kirby()->user()->isAdmin() === false) {
+        // get the current user if it exists
+        $currentUser = $user->kirby()->user();
+
+        if ($role === 'admin' && $currentUser && $currentUser->isAdmin() === false) {
             throw new PermissionException([
                 'key' => 'user.create.permission'
             ]);
