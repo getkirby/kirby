@@ -118,9 +118,9 @@ class Api extends BaseApi
      */
     public function parent(string $path)
     {
-        $modelType  = $path === 'site' ? 'site' : trim(dirname($path), '/');
-        $modelTypes = ['site' => 'site', 'users' => 'user', 'pages' => 'page'];
-        $modelName  = $modelTypes[$modelType] ?? null;
+        $modelType = ($path === 'site' or $path === 'account') ? $path : trim(dirname($path), '/');
+        $modelTypes = ['site' => 'site', 'users' => 'user', 'account' => 'user', 'pages' => 'page'];
+        $modelName = $modelTypes[$modelType] ?? null;
 
         if (Str::endsWith($modelType, '/files') === true) {
             $modelName = 'file';
@@ -130,7 +130,7 @@ class Api extends BaseApi
             throw new InvalidArgumentException('Invalid file model type');
         }
 
-        if ($modelName === 'site') {
+        if ($modelName === 'site' or $path === 'account') {
             $modelId = null;
         } else {
             $modelId = basename($path);
