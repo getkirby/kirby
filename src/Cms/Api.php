@@ -118,35 +118,43 @@ class Api extends BaseApi
      */
     public function parent(string $path)
     {
-        $modelType  = $path === 'site' ? 'site' : trim(dirname($path), '/');
-        $modelTypes = ['site' => 'site', 'users' => 'user', 'pages' => 'page'];
-        $modelName  = $modelTypes[$modelType] ?? null;
+        $modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
+        $modelTypes = [
+            'site'    => 'site',
+            'users'   => 'user',
+            'pages'   => 'page',
+            'account' => 'account'
+        ];
+        $modelName = $modelTypes[$modelType] ?? null;
 
         if (Str::endsWith($modelType, '/files') === true) {
             $modelName = 'file';
         }
 
-        if ($modelName === null) {
-            throw new InvalidArgumentException('Invalid file model type');
+        $kirby = $this->kirby();
+
+        switch ($modelName) {
+            case 'site':
+                $model = $kirby->site();
+                break;
+            case 'account':
+                $model = $kirby->user();
+                break;
+            case 'page':
+                $id    = str_replace(['+', ' '], '/', basename($path));
+                $model = $kirby->page($id);
+                break;
+            case 'file':
+                $model = $this->file(...explode('/files/', $path));
+                break;
+            case 'user':
+                $model = $kirby->user(basename($path));
+                break;
+            default:
+                throw new InvalidArgumentException('Invalid file model type: ' . $modelType);
         }
 
-        if ($modelName === 'site') {
-            $modelId = null;
-        } else {
-            $modelId = basename($path);
-
-            if ($modelName === 'page') {
-                $modelId = str_replace(['+', ' '], '/', $modelId);
-            }
-
-            if ($modelName === 'file') {
-                if ($model = $this->file(...explode('/files/', $path))) {
-                    return $model;
-                }
-            }
-        }
-
-        if ($model = $this->kirby()->$modelName($modelId)) {
+        if ($model) {
             return $model;
         }
 

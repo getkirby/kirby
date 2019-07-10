@@ -214,4 +214,48 @@ class ApiTest extends TestCase
 
         $function->call($api);
     }
+
+    public function testParent()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'files' => [
+                    ['filename' => 'sitefile.jpg']
+                ]
+            ],
+            'users' => [
+                [
+                    'email' => 'current@getkirby.com',
+                ],
+                [
+                    'email' => 'test@getkirby.com',
+                    'files' => [
+                        ['filename' => 'userfile.jpg']
+                    ]
+                ]
+            ],
+        ]);
+
+        $app->impersonate('current@getkirby.com');
+
+        $api = $app->api();
+
+        $this->assertInstanceOf(User::class, $api->parent('account'));
+        $this->assertInstanceOf(User::class, $api->parent('users/test@getkirby.com'));
+        $this->assertInstanceOf(Site::class, $api->parent('site'));
+        $this->assertInstanceOf(Page::class, $api->parent('pages/a+aa'));
+        $this->assertInstanceOf(File::class, $api->parent('site/files/sitefile.jpg'));
+        $this->assertInstanceOf(File::class, $api->parent('pages/a/files/a-regular-file.jpg'));
+        $this->assertInstanceOf(File::class, $api->parent('users/test@getkirby.com/files/userfile.jpg'));
+
+        // model type is not recognized
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid file model type: something');
+        $this->assertNull($api->parent('something/something'));
+
+        // model cannot be found
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The page cannot be found');
+        $this->assertNull($api->parent('pages/does-not-exist'));
+    }
 }
