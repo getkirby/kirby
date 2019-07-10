@@ -15,7 +15,7 @@ class ContentLocksTest extends TestCase
     {
         return new App([
             'roots' => [
-               'index' => $this->fixtures = __DIR__ . '/fixtures/ContentLocksTest'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/ContentLocksTest'
             ],
             'site' => [
                 'children' => [

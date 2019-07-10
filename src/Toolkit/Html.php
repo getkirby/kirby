@@ -110,7 +110,7 @@ class Html
         }
 
         if (is_array($value) === true) {
-            if (isset($value['value']) && isset($value['escape'])) {
+            if (isset($value['value'], $value['escape'])) {
                 $value = $value['escape'] === true ? htmlspecialchars($value['value'], ENT_QUOTES, 'UTF-8') : $value['value'];
             } else {
                 $value = implode(' ', array_filter($value, function ($value) {

@@ -5,7 +5,7 @@
   "cancel": "\u0130ptal",
   "change": "De\u011fi\u015ftir",
   "close": "Kapat",
-  "confirm": "Kaydet",
+  "confirm": "Tamam",
   "copy": "Kopyala",
   "create": "Oluştur",
 
@@ -43,7 +43,7 @@
   "error.avatar.dimensions.invalid":
     "Lütfen profil resminin genişliğini ve yüksekliğini 3000 pikselin altında tutun",
   "error.avatar.mime.forbidden":
-    "\u0130zin verilmeyen dosya tan\u0131mlay\u0131c\u0131s\u0131",
+    "Profil resmi JPEG veya PNG dosyaları olmalıdır",
 
   "error.blueprint.notFound": "\"{name}\" adlı plan yüklenemedi",
 
@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Lütfen \"{needle}\" içeren bir değer girin",
   "error.validation.date": "Lütfen geçerli bir tarih girin",
+  "error.validation.date.after": "Lütfen {date} tarihinden sonra bir tarih girin",
+  "error.validation.date.before": "Lütfen {date} tarihinden önce bir tarih girin",
+  "error.validation.date.between": "Lütfen {min} ve {max} arasında bir tarih girin",
   "error.validation.denied": "Lütfen reddedin",
   "error.validation.different": "Değer \"{other}\" olmamalıdır",
   "error.validation.email": "Lütfen geçerli bir e-posta adresi girin",

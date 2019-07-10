@@ -662,10 +662,10 @@ class Query
 
         if ($this->debug) {
             return [
-            'query'    => $sql['query'],
-            'bindings' => $this->bindings(),
-            'options'  => $params
-        ];
+                'query'    => $sql['query'],
+                'bindings' => $this->bindings(),
+                'options'  => $params
+            ];
         }
 
         if ($this->fail) {
@@ -697,10 +697,10 @@ class Query
 
         if ($this->debug === true) {
             return [
-            'query'    => $sql['query'],
-            'bindings' => $sql['bindings'],
-            'options'  => $params
-        ];
+                'query'    => $sql['query'],
+                'bindings' => $sql['bindings'],
+                'options'  => $params
+            ];
         }
 
         if ($this->fail) {

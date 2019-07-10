@@ -24,8 +24,8 @@
   "delete": "\uc0ad\uc81c",
   "dimensions": "크기",
   "discard": "무시",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "다운로드",
+  "duplicate": "복제",
   "edit": "\ud3b8\uc9d1",
 
   "dialog.files.empty": "No files to select",
@@ -73,11 +73,11 @@
 
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.name": "올바른 언어를 입력하세요.",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "올바른 라이선스 키를 입력하세요.",
   "error.license.email": "올바른 이메일 주소를 입력하세요.",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "라이선스 키가 올바르지 않습니다.",
 
   "error.page.changeSlug.permission":
     "고유 주소({slug})를 변경할 권한이 없습니다.",
@@ -104,7 +104,7 @@
     "고유 주소({slug})가 같은 초안이 있습니다.",
   "error.page.duplicate":
     "고유 주소({slug})가 같은 페이지가 있습니다.",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "페이지({slug})를 복제할 권한이 없습니다.",
   "error.page.notFound": "페이지({slug})가 없습니다.",
   "error.page.num.invalid":
     "올바른 정수를 입력하세요.",
@@ -183,6 +183,9 @@
   "error.validation.contains":
     "{needle}에 포함된 값을 입력하세요.",
   "error.validation.date": "올바른 날짜를 입력하세요.",
+  "error.validation.date.after": "Please enter a date after {date}",
+  "error.validation.date.before": "Please enter a date before {date}",
+  "error.validation.date.between": "Please enter a date between {min} and {max}",
   "error.validation.denied": "취소하세요.",
   "error.validation.different": "{other}에 포함된 값은 입력할 수 없습니다.",
   "error.validation.email": "올바른 이메일 주소를 입력하세요.",
@@ -285,11 +288,11 @@
 
   "loading": "로딩 중",
 
-  "lock.unsaved": "Unsaved changes",
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
+  "lock.unsaved": "수정 사항이 저장되지 않았습니다.",
+  "lock.isLocked": "<strong>{email}</strong>의 수정 사항이 저장되지 않았습니다.",
+  "lock.file.isLocked": "다른 사용자({email})가 수정 중입니다.",
+  "lock.page.isLocked": "다른 사용자({email}가 수정 중입니다.",
+  "lock.unlock": "잠금",
   "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
 
   "login": "\ub85c\uadf8\uc778",
@@ -319,8 +322,8 @@
   "more": "더 보기",
   "name": "이름",
   "next": "다음",
-  "off": "off",
-  "on": "on",
+  "off": "끔",
+  "on": "켬",
   "open": "열기",
   "options": "옵션",
 
@@ -342,8 +345,8 @@
   "page.delete.confirm.title": "페이지 제목을 입력하세요.",
   "page.draft.create": "초안 작성",
   "page.duplicate.appendix": "복사",
-  "page.duplicate.files": "Copy files",
-  "page.duplicate.pages": "Copy pages",
+  "page.duplicate.files": "파일 복사",
+  "page.duplicate.pages": "페이지 복사",
   "page.status": "상태",
   "page.status.draft": "초안",
   "page.status.draft.description":
@@ -370,7 +373,7 @@
 
   "role": "역할",
   "role.admin.description": "The admin has all rights",
-  "role.admin.title": "Admin",
+  "role.admin.title": "관리자",
   "role.all": "전체 보기",
   "role.empty": "이 역할에 해당하는 사용자가 없습니다.",
   "role.description.placeholder": "설명이 없습니다.",
@@ -397,8 +400,8 @@
   "toolbar.button.heading.3": "제목 3",
   "toolbar.button.italic": "강조 2",
   "toolbar.button.file": "파일",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "파일 선택",
+  "toolbar.button.file.upload": "파일 업로드",
   "toolbar.button.link": "링크",
   "toolbar.button.ol": "숫자 목록",
   "toolbar.button.ul": "기호 목록",

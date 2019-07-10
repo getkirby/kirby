@@ -183,6 +183,9 @@
   "error.validation.contains":
     "لطفا مقداری شامل «{needle}» وارد کنید",
   "error.validation.date": "لطفا تاریخ معتبری وارد کنید",
+  "error.validation.date.after": "Please enter a date after {date}",
+  "error.validation.date.before": "Please enter a date before {date}",
+  "error.validation.date.between": "Please enter a date between {min} and {max}",
   "error.validation.denied": "لطفا رد کنید",
   "error.validation.different": "مقدار نباید مساوی «{other}» باشد",
   "error.validation.email": "لطفا ایمیل صحیحی وارد کنید",

@@ -24,13 +24,13 @@
   "delete": "Hapus",
   "dimensions": "Dimensi",
   "discard": "Buang",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Unduh",
+  "duplicate": "Duplikasi",
   "edit": "Sunting",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Tidak ada berkas untuk dipilih",
+  "dialog.pages.empty": "Tidak ada halaman untuk dipilih",
+  "dialog.users.empty": "Tidak ada pengguna untuk dipilih",
 
   "email": "Surel",
   "email.placeholder": "surel@contohsurel.com",
@@ -71,13 +71,13 @@
   "error.form.incomplete": "Pastikan semua bidang telah diisi dengan benar…",
   "error.form.notSaved": "Formulir tidak dapat disimpan",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Masukkan kode bahasa yang valid",
+  "error.language.duplicate": "Bahasa sudah ada",
+  "error.language.name": "Masukkan nama bahasa yang valid",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Masukkan kode lisensi yang valid",
   "error.license.email": "Masukkan surel yang valid",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "Lisensi tidak dapat diverifikasi",
 
   "error.page.changeSlug.permission":
     "Anda tidak diizinkan mengubah akhiran URL untuk \"{slug}\"",
@@ -104,7 +104,7 @@
     "Draf halaman dengan akhiran URL \"{slug}\" sudah ada",
   "error.page.duplicate":
     "Halaman dengan akhiran URL \"{slug}\" sudah ada",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Anda tidak diizinkan menduplikasi \"{slug}\"",
   "error.page.notFound": "Halaman \"{slug}\" tidak dapat ditemukan",
   "error.page.num.invalid":
     "Masukkan nomor urut yang valid. Nomor tidak boleh negatif.",
@@ -119,18 +119,18 @@
   "error.section.files.max.singular":
     "Anda hanya boleh menambahkan satu berkas ke bagian \"{section}\"",
   "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
+    "Bagian \"{section}\" setidaknya memiliki {min} berkas",
   "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+    "Bagian \"{section}\" setidaknya memiliki satu berkas",
 
   "error.section.pages.max.plural":
     "Anda hanya boleh menambahkan maksimal {max} halaman ke bagian \"{section}\"",
   "error.section.pages.max.singular":
     "Anda hanya boleh menambahkan satu halaman ke bagian \"{section}\"",
   "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
+    "Bagian \"{section}\" setidaknya memiliki {min} halaman",
   "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+    "Bagian \"{section}\" setidaknya memiliki satu halaman",
 
   "error.section.notLoaded": "Bagian \"{name}\" tidak dapat dimuat",
   "error.section.type.invalid": "Tipe bagian \"{type}\" tidak valid",
@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Masukkan nilai yang mengandung \"{needle}\"",
   "error.validation.date": "Masukkan tanggal yang valid",
+  "error.validation.date.after": "Please enter a date after {date}",
+  "error.validation.date.before": "Please enter a date before {date}",
+  "error.validation.date.between": "Please enter a date between {min} and {max}",
   "error.validation.denied": "Mohon tolak",
   "error.validation.different": "Nilai harus selain \"{other}\"",
   "error.validation.email": "Masukkan surel yang valid",
@@ -205,7 +208,7 @@
   "error.validation.notcontains":
     "Masukkan nilai yang tidak mengandung \"{needle}\"",
   "error.validation.notin":
-    "Jangan masukkan satu pun: ({notIn})",
+    "Jangan masukkan satupun: ({notIn})",
   "error.validation.option": "Pilih opsi yang valid",
   "error.validation.num": "Masukkan nomor yang valid",
   "error.validation.required": "Masukkan sesuatu",
@@ -285,12 +288,12 @@
 
   "loading": "Memuat",
 
-  "lock.unsaved": "Unsaved changes",
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.unsaved": "Perubahan belum tersimpan",
+  "lock.isLocked": "Perubahan belum tersimpan oleh <strong>{email}</strong>",
+  "lock.file.isLocked": "Berkas sedang disunting oleh {email} dan tidak dapat diubah.",
+  "lock.page.isLocked": "Halaman sedang disunting oleh {email} dan tidak dapat diubah.",
+  "lock.unlock": "Buka kunci",
+  "lock.isUnlocked": "Perubahan Anda yang belum tersimpan telah terubah oleh pengguna lain. Anda dapat mengunduh perubahan Anda untuk menggabungkannya manual.",
 
   "login": "Masuk",
   "login.remember": "Biarkan tetap masuk",
@@ -319,8 +322,8 @@
   "more": "Lebih lanjut",
   "name": "Nama",
   "next": "Selanjutnya",
-  "off": "off",
-  "on": "on",
+  "off": "mati",
+  "on": "hidup",
   "open": "Buka",
   "options": "Opsi",
 
@@ -342,14 +345,14 @@
   "page.delete.confirm.title": "Masukkan judul halaman untuk mengonfirmasi",
   "page.draft.create": "Buat draf",
   "page.duplicate.appendix": "Salin",
-  "page.duplicate.files": "Copy files",
-  "page.duplicate.pages": "Copy pages",
+  "page.duplicate.files": "Salin berkas",
+  "page.duplicate.pages": "Salin halaman",
   "page.status": "Status",
   "page.status.draft": "Draf",
   "page.status.draft.description":
-    "Halaman ada di mode draf dan hanya terlihat untuk penyunting",
+    "Halaman hanya terlihat untuk penyunting",
   "page.status.listed": "Publik",
-  "page.status.listed.description": "Halaman publik untuk siapa pun",
+  "page.status.listed.description": "Halaman publik untuk siapapun",
   "page.status.unlisted": "Tidak tercantum",
   "page.status.unlisted.description": "Halaman hanya dapat diakses via URL",
 
@@ -369,13 +372,13 @@
   "revert": "Kembalikan",
 
   "role": "Peran",
-  "role.admin.description": "The admin has all rights",
+  "role.admin.description": "Admin memiliki semua izin",
   "role.admin.title": "Admin",
   "role.all": "Semua",
   "role.empty": "Tidak ada pengguna dengan peran ini",
   "role.description.placeholder": "Tidak ada deskripsi",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Ini adalah peran cadangan tanpa permisi apapun",
+  "role.nobody.title": "Tidak siapapun",
 
   "save": "Simpan",
   "search": "Cari",
@@ -397,8 +400,8 @@
   "toolbar.button.heading.3": "Penajukan 3",
   "toolbar.button.italic": "Miring",
   "toolbar.button.file": "Berkas",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Pilih berkas",
+  "toolbar.button.file.upload": "Unggah berkas",
   "toolbar.button.link": "Tautan",
   "toolbar.button.ol": "Daftar berurut",
   "toolbar.button.ul": "Daftar tidak berurut",

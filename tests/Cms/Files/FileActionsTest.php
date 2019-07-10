@@ -16,7 +16,7 @@ class FileActionsTest extends TestCase
     {
         return new App([
             'roots' => [
-               'index' => $this->fixtures = __DIR__ . '/fixtures/FileActionsTest'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/FileActionsTest'
             ],
             'site' => [
                 'children' => [

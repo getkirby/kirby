@@ -166,4 +166,7 @@ export default {
 .k-select-input-native[disabled] {
   cursor: default;
 }
+.k-select-input-native {
+  font-weight: $font-weight-normal;
+}
 </style>

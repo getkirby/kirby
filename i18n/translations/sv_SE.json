@@ -24,13 +24,13 @@
   "delete": "Radera",
   "dimensions": "Dimensioner",
   "discard": "Kassera",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Ladda ner",
+  "duplicate": "Duplicera",
   "edit": "Redigera",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Inga filer att välja",
+  "dialog.pages.empty": "Inga sidor att välja",
+  "dialog.users.empty": "Inga användare att välja",
 
   "email": "E-post",
   "email.placeholder": "namn@exampel.se",
@@ -71,13 +71,13 @@
   "error.form.incomplete": "Vänligen åtgärda alla formulärfel...",
   "error.form.notSaved": "Formuläret kunde inte sparas",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Ange en giltig kod för språket",
+  "error.language.duplicate": "Språket finns redan",
+  "error.language.name": "Ange ett giltigt namn för språket",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Ange en giltig licensnyckel",
   "error.license.email": "Ange en giltig e-postadress",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "Licensen kunde inte verifieras",
 
   "error.page.changeSlug.permission":
     "Du har inte behörighet att ändra URL-appendixen för \"{slug}\"",
@@ -104,7 +104,7 @@
     "Ett utkast med URL-appendixen \"{slug}\" existerar redan",
   "error.page.duplicate":
     "En sida med URL-appendixen \"{slug}\" existerar redan",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Du har inte behörighet att duplicera \"{slug}\"",
   "error.page.notFound": "Sidan \"{slug}\" kan inte hittas",
   "error.page.num.invalid":
     "Ange ett giltigt nummer för sortering. Numret får inte vara negativt.",
@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Ange ett värde som innehåller \"{needle}\"",
   "error.validation.date": "Ange ett giltigt datum",
+  "error.validation.date.after": "Please enter a date after {date}",
+  "error.validation.date.before": "Please enter a date before {date}",
+  "error.validation.date.between": "Please enter a date between {min} and {max}",
   "error.validation.denied": "Vänligen neka",
   "error.validation.different": "Värdet får inte vara \"{other}\"",
   "error.validation.email": "Ange en giltig e-postadress",
@@ -285,12 +288,12 @@
 
   "loading": "Laddar",
 
-  "lock.unsaved": "Unsaved changes",
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.unsaved": "Osparade ändringar",
+  "lock.isLocked": "Osparade ändringar av <strong>{email}</strong>",
+  "lock.file.isLocked": "Filen redigeras just nu av {email} och kan inte redigeras.",
+  "lock.page.isLocked": "Sidan redigeras just nu av {email} och kan inte redigeras.",
+  "lock.unlock": "Lås upp",
+  "lock.isUnlocked": "Dina osparade ändringar har skrivits över av en annan användare. Du kan ladda ner dina ändringar för att slå ihop dem manuellt.",
 
   "login": "Logga in",
   "login.remember": "Håll mig inloggad",
@@ -319,8 +322,8 @@
   "more": "Mer",
   "name": "Namn",
   "next": "Nästa",
-  "off": "off",
-  "on": "on",
+  "off": "av",
+  "on": "på",
   "open": "Öppna",
   "options": "Alternativ",
 
@@ -342,8 +345,8 @@
   "page.delete.confirm.title": "Fyll i sidans titel för att bekräfta",
   "page.draft.create": "Skapa utkast",
   "page.duplicate.appendix": "Kopiera",
-  "page.duplicate.files": "Copy files",
-  "page.duplicate.pages": "Copy pages",
+  "page.duplicate.files": "Kopiera filer",
+  "page.duplicate.pages": "Kopiera sidor",
   "page.status": "Status",
   "page.status.draft": "Utkast",
   "page.status.draft.description":
@@ -369,13 +372,13 @@
   "revert": "Återgå",
 
   "role": "Roll",
-  "role.admin.description": "The admin has all rights",
-  "role.admin.title": "Admin",
+  "role.admin.description": "Administratören har alla behörigheter",
+  "role.admin.title": "Administratör",
   "role.all": "Alla",
   "role.empty": "Det finns inga användare med denna roll",
   "role.description.placeholder": "Ingen beskrivning",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Detta är en roll utan några behörigheter",
+  "role.nobody.title": "Ingen",
 
   "save": "Spara",
   "search": "Sök",

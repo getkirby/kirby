@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Si us plau, introduïu un valor que contingui  \"{needle}\"",
   "error.validation.date": "Si us plau, introdueix una data vàlida",
+  "error.validation.date.after": "Introdueix una data posterior {date}",
+  "error.validation.date.before": "Introdueix una data anterior {date}",
+  "error.validation.date.between": "Introdueix una data entre {min} i {max}",
   "error.validation.denied": "Si us plau, denegui",
   "error.validation.different": "El valor no ha de ser \"{other}\"",
   "error.validation.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",

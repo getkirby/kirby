@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Veuillez saisir une valeur contenant «&nbsp;{needle}&nbsp;»",
   "error.validation.date": "Veuillez saisir une date valide",
+  "error.validation.date.after": "Veuillez saisir une date après {date}",
+  "error.validation.date.before": "Veuillez saisir une date avant {date}",
+  "error.validation.date.between": "Veuillez saisir une date entre {min} et {max}",
   "error.validation.denied": "Veuillez refuser",
   "error.validation.different": "La valeur ne doit pas être «&nbsp;{other}&nbsp;»",
   "error.validation.email": "Veuillez saisir un courriel valide",

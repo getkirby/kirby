@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Prosím, zadajte hodnotu, ktorá obsahuje \"{needle}\"",
   "error.validation.date": "Prosím, zadajte platný dátum",
+  "error.validation.date.after": "Please enter a date after {date}",
+  "error.validation.date.before": "Please enter a date before {date}",
+  "error.validation.date.between": "Please enter a date between {min} and {max}",
   "error.validation.denied": "Prosím, odmietnite",
   "error.validation.different": "Hodnota nemôže byť \"{other}\"",
   "error.validation.email": "Prosím, zadajte platnú e-mailovú adresu",

@@ -27,8 +27,7 @@ class SessionsTest extends TestCase
 
     public function tearDown(): void
     {
-        unset($this->sessions);
-        unset($this->store);
+        unset($this->sessions, $this->store);
     }
 
     /**

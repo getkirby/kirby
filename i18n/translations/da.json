@@ -183,6 +183,9 @@
   "error.validation.contains":
     "Indtast venligst en værdi der indeholder \"{needle}\"",
   "error.validation.date": "Indtast venligst en gyldig dato",
+  "error.validation.date.after": "Please enter a date after {date}",
+  "error.validation.date.before": "Please enter a date before {date}",
+  "error.validation.date.between": "Please enter a date between {min} and {max}",
   "error.validation.denied": "Venligst afvis",
   "error.validation.different": "Værdien må ikke være \"{other}\"",
   "error.validation.email": "Indtast venligst en gyldig email adresse",

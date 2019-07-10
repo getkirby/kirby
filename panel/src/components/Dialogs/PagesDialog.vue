@@ -137,7 +137,4 @@ export default {
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
   opacity: 1;
 }
-.k-pages-dialog .k-empty {
-  border: 0;
-}
 </style>

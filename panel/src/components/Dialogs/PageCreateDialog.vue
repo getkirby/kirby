@@ -6,6 +6,7 @@
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
+    @close="reset"
   >
     <k-form
       ref="form"
@@ -29,11 +30,7 @@ export default {
       parent: null,
       section: null,
       templates: [],
-      page: {
-        title: '',
-        slug: '',
-        template: null
-      }
+      page: this.emptyForm()
     };
   },
   computed: {
@@ -77,6 +74,13 @@ export default {
     }
   },
   methods: {
+    emptyForm() {
+      return {
+        title: "",
+        slug: "",
+        template: null
+      };
+    },
     open(parent, blueprintApi, section) {
       this.parent  = parent;
       this.section = section;
@@ -129,6 +133,9 @@ export default {
         .catch(error => {
           this.$refs.dialog.error(error.message);
         });
+    },
+    reset() {
+      this.page = this.emptyForm();
     }
   }
 };

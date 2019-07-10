@@ -387,9 +387,9 @@ class StrTest extends TestCase
             'other other string',
             Str::replaceReplacements('some some string', [
                 [
-                'search'  => 'some',
-                'replace' => 'other',
-                'limit'   => -1
+                    'search'  => 'some',
+                    'replace' => 'other',
+                    'limit'   => -1
                 ]
             ])
         );
@@ -398,14 +398,14 @@ class StrTest extends TestCase
             'other interesting string',
             Str::replaceReplacements('some some string', [
                 [
-                'search'  => 'some',
-                'replace' => 'other',
-                'limit'   => -1
+                    'search'  => 'some',
+                    'replace' => 'other',
+                    'limit'   => -1
                 ],
                 [
-                'search'  => 'other string',
-                'replace' => 'interesting string',
-                'limit'   => 1
+                    'search'  => 'other string',
+                    'replace' => 'interesting string',
+                    'limit'   => 1
                 ]
             ])
         );

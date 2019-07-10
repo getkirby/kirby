@@ -24,7 +24,7 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      user: this.emptyUser(),
+      user: this.emptyForm(),
       languages: [],
       roles: []
     };
@@ -80,7 +80,7 @@ export default {
           this.$refs.dialog.error(error.message);
         });
     },
-    emptyUser() {
+    emptyForm() {
       return {
         name: "",
         email: "",
@@ -93,6 +93,13 @@ export default {
       this.$api.roles.options()
         .then(roles => {
           this.roles = roles;
+
+          // don't let non-admins create admins
+          if (this.$user.role.name !== "admin") {
+            this.roles = this.roles.filter(role => {
+              return role.value !== "admin";
+            });
+          }
 
           // load all translations
           this.$api.translations.options().then(languages => {
@@ -109,7 +116,7 @@ export default {
         });
     },
     reset() {
-      this.user = this.emptyUser();
+      this.user = this.emptyForm();
     }
   }
 };
