@@ -153,6 +153,72 @@ class PagesSectionTest extends TestCase
         $this->assertFalse($section->add());
     }
 
+    public function testSortBy()
+    {
+        $locale = setlocale(LC_ALL, 0);
+        setlocale(LC_ALL, 'de_DE');
+
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Z']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Ä']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'B']]
+            ]
+        ]);
+
+        // no settings
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $page
+        ]);
+        $this->assertEquals('Z', $section->data()[0]['text']);
+        $this->assertEquals('Ä', $section->data()[1]['text']);
+        $this->assertEquals('B', $section->data()[2]['text']);
+
+        // sort by field
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $page,
+            'sortBy' => 'title'
+        ]);
+        $this->assertEquals('B', $section->data()[0]['text']);
+        $this->assertEquals('Z', $section->data()[1]['text']);
+        $this->assertEquals('Ä', $section->data()[2]['text']);
+
+        // custom sorting direction
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $page,
+            'sortBy' => 'title desc'
+        ]);
+        $this->assertEquals('Ä', $section->data()[0]['text']);
+        $this->assertEquals('Z', $section->data()[1]['text']);
+        $this->assertEquals('B', $section->data()[2]['text']);
+
+        // custom flag
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $page,
+            'sortBy' => 'title SORT_LOCALE_STRING'
+        ]);
+        $this->assertEquals('Ä', $section->data()[0]['text']);
+        $this->assertEquals('B', $section->data()[1]['text']);
+        $this->assertEquals('Z', $section->data()[2]['text']);
+
+        // flag & sorting direction
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $page,
+            'sortBy' => 'title desc SORT_LOCALE_STRING'
+        ]);
+        $this->assertEquals('Z', $section->data()[0]['text']);
+        $this->assertEquals('B', $section->data()[1]['text']);
+        $this->assertEquals('Ä', $section->data()[2]['text']);
+
+        setlocale(LC_ALL, $locale);
+    }
+
     public function testSortable()
     {
         $section = new Section('pages', [

@@ -227,6 +227,68 @@ class FilesSectionTest extends TestCase
         $this->assertEquals('Information', $section->help());
     }
 
+    public function testSortBy()
+    {
+        $locale = setlocale(LC_ALL, 0);
+        setlocale(LC_ALL, 'de_DE');
+
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                [
+                    'filename' => 'z.jpg'
+                ],
+                [
+                    'filename' => 'ä.jpg'
+                ],
+                [
+                    'filename' => 'b.jpg'
+                ]
+            ]
+        ]);
+
+        // no settings
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => $model
+        ]);
+        $this->assertEquals('b.jpg', $section->data()[0]['filename']);
+        $this->assertEquals('z.jpg', $section->data()[1]['filename']);
+        $this->assertEquals('ä.jpg', $section->data()[2]['filename']);
+
+        // custom sorting direction
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'sortBy' => 'filename desc'
+        ]);
+        $this->assertEquals('ä.jpg', $section->data()[0]['filename']);
+        $this->assertEquals('z.jpg', $section->data()[1]['filename']);
+        $this->assertEquals('b.jpg', $section->data()[2]['filename']);
+
+        // custom flag
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'sortBy' => 'filename SORT_LOCALE_STRING'
+        ]);
+        $this->assertEquals('ä.jpg', $section->data()[0]['filename']);
+        $this->assertEquals('b.jpg', $section->data()[1]['filename']);
+        $this->assertEquals('z.jpg', $section->data()[2]['filename']);
+
+        // flag & sorting direction
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'sortBy' => 'filename desc SORT_LOCALE_STRING'
+        ]);
+        $this->assertEquals('z.jpg', $section->data()[0]['filename']);
+        $this->assertEquals('b.jpg', $section->data()[1]['filename']);
+        $this->assertEquals('ä.jpg', $section->data()[2]['filename']);
+
+        setlocale(LC_ALL, $locale);
+    }
+
     public function testSortable()
     {
         $section = new Section('files', [
