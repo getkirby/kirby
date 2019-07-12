@@ -82,7 +82,16 @@ return [
             $files = $this->parent->files()->template($this->template);
 
             if ($this->sortBy) {
-                $files = $files->sortBy(...Str::split($this->sortBy, ' '));
+                $sortArgs = Str::split($this->sortBy, ' ');
+
+                // fill in PHP constants
+                array_walk($sortArgs, function (string &$value) {
+                    if (Str::startsWith($value, 'SORT_') === true && defined($value) === true) {
+                        $value = constant($value);
+                    }
+                });
+
+                $files = $files->sortBy(...$sortArgs);
             } elseif ($this->sortable === true) {
                 $files = $files->sortBy('sort', 'asc');
             }
