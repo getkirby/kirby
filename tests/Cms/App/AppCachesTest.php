@@ -62,6 +62,27 @@ class AppCachesTest extends TestCase
         $this->assertFileExists($root . '/getkirby.com_test/pages/home.cache');
     }
 
+    public function testEnabledCacheWithOptionsAndPortPrefix()
+    {
+        $kirby = $this->app([
+            'urls' => [
+                'index' => 'http://127.0.0.0:8000'
+            ],
+            'options' => [
+                'cache.pages' => [
+                    'type' => 'file',
+                    'root' => $root = __DIR__ . '/fixtures/AppCachesTest/cache'
+                ]
+            ]
+        ]);
+
+        $this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
+        $this->assertEquals($root, $kirby->cache('pages')->options()['root']);
+
+        $kirby->cache('pages')->set('home', 'test');
+        $this->assertFileExists($root . '/127.0.0.0_8000/pages/home.cache');
+    }
+
     public function testPluginDefaultCache()
     {
         App::plugin('developer/plugin', [
