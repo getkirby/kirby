@@ -81,7 +81,7 @@ trait AppCaches
             ];
         }
 
-        $prefix = str_replace('/', '_', $this->system()->indexUrl()) .
+        $prefix = str_replace(['/', ':'], '_', $this->system()->indexUrl()) .
                   '/' .
                   str_replace('.', '/', $key);
 
