@@ -92,7 +92,7 @@ class UserTest extends TestCase
         ]);
 
         // create a user file
-        F::write($file = $index . '/test/index.php', 'test');
+        F::write($file = $index . '/test/index.php', '<?php return [];');
 
         $modified = filemtime($file);
         $user     = $app->user('test');
