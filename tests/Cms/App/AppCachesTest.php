@@ -66,7 +66,7 @@ class AppCachesTest extends TestCase
     {
         $kirby = $this->app([
             'urls' => [
-                'index' => 'http://127.0.0.0:8000'
+                'index' => 'http://127.0.0.1:8000'
             ],
             'options' => [
                 'cache.pages' => [
@@ -80,7 +80,7 @@ class AppCachesTest extends TestCase
         $this->assertEquals($root, $kirby->cache('pages')->options()['root']);
 
         $kirby->cache('pages')->set('home', 'test');
-        $this->assertFileExists($root . '/127.0.0.0_8000/pages/home.cache');
+        $this->assertFileExists($root . '/127.0.0.1_8000/pages/home.cache');
     }
 
     public function testPluginDefaultCache()
