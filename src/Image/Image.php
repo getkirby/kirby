@@ -88,7 +88,7 @@ class Image extends File
             return $this->dimensions;
         }
 
-        if (in_array($this->mime(), ['image/jpeg', 'image/jp2', 'image/png', 'image/gif'])) {
+        if (in_array($this->mime(), ['image/jpeg', 'image/jp2', 'image/png', 'image/gif', 'image/webp'])) {
             return $this->dimensions = Dimensions::forImage($this->root);
         }
 
