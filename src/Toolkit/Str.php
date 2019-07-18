@@ -826,7 +826,6 @@ class Str
             return $string;
         }
 
-        $string = trim((string)$string, $separator);
         $parts  = explode($separator, $string);
         $out    = [];
 

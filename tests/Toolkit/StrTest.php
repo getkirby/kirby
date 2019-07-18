@@ -526,6 +526,14 @@ class StrTest extends TestCase
 
         $string = 'ää/ö/üü/ß';
         $this->assertEquals(['ää', 'üü'], Str::split($string, '/', 2));
+
+        $string = <<<EOT
+            ---
+            -abc-
+            ---
+            -def-
+EOT;
+        $this->assertEquals(['-abc-', '-def-'], Str::split($string, '---'));
     }
 
     public function testStartsWith()
