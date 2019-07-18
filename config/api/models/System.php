@@ -35,7 +35,7 @@ return [
         'requirements' => function (System $system) {
             return $system->toArray();
         },
-        'breadcrumbTitle' => function () {
+        'site' => function () {
             try {
                 return $this->site()->blueprint()->title();
             } catch (Throwable $e) {
@@ -90,7 +90,6 @@ return [
         ],
         'panel' => [
             'ascii',
-            'breadcrumbTitle',
             'isOk',
             'isInstalled',
             'isLocal',
@@ -99,6 +98,7 @@ return [
             'license',
             'multilang',
             'requirements',
+            'site',
             'slugs',
             'title',
             'translation',
