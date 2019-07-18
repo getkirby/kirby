@@ -88,6 +88,11 @@ class ImageTest extends TestCase
         $this->assertEquals(50, $image->dimensions()->width());
         $this->assertEquals(50, $image->dimensions()->height());
 
+        // webp
+        $image  = $this->_image('valley.webp');
+        $this->assertEquals(550, $image->dimensions()->width());
+        $this->assertEquals(368, $image->dimensions()->height());
+
         // non-image file
         $image  = $this->_image('blank.pdf');
         $this->assertEquals(0, $image->dimensions()->width());
