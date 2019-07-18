@@ -83,7 +83,20 @@ class UserActionsTest extends TestCase
         $this->assertEquals('editor', $user->role());
     }
 
-    public function testCreate()
+    public function testCreateAdmin()
+    {
+        $user = User::create([
+            'email' => 'new@domain.com',
+            'role'  => 'admin',
+        ]);
+
+        $this->assertTrue($user->exists());
+
+        $this->assertEquals('new@domain.com', $user->email());
+        $this->assertEquals('admin', $user->role());
+    }
+
+    public function testCreateEditor()
     {
         $user = User::create([
             'email' => 'new@domain.com',
