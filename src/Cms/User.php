@@ -420,7 +420,7 @@ class User extends ModelWithContent
     /**
      * Logs the user in without checking the password
      *
-     * @param SKirby\Session\Session|array $session Session options or session object to set the user in
+     * @param Kirby\Session\Session|array $session Session options or session object to set the user in
      * @return void
      */
     public function loginPasswordless($session = null): void
