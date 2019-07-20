@@ -676,6 +676,10 @@ class SessionTest extends TestCase
      */
     public function testRegenerateToken()
     {
+        $sessionsReflector = new ReflectionClass(Sessions::class);
+        $cache = $sessionsReflector->getProperty('cache');
+        $cache->setAccessible(true);
+
         $token = '9999999999.valid.' . $this->store->validKey;
         $session = new Session($this->sessions, $token, []);
 
@@ -702,6 +706,10 @@ class SessionTest extends TestCase
 
         // validate that a cookie has been set
         $this->assertEquals($newToken, Cookie::get('kirby_session'));
+
+        // validate that the new session is cached in the $sessions object
+        $this->assertArrayHasKey($newToken, $cache->getValue($this->sessions));
+        $this->assertEquals($session, $cache->getValue($this->sessions)[$newToken]);
     }
 
     /**
@@ -710,14 +718,23 @@ class SessionTest extends TestCase
      */
     public function testRegenerateTokenHeaderMode()
     {
+        $sessionsReflector = new ReflectionClass(Sessions::class);
+        $cache = $sessionsReflector->getProperty('cache');
+        $cache->setAccessible(true);
+
         $token = '9999999999.valid.' . $this->store->validKey;
         $session = new Session($this->sessions, $token, ['mode' => 'header']);
 
         Cookie::remove('kirby_session');
         $this->assertFalse($session->needsRetransmission());
         $session->regenerateToken();
+        $this->assertNotEquals($token, $newToken = $session->token());
         $this->assertTrue($session->needsRetransmission());
         $this->assertNull(Cookie::get('kirby_session'));
+
+        // validate that the new session is cached in the $sessions object
+        $this->assertArrayHasKey($newToken, $cache->getValue($this->sessions));
+        $this->assertEquals($session, $cache->getValue($this->sessions)[$newToken]);
     }
 
     /**

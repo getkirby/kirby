@@ -469,6 +469,9 @@ class Session
         } else {
             $this->needsRetransmission = true;
         }
+
+        // update cache of the Sessions instance with the new token
+        $this->sessions->updateCache($this);
     }
 
     /**

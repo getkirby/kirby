@@ -243,6 +243,18 @@ class Sessions
     }
 
     /**
+     * Updates the instance cache with a newly created
+     * session or a session with a regenerated token
+     *
+     * @internal
+     * @param Kirby\Session\Session $session Session instance to push to the cache
+     */
+    public function updateCache(Session $session)
+    {
+        $this->cache[$session->token()] = $session;
+    }
+
+    /**
      * Returns the auth token from the cookie
      *
      * @return string|null
