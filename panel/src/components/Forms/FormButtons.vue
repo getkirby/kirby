@@ -29,7 +29,7 @@
         <span v-html="$t('lock.isLocked', { email: form.lock.email })" />
       </p>
       <k-button
-        :disabled="!form.lock.canUnlock"
+        :disabled="!form.lock.unlockable"
         icon="unlock"
         class="k-form-button"
         @click="setUnlock"
@@ -61,15 +61,20 @@
 
 <script>
 export default {
+  data() {
+    return {
+      supportsLocking: true
+    }
+  },
   computed: {
+    api() {
+      return {
+        lock: [this.$route.path + "/lock", null, null, true],
+        unlock: [this.$route.path + "/unlock", null, null, true]
+      }
+    },
     hasChanges() {
       return this.$store.getters["form/hasChanges"](this.id);
-    },
-    hasLock() {
-      return this.form.lock !== null;
-    },
-    hasUnlock() {
-      return this.form.unlock !== null;
     },
     form() {
       return {
@@ -83,12 +88,18 @@ export default {
     isDisabled() {
       return this.$store.getters["form/isDisabled"];
     },
+    isLocked() {
+      return this.form.lock !== null;
+    },
+    isUnlocked() {
+      return this.form.unlock !== null;
+    },
     mode() {
-      if (this.hasUnlock === true) {
+      if (this.isUnlocked === true) {
         return "unlock";
       }
 
-      if (this.hasLock === true) {
+      if (this.isLocked === true) {
         return "lock";
       }
 
@@ -101,27 +112,31 @@ export default {
     hasChanges(current, previous) {
       // if user started to make changes,
       // start setting lock on each heartbeat
-      if (current === true && previous == false) {
-        this.$store.dispatch("heartbeat/remove", this.listen);
+      if (previous === false && current === true) {
+        this.$store.dispatch("heartbeat/remove", this.getLock);
         this.$store.dispatch("heartbeat/add", [this.setLock, 30]);
+        return;
+      }
 
       // if user reversed changes manually,
       // remove lock and listen to lock from other users again
-      } else if (this.id && current === false && previous == true) {
+      if (this.id && previous === true && current === false) {
         this.removeLock();
+        return;
       }
     },
     id() {
-      // whenever the model id changes,
+      // when routed and no new model store id exists,
       // make sure to remove heartbeats
       if (!this.id) {
-        this.$store.dispatch("heartbeat/remove", this.listen);
+        this.$store.dispatch("heartbeat/remove", this.getLock);
         this.$store.dispatch("heartbeat/remove", this.setLock);
         return;
       }
 
+      // start listening for content lock
       if (this.hasChanges === false) {
-        this.$store.dispatch("heartbeat/add", this.listen);
+        this.$store.dispatch("heartbeat/add", this.getLock);
       }
     }
   },
@@ -132,25 +147,33 @@ export default {
     this.$events.$off("keydown.cmd.s", this.onSave);
   },
   methods: {
-    listen() {
-      return this.$api.get(this.$route.path + "/lock", null, null, true).then(response => {
+    /**
+     *  Locking API
+     */
+
+    getLock() {
+      return this.$api.get(...this.api.lock).then(response => {
+
+        // if content locking is not supported by model,
+        // set flag and stop listening
+        if (response.supported === false) {
+          this.supportsLocking = false;
+          this.$store.dispatch("heartbeat/remove", this.getLock);
+          console.warn("Content locking not supported for " + this.id);
+          return;
+        }
 
         // if content is locked, dispatch info to store
-        if (response.locked === true) {
-          this.$store.dispatch("form/lock", {
-            user: response.user,
-            email: response.email,
-            time: parseInt(response.time, 10),
-            canUnlock: response.canUnlock
-          });
+        if (response.locked !== false) {
+          this.$store.dispatch("form/lock", response.locked);
           return;
         }
 
         // if content is not locked but store still holds a lock
-        // from a another user, that lock has been lifted and thus
-        // the content needs to be reloaded to reflect any changes
+        // from another user, that lock has been lifted and thus
+        // the content needs to be reloaded to reflect changes
         if (
-          this.hasLock &&
+          this.isLocked &&
           this.form.lock.user !== this.$store.state.user.current.id
         ) {
           this.$events.$emit("model.reload");
@@ -159,34 +182,57 @@ export default {
         this.$store.dispatch("form/lock", null);
       });
     },
+
     setLock() {
-      this.$api.patch(this.$route.path + "/lock", null, null, true).catch(() => {
-        this.$store.dispatch("form/revert", this.id);
-        this.$store.dispatch("heartbeat/remove", this.setLock);
-        this.$store.dispatch("heartbeat/add", this.listen);
-      });
+      if (this.supportsLocking === true) {
+        this.$api.patch(...this.api.lock).catch(() => {
+          // If setting lock failed, a competing lock has been set between
+          // API calls. In that case, discard changes, stop setting lock and
+          // listen to concurrent lock
+          this.$store.dispatch("form/revert", this.id);
+          this.$store.dispatch("heartbeat/remove", this.setLock);
+          this.$store.dispatch("heartbeat/add", this.getLock);
+        });
+      }
     },
+
     removeLock() {
-      this.$store.dispatch("heartbeat/remove", this.setLock);
-      this.$api.delete(this.$route.path + "/lock", null, null, true).then(() => {
-        this.$store.dispatch("form/lock", null);
-        this.$store.dispatch("heartbeat/add", this.listen);
-      });
+      if (this.supportsLocking === true) {
+        this.$store.dispatch("heartbeat/remove", this.setLock);
+
+        this.$api.delete(...this.api.lock).then(() => {
+          this.$store.dispatch("form/lock", null);
+          this.$store.dispatch("heartbeat/add", this.getLock);
+        });
+      }
     },
+
     setUnlock() {
-      this.$store.dispatch("heartbeat/remove", this.setLock);
-      this.$api.patch(this.$route.path + "/unlock", null, null, true).then(() => {
-        this.$store.dispatch("form/lock", null);
-        this.$store.dispatch("heartbeat/add", this.listen);
-      });
+      if (this.supportsLocking === true) {
+        this.$store.dispatch("heartbeat/remove", this.setLock);
+
+        this.$api.patch(...this.api.unlock).then(() => {
+          this.$store.dispatch("form/lock", null);
+          this.$store.dispatch("heartbeat/add", this.getLock);
+        });
+      }
     },
+
     removeUnlock() {
-      this.$store.dispatch("heartbeat/remove", this.setLock);
-      this.$api.delete(this.$route.path + "/unlock", null, null, true).then(() => {
-        this.$store.dispatch("form/unlock", null);
-        this.$store.dispatch("heartbeat/add", this.listen);
-      });
+      if (this.supportsLocking === true) {
+        this.$store.dispatch("heartbeat/remove", this.setLock);
+
+        this.$api.delete(...this.api.unlock).then(() => {
+          this.$store.dispatch("form/unlock", null);
+          this.$store.dispatch("heartbeat/add", this.getLock);
+        });
+      }
     },
+
+    /**
+     *  User actions
+     */
+
     onDownload() {
       let content = "";
 
@@ -204,13 +250,16 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
+
     onResolve() {
       this.$store.dispatch("form/revert", this.id);
       this.removeUnlock();
     },
+
     onRevert() {
       this.$store.dispatch("form/revert", this.id);
     },
+
     onSave(e) {
       if (!e) {
         return false;
@@ -243,12 +292,10 @@ export default {
           } else {
             this.$store.dispatch("notification/error", {
               message: this.$t("error.form.notSaved"),
-              details: [
-                {
-                  label: "Exception: " + response.exception,
-                  message: response.message
-                }
-              ]
+              details: [{
+                label: "Exception: " + response.exception,
+                message: response.message
+              }]
             });
           }
         });

@@ -153,22 +153,27 @@ export default {
 
       context.commit("CREATE", model);
       context.commit("CURRENT", model.id);
-
+      context.dispatch("load", model);
+    },
+    load(context, model) {
       const stored = localStorage.getItem("kirby$form$" + model.id);
 
       if (stored) {
         const data = JSON.parse(stored);
 
         Api.get(model.api + "/unlock").then(response => {
-          if (response.isUnlocked === true) {
-            context.commit("UNLOCK", data.values);
-
-          } else if (data.values) {
+          if (
+            response.supported === false ||
+            response.unlocked === false
+          ) {
             Object.keys(data.values).forEach(field => {
               const value = data.values[field];
               context.commit("UPDATE", [model.id, field, value]);
             });
+            return;
           }
+
+          context.commit("UNLOCK", data.values);
         });
       }
     },

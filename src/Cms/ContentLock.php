@@ -66,12 +66,12 @@ class ContentLock
     }
 
     /**
-     * Returns array  with `locked` flag and,
-     * if needed, `user`, `email`, `time`, `canUnlock`
+     * Returns either `false` or array  with `user`, `email`,
+     * `time` and `unlockable` keys
      *
-     * @return array
+     * @return array|bool
      */
-    public function get(): array
+    public function get()
     {
         $data = $this->data['lock'] ?? [];
 
@@ -83,17 +83,14 @@ class ContentLock
             $time = intval($data['time']);
 
             return [
-                'locked'    => true,
-                'user'      => $user->id(),
-                'email'     => $user->email(),
-                'time'      => $time,
-                'canUnlock' => $time + $this->kirby()->option('lock.duration', 60 * 2) <= time()
+                'user'       => $user->id(),
+                'email'      => $user->email(),
+                'time'       => $time,
+                'unlockable' => $time + $this->kirby()->option('lock.duration', 60 * 2) <= time()
             ];
         }
 
-        return [
-            'locked' => false
-        ];
+        return false;
     }
 
     /**
@@ -105,10 +102,7 @@ class ContentLock
     {
         $lock = $this->get();
 
-        if (
-            $lock['locked'] === true &&
-            $lock['user'] !== $this->user()->id()
-        ) {
+        if ($lock !== false && $lock['user'] !== $this->user()->id()) {
             return true;
         }
 

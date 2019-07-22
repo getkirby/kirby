@@ -260,11 +260,18 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the lock object for this model
      *
-     * @return Kirby\Cms\ContentLock
+     * Only if a content firectory exists,
+     * virtual pages will need to overwrite this method
+     *
+     * @return Kirby\Cms\ContentLock|null
      */
     public function lock()
     {
-        return new ContentLock($this);
+        $dir = $this->contentFileDirectory();
+
+        if (is_string($dir) === true && file_exists($dir) === true) {
+            return new ContentLock($this);
+        }
     }
 
     /**
