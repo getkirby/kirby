@@ -17,9 +17,8 @@ class ContentLockTest extends TestCase
             ],
             'site' => [
                 'children' => [
-                    [
-                        'slug'  => 'test'
-                    ]
+                    ['slug'  => 'test'],
+                    ['slug'  => 'foo']
                 ]
             ],
             'users' => [
