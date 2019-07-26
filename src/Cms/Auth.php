@@ -163,20 +163,27 @@ class Auth
     }
 
     /**
-     * Check if logins are blocked for the current ip
+     * Check if logins are blocked for the current ip or email
      *
+     * @param string $email
      * @return boolean
      */
-    public function isBlocked(): bool
+    public function isBlocked(string $email): bool
     {
         $ip      = $this->ipHash();
         $log     = $this->log();
         $trials  = $this->kirby->option('auth.trials', 10);
         $timeout = $this->kirby->option('auth.timeout', 3600);
 
-        if ($entry = ($log[$ip] ?? null)) {
-            if ($entry['trials'] > $trials) {
-                if ($entry['time'] > (time() - $timeout)) {
+        if ($entry = ($log['by-ip'][$ip] ?? null)) {
+            if ($entry['trials'] > $trials && $entry['time'] > (time() - $timeout)) {
+                return true;
+            }
+        }
+
+        if ($this->kirby->users()->find($email)) {
+            if ($entry = ($log['by-email'][$email] ?? null)) {
+                if ($entry['trials'] > $trials && $entry['time'] > (time() - $timeout)) {
                     return true;
                 }
             }
@@ -230,7 +237,7 @@ class Auth
     public function validatePassword(string $email, string $password)
     {
         // check for blocked ips
-        if ($this->isBlocked() === true) {
+        if ($this->isBlocked($email) === true) {
             throw new PermissionException('Rate limit exceeded', 403);
         }
 
@@ -250,7 +257,7 @@ class Auth
             ]);
         } catch (Throwable $e) {
             // log invalid login trial
-            $this->track();
+            $this->track($email);
 
             // sleep for a random amount of milliseconds
             // to make automated attacks harder
@@ -279,10 +286,16 @@ class Auth
     public function log(): array
     {
         try {
-            return Data::read($this->logfile(), 'json');
+            $log = Data::read($this->logfile(), 'json');
         } catch (Throwable $e) {
-            return [];
+            $log = [];
         }
+
+        // ensure that the category arrays are defined
+        $log['by-ip']    = $log['by-ip'] ?? [];
+        $log['by-email'] = $log['by-email'] ?? [];
+
+        return $log;
     }
 
     /**
@@ -307,24 +320,39 @@ class Auth
     /**
      * Tracks a login
      *
+     * @param string $email
      * @return boolean
      */
-    public function track(): bool
+    public function track(string $email): bool
     {
         $ip   = $this->ipHash();
         $log  = $this->log();
         $time = time();
 
-        if (isset($log[$ip]) === true) {
-            $log[$ip] = [
+        if (isset($log['by-ip'][$ip]) === true) {
+            $log['by-ip'][$ip] = [
                 'time'   => $time,
-                'trials' => ($log[$ip]['trials'] ?? 0) + 1
+                'trials' => ($log['by-ip'][$ip]['trials'] ?? 0) + 1
             ];
         } else {
-            $log[$ip] = [
+            $log['by-ip'][$ip] = [
                 'time'   => $time,
                 'trials' => 1
             ];
+        }
+
+        if ($this->kirby->users()->find($email)) {
+            if (isset($log['by-email'][$email]) === true) {
+                $log['by-email'][$email] = [
+                    'time'   => $time,
+                    'trials' => ($log['by-email'][$email]['trials'] ?? 0) + 1
+                ];
+            } else {
+                $log['by-email'][$email] = [
+                    'time'   => $time,
+                    'trials' => 1
+                ];
+            }
         }
 
         return Data::write($this->logfile(), $log, 'json');
