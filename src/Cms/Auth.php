@@ -22,7 +22,7 @@ class Auth
 {
     protected $impersonate;
     protected $kirby;
-    protected $user;
+    protected $user = false;
 
     /**
      * @param Kirby\Cms\App $kirby
@@ -359,6 +359,11 @@ class Auth
     {
         if ($this->impersonate !== null) {
             return $this->impersonate;
+        }
+
+        // return from cache
+        if ($this->user !== false) {
+            return $this->user;
         }
 
         try {
