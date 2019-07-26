@@ -79,13 +79,11 @@ class Auth
             throw new PermissionException('Basic authentication is only allowed over HTTPS');
         }
 
-        if ($user = $this->kirby->users()->find($auth->username())) {
-            if ($user->validatePassword($auth->password()) === true) {
-                return $user;
-            }
+        try {
+            return $this->validatePassword($auth->username(), $auth->password());
+        } catch (Throwable $e) {
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -198,14 +196,6 @@ class Auth
      */
     public function login(string $email, string $password, bool $long = false)
     {
-        // check for blocked ips
-        if ($this->isBlocked() === true) {
-            throw new PermissionException('Rate limit exceeded', 403);
-        }
-
-        // stop impersonating
-        $this->impersonate = null;
-
         // session options
         $options = [
             'createMode' => 'cookie',
@@ -213,10 +203,39 @@ class Auth
         ];
 
         // validate the user and log in to the session
+        $user = $this->validatePassword($email, $password);
+        $user->loginPasswordless($options);
+
+        // stop impersonating
+        $this->impersonate = null;
+
+        return $this->user = $user;
+    }
+
+    /**
+     * Validates the user credentials and returns the user object on success;
+     * otherwise logs the failed attempt
+     *
+     * @param string $email
+     * @param string $password
+     * @return Kirby\Cms\User
+     *
+     * @throws PermissionException If the rate limit was exceeded
+     * @throws NotFoundException If the email was invalid
+     * @throws PermissionException If the password is not valid (via `$user->login()`)
+     */
+    public function validatePassword(string $email, string $password)
+    {
+        // check for blocked ips
+        if ($this->isBlocked() === true) {
+            throw new PermissionException('Rate limit exceeded', 403);
+        }
+
+        // validate the user
         try {
             if ($user = $this->kirby->users()->find($email)) {
-                if ($user->login($password, $options) === true) {
-                    return $this->user = $user;
+                if ($user->validatePassword($password) === true) {
+                    return $user;
                 }
             }
 
