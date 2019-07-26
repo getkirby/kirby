@@ -190,7 +190,11 @@ class Auth
      * @param string $email
      * @param string $password
      * @param boolean $long
-     * @return Kirby\Cms\User|false
+     * @return Kirby\Cms\User
+     *
+     * @throws PermissionException If the rate limit was exceeded
+     * @throws NotFoundException If the email was invalid
+     * @throws PermissionException If the password is not valid (via `$user->login()`)
      */
     public function login(string $email, string $password, bool $long = false)
     {
@@ -209,20 +213,30 @@ class Auth
         ];
 
         // validate the user and log in to the session
-        if ($user = $this->kirby->users()->find($email)) {
-            if ($user->login($password, $options) === true) {
-                return $this->user = $user;
+        try {
+            if ($user = $this->kirby->users()->find($email)) {
+                if ($user->login($password, $options) === true) {
+                    return $this->user = $user;
+                }
             }
+
+            throw new NotFoundException([
+                'key'  => 'user.notFound',
+                'data' => [
+                    'name' => $email
+                ]
+            ]);
+        } catch (Throwable $e) {
+            // log invalid login trial
+            $this->track();
+
+            // sleep for a random amount of milliseconds
+            // to make automated attacks harder
+            usleep(random_int(1000, 2000000));
+
+            // keep throwing the original error
+            throw $e;
         }
-
-        // log invalid login trial
-        $this->track();
-
-        // sleep for a random amount of milliseconds
-        // to make automated attacks harder
-        usleep(random_int(1000, 2000000));
-
-        return false;
     }
 
     /**

@@ -36,24 +36,21 @@ return [
             $password = $this->requestBody('password');
 
             try {
-                if ($user = $this->kirby()->auth()->login($email, $password, $long)) {
-                    return [
-                        'code'   => 200,
-                        'status' => 'ok',
-                        'user'   => $this->resolve($user)->view('auth')->toArray()
-                    ];
-                }
+                $user = $this->kirby()->auth()->login($email, $password, $long);
 
-                throw new NotFoundException(['key' => 'user.undefined']);
+                return [
+                    'code'   => 200,
+                    'status' => 'ok',
+                    'user'   => $this->resolve($user)->view('auth')->toArray()
+                ];
             } catch (Throwable $e) {
                 if ($this->kirby()->option('debug') === true) {
                     throw $e;
                 } else {
-                    // catch any kind of login error
+                    // hide the actual error to avoid leaking security-relevant information
+                    throw new InvalidArgumentException('Invalid email or password');
                 }
             }
-
-            throw new InvalidArgumentException('Invalid email or password');
         }
     ],
     [
