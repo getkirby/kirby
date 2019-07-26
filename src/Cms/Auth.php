@@ -7,6 +7,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Toolkit\F;
 use Throwable;
 
 /**
@@ -294,6 +295,24 @@ class Auth
         // ensure that the category arrays are defined
         $log['by-ip']    = $log['by-ip'] ?? [];
         $log['by-email'] = $log['by-email'] ?? [];
+
+        // remove entries that are no longer needed
+        $originalLog = $log;
+        $time = time() - $this->kirby->option('auth.timeout', 3600);
+        foreach ($log as $category => $entries) {
+            $log[$category] = array_filter($entries, function ($entry) use ($time) {
+                return $entry['time'] > $time;
+            });
+        }
+
+        // write new log to the file system if it changed
+        if ($log !== $originalLog) {
+            if (count($log['by-ip']) === 0 && count($log['by-email']) === 0) {
+                F::remove($this->logfile());
+            } else {
+                Data::write($this->logfile(), $log, 'json');
+            }
+        }
 
         return $log;
     }
