@@ -156,7 +156,10 @@ class Auth
      */
     public function ipHash(): string
     {
-        return hash('sha256', $this->kirby->visitor()->ip());
+        $hash = hash('sha256', $this->kirby->visitor()->ip());
+
+        // only use the first 50 chars to ensure privacy
+        return substr($hash, 0, 50);
     }
 
     /**
