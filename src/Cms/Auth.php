@@ -305,6 +305,9 @@ class Auth
             });
         }
 
+        // remove all elements on the top level with different keys (old structure)
+        $log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));
+
         // write new log to the file system if it changed
         if ($log !== $originalLog) {
             if (count($log['by-ip']) === 0 && count($log['by-email']) === 0) {
