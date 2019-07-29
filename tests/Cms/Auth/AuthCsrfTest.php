@@ -21,6 +21,7 @@ class AuthCsrfTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+        $_GET = [];
     }
 
     /**

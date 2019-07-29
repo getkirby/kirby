@@ -56,7 +56,7 @@ class PanelPluginsTest extends TestCase
     {
         $this->createPlugins();
 
-        $time = time();
+        $time = \time();
 
         $plugins = new PanelPlugins();
         $this->assertEquals($time, $plugins->modified());
