@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Throwable;
+
 /**
  * AppUsers
  *
@@ -88,7 +90,11 @@ trait AppUsers
         if (is_string($this->user) === true) {
             return $this->auth()->impersonate($this->user);
         } else {
-            return $this->auth()->user();
+            try {
+                return $this->auth()->user();
+            } catch (Throwable $e) {
+                return null;
+            }
         }
     }
 
