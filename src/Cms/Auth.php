@@ -24,6 +24,7 @@ class Auth
     protected $impersonate;
     protected $kirby;
     protected $user = false;
+    protected $userException;
 
     /**
      * @param Kirby\Cms\App $kirby
@@ -423,7 +424,14 @@ class Auth
         }
 
         // return from cache
-        if ($this->user !== false) {
+        if ($this->user === null) {
+            // throw the same Exception again if one was captured before
+            if ($this->userException !== null) {
+                throw $this->userException;
+            }
+
+            return null;
+        } elseif ($this->user !== false) {
             return $this->user;
         }
 
@@ -435,6 +443,9 @@ class Auth
             }
         } catch (Throwable $e) {
             $this->user = null;
+
+            // capture the Exception for future calls
+            $this->userException = $e;
 
             throw $e;
         }
