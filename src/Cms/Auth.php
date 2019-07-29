@@ -167,20 +167,19 @@ class Auth
      */
     public function isBlocked(string $email): bool
     {
-        $ip      = $this->ipHash();
-        $log     = $this->log();
-        $trials  = $this->kirby->option('auth.trials', 10);
-        $timeout = $this->kirby->option('auth.timeout', 3600);
+        $ip     = $this->ipHash();
+        $log    = $this->log();
+        $trials = $this->kirby->option('auth.trials', 10);
 
         if ($entry = ($log['by-ip'][$ip] ?? null)) {
-            if ($entry['trials'] > $trials && $entry['time'] > (time() - $timeout)) {
+            if ($entry['trials'] >= $trials) {
                 return true;
             }
         }
 
         if ($this->kirby->users()->find($email)) {
             if ($entry = ($log['by-email'][$email] ?? null)) {
-                if ($entry['trials'] > $trials && $entry['time'] > (time() - $timeout)) {
+                if ($entry['trials'] >= $trials) {
                     return true;
                 }
             }
