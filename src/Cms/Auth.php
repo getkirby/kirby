@@ -295,9 +295,11 @@ class Auth
     public function log(): array
     {
         try {
-            $log = Data::read($this->logfile(), 'json');
+            $log  = Data::read($this->logfile(), 'json');
+            $read = true;
         } catch (Throwable $e) {
-            $log = [];
+            $log  = [];
+            $read = false;
         }
 
         // ensure that the category arrays are defined
@@ -317,7 +319,7 @@ class Auth
         $log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));
 
         // write new log to the file system if it changed
-        if ($log !== $originalLog) {
+        if ($read === false || $log !== $originalLog) {
             if (count($log['by-ip']) === 0 && count($log['by-email']) === 0) {
                 F::remove($this->logfile());
             } else {
