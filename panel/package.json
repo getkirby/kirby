@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
+    "dev": "vue-cli-service serve --open",
     "build": "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html",
     "lint": "vue-cli-service lint",
     "pre-commit": "pretty-quick --staged",
