@@ -543,7 +543,7 @@ class Api
             if (is_a($e, 'Kirby\Exception\Exception') === true) {
                 $result = [
                     'status' => 'error',
-                    'route'  => $this->route->pattern()
+                    'route'  => ($this->route)? $this->route->pattern() : null
                 ] + $e->toArray();
             } else {
                 // remove the document root from the file path
