@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Kirby\Http\Idn;
 use Kirby\Toolkit\Str;
 use ReflectionFunction;
 use Throwable;
@@ -270,7 +271,20 @@ V::$validators = [
      * Checks for valid email addresses
      */
     'email' => function ($value): bool {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            try {
+                $parts   = Str::split($value, '@');
+                $address = $parts[0] ?? null;
+                $domain  = Idn::encode($parts[1] ?? '');
+                $email   = $address . '@' . $domain;
+            } catch (Throwable $e) {
+                return false;
+            }
+
+            return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+        }
+
+        return true;
     },
 
     /**
