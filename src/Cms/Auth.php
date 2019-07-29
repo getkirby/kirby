@@ -80,11 +80,7 @@ class Auth
             throw new PermissionException('Basic authentication is only allowed over HTTPS');
         }
 
-        try {
-            return $this->validatePassword($auth->username(), $auth->password());
-        } catch (Throwable $e) {
-            return null;
-        }
+        return $this->validatePassword($auth->username(), $auth->password());
     }
 
     /**
@@ -239,7 +235,14 @@ class Auth
     {
         // check for blocked ips
         if ($this->isBlocked($email) === true) {
-            throw new PermissionException('Rate limit exceeded', 403);
+            if ($this->kirby->option('debug') === true) {
+                $message = 'Rate limit exceeded';
+            } else {
+                // avoid leaking security-relevant information
+                $message = 'Invalid email or password';
+            }
+
+            throw new PermissionException($message, 403);
         }
 
         // validate the user
@@ -264,8 +267,13 @@ class Auth
             // to make automated attacks harder
             usleep(random_int(1000, 2000000));
 
-            // keep throwing the original error
-            throw $e;
+            // keep throwing the original error in debug mode,
+            // otherwise hide it to avoid leaking security-relevant information
+            if ($this->kirby->option('debug') === true) {
+                throw $e;
+            } else {
+                throw new PermissionException('Invalid email or password');
+            }
         }
     }
 
@@ -402,8 +410,9 @@ class Auth
     /**
      * Validates the currently logged in user
      *
-     * @param Kirby\Session\Sessionarray||null $session
-     * @return Kirby\Cms\User|null
+     * @param Kirby\Session\Session|array|null $session
+     * @return Kirby\Cms\User
+     * @throws
      */
     public function user($session = null)
     {
@@ -423,7 +432,9 @@ class Auth
                 return $this->user = $this->currentUserFromSession($session);
             }
         } catch (Throwable $e) {
-            return $this->user = null;
+            $this->user = null;
+
+            throw $e;
         }
     }
 }

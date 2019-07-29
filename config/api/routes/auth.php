@@ -35,22 +35,13 @@ return [
             $long     = $this->requestBody('long');
             $password = $this->requestBody('password');
 
-            try {
-                $user = $this->kirby()->auth()->login($email, $password, $long);
+            $user = $this->kirby()->auth()->login($email, $password, $long);
 
-                return [
-                    'code'   => 200,
-                    'status' => 'ok',
-                    'user'   => $this->resolve($user)->view('auth')->toArray()
-                ];
-            } catch (Throwable $e) {
-                if ($this->kirby()->option('debug') === true) {
-                    throw $e;
-                } else {
-                    // hide the actual error to avoid leaking security-relevant information
-                    throw new InvalidArgumentException('Invalid email or password');
-                }
-            }
+            return [
+                'code'   => 200,
+                'status' => 'ok',
+                'user'   => $this->resolve($user)->view('auth')->toArray()
+            ];
         }
     ],
     [
