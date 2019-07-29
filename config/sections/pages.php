@@ -122,16 +122,7 @@ return [
 
             // sort
             if ($this->sortBy) {
-                $sortArgs = Str::split($this->sortBy, ' ');
-
-                // fill in PHP constants
-                array_walk($sortArgs, function (string &$value) {
-                    if (Str::startsWith($value, 'SORT_') === true && defined($value) === true) {
-                        $value = constant($value);
-                    }
-                });
-
-                $pages = $pages->sortBy(...$sortArgs);
+                $pages = $pages->sortBy(...$pages::sortArgs($this->sortBy));
             }
 
             // pagination

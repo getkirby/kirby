@@ -844,6 +844,26 @@ class Collection extends Iterator implements Countable
     }
 
     /**
+     * Get sort arguments from a string
+     *
+     * @param string $sortBy
+     * @return array
+     */
+    static public function sortArgs(string $sortBy): array
+    {
+        $sortArgs = Str::split($sortBy, ' ');
+
+        // fill in PHP constants
+        array_walk($sortArgs, function (string &$value) {
+            if (Str::startsWith($value, 'SORT_') === true && defined($value) === true) {
+                $value = constant($value);
+            }
+        });
+
+        return $sortArgs;
+    }
+
+    /**
      * Sorts the elements by any number of fields
      *
      * @param   $field      string|callable  Field name or value callback to sort by
