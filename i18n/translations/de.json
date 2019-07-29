@@ -265,6 +265,7 @@
   "language.direction.ltr": "Von links nach rechts",
   "language.direction.rtl": "Von rechts nach links",
   "language.locale": "PHP locale string",
+  "language.locale.warning": "Du nutzt ein angepasstes Setup for PHP Locales. Bitte bearbeite dieses direkt in der entsprechenden Sprachdatei in /site/languages",
   "language.name": "Name",
   "language.updated": "Die Sprache wurde gespeichert",
 

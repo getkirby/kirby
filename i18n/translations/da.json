@@ -265,6 +265,7 @@
   "language.direction.ltr": "Venstre mod højre",
   "language.direction.rtl": "Højre mod venstre",
   "language.locale": "PHP locale string",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Navn",
   "language.updated": "Sproget er blevet opdateret",
 

@@ -265,6 +265,7 @@
   "language.direction.ltr": "왼쪽에서 오른쪽",
   "language.direction.rtl": "오른쪽에서 왼쪽",
   "language.locale": "PHP 로캘 문자열",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "이름",
   "language.updated": "언어를 변경했습니다.",
 

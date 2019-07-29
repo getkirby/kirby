@@ -265,6 +265,7 @@
   "language.direction.ltr": "Balról jobbra",
   "language.direction.rtl": "Jobbról balra",
   "language.locale": "PHP locale sztring",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Név",
   "language.updated": "A nyelv frissítve lett",
 

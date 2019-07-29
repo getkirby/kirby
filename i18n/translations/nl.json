@@ -265,6 +265,7 @@
   "language.direction.ltr": "Links naar rechts",
   "language.direction.rtl": "Rechts naar links",
   "language.locale": "PHP-locale regel",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Naam",
   "language.updated": "De taal is geüpdatet",
 

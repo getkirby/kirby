@@ -265,6 +265,7 @@
   "language.direction.ltr": "Vasemmalta oikealle",
   "language.direction.rtl": "Oikealta vasemmalle",
   "language.locale": "PHP-lokaalin tunniste",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Nimi",
   "language.updated": "Kieli on päivitetty",
 

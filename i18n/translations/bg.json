@@ -265,6 +265,7 @@
   "language.direction.ltr": "Отляво надясно",
   "language.direction.rtl": "Отдясно наляво",
   "language.locale": "PHP locale string",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Име",
   "language.updated": "Езикът беше обновен",
 

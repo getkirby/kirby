@@ -265,6 +265,7 @@
   "language.direction.ltr": "چپ به راست",
   "language.direction.rtl": "راست به چپ",
   "language.locale": "PHP locale string",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "پارسی",
   "language.updated": "زبان به روز شد",
 
