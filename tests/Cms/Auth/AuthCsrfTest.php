@@ -1,0 +1,149 @@
+<?php
+
+namespace Kirby\Cms;
+
+/**
+ * @coversDefaultClass Kirby\Cms\Auth
+ */
+class AuthCsrfTest extends TestCase
+{
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
+            ],
+        ]);
+
+        $this->auth = new Auth($this->app);
+    }
+
+    public function tearDown(): void
+    {
+        Dir::remove($this->fixtures);
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromSession1()
+    {
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = [];
+        $this->assertFalse($this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromSession2()
+    {
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = ['csrf' => ''];
+        $this->assertFalse($this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromSession3()
+    {
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = ['csrf' => 'session-csrf'];
+        $this->assertEquals('session-csrf', $this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromSession4()
+    {
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = ['csrf' => 'invalid-csrf'];
+        $this->assertFalse($this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromOption1()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'api.csrf' => 'option-csrf'
+            ]
+        ]);
+        $this->auth = new Auth($this->app);
+
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = [];
+        $this->assertFalse($this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromOption2()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'api.csrf' => 'option-csrf'
+            ]
+        ]);
+        $this->auth = new Auth($this->app);
+
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = ['csrf' => 'option-csrf'];
+        $this->assertEquals('option-csrf', $this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromOption3()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'api.csrf' => 'option-csrf'
+            ]
+        ]);
+        $this->auth = new Auth($this->app);
+
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = ['csrf' => 'session-csrf'];
+        $this->assertFalse($this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrfFromOption4()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'api.csrf' => 'option-csrf'
+            ]
+        ]);
+        $this->auth = new Auth($this->app);
+
+        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->commit();
+
+        $_GET = ['csrf' => 'invalid-csrf'];
+        $this->assertFalse($this->auth->csrf());
+    }
+}
