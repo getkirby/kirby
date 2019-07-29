@@ -156,7 +156,7 @@ class PagesSectionTest extends TestCase
     public function testSortBy()
     {
         $locale = setlocale(LC_ALL, 0);
-        setlocale(LC_ALL, 'de_DE');
+        setlocale(LC_ALL, ['de_DE.ISO8859-1', 'de_DE']);
 
         $page = new Page([
             'slug'     => 'test',
