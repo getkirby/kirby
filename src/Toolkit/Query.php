@@ -76,7 +76,8 @@ class Query
      */
     protected function resolve(string $query)
     {
-        if (array_key_exists($query, $this->data) === true) {
+        // direct key access in arrays
+        if (is_array($this->data) === true && array_key_exists($query, $this->data) === true) {
             return $this->data[$query];
         }
 
