@@ -76,6 +76,10 @@ class Query
      */
     protected function resolve(string $query)
     {
+        if (array_key_exists($query, $this->data) === true) {
+            return $this->data[$query];
+        }
+
         $parts = $this->parts($query);
         $data  = $this->data;
         $value = null;

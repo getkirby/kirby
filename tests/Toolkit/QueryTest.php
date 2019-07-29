@@ -23,6 +23,15 @@ class QueryTest extends TestCase
         $this->assertEquals($data, $query->result());
     }
 
+    public function testWithDottedData()
+    {
+        $query = new Query('user.username', [
+            'user.username' => 'homer'
+        ]);
+
+        $this->assertEquals('homer', $query->result());
+    }
+
     public function test0LevelArrayQuery()
     {
         $query = new Query('user', [
