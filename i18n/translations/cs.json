@@ -265,6 +265,7 @@
   "language.direction.ltr": "Zleva doprava",
   "language.direction.rtl": "Zprava doleva",
   "language.locale": "Řetězec lokalizace PHP",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Jméno",
   "language.updated": "Jazyk byl aktualizován",
 

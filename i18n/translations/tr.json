@@ -265,6 +265,7 @@
   "language.direction.ltr": "Soldan sağa",
   "language.direction.rtl": "Sağdan sola",
   "language.locale": "PHP yerel dizesi",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "İsim",
   "language.updated": "Dil güncellendi",
 

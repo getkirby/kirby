@@ -265,6 +265,7 @@
   "language.direction.ltr": "Vänster till höger",
   "language.direction.rtl": "Höger till vänster",
   "language.locale": "PHP locale string",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Namn",
   "language.updated": "Språket har uppdaterats",
 

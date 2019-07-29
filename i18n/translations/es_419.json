@@ -265,6 +265,7 @@
   "language.direction.ltr": "De Izquierda a derecha",
   "language.direction.rtl": "De derecha a izquierda",
   "language.locale": "Cadena de localización PHP",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Nombre",
   "language.updated": "El idioma a sido actualizado",
 

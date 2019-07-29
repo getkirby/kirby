@@ -265,6 +265,7 @@
   "language.direction.ltr": "Sinistra a destra",
   "language.direction.rtl": "Destra a sinistra",
   "language.locale": "Stringa \"PHP locale\"",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Nome",
   "language.updated": "La lingua è stata aggiornata",
 

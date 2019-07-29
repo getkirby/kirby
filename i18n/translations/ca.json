@@ -265,6 +265,7 @@
   "language.direction.ltr": "Esquerra a dreta",
   "language.direction.rtl": "De dreta a esquerra",
   "language.locale": "Cadena local de PHP",
+  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Nom",
   "language.updated": "S'ha actualitzat l'idioma",
 
