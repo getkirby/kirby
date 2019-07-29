@@ -849,7 +849,7 @@ class Collection extends Iterator implements Countable
      * @param string $sortBy
      * @return array
      */
-    static public function sortArgs(string $sortBy): array
+    public static function sortArgs(string $sortBy): array
     {
         $sortArgs = Str::split($sortBy, ' ');
 
