@@ -106,7 +106,7 @@ return [
                 if (empty($tag->link) === true) {
                     return $img;
                 }
-                
+
                 if ($link = $tag->file($tag->link)) {
                     $link = $link->url();
                 } else {
@@ -227,13 +227,15 @@ return [
         'html' => function ($tag) {
             $video = Html::video(
                 $tag->value,
-                $tag->kirby()->option('kirbytext.video.options', [])
+                $tag->kirby()->option('kirbytext.video.options', []),
+                [
+                    'height' => $tag->height ?? $tag->kirby()->option('kirbytext.video.height'),
+                    'width'  => $tag->width  ?? $tag->kirby()->option('kirbytext.video.width'),
+                ]
             );
 
             return Html::figure([$video], $tag->caption, [
-                'class'  => $tag->class  ?? $tag->kirby()->option('kirbytext.video.class', 'video'),
-                'height' => $tag->height ?? $tag->kirby()->option('kirbytext.video.height'),
-                'width'  => $tag->width  ?? $tag->kirby()->option('kirbytext.video.width'),
+                'class' => $tag->class  ?? $tag->kirby()->option('kirbytext.video.class', 'video'),
             ]);
         }
     ],
