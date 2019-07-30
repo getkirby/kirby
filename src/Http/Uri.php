@@ -247,7 +247,7 @@ class Uri
         }
 
         $uri = Server::get('REQUEST_URI');
-        $uri = str_replace(Server::get('HTTP_HOST'), '', $uri);
+        $uri = preg_replace('!^(http|https)\:\/\/' . Server::get('HTTP_HOST') . '!', '', $uri);
         $uri = parse_url('http://getkirby.com' . $uri);
 
         $url = new static(array_merge([

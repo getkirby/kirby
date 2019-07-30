@@ -57,7 +57,7 @@ class UriTest extends TestCase
     public function testCurrentWithHostInRequestUri()
     {
         $_SERVER['HTTP_HOST'] = 'ktest.loc';
-        $_SERVER['REQUEST_URI'] = '/ktest.loc/';
+        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/';
 
         $uri = Uri::current();
         $this->assertEquals('/', $uri->toString());
@@ -67,7 +67,7 @@ class UriTest extends TestCase
     public function testCurrentWithHostAndPathInRequestUri()
     {
         $_SERVER['HTTP_HOST'] = 'ktest.loc';
-        $_SERVER['REQUEST_URI'] = '/ktest.loc/a/b';
+        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/a/b';
 
         $uri = Uri::current();
         $this->assertEquals('/a/b', $uri->toString());
@@ -77,11 +77,21 @@ class UriTest extends TestCase
     public function testCurrentWithHostAndSchemeInRequestUri()
     {
         $_SERVER['HTTP_HOST'] = 'ktest.loc';
-        $_SERVER['REQUEST_URI'] = '/http://ktest.loc/';
+        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/';
 
         $uri = Uri::current();
         $this->assertEquals('/', $uri->toString());
         $this->assertEquals('', $uri->path());
+    }
+
+    public function testCurrentWithHostInPath()
+    {
+        $_SERVER['HTTP_HOST'] = 'ktest.loc';
+        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/a/b/ktest.loc';
+
+        $uri = Uri::current();
+        $this->assertEquals('/a/b/ktest.loc', $uri->toString());
+        $this->assertEquals('a/b/ktest.loc', $uri->path());
     }
 
     public function testValidScheme()
