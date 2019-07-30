@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-class MyModel extends ModelWithContent
+class ExtendedModelWithContent extends ModelWithContent
 {
     public function blueprint()
     {
@@ -25,7 +25,7 @@ class MyModel extends ModelWithContent
     }
 }
 
-class MyFailModel extends MyModel
+class BrokenModelWithContent extends ExtendedModelWithContent
 {
     public function root(): ?string
     {
@@ -35,17 +35,15 @@ class MyFailModel extends MyModel
 
 class ModelWithContentTest extends TestCase
 {
-
     public function testContentLock()
     {
-        $model = new MyModel();
+        $model = new ExtendedModelWithContent();
         $this->assertInstanceOf('Kirby\\Cms\\ContentLock', $model->lock());
     }
 
     public function testContentLockWithNoDirectory()
     {
-        $model = new MyFailModel();
+        $model = new BrokenModelWithContent();
         $this->assertNull($model->lock());
     }
 }
-
