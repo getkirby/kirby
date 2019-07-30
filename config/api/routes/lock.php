@@ -6,18 +6,20 @@ use Kirby\Exception\Exception;
  * Content Lock Routes
  */
 return [
-
     [
         'pattern' => '(:all)/lock',
         'method'  => 'GET',
         'action'  => function (string $path) {
             if ($lock = $this->parent($path)->lock()) {
-                $locked = $lock->get();
+                return [
+                    'supported' => true,
+                    'locked'    => $lock->get()
+                ];
             }
 
             return [
-                'supported' => isset($locked) === true,
-                'locked'    => $locked ?? null
+                'supported' => false,
+                'locked'    => null
             ];
         }
     ],
@@ -30,7 +32,7 @@ return [
             }
 
             throw new Exception([
-                'key' => 'lock.notImplemented',
+                'key'      => 'lock.notImplemented',
                 'httpCode' => 501
             ]);
         }
@@ -44,7 +46,7 @@ return [
             }
 
             throw new Exception([
-                'key' => 'lock.notImplemented',
+                'key'      => 'lock.notImplemented',
                 'httpCode' => 501
             ]);
         }
@@ -54,12 +56,15 @@ return [
         'method'  => 'GET',
         'action'  => function (string $path) {
             if ($lock = $this->parent($path)->lock()) {
-                $unlocked = $lock->isUnlocked();
+                return [
+                    'supported' => true,
+                    'unlocked'  => $lock->isUnlocked()
+                ];
             }
 
             return [
-                'supported' => isset($unlocked) === true,
-                'unlocked'  => $unlocked ?? null
+                'supported' => false,
+                'unlocked'  => null
             ];
         }
     ],
@@ -72,7 +77,7 @@ return [
             }
 
             throw new Exception([
-                'key' => 'lock.notImplemented',
+                'key'      => 'lock.notImplemented',
                 'httpCode' => 501
             ]);
         }
@@ -86,7 +91,7 @@ return [
             }
 
             throw new Exception([
-                'key' => 'lock.notImplemented',
+                'key'      => 'lock.notImplemented',
                 'httpCode' => 501
             ]);
         }
