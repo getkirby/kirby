@@ -260,7 +260,7 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the lock object for this model
      *
-     * Only if a content firectory exists,
+     * Only if a content directory exists,
      * virtual pages will need to overwrite this method
      *
      * @return Kirby\Cms\ContentLock|null
