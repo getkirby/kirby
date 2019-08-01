@@ -89,6 +89,7 @@ class Files extends Collection
             $props['collection'] = $collection;
             $props['kirby']      = $kirby;
             $props['parent']     = $parent;
+            $props['model']      = $props['model'] ?? $props['template'] ?? null;
 
             $file = File::factory($props);
 

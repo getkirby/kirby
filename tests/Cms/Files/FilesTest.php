@@ -2,6 +2,10 @@
 
 namespace Kirby\Cms;
 
+class DummyFileModel extends File
+{
+}
+
 class FilesTest extends TestCase
 {
     public function testAddFile()
@@ -75,5 +79,30 @@ class FilesTest extends TestCase
         $this->assertEquals('a/a.jpg', $files->nth(0)->id());
         $this->assertEquals('a/b.jpg', $files->nth(1)->id());
         $this->assertEquals('b/a.jpg', $files->nth(2)->id());
+    }
+
+    public function testFileModel()
+    {
+        File::$models = [
+            'dummy' => DummyFileModel::class
+        ];
+
+        $parent = new Page(['slug' => 'test']);
+
+        $files = Files::factory([
+            [
+                'filename' => 'a.jpg',
+                'model' => 'dummy'
+            ],
+            [
+                'filename' => 'b.jpg',
+                'template' => 'dummy'
+            ]
+        ], $parent);
+
+        $this->assertInstanceOf(DummyFileModel::class, $files->first());
+        $this->assertInstanceOf(DummyFileModel::class, $files->last());
+
+        File::$models = [];
     }
 }
