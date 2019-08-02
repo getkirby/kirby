@@ -6,6 +6,14 @@ use PHPUnit\Framework\TestCase;
 
 class StrTest extends TestCase
 {
+    public function testAscii()
+    {
+        $this->assertEquals('aouss', Str::ascii('äöüß'));
+        $this->assertEquals('Istanbul', Str::ascii('İstanbul'));
+        $this->assertEquals('istanbul', Str::ascii('i̇stanbul'));
+        $this->assertEquals('Nashata istorija', Str::ascii('Нашата история'));
+    }
+
     public function testAfter()
     {
         $string = 'Hellö Wörld';
