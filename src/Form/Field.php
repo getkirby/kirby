@@ -163,7 +163,7 @@ class Field extends Component
                     return $translate;
                 },
                 /**
-                 * Conditions when the field will be shown
+                 * Conditions when the field will be shown (since 3.1.0)
                  */
                 'when' => function ($when = null) {
                     return $when;
