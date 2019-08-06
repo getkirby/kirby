@@ -71,14 +71,6 @@ class File extends ModelWithContent
     public static $methods = [];
 
     /**
-     * Registry with all File models
-     *
-     * @var array
-     */
-    public static $models = [];
-
-
-    /**
      * The parent object
      *
      * @var Kirby\Cms\Model
@@ -266,18 +258,13 @@ class File extends ModelWithContent
     }
 
     /**
-     * Constructs a File object and also
-     * takes File models into account.
+     * Constructs a File object
      *
      * @internal
      * @return self
      */
     public static function factory($props)
     {
-        if (empty($props['model']) === false) {
-            return static::model($props['model'], $props);
-        }
-
         return new static($props);
     }
 
@@ -373,27 +360,6 @@ class File extends ModelWithContent
     public function meta()
     {
         return $this->content();
-    }
-
-    /**
-     * Creates a file model if it has been registered
-     *
-     * @internal
-     * @param string $name
-     * @param array $props
-     * @return Kirby\Cms\File
-     */
-    public static function model(string $name, array $props = [])
-    {
-        if ($class = (static::$models[$name] ?? null)) {
-            $object = new $class($props);
-
-            if (is_a($object, 'Kirby\Cms\File') === true) {
-                return $object;
-            }
-        }
-
-        return new static($props);
     }
 
     /**
