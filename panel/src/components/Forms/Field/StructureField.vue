@@ -131,7 +131,6 @@
 <script>
 import Vue from "vue";
 import Field from "../Field.vue";
-import dayjs from "dayjs";
 import sorter from "@/helpers/sort.js";
 import clone from "@/helpers/clone.js";
 
@@ -354,7 +353,7 @@ export default {
           return value.email;
         }
         case "date": {
-          const date = dayjs(value);
+          const date = window.panel.libraries.dayjs(value);
           const format = field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
           return date.isValid() ? date.format(format) : "";
         }

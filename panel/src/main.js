@@ -5,6 +5,14 @@ import Events from "./config/events.js";
 import Vue from "vue";
 import Vuelidate from "vuelidate";
 
+import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat);
+
+window.panel.libraries = {
+  dayjs: dayjs
+};
+
 Vue.use(Directives);
 Vue.use(Events);
 Vue.use(Filters);
@@ -21,6 +29,8 @@ import "./config/plugins.js";
 
 import router from "./config/router.js";
 import store from "./store/store.js";
+
+
 
  new Vue({
   router,

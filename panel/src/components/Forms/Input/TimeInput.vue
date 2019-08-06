@@ -46,10 +46,6 @@
 <script>
 import padZero from "@/helpers/padZero.js";
 
-import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat'
-dayjs.extend(customParseFormat);
-
 export default {
   inheritAttrs: false,
   props: {
@@ -140,7 +136,7 @@ export default {
 
       const time   = this.notation === 24 ? `${h}:${m}:00` : `${h}:${m}:00 ${a}`;
       const format = this.notation === 24 ? `HH:mm:ss` : `hh:mm:ss A`
-      const date = dayjs("2000-01-01 " + time, "YYYY-MM-DD " + format);
+      const date = window.panel.libraries.dayjs("2000-01-01 " + time, "YYYY-MM-DD " + format);
 
       this.$emit("input", date.format("HH:mm"));
     },
@@ -169,7 +165,7 @@ export default {
     },
     toObject(time) {
 
-      const date = dayjs("2001-01-01 " + time + ":00", "YYYY-MM-DD HH:mm:ss");
+      const date = window.panel.libraries.dayjs("2001-01-01 " + time + ":00", "YYYY-MM-DD HH:mm:ss");
 
       if (!time || date.isValid() === false) {
         return {

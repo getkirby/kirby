@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
 import padZero from "@/helpers/padZero.js";
 
 export default {
@@ -59,19 +58,19 @@ export default {
   },
   data() {
 
-    const current = this.value ? dayjs(this.value) : dayjs();
+    const current = this.value ? window.panel.libraries.dayjs(this.value) : window.panel.libraries.dayjs();
 
     return {
       day: current.date(),
       month: current.month(),
       year: current.year(),
-      today: dayjs(),
+      today: window.panel.libraries.dayjs(),
       current: current,
     };
   },
   computed: {
     date() {
-      return dayjs(`${this.year}-${this.month + 1}-${this.day}`);
+      return window.panel.libraries.dayjs(`${this.year}-${this.month + 1}-${this.day}`);
     },
     numberOfDays() {
       return this.date.daysInMonth();
@@ -137,7 +136,7 @@ export default {
   },
   watch: {
     value(value) {
-      const current = dayjs(value);
+      const current = window.panel.libraries.dayjs(value);
       this.day     = current.date();
       this.month   = current.month();
       this.year    = current.year();
@@ -201,7 +200,7 @@ export default {
         this.day = day;
       }
 
-      const date = dayjs(new Date(
+      const date = window.panel.libraries.dayjs(new Date(
         this.year,
         this.month,
         this.day,

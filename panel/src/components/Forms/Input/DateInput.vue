@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
 import padZero from "@/helpers/padZero.js";
 
 export default {
@@ -57,7 +56,7 @@ export default {
   },
   data() {
     return {
-      date: dayjs(this.value),
+      date: window.panel.libraries.dayjs(this.value),
       minDate: this.calculate(this.min, "min"),
       maxDate: this.calculate(this.max, "max")
     };
@@ -87,7 +86,7 @@ export default {
   },
   watch: {
     value(value) {
-      this.date = dayjs(value);
+      this.date = window.panel.libraries.dayjs(value);
     }
   },
   methods: {
@@ -97,9 +96,9 @@ export default {
         max: {run: "add", take: "endOf" },
       }[what];
 
-      let date = value ? dayjs(value) : null;
+      let date = value ? window.panel.libraries.dayjs(value) : null;
       if (!date || date.isValid() === false) {
-        date = dayjs()[calc.run](10, 'year')[calc.take]("year");
+        date = window.panel.libraries.dayjs()[calc.run](10, 'year')[calc.take]("year");
       }
       return date;
     },
@@ -155,12 +154,12 @@ export default {
       this.onInput();
     },
     setInvalid() {
-      this.date = dayjs("invalid");
+      this.date = window.panel.libraries.dayjs("invalid");
     },
     setInitialDate(key, value) {
-      const current = dayjs();
+      const current = window.panel.libraries.dayjs();
 
-      this.date = dayjs().set(key, parseInt(value));
+      this.date = window.panel.libraries.dayjs().set(key, parseInt(value));
 
       // if the inital day moved the month, let's move it back
       if (key === "date" && current.month() !== this.date.month()) {
