@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
 use Kirby\Toolkit\F;
 
 /**
@@ -15,6 +16,25 @@ use Kirby\Toolkit\F;
  */
 class Languages extends Collection
 {
+
+    /**
+     * Creates a new collection with the given language objects
+     *
+     * @param array $objects
+     * @param object $parent
+     */
+    public function __construct($objects = [], $parent = null)
+    {
+        $defaults = array_filter($objects, function ($language) {
+            return $language->isDefault() === true;
+        });
+
+        if (count($defaults) > 1) {
+            throw new DuplicateException('You cannot have multiple default languages. Please check your language config files.');
+        }
+
+        parent::__construct($objects, $parent);
+    }
 
     /**
      * Returns all language codes as array
@@ -69,22 +89,20 @@ class Languages extends Collection
      */
     public static function load()
     {
-        $languages = new static;
+        $languages = [];
         $files     = glob(App::instance()->root('languages') . '/*.php');
 
         foreach ($files as $file) {
             $props = include $file;
 
             if (is_array($props) === true) {
-
                 // inject the language code from the filename if it does not exist
                 $props['code'] = $props['code'] ?? F::name($file);
 
-                $language = new Language($props);
-                $languages->data[$language->code()] = $language;
+                $languages[] = new Language($props);
             }
         }
 
-        return $languages;
+        return new static($languages);
     }
 }
