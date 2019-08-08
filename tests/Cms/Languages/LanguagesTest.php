@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use PHPUnit\Framework\TestCase;
+use Kirby\Exception\DuplicateException;
 
 class LanguagesTest extends TestCase
 {
@@ -67,5 +68,29 @@ class LanguagesTest extends TestCase
     {
         $this->assertEquals('en', $this->languages->default()->code());
         $this->assertEquals('en', $this->languages->findDefault()->code());
+    }
+
+    public function testMultipleDefault()
+    {
+        $this->expectException(DuplicateException::class);
+
+        new App([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true,
+                    'locale'  => 'en_US',
+                    'url'     => '/',
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch',
+                    'default' => true,
+                    'locale'  => 'de_DE',
+                    'url'     => '/de',
+                ],
+            ]
+        ]);
     }
 }

@@ -296,6 +296,41 @@ class PageSortTest extends TestCase
         $this->assertEquals(20121212, $page->createNum());
     }
 
+    public function testCreateDateBasedNumWithDateHandler()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'date.handler' => 'strftime'
+            ]
+        ]);
+
+        // without date
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'num' => 'date'
+            ]
+        ]);
+
+        $this->assertEquals(date('Ymd'), $page->createNum());
+
+        // with date field
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'num' => 'date',
+            ],
+            'content' => [
+                'date' => '2012-12-12'
+            ]
+        ]);
+
+        $this->assertEquals(20121212, $page->createNum());
+    }
+
     public function testCreateCustomNum()
     {
         // valid

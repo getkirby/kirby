@@ -335,20 +335,4 @@ class FileTest extends TestCase
         $this->assertEquals('https://getkirby.com/api/users/test/files/user-file.jpg', $file->apiUrl());
         $this->assertEquals('users/test/files/user-file.jpg', $file->apiUrl(true));
     }
-
-    public function testFileModel()
-    {
-        File::$models = [
-            'dummy' => FileTestModel::class
-        ];
-
-        $user = File::factory([
-            'filename' => 'test',
-            'model'    => 'dummy'
-        ]);
-
-        $this->assertInstanceOf(FileTestModel::class, $user);
-
-        File::$models = [];
-    }
 }
