@@ -10,7 +10,7 @@ return [
         'before' => null,
 
         /**
-         * Enables/disables the format buttons. Can either be `true`/`false` or a list of allowed buttons. Available buttons: `headlines`, `italic`, `bold`, `link`, `email`, `file`, `list`, `code`, `ul`, `ol` (as well as `|` for a divider)
+         * Enables/disables the format buttons. Can either be `true`/`false` or a list of allowed buttons. Available buttons: `headlines`, `italic`, `bold`, `link`, `email`, `file`, `code`, `ul`, `ol` (as well as `|` for a divider)
          */
         'buttons' => function ($buttons = true) {
             return $buttons;
@@ -73,6 +73,12 @@ return [
             return $size;
         },
 
+        /**
+         * If `false`, spellcheck will be switched off
+         */
+        'spellcheck' => function (bool $spellcheck = false) {
+            return $spellcheck;
+        },
 
         'value' => function (string $value = null) {
             return trim($value);
