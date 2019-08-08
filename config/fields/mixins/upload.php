@@ -6,7 +6,7 @@ use Kirby\Cms\File;
 return [
     'props' => [
         /**
-         * Sets the upload options for linked files
+         * Sets the upload options for linked files (since 3.2.0)
          */
         'uploads' => function ($uploads = []) {
             if ($uploads === false) {
