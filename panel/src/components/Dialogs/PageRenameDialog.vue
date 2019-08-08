@@ -53,6 +53,8 @@ export default {
         });
     },
     submit() {
+      // prevent empty title with just spaces
+      this.page.title = this.page.title.trim();
 
       if (this.page.title.length === 0) {
         this.$refs.dialog.error(this.$t("error.page.changeTitle.empty"));
