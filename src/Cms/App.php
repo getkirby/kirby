@@ -1063,12 +1063,13 @@ class App
     protected function setLanguages(array $languages = null)
     {
         if ($languages !== null) {
-            $this->languages = new Languages();
+            $objects = [];
 
             foreach ($languages as $props) {
-                $language = new Language($props);
-                $this->languages->data[$language->code()] = $language;
+                $objects[] = new Language($props);
             }
+
+            $this->languages = new Languages($objects);
         }
 
         return $this;
