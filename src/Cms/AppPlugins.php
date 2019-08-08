@@ -51,7 +51,6 @@ trait AppPlugins
         'fieldMethods' => [],
         'fileMethods' => [],
         'filesMethods' => [],
-        'fileModels' => [],
         'fields' => [],
         'hooks' => [],
         'pages' => [],
@@ -203,17 +202,6 @@ trait AppPlugins
     protected function extendFilesMethods(array $methods): array
     {
         return $this->extensions['filesMethods'] = Files::$methods = array_merge(Files::$methods, $methods);
-    }
-
-    /**
-     * Registers additional file models
-     *
-     * @param array $models
-     * @return array
-     */
-    protected function extendFileModels(array $models): array
-    {
-        return $this->extensions['fileModels'] = File::$models = array_merge(File::$models, $models);
     }
 
     /**

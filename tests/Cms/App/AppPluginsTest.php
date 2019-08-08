@@ -304,25 +304,6 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $kirby->controller('test'));
     }
 
-    public function testfileModel()
-    {
-        $kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'fileModels' => [
-                'dummy' => DummyFile::class
-            ]
-        ]);
-
-        $user = File::factory([
-            'filename' => 'test',
-            'model'    => 'dummy'
-        ]);
-
-        $this->assertInstanceOf(DummyFile::class, $user);
-    }
-
     public function testFieldMethod()
     {
         $kirby = new App([

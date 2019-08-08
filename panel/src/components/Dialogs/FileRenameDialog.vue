@@ -72,6 +72,14 @@ export default {
       return slug(input, [this.slugs, this.system.ascii], ".");
     },
     submit() {
+      // prevent empty name with just spaces
+      this.file.name = this.file.name.trim();
+
+      if (this.file.name.length === 0) {
+        this.$refs.dialog.error(this.$t("error.file.changeName.empty"));
+        return;
+      }
+
       this.$api.files
         .rename(this.parent, this.file.filename, this.file.name)
         .then(file => {
