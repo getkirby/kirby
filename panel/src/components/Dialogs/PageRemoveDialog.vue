@@ -95,7 +95,7 @@ export default {
             this.page.id === this.$route.params.path.replace(/\+/g, "/")
           ) {
             if (this.page.parent) {
-              payload.route = "/pages/" + this.page.parent.id;
+              payload.route = this.$api.pages.link(this.page.parent.id);
             } else {
               payload.route = "/pages";
             }
