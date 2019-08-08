@@ -52,6 +52,8 @@ export default {
         });
     },
     submit() {
+      this.user.name = this.user.name.trim();
+
       this.$api.users
         .changeName(this.user.id, this.user.name)
         .then(() => {

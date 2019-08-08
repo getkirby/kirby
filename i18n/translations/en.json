@@ -51,6 +51,7 @@
 
   "error.field.converter.invalid": "Invalid converter \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "You are not allowed to change the name of \"{filename}\"",
   "error.file.duplicate": "A file with the name \"{filename}\" already exists",
