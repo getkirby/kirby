@@ -463,7 +463,9 @@ trait PageActions
             case 'date':
             case 'datetime':
                 $format = $mode === 'date' ? 'Ymd' : 'YmdHi';
-                $date   = $this->date()->isEmpty() ? 'now' : $this->date();
+                $lang   = $this->kirby()->defaultLanguage() ?? null;
+                $field  = $this->content($lang)->get('date');
+                $date   = $field->isEmpty() ? 'now' : $field;
                 return date($format, strtotime($date));
                 break;
             case 'default':
