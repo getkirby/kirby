@@ -8,7 +8,7 @@
       :id="id"
       :name="name"
       :required="required"
-      v-model="selected"
+      :value="selected"
       class="k-select-input-native"
       v-on="listeners"
     >
@@ -67,7 +67,8 @@ export default {
       listeners: {
         ...this.$listeners,
         click: (event) => this.onClick(event),
-        input: (event) => this.onInput(event.target.value),
+        change: (event) => this.onInput(event.target.value),
+        input: (event) => {}
       }
     };
   },
