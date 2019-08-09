@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import "@/helpers/regex.js";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {

@@ -1,5 +1,3 @@
-import "./regex";
-
 export default (string, rules = [], allowed = "") => {
 
   const separator = "-";
