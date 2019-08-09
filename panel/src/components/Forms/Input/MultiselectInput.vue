@@ -37,7 +37,7 @@
           ref="search"
           v-model="q"
           @keydown.esc.stop="escape"
-        />
+        >
       </k-dropdown-item>
 
       <div class="k-multiselect-options">
