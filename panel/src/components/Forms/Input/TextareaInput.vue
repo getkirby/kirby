@@ -51,7 +51,6 @@
 
 <script>
 import config from "@/config/config.js";
-import autosize from "autosize";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
@@ -96,7 +95,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      autosize(this.$refs.input);
+      this.$library.autosize(this.$refs.input);
     });
 
     this.onInvalid();
@@ -236,7 +235,7 @@ export default {
       this.insert(prepend + " " + this.selection());
     },
     resize() {
-      autosize.update(this.$refs.input);
+      this.$library.autosize.update(this.$refs.input);
     },
     select() {
       this.$refs.select();

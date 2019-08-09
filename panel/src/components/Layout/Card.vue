@@ -46,8 +46,6 @@
 </template>
 
 <script>
-import ratioPadding from "@/helpers/ratioPadding.js";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -76,8 +74,8 @@ export default {
     },
     ratioPadding() {
       return this.icon && this.icon.ratio
-        ? ratioPadding(this.icon.ratio)
-        : ratioPadding("3/2");
+        ? this.$helper.ratio(this.icon.ratio)
+        : this.$helper.ratio("3/2");
     },
     imageOptions() {
       if (!this.image) {
