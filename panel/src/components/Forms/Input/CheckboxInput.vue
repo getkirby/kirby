@@ -1,5 +1,5 @@
 <template>
-  <label class="k-checkbox-input">
+  <label class="k-checkbox-input" @click.stop>
     <input
       ref="input"
       :checked="value"
@@ -64,7 +64,7 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     select() {
-      this.$refs.input.focus();
+      this.focus();
     }
   },
   validations() {
