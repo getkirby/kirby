@@ -147,11 +147,11 @@ export default {
     },
     insertFile(files) {
       if (files && files.length > 0) {
-        this.insert(files[0].dragText);
+        this.insert(files.map(file => file.dragText).join("\n\n"));
       }
     },
     insertUpload(files, response) {
-      this.insert(response[0].dragText);
+      this.insert(response.map(file => file.dragText).join("\n\n"));
       this.$events.$emit("model.update");
     },
     onClick() {
