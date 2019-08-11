@@ -36,7 +36,8 @@
   "email.placeholder": "mail@example.com",
 
   "error.access.login": "Invalid login",
-  "error.access.panel": "You are not allowed to access the panel",
+  "error.access.panel": "You are not allowed to access the Panel",
+  "error.access.view": "You are not allowed to access this part of the Panel",
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
   "error.avatar.delete.fail": "The profile picture could not be deleted",
@@ -235,14 +236,14 @@
   "install": "Install",
 
   "installation": "Installation",
-  "installation.completed": "The panel has been installed",
-  "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
+  "installation.completed": "The Panel has been installed",
+  "installation.disabled": "The Panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
   "installation.issues.accounts":
     "The <code>/site/accounts</code> folder does not exist or is not writable",
   "installation.issues.content":
     "The <code>/content</code> folder does not exist or is not writable",
   "installation.issues.curl": "The <code>CURL</code> extension is required",
-  "installation.issues.headline": "The panel cannot be installed",
+  "installation.issues.headline": "The Panel cannot be installed",
   "installation.issues.mbstring":
     "The <code>MB String</code> extension is required",
   "installation.issues.media":
