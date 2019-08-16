@@ -194,6 +194,33 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Returns a Collection with the intersection of the given elements
+     *
+     * @param  Collection
+     * @return Collection
+     */
+    public function intersection($other)
+    {
+        return $other->find($this->keys());
+    }
+
+    /**
+     * Checks if there is an intersection between the given collection and this collection
+     *
+     * @param  Collection
+     * @return boolean
+     */
+    public function intersects($other): bool
+    {
+        foreach ($this->keys() as $key) {
+            if ($other->has($key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns a Collection without the given element(s)
      *
      * @param mixed ...$keys any number of keys, passed as individual arguments
