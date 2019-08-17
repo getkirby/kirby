@@ -701,7 +701,6 @@ trait AppPlugins
     protected function pluginsLoader(): array
     {
         $root   = $this->root('plugins');
-        $kirby  = $this;
         $loaded = [];
 
         foreach (Dir::read($root) as $dirname) {
@@ -709,14 +708,10 @@ trait AppPlugins
                 continue;
             }
 
-            if (is_dir($root . '/' . $dirname) === false) {
-                continue;
-            }
-
             $dir   = $root . '/' . $dirname;
             $entry = $dir . '/index.php';
 
-            if (file_exists($entry) === false) {
+            if (is_dir($dir) !== true || is_file($entry) !== true) {
                 continue;
             }
 
