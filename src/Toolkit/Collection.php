@@ -543,6 +543,34 @@ class Collection extends Iterator implements Countable
     }
 
     /**
+     * Returns a Collection with the intersection of the given elements
+     *
+     * @param Kirby\Toolkit\Collection $other
+     * @return Kirby\Toolkit\Collection
+     */
+    public function intersection($other)
+    {
+        return $other->find($this->keys());
+    }
+
+    /**
+     * Checks if there is an intersection between the given collection and this collection
+     *
+     * @param Kirby\Toolkit\Collection $other
+     * @return boolean
+     */
+    public function intersects($other): bool
+    {
+        foreach ($this->keys() as $key) {
+            if ($other->has($key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Checks if the number of elements is zero
      *
      * @return bool
