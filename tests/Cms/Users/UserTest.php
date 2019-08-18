@@ -239,4 +239,56 @@ class UserTest extends TestCase
 
         User::$models = [];
     }
+    
+    public function testLoginHooks()
+    {
+        $phpUnit = $this;
+        
+        $app = new App([
+            'users' => [
+                ['email' => 'test@getkirby.com']
+            ],
+            'hooks' => [
+                'user.login:before' => function ($user, $session) use ($phpUnit) {
+                    $phpUnit->assertEquals('test@getkirby.com', $user->email());
+                    $phpUnit->assertEquals($session, S::instance());
+                },
+                'user.login:after' => function ($user, $session) use ($phpUnit) {
+                    $phpUnit->assertEquals('test@getkirby.com', $user->email());
+                    $phpUnit->assertEquals($session, S::instance());
+                }
+            ]
+        ]);
+
+        $user = $app->user('test@getkirby.com');
+        $user->loginPasswordless();
+        $user->logout();
+    }
+
+    public function testLogoutHooks()
+    {
+        $phpUnit = $this;
+        
+        $app = new App([
+            'users' => [
+                ['email' => 'test@getkirby.com']
+            ],
+            'hooks' => [
+                'user.logout:before' => function ($user, $session) use ($phpUnit) {
+                    $phpUnit->assertEquals('test@getkirby.com', $user->email());
+                    $phpUnit->assertEquals($session, S::instance());
+                },
+                'user.logout:after' => function ($user, $session) use ($phpUnit) {
+                    $phpUnit->assertEquals('test@getkirby.com', $user->email());
+                    if ($session !== null) {
+                        $phpUnit->assertEquals($session, S::instance());
+                    }
+                }
+            ]
+        ]);
+
+        $user = $app->user('test@getkirby.com');
+        $user->loginPasswordless();
+        $user->logout();
+    }
 }
