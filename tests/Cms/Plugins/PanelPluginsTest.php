@@ -72,11 +72,11 @@ class PanelPluginsTest extends TestCase
         $plugins = new PanelPlugins();
 
         // css
-        $expected = "a\nb";
+        $expected = "a\n\nb";
         $this->assertEquals($expected, $plugins->read('css'));
 
         // js
-        $expected = "a\nb";
+        $expected = "a;\n\nb;";
         $this->assertEquals($expected, $plugins->read('js'));
     }
 
