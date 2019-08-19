@@ -10,4 +10,4 @@ If you feel like you can help to check off the following tasks, that'd be great.
 - [ ] Add unit tests for fixed bug/feature
 - [ ] Pass all unit tests
 - [ ] Fix code style issues with CS fixer and `composer fix`
-- [ ] If needeed, in-code documentation (DocBlocks etc.)
+- [ ] If needed, in-code documentation (DocBlocks etc.)
