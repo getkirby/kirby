@@ -942,7 +942,34 @@ class Collection extends Iterator implements Countable
             $params[] = $field['flags']     ?? SORT_NATURAL | SORT_FLAG_CASE;
         }
 
-        $params[] = &$array;
+        // check what kind of collection items we have; only check for the first
+        // item for better performance (we assume that all collection items are
+        // of the same type)
+        $firstItem = $collection->first();
+        if (is_object($firstItem) === true) {
+            // avoid the "Nesting level too deep - recursive dependency?" error
+            // when PHP tries to sort by the objects directly (in case all other
+            // fields are 100 % equal for some elements)
+            if (method_exists($firstItem, '__toString') === true) {
+                // PHP can easily convert the objects to strings, so it should
+                // compare them as strings instead of as objects to avoid the recursion
+                $params[] = &$array;
+                $params[] = SORT_STRING;
+            } else {
+                // we can't convert the objects to strings, so we need a fallback:
+                // custom fictional field that is guaranteed to have a unique value
+                // for each item; WARNING: may lead to slightly wrong sorting results
+                // and is therefore only used as a fallback if we don't have another way
+                $params[] = range(1, count($array));
+                $params[] = SORT_ASC;
+                $params[] = SORT_NUMERIC;
+
+                $params[] = &$array;
+            }
+        } else {
+            // collection items are scalar or array; no correction necessary
+            $params[] = &$array;
+        }
 
         // array_multisort receives $params as separate params
         array_multisort(...$params);
