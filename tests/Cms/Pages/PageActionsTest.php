@@ -401,7 +401,7 @@ class PageActionsTest extends TestCase
         $app = $this->app->clone([
             'hooks' => [
                 'page.changeStatus:before' => function (Page $page, $status, $position) use ($phpunit) {
-                    $phpunit->assertEquals('draft', $status);
+                    $phpunit->assertEquals('unlisted', $status);
                     $phpunit->assertNull($position);
                 },
                 'page.changeStatus:after' => function (Page $newPage, Page $oldPage) use ($phpunit) {
