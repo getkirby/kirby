@@ -71,6 +71,17 @@ class ATest extends TestCase
         $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
     }
 
+    public function testGetWithNonexistingOptions()
+    {
+        $data = [
+            // 'alexander.the.great' => 'should not be fetched',
+            'alexander' => 'not great yet'
+        ];
+
+        $this->assertNull(A::get($data, 'alexander.the.greate'));
+        $this->assertEquals('not great yet', A::get($data, 'alexander'));
+    }
+
     public function testMerge()
     {
 
