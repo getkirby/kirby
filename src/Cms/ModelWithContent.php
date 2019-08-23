@@ -269,7 +269,11 @@ abstract class ModelWithContent extends Model
     {
         $dir = $this->contentFileDirectory();
 
-        if (is_string($dir) === true && file_exists($dir) === true) {
+        if (
+            $this->kirby()->option('content.locking', true) &&
+            is_string($dir) === true &&
+            file_exists($dir) === true
+        ) {
             return new ContentLock($this);
         }
     }
