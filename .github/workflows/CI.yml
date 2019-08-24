@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+    - release/*
+    - develop
+    - features
+  pull_request:
+    branches:
+    - master
+    - release/*
+    - develop
+    - features
+
+jobs:
+  php71:
+    name: PHP 7.1
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v1
+
+    - name: Install Composer
+      uses: MilesChou/composer-action@master
+      with:
+        args: install --ignore-platform-reqs
+    - name: Set up PHP 7.1
+      uses: ./.github/actions/php71
+    - name: Run PHPUnit
+      run: phpunit
