@@ -107,6 +107,9 @@ trait PageActions
                 if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
                     throw new LogicException('The page directory cannot be moved');
                 }
+                
+                // remove from the siblings
+                $oldPage->parentModel()->children()->remove($oldPage);
 
                 Dir::remove($oldPage->mediaRoot());
             }
