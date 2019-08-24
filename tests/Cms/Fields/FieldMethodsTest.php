@@ -566,7 +566,7 @@ class FieldMethodsTest extends TestCase
     public function testWidont()
     {
         $this->assertEquals('Test&nbsp;Headline', $this->field('Test Headline')->widont());
-        $this->assertEquals('Test Headline&nbsp;With&#8209;Dashed', $this->field('Test Headline With-Dashed')->widont());
+        $this->assertEquals('Test Headline&nbsp;With&#8209;Dash', $this->field('Test Headline With-Dash')->widont());
     }
 
     public function testWords()
