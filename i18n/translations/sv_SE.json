@@ -183,9 +183,9 @@
   "error.validation.contains":
     "Ange ett värde som innehåller \"{needle}\"",
   "error.validation.date": "Ange ett giltigt datum",
-  "error.validation.date.after": "Please enter a date after {date}",
-  "error.validation.date.before": "Please enter a date before {date}",
-  "error.validation.date.between": "Please enter a date between {min} and {max}",
+  "error.validation.date.after": "Ange ett datum efter {date}",
+  "error.validation.date.before": "Ange ett datum före {date}",
+  "error.validation.date.between": "Ange ett datum mellan {min} och {max}",
   "error.validation.denied": "Vänligen neka",
   "error.validation.different": "Värdet får inte vara \"{other}\"",
   "error.validation.email": "Ange en giltig e-postadress",
@@ -265,7 +265,7 @@
   "language.direction.ltr": "Vänster till höger",
   "language.direction.rtl": "Höger till vänster",
   "language.locale": "PHP locale string",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Du använder en anpassad språkinställning. Ändra den i språkfilen i mappen /site/languages",
   "language.name": "Namn",
   "language.updated": "Språket har uppdaterats",
 

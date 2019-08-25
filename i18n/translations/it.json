@@ -28,9 +28,9 @@
   "duplicate": "Duplica",
   "edit": "Modifica",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Nessun file selezionabile",
+  "dialog.pages.empty": "Nessuna pagina selezionabile",
+  "dialog.users.empty": "Nessuno user selezionabile",
 
   "email": "Email",
   "email.placeholder": "mail@esempio.com",
@@ -71,9 +71,9 @@
   "error.form.incomplete": "Correggi tutti gli errori nel form...",
   "error.form.notSaved": "Non è stato possibile salvare il form",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Inserisci un codice valido per la lingua",
+  "error.language.duplicate": "La lingua esiste già",
+  "error.language.name": "Inserisci un nome valido per la lingua",
 
   "error.license.format": "Inserisci un codice di licenza valido",
   "error.license.email": "Inserisci un indirizzo email valido",
@@ -183,9 +183,9 @@
   "error.validation.contains":
     "Inserisci un valore che contiene \"{needle}\"",
   "error.validation.date": "Inserisci una data valida",
-  "error.validation.date.after": "Please enter a date after {date}",
-  "error.validation.date.before": "Please enter a date before {date}",
-  "error.validation.date.between": "Please enter a date between {min} and {max}",
+  "error.validation.date.after": "Inserisci una data dopo il {date}",
+  "error.validation.date.before": "Inserisci una data prima del {date}",
+  "error.validation.date.between": "Inserisci una data tra {min} e {max}",
   "error.validation.denied": "Per favore nega",
   "error.validation.different": "Il valore non dev'essere \"{other}\"",
   "error.validation.email": "Inserisci un indirizzo email valido",
@@ -265,7 +265,7 @@
   "language.direction.ltr": "Sinistra a destra",
   "language.direction.rtl": "Destra a sinistra",
   "language.locale": "Stringa \"PHP locale\"",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Stai usando una impostazione personalizzata per il locale. Modificalo nel file della lingua situato in /site/languages",
   "language.name": "Nome",
   "language.updated": "La lingua è stata aggiornata",
 
