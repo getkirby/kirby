@@ -199,7 +199,7 @@ trait UserActions
                 $languageCode = null;
             }
             
-            // add users collection
+            // add the user to users collection
             $user->kirby()->users()->add($user);
 
             // write the user data
