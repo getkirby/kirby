@@ -63,6 +63,8 @@ class PageActionsTest extends TestCase
                 }
             ]
         ]);
+        
+        $app->impersonate('kirby');
 
         $page = new Page([
             'slug' => 'test',
@@ -87,6 +89,8 @@ class PageActionsTest extends TestCase
                 }
             ]
         ]);
+        
+        $app->impersonate('kirby');
 
         $page = new Page([
             'slug' => 'test',
