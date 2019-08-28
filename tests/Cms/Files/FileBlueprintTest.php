@@ -12,6 +12,7 @@ class FileBlueprintTest extends TestCase
 
         $expected = [
             'changeName' => null,
+            'changeSort' => null,
             'create'     => null,
             'delete'     => null,
             'replace'    => null,
