@@ -24,6 +24,15 @@ class PageRules
         if ($num !== null && $num < 0) {
             throw new InvalidArgumentException(['key' => 'page.num.invalid']);
         }
+        
+        if ($page->permissions()->changeNum() !== true) {
+            throw new PermissionException([
+                'key'  => 'page.changeNum.permission',
+                'data' => [
+                    'num' => $page->num()
+                ]
+            ]);
+        }
 
         return true;
     }
