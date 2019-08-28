@@ -60,9 +60,6 @@ trait PageActions
                 ->parentModel()
                 ->children()
                 ->set($newPage->id(), $newPage);
-            
-            // resort after change num
-            $this->resortSiblingsAfterListing($num);
 
             return $newPage;
         });
