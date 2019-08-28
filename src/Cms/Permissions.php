@@ -37,7 +37,7 @@ class Permissions
             'delete' => true
         ],
         'pages' => [
-            'changeNum'     => true,
+            'changeNum'      => true,
             'changeSlug'     => true,
             'changeStatus'   => true,
             'changeTemplate' => true,
