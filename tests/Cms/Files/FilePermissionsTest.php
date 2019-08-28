@@ -10,6 +10,7 @@ class FilePermissionsTest extends TestCase
     {
         return [
             ['changeName'],
+            ['changeSort'],
             ['create'],
             ['delete'],
             ['replace'],
