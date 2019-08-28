@@ -24,6 +24,7 @@ class FileBlueprint extends Blueprint
             // defaults
             [
                 'changeName' => null,
+                'changeSort' => null,
                 'create'     => null,
                 'delete'     => null,
                 'replace'    => null,
