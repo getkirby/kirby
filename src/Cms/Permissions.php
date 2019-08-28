@@ -26,6 +26,7 @@ class Permissions
         ],
         'files' => [
             'changeName' => true,
+            'changeSort' => true,
             'create'     => true,
             'delete'     => true,
             'replace'    => true,
@@ -36,6 +37,7 @@ class Permissions
             'delete' => true
         ],
         'pages' => [
+            'changeNum'     => true,
             'changeSlug'     => true,
             'changeStatus'   => true,
             'changeTemplate' => true,
