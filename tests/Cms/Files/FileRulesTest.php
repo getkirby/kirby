@@ -50,6 +50,20 @@ class FileRulesTest extends TestCase
         $file = $this->createMock(File::class);
         $this->assertTrue(FileRules::changeSort($file, 1));
     }
+    
+    public function testChangeSortWithoutPermissions()
+    {
+        $permissions = $this->createMock(FilePermissions::class);
+        $permissions->method('__call')->with('changeSort')->willReturn(false);
+
+        $file = $this->createMock(File::class);
+        $file->method('permissions')->willReturn($permissions);
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to do this');
+        
+        FileRules::changeSort($file, 1);
+    }
 
     public function testChangeToSameNameWithDifferentException()
     {
