@@ -47,7 +47,16 @@ class FileRulesTest extends TestCase
 
     public function testChangeSort()
     {
-        $file = $this->createMock(File::class);
+        $page = new Page([
+            'slug' => 'test',
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg']
+            ]
+        ]);
+        
+        $file = $page->file('a.jpg');
+        
         $this->assertTrue(FileRules::changeSort($file, 1));
     }
     
