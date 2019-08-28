@@ -18,6 +18,7 @@ class PagePermissionsTest extends TestCase
     public function actionProvider()
     {
         return [
+            ['changeNum'],
             ['changeSlug'],
             ['changeStatus'],
             // ['changeTemplate'], Returns false because of only one blueprint
