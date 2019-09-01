@@ -606,7 +606,7 @@ class Blueprint
             if (empty($type) === true || is_string($type) === false) {
                 $sections[$sectionName] = [
                     'name' => $sectionName,
-                    'headline' => 'Invalid section type for ("' . $sectionName . '")',
+                    'headline' => 'Invalid section type for section "' . $sectionName . '"',
                     'type' => 'info',
                     'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
                 ];
