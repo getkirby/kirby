@@ -603,7 +603,14 @@ class Blueprint
                 'type' => $type = $sectionProps['type'] ?? null
             ]);
 
-            if (isset(Section::$types[$type]) === false) {
+            if (empty($type) === true || is_string($type) === false) {
+                $sections[$sectionName] = [
+                    'name' => $sectionName,
+                    'headline' => 'Invalid section type for ("' . $sectionName . '")',
+                    'type' => 'info',
+                    'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
+                ];
+            } elseif (isset(Section::$types[$type]) === false) {
                 $sections[$sectionName] = [
                     'name' => $sectionName,
                     'headline' => 'Invalid section type ("' . $type . '")',
