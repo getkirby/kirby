@@ -73,7 +73,7 @@ return [
             return null;
         },
         'dragTextType' => function () {
-            return (option('panel')['kirbytext'] ?? true) ? 'kirbytext' : 'markdown';
+            return (option('panel.kirbytext') ?? true) ? 'kirbytext' : 'markdown';
         },
         'parent' => function () {
             return $this->parentModel();
