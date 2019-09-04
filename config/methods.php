@@ -213,7 +213,20 @@ return function (App $app) {
          * @return Kirby\Cms\Structure
          */
         'toStructure' => function (Field $field) {
-            return new Structure(Yaml::decode($field->value), $field->parent());
+            $rows = Yaml::decode($field->value);
+            $data = [];
+
+            if (is_array($rows) === true) {
+                foreach ($rows as $index => $row) {
+                    if (is_array($row) === false) {
+                        continue;
+                    }
+
+                    $data[] = $row;
+                }
+            }
+
+            return new Structure($data, $field->parent());
         },
 
         /**
