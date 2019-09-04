@@ -360,6 +360,22 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('a', $structure->first()->title()->value());
         $this->assertEquals('b', $structure->last()->title()->value());
     }
+    
+    public function testToStructureWithInvalidData()
+    {
+        $data = [
+            ['title' => 'a'],
+            'title'
+        ];
+
+        $yaml = Yaml::encode($data);
+
+        $field     = $this->field($yaml);
+        $structure = $field->toStructure();
+
+        $this->assertCount(1, $structure);
+        $this->assertEquals('a', $structure->first()->title()->value());
+    }
 
     public function testToDefaultUrl()
     {
