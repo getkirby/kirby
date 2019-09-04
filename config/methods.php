@@ -216,14 +216,12 @@ return function (App $app) {
             $rows = Yaml::decode($field->value);
             $data = [];
 
-            if (is_array($rows) === true) {
-                foreach ($rows as $index => $row) {
-                    if (is_array($row) === false) {
-                        continue;
-                    }
-
-                    $data[] = $row;
+            foreach ($rows as $index => $row) {
+                if (is_array($row) === false) {
+                    continue;
                 }
+
+                $data[] = $row;
             }
 
             return new Structure($data, $field->parent());
