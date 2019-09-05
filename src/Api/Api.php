@@ -540,50 +540,19 @@ class Api
         try {
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
-            if (is_a($e, 'Kirby\Exception\Exception') === true) {
-                $result = [
-                    'status' => 'error',
-                    'route'  => ($this->route)? $this->route->pattern() : null
-                ] + $e->toArray();
-            } else {
-                // remove the document root from the file path
-                $file = $e->getFile();
-                if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
-                    $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
-                }
-
-                $result = [
-                    'status'    => 'error',
-                    'exception' => get_class($e),
-                    'message'   => $e->getMessage(),
-                    'file'      => $file,
-                    'line'      => $e->getLine(),
-                    'code'      => empty($e->getCode()) === false ? $e->getCode() : 500,
-                    'route'     => $this->route ? $this->route->pattern() : null
-                ];
-            }
+            $result = $this->responseForException($e);
         }
 
-        if ($result === null) {
-            $result = [
-                'status'  => 'error',
-                'message' => 'not found',
-                'code'    => 404,
-            ];
-        }
-
-        if ($result === true) {
-            $result = [
-                'status' => 'ok',
-            ];
-        }
-
-        if ($result === false) {
-            $result = [
-                'status'  => 'error',
-                'message' => 'bad request',
-                'code'    => 400,
-            ];
+        switch (true) {
+            case $result === null:
+                $result = $this->responseFor404();
+                break;
+            case $result === false:
+                $result = $this->responseFor400();
+                break;
+            case $result === true:
+                $result = $this->responseFor200();
+                break;
         }
 
         if (is_array($result) === false) {
@@ -592,17 +561,6 @@ class Api
 
         // pretty print json data
         $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
-
-        // remove critical info from the result set if
-        // debug mode is switched off
-        if ($this->debug !== true) {
-            unset(
-                $result['file'],
-                $result['exception'],
-                $result['line'],
-                $result['route']
-            );
-        }
 
         if (($result['status'] ?? 'ok') === 'error') {
             $code = $result['code'] ?? 400;
@@ -616,6 +574,69 @@ class Api
         }
 
         return Response::json($result, 200, $pretty);
+    }
+
+    public function responseFor200(): array
+    {
+        return [
+            'status'  => 'ok',
+            'message' => 'ok',
+            'code'    => 200
+        ];
+    }
+
+    public function responseFor400(): array
+    {
+        return [
+            'status'  => 'error',
+            'message' => 'bad request',
+            'code'    => 400,
+        ];
+    }
+
+    public function responseFor404(): array
+    {
+        return [
+            'status'  => 'error',
+            'message' => 'not found',
+            'code'    => 404,
+        ];
+    }
+
+    public function responseForException($e): array
+    {
+        // prepare the result array for all exception types
+        $result = [
+            'status'    => 'error',
+            'message'   => $e->getMessage(),
+            'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
+            'exception' => get_class($e),
+            'key'       => null,
+            'file'      => F::relativepath($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+            'line'      => $e->getLine(),
+            'details'   => [],
+            'route'     => $this->route ? $this->route->pattern() : null
+        ];
+
+        // extend the information for Kirby Exceptions
+        if (is_a($e, 'Kirby\Exception\Exception') === true) {
+            $result['key']     = $e->getKey();
+            $result['details'] = $e->getDetails();
+            $result['code']    = $e->getHttpCode();
+        }
+
+        // remove critical info from the result set if
+        // debug mode is switched off
+        if ($this->debug !== true) {
+            unset(
+                $result['file'],
+                $result['exception'],
+                $result['line'],
+                $result['route']
+            );
+        }
+
+        return $result;
     }
 
     /**
