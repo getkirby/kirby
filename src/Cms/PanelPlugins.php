@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 
 /**
  * The PanelPlugins class takes care of collecting
@@ -78,12 +79,21 @@ class PanelPlugins
         foreach ($this->files() as $file) {
             if (F::extension($file) === $type) {
                 if ($content = F::read($file)) {
+                    if ($type === 'js') {
+                        $content = trim($content);
+
+                        // make sure that each plugin is ended correctly
+                        if (Str::endsWith($content, ';') === false) {
+                            $content .= ';';
+                        }
+                    }
+
                     $dist[] = $content;
                 }
             }
         }
 
-        return implode(PHP_EOL, $dist);
+        return implode(PHP_EOL . PHP_EOL, $dist);
     }
 
     /**
