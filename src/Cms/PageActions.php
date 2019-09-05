@@ -107,6 +107,9 @@ trait PageActions
                 if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
                     throw new LogicException('The page directory cannot be moved');
                 }
+                
+                // remove from the siblings
+                $oldPage->parentModel()->children()->remove($oldPage);
 
                 Dir::remove($oldPage->mediaRoot());
             }
@@ -175,7 +178,7 @@ trait PageActions
 
     protected function changeStatusToDraft()
     {
-        $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
+        $page = $this->commit('changeStatus', [$this, 'draft', null], function ($page) {
             return $page->unpublish();
         });
 
@@ -216,7 +219,7 @@ trait PageActions
             return $this;
         }
 
-        $page = $this->commit('changeStatus', [$this, 'unlisted'], function ($page) {
+        $page = $this->commit('changeStatus', [$this, 'unlisted', null], function ($page) {
             return $page->publish()->changeNum(null);
         });
 
