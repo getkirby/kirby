@@ -576,6 +576,12 @@ class Api
         return Response::json($result, 200, $pretty);
     }
 
+    /**
+     * Returns a 200 - ok
+     * response array.
+     *
+     * @return array
+     */
     public function responseFor200(): array
     {
         return [
@@ -585,6 +591,12 @@ class Api
         ];
     }
 
+    /**
+     * Returns a 400 - bad request
+     * response array.
+     *
+     * @return array
+     */
     public function responseFor400(): array
     {
         return [
@@ -594,6 +606,12 @@ class Api
         ];
     }
 
+    /**
+     * Returns a 404 - not found
+     * response array.
+     *
+     * @return array
+     */
     public function responseFor404(): array
     {
         return [
@@ -603,6 +621,14 @@ class Api
         ];
     }
 
+    /**
+     * Creates the response array for
+     * an exception. Kirby exceptions will
+     * have more information
+     *
+     * @param Exception $e
+     * @return array
+     */
     public function responseForException($e): array
     {
         // prepare the result array for all exception types
