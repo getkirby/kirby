@@ -365,8 +365,7 @@ class PageActionsTest extends TestCase
         $this->assertEquals('B modified (de)', $page->content('de')->b());
     }
 
-
-    public function testChangeStatusHooks()
+    public function testChangeStatusListedHooks()
     {
         $phpunit = $this;
         $before  = 0;
@@ -389,13 +388,37 @@ class PageActionsTest extends TestCase
 
         $app->impersonate('kirby');
 
-        $pageA = Page::create(['slug' => 'test-a', 'num'  => null]);
-        $pageB = Page::create(['slug' => 'test-b', 'num'  => null]);
+        $pageA = Page::create(['slug' => 'test-a', 'num' => null]);
+        $pageB = Page::create(['slug' => 'test-b', 'num' => null]);
 
         $pageA->changeStatus('listed');
         $pageB->changeStatus('listed');
 
         $this->assertEquals(2, $before);
         $this->assertEquals(2, $after);
+    }
+
+    public function testChangeStatusUnlistedHooks()
+    {
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.changeStatus:before' => function (Page $page, $status, $position) use ($phpunit) {
+                    $phpunit->assertEquals('unlisted', $status);
+                    $phpunit->assertNull($position);
+                },
+                'page.changeStatus:after' => function (Page $newPage, Page $oldPage) use ($phpunit) {
+                    $phpunit->assertEquals('draft', $oldPage->status());
+                    $phpunit->assertEquals('unlisted', $newPage->status());
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create(['slug' => 'test']);
+
+        $page->changeStatus('unlisted');
     }
 }

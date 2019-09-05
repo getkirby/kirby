@@ -93,11 +93,11 @@ class Panel
                 'url'         => $url,
                 'site'        => $kirby->url('index'),
                 'api'         => $kirby->url('api'),
-                'csrf'        => $kirby->option('api')['csrf'] ?? csrf(),
+                'csrf'        => $kirby->option('api.csrf') ?? csrf(),
                 'translation' => 'en',
                 'debug'       => $kirby->option('debug', false),
                 'search'      => [
-                    'limit' => $kirby->option('panel')['search']['limit'] ?? 10
+                    'limit' => $kirby->option('panel.search.limit') ?? 10
                 ]
             ]
         ]);

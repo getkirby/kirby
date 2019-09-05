@@ -1020,7 +1020,7 @@ class Str
     {
         return preg_replace_callback('|([^\s])\s+([^\s]+)\s*$|u', function ($matches) {
             if (static::contains($matches[2], '-')) {
-                return $matches[1] . ' ' . str_replace('-', '&#8209;', $matches[2]);
+                return $matches[1] . '&nbsp;' . str_replace('-', '&#8209;', $matches[2]);
             } else {
                 return $matches[1] . '&nbsp;' . $matches[2];
             }

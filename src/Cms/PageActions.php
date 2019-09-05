@@ -175,7 +175,7 @@ trait PageActions
 
     protected function changeStatusToDraft()
     {
-        $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
+        $page = $this->commit('changeStatus', [$this, 'draft', null], function ($page) {
             return $page->unpublish();
         });
 
@@ -216,7 +216,7 @@ trait PageActions
             return $this;
         }
 
-        $page = $this->commit('changeStatus', [$this, 'unlisted'], function ($page) {
+        $page = $this->commit('changeStatus', [$this, 'unlisted', null], function ($page) {
             return $page->publish()->changeNum(null);
         });
 
