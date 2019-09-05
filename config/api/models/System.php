@@ -62,7 +62,7 @@ return [
             }
         },
         'kirbytext' => function () {
-            return $this->kirby()->option('panel')['kirbytext'] ?? true;
+            return $this->kirby()->option('panel.kirbytext') ?? true;
         },
         'user' => function () {
             return $this->user();

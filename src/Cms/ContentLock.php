@@ -86,7 +86,7 @@ class ContentLock
                 'user'       => $user->id(),
                 'email'      => $user->email(),
                 'time'       => $time,
-                'unlockable' => $time + $this->kirby()->option('lock.duration', 60 * 2) <= time()
+                'unlockable' => ($time + 200) <= time()
             ];
         }
 
