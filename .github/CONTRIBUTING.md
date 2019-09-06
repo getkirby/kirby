@@ -39,7 +39,7 @@ Have a look at the [ideas repository](https://github.com/getkirby/ideas/issues).
 2. Fix code style issues with CS fixer and `composer fix` before you submit the PR
 3. Add a helpful description
 4. Focus on a single feature per PR. Don't mix features!
-5. Make sure you use a feature branch and you send the PR to develop––not master!
+5. Make sure you use a feature branch and you send the PR to `features`––not `master`!
 6. Write human-readable commit messages. We might use them for the changelog.
 
 Please understand that we cannot merge all feature ideas or that it might take a while. Features will also have to wait at least until the next feature release. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.

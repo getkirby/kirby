@@ -40,7 +40,9 @@ class Email
         $this->props = array_merge($this->preset, $props);
 
         // add transport settings
-        $this->props['transport'] = $this->options['transport'] ?? [];
+        if (isset($this->props['transport']) === false) {
+            $this->props['transport'] = $this->options['transport'] ?? [];
+        }
 
         // transform model objects to values
         foreach (static::$transform as $prop => $model) {
