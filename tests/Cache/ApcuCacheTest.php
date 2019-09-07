@@ -9,6 +9,14 @@ use PHPUnit\Framework\TestCase;
  */
 class ApcuCacheTest extends TestCase
 {
+    public function setUp(): void
+    {
+        if (extension_loaded('apc') === false || (bool)ini_get('apc.enabled') === false) {
+            $this->markTestSkipped('APCu is not available.');
+            return;
+        }
+    }
+
     /**
      * @covers ::set
      * @covers ::exists
