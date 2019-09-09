@@ -11,7 +11,7 @@ class ApcuCacheTest extends TestCase
 {
     public function setUp(): void
     {
-        if (extension_loaded('apc') === false || (bool)ini_get('apc.enabled') === false) {
+        if (function_exists('apcu_store') === false) {
             $this->markTestSkipped('APCu is not available.');
             return;
         }
