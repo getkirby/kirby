@@ -413,6 +413,16 @@
   "translation.name": "English",
 
   "upload": "Upload",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Error",
   "upload.progress": "Uploading…",
 
