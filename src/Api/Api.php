@@ -543,16 +543,12 @@ class Api
             $result = $this->responseForException($e);
         }
 
-        switch (true) {
-            case $result === null:
-                $result = $this->responseFor404();
-                break;
-            case $result === false:
-                $result = $this->responseFor400();
-                break;
-            case $result === true:
-                $result = $this->responseFor200();
-                break;
+        if ($result === null) {
+            $result = $this->responseFor404();
+        } elseif ($result === false) {
+            $result = $this->responseFor400();
+        } elseif ($result === true) {
+            $result = $this->responseFor200();
         }
 
         if (is_array($result) === false) {
