@@ -76,7 +76,7 @@ return [
         /**
          * If `false`, spellcheck will be switched off
          */
-        'spellcheck' => function (bool $spellcheck = false) {
+        'spellcheck' => function (bool $spellcheck = true) {
             return $spellcheck;
         },
 
