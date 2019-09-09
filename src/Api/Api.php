@@ -648,7 +648,34 @@ class Api
 
             try {
                 if ($upload['error'] !== 0) {
-                    throw new Exception('Upload error');
+                    switch ($upload['error']) {
+                        case UPLOAD_ERR_INI_SIZE:
+                            $errorMessage = "The uploaded file exceeds the upload_max_filesize directive in php.ini";
+                            break;
+                        case UPLOAD_ERR_FORM_SIZE:
+                            $errorMessage = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the page form";
+                            break;
+                        case UPLOAD_ERR_PARTIAL:
+                            $errorMessage = "The uploaded file was only partially uploaded";
+                            break;
+                        case UPLOAD_ERR_NO_FILE:
+                            $errorMessage = "No file was uploaded";
+                            break;
+                        case UPLOAD_ERR_NO_TMP_DIR:
+                            $errorMessage = "Missing a temporary folder";
+                            break;
+                        case UPLOAD_ERR_CANT_WRITE:
+                            $errorMessage = "Failed to write file to disk";
+                            break;
+                        case UPLOAD_ERR_EXTENSION:
+                            $errorMessage = "File upload stopped by extension";
+                            break;
+                        default:
+                            $errorMessage = 'Upload error';
+                            break;
+                    }
+
+                    throw new Exception($errorMessage);
                 }
 
                 // get the extension of the uploaded file
