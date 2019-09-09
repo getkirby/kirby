@@ -136,7 +136,7 @@ export default {
 
       const h = padZero(this.hour || 0);
       const m = padZero(this.minute || 0);
-      const a = String(this.meridiem).toUpperCase() || "AM";
+      const a = String(this.meridiem || "AM").toUpperCase();
 
       const time   = this.notation === 24 ? `${h}:${m}:00` : `${h}:${m}:00 ${a}`;
       const format = this.notation === 24 ? `HH:mm:ss` : `hh:mm:ss A`
