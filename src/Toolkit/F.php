@@ -584,7 +584,7 @@ class F
     public static function relativepath(string $file, string $in = null): string
     {
         if (empty($in) === true) {
-            return $file;
+            return basename($file);
         }
 
         // windows
@@ -592,7 +592,7 @@ class F
         $in   = str_replace('\\', '/', $in);
 
         if (Str::contains($file, $in) === false) {
-            return $file;
+            return basename($file);
         }
 
         return Str::after($file, $in);
