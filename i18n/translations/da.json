@@ -37,6 +37,7 @@
 
   "error.access.login": "Ugyldigt log ind",
   "error.access.panel": "Du har ikke adgang til panelet",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Profilbilledet kunne blev ikke uploadet ",
   "error.avatar.delete.fail": "Profilbilledet kunne ikke slettes",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Ugyldig converter \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Du har ikke tilladelse til at ændre navnet på filen \"{filename}\"",
   "error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
   "error.user.password.undefined": "Brugeren har ikke en adgangskode",
   "error.user.role.invalid": "Indtast venligst en gyldig rolle",
-  "error.user.undefined": "Brugeren kunne ikke findes",
   "error.user.update.permission":
     "Du har ikke tilladelse til at opdatere brugeren \"{name}\"",
 
@@ -412,6 +413,16 @@
   "translation.name": "Dansk",
 
   "upload": "Upload",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Fejl",
   "upload.progress": "Uploader...",
 
