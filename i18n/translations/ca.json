@@ -37,6 +37,7 @@
 
   "error.access.login": "Inici de sessió no vàlid",
   "error.access.panel": "No tens permís per accedir al panell",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "No s'ha pogut carregar la imatge del perfil",
   "error.avatar.delete.fail": "La imatge del perfil no s'ha pogut eliminar",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "No tens permís per canviar el nom de \"{filename}\"",
   "error.file.duplicate": "Ja existeix un fitxer amb el nom \"{filename}\"",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Les contrasenyes no coincideixen",
   "error.user.password.undefined": "L'usuari no té una contrasenya",
   "error.user.role.invalid": "Si us plau, introdueix un rol vàlid",
-  "error.user.undefined": "L'usuari no s'ha trobat",
   "error.user.update.permission":
     "No tens permís per actualitzar l'usuari \"{name}\"",
 
@@ -265,7 +266,7 @@
   "language.direction.ltr": "Esquerra a dreta",
   "language.direction.rtl": "De dreta a esquerra",
   "language.locale": "Cadena local de PHP",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "S'està fent servir una configuració regional personalitzada. Modifica el fitxer d'idioma a /site/languages",
   "language.name": "Nom",
   "language.updated": "S'ha actualitzat l'idioma",
 
@@ -412,6 +413,16 @@
   "translation.name": "Catalan",
 
   "upload": "Carregar",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Error",
   "upload.progress": "Carregant...",
 

@@ -7,6 +7,9 @@
     :data-dialog="$store.state.dialog"
     class="k-panel"
   >
+    <keep-alive>
+      <k-icons />
+    </keep-alive>
     <header v-if="inside" class="k-panel-header">
       <k-topbar @register="$refs.registration.open()" />
       <k-search v-if="$store.state.search" v-bind="$store.state.search" />
@@ -32,12 +35,14 @@
 </template>
 
 <script>
+import Icons from "@/components/Misc/Icons.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 import config from "@/config/config.js";
 
 export default {
   name: "App",
   components: {
+    "k-icons": Icons,
     "k-registration": Registration,
   },
   data() {

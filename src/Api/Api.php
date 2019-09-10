@@ -678,8 +678,19 @@ class Api
         $errors  = [];
         $files   = $this->requestFiles();
 
+        // get error messages from translation
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE   => t('upload.error.iniSize'),
+            UPLOAD_ERR_FORM_SIZE  => t('upload.error.formSize'),
+            UPLOAD_ERR_PARTIAL    => t('upload.error.partial'),
+            UPLOAD_ERR_NO_FILE    => t('upload.error.noFile'),
+            UPLOAD_ERR_NO_TMP_DIR => t('upload.error.tmpDir'),
+            UPLOAD_ERR_CANT_WRITE => t('upload.error.cantWrite'),
+            UPLOAD_ERR_EXTENSION  => t('upload.error.extension')
+        ];
+
         if (empty($files) === true) {
-            throw new Exception('No uploaded files');
+            throw new Exception(t('upload.error.noFiles'));
         }
 
         foreach ($files as $upload) {
@@ -691,7 +702,8 @@ class Api
 
             try {
                 if ($upload['error'] !== 0) {
-                    throw new Exception('Upload error');
+                    $errorMessage = $errorMessages[$upload['error']] ?? t('upload.error.default');
+                    throw new Exception($errorMessage);
                 }
 
                 // get the extension of the uploaded file
@@ -712,7 +724,7 @@ class Api
                 // move the file to a location including the extension,
                 // for better mime detection
                 if (move_uploaded_file($upload['tmp_name'], $source) === false) {
-                    throw new Exception('The uploaded file could not be moved');
+                    throw new Exception(t('upload.error.cantMove'));
                 }
 
                 $data = $callback($source, $filename);
