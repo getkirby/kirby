@@ -35,6 +35,7 @@ export default {
     autofocus: Boolean,
     disabled: Boolean,
     id: [String, Number],
+    default: [Number, String],
     max: {
       type: Number,
       default: 100
@@ -70,14 +71,14 @@ export default {
   },
   computed: {
     label() {
-      return this.value !== null ? this.format(this.value) : "–";
+      return this.format(this.position);
     },
     center() {
       const middle = (this.max - this.min) / 2 + this.min;
       return Math.ceil(middle / this.step) * this.step;
     },
     position() {
-      return this.value !== null ? this.value : this.center;
+      return this.value || this.default || this.center;
     }
   },
   watch: {
