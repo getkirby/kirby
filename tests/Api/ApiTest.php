@@ -312,8 +312,14 @@ class ApiTest extends TestCase
 
         $result = $api->render('test', 'POST');
 
+        $expected = [
+            'status' => 'ok',
+            'message' => 'ok',
+            'code' => 200
+        ];
+
         $this->assertInstanceOf('Kirby\Http\Response', $result);
-        $this->assertEquals(json_encode(['status' => 'ok']), $result->body());
+        $this->assertEquals(json_encode($expected), $result->body());
     }
 
     public function testRenderFalse()
@@ -385,13 +391,53 @@ class ApiTest extends TestCase
         $result = $api->render('test', 'POST');
 
         $expected = [
-            'status'  => 'error',
-            'message' => 'nope',
-            'code'    => 500,
+            'status'   => 'error',
+            'message'  => 'nope',
+            'code'     => 500,
+            'key'      => null,
+            'details'  => []
         ];
 
         $this->assertInstanceOf('Kirby\Http\Response', $result);
         $this->assertEquals(json_encode($expected), $result->body());
+    }
+
+    public function testRenderExceptionWithDebugging()
+    {
+        $api = new Api([
+            'debug' => true,
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        throw new \Exception('nope');
+                    }
+                ]
+            ]
+        ]);
+
+        // simulate the document root to test relative file paths
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+
+        $result = $api->render('test', 'POST');
+
+        $expected = [
+            'status'    => 'error',
+            'message'   => 'nope',
+            'code'      => 500,
+            'exception' => 'Exception',
+            'key'       => null,
+            'file'      => '/' . basename(__FILE__),
+            'line'      => __LINE__ - 18,
+            'details'   => [],
+            'route'     => 'test'
+        ];
+
+        $this->assertInstanceOf('Kirby\Http\Response', $result);
+        $this->assertEquals(json_encode($expected), $result->body());
+
+        unset($_SERVER['DOCUMENT_ROOT']);
     }
 
     public function testRenderKirbyException()
@@ -419,13 +465,57 @@ class ApiTest extends TestCase
         $expected = [
             'status'  => 'error',
             'message' => 'Test',
+            'code'    => 404,
             'key'     => 'error.test',
             'details' => ['a' => 'A'],
-            'code'    => 404,
         ];
 
         $this->assertInstanceOf('Kirby\Http\Response', $result);
         $this->assertEquals(json_encode($expected), $result->body());
+    }
+
+    public function testRenderKirbyExceptionWithDebugging()
+    {
+        $api = new Api([
+            'debug' => true,
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        throw new \Kirby\Exception\NotFoundException([
+                            'key'      => 'test',
+                            'fallback' => 'Test',
+                            'details'  => [
+                                'a' => 'A'
+                            ]
+                        ]);
+                    }
+                ]
+            ]
+        ]);
+
+        // simulate the document root to test relative file paths
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+
+        $result = $api->render('test', 'POST');
+
+        $expected = [
+            'status'    => 'error',
+            'message'   => 'Test',
+            'code'      => 404,
+            'exception' => 'Kirby\\Exception\\NotFoundException',
+            'key'       => 'error.test',
+            'file'      => '/' . basename(__FILE__),
+            'line'      => __LINE__ - 24,
+            'details'   => ['a' => 'A'],
+            'route'     => 'test',
+        ];
+
+        $this->assertInstanceOf('Kirby\Http\Response', $result);
+        $this->assertEquals(json_encode($expected), $result->body());
+
+        unset($_SERVER['DOCUMENT_ROOT']);
     }
 
     public function testRenderWithSanitizedErrorCode()

@@ -9,6 +9,14 @@ use PHPUnit\Framework\TestCase;
  */
 class ApcuCacheTest extends TestCase
 {
+    public function setUp(): void
+    {
+        if (function_exists('apcu_store') === false) {
+            $this->markTestSkipped('APCu is not available.');
+            return;
+        }
+    }
+
     /**
      * @covers ::set
      * @covers ::exists

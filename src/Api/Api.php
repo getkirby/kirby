@@ -540,50 +540,15 @@ class Api
         try {
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
-            if (is_a($e, 'Kirby\Exception\Exception') === true) {
-                $result = [
-                    'status' => 'error',
-                    'route'  => ($this->route)? $this->route->pattern() : null
-                ] + $e->toArray();
-            } else {
-                // remove the document root from the file path
-                $file = $e->getFile();
-                if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
-                    $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
-                }
-
-                $result = [
-                    'status'    => 'error',
-                    'exception' => get_class($e),
-                    'message'   => $e->getMessage(),
-                    'file'      => $file,
-                    'line'      => $e->getLine(),
-                    'code'      => empty($e->getCode()) === false ? $e->getCode() : 500,
-                    'route'     => $this->route ? $this->route->pattern() : null
-                ];
-            }
+            $result = $this->responseForException($e);
         }
 
         if ($result === null) {
-            $result = [
-                'status'  => 'error',
-                'message' => 'not found',
-                'code'    => 404,
-            ];
-        }
-
-        if ($result === true) {
-            $result = [
-                'status' => 'ok',
-            ];
-        }
-
-        if ($result === false) {
-            $result = [
-                'status'  => 'error',
-                'message' => 'bad request',
-                'code'    => 400,
-            ];
+            $result = $this->responseFor404();
+        } elseif ($result === false) {
+            $result = $this->responseFor400();
+        } elseif ($result === true) {
+            $result = $this->responseFor200();
         }
 
         if (is_array($result) === false) {
@@ -592,17 +557,6 @@ class Api
 
         // pretty print json data
         $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
-
-        // remove critical info from the result set if
-        // debug mode is switched off
-        if ($this->debug !== true) {
-            unset(
-                $result['file'],
-                $result['exception'],
-                $result['line'],
-                $result['route']
-            );
-        }
 
         if (($result['status'] ?? 'ok') === 'error') {
             $code = $result['code'] ?? 400;
@@ -616,6 +570,95 @@ class Api
         }
 
         return Response::json($result, 200, $pretty);
+    }
+
+    /**
+     * Returns a 200 - ok
+     * response array.
+     *
+     * @return array
+     */
+    public function responseFor200(): array
+    {
+        return [
+            'status'  => 'ok',
+            'message' => 'ok',
+            'code'    => 200
+        ];
+    }
+
+    /**
+     * Returns a 400 - bad request
+     * response array.
+     *
+     * @return array
+     */
+    public function responseFor400(): array
+    {
+        return [
+            'status'  => 'error',
+            'message' => 'bad request',
+            'code'    => 400,
+        ];
+    }
+
+    /**
+     * Returns a 404 - not found
+     * response array.
+     *
+     * @return array
+     */
+    public function responseFor404(): array
+    {
+        return [
+            'status'  => 'error',
+            'message' => 'not found',
+            'code'    => 404,
+        ];
+    }
+
+    /**
+     * Creates the response array for
+     * an exception. Kirby exceptions will
+     * have more information
+     *
+     * @param Exception $e
+     * @return array
+     */
+    public function responseForException($e): array
+    {
+        // prepare the result array for all exception types
+        $result = [
+            'status'    => 'error',
+            'message'   => $e->getMessage(),
+            'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
+            'exception' => get_class($e),
+            'key'       => null,
+            'file'      => F::relativepath($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+            'line'      => $e->getLine(),
+            'details'   => [],
+            'route'     => $this->route ? $this->route->pattern() : null
+        ];
+
+        // extend the information for Kirby Exceptions
+        if (is_a($e, 'Kirby\Exception\Exception') === true) {
+            $result['key']     = $e->getKey();
+            $result['details'] = $e->getDetails();
+            $result['code']    = $e->getHttpCode();
+        }
+
+        // remove critical info from the result set if
+        // debug mode is switched off
+        if ($this->debug !== true) {
+            unset(
+                $result['file'],
+                $result['exception'],
+                $result['line'],
+                $result['route']
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -635,8 +678,19 @@ class Api
         $errors  = [];
         $files   = $this->requestFiles();
 
+        // get error messages from translation
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE   => t('upload.error.iniSize'),
+            UPLOAD_ERR_FORM_SIZE  => t('upload.error.formSize'),
+            UPLOAD_ERR_PARTIAL    => t('upload.error.partial'),
+            UPLOAD_ERR_NO_FILE    => t('upload.error.noFile'),
+            UPLOAD_ERR_NO_TMP_DIR => t('upload.error.tmpDir'),
+            UPLOAD_ERR_CANT_WRITE => t('upload.error.cantWrite'),
+            UPLOAD_ERR_EXTENSION  => t('upload.error.extension')
+        ];
+
         if (empty($files) === true) {
-            throw new Exception('No uploaded files');
+            throw new Exception(t('upload.error.noFiles'));
         }
 
         foreach ($files as $upload) {
@@ -648,7 +702,8 @@ class Api
 
             try {
                 if ($upload['error'] !== 0) {
-                    throw new Exception('Upload error');
+                    $errorMessage = $errorMessages[$upload['error']] ?? t('upload.error.default');
+                    throw new Exception($errorMessage);
                 }
 
                 // get the extension of the uploaded file
@@ -669,7 +724,7 @@ class Api
                 // move the file to a location including the extension,
                 // for better mime detection
                 if (move_uploaded_file($upload['tmp_name'], $source) === false) {
-                    throw new Exception('The uploaded file could not be moved');
+                    throw new Exception(t('upload.error.cantMove'));
                 }
 
                 $data = $callback($source, $filename);
