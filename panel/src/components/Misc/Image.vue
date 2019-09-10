@@ -14,6 +14,7 @@
         :src="src"
         :srcset="srcset"
         :sizes="sizes"
+        loading="lazy"
         @dragstart.prevent
       >
       <k-loader

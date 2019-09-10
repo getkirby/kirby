@@ -20,7 +20,6 @@
   <base href="<?= $panelUrl ?>">
 </head>
 <body>
-  <?= $icons ?>
   <div id="app"></div>
 
   <noscript>
