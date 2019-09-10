@@ -10,9 +10,9 @@
         min,
         name,
         required,
-        step,
-        value
+        step
       }"
+      :value="position"
       :style="`--min: ${min}; --max: ${max}; --value: ${position}`"
       type="range"
       class="k-range-input-native"
@@ -82,7 +82,7 @@ export default {
     }
   },
   watch: {
-    value() {
+    position() {
       this.onInvalid();
     }
   },
@@ -114,7 +114,7 @@ export default {
   },
   validations() {
     return {
-      value: {
+      position: {
         required: this.required ? required : true,
         min: this.min ? minValue(this.min) : true,
         max: this.max ? maxValue(this.max) : true
