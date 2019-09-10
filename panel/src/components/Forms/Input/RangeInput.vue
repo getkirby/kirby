@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     label() {
-      return this.format(this.position);
+      return this.required || this.value ? this.format(this.position) : "–";
     },
     center() {
       const middle = (this.max - this.min) / 2 + this.min;
