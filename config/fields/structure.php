@@ -162,7 +162,7 @@ return [
         $data = [];
 
         foreach ($value as $row) {
-            $data[] = $this->form($row)->data(true);
+            $data[] = $this->form($row)->data();
         }
 
         return $data;
