@@ -574,6 +574,31 @@ class F
     }
 
     /**
+     * Returns the relative path of the file
+     * starting after $in
+     *
+     * @param string $file
+     * @param string $in
+     * @return string
+     */
+    public static function relativepath(string $file, string $in = null): string
+    {
+        if (empty($in) === true) {
+            return basename($file);
+        }
+
+        // windows
+        $file = str_replace('\\', '/', $file);
+        $in   = str_replace('\\', '/', $in);
+
+        if (Str::contains($file, $in) === false) {
+            return basename($file);
+        }
+
+        return Str::after($file, $in);
+    }
+
+    /**
      * Deletes a file
      *
      * <code>
