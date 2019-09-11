@@ -8,7 +8,7 @@ class EmailFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('email');
+        $field = $this->field('email');
 
         $this->assertEquals('email', $field->type());
         $this->assertEquals('email', $field->name());
@@ -22,13 +22,13 @@ class EmailFieldTest extends TestCase
 
     public function testEmailValidation()
     {
-        $field = new Field('email', [
+        $field = $this->field('email', [
             'value' => 'mail@getkirby.com'
         ]);
 
         $this->assertTrue($field->isValid());
 
-        $field = new Field('email', [
+        $field = $this->field('email', [
             'value' => 'mail[at]getkirby.com'
         ]);
 
@@ -37,7 +37,7 @@ class EmailFieldTest extends TestCase
 
     public function testMinLength()
     {
-        $field = new Field('email', [
+        $field = $this->field('email', [
             'value' => 'mail@test.com',
             'minlength' => 14
         ]);
@@ -48,7 +48,7 @@ class EmailFieldTest extends TestCase
 
     public function testMaxLength()
     {
-        $field = new Field('email', [
+        $field = $this->field('email', [
             'value'     => 'mail@test.com',
             'maxlength' => 12
         ]);

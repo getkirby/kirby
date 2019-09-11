@@ -335,9 +335,11 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
+        $page  = new Page(['slug' => 'test']);
         $field = new FormField('dummy', [
             'name'  => 'dummy',
-            'peter' => 'shaw'
+            'peter' => 'shaw',
+            'model' => $page
         ]);
 
         $this->assertInstanceOf(FormField::class, $field);

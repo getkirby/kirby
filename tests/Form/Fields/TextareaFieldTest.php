@@ -8,7 +8,7 @@ class TextareaFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('textarea');
+        $field = $this->field('textarea');
 
         $this->assertEquals('textarea', $field->type());
         $this->assertEquals('textarea', $field->name());
@@ -26,7 +26,7 @@ class TextareaFieldTest extends TestCase
 
     public function testButtonsDisabled()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'buttons' => false
         ]);
 
@@ -35,7 +35,7 @@ class TextareaFieldTest extends TestCase
 
     public function testButtonsArray()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'buttons' => [
                 'bold',
                 'italic'
@@ -47,7 +47,7 @@ class TextareaFieldTest extends TestCase
 
     public function testDefaultTrimmed()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'default' => 'test '
         ]);
 
@@ -56,7 +56,7 @@ class TextareaFieldTest extends TestCase
 
     public function testFiles()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test',
             'files' => [
                 'query' => 'page.images'
@@ -68,7 +68,7 @@ class TextareaFieldTest extends TestCase
 
     public function testFilesQuery()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test',
             'files' => 'page.images'
         ]);
@@ -78,7 +78,7 @@ class TextareaFieldTest extends TestCase
 
     public function testFilesWithInvalidInput()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'files' => 1
         ]);
 
@@ -87,7 +87,7 @@ class TextareaFieldTest extends TestCase
 
     public function testMaxLength()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value'     => 'test',
             'maxlength' => 3
         ]);
@@ -98,7 +98,7 @@ class TextareaFieldTest extends TestCase
 
     public function testMinLength()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test',
             'minlength' => 5
         ]);
@@ -109,7 +109,7 @@ class TextareaFieldTest extends TestCase
 
     public function testUploads()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test',
             'uploads' => [
                 'template' => 'test'
@@ -121,7 +121,7 @@ class TextareaFieldTest extends TestCase
 
     public function testUploadsDisabled()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test',
             'uploads' => false,
         ]);
@@ -131,7 +131,7 @@ class TextareaFieldTest extends TestCase
 
     public function testUploadsTemplate()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test',
             'uploads' => 'test'
         ]);
@@ -141,7 +141,7 @@ class TextareaFieldTest extends TestCase
 
     public function testUploadsWithInvalidInput()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test',
             'uploads' => 1,
         ]);
@@ -151,7 +151,7 @@ class TextareaFieldTest extends TestCase
 
     public function testValueTrimmed()
     {
-        $field = new Field('textarea', [
+        $field = $this->field('textarea', [
             'value' => 'test '
         ]);
 

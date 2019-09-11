@@ -2,14 +2,13 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Cms\Page;
 use Kirby\Form\Field;
 
 class CheckboxesFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('checkboxes');
+        $field = $this->field('checkboxes');
 
         $this->assertEquals('checkboxes', $field->type());
         $this->assertEquals('checkboxes', $field->name());
@@ -20,7 +19,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testValue()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'value'   => 'a,b,c',
             'options' => $expected = [
                 'a',
@@ -34,14 +33,14 @@ class CheckboxesFieldTest extends TestCase
 
     public function testEmptyValue()
     {
-        $field = new Field('checkboxes');
+        $field = $this->field('checkboxes');
 
         $this->assertEquals([], $field->value());
     }
 
     public function testDefaultValueWithInvalidOptions()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'default' => 'a,b,d',
             'options' => [
                 'a',
@@ -56,7 +55,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testStringConversion()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'options' => [
                 'a',
                 'b',
@@ -70,7 +69,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testIgnoreInvalidOptions()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'options' => [
                 'a',
                 'b',
@@ -84,7 +83,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testMin()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'value'   => 'a',
             'options' => ['a', 'b', 'c'],
             'min'     => 2
@@ -97,7 +96,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'value'   => 'a, b',
             'options' => ['a', 'b', 'c'],
             'max'     => 1
@@ -109,7 +108,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testRequiredProps()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'options'  => ['a', 'b', 'c'],
             'required' => true
         ]);
@@ -120,7 +119,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testRequiredInvalid()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'options'  => ['a', 'b', 'c'],
             'value'    => null,
             'required' => true
@@ -131,7 +130,7 @@ class CheckboxesFieldTest extends TestCase
 
     public function testRequiredValid()
     {
-        $field = new Field('checkboxes', [
+        $field = $this->field('checkboxes', [
             'options'  => ['a', 'b', 'c'],
             'required' => true,
             'value'    => 'a'

@@ -45,7 +45,7 @@ class UserPickerMixinTest extends TestCase
             'slug' => 'test'
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 
@@ -76,7 +76,7 @@ class UserPickerMixinTest extends TestCase
             'slug' => 'test'
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 
@@ -108,7 +108,7 @@ class UserPickerMixinTest extends TestCase
             'slug' => 'test'
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 

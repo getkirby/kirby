@@ -8,7 +8,7 @@ class RadioFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('radio');
+        $field = $this->field('radio');
 
         $this->assertEquals('radio', $field->type());
         $this->assertEquals('radio', $field->name());
@@ -33,7 +33,7 @@ class RadioFieldTest extends TestCase
      */
     public function testValue($input, $expected)
     {
-        $field = new Field('radio', [
+        $field = $this->field('radio', [
             'options' => [
                 'a',
                 'b',

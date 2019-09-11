@@ -8,7 +8,7 @@ class HeadlineFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('headline');
+        $field = $this->field('headline');
 
         $this->assertEquals('headline', $field->type());
         $this->assertEquals('headline', $field->name());
@@ -20,13 +20,13 @@ class HeadlineFieldTest extends TestCase
 
     public function testNumbered()
     {
-        $field = new Field('headline', [
+        $field = $this->field('headline', [
             'numbered' => true
         ]);
 
         $this->assertTrue($field->numbered());
 
-        $field = new Field('headline', [
+        $field = $this->field('headline', [
             'numbered' => false
         ]);
 

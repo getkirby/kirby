@@ -9,7 +9,7 @@ class TagsFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('tags');
+        $field = $this->field('tags');
 
         $this->assertEquals('tags', $field->type());
         $this->assertEquals('tags', $field->name());
@@ -87,7 +87,7 @@ class TagsFieldTest extends TestCase
             ]
         ];
 
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'model'   => $app->page('b'),
             'options' => 'query',
             'query'   => 'page.siblings.pluck("tags", ",", true)',
@@ -95,7 +95,7 @@ class TagsFieldTest extends TestCase
 
         $this->assertEquals($expected, $field->options());
 
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'model'   => $app->file('a/b.jpg'),
             'options' => 'query',
             'query'   => 'file.siblings.pluck("tags", ",", true)',
@@ -106,7 +106,7 @@ class TagsFieldTest extends TestCase
 
     public function testMin()
     {
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'value'   => 'a',
             'options' => ['a', 'b', 'c'],
             'min'     => 2
@@ -120,7 +120,7 @@ class TagsFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'value'   => 'a, b',
             'options' => ['a', 'b', 'c'],
             'max'     => 1
@@ -133,7 +133,7 @@ class TagsFieldTest extends TestCase
 
     public function testRequiredProps()
     {
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'options'  => ['a', 'b', 'c'],
             'required' => true
         ]);
@@ -144,7 +144,7 @@ class TagsFieldTest extends TestCase
 
     public function testRequiredInvalid()
     {
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'options'  => ['a', 'b', 'c'],
             'value'    => null,
             'required' => true
@@ -155,7 +155,7 @@ class TagsFieldTest extends TestCase
 
     public function testRequiredValid()
     {
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'options'  => ['a', 'b', 'c'],
             'required' => true,
             'value'    => 'a'
