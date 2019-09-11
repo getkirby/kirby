@@ -4,6 +4,7 @@ window.panel.plugins = {
   components: {},
   created: [],
   fields: {},
+  icons: {},
   sections: {},
   routes: [],
   use: [],
@@ -19,6 +20,11 @@ window.panel.plugin = function (plugin, parts) {
   // Fields
   resolve(parts, "fields", function (name, options) {
     window.panel.plugins["fields"][`k-${name}-field`] = options;
+  });
+
+  // Icons
+  resolve(parts, "icons", function (name, options) {
+    window.panel.plugins["icons"][name] = options;
   });
 
   // Sections

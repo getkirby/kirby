@@ -37,6 +37,7 @@
 
   "error.access.login": "Geçersiz giriş",
   "error.access.panel": "Panele erişim izniniz yok",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Profil resmi yüklenemedi",
   "error.avatar.delete.fail": "Profil resmi silinemedi",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "\"{filename}\" adını değiştiremezsiniz",
   "error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
   "error.user.password.undefined": "Bu kullanıcının şifresi yok",
   "error.user.role.invalid": "Lütfen geçerli bir rol girin",
-  "error.user.undefined": "Kullan\u0131c\u0131 bulunamad\u0131",
   "error.user.update.permission":
     "\"{name}\" kullanıcısını güncellemenize izin verilmiyor",
 
@@ -325,7 +326,7 @@
   "next": "Sonraki",
   "off": "kapalı",
   "on": "açık",
-  "open": "Önizle",
+  "open": "Önizleme",
   "options": "Seçenekler",
 
   "orientation": "Oryantasyon",
@@ -412,6 +413,16 @@
   "translation.name": "T\u00fcrk\u00e7e",
 
   "upload": "Yükle",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Hata",
   "upload.progress": "Yükleniyor...",
 

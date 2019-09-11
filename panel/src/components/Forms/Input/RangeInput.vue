@@ -10,9 +10,9 @@
         min,
         name,
         required,
-        step,
-        value
+        step
       }"
+      :value="position"
       :style="`--min: ${min}; --max: ${max}; --value: ${position}`"
       type="range"
       class="k-range-input-native"
@@ -35,6 +35,7 @@ export default {
     autofocus: Boolean,
     disabled: Boolean,
     id: [String, Number],
+    default: [Number, String],
     max: {
       type: Number,
       default: 100
@@ -70,18 +71,18 @@ export default {
   },
   computed: {
     label() {
-      return this.value !== null ? this.format(this.value) : "–";
+      return this.required || this.value ? this.format(this.position) : "–";
     },
     center() {
       const middle = (this.max - this.min) / 2 + this.min;
       return Math.ceil(middle / this.step) * this.step;
     },
     position() {
-      return this.value !== null ? this.value : this.center;
+      return this.value || this.default || this.center;
     }
   },
   watch: {
-    value() {
+    position() {
       this.onInvalid();
     }
   },
@@ -113,7 +114,7 @@ export default {
   },
   validations() {
     return {
-      value: {
+      position: {
         required: this.required ? required : true,
         min: this.min ? minValue(this.min) : true,
         max: this.max ? maxValue(this.max) : true

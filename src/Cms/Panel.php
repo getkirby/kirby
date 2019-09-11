@@ -87,7 +87,6 @@ class Panel
             'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
             'pluginCss' => $plugins->url('css'),
             'pluginJs'  => $plugins->url('js'),
-            'icons'     => F::read($kirby->root('panel') . '/dist/img/icons.svg'),
             'panelUrl'  => $uri->path()->toString(true) . '/',
             'options'   => [
                 'url'         => $url,
