@@ -70,15 +70,16 @@ export default {
     };
   },
   computed: {
+    baseline() {
+      // If the minimum is below 0, the baseline should be placed at 0.
+      // Otherwise place the baseline at the minimum
+      return this.min < 0 ? 0 : this.min;  
+    },
     label() {
       return this.required || this.value ? this.format(this.position) : "–";
     },
-    center() {
-      const middle = (this.max - this.min) / 2 + this.min;
-      return Math.ceil(middle / this.step) * this.step;
-    },
     position() {
-      return this.value || this.default || this.center;
+      return this.value || this.default || this.baseline;
     }
   },
   watch: {
