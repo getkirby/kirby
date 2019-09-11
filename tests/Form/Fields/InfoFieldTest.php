@@ -3,13 +3,12 @@
 namespace Kirby\Form\Fields;
 
 use Kirby\Cms\Page;
-use Kirby\Form\Field;
 
 class InfoFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('info');
+        $field = $this->field('info');
 
         $this->assertEquals('info', $field->type());
         $this->assertEquals('info', $field->name());
@@ -23,14 +22,14 @@ class InfoFieldTest extends TestCase
     {
 
         // simple text
-        $field = new Field('info', [
+        $field = $this->field('info', [
             'text' => 'test'
         ]);
 
         $this->assertEquals('<p>test</p>', $field->text());
 
         // translated text
-        $field = new Field('info', [
+        $field = $this->field('info', [
             'text' => [
                 'en' => 'en',
                 'de' => 'de'
@@ -40,7 +39,7 @@ class InfoFieldTest extends TestCase
         $this->assertEquals('<p>en</p>', $field->text());
 
         // text template
-        $field = new Field('info', [
+        $field = $this->field('info', [
             'text' => '{{ page.title }}',
             'model' => new Page([
                 'slug'    => 'test',

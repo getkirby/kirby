@@ -51,6 +51,10 @@ class Field extends Component
             throw new InvalidArgumentException('The field type "' . $type . '" does not exist');
         }
 
+        if (isset($attrs['model']) === false) {
+            throw new InvalidArgumentException('Field requires a model');
+        }
+
         // use the type as fallback for the name
         $attrs['name'] = $attrs['name'] ?? $type;
         $attrs['type'] = $type;
@@ -176,6 +180,33 @@ class Field extends Component
                 },
                 'value' => function ($value = null) {
                     return $value;
+                }
+            ],
+            'computed' => [
+                'after' => function () {
+                    if ($this->after !== null) {
+                        return $this->model()->toString($this->after);
+                    }
+                },
+                'before' => function () {
+                    if ($this->before !== null) {
+                        return $this->model()->toString($this->before);
+                    }
+                },
+                'default' => function () {
+                    if ($this->default !== null) {
+                        return $this->model()->toString($this->default);
+                    }
+                },
+                'label' => function () {
+                    if ($this->label !== null) {
+                        return $this->model()->toString($this->label);
+                    }
+                },
+                'placeholder' => function () {
+                    if ($this->placeholder !== null) {
+                        return $this->model()->toString($this->placeholder);
+                    }
                 }
             ]
         ];

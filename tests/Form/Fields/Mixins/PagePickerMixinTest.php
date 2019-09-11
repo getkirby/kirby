@@ -50,7 +50,7 @@ class PagePickerMixinTest extends TestCase
 
         $app->impersonate('kirby');
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $this->app->site()
         ]);
 
@@ -103,7 +103,7 @@ class PagePickerMixinTest extends TestCase
 
         $app->impersonate('kirby');
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $this->app->site()
         ]);
 
@@ -143,7 +143,7 @@ class PagePickerMixinTest extends TestCase
             ]
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 
@@ -184,7 +184,7 @@ class PagePickerMixinTest extends TestCase
             ]
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 
