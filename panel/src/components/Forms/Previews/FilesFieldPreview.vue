@@ -2,7 +2,8 @@
   <ul v-if="value" class="k-files-field-preview">
     <li v-for="file in value" :key="file.url">
       <k-link :title="file.filename" :to="file.link" @click.native.stop>
-        <k-image :src="file.url" v-bind="image" />
+        <k-image v-if="file.type === 'image'" :src="file.url" v-bind="image" />
+        <k-icon v-else v-bind="file.icon" />
       </k-link>
     </li>
   </ul>
@@ -38,5 +39,7 @@ export default {
 .k-files-field-preview li {
   line-height: 0;
 }
-
+.k-files-field-preview li .k-icon {
+  height: 100%;
+}
 </style>
