@@ -93,4 +93,23 @@ class StructureTest extends TestCase
         $this->assertFalse($structure->last()->isFirst());
         $this->assertFalse($structure->first()->isLast());
     }
+    
+    public function testWithInvalidData()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid structure data');
+        
+        $structure = new Structure([
+            [
+                'name' => 'A',
+                'category' => 'cat-a'
+            ],
+            [
+                'name' => 'B',
+                'category' => 'cat-b'
+            ],
+            'name',
+            'category'
+        ]);
+    }
 }

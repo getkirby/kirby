@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * The Structure class wraps
  * array data into a nicely chainable
@@ -45,6 +47,10 @@ class Structure extends Collection
         if (is_a($props, StructureObject::class) === true) {
             $object = $props;
         } else {
+            if (is_array($props) === false) {
+                throw new InvalidArgumentException('Invalid structure data');
+            }
+            
             $object = new StructureObject([
                 'content'    => $props,
                 'id'         => $props['id'] ?? $id,
