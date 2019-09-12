@@ -372,6 +372,13 @@ trait PageActions
                 }
             }
         }
+        
+        // add copy to siblings
+        if ($isDraft === true) {
+            $parentModel->drafts()->append($copy->id(), $copy);
+        } else {
+            $parentModel->children()->append($copy->id(), $copy);
+        }
 
         return $copy;
     }
