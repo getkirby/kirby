@@ -362,19 +362,19 @@ class FieldMethodsTest extends TestCase
     }
     
     public function testToStructureWithInvalidData()
-    {        
+    {
         $data = [
             ['title' => 'a'],
             ['title' => 'b'],
             'title'
         ];
-        
-        $yaml      = Yaml::encode($data);
-        $field     = $this->field($yaml);
-        
+
+        $yaml  = Yaml::encode($data);
+        $field = $this->field($yaml);
+
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid structure data for "test" field');
-        
+
         $structure = $field->toStructure();
     }
 
