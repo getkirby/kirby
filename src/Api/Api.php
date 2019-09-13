@@ -174,7 +174,7 @@ class Api
 
         $output = $this->route->action()->call($this, ...$this->route->arguments());
 
-        if (is_object($output) === true) {
+        if (is_object($output) === true && is_a($output, 'Kirby\\Http\\Response') !== true) {
             return $this->resolve($output)->toResponse();
         }
 
