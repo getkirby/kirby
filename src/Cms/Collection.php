@@ -101,23 +101,22 @@ class Collection extends BaseCollection
     /**
      * Appends an element to the data array
      *
-     * @param  mixed $key
+     * @param  mixed $key Optional collection key, will be determined from the item if not given
      * @param  mixed $item
      * @return \Kirby\Cms\Collection
      */
     public function append(...$args)
     {
         if (count($args) === 1) {
-            if (is_object($args[0]) === true) {
-                $this->data[$args[0]->id()] = $args[0];
+            // try to determine the key from the provided item
+            if (is_object($args[0]) === true && is_callable([$args[0], 'id']) === true) {
+                return parent::append($args[0]->id(), $args[0]);
             } else {
-                $this->data[] = $args[0];
+                return parent::append($args[0]);
             }
-        } elseif (count($args) > 1) {
-            $this->set($args[0], $args[1]);
         }
 
-        return $this;
+        return parent::append(...$args);
     }
 
     /**
@@ -235,6 +234,27 @@ class Collection extends BaseCollection
     public function parent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Prepends an element to the data array
+     *
+     * @param  mixed $key Optional collection key, will be determined from the item if not given
+     * @param  mixed $item
+     * @return Kirby\Cms\Collection
+     */
+    public function prepend(...$args)
+    {
+        if (count($args) === 1) {
+            // try to determine the key from the provided item
+            if (is_object($args[0]) === true && is_callable([$args[0], 'id']) === true) {
+                return parent::prepend($args[0]->id(), $args[0]);
+            } else {
+                return parent::prepend($args[0]);
+            }
+        }
+
+        return parent::prepend(...$args);
     }
 
     /**
