@@ -690,7 +690,14 @@ class Api
         ];
 
         if (empty($files) === true) {
-            throw new Exception(t('upload.error.noFiles'));
+            $postMaxSize       = 1024 * 1024 * (int)ini_get('post_max_size');
+            $uploadMaxFileSize = 1024 * 1024 * (int)ini_get('upload_max_filesize');
+
+            if ($postMaxSize < $uploadMaxFileSize) {
+                throw new Exception(t('upload.error.iniPostSize'));
+            } else {
+                throw new Exception(t('upload.error.noFiles'));
+            }
         }
 
         foreach ($files as $upload) {
