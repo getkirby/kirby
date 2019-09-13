@@ -123,7 +123,7 @@ class Collection extends Iterator implements Countable
     {
         if (count($args) === 1) {
             $this->data[] = $args[0];
-        } elseif (count($args) === 2) {
+        } elseif (count($args) > 1) {
             $this->set($args[0], $args[1]);
         }
 
@@ -716,7 +716,7 @@ class Collection extends Iterator implements Countable
     {
         if (count($args) === 1) {
             array_unshift($this->data, $args[0]);
-        } elseif (count($args) === 2) {
+        } elseif (count($args) > 1) {
             $data = $this->data;
             $this->data = [];
             $this->set($args[0], $args[1]);

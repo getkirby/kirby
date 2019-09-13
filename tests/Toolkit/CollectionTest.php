@@ -59,6 +59,14 @@ class CollectionTest extends TestCase
         $collection = $collection->append('c', 'C');
 
         $this->assertEquals(['a', 'b', 'c'], $collection->keys());
+
+        // with too many params
+        $collection = new Collection;
+        $collection = $collection->append('a', 'A', 'ignore this');
+        $collection = $collection->append('b', 'B', 'ignore this');
+        $collection = $collection->append('c', 'C', 'ignore this');
+
+        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
     }
 
     public function testCount()
@@ -391,6 +399,13 @@ class CollectionTest extends TestCase
         // with key
         $collection = new Collection(['b' => 'B', 'c' => 'C']);
         $collection = $collection->prepend('a', 'A');
+
+        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
+        $this->assertEquals(['A', 'B', 'C'], $collection->values());
+
+        // with too many params
+        $collection = new Collection(['b' => 'B', 'c' => 'C']);
+        $collection = $collection->prepend('a', 'A', 'ignore this');
 
         $this->assertEquals(['a', 'b', 'c'], $collection->keys());
         $this->assertEquals(['A', 'B', 'C'], $collection->values());
