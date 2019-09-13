@@ -28,6 +28,12 @@ export default {
     current(context, user) {
       context.commit("SET_CURRENT", user);
     },
+    email(context, email) {
+      context.commit("SET_CURRENT", {
+        email: email,
+        ...context.state.current
+      });
+    },
     language(context, language) {
       context.dispatch("translation/activate", language, { root: true });
       context.commit("SET_CURRENT", {
@@ -66,6 +72,12 @@ export default {
         .catch(() => {
           router.push("/login");
         });
+    },
+    name(context, name) {
+      context.commit("SET_CURRENT", {
+        name: name,
+        ...context.state.current
+      });
     },
     visit(context, path) {
       context.commit("SET_PATH", path);
