@@ -690,8 +690,8 @@ class Api
         ];
 
         if (empty($files) === true) {
-            $postMaxSize       = 1024 * 1024 * (int)ini_get('post_max_size');
-            $uploadMaxFileSize = 1024 * 1024 * (int)ini_get('upload_max_filesize');
+            $postMaxSize       = Str::toBytes(ini_get('post_max_size'));
+            $uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
 
             if ($postMaxSize < $uploadMaxFileSize) {
                 throw new Exception(t('upload.error.iniPostSize'));
