@@ -33,7 +33,7 @@ class UsersFieldTest extends TestCase
 
     public function testDefaultProps()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test'])
         ]);
 
@@ -50,7 +50,7 @@ class UsersFieldTest extends TestCase
     {
         $this->app->impersonate('raphael@getkirby.com');
 
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test'])
         ]);
 
@@ -61,7 +61,7 @@ class UsersFieldTest extends TestCase
     {
         $this->app->impersonate('raphael@getkirby.com');
 
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
             'default' => [
                 'raphael@getkirby.com',
@@ -77,7 +77,7 @@ class UsersFieldTest extends TestCase
     {
         $this->app->impersonate('raphael@getkirby.com');
 
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
             'default' => false
         ]);
@@ -87,7 +87,7 @@ class UsersFieldTest extends TestCase
 
     public function testValue()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
             'value' => [
                 'leonardo@getkirby.com', // exists
@@ -109,7 +109,7 @@ class UsersFieldTest extends TestCase
 
     public function testMin()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
             'value' => [
                 'leonardo@getkirby.com',
@@ -126,7 +126,7 @@ class UsersFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
             'value' => [
                 'leonardo@getkirby.com',
@@ -142,7 +142,7 @@ class UsersFieldTest extends TestCase
 
     public function testEmpty()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
             'empty' => 'Test'
         ]);
@@ -152,7 +152,7 @@ class UsersFieldTest extends TestCase
 
     public function testTranslatedEmpty()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
             'empty' => ['en' => 'Test', 'de' => 'Töst']
         ]);
@@ -162,7 +162,7 @@ class UsersFieldTest extends TestCase
 
     public function testRequiredProps()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model'    => new Page(['slug' => 'test']),
             'required' => true
         ]);
@@ -173,7 +173,7 @@ class UsersFieldTest extends TestCase
 
     public function testRequiredInvalid()
     {
-        $field = new Field('users', [
+        $field = $this->field('users', [
             'model'    => new Page(['slug' => 'test']),
             'required' => true
         ]);
@@ -183,7 +183,7 @@ class UsersFieldTest extends TestCase
 
     public function testRequiredValid()
     {
-        $field = new Field('tags', [
+        $field = $this->field('tags', [
             'model'    => new Page(['slug' => 'test']),
             'required' => true,
             'value' => [

@@ -10,6 +10,8 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Url;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Toolkit\Xml;
@@ -213,7 +215,17 @@ return function (App $app) {
          * @return Kirby\Cms\Structure
          */
         'toStructure' => function (Field $field) {
-            return new Structure(Yaml::decode($field->value), $field->parent());
+            try {
+                return new Structure(Yaml::decode($field->value), $field->parent());
+            } catch (Exception $e) {
+                if ($field->parent() === null) {
+                    $message = 'Invalid structure data for "' . $field->key() . '" field';
+                } else {
+                    $message = 'Invalid structure data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
+                }
+
+                throw new InvalidArgumentException($message);
+            }
         },
 
         /**

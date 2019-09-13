@@ -37,6 +37,7 @@
 
   "error.access.login": "로그인할 수 없습니다.",
   "error.access.panel": "패널에 접근할 권한이 없습니다.",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "프로필 이미지를 업로드할 수 없습니다.",
   "error.avatar.delete.fail": "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0\ub97c \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "파일명({filename})을 변경할 권한이 없습니다.",
   "error.file.duplicate": "파일명이 같은 파일({filename})이 있습니다.",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "\uc554\ud638\ub97c \ud655\uc778\ud558\uc138\uc694.",
   "error.user.password.undefined": "암호가 설정되지 않았습니다.",
   "error.user.role.invalid": "올바른 역할을 입력하세요.",
-  "error.user.undefined": "\uc0ac\uc6a9\uc790\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
   "error.user.update.permission":
     "사용자({name})의 정보를 변경할 권한이 없습니다.",
 
@@ -412,6 +413,17 @@
   "translation.name": "한국어",
 
   "upload": "업로드",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "오류",
   "upload.progress": "업로드 중…",
 

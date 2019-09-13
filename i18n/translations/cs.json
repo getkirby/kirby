@@ -24,19 +24,20 @@
   "delete": "Smazat",
   "dimensions": "Rozměry",
   "discard": "Zahodit",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Stáhnout",
+  "duplicate": "Duplikovat",
   "edit": "Upravit",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Žádné soubory k výběru",
+  "dialog.pages.empty": "Žádné stránky k výběru",
+  "dialog.users.empty": "Žádní uživatelé k výběru",
 
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
   "error.access.login": "Neplatné přihlášení",
   "error.access.panel": "Nemáte povoleno vstoupit do panelu",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Nebylo možné nahrát profilový obrázek",
   "error.avatar.delete.fail": "Nebylo mo\u017en\u00e9 smazat profilov\u00fd obr\u00e1zek",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Neplatný konvertor \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Nemáte povoleno změnit jméno souboru \"{filename}\"",
   "error.file.duplicate": "Soubor s názvem \"{filename}\" již existuje",
@@ -71,13 +73,13 @@
   "error.form.incomplete": "Prosím opravte všechny chyby ve formuláři",
   "error.form.notSaved": "Formulář nemohl být uložen",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Zadejte prosím platný kód jazyka",
+  "error.language.duplicate": "Jazyk již existuje",
+  "error.language.name": "Zadejte prosím platné jméno jazyka",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Zadejte prosím platné licenční číslo",
   "error.license.email": "Zadejte prosím platnou emailovou adresu",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "Licenci nelze ověřit",
 
   "error.page.changeSlug.permission":
     "Nem\u016f\u017eete zm\u011bnit URL t\u00e9to str\u00e1nky",
@@ -104,7 +106,7 @@
     "Koncept stránky, který obsahuje v adrese URL \"{slug}\" již existuje ",
   "error.page.duplicate":
     "Stránka, která v adrese URL obsahuje \"{slug}\" již existuje",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "Nemáte dovoleno duplikovat \"{slug}\"",
   "error.page.notFound": "Str\u00e1nku se nepoda\u0159ilo nal\u00e9zt.",
   "error.page.num.invalid":
     "Zadejte prosím platné pořadové číslo. Čísla nesmí být záporná.",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Pros\u00edm potvr\u010fte heslo",
   "error.user.password.undefined": "Uživatel nemá nastavené heslo.",
   "error.user.role.invalid": "Zadejte prosím platnou roli",
-  "error.user.undefined": "U\u017eivatele se nepoda\u0159ilo nal\u00e9zt",
   "error.user.update.permission":
     "Nemáte dovoleno upravit uživatele \"{name}\"",
 
@@ -183,9 +184,9 @@
   "error.validation.contains":
     "Zadejte prosím hodnotu, která obsahuje \"{needle}\"",
   "error.validation.date": "Zadejte prosím platné datum",
-  "error.validation.date.after": "Please enter a date after {date}",
-  "error.validation.date.before": "Please enter a date before {date}",
-  "error.validation.date.between": "Please enter a date between {min} and {max}",
+  "error.validation.date.after": "Zadejte prosím datum po {date}",
+  "error.validation.date.before": "Zadejte prosím datum před {date}",
+  "error.validation.date.between": "Zadejte prosím datum mezi {min} a {max}",
   "error.validation.denied": "Prosím, odmítněte",
   "error.validation.different": "Hodnota nesmí být \"{other}\"",
   "error.validation.email": "Zadejte prosím platnou emailovou adresu",
@@ -265,7 +266,7 @@
   "language.direction.ltr": "Zleva doprava",
   "language.direction.rtl": "Zprava doleva",
   "language.locale": "Řetězec lokalizace PHP",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Používáte vlastní jazykové nastavení. Upravte prosím soubor s nastavením v /site/languages",
   "language.name": "Jméno",
   "language.updated": "Jazyk byl aktualizován",
 
@@ -289,12 +290,12 @@
 
   "loading": "Načítám",
 
-  "lock.unsaved": "Unsaved changes",
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.unsaved": "Neuložené změny",
+  "lock.isLocked": "Neuložené změny provedené <strong>{email}</strong>",
+  "lock.file.isLocked": "Soubor nelze změnit, právě jej upravuje {email}.",
+  "lock.page.isLocked": "Stránku nelze změnit, právě jí upravuje {email} .",
+  "lock.unlock": "Odemknout",
+  "lock.isUnlocked": "Vaše neuložené změny byly přepsány jiným uživatelem. Můžeze si své úpravy stáhnout a zapracovat je ručně.",
 
   "login": "P\u0159ihl\u00e1sit se",
   "login.remember": "Zůstat přihlášen",
@@ -323,8 +324,8 @@
   "more": "Více",
   "name": "Jméno",
   "next": "Další",
-  "off": "off",
-  "on": "on",
+  "off": "vypnuto",
+  "on": "zapnuto",
   "open": "Otevřít",
   "options": "Možnosti",
 
@@ -346,8 +347,8 @@
   "page.delete.confirm.title": "Pro potvrzení zadejte titulek stránky",
   "page.draft.create": "Vytvořit koncept",
   "page.duplicate.appendix": "Kopírovat",
-  "page.duplicate.files": "Copy files",
-  "page.duplicate.pages": "Copy pages",
+  "page.duplicate.files": "Kopírovat soubory",
+  "page.duplicate.pages": "Kopírovat stránky",
   "page.status": "Stav",
   "page.status.draft": "Koncept",
   "page.status.draft.description":
@@ -373,13 +374,13 @@
   "revert": "Zahodit",
 
   "role": "Role",
-  "role.admin.description": "The admin has all rights",
-  "role.admin.title": "Admin",
+  "role.admin.description": "Administrátor má všechna práva",
+  "role.admin.title": "Administrátor",
   "role.all": "Vše",
   "role.empty": "Neexistují uživatelé s touto rolí",
   "role.description.placeholder": "Žádný popis",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Toto je výchozí role bez jakýchkoli oprávnění",
+  "role.nobody.title": "Nikdo",
 
   "save": "Ulo\u017eit",
   "search": "Hledat",
@@ -412,6 +413,17 @@
   "translation.name": "\u010cesky",
 
   "upload": "Nahrát",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Chyba",
   "upload.progress": "Nahrávání...",
 
