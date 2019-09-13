@@ -86,7 +86,7 @@ export default {
         email: "",
         password: "",
         language: "en",
-        role: "admin"
+        role: this.$user.role.name
       };
     },
     open() {
