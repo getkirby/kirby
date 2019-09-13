@@ -37,7 +37,7 @@
 
   "error.access.login": "Neteisingas prisijungimo vardas",
   "error.access.panel": "Neturite teisės prisijungti prie valdymo pulto",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "Neturite teisės peržiūrėti šios valdymo pulto dalies",
 
   "error.avatar.create.fail": "Nepavyko įkelti profilio nuotraukos",
   "error.avatar.delete.fail": "Nepavyko pašalinti profilio nuotraukos",
@@ -52,7 +52,7 @@
 
   "error.field.converter.invalid": "Neteisingas konverteris \"{converter}\"",
 
-  "error.file.changeName.empty": "The name must not be empty",
+  "error.file.changeName.empty": "Pavadinimas negali būti tuščias",
   "error.file.changeName.permission":
     "Neturite teisės pakeisti failo pavadinimo \"{filename}\"",
   "error.file.duplicate": "Failas su pavadinimu \"{filename}\" jau yra",
@@ -413,16 +413,17 @@
   "translation.name": "Lietuvių",
 
   "upload": "Įkelti",
-  "upload.error.cantMove": "The uploaded file could not be moved",
-  "upload.error.cantWrite": "Failed to write file to disk",
-  "upload.error.default": "The file could not be uploaded",
-  "upload.error.extension": "File upload stopped by extension",
-  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
-  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-  "upload.error.noFile": "No file was uploaded",
-  "upload.error.noFiles": "No files were uploaded",
-  "upload.error.partial": "The uploaded file was only partially uploaded",
-  "upload.error.tmpDir": "Missing a temporary folder",
+  "upload.error.cantMove": "Įkeltas failas negali būti perkeltas",
+  "upload.error.cantWrite": "Nepavyko įrašyti failo į diską",
+  "upload.error.default": "Nepavyko įkelti failo",
+  "upload.error.extension": "Neįmanoma įkelti tokio tipo failo",
+  "upload.error.formSize": "Įkeltas failas viršija MAX_FILE_SIZE nustatymą, kuris buvo nurodytas formoje",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "Įkeltas failas viršija upload_max_filesize nustatymą faile php.ini",
+  "upload.error.noFile": "Failas nebuvo įkeltas",
+  "upload.error.noFiles": "Failai nebuvo įkelti",
+  "upload.error.partial": "Failas įkeltas tik iš dalies",
+  "upload.error.tmpDir": "Trūksta laikinojo katalogo",
   "upload.errors": "Klaida",
   "upload.progress": "Įkėlimas…",
 
