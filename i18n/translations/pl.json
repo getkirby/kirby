@@ -37,6 +37,7 @@
 
   "error.access.login": "Nieprawidłowy login",
   "error.access.panel": "Nie masz uprawnień by dostać się do panelu",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Nie udało się załadować zdjęcia profilowego",
   "error.avatar.delete.fail": "Nie udało się usunąć zdjęcia profilowego",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Nieprawidłowy konwerter \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Nie masz uprawnień, by zmienić nazwę \"{filename}\"",
   "error.file.duplicate": "Istnieje już plik o nazwie \"{filename}\"",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Hasła nie są takie same",
   "error.user.password.undefined": "Użytkownik nie ma hasła",
   "error.user.role.invalid": "Wprowadź poprawną rolę",
-  "error.user.undefined": "Nie można znaleźć użytkownika",
   "error.user.update.permission":
     "Nie masz uprawnień, by zaktualizować użytkownika \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Polski",
 
   "upload": "Prześlij",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Błąd",
   "upload.progress": "Przesyłanie…",
 

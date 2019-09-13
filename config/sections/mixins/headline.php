@@ -13,7 +13,11 @@ return [
     ],
     'computed' => [
         'headline' => function () {
-            return $this->headline ?? ucfirst($this->name);
+            if ($this->headline) {
+                return $this->model()->toString($this->headline);
+            }
+
+            return ucfirst($this->name);
         }
     ]
 ];

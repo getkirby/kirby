@@ -37,6 +37,7 @@
 
   "error.access.login": "Kirjautumistiedot eivät kelpaa",
   "error.access.panel": "Sinulla ei ole oikeutta käyttää paneelia",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Profiilikuvaa ei voitu lähettää",
   "error.avatar.delete.fail": "Profiilikuvaa ei voitu poistaa",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Muunnin \"{converter}\" ei kelpaa",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Sinulla ei ole oikeutta muuttaa tiedoston \"{filename}\" nimeä",
   "error.file.duplicate": "Tiedosto nimellä \"{filename}\" on jo olemassa",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Salasanat eivät täsmää",
   "error.user.password.undefined": "Käyttäjällä ei ole salasanaa",
   "error.user.role.invalid": "Anna kelpaava käyttäjätaso",
-  "error.user.undefined": "K\u00e4ytt\u00e4j\u00e4\u00e4 ei l\u00f6ytynyt",
   "error.user.update.permission":
     "Sinulla ei ole oikeutta päivittää käyttäjää \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Suomi",
 
   "upload": "Lähetä",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Virhe",
   "upload.progress": "Lähetetään...",
 

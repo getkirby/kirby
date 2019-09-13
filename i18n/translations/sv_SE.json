@@ -37,6 +37,7 @@
 
   "error.access.login": "Ogiltig inloggning",
   "error.access.panel": "Du saknar behörighet att nå panelen",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Profilbilden kunde inte laddas upp",
   "error.avatar.delete.fail": "Profilbilden kunde inte raderas",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Du har inte behörighet att ändra namnet på \"{filename}\"",
   "error.file.duplicate": "En fil med namnet \"{filename}\" existerar redan",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Lösenorden matchar inte",
   "error.user.password.undefined": "Användaren har inget lösenord",
   "error.user.role.invalid": "Ange en giltig roll",
-  "error.user.undefined": "Användaren kan inte hittas",
   "error.user.update.permission":
     "Du har inte behörighet att uppdatera användaren \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Svenska",
 
   "upload": "Ladda upp",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Fel",
   "upload.progress": "Laddar upp...",
 

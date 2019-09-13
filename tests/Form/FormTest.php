@@ -3,7 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
-use Kirby\Data\Yaml;
+use Kirby\Cms\Page;
 use PHPUnit\Framework\TestCase;
 
 class FormTest extends TestCase
@@ -42,11 +42,12 @@ class FormTest extends TestCase
             ]
         ]);
 
-
+        $page = new Page(['slug' => 'test']);
         $form = new Form([
             'fields' => [
                 'info' => [
-                    'type' => 'info'
+                    'type' => 'info',
+                    'model' => $page
                 ]
             ],
             'values' => [
@@ -65,13 +66,16 @@ class FormTest extends TestCase
             ]
         ]);
 
+        $page = new Page(['slug' => 'test']);
         $form = new Form([
             'fields' => [
                 'structure' => [
                     'type'   => 'structure',
+                    'model' => $page,
                     'fields' => [
                         'tags' => [
-                            'type' => 'tags'
+                            'type'  => 'tags',
+                            'model' => $page
                         ]
                     ]
                 ]
@@ -104,10 +108,12 @@ class FormTest extends TestCase
             ]
         ]);
 
+        $page = new Page(['slug' => 'test']);
         $form = new Form([
             'fields' => [
                 'test' => [
-                    'type' => 'does-not-exist'
+                    'type'  => 'does-not-exist',
+                    'model' => $page
                 ]
             ]
         ]);
@@ -128,13 +134,16 @@ class FormTest extends TestCase
             ]
         ]);
 
+        $page = new Page(['slug' => 'test']);
         $form = new Form([
             'fields' => [
                 'a' => [
-                    'type' => 'text'
+                    'type'  => 'text',
+                    'model' => $page
                 ],
                 'b' => [
-                    'type' => 'text'
+                    'type'  => 'text',
+                    'model' => $page
                 ]
             ],
             'values' => [
@@ -159,13 +168,16 @@ class FormTest extends TestCase
             ]
         ]);
 
+        $page = new Page(['slug' => 'test']);
         $form = new Form([
             'fields' => [
                 'a' => [
-                    'type' => 'text'
+                    'type' => 'text',
+                    'model' => $page
                 ],
                 'b' => [
-                    'type' => 'text'
+                    'type' => 'text',
+                    'model' => $page
                 ]
             ],
             'values' => [
@@ -190,15 +202,18 @@ class FormTest extends TestCase
             ]
         ]);
 
+        $page = new Page(['slug' => 'test']);
         $form = new Form([
             'fields' => [
                 'a' => [
                     'label' => 'Email',
-                    'type' => 'email'
+                    'type' => 'email',
+                    'model' => $page
                 ],
                 'b' => [
                     'label' => 'Url',
-                    'type' => 'url'
+                    'type' => 'url',
+                    'model' => $page
                 ]
             ],
             'values' => [
@@ -240,15 +255,18 @@ class FormTest extends TestCase
             ]
         ]);
 
+        $page = new Page(['slug' => 'test']);
         $form = new Form([
             'fields' => [
                 'a' => [
                     'label' => 'A',
-                    'type' => 'text'
+                    'type' => 'text',
+                    'model' => $page
                 ],
                 'b' => [
                     'label' => 'B',
-                    'type' => 'text'
+                    'type' => 'text',
+                    'model' => $page
                 ]
             ],
             'values' => [

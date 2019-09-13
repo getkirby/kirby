@@ -37,6 +37,7 @@
 
   "error.access.login": "Неправильный логин",
   "error.access.panel": "У вас нет права доступа к панели",
+  "error.access.view": "У вас нет прав доступа к этой части панели",
 
   "error.avatar.create.fail": "Не удалось загрузить фотографию профиля",
   "error.avatar.delete.fail": "\u0410\u0432\u0430\u0442\u0430\u0440 (\u0444\u043e\u0442\u043e) \u043a \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0443 \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u0443\u0434\u0430\u043b\u0435\u043d",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Неверный конвертер \"{converter}\"",
 
+  "error.file.changeName.empty": "Название не может быть пустым",
   "error.file.changeName.permission":
     "У вас нет права поменять название \"{filename}\"",
   "error.file.duplicate": "Файл с названием \"{filename}\" уже есть",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u043f\u0430\u0440\u043e\u043b\u044c",
   "error.user.password.undefined": "У пользователя нет пароля",
   "error.user.role.invalid": "Впишите правильную роль",
-  "error.user.undefined": "\u0410\u043a\u043a\u0430\u0443\u043d\u0442 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
   "error.user.update.permission":
     "У вас нет права обновить пользователя \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Русский (Russian)",
 
   "upload": "Закачать",
+  "upload.error.cantMove": "Загруженный файл не может быть перемещен",
+  "upload.error.cantWrite": "Не получилось записать файл на диск",
+  "upload.error.default": "Не получилось загрузить файл",
+  "upload.error.extension": "Загрузка файла не удалась из за расширения",
+  "upload.error.formSize": "Загруженный файл больше чем MAX_FILE_SIZE настройка в форме",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "Загруженный файл больше чем upload_max_filesize настройка в php.ini",
+  "upload.error.noFile": "Файл не был загружен",
+  "upload.error.noFiles": "Файлы не были загружены",
+  "upload.error.partial": "Файл загружен только частично",
+  "upload.error.tmpDir": "Не хватает временной папки",
   "upload.errors": "Ошибка",
   "upload.progress": "Закачивается...",
 

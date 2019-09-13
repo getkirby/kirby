@@ -37,6 +37,7 @@
 
   "error.access.login": "Neplatné prihlásenie",
   "error.access.panel": "Nemáte povolenie na prístup do Panel-u",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Profilový obrázok sa nepodarilo nahrať",
   "error.avatar.delete.fail": "Profilový obrázok sa nepodarilo zmazať",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Neplatný converter \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Nemáte povolenie na zmenu názvu pre \"{filename}\"",
   "error.file.duplicate": "Súbor s názvom \"{filename}\" už existuje",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Heslá nie sú rovnaké",
   "error.user.password.undefined": "Užívateľ nemá heslo",
   "error.user.role.invalid": "Prosím, zadajte platnú rolu",
-  "error.user.undefined": "Užívateľa sa nepodarilo nájsť",
   "error.user.update.permission":
     "Nemáte povolenie na aktualizáciu užívateľa \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Slovensky",
 
   "upload": "Nahrať",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Chyba",
   "upload.progress": "Nahrávanie...",
 

@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import previewThumb from "@/helpers/previewThumb.js";
+
 export default {
   inheritAttrs: false,
   props: {
@@ -70,31 +72,7 @@ export default {
   },
   computed: {
     imageOptions() {
-      if (!this.image) {
-        return false;
-      }
-
-      let src    = null;
-      let srcset = null;
-
-      if (this.image.list) {
-        src    = this.image.list.url;
-        srcset = this.image.list.srcset;
-      } else {
-        src    = this.image.url;
-        srcset = this.image.srcset;
-      }
-
-      if (!src) {
-        return false;
-      }
-
-      return {
-        src: src,
-        srcset: srcset,
-        back: this.image.back || "black",
-        cover: this.image.cover
-      };
+      return previewThumb(this.image);
     }
   }
 };

@@ -33,6 +33,12 @@ return [
             return $this->toUsers($value);
         },
     ],
+    'computed' => [
+        /**
+         * Unset inherited computed
+         */
+        'default' => null
+    ],
     'methods' => [
         'userResponse' => function ($user) {
             return $user->panelPickerData([

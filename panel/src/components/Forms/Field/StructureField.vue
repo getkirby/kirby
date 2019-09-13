@@ -359,6 +359,7 @@ export default {
           return date.isValid() ? date.format(format) : "";
         }
         case "tags":
+        case "multiselect":
           return value
             .map(item => {
               return item.text;
