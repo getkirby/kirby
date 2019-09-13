@@ -174,7 +174,7 @@ class Api
 
         $output = $this->route->action()->call($this, ...$this->route->arguments());
 
-        if (is_object($output) === true) {
+        if (is_object($output) === true && is_a($output, 'Kirby\\Http\\Response') !== true) {
             return $this->resolve($output)->toResponse();
         }
 
@@ -690,7 +690,14 @@ class Api
         ];
 
         if (empty($files) === true) {
-            throw new Exception(t('upload.error.noFiles'));
+            $postMaxSize       = Str::toBytes(ini_get('post_max_size'));
+            $uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
+
+            if ($postMaxSize < $uploadMaxFileSize) {
+                throw new Exception(t('upload.error.iniPostSize'));
+            } else {
+                throw new Exception(t('upload.error.noFiles'));
+            }
         }
 
         foreach ($files as $upload) {

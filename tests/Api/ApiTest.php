@@ -3,6 +3,7 @@
 namespace Kirby\Api;
 
 use stdClass;
+use Kirby\Cms\Response;
 use PHPUnit\Framework\TestCase;
 
 class MockModel
@@ -62,20 +63,55 @@ class ApiTest extends TestCase
         $api = new Api([
             'routes' => [
                 [
-                    'pattern' => 'test',
+                    'pattern' => 'testScalar',
                     'method'  => 'POST',
                     'action'  => function () {
                         return $this->requestQuery('foo');
                     }
+                ],
+                [
+                    'pattern' => 'testModel',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        return $this->model('test', 'Awesome test model as string, yay');
+                    }
+                ],
+                [
+                    'pattern' => 'testResponse',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        return new Response('test', 'text/plain', 201);
+                    }
+                ]
+            ],
+            'models' => [
+                'test' => [
+                    'fields' => [
+                        'value' => function ($model) {
+                            return $model;
+                        }
+                    ]
                 ]
             ]
         ]);
 
-        $result = $api->call('test', 'POST', [
+        $result = $api->call('testScalar', 'POST', [
             'query' => ['foo' => 'bar']
         ]);
-
         $this->assertEquals('bar', $result);
+
+        $result = $api->call('testModel', 'POST');
+        $this->assertEquals([
+            'code'   => 200,
+            'data'   => [
+                'value' => 'Awesome test model as string, yay'
+            ],
+            'status' => 'ok',
+            'type'   => 'model'
+        ], $result);
+
+        $result = $api->call('testResponse', 'POST');
+        $this->assertEquals(new Response('test', 'text/plain', 201), $result);
     }
 
     public function testCollections()

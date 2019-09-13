@@ -37,7 +37,7 @@
 
   "error.access.login": "Geçersiz giriş",
   "error.access.panel": "Panele erişim izniniz yok",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "Panelin bu bölümüne erişemezsiniz",
 
   "error.avatar.create.fail": "Profil resmi yüklenemedi",
   "error.avatar.delete.fail": "Profil resmi silinemedi",
@@ -52,7 +52,7 @@
 
   "error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
 
-  "error.file.changeName.empty": "The name must not be empty",
+  "error.file.changeName.empty": "İsim boş olmamalıdır",
   "error.file.changeName.permission":
     "\"{filename}\" adını değiştiremezsiniz",
   "error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
@@ -413,16 +413,17 @@
   "translation.name": "T\u00fcrk\u00e7e",
 
   "upload": "Yükle",
-  "upload.error.cantMove": "The uploaded file could not be moved",
-  "upload.error.cantWrite": "Failed to write file to disk",
-  "upload.error.default": "The file could not be uploaded",
-  "upload.error.extension": "File upload stopped by extension",
-  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
-  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-  "upload.error.noFile": "No file was uploaded",
-  "upload.error.noFiles": "No files were uploaded",
-  "upload.error.partial": "The uploaded file was only partially uploaded",
-  "upload.error.tmpDir": "Missing a temporary folder",
+  "upload.error.cantMove": "Yüklenen dosya taşınamadı",
+  "upload.error.cantWrite": "Dosya diske yazılamadı",
+  "upload.error.default": "Dosya yüklenemedi",
+  "upload.error.extension": "Dosya yükleme uzantısı tarafından durduruldu",
+  "upload.error.formSize": "Yüklenen dosya, formda belirtilen MAX_FILE_SIZE yönergesini aşıyor",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "Yüklenen dosya php.ini içindeki upload_max_filesize yönergesini aşıyor",
+  "upload.error.noFile": "Dosya yüklenmedi",
+  "upload.error.noFiles": "Dosyalar yüklenmedi",
+  "upload.error.partial": "Yüklenen dosya sadece kısmen yüklendi",
+  "upload.error.tmpDir": "Geçici klasör eksik",
   "upload.errors": "Hata",
   "upload.progress": "Yükleniyor...",
 
