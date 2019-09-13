@@ -219,10 +219,12 @@ return function (App $app) {
                 return new Structure(Yaml::decode($field->value), $field->parent());
             } catch (Exception $e) {
                 if ($field->parent() === null) {
-                    throw new InvalidArgumentException('Invalid structure data for "' . $field->key() . '" field');
+                    $message = 'Invalid structure data for "' . $field->key() . '" field';
                 } else {
-                    throw new InvalidArgumentException('Invalid structure data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"');
+                    $message = 'Invalid structure data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
                 }
+
+                throw new InvalidArgumentException($message);
             }
         },
 
