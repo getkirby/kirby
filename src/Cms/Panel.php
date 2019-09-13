@@ -24,6 +24,18 @@ use Throwable;
  */
 class Panel
 {
+    public static function customCss(App $kirby)
+    {
+        if ($css = $kirby->option('panel.css')) {
+            $asset = asset($css);
+
+            if ($asset->exists() === true) {
+                return $asset->url() . '?' . $asset->modified();
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Links all dist files in the media folder
@@ -85,6 +97,7 @@ class Panel
             'kirby'     => $kirby,
             'config'    => $kirby->option('panel'),
             'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
+            'customCss' => static::customCss($kirby),
             'pluginCss' => $plugins->url('css'),
             'pluginJs'  => $plugins->url('js'),
             'panelUrl'  => $uri->path()->toString(true) . '/',
