@@ -197,7 +197,7 @@ class Collection extends BaseCollection
     /**
      * Returns a Collection without the given element(s)
      *
-     * @param  mixxed[] $keys any number of keys, passed as individual arguments
+     * @param  mixed[] $keys any number of keys, passed as individual arguments
      * @return Kirby\Cms\Collection
      */
     public function not(...$keys)

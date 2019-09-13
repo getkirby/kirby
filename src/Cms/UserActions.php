@@ -198,6 +198,9 @@ trait UserActions
             } else {
                 $languageCode = null;
             }
+            
+            // add the user to users collection
+            $user->kirby()->users()->add($user);
 
             // write the user data
             return $user->save($user->content()->toArray(), $languageCode);
@@ -241,6 +244,9 @@ trait UserActions
             if (Dir::remove($user->root()) !== true) {
                 throw new LogicException('The user directory for "' . $user->email() . '" could not be deleted');
             }
+            
+            // remove the user from users collection
+            $user->kirby()->users()->remove($user);
 
             return true;
         });

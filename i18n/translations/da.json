@@ -37,6 +37,7 @@
 
   "error.access.login": "Ugyldigt log ind",
   "error.access.panel": "Du har ikke adgang til panelet",
+  "error.access.view": "Du har ikke adgang til denne del af panelet",
 
   "error.avatar.create.fail": "Profilbilledet kunne blev ikke uploadet ",
   "error.avatar.delete.fail": "Profilbilledet kunne ikke slettes",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Ugyldig converter \"{converter}\"",
 
+  "error.file.changeName.empty": "Navn kan ikke efterlades tomt",
   "error.file.changeName.permission":
     "Du har ikke tilladelse til at ændre navnet på filen \"{filename}\"",
   "error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
   "error.user.password.undefined": "Brugeren har ikke en adgangskode",
   "error.user.role.invalid": "Indtast venligst en gyldig rolle",
-  "error.user.undefined": "Brugeren kunne ikke findes",
   "error.user.update.permission":
     "Du har ikke tilladelse til at opdatere brugeren \"{name}\"",
 
@@ -183,9 +184,9 @@
   "error.validation.contains":
     "Indtast venligst en værdi der indeholder \"{needle}\"",
   "error.validation.date": "Indtast venligst en gyldig dato",
-  "error.validation.date.after": "Please enter a date after {date}",
-  "error.validation.date.before": "Please enter a date before {date}",
-  "error.validation.date.between": "Please enter a date between {min} and {max}",
+  "error.validation.date.after": "Indtast venligst en dato efter {date}",
+  "error.validation.date.before": "Indtast venligst en dato før {date}",
+  "error.validation.date.between": "Indtast venligst en dato imellem {min} og {max}",
   "error.validation.denied": "Venligst afvis",
   "error.validation.different": "Værdien må ikke være \"{other}\"",
   "error.validation.email": "Indtast venligst en gyldig email adresse",
@@ -265,7 +266,7 @@
   "language.direction.ltr": "Venstre mod højre",
   "language.direction.rtl": "Højre mod venstre",
   "language.locale": "PHP locale string",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Du benytter en brugerdefineret sprogopsætning. Rediger venligst dette i sprogfilen i /site/languages",
   "language.name": "Navn",
   "language.updated": "Sproget er blevet opdateret",
 
@@ -412,6 +413,17 @@
   "translation.name": "Dansk",
 
   "upload": "Upload",
+  "upload.error.cantMove": "Den uploadede fil kunne ikke flyttes",
+  "upload.error.cantWrite": "Kunne ikke skrive fil til disk",
+  "upload.error.default": "Filen kunne ikke uploades",
+  "upload.error.extension": "Upload af filen blev stoppet af dens type",
+  "upload.error.formSize": "Filen overskrider MAX_FILE_SIZE direktivet der er specificeret for formularen",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "FIlen overskrider upload_max_filesize direktivet i php.ini",
+  "upload.error.noFile": "Ingen fil blev uploadet",
+  "upload.error.noFiles": "Ingen filer blev uploadet",
+  "upload.error.partial": "Den uploadede fil blev kun delvist uploadet",
+  "upload.error.tmpDir": "Der mangler en midlertidig mappe",
   "upload.errors": "Fejl",
   "upload.progress": "Uploader...",
 

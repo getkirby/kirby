@@ -26,14 +26,18 @@
       slot="footer"
       ref="dropdown"
       @open="onOpen"
-      @close="q = null"
+      @keydown.native.esc.stop="close"
     >
       <k-dropdown-item
         v-if="search"
         icon="search"
         class="k-multiselect-search"
       >
-        <input ref="search" v-model="q">
+        <input
+          ref="search"
+          v-model="q"
+          @keydown.esc.stop="escape"
+        >
       </k-dropdown-item>
 
       <div class="k-multiselect-options">
@@ -156,12 +160,10 @@ export default {
     this.onInvalid();
     this.$events.$on("click", this.close);
     this.$events.$on("keydown.cmd.s", this.close);
-    this.$events.$on("keydown.esc", this.escape);
   },
   destroyed() {
     this.$events.$off("click", this.close);
     this.$events.$off("keydown.cmd.s", this.close);
-    this.$events.$off("keydown.esc", this.escape);
   },
   methods: {
     add(option) {

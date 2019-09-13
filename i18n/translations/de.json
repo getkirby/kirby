@@ -37,6 +37,7 @@
 
   "error.access.login": "Ungültige Zugangsdaten",
   "error.access.panel": "Du hast keinen Zugang zum Panel",
+  "error.access.view": "Du hast keinen Zugriff auf diesen Teil des Panels",
 
   "error.avatar.create.fail": "Das Profilbild konnte nicht hochgeladen werden",
   "error.avatar.delete.fail": "Das Profilbild konnte nicht gel\u00f6scht werden",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
 
+  "error.file.changeName.empty": "Bitte gib einen Namen an",
   "error.file.changeName.permission":
     "Du darfst den Dateinamen von \"{filename}\" nicht ändern",
   "error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Die Passwörter stimmen nicht überein",
   "error.user.password.undefined": "Der Benutzer hat kein Passwort",
   "error.user.role.invalid": "Bitte gib eine gültige Rolle an",
-  "error.user.undefined": "Der Benutzer wurde nicht gefunden",
   "error.user.update.permission":
     "Du darfst den den Benutzer \"{name}\" nicht editieren",
 
@@ -412,6 +413,17 @@
   "translation.name": "Deutsch",
 
   "upload": "Hochladen",
+  "upload.error.cantMove": "Die Datei konnte nicht an ihren Zielort bewegt werden",
+  "upload.error.cantWrite": "Die Datei konnte nicht auf der Festplatte gespeichert werden",
+  "upload.error.default": "Die Datei konnte nicht hochgeladen werden",
+  "upload.error.extension": "Der Dateiupload wurde durch eine Erweiterung verhindert",
+  "upload.error.formSize": "Die Datei ist größer als die MAX_FILE_SIZE Einstellung im Formular",
+  "upload.error.iniPostSize": "Die Datei ist größer als die post_max_size Einstellung in der php.ini",
+  "upload.error.iniSize": "Die Datei ist größer als die upload_max_filesize Einstellung in der php.ini",
+  "upload.error.noFile": "Es wurde keine Datei hochgeladen",
+  "upload.error.noFiles": "Es wurden keine Dateien hochgeladen",
+  "upload.error.partial": "Die Datei wurde nur teilweise hochgeladen",
+  "upload.error.tmpDir": "Der temporäre Ordner für den Dateiupload existiert leider nicht",
   "upload.errors": "Fehler",
   "upload.progress": "Hochladen …",
 

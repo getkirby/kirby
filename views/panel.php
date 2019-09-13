@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="<?= $assetUrl ?>/css/app.css">
   <link rel="stylesheet" href="<?= $pluginCss ?>">
 
-  <?php if (isset($config['css'])) : ?>
-    <link rel="stylesheet" href="<?= Url::to($config['css']) ?>">
+  <?php if ($customCss) : ?>
+  <link rel="stylesheet" href="<?= $customCss ?>">
   <?php endif ?>
 
   <link rel="apple-touch-icon" href="<?= $assetUrl ?>/apple-touch-icon.png" />
@@ -20,7 +20,6 @@
   <base href="<?= $panelUrl ?>">
 </head>
 <body>
-  <?= $icons ?>
   <div id="app"></div>
 
   <noscript>

@@ -42,7 +42,7 @@ class Str
         '/⁸|₈/' => '8',
         '/⁹|₉/' => '9',
         '/À|Á|Â|Ã|Å|Ǻ|Ā|Ă|Ą|Ǎ|Ä|A/' => 'A',
-        '/à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª|æ|ǽ|ä|a/' => 'a',
+        '/à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª|æ|ǽ|ä|a|а/' => 'a',
         '/Б/' => 'B',
         '/б/' => 'b',
         '/Ç|Ć|Ĉ|Ċ|Č|Ц/' => 'C',
@@ -60,7 +60,7 @@ class Str
         '/Ĥ|Ħ|Х/' => 'H',
         '/ĥ|ħ|х/' => 'h',
         '/Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ|И/' => 'I',
-        '/ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı|и/' => 'i',
+        '/ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı|и|i̇/' => 'i',
         '/Ĵ|Й/' => 'J',
         '/ĵ|й/' => 'j',
         '/Ķ|К/' => 'K',
@@ -72,7 +72,7 @@ class Str
         '/Ñ|Ń|Ņ|Ň|Н/' => 'N',
         '/ñ|ń|ņ|ň|ŉ|н/' => 'n',
         '/Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ|Ö|O/' => 'O',
-        '/ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|ö|o/' => 'o',
+        '/ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|ö|o|о/' => 'o',
         '/П/' => 'P',
         '/п/' => 'p',
         '/Ŕ|Ŗ|Ř|Р/' => 'R',
@@ -897,6 +897,32 @@ class Str
     }
 
     /**
+     * Converts a filesize string with shortcuts
+     * like M, G or K to an integer value
+     *
+     * @return int
+     */
+    public static function toBytes($size): int
+    {
+        $size = trim($size);
+        $last = strtolower($size[strlen($size)-1] ?? null);
+        $size = (int)$size;
+
+        switch ($last) {
+            case 'g':
+                $size *= 1024;
+                // no break
+            case 'm':
+                $size *= 1024;
+                // no break
+            case 'k':
+                $size *= 1024;
+        }
+
+        return $size;
+    }
+
+    /**
      * Convert the string to the given type
      *
      * @param string $string
@@ -1020,7 +1046,7 @@ class Str
     {
         return preg_replace_callback('|([^\s])\s+([^\s]+)\s*$|u', function ($matches) {
             if (static::contains($matches[2], '-')) {
-                return $matches[1] . ' ' . str_replace('-', '&#8209;', $matches[2]);
+                return $matches[1] . '&nbsp;' . str_replace('-', '&#8209;', $matches[2]);
             } else {
                 return $matches[1] . '&nbsp;' . $matches[2];
             }

@@ -296,6 +296,89 @@ class PageSortTest extends TestCase
         $this->assertEquals(20121212, $page->createNum());
     }
 
+    public function testCreateDateBasedNumWithDateHandler()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'date.handler' => 'strftime'
+            ]
+        ]);
+
+        // without date
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'num' => 'date'
+            ]
+        ]);
+
+        $this->assertEquals(date('Ymd'), $page->createNum());
+
+        // with date field
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'num' => 'date',
+            ],
+            'content' => [
+                'date' => '2012-12-12'
+            ]
+        ]);
+
+        $this->assertEquals(20121212, $page->createNum());
+    }
+
+    public function testCreateNumWithTranslations()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'num' => 'date'
+            ],
+            'translations' => [
+                [
+                    'code' => 'en',
+                    'content' => [
+                        'date' => '2019-01-01',
+                    ]
+                ],
+                [
+                    'code' => 'de',
+                    'content' => [
+                        'date' => '2018-01-01',
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(20190101, $page->createNum());
+
+        $app->setCurrentLanguage('de');
+        $app->setCurrentTranslation('de');
+
+        $this->assertEquals(20190101, $page->createNum());
+    }
+
     public function testCreateCustomNum()
     {
         // valid

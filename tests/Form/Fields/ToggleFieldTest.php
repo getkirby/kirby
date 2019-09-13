@@ -9,7 +9,7 @@ class ToggleFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('toggle');
+        $field = $this->field('toggle');
 
         $this->assertEquals('toggle', $field->type());
         $this->assertEquals('toggle', $field->name());
@@ -19,7 +19,7 @@ class ToggleFieldTest extends TestCase
 
     public function testText()
     {
-        $field = new Field('toggle', [
+        $field = $this->field('toggle', [
             'text' => 'Yay'
         ]);
 
@@ -37,18 +37,18 @@ class ToggleFieldTest extends TestCase
 
         I18n::$locale = 'en';
 
-        $field = new Field('toggle', $props);
+        $field = $this->field('toggle', $props);
         $this->assertEquals('Yay', $field->text());
 
         I18n::$locale = 'de';
 
-        $field = new Field('toggle', $props);
+        $field = $this->field('toggle', $props);
         $this->assertEquals('Ja', $field->text());
     }
 
     public function testTextToggle()
     {
-        $field = new Field('toggle', [
+        $field = $this->field('toggle', [
             'text' => [
                 'Yes',
                 'No'
@@ -69,12 +69,12 @@ class ToggleFieldTest extends TestCase
 
         I18n::$locale = 'en';
 
-        $field = new Field('toggle', $props);
+        $field = $this->field('toggle', $props);
         $this->assertEquals(['Yes', 'No'], $field->text());
 
         I18n::$locale = 'de';
 
-        $field = new Field('toggle', $props);
+        $field = $this->field('toggle', $props);
         $this->assertEquals(['Ja', 'Nein'], $field->text());
     }
 }

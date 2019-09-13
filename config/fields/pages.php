@@ -47,6 +47,12 @@ return [
             return $this->toPages($value);
         },
     ],
+    'computed' => [
+        /**
+         * Unset inherited computed
+         */
+        'default' => null
+    ],
     'methods' => [
         'pageResponse' => function ($page) {
             return $page->panelPickerData([

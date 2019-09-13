@@ -8,7 +8,7 @@ class RangeFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('range');
+        $field = $this->field('range');
 
         $this->assertEquals('range', $field->type());
         $this->assertEquals('range', $field->name());
@@ -23,7 +23,7 @@ class RangeFieldTest extends TestCase
 
     public function testMin()
     {
-        $field = new Field('range', [
+        $field = $this->field('range', [
             'value' => 1,
             'min'   => 2
         ]);
@@ -34,7 +34,7 @@ class RangeFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = new Field('range', [
+        $field = $this->field('range', [
             'value' => 1,
             'max'   => 0
         ]);

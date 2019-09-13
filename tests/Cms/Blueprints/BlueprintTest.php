@@ -234,4 +234,35 @@ class BlueprintTest extends TestCase
         $this->assertArrayHasKey('test', $blueprint->fields());
         $this->assertArrayNotHasKey('child-field', $blueprint->fields());
     }
+    
+    public function testInvalidSectionType()
+    {
+        $blueprint = new Blueprint([
+            'model' => 'test',
+            'sections' => [
+                'main' => [
+                    'type' => [
+                        'headline' => [
+                            'label' => 'Headline',
+                            'name'  => 'headline',
+                            'type'  => 'text',
+                            'width' => '1/1'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        
+        try {
+            $sections = $blueprint->tab('main')['columns'][0]['sections'];
+        } catch (\Exception $e) {
+            $this->assertNull($e->getMessage(), 'Failed to get sections.');
+        }
+        
+        $this->assertEquals(true, is_array($sections));
+        $this->assertEquals(1, sizeof($sections));
+        $this->assertEquals(true, array_key_exists('main', $sections));
+        $this->assertEquals(true, array_key_exists('headline', $sections['main']));
+        $this->assertEquals('Invalid section type for section "main"', $sections['main']['headline']);
+    }
 }

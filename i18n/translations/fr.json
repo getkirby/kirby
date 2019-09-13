@@ -37,8 +37,9 @@
 
   "error.access.login": "Identifiant incorrect",
   "error.access.panel": "Vous n’êtes pas autorisé à accéder au Panel",
+  "error.access.view": "Vous n’êtes pas autorisé à accéder à cette section du Panel",
 
-  "error.avatar.create.fail": "L’image du profil n’a pas pu être transférée",
+  "error.avatar.create.fail": "L’image du profil n’a pu être transférée",
   "error.avatar.delete.fail": "L’image du profil n’a pu être supprimée",
   "error.avatar.dimensions.invalid":
     "Veuillez choisir une image de profil de largeur et hauteur inférieures à 3000 pixels",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Convertisseur «&nbsp;{converter}&nbsp;» incorrect",
 
+  "error.file.changeName.empty": "Le nom ne peut être vide",
   "error.file.changeName.permission":
     "Vous n’êtes pas autorisé à modifier le nom de «&nbsp;{filename}&nbsp;»",
   "error.file.duplicate": "Un fichier nommé «&nbsp;{filename}&nbsp;» existe déjà",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Les mots de passe ne sont pas identiques",
   "error.user.password.undefined": "Cet utilisateur n’a pas de mot de passe",
   "error.user.role.invalid": "Veuillez saisir un rôle valide",
-  "error.user.undefined": "L’utilisateur est introuvable",
   "error.user.update.permission":
     "Vous n’êtes pas autorisé à modifier l’utilisateur « {name} »",
 
@@ -265,7 +266,7 @@
   "language.direction.ltr": "De gauche à droite",
   "language.direction.rtl": "De droite à gauche",
   "language.locale": "Locales PHP",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Vous utilisez une Locale PHP personnalisée. Veuillez la modifier dans le fichier de langue situé dans /site/languages",
   "language.name": "Nom",
   "language.updated": "La langue a été mise à jour",
 
@@ -412,6 +413,17 @@
   "translation.name": "Français",
 
   "upload": "Transférer",
+  "upload.error.cantMove": "Le fichier transféré n’a pu être déplacé",
+  "upload.error.cantWrite": "Le fichier n’a pu être écrit sur le disque",
+  "upload.error.default": "Le fichier n’a pu être transféré",
+  "upload.error.extension": "Le transfert de fichier a été stoppé par une extension",
+  "upload.error.formSize": "Le fichier transféré excède la directive MAX_FILE_SIZE spécifiée dans le formulaire",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "Le fichier transféré excède la directive MAX_FILE_SIZE spécifiée dans php.ini",
+  "upload.error.noFile": "Aucun fichier n’a été transféré",
+  "upload.error.noFiles": "Aucun fichier n’a été transféré",
+  "upload.error.partial": "Le fichier n’a été que partiellement transféré",
+  "upload.error.tmpDir": "Un dossier temporaire est manquant",
   "upload.errors": "Erreur",
   "upload.progress": "Transfert en cours…",
 

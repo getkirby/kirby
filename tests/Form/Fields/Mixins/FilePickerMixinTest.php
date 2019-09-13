@@ -31,7 +31,7 @@ class FilePickerMixinTest extends TestCase
             ]
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 
@@ -65,7 +65,7 @@ class FilePickerMixinTest extends TestCase
             ]
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page->file('b.jpg')
         ]);
 
@@ -99,7 +99,7 @@ class FilePickerMixinTest extends TestCase
             ]
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $user
         ]);
 
@@ -132,7 +132,7 @@ class FilePickerMixinTest extends TestCase
             ]
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $site
         ]);
 
@@ -175,7 +175,7 @@ class FilePickerMixinTest extends TestCase
             ]
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $site->find('test'),
             'query' => 'site.files'
         ]);
@@ -219,7 +219,7 @@ class FilePickerMixinTest extends TestCase
             ],
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page,
         ]);
 

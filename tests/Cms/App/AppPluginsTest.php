@@ -304,25 +304,6 @@ class AppPluginsTest extends TestCase
         $this->assertEquals(['foo' => 'bar'], $kirby->controller('test'));
     }
 
-    public function testfileModel()
-    {
-        $kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'fileModels' => [
-                'dummy' => DummyFile::class
-            ]
-        ]);
-
-        $user = File::factory([
-            'filename' => 'test',
-            'model'    => 'dummy'
-        ]);
-
-        $this->assertInstanceOf(DummyFile::class, $user);
-    }
-
     public function testFieldMethod()
     {
         $kirby = new App([
@@ -354,9 +335,11 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
+        $page  = new Page(['slug' => 'test']);
         $field = new FormField('dummy', [
             'name'  => 'dummy',
-            'peter' => 'shaw'
+            'peter' => 'shaw',
+            'model' => $page
         ]);
 
         $this->assertInstanceOf(FormField::class, $field);

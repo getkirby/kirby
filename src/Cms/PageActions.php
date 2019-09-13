@@ -107,6 +107,9 @@ trait PageActions
                 if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
                     throw new LogicException('The page directory cannot be moved');
                 }
+                
+                // remove from the siblings
+                $oldPage->parentModel()->children()->remove($oldPage);
 
                 Dir::remove($oldPage->mediaRoot());
             }
@@ -175,7 +178,7 @@ trait PageActions
 
     protected function changeStatusToDraft()
     {
-        $page = $this->commit('changeStatus', [$this, 'draft'], function ($page) {
+        $page = $this->commit('changeStatus', [$this, 'draft', null], function ($page) {
             return $page->unpublish();
         });
 
@@ -216,7 +219,7 @@ trait PageActions
             return $this;
         }
 
-        $page = $this->commit('changeStatus', [$this, 'unlisted'], function ($page) {
+        $page = $this->commit('changeStatus', [$this, 'unlisted', null], function ($page) {
             return $page->publish()->changeNum(null);
         });
 
@@ -369,6 +372,13 @@ trait PageActions
                 }
             }
         }
+        
+        // add copy to siblings
+        if ($isDraft === true) {
+            $parentModel->drafts()->append($copy->id(), $copy);
+        } else {
+            $parentModel->children()->append($copy->id(), $copy);
+        }
 
         return $copy;
     }
@@ -463,7 +473,10 @@ trait PageActions
             case 'date':
             case 'datetime':
                 $format = $mode === 'date' ? 'Ymd' : 'YmdHi';
-                return $this->date()->toDate($format, 'now');
+                $lang   = $this->kirby()->defaultLanguage() ?? null;
+                $field  = $this->content($lang)->get('date');
+                $date   = $field->isEmpty() ? 'now' : $field;
+                return date($format, strtotime($date));
                 break;
             case 'default':
 

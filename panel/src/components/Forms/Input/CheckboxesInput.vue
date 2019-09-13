@@ -31,7 +31,7 @@ export default {
     options: Array,
     required: Boolean,
     value: {
-      type: Array,
+      type: [Array, Object],
       default() {
         return [];
       }
@@ -79,7 +79,17 @@ export default {
       this.focus();
     },
     valueToArray(value) {
-      return Array.isArray(value) ? value : String(value).split(",");
+      if (Array.isArray(value) === true) {
+        return value;
+      }
+
+      if (typeof value === "string") {
+        return String(value).split(",");
+      }
+
+      if (typeof value === "object") {
+        return Object.values(value);
+      }
     },
   },
   validations() {
