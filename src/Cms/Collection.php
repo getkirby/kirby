@@ -113,7 +113,7 @@ class Collection extends BaseCollection
             } else {
                 $this->data[] = $args[0];
             }
-        } elseif (count($args) === 2) {
+        } elseif (count($args) > 1) {
             $this->set($args[0], $args[1]);
         }
 
