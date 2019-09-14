@@ -40,7 +40,7 @@
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="go('today')">{{ $t("today") }}</k-button>
+            <k-button @click="go('current-month')">{{ $t("field.date.month.current") }}</k-button>
           </td>
         </tr>
       </tfoot>
@@ -183,7 +183,7 @@ export default {
       this.set(prev);
     },
     go(year, month) {
-      if (year === "today") {
+      if (year === "current-month") {
         year = this.today.year();
         month = this.today.month();
       }

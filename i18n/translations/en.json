@@ -219,6 +219,7 @@
   "error.validation.time": "Please enter a valid time",
   "error.validation.url": "Please enter a valid URL",
 
+  "field.date.month.current": "Current month",
   "field.files.empty": "No files selected yet",
   "field.pages.empty": "No pages selected yet",
   "field.structure.delete.confirm": "Do you really want to delete this row?",
