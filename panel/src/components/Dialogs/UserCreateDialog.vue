@@ -90,30 +90,31 @@ export default {
       };
     },
     open() {
-      this.$api.roles.options()
-        .then(roles => {
-          this.roles = roles;
-
-          // don't let non-admins create admins
-          if (this.$user.role.name !== "admin") {
-            this.roles = this.roles.filter(role => {
-              return role.value !== "admin";
-            });
-          }
-
-          // load all translations
-          this.$api.translations.options().then(languages => {
-            this.languages = languages;
-            this.$refs.dialog.open();
-          })
-          .catch (error => {
-            this.$store.dispatch('notification/error', error);
+      // load and filter roles
+      const roles = this.$api.roles.options().then(roles => {
+        this.roles = roles;
+        
+        // don't let non-admins create admins
+        if (this.$user.role.name !== "admin") {
+          this.roles = this.roles.filter(role => {
+            return role.value !== "admin";
           });
-
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+        }
+      }).catch(error => {
+        this.$store.dispatch('notification/error', error);
+      });
+      
+      // load all translations
+      const translations = this.$api.translations.options().then(languages => {
+        this.languages = languages;
+      }).catch (error => {
+        this.$store.dispatch('notification/error', error);
+      });
+      
+      // open dialog when all API requests finished
+      Promise.all([roles, translations]).then(() => {
+        this.$refs.dialog.open();
+      });
     },
     reset() {
       this.user = this.emptyForm();
