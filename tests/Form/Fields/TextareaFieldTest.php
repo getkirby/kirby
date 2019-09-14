@@ -2,8 +2,6 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class TextareaFieldTest extends TestCase
 {
     public function testDefaultProps()
@@ -127,6 +125,18 @@ class TextareaFieldTest extends TestCase
         ]);
 
         $this->assertFalse($field->uploads());
+    }
+
+    public function testUploadsParent()
+    {
+        $field = $this->field('textarea', [
+            'value' => 'test',
+            'uploads' => [
+                'parent' => 'page.parent'
+            ]
+        ]);
+
+        $this->assertEquals(['parent' => 'page.parent', 'accept' => '*'], $field->uploads());
     }
 
     public function testUploadsTemplate()
