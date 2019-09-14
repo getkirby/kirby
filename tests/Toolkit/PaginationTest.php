@@ -181,6 +181,30 @@ class PaginationTest extends TestCase
         $this->assertEquals(10, $pagination->offset());
     }
 
+    public function testHasCurrentPage()
+    {
+        $pagination = new Pagination([
+            'page'  => 5,
+            'limit' => 1,
+            'total' => 10
+        ]);
+        $this->assertTrue($pagination->hasCurrentPage());
+
+        $pagination = new Pagination([
+            'page'  => 42,
+            'limit' => 1,
+            'total' => 10
+        ]);
+        $this->assertFalse($pagination->hasCurrentPage());
+
+        $pagination = new Pagination([
+            'page'  => 0,
+            'limit' => 1,
+            'total' => 10
+        ]);
+        $this->assertFalse($pagination->hasCurrentPage());
+    }
+
     public function testHasPage()
     {
         $pagination = new Pagination([

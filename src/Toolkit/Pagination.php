@@ -254,6 +254,18 @@ class Pagination
     }
 
     /**
+     * Checks if the current page exists
+     * (returns false if the provided page has
+     * overflowed the range of pages)
+     *
+     * @return boolean
+     */
+    public function hasCurrentPage(): bool
+    {
+        return $this->hasPage($this->page);
+    }
+
+    /**
      * Checks if the given page exists
      *
      * @return boolean
