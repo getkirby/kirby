@@ -43,6 +43,9 @@ export default {
         context.dispatch("run");
       }
     },
+    clear(context) {
+      context.commit("CLEAR");
+    },
     remove(context, beat) {
       context.commit("REMOVE", beat);
 
