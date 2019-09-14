@@ -139,6 +139,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("form/current", null);
     this.check();
   },
   methods: {
