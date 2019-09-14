@@ -232,13 +232,13 @@ class File extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string $type
      * @param bool $absolute
      * @return string
      */
-    public function dragText($type = 'kirbytext', bool $absolute = false): string
+    public function dragText(bool $absolute = false): string
     {
-        $url = $absolute ? $this->id() : $this->filename();
+        $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
+        $url  = $absolute ? $this->id() : $this->filename();
 
         switch ($type) {
             case 'kirbytext':

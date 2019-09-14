@@ -407,8 +407,10 @@ class Page extends ModelWithContent
      * @internal
      * @return string
      */
-    public function dragText($type = 'kirbytext'): string
+    public function dragText(): string
     {
+        $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
+
         switch ($type) {
             case 'kirbytext':
                 return '(link: ' . $this->id() . ' text: ' . $this->title() . ')';

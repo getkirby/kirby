@@ -70,9 +70,6 @@ return [
 
             return null;
         },
-        'dragTextType' => function () {
-            return (option('panel.kirbytext') ?? true) ? 'kirbytext' : 'markdown';
-        },
         'parent' => function () {
             return $this->parentModel();
         },
@@ -104,7 +101,7 @@ return [
                 $image = $file->panelImage($this->image);
 
                 $data[] = [
-                    'dragText' => $file->dragText($this->dragTextType, $dragTextAbsolute),
+                    'dragText' => $file->dragText($dragTextAbsolute),
                     'filename' => $file->filename(),
                     'id'       => $file->id(),
                     'text'     => $file->toString($this->text),
