@@ -1,8 +1,6 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 
 return [
     'mixins' => [

@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Toolkit\Str;
-
 return [
     'props' => [
         /**
@@ -21,6 +19,14 @@ return [
 
                 if (!$parent) {
                     throw new Exception('The parent for the query "' . $query . '" cannot be found in the section "' . $this->name() . '"');
+                }
+
+                if (
+                    is_a($parent, 'Kirby\Cms\Page') === false &&
+                    is_a($parent, 'Kirby\Cms\Site') === false &&
+                    is_a($parent, 'Kirby\Cms\User') === false
+                ) {
+                    throw new Exception('The parent for the section "' . $this->name() . '" has to be a page, site or user object');
                 }
             }
 
