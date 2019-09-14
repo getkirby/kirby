@@ -15,19 +15,27 @@ on:
     - features
 
 jobs:
-  php71:
-    name: PHP 7.1
+  run:    
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        php-versions: ['7.1', '7.2', '7.3']
+    name: PHP ${{ matrix.php-versions }}
     steps:
-    - name: Clone repository
-      uses: actions/checkout@v1
-
-    - name: Install Composer
-      uses: MilesChou/composer-action@master
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
       with:
-        args: install --ignore-platform-reqs
-    - name: Set up PHP 7.1
-      uses: ./.github/actions/php71
+        php-version: ${{ matrix.php-versions }}
+        extension-csv: mbstring, curl, ctype, gdlib, xdebug, apcu
+    - name: Check PHP Version
+      run: php -v
+    - name: Check Composer Version
+      run: composer -V
+    - name: Install composer
+      run: composer install --ignore-platform-reqs
+    - name: Check PHP Extensions
+      run: php -m  
     - name: Run PHPUnit
       run: phpunit
