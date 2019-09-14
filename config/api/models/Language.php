@@ -31,12 +31,14 @@ return [
     ],
     'type'  => Language::class,
     'views' => [
-        'compact' => [
+        'default' => [
             'code',
             'default',
+            'direction',
+            'locale',
             'name',
             'rules',
-            'direction'
+            'url'
         ]
     ]
 ];

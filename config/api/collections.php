@@ -35,7 +35,6 @@ return [
     'languages' => [
         'model' => 'language',
         'type'  => Languages::class,
-        'view'  => 'compact'
     ],
 
     /**

@@ -12,10 +12,12 @@ export default {
       state.all = languages.map(language => {
         return {
           code: language.code,
-          name: language.name,
           default: language.default,
           direction: language.direction,
-          rules: language.rules
+          locale: language.locale,
+          name: language.name,
+          rules: language.rules,
+          url: language.url
         };
       });
     },
