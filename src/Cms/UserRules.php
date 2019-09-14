@@ -81,6 +81,16 @@ class UserRules
             ]);
         }
 
+        // prevent non-admins making a user to admin
+        if (
+            $user->kirby()->user()->isAdmin() === false &&
+            $role === 'admin'
+        ) {
+            throw new PermissionException([
+                'key'  => 'user.changeRole.toAdmin'
+            ]);
+        }
+
         static::validRole($user, $role);
 
         if ($role !== 'admin' && $user->isLastAdmin() === true) {
