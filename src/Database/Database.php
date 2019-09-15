@@ -580,7 +580,7 @@ class Database
      * I.e. $db->users()->all()
      *
      * @param mixed $method
-     * @param null|mixed $arguments
+     * @param mixed $arguments
      */
     public function __call($method, $arguments = null)
     {

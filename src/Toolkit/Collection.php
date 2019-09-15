@@ -250,7 +250,7 @@ class Collection extends Iterator implements Countable
      * predefined filter methods.
      *
      * @param string $field
-     * @param array $args
+     * @param array ...$args
      * @return self
      */
     public function filterBy(string $field, ...$args)
@@ -630,8 +630,7 @@ class Collection extends Iterator implements Countable
     /**
      * Returns a Collection without the given element(s)
      *
-     * @param  args    any number of keys, passed as individual arguments
-     * @param array $keys
+     * @param string ...$keys any number of keys, passed as individual arguments
      * @return \Kirby\Toolkit\Collection
      */
     public function not(...$keys)
@@ -657,7 +656,7 @@ class Collection extends Iterator implements Countable
     /**
      * Add pagination
      *
-     * @param array $arguments
+     * @param array ...$arguments
      * @return \Kirby\Toolkit\Collection a sliced set of data
      */
     public function paginate(...$arguments)
@@ -1031,7 +1030,7 @@ class Collection extends Iterator implements Countable
     /**
      * Alias for $this->not()
      *
-     * @param  list    any number of keys, passed as individual arguments
+     * @param  string ...$keys any number of keys, passed as individual arguments
      * @return \Kirby\Toolkit\Collection
      */
     public function without(...$keys)

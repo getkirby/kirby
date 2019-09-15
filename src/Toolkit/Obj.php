@@ -96,7 +96,7 @@ class Obj extends stdClass
     /**
      * Converts the object to a json string
      *
-     * @param list
+     * @param mixed ...$arguments
      * @return string
      */
     public function toJson(...$arguments): string

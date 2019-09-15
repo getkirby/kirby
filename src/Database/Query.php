@@ -383,7 +383,7 @@ class Query
      * ->where('username like ?', 'myuser')                      (args: 2)
      * ->where('username', 'like', 'myuser');                    (args: 3)
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function where(...$args)
@@ -396,7 +396,7 @@ class Query
      * Shortcut to attach a where clause with an OR operator.
      * Check out the where() method docs for additional info.
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function orWhere(...$args)
@@ -420,7 +420,7 @@ class Query
      * Shortcut to attach a where clause with an AND operator.
      * Check out the where() method docs for additional info.
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function andWhere(...$args)
@@ -463,7 +463,7 @@ class Query
      * ->having('username like ?', 'myuser')                         (args: 2)
      * ->having('username', 'like', 'myuser');                       (args: 3)
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function having(...$args)

@@ -48,7 +48,7 @@ return function (App $app) {
          * Validates the field content with the given validator and parameters
          *
          * @param string $validator
-         * @param mixed[] ...$arguments A list of optional validator arguments
+         * @param mixed ...$arguments A list of optional validator arguments
          * @return boolean
          */
         'isValid' => function (Field $field, string $validator, ...$arguments): bool {

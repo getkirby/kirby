@@ -29,7 +29,7 @@ class Json extends Handler
     /**
      * Parses an encoded JSON string and returns a multi-dimensional array
      *
-     * @param mixed $json
+     * @param string $json
      * @return array
      */
     public static function decode($json): array

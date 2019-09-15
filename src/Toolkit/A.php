@@ -536,7 +536,7 @@ class A
      * // ];
      * </code>
      *
-     * @param list
+     * @param array ...$arrays
      * @return array
      */
     public static function extend(...$arrays): array
