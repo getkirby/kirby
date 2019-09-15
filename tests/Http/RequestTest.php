@@ -3,7 +3,6 @@
 namespace Kirby\Http;
 
 use Kirby\Http\Request\Auth\BasicAuth;
-
 use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;

@@ -42,7 +42,7 @@ class Yaml extends Handler
     /**
      * Parses an encoded YAML string and returns a multi-dimensional array
      *
-     * @param  mixed $yaml
+     * @param  string $yaml
      * @return array
      */
     public static function decode($yaml): array

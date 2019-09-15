@@ -215,9 +215,8 @@ function go(string $url = null, int $code = 302)
 /**
  * Shortcut for html()
  *
- * @param string $text unencoded text
+ * @param string $string unencoded text
  * @param bool $keepTags
- * @param null|string $string
  * @return string
  */
 function h(string $string = null, bool $keepTags = false)

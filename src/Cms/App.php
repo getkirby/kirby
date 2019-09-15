@@ -181,7 +181,7 @@ class App
      *
      * @internal
      * @param string $name Hook name
-     * @param mixed $args Arguments to pass to the hooks
+     * @param mixed ...$args Arguments to pass to the hooks
      * @return mixed Resulting value as modified by the hooks
      */
     public function apply(string $name, ...$args)
@@ -1196,9 +1196,9 @@ class App
      * and return a template snippet
      *
      * @internal
-     * @return string
      * @param mixed $name
      * @param array $data
+     * @return string
      */
     public function snippet($name, array $data = []): ?string
     {

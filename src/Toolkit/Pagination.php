@@ -54,7 +54,7 @@ class Pagination
      * collection with a flexible argument api
      *
      * @param \Kirby\Toolkit\Collection $collection
-     * @param ...mixed $arguments
+     * @param mixed ...$arguments
      * @return self
      */
     public static function for(Collection $collection, ...$arguments)

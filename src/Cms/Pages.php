@@ -376,7 +376,7 @@ class Pages extends Collection
     /**
      * Include all given items in the collection
      *
-     * @param ...mixed $args
+     * @param mixed ...$args
      * @return self
      */
     public function merge(...$args)

@@ -196,7 +196,7 @@ class Collection extends BaseCollection
     /**
      * Returns a Collection without the given element(s)
      *
-     * @param  mixed[] $keys any number of keys, passed as individual arguments
+     * @param  mixed ...$keys any number of keys, passed as individual arguments
      * @return \Kirby\Cms\Collection
      */
     public function not(...$keys)
@@ -216,6 +216,7 @@ class Collection extends BaseCollection
     /**
      * Add pagination and return a sliced set of data.
      *
+     * @param  mixed ...$arguments
      * @return \Kirby\Cms\Collection
      */
     public function paginate(...$arguments)
