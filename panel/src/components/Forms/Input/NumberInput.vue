@@ -14,7 +14,7 @@
       value
     }"
     class="k-number-input"
-    type="number"
+    type="text"
     v-on="listeners"
   >
 </template>
@@ -48,13 +48,20 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
-        input: (event) => this.onInput(event.target.value)
+        blur: (event) => this.onInput(event.target.value),
+        input: () => {},
+        keydown: (event) => this.onKeydown(event)
       }
     }
   },
   watch: {
     value() {
       this.onInvalid();
+    }
+  },
+  computed: {
+    decimals() {
+      return this.step.toString().split(".")[1].length;
     }
   },
   mounted() {
@@ -76,13 +83,25 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
-      // don't convert empty values or the beginning of
-      // a negative number to a Number
-      if (value !== null && value !== "" && value !== "-" && value !== "-0") {
-        value = Number(value);
-      }
+      // float calculations can be slightly off:
+      // ensure to get correct result with same decimal number as step
+      value = parseFloat(Number(parseFloat(value).toFixed(this.decimals)));
+      value = Math.ceil(value / this.step) * this.step;
+      value = value.toFixed(this.decimals);
 
       this.$emit("input", value);
+    },
+    onKeydown(e) {
+      switch (e.code) {
+        case "ArrowUp":
+          e.preventDefault();
+          this.onInput((Number(this.value) || 0) + this.step);
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          this.onInput((Number(this.value) || 0) - this.step);
+          break;
+      }
     },
     select() {
       this.$refs.input.select();

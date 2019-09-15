@@ -20,7 +20,11 @@ export default {
   props: {
     ...Field.props,
     ...Input.props,
-    ...NumberInput.props
+    ...NumberInput.props,
+    icon: {
+      type: String,
+      default: "updown"
+    }
   },
   methods: {
     focus() {

@@ -24,7 +24,7 @@ return [
          * Allowed incremental steps between numbers (i.e `0.5`)
          */
         'step' => function ($step = 1) {
-            return $this->toNumber($step);
+            return (float)$this->toNumber($step);
         },
         'value' => function ($value = null) {
             return $this->toNumber($value);
@@ -36,7 +36,7 @@ return [
                 return null;
             }
 
-            return (float)Str::float($value);
+            return Str::float($value);
         }
     ],
     'validations' => [

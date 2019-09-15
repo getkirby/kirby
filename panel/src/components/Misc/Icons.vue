@@ -339,6 +339,12 @@
         <path d="M10,4H2C1.4,4,1,4.4,1,5v10c0,0.6,0.4,1,1,1h8c0.6,0,1-0.4,1-1V5C11,4.4,10.6,4,10,4z" />
         <path d="M14,0H4v2h9v11h2V1C15,0.4,14.6,0,14,0z" />
       </symbol>
+      <symbol id="icon-updown" viewBox="0 0 16 16">
+          <polygon points="8,3 12,7 4,7 "></polygon> 
+          <polygon points="8,13 4,9 12,9 "></polygon> 
+          <rect x="1" width="14" height="2"></rect> 
+          <rect x="1" y="14" width="14" height="2"></rect>
+      </symbol>
     </defs>
   </svg>
 </template>
