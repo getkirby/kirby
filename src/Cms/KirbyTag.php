@@ -22,7 +22,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
      * Afterwards it uses Kirby's global file finder.
      *
      * @param string $path
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function file(string $path)
     {
@@ -42,7 +42,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
     /**
      * Returns the current Kirby instance
      *
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {
@@ -52,7 +52,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
     /**
      * Returns the parent model
      *
-     * @return Kirby\Cms\Model|null
+     * @return \Kirby\Cms\Model|null
      */
     public function parent()
     {

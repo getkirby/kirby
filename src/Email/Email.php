@@ -47,7 +47,7 @@ class Email
     }
 
     /**
-     * @return Kirby\Email\Body
+     * @return \Kirby\Email\Body
      */
     public function body()
     {

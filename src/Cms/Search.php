@@ -22,7 +22,7 @@ class Search
     /**
      * @param string $query
      * @param array $params
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public static function files(string $query = null, $params = [])
     {
@@ -126,7 +126,7 @@ class Search
     /**
      * @param string $query
      * @param array $params
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public static function pages(string $query = null, $params = [])
     {
@@ -136,7 +136,7 @@ class Search
     /**
      * @param string $query
      * @param array $params
-     * @return Kirby\Cms\Users
+     * @return \Kirby\Cms\Users
      */
     public static function users(string $query = null, $params = [])
     {

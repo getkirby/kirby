@@ -45,7 +45,7 @@ class Collections
      *
      * @param  string $name
      * @param  array $arguments
-     * @return Kirby\Cms\Collection|null
+     * @return \Kirby\Cms\Collection|null
      */
     public function __call(string $name, array $arguments = [])
     {
@@ -57,7 +57,7 @@ class Collections
      *
      * @param string $name
      * @param array $data
-     * @return Kirby\Cms\Collection|null
+     * @return \Kirby\Cms\Collection|null
      */
     public function get(string $name, array $data = [])
     {

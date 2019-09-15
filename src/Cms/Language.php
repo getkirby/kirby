@@ -355,7 +355,7 @@ class Language extends Model
      * which is used to handle language specific
      * routes.
      *
-     * @return Kirby\Cms\LanguageRouter
+     * @return \Kirby\Cms\LanguageRouter
      */
     public function router()
     {

@@ -20,14 +20,14 @@ abstract class Model
     /**
      * The parent Kirby instance
      *
-     * @var Kirby\Cms\App
+     * @var \Kirby\Cms\App
      */
     public static $kirby;
 
     /**
      * The parent site instance
      *
-     * @var Kirby\Cms\Site
+     * @var \Kirby\Cms\Site
      */
     protected $site;
 
@@ -55,7 +55,7 @@ abstract class Model
     /**
      * Returns the parent Kirby instance
      *
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {
@@ -65,7 +65,7 @@ abstract class Model
     /**
      * Returns the parent Site instance
      *
-     * @return Kirby\Cms\Site
+     * @return \Kirby\Cms\Site
      */
     public function site()
     {
@@ -75,7 +75,7 @@ abstract class Model
     /**
      * Setter for the parent Kirby object
      *
-     * @param Kirby\Cms\App|null $kirby
+     * @param \Kirby\Cms\App|null $kirby
      * @return self
      */
     protected function setKirby(App $kirby = null)
@@ -88,7 +88,7 @@ abstract class Model
      * Setter for the parent site object
      *
      * @internal
-     * @param Kirby\Cms\Site|null $site
+     * @param \Kirby\Cms\Site|null $site
      * @return self
      */
     public function setSite(Site $site = null)

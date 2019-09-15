@@ -170,7 +170,7 @@ class Field
 
     /**
      * @see Field::parent()
-     * @return Kirby\Cms\Model|null
+     * @return \Kirby\Cms\Model|null
      */
     public function model()
     {
@@ -201,7 +201,7 @@ class Field
     /**
      * Returns the parent object of the field
      *
-     * @return Kirby\Cms\Model|null
+     * @return \Kirby\Cms\Model|null
      */
     public function parent()
     {

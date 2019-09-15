@@ -72,7 +72,7 @@ trait FileFoundation
     /**
      * Returns the Image object
      *
-     * @return Kirby\Image\Image
+     * @return \Kirby\Image\Image
      */
     public function asset()
     {
@@ -155,7 +155,7 @@ trait FileFoundation
     /**
      * Returns the app instance
      *
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {

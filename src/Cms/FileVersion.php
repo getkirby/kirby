@@ -49,7 +49,7 @@ class FileVersion
     }
 
     /**
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {

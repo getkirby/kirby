@@ -106,7 +106,7 @@ trait PageSiblings
     /**
      * Returns the next listed page if it exists
      *
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function nextListed()
     {
@@ -116,7 +116,7 @@ trait PageSiblings
     /**
      * Returns the next unlisted page if it exists
      *
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function nextUnlisted()
     {
@@ -144,7 +144,7 @@ trait PageSiblings
     /**
      * Returns the previous listed page
      *
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function prevListed()
     {
@@ -154,7 +154,7 @@ trait PageSiblings
     /**
      * Returns the previous unlisted page
      *
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function prevUnlisted()
     {
@@ -173,7 +173,7 @@ trait PageSiblings
     /**
      * Private siblings collector
      *
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     protected function siblingsCollection()
     {
@@ -188,7 +188,7 @@ trait PageSiblings
      * Returns siblings with the same template
      *
      * @param bool $self
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function templateSiblings(bool $self = true)
     {

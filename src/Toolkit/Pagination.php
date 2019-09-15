@@ -54,7 +54,7 @@ class Pagination
      * Creates a pagination instance for the given
      * collection with a flexible argument api
      *
-     * @param Kirby\Toolkit\Collection $collection
+     * @param \Kirby\Toolkit\Collection $collection
      * @param ...mixed $arguments
      * @return self
      */
@@ -117,7 +117,7 @@ class Pagination
      * Getter and setter for the current page
      *
      * @param int|null $page
-     * @return int|Kirby\Toolkit\Pagination
+     * @return int|\Kirby\Toolkit\Pagination
      */
     public function page(int $page = null)
     {
@@ -141,7 +141,7 @@ class Pagination
      * Getter and setter for the total number of items
      *
      * @param int|null $total
-     * @return int|Kirby\Toolkit\Pagination
+     * @return int|\Kirby\Toolkit\Pagination
      */
     public function total(int $total = null)
     {
@@ -161,7 +161,7 @@ class Pagination
      * Getter and setter for the number of items per page
      *
      * @param int|null $limit
-     * @return int|Kirby\Toolkit\Pagination
+     * @return int|\Kirby\Toolkit\Pagination
      */
     public function limit(int $limit = null)
     {

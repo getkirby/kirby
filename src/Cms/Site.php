@@ -160,7 +160,7 @@ class Site extends ModelWithContent
     /**
      * Returns the blueprint object
      *
-     * @return Kirby\Cms\SiteBlueprint
+     * @return \Kirby\Cms\SiteBlueprint
      */
     public function blueprint()
     {
@@ -200,7 +200,7 @@ class Site extends ModelWithContent
     /**
      * Builds a breadcrumb collection
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function breadcrumb()
     {
@@ -243,7 +243,7 @@ class Site extends ModelWithContent
     /**
      * Returns the error page object
      *
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function errorPage()
     {
@@ -282,7 +282,7 @@ class Site extends ModelWithContent
     /**
      * Returns the home page object
      *
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function homePage()
     {
@@ -391,7 +391,7 @@ class Site extends ModelWithContent
      * it can be found. (see `Site::homePage()`)
      *
      * @param  string $path
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function page(string $path = null)
     {
@@ -413,7 +413,7 @@ class Site extends ModelWithContent
     /**
      * Alias for `Site::children()`
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function pages()
     {
@@ -451,7 +451,7 @@ class Site extends ModelWithContent
     /**
      * Returns the permissions object for this site
      *
-     * @return Kirby\Cms\SitePermissions
+     * @return \Kirby\Cms\SitePermissions
      */
     public function permissions()
     {
@@ -496,7 +496,7 @@ class Site extends ModelWithContent
      * which is being used in various methods
      * to check for valid actions and input.
      *
-     * @return Kirby\Cms\SiteRules
+     * @return \Kirby\Cms\SiteRules
      */
     protected function rules()
     {
@@ -508,7 +508,7 @@ class Site extends ModelWithContent
      *
      * @param string $query
      * @param array $params
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function search(string $query = null, $params = [])
     {
@@ -565,7 +565,7 @@ class Site extends ModelWithContent
      * Sets the current page object
      *
      * @internal
-     * @param Kirby\Cms\Page|null $page
+     * @param \Kirby\Cms\Page|null $page
      * @return self
      */
     public function setPage(Page $page = null)
@@ -644,9 +644,9 @@ class Site extends ModelWithContent
      * returns the current page
      *
      * @internal
-     * @param  string|Kirby\Cms\Page $page
+     * @param  string|\Kirby\Cms\Page $page
      * @param  string|null $languageCode
-     * @return Kirby\Cms\Page
+     * @return \Kirby\Cms\Page
      */
     public function visit($page, string $languageCode = null)
     {

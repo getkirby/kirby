@@ -49,7 +49,7 @@ class Session
     /**
      * Creates a new Session instance
      *
-     * @param Kirby\Session\Sessions    $sessions Parent sessions object
+     * @param \Kirby\Session\Sessions    $sessions Parent sessions object
      * @param string|null $token    Session token or null for a new session
      * @param array       $options  Optional additional options:
      *                              - `mode`:       Token transmission mode (cookie or manual)
@@ -305,7 +305,7 @@ class Session
     /**
      * Returns the session data object
      *
-     * @return Kirby\Session\SessionData
+     * @return \Kirby\Session\SessionData
      */
     public function data()
     {
