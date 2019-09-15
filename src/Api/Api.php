@@ -169,7 +169,11 @@ class Api
         $auth   = $this->route->attributes()['auth'] ?? true;
 
         if ($auth !== false) {
-            $this->authenticate();
+            $user = $this->authenticate();
+            
+            if (is_a($user, 'Kirby\Cms\User') === true) {
+                setlocale(LC_ALL, $user->language());
+            }
         }
 
         $output = $this->route->action()->call($this, ...$this->route->arguments());
