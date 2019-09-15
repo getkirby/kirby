@@ -21,7 +21,6 @@ use Kirby\Toolkit\Controller;
  */
 class Collections
 {
-
     /**
      * Each collection is cached once it
      * has been called, to avoid further

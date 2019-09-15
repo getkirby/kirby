@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\Form;
-use Kirby\Cms\Blueprint;
 
 return [
     'mixins' => ['min'],

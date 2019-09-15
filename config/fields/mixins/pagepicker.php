@@ -19,7 +19,7 @@ return [
                 $self  = [
                     'id'     => $parent->id() == '' ? null : $parent->id(),
                     'title'  => $parent->title()->value(),
-                    'parent' => is_a($parent->parent(), Page::class) === true ? $parent->parent()->id() : null,
+                    'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
                 ];
             }
 

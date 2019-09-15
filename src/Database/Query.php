@@ -245,11 +245,11 @@ class Query
     }
 
     /**
-    * Sets the name of the table, which should be queried
-    *
-    * @param string $table
-    * @return \Kirby\Database\Query
-    */
+     * Sets the name of the table, which should be queried
+     *
+     * @param string $table
+     * @return \Kirby\Database\Query
+     */
     public function table(string $table)
     {
         if ($this->database->validateTable($table) === false) {
@@ -441,11 +441,11 @@ class Query
     }
 
     /**
-    * Attaches a group by clause
-    *
-    * @param string $group
-    * @return \Kirby\Database\Query
-    */
+     * Attaches a group by clause
+     *
+     * @param string $group
+     * @return \Kirby\Database\Query
+     */
     public function group(string $group = null)
     {
         $this->group = $group;
@@ -815,7 +815,7 @@ class Query
         $sql        = $this->database->sql();
         $primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
 
-        $results = $this->query($this->select(array($column))->order($primaryKey . ' ASC')->build('select'), [
+        $results = $this->query($this->select([$column])->order($primaryKey . ' ASC')->build('select'), [
             'iterator' => 'array',
             'fetch'    => 'array',
         ]);

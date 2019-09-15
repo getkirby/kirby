@@ -13,7 +13,6 @@ namespace Kirby\Image;
  */
 class Camera
 {
-
     /**
      * Make exif data
      *
@@ -87,7 +86,7 @@ class Camera
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

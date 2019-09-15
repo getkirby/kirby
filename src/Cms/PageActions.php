@@ -23,7 +23,6 @@ use Kirby\Toolkit\Str;
  */
 trait PageActions
 {
-
     /**
      * Changes the sorting number
      * The sorting number must already be correct
@@ -69,7 +68,7 @@ trait PageActions
      * Changes the slug/uid of the page
      *
      * @param string $slug
-     * @param string $language
+     * @param string $languageCode
      * @return self
      */
     public function changeSlug(string $slug, string $languageCode = null)
@@ -107,7 +106,7 @@ trait PageActions
                 if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
                     throw new LogicException('The page directory cannot be moved');
                 }
-                
+
                 // remove from the siblings
                 $oldPage->parentModel()->children()->remove($oldPage);
 
@@ -129,7 +128,7 @@ trait PageActions
      * Change the slug for a specific language
      *
      * @param string $slug
-     * @param string $language
+     * @param string $languageCode
      * @return self
      */
     protected function changeSlugForLanguage(string $slug, string $languageCode = null)
@@ -298,7 +297,8 @@ trait PageActions
      * 5. returns the result
      *
      * @param string $action
-     * @param mixed ...$arguments
+     * @param array $arguments
+     * @param Closure $callback
      * @return mixed
      */
     protected function commit(string $action, array $arguments, Closure $callback)
@@ -372,7 +372,7 @@ trait PageActions
                 }
             }
         }
-        
+
         // add copy to siblings
         if ($isDraft === true) {
             $parentModel->drafts()->append($copy->id(), $copy);
@@ -510,7 +510,7 @@ trait PageActions
                     'site'  => $this->site(),
                 ]);
 
-                return intval($template);
+                return (int)$template;
         }
     }
 

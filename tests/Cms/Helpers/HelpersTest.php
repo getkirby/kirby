@@ -162,7 +162,7 @@ class HelpersTest extends TestCase
     public function testDumpHelperOnServer()
     {
         Server::$cli = false;
-        $this->assertEquals("<pre>test</pre>", dump('test', false));
+        $this->assertEquals('<pre>test</pre>', dump('test', false));
         Server::$cli = null;
     }
 

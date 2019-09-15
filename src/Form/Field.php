@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Exception;
-use Kirby\Cms\App;
 use Kirby\Cms\Model;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Component;
@@ -23,7 +22,6 @@ use Kirby\Toolkit\V;
  */
 class Field extends Component
 {
-
     /**
      * Registry for all component mixins
      *
@@ -75,6 +73,7 @@ class Field extends Component
     }
 
     /**
+     * @param mixed $default
      * @return mixed
      */
     public function data($default = false)

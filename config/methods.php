@@ -5,8 +5,8 @@ use Kirby\Cms\Field;
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
-use Kirby\Cms\Structure;
 use Kirby\Cms\Page;
+use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
@@ -148,7 +148,7 @@ return function (App $app) {
          */
         'toFloat' => function (Field $field, float $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
-            return floatval($value);
+            return (float)$value;
         },
 
         /**
@@ -160,7 +160,7 @@ return function (App $app) {
          */
         'toInt' => function (Field $field, int $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
-            return intval($value);
+            return (int)$value;
         },
 
         /**

@@ -17,7 +17,6 @@ use Kirby\Toolkit\Str;
  */
 class Params extends Query
 {
-
     /**
      * @var null|string
      */

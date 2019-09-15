@@ -15,7 +15,6 @@ use APCUIterator;
  */
 class ApcuCache extends Cache
 {
-
     /**
      * Determines if an item exists in the cache
      *

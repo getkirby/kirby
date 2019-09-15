@@ -20,7 +20,6 @@ use ParsedownExtra;
  */
 class Markdown
 {
-
     /**
      * Array with all configured options
      * for the parser
@@ -64,9 +63,9 @@ class Markdown
     public function parse(string $text, bool $inline = false): string
     {
         if ($this->options['extra'] === true) {
-            $parser = new ParsedownExtra;
+            $parser = new ParsedownExtra();
         } else {
-            $parser = new Parsedown;
+            $parser = new Parsedown();
         }
 
         $parser->setBreaksEnabled($this->options['breaks']);

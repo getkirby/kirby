@@ -14,7 +14,7 @@ use Kirby\Toolkit\Properties;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
-*/
+ */
 class Body
 {
     use Properties;

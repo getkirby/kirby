@@ -16,7 +16,6 @@ use Exception;
  */
 class File
 {
-
     /**
      * Absolute file path
      *
@@ -39,7 +38,7 @@ class File
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

@@ -2,9 +2,9 @@
 
 namespace Kirby\Http;
 
-use Throwable;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Properties;
+use Throwable;
 
 /**
  * Uri builder class
@@ -393,7 +393,7 @@ class Uri
     }
 
     /**
-     * @param  Kirby\Http\Params|string|array|null $path
+     * @param  Kirby\Http\Params|string|array|null $params
      * @return self
      */
     public function setParams($params = null)

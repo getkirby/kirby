@@ -3,9 +3,9 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Data\Data;
 use Kirby\Form\Field;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
@@ -90,7 +90,7 @@ class Blueprint
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->props ?? [];
     }

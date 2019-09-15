@@ -82,7 +82,7 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage('Invalid routing method: KIRBY');
         $this->expectExceptionCode(400);
 
-        $router = new Router;
+        $router = new Router();
         $router->find('a', 'KIRBY');
     }
 
@@ -92,7 +92,7 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage('No route found for path: "a" and request method: "GET"');
         $this->expectExceptionCode(404);
 
-        $router = new Router;
+        $router = new Router();
         $router->find('a', 'GET');
     }
 

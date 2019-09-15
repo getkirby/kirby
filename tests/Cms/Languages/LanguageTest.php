@@ -300,7 +300,7 @@ class LanguageTest extends TestCase
         ];
 
         $this->assertEquals($expected, $language->toArray());
-        $this->assertEquals($expected, $language->__debuginfo());
+        $this->assertEquals($expected, $language->__debugInfo());
     }
 
     public function testExists()

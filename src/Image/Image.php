@@ -7,7 +7,6 @@ use Kirby\Http\Response;
 use Kirby\Toolkit\File;
 use Kirby\Toolkit\Html;
 use Kirby\Toolkit\Mime;
-use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 /**
@@ -21,10 +20,9 @@ use Kirby\Toolkit\V;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
-*/
+ */
 class Image extends File
 {
-
     /**
      * optional url where the file is reachable
      * @var string
@@ -58,7 +56,7 @@ class Image extends File
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'dimensions' => $this->dimensions(),
@@ -200,6 +198,7 @@ class Image extends File
     /**
      * Runs a set of validations on the image object
      *
+     * @param array $rules
      * @return bool
      */
     public function match(array $rules): bool

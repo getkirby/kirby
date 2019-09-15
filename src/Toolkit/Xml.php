@@ -13,7 +13,6 @@ namespace Kirby\Toolkit;
  */
 class Xml
 {
-
     /**
      * Conversion table for html entities
      *
@@ -186,12 +185,13 @@ class Xml
      * @param string $name
      * @param mixed $content
      * @param array $attr
+     * @param mixed $indent
      * @return string
      */
     public static function tag(string $name, $content = null, array $attr = null, $indent = null): string
     {
         $attr  = Html::attr($attr);
-        $start = '<' .  $name . ($attr ? ' ' . $attr : null) . '>';
+        $start = '<' . $name . ($attr ? ' ' . $attr : null) . '>';
         $end   = '</' . $name . '>';
 
         if (is_array($content) === true) {

@@ -19,7 +19,6 @@ use Throwable;
  */
 abstract class ModelWithContent extends Model
 {
-
     /**
      * The content
      *
@@ -371,12 +370,12 @@ abstract class ModelWithContent extends Model
         $image = $this->query($query ?? null);
 
         // validate the query result
-        if (is_a($image, File::class) === false && is_a($image, Asset::class) === false) {
+        if (is_a($image, 'Kirby\Cms\File') === false && is_a($image, 'Kirby\Cms\Asset') === false) {
             $image = null;
         }
 
         // fallback for files
-        if ($image === null && is_a($this, File::class) === true && $this->isViewable() === true) {
+        if ($image === null && is_a($this, 'Kirby\Cms\File') === true && $this->isViewable() === true) {
             $image = $this;
         }
 
@@ -399,7 +398,7 @@ abstract class ModelWithContent extends Model
 
         $result = Str::query($query, [
             'kirby'             => $this->kirby(),
-            'site'              => is_a($this, Site::class) ? $this : $this->site(),
+            'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
         ]);
 
@@ -540,7 +539,7 @@ abstract class ModelWithContent extends Model
     protected function setTranslations(array $translations = null)
     {
         if ($translations !== null) {
-            $this->translations = new Collection;
+            $this->translations = new Collection();
 
             foreach ($translations as $props) {
                 $props['parent'] = $this;
@@ -566,7 +565,7 @@ abstract class ModelWithContent extends Model
 
         $result = Str::template($template, [
             'kirby'             => $this->kirby(),
-            'site'              => is_a($this, Site::class) ? $this : $this->site(),
+            'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
         ]);
 
@@ -596,7 +595,7 @@ abstract class ModelWithContent extends Model
             return $this->translations;
         }
 
-        $this->translations = new Collection;
+        $this->translations = new Collection();
 
         foreach ($this->kirby()->languages() as $language) {
             $translation = new ContentTranslation([

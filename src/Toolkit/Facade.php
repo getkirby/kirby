@@ -14,7 +14,6 @@ namespace Kirby\Toolkit;
  */
 abstract class Facade
 {
-
     /**
      * Returns the instance that should be
      * available statically

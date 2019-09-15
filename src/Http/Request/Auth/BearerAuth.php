@@ -7,7 +7,6 @@ namespace Kirby\Http\Request\Auth;
  */
 class BearerAuth
 {
-
     /**
      * @var string
      */

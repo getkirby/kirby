@@ -17,7 +17,6 @@ use Throwable;
  */
 class Value
 {
-
     /**
      * Cached value
      * @var mixed

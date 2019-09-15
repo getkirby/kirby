@@ -24,7 +24,6 @@ use Kirby\Toolkit\Str;
  */
 class Request
 {
-
     /**
      * The auth object if available
      *
@@ -132,7 +131,7 @@ class Request
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return [
             'body'   => $this->body(),
@@ -150,7 +149,7 @@ class Request
      */
     public function ajax(): bool
     {
-        return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
 
     /**

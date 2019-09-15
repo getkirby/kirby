@@ -2,10 +2,10 @@
 
 namespace Kirby\Data;
 
-use PHPUnit\Framework\TestCase;
 use Kirby\Toolkit\F;
+use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__ . '/mocks.php');
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass Kirby\Data\Data

@@ -15,7 +15,6 @@ use Throwable;
  */
 trait AppUsers
 {
-
     /**
      * Cache for the auth auth layer
      *

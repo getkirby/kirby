@@ -184,11 +184,11 @@ class Api extends BaseApi
     }
 
     /**
-    * Returns the page object for the given id
-    *
-    * @param string $id Page's id
-    * @return \Kirby\Cms\Page|null
-    */
+     * Returns the page object for the given id
+     *
+     * @param string $id Page's id
+     * @return \Kirby\Cms\Page|null
+     */
     public function page(string $id)
     {
         $id   = str_replace('+', '/', $id);

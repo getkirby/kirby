@@ -3,9 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
-use PHPUnit\Framework\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {

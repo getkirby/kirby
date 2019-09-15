@@ -2,13 +2,13 @@
 
 namespace Kirby\Http;
 
-use PHPUnit\Framework\TestCase;
+use Kirby\Http\Request\Auth\BasicAuth;
 
+use Kirby\Http\Request\Auth\BearerAuth;
+use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
-use Kirby\Http\Request\Body;
-use Kirby\Http\Request\Auth\BasicAuth;
-use Kirby\Http\Request\Auth\BearerAuth;
+use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
@@ -50,7 +50,7 @@ class RequestTest extends TestCase
     public function test__debuginfo()
     {
         $request = new Request();
-        $info    = $request->__debuginfo();
+        $info    = $request->__debugInfo();
 
         $this->assertArrayHasKey('body', $info);
         $this->assertArrayHasKey('query', $info);

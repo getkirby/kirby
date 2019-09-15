@@ -16,7 +16,6 @@ use Kirby\Toolkit\Component;
  */
 class Section extends Component
 {
-
     /**
      * Registry for all component mixins
      *

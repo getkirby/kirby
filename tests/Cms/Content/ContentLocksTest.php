@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\TestCase;
 
 class ContentLocksTest extends TestCase
 {

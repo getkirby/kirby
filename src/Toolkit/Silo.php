@@ -15,19 +15,18 @@ namespace Kirby\Toolkit;
  */
 class Silo
 {
-
     /**
      * @var array
      */
     public static $data = [];
 
     /**
-    * Setter for new data.
-    *
-    * @param string|array $key
-    * @param mixed $value
-    * @return array
-    */
+     * Setter for new data.
+     *
+     * @param string|array $key
+     * @param mixed $value
+     * @return array
+     */
     public static function set($key, $value = null): array
     {
         if (is_array($key) === true) {

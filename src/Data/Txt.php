@@ -15,7 +15,6 @@ use Kirby\Toolkit\Str;
  */
 class Txt extends Handler
 {
-
     /**
      * Converts an array to an encoded Kirby txt string
      *

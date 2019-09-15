@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Exception\InvalidArgumentException;
-
 /**
  * Files Routes
  */

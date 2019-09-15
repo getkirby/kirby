@@ -14,7 +14,6 @@ namespace Kirby\Cms;
  */
 class Content
 {
-
     /**
      * The raw data array
      *
@@ -73,7 +72,7 @@ class Content
      * @see    self::data()
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

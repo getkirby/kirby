@@ -21,7 +21,6 @@ use Throwable;
  */
 class Database
 {
-
     /**
      * The number of affected rows for the last query
      *
@@ -579,6 +578,9 @@ class Database
      * Magic way to start queries for tables by
      * using a method named like the table.
      * I.e. $db->users()->all()
+     *
+     * @param mixed $method
+     * @param null|mixed $arguments
      */
     public function __call($method, $arguments = null)
     {

@@ -2,9 +2,9 @@
 
 namespace Kirby\Api;
 
-use stdClass;
 use Kirby\Cms\Response;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class MockModel
 {
@@ -233,15 +233,15 @@ class ApiTest extends TestCase
         ]);
 
         // resolve class with namespace
-        $result = $api->resolve(new MockModel);
+        $result = $api->resolve(new MockModel());
         $this->assertInstanceOf(Model::class, $result);
 
         // resolve class without namespace
-        $result = $api->resolve(new stdClass);
+        $result = $api->resolve(new stdClass());
         $this->assertInstanceOf(Model::class, $result);
 
         // resolve class extension
-        $result = $api->resolve(new ExtendedModel);
+        $result = $api->resolve(new ExtendedModel());
         $this->assertInstanceOf(Model::class, $result);
     }
 
@@ -250,7 +250,7 @@ class ApiTest extends TestCase
         $this->expectException('Kirby\Exception\NotFoundException');
 
         $api = new Api([]);
-        $api->resolve(new MockModel);
+        $api->resolve(new MockModel());
     }
 
     public function testRequestData()

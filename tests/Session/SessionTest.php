@@ -2,14 +2,13 @@
 
 namespace Kirby\Session;
 
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-
 use Kirby\Http\Cookie;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
-require_once(__DIR__ . '/mocks.php');
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Session\Session

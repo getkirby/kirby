@@ -16,7 +16,6 @@ use Kirby\Toolkit\Str;
  */
 class Responder
 {
-
     /**
      * HTTP status code
      *
