@@ -123,11 +123,11 @@ class Pagination
     {
         if ($page === null) {
             if ($this->page > $this->pages()) {
-                $this->page = $this->lastPage();
+                return $this->lastPage();
             }
 
             if ($this->page < 1) {
-                $this->page = $this->firstPage();
+                return $this->firstPage();
             }
 
             return $this->page;
