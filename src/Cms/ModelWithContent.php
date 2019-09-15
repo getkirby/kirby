@@ -627,7 +627,13 @@ abstract class ModelWithContent extends Model
         }
 
         return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
-            return $model->save($strings, $languageCode, true);
+            // save updated values
+            $model = $model->save($strings, $languageCode, true);
+            
+            // update model in siblings collection
+            $model->siblings()->add($model);
+            
+            return $model;
         });
     }
 
