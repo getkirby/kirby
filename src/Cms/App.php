@@ -1198,7 +1198,7 @@ class App
      * @internal
      * @param mixed $name
      * @param array $data
-     * @return string
+     * @return string|null
      */
     public function snippet($name, array $data = []): ?string
     {
