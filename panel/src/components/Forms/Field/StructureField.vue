@@ -292,7 +292,7 @@ export default {
 
       Object.keys(this.fields).forEach(fieldName => {
         const field = this.fields[fieldName];
-        if (field.default) {
+        if (field.default !== null) {
           data[fieldName] = clone(field.default);
         } else {
           data[fieldName] = null;
