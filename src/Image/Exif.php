@@ -15,7 +15,6 @@ use Kirby\Toolkit\V;
  */
 class Exif
 {
-
     /**
      * the parent image object
      * @var Image
@@ -287,7 +286,7 @@ class Exif
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'camera'   => $this->camera(),

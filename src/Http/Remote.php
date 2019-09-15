@@ -18,7 +18,6 @@ use Kirby\Toolkit\Str;
  */
 class Remote
 {
-
     /**
      * @var array
      */

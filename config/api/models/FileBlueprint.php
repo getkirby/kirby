@@ -20,7 +20,7 @@ return [
             return $blueprint->title();
         },
     ],
-    'type' => FileBlueprint::class,
+    'type' => 'Kirby\Cms\FileBlueprint',
     'views' => [
     ],
 ];

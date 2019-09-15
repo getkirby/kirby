@@ -13,7 +13,6 @@ use Closure;
  */
 class Route
 {
-
     /**
      * The callback action function
      *
@@ -92,6 +91,7 @@ class Route
      * @param string|array $pattern
      * @param string|array $method
      * @param Closure      $action
+     * @param array $attributes
      */
     public function __construct($pattern, $method = 'GET', Closure $action, array $attributes = [])
     {

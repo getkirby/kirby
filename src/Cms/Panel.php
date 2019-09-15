@@ -6,7 +6,6 @@ use Exception;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\View;
 use Throwable;
 

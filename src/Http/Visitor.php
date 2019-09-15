@@ -17,10 +17,9 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
-*/
+ */
 class Visitor
 {
-
     /**
      * IP address
      * @var string|null

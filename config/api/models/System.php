@@ -74,7 +74,7 @@ return [
             return $this->kirby()->version();
         }
     ],
-    'type'   => System::class,
+    'type'   => 'Kirby\Cms\System',
     'views'  => [
         'login' => [
             'isOk',

@@ -13,7 +13,6 @@ namespace Kirby\Cache;
  */
 class NullCache extends Cache
 {
-
     /**
      * Writes an item to the cache for a given number of minutes and
      * returns whether the operation was successful

@@ -11,7 +11,6 @@ class PageTestModel extends Page
 
 class PageTest extends TestCase
 {
-
     /**
      * Deregister any plugins for the page
      *

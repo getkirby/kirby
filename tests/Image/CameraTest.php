@@ -27,7 +27,7 @@ class CameraTest extends TestCase
         $exif   = $this->_exif();
         $camera = new Camera($exif);
         $this->assertEquals(array_change_key_case($exif), $camera->toArray());
-        $this->assertEquals(array_change_key_case($exif), $camera->__debuginfo());
+        $this->assertEquals(array_change_key_case($exif), $camera->__debugInfo());
     }
 
     public function testToString()

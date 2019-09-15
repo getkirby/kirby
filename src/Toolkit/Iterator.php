@@ -15,7 +15,6 @@ namespace Kirby\Toolkit;
  */
 class Iterator implements \Iterator
 {
-
     /**
      * The data array
      *
@@ -162,7 +161,7 @@ class Iterator implements \Iterator
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->data;
     }

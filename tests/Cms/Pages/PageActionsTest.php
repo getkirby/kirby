@@ -2,9 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use Kirby\Toolkit\F;
-use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class PageActionsTest extends TestCase
@@ -83,7 +80,7 @@ class PageActionsTest extends TestCase
             ],
             'hooks' => [
                 'page.changeNum:before' => function () {
-                    throw new \Exception("This should not be called");
+                    throw new \Exception('This should not be called');
                 }
             ]
         ]);

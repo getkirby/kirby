@@ -161,6 +161,6 @@ class IteratorTest extends TestCase
         ];
 
         $iterator = new Iterator($array);
-        $this->assertEquals($array, $iterator->__debuginfo());
+        $this->assertEquals($array, $iterator->__debugInfo());
     }
 }

@@ -15,7 +15,6 @@ use Exception;
  */
 class Pagination
 {
-
     /**
      * The current page
      *
@@ -256,6 +255,7 @@ class Pagination
     /**
      * Checks if the given page exists
      *
+     * @param int $page
      * @return boolean
      */
     public function hasPage(int $page): bool
@@ -344,6 +344,7 @@ class Pagination
     /**
      * Creates a range of page numbers for Google-like pagination
      *
+     * @param int $range
      * @return array
      */
     public function range(int $range = 5): array
@@ -376,6 +377,7 @@ class Pagination
     /**
      * Returns the first page of the created range
      *
+     * @param int $range
      * @return int
      */
     public function rangeStart(int $range = 5): int
@@ -386,6 +388,7 @@ class Pagination
     /**
      * Returns the last page of the created range
      *
+     * @param int $range
      * @return int
      */
     public function rangeEnd(int $range = 5): int

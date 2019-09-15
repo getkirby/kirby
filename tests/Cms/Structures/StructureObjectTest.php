@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-
 class StructureObjectTest extends TestCase
 {
     public function testId()

@@ -17,7 +17,6 @@ use Kirby\Exception\PermissionException;
  */
 class ContentLock
 {
-
     /**
      * Lock data
      *
@@ -80,7 +79,7 @@ class ContentLock
             $data['user'] !== $this->user()->id() &&
             $user = $this->kirby()->user($data['user'])
         ) {
-            $time = intval($data['time']);
+            $time = (int)($data['time']);
 
             return [
                 'user'       => $user->id(),

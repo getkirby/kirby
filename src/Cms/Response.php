@@ -14,7 +14,6 @@ namespace Kirby\Cms;
  */
 class Response extends \Kirby\Http\Response
 {
-
     /**
      * Adjusted redirect creation which
      * parses locations with the Url::to method

@@ -2,13 +2,13 @@
 
 namespace Kirby\Session;
 
-use Throwable;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Http\Cookie;
 use Kirby\Http\Request;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * Sessions - Base class for all session fiddling
@@ -38,7 +38,6 @@ class Sessions
      *                                                     Defaults to `kirby_session`
      *                                     - `gcInterval`: How often should the garbage collector be run?
      *                                                     Integer or `false` for never; defaults to `100`
-     *
      */
     public function __construct($store, array $options = [])
     {

@@ -3,9 +3,8 @@
 namespace Kirby\Http;
 
 use Exception;
-use Throwable;
-
 use Kirby\Toolkit\F;
+use Throwable;
 
 /**
  * Representation of an Http response,
@@ -20,7 +19,6 @@ use Kirby\Toolkit\F;
  */
 class Response
 {
-
     /**
      * Store for all registered headers,
      * which will be sent with the response
@@ -63,6 +61,8 @@ class Response
      * @param string  $body
      * @param string  $type
      * @param integer $code
+     * @param array   $headers
+     * @param string  $charset
      */
     public function __construct($body = '', ?string $type = null, ?int $code = null, ?array $headers = null, ?string $charset = null)
     {
@@ -94,7 +94,7 @@ class Response
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -183,6 +183,7 @@ class Response
      * Creates a response for a file and
      * sends the file content to the browser
      *
+     * @param string $file
      * @return self
      */
     public static function file(string $file)

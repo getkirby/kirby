@@ -28,7 +28,6 @@ use Kirby\Toolkit\Str;
  */
 class Filename
 {
-
     /**
      * List of all applicable attributes
      *
@@ -167,7 +166,7 @@ class Filename
             return false;
         }
 
-        return intval($value);
+        return (int)$value;
     }
 
     /**
@@ -257,7 +256,7 @@ class Filename
             return false;
         }
 
-        return intval($value);
+        return (int)$value;
     }
 
     /**

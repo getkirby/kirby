@@ -15,7 +15,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 trait FileModifications
 {
-
     /**
      * Blurs the image by the given amount of pixels
      *
@@ -172,7 +171,7 @@ trait FileModifications
 
         $result = $this->kirby()->component('file::version')($this->kirby(), $this, $options);
 
-        if (is_a($result, FileVersion::class) === false && is_a($result, File::class) === false) {
+        if (is_a($result, 'Kirby\Cms\FileVersion') === false && is_a($result, 'Kirby\Cms\File') === false) {
             throw new InvalidArgumentException('The file::version component must return a File or FileVersion object');
         }
 

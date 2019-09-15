@@ -4,14 +4,13 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
-use Throwable;
-
 use Kirby\Exception\NotFoundException;
-use Kirby\Http\Router;
 use Kirby\Http\Response;
+use Kirby\Http\Router;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The API class is a generic container
@@ -743,7 +742,7 @@ class Api
                 if (empty($extension) === true || in_array($extension, ['tmp', 'temp'])) {
                     $mime      = F::mime($upload['tmp_name']);
                     $extension = F::mimeToExtension($mime);
-                    $filename  = F::name($upload['name']) . '.' .$extension;
+                    $filename  = F::name($upload['name']) . '.' . $extension;
                 } else {
                     $filename = basename($upload['name']);
                 }

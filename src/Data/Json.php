@@ -15,7 +15,6 @@ use Exception;
  */
 class Json extends Handler
 {
-
     /**
      * Converts an array to an encoded JSON string
      *
@@ -30,7 +29,7 @@ class Json extends Handler
     /**
      * Parses an encoded JSON string and returns a multi-dimensional array
      *
-     * @param  string $string
+     * @param mixed $json
      * @return array
      */
     public static function decode($json): array

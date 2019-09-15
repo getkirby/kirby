@@ -95,7 +95,7 @@ class PluginTest extends TestCase
             ]
         ]);
 
-        $app = new App;
+        $app = new App();
         $this->assertEquals('bar', $app->option('developer.plugin.foo'));
 
         App::destroy();

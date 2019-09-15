@@ -5,12 +5,10 @@ use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
-use Kirby\Exception\Exception;
 use Kirby\Http\Server;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\View;
 
 /**
  * Helper to create an asset object
@@ -219,6 +217,7 @@ function go(string $url = null, int $code = 302)
  *
  * @param string $text unencoded text
  * @param bool $keepTags
+ * @param null|string $string
  * @return string
  */
 function h(string $string = null, bool $keepTags = false)
@@ -229,7 +228,7 @@ function h(string $string = null, bool $keepTags = false)
 /**
  * Creates safe html by encoding special characters
  *
- * @param string $text unencoded text
+ * @param string $string unencoded text
  * @param bool $keepTags
  * @return string
  */
@@ -346,7 +345,7 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
 /**
  * Creates a script tag to load a javascript file
  *
- * @param string|array $src
+ * @param string|array $url
  * @param string|array $options
  * @return void
  */

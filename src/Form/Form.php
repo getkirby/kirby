@@ -2,8 +2,8 @@
 
 namespace Kirby\Form;
 
-use Throwable;
 use Kirby\Data\Yaml;
+use Throwable;
 
 /**
  * The main form class, that is being
@@ -37,7 +37,7 @@ class Form
 
         unset($inject['fields'], $inject['values'], $inject['input']);
 
-        $this->fields = new Fields;
+        $this->fields = new Fields();
         $this->values = [];
 
         foreach ($fields as $name => $props) {

@@ -15,7 +15,6 @@ use Kirby\Toolkit\Str;
  */
 trait HasChildren
 {
-
     /**
      * The Pages collection
      *
@@ -137,6 +136,7 @@ trait HasChildren
     /**
      * Finds a single page or draft
      *
+     * @param string $path
      * @return \Kirby\Cms\Page|null
      */
     public function findPageOrDraft(string $path)

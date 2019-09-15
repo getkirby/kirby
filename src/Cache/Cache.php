@@ -16,7 +16,6 @@ namespace Kirby\Cache;
  */
 abstract class Cache
 {
-
     /**
      * Stores all options for the driver
      * @var array
@@ -96,7 +95,7 @@ abstract class Cache
         $value = $this->retrieve($key);
 
         // check for a valid cache value
-        if (!is_a($value, Value::class)) {
+        if (!is_a($value, 'Kirby\Cache\Value')) {
             return $default;
         }
 
@@ -141,7 +140,7 @@ abstract class Cache
         $value = $this->retrieve($key);
 
         // check for a valid Value object
-        if (!is_a($value, Value::class)) {
+        if (!is_a($value, 'Kirby\Cache\Value')) {
             return false;
         }
 
@@ -182,7 +181,7 @@ abstract class Cache
         $value = $this->retrieve($key);
 
         // check for a valid Value object
-        if (!is_a($value, Value::class)) {
+        if (!is_a($value, 'Kirby\Cache\Value')) {
             return false;
         }
 

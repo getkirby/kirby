@@ -39,7 +39,7 @@ return [
             return $site->url();
         },
     ],
-    'type' => Site::class,
+    'type' => 'Kirby\Cms\Site',
     'views' => [
         'compact' => [
             'title',

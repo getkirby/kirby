@@ -23,7 +23,6 @@ use Kirby\Toolkit\V;
  */
 trait AppPlugins
 {
-
     /**
      * A list of all registered plugins
      *
@@ -106,7 +105,7 @@ trait AppPlugins
     protected function extendApi($api): array
     {
         if (is_array($api) === true) {
-            if (is_a($api['routes'] ?? [], Closure::class) === true) {
+            if (is_a($api['routes'] ?? [], 'Closure') === true) {
                 $api['routes'] = $api['routes']($this);
             }
 
@@ -254,7 +253,7 @@ trait AppPlugins
     /**
      * Registers markdown component
      *
-     * @param Closure $blueprints
+     * @param Closure $markdown
      * @return Closure
      */
     protected function extendMarkdown(Closure $markdown)
@@ -336,7 +335,7 @@ trait AppPlugins
      */
     protected function extendRoutes($routes): array
     {
-        if (is_a($routes, Closure::class) === true) {
+        if (is_a($routes, 'Closure') === true) {
             $routes = $routes($this);
         }
 
@@ -480,7 +479,7 @@ trait AppPlugins
 
     /**
      * Returns the extensions registry
-
+     *
      * @internal
      * @param string|null $type
      * @return array
@@ -556,6 +555,7 @@ trait AppPlugins
     /**
      * Apply all passed extensions
      *
+     * @param array $props
      * @return void
      */
     protected function extensionsFromProps(array $props)
@@ -658,7 +658,7 @@ trait AppPlugins
         $name   = $plugin->name();
 
         if (isset(static::$plugins[$name]) === true) {
-            throw new DuplicateException('The plugin "'. $name . '" has already been registered');
+            throw new DuplicateException('The plugin "' . $name . '" has already been registered');
         }
 
         return static::$plugins[$name] = $plugin;

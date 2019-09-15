@@ -16,7 +16,6 @@ use Kirby\Http\Url;
  */
 class Html
 {
-
     /**
      * An internal store for a html entities translation table
      *

@@ -2,9 +2,9 @@
 
 namespace Kirby\Exception;
 
-use PHPUnit\Framework\TestCase;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\TestCase;
 
 class WillFail
 {

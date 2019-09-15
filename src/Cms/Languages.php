@@ -16,7 +16,6 @@ use Kirby\Toolkit\F;
  */
 class Languages extends Collection
 {
-
     /**
      * Creates a new collection with the given language objects
      *

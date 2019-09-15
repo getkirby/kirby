@@ -19,7 +19,6 @@ use Kirby\Toolkit\F;
  */
 trait FileActions
 {
-
     /**
      * Renames the file without touching the extension
      * The store is used to actually execute this.

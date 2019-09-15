@@ -164,7 +164,7 @@ class Collection extends BaseCollection
      * Checks if the given object or id
      * is in the collection
      *
-     * @param string|object
+     * @param string|object $id
      * @return boolean
      */
     public function has($id): bool

@@ -15,7 +15,6 @@ use Throwable;
  */
 class Tpl
 {
-
     /**
      * Renders the template
      *

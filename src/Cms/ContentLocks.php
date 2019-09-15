@@ -18,7 +18,6 @@ use Kirby\Toolkit\F;
  */
 class ContentLocks
 {
-
     /**
      * Data from the `.lock` files
      * that have been read so far

@@ -43,7 +43,7 @@ class QueryTestUser
 
     public function drink()
     {
-        return ["gin", "tonic", "cucumber"];
+        return ['gin', 'tonic', 'cucumber'];
     }
 
     public function self()
@@ -55,7 +55,7 @@ class QueryTestUser
     {
         foreach ($arguments as $arg) {
             if (in_array($arg, ['(', ',', ']', '[']) === false) {
-                throw new \Exception;
+                throw new \Exception();
             }
         }
 

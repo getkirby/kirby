@@ -19,7 +19,6 @@ use Throwable;
  */
 class Media
 {
-
     /**
      * Tries to find a file by model and filename
      * and to copy it to the media folder.

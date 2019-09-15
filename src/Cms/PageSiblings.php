@@ -13,7 +13,6 @@ namespace Kirby\Cms;
  */
 trait PageSiblings
 {
-
     /**
      * @deprecated 3.0.0 Use `Page::hasNextUnlisted` instead
      * @return boolean
