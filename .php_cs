@@ -12,7 +12,7 @@ return PhpCsFixer\Config::create()
         'array_indentation' => true,
         'array_syntax' => ['syntax' => 'short'],
         'cast_spaces' => ['space' => 'none'],
-        'class_keyword_remove' => true,
+        // 'class_keyword_remove' => true, // replaces static::class with 'static' (won't work)
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
         'combine_nested_dirname' => true,
@@ -40,18 +40,15 @@ return PhpCsFixer\Config::create()
         'no_leading_namespace_whitespace' => true,
         'no_mixed_echo_print' => ['use' => 'echo'],
         'no_unneeded_control_parentheses' => true,
-        'no_useless_else' => true,
         'no_unused_imports' => true,
         'no_useless_return' => true,
         'ordered_imports' => ['sort_algorithm' => 'alpha'],
-        'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
-        'phpdoc_align' => ['align' => 'left'],
+        // 'phpdoc_add_missing_param_annotation' => ['only_untyped' => false], // adds params in the wrong order
+        // 'phpdoc_align' => ['align' => 'vertical'], // added in a second step
         'phpdoc_indent' => true,
-        'phpdoc_scalar' => true,
-        'phpdoc_separation' => true,
+        // 'phpdoc_scalar' => true, // added in a second step
         'phpdoc_trim' => true,
         'short_scalar_cast' => true,
-        'simplified_null_return' => true,
         'single_line_comment_style' => true,
         'single_quote' => true,
         'ternary_to_null_coalescing' => true,
