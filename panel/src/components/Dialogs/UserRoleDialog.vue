@@ -62,6 +62,11 @@ export default {
       this.$api.users
         .changeRole(this.user.id, this.user.role)
         .then(() => {
+          // If current panel user, update store
+          if (this.$user.id === this.user.id) {
+            this.$store.dispatch("user/load");
+          }
+
           this.success({
             message: ":)",
             event: "user.changeRole"

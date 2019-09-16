@@ -11,6 +11,9 @@ return [
         'ascii' => function () {
             return Str::$ascii;
         },
+        'defaultLanguage' => function () {
+            return $this->kirby()->option('panel.language', 'en');
+        },
         'isOk' => function (System $system) {
             return $system->isOk();
         },
@@ -90,6 +93,7 @@ return [
         ],
         'panel' => [
             'ascii',
+            'defaultLanguage',
             'isOk',
             'isInstalled',
             'isLocal',

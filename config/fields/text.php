@@ -98,6 +98,7 @@ return [
     ],
     'validations' => [
         'minlength',
-        'maxlength'
+        'maxlength',
+        'pattern'
     ]
 ];
