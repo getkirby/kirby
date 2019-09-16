@@ -33,7 +33,7 @@ class ContentLock
     protected $model;
 
     /**
-     * @param Kirby\Cms\ModelWithContent $model
+     * @param \Kirby\Cms\ModelWithContent $model
      */
     public function __construct(ModelWithContent $model)
     {
@@ -124,7 +124,7 @@ class ContentLock
     /**
      * Returns the app instance
      *
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     protected function kirby(): App
     {
@@ -201,7 +201,7 @@ class ContentLock
      * Returns currently authenticated user;
      * throws exception if none is authenticated
      *
-     * @return Kirby\Cms\User
+     * @return \Kirby\Cms\User
      */
     protected function user(): User
     {

@@ -186,7 +186,7 @@ class Api
      *
      * @param string $name
      * @param array|null $collection
-     * @return Kirby\Api\Collection
+     * @return \Kirby\Api\Collection
      *
      * @throws NotFoundException If no collection for `$name` exists
      */
@@ -263,7 +263,7 @@ class Api
      *
      * @param string $name
      * @param mixed $object
-     * @return Kirby\Api\Model
+     * @return \Kirby\Api\Model
      *
      * @throws NotFoundException If no model for `$name` exists
      */
@@ -375,7 +375,7 @@ class Api
      * API model or collection representation
      *
      * @param mixed $object
-     * @return Kirby\Api\Model|Kirby\Api\Collection
+     * @return \Kirby\Api\Model|\Kirby\Api\Collection
      *
      * @throws NotFoundException If `$object` cannot be resolved
      */

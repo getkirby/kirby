@@ -60,7 +60,7 @@ trait SiteActions
      * Creates a main page
      *
      * @param array $props
-     * @return Kirby\Cms\Page
+     * @return \Kirby\Cms\Page
      */
     public function createChild(array $props)
     {

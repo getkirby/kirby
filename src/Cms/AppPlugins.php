@@ -83,7 +83,7 @@ trait AppPlugins
      *
      * @internal
      * @param array $extensions
-     * @param Kirby\Cms\Plugin $plugin The plugin which defined those extensions
+     * @param \Kirby\Cms\Plugin $plugin The plugin which defined those extensions
      * @return array
      */
     public function extend(array $extensions, Plugin $plugin = null): array
@@ -266,7 +266,7 @@ trait AppPlugins
      * Registers additional options
      *
      * @param array $options
-     * @param Kirby\Cms\Plugin|null $plugin
+     * @param \Kirby\Cms\Plugin|null $plugin
      * @return array
      */
     protected function extendOptions(array $options, Plugin $plugin = null): array
@@ -643,7 +643,7 @@ trait AppPlugins
      *
      * @param string $name
      * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
-     * @return Kirby\Cms\Plugin|null
+     * @return \Kirby\Cms\Plugin|null
      */
     public static function plugin(string $name, array $extends = null)
     {
