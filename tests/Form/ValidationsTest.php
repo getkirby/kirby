@@ -186,6 +186,34 @@ class ValidationsTest extends TestCase
         Validations::minlength($field, 'test');
     }
 
+    public function testPatternValid()
+    {
+        $page  = new Page(['slug' => 'test']);
+        $field = new Field('test', [
+            'pattern' => '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
+            'model' => $page
+        ]);
+
+        $this->assertTrue(Validations::pattern($field, '#fff'));
+        $this->assertTrue(Validations::pattern($field, '#222'));
+        $this->assertTrue(Validations::pattern($field, '#afafaf'));
+        $this->assertTrue(Validations::pattern($field, '#34b3cd'));
+    }
+
+    public function testPatternInvalid()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The value does not match the expected pattern');
+
+        $page  = new Page(['slug' => 'test']);
+        $field = new Field('test', [
+            'pattern' => '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
+            'model' => $page
+        ]);
+
+        Validations::pattern($field, '#MMM');
+    }
+
     public function testRequiredValid()
     {
         $page  = new Page(['slug' => 'test']);
