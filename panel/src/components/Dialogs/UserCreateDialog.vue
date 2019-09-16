@@ -85,8 +85,8 @@ export default {
         name: "",
         email: "",
         password: "",
-        language: "en",
-        role: "admin"
+        language: this.$store.state.system.info.defaultLanguage || "en",
+        role: this.$user.role.name
       };
     },
     open() {
