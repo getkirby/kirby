@@ -38,6 +38,21 @@ class UserPermissions extends ModelPermissions
         return $this->model->isLastAdmin() !== true;
     }
 
+    protected function canCreate(): bool
+    {
+        // the admin can always create new users
+        if ($this->user->isAdmin() === true) {
+            return true;
+        }
+
+        // users who are not admins cannot create admins
+        if ($this->model->isAdmin() === true) {
+            return false;
+        }
+
+        return true;
+    }
+
     protected function canDelete(): bool
     {
         return $this->model->isLastAdmin() !== true;

@@ -91,9 +91,9 @@ export default {
     },
     open() {
       // load and filter roles
-      const roles = this.$api.roles.options().then(roles => {
+      const roles = this.$api.roles.options({ canBe: "created" }).then(roles => {
         this.roles = roles;
-        
+
         // don't let non-admins create admins
         if (this.$user.role.name !== "admin") {
           this.roles = this.roles.filter(role => {
@@ -103,14 +103,14 @@ export default {
       }).catch(error => {
         this.$store.dispatch('notification/error', error);
       });
-      
+
       // load all translations
       const translations = this.$api.translations.options().then(languages => {
         this.languages = languages;
       }).catch (error => {
         this.$store.dispatch('notification/error', error);
       });
-      
+
       // open dialog when all API requests finished
       Promise.all([roles, translations]).then(() => {
         this.$refs.dialog.open();
