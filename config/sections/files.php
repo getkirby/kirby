@@ -1,8 +1,6 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 
 return [
     'mixins' => [
@@ -84,7 +82,7 @@ return [
             if ($this->sortBy) {
                 $files = $files->sortBy(...$files::sortArgs($this->sortBy));
             } elseif ($this->sortable === true) {
-                $files = $files->sortBy('sort', 'asc');
+                $files = $files->sortBy('sort', 'asc', 'filename', 'asc');
             }
 
             // apply the default pagination

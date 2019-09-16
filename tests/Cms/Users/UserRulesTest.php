@@ -139,6 +139,43 @@ class UserRulesTest extends TestCase
         UserRules::changeRole($kirby->user('admin@domain.com'), 'editor');
     }
 
+    public function testChangeRoleToAdminByAdmin()
+    {
+        $kirby = new App([
+            'roots' => [
+                'site' => __DIR__ . '/fixtures',
+            ],
+            'user' => 'user1@domain.com',
+            'users' => [
+                ['email' => 'user1@domain.com', 'role' => 'admin'],
+                ['email' => 'user2@domain.com', 'role' => 'editor']
+            ]
+        ]);
+        $kirby->impersonate('user1@domain.com');
+
+        $this->assertTrue(UserRules::changeRole($kirby->user('user2@domain.com'), 'admin'));
+    }
+
+    public function testChangeRoleToAdminByNonAdmin()
+    {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionCode('error.user.changeRole.toAdmin');
+
+        $kirby = new App([
+            'roots' => [
+                'site' => __DIR__ . '/fixtures',
+            ],
+            'user' => 'user1@domain.com',
+            'users' => [
+                ['email' => 'user1@domain.com', 'role' => 'editor'],
+                ['email' => 'user2@domain.com', 'role' => 'editor']
+            ]
+        ]);
+        $kirby->impersonate('user1@domain.com');
+
+        UserRules::changeRole($kirby->user('user2@domain.com'), 'admin');
+    }
+
     public function testChangeRoleLastAdmin()
     {
         $this->expectException('Kirby\Exception\LogicException');
