@@ -30,15 +30,15 @@ export default {
     },
     email(context, email) {
       context.commit("SET_CURRENT", {
-        email: email,
-        ...context.state.current
+        ...context.state.current,
+        email: email
       });
     },
     language(context, language) {
       context.dispatch("translation/activate", language, { root: true });
       context.commit("SET_CURRENT", {
+        ...context.state.current,
         language: language,
-        ...context.state.current
       });
     },
     load(context) {
@@ -75,8 +75,8 @@ export default {
     },
     name(context, name) {
       context.commit("SET_CURRENT", {
-        name: name,
-        ...context.state.current
+        ...context.state.current,
+        name: name
       });
     },
     visit(context, path) {
