@@ -101,7 +101,7 @@ return [
                 $image = $file->panelImage($this->image);
 
                 $data[] = [
-                    'dragText' => $file->dragText($dragTextAbsolute),
+                    'dragText' => $file->dragText('auto', $dragTextAbsolute),
                     'filename' => $file->filename(),
                     'id'       => $file->id(),
                     'text'     => $file->toString($this->text),
