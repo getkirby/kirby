@@ -152,8 +152,11 @@ export default {
       }
 
       context.commit("CREATE", model);
-      context.commit("CURRENT", model.id);
+      context.dispatch("current", model.id);
       context.dispatch("load", model);
+    },
+    current(context, id) {
+      context.commit("CURRENT", id);
     },
     load(context, model) {
       const stored = localStorage.getItem("kirby$form$" + model.id);
@@ -191,11 +194,6 @@ export default {
     },
     remove(context, id) {
       context.commit("REMOVE", id);
-    },
-    reset(context) {
-      context.commit("CURRENT", null);
-      context.commit("LOCK", null);
-      context.commit("UNLOCK", null);
     },
     revert(context, id) {
       const model = context.getters.model(id);
