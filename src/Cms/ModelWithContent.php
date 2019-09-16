@@ -492,8 +492,18 @@ abstract class ModelWithContent extends Model
             throw new InvalidArgumentException('Invalid language: ' . $languageCode);
         }
 
+        // get the content to store
+        $content = $translation->update($data, $overwrite)->content();
+
+        // remove all untranslatable fields
+        foreach ($this->blueprint()->fields() as $field) {
+            if (($field['translate'] ?? true) === false) {
+                $content[$field['name']] = null;
+            }
+        }
+
         // merge the translation with the new data
-        $translation->update($data, $overwrite);
+        $translation->update($content, true);
 
         // send the full translation array to the writer
         $clone->writeContent($translation->content(), $languageCode);
