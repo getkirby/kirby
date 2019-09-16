@@ -76,7 +76,7 @@ class Files extends Collection
      * Creates a files collection from an array of props
      *
      * @param array $files
-     * @param Kirby\Cms\Model $parent
+     * @param \Kirby\Cms\Model $parent
      * @param array $inject
      * @return self
      */
@@ -102,7 +102,7 @@ class Files extends Collection
      * Tries to find a file by id/filename
      *
      * @param string $id
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function findById(string $id)
     {
@@ -115,7 +115,7 @@ class Files extends Collection
      * map the get method correctly.
      *
      * @param string $key
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function findByKey(string $key)
     {

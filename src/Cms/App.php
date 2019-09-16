@@ -149,7 +149,7 @@ class App
      * Returns the Api instance
      *
      * @internal
-     * @return Kirby\Cms\Api
+     * @return \Kirby\Cms\Api
      */
     public function api()
     {
@@ -294,7 +294,7 @@ class App
      * automatically injected
      *
      * @param string $name
-     * @return Kirby\Cms\Collection|null
+     * @return \Kirby\Cms\Collection|null
      */
     public function collection(string $name)
     {
@@ -309,7 +309,7 @@ class App
     /**
      * Returns all user-defined collections
      *
-     * @return Kirby\Cms\Collections
+     * @return \Kirby\Cms\Collections
      */
     public function collections()
     {
@@ -388,7 +388,7 @@ class App
      * Try to find a controller by name
      *
      * @param string $name
-     * @return Kirby\Toolkit\Controller|null
+     * @return \Kirby\Toolkit\Controller|null
      */
     protected function controllerLookup(string $name, string $contentType = 'html')
     {
@@ -412,7 +412,7 @@ class App
     /**
      * Returns the default language object
      *
-     * @return Kirby\Cms\Language|null
+     * @return \Kirby\Cms\Language|null
      */
     public function defaultLanguage()
     {
@@ -434,7 +434,7 @@ class App
     /**
      * Detect the prefered language from the visitor object
      *
-     * @return Kirby\Cms\Language
+     * @return \Kirby\Cms\Language
      */
     public function detectedLanguage()
     {
@@ -459,7 +459,7 @@ class App
     /**
      * Returns the Email singleton
      *
-     * @return Kirby\Email\PHPMailer
+     * @return \Kirby\Email\PHPMailer
      */
     public function email($preset = [], array $props = [])
     {
@@ -471,7 +471,7 @@ class App
      *
      * @param string $path
      * @param boolean $drafts
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function file(string $path, $parent = null, bool $drafts = true)
     {
@@ -511,7 +511,7 @@ class App
     /**
      * Returns the current App instance
      *
-     * @param Kirby\Cms\App $instance
+     * @param \Kirby\Cms\App $instance
      * @return self
      */
     public static function instance(self $instance = null)
@@ -529,7 +529,7 @@ class App
      *
      * @internal
      * @param mixed $input
-     * @return Kirby\Http\Response
+     * @return \Kirby\Http\Response
      */
     public function io($input)
     {
@@ -673,7 +673,7 @@ class App
      * Returns the current language
      *
      * @param string|null $code
-     * @return Kirby\Cms\Language|null
+     * @return \Kirby\Cms\Language|null
      */
     public function language(string $code = null)
     {
@@ -710,7 +710,7 @@ class App
     /**
      * Returns all available site languages
      *
-     * @return Kirby\Cms\Languages
+     * @return \Kirby\Cms\Languages
      */
     public function languages()
     {
@@ -724,7 +724,7 @@ class App
     /**
      * Returns the app's locks object
      *
-     * @return Kirby\Cms\ContentLocks
+     * @return \Kirby\Cms\ContentLocks
      */
     public function locks(): ContentLocks
     {
@@ -819,9 +819,9 @@ class App
      * Returns any page from the content folder
      *
      * @param string $id
-     * @param Kirby\Cms\Page|Kirby\Cms\Site|null $parent
+     * @param \Kirby\Cms\Page|\Kirby\Cms\Site|null $parent
      * @param bool $drafts
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function page(string $id, $parent = null, bool $drafts = true)
     {
@@ -863,7 +863,7 @@ class App
      * Returns the Response object for the
      * current request
      *
-     * @return Kirby\Http\Response
+     * @return \Kirby\Http\Response
      */
     public function render(string $path = null, string $method = null)
     {
@@ -873,7 +873,7 @@ class App
     /**
      * Returns the Request singleton
      *
-     * @return Kirby\Http\Request
+     * @return \Kirby\Http\Request
      */
     public function request()
     {
@@ -954,7 +954,7 @@ class App
     /**
      * Response configuration
      *
-     * @return Kirby\Cms\Responder
+     * @return \Kirby\Cms\Responder
      */
     public function response()
     {
@@ -964,7 +964,7 @@ class App
     /**
      * Returns all user roles
      *
-     * @return Kirby\Cms\Roles
+     * @return \Kirby\Cms\Roles
      */
     public function roles()
     {
@@ -985,7 +985,7 @@ class App
     /**
      * Returns the directory structure
      *
-     * @return Kirby\Cms\Ingredients
+     * @return \Kirby\Cms\Ingredients
      */
     public function roots()
     {
@@ -995,7 +995,7 @@ class App
     /**
      * Returns the currently active route
      *
-     * @return Kirby\Http\Route|null
+     * @return \Kirby\Http\Route|null
      */
     public function route()
     {
@@ -1006,7 +1006,7 @@ class App
      * Returns the Router singleton
      *
      * @internal
-     * @return Kirby\Http\Router
+     * @return \Kirby\Http\Router
      */
     public function router()
     {
@@ -1046,7 +1046,7 @@ class App
      * Returns the current session object
      *
      * @param array $options Additional options, see the session component
-     * @return Kirby\Session\Session
+     * @return \Kirby\Session\Session
      */
     public function session(array $options = [])
     {
@@ -1123,7 +1123,7 @@ class App
     /**
      * Sets a custom Site object
      *
-     * @param Kirby\Cms\Site|array $site
+     * @param \Kirby\Cms\Site|array $site
      * @return self
      */
     protected function setSite($site = null)
@@ -1141,7 +1141,7 @@ class App
     /**
      * Returns the Server object
      *
-     * @return Kirby\Http\Server
+     * @return \Kirby\Http\Server
      */
     public function server()
     {
@@ -1151,7 +1151,7 @@ class App
     /**
      * Initializes and returns the Site object
      *
-     * @return Kirby\Cms\Site
+     * @return \Kirby\Cms\Site
      */
     public function site()
     {
@@ -1196,7 +1196,7 @@ class App
     /**
      * System check class
      *
-     * @return Kirby\Cms\System
+     * @return \Kirby\Cms\System
      */
     public function system()
     {
@@ -1208,7 +1208,7 @@ class App
      * and return the Template object
      *
      * @internal
-     * @return Kirby\Cms\Template
+     * @return \Kirby\Cms\Template
      */
     public function template(string $name, string $type = 'html', string $defaultType = 'html')
     {
@@ -1277,7 +1277,7 @@ class App
     /**
      * Returns the url structure
      *
-     * @return Kirby\Cms\Ingredients
+     * @return \Kirby\Cms\Ingredients
      */
     public function urls()
     {
@@ -1308,7 +1308,7 @@ class App
     /**
      * Returns the visitor object
      *
-     * @return Kirby\Cms\Visitor
+     * @return \Kirby\Cms\Visitor
      */
     public function visitor()
     {

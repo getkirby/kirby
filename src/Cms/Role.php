@@ -133,7 +133,7 @@ class Role extends Model
     }
 
     /**
-     * @return Kirby\Cms\Permissions
+     * @return \Kirby\Cms\Permissions
      */
     public function permissions()
     {

@@ -36,7 +36,7 @@ class Sql
     /**
      * Constructor
      *
-     * @param Kirby\Database\Database $database
+     * @param \Kirby\Database\Database $database
      */
     public function __construct($database)
     {

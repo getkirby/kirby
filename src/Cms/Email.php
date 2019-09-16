@@ -109,7 +109,7 @@ class Email
      *
      * @param string $name
      * @param string|null $type
-     * @return Kirby\Cms\Template
+     * @return \Kirby\Cms\Template
      */
     protected function getTemplate(string $name, string $type = null)
     {

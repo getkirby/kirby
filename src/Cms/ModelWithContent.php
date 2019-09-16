@@ -23,19 +23,19 @@ abstract class ModelWithContent extends Model
     /**
      * The content
      *
-     * @var Kirby\Cms\Content
+     * @var \Kirby\Cms\Content
      */
     public $content;
 
     /**
-     * @var Kirby\Cms\Translations
+     * @var \Kirby\Cms\Translations
      */
     public $translations;
 
     /**
      * Returns the blueprint of the model
      *
-     * @return Kirby\Cms\Blueprint
+     * @return \Kirby\Cms\Blueprint
      */
     abstract public function blueprint();
 
@@ -53,7 +53,7 @@ abstract class ModelWithContent extends Model
      * Returns the content
      *
      * @param string $languageCode
-     * @return Kirby\Cms\Content
+     * @return \Kirby\Cms\Content
      */
     public function content(string $languageCode = null)
     {
@@ -263,7 +263,7 @@ abstract class ModelWithContent extends Model
      * Only if a content directory exists,
      * virtual pages will need to overwrite this method
      *
-     * @return Kirby\Cms\ContentLock|null
+     * @return \Kirby\Cms\ContentLock|null
      */
     public function lock()
     {
@@ -364,7 +364,7 @@ abstract class ModelWithContent extends Model
      *
      * @internal
      * @param string|null $query
-     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
     protected function panelImageSource(string $query = null)
     {
@@ -578,7 +578,7 @@ abstract class ModelWithContent extends Model
      * If no code is specified the current translation is returned
      *
      * @param string|null $languageCode
-     * @return Kirby\Cms\ContentTranslation|null
+     * @return \Kirby\Cms\ContentTranslation|null
      */
     public function translation(string $languageCode = null)
     {
@@ -588,7 +588,7 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the translations collection
      *
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function translations()
     {

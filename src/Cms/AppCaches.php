@@ -23,7 +23,7 @@ trait AppCaches
      * Returns a cache instance by key
      *
      * @param string $key
-     * @return Kirby\Cache\Cache
+     * @return \Kirby\Cache\Cache
      */
     public function cache(string $key)
     {
