@@ -78,7 +78,7 @@ export default {
       return this.selected[item.id] !== undefined;
     },
     toggle(item) {
-      if (this.options.multiple === false) {
+      if (this.options.multiple === false || this.options.max === 1) {
         this.selected = {};
       }
 
