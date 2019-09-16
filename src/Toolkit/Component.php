@@ -208,7 +208,9 @@ class Component
     protected function applyComputed(array $computed): void
     {
         foreach ($computed as $computedName => $computedFunction) {
-            $this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
+            if (is_callable($computedFunction) === true) {
+                $this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
+            }
         }
     }
 

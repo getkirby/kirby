@@ -155,6 +155,8 @@
     "The role for the last admin cannot be changed",
   "error.user.changeRole.permission":
     "You are not allowed to change the role for the user \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "You are not allowed to create this user",
   "error.user.delete": "The user \"{name}\" cannot be deleted",
   "error.user.delete.lastAdmin": "The last admin cannot be deleted",
@@ -413,6 +415,17 @@
   "translation.name": "English",
 
   "upload": "Upload",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Error",
   "upload.progress": "Uploading…",
 

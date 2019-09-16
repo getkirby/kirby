@@ -80,7 +80,7 @@ class Image extends File
     /**
      * Returns the dimensions of the file if possible
      *
-     * @return Kirby\Image\Dimensions
+     * @return \Kirby\Image\Dimensions
      */
     public function dimensions()
     {
@@ -114,7 +114,7 @@ class Image extends File
     /**
      * Returns the exif object for this file (if image)
      *
-     * @return Kirby\Image\Exif
+     * @return \Kirby\Image\Exif
      */
     public function exif()
     {
@@ -129,7 +129,7 @@ class Image extends File
      * Sends an appropriate header for the asset
      *
      * @param  boolean          $send
-     * @return Kirby\Http\Response|string
+     * @return \Kirby\Http\Response|string
      */
     public function header(bool $send = true)
     {

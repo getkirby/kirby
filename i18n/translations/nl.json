@@ -37,6 +37,7 @@
 
   "error.access.login": "Ongeldige login",
   "error.access.panel": "Je hebt geen toegang tot het Panel",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "De avatar kon niet worden geupload",
   "error.avatar.delete.fail": "De avatar kan niet worden verwijderd",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Ongeldige converter \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Je hebt geen rechten om de naam te wijzigen van \"{filename}\"",
   "error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "De wachtwoorden komen niet overeen",
   "error.user.password.undefined": "De gebruiker heeft geen wachtwoord",
   "error.user.role.invalid": "Gelieve een geldige rol in te voeren",
-  "error.user.undefined": "De gebruiker kan niet worden gevonden",
   "error.user.update.permission":
     "Je hebt geen rechten om gebruiker \"{name}\" te updaten",
 
@@ -412,6 +413,17 @@
   "translation.name": "Nederlands",
 
   "upload": "Upload",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Foutmelding",
   "upload.progress": "Uploaden...",
 

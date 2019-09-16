@@ -360,6 +360,23 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('a', $structure->first()->title()->value());
         $this->assertEquals('b', $structure->last()->title()->value());
     }
+    
+    public function testToStructureWithInvalidData()
+    {
+        $data = [
+            ['title' => 'a'],
+            ['title' => 'b'],
+            'title'
+        ];
+
+        $yaml  = Yaml::encode($data);
+        $field = $this->field($yaml);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid structure data for "test" field');
+
+        $structure = $field->toStructure();
+    }
 
     public function testToDefaultUrl()
     {

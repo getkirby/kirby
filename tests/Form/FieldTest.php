@@ -26,15 +26,29 @@ class FieldTest extends TestCase
         Field::$mixins = [];
     }
 
+    public function testWithoutModel()
+    {
+        Field::$types = [
+            'test' => []
+        ];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Field requires a model');
+
+        $field = new Field('test');
+    }
+
     public function testAfter()
     {
         Field::$types = [
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'blog']);
+
         // untranslated
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'after' => 'test'
         ]);
 
@@ -43,7 +57,7 @@ class FieldTest extends TestCase
 
         // translated
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'after' => [
                 'en' => 'en',
                 'de' => 'de'
@@ -52,6 +66,15 @@ class FieldTest extends TestCase
 
         $this->assertEquals('en', $field->after());
         $this->assertEquals('en', $field->after);
+
+        // with query
+        $field = new Field('test', [
+            'model' => $page,
+            'after' => '{{ page.slug }}'
+        ]);
+
+        $this->assertEquals('blog', $field->after());
+        $this->assertEquals('blog', $field->after);
     }
 
     public function testAutofocus()
@@ -60,9 +83,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         // default autofocus
         $field = new Field('test', [
-            'model'  => new Page(['slug' => 'test']),
+            'model'  => $page,
         ]);
 
         $this->assertFalse($field->autofocus());
@@ -70,7 +95,7 @@ class FieldTest extends TestCase
 
         // enabled autofocus
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'autofocus' => true
         ]);
 
@@ -84,9 +109,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'blog']);
+
         // untranslated
         $field = new Field('test', [
-            'model'  => new Page(['slug' => 'test']),
+            'model' => $page,
             'before' => 'test'
         ]);
 
@@ -95,7 +122,7 @@ class FieldTest extends TestCase
 
         // translated
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'before' => [
                 'en' => 'en',
                 'de' => 'de'
@@ -104,6 +131,15 @@ class FieldTest extends TestCase
 
         $this->assertEquals('en', $field->before());
         $this->assertEquals('en', $field->before);
+
+        // with query
+        $field = new Field('test', [
+            'model' => $page,
+            'before' => '{{ page.slug }}'
+        ]);
+
+        $this->assertEquals('blog', $field->before());
+        $this->assertEquals('blog', $field->before);
     }
 
     public function testDefault()
@@ -112,9 +148,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'blog']);
+
         // default
         $field = new Field('test', [
-            'model'  => new Page(['slug' => 'test']),
+            'model' => $page
         ]);
 
         $this->assertNull($field->default());
@@ -124,7 +162,7 @@ class FieldTest extends TestCase
 
         // specific default
         $field = new Field('test', [
-            'model'   => new Page(['slug' => 'test']),
+            'model'   => $page,
             'default' => 'test'
         ]);
 
@@ -134,7 +172,7 @@ class FieldTest extends TestCase
 
         // don't overwrite existing values
         $field = new Field('test', [
-            'model'   => new Page(['slug' => 'test']),
+            'model'   => $page,
             'default' => 'test',
             'value'   => 'something'
         ]);
@@ -144,6 +182,16 @@ class FieldTest extends TestCase
         $this->assertEquals('something', $field->value());
         $this->assertEquals('something', $field->value);
         $this->assertEquals('something', $field->data(true));
+
+        // with query
+        $field = new Field('test', [
+            'model' => $page,
+            'default' => '{{ page.slug }}'
+        ]);
+
+        $this->assertEquals('blog', $field->default());
+        $this->assertEquals('blog', $field->default);
+        $this->assertEquals('blog', $field->data(true));
     }
 
     public function testDisabled()
@@ -152,9 +200,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         // default state
         $field = new Field('test', [
-            'model'  => new Page(['slug' => 'test']),
+            'model'  => $page
         ]);
 
         $this->assertFalse($field->disabled());
@@ -162,7 +212,7 @@ class FieldTest extends TestCase
 
         // disabled
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'disabled' => true
         ]);
 
@@ -176,16 +226,18 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         // default
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
         ]);
 
         $this->assertEquals([], $field->errors());
 
         // required
         $field = new Field('test', [
-            'model'    => new Page(['slug' => 'test']),
+            'model'    => $page,
             'required' => true
         ]);
 
@@ -202,9 +254,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         // untranslated
         $field = new Field('test', [
-            'model'  => new Page(['slug' => 'test']),
+            'model'  => $page,
             'help' => 'test'
         ]);
 
@@ -213,7 +267,7 @@ class FieldTest extends TestCase
 
         // translated
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'help' => [
                 'en' => 'en',
                 'de' => 'de'
@@ -230,9 +284,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         // default
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
         ]);
 
         $this->assertNull($field->icon());
@@ -240,7 +296,7 @@ class FieldTest extends TestCase
 
         // specific icon
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'icon'  => 'test'
         ]);
 
@@ -259,7 +315,7 @@ class FieldTest extends TestCase
 
         // prop default
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
         ]);
 
         $this->assertEquals('test', $field->icon());
@@ -286,8 +342,10 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'value' => $value
         ]);
 
@@ -305,8 +363,10 @@ class FieldTest extends TestCase
             ]
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test'])
+            'model' => $page
         ]);
 
         $this->assertFalse($field->isEmpty(null));
@@ -319,9 +379,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         // default
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
         ]);
 
         $this->assertTrue($field->isValid());
@@ -329,7 +391,7 @@ class FieldTest extends TestCase
 
         // required
         $field = new Field('test', [
-            'model'    => new Page(['slug' => 'test']),
+            'model'    => $page,
             'required' => true
         ]);
 
@@ -343,14 +405,16 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
         ]);
 
         $this->assertFalse($field->isRequired());
 
         $field = new Field('test', [
-            'model'    => new Page(['slug' => 'test']),
+            'model'    => $page,
             'required' => true
         ]);
 
@@ -376,9 +440,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'blog']);
+
         // untranslated
         $field = new Field('test', [
-            'model'  => new Page(['slug' => 'test']),
+            'model'  => $page,
             'label' => 'test'
         ]);
 
@@ -387,7 +453,7 @@ class FieldTest extends TestCase
 
         // translated
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'label' => [
                 'en' => 'en',
                 'de' => 'de'
@@ -396,6 +462,15 @@ class FieldTest extends TestCase
 
         $this->assertEquals('en', $field->label());
         $this->assertEquals('en', $field->label);
+
+        // with query
+        $field = new Field('test', [
+            'model' => $page,
+            'label' => '{{ page.slug }}'
+        ]);
+
+        $this->assertEquals('blog', $field->label());
+        $this->assertEquals('blog', $field->label);
     }
 
     public function testMixinMin()
@@ -406,15 +481,17 @@ class FieldTest extends TestCase
             'test' => ['mixins' => ['min']]
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
         ]);
 
         $this->assertFalse($field->isRequired());
         $this->assertNull($field->min());
 
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'min'   => 5
         ]);
 
@@ -422,7 +499,7 @@ class FieldTest extends TestCase
         $this->assertEquals(5, $field->min());
 
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'required' => true
         ]);
 
@@ -430,7 +507,7 @@ class FieldTest extends TestCase
         $this->assertEquals(1, $field->min());
 
         $field = new Field('test', [
-            'model'    => new Page(['slug' => 'test']),
+            'model'    => $page,
             'required' => true,
             'min'      => 5
         ]);
@@ -480,9 +557,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'blog']);
+
         // untranslated
         $field = new Field('test', [
-            'model'       => new Page(['slug' => 'test']),
+            'model'       => $page,
             'placeholder' => 'test'
         ]);
 
@@ -491,7 +570,7 @@ class FieldTest extends TestCase
 
         // translated
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'placeholder' => [
                 'en' => 'en',
                 'de' => 'de'
@@ -500,6 +579,15 @@ class FieldTest extends TestCase
 
         $this->assertEquals('en', $field->placeholder());
         $this->assertEquals('en', $field->placeholder);
+
+        // with query
+        $field = new Field('test', [
+            'model' => $page,
+            'placeholder' => '{{ page.slug }}'
+        ]);
+
+        $this->assertEquals('blog', $field->placeholder());
+        $this->assertEquals('blog', $field->placeholder);
     }
 
     public function testSave()
@@ -513,14 +601,16 @@ class FieldTest extends TestCase
             ]
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         $a = new Field('store-me', [
-            'model' => new Page(['slug' => 'test'])
+            'model' => $page
         ]);
 
         $this->assertTrue($a->save());
 
         $b = new Field('dont-store-me', [
-            'model' => new Page(['slug' => 'test'])
+            'model' => $page
         ]);
 
         $this->assertFalse($b->save());
@@ -541,8 +631,10 @@ class FieldTest extends TestCase
             ]
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'value' => ['a', 'b', 'c']
         ]);
 
@@ -583,9 +675,11 @@ class FieldTest extends TestCase
             'test' => []
         ];
 
+        $page = new Page(['slug' => 'test']);
+
         // default width
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
         ]);
 
         $this->assertEquals('1/1', $field->width());
@@ -593,7 +687,7 @@ class FieldTest extends TestCase
 
         // specific width
         $field = new Field('test', [
-            'model' => new Page(['slug' => 'test']),
+            'model' => $page,
             'width' => '1/2'
         ]);
 

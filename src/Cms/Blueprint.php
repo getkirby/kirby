@@ -222,7 +222,7 @@ class Blueprint
      *
      * @param string $name
      * @param string $fallback
-     * @param Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model $model
      * @return self
      */
     public static function factory(string $name, string $fallback = null, Model $model)
@@ -352,7 +352,7 @@ class Blueprint
     /**
      * Returns the parent model
      *
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function model()
     {
@@ -719,7 +719,7 @@ class Blueprint
      * Returns a single section by name
      *
      * @param string $name
-     * @return Kirby\Cms\Section|null
+     * @return \Kirby\Cms\Section|null
      */
     public function section(string $name)
     {

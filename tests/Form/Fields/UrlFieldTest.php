@@ -8,7 +8,7 @@ class UrlFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('url');
+        $field = $this->field('url');
 
         $this->assertEquals('url', $field->type());
         $this->assertEquals('url', $field->name());
@@ -22,13 +22,13 @@ class UrlFieldTest extends TestCase
 
     public function testUrlValidation()
     {
-        $field = new Field('url', [
+        $field = $this->field('url', [
             'value' => 'https://getkirby.com'
         ]);
 
         $this->assertTrue($field->isValid());
 
-        $field = new Field('url', [
+        $field = $this->field('url', [
             'value' => 'getkirby.com'
         ]);
 
@@ -37,7 +37,7 @@ class UrlFieldTest extends TestCase
 
     public function testMinLength()
     {
-        $field = new Field('url', [
+        $field = $this->field('url', [
             'value' => 'https://test.com',
             'minlength' => 17
         ]);
@@ -48,7 +48,7 @@ class UrlFieldTest extends TestCase
 
     public function testMaxLength()
     {
-        $field = new Field('url', [
+        $field = $this->field('url', [
             'value'     => 'https://test.com',
             'maxlength' => 15
         ]);

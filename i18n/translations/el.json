@@ -37,6 +37,7 @@
 
   "error.access.login": "Mη έγκυρη σύνδεση",
   "error.access.panel": "Δεν επιτρέπεται η πρόσβαση στον πίνακα ελέγχου",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Δεν ήταν δυνατή η μεταφόρτωση της εικόνας προφίλ",
   "error.avatar.delete.fail": "Δεν ήταν δυνατή η διαγραφή της εικόνας προφίλ",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Δεν επιτρέπεται να αλλάξετε το όνομα του \"{filename}\"",
   "error.file.duplicate": "Ένα αρχείο με το όνομα \"{filename}\" υπάρχει ήδη",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "\u03a0\u03b1\u03c1\u03b1\u03ba\u03b1\u03bb\u03bf\u03cd\u03bc\u03b5 \u03b5\u03c0\u03b9\u03b2\u03b5\u03b2\u03b1\u03b9\u03ce\u03c3\u03c4\u03b5 \u03c4\u03bf\u03bd \u039a\u03c9\u03b4\u03b9\u03ba\u03cc \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
   "error.user.password.undefined": "Ο χρήστης δεν έχει κωδικό πρόσβασης",
   "error.user.role.invalid": "Παρακαλώ εισαγάγετε έναν έγκυρο ρόλο",
-  "error.user.undefined": "Δεν είναι δυνατή η εύρεση του χρήστη",
   "error.user.update.permission":
     "Δεν επιτρέπεται η ενημέρωση του χρήστη \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac",
 
   "upload": "Μεταφόρτωση",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Σφάλμα",
   "upload.progress": "Μεταφόρτωση...",
 

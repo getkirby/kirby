@@ -37,6 +37,7 @@
 
   "error.access.login": "Érvénytelen bejelentkezés",
   "error.access.panel": "Nincs jogosultságod megnyitni a panelt",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "A profilkép feltöltése nem sikerült",
   "error.avatar.delete.fail": "A profilkép nem törölhető",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Érvénytelen konverter: \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Nincs jogosultságod megváltoztatni a \"{filename}\" fájl nevét",
   "error.file.duplicate": "Már létezik \"{filename}\" nevű fájl",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "K\u00e9rlek er\u0151s\u00edtsd meg a jelsz\u00f3t",
   "error.user.password.undefined": "A felhasználónak nincs jelszó megadva",
   "error.user.role.invalid": "Kérlek adj meg egy megfelelő szerepkört",
-  "error.user.undefined": "A felhaszn\u00e1l\u00f3 nem tal\u00e1lhat\u00f3",
   "error.user.update.permission":
     "Nincs jogosultságod frissíteni \"{name}\" felhasználó adatait",
 
@@ -412,6 +413,17 @@
   "translation.name": "Magyar",
 
   "upload": "Feltöltés",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Hiba",
   "upload.progress": "Feltöltés...",
 

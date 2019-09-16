@@ -64,7 +64,7 @@ return [
                     throw new Exception('The file could not be uploaded');
                 }
 
-                return $map($file);
+                return $map($file, $parent);
             });
         }
     ]

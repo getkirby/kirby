@@ -37,6 +37,7 @@
 
   "error.access.login": "Login Invalido",
   "error.access.panel": "Non ti è permesso accedere al pannello",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Non è stato possibile caricare l'immagine del profilo",
   "error.avatar.delete.fail": "Non è stato possibile eliminare l'immagine del profilo",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Convertitore \"{converter}\" non valido",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Non ti è permesso modificare il nome di \"{filename}\"",
   "error.file.duplicate": "Un file con il nome \"{filename}\" esiste già",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Le password non corrispondono",
   "error.user.password.undefined": "L'utente non ha una password",
   "error.user.role.invalid": "Inserisci un ruolo valido",
-  "error.user.undefined": "L'utente non \u00e8 stato trovato",
   "error.user.update.permission":
     "Non ti è permesso aggiornare l'utente \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Italiano",
 
   "upload": "Carica",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Errore",
   "upload.progress": "Caricamento...",
 

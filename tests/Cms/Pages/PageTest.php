@@ -129,7 +129,30 @@ class PageTest extends TestCase
         ]);
 
         $this->assertEquals('(link: test text: test)', $page->dragText());
-        $this->assertEquals('[test](/test)', $page->dragText('markdown'));
+    }
+
+    public function testDragTextMarkdown()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'panel' => [
+                    'kirbytext' => false
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test'
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+        $this->assertEquals('[test](/test)', $page->dragText());
     }
 
     public function testDragTextWithTitle()
@@ -142,7 +165,33 @@ class PageTest extends TestCase
         ]);
 
         $this->assertEquals('(link: test text: Test Title)', $page->dragText());
-        $this->assertEquals('[Test Title](/test)', $page->dragText('markdown'));
+    }
+
+    public function testDragTextWithTitleMarkdown()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'panel' => [
+                    'kirbytext' => false
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test Title'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+        $this->assertEquals('[Test Title](/test)', $page->dragText());
     }
 
     public function testId()

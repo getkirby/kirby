@@ -10,5 +10,12 @@ return [
         'help' => function ($help = null) {
             return I18n::translate($help, $help);
         }
+    ],
+    'computed' => [
+        'help' => function () {
+            if ($this->help) {
+                return $this->model()->toString($this->help);
+            }
+        }
     ]
 ];

@@ -897,6 +897,32 @@ class Str
     }
 
     /**
+     * Converts a filesize string with shortcuts
+     * like M, G or K to an integer value
+     *
+     * @return int
+     */
+    public static function toBytes($size): int
+    {
+        $size = trim($size);
+        $last = strtolower($size[strlen($size)-1] ?? null);
+        $size = (int)$size;
+
+        switch ($last) {
+            case 'g':
+                $size *= 1024;
+                // no break
+            case 'm':
+                $size *= 1024;
+                // no break
+            case 'k':
+                $size *= 1024;
+        }
+
+        return $size;
+    }
+
+    /**
      * Convert the string to the given type
      *
      * @param string $string

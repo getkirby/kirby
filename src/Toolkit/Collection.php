@@ -117,13 +117,13 @@ class Collection extends Iterator implements Countable
      *
      * @param  mixed      $key
      * @param  mixed      $item
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function append(...$args)
     {
         if (count($args) === 1) {
             $this->data[] = $args[0];
-        } elseif (count($args) === 2) {
+        } elseif (count($args) > 1) {
             $this->set($args[0], $args[1]);
         }
 
@@ -135,7 +135,7 @@ class Collection extends Iterator implements Countable
      * The last chunk may be smaller
      *
      * @param  int        $size  Number of elements per chunk
-     * @return Kirby\Toolkit\Collection        A new collection with an element for each chunk and
+     * @return \Kirby\Toolkit\Collection        A new collection with an element for each chunk and
      *                           a sub collection in each chunk
      */
     public function chunk(int $size)
@@ -197,7 +197,7 @@ class Collection extends Iterator implements Countable
     /**
      * Clone and remove all elements from the collection
      *
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function empty()
     {
@@ -409,7 +409,7 @@ class Collection extends Iterator implements Countable
     /**
      * Returns the elements in reverse order
      *
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function flip()
     {
@@ -525,7 +525,7 @@ class Collection extends Iterator implements Countable
      *
      * @param string $field
      * @param bool $i
-     * @return Kirby\Toolkit\Collection A new collection with an element for each group and a subcollection in each group
+     * @return \Kirby\Toolkit\Collection A new collection with an element for each group and a subcollection in each group
      */
     public function groupBy($field, bool $i = true)
     {
@@ -596,7 +596,7 @@ class Collection extends Iterator implements Countable
      * Returns a new object with a limited number of elements
      *
      * @param  int        $limit  The number of elements to return
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function limit(int $limit)
     {
@@ -607,7 +607,7 @@ class Collection extends Iterator implements Countable
      * Map a function to each element
      *
      * @param  callable $callback
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function map(callable $callback)
     {
@@ -630,7 +630,7 @@ class Collection extends Iterator implements Countable
      * Returns a Collection without the given element(s)
      *
      * @param  args    any number of keys, passed as individual arguments
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function not(...$keys)
     {
@@ -645,7 +645,7 @@ class Collection extends Iterator implements Countable
      * Returns a new object starting from the given offset
      *
      * @param  int        $offset  The index to start from
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function offset(int $offset)
     {
@@ -655,7 +655,7 @@ class Collection extends Iterator implements Countable
     /**
      * Add pagination
      *
-     * @return Kirby\Toolkit\Collection a sliced set of data
+     * @return \Kirby\Toolkit\Collection a sliced set of data
      */
     public function paginate(...$arguments)
     {
@@ -668,7 +668,7 @@ class Collection extends Iterator implements Countable
     /**
      * Get the previously added pagination object
      *
-     * @return Kirby\Toolkit\Pagination|null
+     * @return \Kirby\Toolkit\Pagination|null
      */
     public function pagination()
     {
@@ -716,7 +716,7 @@ class Collection extends Iterator implements Countable
     {
         if (count($args) === 1) {
             array_unshift($this->data, $args[0]);
-        } elseif (count($args) === 2) {
+        } elseif (count($args) > 1) {
             $data = $this->data;
             $this->data = [];
             $this->set($args[0], $args[1]);
@@ -807,7 +807,7 @@ class Collection extends Iterator implements Countable
     /**
      * Shuffle all elements
      *
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function shuffle()
     {
@@ -830,7 +830,7 @@ class Collection extends Iterator implements Countable
      *
      * @param  int        $offset  The optional index to start the slice from
      * @param  int        $limit   The optional number of elements to return
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function slice(int $offset = 0, int $limit = null)
     {
@@ -942,7 +942,34 @@ class Collection extends Iterator implements Countable
             $params[] = $field['flags']     ?? SORT_NATURAL | SORT_FLAG_CASE;
         }
 
-        $params[] = &$array;
+        // check what kind of collection items we have; only check for the first
+        // item for better performance (we assume that all collection items are
+        // of the same type)
+        $firstItem = $collection->first();
+        if (is_object($firstItem) === true) {
+            // avoid the "Nesting level too deep - recursive dependency?" error
+            // when PHP tries to sort by the objects directly (in case all other
+            // fields are 100 % equal for some elements)
+            if (method_exists($firstItem, '__toString') === true) {
+                // PHP can easily convert the objects to strings, so it should
+                // compare them as strings instead of as objects to avoid the recursion
+                $params[] = &$array;
+                $params[] = SORT_STRING;
+            } else {
+                // we can't convert the objects to strings, so we need a fallback:
+                // custom fictional field that is guaranteed to have a unique value
+                // for each item; WARNING: may lead to slightly wrong sorting results
+                // and is therefore only used as a fallback if we don't have another way
+                $params[] = range(1, count($array));
+                $params[] = SORT_ASC;
+                $params[] = SORT_NUMERIC;
+
+                $params[] = &$array;
+            }
+        } else {
+            // collection items are scalar or array; no correction necessary
+            $params[] = &$array;
+        }
 
         // array_multisort receives $params as separate params
         array_multisort(...$params);
@@ -1001,7 +1028,7 @@ class Collection extends Iterator implements Countable
      * Alias for $this->not()
      *
      * @param  args    any number of keys, passed as individual arguments
-     * @return Kirby\Toolkit\Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function without(...$keys)
     {

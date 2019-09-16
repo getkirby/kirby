@@ -21,7 +21,7 @@ class AutoSession
     /**
      * Creates a new AutoSession instance
      *
-     * @param Kirby\Session\SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
+     * @param \Kirby\Session\SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
      * @param array               $options Optional additional options:
      *                                     - `durationNormal`: Duration of normal sessions in seconds
      *                                                         Defaults to 2 hours
@@ -66,7 +66,7 @@ class AutoSession
      *                                          Defaults to `cookie`
      *                          - `long`:       Whether the session is a long "remember me" session or a normal session
      *                                          Defaults to `false`
-     * @return Kirby\Session\Session
+     * @return \Kirby\Session\Session
      */
     public function get(array $options = [])
     {
@@ -149,7 +149,7 @@ class AutoSession
      *                                          Defaults to `1800` (half an hour)
      *                          - `renewable`:  Should it be possible to extend the expiry date?
      *                                          Defaults to `true`
-     * @return Kirby\Session\Session
+     * @return \Kirby\Session\Session
      */
     public function createManually(array $options = [])
     {

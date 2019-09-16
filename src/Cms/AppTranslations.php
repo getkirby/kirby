@@ -85,7 +85,7 @@ trait AppTranslations
      *
      * @internal
      * @param string $languageCode
-     * @return Kirby\Cms\Language|null
+     * @return \Kirby\Cms\Language|null
      */
     public function setCurrentLanguage(string $languageCode = null)
     {
@@ -140,7 +140,7 @@ trait AppTranslations
      * Load a specific translation by locale
      *
      * @param string|null $locale
-     * @return Kirby\Cms\Translation|null
+     * @return \Kirby\Cms\Translation|null
      */
     public function translation(string $locale = null)
     {
@@ -164,7 +164,7 @@ trait AppTranslations
     /**
      * Returns all available translations
      *
-     * @return Kirby\Cms\Translations
+     * @return \Kirby\Cms\Translations
      */
     public function translations()
     {

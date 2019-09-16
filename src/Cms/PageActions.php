@@ -317,7 +317,7 @@ trait PageActions
      * Copies the page to a new parent
      *
      * @param array $options
-     * @return Kirby\Cms\Page
+     * @return \Kirby\Cms\Page
      */
     public function copy(array $options = [])
     {
@@ -371,6 +371,13 @@ trait PageActions
                     $copy = $copy->save(['slug' => null], $language->code());
                 }
             }
+        }
+        
+        // add copy to siblings
+        if ($isDraft === true) {
+            $parentModel->drafts()->append($copy->id(), $copy);
+        } else {
+            $parentModel->children()->append($copy->id(), $copy);
         }
 
         return $copy;
@@ -564,7 +571,7 @@ trait PageActions
      *
      * @param string $slug
      * @param array $options
-     * @return Kirby\Cms\Page
+     * @return \Kirby\Cms\Page
      */
     public function duplicate(string $slug = null, array $options = [])
     {

@@ -10,6 +10,8 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Url;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Toolkit\Xml;
@@ -25,7 +27,7 @@ return function (App $app) {
         /**
          * Converts the field value into a proper boolean and inverts it
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @return boolean
          */
         'isFalse' => function (Field $field): bool {
@@ -35,7 +37,7 @@ return function (App $app) {
         /**
          * Converts the field value into a proper boolean
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @return boolean
          */
         'isTrue' => function (Field $field): bool {
@@ -58,7 +60,7 @@ return function (App $app) {
         /**
          * Parses the field value with the given method
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param string $method [',', 'yaml', 'json']
          * @return array
          */
@@ -76,7 +78,7 @@ return function (App $app) {
         /**
          * Converts the field value into a proper boolean
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param bool $default Default value if the field is empty
          * @return bool
          */
@@ -88,7 +90,7 @@ return function (App $app) {
         /**
          * Converts the field value to a timestamp or a formatted date
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param string|null $format PHP date formatting string
          * @param string|null $fallback Fallback string for `strtotime` (since 3.2)
          * @return string|int
@@ -110,8 +112,8 @@ return function (App $app) {
         /**
          * Returns a file object from a filename in the field
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\File|null
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\File|null
          */
         'toFile' => function (Field $field) {
             return $field->toFiles()->first();
@@ -120,9 +122,9 @@ return function (App $app) {
         /**
          * Returns a file collection from a yaml list of filenames in the field
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param string $separator
-         * @return Kirby\Cms\Files
+         * @return \Kirby\Cms\Files
          */
         'toFiles' => function (Field $field, string $separator = 'yaml') {
             $parent = $field->parent();
@@ -140,7 +142,7 @@ return function (App $app) {
         /**
          * Converts the field value into a proper float
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param float $default Default value if the field is empty
          * @return float
          */
@@ -152,7 +154,7 @@ return function (App $app) {
         /**
          * Converts the field value into a proper integer
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param int $default Default value if the field is empty
          * @return int
          */
@@ -164,7 +166,7 @@ return function (App $app) {
         /**
          * Wraps a link tag around the field value. The field value is used as the link text
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param mixed $attr1 Can be an optional Url. If no Url is set, the Url of the Page, File or Site will be used. Can also be an array of link attributes
          * @param mixed $attr2 If `$attr1` is used to set the Url, you can use `$attr2` to pass an array of additional attributes.
          * @return string
@@ -188,8 +190,8 @@ return function (App $app) {
         /**
          * Returns a page object from a page id in the field
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Page|null
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Page|null
          */
         'toPage' => function (Field $field) use ($app) {
             return $field->toPages()->first();
@@ -198,9 +200,9 @@ return function (App $app) {
         /**
          * Returns a pages collection from a yaml list of page ids in the field
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param string $separator Can be any other separator to split the field value by
-         * @return Kirby\Cms\Pages
+         * @return \Kirby\Cms\Pages
          */
         'toPages' => function (Field $field, string $separator = 'yaml') use ($app) {
             return $app->site()->find(false, false, ...$field->toData($separator));
@@ -209,17 +211,27 @@ return function (App $app) {
         /**
          * Converts a yaml field to a Structure object
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Structure
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Structure
          */
         'toStructure' => function (Field $field) {
-            return new Structure(Yaml::decode($field->value), $field->parent());
+            try {
+                return new Structure(Yaml::decode($field->value), $field->parent());
+            } catch (Exception $e) {
+                if ($field->parent() === null) {
+                    $message = 'Invalid structure data for "' . $field->key() . '" field';
+                } else {
+                    $message = 'Invalid structure data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
+                }
+
+                throw new InvalidArgumentException($message);
+            }
         },
 
         /**
          * Converts the field value to a Unix timestamp
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @return int
          */
         'toTimestamp' => function (Field $field): int {
@@ -229,7 +241,7 @@ return function (App $app) {
         /**
          * Turns the field value into an absolute Url
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @return string
          */
         'toUrl' => function (Field $field): string {
@@ -239,8 +251,8 @@ return function (App $app) {
         /**
          * Converts a user email address to a user object
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\User|null
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\User|null
          */
         'toUser' => function (Field $field) use ($app) {
             return $field->toUsers()->first();
@@ -249,9 +261,9 @@ return function (App $app) {
         /**
          * Returns a users collection from a yaml list of user email addresses in the field
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param string $separator
-         * @return Kirby\Cms\Users
+         * @return \Kirby\Cms\Users
          */
         'toUsers' => function (Field $field, string $separator = 'yaml') use ($app) {
             return $app->users()->find(false, false, ...$field->toData($separator));
@@ -279,7 +291,7 @@ return function (App $app) {
          * Escapes the field value to be safely used in HTML
          * templates without the risk of XSS attacks
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param string $context html, attr, js or css
          */
         'escape' => function (Field $field, string $context = 'html') {
@@ -291,11 +303,11 @@ return function (App $app) {
          * Creates an excerpt of the field value without html
          * or any other formatting.
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param int $cahrs
          * @param boolean $strip
          * @param string $rep
-         * @return Kirby\Cms\Field
+         * @return \Kirby\Cms\Field
          */
         'excerpt' => function (Field $field, int $chars = 0, bool $strip = true, string $rep = '…') {
             $field->value = Str::excerpt($field->kirbytext()->value(), $chars, $strip, $rep);
@@ -305,8 +317,8 @@ return function (App $app) {
         /**
          * Converts the field content to valid HTML
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
          */
         'html' => function (Field $field) {
             $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
@@ -316,8 +328,8 @@ return function (App $app) {
         /**
          * Converts the field content from Markdown/Kirbytext to valid HTML
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
          */
         'kirbytext' => function (Field $field) use ($app) {
             $field->value = $app->kirbytext($field->value, [
@@ -333,8 +345,8 @@ return function (App $app) {
          * to valid HTML
          * @since 3.1.0
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
          */
         'kirbytextinline' => function (Field $field) use ($app) {
             $field->value = $app->kirbytext($field->value, [
@@ -348,8 +360,8 @@ return function (App $app) {
         /**
          * Parses all KirbyTags without also parsing Markdown
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
          */
         'kirbytags' => function (Field $field) use ($app) {
             $field->value = $app->kirbytags($field->value, [
@@ -363,8 +375,8 @@ return function (App $app) {
         /**
          * Converts the field content to lowercase
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
          */
         'lower' => function (Field $field) {
             $field->value = Str::lower($field->value);
@@ -374,8 +386,8 @@ return function (App $app) {
         /**
          * Converts markdown to valid HTML
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
          */
         'markdown' => function (Field $field) use ($app) {
             $field->value = $app->markdown($field->value);
@@ -385,8 +397,8 @@ return function (App $app) {
         /**
          * Converts the field content to valid XML
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\Cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
          */
         'xml' => function (Field $field) {
             $field->value = Xml::encode($field->value);
@@ -397,10 +409,10 @@ return function (App $app) {
          * Cuts the string after the given length and
          * adds "…" if it is longer
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @param int $length The number of characters in the string
          * @param string $appendix An optional replacement for the missing rest
-         * @return Kirby\Cms\Field
+         * @return \Kirby\Cms\Field
          */
         'short' => function (Field $field, int $length, string $appendix = '…') {
             $field->value = Str::short($field->value, $length, $appendix);
@@ -410,8 +422,8 @@ return function (App $app) {
         /**
          * Converts the field content to a slug
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\cms\Field
          */
         'slug' => function (Field $field) {
             $field->value = Str::slug($field->value);
@@ -421,8 +433,8 @@ return function (App $app) {
         /**
          * Applies SmartyPants to the field
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\cms\Field
          */
         'smartypants' => function (Field $field) use ($app) {
             $field->value = $app->smartypants($field->value);
@@ -432,8 +444,8 @@ return function (App $app) {
         /**
          * Splits the field content into an array
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\cms\Field
          */
         'split' => function (Field $field, $separator = ',') {
             return Str::split((string)$field->value, $separator);
@@ -442,8 +454,8 @@ return function (App $app) {
         /**
          * Converts the field content to uppercase
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\cms\Field
          */
         'upper' => function (Field $field) {
             $field->value = Str::upper($field->value);
@@ -454,8 +466,8 @@ return function (App $app) {
          * Avoids typographical widows in strings by replacing
          * the last space with `&nbsp;`
          *
-         * @param Kirby\Cms\Field $field
-         * @return Kirby\cms\Field
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\cms\Field
          */
         'widont' => function (Field $field) {
             $field->value = Str::widont($field->value);
@@ -467,7 +479,7 @@ return function (App $app) {
         /**
          * Parses yaml in the field content and returns an array
          *
-         * @param Kirby\Cms\Field $field
+         * @param \Kirby\Cms\Field $field
          * @return array
          */
         'yaml' => function (Field $field): array {

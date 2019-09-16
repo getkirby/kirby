@@ -33,10 +33,11 @@
   "dialog.users.empty": "Tidak ada pengguna untuk dipilih",
 
   "email": "Surel",
-  "email.placeholder": "surel@contohsurel.com",
+  "email.placeholder": "surel@contoh.com",
 
   "error.access.login": "Upaya masuk tidak valid",
   "error.access.panel": "Anda tidak diizinkan mengakses panel",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Gambar profil tidak dapat diunggah",
   "error.avatar.delete.fail": "Gambar profil tidak dapat dihapus",
@@ -45,12 +46,13 @@
   "error.avatar.mime.forbidden":
     "Gambar profil harus berupa berkas JPEG atau PNG",
 
-  "error.blueprint.notFound": "Blueprint \"{name}\" tidak dapat dimuat",
+  "error.blueprint.notFound": "Cetak biru \"{name}\" tidak dapat dimuat",
 
   "error.email.preset.notFound": "Surel \"{name}\" tidak dapat ditemukan",
 
   "error.field.converter.invalid": "Konverter \"{converter}\" tidak valid",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Anda tidak diizinkan mengubah nama berkas \"{filename}\"",
   "error.file.duplicate": "Berkas dengan nama \"{filename}\" sudah ada",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Sandi tidak cocok",
   "error.user.password.undefined": "Pengguna tidak memiliki sandi",
   "error.user.role.invalid": "Masukkan peran yang valid",
-  "error.user.undefined": "Pengguna tidak dapat ditemukan",
   "error.user.update.permission":
     "Anda tidak diizinkan memperbaharui pengguna \"{name}\"",
 
@@ -265,7 +266,7 @@
   "language.direction.ltr": "Kiri ke kanan",
   "language.direction.rtl": "Kanan ke kiri",
   "language.locale": "String \"PHP locale\"",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Anda menggunakan pengaturan lokal ubah suaian. Ubah di berkas bahasa di /site/languages",
   "language.name": "Nama",
   "language.updated": "Bahasa sudah diperbaharui",
 
@@ -412,6 +413,17 @@
   "translation.name": "Bahasa Indonesia",
 
   "upload": "Unggah",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Kesalahan",
   "upload.progress": "Mengunggah…",
 

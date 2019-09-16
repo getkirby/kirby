@@ -25,8 +25,8 @@ class SessionData
      * Creates a new SessionData instance
      *
      * @codeCoverageIgnore
-     * @param Kirby\Session\Session $session Session object this data belongs to
-     * @param array   $data    Currently stored session data
+     * @param \Kirby\Session\Session $session Session object this data belongs to
+     * @param array $data Currently stored session data
      */
     public function __construct(Session $session, array $data)
     {

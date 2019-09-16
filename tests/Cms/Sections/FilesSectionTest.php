@@ -122,6 +122,31 @@ class FilesSectionTest extends TestCase
         $this->assertEquals('pages/b/files', $section->upload()['api']);
     }
 
+    public function testParentCollectionFail()
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The parent for the section "files" has to be a page, site or user object');
+
+        $app = new App([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a'
+                    ],
+                    [
+                        'slug' => 'b'
+                    ]
+                ]
+            ]
+        ]);
+
+        $section = new Section('files', [
+            'model'  => $app->page('a'),
+            'parent' => 'site.index'
+        ]);
+        $section->parentModel();
+    }
+
     public function testEmpty()
     {
         $section = new Section('files', [

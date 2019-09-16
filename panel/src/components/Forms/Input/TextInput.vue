@@ -96,13 +96,18 @@ export default {
     }
   },
   validations() {
+    const match = (value) => {
+      return (!this.required && value.length === 0) || !this.$refs.input.validity.patternMismatch;
+    };
+
     return {
       value: {
         required: this.required ? required : true,
         minLength: this.minlength ? minLength(this.minlength) : true,
         maxLength: this.maxlength ? maxLength(this.maxlength) : true,
         email: this.type === "email" ? email : true,
-        url: this.type === "url" ? url : true
+        url: this.type === "url" ? url : true,
+        pattern: this.pattern ? match: true,
       }
     };
   }

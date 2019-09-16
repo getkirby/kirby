@@ -37,6 +37,7 @@
 
   "error.access.login": "Geçersiz giriş",
   "error.access.panel": "Panele erişim izniniz yok",
+  "error.access.view": "Panelin bu bölümüne erişemezsiniz",
 
   "error.avatar.create.fail": "Profil resmi yüklenemedi",
   "error.avatar.delete.fail": "Profil resmi silinemedi",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
 
+  "error.file.changeName.empty": "İsim boş olmamalıdır",
   "error.file.changeName.permission":
     "\"{filename}\" adını değiştiremezsiniz",
   "error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
   "error.user.password.undefined": "Bu kullanıcının şifresi yok",
   "error.user.role.invalid": "Lütfen geçerli bir rol girin",
-  "error.user.undefined": "Kullan\u0131c\u0131 bulunamad\u0131",
   "error.user.update.permission":
     "\"{name}\" kullanıcısını güncellemenize izin verilmiyor",
 
@@ -325,7 +326,7 @@
   "next": "Sonraki",
   "off": "kapalı",
   "on": "açık",
-  "open": "Önizle",
+  "open": "Önizleme",
   "options": "Seçenekler",
 
   "orientation": "Oryantasyon",
@@ -412,6 +413,17 @@
   "translation.name": "T\u00fcrk\u00e7e",
 
   "upload": "Yükle",
+  "upload.error.cantMove": "Yüklenen dosya taşınamadı",
+  "upload.error.cantWrite": "Dosya diske yazılamadı",
+  "upload.error.default": "Dosya yüklenemedi",
+  "upload.error.extension": "Dosya yükleme uzantısı tarafından durduruldu",
+  "upload.error.formSize": "Yüklenen dosya, formda belirtilen MAX_FILE_SIZE yönergesini aşıyor",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "Yüklenen dosya php.ini içindeki upload_max_filesize yönergesini aşıyor",
+  "upload.error.noFile": "Dosya yüklenmedi",
+  "upload.error.noFiles": "Dosyalar yüklenmedi",
+  "upload.error.partial": "Yüklenen dosya sadece kısmen yüklendi",
+  "upload.error.tmpDir": "Geçici klasör eksik",
   "upload.errors": "Hata",
   "upload.progress": "Yükleniyor...",
 
