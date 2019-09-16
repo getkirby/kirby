@@ -63,7 +63,7 @@ class CollectionTest extends TestCase
         $this->assertEquals(['A', 'B', 'C'], $collection->values());
 
         // with too many params
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append('a', 'A', 'ignore this');
         $collection = $collection->append('b', 'B', 'ignore this');
         $collection = $collection->append('c', 'C', 'ignore this');
