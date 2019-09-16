@@ -103,7 +103,7 @@ class Collection extends BaseCollection
      *
      * @param  mixed $key
      * @param  mixed $item
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function append(...$args)
     {
@@ -126,7 +126,7 @@ class Collection extends BaseCollection
      *
      * @param string $field
      * @param bool $i Ignore upper/lowercase for group names
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function groupBy($field, bool $i = true)
     {
@@ -198,7 +198,7 @@ class Collection extends BaseCollection
      * Returns a Collection without the given element(s)
      *
      * @param  mixed[] $keys any number of keys, passed as individual arguments
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function not(...$keys)
     {
@@ -217,7 +217,7 @@ class Collection extends BaseCollection
     /**
      * Add pagination and return a sliced set of data.
      *
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function paginate(...$arguments)
     {
@@ -230,7 +230,7 @@ class Collection extends BaseCollection
     /**
      * Returns the parent model
      *
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function parent()
     {

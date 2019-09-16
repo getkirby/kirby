@@ -121,8 +121,8 @@ trait FileActions
     /**
      * Copy the file to the given page
      *
-     * @param Kirby\Cms\Page $page
-     * @return Kirby\Cms\File
+     * @param \Kirby\Cms\Page $page
+     * @return \Kirby\Cms\File
      */
     public function copy(Page $page)
     {

@@ -541,8 +541,7 @@ export default {
       if (!fraction) {
         return "auto";
       }
-
-      const parts = fraction.split("/");
+      const parts = fraction.toString().split("/");
 
       if (parts.length !== 2) {
         return "auto";

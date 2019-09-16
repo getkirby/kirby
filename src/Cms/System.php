@@ -38,7 +38,7 @@ class System
     protected $app;
 
     /**
-     * @param Kirby\Cms\App $app
+     * @param \Kirby\Cms\App $app
      */
     public function __construct(App $app)
     {
