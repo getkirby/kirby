@@ -65,7 +65,7 @@ export default {
           this.user = user;
 
           // If current panel user, update store to switch language
-          if (this.$store.state.user.current.id === this.user.id) {
+          if (this.$user.id === this.user.id) {
             this.$store.dispatch("user/language", this.user.language);
           }
 

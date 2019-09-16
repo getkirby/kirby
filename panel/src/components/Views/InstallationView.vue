@@ -73,7 +73,7 @@ export default {
       user: {
         name: "",
         email: "",
-        language: "en",
+        language: "",
         password: "",
         role: "admin"
       },
@@ -139,6 +139,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("form/current", null);
     this.check();
   },
   methods: {
