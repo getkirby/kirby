@@ -73,7 +73,7 @@ export default {
       user: {
         name: "",
         email: "",
-        language: "en",
+        language: "",
         password: "",
         role: "admin"
       },
