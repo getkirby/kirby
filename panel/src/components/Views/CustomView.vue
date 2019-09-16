@@ -15,6 +15,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.$store.dispatch("breadcrumb", []);
+      vm.$store.dispatch("form/current", null);
     })
   },
   watch: {
