@@ -46,7 +46,7 @@ class Section extends Component
     }
 
     /**
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {
@@ -54,7 +54,7 @@ class Section extends Component
     }
 
     /**
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function model()
     {

@@ -71,7 +71,7 @@ abstract class Cache
      * this needs to be defined by the driver
      *
      * @param string $key
-     * @return Kirby\Cache\Value|null
+     * @return \Kirby\Cache\Value|null
      */
     abstract public function retrieve(string $key);
 

@@ -36,7 +36,7 @@ class Db
      * (Re)connect the database
      *
      * @param array $params Pass [] to use the default params from the config
-     * @return Kirby\Database\Database
+     * @return \Kirby\Database\Database
      */
     public static function connect(array $params = null)
     {
@@ -61,7 +61,7 @@ class Db
     /**
      * Returns the current database connection
      *
-     * @return Kirby\Database\Database
+     * @return \Kirby\Database\Database
      */
     public static function connection()
     {
@@ -74,7 +74,7 @@ class Db
      * that table.
      *
      * @param string $table
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public static function table($table)
     {

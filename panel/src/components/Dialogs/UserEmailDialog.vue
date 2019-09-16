@@ -59,6 +59,11 @@ export default {
           // remove changes for the old user
           this.$store.dispatch("form/revert", "users/" + this.user.id);
 
+          // If current panel user, update store
+          if (this.$user.id === this.user.id) {
+            this.$store.dispatch("user/email", this.user.email);
+          }
+
           let payload = {
             message: ":)",
             event: "user.changeEmail",
