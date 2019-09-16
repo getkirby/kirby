@@ -24,6 +24,7 @@ return [
                 if (
                     is_a($parent, 'Kirby\Cms\Page') === false &&
                     is_a($parent, 'Kirby\Cms\Site') === false &&
+                    is_a($parent, 'Kirby\Cms\File') === false &&
                     is_a($parent, 'Kirby\Cms\User') === false
                 ) {
                     throw new Exception('The parent for the section "' . $this->name() . '" has to be a page, site or user object');
