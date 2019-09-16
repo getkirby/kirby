@@ -95,6 +95,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("form/current", null);
     this.$api.roles.options().then(roles => {
       this.roles = roles;
       this.fetch();

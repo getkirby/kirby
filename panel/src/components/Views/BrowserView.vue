@@ -35,6 +35,8 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("form/current", null);
+    
     if (supports.all()) {
       this.$router.push("/");
     }

@@ -81,8 +81,7 @@ export default {
     toggle() {
       this.isOpen ? this.close() : this.open();
     },
-    focus(n) {
-      n = n || 0;
+    focus(n = 0) {
       if (this.$children[n] && this.$children[n].focus) {
         this.current = n;
         this.$children[n].focus();
@@ -98,22 +97,47 @@ export default {
           break;
         case "ArrowUp":
           e.preventDefault();
-          if (this.current > 0) {
+          
+          while (true) {
             this.current--;
-            this.focus(this.current);
-          } else {
-            this.close();
-            this.$emit("leave", e.code);
+            
+            if (this.current < 0) {
+              this.close();
+              this.$emit("leave", e.code);
+              break;
+            }
+             
+            if (
+              this.$children[this.current] && 
+              this.$children[this.current].disabled === false
+            ) {
+              this.focus(this.current);
+              break;
+            }
           }
+          
           break;
         case "ArrowDown":
           e.preventDefault();
-
-          if (this.current < this.$children.length - 1) {
+          
+          while (true) {
             this.current++;
-            this.focus(this.current);
+            
+            if (this.current > this.$children.length - 1) {
+              const enabled = this.$children.filter(x => x.disabled === false);
+              this.current = this.$children.indexOf(enabled[enabled.length - 1]);
+              break;
+            }
+             
+            if (
+              this.$children[this.current] && 
+              this.$children[this.current].disabled === false
+            ) {
+              this.focus(this.current);
+              break;
+            }
           }
-
+          
           break;
       }
     }

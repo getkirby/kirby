@@ -28,6 +28,10 @@ class UserPermissionsTest extends TestCase
         $kirby = new App([
             'roots' => [
                 'index' => '/dev/null'
+            ],
+            'roles' => [
+                ['name' => 'admin'],
+                ['name' => 'editor']
             ]
         ]);
 
@@ -47,6 +51,10 @@ class UserPermissionsTest extends TestCase
         $kirby = new App([
             'roots' => [
                 'index' => '/dev/null'
+            ],
+            'roles' => [
+                ['name' => 'admin'],
+                ['name' => 'editor']
             ]
         ]);
 
@@ -54,5 +62,22 @@ class UserPermissionsTest extends TestCase
         $perms = $user->permissions();
 
         $this->assertFalse($perms->can($action));
+    }
+
+    public function testChangeSingleRole()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'roles' => [
+                ['name' => 'admin']
+            ]
+        ]);
+
+        $user  = new User(['email' => 'test@getkirby.com']);
+        $perms = $user->permissions();
+
+        $this->assertFalse($perms->can('changeRole'));
     }
 }
