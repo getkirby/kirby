@@ -317,7 +317,7 @@ trait PageActions
      * Copies the page to a new parent
      *
      * @param array $options
-     * @return Kirby\Cms\Page
+     * @return \Kirby\Cms\Page
      */
     public function copy(array $options = [])
     {
@@ -571,7 +571,7 @@ trait PageActions
      *
      * @param string $slug
      * @param array $options
-     * @return Kirby\Cms\Page
+     * @return \Kirby\Cms\Page
      */
     public function duplicate(string $slug = null, array $options = [])
     {

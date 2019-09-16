@@ -30,7 +30,7 @@ class Sessions
     /**
      * Creates a new Sessions instance
      *
-     * @param Kirby\Session\SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
+     * @param \Kirby\Session\SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
      * @param array               $options Optional additional options:
      *                                     - `mode`:       Default token transmission mode (cookie, header or manual)
      *                                                     Defaults to `cookie`
@@ -105,7 +105,7 @@ class Sessions
      *                                          Defaults to `1800` (half an hour)
      *                          - `renewable`:  Should it be possible to extend the expiry date?
      *                                          Defaults to `true`
-     * @return Kirby\Session\Session
+     * @return \Kirby\Session\Session
      */
     public function create(array $options = [])
     {
@@ -122,7 +122,7 @@ class Sessions
      *
      * @param  string $token Session token, either including or without the key
      * @param  string $mode  Optional transmission mode override
-     * @return Kirby\Session\Session
+     * @return \Kirby\Session\Session
      */
     public function get(string $token, string $mode = null)
     {
@@ -139,7 +139,7 @@ class Sessions
      * - In `header` mode: Gets the session from the `Authorization` request header
      * - In `manual` mode: Fails and throws an Exception
      *
-     * @return Kirby\Session\Session|null Either the current session or null in case there isn't one
+     * @return \Kirby\Session\Session|null Either the current session or null in case there isn't one
      */
     public function current()
     {
@@ -183,7 +183,7 @@ class Sessions
      * - Tries to get the session from the cookie
      * - Otherwise returns null
      *
-     * @return Kirby\Session\Session|null Either the current session or null in case there isn't one
+     * @return \Kirby\Session\Session|null Either the current session or null in case there isn't one
      */
     public function currentDetected()
     {
@@ -211,7 +211,7 @@ class Sessions
      * Getter for the session store instance
      * Used internally
      *
-     * @return Kirby\Session\SessionStore
+     * @return \Kirby\Session\SessionStore
      */
     public function store()
     {
@@ -247,7 +247,7 @@ class Sessions
      * session or a session with a regenerated token
      *
      * @internal
-     * @param Kirby\Session\Session $session Session instance to push to the cache
+     * @param \Kirby\Session\Session $session Session instance to push to the cache
      */
     public function updateCache(Session $session)
     {

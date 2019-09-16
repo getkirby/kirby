@@ -52,7 +52,7 @@ class Data
      * Handler getter
      *
      * @param  string  $type
-     * @return Kirby\Data\Handler
+     * @return \Kirby\Data\Handler
      */
     public static function handler(string $type)
     {

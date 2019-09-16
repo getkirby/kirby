@@ -413,7 +413,7 @@ class Uri
     }
 
     /**
-     * @param  Kirby\Http\Path|string|array|null $path
+     * @param \Kirby\Http\Path|string|array|null $path
      * @return self
      */
     public function setPath($path = null)
@@ -423,7 +423,7 @@ class Uri
     }
 
     /**
-     * @param  int|null $port
+     * @param int|null $port
      * @return self
      */
     public function setPort(int $port = null)
@@ -443,7 +443,7 @@ class Uri
     }
 
     /**
-     * @param Kirby\Http\Query|string|array|null $query
+     * @param \Kirby\Http\Query|string|array|null $query
      * @return self
      */
     public function setQuery($query = null)

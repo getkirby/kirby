@@ -54,7 +54,7 @@ class PluginAssets
      *
      * @param string $pluginName
      * @param string $filename
-     * @return Kirby\Cms\Response|null
+     * @return \Kirby\Cms\Response|null
      */
     public static function resolve(string $pluginName, string $filename)
     {

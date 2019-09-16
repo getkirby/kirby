@@ -82,7 +82,7 @@ class Users extends Collection
      * Finds a user in the collection by id or email address
      *
      * @param string $key
-     * @return Kirby\Cms\User|null
+     * @return \Kirby\Cms\User|null
      */
     public function findByKey(string $key)
     {

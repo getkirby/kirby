@@ -62,9 +62,36 @@ class FileTest extends TestCase
         ]);
 
         $file = $page->file('test.pdf');
-
         $this->assertEquals('(file: test.pdf)', $file->dragText());
-        $this->assertEquals('[test.pdf](test.pdf)', $file->dragText('markdown'));
+    }
+
+    public function testDragTextMarkdown()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'panel' => [
+                    'kirbytext' => false
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            [
+                                'filename' => 'test.pdf'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = $app->page('test')->file('test.pdf');
+        $this->assertEquals('[test.pdf](test.pdf)', $file->dragText());
     }
 
     public function testDragTextForImages()
@@ -79,9 +106,36 @@ class FileTest extends TestCase
         ]);
 
         $file = $page->file('test.jpg');
-
         $this->assertEquals('(image: test.jpg)', $file->dragText());
-        $this->assertEquals('![](test.jpg)', $file->dragText('markdown'));
+    }
+
+    public function testDragTextForImagesMarkdown()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'panel' => [
+                    'kirbytext' => false
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            [
+                                'filename' => 'test.jpg'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = $app->page('test')->file('test.jpg');
+        $this->assertEquals('![](test.jpg)', $file->dragText());
     }
 
     public function testFilename()

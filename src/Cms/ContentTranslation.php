@@ -154,7 +154,7 @@ class ContentTranslation
     /**
      * Returns the parent page, file or site object
      *
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function parent()
     {
@@ -182,7 +182,7 @@ class ContentTranslation
     }
 
     /**
-     * @param Kirby\Cms\Model $parent
+     * @param \Kirby\Cms\Model $parent
      * @return self
      */
     protected function setParent(Model $parent)

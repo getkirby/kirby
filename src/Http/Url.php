@@ -278,7 +278,7 @@ class Url
      * Converts the Url to a Uri object
      *
      * @param string $url
-     * @return Kirby\Http\Uri
+     * @return \Kirby\Http\Uri
      */
     public static function toObject($url = null)
     {
