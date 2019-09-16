@@ -47,16 +47,16 @@ export default {
 
       this.$api.users.get(id)
         .then(user => {
-          this.$api.roles.options().then(roles => {
+          this.$api.roles.options({ canBe: "changed" }).then(roles => {
             this.roles = roles;
-            
+
             // don't let non-admins promote anyone to admin
             if (this.$user.role.name !== "admin") {
               this.roles = this.roles.filter(role => {
                 return role.value !== "admin";
               });
             }
-            
+
             this.user = user;
             this.user.role = this.user.role.name;
             this.$refs.dialog.open();
