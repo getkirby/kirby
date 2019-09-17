@@ -405,15 +405,20 @@ class Page extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @internal
+     * @param string $type (auto|kirbytext|markdown)
      * @return string
      */
-    public function dragText($type = 'kirbytext'): string
+    public function dragText(string $type = 'auto'): string
     {
+        if ($type === 'auto') {
+            $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
+        }
+
         switch ($type) {
-            case 'kirbytext':
-                return '(link: ' . $this->id() . ' text: ' . $this->title() . ')';
             case 'markdown':
                 return '[' . $this->title() . '](' . $this->url() . ')';
+            default:
+                return '(link: ' . $this->id() . ' text: ' . $this->title() . ')';
         }
     }
 

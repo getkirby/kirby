@@ -232,27 +232,31 @@ class File extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string $type
+     * @param string $type (auto|kirbytext|markdown)
      * @param bool $absolute
      * @return string
      */
-    public function dragText($type = 'kirbytext', bool $absolute = false): string
+    public function dragText($type = 'auto', bool $absolute = false): string
     {
+        if ($type === 'auto') {
+            $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
+        }
+
         $url = $absolute ? $this->id() : $this->filename();
 
         switch ($type) {
-            case 'kirbytext':
-                if ($this->type() === 'image') {
-                    return '(image: ' . $url . ')';
-                } else {
-                    return '(file: ' . $url . ')';
-                }
-                // no break
             case 'markdown':
                 if ($this->type() === 'image') {
                     return '![' . $this->alt() . '](' . $url . ')';
                 } else {
                     return '[' . $this->filename() . '](' . $url . ')';
+                }
+                // no break
+            default:
+                if ($this->type() === 'image') {
+                    return '(image: ' . $url . ')';
+                } else {
+                    return '(file: ' . $url . ')';
                 }
         }
     }
