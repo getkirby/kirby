@@ -8,7 +8,7 @@
       type="file"
       tabindex="-1"
       @change="select"
-      @click="click"
+      @click.stop
     >
 
     <k-dialog ref="dialog" size="medium">
@@ -87,9 +87,6 @@ export default {
     },
     params(params) {
       this.options = Object.assign({}, this.$props, params);
-    },
-    click(e) {
-      e.stopPropagation();
     },
     select(e) {
       this.upload(e.target.files);
