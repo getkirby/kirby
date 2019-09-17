@@ -106,6 +106,8 @@ class Mime
         'xlsx'  => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'xltx'  => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
         'xsl'   => 'text/xml',
+        'yaml'  => ['application/yaml', 'text/yaml'],
+        'yml'   => ['application/yaml', 'text/yaml'],
         'zip'   => ['application/x-zip', 'application/zip', 'application/x-zip-compressed'],
     ];
 

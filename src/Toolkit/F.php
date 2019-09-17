@@ -48,6 +48,7 @@ class F
             'py',
             'scss',
             'xml',
+            'yaml',
             'yml',
         ],
         'document' => [
