@@ -21,7 +21,6 @@ use Throwable;
  */
 class Database
 {
-
     /**
      * The number of affected rows for the last query
      *
@@ -180,7 +179,7 @@ class Database
      * Connects to a database
      *
      * @param array|null $params This can either be a config key or an array of parameters for the connection
-     * @return Kirby\Database\Database
+     * @return \Kirby\Database\Database
      */
     public function connect(array $params = null)
     {
@@ -223,7 +222,7 @@ class Database
     /**
      * Returns the currently active connection
      *
-     * @return Kirby\Database\Database|null
+     * @return \Kirby\Database\Database|null
      */
     public function connection()
     {
@@ -234,7 +233,7 @@ class Database
      * Sets the exception mode for the next query
      *
      * @param boolean $fail
-     * @return Kirby\Database\Database
+     * @return \Kirby\Database\Database
      */
     public function fail(bool $fail = true)
     {
@@ -467,7 +466,7 @@ class Database
      * Returns the correct Sql generator instance
      * for the type of database
      *
-     * @return Kirby\Database\Sql
+     * @return \Kirby\Database\Sql
      */
     public function sql()
     {
@@ -481,7 +480,7 @@ class Database
      * for that table
      *
      * @param string $table
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function table(string $table)
     {
@@ -579,6 +578,9 @@ class Database
      * Magic way to start queries for tables by
      * using a method named like the table.
      * I.e. $db->users()->all()
+     *
+     * @param mixed $method
+     * @param mixed $arguments
      */
     public function __call($method, $arguments = null)
     {

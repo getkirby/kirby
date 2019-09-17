@@ -33,7 +33,7 @@ class FilesTest extends TestCase
     public function testData()
     {
         // default
-        $files = new Files;
+        $files = new Files();
         $this->assertEquals([], $files->data());
 
         // custom
@@ -82,7 +82,7 @@ class FilesTest extends TestCase
 
         $files = new Files($data);
         $this->assertEquals($data, $files->toArray());
-        $this->assertEquals($data, $files->__debuginfo());
+        $this->assertEquals($data, $files->__debugInfo());
     }
 
     public function testToJson()

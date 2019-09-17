@@ -19,7 +19,6 @@ use Exception;
  */
 class A
 {
-
     /**
      * Appends the given array
      *
@@ -112,6 +111,8 @@ class A
     }
 
     /**
+     * @param mixed $value
+     * @param mixed $separator
      * @return string
      */
     public static function join($value, $separator = ', ')
@@ -535,6 +536,7 @@ class A
      * // ];
      * </code>
      *
+     * @param array ...$arrays
      * @return array
      */
     public static function extend(...$arrays): array

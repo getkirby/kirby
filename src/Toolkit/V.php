@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use Kirby\Http\Idn;
-use Kirby\Toolkit\Str;
 use ReflectionFunction;
 use Throwable;
 
@@ -19,7 +18,6 @@ use Throwable;
  */
 class V
 {
-
     /**
      * An array with all installed validators
      *
@@ -245,9 +243,9 @@ V::$validators = [
      */
     'date' => function ($value): bool {
         $date = date_parse($value);
-        return ($date !== false &&
+        return $date !== false &&
                 $date['error_count'] === 0 &&
-                $date['warning_count'] === 0);
+                $date['warning_count'] === 0;
     },
 
     /**

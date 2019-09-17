@@ -169,8 +169,8 @@ class DbTest extends TestCase
 
     public function testDelete()
     {
-        Db::delete('users', array('username' => 'ringo'));
-        $this->assertFalse(Db::one('users', '*', array('username' => 'ringo')));
+        Db::delete('users', ['username' => 'ringo']);
+        $this->assertFalse(Db::one('users', '*', ['username' => 'ringo']));
     }
 
     public function testCount()

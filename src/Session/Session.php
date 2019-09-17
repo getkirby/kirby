@@ -2,7 +2,6 @@
 
 namespace Kirby\Session;
 
-use Throwable;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -11,6 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * @package   Kirby Session
@@ -49,7 +49,7 @@ class Session
     /**
      * Creates a new Session instance
      *
-     * @param Kirby\Session\Sessions    $sessions Parent sessions object
+     * @param \Kirby\Session\Sessions    $sessions Parent sessions object
      * @param string|null $token    Session token or null for a new session
      * @param array       $options  Optional additional options:
      *                              - `mode`:       Token transmission mode (cookie or manual)
@@ -305,7 +305,7 @@ class Session
     /**
      * Returns the session data object
      *
-     * @return Kirby\Session\SessionData
+     * @return \Kirby\Session\SessionData
      */
     public function data()
     {
@@ -719,7 +719,7 @@ class Session
         $this->renewable    = $data['renewable'];
 
         // reload data into existing object to avoid breaking memory references
-        if (is_a($this->data, SessionData::class)) {
+        if (is_a($this->data, 'Kirby\Session\SessionData')) {
             $this->data()->reload($data['data']);
         } else {
             $this->data = new SessionData($this, $data['data']);

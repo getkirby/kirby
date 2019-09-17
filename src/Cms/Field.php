@@ -27,7 +27,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Field
 {
-
     /**
      * Field method aliases
      *
@@ -111,7 +110,7 @@ class Field
      * @see Field::toArray
      * @return void
      */
-    public function __debuginfo()
+    public function __debugInfo()
     {
         return $this->toArray();
     }
@@ -170,7 +169,7 @@ class Field
 
     /**
      * @see Field::parent()
-     * @return Kirby\Cms\Model|null
+     * @return \Kirby\Cms\Model|null
      */
     public function model()
     {
@@ -201,7 +200,7 @@ class Field
     /**
      * Returns the parent object of the field
      *
-     * @return Kirby\Cms\Model|null
+     * @return \Kirby\Cms\Model|null
      */
     public function parent()
     {

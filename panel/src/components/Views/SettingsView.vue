@@ -92,9 +92,10 @@ export default {
     }
   },
   created() {
-    this.fetch();
+    this.$store.dispatch("form/current", null);
     this.$store.dispatch("title", this.$t("view.settings"));
     this.$store.dispatch("breadcrumb", []);
+    this.fetch();
   },
   methods: {
     fetch() {

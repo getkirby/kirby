@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -29,7 +28,6 @@ use Throwable;
  */
 class Language extends Model
 {
-
     /**
      * @var string
      */
@@ -97,7 +95,7 @@ class Language extends Model
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -230,6 +228,7 @@ class Language extends Model
      * When the language is deleted, all content files with
      * the language code must be removed as well.
      *
+     * @param mixed $code
      * @return bool
      */
     protected function deleteContentFiles($code): bool
@@ -355,7 +354,7 @@ class Language extends Model
      * which is used to handle language specific
      * routes.
      *
-     * @return Kirby\Cms\LanguageRouter
+     * @return \Kirby\Cms\LanguageRouter
      */
     public function router()
     {
@@ -480,7 +479,7 @@ class Language extends Model
     }
 
     /**
-     * @param array $slug
+     * @param array $slugs
      * @return self
      */
     protected function setSlugs(array $slugs = null)

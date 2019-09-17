@@ -16,7 +16,6 @@ use Kirby\Toolkit\F;
  */
 class FileCache extends Cache
 {
-
     /**
      * Full root including prefix
      * @var string
@@ -93,7 +92,7 @@ class FileCache extends Cache
      * needs to return a Value object or null if not found
      *
      * @param string $key
-     * @return Kirby\Cache\Value|null
+     * @return \Kirby\Cache\Value|null
      */
     public function retrieve(string $key)
     {

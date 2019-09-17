@@ -2,9 +2,10 @@
 
 namespace Kirby\Api;
 
-use stdClass;
 use Kirby\Cms\Response;
+use Kirby\Cms\User;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class MockModel
 {
@@ -112,6 +113,33 @@ class ApiTest extends TestCase
 
         $result = $api->call('testResponse', 'POST');
         $this->assertEquals(new Response('test', 'text/plain', 201), $result);
+    }
+
+    public function testCallLocale()
+    {
+        $language = 'de';
+
+        $api = new Api([
+            'routes' => [
+                [
+                    'pattern' => 'foo',
+                    'method'  => 'GET',
+                    'action'  => function () {
+                        return 'something';
+                    }
+                ],
+            ],
+            'authentication' => function () use (&$language) {
+                return new User(['language' => $language]);
+            }
+        ]);
+
+        $this->assertEquals('something', $api->call('foo'));
+        $this->assertTrue(in_array(setlocale(LC_ALL, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+
+        $language = 'pt_BR';
+        $this->assertEquals('something', $api->call('foo'));
+        $this->assertTrue(in_array(setlocale(LC_ALL, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
     }
 
     public function testCollections()
@@ -233,15 +261,15 @@ class ApiTest extends TestCase
         ]);
 
         // resolve class with namespace
-        $result = $api->resolve(new MockModel);
+        $result = $api->resolve(new MockModel());
         $this->assertInstanceOf(Model::class, $result);
 
         // resolve class without namespace
-        $result = $api->resolve(new stdClass);
+        $result = $api->resolve(new stdClass());
         $this->assertInstanceOf(Model::class, $result);
 
         // resolve class extension
-        $result = $api->resolve(new ExtendedModel);
+        $result = $api->resolve(new ExtendedModel());
         $this->assertInstanceOf(Model::class, $result);
     }
 
@@ -250,7 +278,7 @@ class ApiTest extends TestCase
         $this->expectException('Kirby\Exception\NotFoundException');
 
         $api = new Api([]);
-        $api->resolve(new MockModel);
+        $api->resolve(new MockModel());
     }
 
     public function testRequestData()

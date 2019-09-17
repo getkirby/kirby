@@ -140,7 +140,7 @@ class User extends ModelWithContent
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'avatar'  => $this->avatar(),
@@ -168,7 +168,7 @@ class User extends ModelWithContent
     /**
      * Returns the File object for the avatar or null
      *
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function avatar()
     {
@@ -178,7 +178,7 @@ class User extends ModelWithContent
     /**
      * Returns the UserBlueprint object
      *
-     * @return Kirby\Cms\UserBlueprint
+     * @return \Kirby\Cms\UserBlueprint
      */
     public function blueprint()
     {
@@ -260,6 +260,7 @@ class User extends ModelWithContent
      * takes User models into account.
      *
      * @internal
+     * @param mixed $props
      * @return self
      */
     public static function factory($props)
@@ -326,7 +327,7 @@ class User extends ModelWithContent
     /**
      * Compares the current object with the given user object
      *
-     * @param Kirby\Cms\User|null $user
+     * @param \Kirby\Cms\User|null $user
      * @return bool
      */
     public function is(User $user = null): bool
@@ -404,7 +405,7 @@ class User extends ModelWithContent
      * Logs the user in
      *
      * @param string $password
-     * @param Kirby\Session\Session|array $session Session options or session object to set the user in
+     * @param \Kirby\Session\Session|array $session Session options or session object to set the user in
      * @return bool
      *
      * @throws PermissionException If the password is not valid
@@ -420,7 +421,7 @@ class User extends ModelWithContent
     /**
      * Logs the user in without checking the password
      *
-     * @param Kirby\Session\Session|array $session Session options or session object to set the user in
+     * @param \Kirby\Session\Session|array $session Session options or session object to set the user in
      * @return void
      */
     public function loginPasswordless($session = null): void
@@ -434,7 +435,7 @@ class User extends ModelWithContent
     /**
      * Logs the user out
      *
-     * @param Kirby\Session\Session|array $session Session options or session object to unset the user in
+     * @param \Kirby\Session\Session|array $session Session options or session object to unset the user in
      * @return void
      */
     public function logout($session = null): void
@@ -480,7 +481,7 @@ class User extends ModelWithContent
      * @internal
      * @param string $name
      * @param array $props
-     * @return Kirby\Cms\User
+     * @return \Kirby\Cms\User
      */
     public static function model(string $name, array $props = [])
     {
@@ -515,7 +516,7 @@ class User extends ModelWithContent
     /**
      * Returns the user's name
      *
-     * @return Kirby\Cms\Field
+     * @return \Kirby\Cms\Field
      */
     public function name()
     {
@@ -563,7 +564,7 @@ class User extends ModelWithContent
      *
      * @internal
      * @param string|null $query
-     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
     protected function panelImageSource(string $query = null)
     {
@@ -640,7 +641,7 @@ class User extends ModelWithContent
     }
 
     /**
-     * @return Kirby\Cms\UserPermissions
+     * @return \Kirby\Cms\UserPermissions
      */
     public function permissions()
     {
@@ -650,7 +651,7 @@ class User extends ModelWithContent
     /**
      * Returns the user role
      *
-     * @return Kirby\Cms\Role
+     * @return \Kirby\Cms\Role
      */
     public function role()
     {
@@ -681,7 +682,7 @@ class User extends ModelWithContent
      * Returns the UserRules class to
      * validate any important action.
      *
-     * @return Kirby\Cms\UserRules
+     * @return \Kirby\Cms\UserRules
      */
     protected function rules()
     {
@@ -781,8 +782,8 @@ class User extends ModelWithContent
     /**
      * Converts session options into a session object
      *
-     * @param Kirby\Session\Session|array $session Session options or session object to unset the user in
-     * @return Kirby\Session\Session
+     * @param \Kirby\Session\Session|array $session Session options or session object to unset the user in
+     * @return \Kirby\Session\Session
      */
     protected function sessionFromOptions($session)
     {
@@ -799,7 +800,7 @@ class User extends ModelWithContent
     /**
      * Returns the parent Users collection
      *
-     * @return Kirby\Cms\Users
+     * @return \Kirby\Cms\Users
      */
     protected function siblingsCollection()
     {

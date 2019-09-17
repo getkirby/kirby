@@ -4,14 +4,13 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
-use Throwable;
-
 use Kirby\Exception\NotFoundException;
-use Kirby\Http\Router;
 use Kirby\Http\Response;
+use Kirby\Http\Router;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The API class is a generic container
@@ -169,7 +168,29 @@ class Api
         $auth   = $this->route->attributes()['auth'] ?? true;
 
         if ($auth !== false) {
-            $this->authenticate();
+            $user = $this->authenticate();
+
+            // set PHP locales based on *user* language
+            // so that e.g. strftime() gets formatted correctly
+            if (is_a($user, 'Kirby\Cms\User') === true) {
+                $locale = $user->language();
+
+                // if it's not already a full locale, "fake" one
+                // and assume that the country equals the language
+                if (Str::contains($locale, '_') !== true) {
+                    $locale .= '_' . strtoupper($locale);
+                }
+
+                // provide some variants as fallbacks to be
+                // compatible with as many systems as possible
+                setlocale(LC_ALL, [
+                    $locale,
+                    $locale . '.UTF-8',
+                    $locale . '.UTF8',
+                    $locale . '.ISO8859-1',
+                    setlocale(LC_ALL, 0) // fall back to the previously defined locale
+                ]);
+            }
         }
 
         $output = $this->route->action()->call($this, ...$this->route->arguments());
@@ -186,7 +207,7 @@ class Api
      *
      * @param string $name
      * @param array|null $collection
-     * @return Kirby\Api\Collection
+     * @return \Kirby\Api\Collection
      *
      * @throws NotFoundException If no collection for `$name` exists
      */
@@ -263,7 +284,7 @@ class Api
      *
      * @param string $name
      * @param mixed $object
-     * @return Kirby\Api\Model
+     * @return \Kirby\Api\Model
      *
      * @throws NotFoundException If no model for `$name` exists
      */
@@ -375,7 +396,7 @@ class Api
      * API model or collection representation
      *
      * @param mixed $object
-     * @return Kirby\Api\Model|Kirby\Api\Collection
+     * @return \Kirby\Api\Model|\Kirby\Api\Collection
      *
      * @throws NotFoundException If `$object` cannot be resolved
      */
@@ -721,7 +742,7 @@ class Api
                 if (empty($extension) === true || in_array($extension, ['tmp', 'temp'])) {
                     $mime      = F::mime($upload['tmp_name']);
                     $extension = F::mimeToExtension($mime);
-                    $filename  = F::name($upload['name']) . '.' .$extension;
+                    $filename  = F::name($upload['name']) . '.' . $extension;
                 } else {
                     $filename = basename($upload['name']);
                 }

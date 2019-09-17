@@ -1,9 +1,5 @@
 <?php
 
-use Kirby\Cms\File;
-use Kirby\Cms\Page;
-use Kirby\Cms\Site;
-
 /**
  * Api Model Definitions
  */

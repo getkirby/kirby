@@ -16,7 +16,6 @@ use Throwable;
  */
 class View
 {
-
     /**
      * The absolute path to the view file
      *

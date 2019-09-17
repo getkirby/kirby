@@ -150,7 +150,7 @@ class Query
     /**
      * Constructor
      *
-     * @param Kirby\Database\Database $database Database object
+     * @param \Kirby\Database\Database $database Database object
      * @param string $table Optional name of the table, which should be queried
      */
     public function __construct(Database $database, string $table)
@@ -185,7 +185,7 @@ class Query
      * the query instead of actually executing the query and returning results
      *
      * @param boolean $debug
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function debug(bool $debug = true)
     {
@@ -197,7 +197,7 @@ class Query
      * Enables distinct select clauses.
      *
      * @param boolean $distinct
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function distinct(bool $distinct = true)
     {
@@ -210,7 +210,7 @@ class Query
      * If enabled queries will no longer fail silently but throw an exception
      *
      * @param boolean $fail
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function fail(bool $fail = true)
     {
@@ -223,7 +223,7 @@ class Query
      * Set this to array to get a simple array instead of an object
      *
      * @param string $fetch
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function fetch(string $fetch)
     {
@@ -236,7 +236,7 @@ class Query
      * Set this to array to get a simple array instead of an iterator object
      *
      * @param string $iterator
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function iterator(string $iterator)
     {
@@ -245,11 +245,11 @@ class Query
     }
 
     /**
-    * Sets the name of the table, which should be queried
-    *
-    * @param string $table
-    * @return Kirby\Database\Query
-    */
+     * Sets the name of the table, which should be queried
+     *
+     * @param string $table
+     * @return \Kirby\Database\Query
+     */
     public function table(string $table)
     {
         if ($this->database->validateTable($table) === false) {
@@ -264,7 +264,7 @@ class Query
      * Sets the name of the primary key column
      *
      * @param string $primaryKeyName
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function primaryKeyName(string $primaryKeyName)
     {
@@ -277,7 +277,7 @@ class Query
      * By default all columns will be selected
      *
      * @param mixed $select Pass either a string of columns or an array
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function select($select)
     {
@@ -310,7 +310,7 @@ class Query
      *
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function leftJoin(string $table, string $on)
     {
@@ -322,7 +322,7 @@ class Query
      *
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function rightJoin(string $table, string $on)
     {
@@ -334,7 +334,7 @@ class Query
      *
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function innerJoin($table, $on)
     {
@@ -345,7 +345,7 @@ class Query
      * Sets the values which should be used for the update or insert clause
      *
      * @param mixed $values Can either be a string or an array of values
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function values($values = [])
     {
@@ -383,8 +383,8 @@ class Query
      * ->where('username like ?', 'myuser')                      (args: 2)
      * ->where('username', 'like', 'myuser');                    (args: 3)
      *
-     * @param list
-     * @return Kirby\Database\Query
+     * @param mixed ...$args
+     * @return \Kirby\Database\Query
      */
     public function where(...$args)
     {
@@ -396,8 +396,8 @@ class Query
      * Shortcut to attach a where clause with an OR operator.
      * Check out the where() method docs for additional info.
      *
-     * @param list
-     * @return Kirby\Database\Query
+     * @param mixed ...$args
+     * @return \Kirby\Database\Query
      */
     public function orWhere(...$args)
     {
@@ -420,8 +420,8 @@ class Query
      * Shortcut to attach a where clause with an AND operator.
      * Check out the where() method docs for additional info.
      *
-     * @param list
-     * @return Kirby\Database\Query
+     * @param mixed ...$args
+     * @return \Kirby\Database\Query
      */
     public function andWhere(...$args)
     {
@@ -441,11 +441,11 @@ class Query
     }
 
     /**
-    * Attaches a group by clause
-    *
-    * @param string $group
-    * @return Kirby\Database\Query
-    */
+     * Attaches a group by clause
+     *
+     * @param string $group
+     * @return \Kirby\Database\Query
+     */
     public function group(string $group = null)
     {
         $this->group = $group;
@@ -463,8 +463,8 @@ class Query
      * ->having('username like ?', 'myuser')                         (args: 2)
      * ->having('username', 'like', 'myuser');                       (args: 3)
      *
-     * @param list
-     * @return Kirby\Database\Query
+     * @param mixed ...$args
+     * @return \Kirby\Database\Query
      */
     public function having(...$args)
     {
@@ -476,7 +476,7 @@ class Query
      * Attaches an order clause
      *
      * @param string $order
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function order(string $order = null)
     {
@@ -488,7 +488,7 @@ class Query
      * Sets the offset for select clauses
      *
      * @param int $offset
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function offset(int $offset = null)
     {
@@ -500,7 +500,7 @@ class Query
      * Sets the limit for select clauses
      *
      * @param int $limit
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function limit(int $limit = null)
     {
@@ -559,7 +559,7 @@ class Query
     /**
      * Builds a count query
      *
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function count()
     {
@@ -570,7 +570,7 @@ class Query
      * Builds a max query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function max(string $column)
     {
@@ -581,7 +581,7 @@ class Query
      * Builds a min query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function min(string $column)
     {
@@ -592,7 +592,7 @@ class Query
      * Builds a sum query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function sum(string $column)
     {
@@ -603,7 +603,7 @@ class Query
      * Builds an average query
      *
      * @param string $column
-     * @return Kirby\Database\Query
+     * @return \Kirby\Database\Query
      */
     public function avg(string $column)
     {
@@ -815,7 +815,7 @@ class Query
         $sql        = $this->database->sql();
         $primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
 
-        $results = $this->query($this->select(array($column))->order($primaryKey . ' ASC')->build('select'), [
+        $results = $this->query($this->select([$column])->order($primaryKey . ' ASC')->build('select'), [
             'iterator' => 'array',
             'fetch'    => 'array',
         ]);

@@ -18,11 +18,10 @@ use Kirby\Toolkit\Str;
  */
 class Search
 {
-
     /**
      * @param string $query
      * @param array $params
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public static function files(string $query = null, $params = [])
     {
@@ -31,6 +30,10 @@ class Search
 
     /**
      * Native search method to search for anything within the collection
+     *
+     * @param Collection $collection
+     * @param string $query
+     * @param mixed $params
      */
     public static function collection(Collection $collection, string $query = null, $params = [])
     {
@@ -69,10 +72,10 @@ class Search
             $keys = array_keys($data);
             $keys[] = 'id';
 
-            if (is_a($item, User::class) === true) {
+            if (is_a($item, 'Kirby\Cms\User') === true) {
                 $keys[] = 'email';
                 $keys[] = 'role';
-            } elseif (is_a($item, Page::class) === true) {
+            } elseif (is_a($item, 'Kirby\Cms\Page') === true) {
                 // apply the default score for pages
                 $options['score'] = array_merge([
                     'id'    => 64,
@@ -126,7 +129,7 @@ class Search
     /**
      * @param string $query
      * @param array $params
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public static function pages(string $query = null, $params = [])
     {
@@ -136,7 +139,7 @@ class Search
     /**
      * @param string $query
      * @param array $params
-     * @return Kirby\Cms\Users
+     * @return \Kirby\Cms\Users
      */
     public static function users(string $query = null, $params = [])
     {

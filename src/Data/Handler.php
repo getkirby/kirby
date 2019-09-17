@@ -18,7 +18,6 @@ use Kirby\Toolkit\F;
  */
 abstract class Handler
 {
-
     /**
      * Parses an encoded string and returns a multi-dimensional array
      *
@@ -55,6 +54,7 @@ abstract class Handler
     /**
      * Writes data to a file
      *
+     * @param  string  $file
      * @param  array   $data
      * @return boolean
      */

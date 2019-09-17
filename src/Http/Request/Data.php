@@ -18,13 +18,12 @@ namespace Kirby\Http\Request;
  */
 trait Data
 {
-
     /**
      * Improved `var_dump` output
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

@@ -1,19 +1,13 @@
 <?php
 
-use Kirby\Api\Api;
-use Kirby\Cms\App;
 use Kirby\Cms\Media;
 use Kirby\Cms\Panel;
 use Kirby\Cms\PanelPlugins;
 use Kirby\Cms\PluginAssets;
-use Kirby\Cms\Response;
-use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response\Redirect;
-use Kirby\Http\Router;
 use Kirby\Http\Router\Route;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\View;
 
 return function ($kirby) {
     $api   = $kirby->option('api.slug', 'api');

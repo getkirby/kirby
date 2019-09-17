@@ -102,7 +102,7 @@ class F
         ],
     ];
 
-    public static $units = ['B','kB','MB','GB','TB','PB', 'EB', 'ZB', 'YB'];
+    public static $units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
     /**
      * Appends new content to an existing file
@@ -130,7 +130,7 @@ class F
     /**
      * Copy a file to a new location.
      *
-     * @param  string  $file
+     * @param  string  $source
      * @param  string  $target
      * @param  boolean $force
      * @return boolean
@@ -359,6 +359,7 @@ class F
      * Loads a file and returns the result
      *
      * @param string $file
+     * @param mixed $fallback
      * @return mixed
      */
     public static function load(string $file, $fallback = null)
@@ -658,6 +659,7 @@ class F
      * building a glob based on the path
      *
      * @param string $path
+     * @param string $pattern
      * @return array
      */
     public static function similar(string $path, string $pattern = '*'): array
@@ -733,7 +735,7 @@ class F
             throw new Exception('The ZipArchive class is not available');
         }
 
-        $zip = new ZipArchive;
+        $zip = new ZipArchive();
 
         if ($zip->open($file) === true) {
             $zip->extractTo($to);

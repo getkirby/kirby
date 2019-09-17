@@ -15,7 +15,6 @@ use APCUIterator;
  */
 class ApcuCache extends Cache
 {
-
     /**
      * Determines if an item exists in the cache
      *
@@ -59,7 +58,7 @@ class ApcuCache extends Cache
      * needs to return a Value object or null if not found
      *
      * @param string $key
-     * @return Kirby\Cache\Value|null
+     * @return \Kirby\Cache\Value|null
      */
     public function retrieve(string $key)
     {

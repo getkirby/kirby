@@ -4,7 +4,6 @@ namespace Kirby\Image\Darkroom;
 
 ini_set('memory_limit', '512M');
 
-use Exception;
 use claviska\SimpleImage;
 use Kirby\Image\Darkroom;
 

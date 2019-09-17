@@ -23,7 +23,6 @@ use Zend\Escaper\Escaper;
  */
 class Escape
 {
-
     /**
      * Escape common HTML attributes data
      *

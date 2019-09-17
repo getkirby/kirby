@@ -4,12 +4,8 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Filename;
 use Kirby\Cms\FileVersion;
-use Kirby\Cms\FileModifications;
-use Kirby\Cms\Model;
-use Kirby\Cms\Response;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
-use Kirby\Exception\NotFoundException;
 use Kirby\Image\Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
@@ -22,7 +18,7 @@ return [
     /**
      * Used by the `css()` helper
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $url Relative or absolute URL
      * @param string|array $options An array of attributes for the link tag or a media attribute string
      */
@@ -33,8 +29,8 @@ return [
     /**
      * Modify URLs for file objects
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
-     * @param Kirby\Cms\File $file The original file object
+     * @param \Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\File $file The original file object
      * @return string
      */
     'file::url' => function (App $kirby, File $file): string {
@@ -44,10 +40,10 @@ return [
     /**
      * Adapt file characteristics
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
-     * @param Kirby\Cms\File|Kirby\Cms\FileModifications $file The file object
+     * @param \Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\File|\Kirby\Cms\FileModifications $file The file object
      * @param array $options All thumb options (width, height, crop, blur, grayscale)
-     * @return Kirby\Cms\File|Kirby\Cms\FileVersion
+     * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion
      */
     'file::version' => function (App $kirby, $file, array $options = []) {
         if ($file->isResizable() === false) {
@@ -82,7 +78,7 @@ return [
     /**
      * Used by the `js()` helper
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $url Relative or absolute URL
      * @param string|array $options An array of attributes for the link tag or a media attribute string
      */
@@ -93,7 +89,7 @@ return [
     /**
      * Add your own Markdown parser
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $text Text to parse
      * @param array $options Markdown options
      * @param bool $inline Whether to wrap the text in `<p>` tags
@@ -116,7 +112,7 @@ return [
     /**
      * Add your own SmartyPants parser
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $text Text to parse
      * @param array $options SmartyPants options
      * @return string
@@ -138,7 +134,7 @@ return [
     /**
      * Add your own snippet loader
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string|array $name Snippet name
      * @param array $data Data array for the snippet
      * @return string|null
@@ -165,11 +161,11 @@ return [
     /**
      * Add your own template engine
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $name Template name
      * @param string $type Extension type
      * @param string $defaultType Default extension type
-     * @return Kirby\Cms\Template
+     * @return \Kirby\Cms\Template
      */
     'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
         return new Template($name, $type, $defaultType);
@@ -178,7 +174,7 @@ return [
     /**
      * Add your own thumb generator
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $src The root of the original file
      * @param string $dst The root to the desired destination
      * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
@@ -198,7 +194,7 @@ return [
     /**
      * Modify all URLs
      *
-     * @param Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $path URL path
      * @param array|null $options Array of options for the Uri class
      * @param Closure $originalHandler Callback function to the original URL handler with `$path` and `$options` as parameters

@@ -18,7 +18,6 @@ use Michelf\SmartyPantsTypographer;
  */
 class SmartyPants
 {
-
     /**
      * Array with all configured options
      * for the parser

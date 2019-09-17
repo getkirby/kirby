@@ -1,2 +1,1 @@
-
-RegExp.escape = s => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+RegExp.escape = s => s.replace(/\p[-/\\^$*+?.()|[\]{}]/g, '\\$&');

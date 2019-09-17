@@ -36,6 +36,6 @@ class IngredientsTest extends TestCase
         ];
 
         $this->assertEquals($expected, $this->ingredients->toArray());
-        $this->assertEquals($expected, $this->ingredients->__debuginfo());
+        $this->assertEquals($expected, $this->ingredients->__debugInfo());
     }
 }

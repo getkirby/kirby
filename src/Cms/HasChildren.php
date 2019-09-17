@@ -15,25 +15,24 @@ use Kirby\Toolkit\Str;
  */
 trait HasChildren
 {
-
     /**
      * The Pages collection
      *
-     * @var Kirby\Cms\Pages
+     * @var \Kirby\Cms\Pages
      */
     public $children;
 
     /**
      * The list of available drafts
      *
-     * @var Kirby\Cms\Pages
+     * @var \Kirby\Cms\Pages
      */
     public $drafts;
 
     /**
      * Returns the Pages collection
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function children()
     {
@@ -47,7 +46,7 @@ trait HasChildren
     /**
      * Returns all children and drafts at the same time
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function childrenAndDrafts()
     {
@@ -69,7 +68,7 @@ trait HasChildren
      * Searches for a child draft by id
      *
      * @param string $path
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function draft(string $path)
     {
@@ -102,7 +101,7 @@ trait HasChildren
     /**
      * Return all drafts of the model
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function drafts()
     {
@@ -127,7 +126,7 @@ trait HasChildren
      * Finds one or multiple children by id
      *
      * @param string ...$arguments
-     * @return Kirby\Cms\Page|Kirby\Cms\Pages
+     * @return \Kirby\Cms\Page|\Kirby\Cms\Pages
      */
     public function find(...$arguments)
     {
@@ -137,7 +136,8 @@ trait HasChildren
     /**
      * Finds a single page or draft
      *
-     * @return Kirby\Cms\Page|null
+     * @param string $path
+     * @return \Kirby\Cms\Page|null
      */
     public function findPageOrDraft(string $path)
     {
@@ -147,7 +147,7 @@ trait HasChildren
     /**
      * Returns a collection of all children of children
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function grandChildren()
     {
@@ -216,7 +216,7 @@ trait HasChildren
      * Creates a flat child index
      *
      * @param bool $drafts
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function index(bool $drafts = false)
     {

@@ -21,7 +21,7 @@ return [
         /**
          * Changes the calendar icon to something custom
          */
-        'icon' => function (string $icon = "calendar") {
+        'icon' => function (string $icon = 'calendar') {
             return $icon;
         },
         /**

@@ -92,7 +92,7 @@ class Api extends BaseApi
      *
      * @param string $path Path to file's parent model
      * @param string $filename Filename
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function file(string $path = null, string $filename)
     {
@@ -114,7 +114,7 @@ class Api extends BaseApi
      * Returns the model's object for the given path
      *
      * @param string $path Path to parent model
-     * @return Kirby\Cms\Model|null
+     * @return \Kirby\Cms\Model|null
      */
     public function parent(string $path)
     {
@@ -166,7 +166,7 @@ class Api extends BaseApi
     /**
      * Returns the Kirby instance
      *
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {
@@ -184,11 +184,11 @@ class Api extends BaseApi
     }
 
     /**
-    * Returns the page object for the given id
-    *
-    * @param string $id Page's id
-    * @return Kirby\Cms\Page|null
-    */
+     * Returns the page object for the given id
+     *
+     * @param string $id Page's id
+     * @return \Kirby\Cms\Page|null
+     */
     public function page(string $id)
     {
         $id   = str_replace('+', '/', $id);
@@ -214,7 +214,7 @@ class Api extends BaseApi
     }
 
     /**
-     * @param Kirby\Cms\App $kirby
+     * @param \Kirby\Cms\App $kirby
      */
     protected function setKirby(App $kirby)
     {
@@ -225,7 +225,7 @@ class Api extends BaseApi
     /**
      * Returns the site object
      *
-     * @return Kirby\Cms\Site
+     * @return \Kirby\Cms\Site
      */
     public function site()
     {
@@ -238,7 +238,7 @@ class Api extends BaseApi
      * id is passed
      *
      * @param string $id User's id
-     * @return Kirby\Cms\User|null
+     * @return \Kirby\Cms\User|null
      */
     public function user(string $id = null)
     {
@@ -263,7 +263,7 @@ class Api extends BaseApi
     /**
      * Returns the users collection
      *
-     * @return Kirby\Cms\Users
+     * @return \Kirby\Cms\Users
      */
     public function users()
     {

@@ -23,7 +23,7 @@ return [
             return $translation->name();
         },
     ],
-    'type'  => Translation::class,
+    'type'  => 'Kirby\Cms\Translation',
     'views' => [
         'compact' => [
             'direction',

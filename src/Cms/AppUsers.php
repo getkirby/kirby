@@ -15,7 +15,6 @@ use Throwable;
  */
 trait AppUsers
 {
-
     /**
      * Cache for the auth auth layer
      *
@@ -27,7 +26,7 @@ trait AppUsers
      * Returns the Authentication layer class
      *
      * @internal
-     * @return Kirby\Cms\Auth
+     * @return \Kirby\Cms\Auth
      */
     public function auth()
     {
@@ -38,7 +37,7 @@ trait AppUsers
      * Become any existing user
      *
      * @param string|null $who
-     * @return Kirby\Cms\User|null
+     * @return \Kirby\Cms\User|null
      */
     public function impersonate(string $who = null)
     {
@@ -48,8 +47,8 @@ trait AppUsers
     /**
      * Set the currently active user id
      *
-     * @param  Kirby\Cms\User|string $user
-     * @return Kirby\Cms\App
+     * @param \Kirby\Cms\User|string $user
+     * @return \Kirby\Cms\App
      */
     protected function setUser($user = null)
     {
@@ -61,7 +60,7 @@ trait AppUsers
      * Create your own set of app users
      *
      * @param array $users
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     protected function setUsers(array $users = null)
     {
@@ -79,7 +78,7 @@ trait AppUsers
      * or the current user if no id is given
      *
      * @param  string $id
-     * @return Kirby\Cms\User|null
+     * @return \Kirby\Cms\User|null
      */
     public function user(string $id = null)
     {
@@ -101,7 +100,7 @@ trait AppUsers
     /**
      * Returns all users
      *
-     * @return Kirby\Cms\Users
+     * @return \Kirby\Cms\Users
      */
     public function users()
     {

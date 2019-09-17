@@ -24,7 +24,6 @@ use Kirby\Toolkit\Str;
  */
 class Request
 {
-
     /**
      * The auth object if available
      *
@@ -132,7 +131,7 @@ class Request
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return [
             'body'   => $this->body(),
@@ -150,13 +149,13 @@ class Request
      */
     public function ajax(): bool
     {
-        return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
 
     /**
      * Returns the Auth object if authentication is set
      *
-     * @return Kirby\Http\Request\Auth\BasicAuth|Kirby\Http\Request\Auth\BearerAuth|null
+     * @return \Kirby\Http\Request\Auth\BasicAuth|\Kirby\Http\Request\Auth\BearerAuth|null
      */
     public function auth()
     {
@@ -182,7 +181,7 @@ class Request
     /**
      * Returns the Body object
      *
-     * @return Kirby\Http\Request\Body
+     * @return \Kirby\Http\Request\Body
      */
     public function body()
     {
@@ -244,7 +243,7 @@ class Request
     /**
      * Returns the Files object
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function files()
     {
@@ -354,7 +353,7 @@ class Request
     /**
      * Returns the Query object
      *
-     * @return Kirby\Http\Query
+     * @return \Kirby\Http\Query
      */
     public function query()
     {
@@ -378,7 +377,7 @@ class Request
      * the original object.
      *
      * @param array $props
-     * @return Kirby\Http\Uri
+     * @return \Kirby\Http\Uri
      */
     public function url(array $props = null)
     {

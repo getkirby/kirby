@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Obj;
+use stdClass;
+
 class MockObject extends Model
 {
     public function __construct(array $props = [])
@@ -71,6 +74,38 @@ class CollectionTest extends TestCase
         $value      = $collection->getAttribute($object, 'id');
 
         $this->assertEquals('a', $value);
+    }
+
+    public function testAppend()
+    {
+        $a = new MockObject(['id' => 'a', 'name' => 'A']);
+        $b = new MockObject(['id' => 'b', 'name' => 'B']);
+        $c = new Obj(['id' => 'c', 'name' => 'C']);
+        $d = new stdClass();
+        $d->id = 'd';
+        $d->name = 'D';
+
+        // with custom keys
+        $collection = new Collection();
+        $collection = $collection->append('key-a', $a);
+        $collection = $collection->append('key-b', $b);
+        $collection = $collection->append('key-c', $c);
+        $collection = $collection->append('key-d', $d);
+        $collection = $collection->append('key-e', 'a simple string');
+
+        $this->assertEquals(['key-a', 'key-b', 'key-c', 'key-d', 'key-e'], $collection->keys());
+        $this->assertEquals([$a, $b, $c, $d, 'a simple string'], $collection->values());
+
+        // with automatic keys
+        $collection = new Collection();
+        $collection = $collection->append($a);
+        $collection = $collection->append($b);
+        $collection = $collection->append($c);
+        $collection = $collection->append($d);
+        $collection = $collection->append('a simple string');
+
+        $this->assertEquals(['a', 'b', 'c', 0, 1], $collection->keys());
+        $this->assertEquals([$a, $b, $c, $d, 'a simple string'], $collection->values());
     }
 
     public function testGroupBy()
@@ -218,6 +253,38 @@ class CollectionTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertEquals($c, $result->first());
         $this->assertEquals($c, $result->last());
+    }
+
+    public function testPrepend()
+    {
+        $a = new MockObject(['id' => 'a', 'name' => 'A']);
+        $b = new MockObject(['id' => 'b', 'name' => 'B']);
+        $c = new Obj(['id' => 'c', 'name' => 'C']);
+        $d = new stdClass();
+        $d->id = 'd';
+        $d->name = 'D';
+
+        // with custom keys
+        $collection = new Collection();
+        $collection = $collection->prepend('key-a', $a);
+        $collection = $collection->prepend('key-b', $b);
+        $collection = $collection->prepend('key-c', $c);
+        $collection = $collection->prepend('key-d', $d);
+        $collection = $collection->prepend('key-e', 'a simple string');
+
+        $this->assertEquals(['key-e', 'key-d', 'key-c', 'key-b', 'key-a'], $collection->keys());
+        $this->assertEquals(['a simple string', $d, $c, $b, $a], $collection->values());
+
+        // with automatic keys
+        $collection = new Collection();
+        $collection = $collection->prepend($a);
+        $collection = $collection->prepend($b);
+        $collection = $collection->prepend($c);
+        $collection = $collection->prepend($d);
+        $collection = $collection->prepend('a simple string');
+
+        $this->assertEquals([0, 1, 'c', 'b', 'a'], $collection->keys());
+        $this->assertEquals(['a simple string', $d, $c, $b, $a], $collection->values());
     }
 
     public function testQuerySearch()

@@ -2,7 +2,6 @@
 
 namespace Kirby\Exception;
 
-use Kirby\Cms\App;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 

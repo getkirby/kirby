@@ -16,7 +16,6 @@ use Kirby\Toolkit\F;
  */
 class Header
 {
-
     // configuration
     public static $codes = [
 
@@ -139,7 +138,7 @@ class Header
             $code    = substr($code, 0, 3);
         } else {
             $code    = array_key_exists('_' . $code, $codes) === false ? 500 : $code;
-            $message = isset($codes['_' . $code]) ? $codes['_' . $code] : 'Something went wrong';
+            $message = $codes['_' . $code] ?? 'Something went wrong';
         }
 
         $header = $protocol . ' ' . $code . ' ' . $message;
@@ -302,7 +301,7 @@ class Header
 
         header('Pragma: public');
         header('Expires: 0');
-        header('Last-Modified: '. gmdate('D, d M Y H:i:s', $options['modified']) . ' GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $options['modified']) . ' GMT');
         header('Content-Disposition: attachment; filename="' . $options['name'] . '"');
         header('Content-Transfer-Encoding: binary');
 

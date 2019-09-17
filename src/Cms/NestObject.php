@@ -15,7 +15,6 @@ use Kirby\Toolkit\Obj;
  */
 class NestObject extends Obj
 {
-
     /**
      * Converts the object to an array
      *

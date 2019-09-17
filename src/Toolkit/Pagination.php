@@ -15,7 +15,6 @@ use Exception;
  */
 class Pagination
 {
-
     /**
      * The current page
      *
@@ -54,8 +53,8 @@ class Pagination
      * Creates a pagination instance for the given
      * collection with a flexible argument api
      *
-     * @param Kirby\CmToolkits\Collection $collection
-     * @param ...mixed $arguments
+     * @param \Kirby\Toolkit\Collection $collection
+     * @param mixed ...$arguments
      * @return self
      */
     public static function for(Collection $collection, ...$arguments)
@@ -116,8 +115,8 @@ class Pagination
     /**
      * Getter and setter for the current page
      *
-     * @param  int|null $page
-     * @return int|Pagination
+     * @param int|null $page
+     * @return int|\Kirby\Toolkit\Pagination
      */
     public function page(int $page = null)
     {
@@ -140,8 +139,8 @@ class Pagination
     /**
      * Getter and setter for the total number of items
      *
-     * @param  int|null       $total
-     * @return int|Pagination
+     * @param int|null $total
+     * @return int|\Kirby\Toolkit\Pagination
      */
     public function total(int $total = null)
     {
@@ -160,8 +159,8 @@ class Pagination
     /**
      * Getter and setter for the number of items per page
      *
-     * @param  int|null       $limit
-     * @return int|Pagination
+     * @param int|null $limit
+     * @return int|\Kirby\Toolkit\Pagination
      */
     public function limit(int $limit = null)
     {
@@ -256,6 +255,7 @@ class Pagination
     /**
      * Checks if the given page exists
      *
+     * @param int $page
      * @return boolean
      */
     public function hasPage(int $page): bool
@@ -344,6 +344,7 @@ class Pagination
     /**
      * Creates a range of page numbers for Google-like pagination
      *
+     * @param int $range
      * @return array
      */
     public function range(int $range = 5): array
@@ -376,6 +377,7 @@ class Pagination
     /**
      * Returns the first page of the created range
      *
+     * @param int $range
      * @return int
      */
     public function rangeStart(int $range = 5): int
@@ -386,6 +388,7 @@ class Pagination
     /**
      * Returns the last page of the created range
      *
+     * @param int $range
      * @return int
      */
     public function rangeEnd(int $range = 5): int

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase;
 
 class FilesSectionTest extends TestCase
@@ -120,6 +119,31 @@ class FilesSectionTest extends TestCase
         $this->assertEquals('/pages/b', $section->link());
         $this->assertEquals($b, $section->parent());
         $this->assertEquals('pages/b/files', $section->upload()['api']);
+    }
+
+    public function testParentCollectionFail()
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The parent for the section "files" has to be a page, site or user object');
+
+        $app = new App([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a'
+                    ],
+                    [
+                        'slug' => 'b'
+                    ]
+                ]
+            ]
+        ]);
+
+        $section = new Section('files', [
+            'model'  => $app->page('a'),
+            'parent' => 'site.index'
+        ]);
+        $section->parentModel();
     }
 
     public function testEmpty()

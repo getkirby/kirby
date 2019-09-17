@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Toolkit\V;
 
 class VTest extends TestCase
