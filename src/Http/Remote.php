@@ -18,7 +18,6 @@ use Kirby\Toolkit\Str;
  */
 class Remote
 {
-
     /**
      * @var array
      */
@@ -285,7 +284,7 @@ class Remote
      * Decode the response content
      *
      * @param bool $array decode as array or object
-     * @return array|stdClass
+     * @return array|\stdClass
      */
     public function json(bool $array = true)
     {

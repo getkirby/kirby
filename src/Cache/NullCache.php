@@ -13,7 +13,6 @@ namespace Kirby\Cache;
  */
 class NullCache extends Cache
 {
-
     /**
      * Writes an item to the cache for a given number of minutes and
      * returns whether the operation was successful
@@ -38,7 +37,7 @@ class NullCache extends Cache
      * needs to return a Value object or null if not found
      *
      * @param string $key
-     * @return Kirby\Cache\Value|null
+     * @return \Kirby\Cache\Value|null
      */
     public function retrieve(string $key)
     {

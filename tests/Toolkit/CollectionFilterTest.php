@@ -94,7 +94,7 @@ class CollectionFilterTest extends TestCase
     {
         return [
 
-            /* EQUALS */
+            // EQUALS
 
             // strings
             [
@@ -168,7 +168,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => false
             ],
 
-            /* NOT EQUALS */
+            // NOT EQUALS
 
             // strings
             [
@@ -206,7 +206,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => false
             ],
 
-            /* IN */
+            // IN
             [
                 'attributes' => ['a' => 'a', 'b' => 'b', 'c' => 'c'],
                 'operator'   =>  'in',
@@ -222,7 +222,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* NOT IN */
+            // NOT IN
             [
                 'attributes' => ['a' => 'a', 'b' => 'b', 'c' => 'c'],
                 'operator'   =>  'not in',
@@ -238,7 +238,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* CONTAINS */
+            // CONTAINS
             [
                 'attributes' => ['a' => 'abc', 'b' => 'def'],
                 'operator'   =>  '*=',
@@ -254,7 +254,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* NOT CONTAINS */
+            // NOT CONTAINS
             [
                 'attributes' => ['a' => 'abc', 'b' => 'def'],
                 'operator'   =>  '!*=',
@@ -270,7 +270,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MORE */
+            // MORE
             [
                 'attributes' => ['a' => 1, 'b' => 2],
                 'operator'   =>  '>',
@@ -286,7 +286,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MIN */
+            // MIN
             [
                 'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
                 'operator'   =>  '>=',
@@ -302,7 +302,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* LESS */
+            // LESS
             [
                 'attributes' => ['a' => 1, 'b' => 2],
                 'operator'   =>  '<',
@@ -318,7 +318,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MAX */
+            // MAX
             [
                 'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
                 'operator'   =>  '<=',
@@ -334,7 +334,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* STARTS WITH */
+            // STARTS WITH
             [
                 'attributes' => ['a' => 'aa', 'b' => 'bb'],
                 'operator'   =>  '^=',
@@ -350,7 +350,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* NOT STARTS WITH */
+            // NOT STARTS WITH
             [
                 'attributes' => ['a' => 'aa', 'b' => 'bb'],
                 'operator'   =>  '!^=',
@@ -366,7 +366,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* ENDS WITH */
+            // ENDS WITH
             [
                 'attributes' => ['a' => 'aa', 'b' => 'bb'],
                 'operator'   =>  '$=',
@@ -382,7 +382,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* NOT ENDS WITH */
+            // NOT ENDS WITH
             [
                 'attributes' => ['a' => 'aa', 'b' => 'bb'],
                 'operator'   =>  '!$=',
@@ -398,7 +398,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* BETWEEN */
+            // BETWEEN
             [
                 'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
                 'operator'   =>  'between',
@@ -414,7 +414,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MATCH */
+            // MATCH
             [
                 'attributes' => ['a' => 'abc', 'b' => 'ABC'],
                 'operator'   =>  '*',
@@ -430,7 +430,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* NOT MATCH */
+            // NOT MATCH
             [
                 'attributes' => ['a' => 'abc', 'b' => 'ABC'],
                 'operator'   =>  '!*',
@@ -446,7 +446,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MINLENGTH */
+            // MINLENGTH
             [
                 'attributes' => ['a' => 'abc', 'b' => 'defg'],
                 'operator'   =>  'minlength',
@@ -462,7 +462,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MAXLENGTH */
+            // MAXLENGTH
             [
                 'attributes' => ['a' => 'abc', 'b' => 'defg'],
                 'operator'   =>  'maxlength',
@@ -478,7 +478,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MINWORDS */
+            // MINWORDS
             [
                 'attributes' => ['a' => 'hello world', 'b' => 'hello'],
                 'operator'   =>  'minwords',
@@ -494,7 +494,7 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
-            /* MAXWORDS */
+            // MAXWORDS
             [
                 'attributes' => ['a' => 'hello world', 'b' => 'hello'],
                 'operator'   =>  'maxwords',

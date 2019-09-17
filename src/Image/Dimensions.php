@@ -16,7 +16,6 @@ namespace Kirby\Image;
  */
 class Dimensions
 {
-
     /**
      * the height of the parent object
      *
@@ -48,7 +47,7 @@ class Dimensions
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -178,7 +177,7 @@ class Dimensions
      * @param   bool        $force  If true, the dimensions will be
      *                              upscaled to fit the box if smaller
      * @return  self object with recalculated dimensions
-    */
+     */
     protected function fitSize(string $ref, int $fit = null, bool $force = false)
     {
         if ($fit === 0 || $fit === null) {
@@ -217,7 +216,7 @@ class Dimensions
      * @param   bool        $force  If true, the dimensions will be
      *                              upscaled to fit the box if smaller
      * @return  self object with recalculated dimensions
-    */
+     */
     public function fitWidth(int $fit = null, bool $force = false)
     {
         return $this->fitSize('width', $fit, $force);
@@ -286,12 +285,12 @@ class Dimensions
 
         if ($xml !== false) {
             $attr   = $xml->attributes();
-            $width  = floatval($attr->width);
-            $height = floatval($attr->height);
+            $width  = (float)($attr->width);
+            $height = (float)($attr->height);
             if (($width === 0.0 || $height === 0.0) && empty($attr->viewBox) === false) {
                 $box    = explode(' ', $attr->viewBox);
-                $width  = floatval($box[2] ?? 0);
-                $height = floatval($box[3] ?? 0);
+                $width  = (float)($box[2] ?? 0);
+                $height = (float)($box[3] ?? 0);
             }
         }
 
@@ -356,7 +355,7 @@ class Dimensions
     public function ratio(): float
     {
         if ($this->width !== 0 && $this->height !== 0) {
-            return ($this->width / $this->height);
+            return $this->width / $this->height;
         }
 
         return 0;
@@ -386,7 +385,7 @@ class Dimensions
     /**
      * Resize and crop
      *
-     * @params array $options
+     * @param  array $options
      * @return self
      */
     public function thumb(array $options = [])

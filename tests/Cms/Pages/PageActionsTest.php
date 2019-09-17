@@ -2,9 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use Kirby\Toolkit\F;
-use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class PageActionsTest extends TestCase
@@ -83,7 +80,7 @@ class PageActionsTest extends TestCase
             ],
             'hooks' => [
                 'page.changeNum:before' => function () {
-                    throw new \Exception("This should not be called");
+                    throw new \Exception('This should not be called');
                 }
             ]
         ]);
@@ -255,6 +252,54 @@ class PageActionsTest extends TestCase
 
         // assert that the page status didn't change with the update
         $this->assertEquals($oldStatus, $modified->status());
+    }
+    
+    public function testUpdateHooks()
+    {
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.update:before' => function (Page $page, $values, $strings) use ($phpunit) {
+                    $phpunit->assertEquals('foo', $page->category());
+                    $phpunit->assertEquals('foo', $page->siblings()->pluck('category')[0]->toString());
+                    $phpunit->assertEquals('bar', $page->siblings()->pluck('category')[1]->toString());
+                    $phpunit->assertEquals('foo', $page->parent()->children()->pluck('category')[0]->toString());
+                    $phpunit->assertEquals('bar', $page->parent()->children()->pluck('category')[1]->toString());
+                },
+                'page.update:after' => function (Page $newPage, Page $oldPage) use ($phpunit) {
+                    $phpunit->assertEquals('homer', $newPage->category());
+                    $phpunit->assertEquals('homer', $newPage->siblings()->pluck('category')[0]->toString());
+                    $phpunit->assertEquals('bar', $newPage->siblings()->pluck('category')[1]->toString());
+                    $phpunit->assertEquals('homer', $newPage->parent()->children()->pluck('category')[0]->toString());
+                    $phpunit->assertEquals('bar', $newPage->parent()->children()->pluck('category')[1]->toString());
+                }
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'children' => [
+                            [
+                                'slug' => 'a',
+                                'content' => [
+                                    'category' => 'foo'
+                                ]
+                            ],
+                            [
+                                'slug' => 'b',
+                                'content' => [
+                                    'category' => 'bar'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+        $app->page('test/a')->update(['category' => 'homer']);
     }
 
     public function languageProvider()

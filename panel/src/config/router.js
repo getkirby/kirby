@@ -13,25 +13,26 @@ const router = new Router({
   url: config.url === '/' ? '' : config.url,
 });
 
-// Check browser support
 router.beforeEach((to, from, next) => {
   // check for supported browsers
   if (to.name !== "Browser" && supports.all() === false) {
     next("/browser");
   }
 
-  // store the current view
-  store.dispatch("view", to.meta.view);
-
-  // reset the form store
-  if (to.path !== from.path) {
-    store.dispatch("form/reset");
-  }
-
   // keep the last visted path
   if (!to.meta.outside) {
     store.dispatch("user/visit", to.path);
   }
+  
+  // store the current view
+  store.dispatch("view", to.meta.view);
+  
+  // reset the content locks
+  store.dispatch("form/lock", null);
+  store.dispatch("form/unlock", null);
+  
+  // clear all heartbeats
+  store.dispatch("heartbeat/clear");  
 
   next();
 });

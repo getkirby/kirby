@@ -104,7 +104,7 @@ return [
             return $page->url();
         },
     ],
-    'type' => Page::class,
+    'type' => 'Kirby\Cms\Page',
     'views' => [
         'compact' => [
             'id',

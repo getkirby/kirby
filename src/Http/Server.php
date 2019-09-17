@@ -14,7 +14,6 @@ namespace Kirby\Http;
  */
 class Server
 {
-
     /**
      * Cache for the cli status
      *
@@ -105,7 +104,7 @@ class Server
                 break;
             case 'SERVER_PORT':
             case 'HTTP_X_FORWARDED_PORT':
-                $value = intval(preg_replace('![^0-9]+!', '', $value));
+                $value = (int)(preg_replace('![^0-9]+!', '', $value));
                 break;
         }
 

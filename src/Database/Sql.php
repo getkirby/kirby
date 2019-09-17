@@ -2,7 +2,6 @@
 
 namespace Kirby\Database;
 
-use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -18,7 +17,6 @@ use Kirby\Toolkit\Str;
  */
 class Sql
 {
-
     /**
      * List of literals which should not be escaped in queries
      *
@@ -36,7 +34,7 @@ class Sql
     /**
      * Constructor
      *
-     * @param Kirby\Database\Database $database
+     * @param \Kirby\Database\Database $database
      */
     public function __construct($database)
     {
@@ -464,7 +462,7 @@ class Sql
     /**
      * Create the syntax for multiple joins
      *
-     * @params array $joins
+     * @param array $joins
      * @return array
      */
     public function joins(array $joins = null): array
@@ -677,11 +675,11 @@ class Sql
         switch (count($parts)) {
             // non-qualified identifier
             case 1:
-                return array($table, $this->unquoteIdentifier($parts[0]));
+                return [$table, $this->unquoteIdentifier($parts[0])];
 
             // qualified identifier
             case 2:
-                return array($this->unquoteIdentifier($parts[0]), $this->unquoteIdentifier($parts[1]));
+                return [$this->unquoteIdentifier($parts[0]), $this->unquoteIdentifier($parts[1])];
 
             // every other number is an error
             default:

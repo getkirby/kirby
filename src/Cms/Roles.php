@@ -20,6 +20,51 @@ use Kirby\Toolkit\Dir;
  */
 class Roles extends Collection
 {
+    /**
+     * Returns a filtered list of all
+     * roles that can be created by the
+     * current user
+     *
+     * @return self
+     */
+    public function canBeChanged()
+    {
+        if ($user = App::instance()->user()) {
+            return $this->filter(function ($role) use ($user) {
+                $newUser = new User([
+                    'email' => 'test@getkirby.com',
+                    'role'  => $role->id()
+                ]);
+
+                return $newUser->permissions()->can('changeRole');
+            });
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns a filtered list of all
+     * roles that can be created by the
+     * current user
+     *
+     * @return self
+     */
+    public function canBeCreated()
+    {
+        if ($user = App::instance()->user()) {
+            return $this->filter(function ($role) use ($user) {
+                $newUser = new User([
+                    'email' => 'test@getkirby.com',
+                    'role'  => $role->id()
+                ]);
+
+                return $newUser->permissions()->can('create');
+            });
+        }
+
+        return $this;
+    }
 
     /**
      * @param array $roles
@@ -28,7 +73,7 @@ class Roles extends Collection
      */
     public static function factory(array $roles, array $inject = [])
     {
-        $collection = new static;
+        $collection = new static();
 
         // read all user blueprints
         foreach ($roles as $props) {
@@ -52,7 +97,7 @@ class Roles extends Collection
      */
     public static function load(string $root = null, array $inject = [])
     {
-        $roles = new static;
+        $roles = new static();
 
         // load roles from plugins
         foreach (App::instance()->extensions('blueprints') as $blueprintName => $blueprint) {

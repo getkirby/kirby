@@ -104,6 +104,6 @@ class RoleTest extends TestCase
         ];
 
         $this->assertEquals($expected, $role->toArray());
-        $this->assertEquals($expected, $role->__debuginfo());
+        $this->assertEquals($expected, $role->__debugInfo());
     }
 }

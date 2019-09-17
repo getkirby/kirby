@@ -4,7 +4,6 @@ namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\Form\Field;
 
 class UsersFieldTest extends TestCase
 {

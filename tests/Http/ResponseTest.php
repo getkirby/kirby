@@ -8,7 +8,7 @@ class ResponseTest extends TestCase
 {
     public function testBody()
     {
-        $response = new Response;
+        $response = new Response();
         $this->assertEquals('', $response->body());
 
         $response = new Response('test');
@@ -48,7 +48,7 @@ class ResponseTest extends TestCase
 
     public function testHeaders()
     {
-        $response = new Response;
+        $response = new Response();
         $this->assertEquals([], $response->headers());
 
         $response = new Response([
@@ -62,7 +62,7 @@ class ResponseTest extends TestCase
 
     public function testHeader()
     {
-        $response = new Response;
+        $response = new Response();
         $this->assertNull($response->header('test'));
 
         $response = new Response([
@@ -113,7 +113,7 @@ class ResponseTest extends TestCase
 
     public function testType()
     {
-        $response = new Response;
+        $response = new Response();
         $this->assertEquals('text/html', $response->type());
 
         $response = new Response('', 'image/jpeg');
@@ -128,7 +128,7 @@ class ResponseTest extends TestCase
 
     public function testCharset()
     {
-        $response = new Response;
+        $response = new Response();
         $this->assertEquals('UTF-8', $response->charset());
 
         $response = new Response('', 'text/html', 200, [], 'test');
@@ -143,7 +143,7 @@ class ResponseTest extends TestCase
 
     public function testCode()
     {
-        $response = new Response;
+        $response = new Response();
         $this->assertEquals(200, $response->code());
 
         $response = new Response('', 'text/html', 404);
@@ -236,7 +236,7 @@ class ResponseTest extends TestCase
     public function testToArray()
     {
         // default setup
-        $response = new Response;
+        $response = new Response();
         $expected = [
             'type'    => 'text/html',
             'charset' => 'UTF-8',

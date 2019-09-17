@@ -22,7 +22,6 @@ use Kirby\Toolkit\Pagination as BasePagination;
  */
 class Pagination extends BasePagination
 {
-
     /**
      * Pagination method (param or query)
      *

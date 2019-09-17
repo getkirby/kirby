@@ -24,7 +24,6 @@ use Kirby\Toolkit\F;
  */
 class Data
 {
-
     /**
      * Handler Type Aliases
      *
@@ -52,7 +51,7 @@ class Data
      * Handler getter
      *
      * @param  string  $type
-     * @return Kirby\Data\Handler
+     * @return \Kirby\Data\Handler
      */
     public static function handler(string $type)
     {
@@ -65,7 +64,7 @@ class Data
                    null;
 
         if (class_exists($handler)) {
-            return new $handler;
+            return new $handler();
         }
 
         throw new Exception('Missing handler for type: "' . $type . '"');

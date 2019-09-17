@@ -31,6 +31,8 @@ class Asset
     /**
      * Creates a new Asset object
      * for the given path.
+     *
+     * @param string $path
      */
     public function __construct(string $path)
     {

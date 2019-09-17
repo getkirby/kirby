@@ -15,12 +15,11 @@ use Kirby\Exception\InvalidArgumentException;
  */
 trait FileModifications
 {
-
     /**
      * Blurs the image by the given amount of pixels
      *
      * @param boolean $pixels
-     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
     public function blur($pixels = true)
     {
@@ -30,7 +29,7 @@ trait FileModifications
     /**
      * Converts the image to black and white
      *
-     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
     public function bw()
     {
@@ -43,7 +42,7 @@ trait FileModifications
      * @param integer $width
      * @param integer $height
      * @param string|array $options
-     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
     public function crop(int $width, int $height = null, $options = null)
     {
@@ -73,7 +72,7 @@ trait FileModifications
      * Sets the JPEG compression quality
      *
      * @param integer $quality
-     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
     public function quality(int $quality)
     {
@@ -87,7 +86,7 @@ trait FileModifications
      * @param integer $width
      * @param integer $height
      * @param integer $quality
-     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
     public function resize(int $width = null, int $height = null, int $quality = null)
     {
@@ -155,7 +154,7 @@ trait FileModifications
      * place.
      *
      * @param array|null|string $options
-     * @return Kirby\Cms\FileVersion|Kirby\Cms\File
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
     public function thumb($options = null)
     {
@@ -172,7 +171,7 @@ trait FileModifications
 
         $result = $this->kirby()->component('file::version')($this->kirby(), $this, $options);
 
-        if (is_a($result, FileVersion::class) === false && is_a($result, File::class) === false) {
+        if (is_a($result, 'Kirby\Cms\FileVersion') === false && is_a($result, 'Kirby\Cms\File') === false) {
             throw new InvalidArgumentException('The file::version component must return a File or FileVersion object');
         }
 

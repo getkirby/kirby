@@ -3,9 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Exception\PermissionException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Toolkit\F;
 use Throwable;
@@ -27,7 +27,7 @@ class Auth
     protected $userException;
 
     /**
-     * @param Kirby\Cms\App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @codeCoverageIgnore
      */
     public function __construct(App $kirby)
@@ -61,8 +61,8 @@ class Auth
      * for a basic authentication header with
      * valid credentials
      *
-     * @param Kirby\Http\Request\Auth\BasicAuth|null $auth
-     * @return Kirby\Cms\User|null
+     * @param \Kirby\Http\Request\Auth\BasicAuth|null $auth
+     * @return \Kirby\Cms\User|null
      */
     public function currentUserFromBasicAuth(BasicAuth $auth = null)
     {
@@ -90,8 +90,8 @@ class Auth
      * the current session and finding a valid
      * valid user id in there
      *
-     * @param Kirby\Cms\Session|array|null $session
-     * @return Kirby\Cms\User|null
+     * @param \Kirby\Session\Session|array|null $session
+     * @return \Kirby\Cms\User|null
      */
     public function currentUserFromSession($session = null)
     {
@@ -125,7 +125,7 @@ class Auth
      * Become any existing user
      *
      * @param string|null $who
-     * @return Kirby\Cms\User|null
+     * @return \Kirby\Cms\User|null
      */
     public function impersonate(string $who = null)
     {
@@ -196,7 +196,7 @@ class Auth
      * @param string $email
      * @param string $password
      * @param boolean $long
-     * @return Kirby\Cms\User
+     * @return \Kirby\Cms\User
      *
      * @throws PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
      * @throws NotFoundException If the email was invalid
@@ -226,7 +226,7 @@ class Auth
      *
      * @param string $email
      * @param string $password
-     * @return Kirby\Cms\User
+     * @return \Kirby\Cms\User
      *
      * @throws PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
      * @throws NotFoundException If the email was invalid
@@ -413,8 +413,8 @@ class Auth
     /**
      * Validates the currently logged in user
      *
-     * @param Kirby\Session\Session|array|null $session
-     * @return Kirby\Cms\User
+     * @param \Kirby\Session\Session|array|null $session
+     * @return \Kirby\Cms\User
      * @throws
      */
     public function user($session = null)

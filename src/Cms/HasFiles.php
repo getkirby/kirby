@@ -13,18 +13,17 @@ namespace Kirby\Cms;
  */
 trait HasFiles
 {
-
     /**
      * The Files collection
      *
-     * @var Kirby\Cms\Files
+     * @var \Kirby\Cms\Files
      */
     protected $files;
 
     /**
      * Filters the Files collection by type audio
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function audio()
     {
@@ -34,7 +33,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type code
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function code()
     {
@@ -56,7 +55,7 @@ trait HasFiles
      * Creates a new file
      *
      * @param array $props
-     * @return Kirby\Cms\File
+     * @return \Kirby\Cms\File
      */
     public function createFile(array $props)
     {
@@ -71,7 +70,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type documents
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function documents()
     {
@@ -83,7 +82,7 @@ trait HasFiles
      *
      * @param string $filename
      * @param string $in
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function file(string $filename = null, string $in = 'files')
     {
@@ -108,7 +107,7 @@ trait HasFiles
     /**
      * Returns the Files collection
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function files()
     {
@@ -183,7 +182,7 @@ trait HasFiles
      * Returns a specific image by filename or the first one
      *
      * @param string $filename
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function image(string $filename = null)
     {
@@ -193,7 +192,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type image
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function images()
     {
@@ -203,7 +202,7 @@ trait HasFiles
     /**
      * Sets the Files collection
      *
-     * @param Kirby\Cms\Files|null $files
+     * @param \Kirby\Cms\Files|null $files
      * @return self
      */
     protected function setFiles(array $files = null)
@@ -218,7 +217,7 @@ trait HasFiles
     /**
      * Filters the Files collection by type videos
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function videos()
     {

@@ -13,7 +13,6 @@ namespace Kirby\Cms;
  */
 class PageBlueprint extends Blueprint
 {
-
     /**
      * Creates a new page blueprint object
      * with the given props

@@ -183,7 +183,7 @@ class DimensionsTest extends TestCase
             'orientation' => 'landscape'
         ];
         $this->assertEquals($array, $dimensions->toArray());
-        $this->assertEquals($array, $dimensions->__debuginfo());
+        $this->assertEquals($array, $dimensions->__debugInfo());
     }
 
     public function testString()

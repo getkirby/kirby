@@ -20,7 +20,6 @@ use Throwable;
  */
 class Dir
 {
-
     /**
      * Ignore when scanning directories
      *
@@ -84,6 +83,7 @@ class Dir
      * Get all subdirectories
      *
      * @param string $dir
+     * @param array $ignore
      * @param bool $absolute
      * @return array
      */
@@ -102,6 +102,7 @@ class Dir
      * Get all files
      *
      * @param string $dir
+     * @param array $ignore
      * @param bool $absolute
      * @return array
      */
@@ -120,7 +121,9 @@ class Dir
      * Read the directory and all subdirectories
      *
      * @param string $dir
+     * @param bool $recursive
      * @param array $ignore
+     * @param string $path
      * @return array
      */
     public static function index(string $dir, bool $recursive = false, array $ignore = null, string $path = null)
@@ -145,6 +148,7 @@ class Dir
     /**
      * Checks if the folder has any contents
      *
+     * @param string $dir
      * @return boolean
      */
     public static function isEmpty(string $dir): bool

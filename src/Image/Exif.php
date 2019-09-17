@@ -15,7 +15,6 @@ use Kirby\Toolkit\V;
  */
 class Exif
 {
-
     /**
      * the parent image object
      * @var Image
@@ -84,7 +83,7 @@ class Exif
     /**
      * Constructor
      *
-     * @param Kirby\Image\Image $image
+     * @param \Kirby\Image\Image $image
      */
     public function __construct(Image $image)
     {
@@ -106,7 +105,7 @@ class Exif
     /**
      * Returns the Camera object
      *
-     * @return Kirby\Image\Camera|null
+     * @return \Kirby\Image\Camera|null
      */
     public function camera()
     {
@@ -120,7 +119,7 @@ class Exif
     /**
      * Returns the location object
      *
-     * @return Kirby\Image\Location|null
+     * @return \Kirby\Image\Location|null
      */
     public function location()
     {
@@ -287,7 +286,7 @@ class Exif
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'camera'   => $this->camera(),

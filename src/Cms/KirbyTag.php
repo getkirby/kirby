@@ -14,7 +14,6 @@ namespace Kirby\Cms;
  */
 class KirbyTag extends \Kirby\Text\KirbyTag
 {
-
     /**
      * Finds a file for the given path.
      * The method first searches the file
@@ -22,7 +21,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
      * Afterwards it uses Kirby's global file finder.
      *
      * @param string $path
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function file(string $path)
     {
@@ -32,7 +31,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
             return $file;
         }
 
-        if (is_a($parent, File::class) === true && $file = $parent->page()->file($path)) {
+        if (is_a($parent, 'Kirby\Cms\File') === true && $file = $parent->page()->file($path)) {
             return $file;
         }
 
@@ -42,7 +41,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
     /**
      * Returns the current Kirby instance
      *
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {
@@ -52,7 +51,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
     /**
      * Returns the parent model
      *
-     * @return Kirby\Cms\Model|null
+     * @return \Kirby\Cms\Model|null
      */
     public function parent()
     {

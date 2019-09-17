@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Throwable;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -14,6 +13,7 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
+use Throwable;
 
 /**
  * The System class gathers all information
@@ -31,14 +31,13 @@ use Kirby\Toolkit\V;
  */
 class System
 {
-
     /**
      * @var App
      */
     protected $app;
 
     /**
-     * @param Kirby\Cms\App $app
+     * @param \Kirby\Cms\App $app
      */
     public function __construct(App $app)
     {
@@ -53,7 +52,7 @@ class System
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -138,20 +137,21 @@ class System
      */
     public function init()
     {
-        /* /site/accounts */
+        // init /site/accounts
         try {
             Dir::make($this->app->root('accounts'));
         } catch (Throwable $e) {
             throw new PermissionException('The accounts directory could not be created');
         }
 
-        /* /content */
+        // init /content
         try {
             Dir::make($this->app->root('content'));
         } catch (Throwable $e) {
             throw new PermissionException('The content directory could not be created');
         }
 
+        // init /media
         try {
             Dir::make($this->app->root('media'));
         } catch (Throwable $e) {

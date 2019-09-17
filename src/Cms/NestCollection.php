@@ -16,7 +16,6 @@ use Kirby\Toolkit\Collection as BaseCollection;
  */
 class NestCollection extends BaseCollection
 {
-
     /**
      * Converts all objects in the collection
      * to an array. This can also take a callback

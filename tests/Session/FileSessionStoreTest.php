@@ -2,13 +2,12 @@
 
 namespace Kirby\Session;
 
+use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
-
-require_once(__DIR__ . '/mocks.php');
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Session\FileSessionStore

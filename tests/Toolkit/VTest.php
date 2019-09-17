@@ -328,8 +328,8 @@ class VTest extends TestCase
             'lukas',
             'nico'
         ], 3));
-        $this->assertTrue(V::size(new CanBeCounted, 7));
-        $this->assertTrue(V::size(new HasCount, 7));
+        $this->assertTrue(V::size(new CanBeCounted(), 7));
+        $this->assertTrue(V::size(new HasCount(), 7));
         $this->assertTrue(V::size(5, 7, '<'));
         $this->assertTrue(V::size(7, 5, '>'));
 
@@ -337,8 +337,8 @@ class VTest extends TestCase
         $this->assertFalse(V::size(' foo ', 5));
         $this->assertFalse(V::size(7.9, 8));
         $this->assertFalse(V::size([], 3));
-        $this->assertFalse(V::size(new CanBeCounted, 8));
-        $this->assertFalse(V::size(new HasCount, 8));
+        $this->assertFalse(V::size(new CanBeCounted(), 8));
+        $this->assertFalse(V::size(new HasCount(), 8));
         $this->assertFalse(V::size(5, 7, '>'));
         $this->assertFalse(V::size(7, 5, '<'));
     }
@@ -356,7 +356,7 @@ class VTest extends TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('$value is an uncountable object');
 
-        V::size(new \StdClass, 5);
+        V::size(new \StdClass(), 5);
     }
 
     public function testTime()

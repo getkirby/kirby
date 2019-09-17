@@ -6,7 +6,6 @@ use Exception;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\View;
 use Throwable;
 
@@ -41,7 +40,7 @@ class Panel
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
-     * @param Kirby\Cms\App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return bool
      */
     public static function link(App $kirby): bool
@@ -73,8 +72,8 @@ class Panel
     /**
      * Renders the main panel view
      *
-     * @param Kirby\Cms\App $kirby
-     * @return Kirby\Cms\Response
+     * @param \Kirby\Cms\App $kirby
+     * @return \Kirby\Cms\Response
      */
     public static function render(App $kirby)
     {

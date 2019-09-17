@@ -16,7 +16,6 @@ use Kirby\Toolkit\Str;
  */
 class Cookie
 {
-
     /**
      * Key to use for cookie signing
      * @var string

@@ -77,7 +77,7 @@ class StructureObject extends Model
     /**
      * Returns the content
      *
-     * @return Kirby\Cms\Content
+     * @return \Kirby\Cms\Content
      */
     public function content()
     {
@@ -110,7 +110,7 @@ class StructureObject extends Model
      */
     public function is($structure): bool
     {
-        if (is_a($structure, StructureObject::class) === false) {
+        if (is_a($structure, 'Kirby\Cms\StructureObject') === false) {
             return false;
         }
 
@@ -120,7 +120,7 @@ class StructureObject extends Model
     /**
      * Returns the parent Model object
      *
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function parent()
     {
@@ -158,7 +158,7 @@ class StructureObject extends Model
      * Sets the parent Model. This can either be a
      * Page, Site, File or User object
      *
-     * @param Kirby\Cms\Model|null $parent
+     * @param \Kirby\Cms\Model|null $parent
      * @return self
      */
     protected function setParent(Model $parent = null)
@@ -170,7 +170,7 @@ class StructureObject extends Model
     /**
      * Sets the parent Structure collection
      *
-     * @param Kirby\Cms\Structure $structure
+     * @param \Kirby\Cms\Structure $structure
      * @return self
      */
     protected function setStructure(Structure $structure = null)
@@ -182,7 +182,7 @@ class StructureObject extends Model
     /**
      * Returns the parent Structure collection as siblings
      *
-     * @return Kirby\Cms\Structure
+     * @return \Kirby\Cms\Structure
      */
     protected function siblingsCollection()
     {

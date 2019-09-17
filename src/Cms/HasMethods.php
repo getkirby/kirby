@@ -13,7 +13,6 @@ namespace Kirby\Cms;
  */
 trait HasMethods
 {
-
     /**
      * All registered methods
      *

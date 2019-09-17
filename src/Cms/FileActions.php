@@ -19,7 +19,6 @@ use Kirby\Toolkit\F;
  */
 trait FileActions
 {
-
     /**
      * Renames the file without touching the extension
      * The store is used to actually execute this.
@@ -121,8 +120,8 @@ trait FileActions
     /**
      * Copy the file to the given page
      *
-     * @param Kirby\Cms\Page $page
-     * @return Kirby\Cms\File
+     * @param \Kirby\Cms\Page $page
+     * @return \Kirby\Cms\File
      */
     public function copy(Page $page)
     {

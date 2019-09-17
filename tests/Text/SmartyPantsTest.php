@@ -80,7 +80,7 @@ class SmartyPantsTest extends TestCase
             'emdash' => 'emdash',
         ]);
 
-        $result = $parser->parse("--");
+        $result = $parser->parse('--');
         $this->assertEquals('emdash', $result);
     }
 
@@ -90,7 +90,7 @@ class SmartyPantsTest extends TestCase
             'ellipsis' => 'ellipsis',
         ]);
 
-        $result = $parser->parse("...");
+        $result = $parser->parse('...');
         $this->assertEquals('ellipsis', $result);
     }
 }

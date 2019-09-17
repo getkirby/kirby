@@ -20,11 +20,10 @@ namespace Kirby\Cms;
  */
 class Pages extends Collection
 {
-
     /**
      * Cache for the index
      *
-     * @var Kirby\Cms\Pages|null
+     * @var \Kirby\Cms\Pages|null
      */
     protected $index = null;
 
@@ -40,7 +39,7 @@ class Pages extends Collection
      * an entire second collection to the
      * current collection
      *
-     * @param mixed $item
+     * @param mixed $object
      * @return self
      */
     public function add($object)
@@ -54,7 +53,7 @@ class Pages extends Collection
             $this->__set($page->id(), $page);
 
         // add a page object
-        } elseif (is_a($object, Page::class) === true) {
+        } elseif (is_a($object, 'Kirby\Cms\Page') === true) {
             $this->__set($object->id(), $object);
         }
 
@@ -64,17 +63,17 @@ class Pages extends Collection
     /**
      * Returns all audio files of all children
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function audio()
     {
-        return $this->files()->filterBy("type", "audio");
+        return $this->files()->filterBy('type', 'audio');
     }
 
     /**
      * Returns all children for each page in the array
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function children()
     {
@@ -92,27 +91,27 @@ class Pages extends Collection
     /**
      * Returns all code files of all children
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function code()
     {
-        return $this->files()->filterBy("type", "code");
+        return $this->files()->filterBy('type', 'code');
     }
 
     /**
      * Returns all documents of all children
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function documents()
     {
-        return $this->files()->filterBy("type", "document");
+        return $this->files()->filterBy('type', 'document');
     }
 
     /**
      * Fetch all drafts for all pages in the collection
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function drafts()
     {
@@ -131,8 +130,7 @@ class Pages extends Collection
      * Creates a pages collection from an array of props
      *
      * @param array $pages
-     * @param Kirby\Cms\Model $parent
-     * @param array $inject
+     * @param \Kirby\Cms\Model $model
      * @param bool $draft
      * @return self
      */
@@ -167,7 +165,7 @@ class Pages extends Collection
     /**
      * Returns all files of all children
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function files()
     {
@@ -271,7 +269,7 @@ class Pages extends Collection
      * Alias for Pages::findById
      *
      * @param string $id
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function findByUri(string $id)
     {
@@ -281,7 +279,7 @@ class Pages extends Collection
     /**
      * Finds the currently open page
      *
-     * @return Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|null
      */
     public function findOpen()
     {
@@ -293,7 +291,8 @@ class Pages extends Collection
      * extension pages
      *
      * @param string $key
-     * @return Kirby\Cms\Page|null
+     * @param mixed $default
+     * @return \Kirby\Cms\Page|null
      */
     public function get($key, $default = null)
     {
@@ -311,11 +310,11 @@ class Pages extends Collection
     /**
      * Returns all images of all children
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function images()
     {
-        return $this->files()->filterBy("type", "image");
+        return $this->files()->filterBy('type', 'image');
     }
 
     /**
@@ -323,7 +322,7 @@ class Pages extends Collection
      * pages and subpages, etc.
      *
      * @param bool $drafts
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function index(bool $drafts = false)
     {
@@ -357,7 +356,7 @@ class Pages extends Collection
     /**
      * Returns all listed pages in the collection
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function listed()
     {
@@ -367,7 +366,7 @@ class Pages extends Collection
     /**
      * Returns all unlisted pages in the collection
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function unlisted()
     {
@@ -377,6 +376,7 @@ class Pages extends Collection
     /**
      * Include all given items in the collection
      *
+     * @param mixed ...$args
      * @return self
      */
     public function merge(...$args)
@@ -441,7 +441,7 @@ class Pages extends Collection
     /*
      * Returns all listed and unlisted pages in the collection
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function published()
     {
@@ -452,7 +452,7 @@ class Pages extends Collection
      * Filter all pages by the given template
      *
      * @param string|array $templates
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function template($templates)
     {
@@ -472,17 +472,17 @@ class Pages extends Collection
     /**
      * Returns all video files of all children
      *
-     * @return Kirby\Cms\Files
+     * @return \Kirby\Cms\Files
      */
     public function videos()
     {
-        return $this->files()->filterBy("type", "video");
+        return $this->files()->filterBy('type', 'video');
     }
 
     /**
      * Deprecated alias for Pages::listed()
      *
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function visible()
     {

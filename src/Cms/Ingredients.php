@@ -16,7 +16,6 @@ namespace Kirby\Cms;
  */
 class Ingredients
 {
-
     /**
      * @var array
      */
@@ -49,7 +48,7 @@ class Ingredients
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->ingredients;
     }

@@ -19,23 +19,22 @@ use Throwable;
  */
 abstract class ModelWithContent extends Model
 {
-
     /**
      * The content
      *
-     * @var Kirby\Cms\Content
+     * @var \Kirby\Cms\Content
      */
     public $content;
 
     /**
-     * @var Kirby\Cms\Translations
+     * @var \Kirby\Cms\Translations
      */
     public $translations;
 
     /**
      * Returns the blueprint of the model
      *
-     * @return Kirby\Cms\Blueprint
+     * @return \Kirby\Cms\Blueprint
      */
     abstract public function blueprint();
 
@@ -53,7 +52,7 @@ abstract class ModelWithContent extends Model
      * Returns the content
      *
      * @param string $languageCode
-     * @return Kirby\Cms\Content
+     * @return \Kirby\Cms\Content
      */
     public function content(string $languageCode = null)
     {
@@ -263,7 +262,7 @@ abstract class ModelWithContent extends Model
      * Only if a content directory exists,
      * virtual pages will need to overwrite this method
      *
-     * @return Kirby\Cms\ContentLock|null
+     * @return \Kirby\Cms\ContentLock|null
      */
     public function lock()
     {
@@ -364,19 +363,19 @@ abstract class ModelWithContent extends Model
      *
      * @internal
      * @param string|null $query
-     * @return Kirby\Cms\File|Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
     protected function panelImageSource(string $query = null)
     {
         $image = $this->query($query ?? null);
 
         // validate the query result
-        if (is_a($image, File::class) === false && is_a($image, Asset::class) === false) {
+        if (is_a($image, 'Kirby\Cms\File') === false && is_a($image, 'Kirby\Cms\Asset') === false) {
             $image = null;
         }
 
         // fallback for files
-        if ($image === null && is_a($this, File::class) === true && $this->isViewable() === true) {
+        if ($image === null && is_a($this, 'Kirby\Cms\File') === true && $this->isViewable() === true) {
             $image = $this;
         }
 
@@ -399,7 +398,7 @@ abstract class ModelWithContent extends Model
 
         $result = Str::query($query, [
             'kirby'             => $this->kirby(),
-            'site'              => is_a($this, Site::class) ? $this : $this->site(),
+            'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
         ]);
 
@@ -492,8 +491,18 @@ abstract class ModelWithContent extends Model
             throw new InvalidArgumentException('Invalid language: ' . $languageCode);
         }
 
+        // get the content to store
+        $content = $translation->update($data, $overwrite)->content();
+
+        // remove all untranslatable fields
+        foreach ($this->blueprint()->fields() as $field) {
+            if (($field['translate'] ?? true) === false) {
+                $content[$field['name']] = null;
+            }
+        }
+
         // merge the translation with the new data
-        $translation->update($data, $overwrite);
+        $translation->update($content, true);
 
         // send the full translation array to the writer
         $clone->writeContent($translation->content(), $languageCode);
@@ -530,7 +539,7 @@ abstract class ModelWithContent extends Model
     protected function setTranslations(array $translations = null)
     {
         if ($translations !== null) {
-            $this->translations = new Collection;
+            $this->translations = new Collection();
 
             foreach ($translations as $props) {
                 $props['parent'] = $this;
@@ -556,7 +565,7 @@ abstract class ModelWithContent extends Model
 
         $result = Str::template($template, [
             'kirby'             => $this->kirby(),
-            'site'              => is_a($this, Site::class) ? $this : $this->site(),
+            'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
         ]);
 
@@ -568,7 +577,7 @@ abstract class ModelWithContent extends Model
      * If no code is specified the current translation is returned
      *
      * @param string|null $languageCode
-     * @return Kirby\Cms\ContentTranslation|null
+     * @return \Kirby\Cms\ContentTranslation|null
      */
     public function translation(string $languageCode = null)
     {
@@ -578,7 +587,7 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the translations collection
      *
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function translations()
     {
@@ -586,7 +595,7 @@ abstract class ModelWithContent extends Model
             return $this->translations;
         }
 
-        $this->translations = new Collection;
+        $this->translations = new Collection();
 
         foreach ($this->kirby()->languages() as $language) {
             $translation = new ContentTranslation([
@@ -627,7 +636,13 @@ abstract class ModelWithContent extends Model
         }
 
         return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
-            return $model->save($strings, $languageCode, true);
+            // save updated values
+            $model = $model->save($strings, $languageCode, true);
+            
+            // update model in siblings collection
+            $model->siblings()->add($model);
+            
+            return $model;
         });
     }
 

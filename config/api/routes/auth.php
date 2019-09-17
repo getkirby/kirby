@@ -1,8 +1,7 @@
 <?php
 
-use Kirby\Exception\NotFoundException;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\PermissionException;
+use Kirby\Exception\NotFoundException;
 
 /**
  * Authentication

@@ -13,7 +13,6 @@ namespace Kirby\Cache;
  */
 class MemCached extends Cache
 {
-
     /**
      * store for the memache connection
      * @var Memcached
@@ -65,7 +64,7 @@ class MemCached extends Cache
      * needs to return a Value object or null if not found
      *
      * @param string $key
-     * @return Kirby\Cache\Value|null
+     * @return \Kirby\Cache\Value|null
      */
     public function retrieve(string $key)
     {

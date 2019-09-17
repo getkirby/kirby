@@ -14,7 +14,6 @@ namespace Kirby\Cms;
  */
 class Content
 {
-
     /**
      * The raw data array
      *
@@ -47,7 +46,7 @@ class Content
      *
      * @param string $name
      * @param array $arguments
-     * @return Kirby\Cms\Field
+     * @return \Kirby\Cms\Field
      */
     public function __call(string $name, array $arguments = [])
     {
@@ -73,7 +72,7 @@ class Content
      * @see    self::data()
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -147,8 +146,8 @@ class Content
      * Returns either a single field object
      * or all registered fields
      *
-     * @param   string $key
-     * @return  Kirby\Cms\Field|array
+     * @param  string $key
+     * @return \Kirby\Cms\Field|array
      */
     public function get(string $key = null)
     {
@@ -217,7 +216,7 @@ class Content
      * Returns the parent
      * Site, Page, File or User object
      *
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function parent()
     {
@@ -227,7 +226,7 @@ class Content
     /**
      * Set the parent model
      *
-     * @param Kirby\Cms\Model $parent
+     * @param \Kirby\Cms\Model $parent
      * @return self
      */
     public function setParent(Model $parent)

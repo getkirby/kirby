@@ -19,15 +19,14 @@ use Throwable;
  */
 class Media
 {
-
     /**
      * Tries to find a file by model and filename
      * and to copy it to the media folder.
      *
-     * @param Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model $model
      * @param string $hash
      * @param string $filename
-     * @return Kirby\Cms\Response|false
+     * @return \Kirby\Cms\Response|false
      */
     public static function link(Model $model = null, string $hash, string $filename)
     {
@@ -80,10 +79,10 @@ class Media
      * given filename and then calls the thumb
      * component to create a thumbnail accordingly
      *
-     * @param Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model $model
      * @param string $hash
      * @param string $filename
-     * @return Kirby\Cms\Response|false
+     * @return \Kirby\Cms\Response|false
      */
     public static function thumb($model, string $hash, string $filename)
     {

@@ -11,6 +11,14 @@ class MockObject
         $this->value = $value;
     }
 
+    public function value()
+    {
+        return $this->value;
+    }
+}
+
+class MockObjectString extends MockObject
+{
     public function __toString()
     {
         return (string)$this->value;
@@ -198,9 +206,9 @@ class CollectionSorterTest extends TestCase
 
     public function testSortObjects()
     {
-        $bastian = new MockObject('Bastian');
-        $nico    = new MockObject('Nico');
-        $sonja   = new MockObject('Sonja');
+        $bastian = new MockObjectString('Bastian');
+        $nico    = new MockObjectString('Nico');
+        $sonja   = new MockObjectString('Sonja');
 
         $collection = new Collection([
             ['name' => $nico],
@@ -214,6 +222,55 @@ class CollectionSorterTest extends TestCase
         $this->assertEquals($sonja, $sorted->nth(2)['name']);
     }
 
+    public function testSortNoRecursiveDependencyError()
+    {
+        // arrays; shouldn't be a problem
+        $collection = new Collection([
+            ['name' => 'img1.png'],
+            ['name' => 'img2.png'],
+            ['name' => 'img1.png']
+        ]);
+
+        $sorted = $collection->sortBy('name', 'asc');
+        $this->assertEquals('img1.png', $sorted->nth(0)['name']);
+        $this->assertEquals('img1.png', $sorted->nth(1)['name']);
+        $this->assertEquals('img2.png', $sorted->nth(2)['name']);
+
+        // objects with a __toString() method
+        $bastian = new MockObjectString('Bastian');
+        $nico    = new MockObjectString('Nico');
+        $sonja   = new MockObjectString('Sonja');
+
+        $collection = new Collection([
+            'nico'     => $nico,
+            'bastian1' => $bastian,
+            'sonja'    => $sonja,
+            'bastian2' => $bastian
+        ]);
+        $sorted = $collection->sortBy('value', 'asc');
+        $this->assertEquals($bastian, $sorted->nth(0));
+        $this->assertEquals($bastian, $sorted->nth(1));
+        $this->assertEquals($nico, $sorted->nth(2));
+        $this->assertEquals($sonja, $sorted->nth(3));
+
+        // objects without a __toString() method
+        $bastian = new MockObject('Bastian');
+        $nico    = new MockObject('Nico');
+        $sonja   = new MockObject('Sonja');
+
+        $collection = new Collection([
+            'nico'     => $nico,
+            'bastian1' => $bastian,
+            'sonja'    => $sonja,
+            'bastian2' => $bastian
+        ]);
+        $sorted = $collection->sortBy('value', 'asc');
+        $this->assertEquals($bastian, $sorted->nth(0));
+        $this->assertEquals($bastian, $sorted->nth(1));
+        $this->assertEquals($nico, $sorted->nth(2));
+        $this->assertEquals($sonja, $sorted->nth(3));
+    }
+
     public function testFlip()
     {
         $collection = new Collection([
@@ -222,8 +279,7 @@ class CollectionSorterTest extends TestCase
             ['name' => 'img2.png']
         ]);
 
-        $sorted = $collection->sortBy('name', 'asc');
-        $this->assertEquals('img12.png', $collection->first(0)['name']);
+        $this->assertEquals('img12.png', $collection->nth(0)['name']);
         $this->assertEquals('img10.png', $collection->nth(1)['name']);
         $this->assertEquals('img2.png', $collection->nth(2)['name']);
 

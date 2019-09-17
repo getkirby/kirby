@@ -16,7 +16,6 @@ use Kirby\Toolkit\Str;
  */
 class Responder
 {
-
     /**
      * HTTP status code
      *
@@ -174,7 +173,7 @@ class Responder
      * Creates and returns the response object from the config
      *
      * @param string|null $body
-     * @return Kirby\Cms\Response
+     * @return \Kirby\Cms\Response
      */
     public function send(string $body = null)
     {

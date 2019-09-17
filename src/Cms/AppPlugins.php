@@ -23,7 +23,6 @@ use Kirby\Toolkit\V;
  */
 trait AppPlugins
 {
-
     /**
      * A list of all registered plugins
      *
@@ -83,7 +82,7 @@ trait AppPlugins
      *
      * @internal
      * @param array $extensions
-     * @param Kirby\Cms\Plugin $plugin The plugin which defined those extensions
+     * @param \Kirby\Cms\Plugin $plugin The plugin which defined those extensions
      * @return array
      */
     public function extend(array $extensions, Plugin $plugin = null): array
@@ -106,7 +105,7 @@ trait AppPlugins
     protected function extendApi($api): array
     {
         if (is_array($api) === true) {
-            if (is_a($api['routes'] ?? [], Closure::class) === true) {
+            if (is_a($api['routes'] ?? [], 'Closure') === true) {
                 $api['routes'] = $api['routes']($this);
             }
 
@@ -254,7 +253,7 @@ trait AppPlugins
     /**
      * Registers markdown component
      *
-     * @param Closure $blueprints
+     * @param Closure $markdown
      * @return Closure
      */
     protected function extendMarkdown(Closure $markdown)
@@ -266,7 +265,7 @@ trait AppPlugins
      * Registers additional options
      *
      * @param array $options
-     * @param Kirby\Cms\Plugin|null $plugin
+     * @param \Kirby\Cms\Plugin|null $plugin
      * @return array
      */
     protected function extendOptions(array $options, Plugin $plugin = null): array
@@ -336,7 +335,7 @@ trait AppPlugins
      */
     protected function extendRoutes($routes): array
     {
-        if (is_a($routes, Closure::class) === true) {
+        if (is_a($routes, 'Closure') === true) {
             $routes = $routes($this);
         }
 
@@ -480,7 +479,7 @@ trait AppPlugins
 
     /**
      * Returns the extensions registry
-
+     *
      * @internal
      * @param string|null $type
      * @return array
@@ -556,6 +555,7 @@ trait AppPlugins
     /**
      * Apply all passed extensions
      *
+     * @param array $props
      * @return void
      */
     protected function extensionsFromProps(array $props)
@@ -643,7 +643,7 @@ trait AppPlugins
      *
      * @param string $name
      * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
-     * @return Kirby\Cms\Plugin|null
+     * @return \Kirby\Cms\Plugin|null
      */
     public static function plugin(string $name, array $extends = null)
     {
@@ -658,7 +658,7 @@ trait AppPlugins
         $name   = $plugin->name();
 
         if (isset(static::$plugins[$name]) === true) {
-            throw new DuplicateException('The plugin "'. $name . '" has already been registered');
+            throw new DuplicateException('The plugin "' . $name . '" has already been registered');
         }
 
         return static::$plugins[$name] = $plugin;
