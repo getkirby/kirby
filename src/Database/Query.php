@@ -245,11 +245,11 @@ class Query
     }
 
     /**
-    * Sets the name of the table, which should be queried
-    *
-    * @param string $table
-    * @return \Kirby\Database\Query
-    */
+     * Sets the name of the table, which should be queried
+     *
+     * @param string $table
+     * @return \Kirby\Database\Query
+     */
     public function table(string $table)
     {
         if ($this->database->validateTable($table) === false) {
@@ -383,7 +383,7 @@ class Query
      * ->where('username like ?', 'myuser')                      (args: 2)
      * ->where('username', 'like', 'myuser');                    (args: 3)
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function where(...$args)
@@ -396,7 +396,7 @@ class Query
      * Shortcut to attach a where clause with an OR operator.
      * Check out the where() method docs for additional info.
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function orWhere(...$args)
@@ -420,7 +420,7 @@ class Query
      * Shortcut to attach a where clause with an AND operator.
      * Check out the where() method docs for additional info.
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function andWhere(...$args)
@@ -441,11 +441,11 @@ class Query
     }
 
     /**
-    * Attaches a group by clause
-    *
-    * @param string $group
-    * @return \Kirby\Database\Query
-    */
+     * Attaches a group by clause
+     *
+     * @param string $group
+     * @return \Kirby\Database\Query
+     */
     public function group(string $group = null)
     {
         $this->group = $group;
@@ -463,7 +463,7 @@ class Query
      * ->having('username like ?', 'myuser')                         (args: 2)
      * ->having('username', 'like', 'myuser');                       (args: 3)
      *
-     * @param list
+     * @param mixed ...$args
      * @return \Kirby\Database\Query
      */
     public function having(...$args)
@@ -815,7 +815,7 @@ class Query
         $sql        = $this->database->sql();
         $primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
 
-        $results = $this->query($this->select(array($column))->order($primaryKey . ' ASC')->build('select'), [
+        $results = $this->query($this->select([$column])->order($primaryKey . ' ASC')->build('select'), [
             'iterator' => 'array',
             'fetch'    => 'array',
         ]);

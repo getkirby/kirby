@@ -164,7 +164,7 @@ class Collection extends BaseCollection
      * Checks if the given object or id
      * is in the collection
      *
-     * @param string|object
+     * @param string|object $id
      * @return boolean
      */
     public function has($id): bool
@@ -196,7 +196,7 @@ class Collection extends BaseCollection
     /**
      * Returns a Collection without the given element(s)
      *
-     * @param  mixed[] $keys any number of keys, passed as individual arguments
+     * @param  mixed ...$keys any number of keys, passed as individual arguments
      * @return \Kirby\Cms\Collection
      */
     public function not(...$keys)
@@ -216,6 +216,7 @@ class Collection extends BaseCollection
     /**
      * Add pagination and return a sliced set of data.
      *
+     * @param  mixed ...$arguments
      * @return \Kirby\Cms\Collection
      */
     public function paginate(...$arguments)

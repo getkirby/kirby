@@ -33,77 +33,77 @@ class EscapeTest extends TestCase
         '<'     => '&lt;',
         '>'     => '&gt;',
         '&'     => '&amp;',
-        /* Characters beyond ASCII value 255 to unicode escape */
+        // Characters beyond ASCII value 255 to unicode escape
         'Ā'     => '&#x0100;',
-        /* Characters beyond Unicode BMP to unicode escape */
+        // Characters beyond Unicode BMP to unicode escape
         "\xF0\x90\x80\x80" => '&#x10000;',
-        /* Immune chars excluded */
+        // Immune chars excluded
         ','     => ',',
         '.'     => '.',
         '-'     => '-',
         '_'     => '_',
-        /* Basic alnums exluded */
+        // Basic alnums exluded
         'a'     => 'a',
         'A'     => 'A',
         'z'     => 'z',
         'Z'     => 'Z',
         '0'     => '0',
         '9'     => '9',
-        /* Basic control characters and null */
+        // Basic control characters and null
         "\r"    => '&#x0D;',
         "\n"    => '&#x0A;',
         "\t"    => '&#x09;',
         "\0"    => '&#xFFFD;', // should use Unicode replacement char
-        /* Encode chars as named entities where possible */
+        // Encode chars as named entities where possible
         '<'     => '&lt;',
         '>'     => '&gt;',
         '&'     => '&amp;',
         '"'     => '&quot;',
-        /* Encode spaces for quoteless attribute protection */
+        // Encode spaces for quoteless attribute protection
         ' '     => '&#x20;',
     ];
 
     protected $jsSpecialChars = [
-        /* HTML special chars - escape without exception to hex */
+        // HTML special chars - escape without exception to hex
         '<'     => '\\x3C',
         '>'     => '\\x3E',
         '\''    => '\\x27',
         '"'     => '\\x22',
         '&'     => '\\x26',
-        /* Characters beyond ASCII value 255 to unicode escape */
+        // Characters beyond ASCII value 255 to unicode escape
         'Ā'     => '\\u0100',
-        /* Characters beyond Unicode BMP to unicode escape */
+        // Characters beyond Unicode BMP to unicode escape
         "\xF0\x90\x80\x80" => '\\uD800\\uDC00',
-        /* Immune chars excluded */
+        // Immune chars excluded
         ','     => ',',
         '.'     => '.',
         '_'     => '_',
-        /* Basic alnums exluded */
+        // Basic alnums exluded
         'a'     => 'a',
         'A'     => 'A',
         'z'     => 'z',
         'Z'     => 'Z',
         '0'     => '0',
         '9'     => '9',
-        /* Basic control characters and null */
+        // Basic control characters and null
         "\r"    => '\\x0D',
         "\n"    => '\\x0A',
         "\t"    => '\\x09',
         "\0"    => '\\x00',
-        /* Encode spaces for quoteless attribute protection */
+        // Encode spaces for quoteless attribute protection
         ' '     => '\\x20',
     ];
 
     protected $urlSpecialChars = [
-        /* HTML special chars - escape without exception to percent encoding */
+        // HTML special chars - escape without exception to percent encoding
         '<'     => '%3C',
         '>'     => '%3E',
         '\''    => '%27',
         '"'     => '%22',
         '&'     => '%26',
-        /* Characters beyond ASCII value 255 to hex sequence */
+        // Characters beyond ASCII value 255 to hex sequence
         'Ā'     => '%C4%80',
-        /* Punctuation and unreserved check */
+        // Punctuation and unreserved check
         ','     => '%2C',
         '.'     => '.',
         '_'     => '_',
@@ -111,52 +111,52 @@ class EscapeTest extends TestCase
         ':'     => '%3A',
         ';'     => '%3B',
         '!'     => '%21',
-        /* Basic alnums excluded */
+        // Basic alnums excluded
         'a'     => 'a',
         'A'     => 'A',
         'z'     => 'z',
         'Z'     => 'Z',
         '0'     => '0',
         '9'     => '9',
-        /* Basic control characters and null */
+        // Basic control characters and null
         "\r"    => '%0D',
         "\n"    => '%0A',
         "\t"    => '%09',
         "\0"    => '%00',
-        /* PHP quirks from the past */
+        // PHP quirks from the past
         ' '     => '%20',
         '~'     => '~',
         '+'     => '%2B',
     ];
 
     protected $cssSpecialChars = [
-        /* HTML special chars - escape without exception to hex */
+        // HTML special chars - escape without exception to hex
         '<'     => '\\3C ',
         '>'     => '\\3E ',
         '\''    => '\\27 ',
         '"'     => '\\22 ',
         '&'     => '\\26 ',
-        /* Characters beyond ASCII value 255 to unicode escape */
+        // Characters beyond ASCII value 255 to unicode escape
         'Ā'     => '\\100 ',
-        /* Characters beyond Unicode BMP to unicode escape */
+        // Characters beyond Unicode BMP to unicode escape
         "\xF0\x90\x80\x80" => '\\10000 ',
-        /* Immune chars excluded */
+        // Immune chars excluded
         ','     => '\\2C ',
         '.'     => '\\2E ',
         '_'     => '\\5F ',
-        /* Basic alnums exluded */
+        // Basic alnums exluded
         'a'     => 'a',
         'A'     => 'A',
         'z'     => 'z',
         'Z'     => 'Z',
         '0'     => '0',
         '9'     => '9',
-        /* Basic control characters and null */
+        // Basic control characters and null
         "\r"    => '\\D ',
         "\n"    => '\\A ',
         "\t"    => '\\9 ',
         "\0"    => '\\0 ',
-        /* Encode spaces for quoteless attribute protection */
+        // Encode spaces for quoteless attribute protection
         ' '     => '\\20 ',
     ];
 
@@ -246,7 +246,7 @@ class EscapeTest extends TestCase
      */
     public function testUnicodeCodepointConversionToUtf8()
     {
-        $expected = " ~ޙ";
+        $expected = ' ~ޙ';
         $codepoints = [0x20, 0x7e, 0x799];
         $result = '';
         foreach ($codepoints as $value) {

@@ -15,7 +15,6 @@ use Closure;
  */
 trait SiteActions
 {
-
     /**
      * Commits a site action, by following these steps
      *
@@ -27,6 +26,7 @@ trait SiteActions
      *
      * @param string $action
      * @param mixed ...$arguments
+     * @param Closure $callback
      * @return mixed
      */
     protected function commit(string $action, array $arguments, Closure $callback)

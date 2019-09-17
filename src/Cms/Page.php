@@ -154,7 +154,7 @@ class Page extends ModelWithContent
      * Magic caller
      *
      * @param string $method
-     * @param array $args
+     * @param array $arguments
      * @return mixed
      */
     public function __call(string $method, array $arguments = [])
@@ -192,7 +192,7 @@ class Page extends ModelWithContent
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'content'      => $this->content(),
@@ -236,6 +236,7 @@ class Page extends ModelWithContent
     /**
      * Returns an array with all blueprints that are available for the page
      *
+     * @param string $inSection
      * @return array
      */
     public function blueprints(string $inSection = null): array
@@ -300,6 +301,8 @@ class Page extends ModelWithContent
      * Prepares the content for the write method
      *
      * @internal
+     * @param array $data
+     * @param string $languageCode
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -437,6 +440,7 @@ class Page extends ModelWithContent
      * takes page models into account.
      *
      * @internal
+     * @param mixed $props
      * @return self
      */
     public static function factory($props)
@@ -524,7 +528,7 @@ class Page extends ModelWithContent
      */
     public function is($page): bool
     {
-        if (is_a($page, Page::class) === false) {
+        if (is_a($page, 'Kirby\Cms\Page') === false) {
             if (is_string($page) === false) {
                 return false;
             }
@@ -532,7 +536,7 @@ class Page extends ModelWithContent
             $page = $this->kirby()->page($page);
         }
 
-        if (is_a($page, Page::class) === false) {
+        if (is_a($page, 'Kirby\Cms\Page') === false) {
             return false;
         }
 
@@ -558,6 +562,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is a direct or indirect ancestor of the given $page object
      *
+     * @param Page $child
      * @return boolean
      */
     public function isAncestorOf(Page $child): bool
@@ -977,6 +982,7 @@ class Page extends ModelWithContent
      * in the panel
      *
      * @internal
+     * @param bool $relative
      * @return string
      */
     public function panelUrl(bool $relative = false): string
@@ -1033,7 +1039,7 @@ class Page extends ModelWithContent
      */
     public function parents()
     {
-        $parents = new Pages;
+        $parents = new Pages();
         $page    = $this->parent();
 
         while ($page !== null) {
@@ -1151,6 +1157,7 @@ class Page extends ModelWithContent
 
     /**
      * @internal
+     * @param mixed $type
      * @return \Kirby\Cms\Template
      */
     public function representation($type)
@@ -1251,7 +1258,7 @@ class Page extends ModelWithContent
      */
     protected function setNum(int $num = null)
     {
-        $this->num = $num === null ? $num : intval($num);
+        $this->num = $num === null ? $num : (int)$num;
         return $this;
     }
 

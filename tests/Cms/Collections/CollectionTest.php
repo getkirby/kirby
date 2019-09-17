@@ -86,7 +86,7 @@ class CollectionTest extends TestCase
         $d->name = 'D';
 
         // with custom keys
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append('key-a', $a);
         $collection = $collection->append('key-b', $b);
         $collection = $collection->append('key-c', $c);
@@ -97,7 +97,7 @@ class CollectionTest extends TestCase
         $this->assertEquals([$a, $b, $c, $d, 'a simple string'], $collection->values());
 
         // with automatic keys
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append($a);
         $collection = $collection->append($b);
         $collection = $collection->append($c);
@@ -265,7 +265,7 @@ class CollectionTest extends TestCase
         $d->name = 'D';
 
         // with custom keys
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->prepend('key-a', $a);
         $collection = $collection->prepend('key-b', $b);
         $collection = $collection->prepend('key-c', $c);
@@ -276,7 +276,7 @@ class CollectionTest extends TestCase
         $this->assertEquals(['a simple string', $d, $c, $b, $a], $collection->values());
 
         // with automatic keys
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->prepend($a);
         $collection = $collection->prepend($b);
         $collection = $collection->prepend($c);

@@ -140,7 +140,7 @@ class User extends ModelWithContent
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'avatar'  => $this->avatar(),
@@ -260,6 +260,7 @@ class User extends ModelWithContent
      * takes User models into account.
      *
      * @internal
+     * @param mixed $props
      * @return self
      */
     public static function factory($props)

@@ -61,7 +61,7 @@ class BodyTest extends TestCase
         $data = ['a' => 'a'];
         $body = new Body($data);
         $this->assertEquals($data, $body->toArray());
-        $this->assertEquals($data, $body->__debuginfo());
+        $this->assertEquals($data, $body->__debugInfo());
     }
 
     public function testToJson()

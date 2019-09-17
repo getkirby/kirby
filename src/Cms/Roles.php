@@ -20,7 +20,6 @@ use Kirby\Toolkit\Dir;
  */
 class Roles extends Collection
 {
-
     /**
      * Returns a filtered list of all
      * roles that can be created by the
@@ -74,7 +73,7 @@ class Roles extends Collection
      */
     public static function factory(array $roles, array $inject = [])
     {
-        $collection = new static;
+        $collection = new static();
 
         // read all user blueprints
         foreach ($roles as $props) {
@@ -98,7 +97,7 @@ class Roles extends Collection
      */
     public static function load(string $root = null, array $inject = [])
     {
-        $roles = new static;
+        $roles = new static();
 
         // load roles from plugins
         foreach (App::instance()->extensions('blueprints') as $blueprintName => $blueprint) {

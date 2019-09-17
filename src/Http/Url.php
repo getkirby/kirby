@@ -15,7 +15,6 @@ use Kirby\Toolkit\Str;
  */
 class Url
 {
-
     /**
      * The base Url to build absolute Urls from
      *
@@ -112,6 +111,7 @@ class Url
     /**
      * Checks if an URL is absolute
      *
+     * @param string $url
      * @return boolean
      */
     public static function isAbsolute(string $url = null): bool

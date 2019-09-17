@@ -5,8 +5,8 @@ use Kirby\Cms\Field;
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
-use Kirby\Cms\Structure;
 use Kirby\Cms\Page;
+use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
@@ -48,7 +48,7 @@ return function (App $app) {
          * Validates the field content with the given validator and parameters
          *
          * @param string $validator
-         * @param mixed[] ...$arguments A list of optional validator arguments
+         * @param mixed ...$arguments A list of optional validator arguments
          * @return boolean
          */
         'isValid' => function (Field $field, string $validator, ...$arguments): bool {
@@ -148,7 +148,7 @@ return function (App $app) {
          */
         'toFloat' => function (Field $field, float $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
-            return floatval($value);
+            return (float)$value;
         },
 
         /**
@@ -160,7 +160,7 @@ return function (App $app) {
          */
         'toInt' => function (Field $field, int $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
-            return intval($value);
+            return (int)$value;
         },
 
         /**

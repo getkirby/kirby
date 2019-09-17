@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Image\Image;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 
 /**
  * The `$file` object provides a set
@@ -141,7 +140,7 @@ class File extends ModelWithContent
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'content'  => $this->content(),
@@ -189,7 +188,7 @@ class File extends ModelWithContent
     /**
      * Store the template in addition to the
      * other content.
-
+     *
      * @internal
      * @param array $data
      * @param string|null $languageCode
@@ -265,6 +264,7 @@ class File extends ModelWithContent
      * Constructs a File object
      *
      * @internal
+     * @param mixed $props
      * @return self
      */
     public static function factory($props)
@@ -575,7 +575,7 @@ class File extends ModelWithContent
             return $this->parent()->parents()->prepend($this->parent()->id(), $this->parent());
         }
 
-        return new Pages;
+        return new Pages();
     }
 
     /**

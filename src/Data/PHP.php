@@ -16,7 +16,6 @@ use Kirby\Toolkit\F;
  */
 class PHP extends Handler
 {
-
     /**
      * Converts an array to PHP file content
      *
@@ -35,7 +34,7 @@ class PHP extends Handler
                     $array[] = "$indent    " . ($indexed ? '' : static::encode($key) . ' => ') . static::encode($value, "$indent    ");
                 }
 
-                return "[\n" . implode(",\n", $array) . "\n" . $indent . "]";
+                return "[\n" . implode(",\n", $array) . "\n" . $indent . ']';
             case 'boolean':
                 return $data ? 'true' : 'false';
             case 'int':
@@ -75,6 +74,7 @@ class PHP extends Handler
     /**
      * Creates a PHP file with the given data
      *
+     * @param  string  $file
      * @param  array   $data
      * @return boolean
      */

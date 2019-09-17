@@ -14,7 +14,6 @@ namespace Kirby\Cms;
  */
 trait HasSiblings
 {
-
     /**
      * Returns the position / index in the collection
      *
@@ -125,6 +124,7 @@ trait HasSiblings
     /**
      * Checks if the item is at a certain position
      *
+     * @param int $n
      * @return bool
      */
     public function isNth(int $n): bool

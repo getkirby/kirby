@@ -20,7 +20,6 @@ namespace Kirby\Cms;
  */
 class Pages extends Collection
 {
-
     /**
      * Cache for the index
      *
@@ -40,7 +39,7 @@ class Pages extends Collection
      * an entire second collection to the
      * current collection
      *
-     * @param mixed $item
+     * @param mixed $object
      * @return self
      */
     public function add($object)
@@ -54,7 +53,7 @@ class Pages extends Collection
             $this->__set($page->id(), $page);
 
         // add a page object
-        } elseif (is_a($object, Page::class) === true) {
+        } elseif (is_a($object, 'Kirby\Cms\Page') === true) {
             $this->__set($object->id(), $object);
         }
 
@@ -68,7 +67,7 @@ class Pages extends Collection
      */
     public function audio()
     {
-        return $this->files()->filterBy("type", "audio");
+        return $this->files()->filterBy('type', 'audio');
     }
 
     /**
@@ -96,7 +95,7 @@ class Pages extends Collection
      */
     public function code()
     {
-        return $this->files()->filterBy("type", "code");
+        return $this->files()->filterBy('type', 'code');
     }
 
     /**
@@ -106,7 +105,7 @@ class Pages extends Collection
      */
     public function documents()
     {
-        return $this->files()->filterBy("type", "document");
+        return $this->files()->filterBy('type', 'document');
     }
 
     /**
@@ -131,8 +130,7 @@ class Pages extends Collection
      * Creates a pages collection from an array of props
      *
      * @param array $pages
-     * @param \Kirby\Cms\Model $parent
-     * @param array $inject
+     * @param \Kirby\Cms\Model $model
      * @param bool $draft
      * @return self
      */
@@ -293,6 +291,7 @@ class Pages extends Collection
      * extension pages
      *
      * @param string $key
+     * @param mixed $default
      * @return \Kirby\Cms\Page|null
      */
     public function get($key, $default = null)
@@ -315,7 +314,7 @@ class Pages extends Collection
      */
     public function images()
     {
-        return $this->files()->filterBy("type", "image");
+        return $this->files()->filterBy('type', 'image');
     }
 
     /**
@@ -377,6 +376,7 @@ class Pages extends Collection
     /**
      * Include all given items in the collection
      *
+     * @param mixed ...$args
      * @return self
      */
     public function merge(...$args)
@@ -476,7 +476,7 @@ class Pages extends Collection
      */
     public function videos()
     {
-        return $this->files()->filterBy("type", "video");
+        return $this->files()->filterBy('type', 'video');
     }
 
     /**

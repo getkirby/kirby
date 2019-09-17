@@ -14,7 +14,6 @@ namespace Kirby\Image;
  */
 class Location
 {
-
     /**
      * latitude
      *
@@ -99,7 +98,7 @@ class Location
             return $parts[0];
         }
 
-        return floatval($parts[0]) / floatval($parts[1]);
+        return (float)($parts[0]) / (float)($parts[1]);
     }
 
     /**
@@ -130,7 +129,7 @@ class Location
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

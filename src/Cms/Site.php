@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 
 /**
  * The `$site` object is the root element
@@ -132,7 +131,7 @@ class Site extends ModelWithContent
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return array_merge($this->toArray(), [
             'content'  => $this->content(),
@@ -175,7 +174,7 @@ class Site extends ModelWithContent
      * Returns an array with all blueprints that are available
      * as subpages of the site
      *
-     * @params string $inSection
+     * @param string $inSection
      * @return array
      */
     public function blueprints(string $inSection = null): array
@@ -220,6 +219,8 @@ class Site extends ModelWithContent
      * Prepares the content for the write method
      *
      * @internal
+     * @param array $data
+     * @param string $languageCode
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -339,7 +340,7 @@ class Site extends ModelWithContent
      */
     public function is($site): bool
     {
-        if (is_a($site, Site::class) === false) {
+        if (is_a($site, 'Kirby\Cms\Site') === false) {
             return false;
         }
 
@@ -677,6 +678,7 @@ class Site extends ModelWithContent
      * modified after the given unix timestamp
      * This is mainly used to auto-update the cache
      *
+     * @param mixed $time
      * @return bool
      */
     public function wasModifiedAfter($time): bool

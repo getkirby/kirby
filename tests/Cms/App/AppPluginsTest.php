@@ -2,9 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Form\Field as FormField;
-use Kirby\Image\Image;
 use Kirby\Cache\FileCache;
+use Kirby\Form\Field as FormField;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\I18n;

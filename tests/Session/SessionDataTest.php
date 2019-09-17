@@ -4,7 +4,7 @@ namespace Kirby\Session;
 
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__ . '/mocks.php');
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Session\SessionData

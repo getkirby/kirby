@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase as BaseTestCase;
-
 class HasFileTraitUser
 {
     use HasFiles;

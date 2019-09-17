@@ -13,7 +13,6 @@ namespace Kirby\Cms;
  */
 trait HasFiles
 {
-
     /**
      * The Files collection
      *

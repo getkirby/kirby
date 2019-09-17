@@ -27,7 +27,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Field
 {
-
     /**
      * Field method aliases
      *
@@ -111,7 +110,7 @@ class Field
      * @see Field::toArray
      * @return void
      */
-    public function __debuginfo()
+    public function __debugInfo()
     {
         return $this->toArray();
     }

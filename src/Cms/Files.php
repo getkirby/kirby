@@ -18,7 +18,6 @@ namespace Kirby\Cms;
  */
 class Files extends Collection
 {
-
     /**
      * All registered files methods
      *
@@ -31,7 +30,7 @@ class Files extends Collection
      * an entire second collection to the
      * current collection
      *
-     * @param mixed $item
+     * @param mixed $object
      * @return self
      */
     public function add($object)
@@ -45,7 +44,7 @@ class Files extends Collection
             $this->__set($file->id(), $file);
 
         // add a file object
-        } elseif (is_a($object, File::class) === true) {
+        } elseif (is_a($object, 'Kirby\Cms\File') === true) {
             $this->__set($object->id(), $object);
         }
 

@@ -33,7 +33,7 @@ class CollectionTest extends TestCase
     public function test__debuginfo()
     {
         $collection = new Collection(['a' => 'A', 'b' => 'B']);
-        $this->assertEquals(['a', 'b'], $collection->__debuginfo());
+        $this->assertEquals(['a', 'b'], $collection->__debugInfo());
     }
 
     public function assertIsUntouched()
@@ -45,7 +45,7 @@ class CollectionTest extends TestCase
     public function testAppend()
     {
         // simple
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append('a');
         $collection = $collection->append('b');
         $collection = $collection->append('c');
@@ -54,7 +54,7 @@ class CollectionTest extends TestCase
         $this->assertEquals(['a', 'b', 'c'], $collection->values());
 
         // with key
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append('a', 'A');
         $collection = $collection->append('b', 'B');
         $collection = $collection->append('c', 'C');
@@ -63,7 +63,7 @@ class CollectionTest extends TestCase
         $this->assertEquals(['A', 'B', 'C'], $collection->values());
 
         // with too many params
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append('a', 'A', 'ignore this');
         $collection = $collection->append('b', 'B', 'ignore this');
         $collection = $collection->append('c', 'C', 'ignore this');
@@ -81,7 +81,7 @@ class CollectionTest extends TestCase
     public function testFilter()
     {
         $func = function ($element) {
-            return ($element == "My second element") ? true : false;
+            return ($element == 'My second element') ? true : false;
         };
 
         $filtered = $this->collection->filter($func);

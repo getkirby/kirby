@@ -110,7 +110,7 @@ class StructureObject extends Model
      */
     public function is($structure): bool
     {
-        if (is_a($structure, StructureObject::class) === false) {
+        if (is_a($structure, 'Kirby\Cms\StructureObject') === false) {
             return false;
         }
 

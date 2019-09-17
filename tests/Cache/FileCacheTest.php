@@ -2,9 +2,9 @@
 
 namespace Kirby\Cache;
 
+use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
-use Kirby\Toolkit\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Cache\FileCache

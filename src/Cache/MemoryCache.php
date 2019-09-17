@@ -13,7 +13,6 @@ namespace Kirby\Cache;
  */
 class MemoryCache extends Cache
 {
-
     /**
      * Cache data
      * @var array

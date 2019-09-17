@@ -172,6 +172,6 @@ class ImageTest extends TestCase
     public function testDebuginfo()
     {
         $image  = $this->_image();
-        $this->assertInternalType('array', $image->__debuginfo());
+        $this->assertInternalType('array', $image->__debugInfo());
     }
 }

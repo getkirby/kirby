@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use ReflectionClass;
-
 class PageTestCase extends TestCase
 {
     public $page = null;

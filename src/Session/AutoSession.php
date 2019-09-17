@@ -34,7 +34,6 @@ class AutoSession
      *                                                         Defaults to `kirby_session`
      *                                     - `gcInterval`:     How often should the garbage collector be run?
      *                                                         Integer or `false` for never; defaults to `100`
-     *
      */
     public function __construct($store, array $options = [])
     {

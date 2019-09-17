@@ -14,7 +14,6 @@ namespace Kirby\Cms;
  */
 class KirbyTag extends \Kirby\Text\KirbyTag
 {
-
     /**
      * Finds a file for the given path.
      * The method first searches the file
@@ -32,7 +31,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
             return $file;
         }
 
-        if (is_a($parent, File::class) === true && $file = $parent->page()->file($path)) {
+        if (is_a($parent, 'Kirby\Cms\File') === true && $file = $parent->page()->file($path)) {
             return $file;
         }
 

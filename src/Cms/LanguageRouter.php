@@ -20,7 +20,6 @@ use Kirby\Toolkit\Str;
  */
 class LanguageRouter
 {
-
     /**
      * The parent language
      *

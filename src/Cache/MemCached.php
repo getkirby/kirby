@@ -13,7 +13,6 @@ namespace Kirby\Cache;
  */
 class MemCached extends Cache
 {
-
     /**
      * store for the memache connection
      * @var Memcached

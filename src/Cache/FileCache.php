@@ -16,7 +16,6 @@ use Kirby\Toolkit\F;
  */
 class FileCache extends Cache
 {
-
     /**
      * Full root including prefix
      * @var string
