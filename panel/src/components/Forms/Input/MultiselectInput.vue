@@ -50,7 +50,7 @@
             'selected': isSelected(option),
             'disabled': !addable
           }"
-          @click="select(option)"
+          @click.prevent="select(option)"
           @keydown.native.enter.prevent="select(option)"
           @keydown.native.space.prevent="select(option)"
         >
