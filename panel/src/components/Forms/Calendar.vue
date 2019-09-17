@@ -40,7 +40,7 @@
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="go('today')">{{ $t("today") }}</k-button>
+            <k-button @click="selectToday">{{ $t("today") }}</k-button>
           </td>
         </tr>
       </tfoot>
@@ -196,7 +196,12 @@ export default {
       this.month = date.month();
       this.year = date.year();
     },
+    selectToday() {
+      this.set(dayjs());
+      this.select(this.day);
+    },
     select(day) {
+
       if (day) {
         this.day = day;
       }
