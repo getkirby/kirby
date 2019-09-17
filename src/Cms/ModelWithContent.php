@@ -495,14 +495,16 @@ abstract class ModelWithContent extends Model
         $content = $translation->update($data, $overwrite)->content();
 
         // remove all untranslatable fields
-        foreach ($this->blueprint()->fields() as $field) {
-            if (($field['translate'] ?? true) === false) {
-                $content[$field['name']] = null;
+        if ($languageCode !== $this->kirby()->defaultLanguage()->code()) {
+            foreach ($this->blueprint()->fields() as $field) {
+                if (($field['translate'] ?? true) === false) {
+                    $content[$field['name']] = null;
+                }
             }
-        }
 
-        // merge the translation with the new data
-        $translation->update($content, true);
+            // merge the translation with the new data
+            $translation->update($content, true);
+        }
 
         // send the full translation array to the writer
         $clone->writeContent($translation->content(), $languageCode);
@@ -638,10 +640,10 @@ abstract class ModelWithContent extends Model
         return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
             // save updated values
             $model = $model->save($strings, $languageCode, true);
-            
+
             // update model in siblings collection
             $model->siblings()->add($model);
-            
+
             return $model;
         });
     }
