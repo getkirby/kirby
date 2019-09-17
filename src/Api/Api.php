@@ -168,7 +168,29 @@ class Api
         $auth   = $this->route->attributes()['auth'] ?? true;
 
         if ($auth !== false) {
-            $this->authenticate();
+            $user = $this->authenticate();
+
+            // set PHP locales based on *user* language
+            // so that e.g. strftime() gets formatted correctly
+            if (is_a($user, 'Kirby\Cms\User') === true) {
+                $locale = $user->language();
+
+                // if it's not already a full locale, "fake" one
+                // and assume that the country equals the language
+                if (Str::contains($locale, '_') !== true) {
+                    $locale .= '_' . strtoupper($locale);
+                }
+
+                // provide some variants as fallbacks to be
+                // compatible with as many systems as possible
+                setlocale(LC_ALL, [
+                    $locale,
+                    $locale . '.UTF-8',
+                    $locale . '.UTF8',
+                    $locale . '.ISO8859-1',
+                    setlocale(LC_ALL, 0) // fall back to the previously defined locale
+                ]);
+            }
         }
 
         $output = $this->route->action()->call($this, ...$this->route->arguments());
