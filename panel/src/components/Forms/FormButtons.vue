@@ -151,7 +151,6 @@ export default {
         if (response.supported === false) {
           this.supportsLocking = false;
           this.$store.dispatch("heartbeat/remove", this.getLock);
-          console.warn("Content locking not supported for " + this.id);
           return;
         }
 
