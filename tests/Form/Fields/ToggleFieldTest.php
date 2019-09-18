@@ -45,6 +45,23 @@ class ToggleFieldTest extends TestCase
         $this->assertEquals('Ja', $field->text());
     }
 
+    public function testBooleanDefaultValue()
+    {
+        // true
+        $field = $this->field('toggle', [
+            'default' => true
+        ]);
+
+        $this->assertTrue($field->default() === true);
+
+        // false
+        $field = $this->field('toggle', [
+            'default' => false
+        ]);
+
+        $this->assertTrue($field->default() === false);
+    }
+
     public function testTextToggle()
     {
         $field = $this->field('toggle', [
