@@ -193,9 +193,15 @@ class Field extends Component
                     }
                 },
                 'default' => function () {
-                    if ($this->default !== null) {
-                        return $this->model()->toString($this->default);
+                    if ($this->default === null) {
+                        return;
                     }
+
+                    if (is_string($this->default) === false) {
+                        return $this->default;
+                    }
+
+                    return $this->model()->toString($this->default);
                 },
                 'label' => function () {
                     if ($this->label !== null) {
