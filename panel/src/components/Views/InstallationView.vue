@@ -131,8 +131,11 @@ export default {
     }
   },
   watch: {
-    translation(value) {
-      this.user.language = value;
+    translation: {
+      handler(value) {
+        this.user.language = value;
+      },
+      immediate: true
     },
     "user.language"(language) {
       this.$store.dispatch("translation/activate", language);
