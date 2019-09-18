@@ -33,9 +33,7 @@ class JsonTest extends TestCase
     public function testEncodeUnicode()
     {
         $string  = 'здравей';
-        $encoded = '\u0437\u0434\u0440\u0430\u0432\u0435\u0439';
-        $this->assertEquals('"' . $encoded . '"', Json::encode($string));
-        $this->assertEquals('"' . $string . '"', Json::encode($string, JSON_UNESCAPED_UNICODE));
+        $this->assertEquals('"' . $string . '"', Json::encode($string));
     }
 
     /**

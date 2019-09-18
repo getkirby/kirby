@@ -19,12 +19,11 @@ class Json extends Handler
      * Converts an array to an encoded JSON string
      *
      * @param  mixed  $data
-     * @param  int $options
      * @return string
      */
-    public static function encode($data, int $options = 0): string
+    public static function encode($data): string
     {
-        return json_encode($data, $options);
+        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**
