@@ -100,7 +100,9 @@ trait PageActions
 
             if ($oldPage->exists() === true) {
                 // remove the lock of the old page
-                $oldPage->lock()->remove();
+                if ($lock = $oldPage->lock()) {
+                    $lock->remove();
+                }
 
                 // actually move stuff on disk
                 if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
