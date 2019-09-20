@@ -1,5 +1,8 @@
 <?php
 
+use Kirby\Data\Yaml;
+use Kirby\Toolkit\A;
+
 return [
     'mixins' => ['min', 'picker', 'userpicker'],
     'props' => [

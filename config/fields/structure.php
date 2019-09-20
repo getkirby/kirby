@@ -1,6 +1,8 @@
 <?php
 
 use Kirby\Cms\Form;
+use Kirby\Data\Yaml;
+use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => ['min'],

@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Data\Yaml;
 use Kirby\Toolkit\A;
 
 return [

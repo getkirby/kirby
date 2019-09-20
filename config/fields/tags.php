@@ -1,5 +1,9 @@
 <?php
 
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
+
 return [
     'mixins' => ['min', 'options'],
     'props' => [
