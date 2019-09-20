@@ -173,7 +173,7 @@ class Api
             // set PHP locales based on *user* language
             // so that e.g. strftime() gets formatted correctly
             if (is_a($user, 'Kirby\Cms\User') === true) {
-                $locale = $user->language();
+                $locale = $language = $user->language();
 
                 // if it's not already a full locale, "fake" one
                 // and assume that the country equals the language
@@ -188,6 +188,7 @@ class Api
                     $locale . '.UTF-8',
                     $locale . '.UTF8',
                     $locale . '.ISO8859-1',
+                    $language,
                     setlocale(LC_ALL, 0) // fall back to the previously defined locale
                 ];
 
