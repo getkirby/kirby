@@ -248,7 +248,7 @@ class User extends ModelWithContent
     /**
      * Checks if the user exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -342,7 +342,7 @@ class User extends ModelWithContent
     /**
      * Checks if this user has the admin role
      *
-     * @return boolean
+     * @return bool
      */
     public function isAdmin(): bool
     {
@@ -353,7 +353,7 @@ class User extends ModelWithContent
      * Checks if the current user is the virtual
      * Kirby user
      *
-     * @return boolean
+     * @return bool
      */
     public function isKirby(): bool
     {
@@ -363,7 +363,7 @@ class User extends ModelWithContent
     /**
      * Checks if the current user is this user
      *
-     * @return boolean
+     * @return bool
      */
     public function isLoggedIn(): bool
     {
@@ -374,7 +374,7 @@ class User extends ModelWithContent
      * Checks if the user is the last one
      * with the admin role
      *
-     * @return boolean
+     * @return bool
      */
     public function isLastAdmin(): bool
     {
@@ -384,7 +384,7 @@ class User extends ModelWithContent
     /**
      * Checks if the user is the last user
      *
-     * @return boolean
+     * @return bool
      */
     public function isLastUser(): bool
     {
@@ -857,7 +857,7 @@ class User extends ModelWithContent
      * Compares the given password with the stored one
      *
      * @param string $password
-     * @return boolean
+     * @return bool
      *
      * @throws NotFoundException If the user has no password
      * @throws InvalidArgumentException If the entered password is not valid

@@ -90,7 +90,7 @@ class Uri
     protected $scheme = 'http';
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $slash = false;
 
@@ -237,7 +237,7 @@ class Uri
 
     /**
      * @param array $props
-     * @param boolean $forwarded
+     * @param bool $forwarded
      * @return self
      */
     public static function current(array $props = [], bool $forwarded = false)
@@ -289,7 +289,7 @@ class Uri
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasFragment(): bool
     {
@@ -297,7 +297,7 @@ class Uri
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasPath(): bool
     {
@@ -305,7 +305,7 @@ class Uri
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasQuery(): bool
     {

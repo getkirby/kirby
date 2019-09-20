@@ -45,7 +45,7 @@ class SiteBlueprint extends Blueprint
      * button in the panel and redirects it to a
      * different URL if necessary.
      *
-     * @return string|boolean
+     * @return string|bool
      */
     public function preview()
     {

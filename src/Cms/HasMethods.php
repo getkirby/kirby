@@ -39,7 +39,7 @@ trait HasMethods
      *
      * @internal
      * @param string $method
-     * @return boolean
+     * @return bool
      */
     public function hasMethod(string $method): bool
     {

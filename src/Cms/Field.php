@@ -130,7 +130,7 @@ class Field
     /**
      * Checks if the field exists in the content data array
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -140,7 +140,7 @@ class Field
     /**
      * Checks if the field content is empty
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty(): bool
     {
@@ -150,7 +150,7 @@ class Field
     /**
      * Checks if the field content is not empty
      *
-     * @return boolean
+     * @return bool
      */
     public function isNotEmpty(): bool
     {

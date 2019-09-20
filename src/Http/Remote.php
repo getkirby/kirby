@@ -113,7 +113,7 @@ class Remote
     /**
      * Returns the http status code
      *
-     * @return integer|null
+     * @return int|null
      */
     public function code(): ?int
     {

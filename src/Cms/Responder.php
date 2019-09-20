@@ -19,7 +19,7 @@ class Responder
     /**
      * HTTP status code
      *
-     * @var integer
+     * @var int
      */
     protected $code = null;
 
@@ -73,8 +73,8 @@ class Responder
     /**
      * Setter and getter for the status code
      *
-     * @param integer $code
-     * @return integer|self
+     * @param int $code
+     * @return int|self
      */
     public function code(int $code = null)
     {
@@ -156,7 +156,7 @@ class Responder
      * Shortcut to create a redirect response
      *
      * @param string|null $location
-     * @param integer|null $code
+     * @param int|null $code
      * @return self
      */
     public function redirect(?string $location = null, ?int $code = null)

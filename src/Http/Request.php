@@ -145,7 +145,7 @@ class Request
     /**
      * Detects ajax requests
      * @deprecated 3.1.0 No longer reliable, especially with the fetch api.
-     * @return boolean
+     * @return bool
      */
     public function ajax(): bool
     {
@@ -191,7 +191,7 @@ class Request
     /**
      * Checks if the request has been made from the command line
      *
-     * @return boolean
+     * @return bool
      */
     public function cli(): bool
     {
@@ -317,7 +317,7 @@ class Request
      * matches the name of the request method.
      *
      * @param  string  $method
-     * @return boolean
+     * @return bool
      */
     public function is(string $method): bool
     {
@@ -363,7 +363,7 @@ class Request
     /**
      * Checks for a valid SSL connection
      *
-     * @return boolean
+     * @return bool
      */
     public function ssl(): bool
     {

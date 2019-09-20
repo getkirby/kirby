@@ -56,7 +56,7 @@ class View
     /**
      * Checks if the template file exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {

@@ -15,7 +15,7 @@ trait PageSiblings
 {
     /**
      * @deprecated 3.0.0 Use `Page::hasNextUnlisted` instead
-     * @return boolean
+     * @return bool
      */
     public function hasNextInvisible(): bool
     {
@@ -46,7 +46,7 @@ trait PageSiblings
 
     /**
      * @deprecated 3.0.0 Use `Page::hasNextListed` instead
-     * @return boolean
+     * @return bool
      */
     public function hasNextVisible(): bool
     {
@@ -55,7 +55,7 @@ trait PageSiblings
 
     /**
      * @deprecated 3.0.0 Use `Page::hasPrevUnlisted` instead
-     * @return boolean
+     * @return bool
      */
     public function hasPrevInvisible(): bool
     {
@@ -86,7 +86,7 @@ trait PageSiblings
 
     /**
      * @deprecated 3.0.0 Use `Page::hasPrevListed instead`
-     * @return boolean
+     * @return bool
      */
     public function hasPrevVisible(): bool
     {

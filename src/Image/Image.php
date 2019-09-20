@@ -126,7 +126,7 @@ class Image extends File
     /**
      * Sends an appropriate header for the asset
      *
-     * @param  boolean          $send
+     * @param  bool          $send
      * @return \Kirby\Http\Response|string
      */
     public function header(bool $send = true)
@@ -168,7 +168,7 @@ class Image extends File
     /**
      * Checks if the dimensions of the asset are portrait
      *
-     * @return boolean
+     * @return bool
      */
     public function isPortrait(): bool
     {
@@ -178,7 +178,7 @@ class Image extends File
     /**
      * Checks if the dimensions of the asset are landscape
      *
-     * @return boolean
+     * @return bool
      */
     public function isLandscape(): bool
     {
@@ -188,7 +188,7 @@ class Image extends File
     /**
      * Checks if the dimensions of the asset are square
      *
-     * @return boolean
+     * @return bool
      */
     public function isSquare(): bool
     {

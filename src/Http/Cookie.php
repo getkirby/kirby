@@ -36,7 +36,7 @@ class Cookie
      * @param  string  $value     The cookie content
      * @param  array   $options   Array of options:
      *                            lifetime, path, domain, secure, httpOnly
-     * @return boolean            true: cookie was created,
+     * @return bool            true: cookie was created,
      *                            false: cookie creation failed
      */
     public static function set(string $key, string $value, array $options = []): bool
@@ -91,7 +91,7 @@ class Cookie
      * @param  string  $value     The cookie content
      * @param  array   $options   Array of options:
      *                            path, domain, secure, httpOnly
-     * @return boolean            true: cookie was created,
+     * @return bool            true: cookie was created,
      *                            false: cookie creation failed
      */
     public static function forever(string $key, string $value, array $options = []): bool
@@ -128,7 +128,7 @@ class Cookie
      * Checks if a cookie exists
      *
      * @param  string  $key
-     * @return boolean
+     * @return bool
      */
     public static function exists(string $key): bool
     {
@@ -191,7 +191,7 @@ class Cookie
      * </code>
      *
      * @param  string  $key The name of the cookie
-     * @return boolean      true: the cookie has been removed,
+     * @return bool      true: the cookie has been removed,
      *                      false: the cookie could not be removed
      */
     public static function remove(string $key): bool

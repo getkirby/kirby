@@ -129,7 +129,7 @@ class Language extends Model
      *
      * @param string $from
      * @param string $to
-     * @return boolean
+     * @return bool
      */
     protected static function converter(string $from, string $to): bool
     {
@@ -201,7 +201,7 @@ class Language extends Model
      * all its translation files
      *
      * @internal
-     * @return boolean
+     * @return bool
      */
     public function delete(): bool
     {
@@ -270,7 +270,7 @@ class Language extends Model
     /**
      * Check if the language file exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -281,7 +281,7 @@ class Language extends Model
      * Checks if this is the default language
      * for the site.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault(): bool
     {
@@ -430,7 +430,7 @@ class Language extends Model
     }
 
     /**
-     * @param boolean $default
+     * @param bool $default
      * @return self
      */
     protected function setDefault(bool $default = false)

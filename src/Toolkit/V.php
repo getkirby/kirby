@@ -105,8 +105,8 @@ class V
      * @param  mixed    $value
      * @param  array    $rules
      * @param  array    $messages
-     * @param  boolean  $fail
-     * @return boolean|array
+     * @param  bool  $fail
+     * @return bool|array
      */
     public static function value($value, array $rules, array $messages = [], bool $fail = true)
     {
@@ -144,7 +144,7 @@ class V
      *
      * @param  array    $input
      * @param  array    $rules
-     * @return boolean
+     * @return bool
      */
     public static function input(array $input, array $rules): bool
     {
@@ -181,7 +181,7 @@ class V
      *
      * @param  string   $method
      * @param  array    $arguments
-     * @return boolean
+     * @return bool
      */
     public static function __callStatic(string $method, array $arguments): bool
     {

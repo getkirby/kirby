@@ -223,7 +223,7 @@ class Mime
      *
      * @param string $mime
      * @param string $pattern
-     * @return boolean
+     * @return bool
      */
     public static function isAccepted(string $mime, string $pattern): bool
     {

@@ -149,7 +149,7 @@ class Dir
      * Checks if the folder has any contents
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function isEmpty(string $dir): bool
     {
@@ -160,7 +160,7 @@ class Dir
      * Checks if the directory is readable
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function isReadable(string $dir): bool
     {
@@ -171,7 +171,7 @@ class Dir
      * Checks if the directory is writable
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function isWritable(string $dir): bool
     {
@@ -183,7 +183,7 @@ class Dir
      *
      * @param string $source
      * @param string $link
-     * @return boolean
+     * @return bool
      */
     public static function link(string $source, string $link): bool
     {
@@ -208,8 +208,8 @@ class Dir
      * Creates a new directory
      *
      * @param   string  $dir The path for the new directory
-     * @param   boolean $recursive Create all parent directories, which don't exist
-     * @return  boolean True: the dir has been created, false: creating failed
+     * @param   bool $recursive Create all parent directories, which don't exist
+     * @return  bool True: the dir has been created, false: creating failed
      */
     public static function make(string $dir, bool $recursive = true): bool
     {
@@ -268,7 +268,7 @@ class Dir
      *
      * @param   string  $old The current path of the directory
      * @param   string  $new The desired path where the dir should be moved to
-     * @return  boolean true: the directory has been moved, false: moving failed
+     * @return  bool true: the directory has been moved, false: moving failed
      */
     public static function move(string $old, string $new): bool
     {
@@ -334,7 +334,7 @@ class Dir
      * Removes a folder including all containing files and folders
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function remove(string $dir): bool
     {

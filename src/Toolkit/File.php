@@ -57,7 +57,7 @@ class File
      * Copy a file to a new location.
      *
      * @param  string  $target
-     * @param  boolean $force
+     * @param  bool $force
      * @return self
      */
     public function copy(string $target, bool $force = false)
@@ -147,7 +147,7 @@ class File
     /**
      * Checks if the file is readable
      *
-     * @return boolean
+     * @return bool
      */
     public function isReadable(): bool
     {
@@ -157,7 +157,7 @@ class File
     /**
      * Checks if the file is writable
      *
-     * @return boolean
+     * @return bool
      */
     public function isWritable(): bool
     {

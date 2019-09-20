@@ -104,7 +104,7 @@ class Page extends ModelWithContent
     /**
      * The sorting number
      *
-     * @var integer|null
+     * @var int|null
      */
     protected $num;
 
@@ -352,7 +352,7 @@ class Page extends ModelWithContent
      * Returns a number indicating how deep the page
      * is nested within the content folder
      *
-     * @return integer
+     * @return int
      */
     public function depth(): int
     {
@@ -456,7 +456,7 @@ class Page extends ModelWithContent
      * Checks if the intended template
      * for the page exists.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasTemplate(): bool
     {
@@ -563,7 +563,7 @@ class Page extends ModelWithContent
      * Checks if the page is a direct or indirect ancestor of the given $page object
      *
      * @param Page $child
-     * @return boolean
+     * @return bool
      */
     public function isAncestorOf(Page $child): bool
     {
@@ -575,7 +575,7 @@ class Page extends ModelWithContent
      * pages cache. This will also check if one
      * of the ignore rules from the config kick in.
      *
-     * @return boolean
+     * @return bool
      */
     public function isCacheable(): bool
     {
@@ -628,7 +628,7 @@ class Page extends ModelWithContent
      * Checks if the page is a child of the given page
      *
      * @param \Kirby\Cms\Page|string $parent
-     * @return boolean
+     * @return bool
      */
     public function isChildOf($parent): bool
     {
@@ -643,7 +643,7 @@ class Page extends ModelWithContent
      * Checks if the page is a descendant of the given page
      *
      * @param \Kirby\Cms\Page|string $parent
-     * @return boolean
+     * @return bool
      */
     public function isDescendantOf($parent): bool
     {
@@ -661,7 +661,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is a descendant of the currently active page
      *
-     * @return boolean
+     * @return bool
      */
     public function isDescendantOfActive(): bool
     {
@@ -675,7 +675,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the current page is a draft
      *
-     * @return boolean
+     * @return bool
      */
     public function isDraft(): bool
     {
@@ -695,7 +695,7 @@ class Page extends ModelWithContent
     /**
      * Check if the page can be read by the current user
      *
-     * @return boolean
+     * @return bool
      */
     public function isReadable(): bool
     {
@@ -725,7 +725,7 @@ class Page extends ModelWithContent
      * home and error page to stop certain
      * actions. That's why there's a shortcut.
      *
-     * @return boolean
+     * @return bool
      */
     public function isHomeOrErrorPage(): bool
     {
@@ -744,7 +744,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page has a sorting number
      *
-     * @return boolean
+     * @return bool
      */
     public function isListed(): bool
     {
@@ -776,7 +776,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is sortable
      *
-     * @return boolean
+     * @return bool
      */
     public function isSortable(): bool
     {
@@ -786,7 +786,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page has no sorting number
      *
-     * @return boolean
+     * @return bool
      */
     public function isUnlisted(): bool
     {
@@ -808,7 +808,7 @@ class Page extends ModelWithContent
      *
      * @internal
      * @param string $token
-     * @return boolean
+     * @return bool
      */
     public function isVerified(string $token = null)
     {
@@ -884,7 +884,7 @@ class Page extends ModelWithContent
     /**
      * Returns the sorting number
      *
-     * @return integer|null
+     * @return int|null
      */
     public function num(): ?int
     {
@@ -1099,7 +1099,7 @@ class Page extends ModelWithContent
      *
      * @param array $data
      * @param string $contentType
-     * @param integer $code
+     * @param int $code
      * @return string
      */
     public function render(array $data = [], $contentType = 'html'): string
@@ -1241,7 +1241,7 @@ class Page extends ModelWithContent
     /**
      * Sets the draft flag
      *
-     * @param boolean $isDraft
+     * @param bool $isDraft
      * @return self
      */
     protected function setIsDraft(bool $isDraft = null)
@@ -1253,7 +1253,7 @@ class Page extends ModelWithContent
     /**
      * Sets the sorting number
      *
-     * @param integer $num
+     * @param int $num
      * @return self
      */
     protected function setNum(int $num = null)

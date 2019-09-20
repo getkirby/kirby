@@ -475,7 +475,7 @@ class App
      *
      * @param string $path
      * @param mixed $parent
-     * @param boolean $drafts
+     * @param bool $drafts
      * @return \Kirby\Cms\File|null
      */
     public function file(string $path, $parent = null, bool $drafts = true)
@@ -758,7 +758,7 @@ class App
     /**
      * Check for a multilang setup
      *
-     * @return boolean
+     * @return bool
      */
     public function multilang(): bool
     {

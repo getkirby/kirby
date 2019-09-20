@@ -76,7 +76,7 @@ class PHP extends Handler
      *
      * @param  string  $file
      * @param  array   $data
-     * @return boolean
+     * @return bool
      */
     public static function write(string $file = null, array $data = []): bool
     {
