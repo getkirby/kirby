@@ -27,7 +27,7 @@ abstract class SessionStore
      *
      * @param  int     $expiryTime Timestamp
      * @param  string  $id         Session ID
-     * @return boolean             true:  session exists,
+     * @return bool             true:  session exists,
      *                             false: session doesn't exist
      */
     abstract public function exists(int $expiryTime, string $id): bool;

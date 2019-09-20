@@ -165,7 +165,7 @@ class Collection extends BaseCollection
      * is in the collection
      *
      * @param string|object $id
-     * @return boolean
+     * @return bool
      */
     public function has($id): bool
     {

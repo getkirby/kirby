@@ -95,7 +95,7 @@ class Iterator implements \Iterator
     /**
      * Checks if the current element is valid
      *
-     * @return boolean
+     * @return bool
      */
     public function valid(): bool
     {
@@ -138,7 +138,7 @@ class Iterator implements \Iterator
      * Checks by key if an element is included
      *
      * @param  mixed  $key
-     * @return boolean
+     * @return bool
      */
     public function has($key): bool
     {
@@ -149,7 +149,7 @@ class Iterator implements \Iterator
      * Checks if the current key is set
      *
      * @param  mixed  $key  the key to check
-     * @return boolean
+     * @return bool
      */
     public function __isset($key): bool
     {

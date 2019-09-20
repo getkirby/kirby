@@ -59,7 +59,7 @@ class Media
      *
      * @param string $src
      * @param string $dest
-     * @return boolean
+     * @return bool
      */
     public static function publish(string $src, string $dest): bool
     {

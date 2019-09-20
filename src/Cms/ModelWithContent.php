@@ -194,8 +194,8 @@ abstract class ModelWithContent extends Model
      * Decrement a given field value
      *
      * @param string $field
-     * @param integer $by
-     * @param integer $min
+     * @param int $by
+     * @param int $min
      * @return self
      */
     public function decrement(string $field, int $by = 1, int $min = 0)
@@ -231,8 +231,8 @@ abstract class ModelWithContent extends Model
      * Increment a given field value
      *
      * @param string $field
-     * @param integer $by
-     * @param integer $max
+     * @param int $by
+     * @param int $max
      * @return self
      */
     public function increment(string $field, int $by = 1, int $max = null)
@@ -249,7 +249,7 @@ abstract class ModelWithContent extends Model
     /**
      * Checks if the data has any errors
      *
-     * @return boolean
+     * @return bool
      */
     public function isValid(): bool
     {
@@ -618,7 +618,7 @@ abstract class ModelWithContent extends Model
      *
      * @param array $input
      * @param string $languageCode
-     * @param boolean $validate
+     * @param bool $validate
      * @return self
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
@@ -657,7 +657,7 @@ abstract class ModelWithContent extends Model
      * @internal
      * @param array $data
      * @param string $languageCode
-     * @return boolean
+     * @return bool
      */
     public function writeContent(array $data, string $languageCode = null): bool
     {

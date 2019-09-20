@@ -18,21 +18,21 @@ class Pagination
     /**
      * The current page
      *
-     * @var integer
+     * @var int
      */
     protected $page;
 
     /**
      * Total number of items
      *
-     * @var integer
+     * @var int
      */
     protected $total;
 
     /**
      * The number of items per page
      *
-     * @var integer
+     * @var int
      */
     protected $limit;
 
@@ -256,7 +256,7 @@ class Pagination
      * Checks if the given page exists
      *
      * @param int $page
-     * @return boolean
+     * @return bool
      */
     public function hasPage(int $page): bool
     {
@@ -274,7 +274,7 @@ class Pagination
     /**
      * Checks if there are any pages at all
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPages(): bool
     {
@@ -284,7 +284,7 @@ class Pagination
     /**
      * Checks if there's a previous page
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPrevPage(): bool
     {
@@ -304,7 +304,7 @@ class Pagination
     /**
      * Checks if there's a next page
      *
-     * @return boolean
+     * @return bool
      */
     public function hasNextPage(): bool
     {
@@ -324,7 +324,7 @@ class Pagination
     /**
      * Checks if the current page is the first page
      *
-     * @return boolean
+     * @return bool
      */
     public function isFirstPage(): bool
     {
@@ -334,7 +334,7 @@ class Pagination
     /**
      * Checks if the current page is the last page
      *
-     * @return boolean
+     * @return bool
      */
     public function isLastPage(): bool
     {

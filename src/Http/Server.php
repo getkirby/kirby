@@ -34,7 +34,7 @@ class Server
     /**
      * Checks if the request is being served by the CLI
      *
-     * @return boolean
+     * @return bool
      */
     public static function cli(): bool
     {
@@ -131,7 +131,7 @@ class Server
     /**
      * Checks for a https request
      *
-     * @return boolean
+     * @return bool
      */
     public static function https(): bool
     {

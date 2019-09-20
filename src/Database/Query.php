@@ -87,7 +87,7 @@ class Query
     /**
      * Boolean for if exceptions should be thrown on failing queries
      *
-     * @var boolean
+     * @var bool
      */
     protected $fail = false;
 
@@ -129,21 +129,21 @@ class Query
     /**
      * The offset, which should be applied to the select query
      *
-     * @var integer
+     * @var int
      */
     protected $offset = 0;
 
     /**
      * The limit, which should be applied to the select query
      *
-     * @var integer
+     * @var int
      */
     protected $limit;
 
     /**
      * Boolean to enable query debugging
      *
-     * @var boolean
+     * @var bool
      */
     protected $debug = false;
 
@@ -184,7 +184,7 @@ class Query
      * If enabled, the query will return an array with all important info about
      * the query instead of actually executing the query and returning results
      *
-     * @param boolean $debug
+     * @param bool $debug
      * @return \Kirby\Database\Query
      */
     public function debug(bool $debug = true)
@@ -196,7 +196,7 @@ class Query
     /**
      * Enables distinct select clauses.
      *
-     * @param boolean $distinct
+     * @param bool $distinct
      * @return \Kirby\Database\Query
      */
     public function distinct(bool $distinct = true)
@@ -209,7 +209,7 @@ class Query
      * Enables failing queries.
      * If enabled queries will no longer fail silently but throw an exception
      *
-     * @param boolean $fail
+     * @param bool $fail
      * @return \Kirby\Database\Query
      */
     public function fail(bool $fail = true)
@@ -880,7 +880,7 @@ class Query
      *
      * @param array $values You can pass values here or set them with ->values() before
      * @param mixed $where You can pass a where clause here or set it with ->where() before
-     * @return boolean
+     * @return bool
      */
     public function update($values = null, $where = null)
     {
@@ -891,7 +891,7 @@ class Query
      * Fires a delete query
      *
      * @param mixed $where You can pass a where clause here or set it with ->where() before
-     * @return boolean
+     * @return bool
      */
     public function delete($where = null)
     {

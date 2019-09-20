@@ -273,7 +273,7 @@ class Site extends ModelWithContent
     /**
      * Checks if the site exists on disk
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {

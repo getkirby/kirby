@@ -337,7 +337,7 @@ class Str
      *
      * @param  string  $string The string to be shortened
      * @param  int     $chars The final number of characters the string should have
-     * @param  boolean $strip True: remove the HTML tags from the string first
+     * @param  bool $strip True: remove the HTML tags from the string first
      * @param  string  $rep The element, which should be added if the string is too long. Ellipsis is the default.
      * @return string  The shortened string
      */
@@ -401,7 +401,7 @@ class Str
      * Checks if the given string is a URL
      *
      * @param string|null $string
-     * @return boolean
+     * @return bool
      */
     public static function isURL(string $string = null): bool
     {
@@ -458,7 +458,7 @@ class Str
      * Get a character pool with various possible combinations
      *
      * @param  string|array $type
-     * @param  boolean $array
+     * @param  bool $array
      * @return string|array
      */
     public static function pool($type, bool $array = true)

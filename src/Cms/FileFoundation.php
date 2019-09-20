@@ -82,7 +82,7 @@ trait FileFoundation
     /**
      * Checks if the file exists on disk
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -117,7 +117,7 @@ trait FileFoundation
     /**
      * Checks if the file is a resizable image
      *
-     * @return boolean
+     * @return bool
      */
     public function isResizable(): bool
     {
@@ -136,7 +136,7 @@ trait FileFoundation
      * Checks if a preview can be displayed for the file
      * in the panel or in the frontend
      *
-     * @return boolean
+     * @return bool
      */
     public function isViewable(): bool
     {

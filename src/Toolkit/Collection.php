@@ -439,7 +439,7 @@ class Collection extends Iterator implements Countable
      *
      * @param array|object $item
      * @param string $attribute
-     * @param boolean $split
+     * @param bool $split
      * @param mixed $related
      * @return mixed
      */
@@ -545,7 +545,7 @@ class Collection extends Iterator implements Countable
     /**
      * Checks if the number of elements is zero
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty(): bool
     {
@@ -555,7 +555,7 @@ class Collection extends Iterator implements Countable
     /**
      * Checks if the number of elements is even
      *
-     * @return boolean
+     * @return bool
      */
     public function isEven(): bool
     {
@@ -565,7 +565,7 @@ class Collection extends Iterator implements Countable
     /**
      * Checks if the number of elements is more than zero
      *
-     * @return boolean
+     * @return bool
      */
     public function isNotEmpty(): bool
     {
@@ -575,7 +575,7 @@ class Collection extends Iterator implements Countable
     /**
      * Checks if the number of elements is odd
      *
-     * @return boolean
+     * @return bool
      */
     public function isOdd(): bool
     {
@@ -619,7 +619,7 @@ class Collection extends Iterator implements Countable
     /**
      * Returns the nth element from the collection
      *
-     * @param integer $n
+     * @param int $n
      * @return mixed
      */
     public function nth(int $n)

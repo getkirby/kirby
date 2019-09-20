@@ -62,8 +62,8 @@ class SessionData
      * Increments one or multiple session values by a specified amount
      *
      * @param  string|array $key The key to increment or an array with multiple keys
-     * @param  integer      $by  Increment by which amount?
-     * @param  integer      $max Maximum amount (value is not incremented further)
+     * @param  int      $by  Increment by which amount?
+     * @param  int      $max Maximum amount (value is not incremented further)
      * @return void
      */
     public function increment($key, int $by = 1, $max = null)
@@ -116,8 +116,8 @@ class SessionData
      * Decrements one or multiple session values by a specified amount
      *
      * @param  string|array $key The key to decrement or an array with multiple keys
-     * @param  integer      $by  Decrement by which amount?
-     * @param  integer      $min Minimum amount (value is not decremented further)
+     * @param  int      $by  Decrement by which amount?
+     * @param  int      $min Minimum amount (value is not decremented further)
      * @return void
      */
     public function decrement($key, int $by = 1, $min = null)

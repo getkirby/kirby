@@ -116,8 +116,8 @@ class Params extends Query
      * Converts the params object to a params string
      * which can then be used in the URL builder again
      *
-     * @param boolean $leadingSlash
-     * @param boolean $trailingSlash
+     * @param bool $leadingSlash
+     * @param bool $trailingSlash
      * @return string|null
      */
     public function toString($leadingSlash = false, $trailingSlash = false): string

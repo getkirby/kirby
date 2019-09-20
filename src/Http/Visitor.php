@@ -170,7 +170,7 @@ class Visitor
      * Checks if the user accepts the given mime type
      *
      * @param  string $mimeType
-     * @return boolean
+     * @return bool
      */
     public function acceptsMimeType(string $mimeType): bool
     {

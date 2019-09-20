@@ -79,7 +79,7 @@ class System
     /**
      * Check for a writable accounts folder
      *
-     * @return boolean
+     * @return bool
      */
     public function accounts(): bool
     {
@@ -89,7 +89,7 @@ class System
     /**
      * Check for a writable content folder
      *
-     * @return boolean
+     * @return bool
      */
     public function content(): bool
     {
@@ -99,7 +99,7 @@ class System
     /**
      * Check for an existing curl extension
      *
-     * @return boolean
+     * @return bool
      */
     public function curl(): bool
     {
@@ -165,7 +165,7 @@ class System
      * option must be explicitly set to true
      * to get the installer up and running.
      *
-     * @return boolean
+     * @return bool
      */
     public function isInstallable(): bool
     {
@@ -175,7 +175,7 @@ class System
     /**
      * Check if Kirby is already installed
      *
-     * @return boolean
+     * @return bool
      */
     public function isInstalled(): bool
     {
@@ -185,7 +185,7 @@ class System
     /**
      * Check if this is a local installation
      *
-     * @return boolean
+     * @return bool
      */
     public function isLocal(): bool
     {
@@ -218,7 +218,7 @@ class System
     /**
      * Check if all tests pass
      *
-     * @return boolean
+     * @return bool
      */
     public function isOk(): bool
     {
@@ -318,7 +318,7 @@ class System
     /**
      * Check for an existing mbstring extension
      *
-     * @return boolean
+     * @return bool
      */
     public function mbString(): bool
     {
@@ -328,7 +328,7 @@ class System
     /**
      * Check for a writable media folder
      *
-     * @return boolean
+     * @return bool
      */
     public function media(): bool
     {
@@ -338,7 +338,7 @@ class System
     /**
      * Check for a valid PHP version
      *
-     * @return boolean
+     * @return bool
      */
     public function php(): bool
     {
@@ -352,7 +352,7 @@ class System
      *
      * @param string $license
      * @param string $email
-     * @return boolean
+     * @return bool
      */
     public function register(string $license = null, string $email = null): bool
     {
@@ -404,7 +404,7 @@ class System
     /**
      * Check for a valid server environment
      *
-     * @return boolean
+     * @return bool
      */
     public function server(): bool
     {
@@ -424,7 +424,7 @@ class System
     /**
      * Check for a writable sessions folder
      *
-     * @return boolean
+     * @return bool
      */
     public function sessions(): bool
     {

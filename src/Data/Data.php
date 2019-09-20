@@ -116,7 +116,7 @@ class Data
      * @param  string  $file
      * @param  array   $data
      * @param  string  $type
-     * @return boolean
+     * @return bool
      */
     public static function write(string $file = null, array $data = [], string $type = null): bool
     {

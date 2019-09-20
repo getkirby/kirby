@@ -38,7 +38,7 @@ class Api
     /**
      * Debugging flag
      *
-     * @var boolean
+     * @var bool
      */
     protected $debug = false;
 
@@ -268,7 +268,7 @@ class Api
     /**
      * Returns the debugging flag
      *
-     * @return boolean
+     * @return bool
      */
     public function debug(): bool
     {
@@ -279,7 +279,7 @@ class Api
      * Checks if injected data exists for the given key
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function hasData(string $key): bool
     {
@@ -489,7 +489,7 @@ class Api
     /**
      * Setter for the debug flag
      *
-     * @param boolean $debug
+     * @param bool $debug
      * @return self
      */
     protected function setDebug(bool $debug = false)
@@ -693,7 +693,7 @@ class Api
      * Upload helper method
      *
      * @param Closure $callback
-     * @param boolean $single
+     * @param bool $single
      * @return array
      *
      * @throws Exception If request has no files

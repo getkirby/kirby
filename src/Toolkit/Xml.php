@@ -58,7 +58,7 @@ class Xml
      *
      * @param  string  $props   The source array
      * @param  string  $name    The name of the root element
-     * @param  boolean $head    Include the xml declaration head or not
+     * @param  bool $head    Include the xml declaration head or not
      * @param  int     $level   The indendation level
      * @return string  The XML string
      */
@@ -137,7 +137,7 @@ class Xml
      * </code>
      *
      * @param  string  $string
-     * @param  boolean $html True: convert to html first
+     * @param  bool $html True: convert to html first
      * @return string
      */
     public static function encode(string $string = null, bool $html = true): string

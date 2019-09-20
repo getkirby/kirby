@@ -392,7 +392,7 @@ class File extends ModelWithContent
      * Timestamp of the last modification
      * of the content file
      *
-     * @return integer
+     * @return int
      */
     protected function modifiedContent(): int
     {
@@ -403,7 +403,7 @@ class File extends ModelWithContent
      * Timestamp of the last modification
      * of the source file
      *
-     * @return integer
+     * @return int
      */
     protected function modifiedFile(): int
     {

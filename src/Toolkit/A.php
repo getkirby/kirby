@@ -132,7 +132,7 @@ class A
      *
      * @param  array   $array1
      * @param  array   $array2
-     * @param  boolean $mode   Behavior for elements with numeric keys;
+     * @param  bool $mode   Behavior for elements with numeric keys;
      *                         A::MERGE_APPEND:    elements are appended, keys are reset;
      *                         A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
      *                         A::MERGE_REPLACE:   non-associative arrays are completely replaced
@@ -501,7 +501,7 @@ class A
      * </code>
      *
      * @param   array    $array The array to analyze
-     * @return  boolean  true: The array is associative false: It's not
+     * @return  bool  true: The array is associative false: It's not
      */
     public static function isAssociative(array $array): bool
     {

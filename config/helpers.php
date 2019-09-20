@@ -55,7 +55,7 @@ function collection(string $name)
  * Checks / returns a CSRF token
  *
  * @param string $check Pass a token here to compare it to the one in the session
- * @return string|boolean Either the token or a boolean check result
+ * @return string|bool Either the token or a boolean check result
  */
 function csrf(string $check = null)
 {
@@ -126,7 +126,7 @@ function css($url, $options = null)
  * to help with debugging.
  *
  * @param mixed $variable
- * @param boolean $echo
+ * @param bool $echo
  * @return string
  */
 function dump($variable, bool $echo = true): string
@@ -161,7 +161,7 @@ function e($condition, $value, $alternative = null)
  *
  * @param  string  $string  Untrusted data
  * @param  string  $context Location of output
- * @param  boolean $strict  Whether to escape an extended set of characters (HTML attributes only)
+ * @param  bool $strict  Whether to escape an extended set of characters (HTML attributes only)
  * @return string  Escaped data
  */
 function esc($string, $context = 'html', $strict = false)
@@ -206,7 +206,7 @@ function gist(string $url, string $file = null): string
  * Urls can be relative or absolute.
  *
  * @param string $url
- * @param integer $code
+ * @param int $code
  * @return void
  */
 function go(string $url = null, int $code = 302)
@@ -589,7 +589,7 @@ function r($condition, $value, $alternative = null)
  * by the defined step
  *
  * @param string $date
- * @param integer $step
+ * @param int $step
  * @return string|null
  */
 function timestamp(string $date = null, int $step = null): ?string
@@ -671,7 +671,7 @@ function smartypants(string $text = null): string
  *
  * @param string|array $name
  * @param array|object $data
- * @param boolean $return
+ * @param bool $return
  * @return string
  */
 function snippet($name, $data = [], bool $return = false)
