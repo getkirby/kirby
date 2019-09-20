@@ -117,6 +117,8 @@ class ApiTest extends TestCase
 
     public function testCallLocale()
     {
+        $originalLocale = setlocale(LC_CTYPE, 0);
+
         $language = 'de';
 
         $api = new Api([
@@ -135,11 +137,17 @@ class ApiTest extends TestCase
         ]);
 
         $this->assertEquals('something', $api->call('foo'));
-        $this->assertTrue(in_array(setlocale(LC_ALL, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
 
         $language = 'pt_BR';
         $this->assertEquals('something', $api->call('foo'));
-        $this->assertTrue(in_array(setlocale(LC_ALL, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
     }
 
     public function testCollections()

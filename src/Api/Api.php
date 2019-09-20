@@ -183,13 +183,19 @@ class Api
 
                 // provide some variants as fallbacks to be
                 // compatible with as many systems as possible
-                setlocale(LC_ALL, [
+                $locales = [
                     $locale,
                     $locale . '.UTF-8',
                     $locale . '.UTF8',
                     $locale . '.ISO8859-1',
                     setlocale(LC_ALL, 0) // fall back to the previously defined locale
-                ]);
+                ];
+
+                // set the locales that are relevant for string formatting
+                // *don't* set LC_CTYPE to avoid breaking other parts of the system
+                setlocale(LC_MONETARY, $locales);
+                setlocale(LC_NUMERIC, $locales);
+                setlocale(LC_TIME, $locales);
             }
         }
 
