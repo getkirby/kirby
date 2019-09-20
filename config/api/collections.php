@@ -1,12 +1,5 @@
 <?php
 
-use Kirby\Cms\Files;
-use Kirby\Cms\Languages;
-use Kirby\Cms\Pages;
-use Kirby\Cms\Roles;
-use Kirby\Cms\Translations;
-use Kirby\Cms\Users;
-
 /**
  * Api Collection Definitions
  */

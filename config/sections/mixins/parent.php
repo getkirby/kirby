@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Exception\Exception;
+
 return [
     'props' => [
         /**

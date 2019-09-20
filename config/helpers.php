@@ -9,6 +9,8 @@ use Kirby\Http\Server;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 /**
  * Helper to create an asset object

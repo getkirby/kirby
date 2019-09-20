@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Api;
 use Kirby\Cms\File;
+use Kirby\Exception\Exception;
 
 return [
     'props' => [

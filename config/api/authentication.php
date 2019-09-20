@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Auth;
 use Kirby\Exception\PermissionException;
 
 return function () {
