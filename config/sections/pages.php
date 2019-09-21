@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
