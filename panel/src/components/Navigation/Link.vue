@@ -2,7 +2,6 @@
   <a
     v-if="to && !disabled"
     ref="link"
-    :disabled="disabled"
     :href="href"
     :rel="relAttr"
     :tabindex="tabindex"
@@ -28,7 +27,7 @@ export default {
   props: {
     disabled: Boolean,
     rel: String,
-    tabindex: String,
+    tabindex: [String, Number],
     target: String,
     title: String,
     to: String,
