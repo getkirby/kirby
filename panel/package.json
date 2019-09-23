@@ -10,7 +10,7 @@
     "sandbox": "vue serve ./src/ui/main.js",
     "test:e2e": "vue-cli-service test:e2e",
     "test:e2e:record": "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
-    "test:unit": "vue-cli-service test:unit --help",
+    "test:unit": "vue-cli-service test:unit",
     "test:unit:watch": "vue-cli-service test:unit --watch",
     "testkit:reset": "./scripts/reset-testkit"
   },
