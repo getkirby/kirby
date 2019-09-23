@@ -127,7 +127,9 @@ class AppTest extends TestCase
             'from'    => 'test@getkirby.com',
             'to'      => 'test@getkirby.com',
             'body'    => 'test',
-            'subject' => 'Test',
+            'subject' => 'Test'
+        ],
+        [
             'debug'   => true
         ]);
 
