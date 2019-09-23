@@ -492,10 +492,12 @@ abstract class ModelWithContent extends Model
         }
 
         // get the content to store
-        $content = $translation->update($data, $overwrite)->content();
+        $content      = $translation->update($data, $overwrite)->content();
+        $kirby        = $this->kirby();
+        $languageCode = $kirby->languageCode($languageCode);
 
         // remove all untranslatable fields
-        if ($languageCode !== $this->kirby()->defaultLanguage()->code()) {
+        if ($languageCode !== $kirby->defaultLanguage()->code()) {
             foreach ($this->blueprint()->fields() as $field) {
                 if (($field['translate'] ?? true) === false) {
                     $content[$field['name']] = null;
