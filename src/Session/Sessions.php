@@ -30,14 +30,11 @@ class Sessions
     /**
      * Creates a new Sessions instance
      *
-     * @param \Kirby\Session\SessionStore|string $store   SessionStore object or a path to the storage directory (uses the FileSessionStore)
-     * @param array               $options Optional additional options:
-     *                                     - `mode`:       Default token transmission mode (cookie, header or manual)
-     *                                                     Defaults to `cookie`
-     *                                     - `cookieName`: Name to use for the session cookie
-     *                                                     Defaults to `kirby_session`
-     *                                     - `gcInterval`: How often should the garbage collector be run?
-     *                                                     Integer or `false` for never; defaults to `100`
+     * @param \Kirby\Session\SessionStore|string $store SessionStore object or a path to the storage directory (uses the FileSessionStore)
+     * @param array $options Optional additional options:
+     *                       - `mode`: Default token transmission mode (cookie, header or manual); defaults to `cookie`
+     *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
+     *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
      */
     public function __construct($store, array $options = [])
     {
@@ -93,17 +90,12 @@ class Sessions
     /**
      * Creates a new empty session
      *
-     * @param  array   $options Optional additional options:
-     *                          - `mode`:       Token transmission mode (cookie or manual)
-     *                                          Defaults to default mode of the Sessions instance
-     *                          - `startTime`:  Time the session starts being valid (date string or timestamp)
-     *                                          Defaults to `now`
-     *                          - `expiryTime`: Time the session expires (date string or timestamp)
-     *                                          Defaults to `+ 2 hours`
-     *                          - `timeout`:    Activity timeout in seconds (integer or false for none)
-     *                                          Defaults to `1800` (half an hour)
-     *                          - `renewable`:  Should it be possible to extend the expiry date?
-     *                                          Defaults to `true`
+     * @param array $options Optional additional options:
+     *                       - `mode`: Token transmission mode (cookie or manual); defaults to default mode of the Sessions instance
+     *                       - `startTime`:  Time the session starts being valid (date string or timestamp); defaults to `now`
+     *                       - `expiryTime`: Time the session expires (date string or timestamp); defaults to `+ 2 hours`
+     *                       - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
+     *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
      * @return \Kirby\Session\Session
      */
     public function create(array $options = [])
@@ -119,8 +111,8 @@ class Sessions
     /**
      * Returns the specified Session object
      *
-     * @param  string $token Session token, either including or without the key
-     * @param  string $mode  Optional transmission mode override
+     * @param string $token Session token, either including or without the key
+     * @param string $mode Optional transmission mode override
      * @return \Kirby\Session\Session
      */
     public function get(string $token, string $mode = null)

@@ -159,10 +159,10 @@ function e($condition, $value, $alternative = null)
 /**
  * Escape context specific output
  *
- * @param  string  $string  Untrusted data
- * @param  string  $context Location of output
- * @param  bool $strict  Whether to escape an extended set of characters (HTML attributes only)
- * @return string  Escaped data
+ * @param string $string Untrusted data
+ * @param string $context Location of output
+ * @param bool $strict Whether to escape an extended set of characters (HTML attributes only)
+ * @return string Escaped data
  */
 function esc($string, $context = 'html', $strict = false)
 {
@@ -177,9 +177,9 @@ function esc($string, $context = 'html', $strict = false)
 /**
  * Shortcut for $kirby->request()->get()
  *
- * @param   mixed    $key The key to look for. Pass false or null to return the entire request array.
- * @param   mixed    $default Optional default value, which should be returned if no element has been found
- * @return  mixed
+ * @param mixed $key The key to look for. Pass false or null to return the entire request array.
+ * @param mixed $default Optional default value, which should be returned if no element has been found
+ * @return mixed
  */
 function get($key = null, $default = null)
 {
@@ -721,9 +721,9 @@ function svg(string $file)
 /**
  * Returns translate string for key from translation file
  *
- * @param   string|array $key
- * @param   string|null  $fallback
- * @return  mixed
+ * @param string|array $key
+ * @param string|null $fallback
+ * @return mixed
  */
 function t($key, string $fallback = null)
 {
@@ -733,9 +733,9 @@ function t($key, string $fallback = null)
 /**
  * Translates a count
  *
- * @param   string|array $key
- * @param   int  $count
- * @return  mixed
+ * @param string|array $key
+ * @param int $count
+ * @return mixed
  */
 function tc($key, int $count)
 {

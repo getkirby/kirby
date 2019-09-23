@@ -18,7 +18,7 @@ class Txt extends Handler
     /**
      * Converts an array to an encoded Kirby txt string
      *
-     * @param  mixed  $data
+     * @param mixed $data
      * @return string
      */
     public static function encode($data): string
@@ -41,7 +41,7 @@ class Txt extends Handler
     /**
      * Helper for converting the value
      *
-     * @param  array|string $value
+     * @param array|string $value
      * @return string
      */
     protected static function encodeValue($value): string
@@ -63,8 +63,8 @@ class Txt extends Handler
     /**
      * Helper for converting the key and value to the result string
      *
-     * @param  string $key
-     * @param  string $value
+     * @param string $key
+     * @param string $value
      * @return string
      */
     protected static function encodeResult(string $key, string $value): string
@@ -86,7 +86,7 @@ class Txt extends Handler
     /**
      * Parses a Kirby txt string and returns a multi-dimensional array
      *
-     * @param  string $string
+     * @param string $string
      * @return array
      */
     public static function decode($string): array

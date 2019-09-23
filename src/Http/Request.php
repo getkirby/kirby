@@ -232,7 +232,7 @@ class Request
      * Fetches a single file array
      * from the Files object by key
      *
-     * @param  string $key
+     * @param string $key
      * @return array|null
      */
     public function file(string $key)
@@ -316,7 +316,7 @@ class Request
      * Checks if the given method name
      * matches the name of the request method.
      *
-     * @param  string  $method
+     * @param string $method
      * @return bool
      */
     public function is(string $method): bool

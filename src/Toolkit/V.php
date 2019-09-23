@@ -102,10 +102,10 @@ class V
      * a set of rules, using all registered
      * validators
      *
-     * @param  mixed    $value
-     * @param  array    $rules
-     * @param  array    $messages
-     * @param  bool  $fail
+     * @param mixed $value
+     * @param array $rules
+     * @param array $messages
+     * @param bool $fail
      * @return bool|array
      */
     public static function value($value, array $rules, array $messages = [], bool $fail = true)
@@ -142,8 +142,8 @@ class V
      * a set of rules, using all registered
      * validators
      *
-     * @param  array    $input
-     * @param  array    $rules
+     * @param array $input
+     * @param array $rules
      * @return bool
      */
     public static function input(array $input, array $rules): bool
@@ -179,8 +179,8 @@ class V
     /**
      * Calls an installed validator and passes all arguments
      *
-     * @param  string   $method
-     * @param  array    $arguments
+     * @param string $method
+     * @param array $arguments
      * @return bool
      */
     public static function __callStatic(string $method, array $arguments): bool

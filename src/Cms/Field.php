@@ -95,7 +95,7 @@ class Field
      *
      * @param object $parent
      * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function __construct($parent = null, string $key, $value)
     {
@@ -232,7 +232,7 @@ class Field
      * the modified field will be returned. Otherwise it
      * will return the field value.
      *
-     * @param  string|Closure  $value
+     * @param string|Closure $value
      * @return mixed
      */
     public function value($value = null)

@@ -18,7 +18,7 @@ class Json extends Handler
     /**
      * Converts an array to an encoded JSON string
      *
-     * @param  mixed  $data
+     * @param mixed $data
      * @return string
      */
     public static function encode($data): string

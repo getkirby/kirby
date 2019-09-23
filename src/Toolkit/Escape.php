@@ -38,7 +38,7 @@ class Escape
      * <div attr='...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...'>content</div>
      * <div attr="...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...">content</div>
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public static function attr($string)
@@ -59,7 +59,7 @@ class Escape
      * <style>selector { property : "...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE..."; } </style>
      * <span style="property : ...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...">text</span>
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public static function css($string)
@@ -79,7 +79,7 @@ class Escape
      * <body>...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...</body>
      * <div>...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...</div>
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public static function html($string)
@@ -97,7 +97,7 @@ class Escape
      * <script>x='...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...'</script>
      * <div onmouseover="x='...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...'"</div>
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public static function js($string)
@@ -113,7 +113,7 @@ class Escape
      *
      * <a href="http://www.somesite.com?test=...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...">link</a>
      *
-     * @param string  $string
+     * @param string $string
      * @return string
      */
     public static function url($string)
@@ -135,7 +135,7 @@ class Escape
      * < is replaced with &lt;
      * > is replaced with &gt;
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public static function xml($string)

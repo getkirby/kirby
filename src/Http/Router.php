@@ -81,9 +81,9 @@ class Router
      * the appropriate arguments and a Result
      * object.
      *
-     * @param  string $path
-     * @param  string $method
-     * @param  Closure|null $callback
+     * @param string $path
+     * @param string $method
+     * @param Closure|null $callback
      * @return mixed
      */
     public function call(string $path = null, string $method = 'GET', Closure $callback = null)
@@ -126,9 +126,9 @@ class Router
      * find matches and return all the found
      * arguments in the path.
      *
-     * @param  string $path
-     * @param  string $method
-     * @param  array  $ignore
+     * @param string $path
+     * @param string $method
+     * @param array $ignore
      * @return \Kirby\Http\Route|null
      */
     public function find(string $path, string $method, array $ignore = null)

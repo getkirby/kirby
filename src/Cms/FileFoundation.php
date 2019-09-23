@@ -102,7 +102,7 @@ trait FileFoundation
     /**
      * Converts the file to html
      *
-     * @param  array  $attr
+     * @param array $attr
      * @return string
      */
     public function html(array $attr = []): string
@@ -165,8 +165,8 @@ trait FileFoundation
     /**
      * Get the file's last modification time.
      *
-     * @param  string $format
-     * @param  string|null $handler date or strftime
+     * @param string $format
+     * @param string|null $handler date or strftime
      * @return mixed
      */
     public function modified(string $format = null, string $handler = null)

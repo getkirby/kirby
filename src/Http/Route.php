@@ -90,7 +90,7 @@ class Route
      *
      * @param string|array $pattern
      * @param string|array $method
-     * @param Closure      $action
+     * @param Closure $action
      * @param array $attributes
      */
     public function __construct($pattern, $method = 'GET', Closure $action, array $attributes = [])
@@ -177,7 +177,7 @@ class Route
      * Converts the pattern into a full regular
      * expression by replacing all the wildcards
      *
-     * @param  string $pattern
+     * @param string $pattern
      * @return string
      */
     public function regex(string $pattern): string
@@ -201,8 +201,8 @@ class Route
      * Tries to match the path with the regular expression and
      * extracts all arguments for the Route action
      *
-     * @param  string       $pattern
-     * @param  string       $path
+     * @param string $pattern
+     * @param string $path
      * @return array|false
      */
     public function parse(string $pattern, string $path)
