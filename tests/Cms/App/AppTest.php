@@ -123,15 +123,17 @@ class AppTest extends TestCase
             ]
         ]);
 
-        $email = $app->email([
-            'from'    => 'test@getkirby.com',
-            'to'      => 'test@getkirby.com',
-            'body'    => 'test',
-            'subject' => 'Test'
-        ],
-        [
-            'debug'   => true
-        ]);
+        $email = $app->email(
+            [
+                'from'    => 'test@getkirby.com',
+                'to'      => 'test@getkirby.com',
+                'body'    => 'test',
+                'subject' => 'Test'
+            ],
+            [
+                'debug'   => true
+            ]
+        );
 
         $this->assertInstanceOf('Kirby\Email\PHPMailer', $email);
     }
