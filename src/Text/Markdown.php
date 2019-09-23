@@ -56,8 +56,8 @@ class Markdown
     /**
      * Parses the given text and returns the HTML
      *
-     * @param  string $text
-     * @param  bool $inline
+     * @param string $text
+     * @param bool $inline
      * @return string
      */
     public function parse(string $text, bool $inline = false): string

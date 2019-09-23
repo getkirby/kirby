@@ -44,7 +44,7 @@ return PhpCsFixer\Config::create()
         'no_useless_return' => true,
         'ordered_imports' => ['sort_algorithm' => 'alpha'],
         // 'phpdoc_add_missing_param_annotation' => ['only_untyped' => false], // adds params in the wrong order
-        // 'phpdoc_align' => ['align' => 'vertical'], // added in a second step
+        'phpdoc_align' => ['align' => 'left'],
         'phpdoc_indent' => true,
         'phpdoc_scalar' => true,
         'phpdoc_trim' => true,

@@ -58,11 +58,11 @@ class Response
     /**
      * Creates a new response object
      *
-     * @param string  $body
-     * @param string  $type
+     * @param string $body
+     * @param string $type
      * @param int $code
-     * @param array   $headers
-     * @param string  $charset
+     * @param array $headers
+     * @param string $charset
      */
     public function __construct($body = '', ?string $type = null, ?int $code = null, ?array $headers = null, ?string $charset = null)
     {
@@ -194,7 +194,7 @@ class Response
     /**
      * Getter for single headers
      *
-     * @param  string      $key   Name of the header
+     * @param string $key Name of the header
      * @return string|null
      */
     public function header(string $key): ?string

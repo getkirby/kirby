@@ -52,7 +52,7 @@ abstract class Cache
     /**
      * Adds the prefix to the key if given
      *
-     * @param  string $key
+     * @param string $key
      * @return string
      */
     protected function key(string $key): string

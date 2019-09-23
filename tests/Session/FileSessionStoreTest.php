@@ -335,7 +335,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session is currently locked
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertLocked(string $name)
@@ -356,7 +356,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session is currently not locked
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertNotLocked(string $name)
@@ -377,7 +377,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session currently has an open handle
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertHandleExists(string $name)
@@ -389,7 +389,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session currently has no open handle
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertHandleNotExists(string $name)
