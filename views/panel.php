@@ -30,6 +30,8 @@
     Please enable JavaScript in your browser
   </noscript>
 
+  <?= $icons ?>
+
   <script>window.panel = <?= json_encode($options, JSON_UNESCAPED_SLASHES) ?></script>
 
   <script src="<?= $assetUrl ?>/js/plugins.js" defer></script>
