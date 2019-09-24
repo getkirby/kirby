@@ -226,7 +226,7 @@ export default {
           this.$refs.search.focus();
         }
         
-        this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop = this.scrollTop
+        this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop = this.scrollTop;
       });
     },
     remove(option) {
@@ -235,6 +235,7 @@ export default {
     },
     select(option) {
       this.scrollTop = this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop;
+      
       option = { text: option.text, value: option.value };
 
       if (this.isSelected(option)) {
