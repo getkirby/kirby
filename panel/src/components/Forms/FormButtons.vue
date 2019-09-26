@@ -114,7 +114,7 @@ export default {
       // start setting lock on each heartbeat
       if (previous === false && current === true) {
         this.$store.dispatch("heartbeat/remove", this.getLock);
-        this.$store.dispatch("heartbeat/add", [this.setLock, 30]);
+        this.$store.dispatch("heartbeat/add", [this.setLock, 40]);
         return;
       }
 
@@ -126,17 +126,9 @@ export default {
       }
     },
     id() {
-      // when routed and no new model store id exists,
-      // make sure to remove heartbeats
-      if (!this.id) {
-        this.$store.dispatch("heartbeat/remove", this.getLock);
-        this.$store.dispatch("heartbeat/remove", this.setLock);
-        return;
-      }
-
-      // start listening for content lock
-      if (this.hasChanges === false) {
-        this.$store.dispatch("heartbeat/add", this.getLock);
+      // start listening for content lock, when no changes exist
+      if (this.id && this.hasChanges === false) {
+        this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
       }
     }
   },
@@ -159,7 +151,6 @@ export default {
         if (response.supported === false) {
           this.supportsLocking = false;
           this.$store.dispatch("heartbeat/remove", this.getLock);
-          console.warn("Content locking not supported for " + this.id);
           return;
         }
 
@@ -191,7 +182,7 @@ export default {
           // listen to concurrent lock
           this.$store.dispatch("form/revert", this.id);
           this.$store.dispatch("heartbeat/remove", this.setLock);
-          this.$store.dispatch("heartbeat/add", this.getLock);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
         });
       }
     },
@@ -202,7 +193,7 @@ export default {
 
         this.$api.delete(...this.api.lock).then(() => {
           this.$store.dispatch("form/lock", null);
-          this.$store.dispatch("heartbeat/add", this.getLock);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
         });
       }
     },
@@ -213,7 +204,7 @@ export default {
 
         this.$api.patch(...this.api.unlock).then(() => {
           this.$store.dispatch("form/lock", null);
-          this.$store.dispatch("heartbeat/add", this.getLock);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
         });
       }
     },
@@ -224,7 +215,7 @@ export default {
 
         this.$api.delete(...this.api.unlock).then(() => {
           this.$store.dispatch("form/unlock", null);
-          this.$store.dispatch("heartbeat/add", this.getLock);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
         });
       }
     },

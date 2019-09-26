@@ -11,6 +11,9 @@ return [
         'ascii' => function () {
             return Str::$ascii;
         },
+        'defaultLanguage' => function () {
+            return $this->kirby()->option('panel.language', 'en');
+        },
         'isOk' => function (System $system) {
             return $system->isOk();
         },
@@ -62,7 +65,7 @@ return [
             }
         },
         'kirbytext' => function () {
-            return $this->kirby()->option('panel')['kirbytext'] ?? true;
+            return $this->kirby()->option('panel.kirbytext') ?? true;
         },
         'user' => function () {
             return $this->user();
@@ -71,7 +74,7 @@ return [
             return $this->kirby()->version();
         }
     ],
-    'type'   => System::class,
+    'type'   => 'Kirby\Cms\System',
     'views'  => [
         'login' => [
             'isOk',
@@ -90,6 +93,7 @@ return [
         ],
         'panel' => [
             'ascii',
+            'defaultLanguage',
             'isOk',
             'isInstalled',
             'isLocal',

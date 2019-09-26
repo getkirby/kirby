@@ -15,7 +15,6 @@ use Kirby\Database\Sql;
  */
 class Sqlite extends Sql
 {
-
     /**
      * Returns a list of columns for a specified table
      * SQLite version

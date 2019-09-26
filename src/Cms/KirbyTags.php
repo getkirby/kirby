@@ -14,13 +14,12 @@ namespace Kirby\Cms;
  */
 class KirbyTags extends \Kirby\Text\KirbyTags
 {
-
     /**
      * The KirbyTag rendering class
      *
      * @var string
      */
-    protected static $tagClass = KirbyTag::class;
+    protected static $tagClass = 'Kirby\Cms\KirbyTag';
 
     /**
      * @param string $text

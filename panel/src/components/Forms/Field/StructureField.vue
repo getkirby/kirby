@@ -292,7 +292,7 @@ export default {
 
       Object.keys(this.fields).forEach(fieldName => {
         const field = this.fields[fieldName];
-        if (field.default) {
+        if (field.default !== null) {
           data[fieldName] = clone(field.default);
         } else {
           data[fieldName] = null;
@@ -359,6 +359,7 @@ export default {
           return date.isValid() ? date.format(format) : "";
         }
         case "tags":
+        case "multiselect":
           return value
             .map(item => {
               return item.text;
@@ -412,7 +413,9 @@ export default {
       this.submit();
     },
     focus() {
-      this.$refs.add.focus();
+      if (this.$refs.add && this.$refs.add.focus) {
+        this.$refs.add.focus();
+      }
     },
     indexOf(index) {
       if (!this.limit) {
@@ -538,8 +541,7 @@ export default {
       if (!fraction) {
         return "auto";
       }
-
-      const parts = fraction.split("/");
+      const parts = fraction.toString().split("/");
 
       if (parts.length !== 2) {
         return "auto";

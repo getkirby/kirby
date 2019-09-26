@@ -28,7 +28,6 @@ use Kirby\Toolkit\Str;
  */
 class Filename
 {
-
     /**
      * List of all applicable attributes
      *
@@ -69,7 +68,7 @@ class Filename
      *
      * @param string $filename
      * @param string $template
-     * @param array  $attributes
+     * @param array $attributes
      */
     public function __construct(string $filename, string $template, array $attributes = [])
     {
@@ -119,7 +118,7 @@ class Filename
      * to a string, that can be used in the
      * new filename
      *
-     * @param  string $prefix The prefix will be used in the filename creation
+     * @param string $prefix The prefix will be used in the filename creation
      * @return string
      */
     public function attributesToString(string $prefix = null): string
@@ -167,7 +166,7 @@ class Filename
             return false;
         }
 
-        return intval($value);
+        return (int)$value;
     }
 
     /**
@@ -257,7 +256,7 @@ class Filename
             return false;
         }
 
-        return intval($value);
+        return (int)$value;
     }
 
     /**
@@ -266,7 +265,7 @@ class Filename
      * to lowercase and `jpeg` will be
      * replaced with `jpg`
      *
-     * @param  string $extension
+     * @param string $extension
      * @return string
      */
     protected function sanitizeExtension(string $extension): string
@@ -280,7 +279,7 @@ class Filename
      * Sanitizes the name with Kirby's
      * Str::slug function
      *
-     * @param  string $name
+     * @param string $name
      * @return string
      */
     protected function sanitizeName(string $name): string

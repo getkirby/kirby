@@ -115,7 +115,7 @@ return [
             return $file->url(true);
         },
     ],
-    'type'  => File::class,
+    'type'  => 'Kirby\Cms\File',
     'views' => [
         'default' => [
             'content',

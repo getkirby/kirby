@@ -3,9 +3,9 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Data\Data;
 use Kirby\Form\Field;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
@@ -90,7 +90,7 @@ class Blueprint
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->props ?? [];
     }
@@ -222,7 +222,7 @@ class Blueprint
      *
      * @param string $name
      * @param string $fallback
-     * @param Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model $model
      * @return self
      */
     public static function factory(string $name, string $fallback = null, Model $model)
@@ -352,7 +352,7 @@ class Blueprint
     /**
      * Returns the parent model
      *
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function model()
     {
@@ -603,7 +603,14 @@ class Blueprint
                 'type' => $type = $sectionProps['type'] ?? null
             ]);
 
-            if (isset(Section::$types[$type]) === false) {
+            if (empty($type) === true || is_string($type) === false) {
+                $sections[$sectionName] = [
+                    'name' => $sectionName,
+                    'headline' => 'Invalid section type for section "' . $sectionName . '"',
+                    'type' => 'info',
+                    'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
+                ];
+            } elseif (isset(Section::$types[$type]) === false) {
                 $sections[$sectionName] = [
                     'name' => $sectionName,
                     'headline' => 'Invalid section type ("' . $type . '")',
@@ -712,7 +719,7 @@ class Blueprint
      * Returns a single section by name
      *
      * @param string $name
-     * @return Kirby\Cms\Section|null
+     * @return \Kirby\Cms\Section|null
      */
     public function section(string $name)
     {

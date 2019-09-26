@@ -2,13 +2,11 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class TimeFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('time');
+        $field = $this->field('time');
 
         $this->assertEquals('time', $field->type());
         $this->assertEquals('time', $field->name());
@@ -37,7 +35,7 @@ class TimeFieldTest extends TestCase
      */
     public function testValue($input, $expected, $step = 1)
     {
-        $field = new Field('time', [
+        $field = $this->field('time', [
             'default' => $input,
             'step'    => $step,
             'value'   => $input,

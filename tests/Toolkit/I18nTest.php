@@ -130,6 +130,16 @@ class I18nTest extends TestCase
         ], 'fallback'));
     }
 
+    public function testTranslateArrayWithArrayFallback()
+    {
+        // use the english translation as fallback if available
+        $this->assertEquals('Save', I18n::translate(['de' => 'Speichern'], ['en' => 'Save']));
+
+        // use the first value if there's no english translation
+        $this->assertEquals('Fallback', I18n::translate(['de' => 'Speichern'], ['first' => 'Fallback']));
+    }
+
+
     public function testTranslateArrayWithDifferentLocale()
     {
         I18n::$locale = 'de';

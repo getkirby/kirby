@@ -18,7 +18,6 @@ use Michelf\SmartyPantsTypographer;
  */
 class SmartyPants
 {
-
     /**
      * Array with all configured options
      * for the parser
@@ -116,7 +115,7 @@ class SmartyPants
     /**
      * Parses the given text
      *
-     * @param  string $text
+     * @param string $text
      * @return string
      */
     public function parse(string $text): string

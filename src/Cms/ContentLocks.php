@@ -18,7 +18,6 @@ use Kirby\Toolkit\F;
  */
 class ContentLocks
 {
-
     /**
      * Data from the `.lock` files
      * that have been read so far
@@ -73,7 +72,7 @@ class ContentLocks
     /**
      * Returns the path to a model's lock file
      *
-     * @param Kirby\Cms\ModelWithContent $model
+     * @param \Kirby\Cms\ModelWithContent $model
      * @return string
      */
     public static function file(ModelWithContent $model): string
@@ -84,7 +83,7 @@ class ContentLocks
     /**
      * Returns the lock/unlock data for the specified model
      *
-     * @param Kirby\Cms\ModelWithContent $model
+     * @param \Kirby\Cms\ModelWithContent $model
      * @return array
      */
     public function get(ModelWithContent $model): array
@@ -122,7 +121,7 @@ class ContentLocks
      * Returns the file handle to a `.lock` file
      *
      * @param string $file
-     * @param boolean $create Whether to create the file if it does not exist
+     * @param bool $create Whether to create the file if it does not exist
      * @return resource|null File handle
      */
     protected function handle(string $file, bool $create = false)
@@ -155,7 +154,7 @@ class ContentLocks
      * Returns model ID used as the key for the data array;
      * prepended with a slash because the $site otherwise won't have an ID
      *
-     * @param Kirby\Cms\ModelWithContent $model
+     * @param \Kirby\Cms\ModelWithContent $model
      * @return string
      */
     public static function id(ModelWithContent $model): string
@@ -166,9 +165,9 @@ class ContentLocks
     /**
      * Sets and writes the lock/unlock data for the specified model
      *
-     * @param Kirby\Cms\ModelWithContent $model
+     * @param \Kirby\Cms\ModelWithContent $model
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function set(ModelWithContent $model, array $data): bool
     {

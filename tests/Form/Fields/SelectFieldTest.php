@@ -2,13 +2,11 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class SelectFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('select');
+        $field = $this->field('select');
 
         $this->assertEquals('select', $field->type());
         $this->assertEquals('select', $field->name());
@@ -33,7 +31,7 @@ class SelectFieldTest extends TestCase
      */
     public function testValue($input, $expected)
     {
-        $field = new Field('select', [
+        $field = $this->field('select', [
             'options' => [
                 'a',
                 'b',

@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use Kirby\Http\Idn;
-use Kirby\Toolkit\Str;
 use ReflectionFunction;
 use Throwable;
 
@@ -19,7 +18,6 @@ use Throwable;
  */
 class V
 {
-
     /**
      * An array with all installed validators
      *
@@ -104,11 +102,11 @@ class V
      * a set of rules, using all registered
      * validators
      *
-     * @param  mixed    $value
-     * @param  array    $rules
-     * @param  array    $messages
-     * @param  boolean  $fail
-     * @return boolean|array
+     * @param mixed $value
+     * @param array $rules
+     * @param array $messages
+     * @param bool $fail
+     * @return bool|array
      */
     public static function value($value, array $rules, array $messages = [], bool $fail = true)
     {
@@ -144,9 +142,9 @@ class V
      * a set of rules, using all registered
      * validators
      *
-     * @param  array    $input
-     * @param  array    $rules
-     * @return boolean
+     * @param array $input
+     * @param array $rules
+     * @return bool
      */
     public static function input(array $input, array $rules): bool
     {
@@ -181,9 +179,9 @@ class V
     /**
      * Calls an installed validator and passes all arguments
      *
-     * @param  string   $method
-     * @param  array    $arguments
-     * @return boolean
+     * @param string $method
+     * @param array $arguments
+     * @return bool
      */
     public static function __callStatic(string $method, array $arguments): bool
     {
@@ -245,9 +243,9 @@ V::$validators = [
      */
     'date' => function ($value): bool {
         $date = date_parse($value);
-        return ($date !== false &&
+        return $date !== false &&
                 $date['error_count'] === 0 &&
-                $date['warning_count'] === 0);
+                $date['warning_count'] === 0;
     },
 
     /**

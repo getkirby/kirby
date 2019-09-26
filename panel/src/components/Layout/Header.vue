@@ -193,6 +193,7 @@ export default {
   flex-grow: 1;
   flex-shrink: 1;
   flex-direction: column;
+  max-width: 15rem;
 
   @media screen and (min-width: $breakpoint-small) {
     flex-direction: row;

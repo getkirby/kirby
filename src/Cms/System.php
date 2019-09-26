@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Throwable;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -14,6 +13,7 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
+use Throwable;
 
 /**
  * The System class gathers all information
@@ -31,14 +31,13 @@ use Kirby\Toolkit\V;
  */
 class System
 {
-
     /**
      * @var App
      */
     protected $app;
 
     /**
-     * @param Kirby\Cms\App $app
+     * @param \Kirby\Cms\App $app
      */
     public function __construct(App $app)
     {
@@ -53,7 +52,7 @@ class System
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -80,7 +79,7 @@ class System
     /**
      * Check for a writable accounts folder
      *
-     * @return boolean
+     * @return bool
      */
     public function accounts(): bool
     {
@@ -90,7 +89,7 @@ class System
     /**
      * Check for a writable content folder
      *
-     * @return boolean
+     * @return bool
      */
     public function content(): bool
     {
@@ -100,7 +99,7 @@ class System
     /**
      * Check for an existing curl extension
      *
-     * @return boolean
+     * @return bool
      */
     public function curl(): bool
     {
@@ -138,20 +137,21 @@ class System
      */
     public function init()
     {
-        /* /site/accounts */
+        // init /site/accounts
         try {
             Dir::make($this->app->root('accounts'));
         } catch (Throwable $e) {
             throw new PermissionException('The accounts directory could not be created');
         }
 
-        /* /content */
+        // init /content
         try {
             Dir::make($this->app->root('content'));
         } catch (Throwable $e) {
             throw new PermissionException('The content directory could not be created');
         }
 
+        // init /media
         try {
             Dir::make($this->app->root('media'));
         } catch (Throwable $e) {
@@ -165,7 +165,7 @@ class System
      * option must be explicitly set to true
      * to get the installer up and running.
      *
-     * @return boolean
+     * @return bool
      */
     public function isInstallable(): bool
     {
@@ -175,7 +175,7 @@ class System
     /**
      * Check if Kirby is already installed
      *
-     * @return boolean
+     * @return bool
      */
     public function isInstalled(): bool
     {
@@ -185,7 +185,7 @@ class System
     /**
      * Check if this is a local installation
      *
-     * @return boolean
+     * @return bool
      */
     public function isLocal(): bool
     {
@@ -218,7 +218,7 @@ class System
     /**
      * Check if all tests pass
      *
-     * @return boolean
+     * @return bool
      */
     public function isOk(): bool
     {
@@ -318,7 +318,7 @@ class System
     /**
      * Check for an existing mbstring extension
      *
-     * @return boolean
+     * @return bool
      */
     public function mbString(): bool
     {
@@ -328,7 +328,7 @@ class System
     /**
      * Check for a writable media folder
      *
-     * @return boolean
+     * @return bool
      */
     public function media(): bool
     {
@@ -338,7 +338,7 @@ class System
     /**
      * Check for a valid PHP version
      *
-     * @return boolean
+     * @return bool
      */
     public function php(): bool
     {
@@ -352,7 +352,7 @@ class System
      *
      * @param string $license
      * @param string $email
-     * @return boolean
+     * @return bool
      */
     public function register(string $license = null, string $email = null): bool
     {
@@ -404,7 +404,7 @@ class System
     /**
      * Check for a valid server environment
      *
-     * @return boolean
+     * @return bool
      */
     public function server(): bool
     {
@@ -424,7 +424,7 @@ class System
     /**
      * Check for a writable sessions folder
      *
-     * @return boolean
+     * @return bool
      */
     public function sessions(): bool
     {

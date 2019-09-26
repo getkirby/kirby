@@ -2,9 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Form\Field as FormField;
-use Kirby\Image\Image;
 use Kirby\Cache\FileCache;
+use Kirby\Form\Field as FormField;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\I18n;
@@ -335,9 +334,11 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
+        $page  = new Page(['slug' => 'test']);
         $field = new FormField('dummy', [
             'name'  => 'dummy',
-            'peter' => 'shaw'
+            'peter' => 'shaw',
+            'model' => $page
         ]);
 
         $this->assertInstanceOf(FormField::class, $field);

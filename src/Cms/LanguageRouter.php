@@ -20,7 +20,6 @@ use Kirby\Toolkit\Str;
  */
 class LanguageRouter
 {
-
     /**
      * The parent language
      *
@@ -39,7 +38,7 @@ class LanguageRouter
      * Creates a new language router instance
      * for the given language
      *
-     * @param Kirby\Cms\Language $language
+     * @param \Kirby\Cms\Language $language
      */
     public function __construct(Language $language)
     {

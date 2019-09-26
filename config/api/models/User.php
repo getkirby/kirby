@@ -54,7 +54,7 @@ return [
             return $user->username();
         }
     ],
-    'type'  => User::class,
+    'type'  => 'Kirby\Cms\User',
     'views' => [
         'default' => [
             'avatar',

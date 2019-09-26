@@ -13,13 +13,10 @@ return [
     ],
     'computed' => [
         'text' => function () {
-            $text = $this->text;
-
-            if ($model = $this->model()) {
+            if ($text = $this->text) {
                 $text = $this->model()->toString($text);
+                return kirbytext($text);
             }
-
-            return kirbytext($text);
         }
     ],
     'save' => false,

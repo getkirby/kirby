@@ -2,12 +2,11 @@
 
 namespace Kirby\Session;
 
+use Kirby\Http\Cookie;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-use Kirby\Http\Cookie;
-
-require_once(__DIR__ . '/mocks.php');
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Session\Sessions

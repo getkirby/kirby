@@ -5,9 +5,7 @@ namespace Kirby\Form\Fields;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Cms\File;
 use Kirby\Cms\User;
-use Kirby\Form\Field;
 
 class FilesFieldTest extends TestCase
 {
@@ -61,7 +59,7 @@ class FilesFieldTest extends TestCase
 
     public function testDefaultProps()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => $this->model()
         ]);
 
@@ -77,7 +75,7 @@ class FilesFieldTest extends TestCase
 
     public function testValue()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => $this->model(),
             'value' => [
                 'a.jpg', // exists
@@ -99,7 +97,7 @@ class FilesFieldTest extends TestCase
 
     public function testMin()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => $this->model(),
             'value' => [
                 'a.jpg', // exists
@@ -116,7 +114,7 @@ class FilesFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => $this->model(),
             'value' => [
                 'a.jpg', // exists
@@ -132,7 +130,7 @@ class FilesFieldTest extends TestCase
 
     public function testFilesInDraft()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => $this->app->page('test-draft'),
             'value' => [
                 'a.jpg', // exists
@@ -154,7 +152,7 @@ class FilesFieldTest extends TestCase
 
     public function testQueryWithPageParent()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => new Page(['slug' => 'test']),
         ]);
 
@@ -163,7 +161,7 @@ class FilesFieldTest extends TestCase
 
     public function testQueryWithSiteParent()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => new Site(),
         ]);
 
@@ -172,7 +170,7 @@ class FilesFieldTest extends TestCase
 
     public function testQueryWithUserParent()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => new User(['email' => 'test@getkirby.com']),
         ]);
 
@@ -181,7 +179,7 @@ class FilesFieldTest extends TestCase
 
     public function testEmpty()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => new Page(['slug' => 'test']),
             'empty' => 'Test'
         ]);
@@ -191,7 +189,7 @@ class FilesFieldTest extends TestCase
 
     public function testTranslatedEmpty()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model' => new Page(['slug' => 'test']),
             'empty' => ['en' => 'Test', 'de' => 'Töst']
         ]);
@@ -201,7 +199,7 @@ class FilesFieldTest extends TestCase
 
     public function testRequiredProps()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model'    => $this->model(),
             'required' => true
         ]);
@@ -212,7 +210,7 @@ class FilesFieldTest extends TestCase
 
     public function testRequiredInvalid()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model'    => $this->model(),
             'required' => true
         ]);
@@ -222,7 +220,7 @@ class FilesFieldTest extends TestCase
 
     public function testRequiredValid()
     {
-        $field = new Field('files', [
+        $field = $this->field('files', [
             'model'    => $this->model(),
             'required' => true,
             'value' => [

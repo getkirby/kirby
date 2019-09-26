@@ -2,13 +2,11 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class TelFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('tel');
+        $field = $this->field('tel');
 
         $this->assertEquals('tel', $field->type());
         $this->assertEquals('tel', $field->name());

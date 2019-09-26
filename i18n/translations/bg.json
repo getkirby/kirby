@@ -37,6 +37,7 @@
 
   "error.access.login": "Invalid login",
   "error.access.panel": "Нямате права за достъп до панела",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Профилната снимка не може да се качи",
   "error.avatar.delete.fail": "Профилната снимка не може да бъде изтрита",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Невалиден конвертор \"{converter}\"",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Не можете да смените името на \"{filename}\"",
   "error.file.duplicate": "Файл с име \"{filename}\" вече съществува",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "\u041c\u043e\u043b\u044f, \u043f\u043e\u0442\u0432\u044a\u0440\u0434\u0435\u0442\u0435 \u043f\u0430\u0440\u043e\u043b\u0430\u0442\u0430",
   "error.user.password.undefined": "Потребителят няма парола",
   "error.user.role.invalid": "Моля въведете валидна роля",
-  "error.user.undefined": "\u041f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u044f\u0442 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u043d\u0430\u043c\u0435\u0440\u0435\u043d.",
   "error.user.update.permission":
     "Нямате права да обновите този потребител \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Български",
 
   "upload": "Прикачи",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Грешка",
   "upload.progress": "Uploading…",
 

@@ -4,14 +4,13 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
-use Throwable;
-
 use Kirby\Exception\NotFoundException;
-use Kirby\Http\Router;
 use Kirby\Http\Response;
+use Kirby\Http\Router;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The API class is a generic container
@@ -39,7 +38,7 @@ class Api
     /**
      * Debugging flag
      *
-     * @var boolean
+     * @var bool
      */
     protected $debug = false;
 
@@ -169,12 +168,41 @@ class Api
         $auth   = $this->route->attributes()['auth'] ?? true;
 
         if ($auth !== false) {
-            $this->authenticate();
+            $user = $this->authenticate();
+
+            // set PHP locales based on *user* language
+            // so that e.g. strftime() gets formatted correctly
+            if (is_a($user, 'Kirby\Cms\User') === true) {
+                $locale = $language = $user->language();
+
+                // if it's not already a full locale, "fake" one
+                // and assume that the country equals the language
+                if (Str::contains($locale, '_') !== true) {
+                    $locale .= '_' . strtoupper($locale);
+                }
+
+                // provide some variants as fallbacks to be
+                // compatible with as many systems as possible
+                $locales = [
+                    $locale,
+                    $locale . '.UTF-8',
+                    $locale . '.UTF8',
+                    $locale . '.ISO8859-1',
+                    $language,
+                    setlocale(LC_ALL, 0) // fall back to the previously defined locale
+                ];
+
+                // set the locales that are relevant for string formatting
+                // *don't* set LC_CTYPE to avoid breaking other parts of the system
+                setlocale(LC_MONETARY, $locales);
+                setlocale(LC_NUMERIC, $locales);
+                setlocale(LC_TIME, $locales);
+            }
         }
 
         $output = $this->route->action()->call($this, ...$this->route->arguments());
 
-        if (is_object($output) === true) {
+        if (is_object($output) === true && is_a($output, 'Kirby\\Http\\Response') !== true) {
             return $this->resolve($output)->toResponse();
         }
 
@@ -186,7 +214,7 @@ class Api
      *
      * @param string $name
      * @param array|null $collection
-     * @return Kirby\Api\Collection
+     * @return \Kirby\Api\Collection
      *
      * @throws NotFoundException If no collection for `$name` exists
      */
@@ -240,7 +268,7 @@ class Api
     /**
      * Returns the debugging flag
      *
-     * @return boolean
+     * @return bool
      */
     public function debug(): bool
     {
@@ -251,7 +279,7 @@ class Api
      * Checks if injected data exists for the given key
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function hasData(string $key): bool
     {
@@ -263,7 +291,7 @@ class Api
      *
      * @param string $name
      * @param mixed $object
-     * @return Kirby\Api\Model
+     * @return \Kirby\Api\Model
      *
      * @throws NotFoundException If no model for `$name` exists
      */
@@ -375,7 +403,7 @@ class Api
      * API model or collection representation
      *
      * @param mixed $object
-     * @return Kirby\Api\Model|Kirby\Api\Collection
+     * @return \Kirby\Api\Model|\Kirby\Api\Collection
      *
      * @throws NotFoundException If `$object` cannot be resolved
      */
@@ -461,7 +489,7 @@ class Api
     /**
      * Setter for the debug flag
      *
-     * @param boolean $debug
+     * @param bool $debug
      * @return self
      */
     protected function setDebug(bool $debug = false)
@@ -540,50 +568,15 @@ class Api
         try {
             $result = $this->call($path, $method, $requestData);
         } catch (Throwable $e) {
-            if (is_a($e, 'Kirby\Exception\Exception') === true) {
-                $result = [
-                    'status' => 'error',
-                    'route'  => ($this->route)? $this->route->pattern() : null
-                ] + $e->toArray();
-            } else {
-                // remove the document root from the file path
-                $file = $e->getFile();
-                if (empty($_SERVER['DOCUMENT_ROOT']) === false) {
-                    $file = ltrim(Str::after($file, $_SERVER['DOCUMENT_ROOT']), '/');
-                }
-
-                $result = [
-                    'status'    => 'error',
-                    'exception' => get_class($e),
-                    'message'   => $e->getMessage(),
-                    'file'      => $file,
-                    'line'      => $e->getLine(),
-                    'code'      => empty($e->getCode()) === false ? $e->getCode() : 500,
-                    'route'     => $this->route ? $this->route->pattern() : null
-                ];
-            }
+            $result = $this->responseForException($e);
         }
 
         if ($result === null) {
-            $result = [
-                'status'  => 'error',
-                'message' => 'not found',
-                'code'    => 404,
-            ];
-        }
-
-        if ($result === true) {
-            $result = [
-                'status' => 'ok',
-            ];
-        }
-
-        if ($result === false) {
-            $result = [
-                'status'  => 'error',
-                'message' => 'bad request',
-                'code'    => 400,
-            ];
+            $result = $this->responseFor404();
+        } elseif ($result === false) {
+            $result = $this->responseFor400();
+        } elseif ($result === true) {
+            $result = $this->responseFor200();
         }
 
         if (is_array($result) === false) {
@@ -592,17 +585,6 @@ class Api
 
         // pretty print json data
         $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
-
-        // remove critical info from the result set if
-        // debug mode is switched off
-        if ($this->debug !== true) {
-            unset(
-                $result['file'],
-                $result['exception'],
-                $result['line'],
-                $result['route']
-            );
-        }
 
         if (($result['status'] ?? 'ok') === 'error') {
             $code = $result['code'] ?? 400;
@@ -619,10 +601,99 @@ class Api
     }
 
     /**
+     * Returns a 200 - ok
+     * response array.
+     *
+     * @return array
+     */
+    public function responseFor200(): array
+    {
+        return [
+            'status'  => 'ok',
+            'message' => 'ok',
+            'code'    => 200
+        ];
+    }
+
+    /**
+     * Returns a 400 - bad request
+     * response array.
+     *
+     * @return array
+     */
+    public function responseFor400(): array
+    {
+        return [
+            'status'  => 'error',
+            'message' => 'bad request',
+            'code'    => 400,
+        ];
+    }
+
+    /**
+     * Returns a 404 - not found
+     * response array.
+     *
+     * @return array
+     */
+    public function responseFor404(): array
+    {
+        return [
+            'status'  => 'error',
+            'message' => 'not found',
+            'code'    => 404,
+        ];
+    }
+
+    /**
+     * Creates the response array for
+     * an exception. Kirby exceptions will
+     * have more information
+     *
+     * @param Exception $e
+     * @return array
+     */
+    public function responseForException($e): array
+    {
+        // prepare the result array for all exception types
+        $result = [
+            'status'    => 'error',
+            'message'   => $e->getMessage(),
+            'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
+            'exception' => get_class($e),
+            'key'       => null,
+            'file'      => F::relativepath($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+            'line'      => $e->getLine(),
+            'details'   => [],
+            'route'     => $this->route ? $this->route->pattern() : null
+        ];
+
+        // extend the information for Kirby Exceptions
+        if (is_a($e, 'Kirby\Exception\Exception') === true) {
+            $result['key']     = $e->getKey();
+            $result['details'] = $e->getDetails();
+            $result['code']    = $e->getHttpCode();
+        }
+
+        // remove critical info from the result set if
+        // debug mode is switched off
+        if ($this->debug !== true) {
+            unset(
+                $result['file'],
+                $result['exception'],
+                $result['line'],
+                $result['route']
+            );
+        }
+
+        return $result;
+    }
+
+    /**
      * Upload helper method
      *
      * @param Closure $callback
-     * @param boolean $single
+     * @param bool $single
      * @return array
      *
      * @throws Exception If request has no files
@@ -635,8 +706,26 @@ class Api
         $errors  = [];
         $files   = $this->requestFiles();
 
+        // get error messages from translation
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE   => t('upload.error.iniSize'),
+            UPLOAD_ERR_FORM_SIZE  => t('upload.error.formSize'),
+            UPLOAD_ERR_PARTIAL    => t('upload.error.partial'),
+            UPLOAD_ERR_NO_FILE    => t('upload.error.noFile'),
+            UPLOAD_ERR_NO_TMP_DIR => t('upload.error.tmpDir'),
+            UPLOAD_ERR_CANT_WRITE => t('upload.error.cantWrite'),
+            UPLOAD_ERR_EXTENSION  => t('upload.error.extension')
+        ];
+
         if (empty($files) === true) {
-            throw new Exception('No uploaded files');
+            $postMaxSize       = Str::toBytes(ini_get('post_max_size'));
+            $uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
+
+            if ($postMaxSize < $uploadMaxFileSize) {
+                throw new Exception(t('upload.error.iniPostSize'));
+            } else {
+                throw new Exception(t('upload.error.noFiles'));
+            }
         }
 
         foreach ($files as $upload) {
@@ -648,7 +737,8 @@ class Api
 
             try {
                 if ($upload['error'] !== 0) {
-                    throw new Exception('Upload error');
+                    $errorMessage = $errorMessages[$upload['error']] ?? t('upload.error.default');
+                    throw new Exception($errorMessage);
                 }
 
                 // get the extension of the uploaded file
@@ -659,7 +749,7 @@ class Api
                 if (empty($extension) === true || in_array($extension, ['tmp', 'temp'])) {
                     $mime      = F::mime($upload['tmp_name']);
                     $extension = F::mimeToExtension($mime);
-                    $filename  = F::name($upload['name']) . '.' .$extension;
+                    $filename  = F::name($upload['name']) . '.' . $extension;
                 } else {
                     $filename = basename($upload['name']);
                 }
@@ -669,7 +759,7 @@ class Api
                 // move the file to a location including the extension,
                 // for better mime detection
                 if (move_uploaded_file($upload['tmp_name'], $source) === false) {
-                    throw new Exception('The uploaded file could not be moved');
+                    throw new Exception(t('upload.error.cantMove'));
                 }
 
                 $data = $callback($source, $filename);

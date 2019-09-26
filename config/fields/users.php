@@ -1,5 +1,8 @@
 <?php
 
+use Kirby\Data\Yaml;
+use Kirby\Toolkit\A;
+
 return [
     'mixins' => ['min', 'picker', 'userpicker'],
     'props' => [
@@ -32,6 +35,12 @@ return [
         'value' => function ($value = null) {
             return $this->toUsers($value);
         },
+    ],
+    'computed' => [
+        /**
+         * Unset inherited computed
+         */
+        'default' => null
     ],
     'methods' => [
         'userResponse' => function ($user) {

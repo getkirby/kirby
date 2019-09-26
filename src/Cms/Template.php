@@ -18,7 +18,6 @@ use Kirby\Toolkit\Tpl;
  */
 class Template
 {
-
     /**
      * Global template data
      *
@@ -75,7 +74,7 @@ class Template
     /**
      * Checks if the template exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -126,7 +125,7 @@ class Template
                 // Try the default template in the default template directory.
                 return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
             } catch (Exception $e) {
-                //
+                // ignore errors, continue searching
             }
 
             // Look for the default template provided by an extension.
@@ -191,7 +190,7 @@ class Template
     /**
      * Checks if the template uses the default type
      *
-     * @return boolean
+     * @return bool
      */
     public function hasDefaultType(): bool
     {

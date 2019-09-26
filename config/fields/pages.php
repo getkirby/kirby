@@ -1,7 +1,7 @@
 <?php
 
+use Kirby\Data\Yaml;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => ['min', 'pagepicker', 'picker'],
@@ -46,6 +46,12 @@ return [
         'value' => function ($value = null) {
             return $this->toPages($value);
         },
+    ],
+    'computed' => [
+        /**
+         * Unset inherited computed
+         */
+        'default' => null
     ],
     'methods' => [
         'pageResponse' => function ($page) {

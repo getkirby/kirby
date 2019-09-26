@@ -2,13 +2,11 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class DateFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('date');
+        $field = $this->field('date');
 
         $this->assertEquals('date', $field->type());
         $this->assertEquals('date', $field->name());
@@ -21,7 +19,7 @@ class DateFieldTest extends TestCase
 
     public function testEmptyDate()
     {
-        $field = new Field('date', [
+        $field = $this->field('date', [
             'value' => null
         ]);
 
@@ -42,14 +40,14 @@ class DateFieldTest extends TestCase
     public function testSave()
     {
         // default value
-        $field = new Field('date', [
+        $field = $this->field('date', [
             'value' => '12.12.2012',
         ]);
 
         $this->assertEquals('2012-12-12', $field->data());
 
         // with custom format
-        $field = new Field('date', [
+        $field = $this->field('date', [
             'format' => 'd.m.Y',
             'value'  => '12.12.2012',
         ]);
@@ -57,7 +55,7 @@ class DateFieldTest extends TestCase
         $this->assertEquals('12.12.2012', $field->data());
 
         // empty value
-        $field = new Field('date', [
+        $field = $this->field('date', [
             'value'  => null,
         ]);
 
@@ -69,7 +67,7 @@ class DateFieldTest extends TestCase
      */
     public function testValue($input, $expected, $step = null)
     {
-        $field = new Field('date', [
+        $field = $this->field('date', [
             'value' => $input,
             'time'  => ['step' => $step]
         ]);

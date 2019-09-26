@@ -2,13 +2,11 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class LineFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('line');
+        $field = $this->field('line');
 
         $this->assertEquals('line', $field->type());
         $this->assertEquals('line', $field->name());

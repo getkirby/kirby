@@ -2,14 +2,13 @@
 
 namespace Kirby\Session;
 
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-
 use Kirby\Http\Cookie;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
-require_once(__DIR__ . '/mocks.php');
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Session\Session
@@ -1292,8 +1291,8 @@ class SessionTest extends TestCase
     /**
      * Asserts the state of the write mode of the given session
      *
-     * @param  boolean $expected Whether the write mode should be true or false right now
-     * @param  Session $session
+     * @param bool $expected Whether the write mode should be true or false right now
+     * @param Session $session
      * @return void
      */
     protected function assertWriteMode(bool $expected, Session $session)

@@ -5,18 +5,18 @@ use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
-use Kirby\Exception\Exception;
 use Kirby\Http\Server;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\View;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\V;
 
 /**
  * Helper to create an asset object
  *
  * @param string $path
- * @return Kirby\Cms\Asset
+ * @return \Kirby\Cms\Asset
  */
 function asset(string $path)
 {
@@ -44,7 +44,7 @@ function attr(array $attr = null, $before = null, $after = null)
  * Returns the result of a collection by name
  *
  * @param string $name
- * @return Kirby\Cms\Collection|null
+ * @return \Kirby\Cms\Collection|null
  */
 function collection(string $name)
 {
@@ -55,7 +55,7 @@ function collection(string $name)
  * Checks / returns a CSRF token
  *
  * @param string $check Pass a token here to compare it to the one in the session
- * @return string|boolean Either the token or a boolean check result
+ * @return string|bool Either the token or a boolean check result
  */
 function csrf(string $check = null)
 {
@@ -126,7 +126,7 @@ function css($url, $options = null)
  * to help with debugging.
  *
  * @param mixed $variable
- * @param boolean $echo
+ * @param bool $echo
  * @return string
  */
 function dump($variable, bool $echo = true): string
@@ -159,10 +159,10 @@ function e($condition, $value, $alternative = null)
 /**
  * Escape context specific output
  *
- * @param  string  $string  Untrusted data
- * @param  string  $context Location of output
- * @param  boolean $strict  Whether to escape an extended set of characters (HTML attributes only)
- * @return string  Escaped data
+ * @param string $string Untrusted data
+ * @param string $context Location of output
+ * @param bool $strict Whether to escape an extended set of characters (HTML attributes only)
+ * @return string Escaped data
  */
 function esc($string, $context = 'html', $strict = false)
 {
@@ -177,9 +177,9 @@ function esc($string, $context = 'html', $strict = false)
 /**
  * Shortcut for $kirby->request()->get()
  *
- * @param   mixed    $key The key to look for. Pass false or null to return the entire request array.
- * @param   mixed    $default Optional default value, which should be returned if no element has been found
- * @return  mixed
+ * @param mixed $key The key to look for. Pass false or null to return the entire request array.
+ * @param mixed $default Optional default value, which should be returned if no element has been found
+ * @return mixed
  */
 function get($key = null, $default = null)
 {
@@ -206,7 +206,7 @@ function gist(string $url, string $file = null): string
  * Urls can be relative or absolute.
  *
  * @param string $url
- * @param integer $code
+ * @param int $code
  * @return void
  */
 function go(string $url = null, int $code = 302)
@@ -217,7 +217,7 @@ function go(string $url = null, int $code = 302)
 /**
  * Shortcut for html()
  *
- * @param string $text unencoded text
+ * @param string $string unencoded text
  * @param bool $keepTags
  * @return string
  */
@@ -229,7 +229,7 @@ function h(string $string = null, bool $keepTags = false)
 /**
  * Creates safe html by encoding special characters
  *
- * @param string $text unencoded text
+ * @param string $string unencoded text
  * @param bool $keepTags
  * @return string
  */
@@ -246,7 +246,7 @@ function html(string $string = null, bool $keepTags = false)
  * <?= image('some/page/myimage.jpg') ?>
  *
  * @param string $path
- * @return Kirby\Cms\File|null
+ * @return \Kirby\Cms\File|null
  */
 function image(string $path = null)
 {
@@ -346,7 +346,7 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
 /**
  * Creates a script tag to load a javascript file
  *
- * @param string|array $src
+ * @param string|array $url
  * @param string|array $options
  * @return void
  */
@@ -382,7 +382,7 @@ function js($url, $options = null)
 /**
  * Returns the Kirby object in any situation
  *
- * @return Kirby\Cms\App
+ * @return \Kirby\Cms\App
  */
 function kirby()
 {
@@ -527,7 +527,7 @@ function option(string $key, $default = null)
  * id or the current page when no id is specified
  *
  * @param string|array ...$id
- * @return Kirby\Cms\Page|null
+ * @return \Kirby\Cms\Page|null
  */
 function page(...$id)
 {
@@ -542,7 +542,7 @@ function page(...$id)
  * Helper to build page collections
  *
  * @param string|array ...$id
- * @return Kirby\Cms\Pages
+ * @return \Kirby\Cms\Pages
  */
 function pages(...$id)
 {
@@ -589,7 +589,7 @@ function r($condition, $value, $alternative = null)
  * by the defined step
  *
  * @param string $date
- * @param integer $step
+ * @param int $step
  * @return string|null
  */
 function timestamp(string $date = null, int $step = null): ?string
@@ -616,7 +616,7 @@ function timestamp(string $date = null, int $step = null): ?string
 /**
  * Returns the currrent site object
  *
- * @return Kirby\Cms\Site
+ * @return \Kirby\Cms\Site
  */
 function site()
 {
@@ -671,7 +671,7 @@ function smartypants(string $text = null): string
  *
  * @param string|array $name
  * @param array|object $data
- * @param boolean $return
+ * @param bool $return
  * @return string
  */
 function snippet($name, $data = [], bool $return = false)
@@ -721,9 +721,9 @@ function svg(string $file)
 /**
  * Returns translate string for key from translation file
  *
- * @param   string|array $key
- * @param   string|null  $fallback
- * @return  mixed
+ * @param string|array $key
+ * @param string|null $fallback
+ * @return mixed
  */
 function t($key, string $fallback = null)
 {
@@ -733,9 +733,9 @@ function t($key, string $fallback = null)
 /**
  * Translates a count
  *
- * @param   string|array $key
- * @param   int  $count
- * @return  mixed
+ * @param string|array $key
+ * @param int $count
+ * @return mixed
  */
 function tc($key, int $count)
 {

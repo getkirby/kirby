@@ -45,7 +45,7 @@ class Form extends BaseForm
     }
 
     /**
-     * @param Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model $model
      * @param array $props
      * @return self
      */

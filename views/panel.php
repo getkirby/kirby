@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="<?= $assetUrl ?>/css/app.css">
   <link rel="stylesheet" href="<?= $pluginCss ?>">
 
-  <?php if (isset($config['css'])) : ?>
-    <link rel="stylesheet" href="<?= Url::to($config['css']) ?>">
+  <?php if ($customCss) : ?>
+  <link rel="stylesheet" href="<?= $customCss ?>">
   <?php endif ?>
 
   <link rel="apple-touch-icon" href="<?= $assetUrl ?>/apple-touch-icon.png" />
@@ -20,12 +20,17 @@
   <base href="<?= $panelUrl ?>">
 </head>
 <body>
-  <?= $icons ?>
+  <svg aria-hidden="true" class="k-icons" xmlns="http://www.w3.org/2000/svg" overflow="hidden">
+    <defs />
+  </svg>
+
   <div id="app"></div>
 
   <noscript>
     Please enable JavaScript in your browser
   </noscript>
+
+  <?= $icons ?>
 
   <script>window.panel = <?= json_encode($options, JSON_UNESCAPED_SLASHES) ?></script>
 

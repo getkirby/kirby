@@ -2,8 +2,10 @@
 
 namespace Kirby\Api;
 
-use stdClass;
+use Kirby\Cms\Response;
+use Kirby\Cms\User;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class MockModel
 {
@@ -62,20 +64,90 @@ class ApiTest extends TestCase
         $api = new Api([
             'routes' => [
                 [
-                    'pattern' => 'test',
+                    'pattern' => 'testScalar',
                     'method'  => 'POST',
                     'action'  => function () {
                         return $this->requestQuery('foo');
                     }
+                ],
+                [
+                    'pattern' => 'testModel',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        return $this->model('test', 'Awesome test model as string, yay');
+                    }
+                ],
+                [
+                    'pattern' => 'testResponse',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        return new Response('test', 'text/plain', 201);
+                    }
+                ]
+            ],
+            'models' => [
+                'test' => [
+                    'fields' => [
+                        'value' => function ($model) {
+                            return $model;
+                        }
+                    ]
                 ]
             ]
         ]);
 
-        $result = $api->call('test', 'POST', [
+        $result = $api->call('testScalar', 'POST', [
             'query' => ['foo' => 'bar']
         ]);
-
         $this->assertEquals('bar', $result);
+
+        $result = $api->call('testModel', 'POST');
+        $this->assertEquals([
+            'code'   => 200,
+            'data'   => [
+                'value' => 'Awesome test model as string, yay'
+            ],
+            'status' => 'ok',
+            'type'   => 'model'
+        ], $result);
+
+        $result = $api->call('testResponse', 'POST');
+        $this->assertEquals(new Response('test', 'text/plain', 201), $result);
+    }
+
+    public function testCallLocale()
+    {
+        $originalLocale = setlocale(LC_CTYPE, 0);
+
+        $language = 'de';
+
+        $api = new Api([
+            'routes' => [
+                [
+                    'pattern' => 'foo',
+                    'method'  => 'GET',
+                    'action'  => function () {
+                        return 'something';
+                    }
+                ],
+            ],
+            'authentication' => function () use (&$language) {
+                return new User(['language' => $language]);
+            }
+        ]);
+
+        $this->assertEquals('something', $api->call('foo'));
+        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
+
+        $language = 'pt_BR';
+        $this->assertEquals('something', $api->call('foo'));
+        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
     }
 
     public function testCollections()
@@ -197,15 +269,15 @@ class ApiTest extends TestCase
         ]);
 
         // resolve class with namespace
-        $result = $api->resolve(new MockModel);
+        $result = $api->resolve(new MockModel());
         $this->assertInstanceOf(Model::class, $result);
 
         // resolve class without namespace
-        $result = $api->resolve(new stdClass);
+        $result = $api->resolve(new stdClass());
         $this->assertInstanceOf(Model::class, $result);
 
         // resolve class extension
-        $result = $api->resolve(new ExtendedModel);
+        $result = $api->resolve(new ExtendedModel());
         $this->assertInstanceOf(Model::class, $result);
     }
 
@@ -214,7 +286,7 @@ class ApiTest extends TestCase
         $this->expectException('Kirby\Exception\NotFoundException');
 
         $api = new Api([]);
-        $api->resolve(new MockModel);
+        $api->resolve(new MockModel());
     }
 
     public function testRequestData()
@@ -312,8 +384,14 @@ class ApiTest extends TestCase
 
         $result = $api->render('test', 'POST');
 
+        $expected = [
+            'status' => 'ok',
+            'message' => 'ok',
+            'code' => 200
+        ];
+
         $this->assertInstanceOf('Kirby\Http\Response', $result);
-        $this->assertEquals(json_encode(['status' => 'ok']), $result->body());
+        $this->assertEquals(json_encode($expected), $result->body());
     }
 
     public function testRenderFalse()
@@ -385,13 +463,53 @@ class ApiTest extends TestCase
         $result = $api->render('test', 'POST');
 
         $expected = [
-            'status'  => 'error',
-            'message' => 'nope',
-            'code'    => 500,
+            'status'   => 'error',
+            'message'  => 'nope',
+            'code'     => 500,
+            'key'      => null,
+            'details'  => []
         ];
 
         $this->assertInstanceOf('Kirby\Http\Response', $result);
         $this->assertEquals(json_encode($expected), $result->body());
+    }
+
+    public function testRenderExceptionWithDebugging()
+    {
+        $api = new Api([
+            'debug' => true,
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        throw new \Exception('nope');
+                    }
+                ]
+            ]
+        ]);
+
+        // simulate the document root to test relative file paths
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+
+        $result = $api->render('test', 'POST');
+
+        $expected = [
+            'status'    => 'error',
+            'message'   => 'nope',
+            'code'      => 500,
+            'exception' => 'Exception',
+            'key'       => null,
+            'file'      => '/' . basename(__FILE__),
+            'line'      => __LINE__ - 18,
+            'details'   => [],
+            'route'     => 'test'
+        ];
+
+        $this->assertInstanceOf('Kirby\Http\Response', $result);
+        $this->assertEquals(json_encode($expected), $result->body());
+
+        unset($_SERVER['DOCUMENT_ROOT']);
     }
 
     public function testRenderKirbyException()
@@ -419,13 +537,57 @@ class ApiTest extends TestCase
         $expected = [
             'status'  => 'error',
             'message' => 'Test',
+            'code'    => 404,
             'key'     => 'error.test',
             'details' => ['a' => 'A'],
-            'code'    => 404,
         ];
 
         $this->assertInstanceOf('Kirby\Http\Response', $result);
         $this->assertEquals(json_encode($expected), $result->body());
+    }
+
+    public function testRenderKirbyExceptionWithDebugging()
+    {
+        $api = new Api([
+            'debug' => true,
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        throw new \Kirby\Exception\NotFoundException([
+                            'key'      => 'test',
+                            'fallback' => 'Test',
+                            'details'  => [
+                                'a' => 'A'
+                            ]
+                        ]);
+                    }
+                ]
+            ]
+        ]);
+
+        // simulate the document root to test relative file paths
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+
+        $result = $api->render('test', 'POST');
+
+        $expected = [
+            'status'    => 'error',
+            'message'   => 'Test',
+            'code'      => 404,
+            'exception' => 'Kirby\\Exception\\NotFoundException',
+            'key'       => 'error.test',
+            'file'      => '/' . basename(__FILE__),
+            'line'      => __LINE__ - 24,
+            'details'   => ['a' => 'A'],
+            'route'     => 'test',
+        ];
+
+        $this->assertInstanceOf('Kirby\Http\Response', $result);
+        $this->assertEquals(json_encode($expected), $result->body());
+
+        unset($_SERVER['DOCUMENT_ROOT']);
     }
 
     public function testRenderWithSanitizedErrorCode()

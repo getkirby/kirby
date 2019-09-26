@@ -14,7 +14,6 @@ namespace Kirby\Image;
  */
 class Location
 {
-
     /**
      * latitude
      *
@@ -69,8 +68,8 @@ class Location
     /**
      * Converts the gps coordinates
      *
-     * @param  string|array $coord
-     * @param  string       $hemi
+     * @param string|array $coord
+     * @param string $hemi
      * @return float
      */
     protected function gps($coord, string $hemi): float
@@ -88,7 +87,7 @@ class Location
     /**
      * Converts coordinates to floats
      *
-     * @param  string $part
+     * @param string $part
      * @return float
      */
     protected function num(string $part): float
@@ -99,7 +98,7 @@ class Location
             return $parts[0];
         }
 
-        return floatval($parts[0]) / floatval($parts[1]);
+        return (float)($parts[0]) / (float)($parts[1]);
     }
 
     /**
@@ -130,7 +129,7 @@ class Location
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

@@ -44,7 +44,7 @@ return [
             return $file->url(true);
         },
     ],
-    'type'  => FileVersion::class,
+    'type'  => 'Kirby\Cms\FileVersion',
     'views' => [
         'default' => [
             'dimensions',

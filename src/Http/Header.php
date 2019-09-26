@@ -16,7 +16,6 @@ use Kirby\Toolkit\F;
  */
 class Header
 {
-
     // configuration
     public static $codes = [
 
@@ -59,7 +58,7 @@ class Header
      *
      * @param string $mime
      * @param string $charset
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function contentType(string $mime, string $charset = 'UTF-8', bool $send = true)
@@ -109,7 +108,7 @@ class Header
      *
      * @param string $mime
      * @param string $charset
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function type(string $mime, string $charset = 'UTF-8', bool $send = true)
@@ -125,7 +124,7 @@ class Header
      * as 3 digits followed by a space and a message, e.g. '999 Custom Status'.
      *
      * @param int|string $code The HTTP status code
-     * @param boolean $send If set to false the header will be returned instead
+     * @param bool $send If set to false the header will be returned instead
      * @return string|void
      */
     public static function status($code = null, bool $send = true)
@@ -139,7 +138,7 @@ class Header
             $code    = substr($code, 0, 3);
         } else {
             $code    = array_key_exists('_' . $code, $codes) === false ? 500 : $code;
-            $message = isset($codes['_' . $code]) ? $codes['_' . $code] : 'Something went wrong';
+            $message = $codes['_' . $code] ?? 'Something went wrong';
         }
 
         $header = $protocol . ' ' . $code . ' ' . $message;
@@ -155,7 +154,7 @@ class Header
     /**
      * Sends a 200 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function success(bool $send = true)
@@ -166,7 +165,7 @@ class Header
     /**
      * Sends a 201 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function created(bool $send = true)
@@ -177,7 +176,7 @@ class Header
     /**
      * Sends a 202 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function accepted(bool $send = true)
@@ -188,7 +187,7 @@ class Header
     /**
      * Sends a 400 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function error(bool $send = true)
@@ -199,7 +198,7 @@ class Header
     /**
      * Sends a 403 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function forbidden(bool $send = true)
@@ -210,7 +209,7 @@ class Header
     /**
      * Sends a 404 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function notfound(bool $send = true)
@@ -221,7 +220,7 @@ class Header
     /**
      * Sends a 404 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function missing(bool $send = true)
@@ -232,7 +231,7 @@ class Header
     /**
      * Sends a 410 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function gone(bool $send = true)
@@ -243,7 +242,7 @@ class Header
     /**
      * Sends a 500 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function panic(bool $send = true)
@@ -254,7 +253,7 @@ class Header
     /**
      * Sends a 503 header
      *
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function unavailable(bool $send = true)
@@ -267,7 +266,7 @@ class Header
      *
      * @param string $url
      * @param int $code
-     * @param boolean $send
+     * @param bool $send
      * @return string|void
      */
     public static function redirect(string $url, int $code = 302, bool $send = true)
@@ -302,7 +301,7 @@ class Header
 
         header('Pragma: public');
         header('Expires: 0');
-        header('Last-Modified: '. gmdate('D, d M Y H:i:s', $options['modified']) . ' GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $options['modified']) . ' GMT');
         header('Content-Disposition: attachment; filename="' . $options['name'] . '"');
         header('Content-Transfer-Encoding: binary');
 

@@ -37,6 +37,7 @@
 
   "error.access.login": "Inici de sessió no vàlid",
   "error.access.panel": "No tens permís per accedir al panell",
+  "error.access.view": "No tens accés a aquesta part del tauler",
 
   "error.avatar.create.fail": "No s'ha pogut carregar la imatge del perfil",
   "error.avatar.delete.fail": "La imatge del perfil no s'ha pogut eliminar",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
 
+  "error.file.changeName.empty": "El nom no pot estar buit",
   "error.file.changeName.permission":
     "No tens permís per canviar el nom de \"{filename}\"",
   "error.file.duplicate": "Ja existeix un fitxer amb el nom \"{filename}\"",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Les contrasenyes no coincideixen",
   "error.user.password.undefined": "L'usuari no té una contrasenya",
   "error.user.role.invalid": "Si us plau, introdueix un rol vàlid",
-  "error.user.undefined": "L'usuari no s'ha trobat",
   "error.user.update.permission":
     "No tens permís per actualitzar l'usuari \"{name}\"",
 
@@ -265,7 +266,7 @@
   "language.direction.ltr": "Esquerra a dreta",
   "language.direction.rtl": "De dreta a esquerra",
   "language.locale": "Cadena local de PHP",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "S'està fent servir una configuració regional personalitzada. Modifica el fitxer d'idioma a /site/languages",
   "language.name": "Nom",
   "language.updated": "S'ha actualitzat l'idioma",
 
@@ -412,6 +413,17 @@
   "translation.name": "Catalan",
 
   "upload": "Carregar",
+  "upload.error.cantMove": "El fitxer carregat no s'ha pogut moure",
+  "upload.error.cantWrite": "No s'ha pogut escriure el fitxer al disc",
+  "upload.error.default": "No s'ha pogut carregar el fitxer",
+  "upload.error.extension": "La càrrega del fitxer s'ha aturat per l'extensió",
+  "upload.error.formSize": "El fitxer carregat supera la directiva MAX_FILE_SIZE especificada en el formulari",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "El fitxer carregat supera la directiva upload_max_filesize especifiada al php.ini",
+  "upload.error.noFile": "No s'ha carregat cap fitxer",
+  "upload.error.noFiles": "No s'ha penjat cap fitxer",
+  "upload.error.partial": "El fitxer carregat només s'ha carregat parcialment",
+  "upload.error.tmpDir": "Falta una carpeta temporal",
   "upload.errors": "Error",
   "upload.progress": "Carregant...",
 

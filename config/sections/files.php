@@ -1,8 +1,7 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
+use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
@@ -72,9 +71,6 @@ return [
 
             return null;
         },
-        'dragTextType' => function () {
-            return (option('panel')['kirbytext'] ?? true) ? 'kirbytext' : 'markdown';
-        },
         'parent' => function () {
             return $this->parentModel();
         },
@@ -84,7 +80,7 @@ return [
             if ($this->sortBy) {
                 $files = $files->sortBy(...$files::sortArgs($this->sortBy));
             } elseif ($this->sortable === true) {
-                $files = $files->sortBy('sort', 'asc');
+                $files = $files->sortBy('sort', 'asc', 'filename', 'asc');
             }
 
             // apply the default pagination
@@ -106,7 +102,7 @@ return [
                 $image = $file->panelImage($this->image);
 
                 $data[] = [
-                    'dragText' => $file->dragText($this->dragTextType, $dragTextAbsolute),
+                    'dragText' => $file->dragText('auto', $dragTextAbsolute),
                     'filename' => $file->filename(),
                     'id'       => $file->id(),
                     'text'     => $file->toString($this->text),

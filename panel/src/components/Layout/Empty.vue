@@ -1,6 +1,6 @@
 <template>
   <div :data-layout="layout" class="k-empty" v-on="$listeners">
-    <k-icon :type="icon" />
+    <k-icon v-if="icon" :type="icon" />
     <p><slot /></p>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
 /* global styles */
 .k-empty {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   border-radius: $border-radius;
   color: $color-dark-grey;
   border: 1px dashed $color-border;
@@ -54,11 +54,11 @@ export default {
 
 /* layout:list */
 .k-empty[data-layout="list"] {
-  height: 38px;
+  min-height: 38px;
 
   & > .k-icon {
     width: 36px;
-    height: 36px;
+    min-height: 36px;
     border-right: 1px solid rgba(#000, 0.05);
   }
 

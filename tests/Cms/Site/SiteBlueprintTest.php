@@ -9,7 +9,7 @@ class SiteBlueprintTest extends TestCase
     public function testOptions()
     {
         $blueprint = new SiteBlueprint([
-            'model' => new Site
+            'model' => new Site()
         ]);
 
         $expected = [

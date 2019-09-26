@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Api;
 use Kirby\Cms\File;
+use Kirby\Exception\Exception;
 
 return [
     'props' => [
@@ -64,7 +65,7 @@ return [
                     throw new Exception('The file could not be uploaded');
                 }
 
-                return $map($file);
+                return $map($file, $parent);
             });
         }
     ]

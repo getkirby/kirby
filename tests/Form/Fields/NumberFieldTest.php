@@ -2,13 +2,11 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class NumberFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('number');
+        $field = $this->field('number');
 
         $this->assertEquals('number', $field->type());
         $this->assertEquals('number', $field->name());
@@ -42,25 +40,25 @@ class NumberFieldTest extends TestCase
      */
     public function testValue($input, $expected)
     {
-        $field = new Field('number', [
+        $field = $this->field('number', [
             'value'   => $input,
             'default' => $input,
             'step'    => $input
         ]);
 
-        $this->assertTrue($expected === $field->value());
-        $this->assertTrue($expected === $field->default());
+        $this->assertEquals($expected, $field->value());
+        $this->assertEquals($expected, $field->default());
 
         if ($input === null) {
-            $this->assertTrue((float)1 === $field->step());
+            $this->assertEquals((float)1, $field->step());
         } else {
-            $this->assertTrue($expected === $field->step());
+            $this->assertEquals($expected, $field->step());
         }
     }
 
     public function testMin()
     {
-        $field = new Field('number', [
+        $field = $this->field('number', [
             'value' => 1,
             'min'   => 2
         ]);
@@ -71,7 +69,7 @@ class NumberFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = new Field('number', [
+        $field = $this->field('number', [
             'value' => 1,
             'max'   => 0
         ]);
@@ -82,7 +80,7 @@ class NumberFieldTest extends TestCase
 
     public function testLargeValue()
     {
-        $field = new Field('number', [
+        $field = $this->field('number', [
             'value' => 1000
         ]);
 

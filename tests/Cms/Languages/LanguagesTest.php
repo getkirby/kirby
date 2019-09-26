@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use PHPUnit\Framework\TestCase;
 use Kirby\Exception\DuplicateException;
+use PHPUnit\Framework\TestCase;
 
 class LanguagesTest extends TestCase
 {

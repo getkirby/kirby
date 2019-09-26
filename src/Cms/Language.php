@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -29,7 +28,6 @@ use Throwable;
  */
 class Language extends Model
 {
-
     /**
      * @var string
      */
@@ -97,7 +95,7 @@ class Language extends Model
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -131,7 +129,7 @@ class Language extends Model
      *
      * @param string $from
      * @param string $to
-     * @return boolean
+     * @return bool
      */
     protected static function converter(string $from, string $to): bool
     {
@@ -203,7 +201,7 @@ class Language extends Model
      * all its translation files
      *
      * @internal
-     * @return boolean
+     * @return bool
      */
     public function delete(): bool
     {
@@ -230,6 +228,7 @@ class Language extends Model
      * When the language is deleted, all content files with
      * the language code must be removed as well.
      *
+     * @param mixed $code
      * @return bool
      */
     protected function deleteContentFiles($code): bool
@@ -271,7 +270,7 @@ class Language extends Model
     /**
      * Check if the language file exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -282,7 +281,7 @@ class Language extends Model
      * Checks if this is the default language
      * for the site.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault(): bool
     {
@@ -355,7 +354,7 @@ class Language extends Model
      * which is used to handle language specific
      * routes.
      *
-     * @return Kirby\Cms\LanguageRouter
+     * @return \Kirby\Cms\LanguageRouter
      */
     public function router()
     {
@@ -431,7 +430,7 @@ class Language extends Model
     }
 
     /**
-     * @param boolean $default
+     * @param bool $default
      * @return self
      */
     protected function setDefault(bool $default = false)
@@ -480,7 +479,7 @@ class Language extends Model
     }
 
     /**
-     * @param array $slug
+     * @param array $slugs
      * @return self
      */
     protected function setSlugs(array $slugs = null)

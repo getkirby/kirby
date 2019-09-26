@@ -24,12 +24,29 @@ use Throwable;
  */
 class Panel
 {
+    public static function customCss(App $kirby)
+    {
+        if ($css = $kirby->option('panel.css')) {
+            $asset = asset($css);
+
+            if ($asset->exists() === true) {
+                return $asset->url() . '?' . $asset->modified();
+            }
+        }
+
+        return false;
+    }
+
+    public static function icons(App $kirby): string
+    {
+        return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
+    }
 
     /**
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
-     * @param Kirby\Cms\App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return bool
      */
     public static function link(App $kirby): bool
@@ -61,8 +78,8 @@ class Panel
     /**
      * Renders the main panel view
      *
-     * @param Kirby\Cms\App $kirby
-     * @return Kirby\Cms\Response
+     * @param \Kirby\Cms\App $kirby
+     * @return \Kirby\Cms\Response
      */
     public static function render(App $kirby)
     {
@@ -85,19 +102,20 @@ class Panel
             'kirby'     => $kirby,
             'config'    => $kirby->option('panel'),
             'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
+            'customCss' => static::customCss($kirby),
+            'icons'     => static::icons($kirby),
             'pluginCss' => $plugins->url('css'),
             'pluginJs'  => $plugins->url('js'),
-            'icons'     => F::read($kirby->root('panel') . '/dist/img/icons.svg'),
             'panelUrl'  => $uri->path()->toString(true) . '/',
             'options'   => [
                 'url'         => $url,
                 'site'        => $kirby->url('index'),
                 'api'         => $kirby->url('api'),
-                'csrf'        => $kirby->option('api')['csrf'] ?? csrf(),
+                'csrf'        => $kirby->option('api.csrf') ?? csrf(),
                 'translation' => 'en',
                 'debug'       => $kirby->option('debug', false),
                 'search'      => [
-                    'limit' => $kirby->option('panel')['search']['limit'] ?? 10
+                    'limit' => $kirby->option('panel.search.limit') ?? 10
                 ]
             ]
         ]);

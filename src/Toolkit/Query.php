@@ -114,7 +114,7 @@ class Query
     /**
      * Breaks the query string down into its components
      *
-     * @param  string $query
+     * @param string $query
      * @return array
      */
     protected function parts(string $query): array
@@ -137,7 +137,7 @@ class Query
      * Analyzes each part of the query string and
      * extracts methods and method arguments.
      *
-     * @param  string $part
+     * @param string $part
      * @return array
      */
     protected function part(string $part): array
@@ -158,7 +158,7 @@ class Query
      * Converts a parameter of query to
      * proper type.
      *
-     * @param  mixed $arg
+     * @param mixed $arg
      * @return mixed
      */
     protected function parameter($arg)

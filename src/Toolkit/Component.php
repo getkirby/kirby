@@ -17,7 +17,6 @@ use TypeError;
  */
 class Component
 {
-
     /**
      * Registry for all component mixins
      *
@@ -138,7 +137,7 @@ class Component
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -208,7 +207,9 @@ class Component
     protected function applyComputed(array $computed): void
     {
         foreach ($computed as $computedName => $computedFunction) {
-            $this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
+            if (is_callable($computedFunction) === true) {
+                $this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
+            }
         }
     }
 

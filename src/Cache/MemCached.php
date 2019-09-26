@@ -13,7 +13,6 @@ namespace Kirby\Cache;
  */
 class MemCached extends Cache
 {
-
     /**
      * store for the memache connection
      * @var Memcached
@@ -53,7 +52,7 @@ class MemCached extends Cache
      * @param string $key
      * @param mixed $value
      * @param int $minutes
-     * @return boolean
+     * @return bool
      */
     public function set(string $key, $value, int $minutes = 0): bool
     {
@@ -65,7 +64,7 @@ class MemCached extends Cache
      * needs to return a Value object or null if not found
      *
      * @param string $key
-     * @return Kirby\Cache\Value|null
+     * @return \Kirby\Cache\Value|null
      */
     public function retrieve(string $key)
     {
@@ -77,7 +76,7 @@ class MemCached extends Cache
      * whether the operation was successful
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function remove(string $key): bool
     {
@@ -89,7 +88,7 @@ class MemCached extends Cache
      * whether the operation was successful;
      * WARNING: Memcached only supports flushing the whole cache at once!
      *
-     * @return boolean
+     * @return bool
      */
     public function flush(): bool
     {

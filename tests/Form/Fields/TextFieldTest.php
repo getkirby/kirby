@@ -2,13 +2,11 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class TextFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = new Field('text');
+        $field = $this->field('text');
 
         $this->assertEquals('text', $field->type());
         $this->assertEquals('text', $field->name());
@@ -38,7 +36,7 @@ class TextFieldTest extends TestCase
      */
     public function testConverter($converter, $input, $expected)
     {
-        $field = new Field('text', [
+        $field = $this->field('text', [
             'converter' => $converter,
             'value'     => $input,
             'default'   => $input
@@ -53,14 +51,14 @@ class TextFieldTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid converter "does-not-exist"');
 
-        $field = new Field('text', [
+        $field = $this->field('text', [
             'converter' => 'does-not-exist',
         ]);
     }
 
     public function testMinLength()
     {
-        $field = new Field('text', [
+        $field = $this->field('text', [
             'value' => 'test',
             'minlength' => 5
         ]);
@@ -71,7 +69,7 @@ class TextFieldTest extends TestCase
 
     public function testMaxLength()
     {
-        $field = new Field('text', [
+        $field = $this->field('text', [
             'value'     => 'test',
             'maxlength' => 3
         ]);

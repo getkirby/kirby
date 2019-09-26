@@ -28,15 +28,16 @@
   "duplicate": "Duplica",
   "edit": "Modifica",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Nessun file selezionabile",
+  "dialog.pages.empty": "Nessuna pagina selezionabile",
+  "dialog.users.empty": "Nessuno user selezionabile",
 
   "email": "Email",
   "email.placeholder": "mail@esempio.com",
 
   "error.access.login": "Login Invalido",
   "error.access.panel": "Non ti è permesso accedere al pannello",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "Non è stato possibile caricare l'immagine del profilo",
   "error.avatar.delete.fail": "Non è stato possibile eliminare l'immagine del profilo",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Convertitore \"{converter}\" non valido",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Non ti è permesso modificare il nome di \"{filename}\"",
   "error.file.duplicate": "Un file con il nome \"{filename}\" esiste già",
@@ -71,9 +73,9 @@
   "error.form.incomplete": "Correggi tutti gli errori nel form...",
   "error.form.notSaved": "Non è stato possibile salvare il form",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Inserisci un codice valido per la lingua",
+  "error.language.duplicate": "La lingua esiste già",
+  "error.language.name": "Inserisci un nome valido per la lingua",
 
   "error.license.format": "Inserisci un codice di licenza valido",
   "error.license.email": "Inserisci un indirizzo email valido",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "Le password non corrispondono",
   "error.user.password.undefined": "L'utente non ha una password",
   "error.user.role.invalid": "Inserisci un ruolo valido",
-  "error.user.undefined": "L'utente non \u00e8 stato trovato",
   "error.user.update.permission":
     "Non ti è permesso aggiornare l'utente \"{name}\"",
 
@@ -183,9 +184,9 @@
   "error.validation.contains":
     "Inserisci un valore che contiene \"{needle}\"",
   "error.validation.date": "Inserisci una data valida",
-  "error.validation.date.after": "Please enter a date after {date}",
-  "error.validation.date.before": "Please enter a date before {date}",
-  "error.validation.date.between": "Please enter a date between {min} and {max}",
+  "error.validation.date.after": "Inserisci una data dopo il {date}",
+  "error.validation.date.before": "Inserisci una data prima del {date}",
+  "error.validation.date.between": "Inserisci una data tra {min} e {max}",
   "error.validation.denied": "Per favore nega",
   "error.validation.different": "Il valore non dev'essere \"{other}\"",
   "error.validation.email": "Inserisci un indirizzo email valido",
@@ -265,7 +266,7 @@
   "language.direction.ltr": "Sinistra a destra",
   "language.direction.rtl": "Destra a sinistra",
   "language.locale": "Stringa \"PHP locale\"",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Stai usando una impostazione personalizzata per il locale. Modificalo nel file della lingua situato in /site/languages",
   "language.name": "Nome",
   "language.updated": "La lingua è stata aggiornata",
 
@@ -412,6 +413,17 @@
   "translation.name": "Italiano",
 
   "upload": "Carica",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Errore",
   "upload.progress": "Caricamento...",
 

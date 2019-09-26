@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 
 class AppComponentsTest extends TestCase
 {

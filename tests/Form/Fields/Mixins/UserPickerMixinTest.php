@@ -4,8 +4,6 @@ namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\Cms\Site;
-use Kirby\Cms\User;
 use Kirby\Form\Field;
 
 class UserPickerMixinTest extends TestCase
@@ -45,7 +43,7 @@ class UserPickerMixinTest extends TestCase
             'slug' => 'test'
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 
@@ -76,7 +74,7 @@ class UserPickerMixinTest extends TestCase
             'slug' => 'test'
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 
@@ -108,7 +106,7 @@ class UserPickerMixinTest extends TestCase
             'slug' => 'test'
         ]);
 
-        $field = new Field('test', [
+        $field = $this->field('test', [
             'model' => $page
         ]);
 

@@ -37,6 +37,7 @@
 
   "error.access.login": "Login inválido",
   "error.access.panel": "Não tem permissões para aceder ao painel",
+  "error.access.view": "You are not allowed to access this part of the panel",
 
   "error.avatar.create.fail": "A foto de perfil não foi enviada",
   "error.avatar.delete.fail": "A foto do perfil não foi deletada",
@@ -51,6 +52,7 @@
 
   "error.field.converter.invalid": "Conversor \"{converter}\" inválido",
 
+  "error.file.changeName.empty": "The name must not be empty",
   "error.file.changeName.permission":
     "Não tem permissões para alterar o nome de \"{filename}\"",
   "error.file.duplicate": "Um arquivo com o nome \"{filename}\" já existe",
@@ -169,7 +171,6 @@
   "error.user.password.notSame": "As palavras-passe não combinam",
   "error.user.password.undefined": "O utilizador não possui uma palavra-passe",
   "error.user.role.invalid": "Digite uma função válida",
-  "error.user.undefined": "Usu\u00e1rio n\u00e3o encontrado",
   "error.user.update.permission":
     "Não tem permissões para atualizar o utilizador \"{name}\"",
 
@@ -412,6 +413,17 @@
   "translation.name": "Português (Europeu)",
 
   "upload": "Enviar",
+  "upload.error.cantMove": "The uploaded file could not be moved",
+  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.default": "The file could not be uploaded",
+  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+  "upload.error.noFile": "No file was uploaded",
+  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.partial": "The uploaded file was only partially uploaded",
+  "upload.error.tmpDir": "Missing a temporary folder",
   "upload.errors": "Erro",
   "upload.progress": "A enviar…",
 

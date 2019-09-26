@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\App;
 use Kirby\Data\Yaml;
 
 class FieldMethodsTest extends TestCase
@@ -360,6 +359,23 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('a', $structure->first()->title()->value());
         $this->assertEquals('b', $structure->last()->title()->value());
     }
+    
+    public function testToStructureWithInvalidData()
+    {
+        $data = [
+            ['title' => 'a'],
+            ['title' => 'b'],
+            'title'
+        ];
+
+        $yaml  = Yaml::encode($data);
+        $field = $this->field($yaml);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid structure data for "test" field');
+
+        $structure = $field->toStructure();
+    }
 
     public function testToDefaultUrl()
     {
@@ -566,6 +582,7 @@ class FieldMethodsTest extends TestCase
     public function testWidont()
     {
         $this->assertEquals('Test&nbsp;Headline', $this->field('Test Headline')->widont());
+        $this->assertEquals('Test Headline&nbsp;With&#8209;Dash', $this->field('Test Headline With-Dash')->widont());
     }
 
     public function testWords()

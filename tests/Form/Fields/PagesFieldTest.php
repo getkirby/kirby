@@ -4,7 +4,6 @@ namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\Form\Field;
 
 class PagesFieldTest extends TestCase
 {
@@ -42,7 +41,7 @@ class PagesFieldTest extends TestCase
 
     public function testDefaultProps()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model' => $this->model()
         ]);
 
@@ -57,7 +56,7 @@ class PagesFieldTest extends TestCase
 
     public function testValue()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model' => $this->model(),
             'value' => [
                 'a/aa', // exists
@@ -79,7 +78,7 @@ class PagesFieldTest extends TestCase
 
     public function testMin()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model' => $this->model(),
             'value' => [
                 'a/aa', // exists
@@ -96,7 +95,7 @@ class PagesFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model' => $this->model(),
             'value' => [
                 'a/aa', // exists
@@ -112,7 +111,7 @@ class PagesFieldTest extends TestCase
 
     public function testEmpty()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model' => new Page(['slug' => 'test']),
             'empty' => 'Test'
         ]);
@@ -122,7 +121,7 @@ class PagesFieldTest extends TestCase
 
     public function testTranslatedEmpty()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model' => new Page(['slug' => 'test']),
             'empty' => ['en' => 'Test', 'de' => 'Töst']
         ]);
@@ -132,7 +131,7 @@ class PagesFieldTest extends TestCase
 
     public function testRequiredProps()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model'    => new Page(['slug' => 'test']),
             'required' => true
         ]);
@@ -143,7 +142,7 @@ class PagesFieldTest extends TestCase
 
     public function testRequiredInvalid()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model'    => new Page(['slug' => 'test']),
             'required' => true
         ]);
@@ -153,7 +152,7 @@ class PagesFieldTest extends TestCase
 
     public function testRequiredValid()
     {
-        $field = new Field('pages', [
+        $field = $this->field('pages', [
             'model'    => new Page(['slug' => 'test']),
             'required' => true,
             'value' => [

@@ -29,7 +29,7 @@ class RootsTest extends TestCase
      */
     public function testDefaulRoot($root, $method)
     {
-        $roots = (new App)->roots();
+        $roots = (new App())->roots();
 
         $this->assertEquals($root, $roots->$method());
     }

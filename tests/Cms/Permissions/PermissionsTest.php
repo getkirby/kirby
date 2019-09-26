@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Uri;
-
 class PermissionsTest extends TestCase
 {
     public function actions()

@@ -21,7 +21,6 @@ use Kirby\Toolkit\Str;
  */
 trait UserActions
 {
-
     /**
      * Changes the user email address
      *
@@ -158,7 +157,7 @@ trait UserActions
     /**
      * Creates a new User from the given props and returns a new User object
      *
-     * @param array $input
+     * @param array $props
      * @return self
      */
     public static function create(array $props = null)
@@ -198,6 +197,9 @@ trait UserActions
             } else {
                 $languageCode = null;
             }
+
+            // add the user to users collection
+            $user->kirby()->users()->add($user);
 
             // write the user data
             return $user->save($user->content()->toArray(), $languageCode);
@@ -241,6 +243,9 @@ trait UserActions
             if (Dir::remove($user->root()) !== true) {
                 throw new LogicException('The user directory for "' . $user->email() . '" could not be deleted');
             }
+
+            // remove the user from users collection
+            $user->kirby()->users()->remove($user);
 
             return true;
         });
@@ -287,7 +292,8 @@ trait UserActions
     /**
      * Writes the account information to disk
      *
-     * @return boolean
+     * @param array $credentials
+     * @return bool
      */
     protected function writeCredentials(array $credentials): bool
     {

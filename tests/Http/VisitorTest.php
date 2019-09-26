@@ -8,7 +8,7 @@ class VisitorTest extends TestCase
 {
     public function testVisitorDefaults()
     {
-        $visitor = new Visitor;
+        $visitor = new Visitor();
 
         $this->assertEquals('', $visitor->ip());
         $this->assertEquals('', $visitor->userAgent());
@@ -37,7 +37,7 @@ class VisitorTest extends TestCase
 
     public function testIp()
     {
-        $visitor = new Visitor;
+        $visitor = new Visitor();
         $this->assertEquals(null, $visitor->ip());
         $this->assertInstanceOf(Visitor::class, $visitor->ip('192.168.1.1'));
         $this->assertEquals('192.168.1.1', $visitor->ip());
@@ -45,14 +45,14 @@ class VisitorTest extends TestCase
 
     public function testUserAgent()
     {
-        $visitor = new Visitor;
+        $visitor = new Visitor();
         $this->assertInstanceOf(Visitor::class, $visitor->userAgent('Kirby'));
         $this->assertEquals('Kirby', $visitor->userAgent());
     }
 
     public function testAccepts()
     {
-        $visitor = new Visitor;
+        $visitor = new Visitor();
         $this->assertFalse($visitor->acceptsMimeType('text/html'));
 
         $visitor = new Visitor(['acceptedMimeType' => 'text/html']);
