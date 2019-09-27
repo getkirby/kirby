@@ -99,6 +99,7 @@
                   :value="item[columnName]"
                   :column="column"
                   :field="fields[columnName]"
+                  @input="update(index, columnName, $event)"
                 />
                 <template v-else>
                   <p class="k-structure-table-text">
@@ -551,6 +552,10 @@ export default {
       const b = Number(parts[1]);
 
       return parseFloat(100 / b * a, 2).toFixed(2) + "%";
+    },
+    update(index, column, value) {
+      this.items[index][column] = value;
+      this.onInput();
     }
   }
 };

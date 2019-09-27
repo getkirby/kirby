@@ -825,7 +825,7 @@ function video(string $url, array $options = [], array $attr = []): string
  */
 function vimeo(string $url, array $options = [], array $attr = []): string
 {
-    return Html::video($url, $options, $attr);
+    return Html::vimeo($url, $options, $attr);
 }
 
 /**
@@ -851,5 +851,5 @@ function widont(string $string = null): string
  */
 function youtube(string $url, array $options = [], array $attr = []): string
 {
-    return Html::video($url, $options, $attr);
+    return Html::youtube($url, $options, $attr);
 }
