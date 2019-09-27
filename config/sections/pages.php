@@ -2,7 +2,7 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
+use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
@@ -80,9 +80,6 @@ return [
         }
     ],
     'computed' => [
-        'dragTextType' => function () {
-            return option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
-        },
         'parent' => function () {
             return $this->parentModel();
         },
@@ -145,7 +142,7 @@ return [
 
                 $data[] = [
                     'id'          => $item->id(),
-                    'dragText'    => $item->dragText($this->dragTextType),
+                    'dragText'    => $item->dragText(),
                     'text'        => $item->toString($this->text),
                     'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),

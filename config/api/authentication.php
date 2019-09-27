@@ -1,8 +1,6 @@
 <?php
 
-use Kirby\Cms\Auth;
 use Kirby\Exception\PermissionException;
-use Kirby\Toolkit\Str;
 
 return function () {
     $auth = $this->kirby()->auth();

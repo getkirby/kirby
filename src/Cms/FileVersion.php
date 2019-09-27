@@ -37,7 +37,7 @@ class FileVersion
             return $this->asset()->$method(...$arguments);
         }
 
-        if (is_a($this->original(), File::class) === true) {
+        if (is_a($this->original(), 'Kirby\Cms\File') === true) {
             // content fields
             return $this->original()->content()->get($method, $arguments);
         }
@@ -49,7 +49,7 @@ class FileVersion
     }
 
     /**
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {

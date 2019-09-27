@@ -29,7 +29,7 @@ return [
             return $language->url();
         },
     ],
-    'type'  => Language::class,
+    'type'  => 'Kirby\Cms\Language',
     'views' => [
         'compact' => [
             'code',

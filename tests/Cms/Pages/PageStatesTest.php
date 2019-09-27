@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 class PageStatesTest extends TestCase
 {
-
     /**
      * Deregister any plugins for the page
      *

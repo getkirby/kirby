@@ -2,9 +2,6 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-use Kirby\Toolkit\I18n;
-
 class TagsFieldTest extends TestCase
 {
     public function testDefaultProps()

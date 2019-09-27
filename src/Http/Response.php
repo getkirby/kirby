@@ -3,9 +3,8 @@
 namespace Kirby\Http;
 
 use Exception;
-use Throwable;
-
 use Kirby\Toolkit\F;
+use Throwable;
 
 /**
  * Representation of an Http response,
@@ -20,7 +19,6 @@ use Kirby\Toolkit\F;
  */
 class Response
 {
-
     /**
      * Store for all registered headers,
      * which will be sent with the response
@@ -60,9 +58,11 @@ class Response
     /**
      * Creates a new response object
      *
-     * @param string  $body
-     * @param string  $type
-     * @param integer $code
+     * @param string $body
+     * @param string $type
+     * @param int $code
+     * @param array $headers
+     * @param string $charset
      */
     public function __construct($body = '', ?string $type = null, ?int $code = null, ?array $headers = null, ?string $charset = null)
     {
@@ -94,7 +94,7 @@ class Response
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -183,6 +183,7 @@ class Response
      * Creates a response for a file and
      * sends the file content to the browser
      *
+     * @param string $file
      * @return self
      */
     public static function file(string $file)
@@ -193,7 +194,7 @@ class Response
     /**
      * Getter for single headers
      *
-     * @param  string      $key   Name of the header
+     * @param string $key Name of the header
      * @return string|null
      */
     public function header(string $key): ?string
@@ -216,8 +217,8 @@ class Response
      * header and automatic conversion of arrays.
      *
      * @param string|array $body
-     * @param integer $code
-     * @param boolean $pretty
+     * @param int $code
+     * @param bool $pretty
      * @param array $headers
      * @return self
      */
@@ -241,7 +242,7 @@ class Response
      * given location.
      *
      * @param string $location
-     * @param integer $code
+     * @param int $code
      * @return self
      */
     public static function redirect(?string $location = null, ?int $code = null)

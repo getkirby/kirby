@@ -47,8 +47,16 @@ export default {
 
       this.$api.users.get(id)
         .then(user => {
-          this.$api.roles.options().then(roles => {
+          this.$api.roles.options({ canBe: "changed" }).then(roles => {
             this.roles = roles;
+
+            // don't let non-admins promote anyone to admin
+            if (this.$user.role.name !== "admin") {
+              this.roles = this.roles.filter(role => {
+                return role.value !== "admin";
+              });
+            }
+
             this.user = user;
             this.user.role = this.user.role.name;
             this.$refs.dialog.open();
@@ -62,6 +70,11 @@ export default {
       this.$api.users
         .changeRole(this.user.id, this.user.role)
         .then(() => {
+          // If current panel user, update store
+          if (this.$user.id === this.user.id) {
+            this.$store.dispatch("user/load");
+          }
+
           this.success({
             message: ":)",
             event: "user.changeRole"

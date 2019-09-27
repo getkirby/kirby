@@ -1,6 +1,5 @@
-export default ratio => {
-  ratio = ratio || "3/2";
-  const parts = ratio.split("/");
+export default (ratio = "3/2") => {
+  const parts = String(ratio).split("/");
 
   if (parts.length !== 2) {
     return "100%";
@@ -8,6 +7,11 @@ export default ratio => {
 
   const a = Number(parts[0]);
   const b = Number(parts[1]);
-  const padding = 100 / a * b;
+  let padding = 100;
+
+  if (a !== 0 && b !== 0) {
+    padding = 100 / a * b;
+  }
+
   return padding + '%';
 };

@@ -114,6 +114,6 @@ class ExifTest extends TestCase
     {
         $exif  = $this->_exif();
         $this->assertInternalType('array', $exif->toArray());
-        $this->assertInternalType('array', $exif->__debuginfo());
+        $this->assertInternalType('array', $exif->__debugInfo());
     }
 }

@@ -578,7 +578,7 @@ class RouterTest extends TestCase
             ]
         ]);
 
-        /* DE */
+        // DE
 
         // missing representation
         $result = $app->call('fr/test.json');
@@ -592,7 +592,7 @@ class RouterTest extends TestCase
         $this->assertEquals('fr', $app->language()->code());
         $this->assertEquals('fr', I18n::locale());
 
-        /* EN */
+        // EN
 
         // missing representation
         $result = $app->call('en/test.json');
@@ -637,7 +637,7 @@ class RouterTest extends TestCase
             ]
         ]);
 
-        /* FR */
+        // FR
 
         // missing representation
         $result = $app->call('test.json');
@@ -651,7 +651,7 @@ class RouterTest extends TestCase
         $this->assertEquals('fr', $app->language()->code());
         $this->assertEquals('fr', I18n::locale());
 
-        /* EN */
+        // EN
 
         // missing representation
         $result = $app->call('en/test.json');

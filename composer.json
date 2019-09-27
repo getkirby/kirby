@@ -1,7 +1,7 @@
 {
   "name": "getkirby/cms",
   "description": "The Kirby 3 core",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "license": "proprietary",
   "keywords": ["kirby", "cms", "core"],
   "homepage": "https://getkirby.com",
@@ -44,7 +44,7 @@
     "test": "phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist",
     "build": "./scripts/build",
-    "fix": "php-cs-fixer fix ."
+    "fix": "php-cs-fixer fix --config .php_cs"
   },
   "config": {
     "optimize-autoloader": true

@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\Collection;
-use Kirby\Toolkit\Obj;
 
 class SearchTest extends TestCase
 {

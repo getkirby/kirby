@@ -16,7 +16,6 @@ use Kirby\Http\Url;
  */
 class Html
 {
-
     /**
      * An internal store for a html entities translation table
      *
@@ -145,8 +144,8 @@ class Html
      *
      * </code>
      *
-     * @param  string  $string
-     * @return string  The html string
+     * @param string $string
+     * @return string The html string
      */
     public static function decode(string $string = null): string
     {
@@ -190,9 +189,9 @@ class Html
     /**
      * Converts a string to a html-safe string
      *
-     * @param  string  $string
-     * @param  bool    $keepTags
-     * @return string  The html string
+     * @param string $string
+     * @param bool $keepTags
+     * @return string The html string
      */
     public static function encode(string $string = null, bool $keepTags = false): string
     {

@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\I18n;
 
 return [
     'props' => [
@@ -12,8 +13,8 @@ return [
         /**
          * Default value which will be saved when a new page/user/file is created
          */
-        'default' => function ($value = null) {
-            return $this->toBool($value);
+        'default' => function ($default = null) {
+            return $this->default = $default;
         },
         /**
          * Sets the text next to the toggle. The text can be a string or an array of two options. The first one is the negative text and the second one the positive. The text will automatically switch when the toggle is triggered.
@@ -35,6 +36,9 @@ return [
         },
     ],
     'computed' => [
+        'default' => function () {
+            return $this->toBool($this->default);
+        },
         'value' => function () {
             if ($this->props['value'] === null) {
                 return $this->default();

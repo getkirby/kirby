@@ -20,7 +20,7 @@ return [
             return $role->title();
         },
     ],
-    'type'  => Role::class,
+    'type'  => 'Kirby\Cms\Role',
     'views' => [
         'compact' => [
             'description',

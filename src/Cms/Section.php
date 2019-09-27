@@ -16,7 +16,6 @@ use Kirby\Toolkit\Component;
  */
 class Section extends Component
 {
-
     /**
      * Registry for all component mixins
      *
@@ -46,7 +45,7 @@ class Section extends Component
     }
 
     /**
-     * @return Kirby\Cms\App
+     * @return \Kirby\Cms\App
      */
     public function kirby()
     {
@@ -54,7 +53,7 @@ class Section extends Component
     }
 
     /**
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function model()
     {

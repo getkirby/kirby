@@ -20,11 +20,17 @@
   <base href="<?= $panelUrl ?>">
 </head>
 <body>
+  <svg aria-hidden="true" class="k-icons" xmlns="http://www.w3.org/2000/svg" overflow="hidden">
+    <defs />
+  </svg>
+
   <div id="app"></div>
 
   <noscript>
     Please enable JavaScript in your browser
   </noscript>
+
+  <?= $icons ?>
 
   <script>window.panel = <?= json_encode($options, JSON_UNESCAPED_SLASHES) ?></script>
 

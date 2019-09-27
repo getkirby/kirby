@@ -2,8 +2,6 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
-
 class NumberFieldTest extends TestCase
 {
     public function testDefaultProps()

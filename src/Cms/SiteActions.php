@@ -15,7 +15,6 @@ use Closure;
  */
 trait SiteActions
 {
-
     /**
      * Commits a site action, by following these steps
      *
@@ -27,6 +26,7 @@ trait SiteActions
      *
      * @param string $action
      * @param mixed ...$arguments
+     * @param Closure $callback
      * @return mixed
      */
     protected function commit(string $action, array $arguments, Closure $callback)
@@ -60,7 +60,7 @@ trait SiteActions
      * Creates a main page
      *
      * @param array $props
-     * @return Kirby\Cms\Page
+     * @return \Kirby\Cms\Page
      */
     public function createChild(array $props)
     {

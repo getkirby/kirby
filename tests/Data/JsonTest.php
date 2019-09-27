@@ -28,6 +28,15 @@ class JsonTest extends TestCase
     }
 
     /**
+     * @covers ::encode
+     */
+    public function testEncodeUnicode()
+    {
+        $string  = 'здравей';
+        $this->assertEquals('"' . $string . '"', Json::encode($string));
+    }
+
+    /**
      * @covers ::decode
      */
     public function testDecodeCorrupted1()

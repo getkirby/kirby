@@ -38,8 +38,8 @@ class Collection extends BaseCollection
     /**
      * Magic getter function
      *
-     * @param  string $key
-     * @param  mixed  $arguments
+     * @param string $key
+     * @param mixed $arguments
      * @return mixed
      */
     public function __call(string $key, $arguments)
@@ -101,23 +101,22 @@ class Collection extends BaseCollection
     /**
      * Appends an element to the data array
      *
-     * @param  mixed $key
-     * @param  mixed $item
-     * @return Kirby\Cms\Collection
+     * @param mixed $key Optional collection key, will be determined from the item if not given
+     * @param mixed $item
+     * @return \Kirby\Cms\Collection
      */
     public function append(...$args)
     {
         if (count($args) === 1) {
-            if (is_object($args[0]) === true) {
-                $this->data[$args[0]->id()] = $args[0];
+            // try to determine the key from the provided item
+            if (is_object($args[0]) === true && is_callable([$args[0], 'id']) === true) {
+                return parent::append($args[0]->id(), $args[0]);
             } else {
-                $this->data[] = $args[0];
+                return parent::append($args[0]);
             }
-        } elseif (count($args) === 2) {
-            $this->set($args[0], $args[1]);
         }
 
-        return $this;
+        return parent::append(...$args);
     }
 
     /**
@@ -126,7 +125,7 @@ class Collection extends BaseCollection
      *
      * @param string $field
      * @param bool $i Ignore upper/lowercase for group names
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function groupBy($field, bool $i = true)
     {
@@ -165,8 +164,8 @@ class Collection extends BaseCollection
      * Checks if the given object or id
      * is in the collection
      *
-     * @param string|object
-     * @return boolean
+     * @param string|object $id
+     * @return bool
      */
     public function has($id): bool
     {
@@ -182,7 +181,7 @@ class Collection extends BaseCollection
      * The method will automatically detect objects
      * or ids and then search accordingly.
      *
-     * @param  string|object $object
+     * @param string|object $object
      * @return int
      */
     public function indexOf($object): int
@@ -197,8 +196,8 @@ class Collection extends BaseCollection
     /**
      * Returns a Collection without the given element(s)
      *
-     * @param  mixed[] $keys any number of keys, passed as individual arguments
-     * @return Kirby\Cms\Collection
+     * @param mixed ...$keys any number of keys, passed as individual arguments
+     * @return \Kirby\Cms\Collection
      */
     public function not(...$keys)
     {
@@ -217,7 +216,8 @@ class Collection extends BaseCollection
     /**
      * Add pagination and return a sliced set of data.
      *
-     * @return Kirby\Cms\Collection
+     * @param mixed ...$arguments
+     * @return \Kirby\Cms\Collection
      */
     public function paginate(...$arguments)
     {
@@ -230,11 +230,32 @@ class Collection extends BaseCollection
     /**
      * Returns the parent model
      *
-     * @return Kirby\Cms\Model
+     * @return \Kirby\Cms\Model
      */
     public function parent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Prepends an element to the data array
+     *
+     * @param mixed $key Optional collection key, will be determined from the item if not given
+     * @param mixed $item
+     * @return Kirby\Cms\Collection
+     */
+    public function prepend(...$args)
+    {
+        if (count($args) === 1) {
+            // try to determine the key from the provided item
+            if (is_object($args[0]) === true && is_callable([$args[0], 'id']) === true) {
+                return parent::prepend($args[0]->id(), $args[0]);
+            } else {
+                return parent::prepend($args[0]);
+            }
+        }
+
+        return parent::prepend(...$args);
     }
 
     /**
@@ -300,7 +321,7 @@ class Collection extends BaseCollection
      * to an array. This can also take a callback
      * function to further modify the array result.
      *
-     * @param  Closure $map
+     * @param Closure $map
      * @return array
      */
     public function toArray(Closure $map = null): array

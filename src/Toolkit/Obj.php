@@ -16,7 +16,6 @@ use stdClass;
  */
 class Obj extends stdClass
 {
-
     /**
      * Constructor
      *
@@ -46,7 +45,7 @@ class Obj extends stdClass
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -97,6 +96,7 @@ class Obj extends stdClass
     /**
      * Converts the object to a json string
      *
+     * @param mixed ...$arguments
      * @return string
      */
     public function toJson(...$arguments): string

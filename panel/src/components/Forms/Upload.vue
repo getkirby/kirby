@@ -8,6 +8,7 @@
       type="file"
       tabindex="-1"
       @change="select"
+      @click.stop
     >
 
     <k-dialog ref="dialog" size="medium">

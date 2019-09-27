@@ -13,7 +13,7 @@ use PHPMailer\PHPMailer\PHPMailer as Mailer;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
-*/
+ */
 class PHPMailer extends Email
 {
     public function send(bool $debug = false): bool

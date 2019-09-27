@@ -23,7 +23,7 @@ trait AppCaches
      * Returns a cache instance by key
      *
      * @param string $key
-     * @return Kirby\Cache\Cache
+     * @return \Kirby\Cache\Cache
      */
     public function cache(string $key)
     {
@@ -36,7 +36,7 @@ trait AppCaches
 
         if ($options['active'] === false) {
             // use a dummy cache that does nothing
-            return $this->caches[$key] = new NullCache;
+            return $this->caches[$key] = new NullCache();
         }
 
         $type  = strtolower($options['type']);
@@ -55,7 +55,7 @@ trait AppCaches
         $cache = new $className($options);
 
         // check if it is a useable cache object
-        if (is_a($cache, Cache::class) !== true) {
+        if (is_a($cache, 'Kirby\Cache\Cache') !== true) {
             throw new InvalidArgumentException([
                 'key'  => 'app.invalid.cacheType',
                 'data' => ['type' => $type]

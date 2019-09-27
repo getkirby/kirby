@@ -60,6 +60,6 @@ class ObjTest extends TestCase
             'foo' => 'bar'
         ]);
 
-        $this->assertEquals($expected, $obj->__debuginfo());
+        $this->assertEquals($expected, $obj->__debugInfo());
     }
 }

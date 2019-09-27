@@ -1,6 +1,9 @@
-import { mount } from '@vue/test-utils'
-import Headline from '@/components/Misc/Headline.vue'
+import { mount } from "@vue/test-utils";
+import Vue from "vue";
+import Headline from "@/components/Misc/Headline.vue";
 import Link from "@/components/Navigation/Link.vue";
+
+Vue.component("k-link", Link);
 
 describe("Headline.vue", () => {
 

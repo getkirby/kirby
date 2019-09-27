@@ -19,7 +19,6 @@ use Kirby\Toolkit\Str;
  */
 class Users extends Collection
 {
-
     /**
      * All registered users methods
      *
@@ -37,7 +36,7 @@ class Users extends Collection
      * an entire second collection to the
      * current collection
      *
-     * @param mixed $item
+     * @param mixed $object
      * @return self
      */
     public function add($object)
@@ -51,7 +50,7 @@ class Users extends Collection
             $this->__set($user->id(), $user);
 
         // add a user object
-        } elseif (is_a($object, User::class) === true) {
+        } elseif (is_a($object, 'Kirby\Cms\User') === true) {
             $this->__set($object->id(), $object);
         }
 
@@ -67,7 +66,7 @@ class Users extends Collection
      */
     public static function factory(array $users, array $inject = [])
     {
-        $collection = new static;
+        $collection = new static();
 
         // read all user blueprints
         foreach ($users as $props) {
@@ -82,7 +81,7 @@ class Users extends Collection
      * Finds a user in the collection by id or email address
      *
      * @param string $key
-     * @return Kirby\Cms\User|null
+     * @return \Kirby\Cms\User|null
      */
     public function findByKey(string $key)
     {
@@ -102,7 +101,7 @@ class Users extends Collection
      */
     public static function load(string $root, array $inject = [])
     {
-        $users = new static;
+        $users = new static();
 
         foreach (Dir::read($root) as $userDirectory) {
             if (is_dir($root . '/' . $userDirectory) === false) {

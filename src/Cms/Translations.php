@@ -35,7 +35,7 @@ class Translations extends Collection
      */
     public static function factory(array $translations)
     {
-        $collection = new static;
+        $collection = new static();
 
         foreach ($translations as $code => $props) {
             $translation = new Translation($code, $props);
@@ -52,7 +52,7 @@ class Translations extends Collection
      */
     public static function load(string $root, array $inject = [])
     {
-        $collection = new static;
+        $collection = new static();
 
         foreach (Dir::read($root) as $filename) {
             if (F::extension($filename) !== 'json') {

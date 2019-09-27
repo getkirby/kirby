@@ -16,14 +16,13 @@ use Kirby\Toolkit\Collection;
  */
 class Fields extends Collection
 {
-
     /**
      * Internal setter for each object in the Collection.
      * This takes care of validation and of setting
      * the collection prop on each object correctly.
      *
-     * @param string $id
-     * @param object $object
+     * @param string $name
+     * @param object $field
      */
     public function __set(string $name, $field)
     {

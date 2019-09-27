@@ -18,7 +18,6 @@ namespace Kirby\Cms;
  */
 class Files extends Collection
 {
-
     /**
      * All registered files methods
      *
@@ -31,7 +30,7 @@ class Files extends Collection
      * an entire second collection to the
      * current collection
      *
-     * @param mixed $item
+     * @param mixed $object
      * @return self
      */
     public function add($object)
@@ -45,7 +44,7 @@ class Files extends Collection
             $this->__set($file->id(), $file);
 
         // add a file object
-        } elseif (is_a($object, File::class) === true) {
+        } elseif (is_a($object, 'Kirby\Cms\File') === true) {
             $this->__set($object->id(), $object);
         }
 
@@ -76,7 +75,7 @@ class Files extends Collection
      * Creates a files collection from an array of props
      *
      * @param array $files
-     * @param Kirby\Cms\Model $parent
+     * @param \Kirby\Cms\Model $parent
      * @param array $inject
      * @return self
      */
@@ -102,7 +101,7 @@ class Files extends Collection
      * Tries to find a file by id/filename
      *
      * @param string $id
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function findById(string $id)
     {
@@ -115,7 +114,7 @@ class Files extends Collection
      * map the get method correctly.
      *
      * @param string $key
-     * @return Kirby\Cms\File|null
+     * @return \Kirby\Cms\File|null
      */
     public function findByKey(string $key)
     {

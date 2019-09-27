@@ -1,7 +1,7 @@
 <?php
 
+use Kirby\Data\Yaml;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => ['min', 'pagepicker', 'picker'],

@@ -2,9 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use ReflectionClass;
 use Kirby\Toolkit\Dir;
+use ReflectionClass;
 
 class SystemTest extends TestCase
 {

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\App;
 use Kirby\Data\Yaml;
 
 class FieldMethodsTest extends TestCase
