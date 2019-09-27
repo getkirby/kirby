@@ -97,47 +97,47 @@ export default {
           break;
         case "ArrowUp":
           e.preventDefault();
-          
+
           while (true) {
             this.current--;
-            
+
             if (this.current < 0) {
               this.close();
               this.$emit("leave", e.code);
               break;
             }
-             
+
             if (
-              this.$children[this.current] && 
+              this.$children[this.current] &&
               this.$children[this.current].disabled === false
             ) {
               this.focus(this.current);
               break;
             }
           }
-          
+
           break;
         case "ArrowDown":
           e.preventDefault();
-          
+
           while (true) {
             this.current++;
-            
+
             if (this.current > this.$children.length - 1) {
               const enabled = this.$children.filter(x => x.disabled === false);
               this.current = this.$children.indexOf(enabled[enabled.length - 1]);
               break;
             }
-             
+
             if (
-              this.$children[this.current] && 
+              this.$children[this.current] &&
               this.$children[this.current].disabled === false
             ) {
               this.focus(this.current);
               break;
             }
           }
-          
+
           break;
       }
     }
@@ -155,6 +155,7 @@ export default {
   box-shadow: $box-shadow;
   border-radius: $border-radius;
   text-align: left;
+  margin-bottom: 6rem;
 
   [dir="ltr"] & {
     left: 0;
