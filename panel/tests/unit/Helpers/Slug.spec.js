@@ -1,5 +1,4 @@
-import { mount } from '@vue/test-utils'
-import slug from '@/helpers/slug.js'
+import slug from "@/helpers/slug.js"
 
 describe("Slug Helper", () => {
 
