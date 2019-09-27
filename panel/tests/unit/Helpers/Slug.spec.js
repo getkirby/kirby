@@ -50,4 +50,13 @@ describe("Slug Helper", () => {
     expect(result).toBe("aoess");
   });
 
+  it("handles plus signs", () => {
+    const rules = [
+      { "+": "-plus-" }
+    ];
+
+    const result = slug("1+1", rules);
+    expect(result).toBe("1-plus-1");
+  });
+
 });

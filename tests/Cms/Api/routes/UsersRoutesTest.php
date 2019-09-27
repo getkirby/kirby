@@ -14,9 +14,11 @@ class UsersRoutesTest extends TestCase
             ],
             'users' => [
                 [
+                    'name'  => 'Bastian',
                     'email' => 'admin@getkirby.com',
                 ],
                 [
+                    'name'  => 'Sonja',
                     'email' => 'editor@getkirby.com',
                 ]
             ]
@@ -70,6 +72,20 @@ class UsersRoutesTest extends TestCase
 
         $this->assertCount(1, $response['data']);
         $this->assertEquals('editor@getkirby.com', $response['data'][0]['email']);
+    }
+    
+    public function testSearchName()
+    {
+        $app = $this->app;
+
+        $response = $app->api()->call('users/search', 'GET', [
+            'query' => [
+                'q' => 'Bastian'
+            ]
+        ]);
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals('admin@getkirby.com', $response['data'][0]['email']);
     }
 
     public function testFiles()
