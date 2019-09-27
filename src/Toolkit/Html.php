@@ -465,7 +465,7 @@ class Html
         }
 
         // build the options query
-        if (!empty($options)) {
+        if (empty($options) === false) {
             $query = '?' . http_build_query($options);
         } else {
             $query = '';
@@ -523,7 +523,7 @@ class Html
         }
 
         // build the options query
-        if (!empty($options)) {
+        if (empty($options) === false) {
             $query = '?' . http_build_query($options);
         } else {
             $query = '';

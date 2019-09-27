@@ -119,6 +119,7 @@ import ToolbarLinkDialog from "@/components/Forms/Toolbar/LinkDialog.vue";
 import FilesFieldPreview from "@/components/Forms/Previews/FilesFieldPreview.vue";
 import EmailFieldPreview from "@/components/Forms/Previews/EmailFieldPreview.vue";
 import PagesFieldPreview from "@/components/Forms/Previews/PagesFieldPreview.vue";
+import ToggleFieldPreview from "@/components/Forms/Previews/ToggleFieldPreview.vue";
 import UrlFieldPreview from "@/components/Forms/Previews/UrlFieldPreview.vue";
 import UsersFieldPreview from "@/components/Forms/Previews/UsersFieldPreview.vue";
 
@@ -183,6 +184,7 @@ Vue.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 Vue.component("k-email-field-preview", EmailFieldPreview);
 Vue.component("k-files-field-preview", FilesFieldPreview);
 Vue.component("k-pages-field-preview", PagesFieldPreview);
+Vue.component("k-toggle-field-preview", ToggleFieldPreview);
 Vue.component("k-url-field-preview", UrlFieldPreview);
 Vue.component("k-users-field-preview", UsersFieldPreview);
 

@@ -50,7 +50,7 @@
             'selected': isSelected(option),
             'disabled': !addable
           }"
-          @click="select(option)"
+          @click.prevent="select(option)"
           @keydown.native.enter.prevent="select(option)"
           @keydown.native.space.prevent="select(option)"
         >
@@ -99,7 +99,8 @@ export default {
   data() {
     return {
       state: this.value,
-      q: null
+      q: null,
+      scrollTop: 0
     };
   },
   computed: {
@@ -202,12 +203,12 @@ export default {
 
       switch (direction) {
         case "prev":
-          if (current && current.previousSibling) {
+          if (current && current.previousSibling && current.previousSibling.focus) {
             current.previousSibling.focus();
           }
           break;
         case "next":
-          if (current && current.nextSibling) {
+          if (current && current.nextSibling && current.nextSibling.focus) {
             current.nextSibling.focus();
           }
           break;
@@ -221,9 +222,11 @@ export default {
     },
     onOpen() {
       this.$nextTick(() => {
-        if (this.$refs.search) {
+        if (this.$refs.search && this.$refs.search.focus) {
           this.$refs.search.focus();
         }
+        
+        this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop = this.scrollTop;
       });
     },
     remove(option) {
@@ -231,6 +234,8 @@ export default {
       this.onInput();
     },
     select(option) {
+      this.scrollTop = this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop;
+      
       option = { text: option.text, value: option.value };
 
       if (this.isSelected(option)) {

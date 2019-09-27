@@ -62,7 +62,7 @@ export default {
       items: [],
       q: null,
       selected: -1,
-      currentType: "pages"
+      currentType: this.$store.state.view === "users" ? "users" : "pages"
     }
   },
   computed: {
