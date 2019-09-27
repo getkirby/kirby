@@ -557,7 +557,7 @@ class Collection extends Iterator implements Countable
      * Checks if there is an intersection between the given collection and this collection
      *
      * @param Kirby\Toolkit\Collection $other
-     * @return boolean
+     * @return bool
      */
     public function intersects($other): bool
     {
