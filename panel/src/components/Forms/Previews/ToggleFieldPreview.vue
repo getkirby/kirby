@@ -12,7 +12,7 @@
 export default {
   props: {
     field: Object,
-    value: Array,
+    value: Boolean,
   }
 }
 </script>
