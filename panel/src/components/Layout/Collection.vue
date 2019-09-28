@@ -16,7 +16,7 @@
         :key="index"
         v-bind="item"
         @action="$emit('action', item, $event)"
-        @dragstart="onDragStart($event, item.dragText)"
+        @dragstart.prevent="onDragStart($event, item.dragText)"
       />
     </k-draggable>
 
