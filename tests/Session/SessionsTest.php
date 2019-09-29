@@ -36,12 +36,12 @@ class SessionsTest extends TestCase
     public function testConstructorStores()
     {
         // mock store
-        $this->assertEquals($this->store, $this->sessions->store());
+        $this->assertSame($this->store, $this->sessions->store());
 
         // custom store
         $store    = new FileSessionStore(__DIR__ . '/fixtures/store');
         $sessions = new Sessions($store);
-        $this->assertEquals($store, $sessions->store());
+        $this->assertSame($store, $sessions->store());
 
         // custom path
         $path     = __DIR__ . '/fixtures/store';
@@ -50,7 +50,7 @@ class SessionsTest extends TestCase
         $reflector = new ReflectionClass(FileSessionStore::class);
         $pathProperty = $reflector->getProperty('path');
         $pathProperty->setAccessible(true);
-        $this->assertEquals($path, $pathProperty->getValue($sessions->store()));
+        $this->assertSame($path, $pathProperty->getValue($sessions->store()));
     }
 
     /**
@@ -74,12 +74,12 @@ class SessionsTest extends TestCase
             'cookieName' => 'my_cookie_name'
         ]);
 
-        $this->assertEquals('my_cookie_name', $sessions->cookieName());
+        $this->assertSame('my_cookie_name', $sessions->cookieName());
 
         $reflector = new ReflectionClass(Sessions::class);
         $modeProperty = $reflector->getProperty('mode');
         $modeProperty->setAccessible(true);
-        $this->assertEquals('header', $modeProperty->getValue($sessions));
+        $this->assertSame('header', $modeProperty->getValue($sessions));
     }
 
     /**
@@ -135,12 +135,12 @@ class SessionsTest extends TestCase
     {
         $sessions = new Sessions($this->store, ['mode' => 'header']);
         $session = $sessions->create();
-        $this->assertEquals('header', $session->mode());
+        $this->assertSame('header', $session->mode());
         $this->assertNull($session->token());
-        $this->assertEquals(1337000000, $session->startTime()); // timestamp is from mock
-        $this->assertEquals(7200, $session->duration());
-        $this->assertEquals(1337000000 + 7200, $session->expiryTime()); // timestamp is from mock
-        $this->assertEquals(1800, $session->timeout());
+        $this->assertSame(1337000000, $session->startTime()); // timestamp is from mock
+        $this->assertSame(7200, $session->duration());
+        $this->assertSame(1337000000 + 7200, $session->expiryTime()); // timestamp is from mock
+        $this->assertSame(1800, $session->timeout());
         $this->assertTrue($session->renewable());
 
         $session = $sessions->create([
@@ -150,12 +150,12 @@ class SessionsTest extends TestCase
             'timeout'    => false,
             'renewable'  => false
         ]);
-        $this->assertEquals('manual', $session->mode());
+        $this->assertSame('manual', $session->mode());
         $this->assertNull($session->token());
-        $this->assertEquals(1337000000 + 3600, $session->startTime()); // timestamp is from mock
-        $this->assertEquals(36000, $session->duration());
-        $this->assertEquals(1337000000 + 39600, $session->expiryTime()); // timestamp is from mock
-        $this->assertEquals(false, $session->timeout());
+        $this->assertSame(1337000000 + 3600, $session->startTime()); // timestamp is from mock
+        $this->assertSame(36000, $session->duration());
+        $this->assertSame(1337000000 + 39600, $session->expiryTime()); // timestamp is from mock
+        $this->assertSame(false, $session->timeout());
         $this->assertFalse($session->renewable());
     }
 
@@ -166,17 +166,17 @@ class SessionsTest extends TestCase
     {
         $sessions = new Sessions($this->store, ['mode' => 'header']);
         $session = $sessions->get('9999999999.valid.' . $this->store->validKey);
-        $this->assertEquals('header', $session->mode());
-        $this->assertEquals('9999999999.valid.' . $this->store->validKey, $session->token());
+        $this->assertSame('header', $session->mode());
+        $this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
 
         $session1 = $sessions->get('9999999999.valid2.' . $this->store->validKey, 'manual');
-        $this->assertEquals('manual', $session1->mode());
-        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session1->token());
+        $this->assertSame('manual', $session1->mode());
+        $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session1->token());
 
         $session2 = $sessions->get('9999999999.valid2.' . $this->store->validKey, 'header');
-        $this->assertEquals($session1, $session2);
+        $this->assertSame($session1, $session2);
         $session1->data()->set('someKey', 'someValue');
-        $this->assertEquals('someValue', $session2->data()->get('someKey'));
+        $this->assertSame('someValue', $session2->data()->get('someKey'));
     }
 
     /**
@@ -200,13 +200,13 @@ class SessionsTest extends TestCase
 
         $sessions = new Sessions($this->store, ['mode' => 'cookie']);
         $session = $sessions->current();
-        $this->assertEquals('cookie', $session->mode());
-        $this->assertEquals('9999999999.valid.' . $this->store->validKey, $session->token());
+        $this->assertSame('cookie', $session->mode());
+        $this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
 
         $sessions = new Sessions($this->store, ['mode' => 'header']);
         $session = $sessions->current();
-        $this->assertEquals('header', $session->mode());
-        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+        $this->assertSame('header', $session->mode());
+        $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
 
         unset($_SERVER['HTTP_AUTHORIZATION']);
         $this->assertNull($sessions->current());
@@ -217,8 +217,8 @@ class SessionsTest extends TestCase
         // test self-check: should work again
         $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
         $session = $sessions->current();
-        $this->assertEquals('header', $session->mode());
-        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+        $this->assertSame('header', $session->mode());
+        $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
     }
 
     /**
@@ -242,13 +242,13 @@ class SessionsTest extends TestCase
         $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
 
         $session = $this->sessions->currentDetected();
-        $this->assertEquals('header', $session->mode());
-        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+        $this->assertSame('header', $session->mode());
+        $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
 
         unset($_SERVER['HTTP_AUTHORIZATION']);
         $session = $this->sessions->currentDetected();
-        $this->assertEquals('cookie', $session->mode());
-        $this->assertEquals('9999999999.valid.' . $this->store->validKey, $session->token());
+        $this->assertSame('cookie', $session->mode());
+        $this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
 
         Cookie::remove('kirby_session');
         $this->assertNull($this->sessions->currentDetected());
@@ -260,8 +260,8 @@ class SessionsTest extends TestCase
         // test self-check: should work again
         $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
         $session = $this->sessions->currentDetected();
-        $this->assertEquals('header', $session->mode());
-        $this->assertEquals('9999999999.valid2.' . $this->store->validKey, $session->token());
+        $this->assertSame('header', $session->mode());
+        $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
     }
 
     /**
@@ -294,7 +294,7 @@ class SessionsTest extends TestCase
         $this->assertArrayNotHasKey('9999999999.valid.new-key', $cache->getValue($sessions));
         $sessions->updateCache($session);
         $this->assertArrayHasKey('9999999999.valid.new-key', $cache->getValue($sessions));
-        $this->assertEquals($session, $cache->getValue($sessions)['9999999999.valid.new-key']);
+        $this->assertSame($session, $cache->getValue($sessions)['9999999999.valid.new-key']);
     }
 
     /**
@@ -310,7 +310,7 @@ class SessionsTest extends TestCase
         $this->assertNull($tokenFromCookie->invoke($this->sessions));
 
         Cookie::set('kirby_session', 'amazingSessionIdFromCookie');
-        $this->assertEquals('amazingSessionIdFromCookie', $tokenFromCookie->invoke($this->sessions));
+        $this->assertSame('amazingSessionIdFromCookie', $tokenFromCookie->invoke($this->sessions));
 
         Cookie::remove('kirby_session');
     }
@@ -328,7 +328,7 @@ class SessionsTest extends TestCase
         $this->assertNull($tokenFromHeader->invoke($this->sessions));
 
         $_SERVER['HTTP_AUTHORIZATION'] = 'Session amazingSessionIdFromHeader';
-        $this->assertEquals('amazingSessionIdFromHeader', $tokenFromHeader->invoke($this->sessions));
+        $this->assertSame('amazingSessionIdFromHeader', $tokenFromHeader->invoke($this->sessions));
 
         $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer amazingSessionIdFromHeader';
         $this->assertNull($tokenFromHeader->invoke($this->sessions));
