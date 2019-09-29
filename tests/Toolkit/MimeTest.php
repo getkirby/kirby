@@ -31,6 +31,33 @@ class MimeTest extends TestCase
         $this->assertEquals('text/x-php', $mime);
     }
 
+    public function testIsAccepted()
+    {
+        $pattern = 'text/html,text/plain;q=0.8,application/*;q=0.7';
+
+        $this->assertTrue(Mime::isAccepted('text/html', $pattern));
+        $this->assertTrue(Mime::isAccepted('text/plain', $pattern));
+        $this->assertTrue(Mime::isAccepted('application/json', $pattern));
+        $this->assertTrue(Mime::isAccepted('application/yaml', $pattern));
+
+        $this->assertFalse(Mime::isAccepted('text/xml', $pattern));
+    }
+
+    public function testMatchWildcard()
+    {
+        $this->assertTrue(Mime::matchWildcard('text/plain', 'text/plain'));
+        $this->assertTrue(Mime::matchWildcard('text/*', 'text/plain'));
+        $this->assertTrue(Mime::matchWildcard('text/*', 'text/xml'));
+        $this->assertTrue(Mime::matchWildcard('*/plain', 'text/plain'));
+        $this->assertTrue(Mime::matchWildcard('*/plain', 'application/plain'));
+        $this->assertTrue(Mime::matchWildcard('*/*', 'text/plain'));
+        $this->assertTrue(Mime::matchWildcard('*/*', 'application/json'));
+
+        $this->assertFalse(Mime::matchWildcard('text/plain', 'text/xml'));
+        $this->assertFalse(Mime::matchWildcard('text/*', 'application/json'));
+        $this->assertFalse(Mime::matchWildcard('*/plain', 'text/xml'));
+    }
+
     public function testToExtension()
     {
         $extension = Mime::toExtension('image/jpeg');
