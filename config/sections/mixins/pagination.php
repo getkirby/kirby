@@ -14,7 +14,7 @@ return [
          * Sets the default page for the pagination. This will overwrite default pagination.
          */
         'page' => function (int $page = null) {
-            return get('page', $page ?? 1);
+            return get('page', $page);
         },
     ],
     'methods' => [
