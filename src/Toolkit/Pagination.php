@@ -2,7 +2,8 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
+use Kirby\Exception\ErrorPageException;
+use Kirby\Exception\Exception;
 
 /**
  * Basic pagination handling
@@ -27,14 +28,14 @@ class Pagination
      *
      * @var int
      */
-    protected $total;
+    protected $total = 0;
 
     /**
      * The number of items per page
      *
      * @var int
      */
-    protected $limit;
+    protected $limit = 20;
 
     /**
      * Creates a new pagination object
@@ -44,9 +45,7 @@ class Pagination
      */
     public function __construct(array $params = [])
     {
-        $this->page($params['page'] ?? 1);
-        $this->limit($params['limit'] ?? 20);
-        $this->total($params['total'] ?? 0);
+        $this->setProperties($params);
     }
 
     /**
@@ -113,67 +112,48 @@ class Pagination
     }
 
     /**
-     * Getter and setter for the current page
+     * Getter for the current page
      *
-     * @param int|null $page
-     * @return int|\Kirby\Toolkit\Pagination
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->setProperties()
+     * @return int
      */
-    public function page(int $page = null)
+    public function page(int $page = null): int
     {
-        if ($page === null) {
-            if ($this->page > $this->pages()) {
-                $this->page = $this->lastPage();
-            }
-
-            if ($this->page < 1) {
-                $this->page = $this->firstPage();
-            }
-
-            return $this->page;
+        if ($page !== null) {
+            throw new Exception('$pagination->page() setter is no longer supported, use $pagination->setProperties()'); // @codeCoverageIgnore
         }
 
-        $this->page = $page;
-        return $this;
+        return $this->page;
     }
 
     /**
-     * Getter and setter for the total number of items
+     * Getter for the total number of items
      *
-     * @param int|null $total
-     * @return int|\Kirby\Toolkit\Pagination
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->setProperties()
+     * @return int
      */
-    public function total(int $total = null)
+    public function total(int $total = null): int
     {
-        if ($total === null) {
-            return $this->total;
+        if ($total !== null) {
+            throw new Exception('$pagination->total() setter is no longer supported, use $pagination->setProperties()'); // @codeCoverageIgnore
         }
 
-        if ($total < 0) {
-            throw new Exception('Invalid total number of items: ' . $total);
-        }
-
-        $this->total = $total;
-        return $this;
+        return $this->total;
     }
 
     /**
-     * Getter and setter for the number of items per page
+     * Getter for the number of items per page
      *
-     * @param int|null $limit
-     * @return int|\Kirby\Toolkit\Pagination
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->setProperties()
+     * @return int
      */
-    public function limit(int $limit = null)
+    public function limit(int $limit = null): int
     {
-        if ($limit === null) {
-            return $this->limit;
+        if ($limit !== null) {
+            throw new Exception('$pagination->limit() setter is no longer supported, use $pagination->setProperties()'); // @codeCoverageIgnore
         }
 
-        if ($limit < 1) {
-            throw new Exception('Invalid pagination limit: ' . $limit);
-        }
-
-        $this->limit = $limit;
-        return $this;
+        return $this->limit;
     }
 
     /**
@@ -395,6 +375,48 @@ class Pagination
     {
         $range = $this->range($range);
         return array_pop($range);
+    }
+
+    /**
+     * Sets the properties limit, total and page
+     * and validates that the properties match
+     *
+     * @param array $params Array with keys limit, total and/or page
+     */
+    public function setProperties(array $params)
+    {
+        if (isset($params['limit'])) {
+            if (is_int($params['limit']) !== true || $params['limit'] < 1) {
+                throw new Exception('Invalid pagination limit: ' . $params['limit']);
+            }
+
+            $this->limit = $params['limit'];
+        }
+
+        if (isset($params['total'])) {
+            if (is_int($params['total']) !== true || $params['total'] < 0) {
+                throw new Exception('Invalid total number of items: ' . $params['total']);
+            }
+
+            $this->total = $params['total'];
+        }
+
+        if (isset($params['page'])) {
+            if (is_int($params['page']) !== true || $params['page'] < 0) {
+                throw new Exception('Invalid page number: ' . $params['page']);
+            }
+
+            $this->page = $params['page'];
+        } elseif ($this->page === null) {
+            // generate "default page" based on other params if not set already
+            $this->page = $this->firstPage();
+        }
+
+        $min = $this->firstPage();
+        $max = $this->pages();
+        if ($this->page < $min || $this->page > $max) {
+            throw new ErrorPageException('Pagination page ' . $this->page . ' is out of bounds, expected ' . $min . '-' . $max);
+        }
     }
 
     /**
