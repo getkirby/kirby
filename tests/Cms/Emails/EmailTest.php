@@ -159,6 +159,7 @@ class EmailTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testEmailUserData()
     {
