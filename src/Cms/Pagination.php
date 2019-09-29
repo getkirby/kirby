@@ -81,9 +81,9 @@ class Pagination extends BasePagination
         }
 
         if ($params['method'] === 'query') {
-            $params['page'] = $params['page'] ?? $params['url']->query()->get($params['variable'], 1);
+            $params['page'] = $params['page'] ?? $params['url']->query()->get($params['variable']);
         } else {
-            $params['page'] = $params['page'] ?? $params['url']->params()->get($params['variable'], 1);
+            $params['page'] = $params['page'] ?? $params['url']->params()->get($params['variable']);
         }
 
         parent::__construct($params);
