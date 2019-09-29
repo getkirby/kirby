@@ -733,15 +733,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::isUnlisted()` intead
-     * @return bool
-     */
-    public function isInvisible(): bool
-    {
-        return $this->isUnlisted();
-    }
-
-    /**
      * Checks if the page has a sorting number
      *
      * @return bool
@@ -791,15 +782,6 @@ class Page extends ModelWithContent
     public function isUnlisted(): bool
     {
         return $this->isListed() === false;
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::isListed()` intead
-     * @return bool
-     */
-    public function isVisible(): bool
-    {
-        return $this->isListed();
     }
 
     /**

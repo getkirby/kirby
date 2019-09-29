@@ -248,18 +248,6 @@ trait FileActions
     }
 
     /**
-     * @deprecated 3.0.0 Use `File::changeName()` instead
-     *
-     * @param string $name
-     * @param bool $sanitize
-     * @return self
-     */
-    public function rename(string $name, bool $sanitize = true)
-    {
-        return $this->changeName($name, $sanitize);
-    }
-
-    /**
      * Replaces the file. The source must
      * be an absolute path to a file or a Url.
      * The store handles the replacement so it

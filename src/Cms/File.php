@@ -357,16 +357,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * @deprecated 3.0.0 Use `File::content()` instead
-     *
-     * @return \Kirby\Cms\Content
-     */
-    public function meta()
-    {
-        return $this->content();
-    }
-
-    /**
      * Get the file's last modification time.
      *
      * @param string $format

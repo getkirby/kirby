@@ -72,15 +72,6 @@ class Languages extends Collection
     }
 
     /**
-     * @deprecated 3.0.0  Use `Languages::default()`instead
-     * @return \Kirby\Cms\Language|null
-     */
-    public function findDefault()
-    {
-        return $this->default();
-    }
-
-    /**
      * Convert all defined languages to a collection
      *
      * @internal

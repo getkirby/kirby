@@ -14,15 +14,6 @@ namespace Kirby\Cms;
 trait PageSiblings
 {
     /**
-     * @deprecated 3.0.0 Use `Page::hasNextUnlisted` instead
-     * @return bool
-     */
-    public function hasNextInvisible(): bool
-    {
-        return $this->hasNextUnlisted();
-    }
-
-    /**
      * Checks if there's a next listed
      * page in the siblings collection
      *
@@ -42,24 +33,6 @@ trait PageSiblings
     public function hasNextUnlisted(): bool
     {
         return $this->nextUnlisted() !== null;
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::hasNextListed` instead
-     * @return bool
-     */
-    public function hasNextVisible(): bool
-    {
-        return $this->hasNextListed();
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::hasPrevUnlisted` instead
-     * @return bool
-     */
-    public function hasPrevInvisible(): bool
-    {
-        return $this->hasPrevUnlisted();
     }
 
     /**
@@ -85,24 +58,6 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasPrevListed instead`
-     * @return bool
-     */
-    public function hasPrevVisible(): bool
-    {
-        return $this->hasPrevListed();
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::nextUnlisted()` instead
-     * @return self|null
-     */
-    public function nextInvisible()
-    {
-        return $this->nextUnlisted();
-    }
-
-    /**
      * Returns the next listed page if it exists
      *
      * @return \Kirby\Cms\Page|null
@@ -123,24 +78,6 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::prevListed()` instead
-     * @return self|null
-     */
-    public function nextVisible()
-    {
-        return $this->nextListed();
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::prevUnlisted()` instead
-     * @return self|null
-     */
-    public function prevInvisible()
-    {
-        return $this->prevUnlisted();
-    }
-
-    /**
      * Returns the previous listed page
      *
      * @return \Kirby\Cms\Page|null
@@ -158,15 +95,6 @@ trait PageSiblings
     public function prevUnlisted()
     {
         return $this->prevAll()->unlisted()->first();
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::prevListed()` instead
-     * @return self|null
-     */
-    public function prevVisible()
-    {
-        return $this->prevListed();
     }
 
     /**
