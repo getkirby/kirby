@@ -12,7 +12,7 @@ class SmartyPantsTest extends TestCase
         $result   = $parser->parse('This is a "test quote"');
         $expected = 'This is a &#8220;test quote&#8221;';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testDefaults()
@@ -49,7 +49,7 @@ class SmartyPantsTest extends TestCase
 
         $parser = new SmartyPants();
 
-        $this->assertEquals($expected, $parser->defaults());
+        $this->assertSame($expected, $parser->defaults());
     }
 
     public function testDoubleQuotesOption()
@@ -60,7 +60,7 @@ class SmartyPantsTest extends TestCase
         ]);
 
         $result = $parser->parse('"test"');
-        $this->assertEquals('<test>', $result);
+        $this->assertSame('<test>', $result);
     }
 
     public function testSingleQuotesOption()
@@ -71,7 +71,7 @@ class SmartyPantsTest extends TestCase
         ]);
 
         $result = $parser->parse("'test'");
-        $this->assertEquals('<test>', $result);
+        $this->assertSame('<test>', $result);
     }
 
     public function testEmDashOption()
@@ -81,7 +81,7 @@ class SmartyPantsTest extends TestCase
         ]);
 
         $result = $parser->parse('--');
-        $this->assertEquals('emdash', $result);
+        $this->assertSame('emdash', $result);
     }
 
     public function testEllipsisOption()
@@ -91,6 +91,6 @@ class SmartyPantsTest extends TestCase
         ]);
 
         $result = $parser->parse('...');
-        $this->assertEquals('ellipsis', $result);
+        $this->assertSame('ellipsis', $result);
     }
 }

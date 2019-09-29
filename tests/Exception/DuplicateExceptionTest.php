@@ -12,8 +12,8 @@ class DuplicateExceptionTest extends TestCase
     public function testDefaults()
     {
         $exception = new DuplicateException();
-        $this->assertEquals('error.duplicate', $exception->getKey());
-        $this->assertEquals('The entry exists', $exception->getMessage());
-        $this->assertEquals(400, $exception->getHttpCode());
+        $this->assertSame('error.duplicate', $exception->getKey());
+        $this->assertSame('The entry exists', $exception->getMessage());
+        $this->assertSame(400, $exception->getHttpCode());
     }
 }

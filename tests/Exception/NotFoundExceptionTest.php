@@ -12,8 +12,8 @@ class NotFoundExceptionTest extends TestCase
     public function testDefaults()
     {
         $exception = new NotFoundException();
-        $this->assertEquals('error.notFound', $exception->getKey());
-        $this->assertEquals('Not found', $exception->getMessage());
-        $this->assertEquals(404, $exception->getHttpCode());
+        $this->assertSame('error.notFound', $exception->getKey());
+        $this->assertSame('Not found', $exception->getMessage());
+        $this->assertSame(404, $exception->getHttpCode());
     }
 }

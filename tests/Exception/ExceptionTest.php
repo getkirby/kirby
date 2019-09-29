@@ -46,12 +46,12 @@ class ExceptionTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Exception::class, $exception);
-        $this->assertEquals('error.page.slug.invalid', $exception->getKey());
-        $this->assertEquals('error.page.slug.invalid', $exception->getCode());
-        $this->assertEquals('The page slug "project/(c" is invalid', $exception->getMessage());
-        $this->assertEquals($http, $exception->getHttpCode());
-        $this->assertEquals($data, $exception->getData());
-        $this->assertEquals($details, $exception->getDetails());
+        $this->assertSame('error.page.slug.invalid', $exception->getKey());
+        $this->assertSame('error.page.slug.invalid', $exception->getCode());
+        $this->assertSame('The page slug "project/(c" is invalid', $exception->getMessage());
+        $this->assertSame($http, $exception->getHttpCode());
+        $this->assertSame($data, $exception->getData());
+        $this->assertSame($details, $exception->getDetails());
         $this->assertFalse($exception->isTranslated());
     }
 
@@ -62,12 +62,12 @@ class ExceptionTest extends TestCase
     {
         $exception = new Exception();
 
-        $this->assertEquals('error.general', $exception->getKey());
-        $this->assertEquals('An error occurred', $exception->getMessage());
-        $this->assertEquals(500, $exception->getHttpCode());
+        $this->assertSame('error.general', $exception->getKey());
+        $this->assertSame('An error occurred', $exception->getMessage());
+        $this->assertSame(500, $exception->getHttpCode());
         $this->assertFalse($exception->isTranslated());
-        $this->assertEquals([], $exception->getData());
-        $this->assertEquals([], $exception->getDetails());
+        $this->assertSame([], $exception->getData());
+        $this->assertSame([], $exception->getDetails());
     }
 
     /**
@@ -77,11 +77,11 @@ class ExceptionTest extends TestCase
     {
         $exception = new Exception('Another error occurred');
 
-        $this->assertEquals('error.general', $exception->getKey());
-        $this->assertEquals('Another error occurred', $exception->getMessage());
-        $this->assertEquals(500, $exception->getHttpCode());
+        $this->assertSame('error.general', $exception->getKey());
+        $this->assertSame('Another error occurred', $exception->getMessage());
+        $this->assertSame(500, $exception->getHttpCode());
         $this->assertFalse($exception->isTranslated());
-        $this->assertEquals([], $exception->getData());
+        $this->assertSame([], $exception->getData());
     }
 
     /**
@@ -93,7 +93,7 @@ class ExceptionTest extends TestCase
         $exception = new Exception(['previous' => $previous]);
 
         $this->assertNull($previous->getPrevious());
-        $this->assertEquals($previous, $exception->getPrevious());
+        $this->assertSame($previous, $exception->getPrevious());
     }
 
     /**
@@ -126,7 +126,7 @@ class ExceptionTest extends TestCase
             'key'      => 'translatable',
             'fallback' => 'Some fallback'
         ]);
-        $this->assertEquals('Some other translatable error', $exception->getMessage());
+        $this->assertSame('Some other translatable error', $exception->getMessage());
         $this->assertTrue($exception->isTranslated());
 
         // scenario 3: provided fallback message
@@ -134,14 +134,14 @@ class ExceptionTest extends TestCase
             'key'      => 'not-translated',
             'fallback' => 'Some fallback'
         ]);
-        $this->assertEquals('Some fallback', $exception->getMessage());
+        $this->assertSame('Some fallback', $exception->getMessage());
         $this->assertFalse($exception->isTranslated());
 
         // scenario 4: translation for default key in current language
         $exception = new Exception([
             'key' => 'not-translated'
         ]);
-        $this->assertEquals('Some general error', $exception->getMessage());
+        $this->assertSame('Some general error', $exception->getMessage());
         $this->assertTrue($exception->isTranslated());
 
         I18n::$translations = [
@@ -156,14 +156,14 @@ class ExceptionTest extends TestCase
             'key'      => 'translatable',
             'fallback' => 'Some fallback'
         ]);
-        $this->assertEquals('Some other translatable fallback', $exception->getMessage());
+        $this->assertSame('Some other translatable fallback', $exception->getMessage());
         $this->assertTrue($exception->isTranslated());
 
         // scenario 5: translation for default key in default language
         $exception = new Exception([
             'key' => 'not-translated'
         ]);
-        $this->assertEquals('Some general fallback', $exception->getMessage());
+        $this->assertSame('Some general fallback', $exception->getMessage());
         $this->assertTrue($exception->isTranslated());
 
         I18n::$locale = 'en';
@@ -173,7 +173,7 @@ class ExceptionTest extends TestCase
         $exception = new Exception([
             'key' => 'translatable'
         ]);
-        $this->assertEquals('An error occurred', $exception->getMessage());
+        $this->assertSame('An error occurred', $exception->getMessage());
         $this->assertFalse($exception->isTranslated());
     }
 
@@ -183,13 +183,13 @@ class ExceptionTest extends TestCase
     public function testGetFileRelative()
     {
         $exception = new Exception();
-        $this->assertEquals(__FILE__, $exception->getFileRelative());
+        $this->assertSame(__FILE__, $exception->getFileRelative());
 
         $_SERVER['DOCUMENT_ROOT'] = __DIR__;
-        $this->assertEquals(F::filename(__FILE__), $exception->getFileRelative());
+        $this->assertSame(F::filename(__FILE__), $exception->getFileRelative());
 
         $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/';
-        $this->assertEquals(F::filename(__FILE__), $exception->getFileRelative());
+        $this->assertSame(F::filename(__FILE__), $exception->getFileRelative());
     }
 
     /**
@@ -207,12 +207,12 @@ class ExceptionTest extends TestCase
             'details'   => [],
             'code'      => 500
         ];
-        $this->assertEquals($expected, $exception->toArray());
+        $this->assertSame($expected, $exception->toArray());
 
         $_SERVER['DOCUMENT_ROOT'] = __DIR__;
         $exception = new Exception();
         $expected['file'] = F::filename(__FILE__);
         $expected['line'] = $exception->getLine();
-        $this->assertEquals($expected, $exception->toArray());
+        $this->assertSame($expected, $exception->toArray());
     }
 }
