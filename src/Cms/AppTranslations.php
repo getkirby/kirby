@@ -158,7 +158,7 @@ trait AppTranslations
         $inject = $this->extensions['translations'][$locale] ?? [];
 
         // load from disk instead
-        return Translation::load($locale, $this->root('translations') . '/' . $locale . '.json', $inject);
+        return Translation::load($locale, $this->root('i18n:translations') . '/' . $locale . '.json', $inject);
     }
 
     /**
@@ -172,6 +172,6 @@ trait AppTranslations
             return $this->translations;
         }
 
-        return Translations::load($this->root('translations'), $this->extensions['translations'] ?? []);
+        return Translations::load($this->root('i18n:translations'), $this->extensions['translations'] ?? []);
     }
 }

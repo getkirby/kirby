@@ -59,9 +59,7 @@ class PageSiblingsTest extends TestCase
         $collection = $site->children();
 
         $this->assertTrue($collection->first()->hasNextListed());
-        $this->assertTrue($collection->first()->hasNextVisible());
         $this->assertFalse($collection->last()->hasNextListed());
-        $this->assertFalse($collection->last()->hasNextVisible());
     }
 
     public function testHasNextUnlisted()
@@ -74,9 +72,7 @@ class PageSiblingsTest extends TestCase
         $collection = $site->children();
 
         $this->assertTrue($collection->first()->hasNextUnlisted());
-        $this->assertTrue($collection->first()->hasNextInvisible());
         $this->assertFalse($collection->last()->hasNextUnlisted());
-        $this->assertFalse($collection->last()->hasNextInvisible());
     }
 
     public function testHasPrev()
@@ -97,9 +93,7 @@ class PageSiblingsTest extends TestCase
         $collection = $site->children();
 
         $this->assertFalse($collection->first()->hasPrevListed());
-        $this->assertFalse($collection->first()->hasPrevVisible());
         $this->assertTrue($collection->last()->hasPrevListed());
-        $this->assertTrue($collection->last()->hasPrevVisible());
     }
 
     public function testHasPrevUnlisted()
@@ -112,9 +106,7 @@ class PageSiblingsTest extends TestCase
         $collection = $site->children();
 
         $this->assertFalse($collection->first()->hasPrevUnlisted());
-        $this->assertFalse($collection->first()->hasPrevInvisible());
         $this->assertTrue($collection->last()->hasPrevUnlisted());
-        $this->assertTrue($collection->last()->hasPrevInvisible());
     }
 
     public function testIndexOf()
@@ -178,7 +170,6 @@ class PageSiblingsTest extends TestCase
         ])->children();
 
         $this->assertEquals('listed', $collection->first()->nextListed()->slug());
-        $this->assertEquals('listed', $collection->first()->nextVisible()->slug());
     }
 
     public function testNextUnlisted()
@@ -190,7 +181,6 @@ class PageSiblingsTest extends TestCase
         ])->children();
 
         $this->assertEquals('unlisted', $collection->first()->nextUnlisted()->slug());
-        $this->assertEquals('unlisted', $collection->first()->nextInvisible()->slug());
     }
 
     public function testPrev()
@@ -220,7 +210,6 @@ class PageSiblingsTest extends TestCase
         ])->children();
 
         $this->assertEquals('listed', $collection->last()->prevListed()->slug());
-        $this->assertEquals('listed', $collection->last()->prevVisible()->slug());
     }
 
     public function testPrevUnlisted()
@@ -232,7 +221,6 @@ class PageSiblingsTest extends TestCase
         ])->children();
 
         $this->assertEquals('unlisted', $collection->last()->prevUnlisted()->slug());
-        $this->assertEquals('unlisted', $collection->last()->prevInvisible()->slug());
     }
 
     public function testSiblings()

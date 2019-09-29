@@ -67,7 +67,6 @@ class LanguagesTest extends TestCase
     public function testDefault()
     {
         $this->assertEquals('en', $this->languages->default()->code());
-        $this->assertEquals('en', $this->languages->findDefault()->code());
     }
 
     public function testMultipleDefault()

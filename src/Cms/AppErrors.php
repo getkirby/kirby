@@ -29,15 +29,12 @@ trait AppErrors
 
     protected function handleErrors()
     {
-        $request = $this->request();
-
-        // TODO: implement acceptance
-        if ($request->ajax()) {
-            return $this->handleJsonErrors();
+        if ($this->request()->cli() === true) {
+            return $this->handleCliErrors();
         }
 
-        if ($request->cli()) {
-            return $this->handleCliErrors();
+        if ($this->visitor()->prefersJson() === true) {
+            return $this->handleJsonErrors();
         }
 
         return $this->handleHtmlErrors();
