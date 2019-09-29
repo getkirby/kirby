@@ -15,17 +15,10 @@ class PaginationTest extends TestCase
         $this->assertEquals(1, $pagination->page());
     }
 
-    public function testPageSetter()
+    public function testPage()
     {
-        $pagination = new Pagination();
-        $this->assertInstanceOf(Pagination::class, $pagination->page(12));
-    }
-
-    public function testPageGetter()
-    {
-        $pagination = new Pagination();
-        $pagination->page(12);
-        $this->assertEquals(0, $pagination->page());
+        $pagination = new Pagination(['total' => 100, 'page' => 2]);
+        $this->assertEquals(2, $pagination->page());
     }
 
     public function testTotalDefault()
@@ -34,26 +27,10 @@ class PaginationTest extends TestCase
         $this->assertEquals(0, $pagination->total());
     }
 
-    public function testTotalSetter()
+    public function testTotal()
     {
-        $pagination = new Pagination();
-        $this->assertInstanceOf(Pagination::class, $pagination->total(12));
-    }
-
-    public function testTotalGetter()
-    {
-        $pagination = new Pagination();
-        $pagination->total(12);
+        $pagination = new Pagination(['total' => 12]);
         $this->assertEquals(12, $pagination->total());
-    }
-
-    public function testTotalInvalid()
-    {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Invalid total number of items: -1');
-
-        $pagination = new Pagination();
-        $pagination->total(-1);
     }
 
     public function testLimitDefault()
@@ -62,26 +39,10 @@ class PaginationTest extends TestCase
         $this->assertEquals(20, $pagination->limit());
     }
 
-    public function testLimitSetter()
+    public function testLimit()
     {
-        $pagination = new Pagination();
-        $this->assertInstanceOf(Pagination::class, $pagination->limit(100));
-    }
-
-    public function testLimitGetter()
-    {
-        $pagination = new Pagination();
-        $pagination->limit(100);
+        $pagination = new Pagination(['limit' => 100]);
         $this->assertEquals(100, $pagination->limit());
-    }
-
-    public function testLimitInvalid()
-    {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Invalid pagination limit: -1');
-
-        $pagination = new Pagination();
-        $pagination->limit(-1);
     }
 
     public function testStart()
@@ -93,11 +54,11 @@ class PaginationTest extends TestCase
         $this->assertEquals(1, $pagination->start());
 
         // go to the second page
-        $pagination->page(2);
+        $pagination->setProperties(['page' => 2]);
         $this->assertEquals(21, $pagination->start());
 
         // set a different limit
-        $pagination->limit(10);
+        $pagination->setProperties(['limit' => 10]);
         $this->assertEquals(11, $pagination->start());
     }
 
@@ -110,11 +71,11 @@ class PaginationTest extends TestCase
         $this->assertEquals(20, $pagination->end());
 
         // go to the second page
-        $pagination->page(2);
+        $pagination->setProperties(['page' => 2]);
         $this->assertEquals(40, $pagination->end());
 
         // set a different limit
-        $pagination->limit(10);
+        $pagination->setProperties(['limit' => 10]);
         $this->assertEquals(20, $pagination->end());
     }
 
@@ -222,7 +183,7 @@ class PaginationTest extends TestCase
         $pagination = new Pagination(['page' => 2, 'total' => 42]);
         $this->assertEquals(1, $pagination->prevPage());
 
-        $pagination = new Pagination(['page' => 1]);
+        $pagination = new Pagination(['page' => 1, 'total' => 42]);
         $this->assertEquals(null, $pagination->prevPage());
     }
 
@@ -231,7 +192,7 @@ class PaginationTest extends TestCase
         $pagination = new Pagination();
         $this->assertFalse($pagination->hasNextPage());
 
-        $pagination = new Pagination(['total' => 42, 'page' => 5]);
+        $pagination = new Pagination(['total' => 42, 'page' => 3]);
         $this->assertFalse($pagination->hasNextPage());
 
         $pagination = new Pagination(['total' => 42, 'page' => 2]);
@@ -243,7 +204,7 @@ class PaginationTest extends TestCase
         $pagination = new Pagination(['page' => 1, 'total' => 30]);
         $this->assertEquals(2, $pagination->nextPage());
 
-        $pagination = new Pagination(['page' => 3]);
+        $pagination = new Pagination(['page' => 2, 'total' => 30]);
         $this->assertEquals(null, $pagination->nextPage());
     }
 
@@ -320,6 +281,88 @@ class PaginationTest extends TestCase
         $this->assertEquals(range(1, 10), $range);
         $this->assertEquals(1, $pagination->rangeStart(12));
         $this->assertEquals(10, $pagination->rangeEnd(12));
+    }
+
+    public function testSetProperties()
+    {
+        $pagination = new Pagination();
+        $pagination->setProperties(['limit' => 3, 'total' => 5, 'page' => 2]);
+
+        $this->assertSame(3, $pagination->limit());
+        $this->assertSame(5, $pagination->total());
+        $this->assertSame(2, $pagination->page());
+    }
+
+    public function testSetPropertiesInvalid1()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid pagination limit: 0');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['limit' => 0]);
+    }
+
+    public function testSetPropertiesInvalid2()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid pagination limit: 1');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['limit' => '1']);
+    }
+
+    public function testSetPropertiesInvalid3()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid total number of items: -1');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['total' => -1]);
+    }
+
+    public function testSetPropertiesInvalid4()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid total number of items: 1');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['total' => '1']);
+    }
+
+    public function testSetPropertiesInvalid5()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid page number: -1');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['page' => -1]);
+    }
+
+    public function testSetPropertiesInvalid6()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid page number: 1');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['page' => '1']);
+    }
+
+    public function testSetPropertiesOutOfBounds1()
+    {
+        $this->expectException('Kirby\Exception\ErrorPageException');
+        $this->expectExceptionMessage('Pagination page 3 is out of bounds, expected 1-2');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['page' => 3, 'total' => 10, 'limit' => 5]);
+    }
+
+    public function testSetPropertiesOutOfBounds2()
+    {
+        $this->expectException('Kirby\Exception\ErrorPageException');
+        $this->expectExceptionMessage('Pagination page 0 is out of bounds, expected 1-2');
+
+        $pagination = new Pagination();
+        $pagination->setProperties(['page' => 0, 'total' => 10, 'limit' => 5]);
     }
 
     public function testToArray()
