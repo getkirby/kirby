@@ -178,6 +178,43 @@ class Visitor
     }
 
     /**
+     * Returns the MIME type from the provided list that
+     * is most accepted (= preferred) by the visitor
+     *
+     * @param string ...$mimeTypes MIME types to query for
+     * @return string|null Preferred MIME type
+     */
+    public function preferredMimeType(string ...$mimeTypes): ?string
+    {
+        foreach ($this->acceptedMimeTypes() as $acceptedMime) {
+            // look for direct matches
+            if (in_array($acceptedMime->type(), $mimeTypes)) {
+                return $acceptedMime->type();
+            }
+
+            // test each option against wildcard `Accept` values
+            foreach ($mimeTypes as $expectedMime) {
+                if (Mime::matchWildcard($acceptedMime->type(), $expectedMime) === true) {
+                    return $expectedMime;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns true if the visitor prefers a JSON response over
+     * an HTML response based on the `Accept` request header
+     *
+     * @return bool
+     */
+    public function prefersJson(): bool
+    {
+        return $this->preferredMimeType('application/json', 'text/html') === 'application/json';
+    }
+
+    /**
      * Sets the ip address if provided
      * or returns the ip of the current
      * visitor otherwise
