@@ -386,27 +386,27 @@ class Pagination
     public function setProperties(array $params)
     {
         if (isset($params['limit'])) {
-            if (is_int($params['limit']) !== true || $params['limit'] < 1) {
+            if (is_numeric($params['limit']) !== true || $params['limit'] < 1) {
                 throw new Exception('Invalid pagination limit: ' . $params['limit']);
             }
 
-            $this->limit = $params['limit'];
+            $this->limit = (int)$params['limit'];
         }
 
         if (isset($params['total'])) {
-            if (is_int($params['total']) !== true || $params['total'] < 0) {
+            if (is_numeric($params['total']) !== true || $params['total'] < 0) {
                 throw new Exception('Invalid total number of items: ' . $params['total']);
             }
 
-            $this->total = $params['total'];
+            $this->total = (int)$params['total'];
         }
 
         if (isset($params['page'])) {
-            if (is_int($params['page']) !== true || $params['page'] < 0) {
+            if (is_numeric($params['page']) !== true || $params['page'] < 0) {
                 throw new Exception('Invalid page number: ' . $params['page']);
             }
 
-            $this->page = $params['page'];
+            $this->page = (int)$params['page'];
         } elseif ($this->page === null) {
             // generate "default page" based on other params if not set already
             $this->page = $this->firstPage();

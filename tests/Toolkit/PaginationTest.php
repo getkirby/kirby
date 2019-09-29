@@ -305,46 +305,19 @@ class PaginationTest extends TestCase
     public function testSetPropertiesInvalid2()
     {
         $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid pagination limit: 1');
-
-        $pagination = new Pagination();
-        $pagination->setProperties(['limit' => '1']);
-    }
-
-    public function testSetPropertiesInvalid3()
-    {
-        $this->expectException('Kirby\Exception\Exception');
         $this->expectExceptionMessage('Invalid total number of items: -1');
 
         $pagination = new Pagination();
         $pagination->setProperties(['total' => -1]);
     }
 
-    public function testSetPropertiesInvalid4()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid total number of items: 1');
-
-        $pagination = new Pagination();
-        $pagination->setProperties(['total' => '1']);
-    }
-
-    public function testSetPropertiesInvalid5()
+    public function testSetPropertiesInvalid3()
     {
         $this->expectException('Kirby\Exception\Exception');
         $this->expectExceptionMessage('Invalid page number: -1');
 
         $pagination = new Pagination();
         $pagination->setProperties(['page' => -1]);
-    }
-
-    public function testSetPropertiesInvalid6()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid page number: 1');
-
-        $pagination = new Pagination();
-        $pagination->setProperties(['page' => '1']);
     }
 
     public function testSetPropertiesOutOfBounds1()
