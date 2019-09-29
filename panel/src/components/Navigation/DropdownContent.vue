@@ -139,6 +139,25 @@ export default {
           }
 
           break;
+        case "Tab":   
+          while (true) {
+            this.current++;
+          
+            if (this.current > this.$children.length - 1) {
+              this.close();
+              this.$emit("leave", e.code);
+              break;
+            }
+          
+            if (
+              this.$children[this.current] &&
+              this.$children[this.current].disabled === false
+            ) {
+              break;
+            }
+          }
+          
+          break;
       }
     }
   }
