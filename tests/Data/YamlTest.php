@@ -21,16 +21,16 @@ class YamlTest extends TestCase
         ];
 
         $data = Yaml::encode($array);
-        $this->assertEquals(
+        $this->assertSame(
             "name: Homer\nchildren:\n  - Lisa\n  - Bart\n  - Maggie\n",
             $data
         );
 
         $result = Yaml::decode($data);
-        $this->assertEquals($array, $result);
+        $this->assertSame($array, $result);
 
-        $this->assertEquals([], Yaml::decode(null));
-        $this->assertEquals(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
+        $this->assertSame([], Yaml::decode(null));
+        $this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
     }
 
     /**
@@ -42,7 +42,7 @@ class YamlTest extends TestCase
             'number' => 3.2
         ]);
 
-        $this->assertEquals('number: 3.2' . PHP_EOL, $data);
+        $this->assertSame('number: 3.2' . PHP_EOL, $data);
     }
 
     /**
@@ -58,7 +58,7 @@ class YamlTest extends TestCase
             'number' => 3.2
         ]);
 
-        $this->assertEquals('number: 3.2' . PHP_EOL, $data);
+        $this->assertSame('number: 3.2' . PHP_EOL, $data);
 
         setlocale(LC_ALL, $locale);
     }

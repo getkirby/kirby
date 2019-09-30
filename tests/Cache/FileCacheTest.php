@@ -52,26 +52,26 @@ class FileCacheTest extends TestCase
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file'
         ]);
-        $this->assertEquals($root . '/test', $method->invoke($cache, 'test'));
+        $this->assertSame($root . '/test', $method->invoke($cache, 'test'));
 
         $cache = new FileCache([
             'root'      => $root = __DIR__ . '/fixtures/file',
             'extension' => 'cache'
         ]);
-        $this->assertEquals($root . '/test.cache', $method->invoke($cache, 'test'));
+        $this->assertSame($root . '/test.cache', $method->invoke($cache, 'test'));
 
         $cache = new FileCache([
             'root'   => $root = __DIR__ . '/fixtures/file',
             'prefix' => 'test1'
         ]);
-        $this->assertEquals($root . '/test1/test', $method->invoke($cache, 'test'));
+        $this->assertSame($root . '/test1/test', $method->invoke($cache, 'test'));
 
         $cache = new FileCache([
             'root'      => $root = __DIR__ . '/fixtures/file',
             'prefix'    => 'test1',
             'extension' => 'cache'
         ]);
-        $this->assertEquals($root . '/test1/test.cache', $method->invoke($cache, 'test'));
+        $this->assertSame($root . '/test1/test.cache', $method->invoke($cache, 'test'));
     }
 
     /**
@@ -91,9 +91,9 @@ class FileCacheTest extends TestCase
 
         $this->assertFileExists($root . '/foo');
         $this->assertTrue($cache->exists('foo'));
-        $this->assertEquals('A basic value', $cache->retrieve('foo')->value());
-        $this->assertEquals($time, $cache->created('foo'));
-        $this->assertEquals($time + 600, $cache->expires('foo'));
+        $this->assertSame('A basic value', $cache->retrieve('foo')->value());
+        $this->assertSame($time, $cache->created('foo'));
+        $this->assertSame($time + 600, $cache->expires('foo'));
 
         $this->assertTrue($cache->remove('foo'));
         $this->assertFileNotExists($root . '/foo');
@@ -121,9 +121,9 @@ class FileCacheTest extends TestCase
 
         $this->assertFileExists($root . '/foo.cache');
         $this->assertTrue($cache->exists('foo'));
-        $this->assertEquals('A basic value', $cache->retrieve('foo')->value());
-        $this->assertEquals($time, $cache->created('foo'));
-        $this->assertEquals($time + 600, $cache->expires('foo'));
+        $this->assertSame('A basic value', $cache->retrieve('foo')->value());
+        $this->assertSame($time, $cache->created('foo'));
+        $this->assertSame($time + 600, $cache->expires('foo'));
 
         $this->assertTrue($cache->remove('foo'));
         $this->assertFileNotExists($root . '/foo.cache');
@@ -154,20 +154,20 @@ class FileCacheTest extends TestCase
         $this->assertFileExists($root . '/test1/foo');
         $this->assertTrue($cache1->exists('foo'));
         $this->assertFalse($cache2->exists('foo'));
-        $this->assertEquals('A basic value', $cache1->retrieve('foo')->value());
-        $this->assertEquals($time, $cache1->created('foo'));
-        $this->assertEquals($time + 600, $cache1->expires('foo'));
+        $this->assertSame('A basic value', $cache1->retrieve('foo')->value());
+        $this->assertSame($time, $cache1->created('foo'));
+        $this->assertSame($time + 600, $cache1->expires('foo'));
 
         $this->assertTrue($cache2->set('foo', 'Another basic value'));
         $this->assertTrue($cache2->exists('foo'));
 
-        $this->assertEquals('A basic value', $cache1->retrieve('foo')->value());
+        $this->assertSame('A basic value', $cache1->retrieve('foo')->value());
         $this->assertTrue($cache1->remove('foo'));
         $this->assertFileNotExists($root . '/test1/foo');
         $this->assertFalse($cache1->exists('foo'));
         $this->assertNull($cache1->retrieve('foo'));
         $this->assertTrue($cache2->exists('foo'));
-        $this->assertEquals('Another basic value', $cache2->retrieve('foo')->value());
+        $this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
     }
 
     /**

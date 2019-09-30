@@ -12,8 +12,8 @@ class LogicExceptionTest extends TestCase
     public function testDefaults()
     {
         $exception = new LogicException();
-        $this->assertEquals('error.logic', $exception->getKey());
-        $this->assertEquals('This task cannot be finished', $exception->getMessage());
-        $this->assertEquals(400, $exception->getHttpCode());
+        $this->assertSame('error.logic', $exception->getKey());
+        $this->assertSame('This task cannot be finished', $exception->getMessage());
+        $this->assertSame(400, $exception->getHttpCode());
     }
 }

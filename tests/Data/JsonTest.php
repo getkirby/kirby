@@ -21,10 +21,10 @@ class JsonTest extends TestCase
         ];
 
         $data = Json::encode($array);
-        $this->assertEquals('{"name":"Homer","children":["Lisa","Bart","Maggie"]}', $data);
+        $this->assertSame('{"name":"Homer","children":["Lisa","Bart","Maggie"]}', $data);
 
         $result = Json::decode($data);
-        $this->assertEquals($array, $result);
+        $this->assertSame($array, $result);
     }
 
     /**
@@ -33,7 +33,7 @@ class JsonTest extends TestCase
     public function testEncodeUnicode()
     {
         $string  = 'здравей';
-        $this->assertEquals('"' . $string . '"', Json::encode($string));
+        $this->assertSame('"' . $string . '"', Json::encode($string));
     }
 
     /**
