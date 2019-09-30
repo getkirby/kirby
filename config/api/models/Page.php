@@ -56,7 +56,22 @@ return [
             return $page->num();
         },
         'options' => function (Page $page) {
-            return $page->permissions()->toArray();
+            $options = $page->permissions()->toArray();
+            $lock    = $page->lock();
+
+            if ($lock && $lock->isLocked()) {
+                $allowed = ['preview'];
+
+                foreach ($options as $key => $value) {
+                    if (in_array($key, $allowed)) {
+                        continue;
+                    }
+
+                    $options[$key] = false;
+                }
+            }
+
+            return $options;
         },
         'panelIcon' => function (Page $page) {
             return $page->panelIcon();
