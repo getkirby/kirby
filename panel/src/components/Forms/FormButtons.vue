@@ -275,7 +275,7 @@ export default {
             return;
           }
 
-          if (response.details) {
+          if (response.details && response.details.length > 0) {
             this.$store.dispatch("notification/error", {
               message: this.$t("error.form.incomplete"),
               details: response.details
