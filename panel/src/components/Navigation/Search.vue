@@ -53,6 +53,7 @@
 
 <script>
 import config from "@/config/config.js";
+import debounce from "@/helpers/debounce.js";
 
 export default {
   data() {
@@ -83,11 +84,9 @@ export default {
     }
   },
   watch: {
-    q() {
-      this.$helper.debounce(function (q) {
-        this.search(q);
-      }, 200)
-    },
+    q: debounce(function (q) {
+      this.search(q);
+    }, 200),
     currentType() {
       this.search(this.q);
     }
