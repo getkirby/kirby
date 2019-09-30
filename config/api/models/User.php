@@ -39,7 +39,16 @@ return [
             return $user->next();
         },
         'options' => function (User $user) {
-            return $user->permissions()->toArray();
+            $options = $user->permissions()->toArray();
+            $lock    = $user->lock();
+
+            if ($lock && $lock->isLocked()) {
+                foreach ($options as $key => $value) {
+                    $options[$key] = false;
+                }
+            }
+
+            return $options;
         },
         'permissions' => function (User $user) {
             return $user->role()->permissions()->toArray();
