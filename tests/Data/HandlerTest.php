@@ -30,10 +30,10 @@ class HandlerTest extends TestCase
 
         CustomHandler::write($file, $data);
         $this->assertFileExists($file);
-        $this->assertEquals(CustomHandler::encode($data), F::read($file));
+        $this->assertSame(CustomHandler::encode($data), F::read($file));
 
         $result = CustomHandler::read($file);
-        $this->assertEquals($data, $result);
+        $this->assertSame($data, $result);
     }
 
     /**

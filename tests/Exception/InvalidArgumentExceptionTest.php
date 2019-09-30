@@ -12,10 +12,10 @@ class InvalidArgumentExceptionTest extends TestCase
     public function testDefaults()
     {
         $exception = new InvalidArgumentException();
-        $this->assertEquals('error.invalidArgument', $exception->getKey());
-        $this->assertEquals('Invalid argument "-" in method "-"', $exception->getMessage());
-        $this->assertEquals(400, $exception->getHttpCode());
-        $this->assertEquals(['argument' => null, 'method' => null], $exception->getData());
+        $this->assertSame('error.invalidArgument', $exception->getKey());
+        $this->assertSame('Invalid argument "-" in method "-"', $exception->getMessage());
+        $this->assertSame(400, $exception->getHttpCode());
+        $this->assertSame(['argument' => null, 'method' => null], $exception->getData());
     }
 
     /**
@@ -29,8 +29,8 @@ class InvalidArgumentExceptionTest extends TestCase
                 'method' => 'get'
             ]
         ]);
-        $this->assertEquals('Invalid argument "key" in method "get"', $exception->getMessage());
-        $this->assertEquals([
+        $this->assertSame('Invalid argument "key" in method "get"', $exception->getMessage());
+        $this->assertSame([
             'argument' => 'key',
             'method' => 'get'
         ], $exception->getData());
