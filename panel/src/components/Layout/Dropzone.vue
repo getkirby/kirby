@@ -48,7 +48,7 @@ export default {
         return this.reset();
       }
 
-      if ($event.dataTransfer.types.includes("Files") === false) {
+      if ($event.dataTransfer.types.includes("Files") === false || $event.dataTransfer.types.includes("text/plain") === true) {
         return this.reset();
       }
 
@@ -60,7 +60,7 @@ export default {
     },
     onEnter($event) {
       if (this.disabled === false && $event.dataTransfer.types) {
-        if ($event.dataTransfer.types.includes("Files")) {
+        if ($event.dataTransfer.types.includes("Files") === true && $event.dataTransfer.types.includes("text/plain") === false) {
           this.dragging = true;
         }
       }
@@ -70,7 +70,7 @@ export default {
     },
     onOver($event) {
       if (this.disabled === false && $event.dataTransfer.types) {
-        if ($event.dataTransfer.types.includes("Files")) {
+        if ($event.dataTransfer.types.includes("Files") === true && $event.dataTransfer.types.includes("text/plain") === false) {
           $event.dataTransfer.dropEffect = "copy";
           this.over = true;
         }
