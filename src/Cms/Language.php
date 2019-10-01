@@ -57,6 +57,11 @@ class Language extends Model
      * @var array|null
      */
     protected $slugs;
+    
+    /**
+     * @var array|null
+     */
+    protected $smartypants;
 
     /**
      * @var array|null
@@ -85,6 +90,7 @@ class Language extends Model
             'locale',
             'name',
             'slugs',
+            'smartypants',
             'translations',
             'url',
         ]);
@@ -487,6 +493,16 @@ class Language extends Model
         $this->slugs = $slugs ?? [];
         return $this;
     }
+    
+    /**
+     * @param array $smartypants
+     * @return self
+     */
+    protected function setSmartypants(array $smartypants = null)
+    {
+        $this->smartypants = $smartypants ?? [];
+        return $this;
+    }
 
     /**
      * @param array $translations
@@ -516,6 +532,16 @@ class Language extends Model
     public function slugs(): array
     {
         return $this->slugs;
+    }
+    
+    /**
+     * Returns the custom smartypants for this language
+     *
+     * @return array
+     */
+    public function smartypants(): array
+    {
+        return $this->smartypants;
     }
 
     /**
