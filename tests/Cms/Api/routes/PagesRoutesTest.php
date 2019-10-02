@@ -80,6 +80,9 @@ class PagesRoutesTest extends TestCase
                         'slug' => 'a',
                         'files' => [
                             [
+                                'filename' => 'c.jpg',
+                            ],
+                            [
                                 'filename' => 'a.jpg',
                             ],
                             [
@@ -95,8 +98,10 @@ class PagesRoutesTest extends TestCase
 
         $response = $app->api()->call('pages/a/files');
 
-        $this->assertEquals('a.jpg', $response['data'][0]['filename']);
-        $this->assertEquals('b.jpg', $response['data'][1]['filename']);
+        $this->assertCount(3, $response['data']);
+        $this->assertSame('a.jpg', $response['data'][0]['filename']);
+        $this->assertSame('b.jpg', $response['data'][1]['filename']);
+        $this->assertSame('c.jpg', $response['data'][2]['filename']);
     }
 
     public function testFilesSorted()

@@ -102,7 +102,7 @@ export default {
 
         // restrict actions if page is locked
         if (response.locked && ["preview"].includes(action) === false) {
-          this.$store.dispatch('notification/error', this.$t("lock.page.isLocked", { email: response.email }));
+          this.$store.dispatch('notification/error', this.$t("lock.page.isLocked", { email: response.locked.email }));
           return;
         }
 
