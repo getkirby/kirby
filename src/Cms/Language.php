@@ -57,7 +57,7 @@ class Language extends Model
      * @var array|null
      */
     protected $slugs;
-    
+
     /**
      * @var array|null
      */
@@ -493,7 +493,7 @@ class Language extends Model
         $this->slugs = $slugs ?? [];
         return $this;
     }
-    
+
     /**
      * @param array $smartypants
      * @return self
@@ -533,9 +533,9 @@ class Language extends Model
     {
         return $this->slugs;
     }
-    
+
     /**
-     * Returns the custom smartypants for this language
+     * Returns the custom SmartyPants options for this language
      *
      * @return array
      */

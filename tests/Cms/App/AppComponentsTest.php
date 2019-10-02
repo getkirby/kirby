@@ -45,8 +45,22 @@ class AppComponentsTest extends TestCase
 
         $this->assertEquals($expected, $this->kirby->smartypants($text));
     }
-    
-    public function testLanguageSmartypants()
+
+    public function testSmartypantsDisabled()
+    {
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'smartypants'   => false
+            ]
+        ]);
+
+        $text     = '"Test"';
+        $expected = '"Test"';
+
+        $this->assertSame($expected, $this->kirby->smartypants($text));
+    }
+
+    public function testSmartypantsMultiLang()
     {
         $this->kirby = $this->kirby->clone([
             'options' => [
@@ -80,6 +94,36 @@ class AppComponentsTest extends TestCase
 
         $text     = '"Test"';
         $expected = '<Test>';
+
+        $this->assertSame($expected, $this->kirby->smartypants($text));
+    }
+
+    public function testSmartypantsDefaultOptionsOnMultiLang()
+    {
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'languages'     => true,
+                'smartypants'   => true
+            ],
+            'languages' => [
+                [
+                    'code'          => 'en',
+                    'name'          => 'English',
+                    'default'       => true,
+                    'locale'        => 'en_US',
+                    'url'           => '/'
+                ],
+                [
+                    'code'          => 'de',
+                    'name'          => 'Deutsch',
+                    'locale'        => 'de_DE',
+                    'url'           => '/de'
+                ]
+            ]
+        ]);
+
+        $text     = '"Test"';
+        $expected = '&#8220;Test&#8221;';
 
         $this->assertSame($expected, $this->kirby->smartypants($text));
     }
