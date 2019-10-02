@@ -1184,8 +1184,18 @@ class App
     {
         $options = $this->option('smartypants', []);
 
-        if ($options === true) {
+        if ($options === false) {
+            return $text;
+        } elseif (is_array($options) === false) {
             $options = [];
+        }
+
+        if ($this->multilang() === true) {
+            $languageSmartypants = $this->language()->smartypants() ?? [];
+
+            if (empty($languageSmartypants) === false) {
+                $options = array_merge($options, $languageSmartypants);
+            }
         }
 
         return $this->component('smartypants')($this, $text, $options);

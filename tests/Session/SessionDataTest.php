@@ -39,7 +39,7 @@ class SessionDataTest extends TestCase
         $this->sessionData->set('someKey', 'someValue');
         $this->assertTrue($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals('someValue', $this->sessionData->get('someKey'));
+        $this->assertSame('someValue', $this->sessionData->get('someKey'));
 
         // key-value array
         $this->session->ensuredToken = false;
@@ -50,8 +50,8 @@ class SessionDataTest extends TestCase
         ]);
         $this->assertTrue($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals('someValue1', $this->sessionData->get('someKey1'));
-        $this->assertEquals('someValue2', $this->sessionData->get('someKey2'));
+        $this->assertSame('someValue1', $this->sessionData->get('someKey1'));
+        $this->assertSame('someValue2', $this->sessionData->get('someKey2'));
     }
 
     /**
@@ -71,25 +71,25 @@ class SessionDataTest extends TestCase
     {
         $this->session->ensuredToken = false;
         $this->session->preparedForWriting = false;
-        $this->assertEquals(123, $this->sessionData->get('someInt'));
+        $this->assertSame(123, $this->sessionData->get('someInt'));
 
         $this->sessionData->increment('someInt', 10);
         $this->assertTrue($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals(133, $this->sessionData->get('someInt'));
+        $this->assertSame(133, $this->sessionData->get('someInt'));
 
         $this->sessionData->increment('someInt', 10, 120);
-        $this->assertEquals(133, $this->sessionData->get('someInt'));
+        $this->assertSame(133, $this->sessionData->get('someInt'));
 
         $this->sessionData->increment('someInt', 10, 140);
-        $this->assertEquals(140, $this->sessionData->get('someInt'));
+        $this->assertSame(140, $this->sessionData->get('someInt'));
 
         $this->sessionData->increment(['someInt', 'someNewInt'], 10, 145);
-        $this->assertEquals(145, $this->sessionData->get('someInt'));
-        $this->assertEquals(10, $this->sessionData->get('someNewInt'));
+        $this->assertSame(145, $this->sessionData->get('someInt'));
+        $this->assertSame(10, $this->sessionData->get('someNewInt'));
 
         $this->sessionData->increment('someInt', 10, 200);
-        $this->assertEquals(155, $this->sessionData->get('someInt'));
+        $this->assertSame(155, $this->sessionData->get('someInt'));
     }
 
     /**
@@ -130,25 +130,25 @@ class SessionDataTest extends TestCase
     {
         $this->session->ensuredToken = false;
         $this->session->preparedForWriting = false;
-        $this->assertEquals(123, $this->sessionData->get('someInt'));
+        $this->assertSame(123, $this->sessionData->get('someInt'));
 
         $this->sessionData->decrement('someInt', 10);
         $this->assertTrue($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals(113, $this->sessionData->get('someInt'));
+        $this->assertSame(113, $this->sessionData->get('someInt'));
 
         $this->sessionData->decrement('someInt', 10, 150);
-        $this->assertEquals(113, $this->sessionData->get('someInt'));
+        $this->assertSame(113, $this->sessionData->get('someInt'));
 
         $this->sessionData->decrement('someInt', 10, 105);
-        $this->assertEquals(105, $this->sessionData->get('someInt'));
+        $this->assertSame(105, $this->sessionData->get('someInt'));
 
         $this->sessionData->decrement(['someInt', 'someNewInt'], 10, -5);
-        $this->assertEquals(95, $this->sessionData->get('someInt'));
-        $this->assertEquals(-5, $this->sessionData->get('someNewInt'));
+        $this->assertSame(95, $this->sessionData->get('someInt'));
+        $this->assertSame(-5, $this->sessionData->get('someNewInt'));
 
         $this->sessionData->decrement('someInt', 10, 50);
-        $this->assertEquals(85, $this->sessionData->get('someInt'));
+        $this->assertSame(85, $this->sessionData->get('someInt'));
     }
 
     /**
@@ -188,13 +188,13 @@ class SessionDataTest extends TestCase
     public function testGet()
     {
         // string as key
-        $this->assertEquals('someValue', $this->sessionData->get('someString', 'someDefault'));
-        $this->assertEquals(null, $this->sessionData->get('someOtherString'));
-        $this->assertEquals('someDefault', $this->sessionData->get('someOtherString', 'someDefault'));
-        $this->assertEquals(123, $this->sessionData->get('someInt', 456));
+        $this->assertSame('someValue', $this->sessionData->get('someString', 'someDefault'));
+        $this->assertSame(null, $this->sessionData->get('someOtherString'));
+        $this->assertSame('someDefault', $this->sessionData->get('someOtherString', 'someDefault'));
+        $this->assertSame(123, $this->sessionData->get('someInt', 456));
 
         // all data
-        $this->assertEquals([
+        $this->assertSame([
             'someString' => 'someValue',
             'someInt'    => 123
         ], $this->sessionData->get());
@@ -217,13 +217,13 @@ class SessionDataTest extends TestCase
     {
         $this->session->ensuredToken = false;
         $this->session->preparedForWriting = false;
-        $this->assertEquals('someValue', $this->sessionData->pull('someString'));
+        $this->assertSame('someValue', $this->sessionData->pull('someString'));
         $this->assertFalse($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals(null, $this->sessionData->get('someString'));
+        $this->assertSame(null, $this->sessionData->get('someString'));
 
-        $this->assertEquals(null, $this->sessionData->pull('someOtherString'));
-        $this->assertEquals('someDefault', $this->sessionData->pull('someOtherString', 'someDefault'));
+        $this->assertSame(null, $this->sessionData->pull('someOtherString'));
+        $this->assertSame('someDefault', $this->sessionData->pull('someOtherString', 'someDefault'));
     }
 
     /**
@@ -237,7 +237,7 @@ class SessionDataTest extends TestCase
         $this->sessionData->remove('someString');
         $this->assertFalse($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals(null, $this->sessionData->get('someString'));
+        $this->assertSame(null, $this->sessionData->get('someString'));
 
         // key-value array
         $this->session->ensuredToken = false;
@@ -245,7 +245,7 @@ class SessionDataTest extends TestCase
         $this->sessionData->remove(['someString', 'someInt', 'someOtherString']);
         $this->assertFalse($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals([], $this->sessionData->get());
+        $this->assertSame([], $this->sessionData->get());
     }
 
     /**
@@ -268,7 +268,7 @@ class SessionDataTest extends TestCase
         $this->sessionData->clear();
         $this->assertFalse($this->session->ensuredToken);
         $this->assertTrue($this->session->preparedForWriting);
-        $this->assertEquals([], $this->sessionData->get());
+        $this->assertSame([], $this->sessionData->get());
     }
 
     /**
@@ -283,6 +283,6 @@ class SessionDataTest extends TestCase
         $this->sessionData->reload($newData);
         $this->assertFalse($this->session->ensuredToken);
         $this->assertFalse($this->session->preparedForWriting);
-        $this->assertEquals($newData, $this->sessionData->get());
+        $this->assertSame($newData, $this->sessionData->get());
     }
 }

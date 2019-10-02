@@ -12,7 +12,7 @@ class MarkdownTest extends TestCase
     {
         $markdown = new Markdown();
 
-        $this->assertEquals([
+        $this->assertSame([
             'extra'  => false,
             'breaks' => true
         ], $markdown->defaults());
@@ -33,7 +33,7 @@ class MarkdownTest extends TestCase
         $markdown = new Markdown();
         $md       = file_get_contents(static::FIXTURES . '/markdown.md');
         $html     = file_get_contents(static::FIXTURES . '/markdown.html');
-        $this->assertEquals($html, $markdown->parse($md));
+        $this->assertSame($html, $markdown->parse($md));
     }
 
     public function testParseWithExtra()
@@ -41,7 +41,7 @@ class MarkdownTest extends TestCase
         $markdown = new Markdown(['extra' => true]);
         $md       = file_get_contents(static::FIXTURES . '/markdown.md');
         $html     = file_get_contents(static::FIXTURES . '/markdownextra.html');
-        $this->assertEquals($html, $markdown->parse($md));
+        $this->assertSame($html, $markdown->parse($md));
     }
 
     public function testParseWithoutBreaks()
@@ -49,6 +49,6 @@ class MarkdownTest extends TestCase
         $markdown = new Markdown(['breaks' => false]);
         $md       = file_get_contents(static::FIXTURES . '/markdown.md');
         $html     = file_get_contents(static::FIXTURES . '/markdownbreaks.html');
-        $this->assertEquals($html, $markdown->parse($md));
+        $this->assertSame($html, $markdown->parse($md));
     }
 }
