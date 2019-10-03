@@ -29,7 +29,6 @@ before_script:
   - ls -al
 
 script:
-  - composer validate
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
   - PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config .php_cs --verbose --diff --dry-run
 
