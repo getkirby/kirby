@@ -193,7 +193,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Page|null
          */
-        'toPage' => function (Field $field) use ($app) {
+        'toPage' => function (Field $field) {
             return $field->toPages()->first();
         },
 
@@ -254,7 +254,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\User|null
          */
-        'toUser' => function (Field $field) use ($app) {
+        'toUser' => function (Field $field) {
             return $field->toUsers()->first();
         },
 

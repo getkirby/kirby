@@ -393,7 +393,7 @@ class Uri
     }
 
     /**
-     * @param Kirby\Http\Params|string|array|null $params
+     * @param \Kirby\Http\Params|string|array|null $params
      * @return self
      */
     public function setParams($params = null)

@@ -63,7 +63,7 @@ return function ($kirby) {
         [
             'pattern' => $media . '/plugins/(:any)/(:any)/(:all).(css|gif|js|jpg|png|svg|webp|woff2|woff)',
             'env'     => 'media',
-            'action'  => function (string $provider, string $pluginName, string $filename, string $extension) use ($kirby) {
+            'action'  => function (string $provider, string $pluginName, string $filename, string $extension) {
                 return PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension);
             }
         ],
@@ -102,7 +102,7 @@ return function ($kirby) {
         [
             'pattern' => $media . '/assets/(:all)/(:any)/(:any)',
             'env'     => 'media',
-            'action'  => function ($path, $hash, $filename) use ($kirby) {
+            'action'  => function ($path, $hash, $filename) {
                 return Media::thumb($path, $hash, $filename);
             }
         ]
@@ -143,7 +143,7 @@ return function ($kirby) {
                 'pattern' => trim($language->pattern() . '/(:all?)', '/'),
                 'method'  => 'ALL',
                 'env'     => 'site',
-                'action'  => function ($path = null) use ($kirby, $language) {
+                'action'  => function ($path = null) use ($language) {
                     return $language->router()->call($path);
                 }
             ];
