@@ -4,6 +4,8 @@ parameters:
     autoload_files:
         - %currentWorkingDirectory%/vendor/autoload.php
         - %rootDir%/../../autoload.php
+    autoload_directories:
+        - %currentWorkingDirectory%/tests
     excludes_analyse:
         - %currentWorkingDirectory%/dependencies
         - %currentWorkingDirectory%/tests/*/fixtures/*
