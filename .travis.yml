@@ -15,10 +15,9 @@ before_install:
 
 install:
   # Install composer packages, will also trigger dump-autoload
-  - composer self-update
-  - composer require phpunit/phpunit ^7
-  - composer require friendsofphp/php-cs-fixer
-  - composer install --no-interaction --ignore-platform-reqs
+  - composer validate
+  - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "friendsofphp/php-cs-fixer"
+  - composer install --no-interaction --ignore-platform-reqs --no-suggest
 
   # Install coveralls.phar
   - wget -c -nc --retry-connrefused --tries=0 https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar
