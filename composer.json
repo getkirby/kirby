@@ -40,7 +40,7 @@
     }
   },
   "scripts": {
-    "analyze": "phpstan analyse -c .phpstan.neon",
+    "analyze": "phpstan analyse",
     "test": "phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist",
     "build": "./scripts/build",

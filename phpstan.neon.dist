@@ -1,9 +1,11 @@
 parameters:
     paths:
         - %currentWorkingDirectory%
+    autoload_files:
+        - %currentWorkingDirectory%/vendor/autoload.php
+        - %rootDir%/../../autoload.php
     excludes_analyse:
         - %currentWorkingDirectory%/dependencies
-        - %currentWorkingDirectory%/tests # for now, autoloader doesn't work
         - %currentWorkingDirectory%/vendor
 
     level: 0
