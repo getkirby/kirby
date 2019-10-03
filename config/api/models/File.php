@@ -53,6 +53,9 @@ return [
 
             return $files->nth($index + 1);
         },
+        'niceSize' => function (File $file) {
+            return $file->niceSize();
+        },
         'options' => function (File $file) {
             return $file->permissions()->toArray();
         },
@@ -74,26 +77,17 @@ return [
 
             return $files->nth($index - 1);
         },
-        'niceSize' => function (File $file) {
-            return $file->niceSize();
-        },
-        'panelIcon' => function (File $file) {
-            return $file->panelIcon();
-        },
-        'panelImage' => function (File $file) {
-            return $file->panelImage();
-        },
         'parent' => function (File $file) {
             return $file->parent();
         },
         'parents' => function (File $file) {
             return $file->parents()->flip();
         },
-        'template' => function (File $file) {
-            return $file->template();
-        },
         'size' => function (File $file) {
             return $file->size();
+        },
+        'template' => function (File $file) {
+            return $file->template();
         },
         'thumbs' => function ($file) {
             if ($file->isResizable() === false) {

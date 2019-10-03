@@ -29,8 +29,8 @@ class Roles extends Collection
      */
     public function canBeChanged()
     {
-        if ($user = App::instance()->user()) {
-            return $this->filter(function ($role) use ($user) {
+        if (App::instance()->user()) {
+            return $this->filter(function ($role) {
                 $newUser = new User([
                     'email' => 'test@getkirby.com',
                     'role'  => $role->id()
@@ -52,8 +52,8 @@ class Roles extends Collection
      */
     public function canBeCreated()
     {
-        if ($user = App::instance()->user()) {
-            return $this->filter(function ($role) use ($user) {
+        if (App::instance()->user()) {
+            return $this->filter(function ($role) {
                 $newUser = new User([
                     'email' => 'test@getkirby.com',
                     'role'  => $role->id()

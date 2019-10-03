@@ -242,7 +242,7 @@ class Collection extends BaseCollection
      *
      * @param mixed $key Optional collection key, will be determined from the item if not given
      * @param mixed $item
-     * @return Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection
      */
     public function prepend(...$args)
     {

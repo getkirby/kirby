@@ -243,7 +243,7 @@ class Auth
                 $message = 'Invalid email or password';
             }
 
-            throw new PermissionException($message, 403);
+            throw new PermissionException($message);
         }
 
         // validate the user
