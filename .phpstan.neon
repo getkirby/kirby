@@ -1,0 +1,15 @@
+parameters:
+    paths:
+        - %currentWorkingDirectory%
+    excludes_analyse:
+        - %currentWorkingDirectory%/dependencies
+        - %currentWorkingDirectory%/tests # for now, autoloader doesn't work
+        - %currentWorkingDirectory%/vendor
+
+    level: 0
+    memory_limit: 2G
+
+    ignoreErrors:
+        # we use bound $this in our callbacks
+        - message: '#(Using \$this outside a class\.|Undefined variable: \$this)#'
+          path: %currentWorkingDirectory%/config
