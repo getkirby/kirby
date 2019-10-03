@@ -16,12 +16,6 @@ return [
                         $pages  = $model->query($query, 'Kirby\Cms\Pages');
                         $parent = $pages->parent();
                     }
-                    
-                    $self  = [
-                        'id'     => (empty($parent->id()) === true || empty($params['parent']) === true) ? null : $parent->id(),
-                        'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
-                        'title'  => $parent->title()->value(),
-                    ];
                 } else {
                     $pages = $model->query($query, 'Kirby\Cms\Pages');
                 }
@@ -31,14 +25,14 @@ return [
                 }
                 
                 $pages = $parent->children();
-                
-                if ($subpages === true) {
-                    $self  = [
-                        'id'     => empty($parent->id()) === true ? null : $parent->id(),
-                        'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
-                        'title'  => $parent->title()->value(),
-                    ];
-                }
+            }
+            
+            if ($subpages === true) {
+                $self  = [
+                    'id'     => (empty($parent->id()) === true || empty($params['parent']) === true) ? null : $parent->id(),
+                    'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
+                    'title'  => $parent->title()->value(),
+                ];
             }
 
             $children = [];
