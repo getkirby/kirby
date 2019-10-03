@@ -6,7 +6,9 @@ parameters:
         - %rootDir%/../../autoload.php
     excludes_analyse:
         - %currentWorkingDirectory%/dependencies
+        - %currentWorkingDirectory%/tests/*/fixtures/*
         - %currentWorkingDirectory%/vendor
+        - %currentWorkingDirectory%/views
 
     level: 0
     memory_limit: 2G
