@@ -16,6 +16,10 @@ use Kirby\Exception\Exception;
  */
 class Pagination
 {
+    use Properties {
+        setProperties as protected baseSetProperties;
+    }
+
     /**
      * The current page
      *
@@ -41,11 +45,11 @@ class Pagination
      * Creates a new pagination object
      * with the given parameters
      *
-     * @param array $params
+     * @param array $props
      */
-    public function __construct(array $params = [])
+    public function __construct(array $props = [])
     {
-        $this->setProperties($params);
+        $this->setProperties($props);
     }
 
     /**
@@ -114,13 +118,13 @@ class Pagination
     /**
      * Getter for the current page
      *
-     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->setProperties()
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
      * @return int
      */
     public function page(int $page = null): int
     {
         if ($page !== null) {
-            throw new Exception('$pagination->page() setter is no longer supported, use $pagination->setProperties()'); // @codeCoverageIgnore
+            throw new Exception('$pagination->page() setter is no longer supported, use $pagination->clone()'); // @codeCoverageIgnore
         }
 
         return $this->page;
@@ -129,13 +133,13 @@ class Pagination
     /**
      * Getter for the total number of items
      *
-     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->setProperties()
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
      * @return int
      */
     public function total(int $total = null): int
     {
         if ($total !== null) {
-            throw new Exception('$pagination->total() setter is no longer supported, use $pagination->setProperties()'); // @codeCoverageIgnore
+            throw new Exception('$pagination->total() setter is no longer supported, use $pagination->clone()'); // @codeCoverageIgnore
         }
 
         return $this->total;
@@ -144,13 +148,13 @@ class Pagination
     /**
      * Getter for the number of items per page
      *
-     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->setProperties()
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
      * @return int
      */
     public function limit(int $limit = null): int
     {
         if ($limit !== null) {
-            throw new Exception('$pagination->limit() setter is no longer supported, use $pagination->setProperties()'); // @codeCoverageIgnore
+            throw new Exception('$pagination->limit() setter is no longer supported, use $pagination->clone()'); // @codeCoverageIgnore
         }
 
         return $this->limit;
@@ -381,42 +385,80 @@ class Pagination
      * Sets the properties limit, total and page
      * and validates that the properties match
      *
-     * @param array $params Array with keys limit, total and/or page
+     * @param array $props Array with keys limit, total and/or page
+     * @return self
      */
-    public function setProperties(array $params)
+    protected function setProperties(array $props)
     {
-        if (isset($params['limit'])) {
-            if (is_numeric($params['limit']) !== true || $params['limit'] < 1) {
-                throw new Exception('Invalid pagination limit: ' . $params['limit']);
-            }
+        $this->baseSetProperties($props);
 
-            $this->limit = (int)$params['limit'];
-        }
-
-        if (isset($params['total'])) {
-            if (is_numeric($params['total']) !== true || $params['total'] < 0) {
-                throw new Exception('Invalid total number of items: ' . $params['total']);
-            }
-
-            $this->total = (int)$params['total'];
-        }
-
-        if (isset($params['page'])) {
-            if (is_numeric($params['page']) !== true || $params['page'] < 0) {
-                throw new Exception('Invalid page number: ' . $params['page']);
-            }
-
-            $this->page = (int)$params['page'];
-        } elseif ($this->page === null) {
-            // generate "default page" based on other params if not set already
+        // ensure that page is set to something, otherwise
+        // generate "default page" based on other params
+        if ($this->page === null) {
             $this->page = $this->firstPage();
         }
 
+        // validate page based on all params
         $min = $this->firstPage();
         $max = $this->pages();
         if ($this->page < $min || $this->page > $max) {
             throw new ErrorPageException('Pagination page ' . $this->page . ' is out of bounds, expected ' . $min . '-' . $max);
         }
+
+        return $this;
+    }
+
+    /**
+     * Sets the number of items per page
+     *
+     * @param int $limit
+     * @return self
+     */
+    protected function setLimit(int $limit = 20)
+    {
+        if ($limit < 1) {
+            throw new Exception('Invalid pagination limit: ' . $limit);
+        }
+
+        $this->limit = $limit;
+        return $this;
+    }
+
+    /**
+     * Sets the total number of items
+     *
+     * @param int $total
+     * @return self
+     */
+    protected function setTotal(int $total = 0)
+    {
+        if ($total < 0) {
+            throw new Exception('Invalid total number of items: ' . $total);
+        }
+
+        $this->total = $total;
+        return $this;
+    }
+
+    /**
+     * Sets the current page
+     *
+     * @param int|string|null $page Int or int in string form;
+     *                              automatically determined if null
+     * @return self
+     */
+    protected function setPage($page = null)
+    {
+        // if $page is null, it is set to a default in the setProperties() method
+        if ($page !== null) {
+            if (is_numeric($page) !== true || $page < 0) {
+                throw new Exception('Invalid page number: ' . $page);
+            }
+
+            $this->page = (int)$page;
+        }
+
+        return $this;
     }
 
     /**

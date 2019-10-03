@@ -21,6 +21,12 @@ class PaginationTest extends TestCase
         $this->assertEquals(2, $pagination->page());
     }
 
+    public function testPageString()
+    {
+        $pagination = new Pagination(['total' => 100, 'page' => '2']);
+        $this->assertEquals(2, $pagination->page());
+    }
+
     public function testTotalDefault()
     {
         $pagination = new Pagination();
@@ -54,11 +60,11 @@ class PaginationTest extends TestCase
         $this->assertEquals(1, $pagination->start());
 
         // go to the second page
-        $pagination->setProperties(['page' => 2]);
+        $pagination = $pagination->clone(['page' => 2]);
         $this->assertEquals(21, $pagination->start());
 
         // set a different limit
-        $pagination->setProperties(['limit' => 10]);
+        $pagination = $pagination->clone(['limit' => 10]);
         $this->assertEquals(11, $pagination->start());
     }
 
@@ -71,11 +77,11 @@ class PaginationTest extends TestCase
         $this->assertEquals(20, $pagination->end());
 
         // go to the second page
-        $pagination->setProperties(['page' => 2]);
+        $pagination = $pagination->clone(['page' => 2]);
         $this->assertEquals(40, $pagination->end());
 
         // set a different limit
-        $pagination->setProperties(['limit' => 10]);
+        $pagination = $pagination->clone(['limit' => 10]);
         $this->assertEquals(20, $pagination->end());
     }
 
@@ -283,59 +289,59 @@ class PaginationTest extends TestCase
         $this->assertEquals(10, $pagination->rangeEnd(12));
     }
 
-    public function testSetProperties()
+    public function testClone()
     {
         $pagination = new Pagination();
-        $pagination->setProperties(['limit' => 3, 'total' => 5, 'page' => 2]);
+        $pagination = $pagination->clone(['limit' => 3, 'total' => 5, 'page' => 2]);
 
         $this->assertSame(3, $pagination->limit());
         $this->assertSame(5, $pagination->total());
         $this->assertSame(2, $pagination->page());
     }
 
-    public function testSetPropertiesInvalid1()
+    public function testCloneInvalid1()
     {
         $this->expectException('Kirby\Exception\Exception');
         $this->expectExceptionMessage('Invalid pagination limit: 0');
 
         $pagination = new Pagination();
-        $pagination->setProperties(['limit' => 0]);
+        $pagination = $pagination->clone(['limit' => 0]);
     }
 
-    public function testSetPropertiesInvalid2()
+    public function testCloneInvalid2()
     {
         $this->expectException('Kirby\Exception\Exception');
         $this->expectExceptionMessage('Invalid total number of items: -1');
 
         $pagination = new Pagination();
-        $pagination->setProperties(['total' => -1]);
+        $pagination = $pagination->clone(['total' => -1]);
     }
 
-    public function testSetPropertiesInvalid3()
+    public function testCloneInvalid3()
     {
         $this->expectException('Kirby\Exception\Exception');
         $this->expectExceptionMessage('Invalid page number: -1');
 
         $pagination = new Pagination();
-        $pagination->setProperties(['page' => -1]);
+        $pagination = $pagination->clone(['page' => -1]);
     }
 
-    public function testSetPropertiesOutOfBounds1()
+    public function testCloneOutOfBounds1()
     {
         $this->expectException('Kirby\Exception\ErrorPageException');
         $this->expectExceptionMessage('Pagination page 3 is out of bounds, expected 1-2');
 
         $pagination = new Pagination();
-        $pagination->setProperties(['page' => 3, 'total' => 10, 'limit' => 5]);
+        $pagination = $pagination->clone(['page' => 3, 'total' => 10, 'limit' => 5]);
     }
 
-    public function testSetPropertiesOutOfBounds2()
+    public function testCloneOutOfBounds2()
     {
         $this->expectException('Kirby\Exception\ErrorPageException');
         $this->expectExceptionMessage('Pagination page 0 is out of bounds, expected 1-2');
 
         $pagination = new Pagination();
-        $pagination->setProperties(['page' => 0, 'total' => 10, 'limit' => 5]);
+        $pagination = $pagination->clone(['page' => 0, 'total' => 10, 'limit' => 5]);
     }
 
     public function testToArray()
