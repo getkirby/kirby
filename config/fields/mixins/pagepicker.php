@@ -3,24 +3,43 @@
 return [
     'methods' => [
         'pagepicker' => function (array $params = []) {
-            $query = $params['query'] ?? null;
-            $model = $this->model();
-            $site  = $this->kirby()->site();
+            $query    = $params['query'] ?? null;
+            $subpages = $params['subpages'] ?? true;
+            $model    = $this->model();
+            $site     = $this->kirby()->site();
 
-            if ($query) {
+            if (empty($query) === false) {
                 $pages = $model->query($query, 'Kirby\Cms\Pages');
-                $self  = null;
+                
+                if ($subpages === true) {
+                    $root = $pages->parent();
+                    
+                    if ($parent = $site->find($params['parent'] ?? null)) {
+                        $pages = $parent->children();
+                    } else {
+                        $parent = $root;
+                    }
+                    
+                    $self  = [
+                        'id'     => (empty($parent->id()) === true || $root->id() === $parent->id()) ? null : $parent->id(),
+                        'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
+                        'title'  => $parent->title()->value(),
+                    ];
+                }
             } else {
                 if (!$parent = $site->find($params['parent'] ?? null)) {
                     $parent = $site;
                 }
-
+                
                 $pages = $parent->children();
-                $self  = [
-                    'id'     => $parent->id() == '' ? null : $parent->id(),
-                    'title'  => $parent->title()->value(),
-                    'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
-                ];
+                
+                if ($subpages === true) {
+                    $self  = [
+                        'id'     => empty($parent->id()) === true ? null : $parent->id(),
+                        'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
+                        'title'  => $parent->title()->value(),
+                    ];
+                }
             }
 
             $children = [];
@@ -41,7 +60,7 @@ return [
             }
 
             return [
-                'model' => $self,
+                'model' => $self ?? null,
                 'pages' => $children
             ];
         }
