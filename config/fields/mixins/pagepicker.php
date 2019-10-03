@@ -9,22 +9,21 @@ return [
             $site     = $this->kirby()->site();
 
             if (empty($query) === false) {
-                $pages = $model->query($query, 'Kirby\Cms\Pages');
-                
                 if ($subpages === true) {
-                    $root = $pages->parent();
-                    
                     if ($parent = $site->find($params['parent'] ?? null)) {
                         $pages = $parent->children();
                     } else {
-                        $parent = $root;
+                        $pages  = $model->query($query, 'Kirby\Cms\Pages');
+                        $parent = $pages->parent();
                     }
                     
                     $self  = [
-                        'id'     => (empty($parent->id()) === true || $root->id() === $parent->id()) ? null : $parent->id(),
+                        'id'     => (empty($parent->id()) === true || empty($params['parent']) === true) ? null : $parent->id(),
                         'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
                         'title'  => $parent->title()->value(),
                     ];
+                } else {
+                    $pages = $model->query($query, 'Kirby\Cms\Pages');
                 }
             } else {
                 if (!$parent = $site->find($params['parent'] ?? null)) {
