@@ -42,6 +42,13 @@ return [
         'size' => function (string $size = 'auto') {
             return $size;
         },
+        
+        /**
+         * Optional includes subpages of pages
+         */
+        'subpages' => function (bool $subpages = true) {
+            return $subpages;
+        },
 
         'value' => function ($value = null) {
             return $this->toPages($value);
@@ -86,11 +93,12 @@ return [
                     $field = $this->field();
 
                     return $field->pagepicker([
-                        'image'  => $field->image(),
-                        'info'   => $field->info(),
-                        'parent' => $this->requestQuery('parent'),
-                        'query'  => $field->query(),
-                        'text'   => $field->text()
+                        'image'    => $field->image(),
+                        'info'     => $field->info(),
+                        'parent'   => $this->requestQuery('parent'),
+                        'query'    => $field->query(),
+                        'subpages' => $field->subpages(),
+                        'text'     => $field->text()
                     ]);
                 }
             ]
