@@ -356,7 +356,7 @@ class VTest extends TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('$value is an uncountable object');
 
-        V::size(new \StdClass(), 5);
+        V::size(new \stdClass(), 5);
     }
 
     public function testTime()
