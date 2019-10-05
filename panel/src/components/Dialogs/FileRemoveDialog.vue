@@ -40,7 +40,7 @@ export default {
         .delete(this.parent, this.filename)
         .then(() => {
           // remove data from cache
-          this.$store.dispatch("form/remove", "files/" + this.id);
+          this.$store.dispatch("content/remove", "files/" + this.id);
           this.$store.dispatch("notification/success", ":)");
           this.$events.$emit("file.delete", this.id);
           this.$emit("success");
