@@ -19,7 +19,6 @@ use Kirby\Toolkit\F;
  */
 trait FileActions
 {
-
     /**
      * Renames the file without touching the extension
      * The store is used to actually execute this.
@@ -53,7 +52,9 @@ trait FileActions
             }
 
             // remove the lock of the old file
-            $oldFile->lock()->remove();
+            if ($lock = $oldFile->lock()) {
+                $lock->remove();
+            }
 
             // remove all public versions
             $oldFile->unpublish();
@@ -81,7 +82,7 @@ trait FileActions
     /**
      * Changes the file's sorting number in the meta file
      *
-     * @param integer $sort
+     * @param int $sort
      * @return self
      */
     public function changeSort(int $sort)
@@ -121,8 +122,8 @@ trait FileActions
     /**
      * Copy the file to the given page
      *
-     * @param Kirby\Cms\Page $page
-     * @return Kirby\Cms\File
+     * @param \Kirby\Cms\Page $page
+     * @return \Kirby\Cms\File
      */
     public function copy(Page $page)
     {
@@ -216,7 +217,9 @@ trait FileActions
             $file->unpublish();
 
             // remove the lock of the old file
-            $file->lock()->remove();
+            if ($lock = $file->lock()) {
+                $lock->remove();
+            }
 
             if ($file->kirby()->multilang() === true) {
                 foreach ($file->translations() as $translation) {

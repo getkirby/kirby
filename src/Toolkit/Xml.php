@@ -13,7 +13,6 @@ namespace Kirby\Toolkit;
  */
 class Xml
 {
-
     /**
      * Conversion table for html entities
      *
@@ -57,11 +56,11 @@ class Xml
     /**
      * Creates an XML string from an array
      *
-     * @param  string  $props   The source array
-     * @param  string  $name    The name of the root element
-     * @param  boolean $head    Include the xml declaration head or not
-     * @param  int     $level   The indendation level
-     * @return string  The XML string
+     * @param string $props The source array
+     * @param string $name The name of the root element
+     * @param bool $head Include the xml declaration head or not
+     * @param int $level The indendation level
+     * @return string The XML string
      */
     public static function create($props, string $name = 'root', bool $head = true, $level = 0): string
     {
@@ -117,7 +116,7 @@ class Xml
      *
      * </code>
      *
-     * @param  string  $string
+     * @param string $string
      * @return string
      */
     public static function decode(string $string = null): string
@@ -137,8 +136,8 @@ class Xml
      *
      * </code>
      *
-     * @param  string  $string
-     * @param  boolean $html True: convert to html first
+     * @param string $string
+     * @param bool $html True: convert to html first
      * @return string
      */
     public static function encode(string $string = null, bool $html = true): string
@@ -167,7 +166,7 @@ class Xml
     /**
      * Parses a XML string and returns an array
      *
-     * @param  string  $xml
+     * @param string $xml
      * @return array|false
      */
     public static function parse(string $xml = null)
@@ -186,12 +185,13 @@ class Xml
      * @param string $name
      * @param mixed $content
      * @param array $attr
+     * @param mixed $indent
      * @return string
      */
     public static function tag(string $name, $content = null, array $attr = null, $indent = null): string
     {
         $attr  = Html::attr($attr);
-        $start = '<' .  $name . ($attr ? ' ' . $attr : null) . '>';
+        $start = '<' . $name . ($attr ? ' ' . $attr : null) . '>';
         $end   = '</' . $name . '>';
 
         if (is_array($content) === true) {

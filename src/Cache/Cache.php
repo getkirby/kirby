@@ -16,7 +16,6 @@ namespace Kirby\Cache;
  */
 abstract class Cache
 {
-
     /**
      * Stores all options for the driver
      * @var array
@@ -46,14 +45,14 @@ abstract class Cache
      * @param string $key
      * @param mixed $value
      * @param int $minutes
-     * @return boolean
+     * @return bool
      */
     abstract public function set(string $key, $value, int $minutes = 0): bool;
 
     /**
      * Adds the prefix to the key if given
      *
-     * @param  string $key
+     * @param string $key
      * @return string
      */
     protected function key(string $key): string
@@ -71,7 +70,7 @@ abstract class Cache
      * this needs to be defined by the driver
      *
      * @param string $key
-     * @return Kirby\Cache\Value|null
+     * @return \Kirby\Cache\Value|null
      */
     abstract public function retrieve(string $key);
 
@@ -96,7 +95,7 @@ abstract class Cache
         $value = $this->retrieve($key);
 
         // check for a valid cache value
-        if (!is_a($value, Value::class)) {
+        if (!is_a($value, 'Kirby\Cache\Value')) {
             return $default;
         }
 
@@ -141,7 +140,7 @@ abstract class Cache
         $value = $this->retrieve($key);
 
         // check for a valid Value object
-        if (!is_a($value, Value::class)) {
+        if (!is_a($value, 'Kirby\Cache\Value')) {
             return false;
         }
 
@@ -153,7 +152,7 @@ abstract class Cache
      * Checks if an item in the cache is expired
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function expired(string $key): bool
     {
@@ -182,7 +181,7 @@ abstract class Cache
         $value = $this->retrieve($key);
 
         // check for a valid Value object
-        if (!is_a($value, Value::class)) {
+        if (!is_a($value, 'Kirby\Cache\Value')) {
             return false;
         }
 
@@ -205,7 +204,7 @@ abstract class Cache
      * Determines if an item exists in the cache
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function exists(string $key): bool
     {
@@ -218,7 +217,7 @@ abstract class Cache
      * this needs to be defined by the driver
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     abstract public function remove(string $key): bool;
 
@@ -227,7 +226,7 @@ abstract class Cache
      * whether the operation was successful;
      * this needs to be defined by the driver
      *
-     * @return boolean
+     * @return bool
      */
     abstract public function flush(): bool;
 

@@ -113,7 +113,7 @@ export default {
       // if user started to make changes,
       // start setting lock on each heartbeat
       if (previous === false && current === true) {
-        this.$store.dispatch("heartbeat/remove", [this.getLock, 15]);
+        this.$store.dispatch("heartbeat/remove", this.getLock);
         this.$store.dispatch("heartbeat/add", [this.setLock, 40]);
         return;
       }
@@ -126,16 +126,8 @@ export default {
       }
     },
     id() {
-      // when routed and no new model store id exists,
-      // make sure to remove heartbeats
-      if (!this.id) {
-        this.$store.dispatch("heartbeat/remove", this.getLock);
-        this.$store.dispatch("heartbeat/remove", this.setLock);
-        return;
-      }
-
-      // start listening for content lock
-      if (this.hasChanges === false) {
+      // start listening for content lock, when no changes exist
+      if (this.id && this.hasChanges === false) {
         this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
       }
     }
@@ -159,7 +151,6 @@ export default {
         if (response.supported === false) {
           this.supportsLocking = false;
           this.$store.dispatch("heartbeat/remove", this.getLock);
-          console.warn("Content locking not supported for " + this.id);
           return;
         }
 
@@ -284,7 +275,7 @@ export default {
             return;
           }
 
-          if (response.details) {
+          if (response.details && response.details.length > 0) {
             this.$store.dispatch("notification/error", {
               message: this.$t("error.form.incomplete"),
               details: response.details

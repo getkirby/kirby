@@ -40,7 +40,7 @@
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="go('today')">{{ $t("today") }}</k-button>
+            <k-button @click="selectToday">{{ $t("today") }}</k-button>
           </td>
         </tr>
       </tfoot>
@@ -49,8 +49,6 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
-import padZero from "@/helpers/padZero.js";
 
 export default {
   props: {
@@ -59,19 +57,19 @@ export default {
   },
   data() {
 
-    const current = this.value ? dayjs(this.value) : dayjs();
+    const current = this.value ? this.$library.dayjs(this.value) : this.$library.dayjs();
 
     return {
       day: current.date(),
       month: current.month(),
       year: current.year(),
-      today: dayjs(),
+      today: this.$library.dayjs(),
       current: current,
     };
   },
   computed: {
     date() {
-      return dayjs(`${this.year}-${this.month + 1}-${this.day}`);
+      return this.$library.dayjs(`${this.year}-${this.month + 1}-${this.day}`);
     },
     numberOfDays() {
       return this.date.daysInMonth();
@@ -128,7 +126,7 @@ export default {
       for (var x = this.year - 10; x <= this.year + 10; x++) {
         options.push({
           value: x,
-          text: padZero(x)
+          text: this.$helper.pad(x)
         });
       }
 
@@ -137,7 +135,7 @@ export default {
   },
   watch: {
     value(value) {
-      const current = dayjs(value);
+      const current = this.$library.dayjs(value);
       this.day     = current.date();
       this.month   = current.month();
       this.year    = current.year();
@@ -196,12 +194,17 @@ export default {
       this.month = date.month();
       this.year = date.year();
     },
+    selectToday() {
+      this.set(dayjs());
+      this.select(this.day);
+    },
     select(day) {
+
       if (day) {
         this.day = day;
       }
 
-      const date = dayjs(new Date(
+      const date = this.$library.dayjs(new Date(
         this.year,
         this.month,
         this.day,

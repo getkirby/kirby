@@ -34,7 +34,7 @@ class Role extends Model
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -133,7 +133,7 @@ class Role extends Model
     }
 
     /**
-     * @return Kirby\Cms\Permissions
+     * @return \Kirby\Cms\Permissions
      */
     public function permissions()
     {

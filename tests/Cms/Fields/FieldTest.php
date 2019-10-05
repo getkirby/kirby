@@ -7,7 +7,7 @@ class FieldTest extends TestCase
     public function test__debuginfo()
     {
         $field = new Field(null, 'title', 'Title');
-        $this->assertEquals(['title' => 'Title'], $field->__debuginfo());
+        $this->assertEquals(['title' => 'Title'], $field->__debugInfo());
     }
 
     public function testKey()

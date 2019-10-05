@@ -8,6 +8,7 @@
       type="file"
       tabindex="-1"
       @change="select"
+      @click.stop
     >
 
     <k-dialog ref="dialog" size="medium">
@@ -45,8 +46,6 @@
 </template>
 
 <script>
-import uploadFile from "@/helpers/uploadFile.js";
-
 export default {
   props: {
     url: {
@@ -108,7 +107,7 @@ export default {
 
       this.total = this.files.length;
       this.files.forEach(file => {
-        uploadFile(file, {
+        this.$helper.upload(file, {
           url: this.options.url,
           attributes: this.options.attributes,
           headers: {

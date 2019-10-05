@@ -70,10 +70,24 @@ class UserRules
 
     public static function changeRole(User $user, string $role): bool
     {
-        if ($user->kirby()->user()->isAdmin() === false) {
+        // protect admin from role changes by non-admin
+        if (
+            $user->kirby()->user()->isAdmin() === false &&
+            $user->isAdmin() === true
+        ) {
             throw new PermissionException([
                 'key'  => 'user.changeRole.permission',
                 'data' => ['name' => $user->username()]
+            ]);
+        }
+
+        // prevent non-admins making a user to admin
+        if (
+            $user->kirby()->user()->isAdmin() === false &&
+            $role === 'admin'
+        ) {
+            throw new PermissionException([
+                'key'  => 'user.changeRole.toAdmin'
             ]);
         }
 
@@ -101,23 +115,29 @@ class UserRules
         static::validId($user, $user->id());
         static::validEmail($user, $user->email(), true);
         static::validLanguage($user, $user->language());
-
-        // only admins are allowed to add admins
-        $role = $props['role'] ?? null;
+        
+        if (empty($props['password']) === false) {
+            static::validPassword($user, $props['password']);
+        }
 
         // get the current user if it exists
         $currentUser = $user->kirby()->user();
+        
+        // admins are allowed everything
+        if ($currentUser && $currentUser->isAdmin() === true) {
+            return true;
+        }
+
+        // only admins are allowed to add admins
+        $role = $props['role'] ?? null;
 
         if ($role === 'admin' && $currentUser && $currentUser->isAdmin() === false) {
             throw new PermissionException([
                 'key' => 'user.create.permission'
             ]);
         }
-
-        if (empty($props['password']) === false) {
-            static::validPassword($user, $props['password']);
-        }
-
+        
+        // check user permissions (if not on install)
         if ($user->kirby()->users()->count() > 0) {
             if ($user->permissions()->create() !== true) {
                 throw new PermissionException([

@@ -93,6 +93,6 @@ class ContentTranslationTest extends TestCase
         ];
 
         $this->assertEquals($expected, $translation->toArray());
-        $this->assertEquals($expected, $translation->__debuginfo());
+        $this->assertEquals($expected, $translation->__debugInfo());
     }
 }

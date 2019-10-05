@@ -27,7 +27,7 @@ class SitePermissionsTest extends TestCase
 
         $kirby->impersonate('kirby');
 
-        $site  = new Site;
+        $site  = new Site();
         $perms = $site->permissions();
 
         $this->assertTrue($perms->can($action));
@@ -44,7 +44,7 @@ class SitePermissionsTest extends TestCase
             ]
         ]);
 
-        $site  = new Site;
+        $site  = new Site();
         $perms = $site->permissions();
 
         $this->assertFalse($perms->can($action));

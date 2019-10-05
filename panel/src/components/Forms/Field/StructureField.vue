@@ -99,6 +99,7 @@
                   :value="item[columnName]"
                   :column="column"
                   :field="fields[columnName]"
+                  @input="update(index, columnName, $event)"
                 />
                 <template v-else>
                   <p class="k-structure-table-text">
@@ -131,12 +132,8 @@
 <script>
 import Vue from "vue";
 import Field from "../Field.vue";
-import dayjs from "dayjs";
-import sorter from "@/helpers/sort.js";
-import clone from "@/helpers/clone.js";
 
 Array.prototype.sortBy = function(sortBy) {
-  const sort = sorter();
   const options = sortBy.split(" ");
   const field = options[0];
   const direction = options[1] || "asc";
@@ -146,9 +143,9 @@ Array.prototype.sortBy = function(sortBy) {
     const valueB = String(b[field]).toLowerCase();
 
     if (direction === "desc") {
-      return sort(valueB, valueA);
+      return this.$helper.sort(valueB, valueA);
     } else {
-      return sort(valueA, valueB);
+      return this.$helper.sort(valueA, valueB);
     }
   });
 };
@@ -292,8 +289,8 @@ export default {
 
       Object.keys(this.fields).forEach(fieldName => {
         const field = this.fields[fieldName];
-        if (field.default) {
-          data[fieldName] = clone(field.default);
+        if (field.default !== null) {
+          data[fieldName] = this.$helper.clone(field.default);
         } else {
           data[fieldName] = null;
         }
@@ -354,7 +351,7 @@ export default {
           return value.email;
         }
         case "date": {
-          const date = dayjs(value);
+          const date = this.$library.dayjs(value);
           const format = field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
           return date.isValid() ? date.format(format) : "";
         }
@@ -442,7 +439,7 @@ export default {
     },
     open(index, field) {
       this.currentIndex = index;
-      this.currentModel = clone(this.items[index]);
+      this.currentModel = this.$helper.clone(this.items[index]);
       this.createForm(field);
     },
     beforePaginate() {
@@ -541,8 +538,7 @@ export default {
       if (!fraction) {
         return "auto";
       }
-
-      const parts = fraction.split("/");
+      const parts = fraction.toString().split("/");
 
       if (parts.length !== 2) {
         return "auto";
@@ -552,6 +548,10 @@ export default {
       const b = Number(parts[1]);
 
       return parseFloat(100 / b * a, 2).toFixed(2) + "%";
+    },
+    update(index, column, value) {
+      this.items[index][column] = value;
+      this.onInput();
     }
   }
 };

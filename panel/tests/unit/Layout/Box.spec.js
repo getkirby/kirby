@@ -1,5 +1,9 @@
-import { mount } from '@vue/test-utils'
-import Box from '@/components/Layout/Box.vue'
+import { mount } from '@vue/test-utils';
+import Vue from "vue";
+import Box from '@/components/Layout/Box.vue';
+import Text from "@/components/Misc/Text.vue";
+
+Vue.component("k-text", Text);
 
 describe("Box.vue", () => {
 

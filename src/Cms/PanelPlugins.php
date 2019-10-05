@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -19,7 +18,6 @@ use Kirby\Toolkit\Str;
  */
 class PanelPlugins
 {
-
     /**
      * Cache of all collected plugin files
      *

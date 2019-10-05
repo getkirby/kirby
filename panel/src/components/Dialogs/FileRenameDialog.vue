@@ -18,7 +18,6 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import slug from "@/helpers/slug.js";
 
 export default {
   mixins: [DialogMixin],
@@ -69,7 +68,7 @@ export default {
         });
     },
     sluggify(input) {
-      return slug(input, [this.slugs, this.system.ascii], ".");
+      return this.$helper.slug(input, [this.slugs, this.system.ascii], ".");
     },
     submit() {
       // prevent empty name with just spaces

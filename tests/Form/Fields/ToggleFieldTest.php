@@ -2,7 +2,6 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Form\Field;
 use Kirby\Toolkit\I18n;
 
 class ToggleFieldTest extends TestCase
@@ -44,6 +43,23 @@ class ToggleFieldTest extends TestCase
 
         $field = $this->field('toggle', $props);
         $this->assertEquals('Ja', $field->text());
+    }
+
+    public function testBooleanDefaultValue()
+    {
+        // true
+        $field = $this->field('toggle', [
+            'default' => true
+        ]);
+
+        $this->assertTrue($field->default() === true);
+
+        // false
+        $field = $this->field('toggle', [
+            'default' => false
+        ]);
+
+        $this->assertTrue($field->default() === false);
     }
 
     public function testTextToggle()

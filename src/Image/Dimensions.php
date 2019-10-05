@@ -16,7 +16,6 @@ namespace Kirby\Image;
  */
 class Dimensions
 {
-
     /**
      * the height of the parent object
      *
@@ -48,7 +47,7 @@ class Dimensions
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }
@@ -66,9 +65,9 @@ class Dimensions
     /**
      * Crops the dimensions by width and height
      *
-     * @param    int         $width
-     * @param    int         $height
-     * @return   self
+     * @param int $width
+     * @param int $height
+     * @return self
      */
     public function crop(int $width, int $height = null)
     {
@@ -108,9 +107,9 @@ class Dimensions
      *
      * </code>
      *
-     * @param int         $box    the max width and/or height
-     * @param bool        $force  If true, the dimensions will be
-     *                            upscaled to fit the box if smaller
+     * @param int $box the max width and/or height
+     * @param bool $force If true, the dimensions will be
+     *                    upscaled to fit the box if smaller
      * @return self object with recalculated dimensions
      */
     public function fit(int $box, bool $force = false)
@@ -160,10 +159,10 @@ class Dimensions
      *
      * </code>
      *
-     * @param   int         $fit    the max height
-     * @param   bool        $force  If true, the dimensions will be
-     *                              upscaled to fit the box if smaller
-     * @return  self          object with recalculated dimensions
+     * @param int $fit the max height
+     * @param bool $force If true, the dimensions will be
+     *                    upscaled to fit the box if smaller
+     * @return self object with recalculated dimensions
      */
     public function fitHeight(int $fit = null, bool $force = false)
     {
@@ -173,12 +172,12 @@ class Dimensions
     /**
      * Helper for fitWidth and fitHeight methods
      *
-     * @param   string      $ref    reference (width or height)
-     * @param   int         $fit    the max width
-     * @param   bool        $force  If true, the dimensions will be
-     *                              upscaled to fit the box if smaller
-     * @return  self object with recalculated dimensions
-    */
+     * @param string $ref reference (width or height)
+     * @param int $fit the max width
+     * @param bool $force If true, the dimensions will be
+     *                    upscaled to fit the box if smaller
+     * @return self object with recalculated dimensions
+     */
     protected function fitSize(string $ref, int $fit = null, bool $force = false)
     {
         if ($fit === 0 || $fit === null) {
@@ -213,11 +212,11 @@ class Dimensions
      *
      * </code>
      *
-     * @param   int         $fit    the max width
-     * @param   bool        $force  If true, the dimensions will be
-     *                              upscaled to fit the box if smaller
-     * @return  self object with recalculated dimensions
-    */
+     * @param int $fit the max width
+     * @param bool $force If true, the dimensions will be
+     *                    upscaled to fit the box if smaller
+     * @return self object with recalculated dimensions
+     */
     public function fitWidth(int $fit = null, bool $force = false)
     {
         return $this->fitSize('width', $fit, $force);
@@ -226,10 +225,10 @@ class Dimensions
     /**
      * Recalculates the dimensions by the width and height
      *
-     * @param   int         $width      the max height
-     * @param   int         $height     the max width
-     * @param   bool        $force
-     * @return  self
+     * @param int $width the max height
+     * @param int $height the max width
+     * @param bool $force
+     * @return self
      */
     public function fitWidthAndHeight(int $width = null, int $height = null, bool $force = false)
     {
@@ -286,12 +285,12 @@ class Dimensions
 
         if ($xml !== false) {
             $attr   = $xml->attributes();
-            $width  = floatval($attr->width);
-            $height = floatval($attr->height);
+            $width  = (float)($attr->width);
+            $height = (float)($attr->height);
             if (($width === 0.0 || $height === 0.0) && empty($attr->viewBox) === false) {
                 $box    = explode(' ', $attr->viewBox);
-                $width  = floatval($box[2] ?? 0);
-                $height = floatval($box[3] ?? 0);
+                $width  = (float)($box[2] ?? 0);
+                $height = (float)($box[3] ?? 0);
             }
         }
 
@@ -356,17 +355,17 @@ class Dimensions
     public function ratio(): float
     {
         if ($this->width !== 0 && $this->height !== 0) {
-            return ($this->width / $this->height);
+            return $this->width / $this->height;
         }
 
         return 0;
     }
 
     /**
-     * @param   int         $width
-     * @param   int         $height
-     * @param   bool        $force
-     * @return  self
+     * @param int $width
+     * @param int $height
+     * @param bool $force
+     * @return self
      */
     public function resize(int $width = null, int $height = null, bool $force = false)
     {
@@ -386,7 +385,7 @@ class Dimensions
     /**
      * Resize and crop
      *
-     * @params array $options
+     * @param array $options
      * @return self
      */
     public function thumb(array $options = [])

@@ -20,7 +20,7 @@ return [
             return $blueprint->title();
         },
     ],
-    'type' => SiteBlueprint::class,
+    'type' => 'Kirby\Cms\SiteBlueprint',
     'views' => [
     ],
 ];

@@ -33,7 +33,7 @@ class CollectionTest extends TestCase
     public function test__debuginfo()
     {
         $collection = new Collection(['a' => 'A', 'b' => 'B']);
-        $this->assertEquals(['a', 'b'], $collection->__debuginfo());
+        $this->assertEquals(['a', 'b'], $collection->__debugInfo());
     }
 
     public function assertIsUntouched()
@@ -45,20 +45,31 @@ class CollectionTest extends TestCase
     public function testAppend()
     {
         // simple
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append('a');
         $collection = $collection->append('b');
         $collection = $collection->append('c');
 
         $this->assertEquals([0, 1, 2], $collection->keys());
+        $this->assertEquals(['a', 'b', 'c'], $collection->values());
 
         // with key
-        $collection = new Collection;
+        $collection = new Collection();
         $collection = $collection->append('a', 'A');
         $collection = $collection->append('b', 'B');
         $collection = $collection->append('c', 'C');
 
         $this->assertEquals(['a', 'b', 'c'], $collection->keys());
+        $this->assertEquals(['A', 'B', 'C'], $collection->values());
+
+        // with too many params
+        $collection = new Collection();
+        $collection = $collection->append('a', 'A', 'ignore this');
+        $collection = $collection->append('b', 'B', 'ignore this');
+        $collection = $collection->append('c', 'C', 'ignore this');
+
+        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
+        $this->assertEquals(['A', 'B', 'C'], $collection->values());
     }
 
     public function testCount()
@@ -70,7 +81,7 @@ class CollectionTest extends TestCase
     public function testFilter()
     {
         $func = function ($element) {
-            return ($element == "My second element") ? true : false;
+            return ($element == 'My second element') ? true : false;
         };
 
         $filtered = $this->collection->filter($func);
@@ -283,6 +294,83 @@ class CollectionTest extends TestCase
         $this->assertEquals(1, $this->collection->indexOf('My second element'));
     }
 
+    public function testIntersection()
+    {
+        $collection1 = new Collection([
+            'a' => $a = new StringObject('a'),
+            'b' => $b = new StringObject('b'),
+            'c' => $c = new StringObject('c')
+        ]);
+
+        $collection2 = new Collection([
+            'c' => $c,
+            'd' => $d = new StringObject('d'),
+            'b' => $b
+        ]);
+
+        $collection3 = new Collection([
+            'd' => $d,
+            'e' => $e = new StringObject('e')
+        ]);
+
+        // 1 with 2
+        $result = $collection1->intersection($collection2);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals($b, $result->first());
+        $this->assertEquals($c, $result->last());
+
+        // 2 with 1
+        $result = $collection2->intersection($collection1);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals($c, $result->first());
+        $this->assertEquals($b, $result->last());
+
+        // 1 with 3
+        $result = $collection1->intersection($collection3);
+
+        $this->assertCount(0, $result);
+
+        // 3 with 2
+        $result = $collection3->intersection($collection2);
+
+        $this->assertCount(1, $result);
+        $this->assertEquals($d, $result->first());
+    }
+
+    public function testIntersects()
+    {
+        $collection1 = new Collection([
+            'a' => $a = new StringObject('a'),
+            'b' => $b = new StringObject('b'),
+            'c' => $c = new StringObject('c')
+        ]);
+
+        $collection2 = new Collection([
+            'c' => $c,
+            'd' => $d = new StringObject('d'),
+            'b' => $b
+        ]);
+
+        $collection3 = new Collection([
+            'd' => $d,
+            'e' => $e = new StringObject('e')
+        ]);
+
+        // 1 with 2
+        $this->assertTrue($collection1->intersects($collection2));
+
+        // 2 with 1
+        $this->assertTrue($collection2->intersects($collection1));
+
+        // 1 with 3
+        $this->assertFalse($collection1->intersects($collection3));
+
+        // 3 with 2
+        $this->assertTrue($collection3->intersects($collection2));
+    }
+
     public function testIsEmpty()
     {
         $collection = new Collection([
@@ -391,6 +479,13 @@ class CollectionTest extends TestCase
         // with key
         $collection = new Collection(['b' => 'B', 'c' => 'C']);
         $collection = $collection->prepend('a', 'A');
+
+        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
+        $this->assertEquals(['A', 'B', 'C'], $collection->values());
+
+        // with too many params
+        $collection = new Collection(['b' => 'B', 'c' => 'C']);
+        $collection = $collection->prepend('a', 'A', 'ignore this');
 
         $this->assertEquals(['a', 'b', 'c'], $collection->keys());
         $this->assertEquals(['A', 'B', 'C'], $collection->values());

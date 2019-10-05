@@ -6,7 +6,6 @@
 
 <script>
 export default {
-  name: "KirbyColumn",
   props: {
     width: String
   }

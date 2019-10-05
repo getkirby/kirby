@@ -17,7 +17,6 @@ use TypeError;
  */
 class Component
 {
-
     /**
      * Registry for all component mixins
      *
@@ -138,7 +137,7 @@ class Component
      *
      * @return array
      */
-    public function __debuginfo(): array
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

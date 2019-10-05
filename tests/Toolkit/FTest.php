@@ -404,7 +404,7 @@ class FTest extends TestCase
 
     public function testWriteObject()
     {
-        $input = new \stdClass;
+        $input = new \stdClass();
 
         F::write($this->tmp, $input);
 

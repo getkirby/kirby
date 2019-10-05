@@ -1,6 +1,9 @@
-import { mount } from '@vue/test-utils'
-import Button from '@/components/Navigation/Button.vue'
+import { mount } from "@vue/test-utils";
+import Vue from "vue";
+import Button from "@/components/Navigation/Button.vue";
 import Icon from "@/components/Misc/Icon.vue";
+
+Vue.component("k-icon", Icon);
 
 describe("Button.vue", () => {
 

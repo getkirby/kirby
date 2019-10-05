@@ -73,7 +73,7 @@ export default {
       user: {
         name: "",
         email: "",
-        language: "en",
+        language: "",
         password: "",
         role: "admin"
       },
@@ -131,14 +131,18 @@ export default {
     }
   },
   watch: {
-    translation(value) {
-      this.user.language = value;
+    translation: {
+      handler(value) {
+        this.user.language = value;
+      },
+      immediate: true
     },
     "user.language"(language) {
       this.$store.dispatch("translation/activate", language);
     }
   },
   created() {
+    this.$store.dispatch("form/current", null);
     this.check();
   },
   methods: {

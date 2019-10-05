@@ -1,5 +1,8 @@
 <?php
 
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * System Routes
  */
@@ -54,11 +57,11 @@ return [
             }
 
             if ($system->isInstallable() === false) {
-                throw new Exception('The panel cannot be installed');
+                throw new Exception('The Panel cannot be installed');
             }
 
             if ($system->isInstalled() === true) {
-                throw new Exception('The panel is already installed');
+                throw new Exception('The Panel is already installed');
             }
 
             // create the first user

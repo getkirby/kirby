@@ -13,7 +13,6 @@ namespace Kirby\Cms;
  */
 class PageBlueprint extends Blueprint
 {
-
     /**
      * Creates a new page blueprint object
      * with the given props
@@ -186,7 +185,7 @@ class PageBlueprint extends Blueprint
      * button in the panel and redirects it to a
      * different URL if necessary.
      *
-     * @return string|boolean
+     * @return string|bool
      */
     public function preview()
     {

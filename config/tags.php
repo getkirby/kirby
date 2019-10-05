@@ -8,7 +8,9 @@ use Kirby\Cms\Url;
  */
 return [
 
-    /* Date */
+    /**
+     * Date
+     */
     'date' => [
         'attr' => [],
         'html' => function ($tag) {
@@ -16,7 +18,9 @@ return [
         }
     ],
 
-    /* Email */
+    /**
+     * Email
+     */
     'email' => [
         'attr' => [
             'class',
@@ -35,7 +39,9 @@ return [
         }
     ],
 
-    /* File */
+    /**
+     * File
+     */
     'file' => [
         'attr' => [
             'class',
@@ -66,7 +72,9 @@ return [
         }
     ],
 
-    /* Gist */
+    /**
+     * Gist
+     */
     'gist' => [
         'attr' => [
             'file'
@@ -76,7 +84,9 @@ return [
         }
     ],
 
-    /* Image */
+    /**
+     * Image
+     */
     'image' => [
         'attr' => [
             'alt',
@@ -88,7 +98,6 @@ return [
             'linkclass',
             'rel',
             'target',
-            'text',
             'title',
             'width'
         ],
@@ -143,7 +152,9 @@ return [
         }
     ],
 
-    /* Link */
+    /**
+     * Link
+     */
     'link' => [
         'attr' => [
             'class',
@@ -169,7 +180,9 @@ return [
         }
     ],
 
-    /* Tel */
+    /**
+     * Tel
+     */
     'tel' => [
         'attr' => [
             'class',
@@ -186,7 +199,9 @@ return [
         }
     ],
 
-    /* Twitter */
+    /**
+     * Twitter
+     */
     'twitter' => [
         'attr' => [
             'class',
@@ -216,7 +231,9 @@ return [
         }
     ],
 
-    /* Video */
+    /**
+     * Video
+     */
     'video' => [
         'attr' => [
             'class',

@@ -162,7 +162,7 @@ class HelpersTest extends TestCase
     public function testDumpHelperOnServer()
     {
         Server::$cli = false;
-        $this->assertEquals("<pre>test</pre>", dump('test', false));
+        $this->assertEquals('<pre>test</pre>', dump('test', false));
         Server::$cli = null;
     }
 
@@ -693,10 +693,44 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $video);
     }
 
+    public function testYoutubeVideoWithOptions()
+    {
+        $video = video('https://www.youtube.com/watch?v=xB3s_f7PzYk', [
+            'youtube' => [
+                'controls' => 0
+            ]
+        ]);
+
+        $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
+    public function testVimeoVideoWithOptions()
+    {
+        $video = video('https://vimeo.com/335292911', [
+            'vimeo' => [
+                'controls' => 0
+            ]
+        ]);
+
+        $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911?controls=0"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
     public function testVimeo()
     {
-        $video    = video('https://vimeo.com/335292911');
+        $video    = vimeo('https://vimeo.com/335292911');
         $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
+    public function testVimeoWithOptions()
+    {
+        $video    = vimeo('https://vimeo.com/335292911', ['controls' => 0]);
+        $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911?controls=0"></iframe>';
 
         $this->assertEquals($expected, $video);
     }
@@ -713,6 +747,14 @@ class HelpersTest extends TestCase
     {
         $video    = youtube('https://www.youtube.com/watch?v=xB3s_f7PzYk');
         $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
+    public function testYoutubeWithOptions()
+    {
+        $video    = youtube('https://www.youtube.com/watch?v=xB3s_f7PzYk', ['controls' => 0]);
+        $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
 
         $this->assertEquals($expected, $video);
     }

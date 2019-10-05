@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\TestCase;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use PHPUnit\Framework\TestCase;
 
 class KirbyTagsTest extends TestCase
 {

@@ -14,7 +14,6 @@
         :src="src"
         :srcset="srcset"
         :sizes="sizes"
-        loading="lazy"
         @dragstart.prevent
       >
       <k-loader
@@ -32,8 +31,6 @@
 </template>
 
 <script>
-import ratioPadding from "@/helpers/ratioPadding.js";
-
 export default {
   props: {
     alt: String,
@@ -58,7 +55,7 @@ export default {
   },
   computed: {
     ratioPadding() {
-      return ratioPadding(this.ratio || "1/1");
+      return this.$helper.ratio(this.ratio || "1/1");
     }
   },
   created() {

@@ -31,7 +31,7 @@ class LocationTest extends TestCase
             'lng' => -0.016666666666666666
         ];
         $this->assertEquals($array, $camera->toArray());
-        $this->assertEquals($array, $camera->__debuginfo());
+        $this->assertEquals($array, $camera->__debugInfo());
     }
 
     public function testToString()

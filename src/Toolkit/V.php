@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use Kirby\Http\Idn;
-use Kirby\Toolkit\Str;
 use ReflectionFunction;
 use Throwable;
 
@@ -19,7 +18,6 @@ use Throwable;
  */
 class V
 {
-
     /**
      * An array with all installed validators
      *
@@ -104,11 +102,11 @@ class V
      * a set of rules, using all registered
      * validators
      *
-     * @param  mixed    $value
-     * @param  array    $rules
-     * @param  array    $messages
-     * @param  boolean  $fail
-     * @return boolean|array
+     * @param mixed $value
+     * @param array $rules
+     * @param array $messages
+     * @param bool $fail
+     * @return bool|array
      */
     public static function value($value, array $rules, array $messages = [], bool $fail = true)
     {
@@ -144,9 +142,9 @@ class V
      * a set of rules, using all registered
      * validators
      *
-     * @param  array    $input
-     * @param  array    $rules
-     * @return boolean
+     * @param array $input
+     * @param array $rules
+     * @return bool
      */
     public static function input(array $input, array $rules): bool
     {
@@ -181,9 +179,9 @@ class V
     /**
      * Calls an installed validator and passes all arguments
      *
-     * @param  string   $method
-     * @param  array    $arguments
-     * @return boolean
+     * @param string $method
+     * @param array $arguments
+     * @return bool
      */
     public static function __callStatic(string $method, array $arguments): bool
     {
@@ -245,9 +243,9 @@ V::$validators = [
      */
     'date' => function ($value): bool {
         $date = date_parse($value);
-        return ($date !== false &&
+        return $date !== false &&
                 $date['error_count'] === 0 &&
-                $date['warning_count'] === 0);
+                $date['warning_count'] === 0;
     },
 
     /**
@@ -483,7 +481,8 @@ V::$validators = [
      */
     'url' => function ($value): bool {
         // In search for the perfect regular expression: https://mathiasbynens.be/demo/url-regex
-        $regex = '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iu';
+        // Added localhost support and removed 127.*.*.* ip restriction
+        $regex = '_^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:localhost)|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$_iu';
         return preg_match($regex, $value) !== 0;
     }
 ];

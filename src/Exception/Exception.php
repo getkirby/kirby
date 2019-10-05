@@ -2,7 +2,6 @@
 
 namespace Kirby\Exception;
 
-use Kirby\Cms\App;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -43,7 +42,7 @@ class Exception extends \Exception
     /**
      * Whether the exception message could be translated into the user's language
      *
-     * @var boolean
+     * @var bool
      */
     protected $isTranslated = true;
 
@@ -195,7 +194,7 @@ class Exception extends \Exception
      * Returns whether the exception message could
      * be translated into the user's language
      *
-     * @return boolean
+     * @return bool
      */
     final public function isTranslated(): bool
     {

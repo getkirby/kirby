@@ -24,7 +24,7 @@ return [
             return $site->drafts();
         },
         'files' => function (Site $site) {
-            return $site->files()->sortBy('sort', 'asc');
+            return $site->files()->sortBy('sort', 'asc', 'filename', 'asc');
         },
         'options' => function (Site $site) {
             return $site->permissions()->toArray();
@@ -39,7 +39,7 @@ return [
             return $site->url();
         },
     ],
-    'type' => Site::class,
+    'type' => 'Kirby\Cms\Site',
     'views' => [
         'compact' => [
             'title',

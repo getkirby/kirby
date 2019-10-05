@@ -2,9 +2,8 @@
 
 namespace Kirby\Text;
 
-use Closure;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Representation and parse of a single KirbyTag.
@@ -129,7 +128,7 @@ class KirbyTag
     {
         $callback = static::$types[$this->type]['html'] ?? null;
 
-        if (is_a($callback, Closure::class) === true) {
+        if (is_a($callback, 'Closure') === true) {
             return (string)$callback($this);
         }
 

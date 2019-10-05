@@ -9,7 +9,6 @@ use Kirby\Toolkit\Str;
  */
 class BasicAuth extends BearerAuth
 {
-
     /**
      * @var string
      */

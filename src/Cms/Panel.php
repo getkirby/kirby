@@ -37,11 +37,16 @@ class Panel
         return false;
     }
 
+    public static function icons(App $kirby): string
+    {
+        return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
+    }
+
     /**
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
-     * @param Kirby\Cms\App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return bool
      */
     public static function link(App $kirby): bool
@@ -73,8 +78,8 @@ class Panel
     /**
      * Renders the main panel view
      *
-     * @param Kirby\Cms\App $kirby
-     * @return Kirby\Cms\Response
+     * @param \Kirby\Cms\App $kirby
+     * @return \Kirby\Cms\Response
      */
     public static function render(App $kirby)
     {
@@ -98,6 +103,7 @@ class Panel
             'config'    => $kirby->option('panel'),
             'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
             'customCss' => static::customCss($kirby),
+            'icons'     => static::icons($kirby),
             'pluginCss' => $plugins->url('css'),
             'pluginJs'  => $plugins->url('js'),
             'panelUrl'  => $uri->path()->toString(true) . '/',

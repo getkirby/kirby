@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-
 class StructureTest extends TestCase
 {
     public function testCreate()

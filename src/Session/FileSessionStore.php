@@ -55,8 +55,8 @@ class FileSessionStore extends SessionStore
      * Needs to make sure that the session does not already exist
      * and needs to reserve it by locking it exclusively.
      *
-     * @param  int    $expiryTime Timestamp
-     * @return string             Randomly generated session ID (without timestamp)
+     * @param int $expiryTime Timestamp
+     * @return string Randomly generated session ID (without timestamp)
      */
     public function createId(int $expiryTime): string
     {
@@ -89,10 +89,10 @@ class FileSessionStore extends SessionStore
     /**
      * Checks if the given session exists
      *
-     * @param  int     $expiryTime Timestamp
-     * @param  string  $id         Session ID
-     * @return boolean             true:  session exists,
-     *                             false: session doesn't exist
+     * @param int $expiryTime Timestamp
+     * @param string $id Session ID
+     * @return bool true:  session exists,
+     *              false: session doesn't exist
      */
     public function exists(int $expiryTime, string $id): bool
     {
@@ -108,8 +108,8 @@ class FileSessionStore extends SessionStore
      *
      * Needs to throw an Exception on error.
      *
-     * @param  int    $expiryTime Timestamp
-     * @param  string $id         Session ID
+     * @param int $expiryTime Timestamp
+     * @param string $id Session ID
      * @return void
      */
     public function lock(int $expiryTime, string $id)
@@ -146,8 +146,8 @@ class FileSessionStore extends SessionStore
      *
      * Needs to throw an Exception on error.
      *
-     * @param  int    $expiryTime Timestamp
-     * @param  string $id         Session ID
+     * @param int $expiryTime Timestamp
+     * @param string $id Session ID
      * @return void
      */
     public function unlock(int $expiryTime, string $id)
@@ -187,8 +187,8 @@ class FileSessionStore extends SessionStore
      *
      * Needs to throw an Exception on error.
      *
-     * @param  int    $expiryTime Timestamp
-     * @param  string $id         Session ID
+     * @param int $expiryTime Timestamp
+     * @param string $id Session ID
      * @return string
      */
     public function get(int $expiryTime, string $id): string
@@ -250,9 +250,9 @@ class FileSessionStore extends SessionStore
      * Needs to make sure that the session exists.
      * Needs to throw an Exception on error.
      *
-     * @param  int    $expiryTime Timestamp
-     * @param  string $id         Session ID
-     * @param  string $data       Session data to write
+     * @param int $expiryTime Timestamp
+     * @param string $id Session ID
+     * @param string $data Session data to write
      * @return void
      */
     public function set(int $expiryTime, string $id, string $data)
@@ -303,8 +303,8 @@ class FileSessionStore extends SessionStore
      *
      * Needs to throw an Exception on error.
      *
-     * @param  int    $expiryTime Timestamp
-     * @param  string $id         Session ID
+     * @param int $expiryTime Timestamp
+     * @param string $id Session ID
      * @return void
      */
     public function destroy(int $expiryTime, string $id)
@@ -392,8 +392,8 @@ class FileSessionStore extends SessionStore
     /**
      * Returns the combined name based on expiry time and ID
      *
-     * @param  int    $expiryTime Timestamp
-     * @param  string $id         Session ID
+     * @param int $expiryTime Timestamp
+     * @param string $id Session ID
      * @return string
      */
     protected function name(int $expiryTime, string $id): string
@@ -404,7 +404,7 @@ class FileSessionStore extends SessionStore
     /**
      * Returns the full path to the session file
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return string
      */
     protected function path(string $name): string
@@ -415,8 +415,8 @@ class FileSessionStore extends SessionStore
     /**
      * Returns a PHP file handle for a session
      *
-     * @param  string   $name Combined name
-     * @return resource       File handle
+     * @param string $name Combined name
+     * @return resource File handle
      */
     protected function handle(string $name)
     {
@@ -457,7 +457,7 @@ class FileSessionStore extends SessionStore
     /**
      * Closes an open file handle
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function closeHandle(string $name)

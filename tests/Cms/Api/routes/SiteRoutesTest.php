@@ -59,6 +59,9 @@ class SiteRoutesTest extends TestCase
             'site' => [
                 'files' => [
                     [
+                        'filename' => 'c.jpg',
+                    ],
+                    [
                         'filename' => 'a.jpg',
                     ],
                     [
@@ -72,8 +75,10 @@ class SiteRoutesTest extends TestCase
 
         $response = $app->api()->call('site/files');
 
-        $this->assertEquals('a.jpg', $response['data'][0]['filename']);
-        $this->assertEquals('b.jpg', $response['data'][1]['filename']);
+        $this->assertCount(3, $response['data']);
+        $this->assertSame('a.jpg', $response['data'][0]['filename']);
+        $this->assertSame('b.jpg', $response['data'][1]['filename']);
+        $this->assertSame('c.jpg', $response['data'][2]['filename']);
     }
 
     public function testFilesSorted()

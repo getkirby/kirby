@@ -2,8 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
-use Kirby\Toolkit\F;
+use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 
 class PageTranslationsTest extends TestCase
@@ -200,5 +199,66 @@ class PageTranslationsTest extends TestCase
         $page = $this->app()->page('grandma');
         $this->assertCount(2, $page->translations());
         $this->assertEquals(['en', 'de'], $page->translations()->keys());
+    }
+
+    public function testUntranslatableFields()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => $fixtures = __DIR__ . '/fixtures/PageTranslationsTest'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'fields' => [
+                    'a' => [
+                        'type' => 'text'
+                    ],
+                    'b' => [
+                        'type' => 'text',
+                        'translate' => false
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $en = $page->update($input = [
+            'a' => 'A',
+            'b' => 'B'
+        ]);
+
+        $this->assertSame($input, $en->content('en')->data());
+
+        $de = $page->update([
+            'a' => 'A',
+            'b' => 'B'
+        ], 'de');
+
+        $expected = [
+            'a' => 'A',
+            'b' => null
+        ];
+
+        $this->assertSame($expected, $de->content('de')->data());
+
+        Dir::remove($fixtures);
     }
 }

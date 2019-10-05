@@ -107,6 +107,19 @@ class Validations
         return true;
     }
 
+    public static function pattern(Field $field, $value): bool
+    {
+        if ($field->isEmpty($value) === false && $field->pattern() !== null) {
+            if (V::match($value, '/' . $field->pattern() . '/i') === false) {
+                throw new InvalidArgumentException(
+                    V::message('match')
+                );
+            }
+        }
+
+        return true;
+    }
+
     public static function required(Field $field, $value): bool
     {
         if ($field->isRequired() === true && $field->save() === true && $field->isEmpty($value) === true) {

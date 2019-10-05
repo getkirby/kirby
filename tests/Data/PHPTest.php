@@ -19,7 +19,7 @@ class PHPTest extends TestCase
         $expected = __DIR__ . '/fixtures/php/expected.php';
         $result   = PHP::encode(include $input);
 
-        $this->assertEquals(trim(file_get_contents($expected)), $result);
+        $this->assertSame(trim(file_get_contents($expected)), $result);
     }
 
     /**
@@ -30,7 +30,7 @@ class PHPTest extends TestCase
         $input  = include __DIR__ . '/fixtures/php/input.php';
         $result = PHP::decode($input);
 
-        $this->assertEquals($input, $result);
+        $this->assertSame($input, $result);
     }
 
     /**
@@ -41,7 +41,7 @@ class PHPTest extends TestCase
         $input  = __DIR__ . '/fixtures/php/input.php';
         $result = PHP::read($input);
 
-        $this->assertEquals($result, include $input);
+        $this->assertSame($result, include $input);
     }
 
     /**
@@ -67,8 +67,8 @@ class PHPTest extends TestCase
 
         $this->assertTrue(PHP::write($file, $input));
 
-        $this->assertEquals($input, include $file);
-        $this->assertEquals($input, PHP::read($file));
+        $this->assertSame($input, include $file);
+        $this->assertSame($input, PHP::read($file));
 
         F::remove($file);
     }

@@ -16,7 +16,6 @@ use Throwable;
  */
 class View
 {
-
     /**
      * The absolute path to the view file
      *
@@ -35,7 +34,7 @@ class View
      * Creates a new view object
      *
      * @param string $file
-     * @param array  $data
+     * @param array $data
      */
     public function __construct(string $file, array $data = [])
     {
@@ -57,7 +56,7 @@ class View
     /**
      * Checks if the template file exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
