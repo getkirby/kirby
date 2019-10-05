@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 class FilesApiCollectionTest extends TestCase
 {
+    protected $api;
+    protected $app;
+
     public function setUp(): void
     {
         $this->app = new App([

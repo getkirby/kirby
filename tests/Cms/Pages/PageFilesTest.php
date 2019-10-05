@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 class PageFilesTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->app = new App([

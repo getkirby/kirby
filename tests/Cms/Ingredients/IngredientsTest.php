@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class IngredientsTest extends TestCase
 {
+    protected $ingredients;
+
     public function setUp(): void
     {
         $this->ingredients = Ingredients::bake([

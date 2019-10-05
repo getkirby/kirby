@@ -148,6 +148,7 @@ class RouterTest extends TestCase
                         return 'a';
                     }
 
+                    /** @var \Kirby\Http\Route $this */
                     $this->next();
                 }
             ],
@@ -158,6 +159,7 @@ class RouterTest extends TestCase
                         return 'b';
                     }
 
+                    /** @var \Kirby\Http\Route $this */
                     $this->next();
                 }
             ],
@@ -168,6 +170,7 @@ class RouterTest extends TestCase
                         return 'c';
                     }
 
+                    /** @var \Kirby\Http\Route $this */
                     $this->next();
                 }
             ]

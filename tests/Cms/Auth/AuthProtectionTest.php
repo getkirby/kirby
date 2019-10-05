@@ -9,6 +9,10 @@ require_once __DIR__ . '/../mocks.php';
  */
 class AuthProtectionTest extends TestCase
 {
+    protected $app;
+    protected $auth;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->app = new App([

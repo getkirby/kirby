@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 class SqlTest extends TestCase
 {
+    protected $database;
+
     public function setUp(): void
     {
         $this->database = new Database([
