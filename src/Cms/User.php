@@ -446,21 +446,22 @@ class User extends ModelWithContent
      */
     public function logout($session = null): void
     {
-        $kirby = $this->kirby();
-
+        $kirby   = $this->kirby();
         $session = $this->sessionFromOptions($session);
+
+        $kirby->trigger('user.logout:before', $this, $session);
 
         $session->data()->remove('user.id');
 
         if ($session->data()->get() === []) {
             // session is now empty, we might as well destroy it
             $session->destroy();
-            
+
             $kirby->trigger('user.logout:after', $this, null);
         } else {
             // privilege change
             $session->regenerateToken();
-            
+
             $kirby->trigger('user.logout:after', $this, $session);
         }
     }
