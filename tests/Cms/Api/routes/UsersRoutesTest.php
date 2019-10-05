@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class UsersRoutesTest extends TestCase
 {
+    protected $app;
+
     public function setUp(): void
     {
         $this->app = new App([

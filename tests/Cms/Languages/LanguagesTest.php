@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class LanguagesTest extends TestCase
 {
+    protected $app;
+    protected $languages;
+
     public function setUp(): void
     {
         $this->app = new App([

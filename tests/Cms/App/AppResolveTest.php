@@ -6,6 +6,8 @@ use Kirby\Toolkit\F;
 
 class AppResolveTest extends TestCase
 {
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->fixtures = __DIR__ . '/fixtures/AppResolveTest';

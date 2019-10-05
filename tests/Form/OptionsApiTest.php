@@ -9,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 class OptionsApiTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->app = new App([

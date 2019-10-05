@@ -19,15 +19,18 @@ class StringObject
 
 class CollectionTest extends TestCase
 {
+    protected $collection;
+    protected $sampleData;
+
     public function setUp(): void
     {
-        $this->data = [
+        $this->sampleData = [
             'first'  => 'My first element',
             'second' => 'My second element',
             'third'  => 'My third element',
         ];
 
-        $this->collection = new Collection($this->data);
+        $this->collection = new Collection($this->sampleData);
     }
 
     public function test__debuginfo()
@@ -39,7 +42,7 @@ class CollectionTest extends TestCase
     public function assertIsUntouched()
     {
         // the original collection must to be untouched
-        $this->assertEquals($this->data, $this->collection->toArray());
+        $this->assertEquals($this->sampleData, $this->collection->toArray());
     }
 
     public function testAppend()
@@ -99,8 +102,8 @@ class CollectionTest extends TestCase
 
     public function testFlip()
     {
-        $this->assertEquals(array_reverse($this->data, true), $this->collection->flip()->toArray());
-        $this->assertEquals($this->data, $this->collection->flip()->flip()->toArray());
+        $this->assertEquals(array_reverse($this->sampleData, true), $this->collection->flip()->toArray());
+        $this->assertEquals($this->sampleData, $this->collection->flip()->flip()->toArray());
         $this->assertIsUntouched();
     }
 
@@ -461,9 +464,9 @@ class CollectionTest extends TestCase
 
     public function testOffsetAndLimit()
     {
-        $this->assertEquals(array_slice($this->data, 1), $this->collection->offset(1)->toArray());
-        $this->assertEquals(array_slice($this->data, 0, 1), $this->collection->limit(1)->toArray());
-        $this->assertEquals(array_slice($this->data, 1, 1), $this->collection->offset(1)->limit(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 1), $this->collection->offset(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 0, 1), $this->collection->limit(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 1, 1), $this->collection->offset(1)->limit(1)->toArray());
         $this->assertIsUntouched();
     }
 
@@ -603,9 +606,9 @@ class CollectionTest extends TestCase
 
     public function testSlice()
     {
-        $this->assertEquals(array_slice($this->data, 1), $this->collection->slice(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 1), $this->collection->slice(1)->toArray());
         $this->assertEquals(2, $this->collection->slice(1)->count());
-        $this->assertEquals(array_slice($this->data, 0, 1), $this->collection->slice(0, 1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 0, 1), $this->collection->slice(0, 1)->toArray());
         $this->assertEquals(1, $this->collection->slice(0, 1)->count());
         $this->assertIsUntouched();
     }
