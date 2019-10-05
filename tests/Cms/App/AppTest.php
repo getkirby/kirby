@@ -10,6 +10,8 @@ use Kirby\Http\Route;
  */
 class AppTest extends TestCase
 {
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->fixtures = __DIR__ . '/fixtures/AppTest';

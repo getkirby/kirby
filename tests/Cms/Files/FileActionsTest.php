@@ -252,10 +252,10 @@ class FileActionsTest extends TestCase
 
         $app = $this->app->clone([
             'hooks' => [
-                'file.create:before' => function (File $file, Image $image) use (&$before, $phpunit, $parent) {
+                'file.create:before' => function (File $file, Image $image) use (&$before) {
                     $before = true;
                 },
-                'file.create:after' => function (File $file) use (&$after, $phpunit, $parent) {
+                'file.create:after' => function (File $file) use (&$after, $phpunit) {
                     $phpunit->assertTrue($file->siblings(true)->has($file));
                     $phpunit->assertTrue($file->parent()->files()->has($file));
                     $phpunit->assertEquals('test.md', $file->filename());

@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 /**
  * Mock for the PHP time() function to ensure reliable testing
  *

@@ -4,6 +4,10 @@ namespace Kirby\Cms;
 
 class UserBlueprintApiModelTest extends TestCase
 {
+    protected $api;
+    protected $app;
+    protected $user;
+
     public function attr($object, $attr)
     {
         return $this->api->resolve($object)->select($attr)->toArray()[$attr];
