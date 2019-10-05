@@ -6,6 +6,11 @@ use Kirby\Toolkit\Dir;
 
 class ApiTest extends TestCase
 {
+    protected $api;
+    protected $locale;
+    protected $app;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->app = new App([

@@ -7,6 +7,8 @@ use Kirby\Toolkit\F;
 
 class AppComponentsTest extends TestCase
 {
+    protected $kirby;
+
     public function setUp(): void
     {
         $this->kirby = new App([

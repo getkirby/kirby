@@ -9,6 +9,7 @@ use Kirby\Toolkit\I18n;
 class RouterTest extends TestCase
 {
     protected $app;
+    protected $fixtures;
 
     public function setUp(): void
     {

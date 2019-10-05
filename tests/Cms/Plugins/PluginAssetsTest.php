@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class PluginAssetsTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->fixtures = __DIR__ . '/fixtures/PluginAssetsTest';
