@@ -7,6 +7,9 @@ use stdClass;
 
 class MockObject extends Model
 {
+    protected $id;
+    protected $group;
+
     public function __construct(array $props = [])
     {
         $this->id    = $props['id'];

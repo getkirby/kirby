@@ -38,17 +38,17 @@ class CollectionTestCase extends TestCase
 
     public function assertCollectionCount(int $count)
     {
-        return $this->assertCount($count, $this->collection());
+        $this->assertCount($count, $this->collection());
     }
 
     public function assertCollectionHasPagination()
     {
-        return $this->assertInstanceOf(Pagination::class, $this->collectionPagination());
+        $this->assertInstanceOf(Pagination::class, $this->collectionPagination());
     }
 
     public function assertCollectionHasNoPagination()
     {
-        return $this->assertNotInstanceOf(Pagination::class, $this->collectionPagination());
+        $this->assertNotInstanceOf(Pagination::class, $this->collectionPagination());
     }
 
     public function testCollectionType()

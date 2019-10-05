@@ -10,6 +10,7 @@ use Kirby\Toolkit\Dir;
 
 class HelpersTest extends TestCase
 {
+    protected $fixtures;
     protected $kirby;
 
     public function setUp(): void

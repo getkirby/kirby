@@ -26,6 +26,8 @@ class DummyUser extends User
 
 class AppPluginsTest extends TestCase
 {
+    protected $fixtures;
+
     public function setUp(): void
     {
         App::destroy();
@@ -138,7 +140,7 @@ class AppPluginsTest extends TestCase
                     return [
                         [
                             'pattern' => 'b',
-                            'action'  => function () use ($kirby) {
+                            'action'  => function () {
                                 return 'b';
                             }
                         ]
@@ -355,7 +357,7 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'hooks' => [
-                'testHook' => function ($message) use ($phpUnit, &$executed) {
+                'testHook' => function ($message) use ($phpUnit) {
                     $phpUnit->assertEquals('test', $message);
                 }
             ]
