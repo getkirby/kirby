@@ -198,7 +198,7 @@ export default {
           this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
           this.$store.dispatch("title", this.page.title);
 
-          this.$store.dispatch("form/create", {
+          this.$store.dispatch("content/create", {
             id: "pages/" + this.page.id,
             api: this.$api.pages.link(this.page.id),
             content: this.page.content

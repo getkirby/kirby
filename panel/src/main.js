@@ -35,6 +35,9 @@ import store from "./store/store.js";
     window.panel.plugins.created.forEach(plugin => {
       plugin(this);
     });
+
+    // initialize content store
+    this.$store.dispatch("content/init");
   },
   render: h => {
     return h(App);

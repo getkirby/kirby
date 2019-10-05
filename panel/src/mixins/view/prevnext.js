@@ -1,7 +1,7 @@
 export default {
   computed: {
     isLocked() {
-      return this.$store.getters["form/lock"] !== null;
+      return this.$store.state.content.status.lock !== null;
     }
   },
   created() {

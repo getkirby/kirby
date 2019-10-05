@@ -28,14 +28,11 @@ export default {
     };
   },
   computed: {
-    id() {
-      return this.$store.state.form.current;
-    },
     language() {
       return this.$store.state.languages.current;
     },
     values() {
-      return this.$store.getters["form/values"](this.id);
+      return this.$store.getters["content/values"]();
     }
   },
   watch: {
@@ -48,8 +45,7 @@ export default {
   },
   methods: {
     input(values, field, fieldName) {
-      this.$store.dispatch("form/update", [
-        this.id,
+      this.$store.dispatch("content/update", [
         fieldName,
         values[fieldName]
       ]);
