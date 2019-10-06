@@ -42,9 +42,9 @@ return [
         'size' => function (string $size = 'auto') {
             return $size;
         },
-        
+
         /**
-         * Optional includes subpages of pages
+         * Optionally include subpages of pages
          */
         'subpages' => function (bool $subpages = true) {
             return $subpages;

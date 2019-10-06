@@ -7,34 +7,38 @@ return [
             $subpages = $params['subpages'] ?? true;
             $model    = $this->model();
             $site     = $this->kirby()->site();
-
+            $root     = $site;
+            
             if (empty($query) === false) {
                 if ($subpages === true) {
+                    $root  = $model->query($query, 'Kirby\Cms\Pages');
+                    
                     if ($parent = $site->find($params['parent'] ?? null)) {
                         $pages = $parent->children();
                     } else {
-                        $pages  = $model->query($query, 'Kirby\Cms\Pages');
+                        $pages  = $root;
                         $parent = $pages->parent();
                     }
                 } else {
-                    $pages = $model->query($query, 'Kirby\Cms\Pages');
+                    $pages  = $model->query($query, 'Kirby\Cms\Pages');
+                    $parent = null;
                 }
             } else {
                 if (!$parent = $site->find($params['parent'] ?? null)) {
-                    $parent = $site;
+                    $parent = $root;
                 }
                 
                 $pages = $parent->children();
             }
             
-            if ($subpages === true) {
+            if ($subpages === true && $parent !== null) {
                 $self  = [
-                    'id'     => (empty($parent->id()) === true || empty($params['parent']) === true) ? null : $parent->id(),
+                    'id'     => (empty($parent->id()) === true || $parent->id() === $root->parent()->id()) ? null : $parent->id(),
                     'parent' => is_a($parent->parent(), 'Kirby\Cms\Page') === true ? $parent->parent()->id() : null,
                     'title'  => $parent->title()->value(),
                 ];
             }
-
+            
             $children = [];
 
             foreach ($pages as $index => $page) {
