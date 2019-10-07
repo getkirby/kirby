@@ -237,10 +237,18 @@ export default {
     current(context, id) {
       context.commit("CURRENT", id);
     },
+    disable(context) {
+      context.commit("STATUS", false);
+    },
+    enable(context) {
+      context.commit("STATUS", true);
+    },
     lock(context, lock) {
       context.commit("LOCK", lock);
     },
     move(context, [from, to]) {
+      from = context.getters.id(from);
+      to   = context.getters.id(to);
       context.commit("MOVE", [from, to]);
     },
     remove(context, id) {
@@ -263,7 +271,7 @@ export default {
       }
 
       // disable form while saving
-      context.dispatch("status", false);
+      context.dispatch("disable");
       
       const model = context.getters.model(id);      
       const data  = {...model.originals, ...model.changes};
@@ -276,17 +284,12 @@ export default {
           context.commit("CREATE", [id, { originals: data }]);
           // revert unsaved changes (which also removes localStorage enty)
           context.dispatch("revert", id);
-          // enable form again
-          context.dispatch("status", true);
+          context.dispatch("enable");
         })
         .catch(error => {
-          // enable form again and throw error
-          context.dispatch("status", true);
+          context.dispatch("enable");
           throw error;
         });
-    },
-    status(context, enabled = true) {
-      context.commit("STATUS", enabled);
     },
     unlock(context, unlock) {
       context.commit("UNLOCK", unlock);
