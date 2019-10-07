@@ -54,16 +54,7 @@ return [
             return $files->nth($index + 1);
         },
         'options' => function (File $file) {
-            $options = $file->permissions()->toArray();
-            $lock    = $file->lock();
-
-            if ($lock && $lock->isLocked()) {
-                foreach ($options as $key => $value) {
-                    $options[$key] = false;
-                }
-            }
-
-            return $options;
+            return $file->panelOptions();
         },
         'panelIcon' => function (File $file) {
             return $file->panelIcon();
