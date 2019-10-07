@@ -247,6 +247,17 @@ abstract class ModelWithContent extends Model
     }
 
     /**
+     * Checks if the model is locked for the current user
+     *
+     * @return bool
+     */
+    public function isLocked(): bool
+    {
+        $lock = $this->lock();
+        return $lock && $lock->isLocked() === true;
+    }
+
+    /**
      * Checks if the data has any errors
      *
      * @return bool
@@ -380,6 +391,31 @@ abstract class ModelWithContent extends Model
         }
 
         return $image;
+    }
+
+    /**
+     * Returns an array of all actions
+     * that can be performed in the Panel
+     * This also checks for the lock status
+     *
+     * @param array $unlock An array of options that will be force-unlocked
+     * @return array
+     */
+    public function panelOptions(array $unlock = []): array
+    {
+        $options = $this->permissions()->toArray();
+
+        if ($this->isLocked()) {
+            foreach ($options as $key => $value) {
+                if (in_array($key, $unlock)) {
+                    continue;
+                }
+
+                $options[$key] = false;
+            }
+        }
+
+        return $options;
     }
 
     /**
