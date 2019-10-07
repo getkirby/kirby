@@ -231,7 +231,7 @@ class Mime
         $accepted = Str::accepted($pattern);
 
         foreach ($accepted as $m) {
-            if (static::matchWildcard($m['value'], $mime) === true) {
+            if (static::matches($mime, $m['value']) === true) {
                 return true;
             }
         }
@@ -243,11 +243,11 @@ class Mime
      * Tests if a MIME wildcard pattern from an `Accept` header
      * matches a given type
      *
-     * @param string $wildcard
      * @param string $test
+     * @param string $wildcard
      * @return bool
      */
-    public static function matchWildcard(string $wildcard, string $test): bool
+    public static function matches(string $test, string $wildcard): bool
     {
         return fnmatch($wildcard, $test, FNM_PATHNAME) === true;
     }
