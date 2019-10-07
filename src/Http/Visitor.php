@@ -194,7 +194,7 @@ class Visitor
 
             // test each option against wildcard `Accept` values
             foreach ($mimeTypes as $expectedMime) {
-                if (Mime::matchWildcard($acceptedMime->type(), $expectedMime) === true) {
+                if (Mime::matches($expectedMime, $acceptedMime->type()) === true) {
                     return $expectedMime;
                 }
             }
