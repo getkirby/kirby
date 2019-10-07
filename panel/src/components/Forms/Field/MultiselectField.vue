@@ -5,6 +5,7 @@
     v-bind="$props"
     class="k-multiselect-field"
     @blur="blur"
+    @keydown.native.enter.prevent="focus"
   >
     <k-input
       ref="input"
@@ -57,6 +58,9 @@ export default {
     focus() {
       this.$refs.input.focus();
     }
+  },
+  mounted: function() {
+    this.$refs.input.$el.setAttribute('tabindex', 0);
   }
 };
 </script>

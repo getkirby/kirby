@@ -10,9 +10,11 @@ import slug from "@/helpers/slug.js";
 import sort from "@/helpers/sort.js";
 import string from "@/helpers/string.js";
 import upload from "@/helpers/upload.js";
+import isUploadEvent from "@/helpers/isUploadEvent.js";
 
 Vue.prototype.$helper = {
   clone: clone,
+  isUploadEvent: isUploadEvent,
   debounce: debounce,
   pad: pad,
   ratio: ratio,
