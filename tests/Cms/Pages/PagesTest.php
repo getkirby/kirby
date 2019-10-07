@@ -402,6 +402,34 @@ class PagesTest extends TestCase
         $this->assertEquals($expected, $pages->index(true)->keys());
     }
 
+    public function testNotTemplate()
+    {
+        $pages = Pages::factory([
+            [
+                'slug'     => 'a',
+                'template' => 'a'
+            ],
+            [
+                'slug'     => 'b',
+                'template' => 'b'
+            ],
+            [
+                'slug'     => 'c',
+                'template' => 'c'
+            ],
+            [
+                'slug'     => 'd',
+                'template' => 'a'
+            ],
+        ]);
+
+        $this->assertEquals(['a', 'b', 'c', 'd'], $pages->notTemplate(null)->pluck('slug'));
+        $this->assertEquals(['b', 'c'], $pages->notTemplate('a')->pluck('slug'));
+        $this->assertEquals(['c'], $pages->notTemplate(['a', 'b'])->pluck('slug'));
+        $this->assertEquals(['a', 'b', 'c', 'd'], $pages->notTemplate(['z'])->pluck('slug'));
+        $this->assertEquals([], $pages->notTemplate(['a', 'b', 'c'])->pluck('slug'));
+    }
+
     public function testNums()
     {
         $pages = Pages::factory([
