@@ -27,8 +27,7 @@ return [
      */
     'languages' => [
         'model' => 'language',
-        'type'  => 'Kirby\Cms\Languages',
-        'view'  => 'compact'
+        'type'  => 'Kirby\Cms\Languages'
     ],
 
     /**
