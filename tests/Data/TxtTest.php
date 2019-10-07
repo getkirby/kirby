@@ -25,13 +25,13 @@ class TxtTest extends TestCase
         ];
 
         $data = Txt::encode($array);
-        $this->assertEquals(
+        $this->assertSame(
             "Title: Title\n\n----\n\nText: Text",
             $data
         );
 
         $result = Txt::decode($data);
-        $this->assertEquals($array, $result);
+        $this->assertSame($array, $result);
     }
 
     /**
@@ -49,7 +49,7 @@ class TxtTest extends TestCase
         ];
 
         $data = Txt::encode($array);
-        $this->assertEquals(
+        $this->assertSame(
             "Title: Title\n\n----\n\nField: content",
             $data
         );
@@ -68,7 +68,7 @@ class TxtTest extends TestCase
         ];
 
         $data = Txt::encode($array);
-        $this->assertEquals(
+        $this->assertSame(
             "Title: Title\n\n----\n\nText:\n\nText\nText",
             $data
         );
@@ -87,13 +87,13 @@ class TxtTest extends TestCase
         ];
 
         $data = Txt::encode($array);
-        $this->assertEquals(
+        $this->assertSame(
             "Title: Title\n\n----\n\nText:\n\n\\----\n\\----\n" .
             "Text\n\n\\----Field:\nValue\n\\----  \n\\----",
             $data
         );
 
-        $this->assertEquals($array, Txt::decode($data));
+        $this->assertSame($array, Txt::decode($data));
     }
 
     /**
@@ -109,7 +109,7 @@ class TxtTest extends TestCase
         ];
 
         $data = Txt::encode($array);
-        $this->assertEquals(file_get_contents(static::FIXTURES . '/test.txt'), $data);
+        $this->assertSame(file_get_contents(static::FIXTURES . '/test.txt'), $data);
     }
 
     /**
@@ -123,7 +123,7 @@ class TxtTest extends TestCase
             'number' => (float)3.2
         ]);
 
-        $this->assertEquals('Number: 3.2', $data);
+        $this->assertSame('Number: 3.2', $data);
     }
 
     /**
@@ -140,7 +140,7 @@ class TxtTest extends TestCase
             'number' => (float)3.2
         ]);
 
-        $this->assertEquals('Number: 3.2', $data);
+        $this->assertSame('Number: 3.2', $data);
 
         setlocale(LC_ALL, $currentLocale);
     }
@@ -156,6 +156,6 @@ class TxtTest extends TestCase
         ];
 
         $data = Txt::decode(file_get_contents(static::FIXTURES . '/decode.txt'));
-        $this->assertEquals($array, $data);
+        $this->assertSame($array, $data);
     }
 }

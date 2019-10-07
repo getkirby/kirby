@@ -44,9 +44,9 @@ class KirbyTagTest extends TestCase
 
         $tag = new KirbyTag('test', 'test value', $attr, $data);
 
-        $this->assertEquals('dataA', $tag->a());
-        $this->assertEquals('attrB', $tag->b());
-        $this->assertEquals('dataC', $tag->c());
+        $this->assertSame('dataA', $tag->a());
+        $this->assertSame('attrB', $tag->b());
+        $this->assertSame('dataC', $tag->c());
     }
 
     public function test__callStatic()
@@ -58,7 +58,7 @@ class KirbyTagTest extends TestCase
 
         $result = KirbyTag::test('test value', $attr);
 
-        $this->assertEquals('test: test value-attrA-attrB', $result);
+        $this->assertSame('test: test value-attrA-attrB', $result);
     }
 
     public function testAttr()
@@ -69,12 +69,12 @@ class KirbyTagTest extends TestCase
         ]);
 
         // class properties
-        $this->assertEquals('attrA', $tag->a);
-        $this->assertEquals('attrB', $tag->b);
+        $this->assertSame('attrA', $tag->a);
+        $this->assertSame('attrB', $tag->b);
 
         // attr helper
-        $this->assertEquals('attrA', $tag->attr('a', 'fallback'));
-        $this->assertEquals('attrB', $tag->attr('b', 'fallback'));
+        $this->assertSame('attrA', $tag->attr('a', 'fallback'));
+        $this->assertSame('attrB', $tag->attr('b', 'fallback'));
     }
 
     public function testAttrFallback()
@@ -84,7 +84,7 @@ class KirbyTagTest extends TestCase
         ]);
 
         $this->assertNull($tag->b);
-        $this->assertEquals('fallback', $tag->attr('b', 'fallback'));
+        $this->assertSame('fallback', $tag->attr('b', 'fallback'));
     }
 
     public function testFactory()
@@ -96,7 +96,7 @@ class KirbyTagTest extends TestCase
 
         $result = KirbyTag::factory('test', 'test value', $attr);
 
-        $this->assertEquals('test: test value-attrA-attrB', $result);
+        $this->assertSame('test: test value-attrA-attrB', $result);
     }
 
     public function testOption()
@@ -118,87 +118,87 @@ class KirbyTagTest extends TestCase
 
         $tag = new KirbyTag('test', 'test value', $attr, $data, $options);
 
-        $this->assertEquals('optionA', $tag->option('a'));
-        $this->assertEquals('optionB', $tag->option('b'));
-        $this->assertEquals('optionC', $tag->option('c', 'optionC'));
+        $this->assertSame('optionA', $tag->option('a'));
+        $this->assertSame('optionB', $tag->option('b'));
+        $this->assertSame('optionC', $tag->option('c', 'optionC'));
     }
 
     public function testParse()
     {
         $tag = KirbyTag::parse('(test: test value)', ['some' => 'data'], ['some' => 'options']);
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals(['some' => 'data'], $tag->data);
-        $this->assertEquals(['some' => 'options'], $tag->options);
-        $this->assertEquals([], $tag->attrs);
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame(['some' => 'data'], $tag->data);
+        $this->assertSame(['some' => 'options'], $tag->options);
+        $this->assertSame([], $tag->attrs);
 
         $tag = KirbyTag::parse('test: test value');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([], $tag->attrs);
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([], $tag->attrs);
 
         $tag = KirbyTag::parse('test:');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('', $tag->value);
-        $this->assertEquals([], $tag->attrs);
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('', $tag->value);
+        $this->assertSame([], $tag->attrs);
 
         $tag = KirbyTag::parse('test: ');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('', $tag->value);
-        $this->assertEquals([], $tag->attrs);
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('', $tag->value);
+        $this->assertSame([], $tag->attrs);
 
         $tag = KirbyTag::parse('test: test value a: attrA b: attrB');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([
             'a' => 'attrA',
             'b' => 'attrB'
         ], $tag->attrs);
 
         $tag = KirbyTag::parse('test:test value a:attrA b:attrB');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([
             'a' => 'attrA',
             'b' => 'attrB'
         ], $tag->attrs);
 
         $tag = KirbyTag::parse('test: test value a: attrA b:');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([
             'a' => 'attrA',
             'b' => ''
         ], $tag->attrs);
 
         $tag = KirbyTag::parse('test: test value a: attrA b: ');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([
             'a' => 'attrA',
             'b' => ''
         ], $tag->attrs);
 
         $tag = KirbyTag::parse('test: test value a: attrA b: attrB ');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([
             'a' => 'attrA',
             'b' => 'attrB'
         ], $tag->attrs);
 
         $tag = KirbyTag::parse('test: test value a: attrA c: attrC b: attrB');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([
             'a' => 'attrA c: attrC',
             'b' => 'attrB'
         ], $tag->attrs);
 
         $tag = KirbyTag::parse('test: test value a: attrA b: attrB c: attrC');
-        $this->assertEquals('test', $tag->type);
-        $this->assertEquals('test value', $tag->value);
-        $this->assertEquals([
+        $this->assertSame('test', $tag->type);
+        $this->assertSame('test value', $tag->value);
+        $this->assertSame([
             'a' => 'attrA',
             'b' => 'attrB c: attrC'
         ], $tag->attrs);
@@ -218,12 +218,12 @@ class KirbyTagTest extends TestCase
             'a' => 'attrA',
             'b' => 'attrB'
         ]);
-        $this->assertEquals('test: test value-attrA-attrB', $tag->render());
+        $this->assertSame('test: test value-attrA-attrB', $tag->render());
 
         $tag = new KirbyTag('test', '', [
             'a' => 'attrA'
         ]);
-        $this->assertEquals('test: -attrA-', $tag->render());
+        $this->assertSame('test: -attrA-', $tag->render());
     }
 
     public function testRenderNoHtml()
@@ -253,6 +253,6 @@ class KirbyTagTest extends TestCase
     public function testType()
     {
         $tag = new KirbyTag('test', 'test value');
-        $this->assertEquals('test', $tag->type());
+        $this->assertSame('test', $tag->type());
     }
 }

@@ -23,7 +23,6 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import slug from "@/helpers/slug.js";
 
 export default {
   mixins: [DialogMixin],
@@ -60,7 +59,7 @@ export default {
   },
   methods: {
     sluggify(input) {
-      this.slug = slug(input, [this.slugs, this.system.ascii]);
+      this.slug = this.$helper.slug(input, [this.slugs, this.system.ascii]);
 
       if (this.page.parents) {
         this.url = this.page.parents.map(p => p.slug).

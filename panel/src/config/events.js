@@ -1,4 +1,3 @@
-import { lcfirst } from "@/helpers/stringCase.js";
 
 export default {
   install(Vue) {
@@ -68,7 +67,7 @@ export default {
             parts.push('shift');
           }
 
-          let key = lcfirst(e.key);
+          let key = this.$helper.string.lcfirst(e.key);
 
           // key replacements
           const keys = {

@@ -20,7 +20,6 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import slug from "@/helpers/slug.js";
 
 export default {
   mixins: [DialogMixin],
@@ -70,7 +69,7 @@ export default {
   },
   watch: {
     "page.title"(title) {
-      this.page.slug = slug(title, [this.slugs, this.system.ascii]);
+      this.page.slug = this.$helper.slug(title, [this.slugs, this.system.ascii]);
     }
   },
   methods: {

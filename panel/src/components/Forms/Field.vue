@@ -99,8 +99,11 @@ export default {
 .k-field[data-disabled] {
   cursor: not-allowed;
 }
-.k-field[data-disabled] *:not(.k-text[data-theme=help]) {
+.k-field[data-disabled] * {
   pointer-events: none;
+}
+.k-field[data-disabled] .k-text[data-theme=help] * {
+  pointer-events: initial;
 }
 .k-field-counter {
   display: none;
