@@ -426,10 +426,16 @@ class User extends ModelWithContent
      */
     public function loginPasswordless($session = null): void
     {
+        $kirby = $this->kirby();
+
         $session = $this->sessionFromOptions($session);
+
+        $kirby->trigger('user.login:before', $this, $session);
 
         $session->regenerateToken(); // privilege change
         $session->data()->set('user.id', $this->id());
+
+        $kirby->trigger('user.login:after', $this, $session);
     }
 
     /**
@@ -440,16 +446,23 @@ class User extends ModelWithContent
      */
     public function logout($session = null): void
     {
+        $kirby   = $this->kirby();
         $session = $this->sessionFromOptions($session);
+
+        $kirby->trigger('user.logout:before', $this, $session);
 
         $session->data()->remove('user.id');
 
         if ($session->data()->get() === []) {
             // session is now empty, we might as well destroy it
             $session->destroy();
+
+            $kirby->trigger('user.logout:after', $this, null);
         } else {
             // privilege change
             $session->regenerateToken();
+
+            $kirby->trigger('user.logout:after', $this, $session);
         }
     }
 

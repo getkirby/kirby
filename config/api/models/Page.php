@@ -56,7 +56,7 @@ return [
             return $page->num();
         },
         'options' => function (Page $page) {
-            return $page->permissions()->toArray();
+            return $page->panelOptions(['preview']);
         },
         'panelIcon' => function (Page $page) {
             return $page->panelIcon();

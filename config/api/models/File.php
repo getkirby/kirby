@@ -54,7 +54,7 @@ return [
             return $files->nth($index + 1);
         },
         'options' => function (File $file) {
-            return $file->permissions()->toArray();
+            return $file->panelOptions();
         },
         'panelIcon' => function (File $file) {
             return $file->panelIcon();
