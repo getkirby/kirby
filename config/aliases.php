@@ -32,6 +32,9 @@ return [
     'database'  => 'Kirby\Database\Database',
     'db'        => 'Kirby\Database\Db',
 
+    // exceptions
+    'errorpageexception' => 'Kirby\Exception\ErrorPageException',
+
     // http classes
     'cookie'     => 'Kirby\Http\Cookie',
     'header'     => 'Kirby\Http\Header',
