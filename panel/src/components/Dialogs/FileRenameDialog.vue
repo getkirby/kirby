@@ -68,7 +68,7 @@ export default {
         });
     },
     sluggify(input) {
-      return this.$helper.slug(input, [this.slugs, this.system.ascii], ".");
+      return this.$helper.slug(input, [this.slugs, this.system.ascii], "@._-");
     },
     submit() {
       // prevent empty name with just spaces
