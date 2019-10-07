@@ -39,7 +39,7 @@ return [
             return $user->next();
         },
         'options' => function (User $user) {
-            return $user->permissions()->toArray();
+            return $user->panelOptions();
         },
         'permissions' => function (User $user) {
             return $user->role()->permissions()->toArray();

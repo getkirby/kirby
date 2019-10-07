@@ -31,12 +31,14 @@ return [
     ],
     'type'  => 'Kirby\Cms\Language',
     'views' => [
-        'compact' => [
+        'default' => [
             'code',
             'default',
+            'direction',
+            'locale',
             'name',
             'rules',
-            'direction'
+            'url'
         ]
     ]
 ];
