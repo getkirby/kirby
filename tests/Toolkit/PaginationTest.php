@@ -27,6 +27,12 @@ class PaginationTest extends TestCase
         $this->assertEquals(2, $pagination->page());
     }
 
+    public function testPageEmptyCollection()
+    {
+        $pagination = new Pagination(['total' => 0, 'page' => 1]);
+        $this->assertEquals(0, $pagination->page());
+    }
+
     public function testTotalDefault()
     {
         $pagination = new Pagination();
