@@ -398,9 +398,15 @@ class Pagination
             $this->page = $this->firstPage();
         }
 
-        // validate page based on all params
+        // allow a page value of 1 even if there are no pages;
+        // otherwise the exception will get thrown for this pretty common case
         $min = $this->firstPage();
         $max = $this->pages();
+        if ($this->page === 1 && $max === 0) {
+            $this->page = 0;
+        }
+
+        // validate page based on all params
         if ($this->page < $min || $this->page > $max) {
             throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
         }
