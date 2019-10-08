@@ -402,7 +402,7 @@ class Pagination
         $min = $this->firstPage();
         $max = $this->pages();
         if ($this->page < $min || $this->page > $max) {
-            throw new ErrorPageException('Pagination page ' . $this->page . ' is out of bounds, expected ' . $min . '-' . $max);
+            throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
         }
 
         return $this;
