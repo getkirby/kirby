@@ -329,7 +329,7 @@ class PaginationTest extends TestCase
     public function testCloneOutOfBounds1()
     {
         $this->expectException('Kirby\Exception\ErrorPageException');
-        $this->expectExceptionMessage('Pagination page 3 is out of bounds, expected 1-2');
+        $this->expectExceptionMessage('Pagination page 3 does not exist, expected 1-2');
 
         $pagination = new Pagination();
         $pagination = $pagination->clone(['page' => 3, 'total' => 10, 'limit' => 5]);
@@ -338,7 +338,7 @@ class PaginationTest extends TestCase
     public function testCloneOutOfBounds2()
     {
         $this->expectException('Kirby\Exception\ErrorPageException');
-        $this->expectExceptionMessage('Pagination page 0 is out of bounds, expected 1-2');
+        $this->expectExceptionMessage('Pagination page 0 does not exist, expected 1-2');
 
         $pagination = new Pagination();
         $pagination = $pagination->clone(['page' => 0, 'total' => 10, 'limit' => 5]);
