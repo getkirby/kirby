@@ -14,13 +14,14 @@ before_install:
   - phpenv config-add ./tests/php.ini
 
 install:
-  # Install composer packages, will also trigger dump-autoload
-  - composer self-update
-  - composer require phpunit/phpunit ^7
-  - composer require friendsofphp/php-cs-fixer
-  - composer install --no-interaction --ignore-platform-reqs
+  # ensure that the Composer config is valid
+  - composer validate
+  
+  # install Composer packages, will also trigger dump-autoload
+  - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "friendsofphp/php-cs-fixer"
+  - composer install --no-interaction --ignore-platform-reqs --no-suggest
 
-  # Install coveralls.phar
+  # install coveralls.phar
   - wget -c -nc --retry-connrefused --tries=0 https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar
   - chmod +x php-coveralls.phar
   - php php-coveralls.phar --version
@@ -30,7 +31,6 @@ before_script:
   - ls -al
 
 script:
-  - composer validate
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
   - PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config .php_cs --verbose --diff --dry-run
 
