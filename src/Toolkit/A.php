@@ -51,11 +51,11 @@ class A
      * // result: ['cat' => 'miao', 'dog' => 'wuff'];
      * </code>
      *
-     * @param   array  $array   The source array
-     * @param   mixed  $key     The key to look for
-     * @param   mixed  $default Optional default value, which should be
-     *                          returned if no element has been found
-     * @return  mixed
+     * @param array $array The source array
+     * @param mixed $key The key to look for
+     * @param mixed $default Optional default value, which should be
+     *                       returned if no element has been found
+     * @return mixed
      */
     public static function get($array, $key, $default = null)
     {
@@ -130,12 +130,12 @@ class A
     /**
      * Merges arrays recursively
      *
-     * @param  array   $array1
-     * @param  array   $array2
-     * @param  boolean $mode   Behavior for elements with numeric keys;
-     *                         A::MERGE_APPEND:    elements are appended, keys are reset;
-     *                         A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
-     *                         A::MERGE_REPLACE:   non-associative arrays are completely replaced
+     * @param array $array1
+     * @param array $array2
+     * @param bool $mode Behavior for elements with numeric keys;
+     *                   A::MERGE_APPEND:    elements are appended, keys are reset;
+     *                   A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
+     *                   A::MERGE_REPLACE:   non-associative arrays are completely replaced
      * @return array
      */
     public static function merge($array1, $array2, $mode = A::MERGE_APPEND)
@@ -196,10 +196,10 @@ class A
      * // result: ['homer', 'marge', 'lisa'];
      * </code>
      *
-     * @param   array   $array   The source array
-     * @param   string  $key     The key name of the column to extract
-     * @return  array            The result array with all values
-     *                           from that column.
+     * @param array $array The source array
+     * @param string $key The key name of the column to extract
+     * @return array The result array with all values
+     *               from that column.
      */
     public static function pluck(array $array, string $key)
     {
@@ -243,8 +243,8 @@ class A
      * // ];
      * </code>
      *
-     * @param   array  $array The source array
-     * @return  array  The shuffled result array
+     * @param array $array The source array
+     * @return array The shuffled result array
      */
     public static function shuffle(array $array): array
     {
@@ -275,8 +275,8 @@ class A
      * // first: 'miao'
      * </code>
      *
-     * @param   array  $array    The source array
-     * @return  mixed            The first element
+     * @param array $array The source array
+     * @return mixed The first element
      */
     public static function first(array $array)
     {
@@ -297,8 +297,8 @@ class A
      * // last: 'tweet'
      * </code>
      *
-     * @param   array  $array    The source array
-     * @return  mixed            The last element
+     * @param array $array The source array
+     * @return mixed The last element
      */
     public static function last(array $array)
     {
@@ -326,12 +326,12 @@ class A
      * // ];
      * </code>
      *
-     * @param   array  $array  The source array
-     * @param   int    $limit  The number of elements the array should
-     *                         contain after filling it up.
-     * @param   mixed  $fill   The element, which should be used to
-     *                         fill the array
-     * @return  array          The filled-up result array
+     * @param array $array The source array
+     * @param int $limit The number of elements the array should
+     *                   contain after filling it up.
+     * @param mixed $fill The element, which should be used to
+     *                    fill the array
+     * @return array The filled-up result array
      */
     public static function fill(array $array, int $limit, $fill = 'placeholder'): array
     {
@@ -394,10 +394,10 @@ class A
      * // ];
      * </code>
      *
-     * @param   array  $array    The source array
-     * @param   array  $required An array of required keys
-     * @return  array            An array of missing fields. If this
-     *                           is empty, nothing is missing.
+     * @param array $array The source array
+     * @param array $required An array of required keys
+     * @return array An array of missing fields. If this
+     *               is empty, nothing is missing.
      */
     public static function missing(array $array, array $required = []): array
     {
@@ -451,13 +451,13 @@ class A
      *
      * </code>
      *
-     * @param   array   $array The source array
-     * @param   string  $field The name of the column
-     * @param   string  $direction desc (descending) or asc (ascending)
-     * @param   int     $method A PHP sort method flag or 'natural' for
-     *                          natural sorting, which is not supported in
-     *                          PHP by sort flags
-     * @return  array   The sorted array
+     * @param array $array The source array
+     * @param string $field The name of the column
+     * @param string $direction desc (descending) or asc (ascending)
+     * @param int $method A PHP sort method flag or 'natural' for
+     *                    natural sorting, which is not supported in
+     *                    PHP by sort flags
+     * @return array The sorted array
      */
     public static function sort(array $array, string $field, string $direction = 'desc', $method = SORT_REGULAR): array
     {
@@ -500,8 +500,8 @@ class A
      * // returns: true
      * </code>
      *
-     * @param   array    $array The array to analyze
-     * @return  boolean  true: The array is associative false: It's not
+     * @param array $array The array to analyze
+     * @return bool true: The array is associative false: It's not
      */
     public static function isAssociative(array $array): bool
     {
@@ -511,9 +511,9 @@ class A
     /**
      * Returns the average value of an array
      *
-     * @param   array  $array The source array
-     * @param   int    $decimals The number of decimals to return
-     * @return  float  The average value
+     * @param array $array The source array
+     * @param int $decimals The number of decimals to return
+     * @return float The average value
      */
     public static function average(array $array, int $decimals = 0): float
     {
@@ -568,8 +568,8 @@ class A
      * ]);
      * </code>
      *
-     * @param  array $array
-     * @param  array $update
+     * @param array $array
+     * @param array $update
      * @return array
      */
     public static function update(array $array, array $update): array

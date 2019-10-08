@@ -112,7 +112,7 @@ class Url
      * Checks if an URL is absolute
      *
      * @param string $url
-     * @return boolean
+     * @return bool
      */
     public static function isAbsolute(string $url = null): bool
     {
@@ -194,7 +194,7 @@ class Url
      *
      * @param string $url
      * @param int $length
-     * @param boolean $base
+     * @param bool $base
      * @param string $rep
      * @return string
      */

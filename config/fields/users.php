@@ -85,7 +85,7 @@ return [
         ];
     },
     'save' => function ($value = null) {
-        return A::pluck($value, 'email');
+        return A::pluck($value, 'id');
     },
     'validations' => [
         'max',

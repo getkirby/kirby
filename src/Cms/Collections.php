@@ -42,8 +42,8 @@ class Collections
      * Magic caller to enable something like
      * `$collections->myCollection()`
      *
-     * @param  string $name
-     * @param  array $arguments
+     * @param string $name
+     * @param array $arguments
      * @return \Kirby\Cms\Collection|null
      */
     public function __call(string $name, array $arguments = [])
@@ -89,7 +89,7 @@ class Collections
      * Checks if a collection exists
      *
      * @param string $name
-     * @return boolean
+     * @return bool
      */
     public function has(string $name): bool
     {
@@ -109,7 +109,7 @@ class Collections
      * Loads collection from php file in a
      * given directory or from plugin extension.
      *
-     * @param  string $name
+     * @param string $name
      * @return mixed
      */
     public function load(string $name)

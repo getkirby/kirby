@@ -185,6 +185,7 @@ class ResponseTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testSend()
     {
@@ -210,6 +211,7 @@ class ResponseTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testToString()
     {

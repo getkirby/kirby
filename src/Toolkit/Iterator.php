@@ -95,7 +95,7 @@ class Iterator implements \Iterator
     /**
      * Checks if the current element is valid
      *
-     * @return boolean
+     * @return bool
      */
     public function valid(): bool
     {
@@ -115,8 +115,8 @@ class Iterator implements \Iterator
     /**
      * Tries to find the index number for the given element
      *
-     * @param  mixed         $needle  the element to search for
-     * @return string|false           the name of the key or false
+     * @param mixed $needle the element to search for
+     * @return string|false the name of the key or false
      */
     public function indexOf($needle)
     {
@@ -126,8 +126,8 @@ class Iterator implements \Iterator
     /**
      * Tries to find the key for the given element
      *
-     * @param  mixed         $needle  the element to search for
-     * @return string|false           the name of the key or false
+     * @param mixed $needle the element to search for
+     * @return string|false the name of the key or false
      */
     public function keyOf($needle)
     {
@@ -137,8 +137,8 @@ class Iterator implements \Iterator
     /**
      * Checks by key if an element is included
      *
-     * @param  mixed  $key
-     * @return boolean
+     * @param mixed $key
+     * @return bool
      */
     public function has($key): bool
     {
@@ -148,8 +148,8 @@ class Iterator implements \Iterator
     /**
      * Checks if the current key is set
      *
-     * @param  mixed  $key  the key to check
-     * @return boolean
+     * @param mixed $key the key to check
+     * @return bool
      */
     public function __isset($key): bool
     {

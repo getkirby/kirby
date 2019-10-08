@@ -73,6 +73,7 @@ class Search
             $keys[] = 'id';
 
             if (is_a($item, 'Kirby\Cms\User') === true) {
+                $keys[] = 'name';
                 $keys[] = 'email';
                 $keys[] = 'role';
             } elseif (is_a($item, 'Kirby\Cms\Page') === true) {

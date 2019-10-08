@@ -293,7 +293,7 @@ trait UserActions
      * Writes the account information to disk
      *
      * @param array $credentials
-     * @return boolean
+     * @return bool
      */
     protected function writeCredentials(array $credentials): bool
     {

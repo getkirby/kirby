@@ -471,6 +471,7 @@ class RouterTest extends TestCase
 
         // set the accepted visitor language
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
+        $app = $app->clone();
 
         $response = $app->call('/');
 

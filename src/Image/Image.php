@@ -42,8 +42,8 @@ class Image extends File
     /**
      * Constructor
      *
-     * @param string       $root
-     * @param string|null  $url
+     * @param string $root
+     * @param string|null $url
      */
     public function __construct(string $root = null, string $url = null)
     {
@@ -126,7 +126,7 @@ class Image extends File
     /**
      * Sends an appropriate header for the asset
      *
-     * @param  boolean          $send
+     * @param bool $send
      * @return \Kirby\Http\Response|string
      */
     public function header(bool $send = true)
@@ -147,7 +147,7 @@ class Image extends File
     }
 
     /**
-     * @param  array  $attr
+     * @param array $attr
      * @return string
      */
     public function html(array $attr = []): string
@@ -168,7 +168,7 @@ class Image extends File
     /**
      * Checks if the dimensions of the asset are portrait
      *
-     * @return boolean
+     * @return bool
      */
     public function isPortrait(): bool
     {
@@ -178,7 +178,7 @@ class Image extends File
     /**
      * Checks if the dimensions of the asset are landscape
      *
-     * @return boolean
+     * @return bool
      */
     public function isLandscape(): bool
     {
@@ -188,7 +188,7 @@ class Image extends File
     /**
      * Checks if the dimensions of the asset are square
      *
-     * @return boolean
+     * @return bool
      */
     public function isSquare(): bool
     {

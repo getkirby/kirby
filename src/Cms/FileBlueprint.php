@@ -44,7 +44,7 @@ class FileBlueprint extends Blueprint
     }
 
     /**
-     * @param  mixed $accept
+     * @param mixed $accept
      * @return array
      */
     protected function normalizeAccept($accept = null): array

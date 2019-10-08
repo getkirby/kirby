@@ -157,7 +157,7 @@ trait HasChildren
     /**
      * Checks if the model has any children
      *
-     * @return boolean
+     * @return bool
      */
     public function hasChildren(): bool
     {
@@ -167,7 +167,7 @@ trait HasChildren
     /**
      * Checks if the model has any drafts
      *
-     * @return boolean
+     * @return bool
      */
     public function hasDrafts(): bool
     {
@@ -176,7 +176,7 @@ trait HasChildren
 
     /**
      * @deprecated 3.0.0 Use `Page::hasUnlistedChildren` instead
-     * @return boolean
+     * @return bool
      */
     public function hasInvisibleChildren(): bool
     {
@@ -186,7 +186,7 @@ trait HasChildren
     /**
      * Checks if the page has any listed children
      *
-     * @return boolean
+     * @return bool
      */
     public function hasListedChildren(): bool
     {
@@ -196,7 +196,7 @@ trait HasChildren
     /**
      * Checks if the page has any unlisted children
      *
-     * @return boolean
+     * @return bool
      */
     public function hasUnlistedChildren(): bool
     {
@@ -205,7 +205,7 @@ trait HasChildren
 
     /**
      * @deprecated 3.0.0 Use `Page::hasListedChildren` instead
-     * @return boolean
+     * @return bool
      */
     public function hasVisibleChildren(): bool
     {

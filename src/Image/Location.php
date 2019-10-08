@@ -68,8 +68,8 @@ class Location
     /**
      * Converts the gps coordinates
      *
-     * @param  string|array $coord
-     * @param  string       $hemi
+     * @param string|array $coord
+     * @param string $hemi
      * @return float
      */
     protected function gps($coord, string $hemi): float
@@ -87,7 +87,7 @@ class Location
     /**
      * Converts coordinates to floats
      *
-     * @param  string $part
+     * @param string $part
      * @return float
      */
     protected function num(string $part): float

@@ -56,8 +56,8 @@ class File
     /**
      * Copy a file to a new location.
      *
-     * @param  string  $target
-     * @param  boolean $force
+     * @param string $target
+     * @param bool $force
      * @return self
      */
     public function copy(string $target, bool $force = false)
@@ -147,7 +147,7 @@ class File
     /**
      * Checks if the file is readable
      *
-     * @return boolean
+     * @return bool
      */
     public function isReadable(): bool
     {
@@ -157,7 +157,7 @@ class File
     /**
      * Checks if the file is writable
      *
-     * @return boolean
+     * @return bool
      */
     public function isWritable(): bool
     {
@@ -177,8 +177,8 @@ class File
     /**
      * Get the file's last modification time.
      *
-     * @param  string $format
-     * @param  string $handler date or strftime
+     * @param string $format
+     * @param string $handler date or strftime
      * @return mixed
      */
     public function modified(string $format = null, string $handler = 'date')
@@ -189,8 +189,8 @@ class File
     /**
      * Move the file to a new location
      *
-     * @param  string $newRoot
-     * @param  bool   $overwrite Force overwriting any existing files
+     * @param string $newRoot
+     * @param bool $overwrite Force overwriting any existing files
      * @return self
      */
     public function move(string $newRoot, bool $overwrite = false)
@@ -248,8 +248,8 @@ class File
      * Changes the name of the file without
      * touching the extension
      *
-     * @param  string $newName
-     * @param  bool   $overwrite Force overwrite existing files
+     * @param string $newName
+     * @param bool $overwrite Force overwrite existing files
      * @return self
      */
     public function rename(string $newName, bool $overwrite = false)
@@ -276,7 +276,7 @@ class File
     /**
      * Returns the raw size of the file
      *
-     * @return  int
+     * @return int
      */
     public function size(): int
     {
@@ -321,7 +321,7 @@ class File
     /**
      * Writes content to the file
      *
-     * @param  string $content
+     * @param string $content
      * @return bool
      */
     public function write($content): bool

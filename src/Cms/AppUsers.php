@@ -77,7 +77,7 @@ trait AppUsers
      * Returns a specific user by id
      * or the current user if no id is given
      *
-     * @param  string $id
+     * @param string $id
      * @return \Kirby\Cms\User|null
      */
     public function user(string $id = null)

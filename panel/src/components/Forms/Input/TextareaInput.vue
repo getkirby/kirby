@@ -51,7 +51,6 @@
 
 <script>
 import config from "@/config/config.js";
-import autosize from "autosize";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
@@ -96,7 +95,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      autosize(this.$refs.input);
+      this.$library.autosize(this.$refs.input);
     });
 
     this.onInvalid();
@@ -173,7 +172,7 @@ export default {
     },
     onDrop($event) {
       // dropping files
-      if ($event.dataTransfer && $event.dataTransfer.types.includes("Files") === true) {
+      if (this.$helper.isUploadEvent($event)) {
         return this.$refs.fileUpload.drop($event.dataTransfer.files, {
           url: config.api + "/" + this.endpoints.field + "/upload",
           multiple: false
@@ -204,7 +203,7 @@ export default {
     onOver($event) {
 
       // drag & drop for files
-      if (this.uploads && $event.dataTransfer && $event.dataTransfer.types.includes("Files") === true) {
+      if (this.uploads && this.$helper.isUploadEvent($event)) {
         $event.dataTransfer.dropEffect = "copy";
         this.focus();
         this.over = true;
@@ -236,7 +235,7 @@ export default {
       this.insert(prepend + " " + this.selection());
     },
     resize() {
-      autosize.update(this.$refs.input);
+      this.$library.autosize.update(this.$refs.input);
     },
     select() {
       this.$refs.select();

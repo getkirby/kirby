@@ -194,8 +194,8 @@ abstract class ModelWithContent extends Model
      * Decrement a given field value
      *
      * @param string $field
-     * @param integer $by
-     * @param integer $min
+     * @param int $by
+     * @param int $min
      * @return self
      */
     public function decrement(string $field, int $by = 1, int $min = 0)
@@ -231,8 +231,8 @@ abstract class ModelWithContent extends Model
      * Increment a given field value
      *
      * @param string $field
-     * @param integer $by
-     * @param integer $max
+     * @param int $by
+     * @param int $max
      * @return self
      */
     public function increment(string $field, int $by = 1, int $max = null)
@@ -247,9 +247,20 @@ abstract class ModelWithContent extends Model
     }
 
     /**
+     * Checks if the model is locked for the current user
+     *
+     * @return bool
+     */
+    public function isLocked(): bool
+    {
+        $lock = $this->lock();
+        return $lock && $lock->isLocked() === true;
+    }
+
+    /**
      * Checks if the data has any errors
      *
-     * @return boolean
+     * @return bool
      */
     public function isValid(): bool
     {
@@ -380,6 +391,31 @@ abstract class ModelWithContent extends Model
         }
 
         return $image;
+    }
+
+    /**
+     * Returns an array of all actions
+     * that can be performed in the Panel
+     * This also checks for the lock status
+     *
+     * @param array $unlock An array of options that will be force-unlocked
+     * @return array
+     */
+    public function panelOptions(array $unlock = []): array
+    {
+        $options = $this->permissions()->toArray();
+
+        if ($this->isLocked()) {
+            foreach ($options as $key => $value) {
+                if (in_array($key, $unlock)) {
+                    continue;
+                }
+
+                $options[$key] = false;
+            }
+        }
+
+        return $options;
     }
 
     /**
@@ -618,7 +654,7 @@ abstract class ModelWithContent extends Model
      *
      * @param array $input
      * @param string $languageCode
-     * @param boolean $validate
+     * @param bool $validate
      * @return self
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
@@ -657,7 +693,7 @@ abstract class ModelWithContent extends Model
      * @internal
      * @param array $data
      * @param string $languageCode
-     * @return boolean
+     * @return bool
      */
     public function writeContent(array $data, string $languageCode = null): bool
     {

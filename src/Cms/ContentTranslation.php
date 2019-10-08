@@ -119,7 +119,7 @@ class ContentTranslation
     /**
      * Checks if the translation file exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -140,7 +140,7 @@ class ContentTranslation
      * Checks if the this is the default translation
      * of the model
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault(): bool
     {

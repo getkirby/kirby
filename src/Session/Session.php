@@ -49,19 +49,14 @@ class Session
     /**
      * Creates a new Session instance
      *
-     * @param \Kirby\Session\Sessions    $sessions Parent sessions object
-     * @param string|null $token    Session token or null for a new session
-     * @param array       $options  Optional additional options:
-     *                              - `mode`:       Token transmission mode (cookie or manual)
-     *                                              Defaults to `cookie`
-     *                              - `startTime`:  Time the session starts being valid (date string or timestamp)
-     *                                              Defaults to `now`
-     *                              - `expiryTime`: Time the session expires (date string or timestamp)
-     *                                              Defaults to `+ 2 hours`
-     *                              - `timeout`:    Activity timeout in seconds (integer or false for none)
-     *                                              Defaults to `1800` (half an hour)
-     *                              - `renewable`:  Should it be possible to extend the expiry date?
-     *                                              Defaults to `true`
+     * @param \Kirby\Session\Sessions $sessions Parent sessions object
+     * @param string|null $token Session token or null for a new session
+     * @param array $options Optional additional options:
+     *                       - `mode`: Token transmission mode (cookie or manual); defaults to `cookie`
+     *                       - `startTime`: Time the session starts being valid (date string or timestamp); defaults to `now`
+     *                       - `expiryTime`: Time the session expires (date string or timestamp); defaults to `+ 2 hours`
+     *                       - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
+     *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
      */
     public function __construct(Sessions $sessions, $token, array $options)
     {
@@ -156,8 +151,8 @@ class Session
      * Gets or sets the transmission mode
      * Setting only works for new sessions that haven't been transmitted yet
      *
-     * @param  string $mode Optional new transmission mode
-     * @return string       Transmission mode
+     * @param string $mode Optional new transmission mode
+     * @return string Transmission mode
      */
     public function mode(string $mode = null)
     {
@@ -180,7 +175,7 @@ class Session
     /**
      * Gets the session start time
      *
-     * @return integer Timestamp
+     * @return int Timestamp
      */
     public function startTime(): int
     {
@@ -191,8 +186,8 @@ class Session
      * Gets or sets the session expiry time
      * Setting the expiry time also updates the duration and regenerates the session token
      *
-     * @param  string|integer $expiryTime Optional new expiry timestamp or time string to set
-     * @return integer                    Timestamp
+     * @param string|int $expiryTime Optional new expiry timestamp or time string to set
+     * @return int Timestamp
      */
     public function expiryTime($expiryTime = null): int
     {
@@ -226,8 +221,8 @@ class Session
      * Gets or sets the session duration
      * Setting the duration also updates the expiry time and regenerates the session token
      *
-     * @param  integer $duration Optional new duration in seconds to set
-     * @return integer           Number of seconds
+     * @param int $duration Optional new duration in seconds to set
+     * @return int Number of seconds
      */
     public function duration(int $duration = null): int
     {
@@ -252,8 +247,8 @@ class Session
     /**
      * Gets or sets the session timeout
      *
-     * @param  integer|false $timeout Optional new timeout to set or false to disable timeout
-     * @return integer|false          Number of seconds or false for "no timeout"
+     * @param int|false $timeout Optional new timeout to set or false to disable timeout
+     * @return int|false Number of seconds or false for "no timeout"
      */
     public function timeout($timeout = null)
     {
@@ -288,8 +283,8 @@ class Session
      * Gets or sets the renewable flag
      * Automatically renews the session if renewing gets enabled
      *
-     * @param  boolean $renewable Optional new renewable flag to set
-     * @return boolean
+     * @param bool $renewable Optional new renewable flag to set
+     * @return bool
      */
     public function renewable(bool $renewable = null): bool
     {
@@ -315,8 +310,8 @@ class Session
     /**
      * Magic call method that proxies all calls to session data methods
      *
-     * @param  string $name      Method name (one of set, increment, decrement, get, pull, remove, clear)
-     * @param  array  $arguments Method arguments
+     * @param string $name Method name (one of set, increment, decrement, get, pull, remove, clear)
+     * @param array $arguments Method arguments
      * @return mixed
      */
     public function __call(string $name, array $arguments)
@@ -478,7 +473,7 @@ class Session
      * Returns whether the session token needs to be retransmitted to the client
      * Only relevant in header and manual modes
      *
-     * @return boolean
+     * @return bool
      */
     public function needsRetransmission(): bool
     {
@@ -542,8 +537,8 @@ class Session
     /**
      * Parses a token string into its parts and sets them as instance vars
      *
-     * @param  string $token      Session token
-     * @param  bool   $withoutKey If true, $token is passed without key
+     * @param string $token Session token
+     * @param bool $withoutKey If true, $token is passed without key
      * @return void
      */
     protected function parseToken(string $token, bool $withoutKey = false)
@@ -584,9 +579,9 @@ class Session
     /**
      * Makes sure that the given value is a valid timestamp
      *
-     * @param  string|integer $time Timestamp or date string (must be supported by `strtotime()`)
-     * @param  integer        $now  Timestamp to use as a base for the calculation of relative dates
-     * @return integer              Timestamp value
+     * @param string|int $time Timestamp or date string (must be supported by `strtotime()`)
+     * @param int $now Timestamp to use as a base for the calculation of relative dates
+     * @return int Timestamp value
      */
     protected static function timeToTimestamp($time, int $now = null): int
     {
@@ -762,7 +757,7 @@ class Session
      * Checks if the session can be renewed and if the last renewal
      * was more than half a session duration ago
      *
-     * @return boolean
+     * @return bool
      */
     protected function needsRenewal(): bool
     {

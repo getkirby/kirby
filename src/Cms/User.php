@@ -248,7 +248,7 @@ class User extends ModelWithContent
     /**
      * Checks if the user exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -342,7 +342,7 @@ class User extends ModelWithContent
     /**
      * Checks if this user has the admin role
      *
-     * @return boolean
+     * @return bool
      */
     public function isAdmin(): bool
     {
@@ -353,7 +353,7 @@ class User extends ModelWithContent
      * Checks if the current user is the virtual
      * Kirby user
      *
-     * @return boolean
+     * @return bool
      */
     public function isKirby(): bool
     {
@@ -363,7 +363,7 @@ class User extends ModelWithContent
     /**
      * Checks if the current user is this user
      *
-     * @return boolean
+     * @return bool
      */
     public function isLoggedIn(): bool
     {
@@ -374,7 +374,7 @@ class User extends ModelWithContent
      * Checks if the user is the last one
      * with the admin role
      *
-     * @return boolean
+     * @return bool
      */
     public function isLastAdmin(): bool
     {
@@ -384,7 +384,7 @@ class User extends ModelWithContent
     /**
      * Checks if the user is the last user
      *
-     * @return boolean
+     * @return bool
      */
     public function isLastUser(): bool
     {
@@ -426,10 +426,16 @@ class User extends ModelWithContent
      */
     public function loginPasswordless($session = null): void
     {
+        $kirby = $this->kirby();
+
         $session = $this->sessionFromOptions($session);
+
+        $kirby->trigger('user.login:before', $this, $session);
 
         $session->regenerateToken(); // privilege change
         $session->data()->set('user.id', $this->id());
+
+        $kirby->trigger('user.login:after', $this, $session);
     }
 
     /**
@@ -440,16 +446,23 @@ class User extends ModelWithContent
      */
     public function logout($session = null): void
     {
+        $kirby   = $this->kirby();
         $session = $this->sessionFromOptions($session);
+
+        $kirby->trigger('user.logout:before', $this, $session);
 
         $session->data()->remove('user.id');
 
         if ($session->data()->get() === []) {
             // session is now empty, we might as well destroy it
             $session->destroy();
+
+            $kirby->trigger('user.logout:after', $this, null);
         } else {
             // privilege change
             $session->regenerateToken();
+
+            $kirby->trigger('user.logout:after', $this, $session);
         }
     }
 
@@ -857,7 +870,7 @@ class User extends ModelWithContent
      * Compares the given password with the stored one
      *
      * @param string $password
-     * @return boolean
+     * @return bool
      *
      * @throws NotFoundException If the user has no password
      * @throws InvalidArgumentException If the entered password is not valid

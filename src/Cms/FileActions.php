@@ -82,7 +82,7 @@ trait FileActions
     /**
      * Changes the file's sorting number in the meta file
      *
-     * @param integer $sort
+     * @param int $sort
      * @return self
      */
     public function changeSort(int $sort)

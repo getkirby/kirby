@@ -37,9 +37,7 @@ class Api extends BaseApi
         $this->setRequestMethod($method);
         $this->setRequestData($requestData);
 
-        if ($languageCode = $this->language()) {
-            $this->kirby->setCurrentLanguage($languageCode);
-        }
+        $this->kirby->setCurrentLanguage($this->language());
 
         if ($user = $this->kirby->user()) {
             $this->kirby->setCurrentTranslation($user->language());

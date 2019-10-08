@@ -48,13 +48,13 @@ return [
             return $file->next();
         },
         'nextWithTemplate' => function (File $file) {
-            $files = $file->templateSiblings()->sortBy('sort', 'asc');
+            $files = $file->templateSiblings()->sortBy('sort', 'asc', 'filename', 'asc');
             $index = $files->indexOf($file);
 
             return $files->nth($index + 1);
         },
         'options' => function (File $file) {
-            return $file->permissions()->toArray();
+            return $file->panelOptions();
         },
         'panelIcon' => function (File $file) {
             return $file->panelIcon();
@@ -69,7 +69,7 @@ return [
             return $file->prev();
         },
         'prevWithTemplate' => function (File $file) {
-            $files = $file->templateSiblings()->sortBy('sort', 'asc');
+            $files = $file->templateSiblings()->sortBy('sort', 'asc', 'filename', 'asc');
             $index = $files->indexOf($file);
 
             return $files->nth($index - 1);

@@ -112,7 +112,7 @@ class Sql
      *
      * @param string $table
      * @param string $column
-     * @param boolean $enforceQualified
+     * @param bool $enforceQualified
      * @return string|null
      */
     public function columnName(string $table, string $column, bool $enforceQualified = false): ?string
@@ -483,8 +483,8 @@ class Sql
     /**
      * Creates a limit and offset query instruction
      *
-     * @param integer $offset
-     * @param integer|null $limit
+     * @param int $offset
+     * @param int|null $limit
      * @return array
      */
     public function limit(int $offset = 0, int $limit = null): array
@@ -780,7 +780,7 @@ class Sql
      *
      * @param string $table
      * @param string $column
-     * @return boolean
+     * @return bool
      */
     public function validateColumn(string $table, string $column): bool
     {
@@ -797,8 +797,8 @@ class Sql
      * @param string $table Table name
      * @param mixed $values A value string or array of values
      * @param string $separator A separator which should be used to join values
-     * @param boolean $set If true builds a set list of values for update clauses
-     * @param boolean $enforceQualified Always use fully qualified column names
+     * @param bool $set If true builds a set list of values for update clauses
+     * @param bool $enforceQualified Always use fully qualified column names
      */
     public function values(string $table, $values, string $separator = ', ', bool $set = true, bool $enforceQualified = false): array
     {

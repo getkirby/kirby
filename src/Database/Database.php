@@ -64,7 +64,7 @@ class Database
     /**
      * Set to true to throw exceptions on failed queries
      *
-     * @var boolean
+     * @var bool
      */
     protected $fail = false;
 
@@ -232,7 +232,7 @@ class Database
     /**
      * Sets the exception mode for the next query
      *
-     * @param boolean $fail
+     * @param bool $fail
      * @return \Kirby\Database\Database
      */
     public function fail(bool $fail = true)
@@ -358,7 +358,7 @@ class Database
      *
      * @param string $query
      * @param array $bindings
-     * @return boolean
+     * @return bool
      */
     protected function hit(string $query, array $bindings = []): bool
     {
@@ -455,7 +455,7 @@ class Database
      *
      * @param string $query
      * @param array $bindings
-     * @return boolean
+     * @return bool
      */
     public function execute(string $query, array $bindings = []): bool
     {
@@ -491,7 +491,7 @@ class Database
      * Checks if a table exists in the current database
      *
      * @param string $table
-     * @return boolean
+     * @return bool
      */
     public function validateTable(string $table): bool
     {
@@ -515,7 +515,7 @@ class Database
      *
      * @param string $table
      * @param string $column
-     * @return boolean
+     * @return bool
      */
     public function validateColumn(string $table, string $column): bool
     {
@@ -544,7 +544,7 @@ class Database
      *
      * @param string $table
      * @param array $columns
-     * @return boolean
+     * @return bool
      */
     public function createTable($table, $columns = []): bool
     {
@@ -566,7 +566,7 @@ class Database
      * Drops a table
      *
      * @param string $table
-     * @return boolean
+     * @return bool
      */
     public function dropTable($table): bool
     {

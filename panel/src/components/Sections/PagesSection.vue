@@ -1,4 +1,4 @@
-<template>
+  <template>
   <section v-if="isLoading === false" class="k-pages-section">
 
     <header class="k-section-header">
@@ -95,73 +95,62 @@ export default {
       }
     },
     action(page, action) {
-      // check first if page is locked
-      const url = this.$api.pages.url(page.id, "lock")
 
-      this.$api.get(url).then(response => {
-
-        // restrict actions if page is locked
-        if (response.locked && ["preview"].includes(action) === false) {
-          this.$store.dispatch('notification/error', this.$t("lock.page.isLocked", { email: response.email }));
-          return;
+      switch (action) {
+        case "duplicate": {
+          this.$refs.duplicate.open(page.id);
+          break;
         }
+        case "preview": {
+          let preview = window.open("", "_blank");
+          preview.document.write = "...";
 
-        switch (action) {
-          case "duplicate": {
-            this.$refs.duplicate.open(page.id);
-            break;
-          }
-          case "preview": {
-            let preview = window.open("", "_blank");
-            preview.document.write = "...";
+          this.$api.pages
+            .preview(page.id)
+            .then(url => {
+              preview.location.href = url;
+            })
+            .catch(error => {
+              this.$store.dispatch("notification/error", error);
+            });
 
-            this.$api.pages
-              .preview(page.id)
-              .then(url => {
-                preview.location.href = url;
+          break;
+        }
+        case "rename": {
+          this.$refs.rename.open(page.id);
+          break;
+        }
+        case "url": {
+          this.$refs.url.open(page.id);
+          break;
+        }
+        case "status": {
+          this.$refs.status.open(page.id);
+          break;
+        }
+        case "template": {
+          this.$refs.template.open(page.id);
+          break;
+        }
+        case "remove": {
+          if (this.data.length <= this.options.min) {
+            const number = this.options.min > 1 ? "plural" : "singular";
+            this.$store.dispatch("notification/error", {
+              message: this.$t("error.section.pages.min." + number, {
+                section: this.options.headline || this.name,
+                min: this.options.min
               })
-              .catch(error => {
-                this.$store.dispatch("notification/error", error);
-              });
+            });
+            break;
+          }
 
-            break;
-          }
-          case "rename": {
-            this.$refs.rename.open(page.id);
-            break;
-          }
-          case "url": {
-            this.$refs.url.open(page.id);
-            break;
-          }
-          case "status": {
-            this.$refs.status.open(page.id);
-            break;
-          }
-          case "template": {
-            this.$refs.template.open(page.id);
-            break;
-          }
-          case "remove": {
-            if (this.data.length <= this.options.min) {
-              const number = this.options.min > 1 ? "plural" : "singular";
-              this.$store.dispatch("notification/error", {
-                message: this.$t("error.section.pages.min." + number, {
-                  section: this.options.headline || this.name,
-                  min: this.options.min
-                })
-              });
-              break;
-            }
-
-            this.$refs.remove.open(page.id);
-            break;
-          }
-          default: {
-            throw new Error("Invalid action");
-          }
+          this.$refs.remove.open(page.id);
+          break;
         }
-      });
+        default: {
+          throw new Error("Invalid action");
+        }
+      }
 
     },
     items(data) {

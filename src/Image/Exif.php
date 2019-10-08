@@ -173,7 +173,7 @@ class Exif
     /**
      * Checks if this is a color picture
      *
-     * @return boolean|null
+     * @return bool|null
      */
     public function isColor()
     {
@@ -183,7 +183,7 @@ class Exif
     /**
      * Checks if this is a bw picture
      *
-     * @return boolean|null
+     * @return bool|null
      */
     public function isBW(): bool
     {

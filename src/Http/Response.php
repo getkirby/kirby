@@ -58,11 +58,11 @@ class Response
     /**
      * Creates a new response object
      *
-     * @param string  $body
-     * @param string  $type
-     * @param integer $code
-     * @param array   $headers
-     * @param string  $charset
+     * @param string $body
+     * @param string $type
+     * @param int $code
+     * @param array $headers
+     * @param string $charset
      */
     public function __construct($body = '', ?string $type = null, ?int $code = null, ?array $headers = null, ?string $charset = null)
     {
@@ -194,7 +194,7 @@ class Response
     /**
      * Getter for single headers
      *
-     * @param  string      $key   Name of the header
+     * @param string $key Name of the header
      * @return string|null
      */
     public function header(string $key): ?string
@@ -217,8 +217,8 @@ class Response
      * header and automatic conversion of arrays.
      *
      * @param string|array $body
-     * @param integer $code
-     * @param boolean $pretty
+     * @param int $code
+     * @param bool $pretty
      * @param array $headers
      * @return self
      */
@@ -242,7 +242,7 @@ class Response
      * given location.
      *
      * @param string $location
-     * @param integer $code
+     * @param int $code
      * @return self
      */
     public static function redirect(?string $location = null, ?int $code = null)

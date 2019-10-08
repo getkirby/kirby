@@ -28,7 +28,7 @@ return function (App $app) {
          * Converts the field value into a proper boolean and inverts it
          *
          * @param \Kirby\Cms\Field $field
-         * @return boolean
+         * @return bool
          */
         'isFalse' => function (Field $field): bool {
             return $field->toBool() === false;
@@ -38,7 +38,7 @@ return function (App $app) {
          * Converts the field value into a proper boolean
          *
          * @param \Kirby\Cms\Field $field
-         * @return boolean
+         * @return bool
          */
         'isTrue' => function (Field $field): bool {
             return $field->toBool() === true;
@@ -49,7 +49,7 @@ return function (App $app) {
          *
          * @param string $validator
          * @param mixed ...$arguments A list of optional validator arguments
-         * @return boolean
+         * @return bool
          */
         'isValid' => function (Field $field, string $validator, ...$arguments): bool {
             return V::$validator($field->value, ...$arguments);
@@ -305,7 +305,7 @@ return function (App $app) {
          *
          * @param \Kirby\Cms\Field $field
          * @param int $cahrs
-         * @param boolean $strip
+         * @param bool $strip
          * @param string $rep
          * @return \Kirby\Cms\Field
          */

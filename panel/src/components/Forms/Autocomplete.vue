@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import "@/helpers/regex.js";
 
 export default {
   props: {

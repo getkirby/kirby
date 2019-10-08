@@ -19,7 +19,6 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import slug from "@/helpers/slug.js";
 
 export default {
   mixins: [DialogMixin],
@@ -82,7 +81,7 @@ export default {
   },
   watch: {
     "page.slug"(value) {
-      this.page.slug = slug(value, [this.slugs, this.system.ascii]);
+      this.page.slug = this.$helper.slug(value, [this.slugs, this.system.ascii]);
     }
   },
   methods: {
@@ -91,7 +90,7 @@ export default {
         .get(id, {language: "@default", select: "id,slug,hasChildren,hasDrafts,hasFiles,title"})
         .then(page => {
           this.page.id          = page.id;
-          this.page.slug        = page.slug + "-" + slug(this.$t("page.duplicate.appendix"));
+          this.page.slug        = page.slug + "-" + this.$helper.slug(this.$t("page.duplicate.appendix"));
           this.page.hasChildren = page.hasChildren;
           this.page.hasDrafts   = page.hasDrafts;
           this.page.hasFiles    = page.hasFiles;

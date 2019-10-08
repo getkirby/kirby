@@ -369,8 +369,8 @@ class File extends ModelWithContent
     /**
      * Get the file's last modification time.
      *
-     * @param  string $format
-     * @param  string|null $handler date or strftime
+     * @param string $format
+     * @param string|null $handler date or strftime
      * @return mixed
      */
     public function modified(string $format = null, string $handler = null)
@@ -392,7 +392,7 @@ class File extends ModelWithContent
      * Timestamp of the last modification
      * of the content file
      *
-     * @return integer
+     * @return int
      */
     protected function modifiedContent(): int
     {
@@ -403,7 +403,7 @@ class File extends ModelWithContent
      * Timestamp of the last modification
      * of the source file
      *
-     * @return integer
+     * @return int
      */
     protected function modifiedFile(): int
     {

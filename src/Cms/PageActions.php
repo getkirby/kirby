@@ -160,7 +160,7 @@ trait PageActions
      * to either draft, listed or unlisted
      *
      * @param string $status "draft", "listed" or "unlisted"
-     * @param integer $position Optional sorting number
+     * @param int $position Optional sorting number
      * @return self
      */
     public function changeStatus(string $status, int $position = null)
@@ -462,8 +462,8 @@ trait PageActions
      * Create the sorting number for the page
      * depending on the blueprint settings
      *
-     * @param integer $num
-     * @return integer
+     * @param int $num
+     * @return int
      */
     public function createNum(int $num = null): int
     {
@@ -756,7 +756,7 @@ trait PageActions
      *
      * @param array $input
      * @param string $language
-     * @param boolean $validate
+     * @param bool $validate
      * @return self
      */
     public function update(array $input = null, string $language = null, bool $validate = false)

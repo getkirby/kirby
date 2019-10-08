@@ -55,7 +55,7 @@ function collection(string $name)
  * Checks / returns a CSRF token
  *
  * @param string $check Pass a token here to compare it to the one in the session
- * @return string|boolean Either the token or a boolean check result
+ * @return string|bool Either the token or a boolean check result
  */
 function csrf(string $check = null)
 {
@@ -126,7 +126,7 @@ function css($url, $options = null)
  * to help with debugging.
  *
  * @param mixed $variable
- * @param boolean $echo
+ * @param bool $echo
  * @return string
  */
 function dump($variable, bool $echo = true): string
@@ -159,10 +159,10 @@ function e($condition, $value, $alternative = null)
 /**
  * Escape context specific output
  *
- * @param  string  $string  Untrusted data
- * @param  string  $context Location of output
- * @param  boolean $strict  Whether to escape an extended set of characters (HTML attributes only)
- * @return string  Escaped data
+ * @param string $string Untrusted data
+ * @param string $context Location of output
+ * @param bool $strict Whether to escape an extended set of characters (HTML attributes only)
+ * @return string Escaped data
  */
 function esc($string, $context = 'html', $strict = false)
 {
@@ -177,9 +177,9 @@ function esc($string, $context = 'html', $strict = false)
 /**
  * Shortcut for $kirby->request()->get()
  *
- * @param   mixed    $key The key to look for. Pass false or null to return the entire request array.
- * @param   mixed    $default Optional default value, which should be returned if no element has been found
- * @return  mixed
+ * @param mixed $key The key to look for. Pass false or null to return the entire request array.
+ * @param mixed $default Optional default value, which should be returned if no element has been found
+ * @return mixed
  */
 function get($key = null, $default = null)
 {
@@ -206,7 +206,7 @@ function gist(string $url, string $file = null): string
  * Urls can be relative or absolute.
  *
  * @param string $url
- * @param integer $code
+ * @param int $code
  * @return void
  */
 function go(string $url = null, int $code = 302)
@@ -589,7 +589,7 @@ function r($condition, $value, $alternative = null)
  * by the defined step
  *
  * @param string $date
- * @param integer $step
+ * @param int $step
  * @return string|null
  */
 function timestamp(string $date = null, int $step = null): ?string
@@ -671,7 +671,7 @@ function smartypants(string $text = null): string
  *
  * @param string|array $name
  * @param array|object $data
- * @param boolean $return
+ * @param bool $return
  * @return string
  */
 function snippet($name, $data = [], bool $return = false)
@@ -721,9 +721,9 @@ function svg(string $file)
 /**
  * Returns translate string for key from translation file
  *
- * @param   string|array $key
- * @param   string|null  $fallback
- * @return  mixed
+ * @param string|array $key
+ * @param string|null $fallback
+ * @return mixed
  */
 function t($key, string $fallback = null)
 {
@@ -733,9 +733,9 @@ function t($key, string $fallback = null)
 /**
  * Translates a count
  *
- * @param   string|array $key
- * @param   int  $count
- * @return  mixed
+ * @param string|array $key
+ * @param int $count
+ * @return mixed
  */
 function tc($key, int $count)
 {
@@ -825,7 +825,7 @@ function video(string $url, array $options = [], array $attr = []): string
  */
 function vimeo(string $url, array $options = [], array $attr = []): string
 {
-    return Html::video($url, $options, $attr);
+    return Html::vimeo($url, $options, $attr);
 }
 
 /**
@@ -851,5 +851,5 @@ function widont(string $string = null): string
  */
 function youtube(string $url, array $options = [], array $attr = []): string
 {
-    return Html::video($url, $options, $attr);
+    return Html::youtube($url, $options, $attr);
 }

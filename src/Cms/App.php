@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request;
@@ -475,7 +476,7 @@ class App
      *
      * @param string $path
      * @param mixed $parent
-     * @param boolean $drafts
+     * @param bool $drafts
      * @return \Kirby\Cms\File|null
      */
     public function file(string $path, $parent = null, bool $drafts = true)
@@ -586,7 +587,11 @@ class App
 
         // Pages
         if (is_a($input, 'Kirby\Cms\Page')) {
-            $html = $input->render();
+            try {
+                $html = $input->render();
+            } catch (ErrorPageException $e) {
+                return $this->io($e);
+            }
 
             if ($input->isErrorPage() === true) {
                 if ($response->code() === null) {
@@ -758,7 +763,7 @@ class App
     /**
      * Check for a multilang setup
      *
-     * @return boolean
+     * @return bool
      */
     public function multilang(): bool
     {
@@ -1184,8 +1189,18 @@ class App
     {
         $options = $this->option('smartypants', []);
 
-        if ($options === true) {
+        if ($options === false) {
+            return $text;
+        } elseif (is_array($options) === false) {
             $options = [];
+        }
+
+        if ($this->multilang() === true) {
+            $languageSmartypants = $this->language()->smartypants() ?? [];
+
+            if (empty($languageSmartypants) === false) {
+                $options = array_merge($options, $languageSmartypants);
+            }
         }
 
         return $this->component('smartypants')($this, $text, $options);
