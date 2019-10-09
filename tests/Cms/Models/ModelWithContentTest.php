@@ -19,6 +19,11 @@ class ExtendedModelWithContent extends ModelWithContent
         return 'test.txt';
     }
 
+    public function permissions()
+    {
+        return null;
+    }
+
     public function root(): ?string
     {
         return '/tmp';

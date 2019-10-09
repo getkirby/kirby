@@ -6,7 +6,7 @@ class PageTestCase extends TestCase
 {
     public $page = null;
 
-    public function page($id = null)
+    public function page(?string $id = null)
     {
         return parent::page($id ?? $this->page);
     }

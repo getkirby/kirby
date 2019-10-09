@@ -432,7 +432,7 @@ class Pages extends Collection
      * Filter all pages by excluding the given template
      *
      * @param string|array $templates
-     * @return Kirby\Cms\Pages
+     * @return \Kirby\Cms\Pages
      */
     public function notTemplate($templates)
     {
