@@ -12,6 +12,7 @@
 *.sublime-project
 *.sublime-workspace
 /.vscode
+/.idea
 
 # tests
 /panel/cypress

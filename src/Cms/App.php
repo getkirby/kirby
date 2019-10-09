@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request;
@@ -586,7 +587,11 @@ class App
 
         // Pages
         if (is_a($input, 'Kirby\Cms\Page')) {
-            $html = $input->render();
+            try {
+                $html = $input->render();
+            } catch (ErrorPageException $e) {
+                return $this->io($e);
+            }
 
             if ($input->isErrorPage() === true) {
                 if ($response->code() === null) {

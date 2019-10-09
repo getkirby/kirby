@@ -8,6 +8,14 @@ class UserTestModel extends User
 {
 }
 
+class UserTestForceLocked extends User
+{
+    public function isLocked(): bool
+    {
+        return true;
+    }
+}
+
 class UserTest extends TestCase
 {
     public function testAvatar()
@@ -238,5 +246,123 @@ class UserTest extends TestCase
         $this->assertInstanceOf(UserTestModel::class, $user);
 
         User::$models = [];
+    }
+
+    public function testLoginLogoutHooks()
+    {
+        $phpunit = $this;
+
+        $calls         = 0;
+        $logoutSession = false;
+        $app = new App([
+            'users' => [
+                ['email' => 'test@getkirby.com']
+            ],
+            'hooks' => [
+                'user.login:before' => function ($user, $session) use ($phpunit, &$calls) {
+                    $phpunit->assertEquals('test@getkirby.com', $user->email());
+                    $phpunit->assertEquals($session, S::instance());
+
+                    $calls += 1;
+                },
+                'user.login:after' => function ($user, $session) use ($phpunit, &$calls) {
+                    $phpunit->assertEquals('test@getkirby.com', $user->email());
+                    $phpunit->assertEquals($session, S::instance());
+
+                    $calls += 2;
+                },
+                'user.logout:before' => function ($user, $session) use ($phpunit, &$calls) {
+                    $phpunit->assertEquals('test@getkirby.com', $user->email());
+                    $phpunit->assertEquals($session, S::instance());
+
+                    $calls += 4;
+                },
+                'user.logout:after' => function ($user, $session) use ($phpunit, &$calls, &$logoutSession) {
+                    $phpunit->assertEquals('test@getkirby.com', $user->email());
+
+                    if ($logoutSession === true) {
+                        $phpunit->assertEquals($session, S::instance());
+                        $phpunit->assertEquals('value', S::instance()->get('some'));
+                    } else {
+                        $phpunit->assertNull($session);
+                    }
+
+                    $calls += 8;
+                }
+            ]
+        ]);
+
+        // without prepopulated session
+        $user = $app->user('test@getkirby.com');
+        $user->loginPasswordless();
+        $user->logout();
+
+        // with a session with another value
+        S::instance()->set('some', 'value');
+        $logoutSession = true;
+        $user->loginPasswordless();
+        $user->logout();
+
+        // each hook needs to be called exactly twice
+        $this->assertEquals((1 + 2 + 4 + 8) * 2, $calls);
+    }
+
+    public function testPanelOptions()
+    {
+        $user = new User([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $user->kirby()->impersonate('kirby');
+
+        $expected = [
+            'create'         => true,
+            'changeEmail'    => true,
+            'changeLanguage' => true,
+            'changeName'     => true,
+            'changePassword' => true,
+            'changeRole'     => false, // just one role
+            'delete'         => true,
+            'update'         => true,
+        ];
+
+        $this->assertEquals($expected, $user->panelOptions());
+    }
+
+    public function testPanelOptionsWithLockedUser()
+    {
+        $user = new UserTestForceLocked([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $user->kirby()->impersonate('kirby');
+
+        // without override
+        $expected = [
+            'create'         => false,
+            'changeEmail'    => false,
+            'changeLanguage' => false,
+            'changeName'     => false,
+            'changePassword' => false,
+            'changeRole'     => false,
+            'delete'         => false,
+            'update'         => false,
+        ];
+
+        $this->assertEquals($expected, $user->panelOptions());
+
+        // with override
+        $expected = [
+            'create'         => false,
+            'changeEmail'    => true,
+            'changeLanguage' => false,
+            'changeName'     => false,
+            'changePassword' => false,
+            'changeRole'     => false,
+            'delete'         => false,
+            'update'         => false,
+        ];
+
+        $this->assertEquals($expected, $user->panelOptions(['changeEmail']));
     }
 }

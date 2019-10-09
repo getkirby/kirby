@@ -57,7 +57,7 @@ return [
             return $file->niceSize();
         },
         'options' => function (File $file) {
-            return $file->permissions()->toArray();
+            return $file->panelOptions();
         },
         'panelIcon' => function (File $file) {
             return $file->panelIcon();
