@@ -203,6 +203,14 @@ class Field extends Component
 
                     return $this->model()->toString($this->default);
                 },
+                'help' => function () {
+                    if ($this->help) {
+                        $help = $this->model()->toString($this->help);
+                        $help = $this->kirby()->kirbytext(strip_tags($help));
+
+                        return $help;
+                    }
+                },
                 'label' => function () {
                     if ($this->label !== null) {
                         return $this->model()->toString($this->label);
