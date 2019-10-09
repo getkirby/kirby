@@ -23,6 +23,12 @@ return [
             return A::wrap($add);
         },
         /**
+         * Enables/disables reverse sorting
+         */
+        'flip' => function (bool $flip = false) {
+            return $flip;
+        },
+        /**
          * Image options to control the source and look of page previews
          */
         'image' => function ($image = null) {
@@ -120,6 +126,11 @@ return [
             // sort
             if ($this->sortBy) {
                 $pages = $pages->sortBy(...$pages::sortArgs($this->sortBy));
+            }
+
+            // flip
+            if ($this->flip === true) {
+                $pages = $pages->flip();
             }
 
             // pagination
