@@ -135,7 +135,65 @@ class PagePickerMixinTest extends TestCase
         $page = new Page([
             'slug' => 'test',
             'children' => [
-                ['slug' => 'a'],
+                [
+                    'slug' => 'a',
+                    'children' => [
+                        ['slug' => 'aa'],
+                        ['slug' => 'ab'],
+                        ['slug' => 'ac'],
+                    ]
+                ],
+                ['slug' => 'b'],
+                ['slug' => 'c'],
+            ]
+        ]);
+
+        $field = $this->field('test', [
+            'model' => $page
+        ]);
+        
+        $response = $field->pages();
+        $pages    = $response['pages'];
+        $model    = $response['model'];
+        
+        $this->assertCount(3, $model);
+        $this->assertNull($model['id']);
+        $this->assertNull($model['parent']);
+        $this->assertSame('test', $model['title']);
+        
+        $this->assertCount(3, $pages);
+        $this->assertSame('test/a', $pages[0]['id']);
+        $this->assertSame('test/b', $pages[1]['id']);
+        $this->assertSame('test/c', $pages[2]['id']);
+    }
+    
+    public function testPageChildrenWithoutSubpages()
+    {
+        Field::$types = [
+            'test' => [
+                'mixins'  => ['pagepicker'],
+                'methods' => [
+                    'pages' => function () {
+                        return $this->pagepicker([
+                            'query'    => 'page.children',
+                            'subpages' => false
+                        ]);
+                    }
+                ]
+            ]
+        ];
+
+        $page = new Page([
+            'slug' => 'test',
+            'children' => [
+                [
+                    'slug' => 'a',
+                    'children' => [
+                        ['slug' => 'aa'],
+                        ['slug' => 'ab'],
+                        ['slug' => 'ac'],
+                    ]
+                ],
                 ['slug' => 'b'],
                 ['slug' => 'c'],
             ]
@@ -147,8 +205,9 @@ class PagePickerMixinTest extends TestCase
 
         $response = $field->pages();
         $pages    = $response['pages'];
+        $model    = $response['model'];
 
-        $this->assertNull($response['model']);
+        $this->assertNull($model);
         $this->assertCount(3, $pages);
         $this->assertEquals('test/a', $pages[0]['id']);
         $this->assertEquals('test/b', $pages[1]['id']);
