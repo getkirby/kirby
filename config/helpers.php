@@ -122,6 +122,21 @@ function css($url, $options = null): ?string
 }
 
 /**
+ * Triggers a deprecation warning if debug mode is active
+ *
+ * @param string $message
+ * @return bool Whether the warning was triggered
+ */
+function deprecated(string $message): bool
+{
+    if (App::instance()->option('debug') === true) {
+        return trigger_error($message, E_USER_DEPRECATED) === true;
+    }
+
+    return false;
+}
+
+/**
  * Simple object and variable dumper
  * to help with debugging.
  *

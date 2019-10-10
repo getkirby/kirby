@@ -155,6 +155,23 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testDeprecated()
+    {
+        // with disabled debug mode
+        $this->assertFalse(deprecated('The xyz method is deprecated.'));
+
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'debug' => true
+            ]
+        ]);
+
+        // with enabled debug mode
+        $this->expectException('Whoops\Exception\ErrorException');
+        $this->expectExceptionMessage('The xyz method is deprecated.');
+        deprecated('The xyz method is deprecated.');
+    }
+
     public function testDumpHelperOnCli()
     {
         $this->assertEquals("test\n", dump('test', false));
