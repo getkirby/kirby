@@ -1,4 +1,4 @@
-  <template>
+<template>
   <section v-if="isLoading === false" class="k-pages-section">
 
     <header class="k-section-header">
