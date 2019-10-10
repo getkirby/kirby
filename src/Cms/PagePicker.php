@@ -56,10 +56,14 @@ class PagePicker
             'image' => [],
             // query template for the page info field
             'info' => false,
+            // number of pages displayed per pagination page
+            'limit' => 20,
             // optional mapping function for the pages array
             'map' => null,
             // the reference model (site or page)
             'model' => site(),
+            // current page when paginating
+            'page' => 1,
             // Page ID of the selected parent. Used to navigate
             'parent' => null,
             // a query string to fetch specific pages
@@ -175,18 +179,30 @@ class PagePicker
 
         // no query? simple parent-based search for pages
         if (empty($this->options['query']) === true) {
-            return $this->pages = $this->pagesForParent();
-        }
+            $pages = $this->pagesForParent();
 
         // when subpage navigation is enabled, a parent
         // might be passed in addition to the query.
         // The parent then takes priority.
-        if ($this->options['subpages'] === true && empty($this->options['parent']) === false) {
-            return $this->pages = $this->pagesForParent();
-        }
+        } elseif ($this->options['subpages'] === true && empty($this->options['parent']) === false) {
+            $pages = $this->pagesForParent();
 
         // search by query
-        return $this->pages = $this->pagesForQuery();
+        } else {
+            $pages = $this->pagesForQuery();
+        }
+
+        // filter protected pages
+        $pages = $pages->filterBy('isReadable', true);
+
+        // paginate the result
+        $pages = $pages->paginate([
+            'limit' => $this->options['limit'],
+            'page'  => $this->options['page']
+        ]);
+
+        // cache and return the result
+        return $this->pages = $pages;
     }
 
     /**
@@ -242,21 +258,35 @@ class PagePicker
 
         // create the array result for each individual page
         foreach ($pages as $index => $page) {
-            if ($page->isReadable() === true) {
-                if (empty($this->options['map']) === false) {
-                    $result[] = $this->options['map']($page);
-                } else {
-                    $result[] = $page->panelPickerData([
-                        'image' => $this->options['image'],
-                        'info'  => $this->options['info'],
-                        'model' => $this->options['model'],
-                        'text'  => $this->options['text'],
-                    ]);
-                }
+            if (empty($this->options['map']) === false) {
+                $result[] = $this->options['map']($page);
+            } else {
+                $result[] = $page->panelPickerData([
+                    'image' => $this->options['image'],
+                    'info'  => $this->options['info'],
+                    'model' => $this->options['model'],
+                    'text'  => $this->options['text'],
+                ]);
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Return the most relevant pagination
+     * info as array
+     *
+     * @param \Kirby\Cms\Pagination $pagination
+     * @return array
+     */
+    public function paginationToArray(Pagination $pagination): array
+    {
+        return [
+            'limit' => $pagination->limit(),
+            'page'  => $pagination->page(),
+            'total' => $pagination->total()
+        ];
     }
 
     /**
@@ -305,9 +335,12 @@ class PagePicker
      */
     public function toArray(): array
     {
+        $pages = $this->pages();
+
         return [
-            'model' => $this->modelToArray($this->model()),
-            'pages' => $this->pagesToArray($this->pages()),
+            'model'      => $this->modelToArray($this->model()),
+            'pages'      => $this->pagesToArray($pages),
+            'pagination' => $this->paginationToArray($pages->pagination())
         ];
     }
 }
