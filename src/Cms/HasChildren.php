@@ -175,11 +175,13 @@ trait HasChildren
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasUnlistedChildren` instead
+     * @deprecated 3.0.0 Use `Page::hasUnlistedChildren()` instead
      * @return bool
      */
     public function hasInvisibleChildren(): bool
     {
+        deprecated('$page->hasInvisibleChildren() is deprecated, use $page->hasUnlistedChildren() instead. $page->hasInvisibleChildren() will be removed in Kirby 3.5.0.');
+
         return $this->hasUnlistedChildren();
     }
 
@@ -204,11 +206,13 @@ trait HasChildren
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasListedChildren` instead
+     * @deprecated 3.0.0 Use `Page::hasListedChildren()` instead
      * @return bool
      */
     public function hasVisibleChildren(): bool
     {
+        deprecated('$page->hasVisibleChildren() is deprecated, use $page->hasListedChildren() instead. $page->hasVisibleChildren() will be removed in Kirby 3.5.0.');
+
         return $this->hasListedChildren();
     }
 

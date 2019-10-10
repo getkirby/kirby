@@ -256,6 +256,8 @@ trait FileActions
      */
     public function rename(string $name, bool $sanitize = true)
     {
+        deprecated('$file->rename() is deprecated, use $file->changeName() instead. $file->rename() will be removed in Kirby 3.5.0.');
+
         return $this->changeName($name, $sanitize);
     }
 
