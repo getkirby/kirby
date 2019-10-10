@@ -62,7 +62,6 @@ class PageChildrenTest extends TestCase
         ]);
 
         $this->assertTrue($page->hasListedChildren());
-        $this->assertTrue($page->hasVisibleChildren());
     }
 
     public function testHasNoListedChildren()
@@ -75,7 +74,6 @@ class PageChildrenTest extends TestCase
         ]);
 
         $this->assertFalse($page->hasListedChildren());
-        $this->assertFalse($page->hasVisibleChildren());
     }
 
     public function testHasUnlistedChildren()
@@ -88,7 +86,6 @@ class PageChildrenTest extends TestCase
         ]);
 
         $this->assertTrue($page->hasUnlistedChildren());
-        $this->assertTrue($page->hasInvisibleChildren());
     }
 
     public function testHasNoUnlistedChildren()
@@ -101,7 +98,6 @@ class PageChildrenTest extends TestCase
         ]);
 
         $this->assertFalse($page->hasUnlistedChildren());
-        $this->assertFalse($page->hasInvisibleChildren());
     }
 
     public function testHasDrafts()
