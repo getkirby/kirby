@@ -179,6 +179,10 @@ return [
                 return false;
             }
 
+            if ($this->flip === true) {
+                return false;
+            }
+
             return true;
         },
         'upload' => function () {
