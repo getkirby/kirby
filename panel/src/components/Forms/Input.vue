@@ -60,12 +60,16 @@ export default {
           this.isInvalid = $invalid;
           this.$emit("invalid", $invalid, $v);
         }
-      },
-      inputProps: {
-        ...this.$props,
-        ...this.$attrs
       }
     };
+  },
+  computed: {
+    inputProps() {
+      return {
+        ...this.$props,
+        ...this.$attrs
+      };
+    }
   },
   methods: {
     blur(e) {
