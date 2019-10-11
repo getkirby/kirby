@@ -1,3 +1,5 @@
+import debounce from "@/helpers/debounce.js";
+
 export default {
   data() {
     return {
@@ -11,6 +13,7 @@ export default {
         parent: null,
         selected: [],
       },
+      search: null,
       pagination: {
         limit: 20,
         page: 1,
@@ -26,10 +29,16 @@ export default {
       return this.multiple === true ? "check" : "circle-filled";
     }
   },
+  watch: {
+    search: debounce(function () {
+      this.fetch();
+    }, 200),
+  },
   methods: {
     fetch() {
       const params = {
         page: this.pagination.page,
+        search: this.search,
         ...this.fetchData || {}
       };
 
@@ -52,6 +61,9 @@ export default {
 
       // reset pagination
       this.pagination.page = 0;
+
+      // reset the search
+      this.search = null;
 
       let fetch = true;
 

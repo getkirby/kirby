@@ -55,6 +55,8 @@ class FilePicker
             'page' => 1,
             // a query string to fetch specific pages
             'query' => null,
+            // search query
+            'search' => null,
             // query template for the file text field
             'text' => '{{ file.filename }}'
         ];
@@ -97,6 +99,11 @@ class FilePicker
             $files = $files->files();
         } elseif (is_a($files, 'Kirby\Cms\Files') === false) {
             throw new InvalidArgumentException('Your query must return a set of files');
+        }
+
+
+        if (empty($this->options['search']) === false) {
+            $files = $files->search($this->options['search']);
         }
 
         // paginate the result

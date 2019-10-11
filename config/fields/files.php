@@ -99,12 +99,13 @@ return [
                     $field = $this->field();
 
                     return $field->filepicker([
-                        'image' => $field->image(),
-                        'info'  => $field->info(),
-                        'limit' => $field->limit(),
-                        'page'  => $this->requestQuery('page'),
-                        'query' => $field->query(),
-                        'text'  => $field->text()
+                        'image'  => $field->image(),
+                        'info'   => $field->info(),
+                        'limit'  => $field->limit(),
+                        'page'   => $this->requestQuery('page'),
+                        'query'  => $field->query(),
+                        'search' => $this->requestQuery('search'),
+                        'text'   => $field->text()
                     ]);
                 }
             ],
