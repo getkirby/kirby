@@ -135,7 +135,7 @@ class ContentTest extends TestCase
 
     public function testToArray()
     {
-        return $this->assertEquals($this->mockData(), $this->mockObject()->toArray());
+        $this->assertEquals($this->mockData(), $this->mockObject()->toArray());
     }
 
     public function testUpdate()
@@ -150,6 +150,6 @@ class ContentTest extends TestCase
 
     public function testDebuginfo()
     {
-        return $this->assertEquals($this->mockData(), $this->mockObject()->__debugInfo());
+        $this->assertEquals($this->mockData(), $this->mockObject()->__debugInfo());
     }
 }

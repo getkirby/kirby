@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 class EmptySectionMixinTest extends TestCase
 {
+    protected $app;
+    protected $page;
+
     public function setUp(): void
     {
         $this->app = new App([

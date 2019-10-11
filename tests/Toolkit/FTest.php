@@ -4,6 +4,10 @@ namespace Kirby\Toolkit;
 
 class FTest extends TestCase
 {
+    protected $fixtures;
+    protected $moved;
+    protected $tmp;
+
     public function setUp(): void
     {
         $this->fixtures = __DIR__ . '/fixtures/f';

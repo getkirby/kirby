@@ -1,0 +1,21 @@
+parameters:
+    paths:
+        - %currentWorkingDirectory%
+    autoload_files:
+        - %currentWorkingDirectory%/vendor/autoload.php
+        - %rootDir%/../../autoload.php
+    autoload_directories:
+        - %currentWorkingDirectory%/tests
+    excludes_analyse:
+        - %currentWorkingDirectory%/dependencies
+        - %currentWorkingDirectory%/tests/*/fixtures/*
+        - %currentWorkingDirectory%/vendor
+        - %currentWorkingDirectory%/views
+
+    level: 0
+    memory_limit: 2G
+
+    ignoreErrors:
+        # we use bound $this in our callbacks
+        - message: '#(Using \$this outside a class\.|Undefined variable: \$this)#'
+          path: %currentWorkingDirectory%/config

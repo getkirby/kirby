@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     isLocked() {
-      return this.$store.getters["form/lock"] !== null;
+      return this.$store.state.content.status.lock !== null;
     },
     language() {
       return this.$store.state.languages.current;
@@ -90,7 +90,7 @@ export default {
           };
           this.$store.dispatch("breadcrumb", []);
           this.$store.dispatch("title", null);
-          this.$store.dispatch("form/create", {
+          this.$store.dispatch("content/create", {
             id: "site",
             api: "site",
             content: site.content

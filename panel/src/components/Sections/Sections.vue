@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     content() {
-      return this.$store.getters["form/values"]();
+      return this.$store.getters["content/values"]();
     }
   },
   methods: {

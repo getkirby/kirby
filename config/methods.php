@@ -193,7 +193,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Page|null
          */
-        'toPage' => function (Field $field) use ($app) {
+        'toPage' => function (Field $field) {
             return $field->toPages()->first();
         },
 
@@ -254,7 +254,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\User|null
          */
-        'toUser' => function (Field $field) use ($app) {
+        'toUser' => function (Field $field) {
             return $field->toUsers()->first();
         },
 
@@ -326,6 +326,17 @@ return function (App $app) {
         },
 
         /**
+         * Converts all line breaks in the field content to `<br>` tags.
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'nl2br' => function (Field $field) {
+            $field->value = nl2br($field->value, false);
+            return $field;
+        },
+
+        /**
          * Converts the field content from Markdown/Kirbytext to valid HTML
          *
          * @param \Kirby\Cms\Field $field
@@ -369,6 +380,23 @@ return function (App $app) {
                 'field'  => $field
             ]);
 
+            return $field;
+        },
+
+        /**
+         * Strips all block-level HTML elements from the field value,
+         * it can be safely placed inside of other inline elements
+         * without the risk of breaking the HTML structure.
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'inline' => function (Field $field) {
+            // List of valid inline elements taken from: https://developer.mozilla.org/de/docs/Web/HTML/Inline_elemente
+            // Obsolete elements, script tags, image maps and form elements have
+            // been excluded for safety reasons and as they are most likely not
+            // needed in most cases.
+            $field->value = strip_tags($field->value, '<b><i><small><abbr><cite><code><dfn><em><kbd><strong><samp><var><a><bdo><br><img><q><span><sub><sup>');
             return $field;
         },
 

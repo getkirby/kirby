@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class TranslationsRoutesTest extends TestCase
 {
+    protected $app;
+
     public function setUp(): void
     {
         $this->app = new App([

@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase as TestCase;
 
 class PageTemplateTest extends TestCase
 {
+    protected $app;
+
     public function setUp(): void
     {
         $this->app = new App([

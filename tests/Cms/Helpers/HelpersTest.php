@@ -10,6 +10,7 @@ use Kirby\Toolkit\Dir;
 
 class HelpersTest extends TestCase
 {
+    protected $fixtures;
     protected $kirby;
 
     public function setUp(): void
@@ -152,6 +153,23 @@ class HelpersTest extends TestCase
         $expected .= '<link href="https://getkirby.com/assets/css/b.css" rel="stylesheet">';
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testDeprecated()
+    {
+        // with disabled debug mode
+        $this->assertFalse(deprecated('The xyz method is deprecated.'));
+
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'debug' => true
+            ]
+        ]);
+
+        // with enabled debug mode
+        $this->expectException('Whoops\Exception\ErrorException');
+        $this->expectExceptionMessage('The xyz method is deprecated.');
+        deprecated('The xyz method is deprecated.');
     }
 
     public function testDumpHelperOnCli()

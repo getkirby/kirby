@@ -89,7 +89,7 @@ function csrf(string $check = null)
  * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
  * @return string|null
  */
-function css($url, $options = null)
+function css($url, $options = null): ?string
 {
     if (is_array($url) === true) {
         $links = array_map(function ($url) use ($options) {
@@ -119,6 +119,21 @@ function css($url, $options = null)
     ]);
 
     return '<link ' . attr($attr) . '>';
+}
+
+/**
+ * Triggers a deprecation warning if debug mode is active
+ *
+ * @param string $message
+ * @return bool Whether the warning was triggered
+ */
+function deprecated(string $message): bool
+{
+    if (App::instance()->option('debug') === true) {
+        return trigger_error($message, E_USER_DEPRECATED) === true;
+    }
+
+    return false;
 }
 
 /**
@@ -348,9 +363,9 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
  *
  * @param string|array $url
  * @param string|array $options
- * @return void
+ * @return string|null
  */
-function js($url, $options = null)
+function js($url, $options = null): ?string
 {
     if (is_array($url) === true) {
         $scripts = array_map(function ($url) use ($options) {

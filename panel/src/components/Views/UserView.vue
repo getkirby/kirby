@@ -237,7 +237,7 @@ export default {
           }
 
           this.$store.dispatch("title", this.user.name || this.user.email);
-          this.$store.dispatch("form/create", {
+          this.$store.dispatch("content/create", {
             id: "users/" + user.id,
             api: this.$api.users.link(user.id),
             content: user.content

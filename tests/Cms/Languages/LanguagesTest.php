@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class LanguagesTest extends TestCase
 {
+    protected $app;
+    protected $languages;
+
     public function setUp(): void
     {
         $this->app = new App([
@@ -67,7 +70,6 @@ class LanguagesTest extends TestCase
     public function testDefault()
     {
         $this->assertEquals('en', $this->languages->default()->code());
-        $this->assertEquals('en', $this->languages->findDefault()->code());
     }
 
     public function testMultipleDefault()

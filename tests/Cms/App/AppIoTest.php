@@ -50,7 +50,7 @@ class AppIoTest extends TestCase
 
     public function testExceptionWithInvalidHttpCode()
     {
-        $response = $this->app()->io(new Exception('Nope', 8000));
+        $response = $this->app()->io(new \Exception('Nope', 8000));
 
         $this->assertEquals(500, $response->code());
         $this->assertEquals('Nope', $response->body());
