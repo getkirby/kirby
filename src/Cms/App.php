@@ -831,13 +831,17 @@ class App
     /**
      * Returns any page from the content folder
      *
-     * @param string $id
+     * @param string $id|null
      * @param \Kirby\Cms\Page|\Kirby\Cms\Site|null $parent
      * @param bool $drafts
      * @return \Kirby\Cms\Page|null
      */
-    public function page(string $id, $parent = null, bool $drafts = true)
+    public function page(?string $id = null, $parent = null, bool $drafts = true)
     {
+        if ($id === null) {
+            return null;
+        }
+
         $parent = $parent ?? $this->site();
 
         if ($page = $parent->find($id)) {

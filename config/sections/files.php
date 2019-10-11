@@ -16,6 +16,12 @@ return [
     ],
     'props' => [
         /**
+         * Enables/disables reverse sorting
+         */
+        'flip' => function (bool $flip = false) {
+            return $flip;
+        },
+        /**
          * Image options to control the source and look of file previews
          */
         'image' => function ($image = null) {
@@ -81,6 +87,11 @@ return [
                 $files = $files->sortBy(...$files::sortArgs($this->sortBy));
             } elseif ($this->sortable === true) {
                 $files = $files->sortBy('sort', 'asc', 'filename', 'asc');
+            }
+
+            // flip
+            if ($this->flip === true) {
+                $files = $files->flip();
             }
 
             // apply the default pagination
@@ -165,6 +176,10 @@ return [
             }
 
             if ($this->sortBy !== null) {
+                return false;
+            }
+
+            if ($this->flip === true) {
                 return false;
             }
 

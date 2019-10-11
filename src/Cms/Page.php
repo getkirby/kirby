@@ -733,11 +733,13 @@ class Page extends ModelWithContent
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::isUnlisted()` intead
+     * @deprecated 3.0.0 Use `Page::isUnlisted()` instead
      * @return bool
      */
     public function isInvisible(): bool
     {
+        deprecated('$page->isInvisible() is deprecated, use $page->isUnlisted() instead. $page->isInvisible() will be removed in Kirby 3.5.0.');
+
         return $this->isUnlisted();
     }
 
@@ -794,11 +796,13 @@ class Page extends ModelWithContent
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::isListed()` intead
+     * @deprecated 3.0.0 Use `Page::isListed()` instead
      * @return bool
      */
     public function isVisible(): bool
     {
+        deprecated('$page->isVisible() is deprecated, use $page->isListed() instead. $page->isVisible() will be removed in Kirby 3.5.0.');
+
         return $this->isListed();
     }
 

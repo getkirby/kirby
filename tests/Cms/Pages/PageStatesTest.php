@@ -125,14 +125,12 @@ class PageStatesTest extends TestCase
         ]);
 
         $this->assertTrue($page->isListed());
-        $this->assertTrue($page->isVisible());
 
         $page = new Page([
             'slug' => 'test',
         ]);
 
         $this->assertFalse($page->isListed());
-        $this->assertFalse($page->isVisible());
     }
 
     public function testIsUnlisted()
@@ -142,7 +140,6 @@ class PageStatesTest extends TestCase
         ]);
 
         $this->assertTrue($page->isUnlisted());
-        $this->assertTrue($page->isInvisible());
 
         $page = new Page([
             'slug' => 'test',
@@ -150,7 +147,6 @@ class PageStatesTest extends TestCase
         ]);
 
         $this->assertFalse($page->isUnlisted());
-        $this->assertFalse($page->isInvisible());
     }
 
     public function testIsDraft()

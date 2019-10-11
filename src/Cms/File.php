@@ -363,6 +363,8 @@ class File extends ModelWithContent
      */
     public function meta()
     {
+        deprecated('$file->meta() is deprecated, use $file->content() instead. $file->meta() will be removed in Kirby 3.5.0.');
+
         return $this->content();
     }
 

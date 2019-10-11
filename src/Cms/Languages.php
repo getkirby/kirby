@@ -72,11 +72,13 @@ class Languages extends Collection
     }
 
     /**
-     * @deprecated 3.0.0  Use `Languages::default()`instead
+     * @deprecated 3.0.0  Use `Languages::default()` instead
      * @return \Kirby\Cms\Language|null
      */
     public function findDefault()
     {
+        deprecated('$languages->findDefault() is deprecated, use $languages->default() instead. $languages->findDefault() will be removed in Kirby 3.5.0.');
+
         return $this->default();
     }
 
