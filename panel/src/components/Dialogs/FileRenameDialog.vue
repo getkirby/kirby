@@ -84,7 +84,7 @@ export default {
         .then(file => {
 
           // move form changes
-          this.$store.dispatch("content/move", [this.file.id, file.id]);
+          this.$store.dispatch("content/move", ["files/" + this.file.id, "files/" + file.id]);
 
           this.$store.dispatch("notification/success", ":)");
           this.$emit("success", file);
