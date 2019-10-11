@@ -21,6 +21,15 @@
         <k-headline>{{ model.title }}</k-headline>
       </header>
 
+      <k-input
+        :autofocus="true"
+        :placeholder="$t('search') + ' …'"
+        v-model="search"
+        type="text"
+        class="k-dialog-search"
+        icon="search"
+      />
+
       <template v-if="models.length">
         <k-list>
           <k-list-item
@@ -63,6 +72,7 @@
           :dropdown="false"
           v-bind="pagination"
           align="center"
+          class="k-dialog-pagination"
           @paginate="paginate"
         />
       </template>
@@ -135,11 +145,6 @@ export default {
   flex-grow: 1;
   text-align: center;
 }
-
-.k-pages-dialog-search {
-  margin-bottom: 0.5rem;
-}
-
 .k-pages-dialog .k-list-item {
   cursor: pointer;
 }
@@ -149,11 +154,5 @@ export default {
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
   opacity: 1;
-}
-.k-pages-dialog .k-pagination {
-  margin-bottom: -1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>

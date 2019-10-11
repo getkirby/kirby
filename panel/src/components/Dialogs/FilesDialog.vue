@@ -15,10 +15,10 @@
 
       <k-input
         :autofocus="true"
+        :placeholder="$t('search') + ' …'"
         v-model="search"
         type="text"
-        class="k-files-dialog-search"
-        placeholder="Search files …"
+        class="k-dialog-search"
         icon="search"
       />
 
@@ -55,6 +55,7 @@
           :details="true"
           :dropdown="false"
           v-bind="pagination"
+          class="k-dialog-pagination"
           align="center"
           @paginate="paginate"
         />
@@ -77,20 +78,5 @@ export default {
 <style lang="scss">
 .k-files-dialog .k-list-item {
   cursor: pointer;
-}
-.k-files-dialog .k-pagination {
-  margin-bottom: -1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.k-files-dialog-search {
-  margin-bottom: .75rem;
-}
-.k-files-dialog-search.k-input {
-  background: rgba(#000, .075);
-  padding: 0 1rem;
-  height: 36px;
-  border-radius: $border-radius;
 }
 </style>

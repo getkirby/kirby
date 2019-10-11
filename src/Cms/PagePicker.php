@@ -73,6 +73,8 @@ class PagePicker
             'parent' => null,
             // a query string to fetch specific pages
             'query' => null,
+            // search query
+            'search' => null,
             // enable/disable subpage navigation
             'subpages' => true,
             // query template for the page text field
@@ -199,6 +201,11 @@ class PagePicker
 
         // filter protected pages
         $pages = $pages->filterBy('isReadable', true);
+
+        // search
+        if (empty($this->options['search']) === false) {
+            $pages = $pages->search($this->options['search']);
+        }
 
         // paginate the result
         $pages = $pages->paginate([
