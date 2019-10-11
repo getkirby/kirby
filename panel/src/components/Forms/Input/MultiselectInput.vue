@@ -51,8 +51,8 @@
             'disabled': !addable
           }"
           @click.prevent="select(option)"
-          @keydown.native.enter.prevent="select(option)"
-          @keydown.native.space.prevent="select(option)"
+          @keydown.native.enter.prevent.stop="select(option)"
+          @keydown.native.space.prevent.stop="select(option)"
         >
           <span v-html="option.display" />
           <span class="k-multiselect-value" v-html="option.info" />
