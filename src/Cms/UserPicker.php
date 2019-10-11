@@ -33,17 +33,17 @@ class UserPicker
         $defaults = [
             // image settings (ratio, cover, etc.)
             'image' => [],
-            // query template for the page info field
+            // query template for the user info field
             'info' => false,
-            // number of pages displayed per pagination page
+            // number of users displayed per pagination page
             'limit' => 20,
-            // optional mapping function for the pages array
+            // optional mapping function for the users array
             'map' => null,
             // the reference model (user)
             'model' => site(),
             // current page when paginating
             'page' => 1,
-            // a query string to fetch specific pages
+            // a query string to fetch specific users
             'query' => null,
             // query template for the user text field
             'text' => '{{ user.username }}'
@@ -98,7 +98,7 @@ class UserPicker
      * @param \Kirby\Cms\Users|null $users
      * @return array
      */
-    public function usersToArray($users): array
+    public function usersToArray($users = null): array
     {
         if ($users === null) {
             return [];

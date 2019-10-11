@@ -134,10 +134,10 @@ class PagePicker
      * parent model that is currently selected
      * in the page picker.
      *
-     * @param \Kirby\Cms\Site|\Kirby\Cms\Page
+     * @param \Kirby\Cms\Site|\Kirby\Cms\Page|null
      * @return array|null
      */
-    public function modelToArray($model): ?array
+    public function modelToArray($model = null): ?array
     {
         if ($model === null) {
             return null;
@@ -238,7 +238,6 @@ class PagePicker
         // help mitigate some typical query usage issues
         // by converting site and page objects to proper
         // pages by returning their children
-
         if (is_a($pages, 'Kirby\Cms\Site') === true) {
             $pages = $pages->children();
         } elseif (is_a($pages, 'Kirby\Cms\Page') === true) {
@@ -258,7 +257,7 @@ class PagePicker
      * @param \Kirby\Cms\Pages|null $pages
      * @return array
      */
-    public function pagesToArray($pages): array
+    public function pagesToArray($pages = null): array
     {
         if ($pages === null) {
             return [];
