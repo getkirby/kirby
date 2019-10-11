@@ -127,6 +127,11 @@
             </div>
           </template>
 
+          <!-- unsaved changes indicator -->
+          <template v-else>
+            <k-form-indicator />
+          </template>
+
           <!-- search -->
           <k-button
             :tooltip="$t('search')"
