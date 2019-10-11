@@ -54,15 +54,6 @@ export default {
       }
     }
   },
-  computed: {
-    decimals() {
-      if (Math.floor(this.step) === this.step) {
-        return 0;
-      }
-
-      return this.step.toString().split(".")[1].length || 0;
-    }
-  },
   watch: {
     number: {
       immediate: true,
@@ -81,6 +72,13 @@ export default {
     }
   },
   methods: {
+    decimals() {
+      if (Math.floor(this.step) === this.step) {
+        return 0;
+      }
+
+      return this.step.toString().split(".")[1].length || 0;
+    },
     format(value) {
       // don't convert empty values or the beginning of
       // a negative number to a Number
@@ -88,8 +86,10 @@ export default {
         value = Number(value);
       }
 
-      if (this.decimals) {
-        value = parseFloat(value).toFixed(this.decimals);
+      const decimals = this.decimals();
+
+      if (decimals) {
+        value = parseFloat(value).toFixed(decimals);
       } else {
         value = parseInt(value);
       }
