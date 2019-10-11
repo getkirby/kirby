@@ -253,14 +253,13 @@ class Page extends ModelWithContent
             $templates = [];
         }
 
-        // add the current template to the array
-        $templates[] = $currentTemplate;
+        // add the current template to the array if it's not already there
+        if (in_array($currentTemplate, $templates) === false) {
+            array_unshift($templates, $currentTemplate);
+        }
 
         // make sure every template is only included once
         $templates = array_unique($templates);
-
-        // sort the templates
-        asort($templates);
 
         foreach ($templates as $template) {
             try {
