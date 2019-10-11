@@ -225,6 +225,7 @@ export default {
       if (
         this.buttons !== false &&
         $event.key !== "Meta" &&
+        $event.key !== "Control" &&
         this.$refs.toolbar
       ) {
         this.$refs.toolbar.shortcut($event.key, $event);
