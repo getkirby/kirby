@@ -12,7 +12,18 @@
     </template>
 
     <template v-else>
+
+      <k-input
+        :autofocus="true"
+        v-model="search"
+        type="text"
+        class="k-files-dialog-search"
+        placeholder="Search files …"
+        icon="search"
+      />
+
       <template v-if="models.length">
+
         <k-list>
           <k-list-item
             v-for="file in models"
@@ -72,5 +83,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.k-files-dialog-search {
+  margin-bottom: .75rem;
+}
+.k-files-dialog-search.k-input {
+  background: rgba(#000, .075);
+  padding: 0 1rem;
+  height: 36px;
+  border-radius: $border-radius;
 }
 </style>
