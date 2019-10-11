@@ -5,6 +5,7 @@
     size="medium"
     @cancel="$emit('cancel')"
     @submit="submit"
+    @close="onClose"
   >
     <template v-if="issue">
       <k-box :text="issue" theme="negative" />
@@ -115,6 +116,9 @@ export default {
       this.options.parent  = page.id;
       this.pagination.page = 1;
       this.fetch();
+    },
+    onClose() {
+      this.pagination.page = 1;
     },
     onFetched(response) {
       this.model      = response.model;
