@@ -281,8 +281,12 @@ export default {
         .patch(model.api, data)
         .then(() => {
           // re-create model with updated values as originals
-          context.commit("CREATE", [id, { originals: data }]);
-          // revert unsaved changes (which also removes localStorage enty)
+          context.commit("CREATE", [id, {
+            ...model,
+            originals: data
+          }]);
+
+          // revert unsaved changes (which also removes localStorage entry)
           context.dispatch("revert", id);
           context.dispatch("enable");
         })
