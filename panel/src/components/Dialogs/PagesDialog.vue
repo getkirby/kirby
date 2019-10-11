@@ -5,7 +5,6 @@
     size="medium"
     @cancel="$emit('cancel')"
     @submit="submit"
-    @close="onClose"
   >
     <template v-if="issue">
       <k-box :text="issue" theme="negative" />
