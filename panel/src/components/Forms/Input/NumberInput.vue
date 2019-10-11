@@ -80,21 +80,13 @@ export default {
       return this.step.toString().split(".")[1].length || 0;
     },
     format(value) {
-      // don't convert empty values or the beginning of
-      // a negative number to a Number
-      if (value !== null && value !== "" && value !== "-" && value !== "-0") {
-        value = Number(value);
-      }
-
       const decimals = this.decimals();
 
       if (decimals) {
-        value = parseFloat(value).toFixed(decimals);
-      } else {
-        value = parseInt(value);
+        return parseFloat(value).toFixed(decimals);
       }
 
-      return value;
+      return parseInt(value);
     },
     focus() {
       this.$refs.input.focus();
