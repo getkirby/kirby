@@ -116,7 +116,7 @@ class FilePicker
      * @param \Kirby\Cms\Files|null $files
      * @return array
      */
-    public function filesToArray($files): array
+    public function filesToArray($files = null): array
     {
         if ($files === null) {
             return [];
