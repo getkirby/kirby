@@ -631,12 +631,13 @@ trait PageActions
      */
     public function purge()
     {
-        $this->children  = null;
-        $this->blueprint = null;
-        $this->drafts    = null;
-        $this->files     = null;
-        $this->content   = null;
-        $this->inventory = null;
+        $this->blueprint    = null;
+        $this->children     = null;
+        $this->content      = null;
+        $this->drafts       = null;
+        $this->files        = null;
+        $this->inventory    = null;
+        $this->translations = null;
 
         return $this;
     }
