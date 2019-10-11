@@ -34,6 +34,11 @@ class PagePicker
     protected $pages;
 
     /**
+     * @var \Kirby\Cms\Pages
+     */
+    protected $pagesForQuery;
+
+    /**
      * @var \Kirby\Cms\Page|\Kirby\Cms\Site
      */
     protected $parent;
@@ -222,6 +227,11 @@ class PagePicker
      */
     public function pagesForQuery()
     {
+        // cache
+        if ($this->pagesForQuery !== null) {
+            return $this->pagesForQuery;
+        }
+
         $model = $this->options['model'];
         $pages = $model->query($this->options['query']);
 
@@ -237,7 +247,7 @@ class PagePicker
             throw new InvalidArgumentException('Your query must return a set of pages');
         }
 
-        return $pages;
+        return $this->pagesForQuery = $pages;
     }
 
     /**
