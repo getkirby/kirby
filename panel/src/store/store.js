@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
-import form from "./modules/form.js";
+import content from "./modules/content.js";
 import heartbeat from "./modules/heartbeat.js";
 import languages from "./modules/languages.js";
 import notification from "./modules/notification.js";
@@ -87,7 +87,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    form: form,
+    content: content,
     heartbeat: heartbeat,
     languages: languages,
     notification: notification,

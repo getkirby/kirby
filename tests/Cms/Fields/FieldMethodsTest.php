@@ -483,6 +483,14 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('&ouml;', $this->field('ö')->html());
     }
 
+    public function testNl2br()
+    {
+        $input = 'Multiline' . PHP_EOL . 'test' . PHP_EOL . 'string';
+        $expected = 'Multiline<br>' . PHP_EOL . 'test<br>' . PHP_EOL . 'string';
+
+        $this->assertEquals($expected, $this->field($input)->nl2br()->value());
+    }
+
     public function testKirbytext()
     {
         $kirbytext = '(link: # text: Test)';
@@ -507,6 +515,14 @@ class FieldMethodsTest extends TestCase
         $expected  = '<a href="#">Test</a>';
 
         $this->assertEquals($expected, $this->field($kirbytext)->kirbytags());
+    }
+
+    public function testInline()
+    {
+        $html = '<div><h1>Headline</h1> <p>Subtitle with <a href="#">link</a>.</p></div>';
+        $expected = 'Headline Subtitle with <a href="#">link</a>.';
+
+        $this->assertEquals($expected, $this->field($html)->inline());
     }
 
     public function testLower()

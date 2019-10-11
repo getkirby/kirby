@@ -21,7 +21,7 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("form/current", null);
+    this.$store.dispatch("content/current", null);
     this.$store
       .dispatch("system/load")
       .then(system => {

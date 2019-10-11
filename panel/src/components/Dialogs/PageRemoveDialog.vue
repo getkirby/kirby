@@ -82,7 +82,7 @@ export default {
         .delete(this.page.id, { force: true })
         .then(() => {
           // remove data from cache
-          this.$store.dispatch("form/remove", "pages/" + this.page.id);
+          this.$store.dispatch("content/remove", "pages/" + this.page.id);
 
           const payload = {
             message: ":)",
