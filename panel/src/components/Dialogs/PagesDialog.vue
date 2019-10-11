@@ -23,7 +23,7 @@
       </header>
 
       <template v-if="models.length">
-        <k-list v-if="models.length">
+        <k-list>
           <k-list-item
             v-for="page in models"
             :key="page.id"
