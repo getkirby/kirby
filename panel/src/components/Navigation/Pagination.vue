@@ -93,7 +93,9 @@ export default {
     },
     pageLabel: {
       type: String,
-      default: "Page"
+      default() {
+        return this.$t("pagination.page");
+      }
     },
     prevLabel: {
       type: String,
