@@ -45,6 +45,8 @@ class UserPicker
             'page' => 1,
             // a query string to fetch specific users
             'query' => null,
+            // search query
+            'search' => null,
             // query template for the user text field
             'text' => '{{ user.username }}'
         ];
@@ -76,6 +78,11 @@ class UserPicker
         // catch invalid data
         if (is_a($users, 'Kirby\Cms\Users') === false) {
             throw new InvalidArgumentException('Your query must return a set of users');
+        }
+
+        // search
+        if (empty($this->options['search']) === false) {
+            $users = $users->search($this->options['search']);
         }
 
         // sort users

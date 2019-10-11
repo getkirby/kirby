@@ -12,6 +12,16 @@
     </template>
 
     <template v-else>
+
+      <k-input
+        :autofocus="true"
+        :placeholder="$t('search') + ' …'"
+        v-model="search"
+        type="text"
+        class="k-dialog-search"
+        icon="search"
+      />
+
       <template v-if="models.length">
         <k-list>
           <k-list-item
@@ -44,6 +54,7 @@
           :dropdown="false"
           v-bind="pagination"
           align="center"
+          class="k-dialog-pagination"
           @paginate="paginate"
         />
       </template>
@@ -65,11 +76,5 @@ export default {
 <style lang="scss">
 .k-users-dialog .k-list-item {
   cursor: pointer;
-}
-.k-users-dialog .k-pagination {
-  margin-bottom: -1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>
