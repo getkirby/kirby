@@ -10,6 +10,11 @@ export default {
         multiple: true,
         parent: null,
         selected: [],
+      },
+      pagination: {
+        limit: 20,
+        page: 1,
+        total: 0
       }
     }
   },
@@ -23,10 +28,16 @@ export default {
   },
   methods: {
     fetch() {
+      const params = {
+        page: this.pagination.page,
+        ...this.fetchData || {}
+      };
+
       return this.$api
-        .get(this.options.endpoint, this.fetchData || {})
+        .get(this.options.endpoint, params)
         .then(response => {
-          this.models = response.data || response.pages || response;
+          this.models     = response.data;
+          this.pagination = response.pagination;
 
           if (this.onFetched) {
             this.onFetched(response);
@@ -38,6 +49,9 @@ export default {
         });
     },
     open(files, options) {
+
+      // reset pagination
+      this.pagination.page = 0;
 
       let fetch = true;
 
@@ -69,6 +83,11 @@ export default {
       } else {
         this.$refs.dialog.open();
       }
+    },
+    paginate(pagination) {
+      this.pagination.page  = pagination.page;
+      this.pagination.limit = pagination.limit;
+      this.fetch();
     },
     submit() {
       this.$emit("submit", Object.values(this.selected));

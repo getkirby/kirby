@@ -348,8 +348,8 @@ class PagePicker
         $pages = $this->pages();
 
         return [
+            'data'       => $this->pagesToArray($pages),
             'model'      => $this->modelToArray($this->model()),
-            'pages'      => $this->pagesToArray($pages),
             'pagination' => $this->paginationToArray($pages->pagination())
         ];
     }

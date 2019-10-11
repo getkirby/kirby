@@ -12,34 +12,42 @@
     </template>
 
     <template v-else>
-      <k-list v-if="models.length">
-        <k-list-item
-          v-for="file in models"
-          :key="file.filename"
-          :text="file.text"
-          :info="file.info"
-          :image="file.image"
-          :icon="file.icon"
-          @click="toggle(file)"
-        >
-          <k-button
-            v-if="isSelected(file)"
-            slot="options"
-            :autofocus="true"
-            :icon="checkedIcon"
-            :tooltip="$t('remove')"
-            theme="positive"
-          />
-          <k-button
-            v-else
-            slot="options"
-            :autofocus="true"
-            :tooltip="$t('select')"
-            icon="circle-outline"
-          />
-        </k-list-item>
-      </k-list>
-
+      <template v-if="models.length">
+        <k-list>
+          <k-list-item
+            v-for="file in models"
+            :key="file.filename"
+            :text="file.text"
+            :info="file.info"
+            :image="file.image"
+            :icon="file.icon"
+            @click="toggle(file)"
+          >
+            <k-button
+              v-if="isSelected(file)"
+              slot="options"
+              :autofocus="true"
+              :icon="checkedIcon"
+              :tooltip="$t('remove')"
+              theme="positive"
+            />
+            <k-button
+              v-else
+              slot="options"
+              :autofocus="true"
+              :tooltip="$t('select')"
+              icon="circle-outline"
+            />
+          </k-list-item>
+        </k-list>
+        <k-pagination
+          :details="true"
+          :dropdown="false"
+          v-bind="pagination"
+          align="center"
+          @paginate="paginate"
+        />
+      </template>
       <k-empty v-else icon="image">
         {{ $t("dialog.files.empty") }}
       </k-empty>
@@ -58,5 +66,11 @@ export default {
 <style lang="scss">
 .k-files-dialog .k-list-item {
   cursor: pointer;
+}
+.k-files-dialog .k-pagination {
+  margin-bottom: -1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

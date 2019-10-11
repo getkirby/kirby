@@ -64,7 +64,7 @@
           :dropdown="false"
           v-bind="pagination"
           align="center"
-          @paginate="onPaginate"
+          @paginate="paginate"
         />
       </template>
       <k-empty v-else icon="page">
@@ -87,11 +87,6 @@ export default {
         title: null,
         parent: null
       },
-      pagination: {
-        limit: 20,
-        page: 1,
-        total: 0
-      },
       options: {
         ...mixin.options,
         parent: null,
@@ -102,7 +97,6 @@ export default {
     fetchData() {
       return {
         parent: this.options.parent,
-        page: this.pagination.page,
       };
     }
   },
@@ -117,18 +111,9 @@ export default {
       this.pagination.page = 1;
       this.fetch();
     },
-    onClose() {
-      this.pagination.page = 1;
-    },
     onFetched(response) {
-      this.model      = response.model;
-      this.pagination = response.pagination;
+      this.model = response.model;
     },
-    onPaginate(pagination) {
-      this.pagination.page  = pagination.page;
-      this.pagination.limit = pagination.limit;
-      this.fetch();
-    }
   }
 };
 </script>
