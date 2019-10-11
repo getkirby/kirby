@@ -4,13 +4,13 @@ import clone from "@/helpers/clone.js";
 
 export default {
   namespaced: true,
-  
+
   state: {
     /**
      * ID of current model
      */
     current: null,
-    
+
     /**
      * Object of models:
      *  Key   => type/slug/language, e.g. pages/blog+a-blog-post/de
@@ -20,26 +20,26 @@ export default {
      *            - changes: values with unsaved changes
      */
     models: {},
-    
+
     /**
      * Object of status flags/info
      */
     status: {
       // whether form shall be disabled (e.g. for structure fields)
       enabled: true,
-      
+
       // content lock info
       lock: null,
-      
+
       // content unlock info
       unlock: null
     }
   },
-  
-  
+
+
   getters: {
     // status getters
-    
+
     /**
      * Checks for an ID if a model exists in the store
      */
@@ -61,13 +61,13 @@ export default {
     },
 
     // data getters
-    
+
     /**
      * Returns ID (current or provided) with correct language suffix
      */
     id: (state, getters, rootState) => id => {
       id = id || state.current;
-      
+
       if (rootState.languages.current) {
         return id + "/" + rootState.languages.current.code;
       } else {
@@ -113,11 +113,11 @@ export default {
       return clone(getters.model(id).changes);
     }
   },
-  
-  
+
+
   mutations: {
     CREATE(state, [id, model]) {
-      // if model already in store, use stored changes, 
+      // if model already in store, use stored changes,
       // otherwise fallback to provided changes
       let changes = state.models[id] ? state.models[id].changes : model.changes ;
 
@@ -153,7 +153,7 @@ export default {
       localStorage.removeItem("kirby$content$" + id);
     },
     STATUS(state, enabled) {
-      Vue.set(state.status, "status", enabled);
+      Vue.set(state.status, "enabled", enabled);
     },
     UNLOCK(state, unlock) {
       if (unlock) {
@@ -170,7 +170,7 @@ export default {
       }
 
       value = clone(value);
-      
+
       // compare current field value with its original value
       const current  = JSON.stringify(value);
       const original = JSON.stringify(state.models[id].originals[field]);
@@ -193,8 +193,8 @@ export default {
       );
     }
   },
-  
-  
+
+
   actions: {
     init(context) {
       // load models in store from localStorage
@@ -260,7 +260,7 @@ export default {
     },
     save(context, id) {
       id = id || context.state.current;
-      
+
       // don't allow save if model is not current
       // or the form is currently disabled
       if (
@@ -272,8 +272,8 @@ export default {
 
       // disable form while saving
       context.dispatch("disable");
-      
-      const model = context.getters.model(id);      
+
+      const model = context.getters.model(id);
       const data  = {...model.originals, ...model.changes};
 
       // Send updated values to API
