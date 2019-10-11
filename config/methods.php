@@ -394,7 +394,7 @@ return function (App $app) {
         'inline' => function (Field $field) {
             // List of valid inline elements taken from: https://developer.mozilla.org/de/docs/Web/HTML/Inline_elemente
             // Obsolete elements, script tags, image maps and form elements have
-            // been exluded for safety reasons and as they are most likely not
+            // been excluded for safety reasons and as they are most likely not
             // needed in most cases.
             $field->value = strip_tags($field->value, '<b><i><small><abbr><cite><code><dfn><em><kbd><strong><samp><var><a><bdo><br><img><q><span><sub><sup>');
             return $field;
