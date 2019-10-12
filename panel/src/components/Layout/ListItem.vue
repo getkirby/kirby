@@ -18,11 +18,16 @@
     </k-link>
     <nav class="k-list-item-options">
       <slot name="options">
-        <k-button
+        <span 
           v-if="flag"
-          v-bind="flag"
-          @click="flag.click"
-        />
+          :title="flag.tooltip" 
+          class="k-button k-list-item-status"
+        >
+          <k-button
+            v-bind="flag"
+            @click="flag.click"
+          />
+        </span>
         <k-button
           v-if="options"
           :tooltip="$t('options')"
@@ -171,6 +176,9 @@ $list-item-height: 38px;
   @media screen and (min-width: $breakpoint-small) {
     display: block;
   }
+}
+.k-list-item-status {
+  height: auto !important;
 }
 .k-list-item-options {
   position: relative;

@@ -27,6 +27,7 @@
           :disabled="!permissions.changeStatus || isLocked"
           :icon="!permissions.changeStatus || isLocked ? 'protected' : 'circle'"
           :responsive="true"
+          :tooltip="status.label"
           @click="action('status')"
         >
           {{ status.label }}
