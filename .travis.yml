@@ -43,7 +43,6 @@ after_success:
 cache:
   directories:
     - $HOME/.php-cs-fixer
-    - .php_cs.cache
     - vendor
 
 matrix:
