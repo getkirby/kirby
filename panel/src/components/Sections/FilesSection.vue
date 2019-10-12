@@ -55,7 +55,13 @@
 
       <k-file-rename-dialog ref="rename" @success="update" />
       <k-file-remove-dialog ref="remove" @success="update" />
-      <k-upload ref="upload" @success="uploaded" @error="reload" />
+      <k-file-replace-dialog ref="replace" @success="update" />
+      <k-upload 
+        ref="upload" 
+        @duplicates="duplicates" 
+        @error="reload" 
+        @success="uploaded" 
+      />
 
     </template>
 
@@ -70,11 +76,14 @@ export default {
   mixins: [CollectionSectionMixin],
   computed: {
     add() {
-      if (this.$permissions.files.create && this.options.upload !== false) {
+      if (
+        this.$permissions.files.create && 
+        this.options.upload !== false
+      ) {
         return this.options.upload;
-      } else {
-        return false;
       }
+      
+      return false;
     },
   },
   created() {
@@ -147,6 +156,9 @@ export default {
 
         return file;
       });
+    },
+    duplicates(duplicates) {  
+      this.$refs.replace.open(duplicates);      
     },
     replace(file) {
       this.$refs.upload.open({

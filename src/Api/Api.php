@@ -770,7 +770,10 @@ class Api
 
                 $uploads[$upload['name']] = $data;
             } catch (Exception $e) {
-                $errors[$upload['name']] = $e->getMessage();
+                $errors[$upload['name']] = [
+                    'message' => $e->getMessage(),
+                    'code'    => $e->getCode(),
+                ];
             }
 
             if ($single === true) {
@@ -783,7 +786,8 @@ class Api
             if (empty($errors) === false) {
                 return [
                     'status'  => 'error',
-                    'message' => current($errors)
+                    'message' => current($errors)['message'],
+                    'code'    => current($errors)['code'],
                 ];
             }
 

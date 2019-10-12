@@ -17,7 +17,7 @@
         <ul class="k-upload-error-list">
           <li v-for="(error, index) in errors" :key="'error-' + index">
             <p class="k-upload-error-filename">{{ error.file.name }}</p>
-            <p class="k-upload-error-message">{{ error.message }}</p>
+            <p class="k-upload-error-message">{{ error.response.message }}</p>
           </li>
         </ul>
       </template>
@@ -122,7 +122,10 @@ export default {
             this.complete(file, response.data);
           },
           error: (xhr, file, response) => {
-            this.errors.push({ file: file, message: response.message });
+            this.errors.push({ 
+              file: file, 
+              response: response 
+            });
             this.complete(file, response.data);
           }
         });
@@ -134,10 +137,22 @@ export default {
       if (Object.keys(this.completed).length == this.total) {
         // remove the selected file
         this.$refs.input.value = "";
+            
+        // filter duplicate errors and emit
+        const duplicates = this.errors.filter(error => {
+          return error.response.code === "error.file.duplicate";
+        });
+        
+        if (duplicates.length > 0) {
+          this.$emit("duplicates", duplicates);
+          this.errors = this.errors.filter(error => {
+            return error.response.code !== "error.file.duplicate";
+          });
+        }
 
         if (this.errors.length > 0) {
           this.$forceUpdate();
-          this.$emit("error", this.files);
+          this.$emit("error", this.errors);
           return;
         }
 

@@ -51,7 +51,10 @@ class FileRules
     public static function create(File $file, Image $upload): bool
     {
         if ($file->exists() === true) {
-            throw new LogicException('The file exists and cannot be overwritten');
+            throw new LogicException([
+                'key'  => 'file.duplicate',
+                'data' => ['filename' => $file->filename()]
+            ]);
         }
 
         if ($file->permissions()->create() !== true) {
