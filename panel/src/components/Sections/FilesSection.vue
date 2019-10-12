@@ -30,6 +30,7 @@
           :pagination="pagination"
           :sortable="options.sortable"
           :size="options.size"
+          :data-invalid="isInvalid" 
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -37,6 +38,7 @@
         <template v-else>
           <k-empty
             :layout="options.layout"
+            :data-invalid="isInvalid" 
             icon="image"
             @click="if (add) upload()"
           >
@@ -56,7 +58,6 @@
       <k-file-rename-dialog ref="rename" @success="update" />
       <k-file-remove-dialog ref="remove" @success="update" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
-
     </template>
 
   </section>
