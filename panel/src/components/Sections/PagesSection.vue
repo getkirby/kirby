@@ -155,12 +155,13 @@ export default {
     },
     items(data) {
       return data.map(page => {
+        const isEnabled = page.permissions.changeStatus !== false;
+        
         page.flag = {
           class: "k-status-flag k-status-flag-" + page.status,
-          tooltip: this.$t("page.status"),
-          icon:
-            page.permissions.changeStatus === false ? "protected" : "circle",
-          disabled: page.permissions.changeStatus === false,
+          tooltip: isEnabled ? this.$t("page.status") : `${this.$t("page.status")} (${this.$t("disabled")})`,
+          icon: isEnabled ? "circle" : "protected",
+          disabled: !isEnabled,
           click: () => {
             this.action(page, "status");
           }
