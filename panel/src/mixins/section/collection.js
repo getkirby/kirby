@@ -74,6 +74,16 @@ export default {
           this.error = error.message;
         });
     },
+    onRemove() {
+      if (this.data.length < this.pagination.page * this.pagination.limit) {
+        this.paginate({
+          ...this.pagination,
+          page: this.pagination.page - 1
+        });
+      }
+      
+      this.$events.$emit("model.update");
+    },
     paginate(pagination) {
       localStorage.setItem(this.paginationId, pagination.page);
       this.pagination = pagination;

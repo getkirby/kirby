@@ -54,7 +54,7 @@
       </k-dropzone>
 
       <k-file-rename-dialog ref="rename" @success="update" />
-      <k-file-remove-dialog ref="remove" @success="update" />
+      <k-file-remove-dialog ref="remove" @success="onRemove" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
 
     </template>

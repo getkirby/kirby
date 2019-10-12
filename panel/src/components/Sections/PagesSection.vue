@@ -59,7 +59,7 @@
       <k-page-url-dialog ref="url" @success="update" />
       <k-page-status-dialog ref="status" @success="update" />
       <k-page-template-dialog ref="template" @success="update" />
-      <k-page-remove-dialog ref="remove" @success="update" />
+      <k-page-remove-dialog ref="remove" @success="onRemove" />
 
     </template>
 
