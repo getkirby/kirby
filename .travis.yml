@@ -1,5 +1,6 @@
 language: php
 os: linux
+dist: bionic
 sudo: false
 services:
   - memcached
@@ -11,12 +12,13 @@ php:
 
 before_install:
   - echo yes | pecl install -f apcu
-  - phpenv config-add ./tests/php.ini
+  - echo yes | pecl install -f memcached
+  - phpenv config-add tests/php.ini
 
 install:
   # ensure that the Composer config is valid
   - composer validate
-  
+
   # install Composer packages, will also trigger dump-autoload
   - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "friendsofphp/php-cs-fixer"
   - composer install --no-interaction --ignore-platform-reqs --no-suggest
