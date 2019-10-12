@@ -31,6 +31,7 @@
         :list="selected"
         :data-size="size"
         :handle="true"
+        :data-invalid="isInvalid" 
         @end="onInput"
       >
         <component
@@ -57,6 +58,7 @@
     <k-empty
       v-else
       :layout="layout"
+      :data-invalid="isInvalid" 
       icon="image"
       @click="open"
     >
