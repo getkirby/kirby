@@ -90,11 +90,11 @@ class FilePicker
         // by converting site and page objects to proper
         // pages by returning their children
         if (is_a($files, 'Kirby\Cms\Site') === true) {
-            $files = $files->children();
+            $files = $files->files();
         } elseif (is_a($files, 'Kirby\Cms\Page') === true) {
-            $files = $files->children();
+            $files = $files->files();
         } elseif (is_a($files, 'Kirby\Cms\User') === true) {
-            $files = $files->children();
+            $files = $files->files();
         } elseif (is_a($files, 'Kirby\Cms\Files') === false) {
             throw new InvalidArgumentException('Your query must return a set of files');
         }
