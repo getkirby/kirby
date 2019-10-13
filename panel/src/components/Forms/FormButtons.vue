@@ -359,4 +359,7 @@ export default {
 .k-form-lock-loader {
   animation: Spin 4s linear infinite;
 }
+.k-form-lock-loader .k-icon-loader {
+  display: flex;
+}
 </style>
