@@ -6,6 +6,7 @@
     class="k-multiselect-field"
     @blur="blur"
     @keydown.native.enter.prevent="focus"
+    @keydown.native.space.prevent="focus"
   >
     <k-input
       ref="input"

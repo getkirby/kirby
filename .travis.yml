@@ -1,5 +1,6 @@
 language: php
 os: linux
+dist: bionic
 sudo: false
 services:
   - memcached
@@ -11,12 +12,14 @@ php:
 
 before_install:
   - echo yes | pecl install -f apcu
-  - phpenv config-add ./tests/php.ini
+  - echo yes | pecl install -f memcached
+  - phpenv config-rm xdebug.ini # code coverage is generated with phpdbg
+  - phpenv config-add tests/php.ini
 
 install:
   # ensure that the Composer config is valid
   - composer validate
-  
+
   # install Composer packages, will also trigger dump-autoload
   - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "friendsofphp/php-cs-fixer"
   - composer install --no-interaction --ignore-platform-reqs --no-suggest
@@ -31,7 +34,7 @@ before_script:
   - ls -al
 
 script:
-  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - phpdbg -qrr ./vendor/bin/phpunit -d memory_limit=1024M --coverage-clover build/logs/clover.xml
   - PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config .php_cs --verbose --diff --dry-run
 
 after_success:
@@ -40,6 +43,7 @@ after_success:
 cache:
   directories:
     - $HOME/.php-cs-fixer
+    - vendor
 
 matrix:
   fast_finish: true

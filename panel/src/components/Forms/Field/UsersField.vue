@@ -17,6 +17,7 @@
         :element="elements.list"
         :list="selected"
         :handle="true"
+        :data-invalid="isInvalid" 
         @end="onInput"
       >
         <component
@@ -41,6 +42,7 @@
     </template>
     <k-empty
       v-else
+      :data-invalid="isInvalid" 
       icon="users"
       @click="open"
     >
