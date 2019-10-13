@@ -31,6 +31,7 @@ export default {
   },
   watch: {
     search: debounce(function () {
+      this.pagination.page = 0;
       this.fetch();
     }, 200),
   },
