@@ -5,7 +5,6 @@
     size="medium"
     @cancel="$emit('cancel')"
     @submit="submit"
-    @close="onClose"
   >
     <template v-if="issue">
       <k-box :text="issue" theme="negative" />
@@ -21,6 +20,15 @@
         />
         <k-headline>{{ model.title }}</k-headline>
       </header>
+
+      <k-input
+        :autofocus="true"
+        :placeholder="$t('search') + ' …'"
+        v-model="search"
+        type="text"
+        class="k-dialog-search"
+        icon="search"
+      />
 
       <template v-if="models.length">
         <k-list>
@@ -64,7 +72,8 @@
           :dropdown="false"
           v-bind="pagination"
           align="center"
-          @paginate="onPaginate"
+          class="k-dialog-pagination"
+          @paginate="paginate"
         />
       </template>
       <k-empty v-else icon="page">
@@ -87,11 +96,6 @@ export default {
         title: null,
         parent: null
       },
-      pagination: {
-        limit: 20,
-        page: 1,
-        total: 0
-      },
       options: {
         ...mixin.options,
         parent: null,
@@ -102,7 +106,6 @@ export default {
     fetchData() {
       return {
         parent: this.options.parent,
-        page: this.pagination.page,
       };
     }
   },
@@ -117,18 +120,9 @@ export default {
       this.pagination.page = 1;
       this.fetch();
     },
-    onClose() {
-      this.pagination.page = 1;
-    },
     onFetched(response) {
-      this.model      = response.model;
-      this.pagination = response.pagination;
+      this.model = response.model;
     },
-    onPaginate(pagination) {
-      this.pagination.page  = pagination.page;
-      this.pagination.limit = pagination.limit;
-      this.fetch();
-    }
   }
 };
 </script>
@@ -151,11 +145,6 @@ export default {
   flex-grow: 1;
   text-align: center;
 }
-
-.k-pages-dialog-search {
-  margin-bottom: 0.5rem;
-}
-
 .k-pages-dialog .k-list-item {
   cursor: pointer;
 }
@@ -165,11 +154,5 @@ export default {
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
   opacity: 1;
-}
-.k-pages-dialog .k-pagination {
-  margin-bottom: -1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>

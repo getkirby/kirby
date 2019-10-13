@@ -1,5 +1,8 @@
 import Vue from "vue";
 
+/* Style-only components */
+import "@/components/Misc/Invalid.vue";
+
 /* Dialogs */
 import Dialog from "@/components/Dialogs/Dialog.vue";
 import ErrorDialog from "@/components/Dialogs/ErrorDialog.vue";
