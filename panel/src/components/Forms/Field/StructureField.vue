@@ -44,10 +44,10 @@
     </template>
 
     <!-- Empty State -->
-    <k-empty 
-      v-else-if="items.length === 0" 
-      icon="list-bullet" 
-      :data-invalid="isInvalid" 
+    <k-empty
+      v-else-if="items.length === 0"
+      :data-invalid="isInvalid"
+      icon="list-bullet"
       @click="add"
     >
       {{ empty || $t("field.structure.empty") }}
@@ -55,9 +55,9 @@
 
     <!-- Table -->
     <template v-else>
-      <table 
-        :data-invalid="isInvalid" 
-        :data-sortable="isSortable" 
+      <table
+        :data-invalid="isInvalid"
+        :data-sortable="isSortable"
         class="k-structure-table"
       >
         <thead>
@@ -230,15 +230,15 @@ export default {
       if (this.disabled === true) {
         return false;
       }
-      
+
       if (this.min && this.items.length < this.min) {
         return true;
       }
-      
+
       if (this.max && this.items.length > this.max) {
         return true;
       }
-      
+
       return false;
     },
     isSortable() {

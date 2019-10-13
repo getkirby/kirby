@@ -1,5 +1,8 @@
 import Vue from "vue";
 
+/* Style-only components */
+import "@/components/Misc/Invalid.vue";
+
 /* Dialogs */
 import Dialog from "@/components/Dialogs/Dialog.vue";
 import ErrorDialog from "@/components/Dialogs/ErrorDialog.vue";
@@ -227,7 +230,6 @@ import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
 import Headline from "@/components/Misc/Headline.vue";
 import Icon from "@/components/Misc/Icon.vue";
 import Image from "@/components/Misc/Image.vue";
-import Invalid from "@/components/Misc/Invalid.vue";
 import Progress from "@/components/Misc/Progress.vue";
 import SortHandle from "@/components/Misc/SortHandle.vue";
 import Text from "@/components/Misc/Text.vue";

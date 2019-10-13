@@ -1,5 +1,5 @@
 <template>
-  <form :data-invalid="invalid" class="k-login-form" @submit.prevent="login">
+  <form class="k-login-form" @submit.prevent="login">
     <h1 class="k-offscreen">{{ $t('login') }}</h1>
 
     <div v-if="issue" class="k-login-alert" @click="issue = null">
@@ -32,7 +32,6 @@
 export default {
   data() {
     return {
-      invalid: false,
       isLoading: false,
       issue: "",
       user: {
@@ -65,7 +64,6 @@ export default {
   },
   methods: {
     login() {
-      this.invalid   = false;
       this.issue     = null;
       this.isLoading = true;
 
@@ -77,8 +75,7 @@ export default {
             this.isLoading = false;
           });
         })
-        .catch(response => {
-          this.invalid   = true;
+        .catch(() => {
           this.issue     = this.$t("error.access.login");
           this.isLoading = false;
         });
