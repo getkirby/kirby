@@ -1,7 +1,14 @@
 <template>
   <form :data-invalid="invalid" class="k-login-form" @submit.prevent="login">
     <h1 class="k-offscreen">{{ $t('login') }}</h1>
+
+    <div v-if="issue" class="k-login-alert" @click="issue = null">
+      <span>{{ issue }}</span>
+      <k-icon type="alert" />
+    </div>
+
     <k-fieldset :novalidate="true" :fields="fields" v-model="user" />
+
     <div class="k-login-buttons">
       <span class="k-login-checkbox">
         <k-checkbox-input
@@ -27,6 +34,7 @@ export default {
     return {
       invalid: false,
       isLoading: false,
+      issue: "",
       user: {
         email: "",
         password: "",
@@ -42,7 +50,7 @@ export default {
           label: this.$t("email"),
           type: "email",
           required: true,
-          link: false
+          link: false,
         },
         password: {
           label: this.$t("password"),
@@ -57,7 +65,8 @@ export default {
   },
   methods: {
     login() {
-      this.invalid = false;
+      this.invalid   = false;
+      this.issue     = null;
       this.isLoading = true;
 
       this.$store
@@ -68,12 +77,12 @@ export default {
             this.isLoading = false;
           });
         })
-        .catch(() => {
-          this.invalid = true;
+        .catch(response => {
+          this.invalid   = true;
+          this.issue     = this.$t("error.access.login");
           this.isLoading = false;
         });
     }
   }
 };
 </script>
-
