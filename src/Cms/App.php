@@ -121,6 +121,9 @@ class App
         $this->extensionsFromOptions();
         $this->extensionsFromFolders();
 
+        // trigger hook for use in plugins
+        $this->trigger('system.loadPlugins:after');
+
         // handle those damn errors
         $this->handleErrors();
 
