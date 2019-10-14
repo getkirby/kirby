@@ -14,14 +14,15 @@
     <template v-if="error">
       <k-box theme="negative">
         <k-text size="small">
-          <strong>{{ $t("error.section.notLoaded", { name: name }) }}:</strong>
+          <strong>
+            {{ $t("error.section.notLoaded", { name: name }) }}:
+          </strong>
           {{ error }}
         </k-text>
       </k-box>
     </template>
 
     <template v-else>
-
       <k-collection
         v-if="data.length"
         :layout="options.layout"
@@ -30,6 +31,7 @@
         :pagination="pagination"
         :sortable="options.sortable"
         :size="options.size"
+        :data-invalid="isInvalid" 
         @change="sort"
         @paginate="paginate"
         @action="action"
@@ -38,6 +40,7 @@
       <template v-else>
         <k-empty
           :layout="options.layout"
+          :data-invalid="isInvalid" 
           icon="page"
           @click="create"
         >
@@ -60,7 +63,6 @@
       <k-page-status-dialog ref="status" @success="update" />
       <k-page-template-dialog ref="template" @success="update" />
       <k-page-remove-dialog ref="remove" @success="update" />
-
     </template>
 
   </section>

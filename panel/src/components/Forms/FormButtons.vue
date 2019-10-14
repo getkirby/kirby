@@ -28,8 +28,14 @@
         <k-icon type="lock" />
         <span v-html="$t('lock.isLocked', { email: form.lock.email })" />
       </p>
+
+      <k-icon
+        v-if="!form.lock.unlockable"
+        type="loader"
+        class="k-form-lock-loader"
+      />
       <k-button
-        :disabled="!form.lock.unlockable"
+        v-else
         icon="unlock"
         class="k-form-button"
         @click="setUnlock"
@@ -113,14 +119,16 @@ export default {
       // if user started to make changes,
       // start setting lock on each heartbeat
       if (previous === false && current === true) {
+        // console.log("watch: hasChanges new -> setLock:30");
         this.$store.dispatch("heartbeat/remove", this.getLock);
-        this.$store.dispatch("heartbeat/add", [this.setLock, 40]);
+        this.$store.dispatch("heartbeat/add", [this.setLock, 30]);
         return;
       }
 
       // if user reversed changes manually,
       // remove lock and listen to lock from other users again
       if (this.id && previous === true && current === false) {
+        // console.log("watch: noChanges new -> removeLock");
         this.removeLock();
         return;
       }
@@ -128,7 +136,8 @@ export default {
     id() {
       // start listening for content lock, when no changes exist
       if (this.id && this.hasChanges === false) {
-        this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
+        // console.log("watch: id and noChanges -> getLock:30");
+        this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
       }
     }
   },
@@ -182,7 +191,7 @@ export default {
           // listen to concurrent lock
           this.$store.dispatch("content/revert", this.id);
           this.$store.dispatch("heartbeat/remove", this.setLock);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
         });
       }
     },
@@ -193,7 +202,7 @@ export default {
 
         this.$api.delete(...this.api.lock).then(() => {
           this.$store.dispatch("content/lock", null);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
         });
       }
     },
@@ -204,7 +213,7 @@ export default {
 
         this.$api.patch(...this.api.unlock).then(() => {
           this.$store.dispatch("content/lock", null);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
         });
       }
     },
@@ -215,7 +224,7 @@ export default {
 
         this.$api.delete(...this.api.unlock).then(() => {
           this.$store.dispatch("content/unlock", null);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 15]);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
         });
       }
     },
@@ -275,7 +284,7 @@ export default {
             return;
           }
 
-          if (response.details && response.details.length > 0) {
+          if (response.details && Object.keys(response.details).length > 0) {
             this.$store.dispatch("notification/error", {
               message: this.$t("error.form.incomplete"),
               details: response.details
@@ -346,5 +355,11 @@ export default {
 .k-form-lock-buttons {
   display: flex;
   flex-shrink: 0;
+}
+.k-form-lock-loader {
+  animation: Spin 4s linear infinite;
+}
+.k-form-lock-loader .k-icon-loader {
+  display: flex;
 }
 </style>

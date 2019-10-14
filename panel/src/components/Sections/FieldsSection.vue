@@ -8,6 +8,7 @@
       :fields="fields"
       :validate="true"
       :value="values"
+      :disabled="$store.state.content.status.lock !== null"
       @input="input"
       @submit="onSubmit"
     />
