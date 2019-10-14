@@ -29,9 +29,9 @@
         <span v-html="$t('lock.isLocked', { email: form.lock.email })" />
       </p>
 
-      <k-button
+      <k-icon
         v-if="!form.lock.unlockable"
-        icon="loader"
+        type="loader"
         class="k-form-lock-loader"
       />
       <k-button
