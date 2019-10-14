@@ -99,6 +99,7 @@ return [
                         'page'     => $this->requestQuery('page'),
                         'parent'   => $this->requestQuery('parent'),
                         'query'    => $field->query(),
+                        'search'   => $this->requestQuery('search'),
                         'subpages' => $field->subpages(),
                         'text'     => $field->text()
                     ]);

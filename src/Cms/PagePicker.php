@@ -73,6 +73,8 @@ class PagePicker
             'parent' => null,
             // a query string to fetch specific pages
             'query' => null,
+            // search query
+            'search' => null,
             // enable/disable subpage navigation
             'subpages' => true,
             // query template for the page text field
@@ -134,10 +136,10 @@ class PagePicker
      * parent model that is currently selected
      * in the page picker.
      *
-     * @param \Kirby\Cms\Site|\Kirby\Cms\Page
+     * @param \Kirby\Cms\Site|\Kirby\Cms\Page|null
      * @return array|null
      */
-    public function modelToArray($model): ?array
+    public function modelToArray($model = null): ?array
     {
         if ($model === null) {
             return null;
@@ -200,6 +202,11 @@ class PagePicker
         // filter protected pages
         $pages = $pages->filterBy('isReadable', true);
 
+        // search
+        if (empty($this->options['search']) === false) {
+            $pages = $pages->search($this->options['search']);
+        }
+
         // paginate the result
         $pages = $pages->paginate([
             'limit' => $this->options['limit'],
@@ -238,7 +245,6 @@ class PagePicker
         // help mitigate some typical query usage issues
         // by converting site and page objects to proper
         // pages by returning their children
-
         if (is_a($pages, 'Kirby\Cms\Site') === true) {
             $pages = $pages->children();
         } elseif (is_a($pages, 'Kirby\Cms\Page') === true) {
@@ -258,7 +264,7 @@ class PagePicker
      * @param \Kirby\Cms\Pages|null $pages
      * @return array
      */
-    public function pagesToArray($pages): array
+    public function pagesToArray($pages = null): array
     {
         if ($pages === null) {
             return [];
@@ -348,8 +354,8 @@ class PagePicker
         $pages = $this->pages();
 
         return [
+            'data'       => $this->pagesToArray($pages),
             'model'      => $this->modelToArray($this->model()),
-            'pages'      => $this->pagesToArray($pages),
             'pagination' => $this->paginationToArray($pages->pagination())
         ];
     }

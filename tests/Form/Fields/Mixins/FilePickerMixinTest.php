@@ -16,7 +16,7 @@ class FilePickerMixinTest extends TestCase
                 'mixins'  => ['filepicker'],
                 'methods' => [
                     'files' => function () {
-                        return $this->filepicker();
+                        return $this->filepicker()['data'];
                     }
                 ]
             ]
@@ -50,7 +50,7 @@ class FilePickerMixinTest extends TestCase
                 'mixins'  => ['filepicker'],
                 'methods' => [
                     'files' => function () {
-                        return $this->filepicker();
+                        return $this->filepicker()['data'];
                     }
                 ]
             ]
@@ -84,7 +84,7 @@ class FilePickerMixinTest extends TestCase
                 'mixins'  => ['filepicker'],
                 'methods' => [
                     'files' => function () {
-                        return $this->filepicker();
+                        return $this->filepicker()['data'];
                     }
                 ]
             ]
@@ -118,7 +118,7 @@ class FilePickerMixinTest extends TestCase
                 'mixins'  => ['filepicker'],
                 'methods' => [
                     'files' => function () {
-                        return $this->filepicker();
+                        return $this->filepicker()['data'];
                     }
                 ]
             ]
@@ -158,7 +158,7 @@ class FilePickerMixinTest extends TestCase
                     'files' => function () {
                         return $this->filepicker([
                             'query' => $this->query
-                        ]);
+                        ])['data'];
                     }
                 ]
             ]
@@ -204,7 +204,7 @@ class FilePickerMixinTest extends TestCase
                             'map' => function ($file) {
                                 return $file->id();
                             }
-                        ]);
+                        ])['data'];
                     }
                 ]
             ]
