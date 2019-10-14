@@ -350,6 +350,30 @@ class PaginationTest extends TestCase
         $pagination = $pagination->clone(['page' => 0, 'total' => 10, 'limit' => 5]);
     }
 
+    public function testCloneOutOfBoundsNoValidate1()
+    {
+        Pagination::$validate = false;
+
+        $pagination = new Pagination();
+        $pagination = $pagination->clone(['page' => 3, 'total' => 10, 'limit' => 5]);
+
+        $this->assertSame(2, $pagination->page());
+
+        Pagination::$validate = true;
+    }
+
+    public function testCloneOutOfBoundsNoValidate2()
+    {
+        Pagination::$validate = false;
+
+        $pagination = new Pagination();
+        $pagination = $pagination->clone(['page' => 0, 'total' => 10, 'limit' => 5]);
+
+        $this->assertSame(1, $pagination->page());
+
+        Pagination::$validate = true;
+    }
+
     public function testToArray()
     {
         $pagination = new Pagination();
