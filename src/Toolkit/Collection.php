@@ -1056,6 +1056,30 @@ class Collection extends Iterator implements Countable
     }
 
     /**
+     * The when method only executes the given Closure when the first parameter
+     * is true. If the first parameter is false, the Closure will not be executed.
+     * You may pass another Closure as the third parameter to the when method.
+     * This Closure will execute if the first parameter evaluates as false
+     *
+     * @param mixed $condition
+     * @param Closure $callback
+     * @param Closure $fallback
+     * @return Collection
+     */
+    public function when($condition, Closure $callback, Closure $fallback = null)
+    {
+        if ($condition) {
+            return $callback->call($this, $condition) ?: $this;
+        }
+
+        if ($fallback !== null) {
+            return $fallback->call($this, $condition) ?: $this;
+        }
+
+        return $this;
+    }
+
+    /**
      * Alias for $this->not()
      *
      * @param string ...$keys any number of keys, passed as individual arguments
