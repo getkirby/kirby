@@ -101,6 +101,43 @@ export default {
   box-sizing: border-box;
 }
 
+:root {
+  /** Colors **/
+  --color-backdrop: #{$color-backdrop};
+  --color-background: #{$color-background};
+  --color-border: #{$color-border};
+  --color-focus: #{$color-focus};
+  --color-focus-light: #{$color-focus-on-dark};
+  --color-focus-outline: #{$color-focus-outline};
+  --color-negative: #{$color-negative};
+  --color-negative-light: #{$color-negative-on-dark};
+  --color-negative-outline: #{$color-negative-outline};
+  --color-notice: #{$color-notice};
+  --color-notice-light: #{$color-notice-on-dark};
+  --color-positive: #{$color-positive};
+  --color-positive-light: #{$color-positive-on-dark};
+  --color-positive-outline: #{$color-positive-outline};
+  --color-text: #{$color-dark};
+  --color-text-light: #{$color-dark-grey};
+
+  /** Font families **/
+  --font-family-mono: #{$font-family-mono};
+  --font-family-sans: #{$font-family-sans};
+
+  /** Font sizes **/
+  --font-size-tiny: #{$font-size-tiny};
+  --font-size-small: #{$font-size-small};
+  --font-size-medium: #{$font-size-medium};
+  --font-size-large: #{$font-size-large};
+  --font-size-huge: #{$font-size-huge};
+  --font-size-monster: #{$font-size-monster};
+
+  /** Shadows **/
+  --box-shadow-dropdown: #{$box-shadow};
+  --box-shadow-item: #{$box-shadow-card};
+  --box-shadow-focus: #{$box-shadow-focus-full};
+}
+
 noscript {
   padding: 1.5rem;
   display: flex;

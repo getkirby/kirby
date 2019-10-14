@@ -53,7 +53,7 @@ class PagePickerMixinTest extends TestCase
         ]);
 
         $response = $field->pages();
-        $pages    = $response['pages'];
+        $pages    = $response['data'];
         $model    = $response['model'];
 
         $this->assertEquals('Test', $model['title']);
@@ -106,7 +106,7 @@ class PagePickerMixinTest extends TestCase
         ]);
 
         $response = $field->pages();
-        $pages    = $response['pages'];
+        $pages    = $response['data'];
         $model    = $response['model'];
 
         $this->assertEquals('a', $model['title']);
@@ -151,22 +151,22 @@ class PagePickerMixinTest extends TestCase
         $field = $this->field('test', [
             'model' => $page
         ]);
-        
+
         $response = $field->pages();
-        $pages    = $response['pages'];
+        $pages    = $response['data'];
         $model    = $response['model'];
-        
+
         $this->assertCount(3, $model);
         $this->assertNull($model['id']);
         $this->assertNull($model['parent']);
         $this->assertSame('test', $model['title']);
-        
+
         $this->assertCount(3, $pages);
         $this->assertSame('test/a', $pages[0]['id']);
         $this->assertSame('test/b', $pages[1]['id']);
         $this->assertSame('test/c', $pages[2]['id']);
     }
-    
+
     public function testPageChildrenWithoutSubpages()
     {
         Field::$types = [
@@ -204,7 +204,7 @@ class PagePickerMixinTest extends TestCase
         ]);
 
         $response = $field->pages();
-        $pages    = $response['pages'];
+        $pages    = $response['data'];
         $model    = $response['model'];
 
         $this->assertNull($model);
@@ -246,7 +246,7 @@ class PagePickerMixinTest extends TestCase
         ]);
 
         $response = $field->pages();
-        $pages    = $response['pages'];
+        $pages    = $response['data'];
 
         $this->assertEquals(['test/a', 'test/b', 'test/c'], $pages);
     }

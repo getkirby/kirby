@@ -85,7 +85,7 @@ class ContentLock
                 'user'       => $user->id(),
                 'email'      => $user->email(),
                 'time'       => $time,
-                'unlockable' => ($time + 200) <= time()
+                'unlockable' => ($time + 60) <= time()
             ];
         }
 

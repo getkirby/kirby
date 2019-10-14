@@ -43,6 +43,21 @@ export default {
 
       return layouts["list"];
     },
+    isInvalid() {
+      if (this.required && this.selected.length === 0) {
+        return true;
+      }
+      
+      if (this.min && this.selected.length < this.min) {
+        return true;
+      }
+      
+      if (this.max && this.selected.length > this.max) {
+        return true;
+      }
+      
+      return false;
+    },
     more() {
       if (!this.max) {
         return true;
