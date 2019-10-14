@@ -103,7 +103,7 @@ export default {
     open(id) {
       this.$api.pages
         .get(id, {
-          select: ["id", "status", "num", "errors", "siblings", "blueprint"]
+          select: ["id", "status", "num", "errors", "blueprint"]
         })
         .then(page => {
           if (page.blueprint.options.changeStatus === false) {
@@ -119,16 +119,38 @@ export default {
             });
           }
 
-          this.states = page.blueprint.status;
-          this.page = page;
-          this.form.status = page.status;
-          this.form.position = page.num || (page.siblings.length + 1);
-          this.$refs.dialog.open();
+          if (page.blueprint.num === "default") {
+            this.$api.pages
+              .get(id, { select: ["siblings"] })
+              .then(response => {
+                this.setup({
+                  ...page,
+                  siblings: response.siblings
+                });
+              })
+              .catch(error => {
+                this.$store.dispatch('notification/error', error);
+              });
+          } else {
+            this.setup({
+              ...page,
+              siblings: []
+            });
+          }
+
         })
         .catch(error => {
           this.$store.dispatch('notification/error', error);
         });
 
+    },
+    setup(page) {
+      this.page          = page;
+      this.form.position = page.num || (page.siblings.length + 1);
+      this.form.status   = page.status;
+      this.states        = page.blueprint.status;
+
+      this.$refs.dialog.open();
     },
     submit() {
       this.$refs.form.submit();
