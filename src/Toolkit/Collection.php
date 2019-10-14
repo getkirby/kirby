@@ -1064,7 +1064,7 @@ class Collection extends Iterator implements Countable
      * @param mixed $condition
      * @param Closure $callback
      * @param Closure $fallback
-     * @return Collection
+     * @return mixed
      */
     public function when($condition, Closure $callback, Closure $fallback = null)
     {
