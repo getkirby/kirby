@@ -708,7 +708,7 @@ function snippet($name, $data = [], bool $return = false)
  * Includes an SVG file by absolute or
  * relative file path.
  *
- * @param string|Kirby\Cms\File $file
+ * @param string|\Kirby\Cms\File $file
  * @return string|false
  */
 function svg($file)
