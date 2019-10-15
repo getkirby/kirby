@@ -624,7 +624,7 @@ class CollectionTest extends TestCase
         $this->assertEquals($input, $collection->toArray());
     }
 
-    public function testWhenCallback()
+    public function testWhen()
     {
         $collection = new Collection([
             [
@@ -645,57 +645,53 @@ class CollectionTest extends TestCase
             ]
         ]);
 
-        $phpunit = $this;
+        $phpunit           = $this;
+        $expectedCondition = null;
 
-        $callback = function ($condition) use ($phpunit) {
-            $phpunit->assertTrue($condition);
+        $callback = function ($condition) use ($phpunit, &$expectedCondition) {
+            $phpunit->assertSame($expectedCondition, $condition);
             return $this->sortBy('name', 'asc');
         };
 
-        $sorted = $collection->when(true, $callback);
+        $fallback = function ($condition) use ($phpunit, &$expectedCondition) {
+            $phpunit->assertSame($expectedCondition, $condition);
+            return $this->sortBy('name', 'desc');
+        };
+
+        $sorted = $collection->when($expectedCondition = true, $callback);
         $this->assertSame('Bastian', $sorted->nth(0)['name']);
         $this->assertSame('Lukas', $sorted->nth(1)['name']);
         $this->assertSame('Nico', $sorted->nth(2)['name']);
         $this->assertSame('Sonja', $sorted->nth(3)['name']);
-    }
 
-    public function testWhenFallback()
-    {
-        $collection = new Collection([
-            [
-                'name'  => 'Bastian',
-                'color' => 'blue'
-            ],
-            [
-                'name' => 'Nico',
-                'color' => 'green'
-            ],
-            [
-                'name' => 'Lukas',
-                'color' => 'yellow'
-            ],
-            [
-                'name'  => 'Sonja',
-                'color' => 'red'
-            ]
-        ]);
+        $sorted = $collection->when($expectedCondition = 'this is truthy', $callback);
+        $this->assertSame('Bastian', $sorted->nth(0)['name']);
+        $this->assertSame('Lukas', $sorted->nth(1)['name']);
+        $this->assertSame('Nico', $sorted->nth(2)['name']);
+        $this->assertSame('Sonja', $sorted->nth(3)['name']);
 
-        $phpunit = $this;
+        $sorted = $collection->when($expectedCondition = true, $callback, $fallback);
+        $this->assertSame('Bastian', $sorted->nth(0)['name']);
+        $this->assertSame('Lukas', $sorted->nth(1)['name']);
+        $this->assertSame('Nico', $sorted->nth(2)['name']);
+        $this->assertSame('Sonja', $sorted->nth(3)['name']);
 
-        $callback = function ($condition) use ($phpunit) {
-            $phpunit->assertTrue($condition);
-            return $this->sortBy('name', 'asc');
-        };
+        $sorted = $collection->when($expectedCondition = false, $callback);
+        $this->assertSame('Bastian', $sorted->nth(0)['name']);
+        $this->assertSame('Nico', $sorted->nth(1)['name']);
+        $this->assertSame('Lukas', $sorted->nth(2)['name']);
+        $this->assertSame('Sonja', $sorted->nth(3)['name']);
 
-        $fallback = function ($condition) use ($phpunit) {
-            $phpunit->assertFalse($condition);
-            return $this->sortBy('color', 'desc');
-        };
+        $sorted = $collection->when($expectedCondition = false, $callback, $fallback);
+        $this->assertSame('Sonja', $sorted->nth(0)['name']);
+        $this->assertSame('Nico', $sorted->nth(1)['name']);
+        $this->assertSame('Lukas', $sorted->nth(2)['name']);
+        $this->assertSame('Bastian', $sorted->nth(3)['name']);
 
-        $sorted = $collection->when(false, $callback, $fallback);
-        $this->assertSame('yellow', $sorted->nth(0)['color']);
-        $this->assertSame('red', $sorted->nth(1)['color']);
-        $this->assertSame('green', $sorted->nth(2)['color']);
-        $this->assertSame('blue', $sorted->nth(3)['color']);
+        $sorted = $collection->when($expectedCondition = null, $callback, $fallback);
+        $this->assertSame('Sonja', $sorted->nth(0)['name']);
+        $this->assertSame('Nico', $sorted->nth(1)['name']);
+        $this->assertSame('Lukas', $sorted->nth(2)['name']);
+        $this->assertSame('Bastian', $sorted->nth(3)['name']);
     }
 }
