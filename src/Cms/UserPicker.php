@@ -17,7 +17,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class UserPicker extends Picker
 {
-
     /**
      * Extends the basic defaults
      *

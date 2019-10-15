@@ -5,7 +5,6 @@ use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
-use Kirby\Http\Server;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -146,17 +145,8 @@ function deprecated(string $message): bool
  */
 function dump($variable, bool $echo = true): string
 {
-    if (Server::cli() === true) {
-        $output = print_r($variable, true) . PHP_EOL;
-    } else {
-        $output = '<pre>' . print_r($variable, true) . '</pre>';
-    }
-
-    if ($echo === true) {
-        echo $output;
-    }
-
-    return $output;
+    $kirby = App::instance();
+    return $kirby->component('dump')($kirby, $variable, $echo);
 }
 
 /**
@@ -708,11 +698,20 @@ function snippet($name, $data = [], bool $return = false)
  * Includes an SVG file by absolute or
  * relative file path.
  *
- * @param string $file
- * @return string
+ * @param string|\Kirby\Cms\File $file
+ * @return string|false
  */
-function svg(string $file)
+function svg($file)
 {
+    // support for Kirby's file objects
+    if (is_a($file, 'Kirby\Cms\File') === true && $file->extension() === 'svg') {
+        return $file->read();
+    }
+
+    if (is_string($file) === false) {
+        return false;
+    }
+
     $extension = F::extension($file);
 
     // check for valid svg files

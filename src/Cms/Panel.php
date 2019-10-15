@@ -107,6 +107,7 @@ class Panel
             'pluginCss' => $plugins->url('css'),
             'pluginJs'  => $plugins->url('js'),
             'panelUrl'  => $uri->path()->toString(true) . '/',
+            'nonce'     => $kirby->nonce(),
             'options'   => [
                 'url'         => $url,
                 'site'        => $kirby->url('index'),
