@@ -1,5 +1,4 @@
 import App from "./App.vue";
-import Directives from "./config/directives.js";
 import Filters from "./config/filters.js";
 import Events from "./config/events.js";
 import Vue from "vue";
@@ -16,7 +15,6 @@ import "./config/i18n.js";
 import "./config/libraries.js";
 import "./config/plugins.js";
 
-Vue.use(Directives);
 Vue.use(Events);
 Vue.use(Filters);
 Vue.use(Vuelidate);
