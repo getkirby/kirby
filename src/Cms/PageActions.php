@@ -592,6 +592,44 @@ trait PageActions
         });
     }
 
+    /**
+     * Moves the page to a new parent
+     *
+     * @param string $parent ID of new parent
+     * @return self
+     */
+    public function move(string $parent)
+    {
+        $parent = $this->kirby()->page($parent);
+
+        if ($parent === null) {
+            throw new InvalidArgumentException('Parent does not exist');
+        }
+
+        $root = $parent->root() . '/' . $this->slug();
+
+        if (Dir::exists($root) === true) {
+            throw new DuplicateException('Page already exists in new location');
+        }
+
+        return $this->commit('move', [$this, $parent], function ($page, $newParent) {
+            $oldParent = $page->parent();
+
+            // actually move the page on disk
+            if ($page->exists() === true) {
+                Dir::move($page->root(), $root);
+            }
+
+            $parent
+                ->children()
+                ->set($page->id(), $page);
+
+            $oldParent->children()->remove($page->id());
+
+            return $page;
+        });
+    }
+
     public function publish()
     {
         if ($this->isDraft() === false) {

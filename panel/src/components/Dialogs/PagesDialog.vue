@@ -6,6 +6,7 @@
     @cancel="$emit('cancel')"
     @submit="submit"
   >
+    <slot name="header" slot="header" />
     <template v-if="issue">
       <k-box :text="issue" theme="negative" />
     </template>

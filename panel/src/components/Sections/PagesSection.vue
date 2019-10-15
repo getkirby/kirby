@@ -57,8 +57,9 @@
       </template>
 
       <k-page-create-dialog ref="create" />
-      <k-page-duplicate-dialog ref="duplicate" />
       <k-page-rename-dialog ref="rename" @success="update" />
+      <k-page-duplicate-dialog ref="duplicate" />
+      <k-page-move-dialog ref="move" @success="update" />
       <k-page-url-dialog ref="url" @success="update" />
       <k-page-status-dialog ref="status" @success="update" />
       <k-page-template-dialog ref="template" @success="update" />
@@ -99,10 +100,6 @@ export default {
     action(page, action) {
 
       switch (action) {
-        case "duplicate": {
-          this.$refs.duplicate.open(page.id);
-          break;
-        }
         case "preview": {
           let preview = window.open("", "_blank");
           preview.document.write = "...";
@@ -120,6 +117,14 @@ export default {
         }
         case "rename": {
           this.$refs.rename.open(page.id);
+          break;
+        }
+        case "duplicate": {
+          this.$refs.duplicate.open(page.id);
+          break;
+        }
+        case "move": {
+          this.$refs.move.open(page.id);
           break;
         }
         case "url": {

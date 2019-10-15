@@ -43,7 +43,7 @@ export default {
         search: this.search,
         ...this.fetchData || {}
       };
-
+      
       return this.$api
         .get(this.options.endpoint, params)
         .then(response => {

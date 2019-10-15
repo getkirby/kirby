@@ -71,6 +71,28 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/move',
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            $page   = $this->page($id);
+            $picker = new Kirby\Cms\PagePicker([
+                'model'    => $page,
+                'page'     => $this->requestQuery('page'),
+                'parent'   => $this->requestQuery('parent'),
+                'search'   => $this->requestQuery('search'),
+            ]);
+
+            return $picker->toArray();
+        }
+    ],
+    [
+        'pattern' => 'pages/(:any)/move',
+        'method'  => 'PATCH',
+        'action'  => function (string $id) {
+            return $this->page($id)->move($this->requestBody('parent'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/slug',
         'method'  => 'PATCH',
         'action'  => function (string $id) {

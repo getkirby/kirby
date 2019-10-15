@@ -25,8 +25,8 @@ export default {
 
     return url;
   },
-  link(id) {
-    return "/" + this.url(id);
+  link(id, path) {
+    return "/" + this.url(id, path);
   },
   get(id, query) {
     return api.get(this.url(id), query).then(page => {
@@ -66,6 +66,13 @@ export default {
         icon: "copy",
         text: Vue.i18n.translate("duplicate"),
         disabled: !options.duplicate
+      });
+      
+      result.push({
+        click: "move",
+        icon: "parent",
+        text: Vue.i18n.translate("move"),
+        disabled: false
       });
 
       result.push("-");

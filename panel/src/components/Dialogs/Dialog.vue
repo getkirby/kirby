@@ -5,6 +5,9 @@
         <p>{{ notification.message }}</p>
         <k-button icon="cancel" @click="notification = null" />
       </div>
+      <div v-if="$slots.header" class="k-dialog-header">
+        <slot name="header" />
+      </div>
       <div class="k-dialog-body">
         <slot />
       </div>
@@ -228,6 +231,12 @@
 .k-dialog-notification .k-button {
   display: flex;
   margin-left: 1rem;
+}
+
+.k-dialog-header {
+  background: $color-black;
+  color: $color-white;
+  padding: 1rem 1.5rem;
 }
 
 .k-dialog-body {

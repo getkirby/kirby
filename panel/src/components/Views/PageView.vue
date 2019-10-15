@@ -68,6 +68,7 @@
 
     <k-page-rename-dialog ref="rename" @success="update" />
     <k-page-duplicate-dialog ref="duplicate" />
+    <k-page-move-dialog ref="move" @success="update" />
     <k-page-url-dialog ref="url" />
     <k-page-status-dialog ref="status" @success="update" />
     <k-page-template-dialog ref="template" @success="update" />
@@ -156,11 +157,14 @@ export default {
   methods: {
     action(action) {
       switch (action) {
+        case "rename":
+          this.$refs.rename.open(this.page.id);
+          break;
         case "duplicate":
           this.$refs.duplicate.open(this.page.id);
           break;
-        case "rename":
-          this.$refs.rename.open(this.page.id);
+        case "move":
+          this.$refs.move.open(this.page.id);
           break;
         case "url":
           this.$refs.url.open(this.page.id);
