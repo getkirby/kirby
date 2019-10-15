@@ -57,6 +57,7 @@ class App
     protected $languages;
     protected $locks;
     protected $multilang;
+    protected $nonce;
     protected $options;
     protected $path;
     protected $request;
@@ -775,6 +776,17 @@ class App
         }
 
         return $this->multilang = $this->languages()->count() !== 0;
+    }
+
+    /**
+     * Returns the nonce, which is used
+     * in the panel for inline scripts
+     *
+     * @return string
+     */
+    public function nonce(): string
+    {
+        return $this->nonce = $this->nonce ?? base64_encode(random_bytes(20));
     }
 
     /**
