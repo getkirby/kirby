@@ -109,7 +109,6 @@ class Collection extends Iterator implements Countable
     public function __unset($key)
     {
         unset($this->data[$key]);
-        $this->offsetUnset($key);
     }
 
     /**
