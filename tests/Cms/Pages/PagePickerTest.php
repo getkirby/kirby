@@ -41,8 +41,8 @@ class PagePickerTest extends TestCase
         $picker = new PagePicker();
 
         $this->assertEquals($this->app->site(), $picker->model());
-        $this->assertCount(1, $picker->pages());
-        $this->assertEquals('grandmother', $picker->pages()->first()->id());
+        $this->assertCount(1, $picker->items());
+        $this->assertEquals('grandmother', $picker->items()->first()->id());
     }
 
     public function testParent()
@@ -51,8 +51,8 @@ class PagePickerTest extends TestCase
             'parent' => 'grandmother'
         ]);
 
-        $this->assertCount(1, $picker->pages());
-        $this->assertEquals('grandmother/mother', $picker->pages()->first()->id());
+        $this->assertCount(1, $picker->items());
+        $this->assertEquals('grandmother/mother', $picker->items()->first()->id());
         $this->assertEquals('grandmother', $picker->model()->id());
     }
 
@@ -71,9 +71,9 @@ class PagePickerTest extends TestCase
             'query' => 'site.find("grandmother/mother").children'
         ]);
 
-        $this->assertCount(3, $picker->pages());
-        $this->assertEquals('grandmother/mother/child-a', $picker->pages()->first()->id());
-        $this->assertEquals('grandmother/mother/child-c', $picker->pages()->last()->id());
+        $this->assertCount(3, $picker->items());
+        $this->assertEquals('grandmother/mother/child-a', $picker->items()->first()->id());
+        $this->assertEquals('grandmother/mother/child-c', $picker->items()->last()->id());
     }
 
     public function testQueryAndParent()
@@ -83,9 +83,9 @@ class PagePickerTest extends TestCase
             'parent' => 'grandmother/mother'
         ]);
 
-        $this->assertCount(3, $picker->pages());
-        $this->assertEquals('grandmother/mother/child-a', $picker->pages()->first()->id());
-        $this->assertEquals('grandmother/mother/child-c', $picker->pages()->last()->id());
+        $this->assertCount(3, $picker->items());
+        $this->assertEquals('grandmother/mother/child-a', $picker->items()->first()->id());
+        $this->assertEquals('grandmother/mother/child-c', $picker->items()->last()->id());
     }
 
     public function testQueryStart()

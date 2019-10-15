@@ -31,7 +31,7 @@
         :list="selected"
         :data-size="size"
         :handle="true"
-        :data-invalid="isInvalid" 
+        :data-invalid="isInvalid"
         @end="onInput"
       >
         <component
@@ -58,7 +58,7 @@
     <k-empty
       v-else
       :layout="layout"
-      :data-invalid="isInvalid" 
+      :data-invalid="isInvalid"
       icon="image"
       @click="open"
     >
@@ -105,6 +105,7 @@ export default {
         endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
+        search: this.search,
         selected: this.selected.map(file => file.id)
       });
     },

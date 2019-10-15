@@ -30,7 +30,7 @@ class FilePickerTest extends TestCase
     {
         $picker = new FilePicker();
 
-        $this->assertCount(3, $picker->files());
+        $this->assertCount(3, $picker->items());
     }
 
     public function testQuery()
@@ -39,6 +39,6 @@ class FilePickerTest extends TestCase
             'query' => 'site.files.offset(1)'
         ]);
 
-        $this->assertCount(2, $picker->files());
+        $this->assertCount(2, $picker->items());
     }
 }
