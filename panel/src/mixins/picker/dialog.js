@@ -12,6 +12,7 @@ export default {
         multiple: true,
         parent: null,
         selected: [],
+        search: true
       },
       search: null,
       pagination: {

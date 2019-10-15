@@ -2,7 +2,6 @@
   <component :is="element" class="k-list-item" v-on="$listeners">
     <k-sort-handle v-if="sortable" />
     <k-link
-      v-tab
       :to="link"
       :target="target"
       class="k-list-item-content"

@@ -15,43 +15,20 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class UserPicker
+class UserPicker extends Picker
 {
-    /**
-     * @var array
-     */
-    protected $options;
 
     /**
-     * Creates a new UserPicker instance
+     * Extends the basic defaults
      *
-     * @param array $params
+     * @return array
      */
-    public function __construct(array $params = [])
+    public function defaults(): array
     {
-        // default params
-        $defaults = [
-            // image settings (ratio, cover, etc.)
-            'image' => [],
-            // query template for the user info field
-            'info' => false,
-            // number of users displayed per pagination page
-            'limit' => 20,
-            // optional mapping function for the users array
-            'map' => null,
-            // the reference model (user)
-            'model' => site(),
-            // current page when paginating
-            'page' => 1,
-            // a query string to fetch specific users
-            'query' => null,
-            // search query
-            'search' => null,
-            // query template for the user text field
-            'text' => '{{ user.username }}'
-        ];
+        $defaults = parent::defaults();
+        $defaults['text'] = '{{ user.username }}';
 
-        $this->options = array_merge($defaults, $params);
+        return $defaults;
     }
 
     /**
@@ -59,7 +36,7 @@ class UserPicker
      *
      * @return \Kirby\Cms\Users|null
      */
-    public function users()
+    public function items()
     {
         $model = $this->options['model'];
 
@@ -81,84 +58,13 @@ class UserPicker
         }
 
         // search
-        if (empty($this->options['search']) === false) {
-            $users = $users->search($this->options['search']);
-        }
+        $users = $this->search($users);
 
-        // sort users
+        // sort
         $users = $users->sortBy('username', 'asc');
 
-        // paginate the result
-        $users = $users->paginate([
-            'limit' => $this->options['limit'],
-            'page'  => $this->options['page']
-        ]);
-
-        return $users;
+        // paginate
+        return $this->paginate($users);
     }
 
-    /**
-     * Converts all given users to an associative
-     * array that is already optimized for the
-     * panel picker component.
-     *
-     * @param \Kirby\Cms\Users|null $users
-     * @return array
-     */
-    public function usersToArray($users = null): array
-    {
-        if ($users === null) {
-            return [];
-        }
-
-        $result = [];
-
-        foreach ($users as $index => $user) {
-            if (empty($this->options['map']) === false) {
-                $result[] = $this->options['map']($user);
-            } else {
-                $result[] = $user->panelPickerData([
-                    'image' => $this->options['image'],
-                    'info'  => $this->options['info'],
-                    'model' => $this->options['model'],
-                    'text'  => $this->options['text'],
-                ]);
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return the most relevant pagination
-     * info as array
-     *
-     * @param \Kirby\Cms\Pagination $pagination
-     * @return array
-     */
-    public function paginationToArray(Pagination $pagination): array
-    {
-        return [
-            'limit' => $pagination->limit(),
-            'page'  => $pagination->page(),
-            'total' => $pagination->total()
-        ];
-    }
-
-    /**
-     * Returns an associative array
-     * with all information for the picker.
-     * This will be passed directly to the API.
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        $users = $this->users();
-
-        return [
-            'data'       => $this->usersToArray($users),
-            'pagination' => $this->paginationToArray($users->pagination())
-        ];
-    }
 }

@@ -14,6 +14,7 @@
     <template v-else>
 
       <k-input
+        v-if="options.search"
         :autofocus="true"
         :placeholder="$t('search') + ' …'"
         v-model="search"
