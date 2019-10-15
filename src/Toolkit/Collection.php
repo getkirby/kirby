@@ -1069,11 +1069,11 @@ class Collection extends Iterator implements Countable
     public function when($condition, Closure $callback, Closure $fallback = null)
     {
         if ($condition) {
-            return $callback->call($this, $condition) ?? $this;
+            return $callback->call($this, $condition);
         }
 
         if ($fallback !== null) {
-            return $fallback->call($this, $condition) ?? $this;
+            return $fallback->call($this, $condition);
         }
 
         return $this;
