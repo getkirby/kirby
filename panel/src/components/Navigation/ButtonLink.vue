@@ -25,10 +25,8 @@
 </template>
 
 <script>
-import tab from "@/mixins/tab.js";
 
 export default {
-  mixins: [tab],
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
