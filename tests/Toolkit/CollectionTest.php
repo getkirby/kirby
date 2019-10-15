@@ -595,7 +595,6 @@ class CollectionTest extends TestCase
         $this->assertCount(3, $collection);
 
         foreach ($collection as $key => $item) {
-
             $collection->__unset($key);
         }
 

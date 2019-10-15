@@ -66,5 +66,4 @@ class UserPicker extends Picker
         // paginate
         return $this->paginate($users);
     }
-
 }

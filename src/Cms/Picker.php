@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
-
 /**
  * The Picker abstract is the foundation
  * for the UserPicker, PagePicker and FilePicker
