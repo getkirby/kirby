@@ -1,11 +1,11 @@
 export default {
   mounted() {
-    this.$el.addEventListener("keyup", this.onTab);
-    this.$el.addEventListener("blur", this.onUntab);
+    this.$el.addEventListener("keyup", this.onTab, true);
+    this.$el.addEventListener("blur", this.onUntab, true);
   },
   destroyed() {
-    this.$el.removeEventListener("keyup", this.onTab);
-    this.$el.removeEventListener("blur", this.onUntab);
+    this.$el.removeEventListener("keyup", this.onTab, true);
+    this.$el.removeEventListener("blur", this.onUntab, true);
   },
   methods: {
     focus() {
@@ -15,18 +15,18 @@ export default {
     },
     onTab(e) {
       if (e.keyCode === 9) {
-        this.$el.dataset.tabbed = true;
+        this.$el.setAttribute("data-tabbed", true);
       }
     },
     onUntab() {
-      delete this.$el.dataset.tabbed;
+      this.$el.removeAttribute("data-tabbed");
     },
     tab() {
       this.$el.focus();
-      this.$el.dataset.tabbed = true;
+      this.$el.setAttribute("data-tabbed", true);
     },
     untab() {
-      delete this.$el.dataset.tabbed;
+      this.$el.removeAttribute("data-tabbed");
     },
   }
 };

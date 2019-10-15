@@ -44,7 +44,6 @@
         </k-dropdown>
 
         <k-link
-          v-tab
           v-if="view"
           :to="view.link"
           class="k-topbar-button k-topbar-view-button"
@@ -75,7 +74,6 @@
 
         <nav class="k-topbar-crumbs">
           <k-link
-            v-tab
             v-for="(crumb, index) in $store.state.breadcrumb"
             :key="'crumb-' + index"
             :to="crumb.link"
@@ -262,7 +260,6 @@ export default {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  @include highlight-tabbed;
 
   [dir="ltr"] & {
     padding-right: 0;
