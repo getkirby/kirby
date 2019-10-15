@@ -78,6 +78,36 @@ class PagesTest extends TestCase
         $this->assertEquals('a/aa', $pages->nth(2)->id());
     }
 
+    public function testAddNull()
+    {
+        $pages = new Pages();
+        $this->assertCount(0, $pages);
+
+        $pages->add(null);
+
+        $this->assertCount(0, $pages);
+    }
+
+    public function testAddFalse()
+    {
+        $pages = new Pages();
+        $this->assertCount(0, $pages);
+
+        $pages->add(false);
+
+        $this->assertCount(0, $pages);
+    }
+
+    public function testAddInvalidObject()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('You must pass a Page object to the Pages collection');
+
+        $site  = new Site();
+        $pages = new Pages();
+        $pages->add($site);
+    }
+
     public function testAudio()
     {
         $pages = Pages::factory([
