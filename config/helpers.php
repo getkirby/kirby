@@ -708,11 +708,20 @@ function snippet($name, $data = [], bool $return = false)
  * Includes an SVG file by absolute or
  * relative file path.
  *
- * @param string $file
- * @return string
+ * @param string|Kirby\Cms\File $file
+ * @return string|false
  */
-function svg(string $file)
+function svg($file)
 {
+    // support for Kirby's file objects
+    if (is_a($file, 'Kirby\Cms\File') === true && $file->extension() === 'svg') {
+        return $file->read();
+    }
+
+    if (is_string($file) === false) {
+        return false;
+    }
+
     $extension = F::extension($file);
 
     // check for valid svg files

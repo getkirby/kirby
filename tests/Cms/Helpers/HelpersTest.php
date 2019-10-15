@@ -657,6 +657,15 @@ class HelpersTest extends TestCase
         $this->assertFalse(svg('somefile.svg'));
     }
 
+    public function testSvgWithFileObject()
+    {
+        $file = $this->createMock(File::class);
+        $file->method('__call')->willReturn('test');
+        $file->method('extension')->willReturn('svg');
+
+        $this->assertEquals('test', svg($file));
+    }
+
     public function testTwitter()
     {
         // simple
