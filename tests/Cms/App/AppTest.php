@@ -210,6 +210,26 @@ class AppTest extends TestCase
         $this->assertEquals($options, $app->options());
     }
 
+    public function testOptionsOnReady()
+    {
+        App::destroy();
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'ready' => function ($kirby) {
+                    return [
+                        'test' => $kirby->root('index')
+                    ];
+                }
+            ]
+        ]);
+
+        $this->assertEquals('/dev/null', $app->option('test'));
+    }
+
     public function testRolesFromFixtures()
     {
         $app = new App([

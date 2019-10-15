@@ -245,7 +245,10 @@ Vue.component("k-text", Text);
 
 /* Navigation */
 import Button from "@/components/Navigation/Button.vue";
+import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
 import ButtonGroup from "@/components/Navigation/ButtonGroup.vue";
+import ButtonLink from "@/components/Navigation/ButtonLink.vue";
+import ButtonNative from "@/components/Navigation/ButtonNative.vue";
 import Dropdown from "@/components/Navigation/Dropdown.vue";
 import DropdownContent from "@/components/Navigation/DropdownContent.vue";
 import DropdownItem from "@/components/Navigation/DropdownItem.vue";
@@ -258,7 +261,10 @@ import Tag from "@/components/Navigation/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
 Vue.component("k-button", Button);
+Vue.component("k-button-disabled", ButtonDisabled);
 Vue.component("k-button-group", ButtonGroup);
+Vue.component("k-button-link", ButtonLink);
+Vue.component("k-button-native", ButtonNative);
 Vue.component("k-dropdown", Dropdown);
 Vue.component("k-dropdown-content", DropdownContent);
 Vue.component("k-dropdown-item", DropdownItem);

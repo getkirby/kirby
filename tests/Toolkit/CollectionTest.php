@@ -583,6 +583,23 @@ class CollectionTest extends TestCase
         ])->first()['name']);
     }
 
+    public function testRemoveMultiple()
+    {
+        $collection = new Collection();
+
+        $collection->set('a', 'A');
+        $collection->set('b', 'B');
+        $collection->set('c', 'C');
+
+        $this->assertCount(3, $collection);
+
+        foreach ($collection as $key => $item) {
+            $collection->__unset($key);
+        }
+
+        $this->assertCount(0, $collection);
+    }
+
     public function testSetters()
     {
         $this->collection->fourth = 'My fourth element';

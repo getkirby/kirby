@@ -8,6 +8,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -200,7 +201,15 @@ class Api
             }
         }
 
+        // don't throw pagination errors if pagination
+        // page is out of bounds
+        $validate = Pagination::$validate;
+        Pagination::$validate = false;
+
         $output = $this->route->action()->call($this, ...$this->route->arguments());
+
+        // restore old pagination validation mode
+        Pagination::$validate = $validate;
 
         if (is_object($output) === true && is_a($output, 'Kirby\\Http\\Response') !== true) {
             return $this->resolve($output)->toResponse();

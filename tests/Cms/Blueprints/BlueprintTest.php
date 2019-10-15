@@ -267,4 +267,28 @@ class BlueprintTest extends TestCase
         $this->assertEquals(true, array_key_exists('headline', $sections['main']));
         $this->assertEquals('Invalid section type for section "main"', $sections['main']['headline']);
     }
+
+    public function testSectionTypeFromName()
+    {
+        // with options
+        $blueprint = new Blueprint([
+            'model' => 'test',
+            'sections' => [
+                'info' => [
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('info', $blueprint->sections()['info']->type());
+
+        // by just passing true
+        $blueprint = new Blueprint([
+            'model' => 'test',
+            'sections' => [
+                'info' => true
+            ]
+        ]);
+
+        $this->assertEquals('info', $blueprint->sections()['info']->type());
+    }
 }

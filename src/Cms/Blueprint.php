@@ -595,12 +595,17 @@ class Blueprint
                 continue;
             }
 
+            // fallback to default props when true is passed
+            if ($sectionProps === true) {
+                $sectionProps = [];
+            }
+
             // inject all section extensions
             $sectionProps = $this->extend($sectionProps);
 
             $sections[$sectionName] = $sectionProps = array_merge($sectionProps, [
                 'name' => $sectionName,
-                'type' => $type = $sectionProps['type'] ?? null
+                'type' => $type = $sectionProps['type'] ?? $sectionName
             ]);
 
             if (empty($type) === true || is_string($type) === false) {

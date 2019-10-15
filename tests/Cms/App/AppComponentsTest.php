@@ -18,6 +18,19 @@ class AppComponentsTest extends TestCase
         ]);
     }
 
+    public function testDump()
+    {
+        $kirby = $this->kirby->clone([
+            'components' => [
+                'dump' => function ($kirby, $variable) {
+                    return $variable;
+                }
+            ]
+        ]);
+
+        $this->assertEquals('test', dump('test'));
+    }
+
     public function testMarkdown()
     {
         $text     = 'Test';
