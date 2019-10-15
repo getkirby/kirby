@@ -10,6 +10,7 @@ export default {
     max: Number,
     multiple: Boolean,
     parent: String,
+    search: Boolean,
     size: String,
     text: String,
     value: {
@@ -47,15 +48,15 @@ export default {
       if (this.required && this.selected.length === 0) {
         return true;
       }
-      
+
       if (this.min && this.selected.length < this.min) {
         return true;
       }
-      
+
       if (this.max && this.selected.length > this.max) {
         return true;
       }
-      
+
       return false;
     },
     more() {

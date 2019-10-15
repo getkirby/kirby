@@ -28,7 +28,7 @@ class UserPickerTest extends TestCase
     {
         $picker = new UserPicker();
 
-        $this->assertCount(3, $picker->users());
+        $this->assertCount(3, $picker->items());
     }
 
     public function testQuery()
@@ -37,6 +37,6 @@ class UserPickerTest extends TestCase
             'query' => 'kirby.users.offset(1)'
         ]);
 
-        $this->assertCount(2, $picker->users());
+        $this->assertCount(2, $picker->items());
     }
 }

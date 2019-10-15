@@ -16,74 +16,36 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class PagePicker
+class PagePicker extends Picker
 {
     /**
-     * @var \Kirby\Cms\App
+     * @var \Kirby\Cms\Pages
      */
-    protected $kirby;
-
-    /**
-     * @var array
-     */
-    protected $options;
+    protected $items;
 
     /**
      * @var \Kirby\Cms\Pages
      */
-    protected $pages;
+    protected $itemsForQuery;
 
     /**
-     * @var \Kirby\Cms\Pages
-     */
-    protected $pagesForQuery;
-
-    /**
-     * @var \Kirby\Cms\Page|\Kirby\Cms\Site
+     * @var \Kirby\Cms\Page|\Kirby\Cms\Site|null
      */
     protected $parent;
 
     /**
-     * @var \Kirby\Cms\Site
-     */
-    protected $site;
-
-    /**
-     * Creates a new PagePicker instance
+     * Extends the basic defaults
      *
-     * @param array $params
+     * @return array
      */
-    public function __construct(array $params = [])
+    public function defaults(): array
     {
-        // default params
-        $defaults = [
-            // image settings (ratio, cover, etc.)
-            'image' => [],
-            // query template for the page info field
-            'info' => false,
-            // number of pages displayed per pagination page
-            'limit' => 20,
-            // optional mapping function for the pages array
-            'map' => null,
-            // the reference model (site or page)
-            'model' => site(),
-            // current page when paginating
-            'page' => 1,
+        return array_merge(parent::defaults(), [
             // Page ID of the selected parent. Used to navigate
             'parent' => null,
-            // a query string to fetch specific pages
-            'query' => null,
-            // search query
-            'search' => null,
             // enable/disable subpage navigation
             'subpages' => true,
-            // query template for the page text field
-            'text' => null
-        ];
-
-        $this->options = array_merge($defaults, $params);
-        $this->kirby   = $this->options['model']->kirby();
-        $this->site    = $this->kirby->site();
+        ]);
     }
 
     /**
@@ -124,8 +86,8 @@ class PagePicker
             return $this->parent();
         }
 
-        if ($pages = $this->pages()) {
-            return $pages->parent();
+        if ($items = $this->items()) {
+            return $items->parent();
         }
 
         return null;
@@ -177,44 +139,36 @@ class PagePicker
      *
      * @return \Kirby\Cms\Pages|null
      */
-    public function pages()
+    public function items()
     {
         // cache
-        if ($this->pages !== null) {
-            return $this->pages;
+        if ($this->items !== null) {
+            return $this->items;
         }
 
         // no query? simple parent-based search for pages
         if (empty($this->options['query']) === true) {
-            $pages = $this->pagesForParent();
+            $items = $this->itemsForParent();
 
         // when subpage navigation is enabled, a parent
         // might be passed in addition to the query.
         // The parent then takes priority.
         } elseif ($this->options['subpages'] === true && empty($this->options['parent']) === false) {
-            $pages = $this->pagesForParent();
+            $items = $this->itemsForParent();
 
         // search by query
         } else {
-            $pages = $this->pagesForQuery();
+            $items = $this->itemsForQuery();
         }
 
         // filter protected pages
-        $pages = $pages->filterBy('isReadable', true);
+        $items = $items->filterBy('isReadable', true);
 
         // search
-        if (empty($this->options['search']) === false) {
-            $pages = $pages->search($this->options['search']);
-        }
+        $items = $this->search($items);
 
         // paginate the result
-        $pages = $pages->paginate([
-            'limit' => $this->options['limit'],
-            'page'  => $this->options['page']
-        ]);
-
-        // cache and return the result
-        return $this->pages = $pages;
+        return $this->items = $this->paginate($items);
     }
 
     /**
@@ -222,7 +176,7 @@ class PagePicker
      *
      * @return \Kirby\Cms\Pages
      */
-    public function pagesForParent()
+    public function itemsForParent()
     {
         return $this->parent()->children();
     }
@@ -232,77 +186,28 @@ class PagePicker
      *
      * @return \Kirby\Cms\Pages
      */
-    public function pagesForQuery()
+    public function itemsForQuery()
     {
         // cache
-        if ($this->pagesForQuery !== null) {
-            return $this->pagesForQuery;
+        if ($this->itemsForQuery !== null) {
+            return $this->itemsForQuery;
         }
 
         $model = $this->options['model'];
-        $pages = $model->query($this->options['query']);
+        $items = $model->query($this->options['query']);
 
         // help mitigate some typical query usage issues
         // by converting site and page objects to proper
         // pages by returning their children
-        if (is_a($pages, 'Kirby\Cms\Site') === true) {
-            $pages = $pages->children();
-        } elseif (is_a($pages, 'Kirby\Cms\Page') === true) {
-            $pages = $pages->children();
-        } elseif (is_a($pages, 'Kirby\Cms\Pages') === false) {
+        if (is_a($items, 'Kirby\Cms\Site') === true) {
+            $items = $items->children();
+        } elseif (is_a($items, 'Kirby\Cms\Page') === true) {
+            $items = $items->children();
+        } elseif (is_a($items, 'Kirby\Cms\Pages') === false) {
             throw new InvalidArgumentException('Your query must return a set of pages');
         }
 
-        return $this->pagesForQuery = $pages;
-    }
-
-    /**
-     * Converts all given pages to an associative
-     * array that is already optimized for the
-     * panel picker component.
-     *
-     * @param \Kirby\Cms\Pages|null $pages
-     * @return array
-     */
-    public function pagesToArray($pages = null): array
-    {
-        if ($pages === null) {
-            return [];
-        }
-
-        $result = [];
-
-        // create the array result for each individual page
-        foreach ($pages as $index => $page) {
-            if (empty($this->options['map']) === false) {
-                $result[] = $this->options['map']($page);
-            } else {
-                $result[] = $page->panelPickerData([
-                    'image' => $this->options['image'],
-                    'info'  => $this->options['info'],
-                    'model' => $this->options['model'],
-                    'text'  => $this->options['text'],
-                ]);
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return the most relevant pagination
-     * info as array
-     *
-     * @param \Kirby\Cms\Pagination $pagination
-     * @return array
-     */
-    public function paginationToArray(Pagination $pagination): array
-    {
-        return [
-            'limit' => $pagination->limit(),
-            'page'  => $pagination->page(),
-            'total' => $pagination->total()
-        ];
+        return $this->itemsForQuery = $items;
     }
 
     /**
@@ -332,8 +237,8 @@ class PagePicker
     public function start()
     {
         if (empty($this->options['query']) === false) {
-            if ($pages = $this->pagesForQuery()) {
-                return $pages->parent();
+            if ($items = $this->itemsForQuery()) {
+                return $items->parent();
             }
 
             return $this->site;
@@ -351,12 +256,9 @@ class PagePicker
      */
     public function toArray(): array
     {
-        $pages = $this->pages();
+        $array = parent::toArray();
+        $array['model'] = $this->modelToArray($this->model());
 
-        return [
-            'data'       => $this->pagesToArray($pages),
-            'model'      => $this->modelToArray($this->model()),
-            'pagination' => $this->paginationToArray($pages->pagination())
-        ];
+        return $array;
     }
 }
