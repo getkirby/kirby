@@ -6,6 +6,7 @@ use Kirby\Cms\Filename;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
+use Kirby\Http\Server;
 use Kirby\Image\Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
@@ -24,6 +25,30 @@ return [
      */
     'css' => function (App $kirby, string $url, $options = null): string {
         return $url;
+    },
+
+
+    /**
+     * Object and variable dumper
+     * to help with debugging.
+     *
+     * @param \Kirby\Cms\App $kirby Kirby instance
+     * @param mixed $variable
+     * @param bool $echo
+     * @return string
+     */
+    'dump' => function (App $kirby, $variable, bool $echo = true) {
+        if (Server::cli() === true) {
+            $output = print_r($variable, true) . PHP_EOL;
+        } else {
+            $output = '<pre>' . print_r($variable, true) . '</pre>';
+        }
+
+        if ($echo === true) {
+            echo $output;
+        }
+
+        return $output;
     },
 
     /**
