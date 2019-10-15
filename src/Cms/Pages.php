@@ -58,8 +58,8 @@ class Pages extends Collection
         } elseif (is_a($object, 'Kirby\Cms\Page') === true) {
             $this->__set($object->id(), $object);
 
-        // give a useful error message on invalid objects
-        } elseif (is_object($object) === true) {
+        // give a useful error message on invalid input
+        } elseif (in_array($object, [null, false, true], true) !== true) {
             throw new InvalidArgumentException('You must pass a Page object to the Pages collection');
         }
 
