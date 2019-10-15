@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * The `$pages` object refers to a
  * collection of pages. The pages in this
@@ -55,6 +57,10 @@ class Pages extends Collection
         // add a page object
         } elseif (is_a($object, 'Kirby\Cms\Page') === true) {
             $this->__set($object->id(), $object);
+
+        // give a useful error message on invalid objects
+        } elseif (is_object($object) === true) {
+            throw new InvalidArgumentException('You must pass a Page object to the Pages collection');
         }
 
         return $this;
