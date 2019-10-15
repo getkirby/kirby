@@ -17,7 +17,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class UserPicker extends Picker
 {
-
     /**
      * Extends the basic defaults
      *
@@ -66,5 +65,4 @@ class UserPicker extends Picker
         // paginate
         return $this->paginate($users);
     }
-
 }

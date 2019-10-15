@@ -6,6 +6,11 @@ use PHPUnit\Framework\TestCase;
 
 class PaginationTest extends TestCase
 {
+    public function setUp(): void
+    {
+        Pagination::$validate = true;
+    }
+
     public function testDefaultPage()
     {
         $pagination = new Pagination();
