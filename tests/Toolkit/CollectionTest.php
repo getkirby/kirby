@@ -641,5 +641,4 @@ class CollectionTest extends TestCase
         $collection = new Collection($input = ['a', 'b', 'c']);
         $this->assertEquals($input, $collection->toArray());
     }
-
 }
