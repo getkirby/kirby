@@ -585,7 +585,6 @@ class CollectionTest extends TestCase
 
     public function testRemoveMultiple()
     {
-
         $collection = new Collection();
 
         $collection->set('a', 'A');
