@@ -34,10 +34,13 @@ export default {
       return this.$store.state.content.models;
     },
     models() {
-      const ids  = Object.keys(this.store);
+      const ids = Object.keys(this.store).filter(id => {
+        return this.store[id] ? true : false;
+      });
+
       let models = ids.map(id => {
         return {
-          id: id, 
+          id: id,
           ...this.store[id]
         };
       });
@@ -49,7 +52,7 @@ export default {
   },
   methods: {
     go(target) {
-      // if a target language is set and it is not the current language, 
+      // if a target language is set and it is not the current language,
       // switch to it before routing to target view
       if (target.language) {
         if (this.$store.state.languages.current.code !== target.language) {
@@ -64,7 +67,7 @@ export default {
       // create an API request promise for each model with changes
       const promises = this.models.map(model => {
         return this.$api.get(model.api, { view: "compact" }, null, true).then(response => {
-          
+
           // populate entry depending on model type
           let entry;
 
@@ -76,7 +79,7 @@ export default {
                 link: this.$api.pages.link(response.id)
               }
             };
-            
+
           } else if (model.id.startsWith("files/") === true) {
             entry = {
               icon: "image",
@@ -85,7 +88,7 @@ export default {
                 link: response.link
               }
             };
-            
+
           } else if (model.id.startsWith("users/") === true) {
             entry = {
               icon: "user",
