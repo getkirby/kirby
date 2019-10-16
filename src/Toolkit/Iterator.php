@@ -2,6 +2,9 @@
 
 namespace Kirby\Toolkit;
 
+use ArrayIterator;
+use IteratorAggregate;
+
 /**
  * Extended version of PHP's iterator
  * class that builds the foundation of our
@@ -13,7 +16,7 @@ namespace Kirby\Toolkit;
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
  */
-class Iterator implements \Iterator
+class Iterator implements IteratorAggregate
 {
     /**
      * The data array
@@ -30,6 +33,16 @@ class Iterator implements \Iterator
     public function __construct(array $data = [])
     {
         $this->data = $data;
+    }
+
+    /**
+     * Get an iterator for the items.
+     *
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->data);
     }
 
     /**
