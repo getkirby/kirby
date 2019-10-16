@@ -11,14 +11,18 @@ php:
   - 7.3
 
 before_install:
-  - echo yes | pecl install -f apcu
-  - echo yes | pecl install -f memcached
-  - phpenv config-rm xdebug.ini || true
+  # set up PHP config
+  - phpenv config-rm xdebug.ini || true # code coverage is generated with PCOV
   - phpenv config-add tests/php.ini
 
-install:
   # ensure that the Composer config is valid
   - composer validate
+
+install:
+  # install PHP extensions
+  - echo yes | pecl install -f apcu
+  - echo yes | pecl install -f memcached
+  - pecl install pcov
 
   # install Composer packages, will also trigger dump-autoload
   - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "friendsofphp/php-cs-fixer" "pcov/clobber"
@@ -30,19 +34,17 @@ install:
   - php php-coveralls.phar --version
 
 before_script:
-  - pecl install pcov
   - mkdir -p build/logs
   - ls -al
 
 script:
-  - php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
   - PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix --config .php_cs --verbose --diff --dry-run
 
 after_success:
   - travis_retry php php-coveralls.phar -v
 
 cache:
-  apt: true
   directories:
     - $HOME/.composer/cache
     - $HOME/.php-cs-fixer
