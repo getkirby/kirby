@@ -59,7 +59,7 @@ export default {
           this.issue  = e.message;
         });
     },
-    open(files, options) {
+    open(models, options) {
 
       // reset pagination
       this.pagination.page = 0;
@@ -69,12 +69,12 @@ export default {
 
       let fetch = true;
 
-      if (Array.isArray(files)) {
-        this.models = files;
+      if (Array.isArray(models)) {
+        this.models = models;
         fetch       = false;
       } else {
         this.models = [];
-        options     = files;
+        options     = models;
       }
 
       this.options = {
