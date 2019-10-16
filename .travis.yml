@@ -25,13 +25,8 @@ install:
   - pecl install pcov
 
   # install Composer packages, will also trigger dump-autoload
-  - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "friendsofphp/php-cs-fixer" "pcov/clobber"
+  - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "pcov/clobber" "friendsofphp/php-cs-fixer" "php-coveralls/php-coveralls"
   - composer install --no-interaction --ignore-platform-reqs --no-suggest
-
-  # install coveralls.phar
-  - wget -c -nc --retry-connrefused --tries=0 https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar
-  - chmod +x php-coveralls.phar
-  - php php-coveralls.phar --version
 
 before_script:
   - mkdir -p build/logs
@@ -42,7 +37,7 @@ script:
   - PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix --config .php_cs --verbose --diff --dry-run
 
 after_success:
-  - travis_retry php php-coveralls.phar -v
+  - travis_retry ./vendor/bin/php-coveralls -v
 
 cache:
   directories:
