@@ -19,14 +19,14 @@ before_install:
   - composer validate
 
 install:
-  # install PHP extensions
-  - echo yes | pecl install -f apcu
-  - echo yes | pecl install -f memcached
-  - pecl install pcov
-
   # install Composer packages, will also trigger dump-autoload
-  - composer require --no-interaction --ignore-platform-reqs "phpunit/phpunit:^7" "pcov/clobber" "friendsofphp/php-cs-fixer" "php-coveralls/php-coveralls"
-  - composer install --no-interaction --ignore-platform-reqs --no-suggest
+  - composer require -n --ignore-platform-reqs "phwoolcon/ci-pecl-cacher" "phpunit/phpunit:^7" "pcov/clobber" "friendsofphp/php-cs-fixer" "php-coveralls/php-coveralls"
+  - composer install -n --ignore-platform-reqs --no-suggest
+
+  # install and cache PHP extensions
+  - ./vendor/bin/ci-pecl-install apcu
+  - ./vendor/bin/ci-pecl-install memcached
+  - ./vendor/bin/ci-pecl-install pcov
 
 before_script:
   - mkdir -p build/logs
@@ -41,9 +41,10 @@ after_success:
 
 cache:
   directories:
+    - vendor
     - $HOME/.composer/cache
     - $HOME/.php-cs-fixer
-    - vendor
+    - $HOME/pecl_cache
 
 matrix:
   fast_finish: true
