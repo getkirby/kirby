@@ -64,12 +64,14 @@ export default {
     this.$events.$on("online", this.isOnline);
     this.$events.$on("keydown.cmd.shift.f", this.search);
     this.$events.$on("drop", this.drop);
+    this.$events.$on("panel.reload", this.reload);
   },
   destroyed() {
     this.$events.$off("offline", this.isOffline);
     this.$events.$off("online", this.isOnline);
     this.$events.$off("keydown.cmd.shift.f", this.search);
     this.$events.$off("drop", this.drop);
+    this.$events.$off("panel.reload", this.reload);
   },
   methods: {
     drop() {
@@ -83,6 +85,9 @@ export default {
       if (this.$store.state.system.info.isLocal === false) {
         this.offline = true;
       }
+    },
+    reload() {
+      this.$router.go();
     },
     search(event) {
       event.preventDefault();
