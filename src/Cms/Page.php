@@ -692,6 +692,37 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Checks if the page accepts the given
+     * page as child
+     *
+     * @param Page $page
+     * @return boolean
+     */
+    public function isValidParentFor(Page $page): bool
+    {
+        if ($this->is($page) === true) {
+            return false;
+        }
+
+        if ($this->is($page->parent()) === true) {
+            return true;
+        }
+
+        $templates = [];
+
+        // collect all allowed templates for this page
+        foreach ($this->blueprint()->sections() as $section) {
+            if ($section->type() === 'pages') {
+                foreach ($section->blueprints() as $blueprint) {
+                    $templates[] = $blueprint['name'];
+                }
+            }
+        }
+
+        return in_array($page->intendedTemplate()->name(), $templates) === true;
+    }
+
+    /**
      * Check if the page can be read by the current user
      *
      * @return bool

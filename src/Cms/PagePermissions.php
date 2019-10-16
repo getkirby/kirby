@@ -43,6 +43,11 @@ class PagePermissions extends ModelPermissions
         return $this->model->isHomeOrErrorPage() !== true;
     }
 
+    protected function canMove(): bool
+    {
+        return $this->model->isHomeOrErrorPage() !== true;
+    }
+
     protected function canSort(): bool
     {
         if ($this->model->isErrorPage() === true) {

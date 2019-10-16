@@ -9,6 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -602,31 +603,26 @@ trait PageActions
     {
         $parent = $this->kirby()->page($parent);
 
-        if ($parent === null) {
-            throw new InvalidArgumentException('Parent does not exist');
-        }
+        return $this->commit('move', [$this, $parent], function ($page, $parent) {
 
-        $root = $parent->root() . '/' . $this->slug();
+            $copy = $this->copy([
+                'parent'   => $parent,
+                'slug'     => $page->slug(),
+                'isDraft'  => $page->isDraft(),
+                'files'    => true,
+                'children' => true,
+            ]);
 
-        if (Dir::exists($root) === true) {
-            throw new DuplicateException('Page already exists in new location');
-        }
-
-        return $this->commit('move', [$this, $parent], function ($page, $newParent) {
-            $oldParent = $page->parent();
-
-            // actually move the page on disk
-            if ($page->exists() === true) {
-                Dir::move($page->root(), $root);
+            if ($page->isListed()) {
+                $copy = $copy->sort($page->num());
             }
 
-            $parent
-                ->children()
-                ->set($page->id(), $page);
+            // delete the old page
+            Dir::remove($page->root());
 
-            $oldParent->children()->remove($page->id());
+            $parent->children()->remove($page->id());
 
-            return $page;
+            return $copy;
         });
     }
 

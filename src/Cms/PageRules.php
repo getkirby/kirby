@@ -276,6 +276,51 @@ class PageRules
         return true;
     }
 
+    public static function move(Page $page, Page $parent = null): bool
+    {
+        if ($page->permissions()->move() !== true) {
+            throw new PermissionException([
+                'key'  => 'page.move.permission',
+                'data' => [
+                    'slug' => $page->slug()
+                ]
+            ]);
+        }
+
+        if ($parent === null) {
+            throw new InvalidArgumentException([
+                'key' => 'page.move.parent.missing'
+            ]);
+        }
+
+        if ($parent->is($page) === true) {
+            throw new InvalidArgumentException([
+                'key' => 'page.move.parent.self'
+            ]);
+        }
+
+        if ($parent->is($page->parent()) === true) {
+            throw new InvalidArgumentException([
+                'key' => 'page.move.parent.same'
+            ]);
+        }
+
+        if ($parent->isValidParentFor($page) === false) {
+            throw new InvalidArgumentException([
+                'key' => 'parent.move.parent.invalid'
+            ]);
+        }
+
+        if ($duplicate = $parent->find($page->slug())) {
+            throw new DuplicateException([
+                'key'  => 'page.duplicate',
+                'data' => ['slug' => $slug]
+            ]);
+        }
+
+        return true;
+    }
+
     public static function update(Page $page, array $content = []): bool
     {
         if ($page->permissions()->update() !== true) {
