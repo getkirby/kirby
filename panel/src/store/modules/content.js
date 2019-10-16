@@ -117,6 +117,10 @@ export default {
 
   mutations: {
     CREATE(state, [id, model]) {
+      if (!model) {
+        return false;
+      }
+
       // if model already in store, use stored changes,
       // otherwise fallback to provided changes
       let changes = state.models[id] ? state.models[id].changes : model.changes ;
