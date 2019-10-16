@@ -24,7 +24,6 @@ install:
   - composer install -n --ignore-platform-reqs --no-suggest
 
   # install and cache PHP extensions
-  - ./vendor/bin/ci-pecl-install apcu
   - ./vendor/bin/ci-pecl-install memcached
   - ./vendor/bin/ci-pecl-install pcov
 
