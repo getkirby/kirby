@@ -129,19 +129,21 @@ function css($url, $options = null)
  * @param boolean $echo
  * @return string
  */
-function dump($variable, bool $echo = true): string
-{
-    if (Server::cli() === true) {
-        $output = print_r($variable, true) . PHP_EOL;
-    } else {
-        $output = '<pre>' . print_r($variable, true) . '</pre>';
-    }
+if (!function_exists('dump')) {
+    function dump($variable, bool $echo = true): string
+    {
+        if (Server::cli() === true) {
+            $output = print_r($variable, true) . PHP_EOL;
+        } else {
+            $output = '<pre>' . print_r($variable, true) . '</pre>';
+        }
 
-    if ($echo === true) {
-        echo $output;
-    }
+        if ($echo === true) {
+            echo $output;
+        }
 
-    return $output;
+        return $output;
+    }
 }
 
 /**
