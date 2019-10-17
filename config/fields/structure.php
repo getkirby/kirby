@@ -51,6 +51,12 @@ return [
             return $limit;
         },
         /**
+         * Locks adding and removing entries.
+         */
+        'lock' => function (bool $lock = false) {
+            return $lock;
+        },
+        /**
          * Maximum allowed entries in the structure. Afterwards the "Add" button will be switched off.
          */
         'max' => function (int $max = null) {

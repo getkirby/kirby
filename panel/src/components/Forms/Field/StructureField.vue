@@ -4,7 +4,7 @@
     <!-- Add button -->
     <template slot="options">
       <k-button
-        v-if="more && currentIndex === null"
+        v-if="more && currentIndex === null && !lock"
         ref="add"
         :id="_uid"
         icon="add"
@@ -118,7 +118,7 @@
               </template>
             </td>
             <td class="k-structure-table-option">
-              <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
+              <k-button :tooltip="$t('remove')" :disabled="lock" icon="remove" @click="confirmRemove(index)" />
             </td>
           </tr>
         </k-draggable>
@@ -167,6 +167,7 @@ export default {
     empty: String,
     fields: Object,
     limit: Number,
+    lock: Boolean,
     max: Number,
     min: Number,
     sortable: {
