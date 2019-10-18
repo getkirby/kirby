@@ -10,7 +10,7 @@ return [
         'accept' => null,
 
         /**
-         * Hide the value of the options in parentheses.
+         * Hides the value of the options in parentheses.
          */
         'hideValue' => function (bool $hideValue = false) {
             return $hideValue;
