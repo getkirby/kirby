@@ -56,7 +56,7 @@
           @keydown.native.space.prevent.stop="select(option)"
         >
           <span v-html="option.display" />
-          <span class="k-multiselect-value" v-html="option.info" />
+          <span v-if="!hideValue" class="k-multiselect-value" v-html="option.info" />
         </k-dropdown-item>
       </div>
     </k-dropdown-content>
@@ -71,6 +71,7 @@ export default {
   inheritAttrs: false,
   props: {
     disabled: Boolean,
+    hideValue: Boolean,
     id: [Number, String],
     max: Number,
     min: Number,

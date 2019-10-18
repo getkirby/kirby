@@ -10,6 +10,13 @@ return [
         'accept' => null,
 
         /**
+         * Hide the value of the options in parentheses.
+         */
+        'hideValue' => function (bool $hideValue = false) {
+            return $hideValue;
+        },
+
+        /**
          * Custom icon to replace the arrow down.
          */
         'icon' => function (string $icon = null) {
