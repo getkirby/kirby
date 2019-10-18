@@ -700,6 +700,10 @@ class Page extends ModelWithContent
      */
     public function isValidParentFor(Page $page): bool
     {
+        if ($this->isErrorPage() === true) {
+            return false;
+        }
+
         if ($this->is($page) === true) {
             return false;
         }
