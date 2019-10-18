@@ -307,7 +307,7 @@ class PageRules
 
         if ($parent->isValidParentFor($page) === false) {
             throw new InvalidArgumentException([
-                'key' => 'parent.move.parent.invalid'
+                'key' => 'page.move.parent.invalid'
             ]);
         }
 
