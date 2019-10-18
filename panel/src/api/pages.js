@@ -67,12 +67,12 @@ export default {
         text: Vue.i18n.translate("duplicate"),
         disabled: !options.duplicate
       });
-      
+
       result.push({
         click: "move",
         icon: "parent",
         text: Vue.i18n.translate("move"),
-        disabled: false
+        disabled: !options.move
       });
 
       result.push("-");
