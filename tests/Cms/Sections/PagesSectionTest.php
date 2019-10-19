@@ -390,7 +390,7 @@ class PagesSectionTest extends TestCase
             'help'  => 'Test'
         ]);
 
-        $this->assertEquals('Test', $section->help());
+        $this->assertEquals('<p>Test</p>', $section->help());
 
         // translated help
         $section = new Section('pages', [
@@ -402,6 +402,6 @@ class PagesSectionTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('Information', $section->help());
+        $this->assertEquals('<p>Information</p>', $section->help());
     }
 }

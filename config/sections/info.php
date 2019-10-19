@@ -19,7 +19,6 @@ return [
             if ($this->text) {
                 $text = $this->model()->toString($this->text);
                 $text = $this->kirby()->kirbytext($text);
-
                 return $text;
             }
         },

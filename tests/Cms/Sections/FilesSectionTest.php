@@ -237,7 +237,7 @@ class FilesSectionTest extends TestCase
             'help'  => 'Test'
         ]);
 
-        $this->assertEquals('Test', $section->help());
+        $this->assertEquals('<p>Test</p>', $section->help());
 
         // translated help
         $section = new Section('files', [
@@ -249,7 +249,7 @@ class FilesSectionTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('Information', $section->help());
+        $this->assertEquals('<p>Information</p>', $section->help());
     }
 
     public function testSortBy()

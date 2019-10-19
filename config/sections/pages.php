@@ -20,7 +20,7 @@ return [
          * Optional array of templates that should only be allowed to add.
          */
         'create' => function ($add = null) {
-            return A::wrap($add);
+            return $add;
         },
         /**
          * Enables/disables reverse sorting
@@ -199,6 +199,10 @@ return [
             ];
         },
         'add' => function () {
+            if ($this->create === false) {
+                return false;
+            }
+
             if (in_array($this->status, ['draft', 'all']) === false) {
                 return false;
             }
@@ -243,7 +247,7 @@ return [
     'methods' => [
         'blueprints' => function () {
             $blueprints = [];
-            $templates  = empty($this->create) === false ? $this->create : $this->templates;
+            $templates  = empty($this->create) === false ? A::wrap($this->create) : $this->templates;
 
             if (empty($templates) === true) {
                 $templates = $this->kirby()->blueprints();
