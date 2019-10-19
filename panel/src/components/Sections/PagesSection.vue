@@ -31,7 +31,7 @@
         :pagination="pagination"
         :sortable="options.sortable"
         :size="options.size"
-        :data-invalid="isInvalid" 
+        :data-invalid="isInvalid"
         @change="sort"
         @paginate="paginate"
         @action="action"
@@ -40,7 +40,7 @@
       <template v-else>
         <k-empty
           :layout="options.layout"
-          :data-invalid="isInvalid" 
+          :data-invalid="isInvalid"
           icon="page"
           @click="create"
         >
@@ -158,7 +158,7 @@ export default {
     items(data) {
       return data.map(page => {
         const isEnabled = page.permissions.changeStatus !== false;
-        
+
         page.flag = {
           class: "k-status-flag k-status-flag-" + page.status,
           tooltip: isEnabled ? this.$t("page.status") : `${this.$t("page.status")} (${this.$t("disabled")})`,
