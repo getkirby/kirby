@@ -156,7 +156,7 @@ export default {
   },
   watch: {
     page(page) {
-      this.currentPage = page;
+      this.currentPage = parseInt(page);
     }
   },
   created() {
@@ -186,7 +186,7 @@ export default {
           }
 
           this.$emit("paginate", {
-            page: parseInt(this.currentPage),
+            page: this.currentPage,
             start: this.start,
             end: this.end,
             limit: this.limit,
