@@ -390,6 +390,9 @@
 
   "save": "Save",
   "search": "Search",
+
+  "section.required": "The section is required",
+
   "select": "Select",
   "settings": "Settings",
   "size": "Size",
