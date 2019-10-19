@@ -206,8 +206,7 @@ class Field extends Component
                 'help' => function () {
                     if ($this->help) {
                         $help = $this->model()->toString($this->help);
-                        $help = $this->kirby()->kirbytext(strip_tags($help));
-
+                        $help = $this->kirby()->kirbytext($help);
                         return $help;
                     }
                 },

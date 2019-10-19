@@ -18,8 +18,7 @@ return [
         'text' => function () {
             if ($this->text) {
                 $text = $this->model()->toString($this->text);
-                $text = $this->kirby()->kirbytext(strip_tags($text));
-
+                $text = $this->kirby()->kirbytext($text);
                 return $text;
             }
         },
