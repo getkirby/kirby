@@ -4,7 +4,7 @@
 
     <header class="k-section-header">
       <k-headline>
-        {{ headline }} <abbr v-if="options.min" title="This section is required">*</abbr>
+        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
       <k-button-group v-if="add">
         <k-button icon="upload" @click="upload">{{ $t("add") }}</k-button>
