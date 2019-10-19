@@ -123,7 +123,6 @@ class Form
     public static function exceptionField(Throwable $exception, array $props = [])
     {
         $props = array_merge($props, [
-            'name'  => $props['name'],
             'label' => 'Error in "' . $props['name'] . '" field',
             'theme' => 'negative',
             'text'  => strip_tags($exception->getMessage()),
