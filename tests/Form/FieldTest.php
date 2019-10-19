@@ -262,8 +262,8 @@ class FieldTest extends TestCase
             'help' => 'test'
         ]);
 
-        $this->assertEquals('test', $field->help());
-        $this->assertEquals('test', $field->help);
+        $this->assertEquals('<p>test</p>', $field->help());
+        $this->assertEquals('<p>test</p>', $field->help);
 
         // translated
         $field = new Field('test', [
@@ -274,8 +274,8 @@ class FieldTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('en', $field->help());
-        $this->assertEquals('en', $field->help);
+        $this->assertEquals('<p>en</p>', $field->help());
+        $this->assertEquals('<p>en</p>', $field->help);
     }
 
     public function testIcon()

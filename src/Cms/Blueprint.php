@@ -472,7 +472,7 @@ class Blueprint
         return [
             'label' => 'Error',
             'name'  => $name,
-            'text'  => $message,
+            'text'  => strip_tags($message),
             'theme' => 'negative',
             'type'  => 'info',
         ];
