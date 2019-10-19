@@ -178,7 +178,7 @@ class FileTest extends TestCase
 
     public function testDefaultPage()
     {
-        return $this->assertNull($this->file()->page());
+        $this->assertNull($this->file()->page());
     }
 
     public function testUrl()

@@ -6,6 +6,11 @@ use PHPUnit\Framework\TestCase;
 
 class PaginationTest extends TestCase
 {
+    public function setUp(): void
+    {
+        Pagination::$validate = true;
+    }
+
     public function testDefaultPage()
     {
         $pagination = new Pagination();
@@ -25,6 +30,12 @@ class PaginationTest extends TestCase
     {
         $pagination = new Pagination(['total' => 100, 'page' => '2']);
         $this->assertEquals(2, $pagination->page());
+    }
+
+    public function testPageEmptyCollection()
+    {
+        $pagination = new Pagination(['total' => 0, 'page' => 1]);
+        $this->assertEquals(0, $pagination->page());
     }
 
     public function testTotalDefault()
@@ -329,7 +340,7 @@ class PaginationTest extends TestCase
     public function testCloneOutOfBounds1()
     {
         $this->expectException('Kirby\Exception\ErrorPageException');
-        $this->expectExceptionMessage('Pagination page 3 is out of bounds, expected 1-2');
+        $this->expectExceptionMessage('Pagination page 3 does not exist, expected 1-2');
 
         $pagination = new Pagination();
         $pagination = $pagination->clone(['page' => 3, 'total' => 10, 'limit' => 5]);
@@ -338,10 +349,34 @@ class PaginationTest extends TestCase
     public function testCloneOutOfBounds2()
     {
         $this->expectException('Kirby\Exception\ErrorPageException');
-        $this->expectExceptionMessage('Pagination page 0 is out of bounds, expected 1-2');
+        $this->expectExceptionMessage('Pagination page 0 does not exist, expected 1-2');
 
         $pagination = new Pagination();
         $pagination = $pagination->clone(['page' => 0, 'total' => 10, 'limit' => 5]);
+    }
+
+    public function testCloneOutOfBoundsNoValidate1()
+    {
+        Pagination::$validate = false;
+
+        $pagination = new Pagination();
+        $pagination = $pagination->clone(['page' => 3, 'total' => 10, 'limit' => 5]);
+
+        $this->assertSame(2, $pagination->page());
+
+        Pagination::$validate = true;
+    }
+
+    public function testCloneOutOfBoundsNoValidate2()
+    {
+        Pagination::$validate = false;
+
+        $pagination = new Pagination();
+        $pagination = $pagination->clone(['page' => 0, 'total' => 10, 'limit' => 5]);
+
+        $this->assertSame(1, $pagination->page());
+
+        Pagination::$validate = true;
     }
 
     public function testToArray()

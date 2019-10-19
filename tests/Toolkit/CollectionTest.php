@@ -19,15 +19,18 @@ class StringObject
 
 class CollectionTest extends TestCase
 {
+    protected $collection;
+    protected $sampleData;
+
     public function setUp(): void
     {
-        $this->data = [
+        $this->sampleData = [
             'first'  => 'My first element',
             'second' => 'My second element',
             'third'  => 'My third element',
         ];
 
-        $this->collection = new Collection($this->data);
+        $this->collection = new Collection($this->sampleData);
     }
 
     public function test__debuginfo()
@@ -39,7 +42,7 @@ class CollectionTest extends TestCase
     public function assertIsUntouched()
     {
         // the original collection must to be untouched
-        $this->assertEquals($this->data, $this->collection->toArray());
+        $this->assertEquals($this->sampleData, $this->collection->toArray());
     }
 
     public function testAppend()
@@ -99,8 +102,8 @@ class CollectionTest extends TestCase
 
     public function testFlip()
     {
-        $this->assertEquals(array_reverse($this->data, true), $this->collection->flip()->toArray());
-        $this->assertEquals($this->data, $this->collection->flip()->flip()->toArray());
+        $this->assertEquals(array_reverse($this->sampleData, true), $this->collection->flip()->toArray());
+        $this->assertEquals($this->sampleData, $this->collection->flip()->flip()->toArray());
         $this->assertIsUntouched();
     }
 
@@ -461,9 +464,9 @@ class CollectionTest extends TestCase
 
     public function testOffsetAndLimit()
     {
-        $this->assertEquals(array_slice($this->data, 1), $this->collection->offset(1)->toArray());
-        $this->assertEquals(array_slice($this->data, 0, 1), $this->collection->limit(1)->toArray());
-        $this->assertEquals(array_slice($this->data, 1, 1), $this->collection->offset(1)->limit(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 1), $this->collection->offset(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 0, 1), $this->collection->limit(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 1, 1), $this->collection->offset(1)->limit(1)->toArray());
         $this->assertIsUntouched();
     }
 
@@ -580,6 +583,23 @@ class CollectionTest extends TestCase
         ])->first()['name']);
     }
 
+    public function testRemoveMultiple()
+    {
+        $collection = new Collection();
+
+        $collection->set('a', 'A');
+        $collection->set('b', 'B');
+        $collection->set('c', 'C');
+
+        $this->assertCount(3, $collection);
+
+        foreach ($collection as $key => $item) {
+            $collection->__unset($key);
+        }
+
+        $this->assertCount(0, $collection);
+    }
+
     public function testSetters()
     {
         $this->collection->fourth = 'My fourth element';
@@ -603,9 +623,9 @@ class CollectionTest extends TestCase
 
     public function testSlice()
     {
-        $this->assertEquals(array_slice($this->data, 1), $this->collection->slice(1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 1), $this->collection->slice(1)->toArray());
         $this->assertEquals(2, $this->collection->slice(1)->count());
-        $this->assertEquals(array_slice($this->data, 0, 1), $this->collection->slice(0, 1)->toArray());
+        $this->assertEquals(array_slice($this->sampleData, 0, 1), $this->collection->slice(0, 1)->toArray());
         $this->assertEquals(1, $this->collection->slice(0, 1)->count());
         $this->assertIsUntouched();
     }
@@ -619,5 +639,76 @@ class CollectionTest extends TestCase
         // non-associative
         $collection = new Collection($input = ['a', 'b', 'c']);
         $this->assertEquals($input, $collection->toArray());
+    }
+
+    public function testWhen()
+    {
+        $collection = new Collection([
+            [
+                'name'  => 'Bastian',
+                'color' => 'blue'
+            ],
+            [
+                'name' => 'Nico',
+                'color' => 'green'
+            ],
+            [
+                'name' => 'Lukas',
+                'color' => 'yellow'
+            ],
+            [
+                'name'  => 'Sonja',
+                'color' => 'red'
+            ]
+        ]);
+
+        $phpunit           = $this;
+        $expectedCondition = null;
+
+        $callback = function ($condition) use ($phpunit, &$expectedCondition) {
+            $phpunit->assertSame($expectedCondition, $condition);
+            return $this->sortBy('name', 'asc');
+        };
+
+        $fallback = function ($condition) use ($phpunit, &$expectedCondition) {
+            $phpunit->assertSame($expectedCondition, $condition);
+            return $this->sortBy('name', 'desc');
+        };
+
+        $sorted = $collection->when($expectedCondition = true, $callback);
+        $this->assertSame('Bastian', $sorted->nth(0)['name']);
+        $this->assertSame('Lukas', $sorted->nth(1)['name']);
+        $this->assertSame('Nico', $sorted->nth(2)['name']);
+        $this->assertSame('Sonja', $sorted->nth(3)['name']);
+
+        $sorted = $collection->when($expectedCondition = 'this is truthy', $callback);
+        $this->assertSame('Bastian', $sorted->nth(0)['name']);
+        $this->assertSame('Lukas', $sorted->nth(1)['name']);
+        $this->assertSame('Nico', $sorted->nth(2)['name']);
+        $this->assertSame('Sonja', $sorted->nth(3)['name']);
+
+        $sorted = $collection->when($expectedCondition = true, $callback, $fallback);
+        $this->assertSame('Bastian', $sorted->nth(0)['name']);
+        $this->assertSame('Lukas', $sorted->nth(1)['name']);
+        $this->assertSame('Nico', $sorted->nth(2)['name']);
+        $this->assertSame('Sonja', $sorted->nth(3)['name']);
+
+        $sorted = $collection->when($expectedCondition = false, $callback);
+        $this->assertSame('Bastian', $sorted->nth(0)['name']);
+        $this->assertSame('Nico', $sorted->nth(1)['name']);
+        $this->assertSame('Lukas', $sorted->nth(2)['name']);
+        $this->assertSame('Sonja', $sorted->nth(3)['name']);
+
+        $sorted = $collection->when($expectedCondition = false, $callback, $fallback);
+        $this->assertSame('Sonja', $sorted->nth(0)['name']);
+        $this->assertSame('Nico', $sorted->nth(1)['name']);
+        $this->assertSame('Lukas', $sorted->nth(2)['name']);
+        $this->assertSame('Bastian', $sorted->nth(3)['name']);
+
+        $sorted = $collection->when($expectedCondition = null, $callback, $fallback);
+        $this->assertSame('Sonja', $sorted->nth(0)['name']);
+        $this->assertSame('Nico', $sorted->nth(1)['name']);
+        $this->assertSame('Lukas', $sorted->nth(2)['name']);
+        $this->assertSame('Bastian', $sorted->nth(3)['name']);
     }
 }

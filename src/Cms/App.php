@@ -57,6 +57,7 @@ class App
     protected $languages;
     protected $locks;
     protected $multilang;
+    protected $nonce;
     protected $options;
     protected $path;
     protected $request;
@@ -121,8 +122,14 @@ class App
         $this->extensionsFromOptions();
         $this->extensionsFromFolders();
 
+        // trigger hook for use in plugins
+        $this->trigger('system.loadPlugins:after');
+
         // handle those damn errors
         $this->handleErrors();
+
+        // execute a ready callback from the config
+        $this->optionsFromReadyCallback();
 
         // bake config
         Config::$data = $this->options;
@@ -775,6 +782,17 @@ class App
     }
 
     /**
+     * Returns the nonce, which is used
+     * in the panel for inline scripts
+     *
+     * @return string
+     */
+    public function nonce(): string
+    {
+        return $this->nonce = $this->nonce ?? base64_encode(random_bytes(20));
+    }
+
+    /**
      * Load a specific configuration option
      *
      * @param string $key
@@ -794,17 +812,6 @@ class App
     public function options(): array
     {
         return $this->options;
-    }
-
-    /**
-     * Inject options from Kirby instance props
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function optionsFromProps(array $options = []): array
-    {
-        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
@@ -829,15 +836,48 @@ class App
     }
 
     /**
+     * Inject options from Kirby instance props
+     *
+     * @param array $options
+     * @return array
+     */
+    protected function optionsFromProps(array $options = []): array
+    {
+        return $this->options = array_replace_recursive($this->options, $options);
+    }
+
+    /**
+     * Merge last-minute options from ready callback
+     *
+     * @return array
+     */
+    protected function optionsFromReadyCallback(): array
+    {
+        if (isset($this->options['ready']) === true && is_callable($this->options['ready']) === true) {
+            // fetch last-minute options from the callback
+            $options = (array)$this->options['ready']($this);
+
+            // inject all last-minute options recursively
+            $this->options = array_replace_recursive($this->options, $options);
+        }
+
+        return $this->options;
+    }
+
+    /**
      * Returns any page from the content folder
      *
-     * @param string $id
+     * @param string $id|null
      * @param \Kirby\Cms\Page|\Kirby\Cms\Site|null $parent
      * @param bool $drafts
      * @return \Kirby\Cms\Page|null
      */
-    public function page(string $id, $parent = null, bool $drafts = true)
+    public function page(?string $id = null, $parent = null, bool $drafts = true)
     {
+        if ($id === null) {
+            return null;
+        }
+
         $parent = $parent ?? $this->site();
 
         if ($page = $parent->find($id)) {

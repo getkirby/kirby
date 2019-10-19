@@ -2,9 +2,8 @@
   <div class="k-file-preview">
     <k-view class="k-file-preview-layout">
       <div class="k-file-preview-image">
-        <a
-          v-tab
-          :href="file.url"
+        <k-link
+          :to="file.url"
           :title="$t('open')"
           class="k-file-preview-image-link"
           target="_blank"
@@ -22,7 +21,7 @@
             class="k-file-preview-icon"
           />
           <span v-else class="k-file-preview-placeholder" />
-        </a>
+        </k-link>
       </div>
       <div class="k-file-preview-details">
         <ul>
@@ -130,8 +129,9 @@ export default {
   display: block;
   outline: 0;
 }
-.k-file-preview-image-link[data-tabbed] {
-  outline: 2px solid $color-focus !important;
+.k-file-preview-image-link.k-link[data-tabbed] {
+  box-shadow: none;
+  outline: 2px solid $color-focus;
   outline-offset: -2px;
 }
 

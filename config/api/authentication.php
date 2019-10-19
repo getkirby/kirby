@@ -7,7 +7,7 @@ return function () {
 
     // csrf token check
     if ($auth->type() === 'session' && $auth->csrf() === false) {
-        throw new PermissionException('Unauthenticated', 403);
+        throw new PermissionException('Unauthenticated');
     }
 
     // get user from session or basic auth
@@ -19,5 +19,5 @@ return function () {
         return $user;
     }
 
-    throw new PermissionException('Unauthenticated', 403);
+    throw new PermissionException('Unauthenticated');
 };

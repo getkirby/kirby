@@ -12,33 +12,53 @@
     </template>
 
     <template v-else>
-      <k-list v-if="models.length">
-        <k-list-item
-          v-for="user in models"
-          :key="user.email"
-          :text="user.username"
-          :image="user.image"
-          :icon="user.icon"
-          @click="toggle(user)"
-        >
-          <k-button
-            v-if="isSelected(user)"
-            slot="options"
-            :autofocus="true"
-            :icon="checkedIcon"
-            :tooltip="$t('remove')"
-            theme="positive"
-          />
-          <k-button
-            v-else
-            slot="options"
-            :autofocus="true"
-            :tooltip="$t('select')"
-            icon="circle-outline"
-          />
-        </k-list-item>
-      </k-list>
 
+      <k-input
+        v-if="options.search"
+        :autofocus="true"
+        :placeholder="$t('search') + ' …'"
+        v-model="search"
+        type="text"
+        class="k-dialog-search"
+        icon="search"
+      />
+
+      <template v-if="models.length">
+        <k-list>
+          <k-list-item
+            v-for="user in models"
+            :key="user.email"
+            :text="user.username"
+            :image="user.image"
+            :icon="user.icon"
+            @click="toggle(user)"
+          >
+            <k-button
+              v-if="isSelected(user)"
+              slot="options"
+              :autofocus="true"
+              :icon="checkedIcon"
+              :tooltip="$t('remove')"
+              theme="positive"
+            />
+            <k-button
+              v-else
+              slot="options"
+              :autofocus="true"
+              :tooltip="$t('select')"
+              icon="circle-outline"
+            />
+          </k-list-item>
+        </k-list>
+        <k-pagination
+          :details="true"
+          :dropdown="false"
+          v-bind="pagination"
+          align="center"
+          class="k-dialog-pagination"
+          @paginate="paginate"
+        />
+      </template>
       <k-empty v-else icon="users">
         {{ $t("dialog.users.empty") }}
       </k-empty>

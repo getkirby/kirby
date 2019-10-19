@@ -23,6 +23,7 @@
 
   "delete": "Delete",
   "dimensions": "Dimensions",
+  "disabled": "Disabled",
   "discard": "Discard",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -365,6 +366,8 @@
   "pages.status.draft": "Drafts",
   "pages.status.listed": "Published",
   "pages.status.unlisted": "Unlisted",
+  
+  "pagination.page": "Page",
 
   "password": "Password",
   "pixel": "Pixel",

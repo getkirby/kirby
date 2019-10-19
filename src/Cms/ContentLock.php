@@ -85,7 +85,7 @@ class ContentLock
                 'user'       => $user->id(),
                 'email'      => $user->email(),
                 'time'       => $time,
-                'unlockable' => ($time + 200) <= time()
+                'unlockable' => ($time + 60) <= time()
             ];
         }
 
@@ -144,7 +144,10 @@ class ContentLock
 
         // check if lock was set by another user
         if ($this->data['lock']['user'] !== $this->user()->id()) {
-            throw new LogicException('The content lock can only be removed by the user who created it. Use unlock instead.', 409);
+            throw new LogicException([
+                'fallback' => 'The content lock can only be removed by the user who created it. Use unlock instead.',
+                'httpCode' => 409
+            ]);
         }
 
         // remove lock

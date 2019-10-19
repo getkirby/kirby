@@ -75,7 +75,6 @@ class PageBlueprint extends Blueprint
     protected function normalizeNum($num): string
     {
         $aliases = [
-            0      => 'zero',
             '0'    => 'zero',
             'sort' => 'default',
         ];

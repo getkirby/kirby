@@ -30,7 +30,7 @@ export default [
 
       // remove all form changes from localStorage
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith("kirby$form")) {
+        if (key.startsWith("kirby$content$")) {
           localStorage.removeItem(key);
         }
       });

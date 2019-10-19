@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class DirTest extends TestCase
 {
+    protected $fixtures;
+
     public function setUp(): void
     {
         Dir::remove($this->fixtures = __DIR__ . '/fixtures/DirTest');

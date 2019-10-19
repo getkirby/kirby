@@ -21,42 +21,62 @@
         <k-headline>{{ model.title }}</k-headline>
       </header>
 
-      <k-list v-if="models.length">
-        <k-list-item
-          v-for="page in models"
-          :key="page.id"
-          :text="page.text"
-          :info="page.info"
-          :image="page.image"
-          :icon="page.icon"
-          @click="toggle(page)"
-        >
-          <template slot="options">
-            <k-button
-              v-if="isSelected(page)"
-              slot="options"
-              :autofocus="true"
-              :icon="checkedIcon"
-              :tooltip="$t('remove')"
-              theme="positive"
-            />
-            <k-button
-              v-else
-              slot="options"
-              :autofocus="true"
-              :tooltip="$t('select')"
-              icon="circle-outline"
-            />
-            <k-button
-              v-if="model"
-              :disabled="!page.hasChildren"
-              :tooltip="$t('open')"
-              icon="angle-right"
-              @click.stop="go(page)"
-            />
-          </template>
-        </k-list-item>
-      </k-list>
+      <k-input
+        v-if="options.search"
+        :autofocus="true"
+        :placeholder="$t('search') + ' …'"
+        v-model="search"
+        type="text"
+        class="k-dialog-search"
+        icon="search"
+      />
+
+      <template v-if="models.length">
+        <k-list>
+          <k-list-item
+            v-for="page in models"
+            :key="page.id"
+            :text="page.text"
+            :info="page.info"
+            :image="page.image"
+            :icon="page.icon"
+            @click="toggle(page)"
+          >
+            <template slot="options">
+              <k-button
+                v-if="isSelected(page)"
+                slot="options"
+                :autofocus="true"
+                :icon="checkedIcon"
+                :tooltip="$t('remove')"
+                theme="positive"
+              />
+              <k-button
+                v-else
+                slot="options"
+                :autofocus="true"
+                :tooltip="$t('select')"
+                icon="circle-outline"
+              />
+              <k-button
+                v-if="model"
+                :disabled="!page.hasChildren"
+                :tooltip="$t('open')"
+                icon="angle-right"
+                @click.stop="go(page)"
+              />
+            </template>
+          </k-list-item>
+        </k-list>
+        <k-pagination
+          :details="true"
+          :dropdown="false"
+          v-bind="pagination"
+          align="center"
+          class="k-dialog-pagination"
+          @paginate="paginate"
+        />
+      </template>
       <k-empty v-else icon="page">
         {{ $t("dialog.pages.empty") }}
       </k-empty>
@@ -85,21 +105,25 @@ export default {
   },
   computed: {
     fetchData() {
-      return { parent: this.options.parent };
+      return {
+        parent: this.options.parent,
+      };
     }
   },
   methods: {
     back() {
-      this.options.parent = this.model.parent;
+      this.options.parent  = this.model.parent;
+      this.pagination.page = 1;
       this.fetch();
     },
     go(page) {
-      this.options.parent = page.id;
+      this.options.parent  = page.id;
+      this.pagination.page = 1;
       this.fetch();
     },
     onFetched(response) {
       this.model = response.model;
-    }
+    },
   }
 };
 </script>
@@ -122,11 +146,6 @@ export default {
   flex-grow: 1;
   text-align: center;
 }
-
-.k-pages-dialog-search {
-  margin-bottom: 0.5rem;
-}
-
 .k-pages-dialog .k-list-item {
   cursor: pointer;
 }

@@ -97,10 +97,10 @@ export default {
         .then(page => {
 
           // move form changes
-          this.$store.dispatch("form/move", {
-            old: this.$store.getters["form/id"](this.page.id),
-            new: this.$store.getters["form/id"](page.id)
-          });
+          this.$store.dispatch("content/move", [
+            "pages/" + this.page.id, 
+            "pages/" + page.id
+          ]);
 
           const payload = {
             message: ":)",

@@ -5,7 +5,6 @@ use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
-use Kirby\Http\Server;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -89,7 +88,7 @@ function csrf(string $check = null)
  * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
  * @return string|null
  */
-function css($url, $options = null)
+function css($url, $options = null): ?string
 {
     if (is_array($url) === true) {
         $links = array_map(function ($url) use ($options) {
@@ -122,6 +121,21 @@ function css($url, $options = null)
 }
 
 /**
+ * Triggers a deprecation warning if debug mode is active
+ *
+ * @param string $message
+ * @return bool Whether the warning was triggered
+ */
+function deprecated(string $message): bool
+{
+    if (App::instance()->option('debug') === true) {
+        return trigger_error($message, E_USER_DEPRECATED) === true;
+    }
+
+    return false;
+}
+
+/**
  * Simple object and variable dumper
  * to help with debugging.
  *
@@ -131,17 +145,8 @@ function css($url, $options = null)
  */
 function dump($variable, bool $echo = true): string
 {
-    if (Server::cli() === true) {
-        $output = print_r($variable, true) . PHP_EOL;
-    } else {
-        $output = '<pre>' . print_r($variable, true) . '</pre>';
-    }
-
-    if ($echo === true) {
-        echo $output;
-    }
-
-    return $output;
+    $kirby = App::instance();
+    return $kirby->component('dump')($kirby, $variable, $echo);
 }
 
 /**
@@ -348,9 +353,9 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
  *
  * @param string|array $url
  * @param string|array $options
- * @return void
+ * @return string|null
  */
-function js($url, $options = null)
+function js($url, $options = null): ?string
 {
     if (is_array($url) === true) {
         $scripts = array_map(function ($url) use ($options) {
@@ -693,11 +698,20 @@ function snippet($name, $data = [], bool $return = false)
  * Includes an SVG file by absolute or
  * relative file path.
  *
- * @param string $file
- * @return string
+ * @param string|\Kirby\Cms\File $file
+ * @return string|false
  */
-function svg(string $file)
+function svg($file)
 {
+    // support for Kirby's file objects
+    if (is_a($file, 'Kirby\Cms\File') === true && $file->extension() === 'svg') {
+        return $file->read();
+    }
+
+    if (is_string($file) === false) {
+        return false;
+    }
+
     $extension = F::extension($file);
 
     // check for valid svg files

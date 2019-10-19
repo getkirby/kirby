@@ -28,8 +28,8 @@ router.beforeEach((to, from, next) => {
   store.dispatch("view", to.meta.view);
   
   // reset the content locks
-  store.dispatch("form/lock", null);
-  store.dispatch("form/unlock", null);
+  store.dispatch("content/lock", null);
+  store.dispatch("content/unlock", null);
   
   // clear all heartbeats
   store.dispatch("heartbeat/clear");  

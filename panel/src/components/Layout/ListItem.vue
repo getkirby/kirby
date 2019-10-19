@@ -2,7 +2,6 @@
   <component :is="element" class="k-list-item" v-on="$listeners">
     <k-sort-handle v-if="sortable" />
     <k-link
-      v-tab
       :to="link"
       :target="target"
       class="k-list-item-content"
@@ -21,6 +20,7 @@
         <k-button
           v-if="flag"
           v-bind="flag"
+          class="k-list-item-status"
           @click="flag.click"
         />
         <k-button
@@ -171,6 +171,9 @@ $list-item-height: 38px;
   @media screen and (min-width: $breakpoint-small) {
     display: block;
   }
+}
+.k-list-item-status {
+  height: auto !important;
 }
 .k-list-item-options {
   position: relative;

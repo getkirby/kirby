@@ -6,6 +6,7 @@
     class="k-multiselect-field"
     @blur="blur"
     @keydown.native.enter.prevent="focus"
+    @keydown.native.space.prevent="focus"
   >
     <k-input
       ref="input"
@@ -51,6 +52,9 @@ export default {
       };
     }
   },
+  mounted() {
+    this.$refs.input.$el.setAttribute('tabindex', 0);
+  },
   methods: {
     blur(e) {
       this.$refs.input.blur(e);
@@ -59,8 +63,5 @@ export default {
       this.$refs.input.focus();
     }
   },
-  mounted: function() {
-    this.$refs.input.$el.setAttribute('tabindex', 0);
-  }
 };
 </script>

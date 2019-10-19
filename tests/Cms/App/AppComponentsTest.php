@@ -7,6 +7,8 @@ use Kirby\Toolkit\F;
 
 class AppComponentsTest extends TestCase
 {
+    protected $kirby;
+
     public function setUp(): void
     {
         $this->kirby = new App([
@@ -14,6 +16,19 @@ class AppComponentsTest extends TestCase
                 'index' => '/dev/null'
             ]
         ]);
+    }
+
+    public function testDump()
+    {
+        $kirby = $this->kirby->clone([
+            'components' => [
+                'dump' => function ($kirby, $variable) {
+                    return $variable;
+                }
+            ]
+        ]);
+
+        $this->assertEquals('test', dump('test'));
     }
 
     public function testMarkdown()

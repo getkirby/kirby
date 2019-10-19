@@ -7,6 +7,9 @@ use Kirby\Toolkit\Dir;
 
 class AppUsersTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->app = new App([

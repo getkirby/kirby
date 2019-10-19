@@ -10,6 +10,10 @@ use Throwable;
  */
 class AuthTest extends TestCase
 {
+    protected $app;
+    protected $auth;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->app = new App([

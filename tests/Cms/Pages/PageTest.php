@@ -71,7 +71,7 @@ class PageTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(['A', 'B', 'C'], array_column($page->blueprints(), 'title'));
+        $this->assertEquals(['C', 'A', 'B'], array_column($page->blueprints(), 'title'));
 
         // including the same blueprint
         $page = new Page([

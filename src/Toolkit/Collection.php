@@ -545,8 +545,8 @@ class Collection extends Iterator implements Countable
     /**
      * Returns a Collection with the intersection of the given elements
      *
-     * @param Kirby\Toolkit\Collection $other
-     * @return Kirby\Toolkit\Collection
+     * @param \Kirby\Toolkit\Collection $other
+     * @return \Kirby\Toolkit\Collection
      */
     public function intersection($other)
     {
@@ -556,7 +556,7 @@ class Collection extends Iterator implements Countable
     /**
      * Checks if there is an intersection between the given collection and this collection
      *
-     * @param Kirby\Toolkit\Collection $other
+     * @param \Kirby\Toolkit\Collection $other
      * @return bool
      */
     public function intersects($other): bool
@@ -1053,6 +1053,30 @@ class Collection extends Iterator implements Countable
     public function values(): array
     {
         return array_values($this->data);
+    }
+
+    /**
+     * The when method only executes the given Closure when the first parameter
+     * is true. If the first parameter is false, the Closure will not be executed.
+     * You may pass another Closure as the third parameter to the when method.
+     * This Closure will execute if the first parameter evaluates as false
+     *
+     * @param mixed $condition
+     * @param Closure $callback
+     * @param Closure $fallback
+     * @return mixed
+     */
+    public function when($condition, Closure $callback, Closure $fallback = null)
+    {
+        if ($condition) {
+            return $callback->call($this, $condition);
+        }
+
+        if ($fallback !== null) {
+            return $fallback->call($this, $condition);
+        }
+
+        return $this;
     }
 
     /**

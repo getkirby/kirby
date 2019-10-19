@@ -44,13 +44,22 @@
     </template>
 
     <!-- Empty State -->
-    <k-empty v-else-if="items.length === 0" icon="list-bullet" @click="add">
+    <k-empty
+      v-else-if="items.length === 0"
+      :data-invalid="isInvalid"
+      icon="list-bullet"
+      @click="add"
+    >
       {{ empty || $t("field.structure.empty") }}
     </k-empty>
 
     <!-- Table -->
     <template v-else>
-      <table :data-sortable="isSortable" class="k-structure-table">
+      <table
+        :data-invalid="isInvalid"
+        :data-sortable="isSortable"
+        class="k-structure-table"
+      >
         <thead>
           <tr>
             <th class="k-structure-table-index">#</th>
@@ -217,6 +226,21 @@ export default {
 
       return true;
     },
+    isInvalid() {
+      if (this.disabled === true) {
+        return false;
+      }
+
+      if (this.min && this.items.length < this.min) {
+        return true;
+      }
+
+      if (this.max && this.items.length > this.max) {
+        return true;
+      }
+
+      return false;
+    },
     isSortable() {
       if (this.sortBy) {
         return false;
@@ -308,7 +332,7 @@ export default {
       this.$events.$off("keydown.esc", this.escape);
       this.$events.$off("keydown.cmd.s", this.submit);
 
-      this.$store.dispatch("form/enable");
+      this.$store.dispatch("content/enable");
     },
     columnIsEmpty(value) {
       if (value === undefined || value === null || value === "") {
@@ -337,7 +361,7 @@ export default {
     createForm(field) {
       this.$events.$on("keydown.esc", this.escape);
       this.$events.$on("keydown.cmd.s", this.submit);
-      this.$store.dispatch("form/disable");
+      this.$store.dispatch("content/disable");
 
       this.$nextTick(() => {
         if (this.$refs.form) {
