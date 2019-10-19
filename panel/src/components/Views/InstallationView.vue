@@ -101,12 +101,6 @@ export default {
     },
     fields() {
       return {
-        name: {
-          label: this.$t("name"),
-          type: "text",
-          icon: "user",
-          autofocus: true
-        },
         email: {
           label: this.$t("email"),
           type: "email",
