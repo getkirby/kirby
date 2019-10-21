@@ -7,8 +7,7 @@ use Kirby\Toolkit\F;
 class LanguageRoutes
 {
     /**
-     * Inject all language routes into
-     * the given routes array
+     * Creates all multi-language routes
      *
      * @param App $kirby
      * @return array
