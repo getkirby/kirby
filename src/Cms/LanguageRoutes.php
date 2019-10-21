@@ -20,7 +20,6 @@ class LanguageRoutes
         $baseurl = $kirby->url();
 
         foreach ($kirby->languages() as $language) {
-
             // ignore languages with a different base url
             if ($language->baseurl() !== $baseurl) {
                 continue;
@@ -31,7 +30,13 @@ class LanguageRoutes
                 'method'  => 'ALL',
                 'env'     => 'site',
                 'action'  => function ($path = null) use ($language) {
-                    return $language->router()->call($path);
+                    if ($result = $language->router()->call($path)) {
+                        return $result;
+                    }
+
+                    // jump through to the fallback if nothing
+                    // can be found for this language
+                    $this->next();
                 }
             ];
         }

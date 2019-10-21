@@ -366,7 +366,7 @@ class Language extends Model
         $path = $this->path();
 
         if (empty($path) === true) {
-            return '(:all?)';
+            return '(:all)';
         }
 
         return $path . '/(:all?)';

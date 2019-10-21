@@ -370,11 +370,11 @@ class LanguageTest extends TestCase
     {
         return [
             [null, 'en/(:all?)'],
-            ['/', '(:all?)'],
+            ['/', '(:all)'],
             ['/en', 'en/(:all?)'],
             ['/en/', 'en/(:all?)'],
-            ['https://getkirby.com', '(:all?)'],
-            ['https://getkirby.com/', '(:all?)'],
+            ['https://getkirby.com', '(:all)'],
+            ['https://getkirby.com/', '(:all)'],
             ['https://getkirby.com/en', 'en/(:all?)'],
             ['https://getkirby.com/en/', 'en/(:all?)'],
             ['https://getkirby.com/sub/sub', 'sub/sub/(:all?)'],
