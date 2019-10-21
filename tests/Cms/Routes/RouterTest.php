@@ -410,7 +410,8 @@ class RouterTest extends TestCase
                 ],
                 [
                     'code' => 'en',
-                ]
+                    'url'  => '/en'
+                ],
             ]
         ]);
 
