@@ -1,12 +1,12 @@
 <?php
 
+use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
 use Kirby\Cms\Panel;
 use Kirby\Cms\PanelPlugins;
 use Kirby\Cms\PluginAssets;
 use Kirby\Http\Response\Redirect;
 use Kirby\Http\Router\Route;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 return function ($kirby) {
@@ -110,73 +110,7 @@ return function ($kirby) {
 
     // Multi-language setup
     if ($kirby->multilang() === true) {
-
-        // Multi-language home
-        $after[] = [
-            'pattern' => '',
-            'method'  => 'ALL',
-            'env'     => 'site',
-            'action'  => function () use ($kirby) {
-                $home = $kirby->site()->homePage();
-
-                // language detection on the home page with / as URL
-                if ($home && $kirby->url() !== $home->url()) {
-                    if ($kirby->option('languages.detect') === true) {
-                        return $kirby
-                            ->response()
-                            ->redirect($kirby->detectedLanguage()->url());
-                    } else {
-                        return $kirby
-                            ->response()
-                            ->redirect($kirby->site()->url());
-                    }
-
-                    // default home page
-                } else {
-                    return $kirby->defaultLanguage()->router()->call();
-                }
-            }
-        ];
-
-        foreach ($kirby->languages() as $language) {
-            $after[] = [
-                'pattern' => trim($language->pattern() . '/(:all?)', '/'),
-                'method'  => 'ALL',
-                'env'     => 'site',
-                'action'  => function ($path = null) use ($language) {
-                    return $language->router()->call($path);
-                }
-            ];
-        }
-
-        // fallback route for unprefixed default language URLs.
-        $after[] = [
-            'pattern' => '(:all)',
-            'method'  => 'ALL',
-            'env'     => 'site',
-            'action'  => function (string $path) use ($kirby) {
-
-                // check for content representations or files
-                $extension = F::extension($path);
-
-                // try to redirect prefixed pages
-                if (empty($extension) === true && $page = $kirby->page($path)) {
-                    $url = $kirby->request()->url([
-                        'query'    => null,
-                        'params'   => null,
-                        'fragment' => null
-                    ]);
-
-                    if ($url->toString() !== $page->url()) {
-                        return $kirby
-                            ->response()
-                            ->redirect($page->url());
-                    }
-                }
-
-                return $kirby->defaultLanguage()->router()->call($path);
-            }
-        ];
+        $after = LanguageRoutes::create($kirby);
     } else {
 
         // Single-language home

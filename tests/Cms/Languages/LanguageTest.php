@@ -338,4 +338,103 @@ class LanguageTest extends TestCase
 
         $this->assertEquals($fixtures . '/site/languages/de.php', $language->root());
     }
+
+    public function pathProvider()
+    {
+        return [
+            [null, 'en'],
+            ['/', ''],
+            ['/en', 'en'],
+            ['/en/', 'en'],
+            ['https://getkirby.com/en', 'en'],
+            ['https://getkirby.com/en/', 'en'],
+            ['https://getkirby.com/sub/sub', 'sub/sub'],
+            ['https://getkirby.com/sub/sub/', 'sub/sub'],
+        ];
+    }
+
+    /**
+     * @dataProvider pathProvider
+     */
+    public function testPath($input, $expected)
+    {
+        $language = new Language([
+            'code' => 'en',
+            'url'  => $input
+        ]);
+
+        $this->assertEquals($expected, $language->path());
+    }
+
+    public function patternProvider()
+    {
+        return [
+            [null, 'en/(:all?)'],
+            ['/', '(:all?)'],
+            ['/en', 'en/(:all?)'],
+            ['/en/', 'en/(:all?)'],
+            ['https://getkirby.com', '(:all?)'],
+            ['https://getkirby.com/', '(:all?)'],
+            ['https://getkirby.com/en', 'en/(:all?)'],
+            ['https://getkirby.com/en/', 'en/(:all?)'],
+            ['https://getkirby.com/sub/sub', 'sub/sub/(:all?)'],
+            ['https://getkirby.com/sub/sub/', 'sub/sub/(:all?)'],
+        ];
+    }
+
+    /**
+     * @dataProvider patternProvider
+     */
+    public function testPattern($input, $expected)
+    {
+        $language = new Language([
+            'code' => 'en',
+            'url'  => $input
+        ]);
+
+        $this->assertEquals($expected, $language->pattern());
+    }
+
+    public function testBaseUrl()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ]
+        ]);
+
+        // default
+        $language = new Language([
+            'code' => 'en',
+        ]);
+
+        $this->assertEquals('https://getkirby.com', $language->baseUrl());
+
+        // with path
+        $language = new Language([
+            'code' => 'en',
+            'url'  => '/en'
+        ]);
+
+        $this->assertEquals('https://getkirby.com', $language->baseUrl());
+
+        // different domain
+        $language = new Language([
+            'code' => 'en',
+            'url'  => 'https://getkirby.de'
+        ]);
+
+        $this->assertEquals('https://getkirby.de', $language->baseUrl());
+
+        // different domain with path
+        $language = new Language([
+            'code' => 'en',
+            'url'  => 'https://getkirby.de/en'
+        ]);
+
+        $this->assertEquals('https://getkirby.de', $language->baseUrl());
+    }
 }

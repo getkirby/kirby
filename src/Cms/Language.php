@@ -118,6 +118,17 @@ class Language extends Model
     }
 
     /**
+     * Returns the base Url for the language
+     * without the path or other cruft
+     *
+     * @return string
+     */
+    public function baseUrl(): string
+    {
+        return Url::base($this->url()) ?? $this->kirby()->url();
+    }
+
+    /**
      * Returns the language code/id.
      * The language code is used in
      * text file names as appendix.
@@ -332,17 +343,33 @@ class Language extends Model
     }
 
     /**
+     * Returns the URL path for the language
+     *
+     * @return string
+     */
+    public function path(): string
+    {
+        if ($this->url === null) {
+            return $this->code;
+        }
+
+        return Url::path($this->url());
+    }
+
+    /**
      * Returns the routing pattern for the language
      *
      * @return string
      */
     public function pattern(): string
     {
-        if (empty($this->url) === true) {
-            return $this->code;
+        $path = $this->path();
+
+        if (empty($path) === true) {
+            return '(:all?)';
         }
 
-        return trim($this->url, '/');
+        return $path . '/(:all?)';
     }
 
     /**
@@ -580,7 +607,11 @@ class Language extends Model
      */
     public function url(): string
     {
-        return Url::makeAbsolute($this->pattern(), $this->kirby()->url());
+        if ($this->url === null) {
+            $this->url = '/' . $this->code;
+        }
+
+        return Url::makeAbsolute($this->url, $this->kirby()->url());
     }
 
     /**
