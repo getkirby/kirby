@@ -9,11 +9,14 @@ class LanguageRoutes
     /**
      * Creates all multi-language routes
      *
-     * @param App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return array
      */
     public static function create(App $kirby): array
     {
+        $routes = [];
+
+        // add the route for the home page
         $routes[] = static::home($kirby);
 
         // Kirby's base url
@@ -51,7 +54,7 @@ class LanguageRoutes
      * Create the fallback route
      * for unprefixed default language URLs.
      *
-     * @param App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return array
      */
     public static function fallback(App $kirby): array
@@ -88,7 +91,7 @@ class LanguageRoutes
     /**
      * Create the multi-language home page route
      *
-     * @param App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return array
      */
     public static function home(App $kirby): array
