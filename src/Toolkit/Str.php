@@ -763,9 +763,10 @@ class Str
      * @param string $separator To be used instead of space and
      *                          other non-word characters.
      * @param string $allowed List of all allowed characters (regex)
+     * @param int $maxlength The maximum length of the slug
      * @return string The safe string
      */
-    public static function slug(string $string = null, string $separator = null, string $allowed = null): string
+    public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
     {
         $separator = $separator ?? static::$defaults['slug']['separator'];
         $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
@@ -789,7 +790,8 @@ class Str
         $string = preg_replace('!^[^a-z0-9]+!', '', $string);
         $string = preg_replace('![^a-z0-9]+$!', '', $string);
 
-        return $string;
+        // cut the string after the given maxlength
+        return static::short($string, $maxlength, false);
     }
 
     /**
