@@ -23,6 +23,7 @@
 
   "delete": "Zmazať",
   "dimensions": "Rozmery",
+  "disabled": "Disabled",
   "discard": "Zahodiť",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -155,6 +156,8 @@
     "Rolu pre posledného administrátora nie je možné zmeniť",
   "error.user.changeRole.permission":
     "Nemáte povolenie na zmenu role pre užívateľa \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Nemáte povolenie na vytvorenie tohto užívateľa",
   "error.user.delete": "Užívateľa \"{name}\" nie je možné zmazať",
   "error.user.delete.lastAdmin": "Posledného administrátora nie je možné zmazať",
@@ -219,6 +222,7 @@
   "error.validation.time": "Prosím, zadajte platný čas",
   "error.validation.url": "Prosím, zadajte platnú URL",
 
+  "field.required": "The field is required",
   "field.files.empty": "Žiadne súbory zatiaľ neboli zvolené",
   "field.pages.empty": "Žiadne stránky zatiaľ neboli zvolené",
   "field.structure.delete.confirm": "Ste si istý, že chcete zmazať tento riadok?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Zverejnené",
   "pages.status.unlisted": "Skryté",
 
+  "pagination.page": "Stránka",
+
   "password": "Heslo",
   "pixel": "Pixel",
   "prev": "Predchádzajúci",
@@ -384,6 +390,9 @@
 
   "save": "Uložiť",
   "search": "Hľadať",
+
+  "section.required": "The section is required",
+
   "select": "Zvoliť",
   "settings": "Nastavenia",
   "size": "Veľkosť",

@@ -23,6 +23,7 @@
 
   "delete": "Excluir",
   "dimensions": "Dimensões",
+  "disabled": "Disabled",
   "discard": "Descartar",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -155,6 +156,8 @@
     "O papel do último administrador não pode ser alterado",
   "error.user.changeRole.permission":
     "Você não tem permissão para alterar o papel do usuário \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Você não tem permissão para criar este usuário",
   "error.user.delete": "O usuário \"{name}\" não pode ser excluído",
   "error.user.delete.lastAdmin": "O último administrador não pode ser excluído",
@@ -219,6 +222,7 @@
   "error.validation.time": "Digite uma hora válida",
   "error.validation.url": "Digite uma URL válida",
 
+  "field.required": "The field is required",
   "field.files.empty": "Nenhum arquivo selecionado",
   "field.pages.empty": "Nenhuma página selecionada",
   "field.structure.delete.confirm": "Deseja realmente excluir este registro?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Publicadas",
   "pages.status.unlisted": "Não listadas",
 
+  "pagination.page": "Página",
+
   "password": "Senha",
   "pixel": "Pixel",
   "prev": "Anterior",
@@ -384,6 +390,9 @@
 
   "save": "Salvar",
   "search": "Buscar",
+
+  "section.required": "The section is required",
+
   "select": "Selecionar",
   "settings": "Configurações",
   "size": "Tamanho",

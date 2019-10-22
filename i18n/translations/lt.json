@@ -23,6 +23,7 @@
 
   "delete": "Pašalinti",
   "dimensions": "Išmatavimai",
+  "disabled": "Disabled",
   "discard": "Atšaukti",
   "download": "Parsisiųsti",
   "duplicate": "Kopijuoti",
@@ -155,6 +156,8 @@
     "Vienintelio administratoriaus rolės negalima pakeisti",
   "error.user.changeRole.permission":
     "Neturite leidimo pakeisti vartotojo \"{name}\" rolės",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Neturite leidimo sukurti šį vartotoją",
   "error.user.delete": "Vartotojo \"{name}\" negalima pašalinti",
   "error.user.delete.lastAdmin": "Vienintelio administratoriaus negalima pašalinti",
@@ -219,6 +222,7 @@
   "error.validation.time": "Prašome įrašyti korektišką laiką",
   "error.validation.url": "Prašome įrašyti teisingą URL",
 
+  "field.required": "The field is required",
   "field.files.empty": "Dar nėra failų",
   "field.pages.empty": "Dar nėra puslapių",
   "field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Paskelbti",
   "pages.status.unlisted": "Nerodomi",
 
+  "pagination.page": "Puslapis",
+
   "password": "Slaptažodis",
   "pixel": "Pikselis",
   "prev": "Ankstesnis",
@@ -384,6 +390,9 @@
 
   "save": "Išsaugoti",
   "search": "Ieškoti",
+
+  "section.required": "The section is required",
+
   "select": "Pasirinkti",
   "settings": "Nustatymai",
   "size": "Dydis",

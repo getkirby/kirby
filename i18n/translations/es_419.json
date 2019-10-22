@@ -23,6 +23,7 @@
 
   "delete": "Eliminar",
   "dimensions": "Dimensiones",
+  "disabled": "Disabled",
   "discard": "Descartar",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -155,6 +156,8 @@
     "El rol del último administrador no puede ser cambiado",
   "error.user.changeRole.permission":
     "No tienes permiso para cambiar el rol del usuario \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "No tienes permiso de crear este usuario",
   "error.user.delete": "El ususario no pudo ser eliminado",
   "error.user.delete.lastAdmin": "Usted no puede borrar el \u00faltimo administrador",
@@ -219,6 +222,7 @@
   "error.validation.time": "Por favor ingresa una hora válida",
   "error.validation.url": "Por favor ingresa un URL válido",
 
+  "field.required": "The field is required",
   "field.files.empty": "Aún no ha seleccionado ningún archivo",
   "field.pages.empty": "Aún no ha seleccionado ningúna pagina",
   "field.structure.delete.confirm": "\u00bfEn realidad desea borrar esta entrada?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Publicado",
   "pages.status.unlisted": "No publicado",
 
+  "pagination.page": "Página",
+
   "password": "Contrase\u00f1a",
   "pixel": "Pixel",
   "prev": "Anterior",
@@ -384,6 +390,9 @@
 
   "save": "Guardar",
   "search": "Buscar",
+
+  "section.required": "The section is required",
+
   "select": "Seleccionar",
   "settings": "Ajustes",
   "size": "Tamaño",
@@ -410,7 +419,7 @@
 
   "translation.author": "Equipo Kirby",
   "translation.direction": "ltr",
-  "translation.name": "Inglés",
+  "translation.name": "Español (América Latina)",
 
   "upload": "Subir",
   "upload.error.cantMove": "The uploaded file could not be moved",

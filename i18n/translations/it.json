@@ -23,6 +23,7 @@
 
   "delete": "Elimina",
   "dimensions": "Dimensioni",
+  "disabled": "Disabled",
   "discard": "Abbandona",
   "download": "Scarica",
   "duplicate": "Duplica",
@@ -155,6 +156,8 @@
     "Il ruolo dell'ultimo amministratore non può esser cambiato",
   "error.user.changeRole.permission":
     "Non ti è permesso modificare il ruolo dell'utente \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Non ti è permesso creare questo utente",
   "error.user.delete": "L'utente non pu\u00f2 essere eliminato",
   "error.user.delete.lastAdmin": "L'ultimo amministratore non può essere eliminato",
@@ -219,6 +222,7 @@
   "error.validation.time": "Inserisci un orario valido",
   "error.validation.url": "Inserisci un URL valido",
 
+  "field.required": "The field is required",
   "field.files.empty": "Nessun file selezionato",
   "field.pages.empty": "Nessuna pagina selezionata",
   "field.structure.delete.confirm": "Vuoi veramente eliminare questo elemento?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Pubblicato",
   "pages.status.unlisted": "Non in elenco",
 
+  "pagination.page": "Pagina",
+
   "password": "Password",
   "pixel": "Pixel",
   "prev": "Precedente",
@@ -384,6 +390,9 @@
 
   "save": "Salva",
   "search": "Cerca",
+
+  "section.required": "The section is required",
+
   "select": "Seleziona",
   "settings": "Impostazioni",
   "size": "Dimensioni",

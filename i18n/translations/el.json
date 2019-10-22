@@ -23,6 +23,7 @@
 
   "delete": "\u0394\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03ae",
   "dimensions": "Διαστάσεις",
+  "disabled": "Disabled",
   "discard": "Απόρριψη",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -155,6 +156,8 @@
     "Ο ρόλος του τελευταίου διαχειριστή δεν μπορεί να αλλάξει",
   "error.user.changeRole.permission":
     "Δεν επιτρέπεται να αλλάξετε το ρόλο του χρήστη \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Δεν επιτρέπεται η δημιουργία αυτού του χρήστη",
   "error.user.delete": "\u039f \u03c7\u03c1\u03ae\u03c3\u03c4\u03b7\u03c2 \u03b4\u03b5\u03bd \u03bc\u03c0\u03bf\u03c1\u03bf\u03cd\u03c3\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03b5\u03af",
   "error.user.delete.lastAdmin": "Δεν είναι δυνατή η διαγραφή του τελευταίου διαχειριστή",
@@ -219,6 +222,7 @@
   "error.validation.time": "Παρακαλώ εισάγετε μια έγκυρη ώρα",
   "error.validation.url": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση URL",
 
+  "field.required": "The field is required",
   "field.files.empty": "Δεν έχουν επιλεγεί αρχεία ακόμα",
   "field.pages.empty": "Δεν έχουν επιλεγεί ακόμη σελίδες",
   "field.structure.delete.confirm": "\u0395\u03af\u03c3\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03bf\u03c2 \u03cc\u03c4\u03b9 \u03b8\u03ad\u03bb\u03b5\u03c4\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7\u03bd \u03ba\u03b1\u03c4\u03b1\u03c7\u03ce\u03c1\u03b9\u03c3\u03b7;",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Δημοσιευμένο",
   "pages.status.unlisted": "Μη καταχωρημένο",
 
+  "pagination.page": "Σελίδα",
+
   "password": "\u039a\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2 \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
   "pixel": "Εικονοστοιχέιο",
   "prev": "Προηγούμενο",
@@ -384,6 +390,9 @@
 
   "save": "\u0391\u03c0\u03bf\u03b8\u03ae\u03ba\u03b5\u03c5\u03c3\u03b7",
   "search": "Αναζήτηση",
+
+  "section.required": "The section is required",
+
   "select": "Επιλογή",
   "settings": "Ρυθμίσεις",
   "size": "Μέγεθος",

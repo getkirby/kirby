@@ -23,6 +23,7 @@
 
   "delete": "Sil",
   "dimensions": "Boyutlar",
+  "disabled": "Disabled",
   "discard": "Vazge\u00e7",
   "download": "İndir",
   "duplicate": "Kopyala",
@@ -155,6 +156,8 @@
     "Son yöneticinin rolü değiştirilemez",
   "error.user.changeRole.permission":
     "\"{name}\" kullanıcısının rolünü değiştiremezsin",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Bu kullanıcıyı oluşturmanıza izin verilmiyor",
   "error.user.delete": "\"{name}\" kullanıcısı silinemedi",
   "error.user.delete.lastAdmin": "Son y\u00f6netici kullan\u0131c\u0131y\u0131 silemezsiniz",
@@ -219,6 +222,7 @@
   "error.validation.time": "Lütfen geçerli bir zaman girin",
   "error.validation.url": "Lütfen geçerli bir adres girin",
 
+  "field.required": "The field is required",
   "field.files.empty": "Henüz dosya seçilmedi",
   "field.pages.empty": "Henüz sayfa seçilmedi",
   "field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Yayınlandı",
   "pages.status.unlisted": "Liste Dışı",
 
+  "pagination.page": "Sayfa",
+
   "password": "\u015eifre",
   "pixel": "Piksel",
   "prev": "Önceki",
@@ -384,6 +390,9 @@
 
   "save": "Kaydet",
   "search": "Arama",
+
+  "section.required": "The section is required",
+
   "select": "Seç",
   "settings": "Ayarlar",
   "size": "Boyut",
@@ -418,7 +427,7 @@
   "upload.error.default": "Dosya yüklenemedi",
   "upload.error.extension": "Dosya yükleme uzantısı tarafından durduruldu",
   "upload.error.formSize": "Yüklenen dosya, formda belirtilen MAX_FILE_SIZE yönergesini aşıyor",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniPostSize": "Yüklenen dosya php.ini içindeki post_max_size yönergesini aşıyor",
   "upload.error.iniSize": "Yüklenen dosya php.ini içindeki upload_max_filesize yönergesini aşıyor",
   "upload.error.noFile": "Dosya yüklenmedi",
   "upload.error.noFiles": "Dosyalar yüklenmedi",

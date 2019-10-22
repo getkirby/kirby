@@ -23,6 +23,7 @@
 
   "delete": "Verwijderen",
   "dimensions": "Dimensies",
+  "disabled": "Disabled",
   "discard": "Annuleren",
   "download": "Download",
   "duplicate": "Dupliceren",
@@ -155,6 +156,8 @@
     "De rol van de laatste beheerder kan niet worden gewijzigd",
   "error.user.changeRole.permission":
     "Je hebt geen rechten om de rol van gebruiker \"{name}\" te wijzigen",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Je hebt geen rechten om deze gebruiker aan te maken",
   "error.user.delete": "De gebruiker \"{name}\" kan niet worden verwijderd",
   "error.user.delete.lastAdmin": "Je kan de laatste admin niet verwijderen",
@@ -219,6 +222,7 @@
   "error.validation.time": "Vul een geldige tijd in",
   "error.validation.url": "Vul een geldige URL in",
 
+  "field.required": "The field is required",
   "field.files.empty": "Nog geen bestanden geselecteerd",
   "field.pages.empty": "Nog geen pagina's geselecteerd",
   "field.structure.delete.confirm": "Wil je deze entry verwijderen?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Gepubliceerd",
   "pages.status.unlisted": "Niet gepubliceerd",
 
+  "pagination.page": "Pagina",
+
   "password": "Wachtwoord",
   "pixel": "Pixel",
   "prev": "Vorige",
@@ -384,6 +390,9 @@
 
   "save": "Opslaan",
   "search": "Zoeken",
+
+  "section.required": "The section is required",
+
   "select": "Selecteren",
   "settings": "Opties",
   "size": "Grootte",

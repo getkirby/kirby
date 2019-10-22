@@ -23,26 +23,27 @@
 
   "delete": "\uc0ad\uc81c",
   "dimensions": "크기",
+  "disabled": "Disabled",
   "discard": "무시",
   "download": "다운로드",
   "duplicate": "복제",
   "edit": "\ud3b8\uc9d1",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "선택된 파일이 없습니다.",
+  "dialog.pages.empty": "선택된 페이지가 없습니다.",
+  "dialog.users.empty": "선택된 사용자가 없습니다.",
 
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
 
   "error.access.login": "로그인할 수 없습니다.",
   "error.access.panel": "패널에 접근할 권한이 없습니다.",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "패널에 접근할 권한이 없습니다.",
 
   "error.avatar.create.fail": "프로필 이미지를 업로드할 수 없습니다.",
   "error.avatar.delete.fail": "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0\ub97c \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
   "error.avatar.dimensions.invalid":
-    "프로필 이미지의 크기를 가로세로 3,000픽셀 이하로 설정하세요.",
+    "프로필 이미지의 크기를 3,000픽셀 이하로 설정하세요.",
   "error.avatar.mime.forbidden":
     "\uc5c5\ub85c\ub4dc\ud560 \uc218 \uc5c6\ub294 MIME \ud615\uc2dd\uc785\ub2c8\ub2e4.",
 
@@ -52,7 +53,7 @@
 
   "error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
 
-  "error.file.changeName.empty": "The name must not be empty",
+  "error.file.changeName.empty": "이름을 입력하세요.",
   "error.file.changeName.permission":
     "파일명({filename})을 변경할 권한이 없습니다.",
   "error.file.duplicate": "파일명이 같은 파일({filename})이 있습니다.",
@@ -73,9 +74,9 @@
   "error.form.incomplete": "항목에 오류가 있습니다.",
   "error.form.notSaved": "항목을 저장할 수 없습니다.",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "올바른 언어를 입력하세요.",
+  "error.language.code": "올바른 언어 코드를 입력하세요.",
+  "error.language.duplicate": "이미 등록된 언어입니다.",
+  "error.language.name": "올바른 언어명을 입력하세요.",
 
   "error.license.format": "올바른 라이선스 키를 입력하세요.",
   "error.license.email": "올바른 이메일 주소를 입력하세요.",
@@ -155,6 +156,8 @@
     "최종 관리자의 역할은 변경할 수 없습니다.",
   "error.user.changeRole.permission":
     "사용자({name})의 역할을 변경할 권한이 없습니다.",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "사용자를 등록할 권한이 없습니다.",
   "error.user.delete": "사용자({name})를 삭제할 수 없습니다.",
   "error.user.delete.lastAdmin": "\ucd5c\uc885 \uad00\ub9ac\uc790\ub294 \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
@@ -219,6 +222,7 @@
   "error.validation.time": "올바른 시간을 입력하세요.",
   "error.validation.url": "올바른 URL을 입력하세요.",
 
+  "field.required": "The field is required",
   "field.files.empty": "선택된 파일이 없습니다.",
   "field.pages.empty": "선택된 페이지가 없습니다.",
   "field.structure.delete.confirm": "이 행을 삭제할까요?",
@@ -254,7 +258,7 @@
   "installation.issues.sessions": "폴더(/site/sessions)에 쓰기 권한이 없습니다.",
 
   "language": "\uc5b8\uc5b4",
-  "language.code": "코드",
+  "language.code": "언어 코드",
   "language.convert": "기본 언어로 설정",
   "language.convert.confirm":
     "이 언어({name})를 기본 언어로 설정할까요? 설정한 뒤에는 복원할 수 없습니다. 번역되지 않은 항목은 올바르게 표시되지 않을 수 있습니다.",
@@ -280,7 +284,7 @@
   "license.buy": "라이선스 구매",
   "license.register": "등록",
   "license.register.help":
-    "입력한 이메일 주소로 라이선스 코드를 전송합니다. Kirby를 등록하려면 라이선스 코드를 입력하세요.",
+    "이메일 주소로 라이선스 코드를 전송했습니다. Kirby를 등록하려면 라이선스 코드와 이메일 주소를 입력하세요.",
   "license.register.label": "라이선스 코드를 입력하세요.",
   "license.register.success": "Kirby를 구입해주셔서 감사합니다.",
   "license.unregistered": "Kirby가 등록되지 않았습니다.",
@@ -364,6 +368,8 @@
   "pages.status.listed": "발행",
   "pages.status.unlisted": "비공개",
 
+  "pagination.page": "페이지",
+
   "password": "\uc554\ud638",
   "pixel": "픽셀",
   "prev": "이전",
@@ -384,6 +390,9 @@
 
   "save": "\uc800\uc7a5",
   "search": "검색",
+
+  "section.required": "The section is required",
+
   "select": "선택",
   "settings": "설정",
   "size": "크기",
@@ -414,16 +423,16 @@
 
   "upload": "업로드",
   "upload.error.cantMove": "The uploaded file could not be moved",
-  "upload.error.cantWrite": "Failed to write file to disk",
+  "upload.error.cantWrite": "디스크를 읽을 수 없습니다.",
   "upload.error.default": "The file could not be uploaded",
-  "upload.error.extension": "File upload stopped by extension",
+  "upload.error.extension": "파일 확장자를 다시 한번 확인하세요.",
   "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
   "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
   "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-  "upload.error.noFile": "No file was uploaded",
-  "upload.error.noFiles": "No files were uploaded",
+  "upload.error.noFile": "업로드된 파일이 없습니다.",
+  "upload.error.noFiles": "업로드된 파일이 없습니다.",
   "upload.error.partial": "The uploaded file was only partially uploaded",
-  "upload.error.tmpDir": "Missing a temporary folder",
+  "upload.error.tmpDir": "임시 폴더가 없습니다.",
   "upload.errors": "오류",
   "upload.progress": "업로드 중…",
 

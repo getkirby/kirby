@@ -23,6 +23,7 @@
 
   "delete": "Slett",
   "dimensions": "Dimensjoner",
+  "disabled": "Disabled",
   "discard": "Forkast",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -155,6 +156,8 @@
     "Rollen for den siste administratoren kan ikke endres",
   "error.user.changeRole.permission":
     "Du har ikke tillatelse til å endre rollen for brukeren \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Du har ikke tilgang til å opprette denne brukeren",
   "error.user.delete": "Denne brukeren kunne ikke bli slettet",
   "error.user.delete.lastAdmin": "Siste administrator kan ikke slettes",
@@ -219,6 +222,7 @@
   "error.validation.time": "Vennligst angi et gyldig tidspunkt",
   "error.validation.url": "Vennligst skriv inn en gyldig URL",
 
+  "field.required": "The field is required",
   "field.files.empty": "Ingen filer har blitt valgt",
   "field.pages.empty": "Ingen side har blitt valgt",
   "field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Publisert",
   "pages.status.unlisted": "Unotert",
 
+  "pagination.page": "Side",
+
   "password": "Passord",
   "pixel": "Piksel",
   "prev": "Forrige",
@@ -384,6 +390,9 @@
 
   "save": "Lagre",
   "search": "Søk",
+
+  "section.required": "The section is required",
+
   "select": "Velg",
   "settings": "Innstillinger",
   "size": "Størrelse",

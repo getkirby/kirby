@@ -23,6 +23,7 @@
 
   "delete": "Poista",
   "dimensions": "Mitat",
+  "disabled": "Disabled",
   "discard": "Hylkää",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -155,6 +156,8 @@
     "Ainoan ylläpitäjän roolia ei voi muuttaa",
   "error.user.changeRole.permission":
     "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" käyttäjätasoa",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Sinulla ei ole oikeutta luoda tätä käyttäjää",
   "error.user.delete": "Käyttäjää \"{name}\" ei voi poistaa",
   "error.user.delete.lastAdmin": "Ainoaa ylläpitäjää ei voi poistaa",
@@ -219,6 +222,7 @@
   "error.validation.time": "Anna kelpaava aika",
   "error.validation.url": "Anna kelpaava URL",
 
+  "field.required": "The field is required",
   "field.files.empty": "Tiedostoja ei ole vielä valittu",
   "field.pages.empty": " Sivuja ei ole vielä valittu",
   "field.structure.delete.confirm": "Haluatko varmasti poistaa tämän rivin?",
@@ -364,6 +368,8 @@
   "pages.status.listed": "Julkaistut",
   "pages.status.unlisted": "Listaamaton",
 
+  "pagination.page": "Sivu",
+
   "password": "Salasana",
   "pixel": "Pikseli",
   "prev": "Edellinen",
@@ -384,6 +390,9 @@
 
   "save": "Tallenna",
   "search": "Haku",
+
+  "section.required": "The section is required",
+
   "select": "Valitse",
   "settings": "Asetukset",
   "size": "Koko",
