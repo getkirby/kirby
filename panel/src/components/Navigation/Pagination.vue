@@ -24,7 +24,14 @@
               <label for="k-pagination-page">
                 <span>{{ pageLabel }}:</span>
                 <select id="k-pagination-page" ref="page">
-                  <option v-for="p in pages" :selected="page === p" :value="p">{{ p }}</option>
+                  <option
+                    v-for="p in pages"
+                    :key="p"
+                    :selected="page === p"
+                    :value="p"
+                  >
+                    {{ p }}
+                  </option>
                 </select>
               </label>
               <k-button icon="check" @click="goTo($refs.page.value)" />
