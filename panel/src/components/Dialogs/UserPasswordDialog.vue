@@ -57,7 +57,7 @@ export default {
         });
     },
     submit() {
-      if (this.values.password.length < 8) {
+      if (!this.values.password || this.values.password.length < 8) {
         this.$refs.dialog.error(this.$t("error.user.password.invalid"));
         return false;
       }
