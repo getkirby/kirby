@@ -211,6 +211,23 @@ export default {
               const data = localStorage.getItem("kirby$content$" + id);
               context.commit("CREATE", [id, JSON.parse(data)]);
             });
+
+      // load old format
+      Object.keys(localStorage)
+        .filter(key => key.startsWith("kirby$form$"))
+        .map(key => key.split("kirby$form$")[1])
+        .forEach(id => {
+          const json = localStorage.getItem("kirby$form$" + id);
+          const data = JSON.parse(json);
+
+          context.commit("CREATE", [id, {
+            api: data.api,
+            originals: data.originals,
+            changes: data.values
+          }]);
+
+          localStorage.removeItem("kirby$form$" + id);
+        });
     },
     create(context, model) {
       // attach the language to the id
