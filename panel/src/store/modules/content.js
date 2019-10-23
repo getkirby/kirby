@@ -153,8 +153,10 @@ export default {
       localStorage.removeItem("kirby$content$" + id);
     },
     REVERT(state, id) {
-      Vue.set(state.models[id], "changes", {});
-      localStorage.removeItem("kirby$content$" + id);
+      if (state.models[id]) {
+        Vue.set(state.models[id], "changes", {});
+        localStorage.removeItem("kirby$content$" + id);
+      }
     },
     STATUS(state, enabled) {
       Vue.set(state.status, "enabled", enabled);
