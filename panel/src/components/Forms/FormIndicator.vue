@@ -97,6 +97,14 @@ export default {
                 link: this.$api.users.link(response.id),
               }
             };
+          } else {
+            entry = {
+              icon: "home",
+              label: response.title,
+              target: {
+                link: "/site"
+              }
+            };
           }
 
           // add language indicator if in multilang
