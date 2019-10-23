@@ -23,7 +23,7 @@
 
   "delete": "Pašalinti",
   "dimensions": "Išmatavimai",
-  "disabled": "Disabled",
+  "disabled": "Išjungta",
   "discard": "Atšaukti",
   "download": "Parsisiųsti",
   "duplicate": "Kopijuoti",
@@ -157,7 +157,7 @@
   "error.user.changeRole.permission":
     "Neturite leidimo pakeisti vartotojo \"{name}\" rolės",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Jūs neturite teisių suteikti administratoriaus rolę",
   "error.user.create.permission": "Neturite leidimo sukurti šį vartotoją",
   "error.user.delete": "Vartotojo \"{name}\" negalima pašalinti",
   "error.user.delete.lastAdmin": "Vienintelio administratoriaus negalima pašalinti",
@@ -222,7 +222,7 @@
   "error.validation.time": "Prašome įrašyti korektišką laiką",
   "error.validation.url": "Prašome įrašyti teisingą URL",
 
-  "field.required": "The field is required",
+  "field.required": "Laukas privalomas",
   "field.files.empty": "Dar nėra failų",
   "field.pages.empty": "Dar nėra puslapių",
   "field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
@@ -391,7 +391,7 @@
   "save": "Išsaugoti",
   "search": "Ieškoti",
 
-  "section.required": "The section is required",
+  "section.required": "Sekcija privaloma",
 
   "select": "Pasirinkti",
   "settings": "Nustatymai",
@@ -427,7 +427,7 @@
   "upload.error.default": "Nepavyko įkelti failo",
   "upload.error.extension": "Neįmanoma įkelti tokio tipo failo",
   "upload.error.formSize": "Įkeltas failas viršija MAX_FILE_SIZE nustatymą, kuris buvo nurodytas formoje",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniPostSize": "Įkeliamas failas viršija post_max_size nustatymą iš php.ini",
   "upload.error.iniSize": "Įkeltas failas viršija upload_max_filesize nustatymą faile php.ini",
   "upload.error.noFile": "Failas nebuvo įkeltas",
   "upload.error.noFiles": "Failai nebuvo įkelti",

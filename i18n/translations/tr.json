@@ -23,7 +23,7 @@
 
   "delete": "Sil",
   "dimensions": "Boyutlar",
-  "disabled": "Disabled",
+  "disabled": "Devredışı",
   "discard": "Vazge\u00e7",
   "download": "İndir",
   "duplicate": "Kopyala",
@@ -157,7 +157,7 @@
   "error.user.changeRole.permission":
     "\"{name}\" kullanıcısının rolünü değiştiremezsin",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Birini yönetici rolüne tanıtmanıza izin verilmiyor",
   "error.user.create.permission": "Bu kullanıcıyı oluşturmanıza izin verilmiyor",
   "error.user.delete": "\"{name}\" kullanıcısı silinemedi",
   "error.user.delete.lastAdmin": "Son y\u00f6netici kullan\u0131c\u0131y\u0131 silemezsiniz",
@@ -222,7 +222,7 @@
   "error.validation.time": "Lütfen geçerli bir zaman girin",
   "error.validation.url": "Lütfen geçerli bir adres girin",
 
-  "field.required": "The field is required",
+  "field.required": "Alan gereklidir",
   "field.files.empty": "Henüz dosya seçilmedi",
   "field.pages.empty": "Henüz sayfa seçilmedi",
   "field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
@@ -391,7 +391,7 @@
   "save": "Kaydet",
   "search": "Arama",
 
-  "section.required": "The section is required",
+  "section.required": "Bölüm gereklidir",
 
   "select": "Seç",
   "settings": "Ayarlar",
