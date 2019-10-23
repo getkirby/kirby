@@ -324,7 +324,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.k-form-button {
+.k-form-button.k-button {
   font-weight: 500;
   white-space: nowrap;
   line-height: 1;
