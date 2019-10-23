@@ -125,7 +125,18 @@ class Language extends Model
      */
     public function baseUrl(): string
     {
-        return Url::base($this->url()) ?? $this->kirby()->url();
+        $kirbyUrl    = $this->kirby()->url();
+        $languageUrl = $this->url();
+
+        if (empty($this->url)) {
+            return $kirbyUrl;
+        }
+
+        if (Str::startsWith($languageUrl, $kirbyUrl) === true) {
+            return $kirbyUrl;
+        }
+
+        return Url::base($languageUrl) ?? $kirbyUrl;
     }
 
     /**
