@@ -618,11 +618,13 @@ class Language extends Model
      */
     public function url(): string
     {
-        if ($this->url === null) {
-            $this->url = '/' . $this->code;
+        $url = $this->url;
+
+        if ($url === null) {
+            $url = '/' . $this->code;
         }
 
-        return Url::makeAbsolute($this->url, $this->kirby()->url());
+        return Url::makeAbsolute($url, $this->kirby()->url());
     }
 
     /**
