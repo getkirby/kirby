@@ -228,14 +228,19 @@ export default {
       };
 
       // check if content was previously unlocked
-      Api.get(model.api + "/unlock").then(response => {
-        if (
-          response.supported === true &&
-          response.unlocked === true
-        ) {
-          context.commit("UNLOCK", context.state.models[model.id].changes);
-        }
-      });
+      Api
+        .get(model.api + "/unlock")
+        .then(response => {
+          if (
+            response.supported === true &&
+            response.unlocked === true
+          ) {
+            context.commit("UNLOCK", context.state.models[model.id].changes);
+          }
+        })
+        .catch(() => {
+          // fail silently
+        });
 
       context.commit("CREATE", [model.id, data]);
       context.dispatch("current", model.id);
