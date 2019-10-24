@@ -3,9 +3,11 @@ import Vue from "vue";
 import DropdownContent from "@/components/Navigation/DropdownContent.vue";
 import DropdownItem from "@/components/Navigation/DropdownItem.vue";
 import Button from "@/components/Navigation/Button.vue";
+import ButtonNative from "@/components/Navigation/ButtonNative.vue";
 
 Vue.component("k-dropdown-item", DropdownItem);
 Vue.component("k-button", Button);
+Vue.component("k-button-native", ButtonNative);
 
 const localVue = createLocalVue();
 

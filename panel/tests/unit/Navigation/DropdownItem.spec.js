@@ -2,10 +2,16 @@ import { mount } from "@vue/test-utils";
 import Vue from "vue";
 import DropdownItem from "@/components/Navigation/DropdownItem.vue";
 import Button from "@/components/Navigation/Button.vue";
+import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
+import ButtonLink from "@/components/Navigation/ButtonLink.vue";
+import ButtonNative from "@/components/Navigation/ButtonNative.vue";
 import Link from "@/components/Navigation/Link.vue";
 import Icon from "@/components/Misc/Icon.vue";
 
 Vue.component("k-button", Button);
+Vue.component("k-button-disabled", ButtonDisabled);
+Vue.component("k-button-link", ButtonLink);
+Vue.component("k-button-native", ButtonNative);
 Vue.component("k-link", Link);
 Vue.component("k-icon", Icon);
 
@@ -56,8 +62,7 @@ describe("DropdownItem.vue", () => {
       }
     });
 
-    expect(wrapper.element.tagName).toBe("BUTTON");
-    expect(wrapper.attributes("disabled")).toBe("disabled");
+    expect(wrapper.is("span")).toBe(true);
   });
 
   it("disabled link", () => {
