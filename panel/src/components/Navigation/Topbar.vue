@@ -107,6 +107,7 @@
               <p>{{ $t('license.unregistered') }}</p>
               <k-button
                 :responsive="true"
+                :tooltip="$t('license.unregistered')"
                 class="k-topbar-signals-button"
                 icon="key"
                 @click="$emit('register')"
@@ -126,7 +127,7 @@
           </template>
 
           <!-- unsaved changes indicator -->
-          <template v-else>
+          <template>
             <k-form-indicator />
           </template>
 
