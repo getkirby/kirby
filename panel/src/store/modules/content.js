@@ -2,6 +2,13 @@ import Vue from "vue";
 import Api from "@/api/api.js";
 import clone from "@/helpers/clone.js";
 
+const keep = (id, data) => {
+  localStorage.setItem(
+    "kirby$content$" + id,
+    JSON.stringify(data)
+  );
+};
+
 export default {
   namespaced: true,
 
@@ -189,14 +196,11 @@ export default {
         Vue.set(state.models[id].changes, field, value);
       }
 
-      localStorage.setItem(
-        "kirby$content$" + id,
-        JSON.stringify({
-          api: state.models[id].api,
-          originals: state.models[id].originals,
-          changes: state.models[id].changes
-        })
-      );
+      keep(id, {
+        api: state.models[id].api,
+        originals: state.models[id].originals,
+        changes: state.models[id].changes
+      });
     }
   },
 
@@ -217,15 +221,21 @@ export default {
         .filter(key => key.startsWith("kirby$form$"))
         .map(key => key.split("kirby$form$")[1])
         .forEach(id => {
-          const json = localStorage.getItem("kirby$form$" + id);
-          const data = JSON.parse(json);
-
-          context.commit("CREATE", [id, {
+          const json  = localStorage.getItem("kirby$form$" + id);
+          const data  = JSON.parse(json);
+          const model = {
             api: data.api,
             originals: data.originals,
             changes: data.values
-          }]);
+          };
 
+          // add it to the state
+          context.commit("CREATE", [id, model]);
+
+          // keep it in localStorage
+          keep(id, model);
+
+          // remove the old entry
           localStorage.removeItem("kirby$form$" + id);
         });
     },
