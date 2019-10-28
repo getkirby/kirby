@@ -73,6 +73,30 @@ describe("Content Store", () => {
 
   });
 
+  it("create, set current and remove", () => {
+
+    expect(store.getters["content/exists"]("pages/test")).toEqual(false);
+
+    // use commit, because dispatch makes an API request
+    store.commit("content/CREATE", ["pages/test", {
+      api: "pages/test",
+      originals: {
+        title: "Test"
+      }
+    }]);
+
+    store.dispatch("content/current", "pages/test");
+
+    expect(store.getters["content/isCurrent"]("pages/test")).toEqual(true);
+    expect(store.getters["content/exists"]("pages/test")).toEqual(true);
+
+    // remove the model from the store again
+    store.dispatch("content/remove", "pages/test");
+
+    expect(store.getters["content/isCurrent"]("pages/test")).toEqual(false);
+    expect(store.getters["content/exists"]("pages/test")).toEqual(false);
+  });
+
   it("create and move", () => {
 
     // use commit, because dispatch makes an API request

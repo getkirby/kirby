@@ -291,6 +291,10 @@ export default {
     },
     remove(context, id) {
       context.commit("REMOVE", id);
+
+      if (context.getters.isCurrent(id)) {
+        context.commit("CURRENT", null);
+      }
     },
     revert(context, id) {
       id = id || context.state.current;
