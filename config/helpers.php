@@ -348,7 +348,7 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
  *
  * @param string|array $url
  * @param string|array $options
- * @return void
+ * @return string|null
  */
 function js($url, $options = null)
 {
