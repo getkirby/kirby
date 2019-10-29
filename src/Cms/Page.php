@@ -631,8 +631,8 @@ class Page extends ModelWithContent
      */
     public function isChildOf($parent): bool
     {
-        if ($parent = $this->parent()) {
-            return $parent->is($parent);
+        if ($parentObj = $this->parent()) {
+            return $parentObj->is($parent);
         }
 
         return false;
