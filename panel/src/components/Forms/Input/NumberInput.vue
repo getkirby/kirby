@@ -55,6 +55,9 @@ export default {
     }
   },
   watch: {
+    value(value) {
+      this.number = value;
+    },
     number: {
       immediate: true,
       handler() {
