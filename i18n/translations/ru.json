@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Секция \"{name}\" не может быть загружена",
   "error.section.type.invalid": "Тип секции {type} неверный",
 
+  "error.site.changeTitle.empty": "Название не может быть пустым",
   "error.site.changeTitle.permission":
     "У вас нет права поменять название сайта",
   "error.site.update.permission": "У вас нет права обновить сайт",

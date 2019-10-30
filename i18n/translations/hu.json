@@ -138,6 +138,7 @@
   "error.section.notLoaded": "A(z) \"{name}\" szekció nem tölthető be",
   "error.section.type.invalid": "A szekció típusa (\"{type}\") nem megfelelő",
 
+  "error.site.changeTitle.empty": "A cím nem lehet üres",
   "error.site.changeTitle.permission":
     "Nincs jogosultságod megváltoztatni az honlap címét",
   "error.site.update.permission": "Nincs jogosultságod frissíteni a honlapot",

@@ -138,6 +138,7 @@
   "error.section.notLoaded": "La section «&nbsp;{name}&nbsp;» n’a pu être chargée",
   "error.section.type.invalid": "Le type de section «&nbsp;{type}&nbsp;» est incorrect",
 
+  "error.site.changeTitle.empty": "Le titre ne peut être vide",
   "error.site.changeTitle.permission":
     "Vous n’êtes pas autorisé à modifier le titre du site",
   "error.site.update.permission": "Vous n’êtes pas autorisé à modifier le contenu global du site",

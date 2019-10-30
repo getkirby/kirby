@@ -138,6 +138,7 @@
   "error.section.notLoaded": "\"{name}\" bölümü yüklenemedi",
   "error.section.type.invalid": "\"{type}\" tipi geçerli değil",
 
+  "error.site.changeTitle.empty": "Başlık boş bırakılamaz",
   "error.site.changeTitle.permission":
     "Sitenin başlığını değiştiremezsin",
   "error.site.update.permission": "Siteyi güncellemenize izin verilmiyor",

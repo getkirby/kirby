@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Nie udało się załadować sekcji \"{name}\"",
   "error.section.type.invalid": "Typ sekcji \"{type}\" jest nieprawidłowy",
 
+  "error.site.changeTitle.empty": "Tytuł nie może być pusty",
   "error.site.changeTitle.permission":
     "Nie masz uprawnień, by zmienić tytuł strony",
   "error.site.update.permission": "Nie masz uprawnień, by zaktualizować stronę",

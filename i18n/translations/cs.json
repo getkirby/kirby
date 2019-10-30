@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Nelze načíst sekci \"{name}\"",
   "error.section.type.invalid": "Typ sekce \"{type}\" není platný",
 
+  "error.site.changeTitle.empty": "Titulek nesmí být prázdný",
   "error.site.changeTitle.permission":
     "Nemáte dovoleno změnit titulek stránky",
   "error.site.update.permission": "Nemáte dovoleno upravit stránku",

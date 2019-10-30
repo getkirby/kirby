@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Sekcija \"{name}\" negali būti užkrauta",
   "error.section.type.invalid": "Sekcijos tipas \"{type}\" yra neteisingas",
 
+  "error.site.changeTitle.empty": "Pavadinimas negali būti tuščias",
   "error.site.changeTitle.permission":
     "Neturite leidimo keisti svetainės pavadinimo",
   "error.site.update.permission": "Neturite leidimo atnaujinti svetainės",
@@ -223,7 +224,7 @@
   "error.validation.url": "Prašome įrašyti teisingą URL",
 
   "field.required": "Laukas privalomas",
-  "field.files.empty": "Dar nėra failų",
+  "field.files.empty": "Pasirinkti",
   "field.pages.empty": "Dar nėra puslapių",
   "field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
   "field.structure.empty": "Dar nėra įrašų",
@@ -233,7 +234,7 @@
     "Ar tikrai norite pašalinti <br><strong>{filename}</strong>?",
 
   "files": "Failai",
-  "files.empty": "Dar nėra failų",
+  "files.empty": "Įkelti",
 
   "hour": "Valanda",
   "insert": "Įterpti",

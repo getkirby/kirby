@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Osiota \"{name}\" ei voitu ladata",
   "error.section.type.invalid": "Osion tyyppi \"{type}\" ei ole kelvollinen",
 
+  "error.site.changeTitle.empty": "Nimi ei voi olla tyhjä",
   "error.site.changeTitle.permission":
     "Sinulla ei ole oikeutta päivittää sivuston nimeä",
   "error.site.update.permission": "Sinulla ei ole oikeutta päivittää sivuston tietoja",

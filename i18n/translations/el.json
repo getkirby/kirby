@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Δεν ήταν δυνατή η φόρτωση της ενότητας \"{name}\"",
   "error.section.type.invalid": "Ο τύπος ενότητας \"{type}\" δεν είναι έγκυρος",
 
+  "error.site.changeTitle.empty": "Ο τίτλος δεν μπορεί να είναι κενός",
   "error.site.changeTitle.permission":
     "Δεν επιτρέπεται να αλλάξετε τον τίτλο του ιστότοπου",
   "error.site.update.permission": "Δεν επιτρέπεται η ενημέρωση του ιστότοπου",

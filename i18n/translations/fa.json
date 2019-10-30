@@ -138,6 +138,7 @@
   "error.section.notLoaded": "بخش «{name}» قابل بارکذاری نیست",
   "error.section.type.invalid": "نوع بخش «{type}» غیرمجاز است",
 
+  "error.site.changeTitle.empty": "عنوان اجباری است",
   "error.site.changeTitle.permission":
     "شما اجازه تغییر عنوان سایت را ندارید",
   "error.site.update.permission": "شما اجازه بروزرسانی سایت را ندارید",

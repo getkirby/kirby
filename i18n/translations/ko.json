@@ -138,6 +138,7 @@
   "error.section.notLoaded": "섹션({name})을 불러올 수 없습니다.",
   "error.section.type.invalid": "섹션의 형식({type})이 올바르지 않습니다.",
 
+  "error.site.changeTitle.empty": "제목을 입력하세요.",
   "error.site.changeTitle.permission":
     "사이트명을 변경할 권한이 없습니다.",
   "error.site.update.permission": "사이트의 정보를 변경할 권한이 없습니다.",

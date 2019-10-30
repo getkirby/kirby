@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Sekciu \"{name}\" sa nepodarilo nahrať",
   "error.section.type.invalid": "Typ sekcie \"{type}\" nie je platný",
 
+  "error.site.changeTitle.empty": "Titulok nemôže byť prázdny",
   "error.site.changeTitle.permission":
     "Nemáte povolenie na zmenu titulku pre portál",
   "error.site.update.permission": "Nemáte povolenie na aktualizovanie portálu",

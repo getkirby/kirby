@@ -138,6 +138,7 @@
   "error.section.notLoaded": "No s'ha pogut carregar la secció \"{name}\"",
   "error.section.type.invalid": "La secció tipus \"{type}\" no és vàlida",
 
+  "error.site.changeTitle.empty": "El títol no pot estar buit",
   "error.site.changeTitle.permission":
     "No tens permís per canviar el títol del lloc web",
   "error.site.update.permission": "No tens permís per actualitzar el lloc web",

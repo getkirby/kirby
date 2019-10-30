@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Seksjonen \"{name}\" kunne ikke lastes inn",
   "error.section.type.invalid": "Seksjonstypen \"{type}\" er ikke gyldig",
 
+  "error.site.changeTitle.empty": "Tittelen kan ikke være tom",
   "error.site.changeTitle.permission":
     "Du har ikke tillatelse til å endre tittel på siden",
   "error.site.update.permission": "Du har ikke tillatelse til å oppdatere denne siden",

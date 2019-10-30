@@ -138,6 +138,7 @@
   "error.section.notLoaded": "A seção \"{name}\" não pôde ser carregada",
   "error.section.type.invalid": "O tipo da seção \"{type}\" não é válido",
 
+  "error.site.changeTitle.empty": "O título não pode ficar em branco",
   "error.site.changeTitle.permission":
     "Não tem permissões para alterar o título do site",
   "error.site.update.permission": "Não tem permissões para atualizar o site",

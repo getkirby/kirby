@@ -138,6 +138,7 @@
   "error.section.notLoaded": "De zone \"{name}\" kan niet worden geladen",
   "error.section.type.invalid": "Zone-type \"{type}\" is niet geldig",
 
+  "error.site.changeTitle.empty": "De titel mag niet leeg zijn",
   "error.site.changeTitle.permission":
     "Je hebt geen rechten om de titel van de site te wijzigen",
   "error.site.update.permission": "Je hebt geen rechten om de site te updaten",
