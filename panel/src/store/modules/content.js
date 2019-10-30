@@ -221,8 +221,21 @@ export default {
         .filter(key => key.startsWith("kirby$form$"))
         .map(key => key.split("kirby$form$")[1])
         .forEach(id => {
-          const json  = localStorage.getItem("kirby$form$" + id);
-          const data  = JSON.parse(json);
+          const json = localStorage.getItem("kirby$form$" + id);
+          let   data = null;
+
+          try {
+            data = JSON.parse(json);
+          } catch (e) {
+            // fail silently
+          }
+
+          if (!data || !data.api) {
+            // remove invalid entry
+            localStorage.removeItem("kirby$form$" + id);
+            return false;
+          }
+
           const model = {
             api: data.api,
             originals: data.originals,
