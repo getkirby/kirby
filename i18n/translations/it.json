@@ -296,6 +296,7 @@
   "loading": "Caricamento",
 
   "lock.unsaved": "Modifiche non salvate",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Modifiche non salvate di <strong>{email}</strong>",
   "lock.file.isLocked": "Il file viene attualmente modificato da {email} e non può essere cambiato.",
   "lock.page.isLocked": "la pagina viene attualmente modificata da {email} e non può essere cambiata.",

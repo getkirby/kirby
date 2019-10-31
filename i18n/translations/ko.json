@@ -296,6 +296,7 @@
   "loading": "로딩 중",
 
   "lock.unsaved": "수정 사항이 저장되지 않았습니다.",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "<strong>{email}</strong>의 수정 사항이 저장되지 않았습니다.",
   "lock.file.isLocked": "다른 사용자({email})가 수정 중입니다.",
   "lock.page.isLocked": "다른 사용자({email}가 수정 중입니다.",

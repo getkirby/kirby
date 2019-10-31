@@ -296,6 +296,7 @@
   "loading": "Laden",
 
   "lock.unsaved": "Ungespeicherte Änderungen",
+  "lock.unsaved.empty": "Keine ungespeicherten Änderungen",
   "lock.isLocked": "Ungespeicherte Änderungen von <strong>{email}</strong>",
   "lock.file.isLocked": "Die Datei wird von {email} bearbeitet und kann nicht geändert werden.",
   "lock.page.isLocked": "Die Seite wird von {email} bearbeitet und kann nicht geändert werden.",

@@ -296,6 +296,7 @@
   "loading": "Indlæser",
 
   "lock.unsaved": "Ugemte ændringer",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Ugemte ændringer af <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeres på nuværende af {email} og kan derfor ikke ændres.",
   "lock.page.isLocked": "Siden redigeres på nuværende af {email} og kan derfor ikke ændres.",

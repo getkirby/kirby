@@ -296,6 +296,7 @@
   "loading": "Laddar",
 
   "lock.unsaved": "Osparade ändringar",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Osparade ändringar av <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeras just nu av {email} och kan inte redigeras.",
   "lock.page.isLocked": "Sidan redigeras just nu av {email} och kan inte redigeras.",

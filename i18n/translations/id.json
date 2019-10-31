@@ -296,6 +296,7 @@
   "loading": "Memuat",
 
   "lock.unsaved": "Perubahan belum tersimpan",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Perubahan belum tersimpan oleh <strong>{email}</strong>",
   "lock.file.isLocked": "Berkas sedang disunting oleh {email} dan tidak dapat diubah.",
   "lock.page.isLocked": "Halaman sedang disunting oleh {email} dan tidak dapat diubah.",

@@ -296,6 +296,7 @@
   "loading": "Kraunasi",
 
   "lock.unsaved": "Neišsaugoti pakeitimai",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Vartotojo <strong>{email}</strong> neišsaugoti pakeitimai",
   "lock.file.isLocked": "Šį failą dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",
   "lock.page.isLocked": "Šį puslapį dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",

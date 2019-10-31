@@ -296,6 +296,7 @@
   "loading": "Betöltés",
 
   "lock.unsaved": "Nem mentett változások",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Nem mentett <strong>{email}</strong> változások",
   "lock.file.isLocked": "A fájlt jelenleg {email} szerkeszti és nem módosítható.",
   "lock.page.isLocked": "Az oldalt jelenleg {email} szerkeszti és nem módosítható.",

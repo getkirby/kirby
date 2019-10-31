@@ -296,6 +296,7 @@
   "loading": "Yükleniyor",
 
   "lock.unsaved": "Kaydedilmemiş değişiklikler",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "<strong>{email}</strong> tarafından kaydedilmemiş değişiklikler",
   "lock.file.isLocked": "Dosya şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
   "lock.page.isLocked": "Sayfa şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
@@ -351,7 +352,7 @@
     "<strong>Bu sayfada alt sayfalar var</strong>. <br>Tüm alt sayfalar da silinecek.",
   "page.delete.confirm.title": "Onaylamak için sayfa başlığını girin",
   "page.draft.create": "Taslak oluştur",
-  "page.duplicate.appendix": "Kopyala",
+  "page.duplicate.appendix": "Kopya",
   "page.duplicate.files": "Dosyaları kopyala",
   "page.duplicate.pages": "Sayfaları kopyala",
   "page.status": "Durum",
