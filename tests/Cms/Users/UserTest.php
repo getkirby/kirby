@@ -248,65 +248,6 @@ class UserTest extends TestCase
         User::$models = [];
     }
 
-    public function testLoginLogoutHooks()
-    {
-        $phpunit = $this;
-
-        $calls         = 0;
-        $logoutSession = false;
-        $app = new App([
-            'users' => [
-                ['email' => 'test@getkirby.com']
-            ],
-            'hooks' => [
-                'user.login:before' => function ($user, $session) use ($phpunit, &$calls) {
-                    $phpunit->assertEquals('test@getkirby.com', $user->email());
-                    $phpunit->assertEquals($session, S::instance());
-
-                    $calls += 1;
-                },
-                'user.login:after' => function ($user, $session) use ($phpunit, &$calls) {
-                    $phpunit->assertEquals('test@getkirby.com', $user->email());
-                    $phpunit->assertEquals($session, S::instance());
-
-                    $calls += 2;
-                },
-                'user.logout:before' => function ($user, $session) use ($phpunit, &$calls) {
-                    $phpunit->assertEquals('test@getkirby.com', $user->email());
-                    $phpunit->assertEquals($session, S::instance());
-
-                    $calls += 4;
-                },
-                'user.logout:after' => function ($user, $session) use ($phpunit, &$calls, &$logoutSession) {
-                    $phpunit->assertEquals('test@getkirby.com', $user->email());
-
-                    if ($logoutSession === true) {
-                        $phpunit->assertEquals($session, S::instance());
-                        $phpunit->assertEquals('value', S::instance()->get('some'));
-                    } else {
-                        $phpunit->assertNull($session);
-                    }
-
-                    $calls += 8;
-                }
-            ]
-        ]);
-
-        // without prepopulated session
-        $user = $app->user('test@getkirby.com');
-        $user->loginPasswordless();
-        $user->logout();
-
-        // with a session with another value
-        S::instance()->set('some', 'value');
-        $logoutSession = true;
-        $user->loginPasswordless();
-        $user->logout();
-
-        // each hook needs to be called exactly twice
-        $this->assertEquals((1 + 2 + 4 + 8) * 2, $calls);
-    }
-
     public function testPanelOptions()
     {
         $user = new User([
