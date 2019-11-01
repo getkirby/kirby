@@ -214,10 +214,22 @@ class Auth
         $user = $this->validatePassword($email, $password);
         $user->loginPasswordless($options);
 
+        return $user;
+    }
+
+    /**
+     * Sets a user object as the current user in the cache
+     * @internal
+     *
+     * @param \Kirby\Cms\User $user
+     * @return void
+     */
+    public function setUser(User $user): void
+    {
         // stop impersonating
         $this->impersonate = null;
 
-        return $this->user = $user;
+        $this->user = $user;
     }
 
     /**
@@ -334,20 +346,30 @@ class Auth
     /**
      * Logout the current user
      *
-     * @return bool
+     * @return void
      */
-    public function logout(): bool
+    public function logout(): void
     {
-        // stop impersonating
+        // stop impersonating;
+        // ensures that we log out the actually logged in user
         $this->impersonate = null;
 
         // logout the current user if it exists
         if ($user = $this->user()) {
             $user->logout();
         }
+    }
 
+    /**
+     * Clears the cached user data after logout
+     * @internal
+     *
+     * @return void
+     */
+    public function flush(): void
+    {
+        $this->impersonate = null;
         $this->user = null;
-        return true;
     }
 
     /**
