@@ -20,7 +20,7 @@ class LanguageRoutes
         $routes[] = static::home($kirby);
 
         // Kirby's base url
-        $baseurl = $kirby->url();
+        $baseurl = Url::base($kirby->url());
 
         foreach ($kirby->languages() as $language) {
             // ignore languages with a different base url
