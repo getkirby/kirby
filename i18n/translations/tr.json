@@ -296,7 +296,7 @@
   "loading": "Yükleniyor",
 
   "lock.unsaved": "Kaydedilmemiş değişiklikler",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Daha fazla kaydedilmemiş değişiklik yok",
   "lock.isLocked": "<strong>{email}</strong> tarafından kaydedilmemiş değişiklikler",
   "lock.file.isLocked": "Dosya şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
   "lock.page.isLocked": "Sayfa şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",

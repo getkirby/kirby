@@ -296,7 +296,7 @@
   "loading": "Carregant",
 
   "lock.unsaved": "Canvis no guardats",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Ja no hi ha canvis no guardats",
   "lock.isLocked": "Canvis no guardats per <strong>{email}</strong>",
   "lock.file.isLocked": "El fitxer està sent editat actualment per {email}  i no pot ser modificat.",
   "lock.page.isLocked": "La pàgina està sent editat actualment per {email} i no pot ser modificat.",
