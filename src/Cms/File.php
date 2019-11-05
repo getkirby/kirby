@@ -231,12 +231,14 @@ class File extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string $type (auto|kirbytext|markdown)
+     * @param string $type (null|auto|kirbytext|markdown)
      * @param bool $absolute
      * @return string
      */
-    public function dragText($type = 'auto', bool $absolute = false): string
+    public function dragText(string $type = null, bool $absolute = false): string
     {
+        $type = $type ?? 'auto';
+
         if ($type === 'auto') {
             $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
         }
